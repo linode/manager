@@ -1,5 +1,3 @@
-/* eslint-disable xss/no-mixed-html */
-
 export const community_question = {
   _highlightResult: {
     title: {

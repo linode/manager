@@ -2,9 +2,10 @@
  * @file Exposes the `tag` util from the `cy` object.
  */
 
-import { Runnable, Test } from 'mocha';
-import { tag, addTag } from 'support/util/tag';
+import { addTag, tag } from 'support/util/tag';
 import { evaluateQuery } from 'support/util/tag';
+
+import type { Runnable, Test } from 'mocha';
 
 // Expose tag utils from the `cy` object.
 // Similar to `cy.state`, and unlike other functions exposed in `cy`, these do not
@@ -36,7 +37,6 @@ Cypress.on('test:before:run', (_test: Test, _runnable: Runnable) => {
       }
 
       if (!evaluateQuery(query, tags)) {
-        // eslint-disable-next-line sonarjs/no-skipped-tests
         context.skip();
       }
 

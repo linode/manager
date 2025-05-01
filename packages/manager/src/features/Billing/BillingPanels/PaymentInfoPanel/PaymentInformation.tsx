@@ -108,17 +108,17 @@ const PaymentInformation = (props: Props) => {
           <Typography variant="h3">Payment Methods</Typography>
           {!isAkamaiCustomer ? (
             <BillingActionButton
+              data-testid="payment-info-add-payment-method"
+              disabled={isReadOnly}
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+              onClick={() => replace(drawerLink)}
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
                 isChildUser,
                 resourceType: 'Account',
               })}
-              data-testid="payment-info-add-payment-method"
-              disableFocusRipple
-              disableRipple
-              disableTouchRipple
-              disabled={isReadOnly}
-              onClick={() => replace(drawerLink)}
             >
               {ADD_PAYMENT_METHOD}
             </BillingActionButton>

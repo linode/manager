@@ -63,6 +63,7 @@ export const TicketList = (props: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={hasSeverityCapability ? 7 : 6}
           responsive={{
             1: { mdDown: true },
             2: { mdDown: true },
@@ -71,7 +72,6 @@ export const TicketList = (props: Props) => {
             5: !hasSeverityCapability ? { mdDown: true } : { mdDown: false },
             6: hasSeverityCapability ? { mdDown: true } : { mdDown: false },
           }}
-          columns={hasSeverityCapability ? 7 : 6}
         />
       );
     }

@@ -44,7 +44,7 @@ export interface AccessKeyDrawerProps {
 }
 
 interface FormState {
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   label: string;
 }
 
@@ -80,14 +80,8 @@ export const getDefaultScopes = (
     .sort(sortByCluster);
 
 export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
-  const {
-    isRestrictedUser,
-    mode,
-    objectStorageKey,
-    onClose,
-    onSubmit,
-    open,
-  } = props;
+  const { isRestrictedUser, mode, objectStorageKey, onClose, onSubmit, open } =
+    props;
 
   const { data: accountSettings } = useAccountSettings();
 

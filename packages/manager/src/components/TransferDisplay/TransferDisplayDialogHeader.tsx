@@ -15,8 +15,8 @@ export const TransferDisplayDialogHeader = React.memo((props: Props) => {
   return (
     <Typography
       data-testid={dataTestId}
-      sx={{ font: theme.font.bold }}
       fontSize={theme.typography.h3.fontSize}
+      sx={{ font: theme.font.bold }}
     >
       {headerText}
       <TooltipIcon

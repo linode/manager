@@ -239,14 +239,14 @@ export const CredentialList = () => {
         )}
       </Paginate>
       <DeletionDialog
-        onClose={() => {
-          setDeleteError(undefined);
-          navigate({ to: '/managed/credentials' });
-        }}
         entity="credential"
         error={deleteError}
         label={selectedCredential?.label || ''}
         loading={isFetchingSelectedCredential}
+        onClose={() => {
+          setDeleteError(undefined);
+          navigate({ to: '/managed/credentials' });
+        }}
         onDelete={handleDelete}
         open={isDeleteDialogOpen}
       />

@@ -51,8 +51,8 @@ describe('DimensionFilterField', () => {
   const user = userEvent.setup();
 
   it('render the fields properly', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilters
             dataFieldDisabled={true}
@@ -68,8 +68,7 @@ describe('DimensionFilterField', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     expect(screen.getByText('Dimension Filter')).toBeVisible();
     expect(screen.getByText('(optional)')).toBeVisible();
     await user.click(
@@ -81,8 +80,8 @@ describe('DimensionFilterField', () => {
   });
 
   it('does not render the dimension filed directly with Metric component', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilters
             dataFieldDisabled={true}
@@ -98,15 +97,14 @@ describe('DimensionFilterField', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const dimensionFilterID = 'rule_criteria.rules.0.dimension_filters.0-id';
     expect(container.queryByTestId(dimensionFilterID)).not.toBeInTheDocument();
   });
 
   it('adds and removes dimension filter fields dynamically', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilters
             dataFieldDisabled={true}
@@ -122,8 +120,7 @@ describe('DimensionFilterField', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
 
     const dimensionFilterID = 'rule_criteria.rules.0.dimension_filters.1-id';
     await user.click(
@@ -147,7 +144,7 @@ describe('DimensionFilterField', () => {
       value: 'free',
     };
     const {
-      getByText,
+      getByText,, findByText
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
         <DimensionFilters
@@ -175,10 +172,6 @@ describe('DimensionFilterField', () => {
     });
     expect(addButton).toBeDisabled();
     userEvent.hover(addButton);
-    await waitFor(() =>
-      expect(
-        getByText('You can add up to 5 dimension filters.')
-      ).toBeInTheDocument()
-    );
+    await findByText('You can add up to 5 dimension filters.');
   });
 });

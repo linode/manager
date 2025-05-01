@@ -19,7 +19,7 @@ describe('redactAccessToken', () => {
     const url = `http://www.linode.com?something#whatever&access_token=ABC123`;
     const result = redactAccessToken(url);
     expect(result).toBe(
-      `http://www.linode.com?something#whatever&access_token=REDACTED`
+      `http://www.linode.com?something#whatever&access_token=REDACTED`,
     );
   });
 });

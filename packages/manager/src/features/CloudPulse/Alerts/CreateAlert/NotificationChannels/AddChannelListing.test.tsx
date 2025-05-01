@@ -44,16 +44,15 @@ describe('Channel Listing component', () => {
         ? mockNotificationData[0].content.email.email_addresses
         : [];
 
-    const {
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <AddChannelListing name="channel_ids" />,
-      useFormOptions: {
-        defaultValues: {
-          channel_ids: [mockNotificationData[0].id],
+    const { getByText } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <AddChannelListing name="channel_ids" />,
+        useFormOptions: {
+          defaultValues: {
+            channel_ids: [mockNotificationData[0].id],
+          },
         },
-      },
-    });
+      });
     expect(getByText('4. Notification Channels')).toBeVisible();
     expect(getByText(capitalize(mockNotificationData[0].label))).toBeVisible();
     expect(getByText(emailAddresses[0])).toBeInTheDocument();
@@ -61,16 +60,15 @@ describe('Channel Listing component', () => {
   });
 
   it('should remove the fields', async () => {
-    const {
-      getByTestId,
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <AddChannelListing name="channel_ids" />,
-      useFormOptions: {
-        defaultValues: {
-          channel_ids: [mockNotificationData[0].id],
+    const { getByTestId } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <AddChannelListing name="channel_ids" />,
+        useFormOptions: {
+          defaultValues: {
+            channel_ids: [mockNotificationData[0].id],
+          },
         },
-      },
-    });
+      });
     const notificationContainer = getByTestId('notification-channel-0');
     expect(notificationContainer).toBeInTheDocument();
 
@@ -84,7 +82,7 @@ describe('Channel Listing component', () => {
     const mockMaxLimit = 5;
     const {
       getByRole,
-      getByText,
+      getByText,, findByText
     } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: <AddChannelListing name="channel_ids" />,
       useFormOptions: {
@@ -100,10 +98,6 @@ describe('Channel Listing component', () => {
 
     expect(addButton).toBeDisabled();
     userEvent.hover(addButton);
-    await waitFor(() =>
-      expect(
-        getByText('You can add up to 5 notification channels.')
-      ).toBeInTheDocument()
-    );
+    await findByText('You can add up to 5 notification channels.');
   });
 });

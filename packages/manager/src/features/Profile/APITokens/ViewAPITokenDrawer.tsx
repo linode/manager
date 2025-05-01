@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
@@ -8,7 +9,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from '@linode/queries';
 
 import {
   StyledAccessCell,

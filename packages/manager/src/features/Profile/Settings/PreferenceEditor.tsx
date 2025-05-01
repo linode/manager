@@ -1,8 +1,8 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Box, Button, Dialog, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 import type { DialogProps } from '@linode/ui';
 
@@ -74,15 +74,15 @@ export const PreferenceEditor = (props: Props) => {
       {loading && <Typography>Loading...</Typography>}
       <div>
         <textarea
+          onChange={(e) => setUserPrefs(e.target.value)}
           style={{
             fontFamily: '"Ubuntu Mono", monospace"',
             height: 300,
             marginTop: 16,
             width: '100%',
           }}
-          onChange={(e) => setUserPrefs(e.target.value)}
           value={userPrefs}
-        ></textarea>
+        />
       </div>
       <Box display="flex" justifyContent="flex-end">
         <Button

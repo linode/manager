@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import type { InferableComponentEnhancerWithProps } from 'react-redux';
 
 import {
   deleteLongviewClient as _delete,
@@ -10,7 +11,6 @@ import {
 import type { Filter, Params } from '@linode/api-v4';
 import type { LongviewClient } from '@linode/api-v4/lib/longview';
 import type { GetAllData } from '@linode/utilities';
-import type { InferableComponentEnhancerWithProps } from 'react-redux';
 import type { ApplicationState } from 'src/store';
 import type { State } from 'src/store/longview/longview.reducer';
 import type { ThunkDispatch } from 'src/store/types';
@@ -63,13 +63,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      const {
-        data,
-        error,
-        lastUpdated,
-        loading,
-        results,
-      } = state.longviewClients;
+      const { data, error, lastUpdated, loading, results } =
+        state.longviewClients;
       if (mapStateToProps) {
         return mapStateToProps(ownProps, {
           longviewClientsData: data,

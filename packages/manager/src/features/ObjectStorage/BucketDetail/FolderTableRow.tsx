@@ -19,22 +19,18 @@ export interface FolderTableRowProps extends TableRowProps {
 }
 
 export const FolderTableRow = (props: FolderTableRowProps) => {
-  const {
-    displayName,
-    folderName,
-    handleClickDelete,
-    ...tableRowProps
-  } = props;
+  const { displayName, folderName, handleClickDelete, ...tableRowProps } =
+    props;
 
   return (
     <TableRow key={folderName} {...tableRowProps}>
       <TableCell>
         <Grid
+          container
+          spacing={2}
           sx={{
             alignItems: 'center',
           }}
-          container
-          spacing={2}
           wrap="nowrap"
         >
           <StyledIconWrapper>

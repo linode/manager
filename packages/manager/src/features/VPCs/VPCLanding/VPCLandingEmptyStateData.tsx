@@ -1,7 +1,7 @@
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -19,8 +19,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Getting Started with VPCs',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-vpc',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-vpc',
     },
     {
       text: 'Create a VPC',
@@ -32,8 +31,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Assign (and Remove) Services',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/assign-a-compute-instance-to-a-vpc',
     },
   ],
   moreInfo: {
