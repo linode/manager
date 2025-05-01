@@ -104,6 +104,7 @@ export const NodeBalancerDetail = () => {
           },
           pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}
+        className="landing-header-mb-4"
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         title={nodeBalancerLabel}
