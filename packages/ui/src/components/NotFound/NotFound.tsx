@@ -28,7 +28,7 @@ export const NotFound = (props: Props) => {
     >
       <ZeroState />
       <Typography variant="h2">Not Found</Typography>
-      <Typography sx={{ mt: 1 }}>Something went wrong!</Typography>
+      <Typography sx={{ mt: 1 }}>This page does not exist.</Typography>
     </Box>
   );
 };
