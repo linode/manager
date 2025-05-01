@@ -132,7 +132,7 @@ export const UpgradeDialog = (props: Props) => {
         {hasUpdatedSuccessfully ? (
           <>
             The cluster’s Kubernetes version has been updated successfully to{' '}
-            <strong>{nextVersion}</strong>. <br /> <br />
+            <strong>{currentVersion}</strong>. <br /> <br />
             To upgrade your existing worker nodes, you can recycle all nodes
             (which may have a performance impact) or perform other upgrade
             methods. When recycling nodes, all nodes are deleted on a rolling
