@@ -14,12 +14,11 @@ export const useSecureVMNoticesEnabled = () => {
   const flags = useFlags();
 
   return {
-    // secureVMNoticesEnabled: getSecureVMNoticesEnabled(
-    //   secureVMsNoticePreference,
-    //   isInternalAccount,
-    //   flags
-    // ),
-    secureVMNoticesEnabled: true,
+    secureVMNoticesEnabled: getSecureVMNoticesEnabled(
+      secureVMsNoticePreference,
+      isInternalAccount,
+      flags
+    ),
   };
 };
 

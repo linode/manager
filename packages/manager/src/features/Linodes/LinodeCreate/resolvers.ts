@@ -87,7 +87,6 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    console.log(context?.secureVMNoticesEnabled, values.firewallOverride)
     // If we're dealing with an employee account and they did not bypass
     // the firewall banner....
     if (context?.secureVMNoticesEnabled && !values.firewallOverride) {
@@ -96,7 +95,7 @@ export const getLinodeCreateResolver = (
         values.interface_generation === 'linode'
           ? values.linodeInterfaces[0].firewall_id
           : values.firewall_id;
-      console.log('here!');
+
       if (!firewallId) {
         (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
           message: 'You must select a Firewall or bypass the Firewall policy.',
