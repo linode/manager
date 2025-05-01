@@ -10,11 +10,11 @@ import type { TextFieldProps } from '@linode/ui';
 import type { CopyTooltipProps } from 'src/components/CopyTooltip/CopyTooltip';
 
 export interface CopyableTextFieldProps extends TextFieldProps {
+  className?: string;
   /**
    * Optional props that are passed to the underlying CopyTooltip component
    */
   CopyTooltipProps?: Partial<CopyTooltipProps>;
-  className?: string;
   hideIcons?: boolean;
   showDownloadIcon?: boolean;
 }
@@ -35,6 +35,9 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
     <StyledTextField
       value={value}
       {...restProps}
+      className={`${className} copy removeDisabledStyles`}
+      data-qa-copy-tooltip
+      disabled
       InputProps={{
         endAdornment: hideIcons ? undefined : (
           <StyledIconBox>
@@ -45,9 +48,6 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
           </StyledIconBox>
         ),
       }}
-      className={`${className} copy removeDisabledStyles`}
-      data-qa-copy-tooltip
-      disabled
     />
   );
 };

@@ -158,11 +158,11 @@ componentTests('Select', (mount) => {
         mount(
           <Select
             {...defaultProps}
+            clearable
             value={{
               label: options[1].label,
               value: options[1].value,
             }}
-            clearable
           />
         );
 
@@ -181,11 +181,11 @@ componentTests('Select', (mount) => {
         mount(
           <Select
             {...defaultProps}
+            clearable={false}
             value={{
               label: options[1].label,
               value: options[1].value,
             }}
-            clearable={false}
           />
         );
 
@@ -221,12 +221,12 @@ componentTests('Select', (mount) => {
         mount(
           <Select
             {...defaultProps}
+            clearable
+            onChange={spyFn}
             value={{
               label: options[1].label,
               value: options[1].value,
             }}
-            clearable
-            onChange={spyFn}
           />
         );
 
@@ -269,7 +269,7 @@ componentTests('Select', (mount) => {
 
   describe('Logic', () => {
     const WrappedSelect = (props: Partial<SelectProps<SelectOption>>) => {
-      const [value, setValue] = React.useState<SelectOption | null | undefined>(
+      const [value, setValue] = React.useState<null | SelectOption | undefined>(
         null
       );
 

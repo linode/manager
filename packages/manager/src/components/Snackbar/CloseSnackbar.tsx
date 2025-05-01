@@ -11,15 +11,15 @@ export const CloseSnackbar = (props: Props) => {
 
   return (
     <IconButton
+      onClick={onClick}
+      size="large"
       sx={(theme) => ({
         color: theme.palette.text.primary,
         padding: theme.spacing(1),
       })}
-      onClick={onClick}
-      size="large"
       title={text}
     >
-      <CloseIcon width={16} height={16} />
+      <CloseIcon height={16} width={16} />
     </IconButton>
   );
 };

@@ -11,9 +11,8 @@ import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/S
 const AccountActivationLanding = () => {
   const history = useHistory();
 
-  const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
-    false
-  );
+  const [supportDrawerIsOpen, toggleSupportDrawer] =
+    React.useState<boolean>(false);
 
   const handleTicketSubmitSuccess = (
     ticketID: number,
@@ -29,6 +28,8 @@ const AccountActivationLanding = () => {
 
   return (
     <ErrorState
+      CustomIcon={Warning}
+      CustomIconStyles={{ color: '#63A701' }}
       errorText={
         <React.Fragment>
           <Typography
@@ -61,8 +62,6 @@ const AccountActivationLanding = () => {
           />
         </React.Fragment>
       }
-      CustomIcon={Warning}
-      CustomIconStyles={{ color: '#63A701' }}
     />
   );
 };

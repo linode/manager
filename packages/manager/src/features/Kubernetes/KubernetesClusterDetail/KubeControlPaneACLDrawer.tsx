@@ -6,9 +6,9 @@ import {
   Drawer,
   FormControlLabel,
   Notice,
+  omittedProps,
   TextField,
   Typography,
-  omittedProps,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {

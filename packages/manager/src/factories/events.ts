@@ -1,6 +1,7 @@
-import { Entity, Event } from '@linode/api-v4/lib/account/types';
 import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
+
+import type { Entity, Event } from '@linode/api-v4/lib/account/types';
 
 export const entityFactory = Factory.Sync.makeFactory<Entity>({
   id: Factory.each((id) => id),

@@ -13,6 +13,9 @@ export const DisabledPlanSelectionTooltip = (
 
   return (
     <Tooltip
+      data-qa-tooltip={tooltipCopy}
+      data-testid="disabled-plan-tooltip"
+      placement="right"
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
@@ -23,9 +26,6 @@ export const DisabledPlanSelectionTooltip = (
       sx={{
         top: -2,
       }}
-      data-qa-tooltip={tooltipCopy}
-      data-testid="disabled-plan-tooltip"
-      placement="right"
       title={tooltipCopy}
     >
       <IconButton disableRipple size="small">

@@ -34,16 +34,16 @@ export const BucketActionMenu = (props: BucketActionMenuProps) => {
     <StyledRootContainer>
       <Hidden mdDown>
         <InlineMenuAction
+          actionText="Details"
           onClick={() => {
             props.onDetails();
           }}
-          actionText="Details"
         />
         <InlineMenuAction
+          actionText="Delete"
           onClick={() => {
             props.onRemove();
           }}
-          actionText="Delete"
         />
       </Hidden>
       <Hidden mdUp>

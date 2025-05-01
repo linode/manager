@@ -20,6 +20,8 @@ export const Confirmation = (props: Props) => {
 
   return (
     <Controller
+      control={control}
+      name="confirmationText"
       render={({ field, fieldState }) => (
         <TypeToConfirm
           confirmationText={
@@ -39,8 +41,6 @@ export const Confirmation = (props: Props) => {
           visible={isTypeToConfirmEnabled}
         />
       )}
-      control={control}
-      name="confirmationText"
     />
   );
 };

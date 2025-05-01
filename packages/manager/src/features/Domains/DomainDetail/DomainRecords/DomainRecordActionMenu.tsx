@@ -48,7 +48,7 @@ export const DomainRecordActionMenu = (props: DomainRecordActionMenuProps) => {
       },
       title: 'Edit',
     },
-    Boolean(props.deleteData)
+    props.deleteData
       ? {
           onClick: () => {
             handleDelete();

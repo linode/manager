@@ -153,6 +153,7 @@ export const DateTimePicker = ({
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box sx={{ minWidth: '300px', ...sx }}>
         <TextField
+          errorText={errorText}
           InputProps={{
             readOnly: true,
             startAdornment: (
@@ -169,6 +170,10 @@ export const DateTimePicker = ({
             ),
             sx: { paddingLeft: '32px' },
           }}
+          label={label}
+          noMarginTop
+          onClick={(event) => setAnchorEl(event.currentTarget)}
+          placeholder={placeholder}
           value={
             selectedDateTime
               ? `${selectedDateTime.toFormat(format)}${generateTimeZone(
@@ -176,11 +181,6 @@ export const DateTimePicker = ({
                 )}`
               : ''
           }
-          errorText={errorText}
-          label={label}
-          noMarginTop
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-          placeholder={placeholder}
         />
       </Box>
       <Popover
@@ -228,11 +228,14 @@ export const DateTimePicker = ({
             {showTime && (
               <Grid item xs={4}>
                 <TimePicker
+                  data-qa-time="time-picker"
+                  label={timeSelectProps?.label || 'Select Time'}
                   minTime={
                     minDate?.toISODate() === selectedDateTime?.toISODate()
                       ? minDate
                       : undefined
                   }
+                  onChange={handleTimeChange}
                   slotProps={{
                     actionBar: {
                       sx: (theme: Theme) => ({
@@ -265,9 +268,6 @@ export const DateTimePicker = ({
                   sx={{
                     marginTop: 0,
                   }}
-                  data-qa-time="time-picker"
-                  label={timeSelectProps?.label || 'Select Time'}
-                  onChange={handleTimeChange}
                   value={selectedDateTime || null}
                 />
               </Grid>
@@ -288,6 +288,7 @@ export const DateTimePicker = ({
         <Divider />
         <Box display="flex" justifyContent="flex-end">
           <ActionsPanel
+            primaryButtonProps={{ label: 'Apply', onClick: handleApply }}
             secondaryButtonProps={{
               buttonType: 'outlined',
               label: 'Cancel',
@@ -297,7 +298,6 @@ export const DateTimePicker = ({
               marginBottom: theme.spacing(1),
               marginRight: theme.spacing(2),
             })}
-            primaryButtonProps={{ label: 'Apply', onClick: handleApply }}
           />
         </Box>
       </Popover>
@@ -306,8 +306,9 @@ export const DateTimePicker = ({
 };
 
 const generateTimeZone = (selectedTimezone: null | string): string => {
-  const offset = timezones.find((zone) => zone.name === selectedTimezone)
-    ?.offset;
+  const offset = timezones.find(
+    (zone) => zone.name === selectedTimezone
+  )?.offset;
   if (!offset) {
     return '';
   }

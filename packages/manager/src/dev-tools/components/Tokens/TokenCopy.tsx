@@ -30,13 +30,13 @@ export const TokenValue = ({
       }}
     >
       <Box
+        component="span"
         sx={{
           display: 'inline-block',
           mr: 1,
           textAlign: 'right',
           width: 40,
         }}
-        component="span"
       >
         <Typography
           sx={{
@@ -47,6 +47,7 @@ export const TokenValue = ({
         </Typography>
       </Box>{' '}
       <Box
+        component="span"
         sx={{
           background: Color.Neutrals[5],
           border: `1px solid ${Border.Normal}`,
@@ -57,7 +58,6 @@ export const TokenValue = ({
           px: 0.5,
           whiteSpace: 'nowrap',
         }}
-        component="span"
       >
         {value}
       </Box>

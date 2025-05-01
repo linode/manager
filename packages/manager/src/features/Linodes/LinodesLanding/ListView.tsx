@@ -17,10 +17,14 @@ export const ListView = (props: RenderLinodesProps) => {
   }
 
   return (
-    // eslint-disable-next-line
     <>
       {data.map((linode, idx: number) => (
         <LinodeRow
+          alerts={linode.alerts}
+          backups={linode.backups}
+          capabilities={linode.capabilities}
+          created={linode.created}
+          group={linode.group}
           handlers={{
             onOpenDeleteDialog: () =>
               openDialog('delete', linode.id, linode.label),
@@ -35,11 +39,6 @@ export const ListView = (props: RenderLinodesProps) => {
             onOpenResizeDialog: () =>
               openDialog('resize', linode.id, linode.label),
           }}
-          alerts={linode.alerts}
-          backups={linode.backups}
-          capabilities={linode.capabilities}
-          created={linode.created}
-          group={linode.group}
           hypervisor={linode.hypervisor}
           id={linode.id}
           image={linode.image}

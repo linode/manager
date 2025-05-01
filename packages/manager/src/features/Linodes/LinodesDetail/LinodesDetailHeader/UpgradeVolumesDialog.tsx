@@ -63,12 +63,12 @@ export const UpgradeVolumesDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
+      actions={actions}
       error={
         error
           ? getAPIErrorOrDefault(error, 'Unable to migrate volumes.')[0].reason
           : undefined
       }
-      actions={actions}
       onClose={onClose}
       open={open}
       title={`Upgrade Volume${numUpgradeableVolumes === 1 ? '' : 's'}`}

@@ -2,10 +2,11 @@ import { Box, Button, Stack, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { useAllAlertNotificationChannelsQuery } from 'src/queries/cloudpulse/alerts';
 
-import { MULTILINE_ERROR_SEPARATOR, channelTypeOptions } from '../../constants';
+import { channelTypeOptions, MULTILINE_ERROR_SEPARATOR } from '../../constants';
 import { AlertListNoticeMessages } from '../../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { ClearIconButton } from '../Criteria/ClearIconButton';
@@ -14,7 +15,6 @@ import { RenderChannelDetails } from './RenderChannelDetails';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { NotificationChannel } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface AddChannelListingProps {
   /**
@@ -91,15 +91,15 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
       const { id, notification } = props;
       return (
         <Box
+          data-qa-notification={`notification-channel-${id}`}
+          data-testid={`notification-channel-${id}`}
+          key={id}
           sx={(theme) => ({
             ...getAlertBoxStyles(theme),
             borderRadius: 1,
             overflow: 'auto',
             padding: theme.spacing(2),
           })}
-          data-qa-notification={`notification-channel-${id}`}
-          data-testid={`notification-channel-${id}`}
-          key={id}
         >
           <Stack direction="row" justifyContent="space-between">
             <Typography data-qa-channel marginBottom={2} variant="h3">
@@ -140,6 +140,8 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
 
   return (
     <Controller
+      control={control}
+      name={name}
       render={({ fieldState, formState }) => (
         <Stack mt={3} spacing={2}>
           <Typography variant="h2">4. Notification Channels</Typography>
@@ -164,15 +166,15 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
             </Stack>
           )}
           <Button
-            sx={{
-              width:
-                notificationChannelWatcher.length === 5 ? '215px' : '190px',
-            }}
             buttonType="outlined"
             data-qa-buttons="true"
             disabled={notificationChannelWatcher.length === 5}
             onClick={handleOpenDrawer}
             size="medium"
+            sx={{
+              width:
+                notificationChannelWatcher.length === 5 ? '215px' : '190px',
+            }}
             tooltipText="You can add up to 5 notification channels."
           >
             Add notification channel
@@ -188,8 +190,6 @@ export const AddChannelListing = (props: AddChannelListingProps) => {
           />
         </Stack>
       )}
-      control={control}
-      name={name}
     />
   );
 };

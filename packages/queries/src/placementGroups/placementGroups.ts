@@ -34,10 +34,10 @@ import type {
 
 const getAllPlacementGroupsRequest = (
   _params: Params = {},
-  _filter: Filter = {}
+  _filter: Filter = {},
 ) =>
   getAll<PlacementGroup>((params, filter) =>
-    getPlacementGroups({ ...params, ..._params }, { ...filter, ..._filter })
+    getPlacementGroups({ ...params, ..._params }, { ...filter, ..._filter }),
   )().then((data) => data.data);
 
 export const placementGroupQueries = createQueryKeys('placement-groups', {
@@ -74,7 +74,7 @@ export const useAllPlacementGroupsQuery = ({
 export const usePlacementGroupsQuery = (
   params: Params,
   filter: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery<ResourcePage<PlacementGroup>, APIError[]>({
     enabled,
@@ -84,7 +84,7 @@ export const usePlacementGroupsQuery = (
 
 export const usePlacementGroupQuery = (
   placementGroupId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<PlacementGroup, APIError[]>({
     enabled,
@@ -106,7 +106,7 @@ export const useCreatePlacementGroup = () => {
       });
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(placementGroup.id).queryKey,
-        placementGroup
+        placementGroup,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -131,7 +131,7 @@ export const useMutatePlacementGroup = (id: number) => {
       });
       queryClient.setQueryData<PlacementGroup>(
         placementGroupQueries.placementGroup(id).queryKey,
-        placementGroup
+        placementGroup,
       );
     },
   });
@@ -173,8 +173,8 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
         queryKey: placementGroupQueries.all._def,
       });
       queryClient.invalidateQueries({
-        queryKey: placementGroupQueries.placementGroup(placementGroupId)
-          .queryKey,
+        queryKey:
+          placementGroupQueries.placementGroup(placementGroupId).queryKey,
       });
 
       queryClient.invalidateQueries(linodeQueries.linodes);
@@ -190,7 +190,7 @@ export const useAssignLinodesToPlacementGroup = (placementGroupId: number) => {
 };
 
 export const useUnassignLinodesFromPlacementGroup = (
-  placementGroupId: number
+  placementGroupId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<
@@ -208,8 +208,8 @@ export const useUnassignLinodesFromPlacementGroup = (
         queryKey: placementGroupQueries.all._def,
       });
       queryClient.invalidateQueries({
-        queryKey: placementGroupQueries.placementGroup(placementGroupId)
-          .queryKey,
+        queryKey:
+          placementGroupQueries.placementGroup(placementGroupId).queryKey,
       });
 
       queryClient.invalidateQueries(linodeQueries.linodes);

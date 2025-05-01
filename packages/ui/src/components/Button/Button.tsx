@@ -4,8 +4,9 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { omittedProps } from '../../utilities';
-import { Tooltip, TooltipProps } from '../Tooltip';
+import { Tooltip } from '../Tooltip';
 
+import type { TooltipProps } from '../Tooltip';
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/material/styles';
 
@@ -51,12 +52,12 @@ export interface ButtonProps extends _ButtonProps {
   sxEndIcon?: SxProps<Theme>;
   /** Tooltip analytics event */
   tooltipAnalyticsEvent?: () => void;
-  /** Tooltip text */
-  tooltipText?: string | JSX.Element;
   /**
    * Optional props passed to the tooltip
    */
   TooltipProps?: Partial<TooltipProps>;
+  /** Tooltip text */
+  tooltipText?: JSX.Element | string;
 }
 
 const StyledButton = styled(_Button, {
@@ -90,7 +91,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       TooltipProps,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const showTooltip = alwaysShowTooltip || (disabled && Boolean(tooltipText));
 
@@ -116,14 +117,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-describedby={
           showTooltip ? 'button-tooltip' : rest['aria-describedby']
         }
-        endIcon={
-          (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
-        }
         aria-disabled={disabled}
         buttonType={buttonType}
         color={(color === 'error' && color) || buttonTypeToColor[buttonType]}
         data-testid={rest['data-testid'] || 'button'}
         disableRipple={disabled || rest.disableRipple}
+        endIcon={
+          (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
+        }
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
         ref={ref}
@@ -147,5 +148,5 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     }
 
     return button;
-  }
+  },
 );

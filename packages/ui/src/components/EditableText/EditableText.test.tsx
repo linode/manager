@@ -19,7 +19,7 @@ const SAVE_BUTTON_ICON = 'CheckIcon';
 describe('Editable Text', () => {
   it('renders an Editable Text input', () => {
     const { getByLabelText, getByText } = renderWithTheme(
-      <EditableText {...props} />
+      <EditableText {...props} />,
     );
 
     const text = getByText('Edit this');
@@ -31,7 +31,7 @@ describe('Editable Text', () => {
 
   it('shows error text', () => {
     const { getByText } = renderWithTheme(
-      <EditableText {...props} errorText="this is an error" />
+      <EditableText {...props} errorText="this is an error" />,
     );
 
     const errorText = getByText('this is an error');
@@ -40,7 +40,7 @@ describe('Editable Text', () => {
 
   it('can switch between a label and a textfield', () => {
     const { getByLabelText, getByTestId, queryByTestId } = renderWithTheme(
-      <EditableText {...props} />
+      <EditableText {...props} />,
     );
 
     const button = getByLabelText(BUTTON_LABEL);
@@ -68,7 +68,7 @@ describe('Editable Text', () => {
 
   it('does not call onEdit if there are no changes to the text', () => {
     const { getByLabelText, getByTestId, queryByTestId } = renderWithTheme(
-      <EditableText {...props} />
+      <EditableText {...props} />,
     );
     const button = getByLabelText(BUTTON_LABEL);
     expect(button).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe('Editable Text', () => {
 
   it('calls onEdit if the text has been changed', async () => {
     const { getByLabelText, getByTestId } = renderWithTheme(
-      <EditableText {...props} />
+      <EditableText {...props} />,
     );
     const button = getByLabelText(BUTTON_LABEL);
     expect(button).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('Editable Text', () => {
 
   it('appends a suffix to the text when provided', () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <EditableText {...props} textSuffix=" suffix" />
+      <EditableText {...props} textSuffix=" suffix" />,
     );
 
     const text = getByText('Edit this suffix');

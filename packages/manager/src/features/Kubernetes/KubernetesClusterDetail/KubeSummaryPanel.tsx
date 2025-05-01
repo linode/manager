@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -20,7 +21,6 @@ import {
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useAccount } from '@linode/queries';
 import {
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
@@ -50,16 +50,12 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  const [
-    isControlPlaneACLDrawerOpen,
-    setControlPlaneACLDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [isControlPlaneACLDrawerOpen, setControlPlaneACLDrawerOpen] =
+    React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  const {
-    data: dashboard,
-    error: dashboardError,
-  } = useKubernetesDashboardQuery(cluster.id);
+  const { data: dashboard, error: dashboardError } =
+    useKubernetesDashboardQuery(cluster.id);
 
   const {
     error: resetKubeConfigError,
@@ -81,10 +77,8 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const [
-    resetKubeConfigDialogOpen,
-    setResetKubeConfigDialogOpen,
-  ] = React.useState(false);
+  const [resetKubeConfigDialogOpen, setResetKubeConfigDialogOpen] =
+    React.useState(false);
 
   const handleResetKubeConfig = () => {
     return resetKubeConfig({ id: cluster.id }).then(() => {
@@ -104,15 +98,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
       <EntityDetail
         body={
           <Stack
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
             sx={(theme) => ({
               padding: theme.spacing(2),
               [theme.breakpoints.down('sm')]: {
                 padding: theme.spacing(1),
               },
             })}
-            direction="row"
-            flexWrap="wrap"
-            gap={2}
           >
             <KubeClusterSpecs cluster={cluster} />
             <KubeConfigDisplay
@@ -123,6 +117,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
             <ClusterChips
+              cluster={cluster}
               sx={(theme) => ({
                 position: 'absolute',
                 right: theme.spacing(3),
@@ -133,7 +128,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                   flexDirection: 'column',
                 },
               })}
-              cluster={cluster}
             />
           </Stack>
         }

@@ -30,7 +30,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
   const invoices = [
     // eslint-disable-next-line
     invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
-    // eslint-disable-next-line
+
     invoiceFactory.build({ date: '2019-12-01T00:00:00' }),
   ];
   const payments = [

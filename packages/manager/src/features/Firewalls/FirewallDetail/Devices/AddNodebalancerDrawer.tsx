@@ -173,12 +173,12 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={() => {
         setSelectedNodebalancers([]);
         setLocalError(undefined);
         onClose();
       }}
-      NotFoundComponent={NotFound}
       open={open}
       title={`Add Nodebalancer to Firewall: ${firewall?.label}`}
     >
@@ -195,12 +195,12 @@ export const AddNodebalancerDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <NodeBalancerSelect
-          onSelectionChange={(nodebalancers) =>
-            setSelectedNodebalancers(nodebalancers)
-          }
           disabled={isLoading}
           helperText={helperText}
           multiple
+          onSelectionChange={(nodebalancers) =>
+            setSelectedNodebalancers(nodebalancers)
+          }
           optionsFilter={nodebalancerOptionsFilter}
           value={selectedNodebalancers.map((nodebalancer) => nodebalancer.id)}
         />

@@ -1,13 +1,13 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertServiceType } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseResourceSelectProps {
   /**
@@ -34,7 +34,11 @@ export const CloudPulseMultiResourceSelect = (
   const { engine, name, region, serviceType } = { ...props };
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
-  const { data: resources, isError, isLoading } = useResourcesQuery(
+  const {
+    data: resources,
+    isError,
+    isLoading,
+  } = useResourcesQuery(
     Boolean(region && serviceType),
     serviceType?.toString(),
     {},
@@ -60,16 +64,30 @@ export const CloudPulseMultiResourceSelect = (
 
   return (
     <Controller
+      control={control}
+      name={name}
       render={({ field, fieldState }) => (
         <Autocomplete
+          autoHighlight
+          clearOnBlur
+          data-testid="resource-select"
+          disabled={!(region && serviceType)}
           errorText={
             fieldState.error?.message ??
             (isError ? 'Failed to fetch the resources.' : '')
           }
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          label={serviceType === 'dbaas' ? 'Clusters' : 'Resources'}
+          limitTags={2}
+          loading={isLoading && Boolean(region && serviceType)}
+          multiple
+          onBlur={field.onBlur}
           onChange={(_, resources: { label: string; value: string }[]) => {
             const resourceIds = resources.map((resource) => resource.value);
             field.onChange(resourceIds);
           }}
+          options={getResourcesList}
+          placeholder="Select Resources"
           value={
             field.value
               ? getResourcesList.filter((resource) =>
@@ -77,22 +95,8 @@ export const CloudPulseMultiResourceSelect = (
                 )
               : []
           }
-          autoHighlight
-          clearOnBlur
-          data-testid="resource-select"
-          disabled={!Boolean(region && serviceType)}
-          isOptionEqualToValue={(option, value) => option.value === value.value}
-          label={serviceType === 'dbaas' ? 'Clusters' : 'Resources'}
-          limitTags={2}
-          loading={isLoading && Boolean(region && serviceType)}
-          multiple
-          onBlur={field.onBlur}
-          options={getResourcesList}
-          placeholder="Select Resources"
         />
       )}
-      control={control}
-      name={name}
     />
   );
 };

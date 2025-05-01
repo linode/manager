@@ -30,12 +30,12 @@ import type { Filter, Params } from '@linode/api-v4';
  */
 export const getStatusFilter = (ticketStatus: 'all' | 'closed' | 'open') => {
   switch (ticketStatus) {
-    case 'open':
-      return { '+or': [{ status: 'open' }, { status: 'new' }] };
-    case 'closed':
-      return { status: 'closed' };
     case 'all':
       return {};
+    case 'closed':
+      return { status: 'closed' };
+    case 'open':
+      return { '+or': [{ status: 'open' }, { status: 'new' }] };
     default:
       return new Error('Argument must be "open", "closed", or "all"');
   }
@@ -89,10 +89,9 @@ export const formatDescription = (
   ticketType: TicketType
 ) => {
   type customFieldTuple = [string, string | undefined];
-  const customFields: customFieldTuple[] = Object.entries(
-    values
-  ).filter(([key, _value]: customFieldTuple) =>
-    TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP[ticketType]?.includes(key)
+  const customFields: customFieldTuple[] = Object.entries(values).filter(
+    ([key, _value]: customFieldTuple) =>
+      TICKET_TYPE_TO_CUSTOM_FIELD_KEYS_MAP[ticketType]?.includes(key)
   );
 
   // If there are no custom fields, just return the initial description.

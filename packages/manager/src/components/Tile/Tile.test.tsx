@@ -3,7 +3,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Tile, TileProps } from './Tile'; // Assuming the Tile component is in the same directory
+import { Tile } from './Tile'; // Assuming the Tile component is in the same directory
+
+import type { TileProps } from './Tile';
 
 describe('Tile Component', () => {
   const defaultProps: TileProps = {

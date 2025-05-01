@@ -61,11 +61,6 @@ export const ClusterTierPanel = (props: Props) => {
           sxCardBase={{ padding: '16px' }}
         />
         <SelectionCard
-          tooltip={
-            isLkeEnterpriseSelectionDisabled && !isUserRestricted
-              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
-              : undefined
-          }
           checked={selectedTier === 'enterprise' && !isUserRestricted}
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           gridSize={{ xs: 12, sm: 6, md: 4 }}
@@ -73,6 +68,11 @@ export const ClusterTierPanel = (props: Props) => {
           onClick={() => handleClusterTierSelection('enterprise')}
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
+          tooltip={
+            isLkeEnterpriseSelectionDisabled && !isUserRestricted
+              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
+              : undefined
+          }
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
       </Grid2>

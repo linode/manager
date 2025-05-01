@@ -77,8 +77,8 @@ export const SubnetEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title="Edit Subnet"
@@ -94,6 +94,8 @@ export const SubnetEditDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -105,8 +107,6 @@ export const SubnetEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <TextField
           disabled

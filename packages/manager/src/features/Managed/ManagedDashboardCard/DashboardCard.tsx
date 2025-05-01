@@ -19,13 +19,8 @@ interface DashboardCardProps {
 }
 
 const DashboardCard = (props: DashboardCardProps) => {
-  const {
-    alignHeader,
-    alignItems,
-    headerAction,
-    noHeaderActionStyles,
-    title,
-  } = props;
+  const { alignHeader, alignItems, headerAction, noHeaderActionStyles, title } =
+    props;
 
   const ConditionalTypography = !noHeaderActionStyles
     ? StyledTypography

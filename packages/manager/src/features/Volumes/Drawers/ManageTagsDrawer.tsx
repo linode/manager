@@ -12,7 +12,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 export const ManageTagsDrawer = (props: Props) => {
@@ -69,8 +69,8 @@ export const ManageTagsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Manage Volume Tags"
@@ -86,20 +86,20 @@ export const ManageTagsDrawer = (props: Props) => {
         {errors?.root && <Notice text={errors.root.message} variant="error" />}
 
         <Controller
+          control={control}
+          name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              onChange={(selected) =>
-                field.onChange(selected.map((item) => item.value))
-              }
               disabled={isReadOnly}
               label="Tags"
               name="tags"
+              onChange={(selected) =>
+                field.onChange(selected.map((item) => item.value))
+              }
               tagError={fieldState.error?.message}
               value={field.value.map((t) => ({ label: t, value: t })) ?? []}
             />
           )}
-          control={control}
-          name="tags"
         />
 
         <ActionsPanel

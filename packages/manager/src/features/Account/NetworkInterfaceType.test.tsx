@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { accountSettingsFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NetworkInterfaceType } from './NetworkInterfaceType';

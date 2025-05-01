@@ -64,13 +64,13 @@ export const LinodeDiskRow = React.memo((props: Props) => {
           >
             {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
+              max={100}
+              narrow
+              rounded
               sx={{
                 paddingLeft: theme.spacing(),
                 width: 250,
               }}
-              max={100}
-              narrow
-              rounded
               value={event?.percent_complete ?? 0}
             />
           </div>

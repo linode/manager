@@ -1,10 +1,12 @@
-import { Linode, deleteLinode, getLinodes } from '@linode/api-v4';
+import { deleteLinode, getLinodes } from '@linode/api-v4';
 import { linodeFactory } from '@linode/utilities';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
 import { deleteById, isTestLabel } from './common';
+
+import type { Linode } from '@linode/api-v4';
 
 export const createMockLinodeList = (data?: {}, listNumber: number = 1) => {
   return makeResourcePage(

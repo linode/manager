@@ -17,7 +17,7 @@ describe('NewFeatureChip', () => {
   it('triggers an onClick callback', () => {
     const onClickMock = vi.fn();
     const { getByTestId } = renderWithTheme(
-      <NewFeatureChip onClick={onClickMock} />
+      <NewFeatureChip onClick={onClickMock} />,
     );
     const newFeatureChip = getByTestId('newFeatureChip');
     fireEvent.click(newFeatureChip);

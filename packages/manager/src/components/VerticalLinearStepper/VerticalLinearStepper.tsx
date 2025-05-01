@@ -88,6 +88,7 @@ export const VerticalLinearStepper = ({
       {/* Right Column - Stepper Content */}
       <Box sx={{ flex: 2 }}>
         <Stepper
+          activeStep={activeStep}
           connector={
             <StepConnector
               sx={{
@@ -100,7 +101,6 @@ export const VerticalLinearStepper = ({
               }}
             />
           }
-          activeStep={activeStep}
           orientation="vertical"
         >
           {steps.map(({ content, handler, label }, index) => (
@@ -136,6 +136,7 @@ export const VerticalLinearStepper = ({
                     )}
                     {index !== 2 && (
                       <Button
+                        buttonType="primary"
                         /* Generate a 'data-testid' attribute value based on the label of the next step.
                             1. toLocaleLowerCase(): Converts the label to lowercase for consistency.
                             2. replace(/\s/g, ''): Removes spaces from the label to create a valid test ID.
@@ -147,7 +148,6 @@ export const VerticalLinearStepper = ({
                           handleNext();
                           handler?.();
                         }}
-                        buttonType="primary"
                         sx={{ mr: 1, mt: 1 }}
                       >
                         Next: {steps[index + 1]?.label}

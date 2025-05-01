@@ -1,7 +1,9 @@
-import { Profile, getProfile } from '@linode/api-v4';
+import { getProfile } from '@linode/api-v4';
 
 import { configureLinodeApi, defaultApiRoot } from '../util/api';
-import { CypressPlugin } from './plugin';
+
+import type { CypressPlugin } from './plugin';
+import type { Profile } from '@linode/api-v4';
 
 /**
  * Configures API requests to use configure access token and API root.
@@ -30,7 +32,7 @@ export const configureApi: CypressPlugin = async (
 
   // Configure API, attempt to make an API request.
   configureLinodeApi(token, apiBaseUrl);
-  let profile: Profile | null = null;
+  let profile: null | Profile = null;
   try {
     profile = await getProfile();
 

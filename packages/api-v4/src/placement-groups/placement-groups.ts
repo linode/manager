@@ -2,8 +2,8 @@ import {
   createPlacementGroupSchema,
   updatePlacementGroupSchema,
 } from '@linode/validation';
-import { API_ROOT } from '../constants';
 
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -11,7 +11,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import type { Filter, Params, ResourcePage as Page } from '../types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   AssignLinodesToPlacementGroupPayload,
   CreatePlacementGroupPayload,
@@ -30,7 +31,7 @@ export const getPlacementGroups = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/placement/groups`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -43,9 +44,9 @@ export const getPlacementGroups = (params?: Params, filter?: Filter) =>
 export const getPlacementGroup = (placementGroupId: number) =>
   Request<PlacementGroup>(
     setURL(
-      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`
+      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -59,7 +60,7 @@ export const createPlacementGroup = (data: CreatePlacementGroupPayload) =>
   Request<PlacementGroup>(
     setURL(`${API_ROOT}/placement/groups`),
     setMethod('POST'),
-    setData(data, createPlacementGroupSchema)
+    setData(data, createPlacementGroupSchema),
   );
 
 /**
@@ -72,14 +73,14 @@ export const createPlacementGroup = (data: CreatePlacementGroupPayload) =>
  */
 export const updatePlacementGroup = (
   placementGroupId: number,
-  data: UpdatePlacementGroupPayload
+  data: UpdatePlacementGroupPayload,
 ) =>
   Request<PlacementGroup>(
     setURL(
-      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`
+      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`,
     ),
     setMethod('PUT'),
-    setData(data, updatePlacementGroupSchema)
+    setData(data, updatePlacementGroupSchema),
   );
 
 /**
@@ -92,9 +93,9 @@ export const updatePlacementGroup = (
 export const deletePlacementGroup = (placementGroupId: number) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`
+      `${API_ROOT}/placement/groups/${encodeURIComponent(placementGroupId)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -109,16 +110,16 @@ export const deletePlacementGroup = (placementGroupId: number) =>
  */
 export const assignLinodesToPlacementGroup = (
   placementGroupId: number,
-  payload: AssignLinodesToPlacementGroupPayload
+  payload: AssignLinodesToPlacementGroupPayload,
 ) =>
   Request<PlacementGroup>(
     setURL(
       `${API_ROOT}/placement/groups/${encodeURIComponent(
-        placementGroupId
-      )}/assign`
+        placementGroupId,
+      )}/assign`,
     ),
     setMethod('POST'),
-    setData(payload)
+    setData(payload),
   );
 
 /**
@@ -133,14 +134,14 @@ export const assignLinodesToPlacementGroup = (
  */
 export const unassignLinodesFromPlacementGroup = (
   placementGroupId: number,
-  payload: UnassignLinodesFromPlacementGroupPayload
+  payload: UnassignLinodesFromPlacementGroupPayload,
 ) =>
   Request<PlacementGroup>(
     setURL(
       `${API_ROOT}/placement/groups/${encodeURIComponent(
-        placementGroupId
-      )}/unassign`
+        placementGroupId,
+      )}/unassign`,
     ),
     setMethod('POST'),
-    setData(payload)
+    setData(payload),
   );

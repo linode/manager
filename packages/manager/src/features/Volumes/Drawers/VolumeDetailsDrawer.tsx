@@ -10,7 +10,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 export const VolumeDetailsDrawer = (props: Props) => {
@@ -18,8 +18,8 @@ export const VolumeDetailsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Volume Configuration"

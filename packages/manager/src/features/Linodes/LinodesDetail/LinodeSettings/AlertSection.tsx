@@ -1,15 +1,15 @@
 import {
   Box,
   Divider,
+  fadeIn,
   FormControlLabel,
   InputAdornment,
   TextField,
   Toggle,
   Typography,
-  fadeIn,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 interface Props {
@@ -45,6 +45,9 @@ export const AlertSection = (props: Props) => {
   return (
     <>
       <Grid
+        container
+        data-qa-alerts-panel
+        spacing={2}
         sx={{
           '&:last-of-type': {
             marginBottom: 0,
@@ -56,19 +59,16 @@ export const AlertSection = (props: Props) => {
           flex: 1,
           marginBottom: theme.spacing(2),
         }}
-        container
-        data-qa-alerts-panel
-        spacing={2}
       >
         <Grid
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
           size={{
             lg: 7,
             md: 9,
             xs: 12,
+          }}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
           <Box>
@@ -80,6 +80,8 @@ export const AlertSection = (props: Props) => {
                   onChange={onStateChange}
                 />
               }
+              data-qa-alert={title}
+              label={title}
               sx={{
                 '& > span:last-child': {
                   ...theme.typography.h3,
@@ -88,8 +90,6 @@ export const AlertSection = (props: Props) => {
                   paddingLeft: '12px',
                 },
               }}
-              data-qa-alert={title}
-              label={title}
             />
           </Box>
           <Box
@@ -104,6 +104,11 @@ export const AlertSection = (props: Props) => {
           </Box>
         </Grid>
         <Grid
+          size={{
+            lg: 5,
+            md: 3,
+            xs: 12,
+          }}
           sx={{
             paddingBottom: '0',
             paddingTop: '0',
@@ -111,18 +116,20 @@ export const AlertSection = (props: Props) => {
               paddingLeft: '78px',
             },
           }}
-          size={{
-            lg: 5,
-            md: 3,
-            xs: 12,
-          }}
         >
           <TextField
+            disabled={!state || readOnly}
+            error={Boolean(error)}
+            errorText={error}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">{endAdornment}</InputAdornment>
               ),
             }}
+            label={textTitle}
+            max={Infinity}
+            min={0}
+            onChange={onValueChange}
             sx={{
               '.MuiInput-root': {
                 animation: `${fadeIn} .3s ease-in-out forwards`,
@@ -130,13 +137,6 @@ export const AlertSection = (props: Props) => {
                 maxWidth: 150,
               },
             }}
-            disabled={!state || readOnly}
-            error={Boolean(error)}
-            errorText={error}
-            label={textTitle}
-            max={Infinity}
-            min={0}
-            onChange={onValueChange}
             type="number"
             value={value}
           />

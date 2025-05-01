@@ -5,8 +5,8 @@ import {
   regionFactory,
 } from '@linode/utilities';
 import {
-  VLANFactory,
   linodeConfigFactory,
+  VLANFactory,
   volumeFactory,
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
@@ -27,10 +27,10 @@ import {
   mockCloneLinode,
   mockCreateLinode,
   mockGetLinodeDetails,
+  mockGetLinodes,
   mockGetLinodeType,
   mockGetLinodeTypes,
   mockGetLinodeVolumes,
-  mockGetLinodes,
 } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';

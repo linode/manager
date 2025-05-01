@@ -13,12 +13,12 @@ export const PreviewReply = (props: Props) => {
 
   return (
     <Paper
+      error={error}
       sx={{
         height: '243px',
         overflowY: 'auto',
         padding: 1.75,
       }}
-      error={error}
       variant="outlined"
     >
       <Markdown textOrMarkdown={value} />

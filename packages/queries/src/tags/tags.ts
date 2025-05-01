@@ -24,12 +24,12 @@ export const useAllTagsQuery = (enabled = true) =>
 
 const getAllTags = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Tag>((params, filter) =>
-    getTags({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+    getTags({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
   )().then((data) => data.data);
 
 export const updateTagsSuggestionsData = (
   newData: Tag[],
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): void => {
   const uniqueTags = Array.from(new Set(newData.map((tag) => tag.label)))
     .sort()

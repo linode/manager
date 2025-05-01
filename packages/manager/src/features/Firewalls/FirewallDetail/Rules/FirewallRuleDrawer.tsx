@@ -74,7 +74,6 @@ export const FirewallRuleDrawer = React.memo(
     }: FormState) => {
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
-        // eslint-disable-next-line sonarjs/no-duplicate-string
         allowEmptyAddress: addresses !== 'ip/netmask',
       });
       setIPs(validatedIPs);

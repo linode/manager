@@ -1,4 +1,9 @@
 import { PLACEMENT_GROUP_TYPES } from '@linode/api-v4';
+import {
+  useMutatePlacementGroup,
+  usePlacementGroupQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -8,11 +13,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  useMutatePlacementGroup,
-  usePlacementGroupQuery,
-  useRegionsQuery,
-} from '@linode/queries';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
@@ -99,11 +99,11 @@ export const PlacementGroupsDetail = () => {
       />
       {isLinodeReadOnly && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'edit',
             resourceType: 'Placement Groups',
           })}
-          spacingTop={16}
           variant="warning"
         />
       )}

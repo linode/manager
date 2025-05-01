@@ -4,7 +4,7 @@ import type { Config } from '@linode/api-v4';
 // to this in order to address the flickering 'Reboot Needed' status issue (see PR#9893).
 // NOTE: This logic only works for linodes with one configuration/one vpc interface, and will lead to VERY CONFUSING results for linodes with multiple configurations.
 export const manuallySetVPCConfigInterfacesToActive = (
-  configs: Config[]
+  configs: Config[],
 ): Config[] => {
   return configs.map((config) => {
     return {

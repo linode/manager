@@ -7,9 +7,8 @@ import { useState } from 'react';
  * @returns { hasFormBeenSubmitted: boolean, setHasFormBeenSubmitted: (value: boolean) => void }
  */
 export const useFormValidateOnChange = () => {
-  const [hasFormBeenSubmitted, _setHasFormBeenSubmitted] = useState<boolean>(
-    false
-  );
+  const [hasFormBeenSubmitted, _setHasFormBeenSubmitted] =
+    useState<boolean>(false);
 
   const setHasFormBeenSubmitted = (value: boolean) => {
     _setHasFormBeenSubmitted(value);

@@ -251,7 +251,7 @@ export const useAddFirewallDeviceMutation = () => {
 export const useRemoveFirewallDeviceMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], { firewallId: number; deviceId: number }>({
+  return useMutation<{}, APIError[], { deviceId: number; firewallId: number }>({
     mutationFn: ({ firewallId, deviceId }) =>
       deleteFirewallDevice(firewallId, deviceId),
     onSuccess(data, { firewallId, deviceId }) {

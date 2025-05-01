@@ -30,13 +30,13 @@ export const TableCell = (props: TableCellProps) => {
 
   return (
     <_TableCell
+      className={className}
       sx={{
         paddingRight: actionCell ? 0 : '',
         textAlign: actionCell ? 'right' : center ? 'center' : '',
         textTransform: statusCell ? 'capitalize' : '',
         whiteSpace: noWrap ? 'nowrap' : '',
       }}
-      className={className}
       {...rest}
     >
       {statusCell ? (

@@ -166,12 +166,12 @@ export const AddCreditCardForm = (props: Props) => {
       <Grid container spacing={1}>
         <Grid size={12}>
           <TextField
-            InputProps={{
-              inputComponent: creditCardField,
-            }}
             disabled={disableInput}
             error={touched.card_number && Boolean(errors.card_number)}
             errorText={touched.card_number ? errors.card_number : undefined}
+            InputProps={{
+              inputComponent: creditCardField,
+            }}
             label="Credit Card Number"
             name="card_number"
             onChange={(e) => setFieldValue('card_number', e.target.value)}
@@ -185,6 +185,7 @@ export const AddCreditCardForm = (props: Props) => {
           }}
         >
           <TextField
+            disabled={disableInput}
             error={
               (touched.expiry_month || touched.expiry_year) &&
               Boolean(errors.expiry_month || errors.expiry_year)
@@ -194,7 +195,6 @@ export const AddCreditCardForm = (props: Props) => {
                 ? errors.expiry_month || errors.expiry_year
                 : undefined
             }
-            disabled={disableInput}
             inputRef={expiryRef}
             label="Expiration Date"
             name="expiry"
@@ -252,6 +252,8 @@ const creditCardField = ({
   return (
     <NumberFormat
       {...other}
+      format="#### #### #### #######"
+      getInputRef={inputRef}
       onValueChange={(values) => {
         onChange({
           target: {
@@ -259,8 +261,6 @@ const creditCardField = ({
           },
         });
       }}
-      format="#### #### #### #######"
-      getInputRef={inputRef}
     />
   );
 };

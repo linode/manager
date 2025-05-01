@@ -96,7 +96,7 @@ export const displayName = (objectName: string) => {
 export const tableUpdateAction = (
   currentPrefix: string,
   objectName: string
-): { name: string; type: 'FILE' | 'FOLDER' } | null => {
+): null | { name: string; type: 'FILE' | 'FOLDER' } => {
   if (objectName.startsWith(currentPrefix) || currentPrefix === '') {
     // If the prefix matches the beginning of the objectName, we "subtract" it
     // from the objectName, and make decisions based on that.

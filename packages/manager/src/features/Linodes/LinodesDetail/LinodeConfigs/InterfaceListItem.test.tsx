@@ -7,7 +7,7 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { InterfaceListItem } from './InterfaceListItem';

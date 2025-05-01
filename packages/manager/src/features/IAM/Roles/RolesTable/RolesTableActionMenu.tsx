@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 export const RolesTableActionMenu = () => {

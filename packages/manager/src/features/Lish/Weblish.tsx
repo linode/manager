@@ -29,7 +29,7 @@ export class Weblish extends React.Component<Props, State> {
   lastMessage: string = '';
   mounted: boolean = false;
   retryLimiter: RetryLimiterInterface = RetryLimiter(3, 60000);
-  socket: WebSocket | null;
+  socket: null | WebSocket;
 
   state: State = {
     error: '',
@@ -148,12 +148,12 @@ export class Weblish extends React.Component<Props, State> {
       <div>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div
+            className="terminal"
+            id="terminal"
             style={{
               height: 'calc(100vh - 50px)',
               padding: 8,
             }}
-            className="terminal"
-            id="terminal"
           />
         ) : (
           <CircleProgress />
@@ -166,7 +166,7 @@ export class Weblish extends React.Component<Props, State> {
     const { linode } = this.props;
     const { group, label } = linode;
 
-    const socket: WebSocket | null = this.socket;
+    const socket: null | WebSocket = this.socket;
     if (socket === null || socket !== origSocket) {
       return;
     }

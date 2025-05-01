@@ -4,7 +4,7 @@ import * as React from 'react';
 import { TabPanel } from './TabPanel';
 
 interface SafeTabPanelProps {
-  children: React.ReactNode | null;
+  children: null | React.ReactNode;
   index: null | number;
 }
 

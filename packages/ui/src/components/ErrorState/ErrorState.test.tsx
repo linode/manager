@@ -30,7 +30,7 @@ describe('Error State', () => {
 
   it('renders the ErrorState with a custom icon and custom icon styling', () => {
     const screen = renderWithTheme(
-      <ErrorState {...props} CustomIconStyles={{ height: 72, width: 72 }} />
+      <ErrorState {...props} CustomIconStyles={{ height: 72, width: 72 }} />,
     );
 
     const icon = screen.container.querySelector('[data-qa-error-icon="true"]');

@@ -46,10 +46,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
       region: selectedPlacementGroup?.region,
     }
   );
-  const {
-    data: allPlacementGroups,
-    error: allPlacementGroupsError,
-  } = useAllPlacementGroupsQuery({});
+  const { data: allPlacementGroups, error: allPlacementGroupsError } =
+    useAllPlacementGroupsQuery({});
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
@@ -58,10 +56,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     placementGroup: selectedPlacementGroup,
     region,
   });
-  const {
-    isPending,
-    mutateAsync: assignLinodes,
-  } = useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
+  const { isPending, mutateAsync: assignLinodes } =
+    useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
@@ -79,9 +75,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     handleResetForm();
   };
 
-  const linodesFromAllPlacementGroups = getLinodesFromAllPlacementGroups(
-    allPlacementGroups
-  );
+  const linodesFromAllPlacementGroups =
+    getLinodesFromAllPlacementGroups(allPlacementGroups);
 
   const getLinodeSelectOptions = (): Linode[] => {
     // We filter out Linodes that are already assigned to a Placement Group
@@ -101,11 +96,8 @@ export const PlacementGroupsAssignLinodesDrawer = (
     return null;
   }
 
-  const {
-    label,
-    placement_group_policy,
-    placement_group_type,
-  } = selectedPlacementGroup;
+  const { label, placement_group_policy, placement_group_type } =
+    selectedPlacementGroup;
   const linodeSelectLabel = region
     ? `Linodes in ${region.label} (${region.id})`
     : 'Linodes';
@@ -176,12 +168,12 @@ export const PlacementGroupsAssignLinodesDrawer = (
           </Typography>
           <Box sx={{ alignItems: 'flex-end', display: 'flex' }}>
             <LinodeSelect
-              onSelectionChange={(value) => {
-                setSelectedLinode(value);
-              }}
               checkIsOptionEqualToValue
               disabled={hasReachedCapacity || isPending}
               label={linodeSelectLabel}
+              onSelectionChange={(value) => {
+                setSelectedLinode(value);
+              }}
               options={getLinodeSelectOptions()}
               placeholder="Select Linode or type to search"
               sx={{ flexGrow: 1 }}

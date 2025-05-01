@@ -106,13 +106,16 @@ export const scopeStringToPermTuples = (
     return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
-  const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
-    const [perm, level] = scopeStr.split(':');
-    return {
-      ...map,
-      [perm]: levelMap[level as keyof typeof levelMap],
-    };
-  }, defaultScopeMap(basePerms, isCreateFlow));
+  const scopeMap = scopes.split(permRegex).reduce(
+    (map, scopeStr) => {
+      const [perm, level] = scopeStr.split(':');
+      return {
+        ...map,
+        [perm]: levelMap[level as keyof typeof levelMap],
+      };
+    },
+    defaultScopeMap(basePerms, isCreateFlow)
+  );
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -242,7 +245,7 @@ export const isWayInTheFuture = (time: string) => {
  */
 export const filterPermsNameMap = <
   // We're constraining T to an array of objects with the following shape:
-  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[]
+  T extends { name: keyof typeof basePermNameMap; shouldBeIncluded: boolean }[],
 >(
   permMap: typeof basePermNameMap,
   perm: T

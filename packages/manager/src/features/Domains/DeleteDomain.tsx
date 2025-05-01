@@ -43,12 +43,12 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         Delete Domain
       </StyledButton>
       <DeletionDialog
+        entity="domain"
         error={
           error
             ? getAPIErrorOrDefault(error, 'Error deleting domain.')[0].reason
             : undefined
         }
-        entity="domain"
         label={domainLabel}
         loading={isPending}
         onClose={() => setOpen(false)}

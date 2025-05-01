@@ -2,10 +2,13 @@
  * @file Allows parallelization without Cypress Cloud.
  */
 
+import { readFileSync } from 'fs';
 import { globSync } from 'glob';
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
-import { SpecWeight, SpecWeights, specWeightsSchema } from './generate-weights';
+
+import { specWeightsSchema } from './generate-weights';
+
+import type { SpecWeight, SpecWeights } from './generate-weights';
 import type { CypressPlugin } from './plugin';
 
 /**

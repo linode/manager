@@ -25,6 +25,8 @@ export const Details = () => {
     <Paper>
       <Typography variant="h2">Details</Typography>
       <Controller
+        control={control}
+        name="label"
         render={({ field, fieldState }) => (
           <TextField
             disabled={isCreateLinodeRestricted}
@@ -35,23 +37,21 @@ export const Details = () => {
             value={field.value ?? ''}
           />
         )}
-        control={control}
-        name="label"
       />
       {params.type !== 'Clone Linode' && (
         <Controller
+          control={control}
+          name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              value={
-                field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
-              }
               disabled={isCreateLinodeRestricted}
               onChange={(item) => field.onChange(item.map((i) => i.value))}
               tagError={fieldState.error?.message}
+              value={
+                field.value?.map((tag) => ({ label: tag, value: tag })) ?? []
+              }
             />
           )}
-          control={control}
-          name="tags"
         />
       )}
       {isPlacementGroupsEnabled && <PlacementGroupPanel />}

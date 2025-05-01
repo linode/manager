@@ -5,11 +5,11 @@ import { accountTransferFactory } from 'src/factories/account';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TransferDisplay } from './TransferDisplay';
 import {
   TRANSFER_DISPLAY_BUTTON,
   TRANSFER_DISPLAY_GENERAL_POOL,
 } from './constants';
+import { TransferDisplay } from './TransferDisplay';
 
 import type { TransferDataOptions } from './utils';
 

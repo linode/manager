@@ -26,9 +26,8 @@ export const useIsDiskEncryptionFeatureEnabled = (): {
     return { isDiskEncryptionFeatureEnabled: false };
   }
 
-  const hasAccountCapability = account?.capabilities?.includes(
-    'Disk Encryption'
-  );
+  const hasAccountCapability =
+    account?.capabilities?.includes('Disk Encryption');
 
   const isFeatureFlagEnabled = flags.linodeDiskEncryption;
 
@@ -69,8 +68,8 @@ export const useIsBlockStorageEncryptionFeatureEnabled = (): {
 };
 
 interface RebuildEncryptionDescriptionOptions {
-  isLKELinode: boolean;
   isLinodeInDistributedRegion: boolean;
+  isLKELinode: boolean;
 }
 
 export function getRebuildDiskEncryptionDescription(
@@ -88,8 +87,8 @@ export function getRebuildDiskEncryptionDescription(
 }
 
 interface DiskEncryptionDisabledInRebuildFlowOptions {
-  isLKELinode: boolean | undefined;
   isLinodeInDistributedRegion: boolean;
+  isLKELinode: boolean | undefined;
   regionSupportsDiskEncryption: boolean;
 }
 

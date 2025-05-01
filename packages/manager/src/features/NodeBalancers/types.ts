@@ -1,6 +1,6 @@
 import type {
-  APIError,
   Algorithm,
+  APIError,
   NodeBalancerConfigNode,
   NodeBalancerProxyProtocol,
   Protocol,
@@ -41,34 +41,31 @@ export interface NodeBalancerConfigPanelProps {
   algorithm: Algorithm;
   checkBody: string;
   checkPassive: boolean;
-  udpCheckPort: number;
-
   checkPath: string;
+
   configIdx: number;
   disabled?: boolean;
   errors?: APIError[];
-
   forEdit?: boolean;
+
   healthCheckAttempts: number;
-
   healthCheckInterval: number;
+
   healthCheckTimeout: number;
-
   healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
+
   nodeBalancerRegion?: string;
-
   nodeMessage?: string;
+
   nodes: NodeBalancerConfigNodeFields[];
-
   onAlgorithmChange: (v: string) => void;
+
   onCheckBodyChange: (v: string) => void;
-
   onCheckPassiveChange: (v: boolean) => void;
+
   onCheckPathChange: (v: string) => void;
-
-  onUdpCheckPortChange: (v: number) => void;
-
   onDelete?: any;
+
   onHealthCheckAttemptsChange: (v: number | string) => void;
 
   onHealthCheckIntervalChange: (v: number | string) => void;
@@ -93,6 +90,8 @@ export interface NodeBalancerConfigPanelProps {
   onSessionStickinessChange: (v: Stickiness) => void;
 
   onSslCertificateChange: (v: string) => void;
+  onUdpCheckPortChange: (v: number) => void;
+
   port: number;
   privateKey: string;
   protocol: Protocol;
@@ -101,4 +100,5 @@ export interface NodeBalancerConfigPanelProps {
   sessionStickiness: Stickiness;
   sslCertificate: string;
   submitting?: boolean;
+  udpCheckPort: number;
 }

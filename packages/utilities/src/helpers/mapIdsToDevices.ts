@@ -6,11 +6,11 @@ type Device = Linode | NodeBalancer;
 
 export const mapIdsToDevices = <T extends Device>(
   ids: null | number | number[],
-  devices: T[] = []
-): T | T[] | null => {
+  devices: T[] = [],
+): null | T | T[] => {
   const deviceMap = new Map(
     // Even though the types extend Device. type insertion is still required here
-    devices.map((device) => [device.id, device])
+    devices.map((device) => [device.id, device]),
   );
   if (Array.isArray(ids)) {
     return ids.map((id) => deviceMap.get(id)).filter(isNotNullOrUndefined);

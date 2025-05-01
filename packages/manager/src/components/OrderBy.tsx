@@ -135,16 +135,8 @@ export const sortData = <T,>(orderBy: string, order: Order) => {
     }
 
     /** basically, if orderByProp exists, do a pathOr with that instead */
-    const aValue = pathOr<any, T>(
-      '',
-      !!orderByProp ? orderByProp : [orderBy],
-      a
-    );
-    const bValue = pathOr<any, T>(
-      '',
-      !!orderByProp ? orderByProp : [orderBy],
-      b
-    );
+    const aValue = pathOr<any, T>('', orderByProp ? orderByProp : [orderBy], a);
+    const bValue = pathOr<any, T>('', orderByProp ? orderByProp : [orderBy], b);
 
     if (Array.isArray(aValue) && Array.isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);
@@ -244,7 +236,6 @@ export const OrderBy = <T,>(props: CombinedProps<T>) => {
     orderBy,
   };
 
-  // eslint-disable-next-line
   return <>{props.children(downstreamProps)}</>;
 };
 

@@ -3,8 +3,8 @@ import {
   getIsLegacyInterfaceArray,
   linodeConfigInterfaceFactory,
   linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 
 import {

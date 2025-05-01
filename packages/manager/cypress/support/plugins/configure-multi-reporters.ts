@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 // The name of the environment variable to read when checking report configuration.
 const envVarJunit = 'CY_TEST_JUNIT_REPORT';
 const envVarHtml = 'CY_TEST_HTML_REPORT';

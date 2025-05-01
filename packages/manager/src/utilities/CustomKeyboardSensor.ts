@@ -4,7 +4,7 @@
 // - Add a focus style to the draggable element while it is being dragged.
 // - Clear the focus style when the draggable element is dropped.
 
-import { KeyboardCode, defaultCoordinates } from '@dnd-kit/core';
+import { defaultCoordinates, KeyboardCode } from '@dnd-kit/core';
 import {
   add as getAdjustedCoordinates,
   subtract as getCoordinatesDelta,
@@ -27,14 +27,8 @@ class Listeners {
   private listeners: [
     string,
     EventListenerOrEventListenerObject,
-    AddEventListenerOptions | boolean | undefined
+    AddEventListenerOptions | boolean | undefined,
   ][] = [];
-
-  public removeAll = () => {
-    this.listeners.forEach((listener) =>
-      this.target?.removeEventListener(...listener)
-    );
-  };
 
   constructor(private target: EventTarget | null) {}
 
@@ -46,6 +40,12 @@ class Listeners {
     this.target?.addEventListener(eventName, handler as EventListener, options);
     this.listeners.push([eventName, handler as EventListener, options]);
   }
+
+  public removeAll = () => {
+    this.listeners.forEach((listener) =>
+      this.target?.removeEventListener(...listener)
+    );
+  };
 }
 
 const defaultKeyboardCodes: KeyboardCodes = {
@@ -59,20 +59,20 @@ const defaultKeyboardCoordinateGetter: KeyboardCoordinateGetter = (
   { currentCoordinates }
 ) => {
   switch (event.code) {
-    case KeyboardCode.Right:
+    case KeyboardCode.Down:
       return {
         ...currentCoordinates,
-        x: currentCoordinates.x + 25,
+        y: currentCoordinates.y + 25,
       };
     case KeyboardCode.Left:
       return {
         ...currentCoordinates,
         x: currentCoordinates.x - 25,
       };
-    case KeyboardCode.Down:
+    case KeyboardCode.Right:
       return {
         ...currentCoordinates,
-        y: currentCoordinates.y + 25,
+        x: currentCoordinates.x + 25,
       };
     case KeyboardCode.Up:
       return {
@@ -122,11 +122,11 @@ export class CustomKeyboardSensor implements SensorInstance {
       },
     },
   ];
+  public autoScrollEnabled = false;
   private listeners: Listeners;
   private referenceCoordinates: Coordinates | undefined;
-  private windowListeners: Listeners;
 
-  public autoScrollEnabled = false;
+  private windowListeners: Listeners;
 
   constructor(private props: KeyboardSensorProps) {
     const {

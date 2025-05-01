@@ -17,13 +17,11 @@ export const gettingStartedGuides: ResourcesLinks['links'] = [
   },
   {
     text: 'Linode Cloud Instance Module',
-    to:
-      'https://github.com/linode/ansible_linode/blob/dev/docs/modules/instance.md',
+    to: 'https://github.com/linode/ansible_linode/blob/dev/docs/modules/instance.md',
   },
   {
     text: 'Manage Personal Access Tokens',
-    to:
-      'https://techdocs.akamai.com/cloud-computing/docs/manage-personal-access-tokens',
+    to: 'https://techdocs.akamai.com/cloud-computing/docs/manage-personal-access-tokens',
   },
   {
     text: 'Best Practices For Ansible',
@@ -31,8 +29,7 @@ export const gettingStartedGuides: ResourcesLinks['links'] = [
   },
   {
     text: 'Use the Linode Ansible Collection to Deploy a Linode',
-    to:
-      'https://www.linode.com/docs/guides/deploy-linodes-using-linode-ansible-collection/',
+    to: 'https://www.linode.com/docs/guides/deploy-linodes-using-linode-ansible-collection/',
   },
 ];
 

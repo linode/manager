@@ -1,8 +1,10 @@
 import { IPAllocationSchema } from '@linode/validation/lib/linodes.schema';
+
 import { API_ROOT } from '../constants';
-import { IPAddress } from '../networking/types';
 import Request, { setData, setMethod, setURL } from '../request';
-import { IPAllocationRequest, LinodeIPsResponse } from './types';
+
+import type { IPAddress } from '../networking/types';
+import type { IPAllocationRequest, LinodeIPsResponse } from './types';
 
 /**
  * getLinodeIPs
@@ -14,7 +16,7 @@ import { IPAllocationRequest, LinodeIPsResponse } from './types';
 export const getLinodeIPs = (id: number) =>
   Request<LinodeIPsResponse>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(id)}/ips`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -29,12 +31,12 @@ export const getLinodeIPs = (id: number) =>
  */
 export const allocateIPAddress = (
   linodeID: number,
-  data: IPAllocationRequest
+  data: IPAllocationRequest,
 ) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeID)}/ips`),
     setMethod('POST'),
-    setData(data, IPAllocationSchema)
+    setData(data, IPAllocationSchema),
   );
 
 /**
@@ -47,16 +49,16 @@ export const allocateIPAddress = (
  * @param payload.address {string} - the IP Address for which you'd like the delete request to be invoked
  */
 export const removeIPAddress = (payload: {
-  linodeID: number;
   address: string;
+  linodeID: number;
 }) => {
   return Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        payload.linodeID
-      )}/ips/${encodeURIComponent(payload.address)}`
+        payload.linodeID,
+      )}/ips/${encodeURIComponent(payload.address)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 };
 
@@ -70,8 +72,8 @@ export const removeIPAddress = (payload: {
 export const removeIPv6Range = (payload: { range: string }) => {
   return Request<{}>(
     setURL(
-      `${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(payload.range)}`
+      `${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(payload.range)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 };

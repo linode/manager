@@ -9,9 +9,8 @@ interface TokensWithExpiry {
 }
 
 /** user is coming to the app for the first time */
-export const handleStartSession = actionCreator<TokensWithExpiry>(
-  'START_SESSION'
-);
+export const handleStartSession =
+  actionCreator<TokensWithExpiry>('START_SESSION');
 
 /** user is refreshing the page and redux state needs to be synced with local storage */
 export const handleInitTokens = actionCreator('INIT_TOKENS');

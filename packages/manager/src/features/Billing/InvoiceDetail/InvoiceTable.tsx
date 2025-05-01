@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
@@ -13,7 +14,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
-import { useRegionsQuery } from '@linode/queries';
 
 import { getInvoiceRegion } from '../PdfGenerator/utils';
 
@@ -119,16 +119,16 @@ export const InvoiceTable = (props: Props) => {
                     sx={{ paddingLeft: 0, paddingRight: 0 }}
                   >
                     <PaginationFooter
-                      sx={{
-                        border: 0,
-                        width: '100%',
-                      }}
                       count={count}
                       eventCategory="invoice_items"
                       handlePageChange={handlePageChange}
                       handleSizeChange={handlePageSizeChange}
                       page={page}
                       pageSize={pageSize}
+                      sx={{
+                        border: 0,
+                        width: '100%',
+                      }}
                     />
                   </TableCell>
                 </TableRow>

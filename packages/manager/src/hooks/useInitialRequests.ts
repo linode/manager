@@ -1,9 +1,9 @@
+import { accountQueries, profileQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { accountQueries, profileQueries } from '@linode/queries';
 import { redirectToLogin } from 'src/session';
 
 /**

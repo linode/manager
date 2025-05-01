@@ -1,4 +1,4 @@
-import { Box, Stack, WarningIcon, omittedProps } from '@linode/ui';
+import { Box, omittedProps, Stack, WarningIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';

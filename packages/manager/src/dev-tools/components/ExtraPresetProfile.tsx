@@ -13,9 +13,9 @@ import type { Profile } from '@linode/api-v4';
 const profilePreset = extraMockPresets.find((p) => p.id === 'profile:custom');
 
 interface ExtraPresetProfileProps {
-  customProfileData: Profile | null | undefined;
+  customProfileData: null | Profile | undefined;
   handlers: string[];
-  onFormChange?: (data: Profile | null | undefined) => void;
+  onFormChange?: (data: null | Profile | undefined) => void;
   onTogglePreset: (
     e: React.ChangeEvent<HTMLInputElement>,
     presetId: string

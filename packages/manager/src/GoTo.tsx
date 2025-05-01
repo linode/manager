@@ -125,6 +125,9 @@ export const GoTo = React.memo(() => {
 
   return (
     <Dialog
+      enableCloseOnBackdropClick
+      onClose={onClose}
+      open={goToOpen}
       PaperProps={{
         sx: {
           '& .MuiAutocomplete-listbox': {
@@ -134,9 +137,10 @@ export const GoTo = React.memo(() => {
           '& .MuiDialogContent-root ': {
             padding: '0 !important',
           },
-          '& [data-qa-close-drawer="true"], & [data-qa-dialog-title="Go To..."], & [aria-label="Close"]': {
-            display: 'none',
-          },
+          '& [data-qa-close-drawer="true"], & [data-qa-dialog-title="Go To..."], & [aria-label="Close"]':
+            {
+              display: 'none',
+            },
           height: '80%',
           minHeight: '50%',
           minWidth: 'auto !important',
@@ -144,9 +148,6 @@ export const GoTo = React.memo(() => {
           width: 400,
         },
       }}
-      enableCloseOnBackdropClick
-      onClose={onClose}
-      open={goToOpen}
       title="Go To..."
     >
       {/* I was about to put a "@todo" item for mobile display, but realized

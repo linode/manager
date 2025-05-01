@@ -35,10 +35,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleToggleAppliedFilter,
   } = props;
 
-  const {
-    preferences,
-    updateGlobalFilterPreference: updatePreferences,
-  } = useAclpPreference();
+  const { preferences, updateGlobalFilterPreference: updatePreferences } =
+    useAclpPreference();
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
@@ -119,16 +117,16 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
-                sx={(theme) => ({
-                  marginBlockEnd: 'auto',
-                  marginTop: { md: theme.spacing(3.5) },
-                })}
                 aria-label="Refresh Dashboard Metrics"
                 color="inherit"
                 data-testid="global-refresh"
                 disabled={!selectedDashboard}
                 onClick={handleGlobalRefresh}
                 size="small"
+                sx={(theme) => ({
+                  marginBlockEnd: 'auto',
+                  marginTop: { md: theme.spacing(3.5) },
+                })}
               >
                 <Reload height="24px" width="24px" />
               </IconButton>

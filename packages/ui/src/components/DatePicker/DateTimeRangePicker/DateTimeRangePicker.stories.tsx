@@ -75,6 +75,7 @@ export const Default: Story = {
           label: 'End Date',
           showTimeZone: true,
         }}
+        onApply={() => {}}
         presetsProps={{
           defaultValue: 'Last 7 days',
           enablePresets: true,
@@ -83,7 +84,6 @@ export const Default: Story = {
           label: 'Start Date',
           showTimeZone: true,
         }}
-        onApply={() => {}}
       />
     );
   },
@@ -120,12 +120,12 @@ export const WithCustomTimeZone: Story = {
           label: 'End Date',
           showTimeZone: true,
         }}
+        onApply={() => {}}
         startDateProps={{
           label: 'Start Date',
           showTimeZone: true,
           timeZoneValue: 'UTC',
         }}
-        onApply={() => {}}
       />
     );
   },

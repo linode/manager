@@ -47,7 +47,7 @@ export const WithSuffix: Story = {
  * This is just an example to show usage with `EditableText`
  */
 const Link = (
-  props: React.PropsWithChildren<{ className?: string; to?: string }>
+  props: React.PropsWithChildren<{ className?: string; to?: string }>,
 ) => {
   // eslint-disable-next-line jsx-a11y/anchor-has-content
   return <a {...props} href={props.to} rel="noreferrer" target="_blank" />;

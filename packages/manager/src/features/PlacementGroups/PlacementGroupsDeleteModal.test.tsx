@@ -47,6 +47,8 @@ describe('PlacementGroupsDeleteModal', () => {
     const { getByRole, getByTestId, getByText } = renderWithTheme(
       <PlacementGroupsDeleteModal
         {...props}
+        disableUnassignButton={false}
+        isFetching={false}
         linodes={[
           linodeFactory.build({
             id: 1,
@@ -66,8 +68,6 @@ describe('PlacementGroupsDeleteModal', () => {
           placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
-        disableUnassignButton={false}
-        isFetching={false}
       />
     );
 
@@ -96,6 +96,8 @@ describe('PlacementGroupsDeleteModal', () => {
     const { getByRole, getByTestId } = renderWithTheme(
       <PlacementGroupsDeleteModal
         {...props}
+        disableUnassignButton={false}
+        isFetching={false}
         linodes={[
           linodeFactory.build({
             id: 1,
@@ -109,8 +111,6 @@ describe('PlacementGroupsDeleteModal', () => {
           members: [],
           placement_group_type: 'anti_affinity:local',
         })}
-        disableUnassignButton={false}
-        isFetching={false}
       />
     );
 

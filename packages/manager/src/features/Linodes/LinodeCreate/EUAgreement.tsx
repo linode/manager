@@ -1,9 +1,9 @@
+import { useAccountAgreements, useRegionsQuery } from '@linode/queries';
 import { Notice, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useAccountAgreements, useRegionsQuery } from '@linode/queries';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
 import type { LinodeCreateFormValues } from './utilities';

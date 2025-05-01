@@ -17,7 +17,7 @@ function escapeStringForCLI(s: string): string {
 
 type JSONFieldToArray = [string, unknown];
 
-const convertObjectToCLIArg = (data: {} | null) => {
+const convertObjectToCLIArg = (data: null | {}) => {
   return `'${JSON.stringify(data).replace(':', ': ')}'`;
 };
 

@@ -23,7 +23,6 @@ export const StyledVisibilityShowIcon = styled(VisibilityShowIcon)(
   })
 );
 
-// eslint-disable-next-line sonarjs/no-identical-functions
 export const StyledVisibilityHideIcon = styled(VisibilityHideIcon)(
   ({ theme }) => ({
     '& path': {

@@ -4,7 +4,7 @@ import React from 'react';
 import { accountTransferFactory } from 'src/factories';
 import { typeFactory } from 'src/factories/types';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NetworkTransfer } from './NetworkTransfer';

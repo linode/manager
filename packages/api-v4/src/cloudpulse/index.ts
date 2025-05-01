@@ -1,7 +1,7 @@
-export * from './types';
+export * from './alerts';
 
 export * from './dashboards';
 
 export * from './services';
 
-export * from './alerts';
+export * from './types';

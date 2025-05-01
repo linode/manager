@@ -24,6 +24,13 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
   return (
     <Hidden mdDown>
       <Box
+        bottom={0}
+        className="primary-nav-toggle"
+        display="flex"
+        height={PRIMARY_NAV_TOGGLE_HEIGHT}
+        justifyContent={isCollapsed ? 'center' : 'flex-end'}
+        left={-1}
+        position="fixed"
         sx={() => ({
           backgroundColor: Global.Color.Neutrals[90],
           boxShadow: areNavItemsOverflowing
@@ -34,15 +41,9 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
             ? `${SIDEBAR_COLLAPSED_WIDTH}px`
             : `${SIDEBAR_WIDTH}px`,
         })}
-        bottom={0}
-        className="primary-nav-toggle"
-        display="flex"
-        height={PRIMARY_NAV_TOGGLE_HEIGHT}
-        justifyContent={isCollapsed ? 'center' : 'flex-end'}
-        left={-1}
-        position="fixed"
       >
         <Tooltip
+          placement="top-end"
           PopperProps={{
             sx: {
               '& .MuiTooltip-tooltip': {
@@ -50,7 +51,6 @@ export const PrimaryNavToggle = (props: PrimaryNavToggleProps) => {
               },
             },
           }}
-          placement="top-end"
           title={isCollapsed ? 'pin side menu' : 'unpin side menu'}
         >
           <StyledIconButton

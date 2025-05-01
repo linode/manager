@@ -18,8 +18,10 @@ import { calculatePoolUsagePct, getRegionTransferPools } from './utils';
 import type { TransferDisplayDialogProps } from './TransferDisplayDialog';
 import type { RegionalNetworkUtilization } from '@linode/api-v4';
 
-const mockTransferData: RegionalNetworkUtilization = accountTransferFactory.build();
-const mockTransferDataNoResource: RegionalNetworkUtilization = accountTransferNoResourceFactory.build();
+const mockTransferData: RegionalNetworkUtilization =
+  accountTransferFactory.build();
+const mockTransferDataNoResource: RegionalNetworkUtilization =
+  accountTransferNoResourceFactory.build();
 
 export const transferDisplayDialogProps = (
   mockData: RegionalNetworkUtilization

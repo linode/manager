@@ -1,4 +1,5 @@
 import { nodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,10 +8,11 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
-  KubeNodePoolResponse,
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CreateNodePoolData,
+  KubeNodePoolResponse,
   UpdateNodePoolData,
 } from './types';
 
@@ -22,13 +24,13 @@ import {
 export const getNodePools = (
   clusterID: number,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<KubeNodePoolResponse>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`)
+    setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
   );
 
 /**
@@ -41,9 +43,9 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/pools/${encodeURIComponent(nodePoolID)}`
-    )
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}`,
+    ),
   );
 
 /**
@@ -55,7 +57,7 @@ export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
   Request<KubeNodePoolResponse>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
-    setData(data, nodePoolSchema)
+    setData(data, nodePoolSchema),
   );
 
 /**
@@ -66,16 +68,16 @@ export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
 export const updateNodePool = (
   clusterID: number,
   nodePoolID: number,
-  data: Partial<UpdateNodePoolData>
+  data: Partial<UpdateNodePoolData>,
 ) =>
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/pools/${encodeURIComponent(nodePoolID)}`
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
-    setData(data, nodePoolSchema)
+    setData(data, nodePoolSchema),
   );
 
 /**
@@ -88,9 +90,9 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/pools/${encodeURIComponent(nodePoolID)}`
-    )
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}`,
+    ),
   );
 
 /**
@@ -103,9 +105,9 @@ export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
     setMethod('POST'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/pools/${encodeURIComponent(nodePoolID)}/recycle`
-    )
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}/recycle`,
+    ),
   );
 
 /**
@@ -118,7 +120,7 @@ export const recycleNode = (clusterID: number, nodeID: string) =>
     setMethod('POST'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
-        clusterID
-      )}/nodes/${encodeURIComponent(nodeID)}/recycle`
-    )
+        clusterID,
+      )}/nodes/${encodeURIComponent(nodeID)}/recycle`,
+    ),
   );

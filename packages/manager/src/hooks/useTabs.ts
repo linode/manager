@@ -7,7 +7,7 @@ export interface Tab {
   /**
    * The chip to display in the tab (a helper icon if disabled for instance).
    */
-  chip?: React.JSX.Element | null;
+  chip?: null | React.JSX.Element;
   /**
    * Whether the tab is disabled.
    */
@@ -39,9 +39,10 @@ export function useTabs<T extends Tab>(tabs: T[]) {
   const matchRoute = useMatchRoute();
 
   // Filter out hidden tabs
-  const visibleTabs = React.useMemo(() => tabs.filter((tab) => !tab.hide), [
-    tabs,
-  ]);
+  const visibleTabs = React.useMemo(
+    () => tabs.filter((tab) => !tab.hide),
+    [tabs]
+  );
 
   // Calculate current index based on route
   const tabIndex = React.useMemo(() => {

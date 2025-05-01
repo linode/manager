@@ -163,6 +163,8 @@ export const KubernetesPlanContainer = (
                 return (
                   filteredPlans.length > 0 && (
                     <KubernetesPlanSelectionTable
+                      filterOptions={table}
+                      key={`k8-plan-filter-${idx}`}
                       renderPlanSelection={() =>
                         renderPlanSelection({
                           header: table.header,
@@ -172,19 +174,17 @@ export const KubernetesPlanContainer = (
                       shouldDisplayNoRegionSelectedMessage={
                         shouldDisplayNoRegionSelectedMessage
                       }
-                      filterOptions={table}
-                      key={`k8-plan-filter-${idx}`}
                     />
                   )
                 );
               })
             ) : (
               <KubernetesPlanSelectionTable
+                key={planType}
+                renderPlanSelection={renderPlanSelection}
                 shouldDisplayNoRegionSelectedMessage={
                   shouldDisplayNoRegionSelectedMessage
                 }
-                key={planType}
-                renderPlanSelection={renderPlanSelection}
               />
             )
           )}

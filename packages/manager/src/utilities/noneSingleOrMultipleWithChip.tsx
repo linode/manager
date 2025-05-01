@@ -1,4 +1,4 @@
-import { Tooltip, Chip } from '@linode/ui';
+import { Chip, Tooltip } from '@linode/ui';
 import * as React from 'react';
 
 import { StyledItemWithPlusChip } from 'src/components/RemovableSelectionsList/RemovableSelectionsList.style';

@@ -20,7 +20,6 @@ export const StatusBanners = () => {
   }
 
   return (
-    // eslint-disable-next-line
     <>
       {incidents.map((thisIncident) => {
         const mostRecentUpdate = thisIncident.incident_updates.filter(
@@ -70,19 +69,19 @@ export const IncidentBanner = React.memo((props: IncidentProps) => {
         expiry: DateTime.utc().plus({ days: 1 }).toISO(),
         label: preferenceKey,
       }}
+      preferenceKey={preferenceKey}
+      sx={{ marginBottom: theme.spacing() }}
       variant={
         variantMap.error ? 'error' : variantMap.warning ? 'warning' : undefined
       }
-      preferenceKey={preferenceKey}
-      sx={{ marginBottom: theme.spacing() }}
     >
       <Box display="flex" flexDirection="column">
         <Typography
+          data-testid="status-banner"
           sx={{
             fontSize: '1rem',
             marginBottom: theme.spacing(),
           }}
-          data-testid="status-banner"
         >
           <Link to={href}>
             <strong data-testid="incident-status">

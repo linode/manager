@@ -104,22 +104,22 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
           <Grid
+            key={item.label}
             size={{
               md: 2,
               sm: 2,
               xs: 2,
             }}
-            key={item.label}
           >
             <Stack
+              direction="row"
+              spacing={1}
               sx={{
                 '& > p:nth-of-type(2)': {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 },
               }}
-              direction="row"
-              spacing={1}
             >
               <Typography
                 sx={(theme) => ({

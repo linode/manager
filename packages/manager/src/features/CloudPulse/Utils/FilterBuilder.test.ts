@@ -37,18 +37,15 @@ it('test getRegionProperties method', () => {
   expect(regionConfig).toBeDefined();
 
   if (regionConfig) {
-    const {
-      handleRegionChange,
-      label,
-      selectedDashboard,
-    } = getRegionProperties(
-      {
-        config: regionConfig,
-        dashboard: mockDashboard,
-        isServiceAnalyticsIntegration: false,
-      },
-      vi.fn()
-    );
+    const { handleRegionChange, label, selectedDashboard } =
+      getRegionProperties(
+        {
+          config: regionConfig,
+          dashboard: mockDashboard,
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
     const { name } = regionConfig.configuration;
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
@@ -64,21 +61,16 @@ it('test getTagsProperties', () => {
   expect(tagsConfig).toBeDefined();
 
   if (tagsConfig) {
-    const {
-      disabled,
-      handleTagsChange,
-      label,
-      region,
-      resourceType,
-    } = getTagsProperties(
-      {
-        config: tagsConfig,
-        dashboard: mockDashboard,
-        dependentFilters: { region: 'us-east' },
-        isServiceAnalyticsIntegration: true,
-      },
-      vi.fn()
-    );
+    const { disabled, handleTagsChange, label, region, resourceType } =
+      getTagsProperties(
+        {
+          config: tagsConfig,
+          dashboard: mockDashboard,
+          dependentFilters: { region: 'us-east' },
+          isServiceAnalyticsIntegration: true,
+        },
+        vi.fn()
+      );
     const { name } = tagsConfig.configuration;
     expect(handleTagsChange).toBeDefined();
     expect(disabled).toEqual(false);
@@ -96,18 +88,15 @@ it('test getTimeDuratonProperties method', () => {
   expect(timeDurationConfig).toBeDefined();
 
   if (timeDurationConfig) {
-    const {
-      handleStatsChange,
-      label,
-      savePreferences,
-    } = getTimeDurationProperties(
-      {
-        config: timeDurationConfig,
-        dashboard: mockDashboard,
-        isServiceAnalyticsIntegration: false,
-      },
-      vi.fn()
-    );
+    const { handleStatsChange, label, savePreferences } =
+      getTimeDurationProperties(
+        {
+          config: timeDurationConfig,
+          dashboard: mockDashboard,
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
     const { name } = timeDurationConfig.configuration;
     expect(handleStatsChange).toBeDefined();
     expect(savePreferences).toEqual(true);
@@ -260,20 +249,16 @@ it('test getNodeTypeProperties with disabled true', () => {
   expect(nodeTypeSelectionConfig).toBeDefined();
 
   if (nodeTypeSelectionConfig) {
-    const {
-      disabled,
-      handleNodeTypeChange,
-      label,
-      savePreferences,
-    } = getNodeTypeProperties(
-      {
-        config: nodeTypeSelectionConfig,
-        dashboard: dbaasDashboard,
-        dependentFilters: {},
-        isServiceAnalyticsIntegration: false,
-      },
-      vi.fn()
-    );
+    const { disabled, handleNodeTypeChange, label, savePreferences } =
+      getNodeTypeProperties(
+        {
+          config: nodeTypeSelectionConfig,
+          dashboard: dbaasDashboard,
+          dependentFilters: {},
+          isServiceAnalyticsIntegration: false,
+        },
+        vi.fn()
+      );
     const { name } = nodeTypeSelectionConfig.configuration;
     expect(handleNodeTypeChange).toBeDefined();
     expect(savePreferences).toEqual(true);

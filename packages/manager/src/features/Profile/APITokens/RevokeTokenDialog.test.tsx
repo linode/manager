@@ -5,7 +5,9 @@ import * as React from 'react';
 import { appTokenFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Props, RevokeTokenDialog } from './RevokeTokenDialog';
+import { RevokeTokenDialog } from './RevokeTokenDialog';
+
+import type { Props } from './RevokeTokenDialog';
 
 const token = appTokenFactory.build({ label: 'my-token' });
 

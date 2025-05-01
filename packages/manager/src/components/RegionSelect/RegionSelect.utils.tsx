@@ -121,12 +121,11 @@ export const isRegionOptionUnavailable = ({
     return false;
   }
 
-  const regionWithUnavailability:
-    | AccountAvailability
-    | undefined = accountAvailabilityData.find(
-    (regionAvailability: AccountAvailability) =>
-      regionAvailability.region === region.id
-  );
+  const regionWithUnavailability: AccountAvailability | undefined =
+    accountAvailabilityData.find(
+      (regionAvailability: AccountAvailability) =>
+        regionAvailability.region === region.id
+    );
 
   if (!regionWithUnavailability) {
     return false;

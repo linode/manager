@@ -66,9 +66,8 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
        * - Confirms the SSL/TLS tab appears
        */
       it(`does not hide the CORS toggle and SSL/TLS tab for buckets with an ${endpoint} endpoint`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
+        const { mockBucket, mockEndpoint } =
+          createMocksBasedOnEndpointType(endpoint);
         const { cluster, label } = mockBucket;
 
         mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');
@@ -109,9 +108,8 @@ describe('Object Storage Gen 2 bucket details tabs', () => {
        * - Confirms the SSL/TLS tab is hidden
        */
       it(`hides the CORS toggle and SSL/TLS tab for for buckets with an ${endpoint} endpoint`, () => {
-        const { mockBucket, mockEndpoint } = createMocksBasedOnEndpointType(
-          endpoint
-        );
+        const { mockBucket, mockEndpoint } =
+          createMocksBasedOnEndpointType(endpoint);
         const { cluster, label } = mockBucket;
 
         mockGetBucketAccess(label, cluster, mockAccess).as('getBucketAccess');

@@ -8,12 +8,12 @@ describe('truncate', () => {
     hello world hello world hello world hello world hello world hello world hello world 
     hello world hello world hello world hello world hello world hello world hello world
     hello world hello world hello world hello world hello world hello world hello world`,
-    140
+    140,
   );
 
   const stringUnder140 = truncate(
     'hello world hello world hello world hello world',
-    140
+    140,
   );
 
   it('string over 140 + 4 chars should contain an ellipses as last 3 chars', () => {

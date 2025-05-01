@@ -6,7 +6,6 @@ import {
   getObjectStorageEndpoints,
   getObjectStorageTypes,
 } from '@linode/api-v4';
-
 import { getAll } from '@linode/utilities';
 
 import type {

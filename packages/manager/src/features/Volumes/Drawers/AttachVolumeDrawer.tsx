@@ -28,7 +28,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 const AttachVolumeValidationSchema = object({
@@ -51,9 +51,8 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   const { error, mutateAsync: attachVolume } = useAttachVolumeMutation();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const formik = useFormik({
     initialValues: { config_id: -1, linode_id: -1 },
@@ -103,8 +102,8 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Attach Volume ${volume?.label}`}
@@ -118,20 +117,20 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
         )}
         {generalError && <Notice text={generalError} variant="error" />}
         <LinodeSelect
+          clearable={false}
+          disabled={isReadOnly}
           errorText={
             formik.touched.linode_id && formik.errors.linode_id
               ? formik.errors.linode_id
               : linodeError
           }
+          filter={{ region: volume?.region }}
+          noMarginTop
           onSelectionChange={(linode) => {
             if (linode !== null) {
               formik.setFieldValue('linode_id', linode.id);
             }
           }}
-          clearable={false}
-          disabled={isReadOnly}
-          filter={{ region: volume?.region }}
-          noMarginTop
           value={formik.values.linode_id}
         />
         {!linodeError && (
@@ -140,6 +139,7 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
           </FormHelperText>
         )}
         <StyledConfigSelect
+          disabled={isReadOnly || formik.values.linode_id === -1}
           error={
             formik.touched.config_id && formik.errors.config_id
               ? formik.errors.config_id
@@ -148,12 +148,11 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
           linodeId={
             formik.values.linode_id === -1 ? null : formik.values.linode_id
           }
+          name="configId"
+          onBlur={() => null}
           onChange={(id: number) => {
             formik.setFieldValue('config_id', +id);
           }}
-          disabled={isReadOnly || formik.values.linode_id === -1}
-          name="configId"
-          onBlur={() => null}
           value={formik.values.config_id}
         />
         {isBlockStorageEncryptionFeatureEnabled && (

@@ -51,11 +51,8 @@ export const FirewallSelect = <DisableClearable extends boolean>(
 
   const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
 
-  const {
-    defaultNumEntities,
-    isDefault,
-    tooltipText,
-  } = useDefaultFirewallChipInformation(value, hideDefaultChips);
+  const { defaultNumEntities, isDefault, tooltipText } =
+    useDefaultFirewallChipInformation(value, hideDefaultChips);
 
   const selectedFirewall = useMemo(
     () => firewalls?.find((firewall) => firewall.id === value) ?? null,
@@ -64,6 +61,12 @@ export const FirewallSelect = <DisableClearable extends boolean>(
 
   return (
     <Autocomplete<Firewall, false, DisableClearable>
+      errorText={errorText ?? error?.[0].reason}
+      label="Firewall"
+      loading={isLoading || loading}
+      noMarginTop
+      options={firewalls ?? []}
+      placeholder="None"
       renderOption={({ key, ...props }, option, state) => (
         <FirewallSelectOption
           hideDefaultChip={hideDefaultChips}
@@ -83,12 +86,6 @@ export const FirewallSelect = <DisableClearable extends boolean>(
           ),
         },
       }}
-      errorText={errorText ?? error?.[0].reason}
-      label="Firewall"
-      loading={isLoading || loading}
-      noMarginTop
-      options={firewalls ?? []}
-      placeholder="None"
       value={selectedFirewall!}
       {...rest}
     />

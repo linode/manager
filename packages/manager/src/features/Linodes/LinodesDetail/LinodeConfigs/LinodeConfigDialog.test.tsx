@@ -142,9 +142,10 @@ describe('LinodeConfigDialog', () => {
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: vpcInterfacePrimaryWithoutNAT,
         isLKEEnterpriseCluster: false,
-        primaryInterfaceIndex: editableFieldsWithSingleInterface.interfaces.findIndex(
-          (element) => element.primary === true
-        ),
+        primaryInterfaceIndex:
+          editableFieldsWithSingleInterface.interfaces.findIndex(
+            (element) => element.primary === true
+          ),
         thisIndex: editableFieldsWithSingleInterface.interfaces.findIndex(
           (element) => element.purpose === 'vpc'
         ),
@@ -163,9 +164,10 @@ describe('LinodeConfigDialog', () => {
       const valueReturned = unrecommendedConfigNoticeSelector({
         _interface: publicInterface,
         isLKEEnterpriseCluster: false,
-        primaryInterfaceIndex: editableFieldsWithoutVPCInterface.interfaces.findIndex(
-          (element) => element.primary === true
-        ),
+        primaryInterfaceIndex:
+          editableFieldsWithoutVPCInterface.interfaces.findIndex(
+            (element) => element.primary === true
+          ),
         thisIndex: 0,
         values: editableFieldsWithoutVPCInterface,
       });

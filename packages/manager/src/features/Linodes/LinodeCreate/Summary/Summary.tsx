@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -6,7 +7,6 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -139,6 +139,7 @@ export const Summary = () => {
           <Typography>Please configure your Linode.</Typography>
         ) : (
           <Stack
+            direction={isSmallScreen ? 'column' : 'row'}
             divider={
               isSmallScreen ? undefined : (
                 <Divider
@@ -148,7 +149,6 @@ export const Summary = () => {
                 />
               )
             }
-            direction={isSmallScreen ? 'column' : 'row'}
             flexWrap="wrap"
             gap={1.5}
           >

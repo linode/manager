@@ -5,7 +5,7 @@ import {
   getVolumes,
 } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
-import { SimpleBackoffMethod, attemptWithBackoff } from 'support/util/backoff';
+import { attemptWithBackoff, SimpleBackoffMethod } from 'support/util/backoff';
 import { depaginate } from 'support/util/paginate';
 import { pollVolumeStatus } from 'support/util/polling';
 

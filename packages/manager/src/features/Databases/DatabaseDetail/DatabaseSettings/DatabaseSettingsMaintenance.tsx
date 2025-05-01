@@ -47,6 +47,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         </StyledLinkButton>
         {hasUpdates && (
           <TooltipIcon
+            status="help"
             sxTooltipIcon={{
               padding: '0px 8px',
             }}
@@ -57,7 +58,6 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
                 the next maintenance window.
               </Typography>
             }
-            status="help"
           />
         )}
       </Grid>

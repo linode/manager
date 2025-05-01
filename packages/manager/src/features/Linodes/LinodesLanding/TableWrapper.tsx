@@ -1,8 +1,8 @@
+import { usePreferences } from '@linode/queries';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
-import { usePreferences } from '@linode/queries';
 
 import { SortableTableHead } from './SortableTableHead';
 
@@ -12,8 +12,8 @@ import type { TableProps } from 'src/components/Table';
 interface Props {
   children: React.ReactNode;
   dataLength: number;
-  linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  linodeViewPreference: 'grid' | 'list';
   tableProps?: TableProps;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -52,8 +52,8 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
         >
           <SortableTableHead
             handleOrderChange={handleOrderChange}
-            linodeViewPreference={linodeViewPreference}
             linodesAreGrouped={linodesAreGrouped}
+            linodeViewPreference={linodeViewPreference}
             order={order}
             orderBy={orderBy}
             toggleGroupLinodes={toggleGroupLinodes}

@@ -1,16 +1,17 @@
 import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import * as React from 'react';
-import { kernelFactory } from 'src/factories/kernels';
 
+import { kernelFactory } from 'src/factories/kernels';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   KernelSelect,
-  KernelSelectProps,
   kernelsToGroupedItems,
   sortCurrentKernels,
 } from './KernelSelect';
+
+import type { KernelSelectProps } from './KernelSelect';
 
 const kernels = [
   kernelFactory.build({ id: 'linode/grub2', label: 'GRUB 2' }),

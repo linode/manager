@@ -67,7 +67,7 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
 export const sortByVersion = (
   a: string,
   b: string,
-  order: SortOrder
+  order: SortOrder,
 ): number => {
   const aParts = a.split('.');
   const bParts = b.split('.');

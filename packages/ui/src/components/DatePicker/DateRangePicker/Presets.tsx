@@ -11,7 +11,7 @@ interface PresetsProps {
   onPresetSelect: (
     startDate: DateTime | null,
     endDate: DateTime | null,
-    presetLabel: null | string
+    presetLabel: null | string,
   ) => void;
   selectedPreset: null | string;
 }
@@ -70,14 +70,14 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
 
   return (
     <Stack
+      paddingLeft={1}
+      paddingRight={1 / 4}
+      paddingTop={3}
       sx={(theme: Theme) => ({
         backgroundColor: theme.tokens.component.Calendar.PresetArea.Background,
         borderRight: `1px solid ${theme.tokens.component.Calendar.Border}`,
         width: '134px',
       })}
-      paddingLeft={1}
-      paddingRight={1 / 4}
-      paddingTop={3}
     >
       <Typography
         sx={(theme: Theme) => ({
@@ -92,6 +92,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         const { endDate, startDate } = preset.getRange();
         return (
           <StyledActionButton
+            key={preset.label}
             onClick={() => {
               onPresetSelect(startDate, endDate, preset.label);
             }}
@@ -122,7 +123,6 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
               justifyContent: 'flex-start',
               padding: theme.spacing(),
             })}
-            key={preset.label}
             variant="text"
           >
             {preset.label}

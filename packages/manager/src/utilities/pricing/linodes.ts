@@ -112,9 +112,10 @@ export const getDynamicDCNetworkTransferData = ({
   }
 
   if (networkTransferData.region_transfers) {
-    const dataCenterSpecificLinodeTransfer = networkTransferData.region_transfers.find(
-      (networkTransferDataRegion) => networkTransferDataRegion.id === regionId
-    );
+    const dataCenterSpecificLinodeTransfer =
+      networkTransferData.region_transfers.find(
+        (networkTransferDataRegion) => networkTransferDataRegion.id === regionId
+      );
 
     if (dataCenterSpecificLinodeTransfer) {
       return {

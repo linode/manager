@@ -3,7 +3,7 @@ import React from 'react';
 
 import { accountAgreementsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { EUAgreement } from './EUAgreement';
@@ -29,17 +29,15 @@ describe('EUAgreement', () => {
       })
     );
 
-    const {
-      findByText,
-      getByRole,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <EUAgreement />,
-      useFormOptions: {
-        defaultValues: {
-          region: 'eu-west',
+    const { findByText, getByRole } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <EUAgreement />,
+        useFormOptions: {
+          defaultValues: {
+            region: 'eu-west',
+          },
         },
-      },
-    });
+      });
 
     await findByText('Agreements');
     const checkbox = getByRole('checkbox');

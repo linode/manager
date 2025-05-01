@@ -1,7 +1,7 @@
 import {
+  createMaskedText,
   DEFAULT_MASKED_TEXT_LENGTH,
   MASKABLE_TEXT_LENGTH_MAP,
-  createMaskedText,
 } from './createMaskedText';
 
 describe('createMaskedText', () => {

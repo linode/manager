@@ -72,9 +72,8 @@ export const CreateDiskDrawer = (props: Props) => {
     id: linodeId,
   });
 
-  const { mutateAsync: createDisk, reset } = useLinodeDiskCreateMutation(
-    linodeId
-  );
+  const { mutateAsync: createDisk, reset } =
+    useLinodeDiskCreateMutation(linodeId);
 
   const maximumSize = calculateDiskFree(linode, disks, 0);
 
@@ -171,24 +170,26 @@ export const CreateDiskDrawer = (props: Props) => {
         />
         {selectedMode === 'empty' && (
           <Autocomplete
+            disableClearable
+            disabled={disabled}
             errorText={
               formik.touched.filesystem ? formik.errors.filesystem : undefined
             }
+            label="Filesystem"
+            onBlur={formik.handleBlur}
             onChange={(_, option) =>
               formik.setFieldValue('filesystem', option.label)
             }
+            options={fileSystemOptions}
             value={fileSystemOptions.find(
               (option) => option.label === formik.values.filesystem
             )}
-            disableClearable
-            disabled={disabled}
-            label="Filesystem"
-            onBlur={formik.handleBlur}
-            options={fileSystemOptions}
           />
         )}
         {selectedMode === 'from_image' && (
           <ImageAndPassword
+            authorizedUsers={formik.values.authorized_users}
+            disabled={Boolean(disabled)}
             imageFieldError={
               formik.touched.image ? formik.errors.image : undefined
             }
@@ -198,25 +199,23 @@ export const CreateDiskDrawer = (props: Props) => {
             onPasswordChange={(root_pass: string) =>
               formik.setFieldValue('root_pass', root_pass)
             }
+            password={formik.values.root_pass}
             passwordError={
               formik.touched.root_pass ? formik.errors.root_pass : undefined
             }
+            selectedImage={formik.values.image}
             setAuthorizedUsers={(value) =>
               formik.setFieldValue('authorized_users', value)
             }
-            authorizedUsers={formik.values.authorized_users}
-            disabled={Boolean(disabled)}
-            password={formik.values.root_pass}
-            selectedImage={formik.values.image}
           />
         )}
         <TextField
-          InputProps={{
-            endAdornment: <InputAdornment position="end">MB</InputAdornment>,
-          }}
           data-qa-disk-size
           disabled={disabled}
           errorText={formik.touched.size ? formik.errors.size : undefined}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">MB</InputAdornment>,
+          }}
           label="Size"
           name="size"
           onBlur={formik.handleBlur}

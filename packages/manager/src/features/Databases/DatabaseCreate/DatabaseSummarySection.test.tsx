@@ -6,7 +6,7 @@ import { databaseFactory, databaseTypeFactory } from 'src/factories';
 import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';

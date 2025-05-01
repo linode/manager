@@ -33,7 +33,7 @@ export const useAppTokensQuery = (params?: Params, filter?: Filter) => {
 export const usePersonalAccessTokensQuery = (
   params?: Params,
   filter?: Filter,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     enabled,
@@ -92,7 +92,7 @@ export const useRevokeAppAccessTokenMutation = (id: number) => {
           queryClient.invalidateQueries({
             queryKey: profileQueries.appTokens._def,
           }),
-        1000
+        1000,
       );
     },
   });

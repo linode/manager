@@ -1,15 +1,16 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   DataSeries,
   ManagedContact,
   ManagedCredential,
   ManagedIssue,
   ManagedLinodeSetting,
+  ManagedServiceMonitor,
   ManagedSSHPubKey,
   ManagedSSHSetting,
-  ManagedServiceMonitor,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
-import { Factory } from '@linode/utilities';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
   email: Factory.each((i) => `john.doe.${i}@example.com`),

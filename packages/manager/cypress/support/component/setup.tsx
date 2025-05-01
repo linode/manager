@@ -16,11 +16,11 @@
 import { queryClientFactory } from '@linode/queries';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
-  RouterProvider,
   createMemoryHistory,
   createRootRoute,
   createRoute,
   createRouter,
+  RouterProvider,
 } from '@tanstack/react-router';
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';

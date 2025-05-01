@@ -1,7 +1,7 @@
 import { getRegionById, getRegionByLabel } from 'support/util/regions';
 
-import type { SelectorMatcherOptions } from '@testing-library/cypress';
 import type { Region } from '@linode/api-v4';
+import type { SelectorMatcherOptions } from '@testing-library/cypress';
 
 /**
  * Returns a regular expression object to match against region select items.
@@ -61,7 +61,7 @@ export const autocompletePopper = {
    * Finds an item within an autocomplete popper that has the given title.
    */
   findByTitle: (
-    title: string | RegExp,
+    title: RegExp | string,
     options?: SelectorMatcherOptions
   ): Cypress.Chainable => {
     return (

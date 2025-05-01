@@ -1,5 +1,5 @@
 import { useNotificationsQuery } from '@linode/queries';
-import { Box, Chip, Divider, Typography, rotate360 } from '@linode/ui';
+import { Box, Chip, Divider, rotate360, Typography } from '@linode/ui';
 import { usePrevious } from '@linode/utilities';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { IconButton } from '@mui/material';
@@ -24,7 +24,7 @@ import {
   useMarkEventsAsSeen,
 } from 'src/queries/events/events';
 
-import { TopMenuTooltip, topMenuIconButtonSx } from '../TopMenuTooltip';
+import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
 export const NotificationMenu = () => {
   const history = useHistory();
@@ -86,12 +86,6 @@ export const NotificationMenu = () => {
     <>
       <TopMenuTooltip title="Notifications">
         <IconButton
-          sx={(theme) => ({
-            ...topMenuIconButtonSx(theme),
-            color: notificationContext.menuOpen
-              ? theme.tokens.component.GlobalHeader.Icon.Active
-              : theme.tokens.component.GlobalHeader.Icon.Default,
-          })}
           aria-describedby={id}
           aria-haspopup="true"
           aria-label="Notifications"
@@ -99,6 +93,12 @@ export const NotificationMenu = () => {
           id={menuButtonId}
           onClick={handleNotificationMenuToggle}
           ref={anchorRef}
+          sx={(theme) => ({
+            ...topMenuIconButtonSx(theme),
+            color: notificationContext.menuOpen
+              ? theme.tokens.component.GlobalHeader.Icon.Active
+              : theme.tokens.component.GlobalHeader.Icon.Default,
+          })}
         >
           <Bell height="24px" width="24px" />
           {numNotifications > 0 && (
@@ -106,13 +106,13 @@ export const NotificationMenu = () => {
               adjustBorderRadius={
                 numNotifications > 9 || showInProgressEventIcon
               }
+              color="error"
+              data-testid="events-count-notification"
               icon={
-                Boolean(showInProgressEventIcon) ? (
+                showInProgressEventIcon ? (
                   <StyledAutorenewIcon data-testid="in-progress-event-icon" />
                 ) : undefined
               }
-              color="error"
-              data-testid="events-count-notification"
               label={numNotifications > 9 ? '9+' : numNotifications}
               size="small"
             />
@@ -120,10 +120,15 @@ export const NotificationMenu = () => {
         </IconButton>
       </TopMenuTooltip>
       <Popover
+        anchorEl={anchorRef.current}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
         }}
+        data-qa-notification-menu
+        id={id}
+        onClose={handleClose}
+        open={notificationContext.menuOpen}
         slotProps={{
           paper: {
             sx: (theme) => ({
@@ -138,11 +143,6 @@ export const NotificationMenu = () => {
             }),
           },
         }}
-        anchorEl={anchorRef.current}
-        data-qa-notification-menu
-        id={id}
-        onClose={handleClose}
-        open={notificationContext.menuOpen}
       >
         <NotificationCenterNotificationsContainer />
         <Box>

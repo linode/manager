@@ -164,13 +164,13 @@ export const VolumeCreate = () => {
   const renderSelectTooltip = (tooltipText: string) => {
     return (
       <TooltipIcon
+        classes={{ popper: classes.tooltip }}
+        status="help"
         sxTooltipIcon={{
           marginBottom: '6px',
           marginLeft: theme.spacing(),
           padding: 0,
         }}
-        classes={{ popper: classes.tooltip }}
-        status="help"
         text={tooltipText}
         tooltipPosition="right"
       />
@@ -300,7 +300,7 @@ export const VolumeCreate = () => {
   );
 
   const toggleVolumeEncryptionEnabled = (
-    encryption: VolumeEncryption | undefined
+    encryption: undefined | VolumeEncryption
   ) => {
     if (encryption === 'enabled') {
       setFieldValue('encryption', 'disabled');
@@ -359,8 +359,6 @@ export const VolumeCreate = () => {
               </Notice>
             )}
             <TextField
-              tooltipText="Use only ASCII letters, numbers,
-                  underscores, and dashes."
               className={classes.select}
               data-qa-volume-label
               disabled={doesNotHavePermission}
@@ -371,10 +369,15 @@ export const VolumeCreate = () => {
               onChange={handleChange}
               tooltipClasses={classes.labelTooltip}
               tooltipPosition="right"
+              tooltipText="Use only ASCII letters, numbers,
+                  underscores, and dashes."
               value={values.label}
             />
             <Box className={classes.select}>
               <TagsInput
+                disabled={doesNotHavePermission}
+                label="Tags"
+                name="tags"
                 onChange={(items) =>
                   setFieldValue(
                     'tags',
@@ -391,24 +394,21 @@ export const VolumeCreate = () => {
                       : undefined
                     : undefined
                 }
-                disabled={doesNotHavePermission}
-                label="Tags"
-                name="tags"
                 value={values.tags.map((tag) => ({ label: tag, value: tag }))}
               />
             </Box>
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
-                onChange={(e, region) => {
-                  setFieldValue('region', region?.id ?? null);
-                  setFieldValue('linode_id', null);
-                }}
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
                 isGeckoLAEnabled={isGeckoLAEnabled}
                 label="Region"
                 onBlur={handleBlur}
+                onChange={(e, region) => {
+                  setFieldValue('region', region?.id ?? null);
+                  setFieldValue('linode_id', null);
+                }}
                 regions={regions ?? []}
                 value={values.region}
                 width={400}
@@ -429,6 +429,11 @@ export const VolumeCreate = () => {
                   display="flex"
                 >
                   <LinodeSelect
+                    clearable
+                    disabled={doesNotHavePermission}
+                    errorText={linodeError}
+                    onBlur={handleBlur}
+                    onSelectionChange={handleLinodeChange}
                     optionsFilter={(linode: Linode) => {
                       const linodeRegion = linode.region;
                       const valuesRegion = values.region;
@@ -449,11 +454,6 @@ export const VolumeCreate = () => {
                       },
                       width: '400px',
                     }}
-                    clearable
-                    disabled={doesNotHavePermission}
-                    errorText={linodeError}
-                    onBlur={handleBlur}
-                    onSelectionChange={handleLinodeChange}
                     value={values.linode_id}
                   />
                   {renderSelectTooltip(
@@ -512,11 +512,15 @@ export const VolumeCreate = () => {
             {isBlockStorageEncryptionFeatureEnabled && (
               <Box>
                 <Encryption
+                  descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
+                  disabled={!regionSupportsBlockStorageEncryption}
                   disabledReason={
                     values.region
                       ? BLOCK_STORAGE_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
                       : BLOCK_STORAGE_CHOOSE_REGION_COPY
                   }
+                  entityType="Volume"
+                  isEncryptEntityChecked={values.encryption === 'enabled'}
                   notices={
                     values.encryption === 'enabled'
                       ? [
@@ -528,16 +532,15 @@ export const VolumeCreate = () => {
                   onChange={() =>
                     toggleVolumeEncryptionEnabled(values.encryption)
                   }
-                  descriptionCopy={BLOCK_STORAGE_ENCRYPTION_GENERAL_DESCRIPTION}
-                  disabled={!regionSupportsBlockStorageEncryption}
-                  entityType="Volume"
-                  isEncryptEntityChecked={values.encryption === 'enabled'}
                 />
               </Box>
             )}
           </Paper>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              buttonType="primary"
+              className={classes.button}
+              data-qa-deploy-linode
               disabled={
                 disabled ||
                 (isBlockStorageEncryptionFeatureEnabled && // @TODO BSE: Once BSE is fully rolled out, remove feature enabled check/condition
@@ -545,16 +548,13 @@ export const VolumeCreate = () => {
                   !linodeSupportsBlockStorageEncryption &&
                   values.encryption === 'enabled')
               }
+              loading={isSubmitting}
+              style={{ marginLeft: 12 }}
               tooltipText={
                 !isLoading && isInvalidPrice
                   ? PRICES_RELOAD_ERROR_NOTICE_TEXT
                   : ''
               }
-              buttonType="primary"
-              className={classes.button}
-              data-qa-deploy-linode
-              loading={isSubmitting}
-              style={{ marginLeft: 12 }}
               type="submit"
             >
               Create Volume
@@ -568,7 +568,7 @@ export const VolumeCreate = () => {
 
 interface FormState {
   config_id: null | number;
-  encryption: VolumeEncryption | undefined;
+  encryption: undefined | VolumeEncryption;
   label: string;
   linode_id: null | number;
   region: string;

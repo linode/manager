@@ -1,3 +1,4 @@
+import { useUpdateUserMutation } from '@linode/queries';
 import { Button, Paper, TextField } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -5,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useUpdateUserMutation } from '@linode/queries';
 
 import type { User } from '@linode/api-v4';
 
@@ -52,6 +52,8 @@ export const UsernamePanel = ({ user }: Props) => {
     <Paper>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="username"
           render={({ field, fieldState }) => (
             <TextField
               disabled={isProxyUserProfile}
@@ -65,8 +67,6 @@ export const UsernamePanel = ({ user }: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="username"
         />
         <Button
           buttonType="primary"

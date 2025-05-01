@@ -21,7 +21,7 @@ const defaultState = {
 // Useful for components that render several drawers, modals, etc. which need
 // independent open/close state. This hooks provides a common interface.
 export const useOpenClose = (
-  initialState: OpenCloseState = defaultState
+  initialState: OpenCloseState = defaultState,
 ): OpenClose => {
   const [entity, setEntity] = React.useState<OpenCloseState>(initialState);
 

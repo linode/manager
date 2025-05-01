@@ -45,10 +45,8 @@ export const PlacementGroupsEditDrawer = (
     placementGroup?.id ?? -1
   );
   const { enqueueSnackbar } = useSnackbar();
-  const {
-    hasFormBeenSubmitted,
-    setHasFormBeenSubmitted,
-  } = useFormValidateOnChange();
+  const { hasFormBeenSubmitted, setHasFormBeenSubmitted } =
+    useFormValidateOnChange();
 
   const handleResetForm = () => {
     resetForm();
@@ -108,15 +106,15 @@ export const PlacementGroupsEditDrawer = (
 
   return (
     <Drawer
+      isFetching={isFetching}
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
       title={
         placementGroup
           ? `Edit Placement Group ${placementGroup.label}`
           : 'Edit Placement Group'
       }
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
-      onClose={handleClose}
-      open={open}
     >
       {generalError && <Notice text={generalError} variant="error" />}
       {placementGroup ? (
@@ -150,12 +148,12 @@ export const PlacementGroupsEditDrawer = (
           <form onSubmit={handleSubmit}>
             <Stack spacing={1}>
               <TextField
-                inputProps={{
-                  autoFocus: true,
-                }}
                 aria-label="Label for the Placement Group"
                 disabled={!placementGroup || disableEditButton || false}
                 errorText={errors.label}
+                inputProps={{
+                  autoFocus: true,
+                }}
                 label="Label"
                 name="label"
                 onBlur={handleBlur}

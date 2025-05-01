@@ -32,8 +32,8 @@ import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { Category } from './shared';
 import type {
   FirewallPolicyType,
-  FirewallRuleType,
   FirewallRules,
+  FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -392,19 +392,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       )}
       <StyledDiv>
         <FirewallRuleTable
+          category="inbound"
+          disabled={disabled}
           handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
           }
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
+          handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('inbound', startIdx, endIdx)
           }
-          category="inbound"
-          disabled={disabled}
-          handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
-          handlePolicyChange={handlePolicyChange}
           handleUndo={(idx) => handleUndo('inbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.inbound}
@@ -413,19 +413,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       </StyledDiv>
       <StyledDiv>
         <FirewallRuleTable
+          category="outbound"
+          disabled={disabled}
           handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
           }
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
+          handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('outbound', startIdx, endIdx)
           }
-          category="outbound"
-          disabled={disabled}
-          handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
-          handlePolicyChange={handlePolicyChange}
           handleUndo={(idx) => handleUndo('outbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.outbound}
@@ -433,13 +433,13 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         />
       </StyledDiv>
       <FirewallRuleDrawer
+        category={ruleDrawer.category}
         isOpen={
           location.pathname.endsWith('add/inbound') ||
           location.pathname.endsWith('add/outbound') ||
           location.pathname.endsWith(`edit/inbound/${ruleDrawer.ruleIdx}`) ||
           location.pathname.endsWith(`edit/outbound/${ruleDrawer.ruleIdx}`)
         }
-        category={ruleDrawer.category}
         mode={ruleDrawer.mode}
         onClose={closeRuleDrawer}
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
@@ -459,6 +459,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         }}
       />
       <DiscardChangesDialog
+        handleClose={() => setDiscardChangesModalOpen(false)}
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
           setGeneralErrors(undefined);
@@ -469,7 +470,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}
-        handleClose={() => setDiscardChangesModalOpen(false)}
         isOpen={discardChangesModalOpen}
       />
     </>

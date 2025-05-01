@@ -39,12 +39,12 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export interface Props {
-  SideIcon: React.ComponentClass | typeof SvgIcon;
   active?: boolean;
   children?: string;
   className?: string;
   disabled?: boolean;
   onClick?: () => void;
+  SideIcon: React.ComponentClass | typeof SvgIcon;
   text: string;
   title: string;
   to?: string;
@@ -52,16 +52,8 @@ export interface Props {
 
 export const IconTextLink = (props: Props) => {
   const { classes, cx } = useStyles();
-  const {
-    SideIcon,
-    active,
-    className,
-    disabled,
-    onClick,
-    text,
-    title,
-    to,
-  } = props;
+  const { SideIcon, active, className, disabled, onClick, text, title, to } =
+    props;
 
   const LinkButton = (
     <Button

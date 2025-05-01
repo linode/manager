@@ -44,13 +44,10 @@ describe('Volume action menu', () => {
   });
 
   it('should include Attach if the Volume is not attached', async () => {
-    const {
-      getByLabelText,
-      getByText,
-      queryByText,
-    } = await renderWithThemeAndRouter(
-      <VolumesActionMenu {...props} isVolumesLanding={true} />
-    );
+    const { getByLabelText, getByText, queryByText } =
+      await renderWithThemeAndRouter(
+        <VolumesActionMenu {...props} isVolumesLanding={true} />
+      );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Volume ${volume.label}`
@@ -68,13 +65,10 @@ describe('Volume action menu', () => {
       linode_label: 'linode-2',
     });
 
-    const {
-      getByLabelText,
-      getByText,
-      queryByText,
-    } = await renderWithThemeAndRouter(
-      <VolumesActionMenu {...props} volume={attachedVolune} />
-    );
+    const { getByLabelText, getByText, queryByText } =
+      await renderWithThemeAndRouter(
+        <VolumesActionMenu {...props} volume={attachedVolune} />
+      );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Volume ${attachedVolune.label}`

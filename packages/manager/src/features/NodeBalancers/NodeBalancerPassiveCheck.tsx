@@ -19,11 +19,11 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
 
   return (
     <Grid
-      sx={{ padding: 1 }}
       size={{
         md: 6,
         xs: 12,
       }}
+      sx={{ padding: 1 }}
     >
       <Grid container spacing={2}>
         <Grid size={12}>

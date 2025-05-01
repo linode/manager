@@ -41,9 +41,8 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
 
   const userDefinedFields = stackscript?.user_defined_fields;
 
-  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
-    userDefinedFields
-  );
+  const [requiredUDFs, optionalUDFs] =
+    separateUDFsByRequiredStatus(userDefinedFields);
 
   const clusterSize = stackscriptData?.['cluster_size'];
 

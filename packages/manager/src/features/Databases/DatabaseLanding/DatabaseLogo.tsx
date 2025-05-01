@@ -22,11 +22,11 @@ export const DatabaseLogo = ({ sx }: Props) => {
     >
       <Typography sx={{ display: 'inline-block', textAlign: 'center' }}>
         <Typography
+          component="span"
           sx={{
             color: theme.palette.mode === 'light' ? theme.color.headline : '',
             display: 'flex',
           }}
-          component="span"
         >
           Powered by &nbsp;
           {theme.palette.mode === 'light' ? <Logo /> : <LogoWhite />}

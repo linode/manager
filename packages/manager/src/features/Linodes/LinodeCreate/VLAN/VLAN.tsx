@@ -109,9 +109,6 @@ export const VLAN = () => {
           name="interfaces.1.ipam_address"
           render={({ field, fieldState }) => (
             <TextField
-              tooltipText={
-                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
-              }
               containerProps={{ maxWidth: 335 }}
               disabled={disabled}
               errorText={fieldState.error?.message}
@@ -121,6 +118,9 @@ export const VLAN = () => {
               onChange={field.onChange}
               optional
               placeholder="192.0.2.0/24"
+              tooltipText={
+                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+              }
               value={field.value ?? ''}
             />
           )}

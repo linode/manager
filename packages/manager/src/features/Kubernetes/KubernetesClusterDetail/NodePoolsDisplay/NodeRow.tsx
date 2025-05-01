@@ -79,10 +79,10 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     <TableRow data-qa-node-row={nodeId}>
       <TableCell>
         <Grid
+          container
           sx={{
             alignItems: 'center',
           }}
-          container
           wrap="nowrap"
         >
           <Grid>

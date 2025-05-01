@@ -60,6 +60,9 @@ export const ExtraPresetOptionCheckbox = (
                   +
                 </span>
                 <input
+                  aria-label={`Value for ${extraMockPreset.label}`}
+                  disabled={!handlers.includes(extraMockPreset.id)}
+                  min={0}
                   onBlur={(e) => {
                     if (e.target.value === '') {
                       e.target.value = '0';
@@ -79,15 +82,12 @@ export const ExtraPresetOptionCheckbox = (
                       e.target.value = '';
                     }
                   }}
+                  style={{ paddingLeft: '20px', width: '100%' }}
+                  type="number"
                   value={
                     presetsCountMap[extraMockPreset.id] ??
                     (presetsCountMap[extraMockPreset.id] || '0')
                   }
-                  aria-label={`Value for ${extraMockPreset.label}`}
-                  disabled={!handlers.includes(extraMockPreset.id)}
-                  min={0}
-                  style={{ paddingLeft: '20px', width: '100%' }}
-                  type="number"
                 />
               </div>
             )}

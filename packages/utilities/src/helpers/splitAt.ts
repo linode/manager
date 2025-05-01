@@ -13,6 +13,6 @@ export function splitAt(index: number, input: string): [string, string];
  * splitAt(3, [1, 2, 3, 4, 5]); // [[1, 2, 3], [4, 5]]
  * splitAt(3, "hello"); // ["hel", "lo"]
  */
-export function splitAt<T>(index: number, input: T[] | string) {
+export function splitAt<T>(index: number, input: string | T[]) {
   return [input.slice(0, index), input.slice(index)];
 }

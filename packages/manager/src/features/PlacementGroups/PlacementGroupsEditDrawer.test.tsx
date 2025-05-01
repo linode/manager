@@ -26,18 +26,18 @@ describe('PlacementGroupsEditDrawer', () => {
   it('should render, have the proper fields populated with PG values, and have uneditable fields disabled', async () => {
     const { getByLabelText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsEditDrawer
-        selectedPlacementGroup={placementGroupFactory.build({
-          id: 1,
-          label: 'PG-to-edit',
-          placement_group_type: 'anti_affinity:local',
-          region: 'us-east',
-        })}
         disableEditButton={false}
         isFetching={false}
         onClose={vi.fn()}
         onPlacementGroupEdit={vi.fn()}
         open={true}
         region={regionFactory.build({ id: 'us-east', label: 'Newark, NJ' })}
+        selectedPlacementGroup={placementGroupFactory.build({
+          id: 1,
+          label: 'PG-to-edit',
+          placement_group_type: 'anti_affinity:local',
+          region: 'us-east',
+        })}
       />
     );
 

@@ -1,6 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
-
 import { normalizeErrorMessage } from './initSentry';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 const INVALID_TOKEN = 'Invalid Token';
 

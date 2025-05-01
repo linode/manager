@@ -4,7 +4,7 @@
  */
 export const scrollErrorIntoView = (
   errorGroup?: string,
-  options?: ScrollIntoViewOptions
+  options?: ScrollIntoViewOptions,
 ) => {
   const errorScrollClassSelector = errorGroup
     ? `.error-for-scroll-${errorGroup}`

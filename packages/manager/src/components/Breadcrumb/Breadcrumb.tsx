@@ -1,8 +1,10 @@
 import * as React from 'react';
 
 import { StyledPreContainerDiv, StyledRootDiv } from './Breadcrumb.styles';
-import { CrumbOverridesProps, Crumbs } from './Crumbs';
-import { EditableProps, LabelProps } from './types';
+import { Crumbs } from './Crumbs';
+
+import type { CrumbOverridesProps } from './Crumbs';
+import type { EditableProps, LabelProps } from './types';
 
 export interface BreadcrumbProps {
   /**

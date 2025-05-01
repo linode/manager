@@ -39,7 +39,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 export const UpgradeVolumeDialog = (props: Props) => {
@@ -80,12 +80,12 @@ export const UpgradeVolumeDialog = (props: Props) => {
 
   return (
     <ConfirmationDialog
+      actions={actions}
       error={
         error
           ? getAPIErrorOrDefault(error, 'Unable to migrate volume.')[0].reason
           : undefined
       }
-      actions={actions}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

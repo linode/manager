@@ -70,8 +70,8 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title="Edit VPC"
@@ -87,6 +87,8 @@ export const VPCEditDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -98,10 +100,10 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <Controller
+          control={control}
+          name="description"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -114,8 +116,6 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="description"
         />
         <ActionsPanel
           primaryButtonProps={{

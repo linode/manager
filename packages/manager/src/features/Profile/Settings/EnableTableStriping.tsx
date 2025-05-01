@@ -1,7 +1,6 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
-
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 export const EnableTableStriping = () => {
   const { data: isTableStripingEnabled, isLoading } = usePreferences(
@@ -28,16 +27,16 @@ export const EnableTableStriping = () => {
       <FormControlLabel
         control={
           <Toggle
+            checked={Boolean(isTableStripingEnabled)}
             onChange={(_, checked) =>
               updatePreferences({ isTableStripingEnabled: checked })
             }
-            checked={Boolean(isTableStripingEnabled)}
           />
         }
+        disabled={isLoading}
         label={`Table striping is ${
           isTableStripingEnabled ? 'enabled' : 'disabled'
         }`}
-        disabled={isLoading}
       />
     </Paper>
   );

@@ -22,12 +22,12 @@ import {
   FormControlLabel,
   FormHelperText,
   Notice,
+  omitProps,
   Radio,
   TextField,
   Toggle,
   TooltipIcon,
   Typography,
-  omitProps,
 } from '@linode/ui';
 import {
   createDevicesFromStrings,
@@ -260,10 +260,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
-  } = useKubernetesBetaEndpoint();
+  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
+    useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
     enabled:
@@ -307,9 +305,8 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const queryClient = useQueryClient();
 
-  const [deviceCounter, setDeviceCounter] = React.useState(
-    deviceCounterDefault
-  );
+  const [deviceCounter, setDeviceCounter] =
+    React.useState(deviceCounterDefault);
 
   const [useCustomRoot, setUseCustomRoot] = React.useState(false);
 
@@ -426,7 +423,7 @@ export const LinodeConfigDialog = (props: Props) => {
       );
     }
 
-    const actionType = Boolean(config) ? 'updated' : 'created';
+    const actionType = config ? 'updated' : 'created';
     const handleSuccess = () => {
       formik.setSubmitting(false);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
@@ -919,50 +916,50 @@ export const LinodeConfigDialog = (props: Props) => {
             <Grid size={12}>
               <Typography variant="h3">Block Device Assignment</Typography>
               <DeviceSelection
-                getSelected={(slot) =>
-                  values.devices?.[slot as keyof DevicesAsStrings] ?? ''
-                }
                 counter={deviceCounter}
                 devices={availableDevices}
                 disabled={isReadOnly}
                 errorText={formik.errors.devices as string}
+                getSelected={(slot) =>
+                  values.devices?.[slot as keyof DevicesAsStrings] ?? ''
+                }
                 onChange={handleDevicesChanges}
                 slots={deviceSlots}
               />
               <FormControl fullWidth>
                 <Autocomplete
+                  autoHighlight
+                  clearIcon={null}
                   defaultValue={getSelectedDeviceOption(
                     initrdFromConfig,
                     categorizedInitrdOptions
                   )}
+                  groupBy={(option) => option.deviceType}
                   isOptionEqualToValue={(option, value) =>
                     option.label === value.label
                   }
+                  label="initrd"
+                  noMarginTop
                   onChange={(_, selected) =>
                     handleInitrdChange(selected?.value)
                   }
+                  options={categorizedInitrdOptions}
+                  placeholder="None"
                   value={getSelectedDeviceOption(
                     values.initrd,
                     categorizedInitrdOptions
                   )}
-                  autoHighlight
-                  clearIcon={null}
-                  groupBy={(option) => option.deviceType}
-                  label="initrd"
-                  noMarginTop
-                  options={categorizedInitrdOptions}
-                  placeholder="None"
                 />
               </FormControl>
               <Button
-                sx={{
-                  marginLeft: `1px`,
-                  marginTop: theme.spacing(),
-                }}
                 buttonType="secondary"
                 compactX
                 disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
+                sx={{
+                  marginLeft: `1px`,
+                  marginTop: theme.spacing(),
+                }}
               >
                 Add a Device
               </Button>
@@ -981,20 +978,20 @@ export const LinodeConfigDialog = (props: Props) => {
                 />
                 {!useCustomRoot ? (
                   <Autocomplete
-                    onChange={(_, selected) =>
-                      handleRootDeviceChange(selected?.value)
-                    }
-                    value={pathsOptions.find(
-                      (device) => device.value === values.root_device
-                    )}
                     autoHighlight
                     disableClearable
                     disabled={isReadOnly}
                     errorText={formik.errors.root_device}
                     id="root_device"
                     label="Root Device"
+                    onChange={(_, selected) =>
+                      handleRootDeviceChange(selected?.value)
+                    }
                     options={pathsOptions}
                     placeholder="None"
+                    value={pathsOptions.find(
+                      (device) => device.value === values.root_device
+                    )}
                   />
                 ) : (
                   <TextField
@@ -1022,12 +1019,12 @@ export const LinodeConfigDialog = (props: Props) => {
                 )}
                 {isLegacyConfigInterface && (
                   <TooltipIcon
+                    status="help"
+                    sx={{ tooltip: { maxWidth: 350 } }}
                     sxTooltipIcon={{
                       paddingBottom: 0,
                       paddingTop: 0,
                     }}
-                    status="help"
-                    sx={{ tooltip: { maxWidth: 350 } }}
                     text={networkInterfacesHelperText}
                   />
                 )}
@@ -1053,9 +1050,13 @@ export const LinodeConfigDialog = (props: Props) => {
                   )}
                   <>
                     <Autocomplete
+                      autoHighlight
+                      data-testid="primary-interface-dropdown"
                       disableClearable={interfacesWithoutPlaceholderInterfaces.some(
                         (i) => i.purpose === 'public' || i.purpose === 'vpc'
                       )}
+                      disabled={isReadOnly}
+                      label="Primary Interface (Default Route)"
                       onChange={(_, selected) => {
                         const updatedInterfaces = [
                           ...(values.interfaces ?? []),
@@ -1074,17 +1075,13 @@ export const LinodeConfigDialog = (props: Props) => {
                           interfaces: updatedInterfaces,
                         });
                       }}
+                      options={primaryInterfaceOptions}
+                      placeholder="None"
                       value={
                         primaryInterfaceIndex !== null
                           ? primaryInterfaceOptions[primaryInterfaceIndex]
                           : null
                       }
-                      autoHighlight
-                      data-testid="primary-interface-dropdown"
-                      disabled={isReadOnly}
-                      label="Primary Interface (Default Route)"
-                      options={primaryInterfaceOptions}
-                      placeholder="None"
                     />
                     <Divider
                       sx={{
@@ -1127,6 +1124,7 @@ export const LinodeConfigDialog = (props: Props) => {
                           values,
                         })}
                         <InterfaceSelect
+                          additionalIPv4RangesForVPC={thisInterfaceIPRanges}
                           errors={{
                             ipRangeError:
                               // @ts-expect-error this form intentionally breaks formik's error type
@@ -1156,13 +1154,12 @@ export const LinodeConfigDialog = (props: Props) => {
                           handleChange={(newInterface: ExtendedInterface) => {
                             handleInterfaceChange(idx, newInterface);
                           }}
-                          nattedIPv4Address={
-                            thisInterface.ipv4?.nat_1_1 ?? undefined
-                          }
-                          additionalIPv4RangesForVPC={thisInterfaceIPRanges}
                           ipamAddress={thisInterface.ipam_address}
                           key={`eth${idx}-interface`}
                           label={thisInterface.label}
+                          nattedIPv4Address={
+                            thisInterface.ipv4?.nat_1_1 ?? undefined
+                          }
                           purpose={thisInterface.purpose}
                           readOnly={isReadOnly}
                           region={linode?.region}
@@ -1170,8 +1167,8 @@ export const LinodeConfigDialog = (props: Props) => {
                           regionHasVPCs={regionHasVPCs}
                           slotNumber={idx}
                           subnetId={thisInterface.subnet_id}
-                          vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
                           vpcId={thisInterface.vpc_id}
+                          vpcIPv4={thisInterface.ipv4?.vpc ?? undefined}
                         />
                       </React.Fragment>
                     );
@@ -1239,6 +1236,9 @@ export const LinodeConfigDialog = (props: Props) => {
                     <StyledFormControlLabel
                       control={
                         <Toggle
+                          checked={values.helpers.network}
+                          disabled={isReadOnly}
+                          onChange={formik.handleChange}
                           tooltipText={
                             <>
                               Automatically configure static networking
@@ -1248,9 +1248,6 @@ export const LinodeConfigDialog = (props: Props) => {
                               </Link>
                             </>
                           }
-                          checked={values.helpers.network}
-                          disabled={isReadOnly}
-                          onChange={formik.handleChange}
                         />
                       }
                       label="Auto-configure networking"

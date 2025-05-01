@@ -1,4 +1,5 @@
-import { Box, Paper, Chip } from '@linode/ui';
+import { useMakeDefaultPaymentMethodMutation } from '@linode/queries';
+import { Box, Chip, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -6,9 +7,9 @@ import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
-import { useMakeDefaultPaymentMethodMutation } from '@linode/queries';
 
 import { ThirdPartyPayment } from './ThirdPartyPayment';
+
 import type { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -42,9 +43,8 @@ export const PaymentMethodRow = (props: Props) => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    mutateAsync: makePaymentMethodDefault,
-  } = useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
+  const { mutateAsync: makePaymentMethodDefault } =
+    useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
 
   const makeDefault = () => {
     makePaymentMethodDefault().catch((errors) =>
@@ -101,6 +101,8 @@ export const PaymentMethodRow = (props: Props) => {
 
   return (
     <Paper
+      data-qa-payment-row={type}
+      data-testid={`payment-method-row-${paymentMethod.id}`}
       sx={{
         '&&': {
           // TODO: Remove "&&" when Paper has been refactored
@@ -110,8 +112,6 @@ export const PaymentMethodRow = (props: Props) => {
           marginBottom: theme.spacing(),
         },
       }}
-      data-qa-payment-row={type}
-      data-testid={`payment-method-row-${paymentMethod.id}`}
       variant="outlined"
     >
       <Box sx={sxBoxFlex}>

@@ -31,9 +31,8 @@ export const DiskEncryption = (props: Props) => {
       region?.capabilities.includes('LA Disk Encryption')) ??
     false;
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   if (!isDiskEncryptionFeatureEnabled) {
     return null;
@@ -52,20 +51,20 @@ export const DiskEncryption = (props: Props) => {
 
   return (
     <Controller
+      control={control}
+      name="disk_encryption"
       render={({ field, fieldState }) => (
         <Encryption
-          onChange={(checked) =>
-            field.onChange(checked ? 'enabled' : 'disabled')
-          }
           descriptionCopy={description}
           disabled={disabled || disableDiskEncryptionReason !== undefined}
           disabledReason={disableDiskEncryptionReason}
           error={fieldState.error?.message}
           isEncryptEntityChecked={field.value === 'enabled'}
+          onChange={(checked) =>
+            field.onChange(checked ? 'enabled' : 'disabled')
+          }
         />
       )}
-      control={control}
-      name="disk_encryption"
     />
   );
 };

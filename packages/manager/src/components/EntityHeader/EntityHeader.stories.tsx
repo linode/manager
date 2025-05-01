@@ -58,6 +58,10 @@ export const Default: Story = {
                 window: 'W0',
               },
             }}
+            linodeId={12434}
+            linodeLabel="linode-001"
+            linodeRegion="us-east"
+            linodeStatus="running"
             linodeType={{
               accelerated_devices: 0,
               addons: {
@@ -96,10 +100,6 @@ export const Default: Story = {
               transfer: 2000,
               vcpus: 1,
             }}
-            linodeId={12434}
-            linodeLabel="linode-001"
-            linodeRegion="us-east"
-            linodeStatus="running"
             onOpenDeleteDialog={action('onOpenDeleteDialog')}
             onOpenMigrateDialog={action('onOpenMigrateDialog')}
             onOpenPowerDialog={action('onOpenPowerDialog')}

@@ -1,5 +1,6 @@
-import type { Context } from 'mocha';
 import { removeDuplicates } from './arrays';
+
+import type { Context } from 'mocha';
 
 const queryRegex = /(?:-|\+)?([^\s]+)/g;
 
@@ -23,15 +24,15 @@ export type TestTag =
   // Describes additional uses for which a test may serve.
   // For example, a test which creates a Linode end-to-end could be useful for
   // DC testing purposes even if that is not the primary purpose of the test.
+  | 'method:e2e'
+  | 'method:mock'
   | 'purpose:dcTesting'
-  | 'purpose:smokeTesting'
-  | 'purpose:syntheticTesting'
 
   // Method-related tags.
   // Describe the way the tests operate -- either end-to-end using real API requests,
   // or integration using mocked API requests.
-  | 'method:e2e'
-  | 'method:mock';
+  | 'purpose:smokeTesting'
+  | 'purpose:syntheticTesting';
 
 /**
  *
@@ -113,7 +114,7 @@ export const validateQuery = (query: string) => {
  */
 export const getQueryRules = (query: string) => {
   return (query.match(queryRegex) ?? []).map((rule: string) => {
-    if (!['-', '+'].includes(rule[0]) || rule.length === 1) {
+    if (!['+', '-'].includes(rule[0]) || rule.length === 1) {
       return `+${rule}`;
     }
     return rule;

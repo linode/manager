@@ -1,9 +1,9 @@
-import { Grants, Profile } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { UseQueryResult } from '@tanstack/react-query';
-
 import { useGrants, useProfile } from '@linode/queries';
+import * as React from 'react';
+
+import type { Grants, Profile } from '@linode/api-v4/lib';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 export interface WithProfileProps {
   grants: UseQueryResult<Grants, APIError[]>;

@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { OMC_CreateBucketDrawer } from './OMC_CreateBucketDrawer';
@@ -19,19 +19,16 @@ describe('OMC_CreateBucketDrawer', () => {
   });
 
   it('should render the drawer', () => {
-    const {
-      getByTestId,
-      getByText,
-      queryByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <OMC_CreateBucketDrawer {...props} />,
-      options: {
-        flags: {
-          objMultiCluster: true,
-          objectStorageGen2: { enabled: true },
+    const { getByTestId, getByText, queryByText } =
+      renderWithThemeAndHookFormContext({
+        component: <OMC_CreateBucketDrawer {...props} />,
+        options: {
+          flags: {
+            objMultiCluster: true,
+            objectStorageGen2: { enabled: true },
+          },
         },
-      },
-    });
+      });
 
     expect(getByTestId('drawer-title')).toBeVisible();
     expect(getByText('Bucket Name')).toBeVisible();

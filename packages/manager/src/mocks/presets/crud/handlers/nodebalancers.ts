@@ -550,7 +550,7 @@ export const updateNodeBalancer = (mockState: MockState) => [
 export const deleteNodeBalancer = (mockState: MockState) => [
   http.delete(
     '*/v4/nodebalancers/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const nodeBalancerId = Number(params.id);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
       if (!nodeBalancer) {
@@ -606,7 +606,7 @@ export const deleteNodeBalancer = (mockState: MockState) => [
   ),
   http.delete(
     '*/v4/nodebalancers/:id/configs/:configId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const nodeBalancerId = Number(params.id);
       const configId = Number(params.configId);
       const nodeBalancer = await mswDB.get('nodeBalancers', nodeBalancerId);
@@ -655,7 +655,7 @@ export const deleteNodeBalancer = (mockState: MockState) => [
   ),
   http.delete(
     '*/v4/nodebalancers/:id/configs/:configId/nodes/:nodeId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const nodeBalancerId = Number(params.id);
       const configId = Number(params.configId);
       const nodeId = Number(params.nodeId);

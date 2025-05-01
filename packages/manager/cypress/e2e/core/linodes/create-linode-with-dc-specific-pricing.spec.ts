@@ -34,15 +34,17 @@ describe('Create Linode with DC-specific pricing', () => {
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
     )!;
-    const currentBackupPrice = dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
-      (regionPrice) => regionPrice.id === initialRegion.id
-    )!;
+    const currentBackupPrice =
+      dcPricingMockLinodeTypes[0].addons.backups.region_prices.find(
+        (regionPrice) => regionPrice.id === initialRegion.id
+      )!;
     const newPrice = dcPricingMockLinodeTypes[1].region_prices.find(
       (linodeType) => linodeType.id === newRegion.id
     )!;
-    const newBackupPrice = dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
-      (regionPrice) => regionPrice.id === newRegion.id
-    )!;
+    const newBackupPrice =
+      dcPricingMockLinodeTypes[1].addons.backups.region_prices.find(
+        (regionPrice) => regionPrice.id === newRegion.id
+      )!;
 
     // Mock requests to get individual types.
     mockGetLinodeType(dcPricingMockLinodeTypes[0]);

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { firewallFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Firewall } from './Firewall';
@@ -53,12 +53,11 @@ describe('Linode Create Firewall', () => {
       })
     );
 
-    const {
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <Firewall />,
-      useFormOptions: { defaultValues: { firewall_id: firewall.id } },
-    });
+    const { getByLabelText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <Firewall />,
+        useFormOptions: { defaultValues: { firewall_id: firewall.id } },
+      });
 
     await waitFor(
       () => {

@@ -51,7 +51,7 @@ export const useLinodeConfigInterfaceQuery = (options: {
 
 export const useLinodeConfigDeleteMutation = (
   linodeId: number,
-  configId: number
+  configId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
@@ -78,7 +78,7 @@ export const useLinodeConfigCreateMutation = (linodeId: number) => {
 
 export const useLinodeConfigUpdateMutation = (
   linodeId: number,
-  configId: number
+  configId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Config, APIError[], Partial<LinodeConfigCreationData>>({

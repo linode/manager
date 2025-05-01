@@ -77,10 +77,10 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
             tabIndex={0}
           >
             <ShowMoreExpansion
+              defaultExpanded={false}
               name={
                 !showMoreAttachments ? 'Show More Files' : 'Show Less Files'
               }
-              defaultExpanded={false}
             >
               <TicketAttachmentRow
                 attachments={slice(5, Infinity, attachments)}

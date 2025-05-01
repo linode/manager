@@ -12,7 +12,7 @@ import { BucketPermissionsTable } from './BucketPermissionsTable';
 import type { ObjectStorageKey } from '@linode/api-v4';
 
 export interface Props {
-  objectStorageKey: ObjectStorageKey | null;
+  objectStorageKey: null | ObjectStorageKey;
   onClose: () => void;
   open: boolean;
 }

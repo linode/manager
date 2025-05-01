@@ -20,7 +20,6 @@ export const LongviewListRows = React.memo((props: Props) => {
   } = props;
 
   return (
-    // eslint-disable-next-line
     <React.Fragment>
       {longviewClientsData.map((eachClient) => {
         return (
@@ -29,13 +28,13 @@ export const LongviewListRows = React.memo((props: Props) => {
             key={`longview-client-${eachClient.label}`}
           >
             <ClientRow
-              openPackageDrawer={() =>
-                openPackageDrawer(eachClient.id, eachClient.label)
-              }
               clientAPIKey={eachClient.api_key}
               clientID={eachClient.id}
               clientInstallKey={eachClient.install_code}
               clientLabel={eachClient.label}
+              openPackageDrawer={() =>
+                openPackageDrawer(eachClient.id, eachClient.label)
+              }
               triggerDeleteLongviewClient={triggerDeleteLongviewClient}
             />
           </div>

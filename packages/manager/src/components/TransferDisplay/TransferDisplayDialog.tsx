@@ -67,6 +67,8 @@ export const TransferDisplayDialog = React.memo(
          *  Global Transfer Pool Display
          */}
         <TransferDisplayDialogHeader
+          dataTestId="global-transfer-pool-header"
+          headerText="Global Network Transfer Pool"
           tooltipText={`The Global Pool includes transfer associated with active services in your devices' ${
             isGeckoLAEnabled ? 'core' : ''
           } regions${
@@ -75,8 +77,6 @@ export const TransferDisplayDialog = React.memo(
               : '.'
           }
           `}
-          dataTestId="global-transfer-pool-header"
-          headerText="Global Network Transfer Pool"
         />
         <Typography marginBottom={theme.spacing(2)}>
           Any additional transfer usage that exceeds this monthly allotment

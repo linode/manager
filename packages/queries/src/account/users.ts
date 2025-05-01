@@ -47,7 +47,7 @@ export const useAccountUser = (username: string) => {
 
 export const useAccountUserGrants = (username: string) => {
   return useQuery<Grants, APIError[]>(
-    accountQueries.users._ctx.user(username)._ctx.grants
+    accountQueries.users._ctx.user(username)._ctx.grants,
   );
 };
 
@@ -63,7 +63,7 @@ export const useUpdateUserMutation = (username: string) => {
       });
       queryClient.setQueryData(
         accountQueries.users._ctx.user(user.username).queryKey,
-        user
+        user,
       );
 
       // If the currently logged in user updates their user, we need to update the profile
@@ -77,7 +77,7 @@ export const useUpdateUserMutation = (username: string) => {
             }
 
             return { ...oldProfile, ...user };
-          }
+          },
         );
       }
     },
@@ -131,7 +131,7 @@ export const useCreateUserMutation = () => {
 
       queryClient.setQueryData(
         accountQueries.users._ctx.user(user.username).queryKey,
-        user
+        user,
       );
     },
   });

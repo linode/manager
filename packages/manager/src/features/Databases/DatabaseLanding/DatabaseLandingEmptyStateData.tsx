@@ -7,8 +7,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -22,18 +22,15 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Overview of Managed Databases',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-clusters',
     },
     {
       text: 'Get Started with Managed Databases',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/get-started-new-clusters',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/get-started-new-clusters',
     },
     {
       text: 'Choosing a Database Engine',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-engines',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/aiven-database-engines',
     },
   ],
   moreInfo: {
@@ -58,8 +55,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
     {
       external: true,
       text: 'MySQL Beginner Series',
-      to:
-        'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
+      to: 'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
     },
   ],
   moreInfo: {

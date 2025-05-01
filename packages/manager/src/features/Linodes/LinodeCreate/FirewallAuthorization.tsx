@@ -29,14 +29,14 @@ export const FirewallAuthorization = () => {
     <AkamaiBanner
       action={
         <FormControlLabel
-          label={
-            flags.secureVmCopy?.firewallAuthorizationLabel ??
-            'I am authorized to create a Linode without a firewall'
-          }
           checked={field.value ?? false}
           className="error-for-scroll"
           control={<Checkbox />}
           disableTypography
+          label={
+            flags.secureVmCopy?.firewallAuthorizationLabel ??
+            'I am authorized to create a Linode without a firewall'
+          }
           onChange={field.onChange}
           sx={{ fontSize: 14 }}
         />

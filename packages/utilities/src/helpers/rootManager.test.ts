@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getRoot, rootInstances } from './rootManager';

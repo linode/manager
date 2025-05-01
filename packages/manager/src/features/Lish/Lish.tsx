@@ -1,3 +1,4 @@
+import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useInitialRequests } from 'src/hooks/useInitialRequests';
-import { useLinodeLishQuery, useLinodeQuery } from '@linode/queries';
 
 import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';

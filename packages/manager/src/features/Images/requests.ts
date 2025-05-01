@@ -1,4 +1,6 @@
-import Axios, { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
+import Axios from 'axios';
+
+import type { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
 
 const axiosInstance = Axios.create({});
 

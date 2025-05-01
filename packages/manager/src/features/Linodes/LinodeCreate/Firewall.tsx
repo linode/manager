@@ -94,6 +94,10 @@ export const Firewall = () => {
           )}
         <Stack spacing={1.5}>
           <FirewallSelect
+            disabled={isLinodeCreateRestricted}
+            errorText={fieldState.error?.message}
+            label="Assign Firewall"
+            onBlur={field.onBlur}
             onChange={(e, firewall) => {
               onChange(firewall?.id);
               if (!firewall?.id) {
@@ -112,15 +116,12 @@ export const Firewall = () => {
                 });
               }
             }}
-            disabled={isLinodeCreateRestricted}
-            errorText={fieldState.error?.message}
-            label="Assign Firewall"
-            onBlur={field.onBlur}
             placeholder="None"
             value={field.value}
           />
           <Box>
             <LinkButton
+              isDisabled={isLinodeCreateRestricted}
               onClick={() => {
                 setIsDrawerOpen(true);
                 sendLinodeCreateFormInputEvent({
@@ -128,7 +129,6 @@ export const Firewall = () => {
                   label: 'Create Firewall',
                 });
               }}
-              isDisabled={isLinodeCreateRestricted}
             >
               Create Firewall
             </LinkButton>

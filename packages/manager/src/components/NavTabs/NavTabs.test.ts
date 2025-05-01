@@ -1,4 +1,6 @@
-import { NavTab, getTabMatch } from './NavTabs';
+import { getTabMatch } from './NavTabs';
+
+import type { NavTab } from './NavTabs';
 
 describe('getTabMatch', () => {
   const tabs: NavTab[] = [

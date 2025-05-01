@@ -18,6 +18,10 @@ export const RebuildFromSelect = (props: Props) => {
 
   return (
     <Autocomplete
+      disableClearable
+      disabled={disabled}
+      label="Rebuild From"
+      noMarginTop
       onChange={(e, value) => {
         reset((values) => ({
           ...values,
@@ -27,10 +31,6 @@ export const RebuildFromSelect = (props: Props) => {
         }));
         setType(value.label);
       }}
-      disableClearable
-      disabled={disabled}
-      label="Rebuild From"
-      noMarginTop
       options={REBUILD_OPTIONS}
       value={REBUILD_OPTIONS.find((o) => o.label === type)}
     />

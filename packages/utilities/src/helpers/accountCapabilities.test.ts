@@ -13,7 +13,7 @@ describe('isFeatureEnabledV2', () => {
 
   it('returns `true` when the flag is on and the account capability is present', () => {
     expect(isFeatureEnabledV2('Object Storage', true, ['Object Storage'])).toBe(
-      true
+      true,
     );
   });
 
@@ -33,13 +33,13 @@ describe('isFeatureEnabled', () => {
 
   it('returns `true` when the flag is off, but the account capability is present', () => {
     expect(isFeatureEnabled('Object Storage', false, ['Object Storage'])).toBe(
-      true
+      true,
     );
   });
 
   it('returns `true` when both the flag is on and the account capability is present', () => {
     expect(isFeatureEnabled('Object Storage', true, ['Object Storage'])).toBe(
-      true
+      true,
     );
   });
 });

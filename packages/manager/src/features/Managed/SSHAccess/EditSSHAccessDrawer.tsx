@@ -81,8 +81,8 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={() => navigate({ to: '/managed/ssh-access' })}
       open={isOpen}
       title={title}
@@ -183,15 +183,15 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                                 value: removePrefixLength(option.value),
                               })),
                           ]}
+                          errorText={ipError}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
                           }
+                          linodeId={linodeSetting.id}
                           value={{
                             label: ip === 'any' ? 'Any' : ip,
                             value: ip,
                           }}
-                          errorText={ipError}
-                          linodeId={linodeSetting.id}
                         />
                       </Grid>
 

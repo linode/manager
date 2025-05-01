@@ -4,7 +4,7 @@ import * as React from 'react';
 import CommunitySVGIcon from 'src/assets/icons/community_nav.svg';
 import { LINODE_COMMUNITY_URL } from 'src/constants';
 
-import { TopMenuTooltip, topMenuIconButtonSx } from './TopMenuTooltip';
+import { topMenuIconButtonSx, TopMenuTooltip } from './TopMenuTooltip';
 
 export const Community = () => {
   return (

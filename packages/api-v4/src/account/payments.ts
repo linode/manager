@@ -1,8 +1,9 @@
 import {
   CreditCardSchema,
-  PaymentSchema,
   PaymentMethodSchema,
+  PaymentSchema,
 } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -11,15 +12,16 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import {
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type {
   ClientToken,
+  MakePaymentData,
   Payment,
   PaymentMethod,
+  PaymentMethodPayload,
   PaymentResponse,
   SaveCreditCardData,
-  MakePaymentData,
-  PaymentMethodPayload,
 } from './types';
 
 /**

@@ -30,12 +30,8 @@ export interface UseCreateVPCInputs {
 }
 
 export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
-  const {
-    handleSelectVPC,
-    onDrawerClose,
-    pushToVPCPage,
-    selectedRegion,
-  } = inputs;
+  const { handleSelectVPC, onDrawerClose, pushToVPCPage, selectedRegion } =
+    inputs;
 
   const previousSubmitCount = React.useRef<number>(0);
 
@@ -51,10 +47,8 @@ export const useCreateVPC = (inputs: UseCreateVPCInputs) => {
   const { data: regions } = useRegionsQuery();
   const regionsData = regions ?? [];
 
-  const {
-    isPending: isLoadingCreateVPC,
-    mutateAsync: createVPC,
-  } = useCreateVPCMutation();
+  const { isPending: isLoadingCreateVPC, mutateAsync: createVPC } =
+    useCreateVPCMutation();
 
   const onCreateVPC = async (values: CreateVPCPayload) => {
     try {

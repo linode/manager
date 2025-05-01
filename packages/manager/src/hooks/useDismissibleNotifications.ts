@@ -1,8 +1,7 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
-
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 import type { DismissedNotification } from '@linode/utilities';
 
@@ -35,11 +34,11 @@ export interface DismissibleNotificationOptions {
   prefix?: string;
 }
 export interface DismissibleNotificationsHook {
+  dismissedNotifications: Record<string, DismissedNotification>;
   dismissNotifications: (
     notifications: unknown[],
     options?: DismissibleNotificationOptions
   ) => void;
-  dismissedNotifications: Record<string, DismissedNotification>;
   hasDismissedNotifications: (
     notifications: unknown[],
     prefix?: string

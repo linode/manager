@@ -1,4 +1,4 @@
-import { Typography, omittedProps } from '@linode/ui';
+import { omittedProps, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 type StyledVPCFormProps = {

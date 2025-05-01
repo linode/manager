@@ -34,7 +34,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 const initialValues = { label: '' };
@@ -49,9 +49,8 @@ export const CloneVolumeDrawer = (props: Props) => {
   const { data: grants } = useGrants();
   const { data: types, isError, isLoading } = useVolumeTypesQuery();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   // Even if a restricted user has the ability to create Volumes, they
   // can't clone a Volume they only have read only permission on.
@@ -98,8 +97,8 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Clone Volume"

@@ -10,6 +10,8 @@ export interface DocsLinkProps {
   analyticsLabel?: string;
   /** The URL to link to */
   href: string;
+  /*  */
+  icon?: JSX.Element;
   /**
    * The clickable text of the link
    * @default Docs
@@ -17,8 +19,6 @@ export interface DocsLinkProps {
   label?: string;
   /** A callback function when the link is clicked */
   onClick?: () => void;
-  /*  */
-  icon?: JSX.Element;
 }
 
 /**
@@ -31,6 +31,7 @@ export const DocsLink = (props: DocsLinkProps) => {
 
   return (
     <StyledDocsLink
+      className="docsButton"
       onClick={() => {
         if (onClick === undefined) {
           sendHelpButtonClickEvent(href, analyticsLabel);
@@ -38,7 +39,6 @@ export const DocsLink = (props: DocsLinkProps) => {
           onClick();
         }
       }}
-      className="docsButton"
       to={href}
     >
       {icon ?? <DocsIcon />}

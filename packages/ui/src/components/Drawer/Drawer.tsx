@@ -118,18 +118,18 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
 
     return (
       <_Drawer
+        anchor="right"
         onClose={(_, reason) => {
           if (onClose && reason !== 'backdropClick') {
             onClose({}, 'escapeKeyDown');
           }
         }}
+        open={open}
+        ref={ref}
         sx={{
           ...sxDrawer,
           ...sx,
         }}
-        anchor="right"
-        open={open}
-        ref={ref}
         {...rest}
         aria-labelledby={titleID}
         data-qa-drawer
@@ -137,6 +137,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         role="dialog"
       >
         <Grid
+          container
           sx={(theme) => ({
             '&&': {
               marginBottom: theme.spacing(2),
@@ -145,19 +146,18 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             justifyContent: 'space-between',
             position: 'relative',
           })}
-          container
           wrap="nowrap"
         >
           <Grid>
             {isFetching ? null : (
               <Typography
+                data-qa-drawer-title={title}
+                data-testid="drawer-title"
+                id={titleID}
                 sx={(theme) => ({
                   marginRight: theme.spacing(2),
                   wordBreak: 'break-word',
                 })}
-                data-qa-drawer-title={title}
-                data-testid="drawer-title"
-                id={titleID}
                 variant="h2"
               >
                 {title}
@@ -166,16 +166,16 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Grid>
           <Grid>
             <IconButton
-              sx={{
-                position: 'absolute',
-                right: '-12px',
-                top: '-12px',
-              }}
               aria-label="Close drawer"
               color="primary"
               data-qa-close-drawer
               onClick={() => onClose?.({}, 'escapeKeyDown')}
               size="large"
+              sx={{
+                position: 'absolute',
+                right: '-12px',
+                top: '-12px',
+              }}
             >
               <CloseIcon />
             </IconButton>

@@ -4,7 +4,7 @@ import * as React from 'react';
 import HelpSVGIcon from 'src/assets/icons/get_help.svg';
 import { Link } from 'src/components/Link';
 
-import { TopMenuTooltip, topMenuIconButtonSx } from './TopMenuTooltip';
+import { topMenuIconButtonSx, TopMenuTooltip } from './TopMenuTooltip';
 
 export const Help = () => {
   return (

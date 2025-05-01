@@ -53,12 +53,8 @@ interface Props {
 }
 
 const BackupStatus = (props: Props) => {
-  const {
-    backupsEnabled,
-    isBareMetalInstance,
-    linodeId,
-    mostRecentBackup,
-  } = props;
+  const { backupsEnabled, isBareMetalInstance, linodeId, mostRecentBackup } =
+    props;
 
   const { classes } = useStyles();
 
@@ -108,11 +104,11 @@ const BackupStatus = (props: Props) => {
           N/A
         </Typography>
         <TooltipIcon
+          classes={{ tooltip: classes.tooltip }}
+          status="help"
           sxTooltipIcon={{
             padding: 0,
           }}
-          classes={{ tooltip: classes.tooltip }}
-          status="help"
           text={backupsUnavailableMessage}
         />
       </div>

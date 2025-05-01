@@ -23,7 +23,7 @@ import {
 import { accountQueries } from '../account';
 import { queryPresets } from '../base';
 import { profileQueries } from '../profile';
-import { getAllVolumeTypes, getAllVolumes } from './requests';
+import { getAllVolumes, getAllVolumeTypes } from './requests';
 
 import type {
   APIError,
@@ -113,7 +113,7 @@ export const useInfiniteVolumesQuery = (filter: Filter, enabled?: boolean) =>
 export const useAllVolumesQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<Volume[], APIError[]>({
     ...volumeQueries.lists._ctx.all(params, filter),
@@ -124,7 +124,7 @@ export const useLinodeVolumesQuery = (
   linodeId: number,
   params: Params = {},
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.linode(linodeId)._ctx.volumes(params, filter),
@@ -144,7 +144,7 @@ export const useResizeVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({
@@ -240,7 +240,7 @@ export const useUpdateVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({
@@ -268,7 +268,7 @@ export const useAttachVolumeMutation = () => {
       // Update the specific volume
       queryClient.setQueryData<Volume>(
         volumeQueries.volume(volume.id).queryKey,
-        volume
+        volume,
       );
       // Invalidate all lists
       queryClient.invalidateQueries({

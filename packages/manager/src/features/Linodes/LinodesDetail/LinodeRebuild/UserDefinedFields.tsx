@@ -28,9 +28,8 @@ export const UserDefinedFields = () => {
 
   const userDefinedFields = stackscript?.user_defined_fields;
 
-  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
-    userDefinedFields
-  );
+  const [requiredUDFs, optionalUDFs] =
+    separateUDFsByRequiredStatus(userDefinedFields);
 
   if (!stackscript || userDefinedFields?.length === 0) {
     return null;

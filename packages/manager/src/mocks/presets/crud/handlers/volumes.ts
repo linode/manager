@@ -165,7 +165,7 @@ export const updateVolumes = (mockState: MockState) => [
     async ({
       params,
       request,
-    }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const volume = await mswDB.get('volumes', id);
       const payload = await request.clone().json();
@@ -191,7 +191,7 @@ export const updateVolumes = (mockState: MockState) => [
 
   http.post(
     '*/v4/volumes/:id/detach',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const volume = await mswDB.get('volumes', id);
 
@@ -212,7 +212,7 @@ export const updateVolumes = (mockState: MockState) => [
 export const deleteVolumes = (mockState: MockState) => [
   http.delete(
     '*/v4/volumes/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const volume = await mswDB.get('volumes', id);
 

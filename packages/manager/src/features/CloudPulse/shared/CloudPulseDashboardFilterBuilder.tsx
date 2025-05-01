@@ -355,22 +355,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       <Grid
         container
         item
-        xs={12}
         sx={{
           m: 3,
           paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
         }}
+        xs={12}
       >
         <Grid
+          item
+          key="toggleFilter"
           sx={{
             m: 0,
             p: 0,
           }}
-          item
-          key="toggleFilter"
           xs={12}
         >
           <Button
+            onClick={toggleShowFilter}
             startIcon={
               showFilter ? (
                 <KeyboardCaretDownIcon />
@@ -389,7 +390,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 color: theme.color.grey4,
               },
             }}
-            onClick={toggleShowFilter}
           >
             <Typography variant="h3">Filters</Typography>
           </Button>
@@ -398,7 +398,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           columnSpacing={theme.spacing(2)}
           container
           item
-          xs={12}
           sx={{
             display: showFilter ? 'flex' : 'none',
             maxHeight: theme.spacing(23),
@@ -406,6 +405,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             pr: { sm: 0, xs: 2 },
             rowGap: theme.spacing(2),
           }}
+          xs={12}
         >
           <RenderFilters />
         </Grid>

@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import {
   Box,
   CloseIcon,
@@ -10,7 +11,6 @@ import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { useRegionsQuery } from '@linode/queries';
 
 import type { ImageRegionStatus, ImageStatus } from '@linode/api-v4';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';

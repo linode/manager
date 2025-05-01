@@ -16,10 +16,11 @@ export const DeleteIPDialog = (props: Props) => {
   const { address, linodeId, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { error, isPending, mutateAsync: removeIP } = useLinodeIPDeleteMutation(
-    linodeId,
-    address
-  );
+  const {
+    error,
+    isPending,
+    mutateAsync: removeIP,
+  } = useLinodeIPDeleteMutation(linodeId, address);
 
   const handleDeleteIP = async () => {
     await removeIP();

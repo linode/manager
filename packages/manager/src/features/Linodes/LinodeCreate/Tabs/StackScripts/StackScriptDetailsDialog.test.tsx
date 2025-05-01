@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { stackScriptFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptDetailsDialog } from './StackScriptDetailsDialog';

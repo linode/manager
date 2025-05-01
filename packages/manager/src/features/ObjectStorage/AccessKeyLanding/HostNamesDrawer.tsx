@@ -59,6 +59,9 @@ export const HostNamesDrawer = (props: Props) => {
 
           return (
             <CopyableTextField
+              hideLabel
+              key={index}
+              label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}
               sx={{
                 backgroundColor: 'unset',
                 border: 'none',
@@ -67,9 +70,6 @@ export const HostNamesDrawer = (props: Props) => {
               value={`${
                 regionsByIdMap[region.id]?.label
               }${endpointTypeLabel}: ${region.s3_endpoint}`}
-              hideLabel
-              key={index}
-              label={`${region.id}${endpointTypeLabel}: ${region.s3_endpoint}`}
             />
           );
         })}

@@ -29,7 +29,7 @@ describe('Stat Metrics', () => {
       getMetrics([
         [0, 0],
         [0, 0],
-      ]).max
+      ]).max,
     ).toBe(0);
   });
 
@@ -40,20 +40,20 @@ describe('Stat Metrics', () => {
       getMetrics([
         [0, 0],
         [0, 0],
-      ]).average
+      ]).average,
     ).toBe(0);
     expect(
       getMetrics([
         [0, 0],
         [0, 1],
-      ]).average
+      ]).average,
     ).toBe(0.5);
     expect(
       getMetrics([
         [0, 0],
         [0, 3],
         [0, 12],
-      ]).average
+      ]).average,
     ).toBe(5);
   });
 
@@ -95,7 +95,7 @@ describe('Stat Metrics', () => {
       getMetrics([
         [3, 'hello'],
         ['hello', 3],
-      ] as any)
+      ] as any),
     ).toEqual({
       average: 1.5,
       last: 3,
@@ -113,7 +113,7 @@ describe('total traffic', () => {
     expect(totalTraffic.outTraffic).toBe(10800);
     expect(totalTraffic.combinedTraffic).toBe(16200);
     expect(totalTraffic.combinedTraffic).toEqual(
-      totalTraffic.inTraffic + totalTraffic.outTraffic
+      totalTraffic.inTraffic + totalTraffic.outTraffic,
     );
   });
 });

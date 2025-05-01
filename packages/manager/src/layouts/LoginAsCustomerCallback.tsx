@@ -9,13 +9,13 @@
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import type { MapDispatchToProps } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
 
 import type { BaseQueryParams } from '@linode/utilities';
-import type { MapDispatchToProps } from 'react-redux';
-import type { RouteComponentProps } from 'react-router-dom';
 
 interface LoginAsCustomerCallbackProps
   extends DispatchProps,

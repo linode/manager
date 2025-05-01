@@ -1,4 +1,4 @@
-import { getQuota, getQuotaUsage, getQuotas } from '@linode/api-v4';
+import { getQuota, getQuotas, getQuotaUsage } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 

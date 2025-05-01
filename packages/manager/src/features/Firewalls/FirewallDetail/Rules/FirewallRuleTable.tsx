@@ -1,9 +1,9 @@
 import {
+  closestCorners,
   DndContext,
   MouseSensor,
   PointerSensor,
   TouchSensor,
-  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -200,10 +200,10 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                     width: smDown
                       ? '65%'
                       : mdDown
-                      ? '50%'
-                      : lgDown
-                      ? '32%'
-                      : '26%',
+                        ? '50%'
+                        : lgDown
+                          ? '32%'
+                          : '26%',
                   }}
                 >
                   Label
@@ -238,14 +238,14 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                       aria-label={
                         thisRuleRow.label ?? `firewall rule ${thisRuleRow.id}`
                       }
-                      handleOpenRuleDrawerForEditing={
-                        handleOpenRuleDrawerForEditing
-                      }
                       aria-roledescription={screenReaderMessage}
                       aria-selected={false}
                       disabled={disabled}
                       handleCloneFirewallRule={handleCloneFirewallRule}
                       handleDeleteFirewallRule={handleDeleteFirewallRule}
+                      handleOpenRuleDrawerForEditing={
+                        handleOpenRuleDrawerForEditing
+                      }
                       handleUndo={handleUndo}
                       key={thisRuleRow.id}
                       {...thisRuleRow}
@@ -498,18 +498,18 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
       <Box sx={sxBoxPolicyText}>{helperText}</Box>
       <Box sx={sxBoxPolicySelect}>
         <Autocomplete
-          textFieldProps={{
-            hideLabel: true,
-          }}
-          value={policyOptions.find(
-            (thisOption) => thisOption.value === policy
-          )}
           autoHighlight
           disableClearable
           disabled={disabled}
           label={`${category} policy`}
           onChange={(_, selected) => handlePolicyChange(selected?.value)}
           options={policyOptions}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          value={policyOptions.find(
+            (thisOption) => thisOption.value === policy
+          )}
         />
       </Box>
     </Box>
@@ -528,7 +528,6 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
   const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {uniqueByFormField.map((thisError) => {
         if (formField !== thisError.formField || !thisError.reason) {

@@ -13,9 +13,9 @@ import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  SSHKey,
   Token,
   UserPreferences,
-  SSHKey,
 } from '@linode/api-v4';
 
 /**
@@ -145,7 +145,7 @@ export const mockSendVerificationCode = (): Cypress.Chainable<null> => {
 export const mockVerifyVerificationCode = (
   errorMessage?: string | undefined
 ): Cypress.Chainable<null> => {
-  const response = !!errorMessage ? makeErrorResponse(errorMessage) : {};
+  const response = errorMessage ? makeErrorResponse(errorMessage) : {};
   return cy.intercept(
     'POST',
     apiMatcher('profile/phone-number/verify'),

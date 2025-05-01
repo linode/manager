@@ -144,22 +144,17 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     };
   };
 
-  const {
-    handleSubmit,
-    isSubmitting,
-    resetForm,
-    setValues,
-    values,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      _allowList: database?.allow_list?.map(stringToExtendedIP),
-    },
-    onSubmit: handleUpdateAccessControlsClick,
-    validate: (values: Values) => onValidate(values),
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+  const { handleSubmit, isSubmitting, resetForm, setValues, values } =
+    useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        _allowList: database?.allow_list?.map(stringToExtendedIP),
+      },
+      onSubmit: handleUpdateAccessControlsClick,
+      validate: (values: Values) => onValidate(values),
+      validateOnBlur: false,
+      validateOnChange: false,
+    });
 
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {
@@ -207,21 +202,21 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
+            aria-label="Allowed IP Addresses or Ranges"
             buttonText={
               values._allowList && values._allowList.length > 0
                 ? 'Add Another IP'
                 : 'Add an IP'
             }
-            placeholder={
-              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
-            }
-            aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             forDatabaseAccessControls
             inputProps={{ autoFocus: true }}
             ips={values._allowList!}
             onBlur={handleIPBlur}
             onChange={handleIPChange}
+            placeholder={
+              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
+            }
             title="Allowed IP Addresses or Ranges"
           />
           <ActionsPanel

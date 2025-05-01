@@ -22,11 +22,8 @@ export const Actions = () => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const {
-    formState,
-    getValues,
-    trigger,
-  } = useFormContext<LinodeCreateFormValues>();
+  const { formState, getValues, trigger } =
+    useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -64,12 +61,12 @@ export const Actions = () => {
         Create Linode
       </Button>
       <ApiAwarenessModal
+        isOpen={isAPIAwarenessModalOpen}
+        onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(
           structuredClone(getValues()),
           isLinodeInterfacesEnabled
         )}
-        isOpen={isAPIAwarenessModalOpen}
-        onClose={() => setIsAPIAwarenessModalOpen(false)}
       />
     </Box>
   );

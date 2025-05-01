@@ -74,8 +74,8 @@ interface DescriptionListGridProps
    * Only for the "grid" display mode.
    */
   gridProps: {
-    columnSpacing?: number;
     columns: number;
+    columnSpacing?: number;
   };
 }
 

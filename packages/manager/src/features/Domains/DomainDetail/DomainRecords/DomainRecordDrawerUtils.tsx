@@ -1,6 +1,5 @@
-import produce from 'immer';
-
 import { maybeCastToNumber } from '@linode/utilities';
+import produce from 'immer';
 
 import { getInitialIPs } from '../../domainUtils';
 
@@ -41,9 +40,9 @@ export const shouldResolve = (type: string, field: string) => {
   switch (type) {
     case 'AAAA':
       return field === 'name';
-    case 'SRV':
-      return field === 'target';
     case 'CNAME':
+      return field === 'target';
+    case 'SRV':
       return field === 'target';
     case 'TXT':
       return field === 'name';
@@ -189,18 +188,19 @@ export const filterDataByType = (
   type: DomainType | RecordType
 ): Partial<EditableDomainFields | EditableRecordFields> => {
   switch (type) {
-    case 'master':
-      return getMasterData(fields);
-
     case 'A':
+
+    // eslint-disable-next-line no-fallthrough
     case 'AAAA':
     case 'CNAME':
     case 'NS':
     case 'TXT':
       return getSharedRecordData(fields);
-
     case 'CAA':
       return getCAARecordData(fields);
+
+    case 'master':
+      return getMasterData(fields);
 
     case 'MX':
       return getMXRecordData(fields);

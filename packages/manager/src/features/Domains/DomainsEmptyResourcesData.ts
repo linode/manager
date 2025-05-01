@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -25,8 +25,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Getting Started with DNS Manager',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-dns-manager',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-dns-manager',
     },
     {
       text: 'Create a Domain Zone',

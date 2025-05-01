@@ -40,16 +40,16 @@ describe('spacingFunction', () => {
   it('should handle multiple spacing values correctly', () => {
     expect(spacingFunction(4, 8)).toBe(`${Spacing.S4} ${Spacing.S8}`);
     expect(spacingFunction(4, 8, 16)).toBe(
-      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16}`
+      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16}`,
     );
     expect(spacingFunction(4, 8, 16, 24)).toBe(
-      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16} ${Spacing.S24}`
+      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16} ${Spacing.S24}`,
     );
   });
 
   it('should limit to 4 values even if more are provided', () => {
     expect(spacingFunction(4, 8, 16, 24, 32)).toBe(
-      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16} ${Spacing.S24}`
+      `${Spacing.S4} ${Spacing.S8} ${Spacing.S16} ${Spacing.S24}`,
     );
   });
 });

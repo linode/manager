@@ -49,9 +49,8 @@ export const ImagesActionMenu = (props: Props) => {
     globalGrantType: 'add_linodes',
   });
 
-  const {
-    permissionedLinodes: availableLinodes,
-  } = useImageAndLinodeGrantCheck();
+  const { permissionedLinodes: availableLinodes } =
+    useImageAndLinodeGrantCheck();
 
   const isAvailableLinodesPresent = availableLinodes
     ? availableLinodes.length > 0
@@ -72,8 +71,8 @@ export const ImagesActionMenu = (props: Props) => {
               resourceType: 'Images',
             })
           : isDisabled
-          ? 'Image is not yet available for use.'
-          : undefined,
+            ? 'Image is not yet available for use.'
+            : undefined,
       },
       ...(onManageRegions && image.regions && image.regions.length > 0
         ? [
@@ -102,8 +101,8 @@ export const ImagesActionMenu = (props: Props) => {
               resourceType: 'Linodes',
             })
           : isDisabled
-          ? 'Image is not yet available for use.'
-          : undefined,
+            ? 'Image is not yet available for use.'
+            : undefined,
       },
       {
         disabled: !isAvailableLinodesPresent || isDisabled,
@@ -116,8 +115,8 @@ export const ImagesActionMenu = (props: Props) => {
               resourceType: 'Linodes',
             })
           : isDisabled
-          ? 'Image is not yet available for use.'
-          : undefined,
+            ? 'Image is not yet available for use.'
+            : undefined,
       },
       {
         disabled: isImageReadOnly,

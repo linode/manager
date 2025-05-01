@@ -43,6 +43,8 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
       ) : (
         <AreaChart
           {...rest}
+          fillOpacity={0.5}
+          legendHeight="165px"
           margin={{
             bottom: 0,
             left: -15,
@@ -55,8 +57,6 @@ export const CloudPulseLineGraph = React.memo((props: CloudPulseLineGraph) => {
           yAxisProps={{
             tickFormat: (value: number) => `${roundTo(value, 3)}`,
           }}
-          fillOpacity={0.5}
-          legendHeight="165px"
         />
       )}
       {rest.data.length === 0 && (

@@ -5,6 +5,11 @@ import '@fontsource/nunito-sans/600.css';
 import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
 import '@fontsource/nunito-sans/400-italic.css';
+import {
+  useMutatePreferences,
+  usePreferences,
+  useProfile,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { Outlet } from '@tanstack/react-router';
@@ -23,11 +28,6 @@ import {
   useNotificationContext,
 } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { TopMenu } from 'src/features/TopMenu/TopMenu';
-import {
-  useMutatePreferences,
-  usePreferences,
-  useProfile,
-} from '@linode/queries';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
@@ -111,6 +111,9 @@ export const Root = () => {
                   open={menuIsOpen}
                 />
                 <Box
+                  component="main"
+                  id="main-content"
+                  role="main"
                   sx={(theme) => ({
                     maxWidth: `${theme.breakpoints.values.lg}px !important`,
                     padding: `${theme.spacing(3)} 0`,
@@ -126,9 +129,6 @@ export const Root = () => {
                     },
                     transition: theme.transitions.create('opacity'),
                   })}
-                  component="main"
-                  id="main-content"
-                  role="main"
                 >
                   <Grid className={classes.grid} container spacing={0}>
                     <Grid className={cx(classes.switchWrapper, 'p0')}>

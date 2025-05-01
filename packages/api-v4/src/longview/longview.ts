@@ -1,4 +1,5 @@
 import { longviewClientCreate } from '@linode/validation/lib/longview.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,8 +8,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import {
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type {
   ActiveLongviewPlan,
   LongviewClient,
   LongviewSubscription,
@@ -22,9 +24,9 @@ export const createLongviewClient = (label?: string) => {
       {
         label,
       },
-      longviewClientCreate
+      longviewClientCreate,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 };
 
@@ -33,13 +35,13 @@ export const getLongviewClients = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/longview/clients`),
     setParams(params),
     setXFilter(filter),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 export const deleteLongviewClient = (id: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/longview/clients/${encodeURIComponent(id)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 export const updateLongviewClient = (id: number, label: string) => {
@@ -49,22 +51,22 @@ export const updateLongviewClient = (id: number, label: string) => {
       {
         label,
       },
-      longviewClientCreate
+      longviewClientCreate,
     ),
-    setMethod('PUT')
+    setMethod('PUT'),
   );
 };
 
 export const getLongviewSubscriptions = () =>
   Request<ResourcePage<LongviewSubscription>>(
     setURL(`${API_ROOT}/longview/subscriptions`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 export const getActiveLongviewPlan = () =>
   Request<ActiveLongviewPlan>(
     setURL(`${API_ROOT}/longview/plan`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -78,5 +80,5 @@ export const updateActiveLongviewPlan = (plan: LongviewSubscriptionPayload) =>
   Request<ActiveLongviewPlan>(
     setURL(`${API_ROOT}/longview/plan`),
     setData(plan),
-    setMethod('PUT')
+    setMethod('PUT'),
   );

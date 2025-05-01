@@ -45,7 +45,7 @@ export const getCookie = (name: string) => {
  */
 export const checkOptanonConsent = (
   optanonCookie: string | undefined,
-  selectedCategory: typeof ONE_TRUST_COOKIE_CATEGORIES[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
+  selectedCategory: (typeof ONE_TRUST_COOKIE_CATEGORIES)[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
 ): boolean => {
   const optanonGroups = optanonCookie?.match(/groups=([^&]*)/);
 

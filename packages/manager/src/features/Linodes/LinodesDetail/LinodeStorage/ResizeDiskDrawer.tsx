@@ -119,12 +119,12 @@ export const ResizeDiskDrawer = (props: Props) => {
           </StyledLink>
         </FormHelperText>
         <TextField
-          InputProps={{
-            endAdornment: <InputAdornment position="end">MB</InputAdornment>,
-          }}
           aria-required
           data-qa-disk-size
           errorText={formik.errors.size}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">MB</InputAdornment>,
+          }}
           label="Size"
           name="size"
           onBlur={formik.handleBlur}

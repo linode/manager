@@ -1,3 +1,4 @@
+import { usePreferences } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { usePreferences } from '@linode/queries';
 
 import type { DialogProps } from '@linode/ui';
 
@@ -80,21 +80,21 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
       <TypeToConfirm
         confirmationText={
           <Typography
+            component={'span'}
             sx={{
               paddingBottom: theme.spacing(),
               paddingTop: theme.spacing(2),
             }}
-            component={'span'}
           >
             To confirm deletion, type the name of the {entity} (
             <strong>{label}</strong>) in the field below:
           </Typography>
         }
+        expand
+        label={`${capitalize(entity)} Name:`}
         onChange={(input) => {
           setConfirmationText(input);
         }}
-        expand
-        label={`${capitalize(entity)} Name:`}
         placeholder={label}
         value={confirmationText}
         visible={Boolean(typeToConfirmPreference)}

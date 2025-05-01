@@ -1,6 +1,6 @@
 import { Button } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
@@ -110,8 +110,8 @@ export const LandingHeader = ({
               marginLeft: customSmMdBetweenBreakpoint
                 ? theme.spacing(2)
                 : customXsDownBreakpoint
-                ? theme.spacing(1)
-                : undefined,
+                  ? theme.spacing(1)
+                  : undefined,
             }}
           >
             {betaFeedbackLink && (

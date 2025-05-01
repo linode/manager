@@ -274,10 +274,10 @@ export const PaymentDrawer = (props: Props) => {
           </Typography>
         ) : null}
         <TextField
+          disabled={isProcessing || isReadOnly}
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }}
-          disabled={isProcessing || isReadOnly}
           label="Payment Amount"
           noMarginTop
           onBlur={handleOnBlur}
@@ -311,6 +311,8 @@ export const PaymentDrawer = (props: Props) => {
             <Grid className={classes.button}>
               {paymentTooLow || selectedCardExpired ? (
                 <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{ padding: `0px 8px` }}
                   text={
                     paymentTooLow
                       ? `Payment amount must be at least ${minimumPayment}.`
@@ -318,18 +320,16 @@ export const PaymentDrawer = (props: Props) => {
                         ? 'The selected card has expired.'
                         : ''
                   }
-                  status="help"
-                  sxTooltipIcon={{ padding: `0px 8px` }}
                 />
               ) : null}
               <Button
+                buttonType="primary"
                 disabled={
                   paymentTooLow ||
                   selectedCardExpired ||
                   isProcessing ||
                   isReadOnly
                 }
-                buttonType="primary"
                 onClick={handleOpenDialog}
               >
                 Pay Now
@@ -370,17 +370,17 @@ export const PaymentDrawer = (props: Props) => {
                 }}
               >
                 <GooglePayButton
+                  disabled={isProcessing}
+                  renderError={renderError}
+                  setError={setErrorMessage}
+                  setProcessing={setIsProcessing}
+                  setSuccess={setSuccess}
                   transactionInfo={{
                     countryCode: 'US',
                     currencyCode: 'USD',
                     totalPrice: usd,
                     totalPriceStatus: 'FINAL',
                   }}
-                  disabled={isProcessing}
-                  renderError={renderError}
-                  setError={setErrorMessage}
-                  setProcessing={setIsProcessing}
-                  setSuccess={setSuccess}
                 />
               </Grid>
             </Grid>

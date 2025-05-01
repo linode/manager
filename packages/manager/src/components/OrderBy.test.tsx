@@ -4,8 +4,8 @@ import * as React from 'react';
 import { assertOrder, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  OrderBy,
   getInitialValuesFromUserPreferences,
+  OrderBy,
   sortData,
 } from './OrderBy';
 

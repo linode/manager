@@ -13,8 +13,8 @@ import type { ConfigSelection } from './utilities';
 import type { Config } from '@linode/api-v4/lib/linodes';
 
 export interface ConfigsProps {
-  configSelection: ConfigSelection;
   configs: Config[];
+  configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 
@@ -34,6 +34,7 @@ export const Configs = (props: ConfigsProps) => {
         return (
           <div>
             <Table
+              aria-label="List of Configurations"
               sx={{
                 '& td': {
                   borderBottom: 'none',
@@ -41,7 +42,6 @@ export const Configs = (props: ConfigsProps) => {
                   paddingTop: 0,
                 },
               }}
-              aria-label="List of Configurations"
             >
               <TableBody>
                 {paginatedData.length === 0 ? (

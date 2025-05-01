@@ -1,4 +1,4 @@
-import { TooltipIcon, Stack } from '@linode/ui';
+import { Stack, TooltipIcon } from '@linode/ui';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 

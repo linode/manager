@@ -12,7 +12,7 @@
 export async function reduceAsync<T, R>(
   arr: T[],
   fn: (accumulator: R, current: T, index: number, array: T[]) => Promise<R>,
-  initialValue: R
+  initialValue: R,
 ): Promise<R> {
   let accumulator = initialValue;
 

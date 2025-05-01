@@ -46,11 +46,11 @@ export const Default: Story = {
               placeholder="This is a placeholder"
             />
             <ActionsPanel
+              primaryButtonProps={{ label: 'Save' }}
               secondaryButtonProps={{
                 label: 'Cancel',
                 onClick: () => setOpen(false),
               }}
-              primaryButtonProps={{ label: 'Save' }}
             />
           </Drawer>
         </>
@@ -121,11 +121,11 @@ export const Fetching: Story = {
             </Typography>
             <Typography sx={{ mb: 2 }}>It was Saturday.</Typography>
             <ActionsPanel
+              primaryButtonProps={{ label: 'Save' }}
               secondaryButtonProps={{
                 label: 'Cancel',
                 onClick: () => updateArgs({ open: false }),
               }}
-              primaryButtonProps={{ label: 'Save' }}
             />
           </Drawer>
         </>

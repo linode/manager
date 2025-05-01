@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import {
   getEventMessage,
   getEventUsername,
 } from 'src/features/Events/utils';
-import { useProfile } from '@linode/queries';
 
 import {
   NotificationEventAvatar,

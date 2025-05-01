@@ -54,19 +54,15 @@ describe('CopyTooltip', () => {
   });
 
   it('should mask and toggle visibility of tooltip text with the masked property', async () => {
-    const {
-      getByLabelText,
-      getByTestId,
-      getByText,
-      queryByText,
-    } = renderWithTheme(
-      <CopyTooltip
-        {...defaultProps}
-        copyableText
-        masked
-        maskedTextLength="plaintext"
-      />
-    );
+    const { getByLabelText, getByTestId, getByText, queryByText } =
+      renderWithTheme(
+        <CopyTooltip
+          {...defaultProps}
+          copyableText
+          masked
+          maskedTextLength="plaintext"
+        />
+      );
 
     const copyIconButton = getByLabelText(`Copy ${mockText} to clipboard`);
     const visibilityToggle = getByTestId('VisibilityTooltip');

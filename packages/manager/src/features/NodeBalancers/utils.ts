@@ -20,14 +20,15 @@ import type {
   Protocol,
 } from '@linode/api-v4';
 
-export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
-  address: '',
-  label: '',
-  mode: 'accept',
-  modifyStatus: 'new',
-  port: 80,
-  weight: 100,
-});
+export const createNewNodeBalancerConfigNode =
+  (): NodeBalancerConfigNodeFields => ({
+    address: '',
+    label: '',
+    mode: 'accept',
+    modifyStatus: 'new',
+    port: 80,
+    weight: 100,
+  });
 
 export const createNewNodeBalancerConfig = (
   withDefaultPort?: boolean
@@ -93,7 +94,7 @@ export const transformConfigsForRequest = (
   configs: NodeBalancerConfigFields[]
 ): NodeBalancerConfigFields[] => {
   return configs.map((config: NodeBalancerConfigFields) => {
-    return (filter(
+    return filter(
       /* remove the (key: value) pairs that we set to undefined */
       (el) => el !== undefined,
       {
@@ -150,7 +151,7 @@ export const transformConfigsForRequest = (
         stickiness: config.stickiness || undefined,
         udp_check_port: config.udp_check_port,
       }
-    ) as unknown) as NodeBalancerConfigFields;
+    ) as unknown as NodeBalancerConfigFields;
   });
 };
 

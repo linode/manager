@@ -2,7 +2,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { GaugePercent, GaugePercentProps } from './GaugePercent';
+import { GaugePercent } from './GaugePercent';
+
+import type { GaugePercentProps } from './GaugePercent';
 
 describe('GaugePercent Component', () => {
   const defaultProps: GaugePercentProps = {

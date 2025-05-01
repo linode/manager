@@ -10,5 +10,5 @@ export interface TypographyProps extends Omit<_TypographyProps, 'fontFamily'> {
 export const Typography = React.forwardRef<HTMLElement, TypographyProps>(
   (props, ref) => {
     return <_Typography {...props} ref={ref} />;
-  }
+  },
 );

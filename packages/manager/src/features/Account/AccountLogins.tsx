@@ -72,11 +72,11 @@ const AccountLogins = () => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={5}
           responsive={{
             2: { smDown: true },
             3: { mdDown: true },
           }}
-          columns={5}
           rows={1}
         />
       );

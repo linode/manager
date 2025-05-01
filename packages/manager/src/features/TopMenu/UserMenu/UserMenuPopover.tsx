@@ -128,12 +128,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     return (
       <Grid key={link.display} size={12}>
         <Link
+          data-testid={`menu-item-${link.display}`}
+          onClick={onClose}
           style={{
             color: theme.tokens.alias.Content.Text.Link.Default,
             font: theme.tokens.alias.Typography.Body.Semibold,
           }}
-          data-testid={`menu-item-${link.display}`}
-          onClick={onClose}
           to={link.href}
         >
           {link.display}
@@ -154,10 +154,16 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   return (
     <Popover
+      anchorEl={anchorEl}
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
       }}
+      data-testid={id}
+      id={id}
+      marginThreshold={0}
+      onClose={onClose}
+      open={open}
       slotProps={{
         paper: {
           sx: (theme) => ({
@@ -167,12 +173,6 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           }),
         },
       }}
-      anchorEl={anchorEl}
-      data-testid={id}
-      id={id}
-      marginThreshold={0}
-      onClose={onClose}
-      open={open}
       // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
       sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
     >
@@ -204,12 +204,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
+              buttonType="outlined"
+              data-testid="switch-account-button"
               onClick={() => {
                 sendSwitchAccountEvent('User Menu');
                 handleAccountSwitch();
               }}
-              buttonType="outlined"
-              data-testid="switch-account-button"
             />
           )}
         </Stack>
@@ -236,13 +236,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (
                   <Link
+                    data-testid={`menu-item-${menuLink.display}`}
+                    key={menuLink.display}
+                    onClick={onClose}
                     style={{
                       color: theme.tokens.alias.Content.Text.Link.Default,
                       font: theme.tokens.alias.Typography.Body.Semibold,
                     }}
-                    data-testid={`menu-item-${menuLink.display}`}
-                    key={menuLink.display}
-                    onClick={onClose}
                     to={menuLink.href}
                   >
                     {menuLink.display}

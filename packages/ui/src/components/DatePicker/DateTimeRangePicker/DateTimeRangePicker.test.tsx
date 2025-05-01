@@ -33,22 +33,22 @@ describe('DateTimeRangePicker', () => {
     expect(
       screen.getByRole('textbox', {
         name: 'Start Date',
-      })
+      }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
         name: 'End Date',
-      })
+      }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
         name: 'Start Date',
-      })
+      }),
     ).toHaveAttribute('placeholder', 'YYYY-MM-DD hh:mm aa');
     expect(
       screen.getByRole('textbox', {
         name: 'End Date',
-      })
+      }),
     ).toHaveAttribute('placeholder', 'YYYY-MM-DD hh:mm aa');
   });
 
@@ -102,21 +102,21 @@ describe('DateTimeRangePicker', () => {
     formats.forEach((format) => {
       it(`should accept and display dates correctly in ${format} format`, async () => {
         renderWithTheme(
-          <DateTimeRangePicker {...defaultProps} format={format} />
+          <DateTimeRangePicker {...defaultProps} format={format} />,
         );
 
         expect(
-          screen.getByRole('textbox', { name: 'Start Date' })
+          screen.getByRole('textbox', { name: 'Start Date' }),
         ).toHaveAttribute('placeholder', expectedPlaceholderValues[format]);
         expect(
-          screen.getByRole('textbox', { name: 'End Date' })
+          screen.getByRole('textbox', { name: 'End Date' }),
         ).toHaveAttribute('placeholder', expectedPlaceholderValues[format]);
       });
     });
 
     it('should prevent invalid date input for each format', async () => {
       renderWithTheme(
-        <DateTimeRangePicker {...defaultProps} format="yyyy-MM-dd hh:mm a" />
+        <DateTimeRangePicker {...defaultProps} format="yyyy-MM-dd hh:mm a" />,
       );
 
       const startDateField = screen.getByRole('textbox', {
@@ -134,7 +134,7 @@ describe('DateTimeRangePicker', () => {
       renderWithTheme(<DateTimeRangePicker {...defaultProps} />);
 
       await userEvent.click(
-        screen.getByRole('textbox', { name: 'Start Date' })
+        screen.getByRole('textbox', { name: 'Start Date' }),
       );
 
       const startTimeField = screen.getByLabelText(/Start Time/i);

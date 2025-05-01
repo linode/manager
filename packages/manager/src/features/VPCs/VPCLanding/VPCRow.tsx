@@ -51,8 +51,8 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             resourceType: 'VPCs',
           })
         : isVPCLKEEnterpriseCluster
-        ? LKE_ENTERPRISE_VPC_WARNING
-        : undefined,
+          ? LKE_ENTERPRISE_VPC_WARNING
+          : undefined,
     },
     {
       disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
@@ -65,8 +65,8 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             resourceType: 'VPCs',
           })
         : isVPCLKEEnterpriseCluster
-        ? LKE_ENTERPRISE_VPC_WARNING
-        : undefined,
+          ? LKE_ENTERPRISE_VPC_WARNING
+          : undefined,
     },
   ];
 

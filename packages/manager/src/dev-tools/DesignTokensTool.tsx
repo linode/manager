@@ -2,11 +2,11 @@ import { ThemeProvider } from '@emotion/react';
 import {
   Box,
   CircleProgress,
+  light,
   Notice,
   Select,
   Stack,
   Typography,
-  light,
 } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
@@ -43,10 +43,8 @@ const TokenPanelContent = ({
   tokenCategory: TokenCategory;
   tokenObject: TokenObject;
 }) => {
-  const [
-    renderedContent,
-    setRenderedContent,
-  ] = React.useState<React.ReactNode | null>(null);
+  const [renderedContent, setRenderedContent] =
+    React.useState<null | React.ReactNode>(null);
   const [isSearching, setIsSearching] = React.useState(false);
 
   React.useEffect(() => {
@@ -125,6 +123,7 @@ export const DesignTokensTool = () => {
   return (
     <ThemeProvider theme={themes[selectedTheme]}>
       <Box
+        className="dev-tools__design-tokens"
         sx={(theme) => ({
           backgroundColor: theme.tokens.alias.Background.Normal,
           flex: 1,
@@ -133,7 +132,6 @@ export const DesignTokensTool = () => {
           position: 'absolute',
           width: '100%',
         })}
-        className="dev-tools__design-tokens"
       >
         {isLoading ? (
           <Stack alignItems="center" height="100%" justifyContent="center">
@@ -152,6 +150,8 @@ export const DesignTokensTool = () => {
                 </TabList>
               </Stack>
               <Select
+                hideLabel={true}
+                label="Theme"
                 onChange={(e, value) => {
                   handleThemeChange(e, value as { value: ThemeName });
                 }}
@@ -168,25 +168,23 @@ export const DesignTokensTool = () => {
                   label: selectedTheme,
                   value: selectedTheme,
                 }}
-                hideLabel={true}
-                label="Theme"
               />
               <DebouncedSearchTextField
+                clearable
                 errorText={
                   searchValue !== '' && searchValue.length < 3
                     ? 'Search must be at least 3 characters'
                     : ''
                 }
+                hideLabel={true}
+                label="Search"
+                onSearch={setSearchValue}
+                placeholder="Search tokens"
                 sx={{
                   minWidth: 275,
                   position: 'relative',
                   top: '4px',
                 }}
-                clearable
-                hideLabel={true}
-                label="Search"
-                onSearch={setSearchValue}
-                placeholder="Search tokens"
                 value={searchValue}
               />
             </Stack>

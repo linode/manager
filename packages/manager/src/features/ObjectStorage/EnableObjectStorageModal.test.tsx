@@ -10,10 +10,11 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import {
   EnableObjectStorageModal,
-  EnableObjectStorageProps,
   OBJ_STORAGE_NETWORK_TRANSFER_AMT,
   OBJ_STORAGE_STORAGE_AMT,
 } from './EnableObjectStorageModal';
+
+import type { EnableObjectStorageProps } from './EnableObjectStorageModal';
 
 const DC_SPECIFIC_PRICING_REGION = 'id-cgk';
 const BASE_PRICING_REGION = 'us-east';

@@ -13,5 +13,5 @@ export interface ChipProps extends _ChipProps {
 export const Chip = React.forwardRef<HTMLDivElement, ChipProps>(
   (props: ChipProps, ref) => {
     return <_Chip ref={ref} {...props} />;
-  }
+  },
 );

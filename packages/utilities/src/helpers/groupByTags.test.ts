@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { NONE, groupByTags } from './groupByTags';
+import { groupByTags, NONE } from './groupByTags';
 /**
  * [Tag, Linode[]]s
  */

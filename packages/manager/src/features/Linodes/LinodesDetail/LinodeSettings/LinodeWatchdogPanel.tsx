@@ -1,3 +1,4 @@
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 import {
   Accordion,
   Box,
@@ -10,8 +11,6 @@ import {
 } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;
@@ -60,20 +59,20 @@ export const LinodeWatchdogPanel = (props: Props) => {
             }
             control={
               <Toggle
+                checked={linode?.watchdog_enabled ?? false}
+                data-qa-watchdog-toggle={linode?.watchdog_enabled ?? false}
                 onChange={(e, checked) =>
                   updateLinode({ watchdog_enabled: checked })
                 }
-                checked={linode?.watchdog_enabled ?? false}
-                data-qa-watchdog-toggle={linode?.watchdog_enabled ?? false}
               />
             }
+            disabled={isReadOnly}
             label={
               <Stack alignItems="center" direction="row" spacing={1}>
                 <Box>{linode?.watchdog_enabled ? 'Enabled' : 'Disabled'}</Box>
                 <Box>{isPending && <CircleProgress size="sm" />}</Box>
               </Stack>
             }
-            disabled={isReadOnly}
           />
         </Grid>
         <Grid

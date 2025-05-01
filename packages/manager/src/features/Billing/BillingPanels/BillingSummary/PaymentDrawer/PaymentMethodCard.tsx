@@ -40,12 +40,12 @@ const getIcon = (paymentMethod: PaymentMethod) => {
 
 const getHeading = (paymentMethod: PaymentMethod) => {
   switch (paymentMethod.type) {
-    case 'paypal':
-      return thirdPartyPaymentMap[paymentMethod.type].label;
     case 'google_pay':
       return `${thirdPartyPaymentMap[paymentMethod.type].label} ${
         paymentMethod.data.card_type
       } ****${paymentMethod.data.last_four}`;
+    case 'paypal':
+      return thirdPartyPaymentMap[paymentMethod.type].label;
     default:
       return `${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
   }

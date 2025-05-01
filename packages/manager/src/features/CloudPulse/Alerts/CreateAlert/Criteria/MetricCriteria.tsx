@@ -6,6 +6,7 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { useGetCloudPulseMetricDefinitionsByServiceType } from 'src/queries/cloudpulse/services';
 
@@ -16,7 +17,6 @@ import { Metric } from './Metric';
 
 import type { CreateAlertDefinitionForm, MetricCriteriaForm } from '../types';
 import type { AlertServiceType } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface MetricCriteriaProps {
   /**
@@ -74,6 +74,8 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
 
   return (
     <Controller
+      control={control}
+      name={name}
       render={({ fieldState, formState }) => (
         <Stack mt={3} spacing={2}>
           <Typography variant="h2">3. Criteria</Typography>
@@ -104,6 +106,8 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
               })}
           </Stack>
           <Button
+            buttonType="outlined"
+            disabled={metricCriteriaWatcher.length === 5}
             onClick={() =>
               append({
                 aggregate_function: null,
@@ -113,20 +117,16 @@ export const MetricCriteriaField = (props: MetricCriteriaProps) => {
                 threshold: 0,
               })
             }
+            size="medium"
             sx={{
               width: '130px',
             }}
-            buttonType="outlined"
-            disabled={metricCriteriaWatcher.length === 5}
-            size="medium"
             tooltipText="You can add up to 5 metrics."
           >
             Add metric
           </Button>
         </Stack>
       )}
-      control={control}
-      name={name}
     />
   );
 };

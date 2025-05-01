@@ -173,7 +173,7 @@ export const saveCustomAccountData = (data: Account | null): void => {
 /**
  * Retrieves the custom profile form data from local storage.
  */
-export const getCustomProfileData = (): Profile | null => {
+export const getCustomProfileData = (): null | Profile => {
   const data = localStorage.getItem(LOCAL_STORAGE_PROFILE_FORM_DATA_KEY);
   return data ? JSON.parse(data) : null;
 };
@@ -181,7 +181,7 @@ export const getCustomProfileData = (): Profile | null => {
 /**
  * Saves the custom profile form data to local storage.
  */
-export const saveCustomProfileData = (data: Profile | null): void => {
+export const saveCustomProfileData = (data: null | Profile): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,

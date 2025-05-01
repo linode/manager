@@ -125,9 +125,10 @@ export const RenderWidgets = React.memo(
 
     if (
       !dashboard.service_type ||
-      !Boolean(resources.length > 0) ||
+      // eslint-disable-next-line sonarjs/no-inverted-boolean-check
+      !(resources.length > 0) ||
       (!isJweTokenFetching && !jweToken?.token) ||
-      !Boolean(resourceList?.length)
+      !resourceList?.length
     ) {
       return renderPlaceHolder(
         'Select a dashboard and filters to visualize metrics.'
@@ -155,9 +156,8 @@ export const RenderWidgets = React.memo(
               availMetrics &&
               !cloudPulseWidgetProperties.widget.time_granularity
             ) {
-              cloudPulseWidgetProperties.widget.time_granularity = getTimeGranularity(
-                availMetrics.scrape_interval
-              );
+              cloudPulseWidgetProperties.widget.time_granularity =
+                getTimeGranularity(availMetrics.scrape_interval);
             }
             return (
               <CloudPulseWidget

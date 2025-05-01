@@ -11,11 +11,11 @@ export const CreateBucketSchema = object()
         .matches(/^\S*$/, 'Bucket name must not contain spaces.')
         .matches(
           /^[a-z0-9].*[a-z0-9]$/,
-          'Bucket name must start and end with a lowercase letter or number.'
+          'Bucket name must start and end with a lowercase letter or number.',
         )
         .matches(
           /^(?!.*[.-]{2})[a-z0-9.-]+$/,
-          'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.'
+          'Bucket name must contain only lowercase letters, numbers, periods (.), and hyphens (-). Adjacent periods and hyphens are not allowed.',
         )
         .max(63, 'Bucket name must be between 3 and 63 characters.')
         .test(
@@ -33,9 +33,9 @@ export const CreateBucketSchema = object()
             return !buckets.some(
               (bucket) =>
                 bucket.label === value &&
-                (bucket.cluster === cluster || bucket.region === region)
+                (bucket.cluster === cluster || bucket.region === region),
             );
-          }
+          },
         ),
       cluster: string().when('region', {
         is: (region: string) => !region || region.length === 0,
@@ -59,7 +59,7 @@ export const CreateBucketSchema = object()
         .optional(),
       s3_endpoint: string().optional(),
     },
-    [['cluster', 'region']]
+    [['cluster', 'region']],
   )
   .test('cors-enabled-check', 'Invalid CORS configuration.', function (value) {
     const { endpoint_type, cors_enabled } = value;

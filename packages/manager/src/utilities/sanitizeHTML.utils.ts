@@ -22,12 +22,12 @@ export const getAllowedHTMLTags = (
   allowMoreTags?: string[]
 ): string[] => {
   switch (tier) {
-    case 'strict':
-      return [...allowedHTMLTagsStrict, ...(allowMoreTags ?? [])];
     case 'flexible':
       return [...allowedHTMLTagsFlexible, ...(allowMoreTags ?? [])];
     case 'none':
       return allowMoreTags ?? [];
+    case 'strict':
+      return [...allowedHTMLTagsStrict, ...(allowMoreTags ?? [])];
   }
 };
 

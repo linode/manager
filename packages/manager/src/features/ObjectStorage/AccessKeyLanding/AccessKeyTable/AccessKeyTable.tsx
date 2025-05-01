@@ -39,9 +39,8 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
     openRevokeDialog,
   } = props;
 
-  const [showHostNamesDrawer, setShowHostNamesDrawers] = useState<boolean>(
-    false
-  );
+  const [showHostNamesDrawer, setShowHostNamesDrawers] =
+    useState<boolean>(false);
   const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();

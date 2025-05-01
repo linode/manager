@@ -78,10 +78,10 @@ export const DatabaseSummarySection = (props: Props) => {
 
   const resizeSummary = (
     <Box
+      data-testid="resizeSummary"
       sx={(theme: Theme) => ({
         marginTop: theme.spacing(2),
       })}
-      data-testid="resizeSummary"
     >
       {resizeData ? (
         <>

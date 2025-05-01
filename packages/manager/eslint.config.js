@@ -259,13 +259,13 @@ export const baseConfig = [
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
-      'perfectionist/sort-array-includes': 'warn',
-      'perfectionist/sort-classes': 'warn',
-      'perfectionist/sort-enums': 'warn',
-      'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-array-includes': 'error',
+      'perfectionist/sort-classes': 'error',
+      'perfectionist/sort-enums': 'error',
+      'perfectionist/sort-exports': 'error',
       'perfectionist/sort-heritage-clauses': 'off',
       'perfectionist/sort-imports': [
-        'warn',
+        'error',
         {
           customGroups: {
             type: {
@@ -294,17 +294,17 @@ export const baseConfig = [
           newlinesBetween: 'always',
         },
       ],
-      'perfectionist/sort-interfaces': 'warn',
+      'perfectionist/sort-interfaces': 'error',
       'perfectionist/sort-intersection-types': 'off',
-      'perfectionist/sort-jsx-props': 'warn',
+      'perfectionist/sort-jsx-props': 'error',
       'perfectionist/sort-modules': 'off',
-      'perfectionist/sort-named-exports': 'warn',
-      'perfectionist/sort-named-imports': 'warn',
-      'perfectionist/sort-object-types': 'warn',
+      'perfectionist/sort-named-exports': 'error',
+      'perfectionist/sort-named-imports': 'error',
+      'perfectionist/sort-object-types': 'error',
       'perfectionist/sort-objects': 'off',
       'perfectionist/sort-sets': 'off',
-      'perfectionist/sort-switch-case': 'warn',
-      'perfectionist/sort-union-types': 'warn',
+      'perfectionist/sort-switch-case': 'error',
+      'perfectionist/sort-union-types': 'error',
     },
   },
 

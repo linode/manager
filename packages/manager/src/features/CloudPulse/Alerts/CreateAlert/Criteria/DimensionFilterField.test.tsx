@@ -78,8 +78,8 @@ describe('Dimension filter field component', () => {
   });
 
   it('should render the Data Field component with options happy path and select an option', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilterField
             dataFieldDisabled={false}
@@ -96,8 +96,7 @@ describe('Dimension filter field component', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const dataFieldContainer = container.getByTestId(dataFieldId);
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
@@ -123,8 +122,8 @@ describe('Dimension filter field component', () => {
   });
 
   it('should render the Operator component', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilterField
             dataFieldDisabled={false}
@@ -141,8 +140,7 @@ describe('Dimension filter field component', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const dataFieldContainer = container.getByTestId('data-field');
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
@@ -178,8 +176,8 @@ describe('Dimension filter field component', () => {
   });
 
   it('should render the Value component with options happy path and select an option', async () => {
-    const container = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>(
-      {
+    const container =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
         component: (
           <DimensionFilterField
             dataFieldDisabled={false}
@@ -196,8 +194,7 @@ describe('Dimension filter field component', () => {
             serviceType: 'linode',
           },
         },
-      }
-    );
+      });
     const dataFieldContainer = container.getByTestId(dataFieldId);
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',

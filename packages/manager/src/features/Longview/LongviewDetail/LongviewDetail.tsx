@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -13,7 +14,6 @@ import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useTabs } from 'src/hooks/useTabs';
-import { useProfile } from '@linode/queries';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';
