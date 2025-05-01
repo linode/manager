@@ -102,6 +102,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
+      helperText={
+        !selectedRegion
+          ? 'Select a Region for your Linode to see existing placement groups.'
+          : undefined
+      }
       label={label}
       loading={isFetching}
       noOptionsText={
