@@ -81,6 +81,7 @@ export const UserDetailsLanding = () => {
           },
           pathname: location.pathname,
         }}
+        className="landing-header-mb-4"
         docsLink={IAM_DOCS_LINK}
         removeCrumbX={4}
         title={username}
