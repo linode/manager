@@ -1,8 +1,7 @@
 import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { VPC } from './VPC';
@@ -36,8 +35,8 @@ describe('VPC', () => {
     const region = regionFactory.build({ capabilities: [] });
 
     server.use(
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
+      http.get(`*/v4/regions/${region.id}`, () => {
+        return HttpResponse.json(region);
       })
     );
 
@@ -48,7 +47,7 @@ describe('VPC', () => {
       useFormOptions: { defaultValues: { region: region.id } },
     });
 
-    await findByText('VPC is not available in the selected region.');
+    await findByText('VPC is not available in the selected region.', { exact: false });
   });
 
   it('renders a subnet select if a VPC is selected', async () => {

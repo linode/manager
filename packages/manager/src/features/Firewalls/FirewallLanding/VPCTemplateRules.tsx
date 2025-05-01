@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
 
-import { STRENGTHEN_TEMPLATE_RULES } from './constants';
+import { STRENGTHEN_TEMPLATE_RULES } from './PublicTemplateRules';
 import {
   sharedTemplatePolicies,
   sharedTemplateRules,
@@ -12,18 +12,19 @@ import {
 export const VPCTemplateRules = () => {
   return (
     <>
-      <Stack marginTop={3} spacing={2}>
+      <Stack marginTop={2} spacing={2}>
         <Typography>
-          Allows for login with SSH, regular networking control data, and
-          inbound traffic from the VPC address space.
+          This rule set is a starting point for VPC Linode Interfaces. It allows
+          SSH access, essential networking control traffic, and inbound traffic
+          from the VPC address space.
         </Typography>
-        <Typography>{STRENGTHEN_TEMPLATE_RULES}</Typography>
+        {STRENGTHEN_TEMPLATE_RULES}
         <Box
+          data-testid="vpc-template-info"
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
             padding: theme.spacingFunction(16),
           })}
-          data-testid="vpc-template-info"
         >
           {sharedTemplateRules}
           <Typography
@@ -32,7 +33,7 @@ export const VPCTemplateRules = () => {
             Allow traffic for{' '}
             <TextTooltip
               displayText="RFC1918"
-              tooltipText="The RFC reserves the following ranges of IP addresses that cannot be routed on the Internet."
+              tooltipText="RFC1918 defines the IP address ranges that are reserved for private networks—these IPs are not routable on the public internet and are commonly used in internal networking (like VPCs)."
             />{' '}
             ranges
           </Typography>
