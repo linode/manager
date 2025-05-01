@@ -196,6 +196,7 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
+        className="landing-header-mb-16"
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
@@ -218,7 +219,7 @@ export const VolumesLanding = () => {
               </IconButton>
             </InputAdornment>
           ),
-          sx: { mb: 2 },
+          sx: { mb: 3 },
         }}
         onChange={debounce(400, (e) => {
           onSearch(e);
