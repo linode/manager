@@ -235,19 +235,19 @@ const DatabaseCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Database Clusters',
+              position: 1,
+            },
+          ],
+          pathname: location.pathname,
+        }}
+        title="Create"
+      />
       <form onSubmit={handleSubmit} ref={formRef} data-testid="db-create-form">
-        <LandingHeader
-          breadcrumbProps={{
-            crumbOverrides: [
-              {
-                label: 'Database Clusters',
-                position: 1,
-              },
-            ],
-            pathname: location.pathname,
-          }}
-          title="Create"
-        />
         {isRestricted && (
           <Notice
             spacingTop={16}
@@ -317,7 +317,7 @@ const DatabaseCreate = () => {
             onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
           />
         </Paper>
-        <Paper sx={{ marginTop: 2 }}>
+        <Paper sx={{ marginTop: 3 }}>
           <DatabaseSummarySection
             currentClusterSize={values.cluster_size}
             currentEngine={selectedEngine}

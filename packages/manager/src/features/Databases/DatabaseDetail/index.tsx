@@ -194,6 +194,7 @@ export const DatabaseDetail = () => {
           },
           pathname: location.pathname,
         }}
+        className="landing-header-mb-4"
         disabledBreadcrumbEditButton={isDatabasesGrantReadOnly}
         title={database.label}
       />
