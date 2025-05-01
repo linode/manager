@@ -7,6 +7,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import {
   getNextVersion,
+  useKubernetesBetaEndpoint,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import {
@@ -27,7 +28,12 @@ export const UpgradeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: cluster } = useKubernetesClusterQuery({ id: clusterID });
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    id: clusterID,
+    isUsingBetaEndpoint,
+  });
 
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(clusterID);
