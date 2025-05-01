@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { accountQueries, regionQueries } from '@linode/queries';
-import { isNullOrUndefined } from '@linode/utilities';
 import type { FieldErrors, Resolver } from 'react-hook-form';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
@@ -88,15 +87,22 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    const secureVMViolation =
-      context?.secureVMNoticesEnabled &&
-      !values.firewallOverride &&
-      isNullOrUndefined(values.firewall_id);
-
-    if (secureVMViolation) {
-      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
-        type: 'validate',
-      };
+    console.log(context?.secureVMNoticesEnabled, values.firewallOverride)
+    // If we're dealing with an employee account and they did not bypass
+    // the firewall banner....
+    if (context?.secureVMNoticesEnabled && !values.firewallOverride) {
+      // Get the selected Firewall ID depending on what Interface Generation is selected
+      const firewallId =
+        values.interface_generation === 'linode'
+          ? values.linodeInterfaces[0].firewall_id
+          : values.firewall_id;
+      console.log('here!');
+      if (!firewallId) {
+        (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+          message: 'You must select a Firewall or bypass the Firewall policy.',
+          type: 'validate',
+        };
+      }
     }
 
     if (errors) {
