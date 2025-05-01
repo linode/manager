@@ -6,6 +6,7 @@ import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateContact,
   mockDeleteContact,
+  mockGetContact,
   mockGetContacts,
   mockUpdateContact,
 } from 'support/intercepts/managed';
@@ -148,6 +149,7 @@ describe('Managed Contacts tab', () => {
       },
     };
 
+    mockGetContact(contact).as('getContact');
     mockGetContacts([contact]).as('getContacts');
     mockUpdateContact(contactId, updatedContact).as('updateContact');
     visitUrlWithManagedEnabled('/managed/contacts');
@@ -164,6 +166,8 @@ describe('Managed Contacts tab', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getContact');
 
     // Fill out and submit "Edit Contact" form.
     ui.drawer
@@ -216,6 +220,7 @@ describe('Managed Contacts tab', () => {
       name: contactName,
     });
 
+    mockGetContact(contact).as('getContact');
     mockGetContacts([contact]).as('getContacts');
     mockDeleteContact(contactId).as('deleteContact');
     visitUrlWithManagedEnabled('/managed/contacts');
@@ -233,6 +238,7 @@ describe('Managed Contacts tab', () => {
           .click();
       });
 
+    cy.wait('@getContact');
     // Fill out and submit type-to-confirm.
     ui.dialog
       .findByTitle(`Delete Contact ${contactName}?`)

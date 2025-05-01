@@ -1,12 +1,12 @@
 import {
   Autocomplete,
+  CloseIcon,
   FormControlLabel,
   IconButton,
   TextField,
   Toggle,
   Typography,
 } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
 import React from 'react';
 
 import {
@@ -66,7 +66,12 @@ export const DatabaseConfigurationItem = (props: Props) => {
           }}
           options={options}
           renderInput={(params) => (
-            <TextField {...params} label="" placeholder="Select an option" />
+            <TextField
+              {...params}
+              errorText={errorText}
+              label=""
+              placeholder="Select an option"
+            />
           )}
           value={selectedValue ?? options[0]}
         />
@@ -84,7 +89,8 @@ export const DatabaseConfigurationItem = (props: Props) => {
           name={configLabel}
           onBlur={onBlur}
           onChange={(e) => {
-            onChange(e.target.value);
+            const value = e.target.value;
+            onChange(value === '' ? '' : Number(value));
           }}
           placeholder={
             configItem.isNew ? String(configItem?.example ?? '') : ''
@@ -150,7 +156,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
           onClick={() => onRemove(configItem?.label)}
           size="large"
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
       )}
     </StyledWrapper>

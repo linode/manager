@@ -10,6 +10,7 @@ import {
   isExtendedRegion,
   getRegionFromExtendedRegion,
 } from 'support/util/regions';
+import { makeResponse } from 'support/util/response';
 
 import type { ExtendedRegion } from 'support/util/regions';
 
@@ -25,7 +26,7 @@ import type { ExtendedRegion } from 'support/util/regions';
  * @returns Cypress chainable.
  */
 export const mockGetRegions = (
-  regions: Region[] | ExtendedRegion[]
+  regions: ExtendedRegion[] | Region[]
 ): Cypress.Chainable<null> => {
   const mockResponseRegions = regions.map(
     (region: Region | ExtendedRegion): Region => {
@@ -40,6 +41,31 @@ export const mockGetRegions = (
     'GET',
     apiMatcher('regions*'),
     paginateResponse(mockResponseRegions)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch a region and mocks response.
+ *
+ * The mock region can contain an actual API region object, or a Cypress-specific
+ * `ExtendedRegion` instance. If an `ExtendedRegion` is passed, it will be mocked
+ * as a regular `Region`.
+ *
+ * @param region - Region for which to intercept request and mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetRegion = (
+  region: ExtendedRegion | Region
+): Cypress.Chainable<null> => {
+  const mockRegion = isExtendedRegion(region)
+    ? getRegionFromExtendedRegion(region)
+    : region;
+
+  return cy.intercept(
+    'GET',
+    apiMatcher(`regions/${mockRegion.id}`),
+    makeResponse(mockRegion)
   );
 };
 

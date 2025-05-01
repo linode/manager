@@ -132,7 +132,6 @@ describe('delete linode', () => {
       // Check elements in setting tab
       cy.findByText('Linode Label').should('be.visible');
       cy.findByText('Reset Root Password').should('be.visible');
-      cy.findByText('Notification Thresholds').should('be.visible');
       cy.findByText('Shutdown Watchdog').should('be.visible');
       cy.findByText('Delete Linode').should('be.visible');
 

@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 
 describe('NetworkInterfaces', () => {
-  it('renders the NetworkInterfaces accordion', () => {
+  it('renders the NetworkInterfaces section', () => {
     const { getByText } = renderWithTheme(<NetworkInterfaceType />);
 
     expect(getByText('Network Interface Type')).toBeVisible();

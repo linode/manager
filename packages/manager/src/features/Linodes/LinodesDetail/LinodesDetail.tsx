@@ -14,7 +14,6 @@ import {
 } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 
 import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
 
@@ -42,9 +41,10 @@ export const LinodeDetail = () => {
   const location = useLocation();
   const history = useHistory();
 
-  const queryParams = getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-    location.search
-  );
+  const queryParams =
+    getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
+      location.search
+    );
 
   const pathname = location.pathname;
 
@@ -58,11 +58,6 @@ export const LinodeDetail = () => {
   const id = Number(linodeId);
 
   const { data: linode, error, isLoading } = useLinodeQuery(id);
-  const { canUpgradeInterfaces } = useCanUpgradeInterfaces(
-    linode?.lke_cluster_id,
-    linode?.region,
-    linode?.interface_generation
-  );
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -84,6 +79,8 @@ export const LinodeDetail = () => {
         <Route component={CloneLanding} path={`${path}/clone`} />
         {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
           <Redirect
+            from={`${url}/${path}`}
+            key={path}
             to={{
               pathname: url,
               search: new URLSearchParams({
@@ -91,8 +88,6 @@ export const LinodeDetail = () => {
                 [path]: 'true',
               }).toString(),
             }}
-            from={`${url}/${path}`}
-            key={path}
           />
         ))}
         <Route
@@ -101,12 +96,9 @@ export const LinodeDetail = () => {
               <LinodesDetailHeader />
               <LinodesDetailNavigation />
               <UpgradeInterfacesDialog
-                open={
-                  pathname.includes('upgrade-interfaces') &&
-                  canUpgradeInterfaces
-                }
                 linodeId={id}
                 onClose={closeUpgradeInterfacesDialog}
+                open={pathname.includes('upgrade-interfaces')}
               />
             </React.Fragment>
           )}

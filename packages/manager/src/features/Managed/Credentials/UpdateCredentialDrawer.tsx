@@ -8,6 +8,7 @@ import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
+import type { FormikProps } from './CredentialList';
 import type { CredentialPayload } from '@linode/api-v4/lib/managed';
 
 const PasswordInput = React.lazy(() =>
@@ -17,22 +18,28 @@ const PasswordInput = React.lazy(() =>
 );
 
 export interface CredentialDrawerProps {
+  isFetching: boolean;
   label: string;
   onClose: () => void;
-  onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
+  onSubmitLabel: (
+    values: Partial<CredentialPayload>,
+    formikProps: FormikProps
+  ) => void;
   onSubmitPassword: (
     values: Partial<CredentialPayload>,
-    formikProps: any
+    formikProps: FormikProps
   ) => void;
   open: boolean;
 }
 
 const CredentialDrawer = (props: CredentialDrawerProps) => {
-  const { label, onClose, onSubmitLabel, onSubmitPassword, open } = props;
+  const { isFetching, label, onClose, onSubmitLabel, onSubmitPassword, open } =
+    props;
 
   return (
     <Drawer
       NotFoundComponent={NotFound}
+      isFetching={isFetching}
       onClose={onClose}
       open={open}
       title={`Edit Credential: ${label}`}

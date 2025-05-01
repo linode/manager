@@ -1,4 +1,4 @@
-import { Button, Typography } from '@linode/ui';
+import { Button, List, ListItem, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -38,6 +38,29 @@ export const CallToActionBanner: Story = {
 };
 
 /**
+ * Example of a non-dismissible banner with an associated action
+ */
+export const CallToActionNonDismissibleBanner: Story = {
+  render: () => (
+    <DismissibleBanner
+      actionButton={
+        <Button buttonType="primary" onClick={() => null}>
+          Try Beta Now
+        </Button>
+      }
+      dismissible={false}
+      forceImportantIconVerticalCenter
+      preferenceKey="cluster-v1"
+      variant="info"
+    >
+      <Typography>
+        A new Beta version is now available with enhanced features.
+      </Typography>
+    </DismissibleBanner>
+  ),
+};
+
+/**
  * Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
  */
 export const BetaBanner: Story = {
@@ -66,6 +89,34 @@ export const InfoWithLongTextAndMarkup: StoryObj = {
         This is a dismissible informational notice with a title.
       </Typography>
       <Typography>This notice contains long text that should wrap.</Typography>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListTag: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-dismissible-banner"
+      variant="warning"
+    >
+      <ul>
+        <li>This is a dismissible warning with unordered list bullets</li>
+        <li>This is a dismissible warning with unordered list bullets</li>
+      </ul>
+    </DismissibleBanner>
+  ),
+};
+
+export const WarningWithListItem: StoryObj = {
+  render: () => (
+    <DismissibleBanner
+      preferenceKey="warning-list-item-dismissible-banner"
+      variant="warning"
+    >
+      <List>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+        <ListItem>This is a dismissible warning with list items</ListItem>
+      </List>
     </DismissibleBanner>
   ),
 };

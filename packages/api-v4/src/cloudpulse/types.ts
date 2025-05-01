@@ -56,27 +56,27 @@ export interface DateTimeWithPreset {
 }
 
 export interface Widgets {
+  aggregate_function: string;
+  chart_type: 'area' | 'line';
+  color: string;
+  entity_ids: string[];
+  filters: Filters[];
+  group_by: string[];
   label: string;
   metric: string;
-  aggregate_function: string;
-  group_by: string;
-  region_id: number;
   namespace_id: number;
-  color: string;
-  size: number;
-  chart_type: 'line' | 'area';
-  y_label: string;
-  filters: Filters[];
-  serviceType: string;
+  region_id: number;
   service_type: string;
-  entity_ids: string[];
-  time_granularity: TimeGranularity;
+  serviceType: string;
+  size: number;
   time_duration: TimeDuration;
+  time_granularity: TimeGranularity;
   unit: string;
+  y_label: string;
 }
 
 export interface Filters {
-  key: string;
+  dimension_label: string;
   operator: string;
   value: string;
 }
@@ -129,15 +129,19 @@ export interface JWEToken {
   token: string;
 }
 
-export interface CloudPulseMetricsRequest {
-  metric: string;
-  filters?: Filters[];
+export interface Metric {
   aggregate_function: string;
-  group_by: string;
-  relative_time_duration: TimeDuration | undefined;
+  name: string;
+}
+
+export interface CloudPulseMetricsRequest {
   absolute_time_duration: DateTimeWithPreset | undefined;
-  time_granularity: TimeGranularity | undefined;
   entity_ids: number[];
+  filters?: Filters[];
+  group_by: string[];
+  metrics: Metric[];
+  relative_time_duration: TimeDuration | undefined;
+  time_granularity: TimeGranularity | undefined;
 }
 
 export interface CloudPulseMetricsResponse {

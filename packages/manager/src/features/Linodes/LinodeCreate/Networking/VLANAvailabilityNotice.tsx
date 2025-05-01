@@ -4,26 +4,26 @@ import React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
 
-export const VPCAvailability = () => {
+export const VLANAvailabilityNotice = () => {
   const { data: regions } = useRegionsQuery();
 
-  const regionsThatSupportVPC = regions?.filter((r) =>
-    r.capabilities.includes('VPCs')
+  const regionsThatSupportVLAN = regions?.filter((r) =>
+    r.capabilities.includes('Vlans')
   );
 
   return (
-    <Notice variant="warning">
+    <Notice sx={{ width: 'fit-content' }} variant="warning">
       <Typography
         sx={(theme) => ({ font: theme.font.bold, fontSize: 'inherit' })}
       >
-        VPCs are currently available in{' '}
+        VLAN is not available in the selected region.{' '}
         <TextTooltip
-          displayText="select regions"
+          displayText="Available regions"
           minWidth={400}
           sxTypography={{ fontSize: 'inherit' }}
           tooltipText={
             <List sx={{ columns: '2 auto' }}>
-              {regionsThatSupportVPC?.map((region) => (
+              {regionsThatSupportVLAN?.map((region) => (
                 <ListItem disablePadding key={region.id} sx={{ py: 0.5 }}>
                   {region.label} ({region.id})
                 </ListItem>
@@ -31,7 +31,6 @@ export const VPCAvailability = () => {
             </List>
           }
         />
-        .
       </Typography>
     </Notice>
   );

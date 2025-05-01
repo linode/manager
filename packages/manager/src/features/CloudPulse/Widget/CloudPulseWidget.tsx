@@ -25,6 +25,7 @@ import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from '../shared/CloudPulseResourcesSelect';
 import type {
   DateTimeWithPreset,
+  Filters,
   MetricDefinition,
   TimeGranularity,
   Widgets,
@@ -154,6 +155,13 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
   const jweTokenExpiryError = 'Token expired';
+  const filters: Filters[] | undefined =
+    additionalFilters?.length || widget?.filters?.length
+      ? [
+          ...constructAdditionalRequestFilters(additionalFilters ?? []),
+          ...(widget.filters ?? []),
+        ]
+      : undefined;
 
   /**
    *
@@ -234,7 +242,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
         resources,
         widget,
       }),
-      filters: constructAdditionalRequestFilters(additionalFilters ?? []), // any additional dimension filters will be constructed and passed here
+      filters, // any additional dimension filters will be constructed and passed here
     },
     {
       authToken,
@@ -252,11 +260,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const variant: ChartVariant = widget.chart_type;
   if (!isLoading && metricsList) {
     const generatedData = generateGraphData({
-      flags,
       label: widget.label,
       metricsList,
       resources,
-      serviceType,
       status,
       unit,
     });
@@ -339,7 +345,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           <CloudPulseLineGraph
             error={
               status === 'error' && metricsApiCallError !== jweTokenExpiryError // show the error only if the error is not related to token expiration
-                ? metricsApiCallError ?? 'Error while rendering graph'
+                ? (metricsApiCallError ?? 'Error while rendering graph')
                 : undefined
             }
             loading={

@@ -6,13 +6,16 @@ export const useCodeBlockStyles = makeStyles()((theme) => ({
       borderRadius: theme.spacing(0.5),
       overflowX: 'auto',
       padding: theme.spacing(1.5),
+      paddingRight: '40px',
     },
     position: 'relative',
   },
   copyIcon: {
     position: 'absolute',
-    right: `${theme.spacing(1.5)}`,
+    right: 0,
+    paddingRight: `${theme.spacing(1)}`,
     top: `${theme.spacing(1)}`,
+    backgroundColor: theme.tokens.alias.Background.Neutral,
   },
   lineNumbers: {
     code: {

@@ -1,10 +1,17 @@
-import { useFirewallSettingsQuery } from '@linode/queries';
-import { InputLabel, Radio, RadioGroup } from '@linode/ui';
+import { firewallQueries, useQueryClient } from '@linode/queries';
+import {
+  FormControl,
+  Radio,
+  RadioGroup,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { Grid2 } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { FormGroup } from 'src/components/FormGroup';
+import { FormLabel } from 'src/components/FormLabel';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import { getDefaultFirewallForInterfacePurpose } from './utilities';
@@ -20,79 +27,113 @@ const interfaceTypes = [
   {
     label: 'Public Internet',
     purpose: 'public',
+    description:
+      'Connects your Linode to the internet, enabling traffic over the public IP address.',
   },
   {
     label: 'VPC',
     purpose: 'vpc',
+    description:
+      'Connects your Linode to a private, Layer 3–isolated network, enabling secure communication with other Linodes in the same VPC.',
   },
   {
     label: 'VLAN',
     purpose: 'vlan',
+    description:
+      'Connects your Linode to a private Layer 2 network for local communication with other Linodes.',
   },
 ] as const;
 
 export const InterfaceType = ({ index }: Props) => {
-  const {
-    control,
-    getFieldState,
-    setValue,
-  } = useFormContext<LinodeCreateFormValues>();
+  const queryClient = useQueryClient();
 
-  const { data: firewallSettings } = useFirewallSettingsQuery();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { control, getFieldState, setValue } =
+    useFormContext<LinodeCreateFormValues>();
 
   const { field } = useController({
     control,
     name: `linodeInterfaces.${index}.purpose`,
   });
 
-  const onChange = (value: InterfacePurpose) => {
+  const onChange = async (value: InterfacePurpose) => {
     // Change the interface purpose (Public, VPC, VLAN)
     field.onChange(value);
 
-    const defaultFirewall = getDefaultFirewallForInterfacePurpose(
-      value,
-      firewallSettings
-    );
+    // VLAN interfaces do not support Firewalls, so set
+    // the Firewall ID to `null` to be safe and early return.
+    if (value === 'vlan') {
+      setValue(`linodeInterfaces.${index}.firewall_id`, null);
+      return;
+    }
 
-    // Set the Firewall based on defaults if:
-    // - there is a default firewall for this interface type
-    // - the user has not touched the Firewall field
-    if (
-      defaultFirewall &&
-      !getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched
-    ) {
-      setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+    // If the user has not touched the Firewall field...
+    if (!getFieldState(`linodeInterfaces.${index}.firewall_id`).isTouched) {
+      try {
+        const firewallSettings = await queryClient.ensureQueryData(
+          firewallQueries.settings
+        );
+
+        const defaultFirewall = getDefaultFirewallForInterfacePurpose(
+          value,
+          firewallSettings
+        );
+
+        // If this Interface type has a default firewall, set it
+        if (defaultFirewall) {
+          setValue(`linodeInterfaces.${index}.firewall_id`, defaultFirewall);
+        }
+        // eslint-disable-next-line sonarjs/no-ignored-exceptions
+      } catch (error) {
+        // The fetch to get Firewall Settings will fail for restricted users.
+        enqueueSnackbar('Unable to retrieve default Firewall.', {
+          variant: 'warning',
+        });
+      }
     }
   };
 
   return (
-    <FormGroup sx={{ display: 'block' }}>
-      <InputLabel id="network-connection-label">Network Connection</InputLabel>
+    <FormControl>
+      <FormLabel id="network-connection-label">Network Connection</FormLabel>
+      <Typography id="network-connection-helper-text">
+        The default interface used by this Linode to route network traffic.
+        Additional interfaces can be added after the Linode is created.
+      </Typography>
       <RadioGroup
+        aria-describedby="network-connection-helper-text"
         aria-labelledby="network-connection-label"
         sx={{ display: 'block', marginBottom: '0px !important' }}
       >
-        <Grid2 container spacing={1}>
+        <Grid2 container spacing={2}>
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
+              checked={field.value === interfaceType.purpose}
               gridSize={{
                 md: 3,
                 sm: 12,
                 xs: 12,
               }}
-              renderIcon={() => (
-                <Radio checked={field.value === interfaceType.purpose} />
-              )}
-              checked={field.value === interfaceType.purpose}
               heading={interfaceType.label}
               key={interfaceType.purpose}
               onClick={() => onChange(interfaceType.purpose)}
+              renderIcon={() => (
+                <Radio checked={field.value === interfaceType.purpose} />
+              )}
+              renderVariant={() => (
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{ p: 0.5 }}
+                  text={interfaceType.description}
+                />
+              )}
               subheadings={[]}
-              sxCardBaseIcon={{ svg: { fontSize: '24px !important' } }}
+              sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
             />
           ))}
         </Grid2>
       </RadioGroup>
-    </FormGroup>
+    </FormControl>
   );
 };

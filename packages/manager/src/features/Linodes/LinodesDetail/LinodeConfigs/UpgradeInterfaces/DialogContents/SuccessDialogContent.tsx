@@ -1,7 +1,8 @@
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { SUCCESS_DRY_RUN_COPY, SUCCESS_UPGRADE_COPY } from '../constants';
+import { initialState } from '../UpgradeInterfacesDialog';
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
 
 import type {
@@ -16,6 +17,9 @@ export const SuccessDialogContent = (
   const { linodeId, onClose, setDialogState, state } = props;
   const { isDryRun, linodeInterfaces, selectedConfig } = state;
 
+  const location = useLocation();
+  const history = useHistory();
+
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
       linodeId,
@@ -28,20 +32,37 @@ export const SuccessDialogContent = (
     <Stack gap={2}>
       <Notice variant="success">
         <Typography>
-          {isDryRun ? SUCCESS_DRY_RUN_COPY : SUCCESS_UPGRADE_COPY}
+          {isDryRun ? (
+            <>
+              <strong>Dry run successful</strong>
+              <br />
+              No issues were found. You can proceed with upgrading to Linode
+              Interfaces.
+            </>
+          ) : (
+            <>
+              <strong>Upgrade successful</strong>
+              <br />
+              Your Linode now uses Linode Interfaces. Existing interfaces were
+              migrated, firewalls reassigned, and changes are visible in the{' '}
+              <strong>Network</strong> tab.
+            </>
+          )}
         </Typography>
       </Notice>
-      {!isDryRun && linodeInterfaces.length > 0 && (
+      {linodeInterfaces.length > 0 && (
         <Box
           sx={(theme) => ({
             backgroundColor: theme.tokens.alias.Background.Neutral,
-            marginTop: theme.spacingFunction(8),
             padding: theme.spacingFunction(16),
           })}
         >
-          <Typography variant="h3">Upgrade Summary</Typography>
+          <Typography variant="h3">
+            {isDryRun ? 'Dry Run Summary' : 'Upgrade Summary'}
+          </Typography>
           {linodeInterfaces.map((linodeInterface) => (
             <LinodeInterfaceInfo
+              isDryRun={isDryRun}
               key={linodeInterface.id}
               {...linodeInterface}
             />
@@ -53,12 +74,38 @@ export const SuccessDialogContent = (
           {isDryRun ? 'Cancel' : 'Close'}
         </Button>
         {isDryRun && (
+          <>
+            <Button
+              buttonType="outlined"
+              disabled={isPending}
+              onClick={() => setDialogState({ ...initialState })}
+            >
+              Return to Overview
+            </Button>
+            <Button
+              buttonType="primary"
+              loading={isPending}
+              onClick={() => upgradeToLinodeInterfaces(false)}
+            >
+              Continue to Upgrade
+            </Button>
+          </>
+        )}
+        {!isDryRun && (
           <Button
             buttonType="primary"
-            loading={isPending}
-            onClick={() => upgradeToLinodeInterfaces(false)}
+            onClick={() => {
+              const newPath = location.pathname
+                .split('/')
+                // remove 'upgrade-interfaces' from URL
+                .slice(0, -1)
+                // join everything back together
+                .join('/')
+                .concat('/networking');
+              history.replace(newPath);
+            }}
           >
-            Upgrade Interfaces
+            View Network Settings
           </Button>
         )}
       </Box>
@@ -66,10 +113,15 @@ export const SuccessDialogContent = (
   );
 };
 
-const LinodeInterfaceInfo = (props: LinodeInterface) => {
+interface UpgradeLinodeInterfaceInfo extends LinodeInterface {
+  isDryRun: boolean;
+}
+
+const LinodeInterfaceInfo = (props: UpgradeLinodeInterfaceInfo) => {
   const {
     created,
     id,
+    isDryRun,
     mac_address,
     public: publicInterface,
     updated,
@@ -86,16 +138,22 @@ const LinodeInterfaceInfo = (props: LinodeInterface) => {
             marginBottom: theme.spacingFunction(16),
           })}
         >
-          <strong>Interface Meta Info: Interface #{id}</strong>
+          <strong>
+            Interface Meta Info{!isDryRun ? `: Interface #${id}` : ''}
+          </strong>
         </Typography>
-        <Typography>ID: {id}</Typography>
+        {!isDryRun && <Typography>ID: {id}</Typography>}
         <Typography>MAC Address: {mac_address}</Typography>
         <Typography>Created: {created}</Typography>
         <Typography>Updated: {updated}</Typography>
         <Typography>Version: {version}</Typography>
       </Stack>
       {publicInterface && (
-        <Typography>Public Interface successfully upgraded</Typography>
+        <Typography>
+          {isDryRun
+            ? 'Public Interface dry run successful.'
+            : 'Public Interface successfully upgraded.'}
+        </Typography>
       )}
       {vpc && <VPCInterfaceInfo {...vpc} default_route={props.default_route} />}
       {vlan && <VlanInterfaceInfo vlan={vlan} />}
@@ -108,9 +166,9 @@ type VPCInterfaceInfo = VPCInterfaceData &
 
 const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
   const { default_route, ipv4, subnet_id, vpc_id } = props;
-  const { addresses, ranges } = ipv4;
+  const { addresses, ranges } = ipv4 || {};
 
-  const primaryAddress = addresses.find((address) => address.primary === true);
+  const primaryAddress = addresses?.find((address) => address.primary === true);
 
   return (
     <>
@@ -127,13 +185,13 @@ const VPCInterfaceInfo = (props: VPCInterfaceInfo) => {
         <Typography>VPC ID: {vpc_id}</Typography>
         <Typography>Subnet ID: {subnet_id}</Typography>
         <Typography>
-          Addresses: {addresses.map((address) => address.address).join(', ')}
+          Addresses: {addresses?.map((address) => address.address).join(', ')}
         </Typography>
         {primaryAddress && (
           <Typography>Primary Address: {primaryAddress.address}</Typography>
         )}
-        {ranges.length > 0 && (
-          <Typography>Routed Ranges: {ranges.join(', ')}</Typography>
+        {ranges && ranges?.length > 0 && (
+          <Typography>Routed Ranges: {ranges?.join(', ')}</Typography>
         )}
       </Stack>
     </>

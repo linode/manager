@@ -1,12 +1,11 @@
 import { Button } from '@linode/ui';
-import { useDialog } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,46 +14,60 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedContactsQuery,
   useAllManagedCredentialsQuery,
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
-  useCreateMonitorMutation,
   useDeleteMonitorMutation,
-  useUpdateMonitorMutation,
+  useGetMonitorQuery,
 } from 'src/queries/managed/managed';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
 
-import MonitorDrawer from '../MonitorDrawer';
+import { MonitorDrawer } from '../MonitorDrawer';
 import { HistoryDrawer } from './HistoryDrawer';
 import { StyledGrid } from './MonitorTable.styles';
-import MonitorTableContent from './MonitorTableContent';
+import { MonitorTableContent } from './MonitorTableContent';
 
 import type { ManagedServicePayload } from '@linode/api-v4/lib/managed';
-import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikBag } from 'formik';
 
 export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
 export const MonitorTable = () => {
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
-
-  const { data, error, isLoading } = useAllManagedMonitorsQuery();
   const {
-    data: issues,
-    failureReason,
-    isFetching: areIssuesFetching,
-  } = useAllManagedIssuesQuery();
+    data: monitors,
+    error: monitorsError,
+    isLoading,
+  } = useAllManagedMonitorsQuery();
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
 
+  const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const { mutateAsync: deleteServiceMonitor } = useDeleteMonitorMutation();
+
+  const { data: issues } = useDialogData({
+    enabled: match.routeId === '/managed/monitors/$monitorId/issues',
+    paramKey: 'monitorId',
+    queryHook: useAllManagedIssuesQuery,
+    redirectToOnNotFound: '/managed/monitors',
+  });
+
+  const { data: selectedMonitor, isFetching: isFetchingSelectedMonitor } =
+    useDialogData({
+      enabled:
+        match.routeId === '/managed/monitors/$monitorId/edit' ||
+        match.routeId === '/managed/monitors/$monitorId/issues' ||
+        match.routeId === '/managed/monitors/$monitorId/delete',
+      paramKey: 'monitorId',
+      queryHook: useGetMonitorQuery,
+      redirectToOnNotFound: '/managed/monitors',
+    });
 
   const groups = React.useMemo(() => {
     if (!contacts) {
@@ -70,99 +83,47 @@ export const MonitorTable = () => {
     return _groups;
   }, [contacts]);
 
-  const monitors = data || [];
-
-  const { closeDialog, dialog, handleError, openDialog, submitDialog } =
-    useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
-
-  const [historyDrawerOpen, setHistoryDrawerOpen] =
-    React.useState<boolean>(false);
-
-  const [monitorDrawerOpen, setMonitorDrawerOpen] =
-    React.useState<boolean>(false);
-  const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
-  const [editID, setEditID] = React.useState<number>(0);
-
-  const { mutateAsync: updateServiceMonitor } =
-    useUpdateMonitorMutation(editID);
-  const { mutateAsync: createServiceMonitor } = useCreateMonitorMutation();
-
-  const [editLabel, setEditLabel] = React.useState<string>('');
-
-  const handleDrawerClose = () => {
-    setEditID(0);
-    setDrawerMode('create');
-    setMonitorDrawerOpen(false);
-  };
-
-  const handleMonitorDrawerOpen = (id: number, mode: Modes) => {
-    setEditID(id);
-    setDrawerMode(mode);
-    setMonitorDrawerOpen(true);
-  };
-
-  const handleHistoryDrawerOpen = (id: number, label: string) => {
-    setEditID(id);
-    setEditLabel(label);
-    setHistoryDrawerOpen(true);
-  };
-
   const handleDelete = () => {
-    if (!dialog.entityID) {
+    if (!selectedMonitor?.id) {
       return;
     }
-    submitDialog(dialog.entityID)
+
+    deleteServiceMonitor({ id: selectedMonitor.id })
       .then((_) => {
         enqueueSnackbar('Successfully deleted Service Monitor', {
           variant: 'success',
         });
+        navigate({ to: '/managed/monitors' });
       })
       .catch((err) => {
-        handleError(
-          getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
-            .reason
-        );
+        setDeleteError(err[0].reason || 'Error deleting this Service Monitor.');
       });
   };
 
-  const submitMonitorForm = (
-    values: ManagedServicePayload,
-    { setErrors, setStatus, setSubmitting }: FormikProps
-  ) => {
-    const _success = () => {
-      setSubmitting(false);
-      handleDrawerClose();
-    };
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: sortedMonitors,
+  } = useOrderV2({
+    data: monitors,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/managed/monitors',
+    },
+    preferenceKey: 'managed-monitors',
+  });
 
-    const _error = (e: APIError[]) => {
-      const defaultMessage = `Unable to ${
-        drawerMode === 'create' ? 'create' : 'update'
-      } this Monitor. Please try again later.`;
-      const mapErrorToStatus = (generalError: string) =>
-        setStatus({ generalError });
-
-      setSubmitting(false);
-      handleFieldErrors(setErrors, e);
-      handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
-      setSubmitting(false);
-    };
-
-    // Clear drawer error state
-    setStatus(undefined);
-
-    if (drawerMode === 'create') {
-      createServiceMonitor({ ...values, timeout: +values.timeout })
-        .then(_success)
-        .catch(_error);
-    } else {
-      updateServiceMonitor({
-        ...values,
-        timeout: +values.timeout,
-      })
-        .then(_success)
-        .catch(_error);
-    }
-  };
+  const isMonitorDrawerOpen =
+    match.routeId === '/managed/monitors/add' ||
+    match.routeId === '/managed/monitors/$monitorId/edit';
+  const isHistoryDrawerOpen =
+    match.routeId === '/managed/monitors/$monitorId/issues';
+  const isDeleteDialogOpen =
+    match.routeId === '/managed/monitors/$monitorId/delete';
 
   return (
     <>
@@ -184,7 +145,8 @@ export const MonitorTable = () => {
             <StyledGrid>
               <Button
                 buttonType="primary"
-                onClick={() => setMonitorDrawerOpen(true)}
+                onClick={() => navigate({ to: '/managed/monitors/add' })}
+                sx={{ mb: 0.5 }}
               >
                 Add Monitor
               </Button>
@@ -192,106 +154,97 @@ export const MonitorTable = () => {
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={monitors} order={'asc'} orderBy={'label'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
-            {({
-              count,
-              data,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => (
-              <>
-                <Table aria-label="List of Your Managed Service Monitors">
-                  <TableHead>
-                    <TableRow>
-                      <TableSortCell
-                        active={orderBy === 'label'}
-                        data-qa-monitor-label-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'label'}
-                      >
-                        Monitor
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'status'}
-                        data-qa-monitor-status-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'status'}
-                      >
-                        Status
-                      </TableSortCell>
-                      <TableSortCell
-                        active={orderBy === 'address'}
-                        data-qa-monitor-resource-header
-                        direction={order}
-                        handleClick={handleOrderChange}
-                        label={'address'}
-                      >
-                        Resource
-                      </TableSortCell>
-                      <TableCell />
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <MonitorTableContent
-                      error={error}
-                      issues={issues || []}
-                      loading={isLoading}
-                      monitors={data}
-                      openDialog={openDialog}
-                      openHistoryDrawer={handleHistoryDrawerOpen}
-                      openMonitorDrawer={handleMonitorDrawerOpen}
-                    />
-                  </TableBody>
-                </Table>
-                <PaginationFooter
-                  count={count}
-                  eventCategory="managed service monitor table"
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
+      <Paginate data={sortedMonitors ?? []}>
+        {({
+          count,
+          data,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => (
+          <>
+            <Table aria-label="List of Your Managed Service Monitors">
+              <TableHead>
+                <TableRow>
+                  <TableSortCell
+                    active={orderBy === 'label'}
+                    data-qa-monitor-label-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'label'}
+                  >
+                    Monitor
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'status'}
+                    data-qa-monitor-status-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'status'}
+                  >
+                    Status
+                  </TableSortCell>
+                  <TableSortCell
+                    active={orderBy === 'address'}
+                    data-qa-monitor-resource-header
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label={'address'}
+                  >
+                    Resource
+                  </TableSortCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <MonitorTableContent
+                  error={monitorsError}
+                  issues={issues || []}
+                  loading={isLoading}
+                  monitors={data}
                 />
-              </>
-            )}
-          </Paginate>
+              </TableBody>
+            </Table>
+            <PaginationFooter
+              count={count}
+              eventCategory="managed service monitor table"
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+            />
+          </>
         )}
-      </OrderBy>
+      </Paginate>
       <DeletionDialog
         entity="monitor"
-        error={dialog.error}
-        label={dialog.entityLabel || ''}
-        loading={dialog.isLoading}
-        onClose={closeDialog}
+        error={deleteError}
+        label={selectedMonitor?.label || ''}
+        loading={isFetchingSelectedMonitor}
+        onClose={() => {
+          setDeleteError(undefined);
+          navigate({ to: '/managed/monitors' });
+        }}
         onDelete={handleDelete}
-        open={dialog.isOpen}
+        open={isDeleteDialogOpen}
       />
       <MonitorDrawer
         credentials={credentials || []}
         groups={groups}
-        mode={drawerMode}
-        monitor={monitors.find((m) => m.id === editID)}
-        onClose={handleDrawerClose}
-        onSubmit={submitMonitorForm}
-        open={monitorDrawerOpen}
+        isFetching={isFetchingSelectedMonitor}
+        monitor={selectedMonitor}
+        open={isMonitorDrawerOpen}
       />
       <HistoryDrawer
-        error={failureReason}
-        isFetching={areIssuesFetching}
+        isFetching={isFetchingSelectedMonitor}
         issues={issues?.filter((thisIssue) =>
-          thisIssue.services.includes(editID)
+          thisIssue.services.includes(selectedMonitor?.id ?? -1)
         )}
-        monitorLabel={editLabel}
-        onClose={() => setHistoryDrawerOpen(false)}
-        open={historyDrawerOpen}
+        monitorLabel={selectedMonitor?.label}
+        onClose={() => navigate({ to: '/managed/monitors' })}
+        open={isHistoryDrawerOpen}
       />
     </>
   );
 };
-
-export default MonitorTable;

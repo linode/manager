@@ -1,3 +1,4 @@
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -13,12 +14,15 @@ import {
 
 interface Props {
   bucketName: string;
-  history: any;
   prefix: string;
 }
 
 export const BucketBreadcrumb = (props: Props) => {
-  const { bucketName, history, prefix } = props;
+  const { bucketName, prefix } = props;
+  const navigate = useNavigate();
+  const { clusterId } = useParams({
+    from: '/object-storage/buckets/$clusterId/$bucketName',
+  });
   const { width } = useWindowDimensions();
   const bucketPath = bucketName + '/' + prefix;
 
@@ -38,7 +42,11 @@ export const BucketBreadcrumb = (props: Props) => {
         {/* Bucket name */}
         <StyledLink
           onClick={() => {
-            history.push({ search: '?prefix=' });
+            navigate({
+              to: '/object-storage/buckets/$clusterId/$bucketName',
+              params: { clusterId, bucketName },
+              search: { prefix: '' },
+            });
           }}
           variant="body1"
         >
@@ -66,7 +74,11 @@ export const BucketBreadcrumb = (props: Props) => {
                   }
 
                   const prefixString = prefixArrayToString(prefixArray, idx);
-                  history.push({ search: '?prefix=' + prefixString });
+                  navigate({
+                    to: '/object-storage/buckets/$clusterId/$bucketName',
+                    params: { clusterId, bucketName },
+                    search: { prefix: prefixString },
+                  });
                 }}
                 variant="body1"
               >
@@ -76,7 +88,7 @@ export const BucketBreadcrumb = (props: Props) => {
           );
         })}
       </StyledPrefixWrapper>
-      <StyledCopyTooltip text={bucketPath} placement="bottom" />
+      <StyledCopyTooltip placement="bottom" text={bucketPath} />
     </StyledRootContainer>
   );
 };

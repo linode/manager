@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Chip, Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -33,6 +33,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
 import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -176,15 +177,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     <>
       <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
         <Grid
+          container
           size={{
             sm: isDisplayingEncryptedStatus ? 4 : 3,
             xs: 12,
           }}
+          spacing={0}
           sx={{
             flexDirection: matchesLgUp ? 'row' : 'column',
           }}
-          container
-          spacing={0}
         >
           <StyledColumnLabelGrid
             mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
@@ -264,13 +265,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   flexDirection="row"
                 >
                   <EncryptedStatus
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                     tooltipText={
                       isLKELinode
                         ? undefined
                         : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
-                    encryptionStatus={encryptionStatus}
-                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                   />
                 </Box>
               </Grid>
@@ -279,11 +280,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         </Grid>
 
         <Grid
+          container
           size={{
             sm: isDisplayingEncryptedStatus ? 8 : 9,
             xs: 12,
           }}
-          container
         >
           <Grid container size={12}>
             <AccessTable
@@ -301,6 +302,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Typography>
                 ) : undefined
               }
+              gridSize={{ lg: 5, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
+              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   isMasked: maskSensitiveDataPreference,
@@ -313,12 +317,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   text: secondAddress,
                 },
               ]}
-              gridSize={{ lg: 5, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
+              gridSize={{ lg: 7, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
+              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   heading: 'SSH Access',
@@ -335,8 +340,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     : lishLink(username, region, linodeLabel),
                 },
               ]}
-              gridSize={{ lg: 7, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
               title="Access"
             />
@@ -345,18 +348,21 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
       </StyledBodyGrid>
       {vpcLinodeIsAssignedTo && (
         <Grid
+          container
+          direction="column"
+          spacing={1}
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
             padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
           }}
-          container
-          direction="column"
-          spacing={1}
         >
           <StyledColumnLabelGrid data-testid="vpc-section-title">
             VPC
           </StyledColumnLabelGrid>
           <Grid
+            container
+            direction="row"
+            spacing={0}
             sx={{
               alignItems: 'center',
               margin: 0,
@@ -367,9 +373,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 flexDirection: 'column',
               },
             }}
-            container
-            direction="row"
-            spacing={0}
           >
             <StyledVPCBox>
               <StyledListItem sx={{ paddingLeft: 0 }}>
@@ -410,6 +413,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         attachedFirewall ||
         isLinodeInterfacesEnabled) && (
         <Grid
+          container
+          direction="row"
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
             padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
@@ -419,8 +424,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
               paddingLeft: 2,
             },
           }}
-          container
-          direction="row"
         >
           {linodeLkeClusterId && (
             <StyledListItem
@@ -463,7 +466,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           {isLinodeInterfacesEnabled && (
             <StyledListItem
               sx={{
-                ...(!linodeLkeClusterId && !attachedFirewall
+                ...(!linodeLkeClusterId &&
+                (isLinodeInterface || !attachedFirewall)
                   ? { paddingLeft: 0 }
                   : {}),
                 borderRight: 'unset',
@@ -479,18 +483,31 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 >
                   Configuration Profile
                   <span>
-                    <Chip
-                      sx={(theme) => ({
-                        backgroundColor: theme.color.tagButtonBg,
-                        color: theme.tokens.color.Neutrals[80],
-                        marginLeft: theme.spacingFunction(12),
-                      })}
-                      component="span"
-                      disabled={!canUpgradeInterfaces}
-                      label="UPGRADE"
-                      onClick={openUpgradeInterfacesDialog}
-                      size="small"
-                    />
+                    <Tooltip
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            maxWidth: '260px',
+                          },
+                        },
+                      }}
+                      sx={{ width: '500px'}}
+                      title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
+                    >
+                      <Chip
+                        aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
+                        component="span"
+                        disabled={!canUpgradeInterfaces}
+                        label="UPGRADE"
+                        onClick={openUpgradeInterfacesDialog}
+                        size="small"
+                        sx={(theme) => ({
+                          backgroundColor: theme.color.tagButtonBg,
+                          color: theme.tokens.color.Neutrals[80],
+                          marginLeft: theme.spacingFunction(12),
+                        })}
+                      />
+                    </Tooltip>
                     {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
                       <TooltipIcon
                         status="help"

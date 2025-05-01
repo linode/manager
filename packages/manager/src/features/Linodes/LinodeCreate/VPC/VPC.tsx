@@ -1,4 +1,4 @@
-import { useAllVPCsQuery, useRegionsQuery } from '@linode/queries';
+import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -12,7 +12,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { doesRegionSupportFeature } from '@linode/utilities';
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -27,6 +26,7 @@ import {
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
+import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
@@ -39,8 +39,6 @@ export const VPC = () => {
   const { control, formState, setValue } =
     useFormContext<CreateLinodeRequest>();
 
-  const { data: regions } = useRegionsQuery();
-
   const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
     useWatch({
       control,
@@ -52,11 +50,9 @@ export const VPC = () => {
       ],
     });
 
-  const regionSupportsVPCs = doesRegionSupportFeature(
-    regionId,
-    regions ?? [],
-    'VPCs'
-  );
+  const { data: region } = useRegionQuery(regionId);
+
+  const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
 
   const {
     data: vpcs,
@@ -101,6 +97,7 @@ export const VPC = () => {
             Learn more.
           </Link>
         </Typography>
+        {region && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Stack spacing={1.5}>
           <Controller
             control={control}
@@ -110,13 +107,14 @@ export const VPC = () => {
                 disabled={!regionSupportsVPCs}
                 errorText={error?.[0].reason ?? fieldState.error?.message}
                 helperText={
-                  regionId && !regionSupportsVPCs
-                    ? 'VPC is not available in the selected region.'
+                  !regionId
+                    ? 'Select a region to see available VPCs.'
                     : undefined
                 }
                 label="Assign VPC"
                 loading={isLoading}
                 noMarginTop
+                noOptionsText="There are no VPCs in the selected region."
                 onBlur={field.onBlur}
                 onChange={(e, vpc) => {
                   field.onChange(vpc?.id ?? null);
@@ -282,15 +280,6 @@ export const VPC = () => {
                       />
                     )}
                   <VPCRangesDescription />
-                  {formState.errors.interfaces?.[0] &&
-                    'ip_ranges' in formState.errors.interfaces[0] && (
-                      <Notice
-                        text={
-                          formState.errors.interfaces[0]?.ip_ranges?.message
-                        }
-                        variant="error"
-                      />
-                    )}
                   <VPCRanges />
                 </>
               )}

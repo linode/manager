@@ -31,6 +31,9 @@ export const useCalculateHiddenItems = (
 
     const firstHiddenIndex = itemsArray.findIndex(
       (item: HTMLDivElement | HTMLSpanElement) => {
+        if (!item) {
+          return false;
+        }
         const rect = item.getBoundingClientRect();
         return rect.top >= containerBottom;
       }

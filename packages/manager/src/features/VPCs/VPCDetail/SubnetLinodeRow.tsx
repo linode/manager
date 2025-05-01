@@ -158,16 +158,16 @@ export const SubnetLinodeRow = (props: Props) => {
         sx={{ alignItems: 'center', display: 'flex' }}
       >
         <TooltipIcon
-          text={
-            <Typography>
-              {isLinodeInterface
-                ? '@TODO Linode Interfaces - confirm copy? This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
-                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
-            </Typography>
-          }
           icon={<StyledWarningIcon />}
           status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
+          text={
+            <Typography>
+              {isLinodeInterface
+                ? 'This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
+                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
+            </Typography>
+          }
         />
         {linkifiedLinodeLabel}
       </Box>
@@ -238,15 +238,17 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {isRebootNeeded && (
               <InlineMenuAction
+                actionText="Reboot"
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(linode, 'Reboot', subnet);
                 }}
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             {showPowerButton && (
               <InlineMenuAction
+                actionText={isOffline ? 'Power On' : 'Power Off'}
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
@@ -254,8 +256,6 @@ export const SubnetLinodeRow = (props: Props) => {
                     subnet
                   );
                 }}
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             <InlineMenuAction

@@ -355,11 +355,7 @@ export const BucketDetail = () => {
   return (
     <>
       <DocumentTitleSegment segment={`${bucketName} | Bucket`} />
-      <BucketBreadcrumb
-        bucketName={bucketName}
-        history={history}
-        prefix={prefix}
-      />
+      <BucketBreadcrumb bucketName={bucketName} prefix={prefix} />
       <ObjectUploader
         bucketName={bucketName}
         clusterId={clusterId}

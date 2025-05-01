@@ -4,10 +4,11 @@ import {
   Drawer,
   FormControlLabel,
   Notice,
+  omitProps,
   Radio,
   RadioGroup,
+  TextField,
   Typography,
-  omitProps,
 } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -108,6 +109,7 @@ export const CreateFirewallDrawer = React.memo(
             ? await createFirewallFromTemplate({
                 createFirewall,
                 queryClient,
+                firewallLabel: payload.label,
                 templateSlug: slug,
               })
             : await createFirewall(payload);
@@ -170,14 +172,16 @@ export const CreateFirewallDrawer = React.memo(
                   <strong>Create</strong>
                 </Typography>
                 <Controller
+                  control={control}
+                  name="createFirewallFrom"
                   render={({ field }) => (
                     <RadioGroup
+                      aria-label="Create custom firewall or from a template"
+                      data-testid="create-firewall-from-radio-group"
                       onChange={(_, value) => {
                         field.onChange(value);
                         clearErrors();
                       }}
-                      aria-label="Create custom firewall or from a template"
-                      data-testid="create-firewall-from-radio-group"
                       row
                       value={field.value}
                     >
@@ -195,11 +199,26 @@ export const CreateFirewallDrawer = React.memo(
                       />
                     </RadioGroup>
                   )}
-                  control={control}
-                  name="createFirewallFrom"
                 />
               </>
             )}
+            <Controller
+              control={control}
+              name="label"
+              render={({ field, fieldState }) => (
+                <TextField
+                  aria-label="Label for your new Firewall"
+                  disabled={userCannotAddFirewall}
+                  errorText={fieldState.error?.message}
+                  label="Label"
+                  name="label"
+                  onBlur={field.onBlur}
+                  onChange={field.onChange}
+                  required
+                  value={field.value}
+                />
+              )}
+            />
             {createFirewallFrom === 'template' && isLinodeInterfacesEnabled ? (
               <TemplateFirewallFields
                 userCannotAddFirewall={userCannotAddFirewall}

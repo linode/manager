@@ -46,7 +46,7 @@ describe('PromptDialogContent', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    getByText('Upgrade Dry Run');
+    getByText('Perform Dry Run');
     getByText('Upgrade Interfaces');
     getByText('Cancel');
   });

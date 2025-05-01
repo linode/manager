@@ -1,17 +1,16 @@
-import { Box, Button, Chip, Tooltip } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
-import type { CombinedEntity, ExtendedRoleMap } from '../../Shared/utilities';
+import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleMap) => void;
-  role: ExtendedRoleMap;
+  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
+  role: ExtendedRoleView;
 }
 
 export const AssignedEntities = ({
@@ -59,8 +58,7 @@ export const AssignedEntities = ({
       >
         <Chip
           data-testid="entities"
-          deleteIcon={<CloseIcon />}
-          key={entity.id}
+          deleteIcon={<CloseIcon data-testid="CloseIcon" />}
           label={entity.name}
           onDelete={() => onRemoveAssignment(entity, role)}
           sx={{
@@ -91,7 +89,7 @@ export const AssignedEntities = ({
       {numHiddenItems > 0 && (
         <Box
           sx={{
-            aligIitems: 'center',
+            alignItems: 'center',
             backgroundColor:
               theme.name === 'light'
                 ? theme.tokens.color.Ultramarine[20]

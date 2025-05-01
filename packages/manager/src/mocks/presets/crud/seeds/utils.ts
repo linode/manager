@@ -23,6 +23,10 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'ip-addresses:crud':
       await mswDB.deleteAll('ipAddresses', mockState, 'seedState');
       break;
+    case 'kubernetes:crud':
+      await mswDB.deleteAll('kubernetesClusters', mockState, 'seedState');
+      await mswDB.deleteAll('kubernetesNodePools', mockState, 'seedState');
+      break;
     case 'linodes:crud':
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');

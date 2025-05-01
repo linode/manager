@@ -25,13 +25,9 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('Close Account Settings', () => {
-  it('should render subheading text', () => {
-    const { container } = renderWithTheme(<CloseAccountSetting />);
-    const subheading = container.querySelector(
-      '[data-qa-panel-subheading="true"]'
-    );
-    expect(subheading).toBeInTheDocument();
-    expect(subheading?.textContent).toBe('Close Account');
+  it('should render a heading and button', () => {
+    const { getAllByText } = renderWithTheme(<CloseAccountSetting />);
+    expect(getAllByText('Close Account')).toHaveLength(2);
   });
 
   it('should render a Close Account Button', () => {

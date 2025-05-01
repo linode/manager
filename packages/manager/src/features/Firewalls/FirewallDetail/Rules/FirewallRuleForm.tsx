@@ -5,6 +5,7 @@ import {
   Notice,
   Radio,
   RadioGroup,
+  Select,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -78,7 +79,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
   // Set form field errors for each error we have (except "addresses" errors, which are handled
   // by IP Error state).
   React.useEffect(() => {
-    // eslint-disable-next-line no-unused-expressions
     ruleErrors?.forEach((thisError) => {
       if (thisError.formField !== 'addresses') {
         setFieldError(thisError.formField, thisError.reason);
@@ -211,11 +211,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         />
       )}
       <Autocomplete
-        textFieldProps={{
-          dataAttrs: {
-            'data-qa-rule-select': true,
-          },
-        }}
         aria-label="Preset for firewall rule"
         autoHighlight
         disableClearable
@@ -224,6 +219,11 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         onChange={(_, selected) => handleTypeChange(selected)}
         options={firewallOptionItemsShort}
         placeholder="Select a rule preset..."
+        textFieldProps={{
+          dataAttrs: {
+            'data-qa-rule-select': true,
+          },
+        }}
       />
       <TextField
         aria-label="Label for firewall rule"
@@ -246,27 +246,28 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
         placeholder="Enter a description..."
         value={values.description}
       />
-      <Autocomplete
-        textFieldProps={{
-          InputProps: {
-            required: true,
-          },
-          dataAttrs: {
-            'data-qa-protocol-select': true,
-          },
-        }}
+      <Select
         aria-label="Select rule protocol."
-        autoHighlight
-        disableClearable
         errorText={errors.protocol}
         label="Protocol"
         onBlur={handleBlur}
         onChange={(_, selected) => handleProtocolChange(selected.value)}
         options={protocolOptions}
         placeholder="Select a protocol..."
+        required
         value={protocolOptions.find((p) => p.value === values.protocol)}
       />
       <Autocomplete
+        autoHighlight
+        disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
+        disableSelectAll
+        errorText={generalPortError}
+        label="Ports"
+        multiple
+        onChange={(_, selected) => handlePortPresetChange(selected)}
+        options={portOptions}
+        // If options are selected, hide the placeholder
+        placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
         textFieldProps={{
           InputProps: {
             required: true,
@@ -278,16 +279,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
             ? `Ports are not allowed for ${values.protocol} protocols.`
             : undefined,
         }}
-        autoHighlight
-        disableSelectAll
-        disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
-        errorText={generalPortError}
-        label="Ports"
-        multiple
-        onChange={(_, selected) => handlePortPresetChange(selected)}
-        options={portOptions}
-        // If options are selected, hide the placeholder
-        placeholder={presetPorts.length > 0 ? ' ' : 'Select a port...'}
         value={presetPorts}
       />
       {hasCustomInput ? (
@@ -302,10 +293,16 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
           value={values.ports}
         />
       ) : null}
-      <Autocomplete
+      <Select
+        aria-label={`Select rule ${addressesLabel}s.`}
+        errorText={errors.addresses}
+        label={`${capitalize(addressesLabel)}s`}
+        onBlur={handleBlur}
         onChange={(_, selected) => {
           handleAddressesChange(selected.value);
         }}
+        options={addressOptions}
+        placeholder={`Select ${addressesLabel}s...`}
         textFieldProps={{
           InputProps: {
             required: true,
@@ -314,14 +311,6 @@ export const FirewallRuleForm = React.memo((props: FirewallRuleFormProps) => {
             'data-qa-address-source-select': true,
           },
         }}
-        aria-label={`Select rule ${addressesLabel}s.`}
-        autoHighlight
-        disableClearable
-        errorText={errors.addresses}
-        label={`${capitalize(addressesLabel)}s`}
-        onBlur={handleBlur}
-        options={addressOptions}
-        placeholder={`Select ${addressesLabel}s...`}
         value={addressesValue}
       />
       {/* Show this field only if "IP / Netmask has been selected." */}

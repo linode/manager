@@ -5,6 +5,7 @@ import {
   Divider,
   FormHelperText,
   Notice,
+  Select,
   SelectedIcon,
   Stack,
   TextField,
@@ -217,12 +218,12 @@ export const NodeBalancerConfigPanel = (
           }}
         >
           <TextField
-            InputProps={{ id: `port-${configIdx}` }}
             data-qa-port
             disabled={disabled}
             errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.port || errorMap.configs}
             helperText="The unique inbound port that this NodeBalancer configuration will listen on."
+            InputProps={{ id: `port-${configIdx}` }}
             label="Port"
             noMarginTop
             onChange={onPortChange}
@@ -237,24 +238,21 @@ export const NodeBalancerConfigPanel = (
             xs: 6,
           }}
         >
-          <Autocomplete
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-protocol-select': true,
-              },
-              errorGroup: forEdit ? `${configIdx}` : undefined,
-            }}
-            autoHighlight
-            disableClearable
+          <Select
             disabled={disabled}
             errorText={errorMap.protocol}
             helperText="Load balancing protocols: UDP and TCP (Layer 4); HTTP and HTTPS (Layer 7)."
             id={`protocol-${configIdx}`}
             label="Protocol"
-            noMarginTop
             onChange={onProtocolChange}
             options={protocolOptions}
-            size="small"
+            textFieldProps={{
+              noMarginTop: true,
+              dataAttrs: {
+                'data-qa-protocol-select': true,
+              },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
+            }}
             value={defaultProtocol || protocolOptions[0]}
           />
         </Grid>
@@ -266,9 +264,18 @@ export const NodeBalancerConfigPanel = (
           }}
         >
           <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={disabled}
+            errorText={errorMap.algorithm}
+            helperText="Controls how new connections are allocated across backend nodes."
+            id={`algorithm-${configIdx}`}
+            label="Algorithm"
+            noMarginTop
             onChange={(_, selected) => {
               props.onAlgorithmChange(selected.value);
             }}
+            options={algOptions}
             renderOption={(props, option, state) => (
               <li {...props}>
                 <Stack alignItems="center" direction="row" gap={1}>
@@ -280,22 +287,13 @@ export const NodeBalancerConfigPanel = (
                 </Stack>
               </li>
             )}
+            size="small"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-algorithm-select': true,
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.algorithm}
-            helperText="Controls how new connections are allocated across backend nodes."
-            id={`algorithm-${configIdx}`}
-            label="Algorithm"
-            noMarginTop
-            options={algOptions}
-            size="small"
             value={defaultAlg || algOptions[0]}
           />
         </Grid>
@@ -307,9 +305,18 @@ export const NodeBalancerConfigPanel = (
           }}
         >
           <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={disabled}
+            errorText={errorMap.stickiness}
+            helperText="Routes subsequent requests from the client to the same backend."
+            id={`session-stickiness-${configIdx}`}
+            label="Session Stickiness"
+            noMarginTop
             onChange={(_, selected) => {
               props.onSessionStickinessChange(selected.value);
             }}
+            options={sessionOptions}
             renderOption={(props, option, state) => (
               <li {...props}>
                 <Stack alignItems="center" direction="row" gap={1}>
@@ -321,22 +328,13 @@ export const NodeBalancerConfigPanel = (
                 </Stack>
               </li>
             )}
+            size="small"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-session-stickiness-select': true,
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.stickiness}
-            helperText="Routes subsequent requests from the client to the same backend."
-            id={`session-stickiness-${configIdx}`}
-            label="Session Stickiness"
-            noMarginTop
-            options={sessionOptions}
-            size="small"
             value={defaultSession || sessionOptions[1]}
           />
         </Grid>
@@ -348,7 +346,9 @@ export const NodeBalancerConfigPanel = (
               xs: 12,
             }}
           >
-            <Autocomplete
+            <Select
+              disabled={disabled}
+              errorText={errorMap.proxy_protocol}
               helperText={
                 <>
                   Proxy Protocol preserves the initial TCP connection
@@ -359,31 +359,26 @@ export const NodeBalancerConfigPanel = (
                   .
                 </>
               }
+              id={`proxy-protocol-${configIdx}`}
+              label="Proxy Protocol"
               onChange={(_, selected) => {
                 props.onProxyProtocolChange(selected.value);
               }}
+              options={proxyProtocolOptions}
               textFieldProps={{
+                noMarginTop: true,
                 dataAttrs: {
                   'data-qa-proxy-protocol-select': true,
                 },
                 errorGroup: forEdit ? `${configIdx}` : undefined,
               }}
-              autoHighlight
-              disableClearable
-              disabled={disabled}
-              errorText={errorMap.proxy_protocol}
-              id={`proxy-protocol-${configIdx}`}
-              label="Proxy Protocol"
-              noMarginTop
-              options={proxyProtocolOptions}
-              size="small"
               value={selectedProxyProtocol || proxyProtocolOptions[0]}
             />
           </Grid>
         )}
 
         {protocol === 'https' && (
-          <Grid container spacing={2} size={12}>
+          <Grid container size={12} spacing={2}>
             <Grid
               size={{
                 md: 6,
@@ -460,10 +455,10 @@ export const NodeBalancerConfigPanel = (
           )}
         </Grid>
         <Grid
+          size={12}
           sx={{
             paddingBottom: '24px',
           }}
-          size={12}
         >
           <Grid container spacing={2} sx={{ padding: 0 }}>
             {nodes?.map((node, nodeIdx) => (
@@ -501,12 +496,12 @@ export const NodeBalancerConfigPanel = (
           <Divider />
         </Grid>
         <Grid
+          container
+          spacing={2}
           sx={{
             alignItems: 'center',
             justifyContent: 'flex-end',
           }}
-          container
-          spacing={2}
         >
           <StyledActionsPanel
             primaryButtonProps={

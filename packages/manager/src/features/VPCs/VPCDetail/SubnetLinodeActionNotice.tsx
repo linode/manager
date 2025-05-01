@@ -22,28 +22,14 @@ export const SubnetLinodeActionNotice = (props: Props) => {
       spacingBottom={16}
       variant="warning"
     >
-      <Typography component="span" sx={{ pl: 1, py: 1, fontSize: '0.875rem' }}>
+      <Typography>
         <strong>{linodeAction} a Linode to a subnet requires:</strong>
-        <List
-          dense
-          sx={{
-            listStyleType: 'disc',
-            pl: 3,
-          }}
-        >
-          {INTERFACE_WARNINGS.map((notice, idx) => (
-            <ListItem
-              disablePadding
-              key={idx}
-              sx={{
-                display: 'list-item',
-              }}
-            >
-              {notice.text}
-            </ListItem>
-          ))}
-        </List>
       </Typography>
+      <List>
+        {INTERFACE_WARNINGS.map((notice, idx) => (
+          <ListItem key={idx}>{notice.text}</ListItem>
+        ))}
+      </List>
     </Notice>
   );
 };

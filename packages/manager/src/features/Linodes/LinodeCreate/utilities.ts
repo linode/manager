@@ -12,6 +12,7 @@ import {
 } from '@linode/utilities';
 import { enqueueSnackbar } from 'notistack';
 import { useCallback } from 'react';
+import type { FieldErrors } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { imageQueries } from 'src/queries/images';
@@ -40,7 +41,6 @@ import type {
 } from '@linode/api-v4';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors } from 'react-hook-form';
 
 /**
  * This is the ID of the Image of the default OS.
@@ -192,6 +192,7 @@ export const getLinodeCreatePayload = (
       values.interfaces = formValues.linodeInterfaces.map(
         getLinodeInterfacePayload
       );
+      values.firewall_id = undefined;
     } else {
       values.interfaces = formValues.linodeInterfaces.map(
         getLegacyInterfaceFromLinodeInterface
@@ -295,18 +296,20 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    */
   hasSignedEUAgreement?: boolean;
   /**
-   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces
+   * Override the interfaces type of the Linode Create flow so it only has Legacy Interfaces.
+   * `ipv4` and `ipv6` fields are only accepted for VPC interfaces and the omit type avoids
+   * `CreateLinodeSchema` type errors (see https://github.com/linode/manager/pull/11942#discussion_r2043029481)
    */
-  interfaces: InterfacePayload[];
+  interfaces: InterfacePayload[] | Omit<InterfacePayload, 'ipv4' | 'ipv6'>[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */
-  linode?: {
+  linode?: null | {
     id: number;
     label: string;
     region: string;
-    type: string | null;
-  } | null;
+    type: null | string;
+  };
   /**
    * Form state for the new Linode interface
    */
@@ -342,7 +345,7 @@ export const defaultValues = async (
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
-  let stackscript: StackScript | null = null;
+  let stackscript: null | StackScript = null;
 
   if (stackscriptId) {
     try {
@@ -370,7 +373,8 @@ export const defaultValues = async (
     }
   }
 
-  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] = undefined;
+  let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
+    undefined;
 
   if (isLinodeInterfacesEnabled) {
     try {

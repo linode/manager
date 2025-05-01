@@ -1,10 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { accountQueries, regionQueries } from '@linode/queries';
 import { isNullOrUndefined } from '@linode/utilities';
+import type { FieldErrors, Resolver } from 'react-hook-form';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
-import { getLinodeInterfacePayload } from './Networking/utilities';
+import { getCleanedLinodeInterfaceValues } from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
@@ -19,7 +20,6 @@ import type {
 } from './utilities';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
@@ -34,7 +34,7 @@ export const getLinodeCreateResolver = (
     if (context?.isLinodeInterfacesEnabled) {
       values.interfaces = [];
       values.linodeInterfaces = values.linodeInterfaces.map(
-        getLinodeInterfacePayload
+        getCleanedLinodeInterfaceValues
       );
     } else {
       values.linodeInterfaces = [];

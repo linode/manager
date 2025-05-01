@@ -92,8 +92,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
             })}
             variant="body1"
           >
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(props.sizeInBytes, { base10: true }).formatted}
+            {readableBytes(props.sizeInBytes).formatted}
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
             <FileUploadComplete
