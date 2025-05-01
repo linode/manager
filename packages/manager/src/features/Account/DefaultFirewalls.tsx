@@ -93,11 +93,21 @@ export const DefaultFirewalls = () => {
         {errors.root?.message && (
           <Notice variant="error">{errors.root.message}</Notice>
         )}
-        <Typography sx={{ mb: 2 }}>
-          Set the default firewall that is assigned to each network interface
-          type when creating a Linode. The same firewall (new or existing) can
-          be assigned to each type of interface/connection.
-        </Typography>
+        <Stack mb={2} spacing={2}>
+          <Typography>
+            Select the default firewall for each device and/or interface type.
+          </Typography>
+          <Typography>
+            For Linodes using Linode Interfaces, firewalls are assigned to the
+            individual interface. For Linodes using Configuration Profile
+            Interfaces, the firewall is assigned to the Linode itself and
+            applies to all non-VLAN interfaces.
+          </Typography>
+          <Typography>
+            Firewall templates are available for both VPC and public Linode
+            Interfaces, and include pre-configured protection rules.
+          </Typography>
+        </Stack>
         <Stack divider={<Divider />} spacing={2}>
           <Stack spacing={2}>
             <Typography variant="h3">Linodes</Typography>
