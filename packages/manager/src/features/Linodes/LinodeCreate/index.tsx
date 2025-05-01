@@ -192,7 +192,7 @@ export const LinodeCreate = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
-        className="landing-header-tabs"
+        className="landing-header-mb-4"
         onDocsClick={() =>
           sendLinodeCreateFormInputEvent({
             createType: params.type ?? 'OS',
