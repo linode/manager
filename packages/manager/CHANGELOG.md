@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Missing `PublicIPAddressesTooltip` for VPC-only Linodes without an explicitly marked primary VPC interface ([#12122](https://github.com/linode/manager/pull/12122))
 - Fix incorrect card sizing at 1920px+ in LKE Tier panel ([#12076](https://github.com/linode/manager/pull/12076))
 - Bugs in Linode Create, Landing & Detail Pages ([#12028](https://github.com/linode/manager/pull/12028))
+- Bug displaying the incorrect cluster version number in upgrade completion dialog on LKE cluster details page ([#12139](https://github.com/linode/manager/pull/12139))
 
 ### Tech Stories:
 
