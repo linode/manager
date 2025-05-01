@@ -17,7 +17,7 @@ export interface LandingHeaderProps {
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: Partial<BreadcrumbProps>;
   buttonDataAttrs?: { [key: string]: boolean | string };
-  className?: string;
+  className?: 'landing-header' | 'landing-header-mb-4' | 'landing-header-mb-16';
   createButtonText?: string;
   disabledBreadcrumbEditButton?: boolean;
   disabledCreateButton?: boolean;
