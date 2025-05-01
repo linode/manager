@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-skipped-tests */
 /**
  * @file Exposes the `tag` util from the `cy` object.
  */
