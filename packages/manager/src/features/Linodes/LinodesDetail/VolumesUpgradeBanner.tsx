@@ -28,13 +28,8 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
   }
 
   return (
-    <Notice spacingBottom={0} variant="info">
-      <Stack
-        alignItems="center"
-        direction="row"
-        justifyContent="space-between"
-        py={1}
-      >
+    <Notice forceImportantIconVerticalCenter variant="info">
+      <Stack direction="column" flex={1} justifyContent="center">
         <Typography>
           {numUpgradeableVolumes === 1
             ? 'A Volume attached to this Linode is '
@@ -46,11 +41,18 @@ export const VolumesUpgradeBanner = ({ linodeId }: Props) => {
           </Link>
           .
         </Typography>
+      </Stack>
+      <Stack
+        alignSelf="flex-start"
+        direction="row"
+        justifyContent="flex-end"
+        spacing={1}
+      >
         <Button
+          buttonType="primary"
           onClick={() =>
             history.push(`/linodes/${linodeId}/storage?upgrade=true`)
           }
-          buttonType="primary"
         >
           Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
         </Button>

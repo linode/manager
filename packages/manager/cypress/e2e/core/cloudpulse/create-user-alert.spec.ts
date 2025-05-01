@@ -2,7 +2,7 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -15,6 +15,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -85,6 +86,9 @@ const metricDefinitions = metrics.map(({ name, title, unit }) =>
     unit,
   })
 );
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 const mockAlerts = alertFactory.build({
   alert_channels: [{ id: 1 }],
   created_by: 'user1',
@@ -98,7 +102,6 @@ const mockAlerts = alertFactory.build({
   severity: 0,
   tags: [''],
   trigger_conditions: triggerConditionFactory.build(),
-  updated: new Date().toISOString(),
 });
 
 /**
@@ -159,6 +162,7 @@ describe('Create Alert', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
@@ -417,8 +421,11 @@ describe('Create Alert', () => {
           cy.findByText('Databases').should('be.visible');
           cy.findByText(created_by).should('be.visible');
           cy.findByText(
-            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
-          );
+            formatDate(updated, {
+              format: 'MMM dd, yyyy, h:mm a',
+              timezone: 'GMT',
+            })
+          ).should('be.visible');
         });
     });
   });

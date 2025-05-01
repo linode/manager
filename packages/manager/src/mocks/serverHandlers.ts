@@ -51,6 +51,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
+  dimensionFilterFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -113,6 +114,7 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
+import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
@@ -1085,6 +1087,20 @@ export const handlers = [
       }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
+  }),
+  http.get('*/v4*/object-storage/quotas*', () => {
+    const quotas = [
+      quotaFactory.build({
+        description: 'The total capacity of your Object Storage account',
+        endpoint_type: 'E0',
+        quota_limit: 1_000_000_000_000_000,
+        quota_name: 'Total Capacity',
+        resource_metric: 'byte',
+        s3_endpoint: 'endpoint1',
+      }),
+    ];
+
+    return HttpResponse.json(makeResourcePage(quotas));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -2877,6 +2893,9 @@ export const handlers = [
           unit: '%',
           group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
+          filters: dimensionFilterFactory.buildList(5, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
+          }),
         },
         {
           aggregate_function: 'avg',
@@ -2898,6 +2917,9 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          filters: dimensionFilterFactory.buildList(3, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith', 'in']),
+          }),
           group_by: ['entity_id'],
         },
         {

@@ -100,6 +100,14 @@ export async function loadDevTools(
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
       ],
+      kubernetesClusters: [
+        ...initialContext.kubernetesClusters,
+        ...(seedContext?.kubernetesClusters || []),
+      ],
+      kubernetesNodePools: [
+        ...initialContext.kubernetesNodePools,
+        ...(seedContext?.kubernetesNodePools || []),
+      ],
       linodeConfigs: [
         ...initialContext.linodeConfigs,
         ...(seedContext?.linodeConfigs || []),
