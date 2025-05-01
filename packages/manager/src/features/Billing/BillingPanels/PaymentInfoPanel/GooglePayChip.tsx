@@ -1,7 +1,6 @@
 import { useClientToken } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
 import { useScript } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -53,9 +52,8 @@ export const GooglePayChip = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     const init = async () => {
@@ -101,28 +99,20 @@ export const GooglePayChip = (props: Props) => {
   }
 
   if (isLoading) {
-    return (
-      <Grid>
-        <CircleProgress size="sm" />
-      </Grid>
-    );
+    return <CircleProgress size="sm" />;
   }
 
   return (
-    <Grid>
-      <button
-        className={cx({
-          [classes.button]: true,
-          [classes.disabled]: disabledDueToProcessing,
-        })}
-        data-qa-button="gpayChip"
-        disabled={disabledDueToProcessing}
-        onClick={handlePay}
-      >
-        <GooglePayIcon height="26" width="49" />
-      </button>
-    </Grid>
+    <button
+      className={cx({
+        [classes.button]: true,
+        [classes.disabled]: disabledDueToProcessing,
+      })}
+      data-qa-button="gpayChip"
+      disabled={disabledDueToProcessing}
+      onClick={handlePay}
+    >
+      <GooglePayIcon height="26" width="49" />
+    </button>
   );
 };
-
-export default GooglePayChip;

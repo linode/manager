@@ -28,10 +28,10 @@ import { isCreditCardExpired } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { PayPalErrorBoundary } from '../../PaymentInfoPanel/PayPalErrorBoundary';
-import GooglePayButton from './GooglePayButton';
+import { GooglePayButton } from './GooglePayButton';
 import { CreditCardDialog } from './PaymentBits/CreditCardDialog';
 import { PaymentMethodCard } from './PaymentMethodCard';
-import PayPalButton from './PayPalButton';
+import { PayPalButton } from './PayPalButton';
 
 import type { SetSuccess } from './types';
 import type { PaymentMethod } from '@linode/api-v4';
@@ -102,9 +102,8 @@ export const PaymentDrawer = (props: Props) => {
     getMinimumPayment(account?.balance || 0)
   );
   const [paymentMethodId, setPaymentMethodId] = React.useState<number>(-1);
-  const [selectedCardExpired, setSelectedCardExpired] = React.useState<boolean>(
-    false
-  );
+  const [selectedCardExpired, setSelectedCardExpired] =
+    React.useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
@@ -316,8 +315,8 @@ export const PaymentDrawer = (props: Props) => {
                     paymentTooLow
                       ? `Payment amount must be at least ${minimumPayment}.`
                       : selectedCardExpired
-                      ? 'The selected card has expired.'
-                      : ''
+                        ? 'The selected card has expired.'
+                        : ''
                   }
                   status="help"
                   sxTooltipIcon={{ padding: `0px 8px` }}
@@ -419,7 +418,7 @@ const Warning = (props: WarningProps) => {
       .
     </>
   ) : (
-    warning.detail ?? ''
+    (warning.detail ?? '')
   );
   const message = (
     <>

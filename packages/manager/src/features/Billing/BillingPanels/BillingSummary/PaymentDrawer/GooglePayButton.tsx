@@ -83,9 +83,8 @@ export const GooglePayButton = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
   const { data: account } = useAccount();
 
   const {
@@ -183,5 +182,3 @@ export const GooglePayButton = (props: Props) => {
     </div>
   );
 };
-
-export default GooglePayButton;
