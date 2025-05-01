@@ -1,18 +1,8 @@
-export const CONFIG_SELECT_DRY_RUN_COPY =
-  'This Linode has multiple configuration profiles. Please select a configuration profile to proceed. The upgrade dry run will identify any issues that may occur before upgrading.';
-
-export const CONFIG_SELECT_ACTUAL_UPGRADE_COPY =
-  'This Linode has multiple configuration profiles. Please select a configuration profile to upgrade. The upgrade will reassign the network interfaces from the configuration profile to the Linode.';
+export const CONFIG_SELECT_SHARED_COPY =
+  'This Linode has multiple configuration profiles. Choose one to continue.';
 
 export const UPGRADE_INTERFACES_WARNING =
-  'Once the network interfaces have been reassigned to the Linode, it will no longer be possible to use legacy configuration profiles.';
-
-export const SUCCESS_DRY_RUN_COPY =
-  'The configuration dry run was successful and no issues were found. You can proceed with upgrading interfaces.';
-export const SUCCESS_UPGRADE_COPY = 'The configuration upgrade was successful.';
+  'After upgrading, the Linode will use only Linode Interfaces and cannot revert back to Configuration Profile Interfaces. Private IPv4 addresses are not supported on public Linode Interfaces. Services depending on a private IPv4 will no longer function.';
 
 export const ERROR_DRY_RUN_COPY =
-  'The configuration dry run found the following issues. Please correct the issues and perform another dry run before upgrading the interface configuration.';
-
-export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT =
-  'Upgrade to Linode interfaces to connect the interface to the Linode not the Configuration Profile. You can perform a dry run to identify any issues before upgrading.';
+  'The dry run found the following issues. After correcting them, perform another dry run.';

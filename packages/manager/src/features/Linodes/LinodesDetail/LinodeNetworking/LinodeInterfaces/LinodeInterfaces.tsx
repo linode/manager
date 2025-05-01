@@ -89,7 +89,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}
         open={isEditDrawerOpen}
-        title="Edit Network Interface"
+        title={`Edit Network Interface${selectedInterfaceId ? ` (ID: ${selectedInterfaceId})` : ''}`}
       >
         {selectedInterfaceId && (
           <EditInterfaceDrawerContents
