@@ -1,7 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from '@mui/material';
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { vi } from 'vitest';
 
 import * as themes from '../foundations/themes';
 
@@ -29,21 +28,3 @@ export const renderWithTheme = (
     rerender: (ui) => renderResult.rerender(wrapWithTheme(ui, options)),
   };
 };
-
-export function mockMatchMedia(
-  matcher: (query: string) => boolean = () => false,
-) {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: vi.fn().mockImplementation((query: string) => ({
-      matches: matcher(query),
-      media: query,
-      onchange: null,
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    })),
-  });
-}
