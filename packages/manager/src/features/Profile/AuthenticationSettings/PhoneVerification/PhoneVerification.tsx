@@ -1,3 +1,10 @@
+import {
+  profileQueries,
+  updateProfileData,
+  useProfile,
+  useSendPhoneVerificationCodeMutation,
+  useVerifyPhoneVerificationCodeMutation,
+} from '@linode/queries';
 import { Box, Button, InputAdornment, TextField, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
@@ -7,13 +14,6 @@ import * as React from 'react';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import {
-  profileQueries,
-  updateProfileData,
-  useProfile,
-  useSendPhoneVerificationCodeMutation,
-  useVerifyPhoneVerificationCodeMutation,
-} from '@linode/queries';
 
 import { countries } from './countries';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
@@ -21,8 +21,8 @@ import {
   StyledButtonContainer,
   StyledCodeSentMessageBox,
   StyledFormHelperText,
-  StyledISOCodeSelect,
   StyledInputContainer,
+  StyledISOCodeSelect,
   StyledLabel,
   StyledPhoneNumberInput,
   StyledPhoneNumberTitle,
@@ -213,21 +213,21 @@ export const PhoneVerification = ({
               <Box alignItems="center" display="flex" style={{ gap: 10 }}>
                 <Typography>
                   <MaskableText
+                    isToggleable
                     text={
                       profile?.verified_phone_number
                         ? getFormattedNumber(profile.verified_phone_number)
                         : 'No Phone Number'
                     }
-                    isToggleable
                   />
                 </Typography>
                 <LinkButton
+                  onClick={onEdit}
                   style={{
                     bottom: -0.5,
                     fontSize: '0.85rem',
                     position: 'relative',
                   }}
-                  onClick={onEdit}
                 >
                   Edit
                 </LinkButton>
@@ -235,6 +235,7 @@ export const PhoneVerification = ({
             </>
           ) : isCodeSent ? (
             <TextField
+              errorText={verifyError?.[0].reason}
               helperText={
                 <LinkButton
                   isDisabled={isResending}
@@ -244,7 +245,6 @@ export const PhoneVerification = ({
                   Resend verification code
                 </LinkButton>
               }
-              errorText={verifyError?.[0].reason}
               id="otp_code"
               label="Verification Code"
               name="otp_code"
@@ -260,18 +260,26 @@ export const PhoneVerification = ({
                 isPhoneInputFocused={isPhoneInputFocused}
               >
                 <StyledISOCodeSelect
+                  autoHighlight
+                  disableClearable
+                  disablePortal={true}
+                  id="iso_code"
                   isOptionEqualToValue={(option, value) =>
                     option.label === value.label
                   }
+                  label="ISO Code"
+                  onBlur={() => setIsPhoneInputFocused(false)}
                   onChange={(_, item: SelectPhoneVerificationOption) => {
                     sendCodeForm.setFieldValue('iso_code', item.value);
                   }}
+                  onFocus={() => setIsPhoneInputFocused(true)}
                   options={countries.map((country) => ({
                     label: `${getCountryName(country.name)} ${
                       country.dialingCode
                     } ${getCountryFlag(country.code)}`,
                     value: country.code,
                   }))}
+                  placeholder=""
                   slotProps={{
                     paper: {
                       sx: (theme) => ({
@@ -293,16 +301,10 @@ export const PhoneVerification = ({
                   value={{
                     label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
-                  autoHighlight
-                  disableClearable
-                  disablePortal={true}
-                  id="iso_code"
-                  label="ISO Code"
-                  onBlur={() => setIsPhoneInputFocused(false)}
-                  onFocus={() => setIsPhoneInputFocused(true)}
-                  placeholder=""
                 />
                 <StyledPhoneNumberInput
+                  hideLabel
+                  id="phone_number"
                   InputProps={{
                     startAdornment: selectedCountry ? (
                       <InputAdornment position="end">
@@ -310,8 +312,6 @@ export const PhoneVerification = ({
                       </InputAdornment>
                     ) : undefined,
                   }}
-                  hideLabel
-                  id="phone_number"
                   inputRef={phoneNumberRef}
                   label="Phone Number"
                   name="phone_number"

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { imageFactory, stackScriptFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StackScriptImages } from './StackScriptImages';
@@ -44,16 +44,13 @@ describe('Images', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      queryByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <StackScriptImages />,
-      useFormOptions: {
-        defaultValues: { stackscript_id: stackscript.id },
-      },
-    });
+    const { findByText, getByLabelText, queryByText } =
+      renderWithThemeAndHookFormContext({
+        component: <StackScriptImages />,
+        useFormOptions: {
+          defaultValues: { stackscript_id: stackscript.id },
+        },
+      });
 
     const imageSelect = getByLabelText('Images');
 

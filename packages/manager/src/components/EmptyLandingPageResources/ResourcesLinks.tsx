@@ -14,11 +14,11 @@ export const ResourceLinks = (props: ResourcesLinks) => {
       {links.map((linkData) => (
         <ListItem key={linkData.to}>
           <Link
+            external={linkData.external}
             onClick={() => {
               getLinkOnClick(linkAnalyticsEvent, linkData.text);
               onClick?.();
             }}
-            external={linkData.external}
             to={linkData.to}
           >
             {linkData.text}

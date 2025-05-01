@@ -295,8 +295,8 @@ export const TextField = (props: TextFieldProps) => {
         data-testid="inputLabelWrapper"
         display="flex"
         sx={{
-          marginBottom: theme.spacingFunction(8),
-          ...(!noMarginTop && { marginTop: theme.spacingFunction(16) }),
+          marginBottom: theme.spacing(1),
+          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
         }}
       >
         {labelTooltipText && labelTooltipIconPosition === 'left' && (

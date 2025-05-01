@@ -54,7 +54,11 @@ const VPCLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: vpcs, error, isLoading } = useVPCsQuery(
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useVPCsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -119,6 +123,7 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{ pathname: '/vpcs' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -126,7 +131,6 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
-        breadcrumbProps={{ pathname: '/vpcs' }}
         createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
         docsLink={VPC_DOCS_LINK}

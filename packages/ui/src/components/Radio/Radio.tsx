@@ -34,6 +34,7 @@ export const Radio = (props: RadioProps) => {
           viewBox="0 0 20 20"
         />
       }
+      data-qa-radio={props.checked || false}
       icon={
         <SvgIcon
           component={RadioIcon}
@@ -41,7 +42,6 @@ export const Radio = (props: RadioProps) => {
           viewBox="0 0 20 20"
         />
       }
-      data-qa-radio={props.checked || false}
       {...props}
       inputProps={{
         'aria-checked': props.checked,

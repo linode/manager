@@ -1,19 +1,20 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
-import {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { accountQueries } from './queries';
 
+import type { AccountMaintenance } from '@linode/api-v4/lib/account';
+import type {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
+
 export const useAllAccountMaintenanceQuery = (
   params: Params = {},
   filter: Filter = {},
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<AccountMaintenance[], APIError[]>({
     ...accountQueries.maintenance._ctx.all(params, filter),

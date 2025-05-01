@@ -2,6 +2,7 @@ import {
   getActiveLongviewPlan,
   updateActiveLongviewPlan,
 } from '@linode/api-v4/lib/longview';
+import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { Button, CircleProgress, Notice, Paper, Radio } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -14,7 +15,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -224,15 +224,15 @@ export const LongviewPlans = (props: LongviewPlansProps) => {
                 </TableBody>
               </StyledTable>
               <Button
-                sx={{
-                  marginBottom: theme.spacing(3),
-                  marginTop: theme.spacing(3),
-                }}
                 buttonType="primary"
                 data-testid="submit-button"
                 disabled={isButtonDisabled}
                 loading={updateLoading}
                 onClick={onSubmit}
+                sx={{
+                  marginBottom: theme.spacing(3),
+                  marginTop: theme.spacing(3),
+                }}
               >
                 Change Plan
               </Button>
@@ -359,16 +359,16 @@ export const LongviewSubscriptionRow = React.memo(
         <TableCell data-testid={`plan-cell-${id}`}>
           <StyledDiv>
             <Radio
-              sx={{
-                marginLeft: `-${theme.spacing(0.5)}`,
-                marginRight: theme.spacing(2),
-                padding: '2px',
-              }}
               checked={isSelected}
               data-testid={`lv-sub-radio-${id}`}
               disabled={disabled}
               id={id}
               onChange={onRadioSelect}
+              sx={{
+                marginLeft: `-${theme.spacing(0.5)}`,
+                marginRight: theme.spacing(2),
+                padding: '2px',
+              }}
               value={id}
             />
             {plan}

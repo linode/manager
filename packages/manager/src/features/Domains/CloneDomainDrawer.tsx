@@ -30,9 +30,11 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const { error, mutateAsync: cloneDomain, reset } = useCloneDomainMutation(
-    domain?.id ?? 0
-  );
+  const {
+    error,
+    mutateAsync: cloneDomain,
+    reset,
+  } = useCloneDomainMutation(domain?.id ?? 0);
 
   const navigate = useNavigate();
 
@@ -58,8 +60,8 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Clone Domain"

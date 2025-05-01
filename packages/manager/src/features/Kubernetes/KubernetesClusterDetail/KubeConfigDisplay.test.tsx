@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { kubeEndpointFactory } from 'src/factories/kubernetesCluster';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { KubeConfigDisplay } from './KubeConfigDisplay';

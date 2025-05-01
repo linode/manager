@@ -1,5 +1,6 @@
+import { array, boolean, number, object, string } from 'yup';
+
 import { validateIP } from './firewalls.schema';
-import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object({
   type: string(),

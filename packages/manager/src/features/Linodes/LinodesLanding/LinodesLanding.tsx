@@ -1,6 +1,7 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -42,7 +43,6 @@ import type { Action } from '../PowerActionsDialogOrDrawer';
 import type { ExtendedStatus } from './utils';
 import type { Config } from '@linode/api-v4/lib/linodes/types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { RouteComponentProps } from 'react-router-dom';
 import type { WithFeatureFlagProps } from 'src/containers/flags.container';
 import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
@@ -81,9 +81,9 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
-  LandingHeader?: React.ReactElement;
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
+  LandingHeader?: React.ReactElement;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
@@ -100,6 +100,17 @@ type CombinedProps = LinodesLandingProps &
   WithProfileProps;
 
 class ListLinodes extends React.Component<CombinedProps, State> {
+  state: State = {
+    deleteDialogOpen: false,
+    enableBackupsDialogOpen: false,
+    groupByTag: false,
+    linodeMigrateOpen: false,
+    linodeResizeOpen: false,
+    powerDialogOpen: false,
+    rebuildDialogOpen: false,
+    rescueDialogOpen: false,
+  };
+
   changeView = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);
     const { history, location } = this.props;
@@ -127,9 +138,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           deleteDialogOpen: true,
         });
         break;
-      case 'resize':
+      case 'enable_backups':
         this.setState({
-          linodeResizeOpen: true,
+          enableBackupsDialogOpen: true,
         });
         break;
       case 'migrate':
@@ -147,9 +158,9 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           rescueDialogOpen: true,
         });
         break;
-      case 'enable_backups':
+      case 'resize':
         this.setState({
-          enableBackupsDialogOpen: true,
+          linodeResizeOpen: true,
         });
         break;
     }
@@ -172,21 +183,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       selectedLinodeID: linodeID,
       selectedLinodeLabel: linodeLabel,
     });
-  };
-
-  state: State = {
-    deleteDialogOpen: false,
-    enableBackupsDialogOpen: false,
-    groupByTag: false,
-    linodeMigrateOpen: false,
-    linodeResizeOpen: false,
-    powerDialogOpen: false,
-    rebuildDialogOpen: false,
-    rescueDialogOpen: false,
-  };
-
-  updatePageUrl = (page: number) => {
-    this.props.history.push(`?page=${page}`);
   };
 
   render() {
@@ -351,12 +347,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   resourceType: 'Linodes',
                                 }),
                               }}
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
                               disabledCreateButton={isLinodesGrantReadOnly}
                               docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
                               entity="Linode"
+                              onButtonClick={() =>
+                                this.props.history.push('/linodes/create')
+                              }
                               title="Linodes"
                             />
                           </div>
@@ -383,14 +379,14 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               : linode.status,
                           };
                         })}
+                        // If there are Linodes with scheduled maintenance, default to
+                        // sorting by status priority so they are more visible.
+                        order="asc"
                         orderBy={
                           this.props.someLinodesHaveScheduledMaintenance
                             ? '_statusPriority'
                             : 'label'
                         }
-                        // If there are Linodes with scheduled maintenance, default to
-                        // sorting by status priority so they are more visible.
-                        order="asc"
                         preferenceKey={'linodes-landing'}
                       >
                         {({ data, handleOrderChange, order, orderBy }) => {
@@ -413,8 +409,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               display={linodeViewPreference}
                               filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
-                              linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={true}
+                              linodeViewPreference={linodeViewPreference}
                               regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
@@ -430,8 +426,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                               display={linodeViewPreference}
                               filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
-                              linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
+                              linodeViewPreference={linodeViewPreference}
                               regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
@@ -456,6 +452,10 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       </React.Fragment>
     );
   }
+
+  updatePageUrl = (page: number) => {
+    this.props.history.push(`?page=${page}`);
+  };
 }
 
 const eventCategory = 'linodes landing';

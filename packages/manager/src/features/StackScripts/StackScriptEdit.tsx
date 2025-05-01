@@ -39,9 +39,11 @@ export const StackScriptEdit = () => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: stackscript, error, isLoading } = useStackScriptQuery(
-    Number(id)
-  );
+  const {
+    data: stackscript,
+    error,
+    isLoading,
+  } = useStackScriptQuery(Number(id));
   const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(
     Number(id)
   );
@@ -115,12 +117,12 @@ export const StackScriptEdit = () => {
           <Paper>
             {!hasPermissionToEdit && (
               <Notice
+                spacingBottom={12}
                 text={getRestrictedResourceText({
                   action: 'edit',
                   isSingular: true,
                   resourceType: 'StackScripts',
                 })}
-                spacingBottom={12}
                 variant="error"
               />
             )}
@@ -170,11 +172,11 @@ export const StackScriptEdit = () => {
               Cancel
             </Button>
             <Button
+              buttonType="primary"
               onClick={() => {
                 form.reset();
                 setIsResetConfirmationOpen(false);
               }}
-              buttonType="primary"
             >
               Reset
             </Button>

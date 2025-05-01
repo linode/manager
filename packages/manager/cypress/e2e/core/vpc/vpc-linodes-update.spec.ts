@@ -8,8 +8,8 @@ import {
 } from '@linode/utilities';
 import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
 import {
-  vpcLinodeInterfaceShutDownNotice,
   vpcConfigProfileInterfaceRebootNotice,
+  vpcLinodeInterfaceShutDownNotice,
 } from 'support/constants/vpc';
 import {
   mockCreateLinodeConfigInterfaces,

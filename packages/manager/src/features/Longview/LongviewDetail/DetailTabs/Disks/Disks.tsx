@@ -21,12 +21,8 @@ interface Props {
 }
 
 const Disks = (props: Props) => {
-  const {
-    clientAPIKey,
-    clientLastUpdated,
-    lastUpdated,
-    lastUpdatedError,
-  } = props;
+  const { clientAPIKey, clientLastUpdated, lastUpdated, lastUpdatedError } =
+    props;
 
   const [time, setTimeBox] = React.useState<WithStartAndEnd>({
     end: 0,

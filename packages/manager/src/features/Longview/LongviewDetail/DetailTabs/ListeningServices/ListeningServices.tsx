@@ -56,23 +56,19 @@ export const ListeningServices = (props: TableProps) => {
 export const ServicesTable = (props: TableProps) => {
   const { services, servicesError, servicesLoading } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<LongviewService>({
-    data: services,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'process',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<LongviewService>({
+      data: services,
+      initialRoute: {
+        defaultOrder: {
+          order: 'asc',
+          orderBy: 'process',
+        },
+        from: '/longview/clients/$id/overview',
       },
-      from: '/longview/clients/$id/overview',
-    },
-    preferenceKey: 'listening-services',
-    prefix: 'listening-services',
-  });
+      preferenceKey: 'listening-services',
+      prefix: 'listening-services',
+    });
 
   return (
     <Paginate data={sortedData ?? []} pageSize={25}>

@@ -65,13 +65,13 @@ export const AccessKeyTableRow = (props: Props) => {
       )}
       <TableCell actionCell>
         <AccessKeyActionMenu
+          label={storageKeyData.label}
+          objectStorageKey={storageKeyData}
+          openDrawer={openDrawer}
           openHostnamesDrawer={() => {
             setShowHostNamesDrawers(true);
             setHostNames(storageKeyData.regions);
           }}
-          label={storageKeyData.label}
-          objectStorageKey={storageKeyData}
-          openDrawer={openDrawer}
           openRevokeDialog={openRevokeDialog}
         />
       </TableCell>

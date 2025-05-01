@@ -2,6 +2,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -23,7 +24,6 @@ import {
 } from './EventsLanding.styles';
 
 import type { Filter } from '@linode/api-v4';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
