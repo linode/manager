@@ -119,7 +119,7 @@ body.searchOverlay #main-content {
   margin-right: 0 !important;
 }
 
-.content-wrapper > .landing-header:first-child {
+.content-wrapper > .landing-header:first-child, .content-wrapper > .landing-header-mb-4:first-child, .content-wrapper > .landing-header-mb-16:first-child {
   margin-top: 0;
 }
 

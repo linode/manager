@@ -43,6 +43,7 @@ export const StackScriptsLanding = () => {
             resourceType: 'StackScripts',
           }),
         }}
+        className="landing-header-mb-4"
         onButtonClick={() => {
           navigate({ to: '/stackscripts/create' });
         }}

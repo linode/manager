@@ -64,12 +64,10 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -85,15 +83,13 @@ export const StackScriptLandingTable = (props: Props) => {
         : 'stackscripts-landing-community',
   });
 
-  const {
-    data: selectedStackScript,
-    isFetching: isFetchingStackScript,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useStackScriptQuery,
-    redirectToOnNotFound: '/stackscripts/account',
-  });
+  const { data: selectedStackScript, isFetching: isFetchingStackScript } =
+    useDialogData({
+      enabled: !!id,
+      paramKey: 'id',
+      queryHook: useStackScriptQuery,
+      redirectToOnNotFound: '/stackscripts/account',
+    });
 
   const {
     data,
@@ -134,7 +130,7 @@ export const StackScriptLandingTable = (props: Props) => {
   }
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={3}>
       <DebouncedSearchTextField
         inputSlotProps={
           searchParseError
