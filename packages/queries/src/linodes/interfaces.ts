@@ -247,6 +247,10 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
         });
+
+        // queryClient.invalidateQueries({
+        //   queryKey: linodeQueries.linode(linodeId)._ctx.firewalls.queryKey,
+        // });
       },
     },
   );
