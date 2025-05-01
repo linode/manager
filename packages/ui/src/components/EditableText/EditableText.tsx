@@ -281,10 +281,10 @@ export const EditableText = (props: EditableTextProps) => {
       <div className={cx(classes.container, className)} data-qa-edit-field>
         <TextField
           {...rest}
-          className={classes.textField}
-          editable
           // eslint-disable-next-line
           autoFocus={true}
+          className={classes.textField}
+          editable
           errorText={props.errorText}
           hideLabel
           inputProps={{
