@@ -1,4 +1,3 @@
-import { regionFactory } from '@linode/utilities';
 import { QueryClient } from '@tanstack/react-query';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -12,12 +11,9 @@ const queryMocks = vi.hoisted(() => ({
   getQuotasFilters: vi.fn().mockReturnValue({}),
   useFlags: vi.fn().mockReturnValue({}),
   useGetLocationsForQuotaService: vi.fn().mockReturnValue({}),
-  useGetRegionsQuery: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
-  useRegionsQuery: queryMocks.useGetRegionsQuery,
+  useObjectStorageEndpoints: vi.fn().mockReturnValue({}),
+  convertResourceMetric: vi.fn().mockReturnValue({}),
+  pluralizeMetric: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/hooks/useFlags', () => {
@@ -28,28 +24,22 @@ vi.mock('src/hooks/useFlags', () => {
   };
 });
 
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useObjectStorageEndpoints: queryMocks.useObjectStorageEndpoints,
+  };
+});
+
 vi.mock('./utils', () => ({
   getQuotasFilters: queryMocks.getQuotasFilters,
   useGetLocationsForQuotaService: queryMocks.useGetLocationsForQuotaService,
+  convertResourceMetric: queryMocks.convertResourceMetric,
+  pluralizeMetric: queryMocks.pluralizeMetric,
 }));
 
 describe('Quotas', () => {
-  beforeEach(() => {
-    queryMocks.useGetLocationsForQuotaService.mockReturnValue({
-      isFetchingRegions: false,
-      regions: [
-        regionFactory.build({ id: 'global', label: 'Global (Account level)' }),
-      ],
-    });
-    queryMocks.useGetRegionsQuery.mockReturnValue({
-      data: [
-        regionFactory.build({ id: 'global', label: 'Global (Account level)' }),
-        regionFactory.build({ id: 'us-east', label: 'Newark, NJ' }),
-      ],
-      isFetching: false,
-    });
-  });
-
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -64,89 +54,64 @@ describe('Quotas', () => {
     });
 
     expect(getByText('Quotas')).toBeInTheDocument();
-    expect(getByText('Learn More About Quotas')).toBeInTheDocument();
-    expect(getByText('Select a Service')).toBeInTheDocument();
+    expect(getByText('Learn more about quotas')).toBeInTheDocument();
+    expect(getByText('Object Storage Endpoint')).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('Select a region for Linodes')
+      screen.getByPlaceholderText('Select an Object Storage S3 endpoint')
+    ).toBeInTheDocument();
+    expect(
+      getByText('Apply filters above to see quotas and current usage.')
     ).toBeInTheDocument();
   });
 
-  it('allows service selection', async () => {
+  it('allows endpoint selection', async () => {
+    queryMocks.useGetLocationsForQuotaService.mockReturnValue({
+      isFetchingS3Endpoints: false,
+      regions: null,
+      s3Endpoints: [{ label: 'endpoint1 (Standard E0)', value: 'endpoint1' }],
+      service: 'object-storage',
+    });
+
     const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
       queryClient,
     });
 
-    const serviceSelect = getByPlaceholderText('Select a service');
+    const endpointSelect = getByPlaceholderText(
+      'Select an Object Storage S3 endpoint'
+    );
 
     await waitFor(() => {
-      expect(serviceSelect).toHaveValue('Linodes');
-      expect(
-        getByPlaceholderText('Select a region for Linodes')
-      ).toBeInTheDocument();
-    });
-
-    userEvent.click(serviceSelect);
-    await waitFor(() => {
-      const kubernetesOption = getByRole('option', { name: 'Kubernetes' });
-      userEvent.click(kubernetesOption);
+      expect(endpointSelect).not.toHaveValue(null);
     });
 
     await waitFor(() => {
-      expect(serviceSelect).toHaveValue('Kubernetes');
-      expect(
-        getByPlaceholderText('Select a region for Kubernetes')
-      ).toBeInTheDocument();
+      expect(endpointSelect).toBeInTheDocument();
     });
 
-    userEvent.click(serviceSelect);
-    await waitFor(() => {
-      const objectStorageOption = getByRole('option', {
-        name: 'Object Storage',
+    await userEvent.click(endpointSelect);
+    await waitFor(async () => {
+      const endpointOption = getByRole('option', {
+        name: 'endpoint1 (Standard E0)',
       });
-      userEvent.click(objectStorageOption);
+      await userEvent.click(endpointOption);
     });
 
     await waitFor(() => {
-      expect(serviceSelect).toHaveValue('Object Storage');
-      expect(
-        getByPlaceholderText('Select an Object Storage S3 endpoint')
-      ).toBeInTheDocument();
+      expect(endpointSelect).toHaveValue('endpoint1 (Standard E0)');
     });
   });
 
   it('shows loading state when fetching data', () => {
     queryMocks.useGetLocationsForQuotaService.mockReturnValue({
-      isFetchingRegions: true,
-      regions: [],
+      isFetchingS3Endpoints: true,
+      s3Endpoints: null,
+      service: 'object-storage',
     });
 
     const { getByPlaceholderText } = renderWithTheme(<Quotas />, {
       queryClient,
     });
 
-    expect(
-      getByPlaceholderText('Loading Linodes regions...')
-    ).toBeInTheDocument();
-  });
-
-  it('shows a global option for regions', async () => {
-    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
-      queryClient,
-    });
-
-    const regionSelect = getByPlaceholderText('Select a region for Linodes');
-    expect(regionSelect).toHaveValue('');
-
-    userEvent.click(regionSelect);
-    await waitFor(() => {
-      const globalOption = getByRole('option', {
-        name: 'Global (Account level) (global)',
-      });
-      userEvent.click(globalOption);
-    });
-
-    await waitFor(() => {
-      expect(regionSelect).toHaveValue('Global (Account level) (global)');
-    });
+    expect(getByPlaceholderText('Loading S3 endpoints...')).toBeInTheDocument();
   });
 });
