@@ -60,6 +60,8 @@ export const CreateUserDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="username"
           render={({ field, fieldState }) => (
             <TextField
               data-qa-create-username
@@ -72,12 +74,12 @@ export const CreateUserDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="username"
           rules={{ required: 'Username is required' }}
         />
 
         <Controller
+          control={control}
+          name="email"
           render={({ field, fieldState }) => (
             <TextField
               data-qa-create-email
@@ -90,8 +92,6 @@ export const CreateUserDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="email"
           rules={{ required: 'Email is required' }}
         />
 

@@ -110,13 +110,13 @@ export const AppDetailDrawer = (props: Props) => {
               src={`/assets/white/${selectedApp?.details?.logo_url}`}
             />
             <Typography
+              className={classes.appName}
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML({
                   sanitizingTier: 'flexible',
                   text: displayLabel,
                 }),
               }}
-              className={classes.appName}
               data-qa-drawer-title={displayLabel}
               data-testid="app-name"
               variant="h2"
@@ -128,13 +128,13 @@ export const AppDetailDrawer = (props: Props) => {
                 {selectedApp?.details.summary}
               </Typography>
               <Typography
+                className={classes.description}
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHTML({
                     sanitizingTier: 'flexible',
                     text: selectedApp?.details?.description,
                   }),
                 }}
-                className={classes.description}
                 variant="body1"
               />
             </Box>

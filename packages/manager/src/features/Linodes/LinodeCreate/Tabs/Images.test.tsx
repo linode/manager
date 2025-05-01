@@ -17,12 +17,10 @@ describe('Images', () => {
   });
 
   it('renders an image select', () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
-      component: <Images />,
-    });
+    const { getByLabelText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <Images />,
+      });
 
     expect(getByLabelText('Images')).toBeVisible();
     expect(getByPlaceholderText('Choose an image')).toBeVisible();

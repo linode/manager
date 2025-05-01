@@ -39,10 +39,10 @@ export const SideMenu = (props: SideMenuProps) => {
     <>
       <Hidden mdUp>
         <StyledDrawer
+          data-testid="side-menu-mobile"
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
-          data-testid="side-menu-mobile"
           onClose={closeMenu}
           open={open}
           variant="temporary"

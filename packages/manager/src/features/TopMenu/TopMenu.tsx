@@ -53,19 +53,23 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           {isNarrowViewport && (
             <TopMenuTooltip title="Expand side menu">
               <IconButton
-                sx={(theme) => ({
-                  padding: theme.tokens.spacing.S16,
-                })}
                 aria-label="open menu"
                 color="inherit"
                 disableRipple
                 onClick={openSideMenu}
+                sx={(theme) => ({
+                  padding: theme.tokens.spacing.S16,
+                })}
               >
                 <MenuIcon />
               </IconButton>
             </TopMenuTooltip>
           )}
           <Box
+            alignItems="center"
+            display="flex"
+            flexGrow={1}
+            flexShrink={0}
             gap={(theme) => ({
               md: theme.tokens.spacing.S32,
               xs: theme.tokens.spacing.S12,
@@ -76,10 +80,6 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
                 sm: theme.tokens.spacing.S16,
               },
             })}
-            alignItems="center"
-            display="flex"
-            flexGrow={1}
-            flexShrink={0}
           >
             {!isNarrowViewport && (
               <Link
@@ -104,6 +104,9 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
           </Box>
 
           <Stack
+            alignItems="center"
+            direction="row"
+            justifyContent="flex-end"
             sx={(theme) => ({
               gap: {
                 sm: theme.tokens.spacing.S24,
@@ -119,18 +122,15 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
                 xs: theme.tokens.spacing.S8,
               },
             })}
-            alignItems="center"
-            direction="row"
-            justifyContent="flex-end"
           >
             {!isSmallScreen && <CreateMenu />}
             <Box
+              display="flex"
               gap={{
                 md: 0,
                 sm: theme.tokens.spacing.S16,
                 xs: theme.tokens.spacing.S8,
               }}
-              display="flex"
             >
               <Help />
               <Community />

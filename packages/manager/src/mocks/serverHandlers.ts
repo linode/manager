@@ -2069,7 +2069,7 @@ export const handlers = [
       body: null,
       entity: null,
       label: "We've updated our policies.",
-      // eslint-disable-next-line xss/no-mixed-html
+
       message:
         "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
       severity: 'minor',

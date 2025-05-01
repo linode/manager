@@ -1,4 +1,4 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export const extDisk: Disk = {
   created: '2018-07-05T18:15:43',

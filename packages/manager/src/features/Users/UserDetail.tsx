@@ -1,3 +1,4 @@
+import { useAccountUser, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -9,7 +10,6 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useAccountUser, useProfile } from '@linode/queries';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
