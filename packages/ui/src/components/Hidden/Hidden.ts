@@ -65,7 +65,7 @@ const useCurrentWidth = (): Breakpoint => {
 type UpDownKeys = `${Breakpoint}Down` | `${Breakpoint}Up`;
 type UpDownProps = Pick<HiddenProps, UpDownKeys>;
 
-export const Hidden: React.FC<HiddenProps> = (props) => {
+export const Hidden = (props: HiddenProps) => {
   const width = useCurrentWidth();
   const {
     children,
