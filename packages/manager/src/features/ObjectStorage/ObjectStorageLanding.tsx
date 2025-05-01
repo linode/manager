@@ -131,6 +131,7 @@ export const ObjectStorageLanding = () => {
           }),
         }}
         breadcrumbProps={{ pathname: '/object-storage' }}
+        className="landing-header-mb-4"
         createButtonText={createButtonText}
         disabledCreateButton={isBucketCreationRestricted}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
