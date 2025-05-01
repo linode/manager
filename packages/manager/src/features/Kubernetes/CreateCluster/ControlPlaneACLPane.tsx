@@ -12,7 +12,6 @@ import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { validateIPs } from 'src/utilities/ipUtils';
 
 import {
   CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
@@ -87,13 +86,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
               disabled={isAcknowledgementChecked}
               ips={ipV4Addr}
               isLinkStyled
-              onBlur={(_ips: ExtendedIP[]) => {
-                const validatedIPs = validateIPs(_ips, {
-                  allowEmptyAddress: true,
-                  errorMessage: 'Must be a valid IPv4 address.',
-                });
-                handleIPv4Change(validatedIPs);
-              }}
               onChange={handleIPv4Change}
               title="IPv4 Addresses or CIDRs"
             />
@@ -103,13 +95,6 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
                 disabled={isAcknowledgementChecked}
                 ips={ipV6Addr}
                 isLinkStyled
-                onBlur={(_ips: ExtendedIP[]) => {
-                  const validatedIPs = validateIPs(_ips, {
-                    allowEmptyAddress: true,
-                    errorMessage: 'Must be a valid IPv6 address.',
-                  });
-                  handleIPv6Change(validatedIPs);
-                }}
                 onChange={handleIPv6Change}
                 title="IPv6 Addresses or CIDRs"
               />
