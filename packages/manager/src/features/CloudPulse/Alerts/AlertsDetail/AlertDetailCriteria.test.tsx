@@ -36,10 +36,8 @@ describe('AlertDetailCriteria component tests', () => {
     expect(getAllByText('CPU Usage').length).toBe(2);
     expect(getAllByText('bytes').length).toBe(2);
     expect(getAllByText(metricOperatorTypeMap['gt']).length).toBe(2);
-    const {
-      evaluation_period_seconds,
-      polling_interval_seconds,
-    } = alertDetails.trigger_conditions;
+    const { evaluation_period_seconds, polling_interval_seconds } =
+      alertDetails.trigger_conditions;
     expect(
       getByText(convertSecondsToMinutes(polling_interval_seconds))
     ).toBeInTheDocument();

@@ -1,6 +1,6 @@
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
-import { Hidden } from '@linode/ui';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow/TableRow';

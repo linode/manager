@@ -1,5 +1,6 @@
-import { Reducer } from 'redux';
 import actionCreatorFactory, { isType } from 'typescript-fsa';
+
+import type { Reducer } from 'redux';
 
 export const actionCreator = actionCreatorFactory('@@manager/pending-upload');
 

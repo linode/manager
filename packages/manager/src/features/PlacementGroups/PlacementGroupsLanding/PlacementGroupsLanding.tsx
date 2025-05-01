@@ -5,6 +5,7 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
   useLocation,
@@ -15,7 +16,6 @@ import {
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -205,6 +205,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{ pathname: PLACEMENT_GROUPS_LANDING_ROUTE }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -212,7 +213,6 @@ export const PlacementGroupsLanding = React.memo(() => {
             resourceType: 'Placement Groups',
           }),
         }}
-        breadcrumbProps={{ pathname: PLACEMENT_GROUPS_LANDING_ROUTE }}
         disabledCreateButton={isLinodeReadOnly}
         docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
@@ -285,13 +285,13 @@ export const PlacementGroupsLanding = React.memo(() => {
                 placementGroup,
                 linodes
               )}
+              disabled={isLinodeReadOnly}
               handleDeletePlacementGroup={() =>
                 handleDeletePlacementGroup(placementGroup)
               }
               handleEditPlacementGroup={() =>
                 handleEditPlacementGroup(placementGroup)
               }
-              disabled={isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
               region={getPlacementGroupRegion(placementGroup)}

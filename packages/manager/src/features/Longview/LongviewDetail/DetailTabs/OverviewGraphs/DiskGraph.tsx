@@ -4,10 +4,11 @@ import * as React from 'react';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 import { appendStats } from 'src/features/Longview/shared/utilities';
 
-import { Disk, StatWithDummyPoint } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { Disk, StatWithDummyPoint } from '../../../request.types';
+import type { GraphProps } from './types';
 
 export const DiskGraph = (props: GraphProps) => {
   const {
@@ -22,12 +23,12 @@ export const DiskGraph = (props: GraphProps) => {
 
   const theme = useTheme();
 
-  const { data, error: requestError, loading, request } = useGraphs(
-    ['disk', 'sysinfo'],
-    clientAPIKey,
-    start,
-    end
-  );
+  const {
+    data,
+    error: requestError,
+    loading,
+    request,
+  } = useGraphs(['disk', 'sysinfo'], clientAPIKey, start, end);
 
   React.useEffect(() => {
     request();
@@ -42,6 +43,8 @@ export const DiskGraph = (props: GraphProps) => {
 
   return (
     <LongviewLineGraph
+      // Only show an error state if we don't have any data,
+      ariaLabel="Disk I/O Graph"
       data={[
         {
           backgroundColor: theme.graphs.diskIO.swap,
@@ -62,8 +65,6 @@ export const DiskGraph = (props: GraphProps) => {
           label: 'Read',
         },
       ]}
-      // Only show an error state if we don't have any data,
-      ariaLabel="Disk I/O Graph"
       // or in the case of special errors returned by processDiskData
       error={(!data.Disk && requestError) || error}
       loading={loading}

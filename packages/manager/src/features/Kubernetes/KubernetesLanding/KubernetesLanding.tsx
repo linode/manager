@@ -1,5 +1,6 @@
 import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +12,6 @@ import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -242,6 +242,9 @@ export const KubernetesLanding = () => {
         <TableBody>
           {data?.data.map((cluster) => (
             <KubernetesClusterRow
+              cluster={cluster}
+              key={`kubernetes-cluster-list-${cluster.id}`}
+              openDeleteDialog={openDialog}
               openUpgradeDialog={() =>
                 openUpgradeDialog(
                   cluster.id,
@@ -250,9 +253,6 @@ export const KubernetesLanding = () => {
                   cluster.k8s_version
                 )
               }
-              cluster={cluster}
-              key={`kubernetes-cluster-list-${cluster.id}`}
-              openDeleteDialog={openDialog}
             />
           ))}
         </TableBody>

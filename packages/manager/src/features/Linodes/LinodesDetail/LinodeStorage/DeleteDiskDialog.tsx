@@ -1,8 +1,8 @@
+import { useLinodeDeleteDiskMutation } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useLinodeDeleteDiskMutation } from '@linode/queries';
 
 import type { Disk } from '@linode/api-v4';
 

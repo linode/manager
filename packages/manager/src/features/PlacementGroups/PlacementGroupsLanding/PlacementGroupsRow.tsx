@@ -3,9 +3,9 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import { List, ListItem, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
-import { Hidden } from '@linode/ui';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
@@ -84,6 +84,9 @@ export const PlacementGroupsRow = React.memo(
             '0'
           ) : (
             <TextTooltip
+              displayText={`${assignedLinodes?.length ?? 0}`}
+              minWidth={250}
+              placement="bottom-start"
               PopperProps={{
                 sx: {
                   '& .MuiTooltip-tooltip': {
@@ -100,9 +103,6 @@ export const PlacementGroupsRow = React.memo(
                   ))}
                 </List>
               }
-              displayText={`${assignedLinodes?.length ?? 0}`}
-              minWidth={250}
-              placement="bottom-start"
             />
           )}
           &nbsp; of{' '}

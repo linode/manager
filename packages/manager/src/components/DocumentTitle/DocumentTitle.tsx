@@ -64,34 +64,34 @@ export const DocumentTitleSegment = (props: DocumentTitleSegmentProps) => {
   );
 };
 
-export const withDocumentTitleProvider = <Props extends {}>(
-  Component: React.ComponentType<Props>
-) => (props: Props) => {
-  let titleSegments: string[] = [];
+export const withDocumentTitleProvider =
+  <Props extends {}>(Component: React.ComponentType<Props>) =>
+  (props: Props) => {
+    let titleSegments: string[] = [];
 
-  const updateDocumentTitle = () => {
-    const newTitle = reverse(titleSegments).join(' | ');
-    document.title = newTitle;
+    const updateDocumentTitle = () => {
+      const newTitle = reverse(titleSegments).join(' | ');
+      document.title = newTitle;
+    };
+
+    const appendSegment: DocumentTitleSegmentsContext['appendSegment'] = (
+      segment: string
+    ) => {
+      titleSegments = [...titleSegments, segment];
+      updateDocumentTitle();
+    };
+
+    const removeSegment: DocumentTitleSegmentsContext['removeSegment'] = (
+      segment: string
+    ) => {
+      const targetIdx = titleSegments.findIndex((el) => el === segment);
+      titleSegments.splice(targetIdx, 1);
+      updateDocumentTitle();
+    };
+
+    return (
+      <DocumentTitleSegmentsProvider value={{ appendSegment, removeSegment }}>
+        <Component {...props} />
+      </DocumentTitleSegmentsProvider>
+    );
   };
-
-  const appendSegment: DocumentTitleSegmentsContext['appendSegment'] = (
-    segment: string
-  ) => {
-    titleSegments = [...titleSegments, segment];
-    updateDocumentTitle();
-  };
-
-  const removeSegment: DocumentTitleSegmentsContext['removeSegment'] = (
-    segment: string
-  ) => {
-    const targetIdx = titleSegments.findIndex((el) => el === segment);
-    titleSegments.splice(targetIdx, 1);
-    updateDocumentTitle();
-  };
-
-  return (
-    <DocumentTitleSegmentsProvider value={{ appendSegment, removeSegment }}>
-      <Component {...props} />
-    </DocumentTitleSegmentsProvider>
-  );
-};

@@ -1,15 +1,15 @@
+import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Chip, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { HighPerformanceVolumeIcon } from '../Linodes/HighPerformanceVolumeIcon';

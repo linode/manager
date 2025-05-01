@@ -1,8 +1,8 @@
 import { Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from '@linode/ui';
 import { Tags } from 'src/components/Tags/Tags';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 

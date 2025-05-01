@@ -1,9 +1,9 @@
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from '@linode/ui';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useInProgressEvents } from 'src/queries/events/events';
@@ -64,13 +64,13 @@ export const LinodeDiskRow = React.memo((props: Props) => {
           >
             {diskEventLabelMap[event.action]} ({event.percent_complete}%)
             <BarPercent
+              max={100}
+              narrow
+              rounded
               sx={{
                 paddingLeft: theme.spacing(),
                 width: 250,
               }}
-              max={100}
-              narrow
-              rounded
               value={event?.percent_complete ?? 0}
             />
           </div>

@@ -1,6 +1,5 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
-
-import {
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
+import type {
   LongviewLoad,
   LongviewMemory,
   LongviewNetwork,

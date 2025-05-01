@@ -1,14 +1,14 @@
+import { useProfile } from '@linode/queries';
 import { Tooltip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize, truncate } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { Markdown } from 'src/components/Markdown/Markdown';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useProfile } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -43,12 +43,12 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       </TableCell>
       <TableCell>
         <Link
+          tabIndex={0}
           to={
             entity.type === 'linode'
               ? `/${entity.type}s/${entity.id}`
               : `/${entity.type}s`
           }
-          tabIndex={0}
         >
           {entity.label}
         </Link>

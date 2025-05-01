@@ -1,8 +1,7 @@
+import { useAccount } from '@linode/queries';
 import { TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import { useAccount } from '@linode/queries';
 
 import { SMTP_FIELD_NAME_TO_LABEL_MAP } from './constants';
 
@@ -30,6 +29,8 @@ export const SupportTicketSMTPFields = () => {
   return (
     <>
       <Controller
+        control={form.control}
+        name="customerName"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-customer-name
@@ -42,10 +43,10 @@ export const SupportTicketSMTPFields = () => {
             value={field.value}
           />
         )}
-        control={form.control}
-        name="customerName"
       />
       <Controller
+        control={form.control}
+        name="companyName"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-company-name
@@ -56,10 +57,10 @@ export const SupportTicketSMTPFields = () => {
             value={field.value}
           />
         )}
-        control={form.control}
-        name="companyName"
       />
       <Controller
+        control={form.control}
+        name="useCase"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-use-case
@@ -73,10 +74,10 @@ export const SupportTicketSMTPFields = () => {
             value={field.value}
           />
         )}
-        control={form.control}
-        name="useCase"
       />
       <Controller
+        control={form.control}
+        name="emailDomains"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-email-domains
@@ -90,10 +91,10 @@ export const SupportTicketSMTPFields = () => {
             value={field.value}
           />
         )}
-        control={form.control}
-        name="emailDomains"
       />
       <Controller
+        control={form.control}
+        name="publicInfo"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-ticket-public-info
@@ -107,8 +108,6 @@ export const SupportTicketSMTPFields = () => {
             value={field.value}
           />
         )}
-        control={form.control}
-        name="publicInfo"
       />
     </>
   );

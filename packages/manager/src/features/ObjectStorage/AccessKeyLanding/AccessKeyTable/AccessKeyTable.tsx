@@ -1,7 +1,7 @@
+import { Hidden } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
 
-import { Hidden } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

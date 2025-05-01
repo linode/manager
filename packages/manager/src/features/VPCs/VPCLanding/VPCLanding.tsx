@@ -1,9 +1,9 @@
 import { useVPCQuery, useVPCsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -123,6 +123,7 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{ pathname: '/vpcs' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -130,7 +131,6 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
-        breadcrumbProps={{ pathname: '/vpcs' }}
         createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
         docsLink={VPC_DOCS_LINK}

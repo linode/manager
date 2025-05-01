@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -5,6 +6,7 @@ import {
   StyledActionButton,
   Typography,
 } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -13,14 +15,12 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from '@linode/ui';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import {
   getKubeControlPlaneACL,
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useAccount } from '@linode/queries';
 import {
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
@@ -98,15 +98,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
       <EntityDetail
         body={
           <Stack
+            direction="row"
+            flexWrap="wrap"
+            gap={2}
             sx={(theme) => ({
               padding: theme.spacing(2),
               [theme.breakpoints.down('sm')]: {
                 padding: theme.spacing(1),
               },
             })}
-            direction="row"
-            flexWrap="wrap"
-            gap={2}
           >
             <KubeClusterSpecs cluster={cluster} />
             <KubeConfigDisplay
@@ -117,6 +117,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
             <ClusterChips
+              cluster={cluster}
               sx={(theme) => ({
                 position: 'absolute',
                 right: theme.spacing(3),
@@ -127,7 +128,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                   flexDirection: 'column',
                 },
               })}
-              cluster={cluster}
             />
           </Stack>
         }

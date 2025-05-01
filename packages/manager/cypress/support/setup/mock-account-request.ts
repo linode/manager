@@ -1,8 +1,9 @@
+import { mockGetAccount } from 'support/intercepts/account';
+
 /**
  * @file Mocks Linode APIv4 account request to improve performance.
  */
 import type { Account } from '@linode/api-v4';
-import { mockGetAccount } from 'support/intercepts/account';
 
 /**
  * Mocks the Linode API account info GET request to improve performance.

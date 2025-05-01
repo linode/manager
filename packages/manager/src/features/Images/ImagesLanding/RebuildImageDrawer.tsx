@@ -24,9 +24,8 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, isFetching, onClose, open } = props;
 
   const history = useHistory();
-  const {
-    permissionedLinodes: availableLinodes,
-  } = useImageAndLinodeGrantCheck();
+  const { permissionedLinodes: availableLinodes } =
+    useImageAndLinodeGrantCheck();
 
   const { control, formState, handleSubmit, reset } = useForm<{
     linodeId: number;
@@ -57,8 +56,8 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"
@@ -79,17 +78,19 @@ export const RebuildImageDrawer = (props: Props) => {
         <Divider spacingBottom={0} spacingTop={24} />
 
         <Controller
+          control={control}
+          name="linodeId"
           render={({ field, fieldState }) => (
             <LinodeSelect
+              clearable={true}
+              errorText={fieldState.error?.message}
+              onBlur={field.onBlur}
               onSelectionChange={(linode) => {
                 field.onChange(linode?.id);
               }}
               optionsFilter={(linode) =>
                 availableLinodes ? availableLinodes.includes(linode.id) : true
               }
-              clearable={true}
-              errorText={fieldState.error?.message}
-              onBlur={field.onBlur}
               placeholder="Select Linode or Type to Search"
               value={field.value}
             />
@@ -100,8 +101,6 @@ export const RebuildImageDrawer = (props: Props) => {
               value: true,
             },
           }}
-          control={control}
-          name="linodeId"
         />
 
         <ActionsPanel

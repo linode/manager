@@ -1,7 +1,7 @@
 import { Accordion, Box, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 
 import {
@@ -80,11 +80,11 @@ export const NotificationCenterNotificationsContainer = (
 
       <Hidden smUp>
         <Accordion
+          defaultExpanded={true}
+          heading={header}
           headingNumberCount={
             notifications.length > 0 ? notifications.length : undefined
           }
-          defaultExpanded={true}
-          heading={header}
         >
           <NotificationCenterNotifications
             content={notifications}

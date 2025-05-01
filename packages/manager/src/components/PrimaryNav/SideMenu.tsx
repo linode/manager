@@ -1,9 +1,8 @@
 import { Global } from '@linode/design-language-system';
+import { Hidden } from '@linode/ui';
 import Drawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-
-import { Hidden } from '@linode/ui';
 
 import { SIDEBAR_COLLAPSED_WIDTH, SIDEBAR_WIDTH } from './constants';
 import PrimaryNav from './PrimaryNav';
@@ -39,10 +38,10 @@ export const SideMenu = (props: SideMenuProps) => {
     <>
       <Hidden mdUp>
         <StyledDrawer
+          data-testid="side-menu-mobile"
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
-          data-testid="side-menu-mobile"
           onClose={closeMenu}
           open={open}
           variant="temporary"

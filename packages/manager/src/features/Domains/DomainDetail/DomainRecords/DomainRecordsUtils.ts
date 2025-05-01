@@ -51,8 +51,10 @@ export function getTimeColumn(
   return msToReadableTime(record[keyPath] ?? 0);
 }
 
-export const typeEq = (type: RecordType) => (record: DomainRecord): boolean =>
-  record.type === type;
+export const typeEq =
+  (type: RecordType) =>
+  (record: DomainRecord): boolean =>
+    record.type === type;
 
 const prependLinodeNS: Partial<DomainRecord>[] = [
   {

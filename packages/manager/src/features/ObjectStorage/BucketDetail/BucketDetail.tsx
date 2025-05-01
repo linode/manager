@@ -1,6 +1,7 @@
 import { getObjectList, getObjectURL } from '@linode/api-v4/lib/object-storage';
 import { useAccount } from '@linode/queries';
 import { ActionsPanel, Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { isFeatureEnabledV2, truncateMiddle } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams, useSearch } from '@tanstack/react-router';
@@ -12,7 +13,6 @@ import { debounce } from 'throttle-debounce';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from '@linode/ui';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

@@ -6,12 +6,12 @@ import {
   Tooltip,
   Typography,
 } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Divider from '@mui/material/Divider';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from '@linode/ui';
 
 import { NodeTable } from './NodeTable';
 
@@ -74,6 +74,10 @@ export const NodePool = (props: Props) => {
 
   return (
     <Accordion
+      data-qa-node-pool-id={poolId}
+      data-qa-node-pool-section
+      detailProps={{ sx: { paddingBottom: 1 } }}
+      expanded={accordionExpanded}
       heading={
         <Box
           sx={{
@@ -86,11 +90,11 @@ export const NodePool = (props: Props) => {
           <Box display="flex">
             <Typography variant="h2">{typeLabel}</Typography>
             <Divider
+              orientation="vertical"
               sx={(theme) => ({
                 height: 16,
                 margin: `4px ${theme.spacing(1)}`,
               })}
-              orientation="vertical"
             />
             <Typography variant="h2">
               {pluralize('Node', 'Nodes', count)}
@@ -150,20 +154,20 @@ export const NodePool = (props: Props) => {
               right={(theme) => theme.spacing(5)}
             >
               <StyledActionButton
+                compactY
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClickLabelsAndTaints(poolId);
                 }}
-                compactY
               >
                 Labels and Taints
               </StyledActionButton>
               <StyledActionButton
+                compactY
                 onClick={(e) => {
                   e.stopPropagation();
                   openAutoscalePoolDialog(poolId);
                 }}
-                compactY
               >
                 Autoscale Pool
               </StyledActionButton>
@@ -173,20 +177,20 @@ export const NodePool = (props: Props) => {
                 </Typography>
               )}
               <StyledActionButton
+                compactY
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClickResize(poolId);
                 }}
-                compactY
               >
                 Resize Pool
               </StyledActionButton>
               <StyledActionButton
+                compactY
                 onClick={(e) => {
                   e.stopPropagation();
                   openRecycleAllNodesDialog(poolId);
                 }}
-                compactY
               >
                 Recycle Pool Nodes
               </StyledActionButton>
@@ -199,12 +203,12 @@ export const NodePool = (props: Props) => {
               >
                 <div>
                   <StyledActionButton
+                    compactY
+                    disabled={isOnlyNodePool}
                     onClick={(e) => {
                       e.stopPropagation();
                       openDeletePoolDialog(poolId);
                     }}
-                    compactY
-                    disabled={isOnlyNodePool}
                   >
                     Delete Pool
                   </StyledActionButton>
@@ -214,10 +218,6 @@ export const NodePool = (props: Props) => {
           </Hidden>
         </Box>
       }
-      data-qa-node-pool-id={poolId}
-      data-qa-node-pool-section
-      detailProps={{ sx: { paddingBottom: 1 } }}
-      expanded={accordionExpanded}
       onChange={handleAccordionClick}
       // Improve performance by unmounting large content from the DOM when collapsed
       slotProps={{ transition: { unmountOnExit: nodes.length > 25 } }}

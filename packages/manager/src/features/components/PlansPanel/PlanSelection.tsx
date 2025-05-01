@@ -1,10 +1,10 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Chip, FormControlLabel, Radio } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { Hidden } from '@linode/ui';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

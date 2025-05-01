@@ -1,4 +1,6 @@
+import { useLinodesQuery, useProfile } from '@linode/queries';
 import { Button, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -6,7 +8,6 @@ import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from '@linode/ui';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -24,7 +25,6 @@ import {
   useDomainsQuery,
   useUpdateDomainMutation,
 } from 'src/queries/domains';
-import { useLinodesQuery, useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';
@@ -262,13 +262,13 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
           labelTitle: 'Domains',
           pathname: '/domains',
         }}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
+        entity="Domain"
         extraActions={
           <StyledButon buttonType="secondary" onClick={handleImport}>
             Import a Zone
           </StyledButon>
         }
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
-        entity="Domain"
         onButtonClick={navigateToCreate}
         title="Domains"
       />
@@ -349,13 +349,13 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         open={params.action === 'edit'}
       />
       <DeletionDialog
+        entity="domain"
         error={
           deleteError
             ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
                 .reason
             : undefined
         }
-        entity="domain"
         isFetching={isFetchingDomain}
         label={selectedDomain?.domain ?? 'Unknown'}
         loading={isDeleting}

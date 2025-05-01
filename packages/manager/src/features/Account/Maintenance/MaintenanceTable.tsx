@@ -1,15 +1,14 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from '@linode/queries';
 import { Box, Paper, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useFormattedDate } from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { Hidden } from '@linode/ui';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -97,12 +96,12 @@ export const MaintenanceTable = ({ type }: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={7}
           responsive={{
             2: { smDown: true },
             3: { xsDown: true },
             5: { mdDown: true },
           }}
-          columns={7}
           rows={1}
         />
       );

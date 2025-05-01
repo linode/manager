@@ -1,8 +1,9 @@
+import { Hidden } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
-import { Hidden } from '@linode/ui';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -23,7 +24,6 @@ import {
 } from './EventsLanding.styles';
 
 import type { Filter } from '@linode/api-v4';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).

@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography, fadeIn } from '@linode/ui';
+import { Box, Button, fadeIn, TextField, Typography } from '@linode/ui';
 import Edit from '@mui/icons-material/Edit';
 import { styled } from '@mui/material/styles';
 

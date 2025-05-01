@@ -4,6 +4,7 @@ import {
   useSubnetsQuery,
 } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
   useLocation,
@@ -16,7 +17,6 @@ import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from '@linode/ui';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

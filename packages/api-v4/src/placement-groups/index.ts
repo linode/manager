@@ -1,3 +1,3 @@
-export * from './types';
-
 export * from './placement-groups';
+
+export * from './types';

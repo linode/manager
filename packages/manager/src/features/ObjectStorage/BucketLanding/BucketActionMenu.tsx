@@ -1,8 +1,8 @@
+import { Hidden } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from '@linode/ui';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -34,16 +34,16 @@ export const BucketActionMenu = (props: BucketActionMenuProps) => {
     <StyledRootContainer>
       <Hidden mdDown>
         <InlineMenuAction
+          actionText="Details"
           onClick={() => {
             props.onDetails();
           }}
-          actionText="Details"
         />
         <InlineMenuAction
+          actionText="Delete"
           onClick={() => {
             props.onRemove();
           }}
-          actionText="Delete"
         />
       </Hidden>
       <Hidden mdUp>

@@ -1,5 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import {
   getRegionsByRegionId,
   isFeatureEnabledV2,
@@ -8,7 +9,6 @@ import {
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from '@linode/ui';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';

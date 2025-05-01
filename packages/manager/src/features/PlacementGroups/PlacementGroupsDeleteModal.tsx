@@ -97,14 +97,14 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={isDisabled}
+      disableTypeToConfirmSubmit={isDisabled}
       entity={{
         action: 'deletion',
         name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
       }}
-      disableTypeToConfirmInput={isDisabled}
-      disableTypeToConfirmSubmit={isDisabled}
       expand
       isFetching={isFetching}
       label="Placement Group"
@@ -139,19 +139,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             </List>
           </Notice>
           <RemovableSelectionsList
-            RemoveButton={(props: ButtonProps) => (
-              <Button
-                {...props}
-                sx={(theme) => ({
-                  font: theme.font.normal,
-                  fontSize: '0.875rem',
-                })}
-                disabled={disableUnassignButton || props.disabled}
-                variant="text"
-              >
-                Unassign
-              </Button>
-            )}
             disableItemsOnRemove
             hasEncounteredMutationError={Boolean(unassignLinodeError)}
             headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup?.label}`}
@@ -159,6 +146,19 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             maxWidth={540}
             noDataText="No Linodes assigned to this Placement Group."
             onRemove={handleUnassignLinode}
+            RemoveButton={(props: ButtonProps) => (
+              <Button
+                {...props}
+                disabled={disableUnassignButton || props.disabled}
+                sx={(theme) => ({
+                  font: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                variant="text"
+              >
+                Unassign
+              </Button>
+            )}
             selectionData={assignedLinodes ?? []}
             showLoadingIndicatorOnRemove
             sx={{ mb: 3, mt: 1 }}

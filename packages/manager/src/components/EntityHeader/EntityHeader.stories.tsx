@@ -1,9 +1,9 @@
 import { Box, Button } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from '@linode/ui';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
 import { Link } from '../Link';
@@ -58,6 +58,10 @@ export const Default: Story = {
                 window: 'W0',
               },
             }}
+            linodeId={12434}
+            linodeLabel="linode-001"
+            linodeRegion="us-east"
+            linodeStatus="running"
             linodeType={{
               accelerated_devices: 0,
               addons: {
@@ -96,10 +100,6 @@ export const Default: Story = {
               transfer: 2000,
               vcpus: 1,
             }}
-            linodeId={12434}
-            linodeLabel="linode-001"
-            linodeRegion="us-east"
-            linodeStatus="running"
             onOpenDeleteDialog={action('onOpenDeleteDialog')}
             onOpenMigrateDialog={action('onOpenMigrateDialog')}
             onOpenPowerDialog={action('onOpenPowerDialog')}

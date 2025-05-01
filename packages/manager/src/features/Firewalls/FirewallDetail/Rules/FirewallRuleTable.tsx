@@ -1,9 +1,9 @@
 import {
+  closestCorners,
   DndContext,
   MouseSensor,
   PointerSensor,
   TouchSensor,
-  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -16,6 +16,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Box, Typography } from '@linode/ui';
 import { Autocomplete } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -23,7 +24,6 @@ import { prop, uniqBy } from 'ramda';
 import * as React from 'react';
 
 import Undo from 'src/assets/icons/undo.svg';
-import { Hidden } from '@linode/ui';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -238,14 +238,14 @@ export const FirewallRuleTable = (props: FirewallRuleTableProps) => {
                       aria-label={
                         thisRuleRow.label ?? `firewall rule ${thisRuleRow.id}`
                       }
-                      handleOpenRuleDrawerForEditing={
-                        handleOpenRuleDrawerForEditing
-                      }
                       aria-roledescription={screenReaderMessage}
                       aria-selected={false}
                       disabled={disabled}
                       handleCloneFirewallRule={handleCloneFirewallRule}
                       handleDeleteFirewallRule={handleDeleteFirewallRule}
+                      handleOpenRuleDrawerForEditing={
+                        handleOpenRuleDrawerForEditing
+                      }
                       handleUndo={handleUndo}
                       key={thisRuleRow.id}
                       {...thisRuleRow}
@@ -498,18 +498,18 @@ export const PolicyRow = React.memo((props: PolicyRowProps) => {
       <Box sx={sxBoxPolicyText}>{helperText}</Box>
       <Box sx={sxBoxPolicySelect}>
         <Autocomplete
-          textFieldProps={{
-            hideLabel: true,
-          }}
-          value={policyOptions.find(
-            (thisOption) => thisOption.value === policy
-          )}
           autoHighlight
           disableClearable
           disabled={disabled}
           label={`${category} policy`}
           onChange={(_, selected) => handlePolicyChange(selected?.value)}
           options={policyOptions}
+          textFieldProps={{
+            hideLabel: true,
+          }}
+          value={policyOptions.find(
+            (thisOption) => thisOption.value === policy
+          )}
         />
       </Box>
     </Box>
@@ -528,7 +528,6 @@ export const ConditionalError = React.memo((props: ConditionalErrorProps) => {
   const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {uniqueByFormField.map((thisError) => {
         if (formField !== thisError.formField || !thisError.reason) {
