@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -9,11 +10,11 @@ import {
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { readDownload } from 'support/util/downloads';
 import { getRegionById } from 'support/util/regions';
-import { regionFactory } from '@linode/utilities';
-import { mockGetRegions } from 'support/intercepts/regions';
+
 import {
   accountFactory,
   kubernetesClusterFactory,
@@ -22,8 +23,13 @@ import {
 
 import type { KubernetesCluster } from '@linode/api-v4';
 
+const mockRegion = regionFactory.build({
+  id: 'us-central',
+  label: 'Dallas, TX',
+  capabilities: ['Linodes', 'Disk Encryption'],
+});
 describe('LKE landing page', () => {
-  xit('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
+  it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
     mockAppendFeatureFlags({
       linodeDiskEncryption: false,
@@ -60,11 +66,6 @@ describe('LKE landing page', () => {
     const mockAccount = accountFactory.build({
       capabilities: ['Linodes', 'Disk Encryption'],
     });
-    const mockRegion = regionFactory.build({
-      id: 'us-central',
-      label: 'Dallas, TX',
-      capabilities: ['Linodes', 'Disk Encryption'],
-    });
     const mockClusters = kubernetesClusterFactory.buildList(3, {
       region: mockRegion.id,
     });
@@ -86,25 +87,28 @@ describe('LKE landing page', () => {
   /*
    * - Confirms that LKE clusters are listed on landing page.
    */
-  xit('lists LKE clusters', () => {
-    const mockClusters = kubernetesClusterFactory.buildList(10);
+  it('lists LKE clusters', () => {
+    const mockClusters = kubernetesClusterFactory.buildList(10, {
+      region: mockRegion.id,
+    });
     mockGetClusters(mockClusters).as('getClusters');
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       mockGetClusterPools(cluster.id, nodePoolFactory.buildList(3));
     });
 
+    mockGetRegions([mockRegion]).as('getRegions');
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait('@getClusters');
+    cy.wait(['@getClusters', '@getRegions']);
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       cy.findByText(cluster.label)
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(getRegionById(cluster.region).label).should(
-            'be.visible'
-          );
+          cy.findByText(
+            getRegionById(cluster.region, [mockRegion]).label
+          ).should('be.visible');
           cy.findByText(cluster.k8s_version).should('be.visible');
 
           ui.button
@@ -124,7 +128,7 @@ describe('LKE landing page', () => {
    * - Confirms that welcome page is shown when no LKE clusters exist.
    * - Confirms that core page elements (create button, guides, playlist, etc.) are present.
    */
-  xit('shows welcome page when there are no LKE clusters', () => {
+  it('shows welcome page when there are no LKE clusters', () => {
     mockGetClusters([]).as('getClusters');
     cy.visitWithLogin('/kubernetes/clusters');
     cy.wait('@getClusters');
@@ -146,7 +150,7 @@ describe('LKE landing page', () => {
    * - Confirms UI flow for Kubeconfig file downloading using mocked data.
    * - Confirms that downloaded Kubeconfig contains expected content.
    */
-  xit('can download kubeconfig', () => {
+  it('can download kubeconfig', () => {
     const mockCluster = kubernetesClusterFactory.build();
     const mockClusterNodePools = nodePoolFactory.buildList(2);
     const mockKubeconfigFilename = `${mockCluster.label}-kubeconfig.yaml`;
@@ -181,7 +185,7 @@ describe('LKE landing page', () => {
     readDownload(mockKubeconfigFilename).should('eq', mockKubeconfigContents);
   });
 
-  xit('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
+  it('does not show an Upgrade chip when there is no new kubernetes standard version', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
@@ -201,7 +205,7 @@ describe('LKE landing page', () => {
     cy.findByText('UPGRADE').should('not.exist');
   });
 
-  xit('does not show an Upgrade chip when there is no new kubernetes enterprise version', () => {
+  it('does not show an Upgrade chip when there is no new kubernetes enterprise version', () => {
     const oldVersion = '1.31.1+lke1';
     const newVersion = '1.32.1+lke2';
 
@@ -236,7 +240,7 @@ describe('LKE landing page', () => {
     cy.findByText('UPGRADE').should('not.exist');
   });
 
-  xit('can upgrade the standard kubernetes version from the landing page', () => {
+  it('can upgrade the standard kubernetes version from the landing page', () => {
     const oldVersion = '1.25';
     const newVersion = '1.26';
 
@@ -290,7 +294,7 @@ describe('LKE landing page', () => {
     cy.findByText(newVersion).should('be.visible');
   });
 
-  xit('can upgrade the enterprise kubernetes version from the landing page', () => {
+  it('can upgrade the enterprise kubernetes version from the landing page', () => {
     const oldVersion = '1.31.1+lke1';
     const newVersion = '1.32.1+lke2';
 
