@@ -240,17 +240,30 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
   return useMutation<UpgradeInterfaceData, APIError[], UpgradeInterfacePayload>(
     {
       mutationFn: (data) => upgradeToLinodeInterface(linodeId, data),
-      onSuccess() {
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId).queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-        });
+      onSuccess(upgradeData) {
+        // only invalidate queries if this is an actual upgrade, not a dry run
+        if (upgradeData.dry_run === false) {
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId).queryKey,
+          });
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+          });
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId)._ctx.firewalls.queryKey,
+          });
 
-        // queryClient.invalidateQueries({
-        //   queryKey: linodeQueries.linode(linodeId)._ctx.firewalls.queryKey,
-        // });
+          // Simlar to deleting the interface - because we don't easily know the interface's Firewall here,
+          // we'll just invalidate all firewall queries.
+          // If this ever needs to be optimized, we can fetch the interface's firewalls before deletion,
+          // and do a more granular invalidation knowing the firewall ID.
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewall._def,
+          });
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+        }
       },
     },
   );
