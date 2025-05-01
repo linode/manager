@@ -32,11 +32,13 @@ export const Actions = () => {
   const [
     legacyFirewallId,
     firstLinodeInterfaceFirewallId,
+    firstLinodeInterfaceType,
     interfaceGeneration,
   ] = useWatch({
     name: [
       'firewall_id',
       'linodeInterfaces.0.firewall_id',
+      'linodeInterfaces.0.purpose',
       'interface_generation',
     ],
     control,
@@ -48,7 +50,9 @@ export const Actions = () => {
       : legacyFirewallId;
 
   const userNeedsToTakeActionAboutInternalFirewallPolicy =
-    'firewallOverride' in formState.errors && !firewallId;
+    interfaceGeneration === 'linode' && firstLinodeInterfaceType === 'vlan'
+      ? false
+      : 'firewallOverride' in formState.errors && !firewallId;
 
   const disableSubmitButton =
     isLinodeCreateRestricted ||

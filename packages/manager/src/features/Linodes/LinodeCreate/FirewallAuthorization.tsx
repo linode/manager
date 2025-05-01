@@ -20,15 +20,24 @@ export const FirewallAuthorization = () => {
   const [
     legacyFirewallId,
     firstLinodeInterfaceFirewallId,
+    firstLinodeInterfaceType,
     interfaceGeneration,
   ] = useWatch({
     name: [
       'firewall_id',
       'linodeInterfaces.0.firewall_id',
+      'linodeInterfaces.0.purpose',
       'interface_generation',
     ],
     control,
   });
+
+  // Special case ❗️
+  // VLAN interfaces do not support Firewalls, so we hide this notice
+  // if that's what the user selects.
+  if (firstLinodeInterfaceType === 'vlan' && interfaceGeneration === 'linode') {
+    return null;
+  }
 
   const firewallId =
     interfaceGeneration === 'linode'
