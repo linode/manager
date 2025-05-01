@@ -69,7 +69,6 @@ export const VPCEditDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title="Edit VPC"

@@ -60,7 +60,6 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Clone Domain"

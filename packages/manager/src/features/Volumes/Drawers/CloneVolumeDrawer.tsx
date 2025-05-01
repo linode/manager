@@ -97,7 +97,6 @@ export const CloneVolumeDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Clone Volume"

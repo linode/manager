@@ -69,7 +69,6 @@ export const ManageTagsDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Manage Volume Tags"

@@ -76,7 +76,6 @@ export const SubnetEditDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title="Edit Subnet"

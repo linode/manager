@@ -124,7 +124,6 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Domain"

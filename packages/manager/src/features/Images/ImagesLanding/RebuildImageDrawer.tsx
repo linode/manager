@@ -56,7 +56,6 @@ export const RebuildImageDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"

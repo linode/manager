@@ -18,7 +18,6 @@ export const VolumeDetailsDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Volume Configuration"

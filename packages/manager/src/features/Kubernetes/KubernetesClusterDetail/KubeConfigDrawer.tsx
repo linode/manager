@@ -25,7 +25,6 @@ export const KubeConfigDrawer = (props: Props) => {
     <Drawer
       error={failureReason}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={closeDrawer}
       open={open}
       title="View Kubeconfig"

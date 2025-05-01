@@ -172,7 +172,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={() => {
         setSelectedNodebalancers([]);
         setLocalError(undefined);

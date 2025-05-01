@@ -102,7 +102,6 @@ export const AttachVolumeDrawer = React.memo((props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Attach Volume ${volume?.label}`}

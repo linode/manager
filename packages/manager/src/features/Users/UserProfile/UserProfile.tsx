@@ -1,15 +1,9 @@
 import { useAccountUser } from '@linode/queries';
-import { CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { CircleProgress, ErrorState, NotFound, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-<<<<<<< HEAD
-import { NotFound } from 'src/components/NotFound';
-=======
-import { NotFound } from '@linode/ui';
-import { useAccountUser } from '@linode/queries';
->>>>>>> 1f4f4ab7ff (move NotFound component to UI plackage)
 
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';

@@ -81,7 +81,6 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={() => navigate({ to: '/managed/ssh-access' })}
       open={isOpen}
       title={title}

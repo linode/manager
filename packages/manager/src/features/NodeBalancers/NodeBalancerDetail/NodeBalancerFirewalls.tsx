@@ -155,7 +155,6 @@ export const NodeBalancerFirewalls = (props: Props) => {
         }
       />
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={() =>
           navigate({
             params: { id: String(nodeBalancerId) },

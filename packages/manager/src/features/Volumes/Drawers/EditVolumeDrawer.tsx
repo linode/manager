@@ -84,7 +84,6 @@ export const EditVolumeDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Volume"

@@ -29,7 +29,6 @@ export const BillingContactDrawer = (props: Props) => {
   return (
     <Drawer
       className={classes.drawer}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Billing Contact Info"
