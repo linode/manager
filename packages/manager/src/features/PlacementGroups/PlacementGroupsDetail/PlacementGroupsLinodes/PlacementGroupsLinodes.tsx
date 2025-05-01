@@ -139,7 +139,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       <Grid
         sx={{
           justifyContent: 'space-between',
@@ -153,7 +153,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
           }}
           sx={{
             flexGrow: 1,
-            mb: 1,
           }}
         >
           <DebouncedSearchTextField
