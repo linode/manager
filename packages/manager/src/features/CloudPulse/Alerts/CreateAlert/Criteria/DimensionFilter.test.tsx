@@ -143,35 +143,34 @@ describe('DimensionFilterField', () => {
       operator: 'eq',
       value: 'free',
     };
-    const {
-      getByText,, findByText
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <DimensionFilters
-          dataFieldDisabled={true}
-          dimensionOptions={mockData[0].dimensions}
-          name={`rule_criteria.rules.${0}.dimension_filters`}
-        />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          rule_criteria: {
-            rules: [
-              {
-                ...mockData[0],
-                dimension_filters: Array(5).fill(dimensionFilterValue),
-              },
-            ],
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: (
+          <DimensionFilters
+            dataFieldDisabled={true}
+            dimensionOptions={mockData[0].dimensions}
+            name={`rule_criteria.rules.${0}.dimension_filters`}
+          />
+        ),
+        useFormOptions: {
+          defaultValues: {
+            rule_criteria: {
+              rules: [
+                {
+                  ...mockData[0],
+                  dimension_filters: Array(5).fill(dimensionFilterValue),
+                },
+              ],
+            },
+            serviceType: 'linode',
           },
-          serviceType: 'linode',
         },
-      },
-    });
+      });
     const addButton = screen.getByRole('button', {
       name: dimensionFilterButton,
     });
     expect(addButton).toBeDisabled();
-    userEvent.hover(addButton);
+    await userEvent.hover(addButton);
     await findByText('You can add up to 5 dimension filters.');
   });
 });

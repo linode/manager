@@ -1,5 +1,5 @@
 import { capitalize } from '@linode/utilities';
-import { waitFor, within } from '@testing-library/react';
+import { within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -80,24 +80,22 @@ describe('Channel Listing component', () => {
   it('should show tooltip when the max limit of notification channels is reached', async () => {
     // Mock the `notificationChannelWatcher` length to simulate the max limit
     const mockMaxLimit = 5;
-    const {
-      getByRole,
-      getByText,, findByText
-    } = renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: <AddChannelListing name="channel_ids" />,
-      useFormOptions: {
-        defaultValues: {
-          channel_ids: Array(mockMaxLimit).fill(mockNotificationData[0].id), // simulate 5 channels
+    const { getByRole, findByText } =
+      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+        component: <AddChannelListing name="channel_ids" />,
+        useFormOptions: {
+          defaultValues: {
+            channel_ids: Array(mockMaxLimit).fill(mockNotificationData[0].id), // simulate 5 channels
+          },
         },
-      },
-    });
+      });
 
     const addButton = getByRole('button', {
       name: 'Add notification channel',
     });
 
     expect(addButton).toBeDisabled();
-    userEvent.hover(addButton);
+    await userEvent.hover(addButton);
     await findByText('You can add up to 5 notification channels.');
   });
 });
