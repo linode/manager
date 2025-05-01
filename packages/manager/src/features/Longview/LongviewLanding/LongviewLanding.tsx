@@ -138,6 +138,7 @@ export const LongviewLanding = (props: LongviewProps) => {
           }),
         }}
         createButtonText="Add Client"
+        className="landing-header-mb-4"
         disabledCreateButton={isLongviewCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
         entity="Client"
