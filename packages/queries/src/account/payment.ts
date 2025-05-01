@@ -58,7 +58,7 @@ export const useMakeDefaultPaymentMethodMutation = (id: number) => {
 export const useAddPaymentMethodMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{}, APIError[], PaymentMethodPayload>({
+  return useMutation<Record<string, never>, APIError[], PaymentMethodPayload>({
     mutationFn: addPaymentMethod,
     onSuccess() {
       queryClient.invalidateQueries({
