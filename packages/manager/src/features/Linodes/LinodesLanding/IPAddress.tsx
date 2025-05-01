@@ -1,10 +1,9 @@
+import { usePreferences } from '@linode/queries';
 import { tail } from '@linode/utilities';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { ShowMore } from 'src/components/ShowMore/ShowMore';
-import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
-import { usePreferences } from '@linode/queries';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
 import {
@@ -74,9 +73,8 @@ export const IPAddress = (props: IPAddressProps) => {
 
   const copiedTimeout: null | number = null;
 
-  const [isIpTooltipHovered, setIsIpTooltipHovered] = React.useState<boolean>(
-    false
-  );
+  const [isIpTooltipHovered, setIsIpTooltipHovered] =
+    React.useState<boolean>(false);
 
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -94,10 +92,6 @@ export const IPAddress = (props: IPAddressProps) => {
   const handleMouseLeave = () => setIsIpTooltipHovered(false);
 
   const renderCopyIcon = (ip: string) => {
-    if (disabled) {
-      return PublicIPAddressesTooltip;
-    }
-
     return (
       <StyledIpLinkDiv data-qa-copy-ip>
         <StyledCopyTooltip

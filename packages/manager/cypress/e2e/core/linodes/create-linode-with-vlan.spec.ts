@@ -195,9 +195,6 @@ describe('Create Linode with VLANs', () => {
    * - Confirms that VLAN fields are disabled before and after selecting a region.
    */
   it('cannot assign VLANs in regions without capability', () => {
-    const availabilityNotice =
-      'VLANs are currently available in select regions.';
-
     const nonVlanRegion = regionFactory.build({
       capabilities: ['Linodes'],
     });
@@ -209,6 +206,8 @@ describe('Create Linode with VLANs', () => {
     mockGetRegions([nonVlanRegion, vlanRegion]);
     cy.visitWithLogin('/linodes/create');
 
+    linodeCreatePage.selectRegionById(nonVlanRegion.id);
+
     // Expand VLAN accordion, confirm VLAN availability notice is displayed and
     // that VLAN fields are disabled while no region is selected.
     ui.accordionHeading.findByTitle('VLAN').click();
@@ -216,7 +215,9 @@ describe('Create Linode with VLANs', () => {
       .findByTitle('VLAN')
       .scrollIntoView()
       .within(() => {
-        cy.contains(availabilityNotice).should('be.visible');
+        cy.findByText('VLAN is not available in the selected region.', {
+          exact: false,
+        }).should('be.visible');
         cy.findByLabelText('VLAN').should('be.disabled');
         cy.findByLabelText(/IPAM Address/).should('be.disabled');
       });

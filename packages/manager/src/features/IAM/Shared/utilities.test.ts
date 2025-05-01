@@ -9,11 +9,13 @@ import {
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
+  mergeAssignedRolesIntoExistingRoles,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { ExtendedRoleMap } from './types';
+import type { ExtendedRoleView } from './types';
+import type { AssignNewRoleFormValues } from './utilities';
 import type { EntityAccess } from '@linode/api-v4';
 
 const accountAccess = 'account_access';
@@ -68,6 +70,64 @@ const userPermissions = userPermissionsFactory.build({
     },
   ],
 });
+
+const mockAssignRolesFormValues: AssignNewRoleFormValues = {
+  roles: [
+    {
+      entities: null,
+      role: {
+        access: 'account_access',
+        entity_type: 'account',
+        label: 'account_viewer',
+        value: 'account_viewer',
+      },
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'firewall',
+        label: 'firewall_viewer',
+        value: 'firewall_viewer',
+      },
+      entities: [
+        {
+          label: 'firewall-1',
+          value: 12365433,
+        },
+      ],
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'linode',
+        label: 'linode_viewer',
+        value: 'linode_viewer',
+      },
+      entities: [
+        {
+          label: 'linode-12345678',
+          value: 12345678,
+        },
+      ],
+    },
+  ],
+};
+
+const mockMergedRoles = {
+  account_access: ['account_linode_admin', 'linode_creator', 'account_viewer'],
+  entity_access: [
+    {
+      id: 12345678,
+      roles: ['linode_contributor', 'linode_viewer'],
+      type: 'linode',
+    },
+    {
+      id: 12365433,
+      roles: ['firewall_viewer'],
+      type: 'firewall',
+    },
+  ],
+};
 
 describe('getAllRoles', () => {
   it('should return a list of roles for each access type', () => {
@@ -575,7 +635,7 @@ describe('getFormattedEntityType', () => {
 
 describe('getFacadeRoleDescription', () => {
   it('returns description for account_access with non-paid entity types', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'account_access',
       description: 'stackscript creator',
       entity_ids: null,
@@ -592,7 +652,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for account_access with paid entity types', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'account_access',
       description: 'linode creator',
       entity_ids: null,
@@ -609,7 +669,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for entity_access with admin role', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'entity_access',
       description: 'stackscript admin',
       entity_ids: [1],
@@ -627,7 +687,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for entity_access with viewer role', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'entity_access',
       description: 'stackscript viewer',
       entity_ids: [1],
@@ -642,5 +702,42 @@ describe('getFacadeRoleDescription', () => {
     expect(result).toBe(
       `This role grants the same access as the legacy Read-Only special permission for the StackScripts attached to this role.`
     );
+  });
+});
+
+describe('mergeAssignedRolesIntoExistingRoles', () => {
+  it('should merge new role form selections into existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(
+        mockAssignRolesFormValues,
+        userPermissions
+      )
+    ).toEqual(mockMergedRoles);
+  });
+
+  it('should just return the existing roles if no selected form values passed in', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles({ roles: [] }, userPermissions)
+    ).toEqual(userPermissions);
+  });
+
+  it('should transform new role form selections into proper format even with no existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(mockAssignRolesFormValues, undefined)
+    ).toEqual({
+      account_access: ['account_viewer'],
+      entity_access: [
+        {
+          id: 12365433,
+          roles: ['firewall_viewer'],
+          type: 'firewall',
+        },
+        {
+          id: 12345678,
+          roles: ['linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    });
   });
 });
