@@ -124,8 +124,8 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Domain"
@@ -200,18 +200,18 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
           </React.Fragment>
         )}
         <TagsInput
+          disabled={disabled}
           onChange={(tags) =>
             formik.setFieldValue(
               'tags',
               tags.map((tag) => tag.value)
             )
           }
+          tagError={errorMap.tags}
           value={
             formik.values?.tags?.map((tag) => ({ label: tag, value: tag })) ??
             []
           }
-          disabled={disabled}
-          tagError={errorMap.tags}
         />
         <ActionsPanel
           primaryButtonProps={{

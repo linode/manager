@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Typography, omittedProps } from '@linode/ui';
+import { Box, List, ListItem, omittedProps, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import type { RemovableSelectionsListProps } from './RemovableSelectionsList';

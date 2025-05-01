@@ -189,11 +189,11 @@ export const LinodeEntityDetailHeader = (
       <Box sx={sxBoxFlex}>
         <Hidden mdDown>
           <Button
+            buttonType="primary"
+            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             onClick={() =>
               handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
             }
-            buttonType="primary"
-            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             {isRunning ? 'Power Off' : 'Power On'}
@@ -207,11 +207,11 @@ export const LinodeEntityDetailHeader = (
             Reboot
           </Button>
           <Button
+            buttonType="primary"
+            disabled={isLinodesGrantReadOnly}
             onClick={() => {
               handleConsoleButtonClick(linodeId);
             }}
-            buttonType="primary"
-            disabled={isLinodesGrantReadOnly}
             sx={sxActionItem}
           >
             Launch LISH Console

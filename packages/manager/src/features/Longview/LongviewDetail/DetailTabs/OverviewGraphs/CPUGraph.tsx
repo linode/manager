@@ -49,6 +49,7 @@ export const CPUGraph = (props: GraphProps) => {
 
   return (
     <LongviewLineGraph
+      ariaLabel="CPU Usage Graph"
       data={[
         {
           backgroundColor: theme.graphs.cpu.system,
@@ -69,7 +70,6 @@ export const CPUGraph = (props: GraphProps) => {
           label: 'Wait',
         },
       ]}
-      ariaLabel="CPU Usage Graph"
       error={error}
       loading={loading}
       nativeLegend

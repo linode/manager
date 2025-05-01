@@ -19,7 +19,7 @@ import type { State as AuthState } from 'src/store/authentication';
 interface Props {
   onClose: () => void;
   open: boolean;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 interface HandleSwitchToChildAccountProps {
@@ -27,7 +27,7 @@ interface HandleSwitchToChildAccountProps {
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
@@ -146,12 +146,12 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              aria-label="parent-account-link"
+              disabled={isSubmitting}
               onClick={() => {
                 sendSwitchToParentAccountEvent();
                 handleSwitchToParentAccount();
               }}
-              aria-label="parent-account-link"
-              disabled={isSubmitting}
             >
               switch back to your account
             </StyledLinkButton>

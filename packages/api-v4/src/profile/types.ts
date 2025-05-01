@@ -2,55 +2,55 @@ import type { UserType } from '../account';
 
 export interface Referrals {
   code: string;
-  url: string;
-  total: number;
   completed: number;
-  pending: number;
   credit: number;
+  pending: number;
+  total: number;
+  url: string;
 }
 
-export type TPAProvider = 'password' | 'github' | 'google';
+export type TPAProvider = 'github' | 'google' | 'password';
 export interface Profile {
-  uid: number;
-  username: string;
-  email: string;
-  timezone: string;
-  email_notifications: boolean;
-  referrals: Referrals;
-  ip_whitelist_enabled: boolean;
-  lish_auth_method: 'password_keys' | 'keys_only' | 'disabled';
   authentication_type: TPAProvider;
   authorized_keys: string[];
-  two_factor_auth: boolean;
+  email: string;
+  email_notifications: boolean;
+  ip_whitelist_enabled: boolean;
+  lish_auth_method: 'disabled' | 'keys_only' | 'password_keys';
+  referrals: Referrals;
   restricted: boolean;
-  verified_phone_number: string | null;
+  timezone: string;
+  two_factor_auth: boolean;
+  uid: number;
   user_type: UserType;
+  username: string;
+  verified_phone_number: null | string;
 }
 
 export interface TokenRequest {
-  scopes?: string;
   expiry?: string;
   label: string;
+  scopes?: string;
 }
 
 export interface Token {
-  id: number;
-  scopes: string;
-  label: string;
   created: string;
-  token?: string;
-  expiry: string | null;
-  website?: string;
+  expiry: null | string;
+  id: number;
+  label: string;
+  scopes: string;
   thumbnail_url?: null | string;
+  token?: string;
+  website?: string;
 }
 
 export interface TrustedDevice {
   created: string;
+  expiry: string;
+  id: number;
   last_authenticated: string;
   last_remote_addr: string;
-  id: number;
   user_agent: string;
-  expiry: string;
 }
 
 export interface SSHKey {
@@ -61,18 +61,18 @@ export interface SSHKey {
 }
 
 export interface Secret {
-  secret: string;
   expiry: Date;
+  secret: string;
 }
 
 export type UserPreferences = Record<string, any>;
 
 export interface ProfileLogin {
-  id: number;
   datetime: string;
+  id: number;
   ip: string;
-  username: string;
   restricted: boolean;
+  username: string;
 }
 
 export type SecurityQuestions = Record<string, string>;
@@ -84,7 +84,7 @@ export interface VerifyVerificationCodePayload {
 export interface SecurityQuestion {
   id: number;
   question: string;
-  response: string | null;
+  response: null | string;
 }
 
 export interface SecurityQuestionsData {
@@ -99,6 +99,6 @@ export interface SecurityQuestionsPayload {
 }
 
 export interface SendPhoneVerificationCodePayload {
-  phone_number: string;
   iso_code: string;
+  phone_number: string;
 }

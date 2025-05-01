@@ -57,11 +57,11 @@ export const UserPermissionsEntitySection = React.memo(
       <Box key={entity} marginTop={`${theme.spacing(2)}`} paddingBottom="0">
         {showHeading && (
           <Typography
+            data-qa-permissions-header={entity}
             sx={{
               marginBottom: theme.spacing(2),
               marginTop: theme.spacing(3),
             }}
-            data-qa-permissions-header={entity}
             variant="h3"
           >
             {grantTypeMap[entity]}
@@ -81,11 +81,11 @@ export const UserPermissionsEntitySection = React.memo(
                 <FormControlLabel
                   control={
                     <Radio
+                      checked={entityIsAll(null)}
+                      data-qa-permission-header="None"
                       inputProps={{
                         'aria-label': `${entity}s, set-all-permissions-to-none`,
                       }}
-                      checked={entityIsAll(null)}
-                      data-qa-permission-header="None"
                       name={`${entity}-select-all`}
                       onChange={entitySetAllTo(entity, null)}
                       value="null"
@@ -98,11 +98,11 @@ export const UserPermissionsEntitySection = React.memo(
                 <FormControlLabel
                   control={
                     <Radio
+                      checked={entityIsAll('read_only')}
+                      data-qa-permission-header="Read Only"
                       inputProps={{
                         'aria-label': `${entity}s, set-all-permissions-to-read-only`,
                       }}
-                      checked={entityIsAll('read_only')}
-                      data-qa-permission-header="Read Only"
                       name={`${entity}-select-all`}
                       onChange={entitySetAllTo(entity, 'read_only')}
                       value="read_only"
@@ -115,11 +115,11 @@ export const UserPermissionsEntitySection = React.memo(
                 <FormControlLabel
                   control={
                     <Radio
+                      checked={entityIsAll('read_write')}
+                      data-qa-permission-header="Read-Write"
                       inputProps={{
                         'aria-label': `${entity}s, set-all-permissions-to-read-write`,
                       }}
-                      checked={entityIsAll('read_write')}
-                      data-qa-permission-header="Read-Write"
                       name={`${entity}-select-all`}
                       onChange={entitySetAllTo(entity, 'read_write')}
                       value="read_write"
@@ -149,39 +149,39 @@ export const UserPermissionsEntitySection = React.memo(
                   </TableCell>
                   <TableCell padding="checkbox">
                     <Radio
+                      checked={grant.permissions === null}
+                      data-qa-permission="None"
+                      edge="start"
                       inputProps={{
                         'aria-label': `Disallow access for ${grant.label}`,
                         name: `${grant.label}-permissions`,
                       }}
-                      checked={grant.permissions === null}
-                      data-qa-permission="None"
-                      edge="start"
                       onChange={setGrantTo(entity, idx, null)}
                       value="null"
                     />
                   </TableCell>
                   <TableCell padding="checkbox">
                     <Radio
+                      checked={grant.permissions === 'read_only'}
+                      data-qa-permission="Read Only"
+                      edge="start"
                       inputProps={{
                         'aria-label': `Allow read-only access for ${grant.label}`,
                         name: `${grant.label}-permissions`,
                       }}
-                      checked={grant.permissions === 'read_only'}
-                      data-qa-permission="Read Only"
-                      edge="start"
                       onChange={setGrantTo(entity, idx, 'read_only')}
                       value="read_only"
                     />
                   </TableCell>
                   <TableCell padding="checkbox">
                     <Radio
+                      checked={grant.permissions === 'read_write'}
+                      data-qa-permission="Read-Write"
+                      edge="start"
                       inputProps={{
                         'aria-label': `Allow read-write access for ${grant.label}`,
                         name: `${grant.label}-permissions`,
                       }}
-                      checked={grant.permissions === 'read_write'}
-                      data-qa-permission="Read-Write"
-                      edge="start"
                       onChange={setGrantTo(entity, idx, 'read_write')}
                       value="read_write"
                     />

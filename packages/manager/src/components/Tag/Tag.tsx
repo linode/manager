@@ -67,6 +67,11 @@ export const Tag = (props: TagProps) => {
   return (
     <StyledChip
       {...props}
+      aria-label={`Search for Tag '${label}'`}
+      className={className}
+      clickable
+      component={component}
+      data-qa-tag={label}
       deleteIcon={
         chipProps.onDelete ? (
           <StyledDeleteButton
@@ -78,11 +83,6 @@ export const Tag = (props: TagProps) => {
           </StyledDeleteButton>
         ) : undefined
       }
-      aria-label={`Search for Tag '${label}'`}
-      className={className}
-      clickable
-      component={component}
-      data-qa-tag={label}
       label={_label}
       onClick={handleClick}
       role="button"

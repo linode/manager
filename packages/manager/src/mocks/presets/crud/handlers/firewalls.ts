@@ -246,7 +246,7 @@ export const updateFirewall = (mockState: MockState) => [
 export const deleteFirewall = (mockState: MockState) => [
   http.delete(
     '*/v4beta/networking/firewalls/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const firewall = await mswDB.get('firewalls', id);
 
@@ -399,7 +399,7 @@ export const createFirewallDevice = (mockState: MockState) => [
 export const deleteFirewallDevice = (mockState: MockState) => [
   http.delete(
     '*/v4beta/networking/firewalls/:id/devices/:deviceId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const firewallId = Number(params.id);
       const deviceId = Number(params.deviceId);
       const firewall = await mswDB.get('firewalls', firewallId);

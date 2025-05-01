@@ -48,18 +48,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
     nodePool?.id ?? -1
   );
 
-  const {
-    control,
-    formState,
-    setValue,
-    watch,
-    ...form
-  } = useForm<LabelsAndTaintsFormFields>({
-    defaultValues: {
-      labels: undefined,
-      taints: undefined,
-    },
-  });
+  const { control, formState, setValue, watch, ...form } =
+    useForm<LabelsAndTaintsFormFields>({
+      defaultValues: {
+        labels: undefined,
+        taints: undefined,
+      },
+    });
 
   React.useEffect(() => {
     if (!nodePool) {
@@ -166,13 +161,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
           </Typography>
           <LabelTable />
           <Button
+            buttonType="outlined"
+            disabled={shouldShowLabelForm}
             onClick={() => {
               {
                 setShouldShowLabelForm(true);
               }
             }}
-            buttonType="outlined"
-            disabled={shouldShowLabelForm}
           >
             Add Label
           </Button>
@@ -200,13 +195,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
           </Typography>
           <TaintTable />
           <Button
+            buttonType="outlined"
+            disabled={shouldShowTaintForm}
             onClick={() => {
               {
                 setShouldShowTaintForm(true);
               }
             }}
-            buttonType="outlined"
-            disabled={shouldShowTaintForm}
           >
             Add Taint
           </Button>

@@ -88,20 +88,14 @@ export const AccessControls = (props: Props) => {
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
-  const [
-    accessControlToBeRemoved,
-    setAccessControlToBeRemoved,
-  ] = React.useState<null | string>(null);
+  const [accessControlToBeRemoved, setAccessControlToBeRemoved] =
+    React.useState<null | string>(null);
 
-  const [
-    addAccessControlDrawerOpen,
-    setAddAccessControlDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [addAccessControlDrawerOpen, setAddAccessControlDrawerOpen] =
+    React.useState<boolean>(false);
 
-  const {
-    isPending: databaseUpdating,
-    mutateAsync: updateDatabase,
-  } = useDatabaseMutation(database.engine, database.id);
+  const { isPending: databaseUpdating, mutateAsync: updateDatabase } =
+    useDatabaseMutation(database.engine, database.id);
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);

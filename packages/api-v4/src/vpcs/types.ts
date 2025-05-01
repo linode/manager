@@ -7,27 +7,27 @@ interface CreateVPCIPv6 extends VPCIPv6 {
 }
 
 export interface VPC {
-  id: number;
-  label: string;
+  created: string;
   description: string;
+  id: number;
+  ipv6?: VPCIPv6[];
+  label: string;
   region: string;
   subnets: Subnet[];
-  created: string;
   updated: string;
-  ipv6?: VPCIPv6[];
 }
 
 export interface CreateVPCPayload {
-  label: string;
   description?: string;
-  region: string;
   ipv6?: CreateVPCIPv6[];
+  label: string;
+  region: string;
   subnets?: CreateSubnetPayload[];
 }
 
 export interface UpdateVPCPayload {
-  label?: string;
   description?: string;
+  label?: string;
 }
 
 interface VPCIPv6Subnet {
@@ -35,15 +35,15 @@ interface VPCIPv6Subnet {
 }
 
 export interface CreateSubnetPayload {
-  label: string;
   ipv4?: string;
   ipv6?: VPCIPv6Subnet[];
+  label: string;
 }
 
 export interface Subnet extends CreateSubnetPayload {
+  created: string;
   id: number;
   linodes: SubnetAssignedLinodeData[];
-  created: string;
   updated: string;
 }
 
@@ -52,9 +52,9 @@ export interface ModifySubnetPayload {
 }
 
 export interface SubnetLinodeInterfaceData {
-  id: number;
   active: boolean;
-  config_id: number | null;
+  config_id: null | number;
+  id: number;
 }
 
 export interface SubnetAssignedLinodeData {
@@ -64,19 +64,19 @@ export interface SubnetAssignedLinodeData {
 
 export interface VPCIP {
   active: boolean;
-  address: string | null;
-  address_range: string | null;
-  ipv6_range: string | null;
-  ipv6_is_public: boolean | null;
+  address: null | string;
+  address_range: null | string;
+  config_id: null | number;
+  gateway: null | string;
+  interface_id: number;
   ipv6_addresses: {
     slaac_address: string;
   }[];
-  config_id: number | null;
-  gateway: string | null;
-  interface_id: number;
+  ipv6_is_public: boolean | null;
+  ipv6_range: null | string;
   linode_id: number;
   nat_1_1: string;
-  prefix: number | null;
+  prefix: null | number;
   region: string;
   subnet_id: number;
   subnet_mask: string;

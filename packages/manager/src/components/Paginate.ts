@@ -5,25 +5,25 @@ import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
 
-export const createDisplayPage = <T>(page: number, pageSize: number) => (
-  list: T[]
-): T[] => {
-  const count = list.length;
-  if (count === 0) {
-    return list;
-  }
+export const createDisplayPage =
+  <T>(page: number, pageSize: number) =>
+  (list: T[]): T[] => {
+    const count = list.length;
+    if (count === 0) {
+      return list;
+    }
 
-  if (pageSize === Infinity) {
-    return list;
-  }
+    if (pageSize === Infinity) {
+      return list;
+    }
 
-  const pages = Math.ceil(count / pageSize);
-  const currentPage = clamp(1, pages, page);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize - 1, count - 1);
+    const pages = Math.ceil(count / pageSize);
+    const currentPage = clamp(1, pages, page);
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = Math.min(startIndex + pageSize - 1, count - 1);
 
-  return slice(startIndex, endIndex + 1, list);
-};
+    return slice(startIndex, endIndex + 1, list);
+  };
 
 export interface PaginationProps<T> extends State {
   count: number;
@@ -49,6 +49,11 @@ interface Props<T> {
 }
 
 export default class Paginate<T> extends React.Component<Props<T>, State> {
+  state: State = {
+    page: this.props.page || 1,
+    pageSize: this.props.pageSize || storage.pageSize.get() || 25,
+  };
+
   handlePageChange = (page: number) => {
     if (this.props.shouldScroll ?? true) {
       const { scrollToRef } = this.props;
@@ -68,11 +73,6 @@ export default class Paginate<T> extends React.Component<Props<T>, State> {
     } else {
       storage.pageSize.set(pageSize);
     }
-  };
-
-  state: State = {
-    page: this.props.page || 1,
-    pageSize: this.props.pageSize || storage.pageSize.get() || 25,
   };
 
   render() {

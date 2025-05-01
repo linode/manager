@@ -30,7 +30,7 @@ describe('omittedProps utility', () => {
         color="red"
         data-testid="styled-component"
         extraProp="extra"
-      />
+      />,
     );
 
     const component = screen.getByTestId('styled-component');

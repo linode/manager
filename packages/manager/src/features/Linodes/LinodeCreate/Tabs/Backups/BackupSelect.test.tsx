@@ -1,7 +1,7 @@
 import { backupFactory, linodeFactory } from '@linode/utilities';
 import React from 'react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { BackupSelect } from './BackupSelect';
@@ -36,15 +36,13 @@ describe('BackupSelect', () => {
       })
     );
 
-    const {
-      findAllByText,
-      getByText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <BackupSelect />,
-      useFormOptions: {
-        defaultValues: { linode: linodeFactory.build({ id: 2 }) },
-      },
-    });
+    const { findAllByText, getByText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <BackupSelect />,
+        useFormOptions: {
+          defaultValues: { linode: linodeFactory.build({ id: 2 }) },
+        },
+      });
 
     const automaticBackups = await findAllByText('Automatic');
 
