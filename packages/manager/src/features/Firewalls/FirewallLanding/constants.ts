@@ -10,10 +10,7 @@ export const READ_ONLY_DEVICES_HIDDEN_MESSAGE =
 export const NODEBALANCER_HELPER_TEXT =
   "Only the firewall's inbound rules apply to NodeBalancers.";
 
-export const STRENGTHEN_TEMPLATE_RULES =
-  'It is recommended to further strengthen these rules by limiting the allowed IPv4 and IPv6 ranges.';
-
 export const NO_PERMISSIONS_TOOLTIP_TEXT =
   "You don't have permissions to modify this Firewall.";
 export const DEFAULT_FIREWALL_TOOLTIP_TEXT =
-  'This firewall is used as an interface default and cannot be modified. Change the firewall default assignment in Account Settings to modify the firewall.';
+  "This firewall is currently set as a default and can't be deleted. To delete it, first unassign it from the associated Linode, Linode Interface, or NodeBalancer.";
