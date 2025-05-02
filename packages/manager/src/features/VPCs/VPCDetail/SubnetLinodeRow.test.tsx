@@ -82,7 +82,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, getByText } =
+    const { getAllByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -122,9 +122,8 @@ describe('SubnetLinodeRow', () => {
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
-    waitFor(() => {
-      getByText(mockFirewall0);
-    });
+    const firewall = await findByText(mockFirewall0);
+    expect(firewall).toBeVisible();
   });
 
   it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
@@ -146,7 +145,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, getByText } =
+    const { getAllByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -174,9 +173,8 @@ describe('SubnetLinodeRow', () => {
 
     getAllByText('10.0.0.0');
     getAllByText('10.0.0.1');
-    waitFor(() => {
-      getByText(mockFirewall0);
-    });
+    const firewall = await findByText(mockFirewall0);
+    expect(firewall).toBeVisible();
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
