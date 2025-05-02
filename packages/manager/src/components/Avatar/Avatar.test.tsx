@@ -1,6 +1,6 @@
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories/profile';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Avatar } from './Avatar';
@@ -13,8 +13,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -31,7 +31,7 @@ describe('Avatar', () => {
     const avatarStyles = getComputedStyle(avatar);
 
     expect(getByTestId('avatar-letter')).toHaveTextContent('M');
-    expect(avatarStyles.backgroundColor).toBe('rgb(1, 116, 188)'); // theme.color.primary.dark (#0174bc)
+    expect(avatarStyles.backgroundColor).toBe('rgb(214, 214, 221)');
   });
 
   it('should render a background color from props', () => {

@@ -41,6 +41,7 @@ export interface NodeBalancerConfigPanelProps {
   algorithm: Algorithm;
   checkBody: string;
   checkPassive: boolean;
+  udpCheckPort: number;
 
   checkPath: string;
   configIdx: number;
@@ -64,6 +65,8 @@ export interface NodeBalancerConfigPanelProps {
 
   onCheckPassiveChange: (v: boolean) => void;
   onCheckPathChange: (v: string) => void;
+
+  onUdpCheckPortChange: (v: number) => void;
 
   onDelete?: any;
   onHealthCheckAttemptsChange: (v: number | string) => void;

@@ -28,6 +28,7 @@ interface TabbedPanelProps {
   initTab?: number;
   innerClass?: string;
   noPadding?: boolean;
+  notice?: JSX.Element;
   rootClass?: string;
   sx?: SxProps<Theme>;
   tabDisabledMessage?: string;
@@ -44,6 +45,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
     header,
     initTab,
     innerClass,
+    notice,
     rootClass,
     sx,
     tabs,
@@ -67,7 +69,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
   };
 
   useEffect(() => {
-    if (tabIndex !== initTab) {
+    if (tabIndex === undefined && initTab !== undefined) {
       setTabIndex(initTab);
     }
   }, [initTab]);
@@ -93,6 +95,7 @@ const TabbedPanel = React.memo((props: TabbedPanelProps) => {
           </Notice>
         )}
         {copy && <StyledTypography data-qa-tp-copy>{copy}</StyledTypography>}
+        {notice}
         <StyledTabs index={tabIndex} onChange={tabChangeHandler}>
           <StyledTabList>
             {tabs.map((tab, idx) => (

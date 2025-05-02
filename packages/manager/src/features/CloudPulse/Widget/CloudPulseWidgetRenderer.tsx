@@ -19,17 +19,17 @@ import type {
 import type {
   AclpConfig,
   Dashboard,
+  DateTimeWithPreset,
   JWEToken,
   MetricDefinition,
   ResourcePage,
-  TimeDuration,
   Widgets,
 } from '@linode/api-v4';
 
 interface WidgetProps {
   additionalFilters?: CloudPulseMetricsAdditionalFilters[];
   dashboard?: Dashboard | undefined;
-  duration: TimeDuration;
+  duration: DateTimeWithPreset;
   isJweTokenFetching: boolean;
   jweToken?: JWEToken | undefined;
   manualRefreshTimeStamp?: number;
@@ -171,7 +171,7 @@ export const RenderWidgets = React.memo(
               />
             );
           } else {
-            return <React.Fragment key={index}></React.Fragment>;
+            return <React.Fragment key={index} />;
           }
         })}
       </Grid>

@@ -15,6 +15,7 @@ export const StyledTagButton = styled(Button, {
   shouldForwardProp: omittedProps(['panel']),
 })<{ panel?: boolean }>(({ theme, ...props }) => ({
   border: 'none',
+  color: theme.tokens.alias.Action.Neutral,
   fontSize: '0.875rem',
   minHeight: 30,
   whiteSpace: 'nowrap',
@@ -23,9 +24,12 @@ export const StyledTagButton = styled(Button, {
   }),
   ...(!props.disabled && {
     '&:hover, &:focus': {
-      backgroundColor: theme.color.tagButtonBg,
+      '& svg': {
+        color: theme.color.white,
+      },
+      backgroundColor: theme.color.buttonPrimaryHover,
       border: 'none',
-      color: theme.color.tagButtonText,
+      color: theme.color.white,
     },
     backgroundColor: theme.color.tagButtonBg,
     color: theme.color.tagButtonText,
@@ -39,7 +43,7 @@ export const StyledPlusIcon = styled(PlusSignIcon, {
     ? theme.name === 'dark'
       ? theme.tokens.color.Neutrals[70]
       : theme.color.disabledText
-    : theme.color.tagIcon,
+    : theme.color.tagButtonText,
   height: '10px',
   width: '10px',
 }));

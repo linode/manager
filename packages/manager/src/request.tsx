@@ -94,6 +94,7 @@ export const injectAkamaiAccountHeader = (
   response: AxiosResponse
 ): AxiosResponse => {
   const akamaiAccountHeader = 'akamai-internal-account';
+  // NOTE: this won't work locally (only staging and prod allow this header)
   if (isSuccessfulGETProfileResponse(response)) {
     const modifiedData: ProfileWithAkamaiAccountHeader = {
       ...response.data,

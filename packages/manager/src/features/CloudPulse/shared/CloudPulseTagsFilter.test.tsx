@@ -1,26 +1,35 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
 
-import type { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
+import type { useAllLinodesQuery } from '@linode/queries';
+
+const props: CloudPulseTagsSelectProps = {
+  disabled: false,
+  handleTagsChange: vi.fn(),
+  label: 'Tags',
+  optional: true,
+  region: 'us-east',
+  resourceType: 'linode',
+};
 
 const queryMocks = vi.hoisted(() => ({
   useAllLinodesQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
   };
 });
 
-const mockTagsHandler = vi.fn();
 const SELECT_ALL = 'Select All';
 const ARIA_SELECTED = 'aria-selected';
 const LABEL_SUBTITLE = 'Tags (optional)';
@@ -41,17 +50,24 @@ describe('CloudPulseTagsSelect component tests', () => {
       getByLabelText,
       getByPlaceholderText,
       getByTestId,
-    } = renderWithTheme(
-      <CloudPulseTagsSelect
-        handleTagsChange={mockTagsHandler}
-        label="Tags"
-        optional
-        resourceType="linode"
-      />
-    );
+    } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
     expect(getByTestId('tags-select')).toBeInTheDocument();
     expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(getByPlaceholderText('Select Tags')).toBeInTheDocument();
+  });
+
+  it('should render a disabled Tags Select component when disabled is true or region is undefined', () => {
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: linodeFactory.buildList(2),
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    const { getByRole } = renderWithTheme(
+      <CloudPulseTagsSelect {...props} disabled={true} />
+    );
+
+    expect(getByRole('button', { name: 'Open' })).toBeDisabled();
   });
 
   it('should render a Tags Select component with error message on api call failure', () => {
@@ -60,18 +76,29 @@ describe('CloudPulseTagsSelect component tests', () => {
       isError: true,
       isLoading: false,
     } as ReturnType<typeof useAllLinodesQuery>);
-    const { getByText } = renderWithTheme(
-      <CloudPulseTagsSelect
-        handleTagsChange={mockTagsHandler}
-        label="Tags"
-        resourceType="linode"
-      />
-    );
+    const { getByText } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
 
     expect(getByText('Failed to fetch Tags.'));
   });
 
-  it('should select multiple tags', async () => {
+  it('should render a Tags Select component with tags filtered based on the selected region', async () => {
+    const user = userEvent.setup();
+
+    queryMocks.useAllLinodesQuery.mockReturnValue({
+      data: [],
+      isError: false,
+      isLoading: false,
+      status: 'success',
+    });
+    const { getByRole, queryAllByRole } = renderWithTheme(
+      <CloudPulseTagsSelect {...props} region={'us-central'} />
+    );
+    await user.click(getByRole('button', { name: 'Open' }));
+    const options = queryAllByRole('option');
+    expect(options).toHaveLength(0); // no tags for the selected region
+  });
+
+  it('should select multiple tags from the tags filtered based on the selected region', async () => {
     const user = userEvent.setup();
 
     queryMocks.useAllLinodesQuery.mockReturnValue({
@@ -82,18 +109,10 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByLabelText, getByRole } = renderWithTheme(
-      <CloudPulseTagsSelect
-        handleTagsChange={mockTagsHandler}
-        label="Tags"
-        optional
-        resourceType={'linode'}
-      />
-    );
+    const { getByRole } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
     await user.click(getByRole('button', { name: 'Open' }));
     await user.click(getByRole('option', { name: 'tag-2' }));
     await user.click(getByRole('option', { name: 'tag-3' }));
-    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
 
     expect(
       getByRole('option', {
@@ -121,18 +140,11 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const { getByLabelText, getByRole } = renderWithTheme(
-      <CloudPulseTagsSelect
-        handleTagsChange={mockTagsHandler}
-        label="Tags"
-        optional
-        resourceType={'linode'}
-      />
-    );
+    const { getByRole } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
     await user.click(getByRole('button', { name: 'Open' }));
     await user.click(getByRole('option', { name: SELECT_ALL }));
     await user.click(getByRole('option', { name: 'Deselect All' }));
-    expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
+
     expect(
       getByRole('option', {
         name: 'tag-2',
@@ -156,10 +168,8 @@ describe('CloudPulseTagsSelect component tests', () => {
 
     const { getByRole } = renderWithTheme(
       <CloudPulseTagsSelect
+        {...props}
         defaultValue={['tag-2']}
-        handleTagsChange={mockTagsHandler}
-        label="Tags"
-        resourceType={'linode'}
         savePreferences
       />
     );

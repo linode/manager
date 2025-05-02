@@ -1,12 +1,10 @@
 import { Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import * as React from 'react';
-
-import { pluralize } from 'src/utilities/pluralize';
 
 import {
   StyledButton,
   StyledClose,
-  StyledHeaderTypography,
   StyledRowBoxDiv,
   StyledRowDiv,
   StyledSubmitButton,
@@ -65,7 +63,7 @@ export const TransferCheckoutBar = React.memo((props: Props) => {
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
     <div>
-      <StyledHeaderTypography>Service Transfer Summary</StyledHeaderTypography>
+      <Typography variant="h3">Service Transfer Summary</Typography>
       <StyledRowBoxDiv>
         {Object.entries(selectedEntities.linodes).map(([id, label]) => (
           <TransferRow

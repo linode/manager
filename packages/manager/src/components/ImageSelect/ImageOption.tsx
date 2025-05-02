@@ -1,22 +1,21 @@
-import { Stack, Tooltip, Typography } from '@linode/ui';
+import { ListItemOption, Stack, Tooltip, Typography } from '@linode/ui';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
-import { ListItemOption } from 'src/components/ListItemOption';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { OSIcon } from '../OSIcon';
 import { isImageDeprecated } from './utilities';
 
 import type { Image } from '@linode/api-v4';
-import type { ListItemProps } from 'src/components/ListItemOption';
+import type { ListItemOptionProps } from '@linode/ui';
 
 export const ImageOption = ({
   disabledOptions,
   item,
   props,
   selected,
-}: ListItemProps<Image>) => {
+}: ListItemOptionProps<Image>) => {
   const flags = useFlags();
 
   return (
@@ -28,7 +27,13 @@ export const ImageOption = ({
       selected={selected}
     >
       <Stack alignItems="center" direction="row" gap={1} width="100%">
-        {item?.id !== 'any/all' && <OSIcon fontSize="1.8em" os={item.vendor} />}
+        {item?.id !== 'any/all' && (
+          <OSIcon
+            fontSize="1.8em"
+            os={item.vendor}
+            sx={{ position: 'relative', top: 2 }}
+          />
+        )}
         <Typography color="inherit">
           {item.label} {isImageDeprecated(item) && '(deprecated)'}
         </Typography>

@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { placementGroupFactory, regionFactory } from 'src/factories';
+import { placementGroupFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsDetailPanel } from './PlacementGroupsDetailPanel';
@@ -15,21 +16,11 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/regions/regions', async () => {
-  const actual = await vi.importActual('src/queries/regions/regions');
-  return {
-    ...actual,
-    useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
-
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
-  return {
-    ...actual,
-    useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
-  };
-});
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
 
 describe('PlacementGroupsDetailPanel', () => {
   beforeEach(() => {
@@ -61,10 +52,8 @@ describe('PlacementGroupsDetailPanel', () => {
     queryMocks.useAllPlacementGroupsQuery.mockReturnValue({
       data: [
         placementGroupFactory.build({
-          placement_group_type: 'affinity:local',
           id: 1,
           is_compliant: true,
-          placement_group_policy: 'strict',
           label: 'my-placement-group',
           members: [
             {
@@ -72,6 +61,8 @@ describe('PlacementGroupsDetailPanel', () => {
               linode_id: 1,
             },
           ],
+          placement_group_policy: 'strict',
+          placement_group_type: 'affinity:local',
           region: 'us-west',
         }),
       ],

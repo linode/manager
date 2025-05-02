@@ -1,4 +1,3 @@
-import { Domain } from '@linode/api-v4';
 import { domainFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -7,6 +6,8 @@ import {
 } from 'support/intercepts/domains';
 import { cleanUp } from 'support/util/cleanup';
 import { randomDomainName } from 'support/util/random';
+
+import type { Domain } from '@linode/api-v4';
 
 authenticate();
 describe('Create a Domain', () => {

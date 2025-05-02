@@ -5,12 +5,12 @@ import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useLegacyRestoreFromBackupMutation } from 'src/queries/databases/databases';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
-import type { DialogProps } from 'src/components/Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 interface Props extends Omit<DialogProps, 'title'> {
   backup: DatabaseBackup;

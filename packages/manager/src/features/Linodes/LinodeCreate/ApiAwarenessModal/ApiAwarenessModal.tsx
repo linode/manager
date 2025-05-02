@@ -1,10 +1,8 @@
-import { Typography } from '@linode/ui';
+import { ActionsPanel, Dialog, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
 import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
@@ -18,7 +16,7 @@ import { IntegrationsTabPanel } from './IntegrationsTabPanel';
 import { LinodeCLIPanel } from './LinodeCLIPanel';
 import { SDKTabPanel } from './SDKTabPanel';
 
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export interface ApiAwarenessModalProps {
   isOpen: boolean;
@@ -79,15 +77,15 @@ export const ApiAwarenessModal = (props: ApiAwarenessModalProps) => {
 
   return (
     <Dialog
-      sx={{
-        overflowX: 'hidden',
-        paddingBottom: '0px',
-      }}
       fullHeight
       fullWidth
       maxWidth="sm"
       onClose={onClose}
       open={isOpen}
+      sx={{
+        overflowX: 'hidden',
+        paddingBottom: '0px',
+      }}
       title="Create Linode"
     >
       <Typography sx={{ paddingBottom: '6px' }} variant="body1">

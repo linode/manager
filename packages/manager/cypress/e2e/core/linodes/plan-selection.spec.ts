@@ -1,20 +1,20 @@
 // TODO: Cypress
-// Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
-import { ui } from 'support/ui';
 import {
-  accountFactory,
   linodeTypeFactory,
-  regionFactory,
   regionAvailabilityFactory,
-} from '@src/factories';
+  regionFactory,
+} from '@linode/utilities';
+import { accountFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import {
-  mockGetRegions,
-  mockGetRegionAvailability,
-} from 'support/intercepts/regions';
-import { mockGetLinodeTypes } from 'support/intercepts/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetLinodeTypes } from 'support/intercepts/linodes';
+import {
+  mockGetRegionAvailability,
+  mockGetRegions,
+} from 'support/intercepts/regions';
+// Move this to cypress component testing once the setup is complete - see https://github.com/linode/manager/pull/10134
+import { ui } from 'support/ui';
 
 const mockRegions = [
   regionFactory.build({
@@ -26,71 +26,71 @@ const mockRegions = [
 
 const mockDedicatedLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-1',
     label: 'dedicated-1',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-2',
     label: 'dedicated-2',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-3',
     label: 'dedicated-3',
-    class: 'dedicated',
   }),
   linodeTypeFactory.build({
+    class: 'dedicated',
     id: 'dedicated-4',
     label: 'dedicated-4',
-    class: 'dedicated',
   }),
 ];
 
 const mockSharedLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-1',
     label: 'shared-1',
-    class: 'standard',
   }),
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-2',
     label: 'shared-2',
-    class: 'standard',
   }),
   linodeTypeFactory.build({
+    class: 'standard',
     id: 'shared-3',
     label: 'shared-3',
-    class: 'standard',
   }),
 ];
 
 const mockHighMemoryLinodeTypes = [
   linodeTypeFactory.build({
+    class: 'highmem',
     id: 'highmem-1',
     label: 'highmem-1',
-    class: 'highmem',
   }),
 ];
 
 const mockGPUType = [
   linodeTypeFactory.build({
+    class: 'gpu',
     id: 'gpu-1',
     label: 'gpu-1',
-    class: 'gpu',
   }),
   linodeTypeFactory.build({
+    class: 'gpu',
     id: 'gpu-2',
     label: 'gpu-2 Ada',
-    class: 'gpu',
   }),
 ];
 
 const mockAcceleratedType = [
   linodeTypeFactory.build({
+    class: 'accelerated',
     id: 'accelerated-1',
     label: 'accelerated-1',
-    class: 'accelerated',
   }),
 ];
 
@@ -104,23 +104,23 @@ const mockLinodeTypes = [
 
 const mockRegionAvailability = [
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'dedicated-3',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'dedicated-4',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
+    available: false,
     plan: 'highmem-1',
-    available: false,
     region: 'us-east',
   }),
   regionAvailabilityFactory.build({
-    plan: 'shared-3',
     available: false,
+    plan: 'shared-3',
     region: 'us-east',
   }),
 ];
@@ -149,7 +149,9 @@ describe('displays linode plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
@@ -245,12 +247,15 @@ describe('displays kubernetes plans panel based on availability', () => {
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     cy.wait(['@getRegionAvailability']);
 
     // Dedicated CPU tab
     // Should be selected/open by default
+    // Should have the premium plans notice above the table
     // Should have the limited availability notice
     // Should contain 5 plans (6 rows including the header row)
     // Should have 3 plans disabled
@@ -258,7 +263,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // All inputs for a row should be enabled if row is enabled (only testing one row in suite)
     // All inputs for a disabled row should be disabled (only testing one row in suite)
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -295,13 +300,13 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // Shared CPU tab
-    // Should have no notices
+    // Should have the premium plans notice above the table
     // Should contain 3 plans (4 rows including the header row)
     // Should have 2 disabled plans
     // Should have tooltip for the disabled plan (not more than half disabled plans in the panel)
     cy.findByText('Shared CPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 0);
+      cy.findAllByRole('alert').should('have.length', 1);
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
         cy.findAllByRole('row').should('have.length', 4);
@@ -319,13 +324,14 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // High Memory tab
+    // Should have the premium plans notice above the table
     // Should have the limited availability notice
     // Should contain 1 plan (2 rows including the header row)
     // Should have one disabled plan
     // Should have no tooltip for the disabled plan (more than half disabled plans in the panel)
     cy.findByText('High Memory').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.limitedAvailability).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -339,6 +345,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     });
 
     // Premium CPU
+    // Should have the premium plans notice above the table
     // Should have the unavailable notice
     // Only present since we manually inject the 512 plan for it
     // Should contain 1 plan (2 rows including the header row)
@@ -346,7 +353,7 @@ describe('displays kubernetes plans panel based on availability', () => {
     // Should not have tooltip for the disabled plan (not needed on disabled panels)
     cy.findByText('Premium CPU').click();
     cy.get(k8PlansPanel).within(() => {
-      cy.findAllByRole('alert').should('have.length', 1);
+      cy.findAllByRole('alert').should('have.length', 2);
       cy.get(notices.unavailable).should('be.visible');
 
       cy.findByRole('table', { name: planSelectionTable }).within(() => {
@@ -370,9 +377,9 @@ describe('displays specific linode plans for GPU', () => {
     );
     mockAppendFeatureFlags({
       gpuv2: {
-        transferBanner: true,
-        planDivider: true,
         egressBanner: true,
+        planDivider: true,
+        transferBanner: true,
       },
     }).as('getFeatureFlags');
   });
@@ -381,7 +388,9 @@ describe('displays specific linode plans for GPU', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
 
     // GPU tab
     // Should display two separate tables
@@ -404,6 +413,59 @@ describe('displays specific linode plans for GPU', () => {
         cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
         cy.findAllByRole('row').should('have.length', 2);
         cy.get('[id="gpu-1"]').should('be.disabled');
+      });
+    });
+  });
+});
+
+describe('displays specific kubernetes plans for GPU', () => {
+  beforeEach(() => {
+    mockGetRegions(mockRegions).as('getRegions');
+    mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
+    mockGetRegionAvailability(mockRegions[0].id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+    mockAppendFeatureFlags({
+      gpuv2: {
+        egressBanner: true,
+        planDivider: true,
+        transferBanner: true,
+      },
+    }).as('getFeatureFlags');
+  });
+
+  it('Should render divided tables when GPU divider enabled', () => {
+    cy.visitWithLogin('/kubernetes/create');
+    cy.wait(['@getRegions', '@getLinodeTypes', '@getFeatureFlags']);
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+      .click();
+
+    // GPU tab
+    // Should display two separate tables
+    cy.findByText('GPU').click();
+    cy.get(k8PlansPanel).within(() => {
+      cy.findAllByRole('alert').should('have.length', 3);
+      cy.get(notices.unavailable).should('be.visible');
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA RTX 4000 Ada Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA RTX 4000 Ada').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-2 Ada"]').should(
+          'have.attr',
+          'disabled'
+        );
+      });
+
+      cy.findByRole('table', {
+        name: 'List of NVIDIA Quadro RTX 6000 Plans',
+      }).within(() => {
+        cy.findByText('NVIDIA Quadro RTX 6000').should('be.visible');
+        cy.findAllByRole('row').should('have.length', 2);
+        cy.get('[data-qa-plan-row="gpu-1"]').should('have.attr', 'disabled');
       });
     });
   });
@@ -484,7 +546,9 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.findByText('Accelerated').click();
         cy.get(linodePlansPanel).within(() => {
@@ -537,13 +601,15 @@ describe('Linode Accelerated plans', () => {
         ]);
 
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockRegions[0].label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockRegions[0].label, mockRegions)
+          .click();
 
         cy.wait(['@getRegionAvailability']);
 
         cy.findByText('Accelerated').click();
         cy.get(k8PlansPanel).within(() => {
-          cy.findAllByRole('alert').should('have.length', 2);
+          cy.findAllByRole('alert').should('have.length', 3);
 
           cy.findByRole('table', { name: planSelectionTable }).within(() => {
             cy.findAllByRole('row').should('have.length', 2);

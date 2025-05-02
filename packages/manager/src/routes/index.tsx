@@ -3,10 +3,11 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { NotFound } from 'src/components/NotFound';
+import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
+import { cloudPulseAlertsRouteTree } from './alerts';
 import { betaRouteTree } from './betas';
-import { cloudPulseRouteTree } from './cloudPulse';
 import { databasesRouteTree } from './databases';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
@@ -16,6 +17,7 @@ import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
 import { longviewRouteTree } from './longview';
 import { managedRouteTree } from './managed';
+import { cloudPulseMetricsRouteTree } from './metrics';
 import { nodeBalancersRouteTree } from './nodeBalancers';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
@@ -42,7 +44,8 @@ export const routeTree = rootRoute.addChildren([
   indexRoute,
   accountRouteTree,
   betaRouteTree,
-  cloudPulseRouteTree,
+  cloudPulseAlertsRouteTree,
+  cloudPulseMetricsRouteTree,
   databasesRouteTree,
   domainsRouteTree,
   eventsRouteTree,
@@ -89,21 +92,29 @@ declare module '@tanstack/react-router' {
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   domainsRouteTree,
+  firewallsRouteTree,
+  imagesRouteTree,
   longviewRouteTree,
+  managedRouteTree,
+  nodeBalancersRouteTree,
+  objectStorageRouteTree,
+  placementGroupsRouteTree,
+  stackScriptsRouteTree,
   volumesRouteTree,
   tagsRoutes,
+  vpcsRouteTree,
 ]);
 
 export type MigrationRouteTree = typeof migrationRouteTree;
 
 export const migrationRouter = createRouter({
-  Wrap: ({ children }) => {
-    return <div data-testid="migration-router">{children}</div>;
-  },
   context: {
     queryClient: new QueryClient(),
   },
   defaultNotFoundComponent: () => <NotFound />,
   defaultPreload: 'intent',
+  defaultErrorComponent: ({ error, reset }) => (
+    <ErrorComponent error={error} eventId={error.name} resetError={reset} />
+  ),
   routeTree: migrationRouteTree,
 });

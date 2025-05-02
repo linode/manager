@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 
 import type { CardBaseProps } from './CardBase';
 
@@ -40,30 +40,27 @@ export const CardBaseGrid = styled(Grid, {
   height: '100%',
   margin: 0,
   minHeight: 60,
-  padding: `0 ${theme.spacing(1)} !important`,
+  padding: theme.spacing(1.5),
   position: 'relative',
-
   transition:
     'background-color 225ms ease-in-out, border-color 225ms ease-in-out',
-
   width: '100%',
 }));
 
 export const CardBaseIcon = styled(Grid, {
   label: 'CardBaseIcon',
-})(({ theme }) => ({
+})({
   '& img': {
     maxHeight: 32,
     maxWidth: 32,
   },
   '& svg, & span': {
-    color: theme.tokens.color.Neutrals[50],
     fontSize: 32,
   },
   alignItems: 'flex-end',
   display: 'flex',
   justifyContent: 'flex-end',
-}));
+});
 
 export const CardBaseHeadings = styled(Grid, {
   label: 'CardBaseHeadings',
@@ -83,14 +80,16 @@ export const CardBaseHeading = styled('div', {
   color: theme.color.headline,
   columnGap: theme.spacing(2),
   display: 'flex',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   wordBreak: 'break-word',
 }));
 
 export const CardBaseSubheading = styled('div', {
   label: 'CardBaseSubheading',
-})(({ theme }) => ({
-  color: theme.palette.text.primary,
+})<Partial<CardBaseProps>>(({ theme, ...props }) => ({
+  color: props.checked
+    ? theme.tokens.alias.Content.Text.Primary.Default
+    : theme.palette.text.primary,
   fontSize: '0.875rem',
 }));

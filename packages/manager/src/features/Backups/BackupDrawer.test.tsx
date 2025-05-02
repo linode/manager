@@ -1,14 +1,15 @@
+import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
-import {
-  accountSettingsFactory,
-  linodeFactory,
-  typeFactory,
-} from 'src/factories';
+
+import { accountSettingsFactory, typeFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BackupDrawer } from './BackupDrawer';
 
 const queryMocks = vi.hoisted(() => ({
+  useAccountSettings: vi.fn().mockReturnValue({
+    data: undefined,
+  }),
   useAllLinodesQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
@@ -18,13 +19,10 @@ const queryMocks = vi.hoisted(() => ({
   useTypeQuery: vi.fn().mockReturnValue({
     data: undefined,
   }),
-  useAccountSettings: vi.fn().mockReturnValue({
-    data: undefined,
-  }),
 }));
 
-vi.mock('src/queries/linodes/linodes', async () => {
-  const actual = await vi.importActual('src/queries/linodes/linodes');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllLinodesQuery: queryMocks.useAllLinodesQuery,
@@ -51,8 +49,6 @@ vi.mock('src/queries/accountSettings', async () => {
 describe('BackupDrawer', () => {
   beforeEach(() => {
     const mockType = typeFactory.build({
-      id: 'mock-linode-type',
-      label: 'Mock Linode Type',
       addons: {
         backups: {
           price: {
@@ -68,6 +64,8 @@ describe('BackupDrawer', () => {
           ],
         },
       },
+      id: 'mock-linode-type',
+      label: 'Mock Linode Type',
     });
     queryMocks.useAccountSettings.mockReturnValue({
       data: accountSettingsFactory.build({
@@ -87,20 +85,20 @@ describe('BackupDrawer', () => {
       queryMocks.useAllLinodesQuery.mockReturnValue({
         data: [
           linodeFactory.build({
+            backups: { enabled: false },
             region: 'es-mad',
             type: 'mock-linode-type',
-            backups: { enabled: false },
           }),
           ...linodeFactory.buildList(5, {
+            backups: { enabled: false },
             region: 'us-east',
             type: 'mock-linode-type',
-            backups: { enabled: false },
           }),
         ],
       });
 
       const { findByText } = renderWithTheme(
-        <BackupDrawer open={true} onClose={vi.fn()} />
+        <BackupDrawer onClose={vi.fn()} open={true} />
       );
       expect(await findByText('Total for 6 Linodes:')).toBeVisible();
       expect(await findByText('$12.50')).toBeVisible();
@@ -110,15 +108,15 @@ describe('BackupDrawer', () => {
       queryMocks.useAllLinodesQuery.mockReturnValue({
         data: [
           linodeFactory.build({
+            backups: { enabled: false },
             region: 'es-mad',
             type: 'mock-linode-type',
-            backups: { enabled: false },
           }),
         ],
       });
 
       const { findByText } = renderWithTheme(
-        <BackupDrawer open={true} onClose={vi.fn()} />
+        <BackupDrawer onClose={vi.fn()} open={true} />
       );
       expect(await findByText('Total for 1 Linode:')).toBeVisible();
       expect(await findByText('$0.00')).toBeVisible();
@@ -134,7 +132,7 @@ describe('BackupDrawer', () => {
       });
 
       const { findByText } = renderWithTheme(
-        <BackupDrawer open={true} onClose={vi.fn()} />
+        <BackupDrawer onClose={vi.fn()} open={true} />
       );
       expect(await findByText('Total for 1 Linode:')).toBeVisible();
       expect(await findByText('$--.--')).toBeVisible();
@@ -156,7 +154,7 @@ describe('BackupDrawer', () => {
       });
 
       const { findByText, queryByText } = renderWithTheme(
-        <BackupDrawer open={true} onClose={vi.fn()} />
+        <BackupDrawer onClose={vi.fn()} open={true} />
       );
       // Confirm that Linodes without backups are listed in table.
       /* eslint-disable no-await-in-loop */

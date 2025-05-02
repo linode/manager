@@ -2,8 +2,10 @@
  * @file DBaaS integration tests for delete operations.
  */
 
-import { accountFactory, databaseFactory } from 'src/factories';
-import { randomNumber, randomIp } from 'support/util/random';
+import {
+  databaseConfigurations,
+  mockDatabaseNodeTypes,
+} from 'support/constants/databases';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockDeleteDatabase,
@@ -12,15 +14,15 @@ import {
   mockGetDatabaseTypes,
 } from 'support/intercepts/databases';
 import { ui } from 'support/ui';
-import {
-  databaseClusterConfiguration,
-  databaseConfigurations,
-  mockDatabaseNodeTypes,
-} from 'support/constants/databases';
+import { randomIp, randomNumber } from 'support/util/random';
+
+import { accountFactory, databaseFactory } from 'src/factories';
+
+import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 describe('Delete database clusters', () => {
   databaseConfigurations.forEach(
-    (configuration: databaseClusterConfiguration) => {
+    (configuration: DatabaseClusterConfiguration) => {
       describe(`Deletes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
         /*
          * - Tests database deletion UI flow using mocked data.
@@ -30,13 +32,13 @@ describe('Delete database clusters', () => {
         it('Can delete active database clusters', () => {
           const allowedIp = randomIp();
           const database = databaseFactory.build({
+            allow_list: [allowedIp],
+            engine: configuration.dbType,
             id: randomNumber(1, 1000),
-            type: configuration.linodeType,
             label: configuration.label,
             region: configuration.region.id,
-            engine: configuration.dbType,
             status: 'active',
-            allow_list: [allowedIp],
+            type: configuration.linodeType,
           });
 
           // Mock account to ensure 'Managed Databases' capability.
@@ -61,7 +63,8 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click().type(database.label);
+              cy.findByLabelText('Cluster Name').click();
+              cy.focused().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')
@@ -82,17 +85,17 @@ describe('Delete database clusters', () => {
          */
         it('Cannot delete provisioning database clusters', () => {
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: configuration.label,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            status: 'provisioning',
             allow_list: [],
+            engine: configuration.dbType,
             hosts: {
               primary: undefined,
               secondary: undefined,
             },
+            id: randomNumber(1, 1000),
+            label: configuration.label,
+            region: configuration.region.id,
+            status: 'provisioning',
+            type: configuration.linodeType,
           });
 
           const errorMessage =
@@ -123,7 +126,8 @@ describe('Delete database clusters', () => {
             .findByTitle(`Delete Database Cluster ${database.label}`)
             .should('be.visible')
             .within(() => {
-              cy.findByLabelText('Cluster Name').click().type(database.label);
+              cy.findByLabelText('Cluster Name').click();
+              cy.focused().type(database.label);
 
               ui.buttonGroup
                 .findButtonByTitle('Delete Cluster')

@@ -1,7 +1,7 @@
 import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from '@linode/queries';
 
 import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';
 
@@ -72,8 +72,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
             >
               <Stack>
                 <Typography
+                  sx={(theme) => ({
+                    font: theme.font.bold,
+                  })}
                   color="inherit"
-                  fontFamily={(theme) => theme.font.bold}
                 >
                   {option.label}
                 </Typography>

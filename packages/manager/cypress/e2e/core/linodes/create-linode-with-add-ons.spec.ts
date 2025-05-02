@@ -1,4 +1,4 @@
-import { linodeFactory } from 'src/factories';
+import { linodeFactory } from '@linode/utilities';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
@@ -37,11 +37,10 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.checkEUAgreements();
 
     // Confirm Backups assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Backups').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Backups').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -91,11 +90,10 @@ describe('Create Linode with Add-ons', () => {
     linodeCreatePage.checkPrivateIPs();
 
     // Confirm Private IP assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Private IP').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Private IP').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

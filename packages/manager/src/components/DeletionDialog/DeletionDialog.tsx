@@ -1,15 +1,14 @@
-import { Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { titlecase } from 'src/features/Linodes/presentation';
-import { usePreferences } from 'src/queries/profile/preferences';
-import { capitalize } from 'src/utilities/capitalize';
+import { usePreferences } from '@linode/queries';
 
-import type { DialogProps } from '../Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   entity: string;
@@ -21,18 +20,14 @@ export interface DeletionDialogProps extends Omit<DialogProps, 'title'> {
   open: boolean;
 }
 
+/**
+ * @deprecated
+ * Use the ConfirmationDialog component instead.
+ */
 export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   const theme = useTheme();
-  const {
-    entity,
-    error,
-    label,
-    loading,
-    onClose,
-    onDelete,
-    open,
-    ...rest
-  } = props;
+  const { entity, error, label, loading, onClose, onDelete, open, ...rest } =
+    props;
 
   const { data: typeToConfirmPreference } = usePreferences(
     (preferences) => preferences?.type_to_confirm ?? true
@@ -69,12 +64,13 @@ export const DeletionDialog = React.memo((props: DeletionDialogProps) => {
   return (
     <ConfirmationDialog
       actions={renderActions}
+      error={error}
+      isFetching={loading}
       onClose={onClose}
       open={open}
       title={`Delete ${titlecase(entity)} ${label}?`}
       {...rest}
     >
-      {error && <Notice text={error} variant="error" />}
       <Notice variant="warning">
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting this {entity} is permanent and

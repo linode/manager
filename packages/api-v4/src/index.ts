@@ -32,7 +32,11 @@ export * from './placement-groups';
 
 export * from './profile';
 
+export * from './quotas';
+
 export * from './regions';
+
+export * from './service-transfers';
 
 export * from './stackscripts';
 
@@ -52,7 +56,7 @@ export * from './betas';
 
 export * from './iam';
 
-export * from './resources';
+export * from './entities';
 
 export {
   baseRequest,

@@ -1,12 +1,12 @@
 import { createImage } from '@linode/api-v4/lib/images';
-import { createTestLinode } from 'support/util/linodes';
-import { ui } from 'support/ui';
-
 import { authenticate } from 'support/api/authentication';
-import { randomLabel } from 'support/util/random';
-import { cleanUp } from 'support/util/cleanup';
-import type { Image, Linode } from '@linode/api-v4';
 import { interceptGetLinodeDisks } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
+
+import type { Image, Linode } from '@linode/api-v4';
 
 authenticate();
 describe('Search Images', () => {
@@ -59,8 +59,8 @@ describe('Search Images', () => {
 
             // Search for the first image by label, confirm it's the only one shown.
             cy.findByPlaceholderText('Search Images').type(image1.label);
-            expect(cy.contains(image1.label).should('be.visible'));
-            expect(cy.contains(image2.label).should('not.exist'));
+            cy.contains(image1.label).should('be.visible');
+            cy.contains(image2.label).should('not.exist');
 
             // Clear search, confirm both images are shown.
             cy.findByTestId('clear-images-search').click();
@@ -68,7 +68,7 @@ describe('Search Images', () => {
             cy.contains(image2.label).should('be.visible');
 
             // Use the main search bar to search and filter images
-            cy.get('[id="main-search"').type(image2.label);
+            ui.mainSearch.find().type(image2.label);
             ui.autocompletePopper.findByTitle(image2.label).click();
 
             // Confirm that only the second image is shown.

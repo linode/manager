@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 /**
  * Displays a table of information about the browser being used for the tests.
@@ -52,22 +52,25 @@ export const configureBrowser: CypressPlugin = (on, _config) => {
         enabled: false,
       },
     };
-
-    // Disable Chrome's new headless implementation.
-    // This attempts to resolve indefinite test hanging.
+    // Explicitly set Chrome pointer type.
     //
-    // See also: https://github.com/cypress-io/cypress/issues/27264
+    // This is useful to for webpages/components that attempt to detect if a
+    // user is using a desktop device or a mobile device.
+    //
+    // MUI's date/time picker uses the `@media (pointer: fine)` media query
+    // to accomplish this, which does not match on headless CI environments,
+    // prompting the component to behave as if it were running on a mobile
+    // device.
+    //
+    // See also:
+    // - https://mui.com/x/react-date-pickers/date-time-picker/
+    // - https://mui.com/x/react-date-pickers/base-concepts/#testing-caveats
     if (browser.name === 'chrome' && browser.isHeadless) {
-      // If present, remove the `--headless=new` command line argument.
-      launchOptions.args = launchOptions.args.filter((arg: string) => {
-        return arg !== '--headless=new';
-      });
-      // Append `--headless=old` and `--disable-dev-shm-usage` args.
-      launchOptions.args.push('--headless=old');
-      launchOptions.args.push('--disable-dev-shm-usage');
+      launchOptions.args.push('--blink-settings=primaryPointerType=4');
     }
 
     displayBrowserInfo(browser, launchOptions);
+
     return launchOptions;
   });
 };

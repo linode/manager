@@ -1,4 +1,4 @@
-import Close from '@mui/icons-material/Close';
+import { CloseIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
@@ -45,10 +45,10 @@ const linodes: OptionType[] = [
 ];
 
 const AutocompleteWithSeparateSelectedOptions = (
-  props: EnhancedAutocompleteProps<OptionType, true>
+  props: EnhancedAutocompleteProps<OptionType, true>,
 ) => {
   const [selectedOptions, setSelectedOptions] = React.useState<OptionType[]>(
-    []
+    [],
   );
 
   const handleSelectedOptions = React.useCallback((selected: OptionType[]) => {
@@ -58,7 +58,7 @@ const AutocompleteWithSeparateSelectedOptions = (
   // Function to remove an option from the list of selected options
   const removeOption = (optionToRemove: OptionType) => {
     const updatedSelectedOptions = selectedOptions.filter(
-      (option) => option.value !== optionToRemove.value
+      (option) => option.value !== optionToRemove.value,
     );
 
     // Call onSelectionChange to update the selected options
@@ -88,7 +88,7 @@ const AutocompleteWithSeparateSelectedOptions = (
                   onClick={() => removeOption(option)}
                   size="medium"
                 >
-                  <Close />
+                  <CloseIcon />
                 </IconButton>
               </SelectedOptionsListItem>
             ))}
@@ -130,7 +130,7 @@ type Story = StoryObj<typeof Autocomplete>;
 // Styled Components =================================================
 
 const CustomValue = styled('span')(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '1rem',
   wordBreak: 'break-word',
 }));
@@ -147,13 +147,13 @@ const StyledListItem = styled('li')(() => ({
 
 const StyledLabel = styled('span')(({ theme }) => ({
   color: theme.color.label,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '14px',
 }));
 
 const SelectedOptionsHeader = styled('h4')(({ theme }) => ({
   color: theme.color.headline,
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '14px',
   textTransform: 'initial',
 }));
@@ -297,17 +297,18 @@ type MultiSelectWithSeparateSelectionOptionsStory = StoryObj<
   EnhancedAutocompleteProps<OptionType, true>
 >;
 
-export const MultiSelectWithSeparateSelectionOptions: MultiSelectWithSeparateSelectionOptionsStory = {
-  args: {
-    multiple: true,
-    onChange: (e, selected: OptionType[]) => {
-      action('onChange')(selected.map((options) => options.value));
+export const MultiSelectWithSeparateSelectionOptions: MultiSelectWithSeparateSelectionOptionsStory =
+  {
+    args: {
+      multiple: true,
+      onChange: (e, selected: OptionType[]) => {
+        action('onChange')(selected.map((options) => options.value));
+      },
+      placeholder: LABEL,
+      selectAllLabel: 'Linodes',
     },
-    placeholder: LABEL,
-    selectAllLabel: 'Linodes',
-  },
-  render: (args) => <AutocompleteWithSeparateSelectedOptions {...args} />,
-};
+    render: (args) => <AutocompleteWithSeparateSelectedOptions {...args} />,
+  };
 
 // simplified Linode interface for use in this file (api-v4 is not a dependency of ui)
 export interface Linode {

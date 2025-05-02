@@ -9,17 +9,19 @@ html {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-stretch: normal;
+  font-optical-sizing: auto;
 }
 
 body {
   height: 100%;
   margin: 0;
   padding: 0 !important;
-  font-family: 'LatoWeb', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  overscroll-behavior: none;
 
   strong, b {
-    font-family: 'LatoWebBold', sans-serif;
-    font-weight: normal;
+    font-weight: 700;
   }
 }
 
@@ -111,7 +113,6 @@ body.searchOverlay #main-content {
 
 #main-content {
   max-width: 1280px;
-  margin: 0 auto;
 }
 
 .label-visually-hidden {
@@ -326,7 +327,8 @@ button::-moz-focus-inner {
   background: #3683dc;
   color: white;
   font-size: 14px;
-  font-family: 'LatoWebBold', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
   padding: 8px;
   position: absolute;
   top: -40px;
@@ -344,17 +346,4 @@ See: https://blog.chromium.org/2020/09/giving-users-and-developers-more.html
 */
 :focus:not(:focus-visible) {
   outline: none;
-}
-
-/* Used by `srSpeak` in `accessibility.ts` */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
 }

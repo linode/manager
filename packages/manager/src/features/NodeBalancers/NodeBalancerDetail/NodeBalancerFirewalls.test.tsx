@@ -9,15 +9,29 @@ const firewall = firewallFactory.build({ label: 'mock-firewall-1' });
 
 // Set up various mocks for tests
 
+const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn(() => ({})),
+  useNavigate: vi.fn(() => navigate),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useParams: vi.fn(() => ({})),
 }));
 
-vi.mock('src/queries/nodebalancers', async () => {
-  const actual = await vi.importActual('src/queries/nodebalancers');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useMatch: queryMocks.useMatch,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -32,6 +46,9 @@ describe('NodeBalancerFirewalls', () => {
       data: { data: [firewall] },
       isLoading: false,
     });
+    queryMocks.useParams.mockReturnValue({
+      id: '1',
+    });
   });
 
   afterEach(() => {
@@ -41,21 +58,12 @@ describe('NodeBalancerFirewalls', () => {
   it('renders the Firewall table', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
     expect(getByText('mock-firewall-1')).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
     expect(getByText('1 Inbound / 1 Outbound')).toBeVisible();
     expect(getByText('Unassign')).toBeVisible();
-  });
-
-  it('displays the FirewallInfo text', () => {
-    const { getByText } = renderWithTheme(
-      <NodeBalancerFirewalls {...props} displayFirewallInfoText={true} />
-    );
-
-    expect(getByText('Learn more about creating Firewalls.')).toBeVisible();
   });
 
   it('displays a loading placeholder', () => {
@@ -68,7 +76,6 @@ describe('NodeBalancerFirewalls', () => {
     );
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 
@@ -85,7 +92,6 @@ describe('NodeBalancerFirewalls', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 
@@ -101,7 +107,6 @@ describe('NodeBalancerFirewalls', () => {
     const { getByText } = renderWithTheme(<NodeBalancerFirewalls {...props} />);
 
     // headers still exist
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
 

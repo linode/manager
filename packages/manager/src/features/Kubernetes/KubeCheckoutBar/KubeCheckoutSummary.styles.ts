@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 export const StyledHeader = styled(Typography, {
   label: 'StyledHeader',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '16px',
   paddingBottom: theme.spacing(0.5),
   paddingTop: theme.spacing(0.5),
@@ -43,6 +43,6 @@ export const StyledPriceBox = styled(Box, {
 })(({ theme }) => ({
   '& h3': {
     color: theme.palette.text.primary,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
   },
 }));

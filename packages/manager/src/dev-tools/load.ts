@@ -76,9 +76,9 @@ export async function loadDevTools(
 
     const seeds = await populateSeeds(emptyStore);
 
-    const seedPromises = (Object.keys(
-      seedContext
-    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
+    const seedPromises = (Object.keys(seedContext) as (keyof MockState)[]).map(
+      (key) => updateSeedContext(key, seeds)
+    );
 
     await Promise.all(seedPromises);
 
@@ -92,15 +92,39 @@ export async function loadDevTools(
         ...initialContext.eventQueue,
         ...(seedContext?.eventQueue || []),
       ],
+      firewallDevices: [
+        ...initialContext.firewallDevices,
+        ...(seedContext?.firewallDevices || []),
+      ],
       firewalls: [
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
+      ],
+      kubernetesClusters: [
+        ...initialContext.kubernetesClusters,
+        ...(seedContext?.kubernetesClusters || []),
+      ],
+      kubernetesNodePools: [
+        ...initialContext.kubernetesNodePools,
+        ...(seedContext?.kubernetesNodePools || []),
       ],
       linodeConfigs: [
         ...initialContext.linodeConfigs,
         ...(seedContext?.linodeConfigs || []),
       ],
       linodes: [...initialContext.linodes, ...(seedContext?.linodes || [])],
+      nodeBalancerConfigNodes: [
+        ...initialContext.nodeBalancerConfigNodes,
+        ...(seedContext.nodeBalancerConfigNodes || []),
+      ],
+      nodeBalancerConfigs: [
+        ...initialContext.nodeBalancerConfigs,
+        ...(seedContext.nodeBalancerConfigs || []),
+      ],
+      nodeBalancers: [
+        ...initialContext.nodeBalancers,
+        ...(seedContext.nodeBalancers || []),
+      ],
       notificationQueue: [
         ...initialContext.notificationQueue,
         ...(seedContext?.notificationQueue || []),
@@ -114,6 +138,7 @@ export async function loadDevTools(
         ...(seedContext?.regionAvailability || []),
       ],
       regions: [...initialContext.regions, ...(seedContext?.regions || [])],
+      subnets: [...initialContext.subnets, ...(seedContext?.subnets || [])],
       supportReplies: [
         ...initialContext.supportReplies,
         ...(seedContext?.supportReplies || []),
@@ -123,6 +148,7 @@ export async function loadDevTools(
         ...(seedContext?.supportTickets || []),
       ],
       volumes: [...initialContext.volumes, ...(seedContext?.volumes || [])],
+      vpcs: [...initialContext.vpcs, ...(seedContext?.vpcs || [])],
     };
 
     const extraHandlers = extraMswPresets.reduce(

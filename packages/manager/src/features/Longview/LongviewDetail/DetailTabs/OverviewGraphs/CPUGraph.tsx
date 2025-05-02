@@ -8,8 +8,9 @@ import {
   convertData,
   pathMaybeAddDataInThePast,
 } from '../../../shared/formatters';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { GraphProps } from './types';
 
 export const CPUGraph = (props: GraphProps) => {
   const {
@@ -34,9 +35,9 @@ export const CPUGraph = (props: GraphProps) => {
   const cpuData = React.useMemo(() => {
     const summedCPUData = sumCPU(data.CPU);
     return pathMaybeAddDataInThePast(summedCPUData, start, [
-      ['system'],
-      ['user'],
-      ['wait'],
+      'system',
+      'user',
+      'wait',
     ]);
   }, [data.CPU]);
 

@@ -1,10 +1,11 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
-  MetricDefinition,
   CloudPulseMetricsResponse,
   CloudPulseMetricsResponseData,
   Dashboard,
+  Filters,
+  MetricDefinition,
   Widgets,
 } from '@linode/api-v4';
 import type { ChartVariant } from 'src/components/AreaChart/AreaChart';
@@ -26,13 +27,19 @@ export const dashboardFactory = Factory.Sync.makeFactory<Dashboard>({
   widgets: [],
 });
 
+export const dimensionFilterFactory = Factory.Sync.makeFactory<Filters>({
+  dimension_label: Factory.each((i) => `dimension_${i}`),
+  operator: 'startswith',
+  value: Factory.each((i) => `value_${i}`),
+});
+
 export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   aggregate_function: 'avg',
   chart_type: Factory.each((i) => chart_type[i % chart_type.length]),
   color: Factory.each((i) => color[i % color.length]),
   entity_ids: Factory.each((i) => [`resource-${i}`]),
-  filters: [],
-  group_by: 'region',
+  filters: dimensionFilterFactory.buildList(3),
+  group_by: Factory.each((i) => [`group_by_${i}`]),
   label: Factory.each((i) => `widget_label_${i}`),
   metric: Factory.each((i) => `widget_metric_${i}`),
   namespace_id: Factory.each((i) => i % 10),
@@ -52,10 +59,26 @@ export const widgetFactory = Factory.Sync.makeFactory<Widgets>({
   y_label: Factory.each((i) => `y_label_${i}`),
 });
 
-export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>(
-  {
+export const dashboardMetricFactory =
+  Factory.Sync.makeFactory<MetricDefinition>({
     available_aggregate_functions: ['min', 'max', 'avg', 'sum'],
-    dimensions: [],
+    dimensions: [
+      {
+        dimension_label: 'state',
+        label: 'State of CPU',
+        values: [
+          'user',
+          'system',
+          'idle',
+          'interrupt',
+          'nice',
+          'softirq',
+          'steal',
+          'wait',
+        ],
+      },
+    ],
+    is_alertable: true,
     label: Factory.each((i) => `widget_label_${i}`),
     metric: Factory.each((i) => `widget_metric_${i}`),
     metric_type: 'gauge',
@@ -63,11 +86,10 @@ export const dashboardMetricFactory = Factory.Sync.makeFactory<MetricDefinition>
       (i) => scrape_interval[i % scrape_interval.length]
     ),
     unit: 'defaultUnit',
-  }
-);
+  });
 
-export const cloudPulseMetricsResponseDataFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponseData>(
-  {
+export const cloudPulseMetricsResponseDataFactory =
+  Factory.Sync.makeFactory<CloudPulseMetricsResponseData>({
     result: [
       {
         metric: {},
@@ -75,16 +97,14 @@ export const cloudPulseMetricsResponseDataFactory = Factory.Sync.makeFactory<Clo
       },
     ],
     result_type: 'matrix',
-  }
-);
+  });
 
-export const cloudPulseMetricsResponseFactory = Factory.Sync.makeFactory<CloudPulseMetricsResponse>(
-  {
+export const cloudPulseMetricsResponseFactory =
+  Factory.Sync.makeFactory<CloudPulseMetricsResponse>({
     data: cloudPulseMetricsResponseDataFactory.build(),
     isPartial: false,
     stats: {
       series_fetched: 2,
     },
     status: 'success',
-  }
-);
+  });

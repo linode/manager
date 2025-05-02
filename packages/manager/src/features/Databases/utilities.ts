@@ -1,17 +1,17 @@
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import type {
   DatabaseEngine,
+  DatabaseFork,
   DatabaseInstance,
   Engine,
   PendingUpdates,
 } from '@linode/api-v4';
-import type { DatabaseFork } from '@linode/api-v4';
 
 export interface IsDatabasesEnabled {
   isDatabasesEnabled: boolean;
@@ -128,7 +128,7 @@ export const isDateOutsideBackup = (
   if (!oldestBackup) {
     return true;
   }
-  const today = DateTime.now();
+  const today = DateTime.utc();
   return date < oldestBackup || date > today;
 };
 
@@ -169,10 +169,10 @@ export const toSelectedDateTime = (
   time: number = 0
 ) => {
   const isoDate = selectedDate?.toISODate();
-  const isoTime = DateTime.now()
+  const isoTime = DateTime.utc()
     .set({ hour: time, minute: 0 })
     ?.toISOTime({ includeOffset: false });
-  return DateTime.fromISO(`${isoDate}T${isoTime}`);
+  return DateTime.fromISO(`${isoDate}T${isoTime}`, { zone: 'UTC' });
 };
 
 /**
@@ -187,7 +187,7 @@ export const toFormatedDate = (
   selectedDate?: DateTime | null,
   selectedTime?: number
 ) => {
-  const today = DateTime.now();
+  const today = DateTime.utc();
   const isoDate =
     selectedDate && selectedTime
       ? toISOString(selectedDate!, selectedTime)

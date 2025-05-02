@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.132.0",
+  "version": "0.138.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -40,18 +40,17 @@
   "browser": "./lib/index.global.js",
   "unpkg": "./lib/index.global.js",
   "dependencies": {
-    "@linode/validation": "*",
-    "axios": "~1.7.4",
+    "@linode/validation": "workspace:*",
+    "axios": "~1.8.3",
     "ipaddr.js": "^2.0.0",
     "yup": "^1.4.0"
   },
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "yarn vitest run",
-    "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
-    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
-    "precommit": "lint-staged"
+    "test": "vitest run",
+    "lint": "eslint . --quiet --ext .js,.ts,.tsx",
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false"
   },
   "files": [
     "lib"
@@ -59,11 +58,7 @@
   "devDependencies": {
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
-    "eslint": "^6.8.0",
-    "eslint-plugin-sonarjs": "^0.5.0",
-    "lint-staged": "^15.2.9",
-    "prettier": "~2.2.1",
-    "tsup": "^8.2.4"
+    "tsup": "^8.4.0"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

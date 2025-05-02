@@ -1,7 +1,12 @@
+import {
+  useAllLinodeConfigsQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
@@ -14,21 +19,42 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useAllLinodeConfigsQuery } from 'src/queries/linodes/configs';
-import { useGrants } from 'src/queries/profile/profile';
+import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { BootConfigDialog } from './BootConfigDialog';
 import { ConfigRow } from './ConfigRow';
 import { DeleteConfigDialog } from './DeleteConfigDialog';
 import { LinodeConfigDialog } from './LinodeConfigDialog';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './UpgradeInterfaces/constants';
+import { getUnableToUpgradeTooltipText } from './UpgradeInterfaces/utils';
 
 const LinodeConfigs = () => {
   const theme = useTheme();
+  const location = useLocation();
+  const history = useHistory();
 
   const { linodeId } = useParams<{ linodeId: string }>();
 
   const id = Number(linodeId);
+
+  const { data: linode } = useLinodeQuery(id);
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { canUpgradeInterfaces, unableToUpgradeReasons } =
+    useCanUpgradeInterfaces(
+      linode?.lke_cluster_id,
+      linode?.region,
+      linode?.interface_generation
+    );
+
+  const unableToUpgradeTooltip = getUnableToUpgradeTooltipText(
+    unableToUpgradeReasons
+  );
+  const upgradeInterfacesTooltipText =
+    unableToUpgradeTooltip ?? DEFAULT_UPGRADE_BUTTON_HELPER_TEXT;
+
+  const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
   const configsPanel = React.useRef();
 
@@ -41,17 +67,16 @@ const LinodeConfigs = () => {
 
   const { data: configs, error, isLoading } = useAllLinodeConfigsQuery(id);
 
-  const [
-    isLinodeConfigDialogOpen,
-    setIsLinodeConfigDialogOpen,
-  ] = React.useState(false);
-  const [
-    isDeleteConfigDialogOpen,
-    setIsDeleteConfigDialogOpen,
-  ] = React.useState(false);
-  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] = React.useState(
-    false
-  );
+  const [isLinodeConfigDialogOpen, setIsLinodeConfigDialogOpen] =
+    React.useState(false);
+  const [isDeleteConfigDialogOpen, setIsDeleteConfigDialogOpen] =
+    React.useState(false);
+  const [isBootConfigDialogOpen, setIsBootConfigDialogOpen] =
+    React.useState(false);
+
+  const openUpgradeInterfacesDialog = () => {
+    history.replace(`${location.pathname}/upgrade-interfaces`);
+  };
 
   const [selectedConfigId, setSelectedConfigId] = React.useState<number>();
 
@@ -91,11 +116,23 @@ const LinodeConfigs = () => {
           href={
             'https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance'
           }
+          label={'Configuration Profiles'}
           onClick={() => {
             sendLinodeConfigurationDocsEvent('Configuration Profiles');
           }}
-          label={'Configuration Profiles'}
         />
+        {isLinodeInterfacesEnabled &&
+          linode?.interface_generation !== 'linode' && (
+            <Button
+              alwaysShowTooltip
+              buttonType="outlined"
+              disabled={isReadOnly || !canUpgradeInterfaces}
+              onClick={openUpgradeInterfacesDialog}
+              tooltipText={upgradeInterfacesTooltipText}
+            >
+              Upgrade Interfaces
+            </Button>
+          )}
         <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
           Add Configuration
         </Button>
@@ -117,46 +154,46 @@ const LinodeConfigs = () => {
                     <TableHead>
                       <TableRow>
                         <TableSortCell
-                          sx={{
-                            ...theme.applyTableHeaderStyles,
-                            width: '35%',
-                          }}
                           active={orderBy === 'label'}
                           direction={order}
                           handleClick={handleOrderChange}
                           label={'label'}
+                          sx={{
+                            ...theme.applyTableHeaderStyles,
+                            width: '35%',
+                          }}
                         >
                           <strong>Configuration</strong>
                         </TableSortCell>
                         <TableCell
                           sx={{
-                            borderRight: `1px solid ${theme.palette.divider}`,
-                            fontFamily: theme.font.bold,
-                            width: '25%',
+                            font: theme.font.bold,
+                            width: isLegacyConfigInterface ? '25%' : '55%',
                           }}
                         >
                           Disks
                         </TableCell>
-                        <TableCell
-                          sx={{
-                            borderRight: `1px solid ${theme.palette.divider}`,
-                            fontFamily: theme.font.bold,
-                            width: '30%',
-                          }}
-                        >
-                          Network Interfaces
-                        </TableCell>
+                        {isLegacyConfigInterface && (
+                          <TableCell
+                            sx={{
+                              font: theme.font.bold,
+                              width: '30%',
+                            }}
+                          >
+                            Network Interfaces
+                          </TableCell>
+                        )}
                         <TableCell sx={{ width: '10%' }} />
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
-                        loadingProps={{
-                          columns: 4,
-                        }}
                         error={error ?? undefined}
                         length={paginatedData.length}
                         loading={isLoading}
+                        loadingProps={{
+                          columns: 4,
+                        }}
                       >
                         {paginatedData.map((thisConfig) => {
                           return (

@@ -3,7 +3,6 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ALGORITHM_HELPER_TEXT } from './constants';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 
 import type {
@@ -57,6 +56,7 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   onSave: vi.fn(),
   onSessionStickinessChange: vi.fn(),
   onSslCertificateChange: vi.fn(),
+  onUdpCheckPortChange: vi.fn(),
   port: 80,
   privateKey: '',
   protocol: 'http',
@@ -64,14 +64,15 @@ export const nbConfigPanelMockPropsForTest: NodeBalancerConfigPanelProps = {
   removeNode: vi.fn(),
   sessionStickiness: 'table',
   sslCertificate: '',
+  udpCheckPort: 80,
 };
 
 const activeHealthChecksFormInputs = ['Interval', 'Timeout', 'Attempts'];
 
 const activeHealthChecksHelperText = [
-  'Seconds between health check probes',
-  'Seconds to wait before considering the probe a failure. 1-30. Must be less than check_interval.',
-  'Number of failed probes before taking a node out of rotation. 1-30',
+  'Seconds (2-3600) between health check probes.',
+  'Seconds to wait (1-30) before considering the probe a failure. Must be less than Interval.',
+  'Number of failed probes (1-30) before taking a node out of rotation.',
 ];
 
 const sslCertificate = 'ssl-certificate';
@@ -98,21 +99,25 @@ describe('NodeBalancerConfigPanel', () => {
     expect(getByLabelText('IP Address')).toBeVisible();
     expect(getByLabelText('Weight')).toBeVisible();
     expect(getByLabelText('Port')).toBeVisible();
-    expect(getByText('Listen on this port.')).toBeVisible();
+    expect(
+      getByText(
+        'The unique inbound port that this NodeBalancer configuration will listen on.'
+      )
+    ).toBeVisible();
     expect(getByText('Active Health Checks')).toBeVisible();
     expect(
       getByText(
-        'Route subsequent requests from the client to the same backend.'
+        'Routes subsequent requests from the client to the same backend.'
       )
     ).toBeVisible();
     expect(
       getByText(
-        'Enable passive checks based on observing communication with back-end nodes.'
+        "When enabled, the NodeBalancer monitors requests to backends. If a request times out, returns a 5xx response (except 501/505), or fails to connect, the backend is marked 'down' and removed from rotation."
       )
     ).toBeVisible();
     expect(
       getByText(
-        "Active health checks proactively check the health of back-end nodes. 'HTTP Valid Status' requires a 2xx or 3xx response from the backend node. 'HTTP Body Regex' uses a regex to match against an expected result body."
+        "Monitors backends to ensure they’re 'up' and handling requests."
       )
     ).toBeVisible();
     expect(getByText('Add a Node')).toBeVisible();
@@ -216,56 +221,6 @@ describe('NodeBalancerConfigPanel', () => {
     expect(getByTestId('http-body')).toBeVisible();
   });
 
-  it('renders the relevant helper text for the Round Robin algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="roundrobin"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.roundrobin)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Least Connections algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="leastconn"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.leastconn)).toBeVisible();
-
-    expect(queryByText(ALGORITHM_HELPER_TEXT.source)).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders the relevant helper text for the Source algorithm', () => {
-    const { getByText, queryByText } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        algorithm="source"
-      />
-    );
-
-    expect(getByText(ALGORITHM_HELPER_TEXT.source)).toBeVisible();
-
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.leastconn)
-    ).not.toBeInTheDocument();
-    expect(
-      queryByText(ALGORITHM_HELPER_TEXT.roundrobin)
-    ).not.toBeInTheDocument();
-  });
-
   it('adds another backend node', async () => {
     const { getByText } = renderWithTheme(
       <NodeBalancerConfigPanel {...nbConfigPanelMockPropsForTest} />
@@ -367,5 +322,27 @@ describe('NodeBalancerConfigPanel', () => {
     for (const algorithm of ['None', 'Session', 'Source IP']) {
       expect(getByText(algorithm)).toBeVisible();
     }
+  });
+
+  it('shows a "Health Check Port" field when health checks are enabled', async () => {
+    const onChange = vi.fn();
+
+    const { getByLabelText } = renderWithTheme(
+      <NodeBalancerConfigPanel
+        {...nbConfigPanelMockPropsForTest}
+        healthCheckType="connection"
+        onUdpCheckPortChange={onChange}
+        protocol="udp"
+      />,
+      { flags: { udp: true } }
+    );
+
+    const checkPortField = getByLabelText('Health Check Port');
+
+    expect(checkPortField).toBeVisible();
+
+    await userEvent.type(checkPortField, '8080');
+
+    expect(onChange).toHaveBeenCalledWith(8080);
   });
 });

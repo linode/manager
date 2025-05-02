@@ -1,7 +1,8 @@
+import { profileFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { accountUserFactory, profileFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
@@ -10,8 +11,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

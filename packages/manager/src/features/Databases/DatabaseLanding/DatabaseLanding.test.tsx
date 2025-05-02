@@ -1,6 +1,10 @@
-import { screen, within } from '@testing-library/react';
-import { fireEvent } from '@testing-library/react';
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { capitalize } from '@linode/utilities';
+import {
+  screen,
+  within,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from '@testing-library/react';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -9,7 +13,6 @@ import DatabaseLanding from 'src/features/Databases/DatabaseLanding/DatabaseLand
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { capitalize } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
@@ -21,8 +24,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({ data: { restricted: false } }),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,

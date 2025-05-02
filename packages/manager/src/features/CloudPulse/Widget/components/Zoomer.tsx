@@ -1,4 +1,4 @@
-import { IconButton, useTheme } from '@mui/material';
+import { IconButton } from '@mui/material';
 import * as React from 'react';
 
 import ZoomInMap from 'src/assets/icons/zoomin.svg';
@@ -13,49 +13,39 @@ export interface ZoomIconProperties {
 }
 
 export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
-  const theme = useTheme();
+  const { handleZoomToggle } = props;
 
-  const handleClick = (needZoomIn: boolean) => {
-    props.handleZoomToggle(needZoomIn);
-  };
-
-  const ToggleZoomer = () => {
-    if (props.zoomIn) {
-      return (
-        <CloudPulseTooltip placement="bottom-end" title="Minimize">
-          <IconButton
-            sx={{
-              color: theme.color.grey1,
-              fontSize: 'x-large',
-              padding: 0,
-            }}
-            aria-label="Zoom In"
-            data-testid="zoom-in"
-            onClick={() => handleClick(false)}
-          >
-            <ZoomInMap />
-          </IconButton>
-        </CloudPulseTooltip>
-      );
-    }
-
+  if (props.zoomIn) {
     return (
-      <CloudPulseTooltip placement="bottom-end" title="Maximize">
+      <CloudPulseTooltip placement="bottom-end" title="Minimize">
         <IconButton
           sx={{
-            color: theme.color.grey1,
-            fontSize: 'x-large',
             padding: 0,
           }}
           aria-label="Zoom Out"
+          color="inherit"
           data-testid="zoom-out"
-          onClick={() => handleClick(true)}
+          onClick={() => handleZoomToggle(false)}
         >
           <ZoomOutMap />
         </IconButton>
       </CloudPulseTooltip>
     );
-  };
+  }
 
-  return <ToggleZoomer />;
+  return (
+    <CloudPulseTooltip placement="bottom-end" title="Maximize">
+      <IconButton
+        sx={{
+          padding: 0,
+        }}
+        aria-label="Zoom In"
+        color="inherit"
+        data-testid="zoom-in"
+        onClick={() => handleZoomToggle(true)}
+      >
+        <ZoomInMap />
+      </IconButton>
+    </CloudPulseTooltip>
+  );
 });

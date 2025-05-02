@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { regionFactory, typeFactory } from 'src/factories';
+import { typeFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE } from 'src/utilities/pricing/constants';
@@ -64,6 +65,22 @@ describe('KubeCheckoutBar', () => {
   it('should not show a warning if all pools have 3 nodes or more', () => {
     const { queryAllByText } = renderComponent(props);
     expect(queryAllByText(/minimum of 3 nodes/i)).toHaveLength(0);
+  });
+
+  it('should render additional pricing text and link', async () => {
+    const { findByText, getByRole } = renderComponent(props);
+    expect(
+      await findByText(
+        /Additional services added to the cluster may incur charges./i
+      )
+    ).toBeVisible();
+
+    const additionalPricingLink = getByRole('link');
+    expect(additionalPricingLink).toHaveTextContent('See pricing');
+    expect(additionalPricingLink).toHaveAttribute(
+      'href',
+      'https://www.linode.com/pricing/'
+    );
   });
 
   it('should show a warning if any pool has fewer than 3 nodes', async () => {

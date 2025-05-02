@@ -1,4 +1,15 @@
 import {
+  useAccountAgreements,
+  useCreateVolumeMutation,
+  useGrants,
+  useLinodeQuery,
+  useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+  useVolumeTypesQuery,
+} from '@linode/queries';
+import { LinodeSelect, useIsGeckoEnabled } from '@linode/shared';
+import {
   Box,
   Button,
   Notice,
@@ -8,6 +19,8 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { isNilOrEmpty, maybeCastToNumber } from '@linode/utilities';
+import { doesRegionSupportFeature } from '@linode/utilities';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
@@ -30,38 +43,26 @@ import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryp
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import {
-  useCreateVolumeMutation,
-  useVolumeTypesQuery,
-} from 'src/queries/volumes/volumes';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendCreateVolumeEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
-import { isNilOrEmpty } from 'src/utilities/isNilOrEmpty';
-import { maybeCastToNumber } from 'src/utilities/maybeCastToNumber';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { SIZE_FIELD_WIDTH } from './constants';
 import { ConfigSelect } from './Drawers/VolumeDrawer/ConfigSelect';
 import { SizeField } from './Drawers/VolumeDrawer/SizeField';
 
-import type { VolumeEncryption } from '@linode/api-v4';
+import type { APIError, VolumeEncryption } from '@linode/api-v4';
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { Theme } from '@mui/material/styles';
 
@@ -125,6 +126,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export const VolumeCreate = () => {
+  const flags = useFlags();
   const theme = useTheme();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -135,6 +137,10 @@ export const VolumeCreate = () => {
   const { data: grants } = useGrants();
 
   const { data: regions } = useRegionsQuery();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
@@ -142,9 +148,8 @@ export const VolumeCreate = () => {
   const [hasSignedAgreement, setHasSignedAgreement] = React.useState(false);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const regionsWithBlockStorage =
     regions
@@ -187,7 +192,8 @@ export const VolumeCreate = () => {
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
-      const { config_id, encryption, label, linode_id, region, size } = values;
+      const { config_id, encryption, label, linode_id, region, size, tags } =
+        values;
 
       setSubmitting(true);
 
@@ -211,6 +217,7 @@ export const VolumeCreate = () => {
           linode_id === null ? undefined : maybeCastToNumber(linode_id),
         region: isNilOrEmpty(region) || region === 'none' ? undefined : region,
         size: maybeCastToNumber(size),
+        tags,
       })
         .then((volume) => {
           if (hasSignedAgreement) {
@@ -324,12 +331,11 @@ export const VolumeCreate = () => {
       />
       {doesNotHavePermission && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'create',
             resourceType: 'Volumes',
           })}
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
@@ -367,6 +373,30 @@ export const VolumeCreate = () => {
               tooltipPosition="right"
               value={values.label}
             />
+            <Box className={classes.select}>
+              <TagsInput
+                onChange={(items) =>
+                  setFieldValue(
+                    'tags',
+                    items.map((t) => t.value)
+                  )
+                }
+                tagError={
+                  touched.tags
+                    ? errors.tags
+                      ? getErrorStringOrDefault(
+                          errors.tags as unknown as APIError[],
+                          'Unable to tag volume.'
+                        )
+                      : undefined
+                    : undefined
+                }
+                disabled={doesNotHavePermission}
+                label="Tags"
+                name="tags"
+                value={values.tags.map((tag) => ({ label: tag, value: tag }))}
+              />
+            </Box>
             <Box alignItems="flex-end" display="flex">
               <RegionSelect
                 onChange={(e, region) => {
@@ -376,6 +406,7 @@ export const VolumeCreate = () => {
                 currentCapability="Block Storage"
                 disabled={doesNotHavePermission}
                 errorText={touched.region ? errors.region : undefined}
+                isGeckoLAEnabled={isGeckoLAEnabled}
                 label="Region"
                 onBlur={handleBlur}
                 regions={regions ?? []}
@@ -542,6 +573,7 @@ interface FormState {
   linode_id: null | number;
   region: string;
   size: number;
+  tags: string[];
 }
 
 const initialValues: FormState = {
@@ -551,4 +583,5 @@ const initialValues: FormState = {
   linode_id: null,
   region: '',
   size: 20,
+  tags: [],
 };

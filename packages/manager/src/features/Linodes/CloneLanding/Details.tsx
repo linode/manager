@@ -1,5 +1,9 @@
+import { useRegionsQuery } from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
 import {
+  ActionsPanel,
   Button,
+  CloseIcon,
   Divider,
   List,
   ListItem,
@@ -7,14 +11,10 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 
 import {
   StyledButton,
@@ -160,7 +160,7 @@ export const Details = (props: Props) => {
                   data-qa-inline-delete
                   onClick={() => handleToggleConfig(eachConfig.id)}
                 >
-                  <Close />
+                  <CloseIcon />
                 </StyledButton>
               </StyledDiv>
               <List sx={{ flexBasis: '100%', marginLeft: theme.spacing(2) }}>
@@ -190,7 +190,7 @@ export const Details = (props: Props) => {
                 data-qa-inline-delete
                 onClick={() => handleToggleDisk(eachDisk.id)}
               >
-                <Close />
+                <CloseIcon />
               </StyledButton>
             </ListItem>
           );

@@ -7,12 +7,26 @@ type ObjectStore = 'mockState' | 'seedState';
 const MOCK_STATE: ObjectStore = 'mockState';
 const SEED_STATE: ObjectStore = 'seedState';
 
+// Helper method to find an item in the DB. Returns true
+// if the given item has the same ID as the given number
+const findItem = (item: unknown, id: number) => {
+  // Some items may be stored as [number, Entity], so we
+  // need to check for both Entity and [number, Entity] types
+  const isItemTuple = Array.isArray(item) && item.length >= 2;
+
+  const itemTupleToFind = isItemTuple && hasId(item[1]) && item[1].id === id;
+
+  const itemToFind = hasId(item) && item.id === id;
+
+  return itemTupleToFind || itemToFind;
+};
+
 export const mswDB = {
   add: async <T extends keyof MockState>(
     entity: T,
     payload: MockState[T] extends Array<infer U> ? U : MockState[T],
     state: MockState
-  ): Promise<void> => {
+  ): Promise<MockState[T] extends Array<infer U> ? U : MockState[T]> => {
     const db = await mswDB.open('MockDB', 1);
 
     return new Promise((resolve, reject) => {
@@ -42,6 +56,22 @@ export const mswDB = {
             newId = newId + 1;
           }
           payload.id = newId;
+        } else if (
+          // generate unique ID for tuple type entities if necessary
+          Array.isArray(payload) &&
+          payload.length >= 2 &&
+          hasId(payload[1])
+        ) {
+          let newId = payload[1].id;
+          while (
+            mockState[entity].some(
+              // eslint-disable-next-line no-loop-func
+              (item: [number, { id: number }]) => item[1].id === newId
+            )
+          ) {
+            newId = newId + 1;
+          }
+          payload[1].id = newId;
         }
 
         mockState[entity].push(payload);
@@ -50,7 +80,7 @@ export const mswDB = {
         const updatedRequest = store.put({ id: 1, ...mockState });
 
         updatedRequest.onsuccess = () => {
-          resolve();
+          resolve(payload);
         };
         updatedRequest.onerror = (event) => {
           reject(event);
@@ -161,13 +191,9 @@ export const mswDB = {
 
           const deleteEntity = (state: MockState | undefined) => {
             if (state && state[entity]) {
-              const index = state[entity].findIndex((item) => {
-                if (!hasId(item)) {
-                  return false;
-                }
-
-                return item.id === id;
-              });
+              const index = state[entity].findIndex((item) =>
+                findItem(item, id)
+              );
               if (index !== -1) {
                 state[entity].splice(index, 1);
               }
@@ -326,12 +352,7 @@ export const mswDB = {
           const seedState = seedRequest.result;
 
           const findEntity = (state: MockState | undefined) => {
-            return state?.[entity]?.find((item) => {
-              if (!hasId(item)) {
-                return false;
-              }
-              return item.id === id;
-            });
+            return state?.[entity]?.find((item) => findItem(item, id));
           };
 
           const mockEntity = findEntity(mockState);
@@ -481,9 +502,12 @@ export const mswDB = {
       storeRequest.onsuccess = () => {
         const mockState = storeRequest.result;
         if (mockState && mockState[entity]) {
-          const index = mockState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+          const index = mockState[
+            entity
+          ].findIndex((item: [number, { id: number }] | { id: number }) =>
+            findItem(item, id)
           );
+
           if (index !== -1) {
             Object.assign(mockState[entity][index], payload);
             Object.assign(state[entity][index], payload);
@@ -502,9 +526,12 @@ export const mswDB = {
             return;
           }
 
-          const index = seedState[entity].findIndex(
-            (item: { id: number }) => item.id === id
+          const index = seedState[
+            entity
+          ].findIndex((item: [number, { id: number }] | { id: number }) =>
+            findItem(item, id)
           );
+
           if (index === -1) {
             reject(new Error('Item not found'));
             return;

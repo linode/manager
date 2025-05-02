@@ -1,14 +1,12 @@
+import { linodeFactory } from '@linode/utilities';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { mockGetPlacementGroups } from 'support/intercepts/placement-groups';
 import { ui } from 'support/ui';
-import {
-  accountFactory,
-  linodeFactory,
-  placementGroupFactory,
-} from 'src/factories';
-import { mockGetAccount } from 'support/intercepts/account';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+
+import { accountFactory, placementGroupFactory } from 'src/factories';
 
 const mockAccount = accountFactory.build();
 
@@ -49,31 +47,31 @@ describe('VM Placement landing page', () => {
     const mockPlacementGroupNoncompliantRegion = chooseRegion();
 
     const mockPlacementGroupLinode = linodeFactory.build({
-      label: randomLabel(),
       id: randomNumber(),
+      label: randomLabel(),
       region: mockPlacementGroupNoncompliantRegion.id,
     });
 
     const mockPlacementGroupCompliant = placementGroupFactory.build({
       id: randomNumber(),
-      label: randomLabel(),
-      region: mockPlacementGroupCompliantRegion.id,
-      placement_group_type: 'anti_affinity:local',
       is_compliant: true,
-      placement_group_policy: 'flexible',
+      label: randomLabel(),
       members: [],
+      placement_group_policy: 'flexible',
+      placement_group_type: 'anti_affinity:local',
+      region: mockPlacementGroupCompliantRegion.id,
     });
 
     const mockPlacementGroupNoncompliant = placementGroupFactory.build({
       id: randomNumber(),
-      label: randomLabel(),
-      region: mockPlacementGroupNoncompliantRegion.id,
-      placement_group_type: 'affinity:local',
       is_compliant: false,
-      placement_group_policy: 'strict',
+      label: randomLabel(),
       members: [
-        { linode_id: mockPlacementGroupLinode.id, is_compliant: false },
+        { is_compliant: false, linode_id: mockPlacementGroupLinode.id },
       ],
+      placement_group_policy: 'strict',
+      placement_group_type: 'affinity:local',
+      region: mockPlacementGroupNoncompliantRegion.id,
     });
 
     const mockPlacementGroups = [

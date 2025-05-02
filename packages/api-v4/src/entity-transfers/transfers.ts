@@ -11,6 +11,7 @@ import { Filter, Params, ResourcePage as Page } from '../types';
 import { CreateTransferPayload, EntityTransfer } from './types';
 
 /**
+ * @deprecated
  * getEntityTransfers
  *
  * Returns a paginated list of all Entity Transfers which this customer has created or accepted.
@@ -24,6 +25,7 @@ export const getEntityTransfers = (params?: Params, filter?: Filter) =>
   );
 
 /**
+ * @deprecated
  * getEntityTransfer
  *
  * Get a single Entity Transfer by its token (uuid). A Pending transfer
@@ -39,6 +41,7 @@ export const getEntityTransfer = (token: string) =>
   );
 
 /**
+ * @deprecated
  * createEntityTransfer
  *
  *  Creates a pending Entity Transfer for one or more entities on
@@ -52,6 +55,7 @@ export const createEntityTransfer = (data: CreateTransferPayload) =>
   );
 
 /**
+ * @deprecated
  * acceptEntityTransfer
  *
  * Accepts a transfer that has been created by a user on a different account.
@@ -67,6 +71,7 @@ export const acceptEntityTransfer = (token: string) =>
   );
 
 /**
+ * @deprecated
  * cancelTransfer
  *
  * Cancels a pending transfer. Only unrestricted users on the account

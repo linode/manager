@@ -6,16 +6,16 @@
  * if the user was navgiated from Login. Further, we are doing no nonce checking here
  */
 
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
+import type { BaseQueryParams } from '@linode/utilities';
 import type { MapDispatchToProps } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
 
 interface LoginAsCustomerCallbackProps
   extends DispatchProps,

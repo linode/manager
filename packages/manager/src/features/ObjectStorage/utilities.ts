@@ -6,7 +6,7 @@ import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
-  return `https://${hostname}/${objectName}`;
+  return `https://${hostname}/${encodeURIComponent(objectName)}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent
@@ -47,14 +47,12 @@ export interface ACLType {
 export interface ExtendedObject extends ObjectStorageObject {
   _displayName: string;
   _isFolder: boolean;
-  _manuallyCreated: boolean;
   _shouldDisplayObject: boolean;
 }
 
 export const extendObject = (
   object: ObjectStorageObject,
-  prefix: string,
-  manuallyCreated = false
+  prefix: string
 ): ExtendedObject => {
   const _isFolder = isFolder(object);
 
@@ -69,9 +67,6 @@ export const extendObject = (
     ...object,
     _displayName,
     _isFolder,
-    // If we're in a folder called "my-folder", we don't want to show the object
-    // called "my-folder/". We can look at the prefix to make this decision,
-    _manuallyCreated: manuallyCreated,
     // since it will also be "my-folder/".
     _shouldDisplayObject: object.name !== prefix,
   };

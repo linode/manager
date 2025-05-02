@@ -1,13 +1,13 @@
-import { accountBetaFactory, betaFactory } from '@src/factories';
-import { authenticate } from 'support/api/authentication';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { accountBetaFactory, betaFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
+import { authenticate } from 'support/api/authentication';
 import {
   mockGetAccountBetas,
-  mockGetBetas,
   mockGetBeta,
+  mockGetBetas,
   mockPostBeta,
 } from 'support/intercepts/betas';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 
 authenticate();
 
@@ -21,17 +21,17 @@ describe('Enroll in a Beta Program', () => {
       selfServeBetas: true,
     }).as('getFeatureFlags');
     const currentlyEnrolledBeta = accountBetaFactory.build({
-      id: '12345',
       enrolled: DateTime.now().minus({ days: 10 }).toISO(),
+      id: '12345',
       started: DateTime.now().minus({ days: 11 }).toISO(),
     });
     const availableBetas = betaFactory.buildList(2);
     const historicalBetas = accountBetaFactory.buildList(2, {
+      ended: DateTime.now().minus({ days: 5 }).toISO(),
+      enrolled: DateTime.now().minus({ days: 10 }).toISO(),
       id: '1234',
       label: 'Historical Beta',
       started: DateTime.now().minus({ days: 15 }).toISO(),
-      enrolled: DateTime.now().minus({ days: 10 }).toISO(),
-      ended: DateTime.now().minus({ days: 5 }).toISO(),
     });
 
     const accountBetas = [currentlyEnrolledBeta, ...historicalBetas];

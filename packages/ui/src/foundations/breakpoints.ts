@@ -1,4 +1,3 @@
-import { Chart } from '@linode/design-language-system';
 import { createTheme } from '@mui/material';
 
 // This is a hack to create breakpoints outside of the theme itself.
@@ -13,6 +12,5 @@ export const breakpoints = createTheme({
       xs: 0,
     },
   },
-  tokens: { chart: Chart },
   name: 'light',
 }).breakpoints;

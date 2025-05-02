@@ -1,12 +1,14 @@
-import { Profile } from '@linode/api-v4';
-import { profileFactory } from '@src/factories';
-import { mockGetProfile } from 'support/intercepts/profile';
+import { profileFactory } from '@linode/utilities';
 import { getProfile } from 'support/api/account';
-import { interceptGetProfile } from 'support/intercepts/profile';
 import { mockUpdateUsername } from 'support/intercepts/account';
+import { interceptGetProfile } from 'support/intercepts/profile';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
+
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
+
+import type { Profile } from '@linode/api-v4';
 
 const verifyUsernameAndEmail = (
   mockRestrictedProxyProfile: Profile,
@@ -68,8 +70,8 @@ describe('Display Settings', () => {
       cy.findByLabelText('Username')
         .should('be.visible')
         .should('have.value', username)
-        .clear()
-        .type(newUsername);
+        .clear();
+      cy.focused().type(newUsername);
 
       ui.button
         .findByTitle('Update Username')
@@ -89,9 +91,9 @@ describe('Display Settings', () => {
 
   it('disables username/email fields for restricted proxy user', () => {
     const mockRestrictedProxyProfile = profileFactory.build({
-      username: 'restricted-proxy-user',
-      user_type: 'proxy',
       restricted: true,
+      user_type: 'proxy',
+      username: 'restricted-proxy-user',
     });
 
     verifyUsernameAndEmail(
@@ -103,8 +105,8 @@ describe('Display Settings', () => {
 
   it('disables username/email fields for unrestricted proxy user', () => {
     const mockUnrestrictedProxyProfile = profileFactory.build({
-      username: 'unrestricted-proxy-user',
       user_type: 'proxy',
+      username: 'unrestricted-proxy-user',
     });
 
     verifyUsernameAndEmail(
@@ -116,9 +118,9 @@ describe('Display Settings', () => {
 
   it('disables username/email fields for regular restricted user', () => {
     const mockRegularRestrictedProfile = profileFactory.build({
-      username: 'regular-restricted-user',
-      user_type: 'default',
       restricted: true,
+      user_type: 'default',
+      username: 'regular-restricted-user',
     });
 
     verifyUsernameAndEmail(

@@ -1,24 +1,23 @@
 import {
+  ActionsPanel,
   Autocomplete,
   FormControlLabel,
   Notice,
   Toggle,
   Typography,
 } from '@linode/ui';
+import { capitalize, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import {
   useBucketAccess,
   useObjectAccess,
   useUpdateBucketAccessMutation,
   useUpdateObjectAccessMutation,
 } from 'src/queries/object-storage/queries';
-import { capitalize } from 'src/utilities/capitalize';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { bucketACLOptions, objectACLOptions } from '../utilities';
@@ -101,7 +100,7 @@ export const AccessSelect = React.memo((props: Props) => {
       return { acl: _acl as ACLType, cors_enabled };
     }
     return { acl: 'private' as ACLType, cors_enabled: true };
-  }, [bucketAccessData, objectAccessData, , variant]);
+  }, [bucketAccessData, objectAccessData, variant]);
 
   const {
     control,
@@ -253,7 +252,7 @@ export const AccessSelect = React.memo((props: Props) => {
         <Notice spacingBottom={0} spacingTop={16} variant="warning">
           <Typography
             sx={(theme) => ({
-              fontFamily: theme.font.bold,
+              font: theme.font.bold,
             })}
           >
             CORS (Cross Origin Sharing) is not available for endpoint types E2

@@ -1,16 +1,21 @@
-import { imageFactory } from 'src/factories';
-import { ui } from 'support/ui';
-import { mockGetAllImages } from 'support/intercepts/images';
-import { profileFactory } from 'src/factories';
-import { randomLabel } from 'support/util/random';
-import { grantsFactory } from 'src/factories';
-import { accountUserFactory } from 'src/factories';
+import { profileFactory } from '@linode/utilities';
+import { grantsFactory } from '@linode/utilities';
 import { mockGetUser } from 'support/intercepts/account';
+import {
+  mockGetCustomImages,
+  mockGetRecoveryImages,
+} from 'support/intercepts/images';
 import {
   mockGetProfile,
   mockGetProfileGrants,
 } from 'support/intercepts/profile';
-import { Image } from '@linode/api-v4';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+
+import { imageFactory } from 'src/factories';
+import { accountUserFactory } from 'src/factories';
+
+import type { Image } from '@linode/api-v4';
 
 function checkActionMenu(tableAlias: string, mockImages: any[]) {
   mockImages.forEach((image) => {
@@ -48,33 +53,45 @@ function checkActionMenu(tableAlias: string, mockImages: any[]) {
 
 describe('image landing checks for non-empty state with restricted user', () => {
   beforeEach(() => {
-    const mockImages: Image[] = new Array(3).fill(null).map(
-      (_item: null, index: number): Image => {
+    const mockCustomImages: Image[] = new Array(3)
+      .fill(null)
+      .map((_item: null, index: number): Image => {
         return imageFactory.build({
           label: `Image ${index}`,
-          tags: [index % 2 == 0 ? 'even' : 'odd', 'nums'],
+          tags: [index % 2 === 0 ? 'even' : 'odd', 'nums'],
+          type: 'manual',
         });
-      }
-    );
+      });
+
+    const mockRecoveryImages: Image[] = new Array(3)
+      .fill(null)
+      .map((_item: null, index: number): Image => {
+        return imageFactory.build({
+          label: `Image ${index}`,
+          tags: [index % 2 === 0 ? 'even' : 'odd', 'nums'],
+          type: 'automatic',
+        });
+      });
 
     // Mock setup to display the Image landing page in an non-empty state
-    mockGetAllImages(mockImages).as('getImages');
+    mockGetCustomImages(mockCustomImages).as('getCustomImages');
+    mockGetRecoveryImages(mockRecoveryImages).as('getRecoveryImages');
 
     // Alias the mockImages array
-    cy.wrap(mockImages).as('mockImages');
+    cy.wrap(mockCustomImages).as('mockCustomImages');
   });
 
   it('checks restricted user with read access has no access to create image and can see existing images', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     const mockProfile = profileFactory.build({
-      username: randomLabel(),
       restricted: true,
+      username: randomLabel(),
     });
 
     const mockUser = accountUserFactory.build({
-      username: mockProfile.username,
       restricted: true,
       user_type: 'default',
+      username: mockProfile.username,
     });
 
     const mockGrants = grantsFactory.build({
@@ -89,7 +106,8 @@ describe('image landing checks for non-empty state with restricted user', () => 
 
     // Login and wait for application to load
     cy.visitWithLogin('/images');
-    cy.wait('@getImages');
+    cy.wait('@getCustomImages');
+    cy.wait('@getRecoveryImages');
     cy.url().should('endWith', '/images');
 
     cy.contains('h3', 'Custom Images')
@@ -118,7 +136,7 @@ describe('image landing checks for non-empty state with restricted user', () => 
       )
       .should('be.visible');
 
-    cy.get<Image[]>('@mockImages').then((mockImages) => {
+    cy.get<Image[]>('@mockCustomImages').then((mockImages) => {
       // Assert that the correct number of Image entries are present in the customImageTable
       cy.get('@customImageTable')
         .find('tbody tr')

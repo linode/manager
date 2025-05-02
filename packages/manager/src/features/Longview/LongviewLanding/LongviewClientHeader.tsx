@@ -1,16 +1,15 @@
+import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
-import { pathOr } from 'ramda';
+import { formatUptime } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
 import { Link } from 'src/components/Link';
 import withClientStats from 'src/containers/longview.stats.container';
-import { useProfile } from 'src/queries/profile/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { formatUptime } from 'src/utilities/formatUptime';
 
 import { getPackageNoticeText } from '../shared/utilities';
 import {
@@ -21,7 +20,6 @@ import {
 } from './LongviewClientHeader.styles';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
 
-import type { LongviewPackage } from '../request.types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { DispatchProps } from 'src/containers/longview.container';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
@@ -74,19 +72,12 @@ export const LongviewClientHeader = enhanced(
         });
     };
 
-    const hostname = pathOr(
-      'Hostname not available',
-      ['SysInfo', 'hostname'],
-      longviewClientData
-    );
-    const uptime = pathOr<null | number>(null, ['Uptime'], longviewClientData);
+    const hostname =
+      longviewClientData.SysInfo?.hostname ?? 'Hostname not available';
+    const uptime = longviewClientData?.Uptime ?? null;
     const formattedUptime =
       uptime !== null ? `Up ${formatUptime(uptime)}` : 'Uptime not available';
-    const packages = pathOr<LongviewPackage[] | null>(
-      null,
-      ['Packages'],
-      longviewClientData
-    );
+    const packages = longviewClientData?.Packages ?? null;
     const numPackagesToUpdate = packages ? packages.length : 0;
     const packagesToUpdate = getPackageNoticeText(packages);
 

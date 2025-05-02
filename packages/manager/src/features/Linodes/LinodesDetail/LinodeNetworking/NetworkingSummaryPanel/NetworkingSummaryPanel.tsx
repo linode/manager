@@ -1,10 +1,11 @@
+import { useLinodeQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import { Paper } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled, useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { Paper } from '@linode/ui';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useFlags } from 'src/hooks/useFlags';
 
 import { DNSResolvers } from './DNSResolvers';
 import { NetworkTransfer } from './NetworkTransfer';
@@ -15,10 +16,14 @@ interface Props {
 }
 
 export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
+  const flags = useFlags();
+  const theme = useTheme();
   // @todo maybe move this query closer to the consuming component
   const { data: linode } = useLinodeQuery(props.linodeId);
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
-  const theme = useTheme();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   if (!linode) {
     return null;
@@ -31,7 +36,13 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
     <Paper>
       <Grid container spacing={4} sx={{ flexGrow: 1 }}>
         {hideNetworkTransfer ? null : ( // Distributed compute instances have no transfer pool
-          <Grid md={2.5} sm={6} xs={12}>
+          <Grid
+            size={{
+              md: 2.5,
+              sm: 6,
+              xs: 12,
+            }}
+          >
             <NetworkTransfer
               linodeId={linode.id}
               linodeLabel={linode.label}
@@ -41,14 +52,16 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           </Grid>
         )}
         <Grid
+          size={{
+            md: 'grow',
+            sm: 'grow',
+            xs: 12,
+          }}
           sx={{
             [theme.breakpoints.down('md')]: {
               order: 3,
             },
           }}
-          md
-          sm
-          xs={12}
         >
           <TransferHistory
             linodeCreated={linode.created}
@@ -59,9 +72,7 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           sx={{
             paddingBottom: 0,
           }}
-          md={3.5}
-          sm={hideNetworkTransfer ? 12 : 6}
-          xs={12}
+          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
         >
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>

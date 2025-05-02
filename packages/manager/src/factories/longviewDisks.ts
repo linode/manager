@@ -1,16 +1,16 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
-import {
-  Disk,
-  LongviewDisk,
-  LongviewCPU,
+import type {
   CPU,
-  LongviewSystemInfo,
-  LongviewNetworkInterface,
+  Disk,
   InboundOutboundNetwork,
-  LongviewNetwork,
-  LongviewMemory,
+  LongviewCPU,
+  LongviewDisk,
   LongviewLoad,
+  LongviewMemory,
+  LongviewNetwork,
+  LongviewNetworkInterface,
+  LongviewSystemInfo,
   Uptime,
 } from 'src/features/Longview/request.types';
 
@@ -38,25 +38,25 @@ export const diskFactory = Factory.Sync.makeFactory<Disk>({
   childof: 0,
   children: 0,
   dm: 0,
-  isswap: 0,
-  mounted: 1,
-  reads: [mockStats[0]],
-  write_bytes: [mockStats[1]],
-  writes: [mockStats[2]],
   fs: {
-    total: [mockStats[3]],
+    free: [mockStats[6]],
     ifree: [mockStats[4]],
     itotal: [mockStats[5]],
     path: '/',
-    free: [mockStats[6]],
+    total: [mockStats[3]],
   },
+  isswap: 0,
+  mounted: 1,
   read_bytes: [mockStats[0]],
+  reads: [mockStats[0]],
+  write_bytes: [mockStats[1]],
+  writes: [mockStats[2]],
 });
 
 export const cpuFactory = Factory.Sync.makeFactory<CPU>({
   system: [mockStats[7]],
-  wait: [mockStats[8]],
   user: [mockStats[9]],
+  wait: [mockStats[8]],
 });
 
 export const longviewDiskFactory = Factory.Sync.makeFactory<LongviewDisk>({
@@ -117,15 +117,15 @@ export const longviewNetworkFactory = Factory.Sync.makeFactory<LongviewNetwork>(
 
 export const LongviewMemoryFactory = Factory.Sync.makeFactory<LongviewMemory>({
   Memory: {
+    real: {
+      buffers: [mockStats[15]],
+      cache: [mockStats[16]],
+      free: [mockStats[14]],
+      used: [mockStats[13]],
+    },
     swap: {
       free: [mockStats[12]],
       used: [mockStats[0]],
-    },
-    real: {
-      used: [mockStats[13]],
-      free: [mockStats[14]],
-      buffers: [mockStats[15]],
-      cache: [mockStats[16]],
     },
   },
 });
@@ -135,5 +135,5 @@ export const LongviewLoadFactory = Factory.Sync.makeFactory<LongviewLoad>({
 });
 
 export const UptimeFactory = Factory.Sync.makeFactory<Uptime>({
-  uptime: 84516.53,
+  Uptime: 84516.53,
 });

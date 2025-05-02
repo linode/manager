@@ -1,41 +1,43 @@
 /**
  * @file Error Handling Tests for CloudPulse Dashboard.
  */
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { regionFactory } from '@linode/utilities';
+import { widgetDetails } from 'support/constants/widgets';
+import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockCreateCloudPulseJWEToken,
   mockGetCloudPulseDashboard,
-  mockGetCloudPulseDashboards,
-  mockGetCloudPulseMetricDefinitions,
-  mockGetCloudPulseServices,
   mockGetCloudPulseDashboardByIdError,
+  mockGetCloudPulseDashboards,
   mockGetCloudPulseDashboardsError,
+  mockGetCloudPulseMetricDefinitions,
   mockGetCloudPulseMetricDefinitionsError,
+  mockGetCloudPulseServices,
   mockGetCloudPulseServicesError,
   mockGetCloudPulseTokenError,
 } from 'support/intercepts/cloudpulse';
-import { ui } from 'support/ui';
-import { widgetDetails } from 'support/constants/widgets';
 import {
-  accountFactory,
-  dashboardFactory,
-  dashboardMetricFactory,
-  databaseFactory,
-  regionFactory,
-  widgetFactory,
-} from 'src/factories';
+  mockGetDatabases,
+  mockGetDatabasesError,
+} from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import {
   mockGetRegions,
   mockGetRegionsError,
 } from 'support/intercepts/regions';
+import { ui } from 'support/ui';
+
 import {
-  mockGetDatabases,
-  mockGetDatabasesError,
-} from 'support/intercepts/databases';
-import { Database } from '@linode/api-v4';
-import { mockGetAccount } from 'support/intercepts/account';
-import { Flags } from 'src/featureFlags';
+  accountFactory,
+  dashboardFactory,
+  dashboardMetricFactory,
+  databaseFactory,
+  widgetFactory,
+} from 'src/factories';
+
+import type { Database } from '@linode/api-v4';
+import type { Flags } from 'src/featureFlags';
 
 /**
  * Verifies the presence and values of specific properties within the aclpPreference object
@@ -47,7 +49,7 @@ import { Flags } from 'src/featureFlags';
  */
 
 const flags: Partial<Flags> = {
-  aclp: { enabled: true, beta: true },
+  aclp: { beta: true, enabled: true },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'LINODE_ID',
@@ -59,34 +61,34 @@ const flags: Partial<Flags> = {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'dbaas',
-      supportedRegionIds: 'us-ord',
+      supportedRegionIds: 'us-ord, us-east',
     },
   ],
 };
 const {
-  metrics,
-  id,
-  serviceType,
+  clusterName,
   dashboardName,
   engine,
-  clusterName,
+  id,
+  metrics,
   nodeType,
+  serviceType,
 } = widgetDetails.dbaas;
 
 const dashboard = dashboardFactory.build({
   label: dashboardName,
   service_type: serviceType,
-  widgets: metrics.map(({ title, yLabel, name, unit }) => {
+  widgets: metrics.map(({ name, title, unit, yLabel }) => {
     return widgetFactory.build({
       label: title,
-      y_label: yLabel,
       metric: name,
       unit,
+      y_label: yLabel,
     });
   }),
 });
 
-const metricDefinitions = metrics.map(({ title, name, unit }) =>
+const metricDefinitions = metrics.map(({ name, title, unit }) =>
   dashboardMetricFactory.build({
     label: title,
     metric: name,
@@ -94,21 +96,39 @@ const metricDefinitions = metrics.map(({ title, name, unit }) =>
   })
 );
 
-const mockRegion = regionFactory.build({
-  capabilities: ['Managed Databases'],
-  id: 'us-ord',
-  label: 'Chicago, IL',
-});
+const mockRegions = [
+  regionFactory.build({
+    id: 'us-ord',
+    label: 'Chicago, IL',
+    capabilities: ['Managed Databases'],
+  }),
+  regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    capabilities: ['Managed Databases'],
+  }),
+];
 
-const databaseMock: Database = databaseFactory.build({
-  label: clusterName,
-  type: engine,
-  region: mockRegion.id,
-  version: '1',
-  status: 'provisioning',
-  cluster_size: 1,
-  engine: 'mysql',
-});
+const databaseMocks: Database[] = [
+  databaseFactory.build({
+    cluster_size: 3,
+    engine: 'mysql',
+    label: clusterName,
+    region: mockRegions[0].id,
+    status: 'provisioning',
+    type: engine,
+    version: '1',
+  }),
+  databaseFactory.build({
+    cluster_size: 3,
+    engine: 'mysql',
+    region: mockRegions[1].id,
+    status: 'provisioning',
+    type: engine,
+    version: '1',
+  }),
+];
+
 const mockAccount = accountFactory.build();
 
 describe('Tests for API error handling', () => {
@@ -117,12 +137,12 @@ describe('Tests for API error handling', () => {
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetCloudPulseDashboards(serviceType, [dashboard]).as('fetchDashboard');
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
     mockCreateCloudPulseJWEToken(serviceType);
     mockGetCloudPulseDashboard(id, dashboard);
-    mockGetRegions([mockRegion]);
+    mockGetRegions(mockRegions);
     mockGetUserPreferences({});
-    mockGetDatabases([databaseMock]).as('getDatabases');
+    mockGetDatabases(databaseMocks).as('getDatabases');
   });
 
   it('displays error message when metric definitions API fails', () => {
@@ -132,7 +152,7 @@ describe('Tests for API error handling', () => {
       'Internal Server Error'
     ).as('getMetricDefinitions');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -148,7 +168,7 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
@@ -159,7 +179,7 @@ describe('Tests for API error handling', () => {
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -170,6 +190,11 @@ describe('Tests for API error handling', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -189,7 +214,7 @@ describe('Tests for API error handling', () => {
     // Mocking an error response for the 'fetchServices' API request.
     mockGetCloudPulseServicesError('Internal Server Error').as('fetchServices');
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait('@fetchServices');
@@ -204,7 +229,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseTokenError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -231,7 +256,7 @@ describe('Tests for API error handling', () => {
     ui.regionSelect.find().click();
 
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -242,6 +267,11 @@ describe('Tests for API error handling', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
 
     // Select a Node from the autocomplete input.
     ui.autocomplete
@@ -258,14 +288,14 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when Dashboards API fails', () => {
-    mockGetCloudPulseServices(serviceType).as('fetchServices');
+    mockGetCloudPulseServices([serviceType]).as('fetchServices');
 
     // Mocking an error response for the 'fetchDashboard' API request for a specific service type.
     mockGetCloudPulseDashboardsError(serviceType, 'Internal Server Error').as(
       'fetchDashboard'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -282,7 +312,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseDashboardError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -309,7 +339,7 @@ describe('Tests for API error handling', () => {
     //  Select a region from the dropdown.
     ui.regionSelect.find().click();
     ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
       .should('be.visible')
       .click();
 
@@ -320,6 +350,11 @@ describe('Tests for API error handling', () => {
       .type(clusterName);
 
     ui.autocompletePopper.findByTitle(clusterName).should('be.visible').click();
+
+    ui.button
+      .findByAttribute('aria-label', 'Close')
+      .should('be.visible')
+      .click();
 
     //  Select a node type from the autocomplete input.
     ui.autocomplete
@@ -341,7 +376,7 @@ describe('Tests for API error handling', () => {
       'getCloudPulseRegionsError'
     );
 
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -366,12 +401,7 @@ describe('Tests for API error handling', () => {
   });
 
   it('displays error message when instance API fails', () => {
-    // Mocking an error response for the 'CloudPulseDatabaseInstances' API request.
-    mockGetDatabasesError('Internal Server Error').as(
-      'getDatabaseInstancesError'
-    );
-
-    cy.visitWithLogin('monitor/cloudpulse');
+    cy.visitWithLogin('/metrics');
 
     // Wait for the API calls .
     cy.wait(['@fetchServices', '@fetchDashboard']);
@@ -387,21 +417,32 @@ describe('Tests for API error handling', () => {
       .should('be.visible')
       .click();
 
-    //  Select a region from the dropdown.
-    ui.regionSelect.find().click();
-
-    ui.regionSelect
-      .findItemByRegionId(mockRegion.id, [mockRegion])
-      .should('be.visible')
-      .click();
-
-    //Select a Database Engine from the autocomplete input.
+    // Select a Database Engine from the autocomplete input.
     ui.autocomplete
       .findByLabel('Database Engine')
       .should('be.visible')
       .type(engine);
 
     ui.autocompletePopper.findByTitle(engine).should('be.visible').click();
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegions[0].id, mockRegions)
+      .should('be.visible')
+      .click();
+
+    // simulate an error on instances call before changing the region again
+    mockGetDatabasesError('Internal Server Error').as(
+      'getDatabaseInstancesError'
+    );
+
+    //  Select a region from the dropdown.
+    ui.regionSelect.find().click();
+    ui.regionSelect
+      .findItemByRegionId(mockRegions[1].id, mockRegions)
+      .should('be.visible')
+      .click();
 
     // Wait for the intercepted request to complete
     cy.wait('@getDatabaseInstancesError');

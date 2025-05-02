@@ -1,22 +1,39 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { grantsFactory, profileFactory } from '@linode/utilities';
+import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { grantsFactory, imageFactory, profileFactory } from 'src/factories';
+import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
+
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({ action: undefined, imageId: undefined }),
+  useSearch: vi.fn().mockReturnValue({ query: undefined }),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
+  };
+});
 
 const mockHistory = {
   push: vi.fn(),
   replace: vi.fn(),
 };
 
-// Mock useHistory
 vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
+  const actual = await vi.importActual('react-router-dom');
   return {
     ...actual,
     useHistory: vi.fn(() => mockHistory),
@@ -41,14 +58,14 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<ImagesLanding />, {
-      flags: { imageServiceGen2: true },
-    });
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     // Two tables should render
     getAllByText('Custom Images');
@@ -58,7 +75,6 @@ describe('Images Landing Table', () => {
     expect(getAllByText('Image').length).toBe(2);
     expect(getAllByText('Status').length).toBe(2);
     expect(getAllByText('Replicated in').length).toBe(1);
-    expect(getAllByText('Compatibility').length).toBe(1);
     expect(getAllByText('Original Image').length).toBe(1);
     expect(getAllByText('All Replicas').length).toBe(1);
     expect(getAllByText('Created').length).toBe(2);
@@ -78,9 +94,15 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<ImagesLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
+
     expect(getByText('No Custom Images to display.')).toBeInTheDocument();
   });
 
@@ -97,9 +119,14 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<ImagesLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
     expect(getByText('No Recovery Images to display.')).toBeInTheDocument();
   });
 
@@ -110,9 +137,15 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<ImagesLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
+
     expect(
       getByText((text) => text.includes('Store custom Linux images'))
     ).toBeInTheDocument();
@@ -131,22 +164,32 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const {
+      getAllByLabelText,
+      getByTestId,
+      getByText,
+      queryByTestId,
+      rerender,
+    } = await renderWithThemeAndRouter(<ImagesLanding />);
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Open action menu
     const actionMenu = getAllByLabelText(
       `Action menu for Image ${images[0].label}`
     )[0];
     await userEvent.click(actionMenu);
-
     await userEvent.click(getByText('Edit'));
+
+    queryMocks.useParams.mockReturnValue({ action: 'edit' });
+
+    rerender(<ImagesLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getByText('Edit Image');
   });
@@ -164,24 +207,36 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const {
+      getAllByLabelText,
+      getByTestId,
+      getByText,
+      queryByTestId,
+      rerender,
+    } = await renderWithThemeAndRouter(<ImagesLanding />);
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Open action menu
     const actionMenu = getAllByLabelText(
       `Action menu for Image ${images[0].label}`
     )[0];
     await userEvent.click(actionMenu);
-
     await userEvent.click(getByText('Rebuild an Existing Linode'));
 
-    getByText('Rebuild an Existing Linode from an Image');
+    queryMocks.useParams.mockReturnValue({ action: 'rebuild' });
+
+    rerender(<ImagesLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    await waitFor(() => {
+      getByText('Rebuild an Existing Linode from an Image');
+    });
   });
 
   it('should allow deploying to a new Linode', async () => {
@@ -197,26 +252,23 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const { getAllByLabelText, getByText, queryByTestId } =
+      await renderWithThemeAndRouter(<ImagesLanding />);
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Open action menu
     const actionMenu = getAllByLabelText(
       `Action menu for Image ${images[0].label}`
     )[0];
     await userEvent.click(actionMenu);
-
     await userEvent.click(getByText('Deploy to New Linode'));
+
     expect(mockHistory.push).toBeCalledWith({
       pathname: '/linodes/create/',
       search: `?type=Images&imageID=${images[0].id}`,
-      state: { selectedImageId: images[0].id },
     });
   });
 
@@ -233,24 +285,36 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByTestId, getByText } = renderWithTheme(
-      <ImagesLanding />
-    );
+    const {
+      getAllByLabelText,
+      getByTestId,
+      getByText,
+      queryByTestId,
+      rerender,
+    } = await renderWithThemeAndRouter(<ImagesLanding />);
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Open action menu
     const actionMenu = getAllByLabelText(
       `Action menu for Image ${images[0].label}`
     )[0];
     await userEvent.click(actionMenu);
-
     await userEvent.click(getByText('Delete'));
 
-    getByText(`Delete Image ${images[0].label}`);
+    queryMocks.useParams.mockReturnValue({ action: 'delete' });
+
+    rerender(<ImagesLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    await waitFor(() => {
+      getByText('Are you sure you want to delete this Image?');
+    });
   });
 
   it('disables the create button if the user does not have permission to create images', async () => {
@@ -274,12 +338,14 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<ImagesLanding />);
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
+      <ImagesLanding />
+    );
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
     const createImageButton = getByText('Create Image').closest('button');
 
@@ -325,20 +391,14 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const {
-      getAllByLabelText,
-      getByTestId,
-      findAllByLabelText,
-    } = renderWithTheme(<ImagesLanding />, {
-      flags: { imageServiceGen2: true },
-    });
+    const { findAllByLabelText, getAllByLabelText, queryByTestId } =
+      await renderWithThemeAndRouter(<ImagesLanding />);
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingElement = queryByTestId(loadingTestId);
+    if (loadingElement) {
+      await waitForElementToBeRemoved(loadingElement);
+    }
 
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    // Open action menu
     const actionMenu = getAllByLabelText(
       `Action menu for Image ${images[0].label}`
     )[0];

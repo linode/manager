@@ -1,38 +1,73 @@
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { useCreateCredentialMutation } from 'src/queries/managed/managed';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
+import { handleManagedErrors } from '../utils';
 import { creationSchema } from './credential.schema';
 
-import type { CredentialPayload } from '@linode/api-v4/lib/managed';
+import type { CredentialPayload } from '@linode/api-v4';
+import type { FormikBag } from 'formik';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+export type FormikProps = FormikBag<{}, CredentialPayload>;
+
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 export interface CredentialDrawerProps {
   onClose: () => void;
-  onSubmit: (values: CredentialPayload, formikProps: any) => void;
   open: boolean;
 }
 
-const CredentialDrawer = (props: CredentialDrawerProps) => {
-  const { onClose, onSubmit, open } = props;
+export const AddCredentialDrawer = (props: CredentialDrawerProps) => {
+  const { onClose, open } = props;
+  const navigate = useNavigate();
+  const { mutateAsync: createCredential } = useCreateCredentialMutation();
+
+  const handleCreate = (
+    values: CredentialPayload,
+    { setErrors, setStatus, setSubmitting }: FormikProps
+  ) => {
+    setStatus(undefined);
+    createCredential(values)
+      .then(() => {
+        navigate({ to: '/managed/credentials' });
+        setSubmitting(false);
+      })
+      .catch((e) => {
+        handleManagedErrors({
+          apiError: e,
+          defaultMessage:
+            'Unable to create this Credential. Please try again later.',
+          setErrors,
+          setStatus,
+          setSubmitting,
+        });
+      });
+  };
 
   return (
-    <Drawer onClose={onClose} open={open} title={'Add Credential'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={'Add Credential'}
+    >
       <Formik
         initialValues={{
           label: '',
           password: '',
           username: '',
         }}
-        onSubmit={onSubmit}
+        onSubmit={handleCreate}
         validateOnBlur={false}
         validateOnChange={false}
         validationSchema={creationSchema}
@@ -119,5 +154,3 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
     </Drawer>
   );
 };
-
-export default CredentialDrawer;

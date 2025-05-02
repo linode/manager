@@ -1,15 +1,14 @@
 import { Button, Notice, Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
+import { styled, useTheme } from '@mui/material/styles';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
+import { formattedTypes } from './constants';
 import { FirewallDeviceTable } from './FirewallDeviceTable';
 import { RemoveDeviceDialog } from './RemoveDeviceDialog';
 
@@ -22,81 +21,59 @@ export interface FirewallDeviceLandingProps {
   type: FirewallDeviceEntityType;
 }
 
-export const formattedTypes = {
-  linode: 'Linode',
-  nodebalancer: 'NodeBalancer',
-};
-
 export const FirewallDeviceLanding = React.memo(
   (props: FirewallDeviceLandingProps) => {
     const { disabled, firewallId, firewallLabel, type } = props;
-
-    const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
-      firewallId
-    );
-
     const theme = useTheme();
-
-    const history = useHistory();
-    const routeMatch = useRouteMatch();
+    const navigate = useNavigate();
     const location = useLocation();
-
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
-    React.useEffect(() => {
-      if (location.pathname.endsWith('add')) {
-        setDeviceDrawerOpen(true);
-      }
-    }, [location.pathname]);
-
-    const devices =
-      allDevices?.filter((device) => device.entity.type === type) || [];
-
-    const [filteredDevices, setFilteredDevices] = React.useState<
-      FirewallDevice[]
-    >([]);
-
-    React.useEffect(() => {
-      setFilteredDevices(devices);
-    }, [allDevices]);
-
-    const [
-      isRemoveDeviceDialogOpen,
-      setIsRemoveDeviceDialogOpen,
-    ] = React.useState<boolean>(false);
-
-    const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
-
-    const selectedDevice = filteredDevices?.find(
-      (device) => device.id === selectedDeviceId
-    );
-
-    const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
-      false
-    );
-
     const handleClose = () => {
-      setDeviceDrawerOpen(false);
-      history.push(routeMatch.url);
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes'
+            : '/firewalls/$id/nodebalancers',
+      });
     };
 
     const handleOpen = () => {
-      setDeviceDrawerOpen(true);
-      history.push(routeMatch.url + '/add');
+      navigate({
+        params: { id: String(firewallId) },
+        to:
+          type === 'linode'
+            ? '/firewalls/$id/linodes/add'
+            : '/firewalls/$id/nodebalancers/add',
+      });
     };
 
     const [searchText, setSearchText] = React.useState('');
 
     const filter = (value: string) => {
       setSearchText(value);
-      const filtered = devices?.filter((device) => {
-        return device.entity.label.toLowerCase().includes(value.toLowerCase());
-      });
-      setFilteredDevices(filtered ?? []);
     };
+    const [device, setDevice] = React.useState<FirewallDevice | undefined>(
+      undefined
+    );
 
     const formattedType = formattedTypes[type];
+
+    // If the user initiates a history -/+ to a /remove route and the device is not found,
+    // push navigation to the appropriate /linodes or /nodebalancers route.
+    React.useEffect(() => {
+      if (!device && location.pathname.endsWith('remove')) {
+        navigate({
+          params: { id: String(firewallId) },
+          to:
+            type === 'linode'
+              ? '/firewalls/$id/linodes'
+              : '/firewalls/$id/nodebalancers',
+        });
+      }
+    }, [device, location.pathname, firewallId, type, navigate]);
 
     return (
       <>
@@ -105,7 +82,6 @@ export const FirewallDeviceLanding = React.memo(
             text={
               "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
             }
-            important
             variant="error"
           />
         ) : null}
@@ -119,10 +95,12 @@ export const FirewallDeviceLanding = React.memo(
             A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
           <Grid
-            alignItems="center"
+            sx={{
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
             container
             direction="row"
-            justifyContent="space-between"
           >
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
@@ -150,36 +128,49 @@ export const FirewallDeviceLanding = React.memo(
           </Grid>
         </Grid>
         <FirewallDeviceTable
-          triggerRemoveDevice={(id) => {
-            setSelectedDeviceId(id);
-            setIsRemoveDeviceDialogOpen(true);
+          handleRemoveDevice={(device) => {
+            setDevice(device);
+            navigate({
+              params: { id: String(firewallId) },
+              to:
+                type === 'linode'
+                  ? '/firewalls/$id/linodes/remove'
+                  : '/firewalls/$id/nodebalancers/remove',
+            });
           }}
           deviceType={type}
-          devices={filteredDevices ?? []}
           disabled={disabled}
-          error={error ?? undefined}
-          loading={isLoading}
+          firewallId={firewallId}
+          type={type}
         />
         {type === 'linode' ? (
           <AddLinodeDrawer
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         ) : (
           <AddNodebalancerDrawer
             helperText={helperText}
             onClose={handleClose}
-            open={addDeviceDrawerOpen}
+            open={location.pathname.endsWith('add')}
           />
         )}
         <RemoveDeviceDialog
-          device={selectedDevice}
+          onClose={() =>
+            navigate({
+              params: { id: String(firewallId) },
+              to:
+                type === 'linode'
+                  ? '/firewalls/$id/linodes'
+                  : '/firewalls/$id/nodebalancers',
+            })
+          }
+          device={device}
           firewallId={firewallId}
           firewallLabel={firewallLabel}
-          onClose={() => setIsRemoveDeviceDialogOpen(false)}
           onService={undefined}
-          open={isRemoveDeviceDialogOpen}
+          open={location.pathname.endsWith('remove')}
         />
       </>
     );

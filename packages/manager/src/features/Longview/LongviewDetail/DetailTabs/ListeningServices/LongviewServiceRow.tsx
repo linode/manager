@@ -15,19 +15,13 @@ export const LongviewServiceRow = (props: Props) => {
 
   return (
     <TableRow data-testid="longview-service-row">
-      <TableCell data-qa-service-process parentColumn="Process">
-        {service.name}
-      </TableCell>
-      <TableCell data-qa-service-user parentColumn="User">
+      <TableCell data-qa-service-process>{service.name}</TableCell>
+      <TableCell data-qa-service-user>
         <MaskableText isToggleable text={service.user} />
       </TableCell>
-      <TableCell data-qa-service-protocol parentColumn="Protocol">
-        {service.type}
-      </TableCell>
-      <TableCell data-qa-service-port parentColumn="Port">
-        {service.port}
-      </TableCell>
-      <TableCell data-qa-service-ip parentColumn="IP">
+      <TableCell data-qa-service-protocol>{service.type}</TableCell>
+      <TableCell data-qa-service-port>{service.port}</TableCell>
+      <TableCell data-qa-service-ip>
         <MaskableText isToggleable text={service.ip} />
       </TableCell>
     </TableRow>

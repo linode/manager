@@ -1,24 +1,31 @@
-import { Box, IconButton, Typography } from '@linode/ui';
+import { Box, Stack } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
+import { IconButton, useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { AppBar } from 'src/components/AppBar';
-import { Hidden } from 'src/components/Hidden';
+import { Link } from 'src/components/Link';
+import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
 import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';
 import { Help } from './Help';
+import { InternalAdminBanner } from './InternalAdminBanner';
 import { NotificationMenu } from './NotificationMenu/NotificationMenu';
-import SearchBar from './SearchBar/SearchBar';
+import { SearchBar } from './SearchBar/SearchBar';
 import { TopMenuTooltip } from './TopMenuTooltip';
 import { UserMenu } from './UserMenu';
 
+import type { Theme } from '@mui/material';
+
 export interface TopMenuProps {
+  /** Callback to toggle the desktop menu */
   desktopMenuToggle: () => void;
-  isSideMenuOpen: boolean;
+  /** Callback to open the side menu */
   openSideMenu: () => void;
+  /** The username of the logged-in user */
   username: string;
 }
 
@@ -27,76 +34,112 @@ export interface TopMenuProps {
  * - The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
  */
 export const TopMenu = React.memo((props: TopMenuProps) => {
-  const { desktopMenuToggle, isSideMenuOpen, openSideMenu, username } = props;
+  const { openSideMenu, username } = props;
 
   const { loggedInAsCustomer } = useAuthentication();
 
-  const navHoverText = isSideMenuOpen
-    ? 'Collapse side menu'
-    : 'Expand side menu';
+  const isNarrowViewport = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down(960)
+  );
+
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <React.Fragment>
-      {loggedInAsCustomer && (
-        <Box
-          bgcolor={(theme) => theme.tokens.color.Pink[40]}
-          padding="1em"
-          textAlign="center"
-        >
-          <Typography
-            color={(theme) => theme.tokens.color.Neutrals.Black}
-            fontSize="1.2em"
-          >
-            You are logged in as customer: <strong>{username}</strong>
-          </Typography>
-        </Box>
-      )}
+    <>
+      {loggedInAsCustomer && <InternalAdminBanner username={username} />}
       <AppBar data-qa-appbar>
-        <Toolbar
-          sx={(theme) => ({
-            '&.MuiToolbar-root': {
-              height: `50px`,
-              padding: theme.spacing(0),
-              width: '100%',
-            },
-          })}
-          variant="dense"
-        >
-          <Hidden mdDown>
-            <TopMenuTooltip title={navHoverText}>
+        <Toolbar variant="dense">
+          {isNarrowViewport && (
+            <TopMenuTooltip title="Expand side menu">
               <IconButton
+                sx={(theme) => ({
+                  padding: theme.tokens.spacing.S16,
+                })}
                 aria-label="open menu"
                 color="inherit"
-                data-testid="open-nav-menu"
-                onClick={desktopMenuToggle}
-                size="large"
-              >
-                <MenuIcon />
-              </IconButton>
-            </TopMenuTooltip>
-          </Hidden>
-          <Hidden mdUp>
-            <TopMenuTooltip title={navHoverText}>
-              <IconButton
-                aria-label="open menu"
-                color="inherit"
+                disableRipple
                 onClick={openSideMenu}
-                size="large"
               >
                 <MenuIcon />
               </IconButton>
             </TopMenuTooltip>
-          </Hidden>
-          <CreateMenu />
-          <SearchBar />
-          <Help />
-          <Community />
+          )}
+          <Box
+            gap={(theme) => ({
+              md: theme.tokens.spacing.S32,
+              xs: theme.tokens.spacing.S12,
+            })}
+            sx={(theme) => ({
+              paddingLeft: {
+                md: 0,
+                sm: theme.tokens.spacing.S16,
+              },
+            })}
+            alignItems="center"
+            display="flex"
+            flexGrow={1}
+            flexShrink={0}
+          >
+            {!isNarrowViewport && (
+              <Link
+                accessibleAriaLabel="Akamai - Dashboard"
+                style={{ lineHeight: 0 }}
+                title="Akamai - Dashboard"
+                to={`/dashboard`}
+              >
+                <StyledAkamaiLogo
+                  sx={{
+                    width: {
+                      md: 83,
+                      xs: 79,
+                    },
+                  }}
+                />
+              </Link>
+            )}
+            <Box flexGrow={1} flexShrink={0}>
+              <SearchBar />
+            </Box>
+          </Box>
 
-          <NotificationMenu />
-
-          <UserMenu />
+          <Stack
+            sx={(theme) => ({
+              gap: {
+                sm: theme.tokens.spacing.S24,
+                xs: theme.tokens.spacing.S8,
+              },
+              paddingLeft: {
+                sm: theme.tokens.spacing.S32,
+                xs: theme.tokens.spacing.S16,
+              },
+              paddingRight: {
+                md: 0,
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
+              },
+            })}
+            alignItems="center"
+            direction="row"
+            justifyContent="flex-end"
+          >
+            {!isSmallScreen && <CreateMenu />}
+            <Box
+              gap={{
+                md: 0,
+                sm: theme.tokens.spacing.S16,
+                xs: theme.tokens.spacing.S8,
+              }}
+              display="flex"
+            >
+              <Help />
+              <Community />
+              <NotificationMenu />
+            </Box>
+            <UserMenu />
+          </Stack>
         </Toolbar>
       </AppBar>
-    </React.Fragment>
+    </>
   );
 });

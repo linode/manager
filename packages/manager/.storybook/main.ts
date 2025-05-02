@@ -5,6 +5,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.@(mdx|stories.@(js|ts|jsx|tsx))',
     '../src/features/**/*.@(mdx|stories.@(js|ts|jsx|tsx))',
+    '../../shared/src/**/*.@(mdx|stories.@(js|ts|jsx|tsx))',
     '../../ui/src/components/**/*.@(mdx|stories.@(js|ts|jsx|tsx))',
   ],
   addons: [
@@ -47,13 +48,6 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
-      base: './',
-      resolve: {
-        preserveSymlinks: true,
-      },
-      define: {
-        'process.env': {},
-      },
       optimizeDeps: {
         include: [
           '@storybook/react',

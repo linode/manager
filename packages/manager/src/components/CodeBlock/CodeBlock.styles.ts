@@ -1,51 +1,35 @@
-import { styled } from '@mui/material/styles';
+import { makeStyles } from 'tss-react/mui';
 
-import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
-
-export const StyledCommandDiv = styled('div', { label: 'StyledCommandDiv' })(
-  ({ theme }) => ({
+export const useCodeBlockStyles = makeStyles()((theme) => ({
+  codeblock: {
     '& pre': {
-      marginBottom: 0,
-      marginTop: `${theme.spacing(3)}`,
+      borderRadius: theme.spacing(0.5),
+      overflowX: 'auto',
+      padding: theme.spacing(1.5),
+      paddingRight: '40px',
     },
     position: 'relative',
-  })
-);
-
-export const StyledHighlightedMarkdown = styled(HighlightedMarkdown, {
-  label: 'StyledHighlightedMarkdown',
-})(({ theme }) => ({
-  '& .hljs': {
-    '& .hljs-literal, .hljs-built_in': {
-      color: theme.tokens.color.Yellow[5],
-    },
-    '& .hljs-string': {
-      color: theme.tokens.color.Yellow[50],
-    },
-    '& .hljs-symbol': {
-      color: theme.tokens.color.Yellow[5],
-    },
-
-    '& .hljs-variable': {
-      color: 'teal',
-    },
-    backgroundColor: theme.tokens.color.Neutrals[100],
-    color: theme.tokens.color.Yellow[5],
-    padding: `${theme.spacing(4)} ${theme.spacing(2)}`,
   },
-}));
-
-export const StyledCopyTooltip = styled(CopyTooltip, {
-  label: 'StyledCopyTooltip',
-})(({ theme }) => ({
-  '& svg': {
-    color: theme.tokens.color.Green[60],
+  copyIcon: {
+    position: 'absolute',
+    right: 0,
+    paddingRight: `${theme.spacing(1)}`,
+    top: `${theme.spacing(1)}`,
+    backgroundColor: theme.tokens.alias.Background.Neutral,
   },
-  '& svg:hover': {
-    color: theme.tokens.color.Green[70],
+  lineNumbers: {
+    code: {
+      counterIncrement: 'step 0',
+      counterReset: 'step',
+    },
+    'code .line::before': {
+      color: 'rgba(115,138,148,.5)',
+      content: 'counter(step)',
+      counterIncrement: 'step',
+      display: 'inline-block',
+      marginRight: '1.5rem',
+      textAlign: 'right',
+      width: '1rem',
+    },
   },
-  position: 'absolute',
-  right: `${theme.spacing(1.5)}`,
-  top: `${theme.spacing(1)}`,
 }));

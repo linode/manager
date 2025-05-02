@@ -78,7 +78,27 @@ export const mockGetProfileGrants = (
 export const mockGetUserPreferences = (
   preferences: UserPreferences
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher('profile/preferences'), preferences);
+  const defaultPreferences = {
+    // All sidebar categories are expanded.
+    collapsedSideNavProductFamilies: [],
+
+    // Sidebar is not pinned.
+    desktop_sidebar_open: false,
+
+    // Type-to-confirm is enabled.
+    type_to_confirm: true,
+  };
+
+  const resolvedPreferences = {
+    ...defaultPreferences,
+    ...preferences,
+  };
+
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/preferences'),
+    resolvedPreferences
+  );
 };
 
 /**

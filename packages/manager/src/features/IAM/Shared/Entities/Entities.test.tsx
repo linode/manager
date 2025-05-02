@@ -1,57 +1,57 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { accountEntityFactory } from 'src/factories/accountEntities';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
-
-import type { IamAccountResource } from '@linode/api-v4/lib/resources/types';
+import { EntitiesOption } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountResources: vi.fn().mockReturnValue({}),
+  useAccountEntities: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/resources/resources', async () => {
-  const actual = await vi.importActual('src/queries/resources/resources');
+vi.mock('src/queries/entities/entities', async () => {
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
-    useAccountResources: queryMocks.useAccountResources,
+    useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
-const mockResources: IamAccountResource[] = [
-  {
-    resource_type: 'linode',
-    resources: [
-      {
-        id: 23456789,
-        name: 'linode-uk-123',
-      },
-      {
-        id: 456728,
-        name: 'db-us-southeast1',
-      },
-    ],
-  },
-  {
-    resource_type: 'image',
-    resources: [
-      { id: 3, name: 'image-1' },
-      { id: 4, name: 'image-2' },
-    ],
-  },
+const mockEntities = [
+  accountEntityFactory.build({
+    id: 7,
+    type: 'linode',
+  }),
+  accountEntityFactory.build({
+    id: 1,
+    label: 'firewall-1',
+    type: 'firewall',
+  }),
 ];
 
-describe('Resources', () => {
+const mockOnChange = vi.fn();
+const mockValue: EntitiesOption[] = [];
+
+describe('Entities', () => {
   it('renders correct data when it is an account access and type is an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
-      <Entities access="account_access" type="account" />
+    renderWithTheme(
+      <Entities
+        access="account_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="account"
+        value={mockValue}
+      />
     );
 
-    const autocomplete = queryAllByRole('combobox');
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All entities')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
@@ -59,60 +59,120 @@ describe('Resources', () => {
   });
 
   it('renders correct data when it is an account access and type is not an account', () => {
-    const { getByText, queryAllByRole } = renderWithTheme(
-      <Entities access="account_access" type="firewall" />
+    renderWithTheme(
+      <Entities
+        access="account_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="firewall"
+        value={mockValue}
+      />
     );
 
-    const autocomplete = queryAllByRole('combobox');
+    const autocomplete = screen.queryAllByRole('combobox');
 
-    expect(getByText('Entities')).toBeInTheDocument();
-    expect(getByText('All firewalls')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
+    expect(screen.getByText('All Firewalls')).toBeVisible();
 
     // check that the autocomplete doesn't exist
     expect(autocomplete.length).toBe(0);
     expect(autocomplete[0]).toBeUndefined();
   });
 
-  it('renders correct data when it is a resources access', () => {
-    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
+  it('renders correct data when it is an entity access', () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
 
-    const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="resource_access" type="image" />
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="image"
+        value={mockValue}
+      />
     );
 
-    expect(getByText('Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
 
     // Verify comboboxes exist
-    const autocomplete = getAllByRole('combobox');
+    const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
-    expect(autocomplete[0]).toBeInTheDocument();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
+    expect(autocomplete[0]).toBeVisible();
+    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
   });
 
-  it('renders correct options in Autocomplete dropdown when it is a resources access', () => {
-    queryMocks.useAccountResources.mockReturnValue({ data: mockResources });
+  it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
 
-    const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="resource_access" type="image" />
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="firewall"
+        value={mockValue}
+      />
     );
 
-    expect(getByText('Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entities')).toBeVisible();
 
-    const autocomplete = getAllByRole('combobox')[0];
-    fireEvent.focus(autocomplete);
-    fireEvent.mouseDown(autocomplete);
-    expect(getByText('image-1')).toBeInTheDocument();
-    expect(getByText('image-2')).toBeInTheDocument();
+    const autocomplete = screen.getAllByRole('combobox')[0];
+    await userEvent.click(autocomplete);
+    expect(screen.getByText('firewall-1')).toBeVisible();
   });
 
-  it('updates selected options when Autocomplete value changes when it is a resources access', () => {
-    const { getAllByRole, getByText } = renderWithTheme(
-      <Entities access="resource_access" type="linode" />
+  it('updates selected options when Autocomplete value changes when it is an entity access', () => {
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={mockValue}
+      />
     );
 
-    const autocomplete = getAllByRole('combobox')[0];
-    fireEvent.change(autocomplete, { target: { value: 'linode-uk-123' } });
+    const autocomplete = screen.getAllByRole('combobox')[0];
+    fireEvent.change(autocomplete, { target: { value: 'linode7' } });
     fireEvent.keyDown(autocomplete, { key: 'Enter' });
-    expect(getByText('linode-uk-123')).toBeInTheDocument();
+    expect(screen.getByText('test-1')).toBeVisible();
+  });
+
+  it('renders Autocomplete as readonly when mode is "change-role"', () => {
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        mode="change-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={mockValue}
+      />
+    );
+
+    const autocomplete = screen.getByRole('combobox');
+    expect(autocomplete).toBeVisible();
+    expect(autocomplete).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('displays errorText when provided', () => {
+    const errorMessage = 'Entities are required.';
+
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        errorText={errorMessage}
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="linode"
+        value={mockValue}
+      />
+    );
+
+    // Verify that the error message is displayed
+    expect(screen.getByText(errorMessage)).toBeVisible();
   });
 });

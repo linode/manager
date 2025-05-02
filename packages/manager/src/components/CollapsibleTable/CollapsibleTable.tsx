@@ -9,7 +9,7 @@ import { CollapsibleRow } from './CollapsibleRow';
 export interface TableItem {
   InnerTable: JSX.Element;
   OuterTableCells: JSX.Element;
-  id: number;
+  id: number | string;
   label: string;
 }
 
@@ -17,13 +17,14 @@ interface Props {
   TableItems: TableItem[];
   TableRowEmpty: JSX.Element;
   TableRowHead: JSX.Element;
+  striped?: boolean;
 }
 
 export const CollapsibleTable = (props: Props) => {
-  const { TableItems, TableRowEmpty, TableRowHead } = props;
+  const { TableItems, TableRowEmpty, TableRowHead, striped = true } = props;
 
   return (
-    <Table aria-label="collapsible table">
+    <Table aria-label="collapsible table" nested striped={striped}>
       <TableHead data-qa-table-row="collapsible-table-headers-row">
         {TableRowHead}
       </TableHead>

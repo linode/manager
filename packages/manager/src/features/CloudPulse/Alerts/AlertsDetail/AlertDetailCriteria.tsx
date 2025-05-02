@@ -31,25 +31,41 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
     () => (
       <>
         <Grid item sm={4} xs={12}>
-          <StyledAlertTypography fontFamily={theme.font.bold}>
+          <StyledAlertTypography
+            data-qa-item="Trigger Alert When"
+            sx={{ font: theme.font.bold }}
+          >
             Trigger Alert When:
           </StyledAlertTypography>
         </Grid>
-        <Grid alignItems="center" container item md={8} xs={12}>
+        <Grid
+          container
+          item
+          md={8}
+          xs={12}
+          sx={{
+            alignItems: 'center',
+          }}
+        >
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
+            data-qa-chip="All"
             label="All"
             variant="outlined"
           />
-          <StyledAlertTypography marginRight={0.5}>
+          <StyledAlertTypography
+            data-qa-item="criteria are met for"
+            marginRight={0.5}
+          >
             criteria are met for
           </StyledAlertTypography>
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
+            data-qa-chip={triggerOccurrences}
             label={triggerOccurrences}
             variant="outlined"
           />
-          <StyledAlertTypography>
+          <StyledAlertTypography data-qa-item="consecutive occurrences">
             consecutive occurrences.
           </StyledAlertTypography>
         </Grid>
@@ -62,7 +78,13 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
-      <Grid alignItems="center" container spacing={1}>
+      <Grid
+        container
+        spacing={1}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         <RenderAlertMetricsAndDimensions ruleCriteria={ruleCriteria} />
         <DisplayAlertDetailChips // label chip for polling interval
           label="Polling Interval"

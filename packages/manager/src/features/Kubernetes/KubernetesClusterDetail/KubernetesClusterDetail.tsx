@@ -1,19 +1,20 @@
-import { Box, CircleProgress, Stack } from '@linode/ui';
+import { useAccount, useRegionsQuery } from '@linode/queries';
+import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account/account';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubeHighAvailability,
+  useAPLAvailability,
+} from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { APLSummaryPanel } from './APLSummaryPanel';
@@ -29,7 +30,12 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
 
-  const { data: cluster, error, isLoading } = useKubernetesClusterQuery(id);
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+
+  const { data: cluster, error, isLoading } = useKubernetesClusterQuery({
+    id,
+    isUsingBetaEndpoint,
+  });
   const { data: regionsData } = useRegionsQuery();
 
   const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
@@ -124,9 +130,11 @@ export const KubernetesClusterDetail = () => {
           </Box>
         )}
         <NodePoolsDisplay
+          clusterCreated={cluster.created}
           clusterID={cluster.id}
           clusterLabel={cluster.label}
           clusterRegionId={cluster.region}
+          clusterTier={cluster.tier ?? 'standard'}
           regionsData={regionsData || []}
         />
       </Stack>

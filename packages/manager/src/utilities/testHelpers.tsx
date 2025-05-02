@@ -1,3 +1,5 @@
+import { queryClientFactory } from '@linode/queries';
+import { CssBaseline } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
   RouterProvider,
@@ -6,12 +8,11 @@ import {
   createRoute,
   createRouter,
 } from '@tanstack/react-router';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import { mergeDeepRight } from 'ramda';
 import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Provider } from 'react-redux';
@@ -20,10 +21,11 @@ import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
-import { queryClientFactory } from 'src/queries/base';
 import { setupInterceptors } from 'src/request';
 import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
+
+import { mergeDeepRight } from './mergeDeepRight';
 
 import type { QueryClient } from '@tanstack/react-query';
 // TODO: Tanstack Router - replace AnyRouter once migration is complete.
@@ -31,7 +33,7 @@ import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
-import type { MemoryRouterProps } from 'react-router';
+import type { MemoryRouterProps } from 'react-router-dom';
 import type { DeepPartial } from 'redux';
 import type { FlagSet } from 'src/featureFlags';
 import type { ApplicationState, ApplicationStore } from 'src/store';
@@ -39,10 +41,12 @@ import type { ApplicationState, ApplicationStore } from 'src/store';
 export const mockMatchMedia = (matches: boolean = true) => {
   window.matchMedia = vi.fn().mockImplementation((query) => {
     return {
+      addEventListener: () => vi.fn(),
       addListener: vi.fn(),
       matches,
       media: query,
       onchange: null,
+      removeEventListener: () => vi.fn(),
       removeListener: vi.fn(),
     };
   });
@@ -75,7 +79,6 @@ interface Options {
   routePath?: string;
   theme?: 'dark' | 'light';
 }
-
 /**
  * preference state is necessary for all tests using the
  * renderWithTheme() helper function, since the whole app is wrapped with
@@ -93,9 +96,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
 
   // we have to call setupInterceptors so that our API error normalization works as expected
   // I'm sorry that it makes us pass it the "ApplicationStore"
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   const uiToRender = ui.children ?? ui;
 
@@ -109,6 +110,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
               {/**
                * TODO Tanstack Router - remove amy routing  routing wrapWithTheme
@@ -178,9 +180,7 @@ export const wrapWithThemeAndRouter = (
   const queryClient = passedQueryClient ?? queryClientFactory();
   const storeToPass = customStore ? baseStore(customStore) : storeFactory();
 
-  setupInterceptors(
-    configureStore<ApplicationState>([thunk])(defaultState)
-  );
+  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   const rootRoute = createRootRoute({});
   const indexRoute = createRoute({
@@ -205,6 +205,7 @@ export const wrapWithThemeAndRouter = (
             flags={options.flags ?? {}}
             options={{ bootstrap: options.flags }}
           >
+            <CssBaseline enableColorScheme />
             <SnackbarProvider>
               <BrowserRouter>
                 <RouterProvider router={router} />
@@ -228,19 +229,17 @@ export const renderWithThemeAndRouter = async (
     routeTree: options.routeTree || migrationRouteTree,
   });
 
-  let renderResult: RenderResult;
+  const utils: RenderResult = render(
+    wrapWithThemeAndRouter(ui, { ...options, router })
+  );
 
-  await act(async () => {
-    renderResult = render(wrapWithThemeAndRouter(ui, { ...options, router }));
-
-    // Wait for the router to be ready
-    await waitFor(() => expect(router.state.status).toBe('idle'));
-  });
+  // Wait for the router to be ready
+  await waitFor(() => expect(router.state.status).toBe('idle'));
 
   return {
-    ...renderResult!,
+    ...utils,
     rerender: (ui) =>
-      renderResult.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
+      utils.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
     router,
   };
 };
@@ -283,10 +282,10 @@ export const renderWithTheme = (
   ui: React.ReactNode,
   options: Options = {}
 ): RenderResult => {
-  const renderResult = render(wrapWithTheme(ui, options));
+  const utils = render(wrapWithTheme(ui, options));
   return {
-    ...renderResult,
-    rerender: (ui) => renderResult.rerender(wrapWithTheme(ui, options)),
+    ...utils,
+    rerender: (ui) => utils.rerender(wrapWithTheme(ui, options)),
   };
 };
 
@@ -338,14 +337,16 @@ export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
 type Query = (f: MatcherFunction) => HTMLElement;
 
 /** H/T to https://stackoverflow.com/questions/55509875/how-to-query-by-text-string-which-contains-html-tags-using-react-testing-library */
-export const withMarkup = (query: Query) => (text: string): HTMLElement =>
-  query((content: string, node: HTMLElement) => {
-    const hasText = (node: HTMLElement) => node.textContent === text;
-    const childrenDontHaveText = Array.from(node.children).every(
-      (child) => !hasText(child as HTMLElement)
-    );
-    return hasText(node) && childrenDontHaveText;
-  });
+export const withMarkup =
+  (query: Query) =>
+  (text: string): HTMLElement =>
+    query((content: string, node: HTMLElement) => {
+      const hasText = (node: HTMLElement) => node.textContent === text;
+      const childrenDontHaveText = Array.from(node.children).every(
+        (child) => !hasText(child as HTMLElement)
+      );
+      return hasText(node) && childrenDontHaveText;
+    });
 
 /**
  * Assert that HTML elements appear in a specific order. `selectorAttribute` must select the parent

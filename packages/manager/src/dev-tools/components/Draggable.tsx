@@ -98,13 +98,17 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
           onMouseDown((e as unknown) as React.MouseEvent);
         }
       }}
-      style={{
-        height: `${size.height}px`,
-        left: `${position.x}px`,
-        position: 'absolute',
-        top: `${position.y}px`,
-        width: `${size.width}px`,
-      }}
+      style={
+        draggable
+          ? {
+              height: `${size.height}px`,
+              left: `${position.x}px`,
+              position: 'absolute',
+              top: `${position.y}px`,
+              width: `${size.width}px`,
+            }
+          : {}
+      }
       ref={nodeRef}
       role="button"
       tabIndex={0}
@@ -113,14 +117,14 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
       {draggable && (
         <>
           <button
-            className="dev-tools__draggable-handle"
+            className="dev-tools-button dev-tools__draggable-handle"
             onMouseDown={(e) => onMouseDown(e)}
             title="Drag to move"
           >
             <DragIndicatorIcon />
           </button>
           <button
-            className="dev-tools__resize-handle"
+            className="dev-tools-button dev-tools__resize-handle"
             onMouseDown={(e) => onResizeStart(e)}
             title="Resize"
           >

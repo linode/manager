@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account/account';
+import { useAccount } from '@linode/queries';
 
 export const TaxCollectionBanner = () => {
   const history = useHistory();
@@ -68,7 +68,6 @@ export const TaxCollectionBanner = () => {
     !isBannerDateWithinFiveWeeksPrior ? (
     <DismissibleBanner
       actionButton={actionButton}
-      important
       preferenceKey="tax-collection-banner"
       variant="warning"
     >

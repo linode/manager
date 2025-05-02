@@ -11,6 +11,15 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
+   * @returns vsoid
+   * function to handle the service type change
+   */
+  handleServiceTypeChange?: () => void;
+  /**
+   * Boolean value to check if service select is disabled in the edit flow
+   */
+  isDisabled?: boolean;
+  /**
    * name used for the component in the form
    */
   name: FieldPathByValue<CreateAlertDefinitionForm, AlertServiceType | null>;
@@ -19,7 +28,7 @@ interface CloudPulseServiceSelectProps {
 export const CloudPulseServiceSelect = (
   props: CloudPulseServiceSelectProps
 ) => {
-  const { name } = props;
+  const { handleServiceTypeChange, isDisabled, name } = props;
   const {
     data: serviceOptions,
     error: serviceTypesError,
@@ -31,7 +40,7 @@ export const CloudPulseServiceSelect = (
     string,
     AlertServiceType
   >[] => {
-    return serviceOptions && serviceOptions.data.length > 0
+    return serviceOptions?.data?.length
       ? serviceOptions.data.map((service) => ({
           label: service.label,
           value: service.service_type as AlertServiceType,
@@ -58,13 +67,16 @@ export const CloudPulseServiceSelect = (
             if (reason === 'clear') {
               field.onChange(null);
             }
+            if (handleServiceTypeChange !== undefined) {
+              handleServiceTypeChange();
+            }
           }}
           value={
-            field.value !== null
-              ? getServicesList.find((option) => option.value === field.value)
-              : null
+            getServicesList.find((option) => option.value === field.value) ??
+            null
           }
           data-testid="servicetype-select"
+          disabled={isDisabled}
           fullWidth
           label="Service"
           loading={serviceTypesLoading && !serviceTypesError}

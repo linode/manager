@@ -1,23 +1,27 @@
 import {
-  Accent,
   Action,
+  Alias,
   Background,
   Badge,
   Border,
   Button,
+  Component,
   Color,
+  Font,
   Content,
   Dropdown,
-  Elevation,
+  GlobalHeader,
   Interaction,
   NotificationToast,
+  Search,
   Select,
+  Spacing,
+  Table,
   TextField,
   Typography,
 } from '@linode/design-language-system/themes/dark';
 
 import { breakpoints } from '../breakpoints';
-import { latoWeb } from '../fonts';
 
 import type { ThemeOptions } from '@mui/material/styles';
 
@@ -27,7 +31,7 @@ const primaryColors = {
   headline: Color.Neutrals[5],
   light: Color.Brand[60],
   main: Color.Brand[80],
-  text: Color.Neutrals.White,
+  text: Content.Text.Primary.Default,
   white: Color.Neutrals.Black,
 };
 
@@ -78,7 +82,7 @@ export const customDarkModeOptions = {
     grey6: Color.Neutrals[50],
     grey7: Color.Neutrals[80],
     grey9: primaryColors.divider,
-    headline: primaryColors.headline,
+    headline: Content.Text.Primary.Default,
     label: Color.Neutrals[40],
     offBlack: Color.Neutrals.White,
     red: Color.Red[70],
@@ -105,24 +109,28 @@ export const customDarkModeOptions = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `6px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.IconBackground}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `6px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `6px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.IconBackground}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `6px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
+  },
+  tip: {
+    backgroundColor: NotificationToast.Informative.Background,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
 } as const;
 
@@ -186,6 +194,25 @@ const genericTableHeaderStyle = {
   },
 };
 
+const MuiTableHeadSvgStyles = {
+  svg: {
+    path: {
+      fill: Color.Brand[60],
+    },
+  },
+};
+
+const MuiTableZebraHoverStyles = {
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
+};
+
+const MuiTableZebraStyles = {
+  background: Table.Row.Background.Zebra,
+  ...MuiTableZebraHoverStyles,
+};
+
 export const darkTheme: ThemeOptions = {
   animateCircleIcon: {
     ...iconCircleAnimation,
@@ -207,17 +234,16 @@ export const darkTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: tempReplacementforColorNeutralsBlack,
-          color: primaryColors.text,
+          backgroundColor: GlobalHeader.Background,
+          color: GlobalHeader.Text.Default,
+          zIndex: 1500, // To be above primary nav
         },
       },
     },
     MuiAutocomplete: {
       styleOverrides: {
-        input: {
-          '&::selection': {
-            backgroundColor: customDarkModeOptions.bg.appBar,
-          },
+        clearIndicator: {
+          color: Select.Default.Icon,
         },
         listbox: {
           backgroundColor: customDarkModeOptions.bg.white,
@@ -229,8 +255,21 @@ export const darkTheme: ThemeOptions = {
         noOptions: {
           color: Color.Neutrals.White,
         },
+        option: {
+          '&:hover': {
+            backgroundColor: `${Dropdown.Background.Hover}`,
+            color: Dropdown.Text.Default,
+          },
+        },
+        popupIndicator: {
+          color: Select.Default.Icon,
+        },
         tag: {
-          '.MuiChip-deleteIcon': { color: primaryColors.text },
+          '.MuiChip-deleteIcon': {
+            color: Content.Text.Primary.Default,
+            width: 'auto',
+            height: 'auto',
+          },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
       },
@@ -259,8 +298,8 @@ export const darkTheme: ThemeOptions = {
             color: Button.Primary.Disabled.Text,
           },
           backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
           color: Button.Primary.Default.Text,
-          padding: '2px 20px',
         },
         containedSecondary: {
           '&:active': {
@@ -273,7 +312,6 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: 'transparent',
-            color: Button.Secondary.Hover.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: 'transparent',
@@ -304,30 +342,19 @@ export const darkTheme: ThemeOptions = {
           minHeight: 34,
         },
         root: {
-          '&[aria-disabled="true"]': {
-            cursor: 'not-allowed',
-          },
-          border: 'none',
-          borderRadius: 1,
-          cursor: 'pointer',
-          fontFamily: latoWeb.bold,
-          fontSize: '1rem',
-          lineHeight: 1,
-          minHeight: 34,
-          minWidth: 105,
-          textTransform: 'capitalize',
-          transition: 'none',
+          font: Typography.Label.Semibold.S,
         },
       },
       variants: [
         {
           props: { color: 'error' },
           style: {
-            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
-              backgroundColor: Background.Negativesubtle,
-              border: `1px solid ${Border.Negative}`,
-              color: Content.Text.Negative,
-            },
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
+              {
+                backgroundColor: Background.Negativesubtle,
+                border: `1px solid ${Border.Negative}`,
+                color: Content.Text.Negative,
+              },
             '&[aria-disabled="true"]': {
               backgroundColor: 'transparent',
               border: `1px solid ${Button.Secondary.Disabled.Border}`,
@@ -367,54 +394,95 @@ export const darkTheme: ThemeOptions = {
         },
       },
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          // Unchecked & Disabled
+          '&.Mui-disabled': {
+            '& svg': {
+              backgroundColor: Component.Checkbox.Empty.Disabled.Background,
+            },
+            color: Component.Checkbox.Empty.Disabled.Border,
+            pointerEvents: 'none',
+          },
+          // Checked & Disabled
+          '&.Mui-checked.Mui-disabled': {
+            color: Component.Checkbox.Checked.Disabled.Background,
+          },
+          // Indeterminate & Disabled
+          '&.MuiCheckbox-indeterminate.Mui-disabled': {
+            color: Component.Checkbox.Indeterminated.Disabled.Background,
+          },
+          color: Component.Checkbox.Empty.Default.Border,
+        },
+      },
+    },
     MuiChip: {
       defaultProps: {
         // In dark mode, we decided our Chips will be our primary color by default.
         color: 'primary',
       },
       styleOverrides: {
+        // TODO: This will need CDS guidance in future
         clickable: {
-          color: Color.Brand[100],
+          '&:active': {
+            backgroundColor: Button.Primary.Pressed.Background,
+          },
+          '&:disabled': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          '&:hover, &:focus': {
+            backgroundColor: Button.Primary.Hover.Background,
+            color: Button.Primary.Default.Text,
+          },
+          '&[aria-disabled="true"]': {
+            backgroundColor: Button.Primary.Disabled.Background,
+            color: Button.Primary.Disabled.Text,
+          },
+          backgroundColor: Button.Primary.Default.Background,
+          border: `1px solid transparent`,
+          color: Button.Primary.Default.Text,
         },
         colorError: {
-          backgroundColor: Badge.Negative.Background,
-          color: Badge.Negative.Text,
+          backgroundColor: Badge.Negative.Subtle.Background,
+          color: Badge.Negative.Subtle.Text,
         },
         colorInfo: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorPrimary: {
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSecondary: {
           '&.MuiChip-clickable': {
             '&:hover': {
-              backgroundColor: Badge.Informative.Background,
-              color: Badge.Informative.Text,
+              backgroundColor: Badge.Informative.Subtle.Background,
+              color: Badge.Informative.Subtle.Text,
             },
           },
-          backgroundColor: Badge.Informative.Background,
-          color: Badge.Informative.Text,
+          backgroundColor: Badge.Informative.Subtle.Background,
+          color: Badge.Informative.Subtle.Text,
         },
         colorSuccess: {
-          backgroundColor: Badge.Positive.Background,
-          color: Badge.Positive.Text,
+          backgroundColor: Badge.Positive.Subtle.Background,
+          color: Badge.Positive.Subtle.Text,
         },
         colorWarning: {
-          backgroundColor: Badge.Warning.Background,
-          color: Badge.Warning.Text,
+          backgroundColor: Badge.Warning.Subtle.Background,
+          color: Badge.Warning.Subtle.Text,
         },
         outlined: {
           '& .MuiChip-label': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           backgroundColor: 'transparent',
           borderRadius: 1,
         },
         root: {
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -429,7 +497,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           borderBottom: `1px solid ${Color.Neutrals[100]}`,
-          color: primaryColors.headline,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -465,7 +533,7 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-disabled': {
             color: `${Color.Neutrals[50]} !important`,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
         root: {},
       },
@@ -500,71 +568,58 @@ export const darkTheme: ThemeOptions = {
     MuiIconButton: {
       styleOverrides: {
         root: {
+          '&.MuiIconButton-isActive': {
+            svg: {
+              path: {
+                fill: Content.Icon.Primary.Active,
+              },
+            },
+          },
           '&:hover': {
-            color: primaryColors.main,
+            color: Content.Icon.Primary.Hover,
           },
-        },
-      },
-    },
-    MuiInput: {
-      styleOverrides: {
-        disabled: {},
-        focused: {},
-        input: {
-          '&.Mui-disabled': {
-            WebkitTextFillColor: 'unset !important',
-          },
-        },
-        root: {
-          '& svg': {
-            color: TextField.Default.InfoIcon,
-          },
-          '&.Mui-disabled': {
-            '& svg': {
-              color: TextField.Disabled.InfoIcon,
-            },
-            backgroundColor: TextField.Disabled.Background,
-            borderColor: TextField.Disabled.Border,
-            color: TextField.Disabled.Text,
-          },
-          '&.Mui-error': {
-            '& svg': {
-              color: TextField.Error.Icon,
-            },
-            backgroundColor: TextField.Error.Background,
-            borderColor: TextField.Error.Border,
-            color: TextField.Error.Text,
-          },
-          '&.Mui-focused': {
-            '& svg': {
-              color: TextField.Focus.Icon,
-            },
-            backgroundColor: TextField.Focus.Background,
-            borderColor: TextField.Focus.Border,
-            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
-            color: TextField.Focus.Text,
-          },
-          '&.Mui-hover': {
-            '& svg': {
-              color: TextField.Hover.Icon,
-            },
-            backgroundColor: TextField.Hover.Background,
-            borderColor: TextField.Hover.Border,
-            color: TextField.Hover.Text,
-          },
-          backgroundColor: TextField.Default.Background,
-          borderColor: TextField.Default.Border,
-          color: TextField.Filled.Text,
         },
       },
     },
     MuiInputAdornment: {
       styleOverrides: {
         root: {
-          '& p': {
-            color: Color.Neutrals[20],
+          color: Search.Filled.Icon,
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          '&::placeholder': {
+            color: TextField.Placeholder.Text,
           },
-          color: Color.Neutrals[20],
+        },
+        root: {
+          '&.Mui-error': {
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&:active, &:focus, &.Mui-focused, &.Mui-focused:hover': {
+            backgroundColor: TextField.Focus.Background,
+            border: `1px solid ${TextField.Focus.Border}`,
+            color: TextField.Focus.Text,
+          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              backgroundColor: TextField.Disabled.Background,
+              border: `1px solid ${TextField.Disabled.Border}`,
+              color: TextField.Disabled.Text,
+            },
+          '&:hover': {
+            backgroundColor: TextField.Hover.Background,
+            border: `1px solid ${TextField.Hover.Border}`,
+            color: TextField.Hover.Text,
+          },
+          background: TextField.Default.Background,
+          border: `1px solid ${TextField.Default.Border}`,
+          color: TextField.Filled.Text,
         },
       },
     },
@@ -572,9 +627,9 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.selectHeader': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -582,7 +637,7 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.loading': {
-            backgroundColor: primaryColors.text,
+            backgroundColor: Content.Text.Primary.Default,
           },
           '&:active': {
             backgroundColor: Dropdown.Background.Default,
@@ -609,6 +664,76 @@ export const darkTheme: ThemeOptions = {
           padding: '10px 10px 10px 16px',
         },
         selected: {},
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          '&.Mui-disabled': {
+            WebkitTextFillColor: 'unset !important',
+          },
+          boxSizing: 'border-box',
+          [breakpoints.only('xs')]: {
+            fontSize: '1rem',
+          },
+          fontSize: '0.9rem',
+          padding: 8,
+        },
+        root: {
+          '& svg': {
+            color: TextField.Default.InfoIcon,
+          },
+          '&.Mui-disabled': {
+            '& svg': {
+              color: TextField.Disabled.InfoIcon,
+            },
+            backgroundColor: TextField.Disabled.Background,
+            borderColor: TextField.Disabled.Border,
+            color: TextField.Disabled.Text,
+          },
+          '&.Mui-error': {
+            '& svg': {
+              color: TextField.Error.Icon,
+            },
+            backgroundColor: TextField.Error.Background,
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+            borderColor: TextField.Error.Border,
+            color: TextField.Error.Text,
+          },
+          '&.Mui-focused': {
+            '& svg': {
+              color: TextField.Focus.Icon,
+            },
+            backgroundColor: TextField.Focus.Background,
+            borderColor: TextField.Focus.Border,
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+            color: TextField.Focus.Text,
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '1px',
+            boxShadow: `0 0 2px 1px ${Color.Neutrals[100]}`,
+          },
+          '&.Mui-hover': {
+            '& svg': {
+              color: TextField.Hover.Icon,
+            },
+            backgroundColor: TextField.Hover.Background,
+            borderColor: TextField.Hover.Border,
+            color: TextField.Hover.Text,
+          },
+          backgroundColor: TextField.Default.Background,
+          borderColor: TextField.Default.Border,
+          borderRadius: 0,
+          boxSizing: 'border-box',
+          color: TextField.Filled.Text,
+          height: '34px',
+          lineHeight: 1,
+          minHeight: '34px',
+          transition: 'border-color 225ms ease-in-out',
+        },
       },
     },
     MuiPaper: {
@@ -665,6 +790,7 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: theme.palette.primary.main,
           },
+          padding: '10px 10px',
         }),
       },
     },
@@ -676,7 +802,7 @@ export const darkTheme: ThemeOptions = {
         root: {
           backgroundColor: Color.Neutrals[100],
           boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
-          color: primaryColors.text,
+          color: Content.Text.Primary.Default,
         },
       },
     },
@@ -715,56 +841,108 @@ export const darkTheme: ThemeOptions = {
     MuiTable: {
       styleOverrides: {
         root: {
-          // For nested tables like VPC
-          '& table': {
+          // Zebra Striping
+          '&.MuiTable-zebra': {
+            // Linodes Group by Tag: First Row is the Title
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)':
+              MuiTableZebraStyles,
+            // Default Striping
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)':
+              MuiTableZebraStyles,
+          },
+          // Nested Tables
+          '.MuiTable-root': {
+            '.MuiTableCell-head': {
+              color: Table.HeaderOutlined.Text,
+            },
+            '.MuiTableRow-head, .MuiTableRow-head.MuiTableRow-hover:hover': {
+              background: Background.Neutralsubtle,
+            },
             border: 0,
           },
-          border: `1px solid ${customDarkModeOptions.borderColors.borderTable}`,
-          borderBottom: 0,
-          borderTop: 0,
+          // Collapsible Rows
+          '.MuiTableRow-root:not(:last-of-type) .MuiCollapse-root': {
+            borderBottom: `1px solid ${Border.Normal}`,
+          },
+          border: `1px solid ${Border.Normal}`,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         head: {
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
-          color: primaryColors.text,
+          // User Permissions Table
+          '.MuiFormControlLabel-label': {
+            color: Table.HeaderNested.Text,
+          },
+          // Icons in TH (i.e.: Summary View, Group by Tag)
+          '.MuiIconButton-root': {
+            '&.MuiIconButton-isActive': MuiTableHeadSvgStyles,
+            ':hover': {
+              color: Color.Brand[60],
+              ...MuiTableHeadSvgStyles,
+            },
+            svg: {
+              path: {
+                fill: Color.Neutrals.White,
+              },
+            },
+          },
+          color: Table.HeaderNested.Text,
         },
         root: {
-          '& a': {
-            color: Action.Primary.Default,
+          '&.MuiTableCell-nested': {
+            '.MuiCollapse-root': {
+              borderBottom: `1px solid ${Border.Normal}`,
+            },
           },
-          '& a:hover': {
-            color: Action.Primary.Hover,
-          },
-          borderBottom: `1px solid ${primaryColors.divider}`,
-          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${Table.Row.Border}`,
         },
       },
     },
     MuiTableRow: {
       styleOverrides: {
         head: {
-          '&:before': {
-            backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
-          },
-          backgroundColor: Color.Neutrals[100],
-        },
-        hover: {
-          '& a': {
-            color: primaryColors.text,
-          },
+          background: Table.HeaderNested.Background,
         },
         root: {
-          '&:before': {
-            borderLeftColor: Color.Neutrals[90],
+          // Prevent needing `hover={false}` on header TableRows
+          '&.MuiTableRow-head.MuiTableRow-hover:hover': {
+            backgroundColor: Table.HeaderNested.Background,
           },
-          '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[80],
+          // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
           },
-          backgroundColor: Color.Neutrals[90],
-          border: `1px solid ${Color.Neutrals[50]}`,
+          // Disable hover for nested rows (VPC)
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
+            {
+              backgroundColor: Table.Row.Background.Default,
+            },
+          '&.disabled-row .MuiTableCell-root': {
+            // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
+            color: Content.Text.Primary.Disabled,
+          },
+          background: Table.Row.Background.Default,
+        },
+      },
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&.Mui-active': {
+            color: Table.HeaderNested.Text,
+          },
+          ':hover': {
+            ...MuiTableHeadSvgStyles,
+            color: Color.Brand[60],
+          },
+          svg: {
+            path: {
+              fill: Table.HeaderNested.Text,
+            },
+          },
         },
       },
     },
@@ -799,13 +977,13 @@ export const darkTheme: ThemeOptions = {
             color: Action.Primary.Default,
           },
           '& a.black': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a.black:hover': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a.black:visited': {
-            color: primaryColors.text,
+            color: Content.Text.Primary.Default,
           },
           '& a:hover': {
             color: Action.Primary.Hover,
@@ -888,39 +1066,35 @@ export const darkTheme: ThemeOptions = {
     mode: 'dark',
     primary: primaryColors,
     text: {
-      primary: primaryColors.text,
+      primary: Content.Text.Primary.Default,
     },
   },
   textColors: customDarkModeOptions.textColors,
   tokens: {
-    // No need to add global tokens here, as they will be inherited from light.ts
-    accent: Accent,
-    action: Action,
-    background: Background,
-    border: Border,
-    content: Content,
-    elevation: Elevation,
-    interaction: Interaction,
-    typography: Typography,
+    alias: Alias,
+    color: Color,
+    component: Component,
+    font: Font,
+    spacing: Spacing,
   },
   typography: {
     body1: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
     caption: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
     h1: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     h2: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     h3: {
-      color: primaryColors.headline,
+      color: Content.Text.Primary.Default,
     },
     subtitle1: {
-      color: primaryColors.text,
+      color: Content.Text.Primary.Default,
     },
   },
 };

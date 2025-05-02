@@ -7,7 +7,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
-import type { FlagSet, Flags } from 'src/featureFlags';
+import type { Flags, FlagSet } from 'src/featureFlags';
 import type { Dispatch } from 'src/hooks/types';
 
 const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
@@ -20,14 +20,18 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
  */
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
+  { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
+  { flag: 'aclpIntegration', label: 'ACLP Integration' },
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
-  { flag: 'imageServiceGen2', label: 'Image Service Gen2' },
-  { flag: 'imageServiceGen2Ga', label: 'Image Service Gen2 GA' },
+  { flag: 'limitsEvolution', label: 'Limits Evolution' },
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
+  { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
+  { flag: 'mtctt2025', label: 'MTC TT 2025' },
+  { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
   { flag: 'selfServeBetas', label: 'Self Serve Betas' },
@@ -35,8 +39,17 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2', label: 'Databases V2 Beta' },
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },
+  { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
+  {
+    flag: 'linodeCloneFirewall',
+    label: 'Linode Clone Firewall',
+  },
+  {
+    flag: 'vmHostMaintenance',
+    label: 'VM Host Maintenance Policy',
+  },
 ];
 
 interface RenderFlagItemProps {
@@ -203,7 +216,9 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       </div>
       <div className="dev-tools__tool__footer">
         <div className="dev-tools__button-list">
-          <button onClick={resetFlags}>Reset to LD DEV Defaults</button>
+          <button className="dev-tools-button" onClick={resetFlags}>
+            Reset to LD DEV Defaults
+          </button>
         </div>
       </div>
     </div>

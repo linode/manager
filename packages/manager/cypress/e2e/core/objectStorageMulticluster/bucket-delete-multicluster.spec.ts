@@ -1,12 +1,14 @@
-import { randomLabel } from 'support/util/random';
-import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetBuckets,
   mockDeleteBucket,
+  mockGetBuckets,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { accountFactory, objectStorageBucketFactory } from 'src/factories';
 
 describe('Object Storage Multicluster Bucket delete', () => {
   /*
@@ -16,12 +18,13 @@ describe('Object Storage Multicluster Bucket delete', () => {
    */
   it('can delete object storage bucket with OBJ Multicluster', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const region = chooseRegion().id;
     const bucketMock = objectStorageBucketFactory.build({
+      cluster: region,
+      hostname: `${bucketLabel}.${region}.linodeobjects.com`,
       label: bucketLabel,
-      cluster: bucketCluster,
-      hostname: `${bucketLabel}.${bucketCluster}.linodeobjects.com`,
       objects: 0,
+      region,
     });
 
     mockGetAccount(
@@ -33,10 +36,8 @@ describe('Object Storage Multicluster Bucket delete', () => {
       objMultiCluster: true,
       objectStorageGen2: { enabled: false },
     });
-
     mockGetBuckets([bucketMock]).as('getBuckets');
     mockDeleteBucket(bucketLabel, bucketMock.region!).as('deleteBucket');
-
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
 
@@ -51,7 +52,8 @@ describe('Object Storage Multicluster Bucket delete', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.enabled')

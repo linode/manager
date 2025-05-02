@@ -1,9 +1,9 @@
+import { useGrants, useProfile } from '@linode/queries';
 import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { noPermissionTooltipText } from 'src/features/Firewalls/FirewallLanding/FirewallActionMenu';
+import { NO_PERMISSIONS_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
 import { checkIfUserCanModifyFirewall } from 'src/features/Firewalls/shared';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -27,7 +27,7 @@ export const NodeBalancerFirewallsActionMenu = (props: Props) => {
   const disabledProps = !userCanModifyFirewall
     ? {
         disabled: true,
-        tooltip: noPermissionTooltipText,
+        tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
       }
     : {};
 

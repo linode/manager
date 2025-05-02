@@ -1,15 +1,19 @@
+import { useRegionAvailabilityQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice } from '@linode/ui';
+import {
+  getQueryParamsFromQueryString,
+  plansNoticesUtils,
+} from '@linode/utilities';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
-import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+import {
+  getIsDistributedRegion,
+  isDistributedRegionSupported,
+} from 'src/components/RegionSelect/RegionSelect.utils';
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRegionAvailabilityQuery } from 'src/queries/regions/regions';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { DistributedRegionPlanTable } from './DistributedRegionPlanTable';
 import { PlanContainer } from './PlanContainer';
@@ -18,6 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCTTPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -47,8 +52,8 @@ export interface PlansPanelProps {
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
-  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
+  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
@@ -84,7 +89,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
   } = props;
 
   const flags = useFlags();
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
   const location = useLocation();
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
@@ -94,11 +102,16 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const { data: regionAvailabilities } = useRegionAvailabilityQuery(
     selectedRegionID || '',
-    Boolean(flags.soldOutChips) && selectedRegionID !== undefined
+    Boolean(flags.soldOutChips) && Boolean(selectedRegionID)
   );
 
   const _types = types.filter((type) => {
     if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC_TT plans if the feature flag is not enabled.
+    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
       return false;
     }
 
@@ -166,6 +179,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                disabledClasses={disabledClasses}
+                flow="linode"
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
                   showDistributedRegionPlanTable ||
                   !flags.disableLargestGbPlans ||
@@ -174,9 +191,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
-                disabledClasses={disabledClasses}
-                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-                hasSelectedRegion={hasSelectedRegion}
                 planType={plan}
                 regionsData={regionsData || []}
               />
@@ -193,8 +207,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionID}
                 showLimits={showLimits}

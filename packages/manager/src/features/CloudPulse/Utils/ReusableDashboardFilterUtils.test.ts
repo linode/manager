@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import { dashboardFactory } from 'src/factories';
 
 import {
@@ -9,7 +11,9 @@ import {
 } from './ReusableDashboardFilterUtils';
 
 const mockDashboard = dashboardFactory.build();
-
+const end = DateTime.now();
+const start = end.minus({ minutes: 30 });
+const preset = '30minutes';
 it('test getDashboardProperties method', () => {
   const result = getDashboardProperties({
     dashboardObj: mockDashboard,
@@ -29,12 +33,15 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     resource: 0,
   });
   expect(result).toBe(false);
-
   result = checkMandatoryFiltersSelected({
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 1,
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: {
+      end: end.toISO(),
+      preset,
+      start: start.toISO(),
+    },
   });
 
   expect(result).toBe(true);
@@ -52,7 +59,7 @@ it('test checkMandatoryFiltersSelected method for time duration and resource', (
     dashboardObj: mockDashboard,
     filterValue: { region: 'us-east' },
     resource: 0, // here resource is 0, so it should return false
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
   });
 
   expect(result).toBe(false);
@@ -64,7 +71,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
     filterValue: { region: 'us-east' }, // here role is missing
     resource: 1,
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
   });
 
   expect(result).toBe(false);
@@ -73,7 +80,7 @@ it('test checkMandatoryFiltersSelected method for role', () => {
     dashboardObj: { ...mockDashboard, service_type: 'dbaas' },
     filterValue: { node_type: 'primary', region: 'us-east' },
     resource: 1,
-    timeDuration: { unit: 'min', value: 30 },
+    timeDuration: { end: end.toISO(), preset, start: start.toISO() },
   });
 
   expect(result).toBe(true);

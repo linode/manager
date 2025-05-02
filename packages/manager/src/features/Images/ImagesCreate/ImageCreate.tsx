@@ -1,16 +1,12 @@
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NavTabs } from 'src/components/NavTabs/NavTabs';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-
-import type { NavTab } from 'src/components/NavTabs/NavTabs';
-
-const ImageUpload = React.lazy(() =>
-  import('./ImageUpload').then((module) => ({ default: module.ImageUpload }))
-);
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 const CreateImageTab = React.lazy(() =>
   import('./CreateImageTab').then((module) => ({
@@ -18,34 +14,38 @@ const CreateImageTab = React.lazy(() =>
   }))
 );
 
-export const ImageCreate = () => {
-  const { url } = useRouteMatch();
+const ImageUpload = React.lazy(() =>
+  import('./ImageUpload').then((module) => ({ default: module.ImageUpload }))
+);
 
-  const tabs: NavTab[] = [
+export const ImageCreate = () => {
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      render: <CreateImageTab />,
-      routeName: `${url}/disk`,
       title: 'Capture Image',
+      to: '/images/create/disk',
     },
     {
-      render: <ImageUpload />,
-      routeName: `${url}/upload`,
       title: 'Upload Image',
+      to: '/images/create/upload',
     },
-  ];
+  ]);
 
   return (
     <>
-      <DocumentTitleSegment segment="Create Image" />
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <NavTabs tabs={tabs} />
-      </React.Suspense>
+      <DocumentTitleSegment segment="Create an Image" />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <CreateImageTab />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <ImageUpload />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
     </>
   );
 };
-
-export const imageCreateLazyRoute = createLazyRoute('/images/create')({
-  component: ImageCreate,
-});
-
-export default ImageCreate;

@@ -1,10 +1,11 @@
+import { capitalize } from '@linode/utilities';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { DimensionOperatorOptions } from '../../constants';
+import { dimensionOperatorOptions } from '../../constants';
 import { DimensionFilterField } from './DimensionFilterField';
 
 import type { CreateAlertDefinitionForm } from '../types';
@@ -39,6 +40,7 @@ const mockData: MetricDefinition[] = [
         values: [],
       },
     ],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',
@@ -47,6 +49,7 @@ const mockData: MetricDefinition[] = [
   },
 ];
 
+const dataFieldId = 'data-field';
 const dimensionFieldMockData = mockData[0].dimensions;
 describe('Dimension filter field component', () => {
   const user = userEvent.setup();
@@ -95,7 +98,7 @@ describe('Dimension filter field component', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('data-field');
+    const dataFieldContainer = container.getByTestId(dataFieldId);
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
@@ -140,6 +143,15 @@ describe('Dimension filter field component', () => {
         },
       }
     );
+    const dataFieldContainer = container.getByTestId('data-field');
+    const dataFieldInput = within(dataFieldContainer).getByRole('button', {
+      name: 'Open',
+    });
+    await user.click(dataFieldInput);
+    const option = await container.findByRole('option', {
+      name: dimensionFieldMockData[1].label,
+    });
+    await user.click(option);
     const operatorContainer = container.getByTestId('operator');
     const operatorInput = within(operatorContainer).getByRole('button', {
       name: 'Open',
@@ -149,19 +161,19 @@ describe('Dimension filter field component', () => {
 
     expect(
       await container.findByRole('option', {
-        name: DimensionOperatorOptions[1].label,
+        name: dimensionOperatorOptions[1].label,
       })
     );
 
     await user.click(
       await container.findByRole('option', {
-        name: DimensionOperatorOptions[0].label,
+        name: dimensionOperatorOptions[0].label,
       })
     );
 
     expect(within(operatorContainer).getByRole('combobox')).toHaveAttribute(
       'value',
-      DimensionOperatorOptions[0].label
+      dimensionOperatorOptions[0].label
     );
   });
 
@@ -186,10 +198,11 @@ describe('Dimension filter field component', () => {
         },
       }
     );
-    const dataFieldContainer = container.getByTestId('data-field');
+    const dataFieldContainer = container.getByTestId(dataFieldId);
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
       name: 'Open',
     });
+    const valueLabel = capitalize(dimensionFieldMockData[1].values[0]);
     await user.click(dataFieldInput);
     await user.click(
       await container.findByRole('option', {
@@ -204,25 +217,25 @@ describe('Dimension filter field component', () => {
     user.click(valueInput);
     expect(
       await container.findByRole('option', {
-        name: dimensionFieldMockData[1].values[0],
+        name: valueLabel,
       })
     );
 
     expect(
       await container.findByRole('option', {
-        name: dimensionFieldMockData[1].values[1],
+        name: valueLabel,
       })
     );
 
     await user.click(
       container.getByRole('option', {
-        name: dimensionFieldMockData[1].values[0],
+        name: valueLabel,
       })
     );
 
     expect(within(valueContainer).getByRole('combobox')).toHaveAttribute(
       'value',
-      dimensionFieldMockData[1].values[0]
+      valueLabel
     );
   });
 });

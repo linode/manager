@@ -1,22 +1,37 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { alertFactory, serviceTypesFactory } from 'src/factories/';
+import {
+  alertFactory,
+  notificationChannelFactory,
+  serviceTypesFactory,
+} from 'src/factories/';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';
 
 // Mock Data
 const alertDetails = alertFactory.build({ service_type: 'linode' });
+const notificationChannels = notificationChannelFactory.buildList(3);
+
+const linodes = linodeFactory.buildList(3);
+const regions = regionFactory.buildList(3);
 
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useAlertDefinitionQuery: vi.fn(),
+  useAllAlertNotificationChannelsQuery: vi.fn(),
   useCloudPulseServiceTypes: vi.fn(),
+  useRegionsQuery: vi.fn(),
+  useResourcesQuery: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useAlertDefinitionQuery: queryMocks.useAlertDefinitionQuery,
+  useAllAlertNotificationChannelsQuery:
+    queryMocks.useAllAlertNotificationChannelsQuery,
 }));
 
 vi.mock('src/queries/cloudpulse/services', () => {
@@ -25,6 +40,16 @@ vi.mock('src/queries/cloudpulse/services', () => {
     useCloudPulseServiceTypes: queryMocks.useCloudPulseServiceTypes,
   };
 });
+
+vi.mock('src/queries/cloudpulse/resources', () => ({
+  ...vi.importActual('src/queries/cloudpulse/resources'),
+  useResourcesQuery: queryMocks.useResourcesQuery,
+}));
+
+vi.mock('@linode/queries', async (importOriginal) => ({
+  ...(await importOriginal()),
+  useRegionsQuery: queryMocks.useRegionsQuery,
+}));
 
 // Shared Setup
 beforeEach(() => {
@@ -35,6 +60,21 @@ beforeEach(() => {
   });
   queryMocks.useCloudPulseServiceTypes.mockReturnValue({
     data: { data: serviceTypesFactory.buildList(1) },
+    isFetching: false,
+  });
+  queryMocks.useResourcesQuery.mockReturnValue({
+    data: linodes,
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useRegionsQuery.mockReturnValue({
+    data: regions,
+    isError: false,
+    isFetching: false,
+  });
+  queryMocks.useAllAlertNotificationChannelsQuery.mockReturnValue({
+    data: notificationChannels,
+    isError: false,
     isFetching: false,
   });
 });
@@ -66,7 +106,7 @@ describe('AlertDetail component tests', () => {
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
       isError: false,
-      isFetching: true,
+      isLoading: true,
     });
 
     const { getByTestId } = renderWithTheme(<AlertDetail />);
@@ -82,16 +122,33 @@ describe('AlertDetail component tests', () => {
     // validate overview is present with its couple of properties (values will be validated in its own components test)
     expect(getByText('Overview')).toBeInTheDocument();
     expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
+    expect(getByText('Entities')).toBeInTheDocument(); // validate if entities is present
+    expect(getByText('Notification Channels')).toBeInTheDocument(); // validate if notification channels is present
     expect(getByText('Name:')).toBeInTheDocument();
     expect(getByText('Description:')).toBeInTheDocument();
+  });
+
+  it('should show error notice for failed alert', () => {
+    const alert = alertFactory.build({
+      status: 'failed',
+    });
+    queryMocks.useAlertDefinitionQuery.mockReturnValue({
+      data: alert,
+      isError: false,
+      isLoadiing: false,
+    });
+
+    renderWithTheme(<AlertDetail />);
+
+    const element = screen.getByTestId('notice-error').textContent;
+    expect(element).toEqual(
+      `${alert.label} alert creation has failed. Please open a support ticket for assistance.`
+    );
   });
 });
 
 const validateBreadcrumbs = (link: HTMLElement) => {
   expect(link).toBeInTheDocument();
   expect(link).toHaveTextContent('Definitions');
-  expect(link.closest('a')).toHaveAttribute(
-    'href',
-    '/monitor/alerts/definitions'
-  );
+  expect(link.closest('a')).toHaveAttribute('href', '/alerts/definitions');
 };

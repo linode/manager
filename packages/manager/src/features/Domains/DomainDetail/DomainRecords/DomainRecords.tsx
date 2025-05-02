@@ -1,10 +1,9 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
-import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
-import { lensPath, over } from 'ramda';
+import { ActionsPanel, Typography } from '@linode/ui';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 // eslint-disable-next-line no-restricted-imports
@@ -14,7 +13,6 @@ import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault,
 } from 'src/utilities/errorUtils';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';
@@ -196,7 +194,10 @@ export const DomainRecords = (props: Props) => {
     fn: (confirmDialog: ConfirmationState) => ConfirmationState
   ) => {
     setState((prevState) => {
-      const newState = over(lensPath(['confirmDialog']), fn, prevState);
+      const newState = {
+        ...prevState,
+        confirmDialog: fn(prevState.confirmDialog),
+      };
       scrollErrorIntoViewV2(confirmDialogRef);
 
       return newState;
@@ -205,7 +206,10 @@ export const DomainRecords = (props: Props) => {
 
   const updateDrawer = (fn: (drawer: DrawerState) => DrawerState) => {
     setState((prevState) => {
-      return over(lensPath(['drawer']), fn, prevState);
+      return {
+        ...prevState,
+        drawer: fn(prevState.drawer),
+      };
     });
   };
 

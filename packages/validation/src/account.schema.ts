@@ -124,6 +124,9 @@ export const UpdateAccountSettingsSchema = object({
   network_helper: boolean(),
   backups_enabled: boolean(),
   managed: boolean(),
+  longview_subscription: string().nullable(),
+  object_storage: string(),
+  interfaces_for_new_linodes: string(),
 });
 
 export const PromoCodeSchema = object({

@@ -1,33 +1,39 @@
-import { FormControlLabel, Typography } from '@linode/ui';
 import {
+  useAllocateIPMutation,
+  useCreateIPv6RangeMutation,
+  useLinodeIPsQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Box,
   Divider,
+  Drawer,
+  FormControlLabel,
   Notice,
   Radio,
   RadioGroup,
   Stack,
   Tooltip,
+  Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import {
-  useAllocateIPMutation,
-  useLinodeIPsQuery,
-} from 'src/queries/linodes/networking';
-import { useCreateIPv6RangeMutation } from 'src/queries/networking/networking';
+import { NotFound } from 'src/components/NotFound';
 
 import { ExplainerCopy } from './ExplainerCopy';
 
 import type { IPv6Prefix } from '@linode/api-v4/lib/networking';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 export type IPType = 'v4Private' | 'v4Public';
 
-const ipOptions: Item<IPType>[] = [
+type IPOption = {
+  label: string;
+  value: IPType;
+};
+
+const ipOptions: IPOption[] = [
   { label: 'Public', value: 'v4Public' },
   { label: 'Private', value: 'v4Private' },
 ];
@@ -154,7 +160,12 @@ export const AddIPDrawer = (props: Props) => {
       : null;
 
   return (
-    <Drawer onClose={onClose} open={open} title="Add an IP Address">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add an IP Address"
+    >
       <Stack spacing={2}>
         <Typography variant="h3">IPv4</Typography>
         {Boolean(ipv4Error) && (
@@ -279,7 +290,7 @@ const StyledRadioGroup = styled(RadioGroup, {
     minWidth: 100,
   },
   '& p': {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
   },
   marginBottom: '0 !important',
 }));

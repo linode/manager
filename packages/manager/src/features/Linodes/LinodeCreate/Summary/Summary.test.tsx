@@ -1,6 +1,7 @@
+import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { imageFactory, regionFactory, typeFactory } from 'src/factories';
+import { imageFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
@@ -263,5 +264,22 @@ describe('Linode Create Summary', () => {
     });
 
     await findByText(`5 Nodes - $10/month $2.50/hr`);
+  });
+
+  it('should render "Encrypted" if a distributed region is selected', async () => {
+    const region = regionFactory.build({ site_type: 'distributed' });
+
+    server.use(
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      })
+    );
+
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <Summary />,
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+
+    await findByText('Encrypted');
   });
 });

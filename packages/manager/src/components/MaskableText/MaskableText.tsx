@@ -1,8 +1,7 @@
-import { Stack, VisibilityTooltip } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { usePreferences } from '@linode/queries';
+import { Stack, Typography, VisibilityTooltip } from '@linode/ui';
 import * as React from 'react';
 
-import { usePreferences } from 'src/queries/profile/preferences';
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import type { SxProps, Theme } from '@mui/material';
@@ -27,7 +26,7 @@ export interface MaskableTextProps {
   /**
    * Optionally specifies the length of the masked text to depending on data type (e.g. 'ipv4', 'ipv6', 'plaintext'); if not provided, will use a default length.
    */
-  length?: MaskableTextLength;
+  length?: MaskableTextLength | number;
   /**
    * Optional styling for the masked and unmasked Typography
    */

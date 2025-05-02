@@ -1,5 +1,5 @@
 import {
-  createSubnetSchema,
+  createSubnetSchemaIPv4,
   createVPCSchema,
   modifySubnetSchema,
   updateVPCSchema,
@@ -20,6 +20,7 @@ import {
   Subnet,
   UpdateVPCPayload,
   VPC,
+  VPCIP,
 } from './types';
 
 // VPC methods
@@ -128,7 +129,7 @@ export const createSubnet = (vpcID: number, data: CreateSubnetPayload) =>
   Request<Subnet>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
     setMethod('POST'),
-    setData(data, createSubnetSchema)
+    setData(data, createSubnetSchemaIPv4)
   );
 
 /**
@@ -166,4 +167,30 @@ export const deleteSubnet = (vpcID: number, subnetID: number) =>
       )}/subnets/${encodeURIComponent(subnetID)}`
     ),
     setMethod('DELETE')
+  );
+
+/**
+ * getVPCsIPs
+ *
+ * Get a paginated list of all VPC IP addresses and address ranges
+ */
+export const getVPCsIPs = (params?: Params, filter?: Filter) =>
+  Request<Page<VPCIP>>(
+    setURL(`${API_ROOT}/vpcs/ips`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
+  );
+
+/**
+ * getVPCIPs
+ *
+ * Get a paginated list of VPC IP addresses for the specified VPC
+ */
+export const getVPCIPs = (vpcID: number, params?: Params, filter?: Filter) =>
+  Request<Page<VPCIP>>(
+    setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/ips`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filter)
   );

@@ -8,7 +8,12 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
 
-describe('Database Backups (Legacy)', () => {
+/**
+ * Skipped due to repeated flake issues that we've been unable to fix after a few attempts
+ * 1. https://github.com/linode/manager/pull/11130
+ * 2. https://github.com/linode/manager/pull/11394
+ */
+describe.skip('Database Backups (Legacy)', () => {
   it('should render a list of backups after loading', async () => {
     const mockDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',

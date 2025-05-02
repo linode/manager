@@ -15,10 +15,10 @@ import {
   StyledTagTableCell,
 } from './ResultRow.styles';
 
-import type { Item } from 'src/components/EnhancedSelect/Select';
+import type { SearchableItem } from './search.interfaces';
 
 interface ResultRowProps {
-  result: Item;
+  result: SearchableItem;
 }
 
 export const ResultRow = (props: ResultRowProps) => {
@@ -47,7 +47,9 @@ export const ResultRow = (props: ResultRowProps) => {
         </StyledCreatedTableCell>
 
         <StyledTagTableCell>
-          <Tags data-testid={'result-tags'} tags={result.data.tags} />
+          {result.data.tags && (
+            <Tags data-testid={'result-tags'} tags={result.data.tags} />
+          )}
         </StyledTagTableCell>
       </Hidden>
     </StyledTableRow>

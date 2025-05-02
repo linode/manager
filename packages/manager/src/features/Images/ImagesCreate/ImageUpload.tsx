@@ -1,5 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAccountAgreements,
+  useMutateAccountAgreements,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
+import {
+  ActionsPanel,
   Box,
   Button,
   Checkbox,
@@ -9,16 +17,17 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Link } from 'src/components/Link';
+// eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
@@ -27,17 +36,10 @@ import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
 import { useUploadImageMutation } from 'src/queries/images';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
-import { readableBytes } from 'src/utilities/unitConversions';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
@@ -45,20 +47,23 @@ import { uploadImageFile } from '../requests';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
-import type {
-  ImageUploadFormData,
-  ImageUploadNavigationState,
-} from './ImageUpload.utils';
+import type { ImageUploadFormData } from './ImageUpload.utils';
 import type { AxiosError, AxiosProgressEvent } from 'axios';
 import type { Dispatch } from 'src/hooks/types';
 
 export const ImageUpload = () => {
-  const { location } = useHistory<ImageUploadNavigationState | undefined>();
+  const { imageDescription, imageLabel } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const dispatch = useDispatch<Dispatch>();
   const hasPendingUpload = usePendingUpload();
-  const { push } = useHistory();
   const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   const [uploadProgress, setUploadProgress] = useState<AxiosProgressEvent>();
   const cancelRef = React.useRef<(() => void) | null>(null);
@@ -74,8 +79,8 @@ export const ImageUpload = () => {
 
   const form = useForm<ImageUploadFormData>({
     defaultValues: {
-      description: location.state?.imageDescription,
-      label: location.state?.imageLabel,
+      description: imageDescription,
+      label: imageLabel,
     },
     mode: 'onBlur',
     resolver: yupResolver(ImageUploadSchema),
@@ -125,7 +130,7 @@ export const ImageUpload = () => {
           dispatch(setPendingUpload(false));
         });
 
-        push('/images');
+        navigate({ search: () => ({}), to: '/images' });
       } catch (error) {
         // Handle an Axios error for the actual image upload
         form.setError('root', { message: (error as AxiosError).message });
@@ -173,7 +178,7 @@ export const ImageUpload = () => {
 
     dispatch(setPendingUpload(false));
 
-    push(nextLocation);
+    navigate({ search: () => ({}), to: nextLocation });
   };
 
   return (
@@ -187,7 +192,6 @@ export const ImageUpload = () => {
                 isSingular: false,
                 resourceType: 'Images',
               })}
-              important
               variant="error"
             />
           )}
@@ -196,8 +200,12 @@ export const ImageUpload = () => {
               Image Details
             </Typography>
             <Typography>
-              Custom images are billed monthly at $0.10/GB. An uploaded image
-              file needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#upload-an-image-file">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. An uploaded image file needs to
+              meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/upload-an-image#requirements-and-considerations">
                 requirements
               </Link>
@@ -257,11 +265,6 @@ export const ImageUpload = () => {
             <Controller
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  currentCapability={
-                    flags.disallowImageUploadToNonObjRegions
-                      ? 'Object Storage'
-                      : undefined
-                  }
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
@@ -269,9 +272,11 @@ export const ImageUpload = () => {
                     inputRef: field.ref,
                     onBlur: field.onBlur,
                   }}
+                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
                   disableClearable
                   errorText={fieldState.error?.message}
                   ignoreAccountAvailability
+                  isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta

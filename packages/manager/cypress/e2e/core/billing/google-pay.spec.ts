@@ -1,25 +1,26 @@
 import { mockGetPaymentMethods } from 'support/intercepts/account';
-import { PaymentMethod, CreditCardData } from '@linode/api-v4';
 import { ui } from 'support/ui';
+
+import type { CreditCardData, PaymentMethod } from '@linode/api-v4';
 
 const mockPaymentMethods: PaymentMethod[] = [
   {
-    id: 420330,
-    type: 'credit_card',
-    is_default: true,
     created: '2021-07-27T14:37:43',
     data: {
       card_type: 'American Express',
-      last_four: '2222',
       expiry: '07/2025',
+      last_four: '2222',
     },
+    id: 420330,
+    is_default: true,
+    type: 'credit_card',
   },
   {
-    id: 434357,
-    type: 'google_pay',
-    is_default: false,
     created: '2021-08-04T18:29:01',
-    data: { card_type: 'Visa', last_four: '2045', expiry: '07/2025' },
+    data: { card_type: 'Visa', expiry: '07/2025', last_four: '2045' },
+    id: 434357,
+    is_default: false,
+    type: 'google_pay',
   },
 ];
 
@@ -31,27 +32,28 @@ const mockPaymentMethodsData = mockPaymentMethods.map(
 
 const mockPaymentMethodsExpired: PaymentMethod[] = [
   {
-    id: 420330,
-    type: 'credit_card',
-    is_default: true,
     created: '2021-07-27T14:37:43',
     data: {
       card_type: 'American Express',
-      last_four: '2222',
       expiry: '07/2025',
+      last_four: '2222',
     },
+    id: 420330,
+    is_default: true,
+    type: 'credit_card',
   },
   {
-    id: 434357,
-    type: 'google_pay',
-    is_default: false,
     created: '2021-08-04T18:29:01',
-    data: { card_type: 'Visa', last_four: '2045', expiry: '07/2020' },
+    data: { card_type: 'Visa', expiry: '07/2020', last_four: '2045' },
+    id: 434357,
+    is_default: false,
+    type: 'google_pay',
   },
 ];
 
 const pastDueExpiry = 'Expired 07/20';
-const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
+const braintreeURL =
+  'https://+(payments.braintree-api.com|payments.sandbox.braintree-api.com)/*';
 
 describe('Google Pay', () => {
   it('adds google pay method', () => {

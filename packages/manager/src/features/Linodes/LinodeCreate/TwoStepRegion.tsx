@@ -1,3 +1,5 @@
+import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Autocomplete, Box, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -9,7 +11,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useFlags } from 'src/hooks/useFlags';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { DOCS_LINK_LABEL_DC_PRICING } from 'src/utilities/pricing/constants';
@@ -73,9 +75,14 @@ export const TwoStepRegion = (props: CombinedProps) => {
 
   const { data: regions } = useRegionsQuery();
   const { params } = useLinodeCreateQueryParams();
+  const flags = useFlags();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
 
   return (
-    <Paper>
+    <Paper data-qa-linode-region data-testid="region">
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
@@ -110,6 +117,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               onChange={(e, region) => onChange(region)}
               regionFilter="core"
               regions={regions ?? []}
@@ -140,6 +148,7 @@ export const TwoStepRegion = (props: CombinedProps) => {
               disabled={disabled}
               disabledRegions={disabledRegions}
               errorText={errorText}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               onChange={(e, region) => onChange(region)}
               regionFilter={regionFilter}
               regions={regions ?? []}

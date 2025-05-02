@@ -14,7 +14,7 @@ import { cypressRunCommand } from '../util/cypress';
  * The Slack notification has a maximum character limit, so we must truncate
  * the failure results to reduce the risk of hitting that limit.
  */
-const FAILURE_SUMMARY_LIMIT = 6;
+const FAILURE_SUMMARY_LIMIT = 4;
 
 /**
  * Outputs test result summary formatted as a Slack message.

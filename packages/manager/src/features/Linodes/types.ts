@@ -1,5 +1,4 @@
-import type { LinodeCreateType } from './LinodeCreate/types';
-import type { BaseQueryParams } from 'src/utilities/queryParams';
+import type { BaseQueryParams, LinodeCreateType } from '@linode/utilities';
 
 export type DialogType =
   | 'delete'

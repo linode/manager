@@ -3,6 +3,12 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import {
+  ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
+  ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACL_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
+} from '../constants';
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
 
 import type { KubeControlPlaneACLDrawerProps } from './KubeControlPaneACLDrawer';
@@ -13,6 +19,7 @@ const props: KubeControlPlaneACLDrawerProps = {
   clusterId: 1,
   clusterLabel: 'Test',
   clusterMigrated: true,
+  clusterTier: 'standard',
   open: true,
 };
 
@@ -21,8 +28,8 @@ const queryMocks = vi.hoisted(() => ({
     data: {
       acl: {
         addresses: {
-          ipv4: [''],
-          ipv6: [''],
+          ipv4: [],
+          ipv6: [],
         },
         enabled: false,
         'revision-id': '',
@@ -42,23 +49,16 @@ vi.mock('src/queries/kubernetes', async () => {
 
 describe('KubeControlPaneACLDrawer', () => {
   it('renders the drawer as expected when the cluster is migrated', async () => {
-    const { getAllByText, getByText, queryByText } = renderWithTheme(
-      <KubeControlPlaneACLDrawer {...props} />
-    );
+    const { getAllByTestId, getAllByText, getByText, queryByText } =
+      renderWithTheme(<KubeControlPlaneACLDrawer {...props} />);
 
     expect(getByText('Control Plane ACL for Test')).toBeVisible();
-    expect(
-      getByText(
-        "Control Plane ACL secures network access to your LKE cluster's control plane. Use this form to enable or disable the ACL on your LKE cluster, update the list of allowed IP addresses, and adjust other settings."
-      )
-    ).toBeVisible();
+    expect(getByText(ACL_DRAWER_STANDARD_TIER_ACL_COPY)).toBeVisible();
 
     // Activation Status section
     expect(getByText('Activation Status')).toBeVisible();
     expect(
-      getByText(
-        'Enable or disable the Control Plane ACL. If the ACL is not enabled, any public IP address can be used to access your control plane. Once enabled, all network access is denied except for the IP addresses and CIDR ranges defined on the ACL.'
-      )
+      getByText(ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY)
     ).toBeVisible();
     expect(getByText('Enable Control Plane ACL')).toBeVisible();
 
@@ -82,12 +82,34 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
 
+    // Confirm text input is disabled when ACL is disabled
+    const inputs = getAllByTestId('textfield-input');
+    expect(inputs).toHaveLength(3);
+    inputs.forEach((input) => {
+      expect(input).toBeDisabled();
+    });
+
     // Confirm notice does not display
     expect(
       queryByText(
         'Control Plane ACL has not yet been installed on this cluster. During installation, it may take up to 15 minutes for the access control list to be fully enforced.'
       )
     ).not.toBeInTheDocument();
+  });
+
+  it('confirms the revision ID and IP address fields are enabled when ACL is enabled', async () => {
+    const { getAllByTestId, getByText } = renderWithTheme(
+      <KubeControlPlaneACLDrawer {...props} />
+    );
+
+    const toggle = getByText('Enable Control Plane ACL');
+    await userEvent.click(toggle);
+
+    const inputs = getAllByTestId('textfield-input');
+    expect(inputs).toHaveLength(3);
+    inputs.forEach((input) => {
+      expect(input).toBeEnabled();
+    });
   });
 
   it('shows a notice and hides revision ID if cluster is not migrated', () => {
@@ -118,6 +140,25 @@ describe('KubeControlPaneACLDrawer', () => {
     expect(getByText('Add IPv4 Address')).toBeVisible();
     expect(getByText('IPv6 Addresses or CIDRs')).toBeVisible();
     expect(getByText('Add IPv6 Address')).toBeVisible();
+  });
+
+  it('shows correct copy and state for toggle for enterprise clusters', () => {
+    const { getByRole, getByText } = renderWithTheme(
+      <KubeControlPlaneACLDrawer {...props} clusterTier="enterprise" />
+    );
+
+    expect(getByText('Control Plane ACL for Test')).toBeVisible();
+    expect(getByText(ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY)).toBeVisible();
+
+    // Activation Status section
+    expect(getByText('Activation Status')).toBeVisible();
+    expect(
+      getByText(ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY)
+    ).toBeVisible();
+    // Confirm ACL is checked by default and edits are disabled.
+    const toggle = getByRole('checkbox', { name: 'Enable Control Plane ACL' });
+    expect(toggle).toBeChecked();
+    expect(toggle).toBeDisabled();
   });
 
   it('closes the drawer', async () => {

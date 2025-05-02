@@ -1,10 +1,12 @@
-import { Box, TooltipIcon, Typography } from '@linode/ui';
+import { useAllLinodesQuery, useProfile } from '@linode/queries';
+import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
+import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 
+import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -18,7 +20,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { NodeRow as _NodeRow } from './NodeRow';
@@ -30,17 +32,25 @@ import {
   StyledVerticalDivider,
 } from './NodeTable.styles';
 
+import type { StatusFilter } from './NodePoolsDisplay';
 import type { NodeRow } from './NodeRow';
-import type { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
+import type {
+  KubernetesTier,
+  PoolNodeResponse,
+} from '@linode/api-v4/lib/kubernetes';
 import type { EncryptionStatus } from '@linode/api-v4/lib/linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 export interface Props {
+  clusterCreated: string;
   clusterId: number;
+  clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus | undefined;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
+  regionSupportsDiskEncryption: boolean;
+  statusFilter: StatusFilter;
   tags: string[];
   typeLabel: string;
 }
@@ -49,19 +59,24 @@ export const encryptionStatusTestId = 'encryption-status-fragment';
 
 export const NodeTable = React.memo((props: Props) => {
   const {
+    clusterCreated,
     clusterId,
+    clusterTier,
     encryptionStatus,
     nodes,
     openRecycleNodeDialog,
     poolId,
+    regionSupportsDiskEncryption,
+    statusFilter,
     tags,
     typeLabel,
   } = props;
 
+  const { data: profile } = useProfile();
+
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -84,8 +99,40 @@ export const NodeTable = React.memo((props: Props) => {
 
   const rowData = nodes.map((thisNode) => nodeToRow(thisNode, linodes ?? []));
 
+  const filteredRowData = ['offline', 'provisioning', 'running'].includes(
+    statusFilter
+  )
+    ? rowData.filter((row) => {
+        if (statusFilter === 'provisioning') {
+          return ['provisioning', undefined].includes(row.instanceStatus);
+        }
+        return row.instanceStatus === statusFilter;
+      })
+    : null;
+
+  // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
+  // since nodes are not returned right away unlike standard LKE
+  const isEnterpriseClusterWithin10MinsOfCreation = () => {
+    if (clusterTier !== 'enterprise') {
+      return false;
+    }
+
+    const createdTime = parseAPIDate(clusterCreated).setZone(profile?.timezone);
+
+    const interval = Interval.fromDateTimes(
+      createdTime,
+      createdTime.plus({ minutes: 10 })
+    );
+
+    const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
+      zone: profile?.timezone,
+    });
+
+    return interval.contains(currentTime);
+  };
+
   return (
-    <OrderBy data={rowData} order={'asc'} orderBy={'label'}>
+    <OrderBy data={filteredRowData || rowData} order="asc" orderBy="label">
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
         <Paginate data={orderedData}>
           {({
@@ -140,30 +187,72 @@ export const NodeTable = React.memo((props: Props) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableContentWrapper
-                    length={paginatedAndOrderedData.length}
-                    loading={isLoading}
-                    loadingProps={{ columns: 4 }}
-                  >
-                    {paginatedAndOrderedData.map((eachRow) => {
-                      return (
-                        <_NodeRow
-                          instanceId={eachRow.instanceId}
-                          instanceStatus={eachRow.instanceStatus}
-                          ip={eachRow.ip}
-                          key={`node-row-${eachRow.nodeId}`}
-                          label={eachRow.label}
-                          linodeError={error ?? undefined}
-                          nodeId={eachRow.nodeId}
-                          nodeStatus={eachRow.nodeStatus}
-                          openRecycleNodeDialog={openRecycleNodeDialog}
-                          typeLabel={typeLabel}
-                        />
-                      );
-                    })}
-                  </TableContentWrapper>
+                  {rowData.length === 0 &&
+                    isEnterpriseClusterWithin10MinsOfCreation() && (
+                      <TableRow>
+                        <TableCell colSpan={4}>
+                          <ErrorState
+                            errorText={
+                              <Box>
+                                <Typography
+                                  data-qa-error-msg
+                                  style={{ textAlign: 'center' }}
+                                  variant="h3"
+                                >
+                                  Worker nodes will appear once cluster
+                                  provisioning is complete.
+                                </Typography>
+                                <Typography>
+                                  Provisioning can take up to 10 minutes.
+                                </Typography>
+                              </Box>
+                            }
+                            CustomIcon={EmptyStateCloud}
+                            compact
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  {(rowData.length > 0 ||
+                    !isEnterpriseClusterWithin10MinsOfCreation()) && (
+                    <TableContentWrapper
+                      length={paginatedAndOrderedData.length}
+                      loading={isLoading}
+                      loadingProps={{ columns: 4 }}
+                    >
+                      {paginatedAndOrderedData.map((eachRow) => {
+                        return (
+                          <_NodeRow
+                            instanceId={eachRow.instanceId}
+                            instanceStatus={eachRow.instanceStatus}
+                            ip={eachRow.ip}
+                            key={`node-row-${eachRow.nodeId}`}
+                            label={eachRow.label}
+                            linodeError={error ?? undefined}
+                            nodeId={eachRow.nodeId}
+                            nodeStatus={eachRow.nodeStatus}
+                            openRecycleNodeDialog={openRecycleNodeDialog}
+                            typeLabel={typeLabel}
+                          />
+                        );
+                      })}
+                    </TableContentWrapper>
+                  )}
                 </TableBody>
               </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="Node Table"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+                /**
+                 * M3-9360: Since this table is in an accordion, the position needs to be relative
+                 * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+                 **/
+                sx={{ position: 'relative' }}
+              />
               <StyledTableFooter>
                 <StyledPoolInfoBox>
                   {isDiskEncryptionFeatureEnabled &&
@@ -178,8 +267,11 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        regionSupportsDiskEncryption={
+                          regionSupportsDiskEncryption
+                        }
                         encryptionStatus={encryptionStatus}
-                        tooltipText={DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY}
+                        tooltipText={undefined}
                       />
                     </Box>
                   ) : (
@@ -188,14 +280,6 @@ export const NodeTable = React.memo((props: Props) => {
                 </StyledPoolInfoBox>
                 <TagCell tags={tags} updateTags={updateTags} view="inline" />
               </StyledTableFooter>
-              <PaginationFooter
-                count={count}
-                eventCategory="Node Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-              />
             </>
           )}
         </Paginate>
@@ -227,9 +311,11 @@ export const nodeToRow = (
 
 export const EncryptedStatus = ({
   encryptionStatus,
+  regionSupportsDiskEncryption,
   tooltipText,
 }: {
   encryptionStatus: EncryptionStatus;
+  regionSupportsDiskEncryption: boolean;
   tooltipText: string | undefined;
 }) => {
   return encryptionStatus === 'enabled' ? (
@@ -242,7 +328,9 @@ export const EncryptedStatus = ({
       <Unlock />
       <StyledNotEncryptedBox>
         <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
-        {tooltipText ? <TooltipIcon status="help" text={tooltipText} /> : null}
+        {regionSupportsDiskEncryption && tooltipText ? (
+          <TooltipIcon status="help" text={tooltipText} />
+        ) : null}
       </StyledNotEncryptedBox>
     </>
   ) : null;

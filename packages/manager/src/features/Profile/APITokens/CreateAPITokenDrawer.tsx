@@ -1,17 +1,22 @@
 import {
-  Autocomplete,
+  useCreatePersonalAccessTokenMutation,
+  useProfile,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
   FormControl,
   FormHelperText,
   Notice,
   Radio,
+  Select,
   TextField,
 } from '@linode/ui';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -20,8 +25,6 @@ import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { VPC_READ_ONLY_TOOLTIP } from 'src/features/VPCs/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile/profile';
-import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile/tokens';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import {
@@ -115,6 +118,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
     globalGrantType: 'child_account_access',
   });
 
+  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
+  const hideChildAccountAccessScope =
+    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
+
   const form = useFormik<{
     expiry: string;
     label: string;
@@ -125,7 +132,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
       const { token } = await createPersonalAccessToken({
         expiry: values.expiry,
         label: values.label,
-        scopes: permTuplesToScopeString(values.scopes),
+        scopes: permTuplesToScopeString(
+          values.scopes,
+          hideChildAccountAccessScope ? ['child_account'] : []
+        ),
       });
       onClose();
       showSecret(token ?? 'Secret not available');
@@ -153,26 +163,23 @@ export const CreateAPITokenDrawer = (props: Props) => {
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    const newScopes = form.values.scopes.map(
-      (scope): Permission => {
-        // Check the excluded scopes object to see if the current scope will have its own defaults.
-        const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
-          (excludedScope) =>
-            excludedScope.name === scope[0] &&
-            excludedScope.invalidAccessLevels.includes(value)
-        );
+    const newScopes = form.values.scopes.map((scope): Permission => {
+      // Check the excluded scopes object to see if the current scope will have its own defaults.
+      const indexOfExcludedScope = excludedScopesFromSelectAll.findIndex(
+        (excludedScope) =>
+          excludedScope.name === scope[0] &&
+          excludedScope.invalidAccessLevels.includes(value)
+      );
 
-        // Set an excluded scope based on its default access level, not the given Select All value.
-        if (indexOfExcludedScope >= 0) {
-          return [
-            scope[0],
-            excludedScopesFromSelectAll[indexOfExcludedScope]
-              .defaultAccessLevel,
-          ];
-        }
-        return [scope[0], value];
+      // Set an excluded scope based on its default access level, not the given Select All value.
+      if (indexOfExcludedScope >= 0) {
+        return [
+          scope[0],
+          excludedScopesFromSelectAll[indexOfExcludedScope].defaultAccessLevel,
+        ];
       }
-    );
+      return [scope[0], value];
+    });
     form.setFieldValue('scopes', newScopes);
   };
 
@@ -183,6 +190,19 @@ export const CreateAPITokenDrawer = (props: Props) => {
       invalidAccessLevels: [levelMap.read_only],
       name: 'vpc',
     },
+    ...(hideChildAccountAccessScope
+      ? [
+          {
+            defaultAccessLevel: levelMap.hidden,
+            invalidAccessLevels: [
+              levelMap.read_only,
+              levelMap.read_write,
+              levelMap.none,
+            ],
+            name: 'child_account',
+          },
+        ]
+      : []),
   ];
 
   const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
@@ -199,12 +219,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
   // Filter permissions for all users except parent user accounts.
   const allPermissions = form.values.scopes;
 
-  // Visually hide the "Child Account Access" permission even though it's still part of the base perms.
-  const hideChildAccountAccessScope =
-    profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
-
   return (
-    <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Add Personal Access Token"
+    >
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}
@@ -214,30 +235,11 @@ export const CreateAPITokenDrawer = (props: Props) => {
         value={form.values.label}
       />
       <FormControl data-testid="expiry-select">
-        <Autocomplete
-          onChange={(_, selected) =>
-            form.setFieldValue('expiry', selected.value)
-          }
-          slotProps={{
-            popper: {
-              sx: {
-                '&& .MuiAutocomplete-listbox': {
-                  padding: 0,
-                },
-              },
-            },
-          }}
-          sx={{
-            '&& .MuiAutocomplete-inputRoot': {
-              paddingLeft: 1,
-              paddingRight: 0,
-            },
-            '&& .MuiInput-input': {
-              padding: '0px 2px',
-            },
-          }}
-          disableClearable
+        <Select
           label="Expiry"
+          onChange={(_, selected) => {
+            form.setFieldValue('expiry', selected.value);
+          }}
           options={expiryList}
           value={expiryList.find((item) => item.value === form.values.expiry)}
         />
@@ -263,52 +265,41 @@ export const CreateAPITokenDrawer = (props: Props) => {
         </TableHead>
         <TableBody>
           <TableRow data-qa-row="Select All">
-            <StyledSelectCell padding="checkbox" parentColumn="Access">
-              Select All
-            </StyledSelectCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="No Access"
-            >
+            <StyledSelectCell padding="checkbox">Select All</StyledSelectCell>
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select no access for all',
-                }}
                 checked={indexOfColumnWhereAllAreSelected === 0}
                 data-qa-perm-no-access-radio
                 data-testid="set-all-no-access"
+                inputProps={{
+                  'aria-label': 'Select no access for all',
+                }}
                 name="Select All"
                 onChange={handleSelectAllScopes}
                 value="0"
               />
             </StyledSelectAllPermissionsCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="Read Only"
-            >
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read-only for all',
-                }}
                 checked={indexOfColumnWhereAllAreSelected === 1}
                 data-qa-perm-read-radio
                 data-testid="set-all-read"
+                inputProps={{
+                  'aria-label': 'Select read-only for all',
+                }}
                 name="Select All"
                 onChange={handleSelectAllScopes}
                 value="1"
               />
             </StyledSelectAllPermissionsCell>
-            <StyledSelectAllPermissionsCell
-              padding="checkbox"
-              parentColumn="Read/Write"
-            >
+            <StyledSelectAllPermissionsCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read/write for all',
-                }}
                 checked={indexOfColumnWhereAllAreSelected === 2}
                 data-qa-perm-rw-radio
                 data-testid="set-all-write"
+                inputProps={{
+                  'aria-label': 'Select read/write for all',
+                }}
                 name="Select All"
                 onChange={handleSelectAllScopes}
                 value="2"
@@ -331,10 +322,10 @@ export const CreateAPITokenDrawer = (props: Props) => {
                 data-qa-row={basePermNameMap[scopeTup[0]]}
                 key={scopeTup[0]}
               >
-                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                <StyledAccessCell padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell padding="checkbox" parentColumn="None">
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}
@@ -344,26 +335,20 @@ export const CreateAPITokenDrawer = (props: Props) => {
                     viewOnly={false}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read Only"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
-                    tooltipText={
-                      scopeIsForVPC ? VPC_READ_ONLY_TOOLTIP : undefined
-                    }
                     active={scopeTup[1] === 1}
                     disabled={scopeIsForVPC} // "Read Only" is not a valid scope for VPC
                     onChange={handleScopeChange}
                     scope="1"
                     scopeDisplay={scopeTup[0]}
+                    tooltipText={
+                      scopeIsForVPC ? VPC_READ_ONLY_TOOLTIP : undefined
+                    }
                     viewOnly={false}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read/Write"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     disabled={false}

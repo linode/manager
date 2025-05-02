@@ -2,7 +2,7 @@
  * @file Cypress intercepts and mocks for Cloud Manager account requests.
  */
 
-import { makeErrorResponse } from 'support/util/errors';
+import { APIErrorContents, makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
@@ -306,6 +306,25 @@ export const mockGetEntityTransfers = (
 };
 
 /**
+ * Intercepts GET request to fetch service transfers and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetEntityTransfersError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 500
+) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/entity-transfers*'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
  * Intercepts GET request to receive entity transfer and mocks response.
  *
  * @param token - Token for entity transfer request to mock.
@@ -365,6 +384,25 @@ export const mockUpdateAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
   return cy.intercept('PUT', apiMatcher('account/settings'), settings);
+};
+
+/**
+ * Intercepts PUT request to update account settings and mocks an API error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountSettingsError = (
+  errorContents: APIErrorContents = 'An unknown error has occurred',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('account/settings'),
+    makeErrorResponse(errorContents, statusCode)
+  );
 };
 
 /**
@@ -574,6 +612,23 @@ export const mockGetAccountAgreements = (
 };
 
 /**
+ * Intercepts POST request to update account agreements and mocks response.
+ *
+ * @param agreements - Agreements with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountAgreements = (
+  agreements: Agreements
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/agreements`),
+    makeResponse(agreements)
+  );
+};
+
+/**
  * Intercepts GET request to fetch child accounts and mocks the response.
  *
  * @param childAccounts - Child account objects with which to mock response.
@@ -704,4 +759,36 @@ export const mockGetMaintenance = (
  */
 export const interceptGetAccountAvailability = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('account/availability*'));
+};
+
+/**
+ * Mocks POST request to enable the Linode Managed.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableLinodeManaged = (): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/settings/managed-enable'),
+    makeResponse()
+  );
+};
+
+/**
+ * Mocks POST request to to enable the Linode Managed and mocks an error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableLinodeManagedError = (
+  errorMessage: string = 'An unknown error has occurred',
+  statusCode: number = 400
+) => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/settings/managed-enable'),
+    makeErrorResponse(errorMessage, statusCode)
+  );
 };

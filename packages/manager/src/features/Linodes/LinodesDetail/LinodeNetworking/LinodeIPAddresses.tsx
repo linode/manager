@@ -1,7 +1,13 @@
 import {
+  useLinodeIPsQuery,
+  useLinodeQuery,
+  useRegionsQuery,
+} from '@linode/queries';
+import {
   Box,
   Button,
   CircleProgress,
+  ErrorState,
   Paper,
   Stack,
   Typography,
@@ -10,7 +16,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
@@ -20,10 +25,8 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCConfigInterface } from 'src/hooks/useVPCConfigInterface';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useVPCInterface } from 'src/hooks/useVPCInterface';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -42,11 +45,11 @@ import type { IPTypes } from './types';
 import type {
   IPAddress,
   IPRange,
-  Interface,
   LinodeIPsResponse,
+  VPCIP,
 } from '@linode/api-v4';
 
-export const ipv4TableID = 'ips';
+export const ipTableId = 'ips';
 
 interface LinodeIPAddressesProps {
   linodeID: number;
@@ -61,6 +64,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
@@ -73,23 +77,24 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
-  const { configInterfaceWithVPC, isVPCOnlyLinode } = useVPCConfigInterface(
-    linodeID
-  );
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+
+  const { isVPCOnlyLinode } = useVPCInterface({
+    isLinodeInterface,
+    linodeId: linodeID,
+  });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
 
   const [isDeleteIPDialogOpen, setIsDeleteIPDialogOpen] = React.useState(false);
-  const [isDeleteRangeDialogOpen, setIsDeleteRangeDialogOpen] = React.useState(
-    false
-  );
+  const [isDeleteRangeDialogOpen, setIsDeleteRangeDialogOpen] =
+    React.useState(false);
   const [isRangeDrawerOpen, setIsRangeDrawerOpen] = React.useState(false);
   const [isIPDrawerOpen, setIsIPDrawerOpen] = React.useState(false);
   const [isIpRdnsDrawerOpen, setIsIpRdnsDrawerOpen] = React.useState(false);
-  const [isRangeRdnsDrawerOpen, setIsRangeRdnsDrawerOpen] = React.useState(
-    false
-  );
+  const [isRangeRdnsDrawerOpen, setIsRangeRdnsDrawerOpen] =
+    React.useState(false);
   const [isTransferDialogOpen, setIsTransferDialogOpen] = React.useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = React.useState(false);
 
@@ -141,7 +146,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
-  const ipDisplay = ipResponseToDisplayRows(ips, configInterfaceWithVPC);
+  const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
     <Box>
@@ -160,11 +165,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         {isSmallScreen ? (
           <ActionMenu
             actionsList={[
-              {
-                disabled: isLinodesGrantReadOnly,
-                onClick: () => setIsAddDrawerOpen(true),
-                title: 'Add an IP Address',
-              },
+              ...(!isLinodeInterfacesEnabled
+                ? [
+                    {
+                      disabled: isLinodesGrantReadOnly,
+                      onClick: () => setIsAddDrawerOpen(true),
+                      title: 'Add an IP Address',
+                    },
+                  ]
+                : []),
               {
                 disabled: isLinodesGrantReadOnly,
                 onClick: () => setIsTransferDialogOpen(true),
@@ -194,21 +203,28 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               IP Sharing
             </Button>
-            <Button
-              buttonType="primary"
-              disabled={isLinodesGrantReadOnly}
-              onClick={() => setIsAddDrawerOpen(true)}
-            >
-              Add an IP Address
-            </Button>
+            {!isLinodeInterfacesEnabled && (
+              <Button
+                buttonType="primary"
+                disabled={isLinodesGrantReadOnly}
+                onClick={() => setIsAddDrawerOpen(true)}
+              >
+                Add an IP Address
+              </Button>
+            )}
           </Stack>
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <OrderBy data={ipDisplay} order="asc" orderBy="type">
+      <OrderBy
+        data={ipDisplay}
+        order="asc"
+        orderBy="type"
+        preferenceKey={'linode-network-ip-table'}
+      >
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
-            <Table aria-label="IPv4 Addresses" id={ipv4TableID}>
+            <Table aria-label="Linode IP Addresses" id={ipTableId}>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: '15%' }}>Address</TableCell>
@@ -232,8 +248,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                   <LinodeIPAddressRow
                     {...ipDisplay}
                     {...handlers}
+                    isLinodeInterface={isLinodeInterface}
                     isVPCOnlyLinode={
-                      isVPCOnlyLinode && ipDisplay.type === 'IPv4 – Public'
+                      isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
                     }
                     key={`${ipDisplay.address}-${ipDisplay.type}`}
                     linodeId={linodeID}
@@ -322,51 +339,9 @@ export interface IPDisplay {
   type: IPTypes;
 }
 
-export const vpcConfigInterfaceToDisplayRows = (
-  configInterfaceWithVPC: Interface
-) => {
-  const ipDisplay: IPDisplay[] = [];
-
-  const { ip_ranges, ipv4 } = configInterfaceWithVPC;
-  const emptyProps = {
-    gateway: '',
-    rdns: '',
-    subnetMask: '',
-  };
-
-  if (ipv4?.vpc) {
-    ipDisplay.push({
-      address: ipv4.vpc,
-      type: 'IPv4 – VPC',
-      ...emptyProps,
-    });
-  }
-
-  if (ipv4?.nat_1_1) {
-    ipDisplay.push({
-      address: ipv4.nat_1_1,
-      type: 'VPC IPv4 – NAT',
-      ...emptyProps,
-    });
-  }
-
-  if (ip_ranges) {
-    ip_ranges.forEach((ip_range) => {
-      ipDisplay.push({
-        address: ip_range,
-        type: 'IPv4 – VPC – Range',
-        ...emptyProps,
-      });
-    });
-  }
-
-  return ipDisplay;
-};
-
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  ipResponse?: LinodeIPsResponse,
-  configInterfaceWithVPC?: Interface
+  ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
   if (!ipResponse) {
     return [];
@@ -389,13 +364,11 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  if (configInterfaceWithVPC) {
-    if (configInterfaceWithVPC.ipv4?.nat_1_1) {
-      // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
-      ipDisplay.shift();
-    }
-    ipDisplay.push(...vpcConfigInterfaceToDisplayRows(configInterfaceWithVPC));
+  // If there is a VPC interface with 1:1 NAT, hide the Public IPv4 IP address row
+  if (ipv4.vpc.find((vpcIp) => vpcIp.nat_1_1)) {
+    ipDisplay.shift();
   }
+  ipDisplay.push(...createVPCIPv4Display(ipv4.vpc));
 
   // IPv6 ranges and pools to display in the networking table
   ipDisplay.push(
@@ -421,7 +394,7 @@ export const ipResponseToDisplayRows = (
         gateway: '',
         rdns: '',
         subnetMask: '',
-        type: 'IPv6 – Range' as IPDisplay['type'],
+        type: 'Range – IPv6' as IPDisplay['type'],
       };
     })
   );
@@ -434,11 +407,45 @@ type ipKey =
   | 'Private'
   | 'Public'
   | 'Reserved'
-  | 'SLAAC'
-  | 'Shared';
+  | 'Shared'
+  | 'SLAAC';
 
 const mapIPv4Display = (ips: IPAddress[], key: ipKey): IPDisplay[] => {
   return ips.map((ip) => ipToDisplay(ip, key));
+};
+
+export const createVPCIPv4Display = (ips: VPCIP[]): IPDisplay[] => {
+  const emptyProps = {
+    gateway: '',
+    rdns: '',
+    subnetMask: '',
+  };
+
+  const vpcIPDisplay: IPDisplay[] = [];
+  for (const ip of ips) {
+    if (ip.address_range) {
+      vpcIPDisplay.push({
+        address: ip.address_range,
+        type: 'VPC – Range – IPv4',
+        ...emptyProps,
+      });
+    }
+    if (ip.address) {
+      vpcIPDisplay.push({
+        address: ip.address,
+        type: 'VPC – IPv4',
+        ...emptyProps,
+      });
+    }
+    if (ip.nat_1_1) {
+      vpcIPDisplay.push({
+        address: ip.nat_1_1,
+        type: 'VPC NAT – IPv4',
+        ...emptyProps,
+      });
+    }
+  }
+  return vpcIPDisplay;
 };
 
 const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
@@ -453,16 +460,13 @@ const ipToDisplay = (ip: IPAddress, key: ipKey): IPDisplay => {
 };
 
 export const createType = (ip: IPAddress, key: ipKey) => {
-  let type = '';
-  type += ip.type === 'ipv4' ? 'IPv4' : 'IPv6';
-
-  type += ' – ';
-
-  if (key === 'Reserved') {
-    type += ip.public ? 'Reserved (public)' : 'Reserved (private)';
-  } else {
-    type += key;
+  if (key === 'Reserved' && ip.type === 'ipv4') {
+    return ip.public ? 'Reserved IPv4 (public)' : 'Reserved IPv4 (private)';
   }
 
-  return type;
+  if (key === 'SLAAC') {
+    return 'Public – IPv6 – SLAAC';
+  }
+
+  return `${key} – ${ip.type === 'ipv4' ? 'IPv4' : 'IPv6'}`;
 };

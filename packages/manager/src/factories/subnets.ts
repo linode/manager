@@ -1,4 +1,4 @@
-import Factory from 'src/factories/factoryProxy';
+import { Factory } from '@linode/utilities';
 
 import type {
   Subnet,
@@ -11,10 +11,13 @@ import type {
 export const subnetAssignedLinodeDataFactory = Factory.Sync.makeFactory<SubnetAssignedLinodeData>(
   {
     id: Factory.each((i) => i),
-    interfaces: Array.from({ length: 5 }, () => ({
-      active: false,
-      id: Math.floor(Math.random() * 100),
-    })),
+    interfaces: Factory.each((i) =>
+      Array.from({ length: 5 }, (_, arrIdx) => ({
+        active: false,
+        config_id: i * 10 + arrIdx,
+        id: i * 10 + arrIdx,
+      }))
+    ),
   }
 );
 
@@ -23,10 +26,12 @@ export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
   id: Factory.each((i) => i),
   ipv4: '0.0.0.0/0',
   label: Factory.each((i) => `subnet-${i}`),
-  linodes: Array.from({ length: 5 }, () =>
-    subnetAssignedLinodeDataFactory.build({
-      id: Math.floor(Math.random() * 100),
-    })
+  linodes: Factory.each((i) =>
+    Array.from({ length: 5 }, (_, arrIdx) =>
+      subnetAssignedLinodeDataFactory.build({
+        id: i * 10 + arrIdx,
+      })
+    )
   ),
   updated: '2023-07-12T16:08:53',
 });

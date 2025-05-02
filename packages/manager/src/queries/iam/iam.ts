@@ -1,26 +1,40 @@
-import {
-  APIError,
-  IamUserPermissions,
-  IamAccountPermissions,
-} from '@linode/api-v4';
-import { iamQueries } from './queries';
-import { useQuery } from '@tanstack/react-query';
-import { useProfile } from 'src/queries/profile/profile';
-import { queryPresets } from '../base';
+import { updateUserPermissions } from '@linode/api-v4';
+import { queryPresets } from '@linode/queries';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useAccountUserPermissions = (username: string) => {
-  return useQuery<IamUserPermissions, APIError[]>(
-    iamQueries.user(username)._ctx.permissions
-  );
+import { iamQueries } from './queries';
+
+import type {
+  APIError,
+  IamAccountPermissions,
+  IamUserPermissions,
+} from '@linode/api-v4';
+
+export const useAccountUserPermissions = (username?: string) => {
+  return useQuery<IamUserPermissions, APIError[]>({
+    ...iamQueries.user(username ?? '')._ctx.permissions,
+    enabled: Boolean(username),
+  });
 };
 
-export const useAccountPermissions = () => {
-  const { data: profile } = useProfile();
-
+export const useAccountPermissions = (enabled = true) => {
   return useQuery<IamAccountPermissions, APIError[]>({
     ...iamQueries.permissions,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled: !profile?.restricted,
+    enabled,
+  });
+};
+
+export const useAccountUserPermissionsMutation = (username: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<IamUserPermissions, APIError[], IamUserPermissions>({
+    mutationFn: (data) => updateUserPermissions(username, data),
+    onSuccess(role) {
+      queryClient.setQueryData<IamUserPermissions>(
+        iamQueries.user(username)._ctx.permissions.queryKey,
+        role
+      );
+    },
   });
 };

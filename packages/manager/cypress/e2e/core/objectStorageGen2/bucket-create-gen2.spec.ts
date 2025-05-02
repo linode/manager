@@ -1,24 +1,27 @@
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  mockGetObjectStorageEndpoints,
-  mockGetBuckets,
-  mockDeleteBucket,
   mockCreateBucket,
-  mockGetBucketAccess,
   mockCreateBucketError,
+  mockDeleteBucket,
+  mockGetBucketAccess,
+  mockGetBuckets,
+  mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import {
   accountFactory,
   objectStorageBucketFactoryGen2,
   objectStorageEndpointsFactory,
-  regionFactory,
 } from 'src/factories';
-import { chooseRegion } from 'support/util/regions';
+
 import type { ACLType, ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 create bucket tests', () => {
@@ -95,8 +98,6 @@ describe('Object Storage Gen2 create bucket tests', () => {
         endpointType === 'Standard (E3)' ||
         endpointType === 'Standard (E2)'
       ) {
-        cy.contains(bucketRateLimitsNotice).should('be.visible');
-        cy.get('[data-testid="bucket-rate-limit-table"]').should('be.visible');
         cy.contains(CORSNotice).should('be.visible');
         ui.toggle.find().should('not.exist');
       } else {
@@ -150,9 +151,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E0',
       cors_enabled: true,
+      endpoint_type: 'E0',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -174,9 +175,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E0',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E0',
       s3_endpoint: undefined,
     });
 
@@ -184,8 +185,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Bucket Name (required)').click();
+        cy.focused().type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -262,7 +265,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -288,9 +292,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E1',
       cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -312,9 +316,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E1',
       s3_endpoint: 'us-sea-1.linodeobjects.com',
     });
 
@@ -322,8 +326,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Bucket Name (required)').click();
+        cy.focused().type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -385,7 +391,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -411,9 +418,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E2',
       cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -435,9 +442,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E2',
       s3_endpoint: undefined,
     });
 
@@ -445,8 +452,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Bucket Name (required)').click();
+        cy.focused().type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -506,7 +515,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -532,9 +542,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     mockGetBuckets([]).as('getBuckets');
     mockDeleteBucket(bucketLabel, mockRegion.id).as('deleteBucket');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E3',
       cors_enabled: false,
+      endpoint_type: 'E3',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
 
@@ -556,9 +566,9 @@ describe('Object Storage Gen2 create bucket tests', () => {
     ]);
 
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E3',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E3',
       s3_endpoint: undefined,
     });
 
@@ -566,8 +576,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
-        cy.findByText('Label').click().type(bucketLabel);
-        ui.regionSelect.find().click().type(`${mockRegion.label}{enter}`);
+        cy.findByLabelText('Bucket Name (required)').click();
+        cy.focused().type(bucketLabel);
+        ui.regionSelect.find().click();
+        cy.focused().type(`${mockRegion.label}{enter}`);
         cy.findByLabelText('Object Storage Endpoint Type')
           .should('be.visible')
           .click();
@@ -627,7 +639,8 @@ describe('Object Storage Gen2 create bucket tests', () => {
       .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        cy.findByLabelText('Bucket Name').click();
+        cy.focused().type(bucketLabel);
         ui.buttonGroup
           .findButtonByTitle('Delete')
           .should('be.visible')
@@ -700,9 +713,10 @@ describe('Object Storage Gen2 create bucket tests', () => {
           .should('be.enabled')
           .click();
 
-        cy.contains('Label is required.').should('be.visible');
-        cy.findByText('Label').click().type(bucketLabel);
-        cy.contains('Label is required.').should('not.exist');
+        cy.contains('Bucket name is required.').should('be.visible');
+        cy.findByLabelText('Bucket Name (required)').click();
+        cy.focused().type(bucketLabel);
+        cy.contains('Bucket name is required.').should('not.exist');
 
         // confirms (mock) API error appears
         ui.buttonGroup
@@ -713,6 +727,58 @@ describe('Object Storage Gen2 create bucket tests', () => {
 
         cy.wait('@createBucket');
         cy.findByText(mockErrorMessage).should('be.visible');
+      });
+  });
+});
+
+/**
+ * When a restricted user navigates to object-storage/buckets/create, an error is shown in the "Create Bucket" drawer noting that the user does not have bucket creation permissions
+ */
+describe('Object Storage Gen2 create bucket modal has disabled fields for restricted user', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      objMultiCluster: true,
+      objectStorageGen2: { enabled: true },
+    }).as('getFeatureFlags');
+    mockGetAccount(
+      accountFactory.build({
+        capabilities: [
+          'Object Storage',
+          'Object Storage Endpoint Types',
+          'Object Storage Access Key Regions',
+        ],
+      })
+    ).as('getAccount');
+    // restricted user
+    mockGetProfile(
+      profileFactory.build({
+        email: 'mock-user@linode.com',
+        restricted: true,
+      })
+    ).as('getProfile');
+  });
+
+  // bucket creation
+  it('create bucket form', () => {
+    cy.visitWithLogin('/object-storage/buckets/create');
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+
+    // error message
+    ui.drawer
+      .findByTitle('Create Bucket')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText(/You don't have permissions to create a Bucket./).should(
+          'be.visible'
+        );
+        cy.findByLabelText('Bucket Name (required)')
+          .should('be.visible')
+          .should('be.disabled');
+        ui.regionSelect.find().should('be.visible').should('be.disabled');
+        // submit button should be disabled
+        cy.findByTestId('create-bucket-button')
+          .should('be.visible')
+          .should('be.disabled');
       });
   });
 });

@@ -1,5 +1,12 @@
+// Supports weights 300-700
+import '@fontsource/fira-code';
+import '@fontsource/nunito-sans/400.css';
+import '@fontsource/nunito-sans/600.css';
+import '@fontsource/nunito-sans/700.css';
+import '@fontsource/nunito-sans/800.css';
+import '@fontsource/nunito-sans/400-italic.css';
 import { Box } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 
@@ -19,14 +26,14 @@ import { TopMenu } from 'src/features/TopMenu/TopMenu';
 import {
   useMutatePreferences,
   usePreferences,
-} from 'src/queries/profile/preferences';
+  useProfile,
+} from '@linode/queries';
 
 import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
-import { useProfile } from './queries/profile/profile';
 import { useStyles } from './Root.styles';
 
 export const Root = () => {
@@ -90,25 +97,36 @@ export const Root = () => {
         <SwitchAccountSessionProvider value={switchAccountSessionContextValue}>
           <ComplianceUpdateProvider value={complianceUpdateContextValue}>
             <NotificationProvider value={contextValue}>
-              <SideMenu
-                closeMenu={() => toggleMenu(false)}
-                collapse={desktopMenuIsOpen || false}
-                open={menuIsOpen}
+              <MainContentBanner />
+              <TopMenu
+                desktopMenuToggle={desktopMenuToggle}
+                openSideMenu={() => toggleMenu(true)}
+                username={username}
               />
-              <div
-                className={cx(classes.content, {
-                  [classes.fullWidthContent]: desktopMenuIsOpen,
-                })}
-              >
-                <MainContentBanner />
-                <TopMenu
+              <div className={classes.content}>
+                <SideMenu
+                  closeMenu={() => toggleMenu(false)}
+                  collapse={desktopMenuIsOpen || false}
                   desktopMenuToggle={desktopMenuToggle}
-                  isSideMenuOpen={!desktopMenuIsOpen}
-                  openSideMenu={() => toggleMenu(true)}
-                  username={username}
+                  open={menuIsOpen}
                 />
-                <main
-                  className={classes.cmrWrapper}
+                <Box
+                  sx={(theme) => ({
+                    maxWidth: `${theme.breakpoints.values.lg}px !important`,
+                    padding: `${theme.spacing(3)} 0`,
+                    paddingTop: 12,
+                    [theme.breakpoints.between('md', 'xl')]: {
+                      paddingLeft: theme.spacing(2),
+                      paddingRight: theme.spacing(2),
+                    },
+                    [theme.breakpoints.down('md')]: {
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                      paddingTop: theme.spacing(2),
+                    },
+                    transition: theme.transitions.create('opacity'),
+                  })}
+                  component="main"
                   id="main-content"
                   role="main"
                 >
@@ -120,10 +138,10 @@ export const Root = () => {
                       </React.Suspense>
                     </Grid>
                   </Grid>
-                </main>
+                </Box>
               </div>
             </NotificationProvider>
-            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <Footer />
           </ComplianceUpdateProvider>
         </SwitchAccountSessionProvider>
       </SessionExpirationProvider>

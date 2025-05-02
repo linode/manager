@@ -19,3 +19,5 @@ export const MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED =
   '2023-10-05 00:00:00Z';
 export const DOCS_LINK_LABEL_DC_PRICING = 'How Data Center Pricing Works';
 export const DOCS_LINK_LABEL_APL_APPLICATIONS = 'Available Applications';
+export const LKE_ADDITIONAL_PRICING =
+  'Additional services added to the cluster may incur charges.';

@@ -7,12 +7,22 @@ import { ListItem } from '../ListItem';
 import { TextField } from '../TextField';
 
 import type { EnhancedAutocompleteProps } from '../Autocomplete';
+import type { AutocompleteValue, SxProps } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 
-export type SelectOptionType = {
+type Option<T = number | string> = {
   label: string;
-  value: string;
+  value: T;
 };
-interface InternalOptionType extends SelectOptionType {
+
+export type SelectOption<
+  T = number | string,
+  Nullable extends boolean = false,
+> = Nullable extends true
+  ? AutocompleteValue<Option<T>, false, false, false>
+  : Option<T>;
+
+interface InternalOptionType extends SelectOption {
   /**
    * Whether the option is a "create" option.
    *
@@ -26,9 +36,11 @@ interface InternalOptionType extends SelectOptionType {
    */
   noOptions?: boolean;
 }
-export interface SelectProps
+
+export interface SelectProps<T extends { label: string }>
   extends Pick<
-    EnhancedAutocompleteProps<SelectOptionType>,
+    EnhancedAutocompleteProps<T>,
+    | 'disabled'
     | 'errorText'
     | 'helperText'
     | 'id'
@@ -36,12 +48,20 @@ export interface SelectProps
     | 'loading'
     | 'noOptionsText'
     | 'onBlur'
+    | 'open'
     | 'options'
     | 'placeholder'
+    | 'ref'
     | 'sx'
     | 'textFieldProps'
     | 'value'
   > {
+  /**
+   * Whether the Autocomplete should be focused when it mounts.
+   *
+   * @default false
+   */
+  autoFocus?: boolean;
   /**
    * Whether the select can be cleared once a value is selected.
    *
@@ -62,16 +82,27 @@ export interface SelectProps
    */
   hideLabel?: boolean;
   /**
+   * Keep the search input enabled on mobile.
+   * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
+   * Because some instances may require the search input to be editable on mobile, this prop is available to override that default behavior.
+   *
+   * @default false
+   */
+  keepSearchEnabledOnMobile?: boolean;
+  /**
    * The label for the select.
    */
   label: string;
   /**
+   * The props for the ListItem component.
+   */
+  listItemProps?: (value: T) => {
+    dataAttributes?: Record<string, T | boolean | string>;
+  };
+  /**
    * The callback function that is invoked when the value changes.
    */
-  onChange?: (
-    _event: React.SyntheticEvent,
-    _value: SelectProps['value']
-  ) => void;
+  onChange?: (_event: React.SyntheticEvent, _value: T) => void;
   /**
    * Whether the select is required.
    *
@@ -84,6 +115,10 @@ export interface SelectProps
    * @default false
    */
   searchable?: boolean;
+  /**
+   * The style overrides for the select.
+   */
+  sx?: SxProps<Theme>;
 }
 
 /**
@@ -94,12 +129,17 @@ export interface SelectProps
  *
  * For any other use-cases, use the Autocomplete component directly.
  */
-export const Select = (props: SelectProps) => {
+export const Select = <T extends SelectOption = SelectOption>(
+  props: SelectProps<T>,
+) => {
   const {
+    autoFocus = false,
     clearable = false,
     creatable = false,
     hideLabel = false,
+    keepSearchEnabledOnMobile = false,
     label,
+    listItemProps,
     loading = false,
     noOptionsText = 'No options available',
     onChange,
@@ -113,31 +153,31 @@ export const Select = (props: SelectProps) => {
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOptionType | null | string
+    value: SelectOption | null | string,
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
         label: value,
         value,
-      });
+      } as T);
     } else if (value && typeof value === 'object' && 'label' in value) {
       const { label, value: optionValue } = value;
       onChange?.(event, {
         label,
         value: optionValue,
-      });
+      } as T);
     } else {
-      onChange?.(event, null);
+      onChange?.(event, null as unknown as T);
     }
   };
 
   const _options = React.useMemo(
     () => getOptions({ creatable, inputValue, options }),
-    [creatable, inputValue, options]
+    [creatable, inputValue, options],
   );
 
   return (
-    <Autocomplete<SelectOptionType, false, boolean, boolean>
+    <Autocomplete<SelectOption, false, boolean, boolean>
       {...rest}
       isOptionEqualToValue={(option, value) => {
         if (!option || !value) {
@@ -147,6 +187,8 @@ export const Select = (props: SelectProps) => {
       }}
       renderInput={(params) => (
         <TextField
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus={autoFocus}
           {...params}
           {...textFieldProps}
           InputProps={{
@@ -156,7 +198,7 @@ export const Select = (props: SelectProps) => {
               <>
                 {loading && (
                   <InputAdornment position="end">
-                    <CircleProgress size="sm" />
+                    <CircleProgress noPadding size="xs" />
                   </InputAdornment>
                 )}
                 {textFieldProps?.InputProps?.endAdornment}
@@ -178,6 +220,7 @@ export const Select = (props: SelectProps) => {
           label={label}
           placeholder={props.placeholder}
           required={props.required}
+          sx={sx}
         />
       )}
       renderOption={(props, option: InternalOptionType) => {
@@ -185,6 +228,9 @@ export const Select = (props: SelectProps) => {
         return (
           <ListItem
             {...rest}
+            {...(option.create || option.noOptions
+              ? undefined
+              : listItemProps?.(option as T)?.dataAttributes)}
             sx={
               option.noOptions
                 ? {
@@ -219,7 +265,8 @@ export const Select = (props: SelectProps) => {
       disableClearable={!clearable}
       forcePopupIcon
       freeSolo={creatable}
-      getOptionDisabled={(option: SelectOptionType) => option.value === ''}
+      getOptionDisabled={(option: SelectOption) => option.value === ''}
+      keepSearchEnabledOnMobile={keepSearchEnabledOnMobile}
       label={label}
       noOptionsText={noOptionsText}
       onChange={handleChange}
@@ -234,7 +281,7 @@ interface GetOptionsProps {
   /**
    * Whether the select can create a new option.
    */
-  creatable: SelectProps['creatable'];
+  creatable: boolean;
   /**
    * The input value.
    */
@@ -265,13 +312,13 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     const matchingOptions = options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        opt.value.toLowerCase().includes(inputValue.toLowerCase())
+        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase()),
     );
 
     const exactMatch = matchingOptions.some(
       (opt) =>
         opt.label.toLowerCase() === inputValue.toLowerCase() ||
-        opt.value.toLowerCase() === inputValue.toLowerCase()
+        opt.value.toString().toLowerCase() === inputValue.toLowerCase(),
     );
 
     // If there's an exact match, don't show is as a create option

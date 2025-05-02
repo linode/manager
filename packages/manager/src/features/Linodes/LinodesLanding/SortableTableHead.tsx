@@ -1,4 +1,6 @@
+import { IconButton } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,8 +11,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-
-import { StyledToggleButton } from './DisplayLinodes.styles';
 
 import type { OrderByProps } from 'src/components/OrderBy';
 
@@ -51,7 +51,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
       <TableRow>
         <TableSortCell
           sx={{
-            ...theme.applyTableHeaderStyles,
             [theme.breakpoints.down('lg')]: {
               width: '20%',
             },
@@ -67,7 +66,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         </TableSortCell>
         <TableSortCell
           sx={{
-            ...theme.applyTableHeaderStyles,
             [theme.breakpoints.down('md')]: {
               width: '25%',
             },
@@ -87,7 +85,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <Hidden smDown>
           <TableSortCell
             sx={{
-              ...theme.applyTableHeaderStyles,
               [theme.breakpoints.only('sm')]: {
                 width: '15%',
               },
@@ -112,7 +109,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           <Hidden lgDown>
             <TableSortCell
               sx={{
-                ...theme.applyTableHeaderStyles,
                 [theme.breakpoints.down('sm')]: {
                   width: '18%',
                 },
@@ -131,7 +127,6 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         <Hidden lgDown>
           <TableSortCell
             sx={{
-              ...theme.applyTableHeaderStyles,
               [theme.breakpoints.down('sm')]: {
                 width: '18%',
               },
@@ -147,33 +142,43 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           </TableSortCell>
         </Hidden>
         <TableCell sx={{ padding: '0 !important' }}>
-          <div
-            style={{
-              backgroundColor: theme.bg.tableHeader,
+          <Box
+            sx={{
+              alignItems: 'center',
+              backgroundColor:
+                theme.tokens.component.Table.HeaderNested.Background,
               display: 'flex',
+              gap: 3,
               justifyContent: 'flex-end',
+              paddingRight: 1.5,
             }}
           >
             <div className="visually-hidden" id={displayViewDescriptionId}>
               Currently in {linodeViewPreference} view
             </div>
             <Tooltip placement="top" title="Summary view">
-              <StyledToggleButton
+              <IconButton
+                className={
+                  linodeViewPreference === 'grid'
+                    ? 'MuiIconButton-isActive'
+                    : ''
+                }
+                sx={{
+                  padding: 0,
+                }}
                 aria-describedby={displayViewDescriptionId}
                 aria-label="Toggle display"
                 disableRipple
-                isActive={linodeViewPreference === 'grid'}
                 onClick={toggleLinodeView}
-                size="large"
               >
                 <GridView />
-              </StyledToggleButton>
+              </IconButton>
             </Tooltip>
             <GroupByTagToggle
               isGroupedByTag={linodesAreGrouped}
               toggleGroupByTag={toggleGroupLinodes}
             />
-          </div>
+          </Box>
         </TableCell>
       </TableRow>
     </TableHead>

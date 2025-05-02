@@ -2,47 +2,11 @@ import { CircleProgress } from '@linode/ui';
 import { default as TableCell } from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import * as React from 'react';
-import { makeStyles } from 'tss-react/mui';
 
-import SortUp from 'src/assets/icons/sort-up.svg';
+import ArrowDown from 'src/assets/icons/arrow-down.svg';
 import Sort from 'src/assets/icons/unsorted.svg';
 
-import type { Theme } from '@mui/material/styles';
 import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell';
-
-const useStyles = makeStyles()((theme: Theme) => ({
-  initialIcon: {
-    margin: 0,
-    marginLeft: 4,
-    marginRight: 4,
-  },
-  label: {
-    fontSize: '.875rem',
-    minHeight: 20,
-    transition: 'none',
-  },
-  noWrap: {
-    whiteSpace: 'nowrap',
-  },
-  root: {
-    '& svg': {
-      marginLeft: 4,
-      width: 20,
-    },
-    '&:hover': {
-      '& .MuiTableSortLabel-icon': {
-        color: theme.textColors.linkActiveLight,
-      },
-      '& span': {
-        color: theme.textColors.linkActiveLight,
-      },
-      '& svg g': {
-        fill: theme.textColors.linkActiveLight,
-      },
-      cursor: 'pointer',
-    },
-  },
-}));
 
 export interface TableSortCellProps extends _TableCellProps {
   active: boolean;
@@ -54,8 +18,6 @@ export interface TableSortCellProps extends _TableCellProps {
 }
 
 export const TableSortCell = (props: TableSortCellProps) => {
-  const { classes, cx } = useStyles();
-
   const {
     active,
     children,
@@ -65,6 +27,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
     isLoading,
     label,
     noWrap,
+    sx,
     ...rest
   } = props;
 
@@ -76,25 +39,24 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
-      className={cx(props.className, {
-        [classes.noWrap]: noWrap,
-        [classes.root]: true,
-      })}
-      {...rest}
       onClick={onHandleClick}
       role="columnheader"
       sortDirection={direction}
+      sx={{
+        whiteSpace: noWrap ? 'nowrap' : '',
+        ...sx,
+      }}
+      {...rest}
     >
       <TableSortLabel
-        IconComponent={SortUp}
         active={active}
         aria-label={`Sort by ${label}`}
-        className={classes.label}
         direction={direction}
         hideSortIcon={true}
+        IconComponent={ArrowDown}
       >
         {children}
-        {!active && <Sort className={classes.initialIcon} />}
+        {!active && <Sort />}
       </TableSortLabel>
       {isLoading && <CircleProgress size="sm" />}
     </TableCell>

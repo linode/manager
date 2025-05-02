@@ -1,56 +1,56 @@
-import { Box } from '@linode/ui';
-import { pathOr } from 'ramda';
+import { Box, Chip, SvgIcon } from '@linode/ui';
 import * as React from 'react';
-
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
-import { Tag } from 'src/components/Tag/Tag';
-import { linodeInTransition } from 'src/features/Linodes/transitions';
+import { useHistory } from 'react-router-dom';
 
 import {
+  StyledSearchSuggestion,
   StyledSegment,
   StyledSuggestionDescription,
   StyledSuggestionIcon,
   StyledSuggestionTitle,
   StyledTagContainer,
-  StyledWrapperDiv,
 } from './SearchSuggestion.styles';
 
-import type { LinodeStatus } from '@linode/api-v4/lib/linodes';
-import type { OptionProps } from 'react-select';
+import type { SearchableItem } from 'src/features/Search/search.interfaces';
+import { searchableEntityIconMap } from 'src/features/Search/utils';
 
-export interface SearchSuggestionT {
-  description: string;
-  history: any;
-  icon: string;
-  isHighlighted?: boolean;
-  path: string;
+export interface SearchSuggestionProps {
+  data: SearchableItem;
   searchText: string;
-  status?: LinodeStatus;
-  tags?: string[];
-}
-
-export interface SearchSuggestionProps extends OptionProps<any, any> {
-  data: {
-    data: SearchSuggestionT;
-    label: string;
+  selectOption: (option: unknown) => void;
+  selectProps: {
+    onMenuClose: () => void;
   };
-  searchText: string;
 }
 
 export const SearchSuggestion = (props: SearchSuggestionProps) => {
-  const { data, innerProps, innerRef, label, selectProps } = props;
-  const { description, icon, searchText, status, tags } = data.data;
-  const searchResultIcon = pathOr<string>('default', [], icon);
+  const { data, searchText, selectOption, selectProps, ...rest } = props;
+  const history = useHistory();
+
+  const Icon = searchableEntityIconMap[data.entityType];
 
   const handleClick = () => {
-    const suggestion = data;
-    props.selectOption(suggestion);
+    selectOption(data);
+  };
+
+  const handleTagQuery = (
+    e: React.MouseEvent<HTMLDivElement>,
+    label: string
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    history.push(`/search/?query=tag:${label}`);
+    selectProps.onMenuClose();
   };
 
   const maybeStyleSegment = (
     text: string,
     searchText: string
   ): React.ReactNode => {
+    if (!text || !searchText) {
+      return null;
+    }
+
     const idx = text
       .toLocaleLowerCase()
       .indexOf(searchText.toLocaleLowerCase());
@@ -69,56 +69,61 @@ export const SearchSuggestion = (props: SearchSuggestionProps) => {
     );
   };
 
-  const renderTags = (tags: string[], selected: boolean) => {
+  const renderTags = (tags: string[]) => {
     if (tags.length === 0) {
       return;
     }
+
     return tags.map((tag: string) => (
-      <Tag
+      <Chip
         className="tag"
-        closeMenu={selectProps.onMenuClose}
-        colorVariant={selected ? 'blue' : 'lightBlue'}
-        component={'button' as 'div'}
         key={`tag-${tag}`}
         label={tag}
+        onClick={(e) => handleTagQuery(e, tag)}
       />
     ));
   };
 
   return (
-    <StyledWrapperDiv
-      data-qa-selected={Boolean(props.isFocused)}
+    <StyledSearchSuggestion
+      {...rest}
       data-qa-suggestion
-      isFocused={Boolean(props.isFocused)}
-      onKeyDown={handleClick}
-      ref={innerRef}
-      {...innerProps}
-      // overrides onClick from InnerProps
       onClick={handleClick}
-      role="button"
-      tabIndex={0}
+      onKeyDown={handleClick}
+      role="option"
     >
-      <Box sx={{ display: 'flex', flexFlow: 'row nowrap' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexFlow: 'row nowrap',
+        }}
+        width="100%"
+      >
         <StyledSuggestionIcon>
-          <EntityIcon
-            loading={status && linodeInTransition(status)}
-            size={20}
-            status={status}
-            variant={searchResultIcon}
-          />
+          <SvgIcon>
+            <Icon />
+          </SvgIcon>
         </StyledSuggestionIcon>
-        <Box sx={(theme) => ({ padding: theme.spacing(1) })}>
-          <StyledSuggestionTitle data-qa-suggestion-title>
-            {maybeStyleSegment(label, searchText)}
-          </StyledSuggestionTitle>
-          <StyledSuggestionDescription data-qa-suggestion-desc>
-            {description}
-          </StyledSuggestionDescription>
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="space-between"
+          sx={(theme) => ({ padding: theme.spacing(1) })}
+          width="100%"
+        >
+          <Box display="flex" flexDirection="column" marginRight={1}>
+            <StyledSuggestionTitle data-qa-suggestion-title>
+              {maybeStyleSegment(data.label, searchText)}
+            </StyledSuggestionTitle>
+            <StyledSuggestionDescription data-qa-suggestion-desc>
+              {data.data.description}
+            </StyledSuggestionDescription>
+          </Box>
+          <StyledTagContainer className="tag-container">
+            {data.data.tags && renderTags(data.data.tags)}
+          </StyledTagContainer>
         </Box>
       </Box>
-      <StyledTagContainer>
-        {tags && renderTags(tags, Boolean(props.isFocused))}
-      </StyledTagContainer>
-    </StyledWrapperDiv>
+    </StyledSearchSuggestion>
   );
 };

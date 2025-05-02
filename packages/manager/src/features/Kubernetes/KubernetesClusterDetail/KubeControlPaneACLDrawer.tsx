@@ -1,31 +1,44 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  ActionsPanel,
   Box,
+  Checkbox,
+  Drawer,
   FormControlLabel,
   Notice,
   TextField,
-  Toggle,
   Typography,
   omittedProps,
 } from '@linode/ui';
-import { kubernetesControlPlaneACLPayloadSchema } from '@linode/validation';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
+import {
+  kubernetesControlPlaneACLPayloadSchema,
+  kubernetesEnterpriseControlPlaneACLPayloadSchema,
+} from '@linode/validation';
 import { Divider, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
+import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
 } from 'src/queries/kubernetes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
+
+import {
+  ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY,
+  ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACL_COPY,
+  ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY,
+} from '../constants';
+import { StyledACLToggle } from '../CreateCluster/ControlPlaneACLPane';
 
 import type {
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
+  KubernetesTier,
 } from '@linode/api-v4';
 
 export interface KubeControlPlaneACLDrawerProps {
@@ -34,6 +47,7 @@ export interface KubeControlPlaneACLDrawerProps {
   clusterId: KubernetesCluster['id'];
   clusterLabel: KubernetesCluster['label'];
   clusterMigrated: boolean;
+  clusterTier: KubernetesTier;
   open: boolean;
 }
 
@@ -47,17 +61,21 @@ export const KubeControlPlaneACLDrawer = (
     clusterId,
     clusterLabel,
     clusterMigrated,
+    clusterTier,
     open,
   } = props;
   const aclPayload = aclData?.acl;
 
-  const {
-    mutateAsync: updateKubernetesClusterControlPlaneACL,
-  } = useKubernetesControlPlaneACLMutation(clusterId);
+  const isEnterpriseCluster = clusterTier === 'enterprise';
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterId
-  );
+  const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
+    React.useState(false);
+
+  const { mutateAsync: updateKubernetesClusterControlPlaneACL } =
+    useKubernetesControlPlaneACLMutation(clusterId);
+
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterId);
 
   const {
     control,
@@ -65,16 +83,25 @@ export const KubeControlPlaneACLDrawer = (
     handleSubmit,
     reset,
     setError,
+    setValue,
     watch,
   } = useForm<KubernetesControlPlaneACLPayload>({
     defaultValues: aclData,
     mode: 'onBlur',
-    resolver: yupResolver(kubernetesControlPlaneACLPayloadSchema),
+    resolver: yupResolver(
+      isEnterpriseCluster && !isACLAcknowledgementChecked
+        ? kubernetesEnterpriseControlPlaneACLPayloadSchema
+        : kubernetesControlPlaneACLPayloadSchema
+    ),
     values: {
       acl: {
         addresses: {
-          ipv4: aclPayload?.addresses?.ipv4 ?? [''],
-          ipv6: aclPayload?.addresses?.ipv6 ?? [''],
+          ipv4: aclPayload?.addresses?.ipv4?.length
+            ? aclPayload?.addresses?.ipv4
+            : [''],
+          ipv6: aclPayload?.addresses?.ipv6?.length
+            ? aclPayload?.addresses?.ipv6
+            : [''],
         },
         enabled: aclPayload?.enabled ?? false,
         'revision-id': aclPayload?.['revision-id'] ?? '',
@@ -83,6 +110,11 @@ export const KubeControlPlaneACLDrawer = (
   });
 
   const { acl } = watch();
+
+  const shouldShowAclAcknowledgementCheck =
+    isEnterpriseCluster &&
+    (acl?.addresses?.ipv4?.length === 0 || acl?.addresses?.ipv4?.[0] === '') &&
+    (acl?.addresses?.ipv6?.length === 0 || acl?.addresses?.ipv6?.[0] === '');
 
   const updateCluster = async () => {
     // A quick note on the following code:
@@ -119,12 +151,12 @@ export const KubeControlPlaneACLDrawer = (
       acl: {
         enabled: acl.enabled,
         'revision-id': acl['revision-id'],
-        ...((ipv4.length > 0 || ipv6.length > 0) && {
+        ...{
           addresses: {
-            ...(ipv4.length > 0 && { ipv4 }),
-            ...(ipv6.length > 0 && { ipv6 }),
+            ipv4,
+            ipv6,
           },
-        }),
+        },
       },
     };
 
@@ -143,6 +175,8 @@ export const KubeControlPlaneACLDrawer = (
       }
       scrollErrorIntoViewV2(formContainerRef);
     }
+
+    setIsACLAcknowledgementChecked(false);
   };
 
   const handleClose = () => {
@@ -152,6 +186,7 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}
@@ -165,16 +200,15 @@ export const KubeControlPlaneACLDrawer = (
         )}
         <Stack sx={{ marginTop: 3 }}>
           <StyledTypography variant="body1">
-            Control Plane ACL secures network access to your LKE cluster&apos;s
-            control plane. Use this form to enable or disable the ACL on your
-            LKE cluster, update the list of allowed IP addresses, and adjust
-            other settings.
+            {isEnterpriseCluster
+              ? ACL_DRAWER_ENTERPRISE_TIER_ACL_COPY
+              : ACL_DRAWER_STANDARD_TIER_ACL_COPY}
           </StyledTypography>
           {!clusterMigrated && (
             <Notice spacingBottom={0} spacingTop={16} variant="warning">
               <StyledTypography
                 sx={(theme) => ({
-                  fontFamily: theme.font.bold,
+                  font: theme.font.bold,
                   fontSize: '15px',
                 })}
               >
@@ -187,28 +221,57 @@ export const KubeControlPlaneACLDrawer = (
           <Divider sx={{ marginBottom: 2, marginTop: 3 }} />
           <Typography variant="h3">Activation Status</Typography>
           <StyledTypography topMargin variant="body1">
-            Enable or disable the Control Plane ACL. If the ACL is not enabled,
-            any public IP address can be used to access your control plane. Once
-            enabled, all network access is denied except for the IP addresses
-            and CIDR ranges defined on the ACL.
+            {isEnterpriseCluster
+              ? ACL_DRAWER_ENTERPRISE_TIER_ACTIVATION_STATUS_COPY
+              : ACL_DRAWER_STANDARD_TIER_ACTIVATION_STATUS_COPY}
           </StyledTypography>
           <Box sx={{ marginTop: 1 }}>
             <Controller
+              control={control}
+              name="acl.enabled"
               render={({ field }) => (
                 <FormControlLabel
                   control={
-                    <Toggle
-                      checked={field.value ?? false}
+                    <StyledACLToggle
+                      checked={
+                        isEnterpriseCluster ? true : (field.value ?? false)
+                      }
+                      disabled={isEnterpriseCluster}
                       name="ipacl-checkbox"
                       onBlur={field.onBlur}
-                      onChange={field.onChange}
+                      onChange={() => {
+                        setValue('acl.enabled', !field.value, {
+                          shouldDirty: true,
+                        });
+                        // Disabling ACL should clear the revision-id and any addresses (see LKE-6205).
+                        if (!acl.enabled) {
+                          setValue('acl.revision-id', '');
+                          setValue('acl.addresses.ipv6', ['']);
+                          setValue('acl.addresses.ipv4', ['']);
+                        } else {
+                          setValue(
+                            'acl.revision-id',
+                            aclPayload?.['revision-id']
+                          );
+                          setValue(
+                            'acl.addresses.ipv6',
+                            aclPayload?.addresses?.ipv6?.length
+                              ? aclPayload?.addresses?.ipv6
+                              : ['']
+                          );
+                          setValue(
+                            'acl.addresses.ipv4',
+                            aclPayload?.addresses?.ipv4?.length
+                              ? aclPayload?.addresses?.ipv4
+                              : ['']
+                          );
+                        }
+                      }}
                     />
                   }
-                  label={'Enable Control Plane ACL'}
+                  label="Enable Control Plane ACL"
                 />
               )}
-              control={control}
-              name="acl.enabled"
             />
           </Box>
           <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
@@ -223,8 +286,11 @@ export const KubeControlPlaneACLDrawer = (
                 string to use for tracking this change.
               </StyledTypography>
               <Controller
+                control={control}
+                name="acl.revision-id"
                 render={({ field, fieldState }) => (
                   <TextField
+                    disabled={!acl.enabled}
                     errorText={fieldState.error?.message}
                     label="Revision ID"
                     onBlur={field.onBlur}
@@ -232,8 +298,6 @@ export const KubeControlPlaneACLDrawer = (
                     value={field.value}
                   />
                 )}
-                control={control}
-                name="acl.revision-id"
               />
               <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
             </>
@@ -244,16 +308,20 @@ export const KubeControlPlaneACLDrawer = (
             cluster&apos;s control plane will only be accessible from IP
             addresses within this list.
           </StyledTypography>
-          {errors.acl?.message && (
+          {(errors.acl?.root || errors.acl?.message) && (
             <Notice spacingBottom={12} spacingTop={8} variant="error">
-              {errors.acl.message}
+              {errors.acl?.root?.message}
+              {errors.acl?.message}
             </Notice>
           )}
           <Box sx={{ maxWidth: 450 }}>
             <Controller
+              control={control}
+              name="acl.addresses.ipv4"
               render={({ field }) => (
                 <MultipleNonExtendedIPInput
                   buttonText="Add IPv4 Address"
+                  disabled={!acl.enabled || isACLAcknowledgementChecked}
                   ipErrors={errors.acl?.addresses?.ipv4}
                   isLinkStyled
                   nonExtendedIPs={field.value ?? ['']}
@@ -262,14 +330,15 @@ export const KubeControlPlaneACLDrawer = (
                   title="IPv4 Addresses or CIDRs"
                 />
               )}
-              control={control}
-              name="acl.addresses.ipv4"
             />
             <Box marginTop={2}>
               <Controller
+                control={control}
+                name="acl.addresses.ipv6"
                 render={({ field }) => (
                   <MultipleNonExtendedIPInput
                     buttonText="Add IPv6 Address"
+                    disabled={!acl.enabled || isACLAcknowledgementChecked}
                     ipErrors={errors.acl?.addresses?.ipv6}
                     isLinkStyled
                     nonExtendedIPs={field.value ?? ['']}
@@ -278,11 +347,24 @@ export const KubeControlPlaneACLDrawer = (
                     title="IPv6 Addresses or CIDRs"
                   />
                 )}
-                control={control}
-                name="acl.addresses.ipv6"
               />
             </Box>
           </Box>
+          {shouldShowAclAcknowledgementCheck && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="acl-acknowledgement"
+                  onChange={() =>
+                    setIsACLAcknowledgementChecked(!isACLAcknowledgementChecked)
+                  }
+                />
+              }
+              data-qa-checkbox="acl-acknowledgement"
+              label="Provide an ACL later. The control plane will be unreachable until an ACL is defined."
+              sx={{ marginY: 1 }}
+            />
+          )}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': 'update-acl-button',

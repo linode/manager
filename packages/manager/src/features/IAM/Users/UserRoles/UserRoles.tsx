@@ -1,33 +1,51 @@
-import { Button, Paper, Stack, Typography } from '@linode/ui';
+import { useAccountUser } from '@linode/queries';
+import {
+  Button,
+  CircleProgress,
+  ErrorState,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { isEmpty } from 'ramda';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
+import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
-import { Entities } from '../../Shared/Entities/Entities';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
+import { AssignNewRoleDrawer } from './AssignNewRoleDrawer';
 
-import type { IamUserPermissions } from '@linode/api-v4';
-
-interface Props {
-  assignedRoles?: IamUserPermissions;
-}
-
-export const UserRoles = ({ assignedRoles }: Props) => {
+export const UserRoles = () => {
   const { username } = useParams<{ username: string }>();
 
-  const handleClick = () => {
-    // mock for UIE-8140: RBAC-4: User Roles - Assign New Role
-  };
+  const { data: assignedRoles, isLoading } = useAccountUserPermissions(
+    username ?? ''
+  );
+  const { error } = useAccountUser(username ?? '');
 
-  const hasAssignedRoles = assignedRoles ? !isEmpty(assignedRoles) : false;
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
+
+  const hasAssignedRoles = assignedRoles
+    ? !isEmpty(assignedRoles.account_access) ||
+      !isEmpty(assignedRoles.entity_access)
+    : false;
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
 
   return (
     <>
       <DocumentTitleSegment segment={`${username} - User Roles`} />
-      <Paper>
+      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
         <Stack spacing={3}>
           <Stack
             alignItems="center"
@@ -35,24 +53,21 @@ export const UserRoles = ({ assignedRoles }: Props) => {
             justifyContent="space-between"
           >
             <Typography variant="h2">Assigned Roles</Typography>
-            <Button buttonType="primary" onClick={handleClick}>
+            <Button buttonType="primary" onClick={() => setIsDrawerOpen(true)}>
               Assign New Role
             </Button>
           </Stack>
           {hasAssignedRoles ? (
-            <div>
-              <p>UIE-8138 - assigned roles table</p>
-              {/* just for showing the Entities componnet, it will be gone wuth the AssignedPermissions component*/}
-
-              <Entities access="account_access" type="account" />
-              <Entities access="account_access" type="firewall" />
-              <Entities access="resource_access" type="linode" />
-            </div>
+            <AssignedRolesTable />
           ) : (
             <NoAssignedRoles text={NO_ASSIGNED_ROLES_TEXT} />
           )}
         </Stack>
       </Paper>
+      <AssignNewRoleDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+      />
     </>
   );
 };

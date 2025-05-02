@@ -1,3 +1,9 @@
+import {
+  useAllIPsQuery,
+  useLinodeIPsQuery,
+  useLinodeQuery,
+  usePreferences,
+} from '@linode/queries';
 import { CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { parse as parseIP } from 'ipaddr.js';
@@ -7,10 +13,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useLinodeIPsQuery } from 'src/queries/linodes/networking';
-import { useAllIPsQuery } from 'src/queries/networking/networking';
-import { usePreferences } from 'src/queries/profile/preferences';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
 
@@ -27,6 +29,7 @@ export interface IPAddressRowHandlers {
 }
 
 interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
+  isLinodeInterface: boolean;
   isVPCOnlyLinode: boolean;
   linodeId: number;
   readOnly: boolean;
@@ -41,6 +44,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    isLinodeInterface,
     isVPCOnlyLinode,
     linodeId,
     openRemoveIPDialog,
@@ -57,7 +61,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
   );
 
   const isOnlyPublicIP =
-    ips?.ipv4.public.length === 1 && type === 'IPv4 – Public';
+    ips?.ipv4.public.length === 1 && type === 'Public – IPv4';
 
   return (
     <StyledTableRow
@@ -65,11 +69,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
       disabled={isVPCOnlyLinode}
       key={`${address}-${type}`}
     >
-      <TableCell
-        data-qa-ip-address
-        parentColumn="Address"
-        sx={{ whiteSpace: 'nowrap' }}
-      >
+      <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         <CopyTooltip
           copyableText
           disabled={isVPCOnlyLinode}
@@ -79,16 +79,12 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
         />
         {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
       </TableCell>
-      <TableCell
-        data-qa-ip-address
-        parentColumn="Type"
-        sx={{ whiteSpace: 'nowrap' }}
-      >
+      <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         {type}
       </TableCell>
-      <TableCell parentColumn="Default Gateway">{gateway}</TableCell>
-      <TableCell parentColumn="Subnet Mask">{subnetMask}</TableCell>
-      <TableCell data-qa-rdns parentColumn="Reverse DNS">
+      <TableCell>{gateway}</TableCell>
+      <TableCell>{subnetMask}</TableCell>
+      <TableCell data-qa-rdns>
         {/* Ranges have special handling for RDNS. */}
         {_range ? (
           <RangeRDNSCell
@@ -105,6 +101,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           <LinodeNetworkingActionMenu
             ipAddress={_ip}
             ipType={type}
+            isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
             isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={handleOpenEditRDNS}
@@ -115,6 +112,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           <LinodeNetworkingActionMenu
             ipAddress={_range}
             ipType={type}
+            isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
             isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={() => handleOpenEditRDNSForRange(_range)}

@@ -1,9 +1,10 @@
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
+import { useAllLinodesQuery } from '@linode/queries';
 import { themes } from 'src/utilities/theme';
 
+import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { FilterValue, Linode } from '@linode/api-v4';
 
 export interface CloudPulseTags {
@@ -17,6 +18,7 @@ export interface CloudPulseTagsSelectProps {
   label: string;
   optional?: boolean;
   placeholder?: string;
+  region: FilterValueType;
   resourceType: string | undefined;
   savePreferences?: boolean;
 }
@@ -25,48 +27,63 @@ export const CloudPulseTagsSelect = React.memo(
   (props: CloudPulseTagsSelectProps) => {
     const {
       defaultValue,
+      disabled,
       handleTagsChange,
       label,
       optional,
       placeholder,
+      region,
       resourceType,
       savePreferences,
     } = props;
 
-    const { data: linodes, isError, isLoading } = useAllLinodesQuery();
+    const regionFilter = region ? (region as string) : undefined;
+    const { data: linodesByRegion, isError, isLoading } = useAllLinodesQuery(
+      {},
+      { region: regionFilter },
+      !disabled && Boolean(region && resourceType)
+    );
+
     // fetch all linode instances, consume the associated tags
     const tags = React.useMemo(() => {
-      if (!linodes) {
-        return [];
+      if (!linodesByRegion) {
+        return undefined;
       }
+
       return Array.from(
-        new Set(linodes.flatMap((linode: Linode) => linode.tags))
+        new Set(linodesByRegion.flatMap((linode: Linode) => linode.tags))
       )
         .sort()
         .map((tag) => ({ label: tag })) as CloudPulseTags[];
-    }, [linodes]);
+    }, [linodesByRegion]);
 
     const [selectedTags, setSelectedTags] = React.useState<CloudPulseTags[]>();
 
     const isAutocompleteOpen = React.useRef(false); // Ref to track the open state of Autocomplete
 
     React.useEffect(() => {
-      if (!tags || !savePreferences) {
-        setSelectedTags([]);
-        handleTagsChange([]);
+      if (disabled && !selectedTags) {
         return;
       }
-      const defaultTags =
-        defaultValue && Array.isArray(defaultValue)
-          ? defaultValue.map((tag) => String(tag))
-          : [];
-      const filteredTags = tags.filter((tag) =>
-        defaultTags.includes(String(tag.label))
-      );
-      handleTagsChange(filteredTags);
-      setSelectedTags(filteredTags);
+      // To save default values, go through side effects if disabled is false
+      if (!tags || !savePreferences || selectedTags) {
+        if (selectedTags) {
+          setSelectedTags([]);
+          handleTagsChange([]);
+        }
+      } else {
+        const defaultTags =
+          defaultValue && Array.isArray(defaultValue)
+            ? defaultValue.map((tag) => String(tag))
+            : [];
+        const filteredTags = tags.filter((tag) =>
+          defaultTags.includes(String(tag.label))
+        );
+        handleTagsChange(filteredTags);
+        setSelectedTags(filteredTags);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tags, resourceType]);
+    }, [tags, resourceType, region, disabled]);
 
     return (
       <Autocomplete
@@ -104,14 +121,14 @@ export const CloudPulseTagsSelect = React.memo(
         autoHighlight
         clearOnBlur
         data-testid="tags-select"
-        disabled={!resourceType}
+        disabled={disabled}
         errorText={isError ? `Failed to fetch ${label || 'Tags'}.` : ''}
         label={label || 'Tags'}
         limitTags={1}
         loading={isLoading}
         multiple
         noMarginTop
-        options={tags}
+        options={tags ?? []}
         placeholder={selectedTags?.length ? '' : placeholder || 'Select Tags'}
         value={selectedTags ?? []}
       />

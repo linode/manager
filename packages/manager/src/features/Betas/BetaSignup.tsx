@@ -1,4 +1,11 @@
-import { Checkbox, CircleProgress, Paper, Stack, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Checkbox,
+  CircleProgress,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import {
   createLazyRoute,
   useNavigate,
@@ -7,11 +14,10 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { HighlightedMarkdown } from 'src/components/HighlightedMarkdown/HighlightedMarkdown';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
+import { Markdown } from 'src/components/Markdown/Markdown';
 import { NotFound } from 'src/components/NotFound';
-import { useCreateAccountBetaMutation } from 'src/queries/account/betas';
+import { useCreateAccountBetaMutation } from '@linode/queries';
 import { useBetaQuery } from 'src/queries/betas';
 
 export const BetaSignup = () => {
@@ -150,11 +156,7 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
               {beta.label}
             </Typography>
             <Typography paddingBottom={2}>{beta.description}</Typography>
-            <HighlightedMarkdown
-              language="plaintext"
-              sanitizeOptions={{}}
-              textOrMarkdown={betaAgreement}
-            />
+            <Markdown textOrMarkdown={betaAgreement} />
             <Checkbox
               onChange={() => {
                 setHasAgreed(!hasAgreed);

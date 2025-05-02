@@ -2,13 +2,14 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'sum' | 'min' | 'max' | 'count';
 export type MetricOperatorType = 'eq' | 'gt' | 'lt' | 'gte' | 'lte';
 export type AlertServiceType = 'linode' | 'dbaas';
+export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
   | 'startswith'
   | 'endswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertStatusType = 'enabled' | 'disabled';
+export type AlertStatusType = 'enabled' | 'disabled' | 'in progress' | 'failed';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'number'
@@ -20,6 +21,13 @@ export type MetricUnitType =
   | 'KB'
   | 'MB'
   | 'GB';
+export type NotificationStatus = 'Enabled' | 'Disabled';
+export type ChannelType = 'email' | 'slack' | 'pagerduty' | 'webhook';
+export type AlertNotificationType = 'default' | 'custom';
+type AlertNotificationEmail = 'email';
+type AlertNotificationSlack = 'slack';
+type AlertNotificationPagerDuty = 'pagerduty';
+type AlertNotificationWebHook = 'webhook';
 export interface Dashboard {
   id: number;
   label: string;
@@ -41,28 +49,34 @@ export interface TimeDuration {
   value: number;
 }
 
+export interface DateTimeWithPreset {
+  end: string;
+  start: string;
+  preset?: string;
+}
+
 export interface Widgets {
+  aggregate_function: string;
+  chart_type: 'area' | 'line';
+  color: string;
+  entity_ids: string[];
+  filters: Filters[];
+  group_by: string[];
   label: string;
   metric: string;
-  aggregate_function: string;
-  group_by: string;
-  region_id: number;
   namespace_id: number;
-  color: string;
-  size: number;
-  chart_type: 'line' | 'area';
-  y_label: string;
-  filters: Filters[];
-  serviceType: string;
+  region_id: number;
   service_type: string;
-  entity_ids: string[];
-  time_granularity: TimeGranularity;
+  serviceType: string;
+  size: number;
   time_duration: TimeDuration;
+  time_granularity: TimeGranularity;
   unit: string;
+  y_label: string;
 }
 
 export interface Filters {
-  key: string;
+  dimension_label: string;
   operator: string;
   value: string;
 }
@@ -73,6 +87,7 @@ export type FilterValue =
   | string[]
   | number[]
   | WidgetFilterValue
+  | DateTimeWithPreset
   | undefined;
 
 type WidgetFilterValue = { [key: string]: AclpWidget };
@@ -97,6 +112,7 @@ export interface MetricDefinition {
   scrape_interval: string;
   available_aggregate_functions: string[];
   dimensions: Dimension[];
+  is_alertable: boolean;
 }
 
 export interface Dimension {
@@ -113,14 +129,19 @@ export interface JWEToken {
   token: string;
 }
 
-export interface CloudPulseMetricsRequest {
-  metric: string;
-  filters?: Filters[];
+export interface Metric {
   aggregate_function: string;
-  group_by: string;
-  relative_time_duration: TimeDuration;
-  time_granularity: TimeGranularity | undefined;
+  name: string;
+}
+
+export interface CloudPulseMetricsRequest {
+  absolute_time_duration: DateTimeWithPreset | undefined;
   entity_ids: number[];
+  filters?: Filters[];
+  group_by: string[];
+  metrics: Metric[];
+  relative_time_duration: TimeDuration | undefined;
+  time_granularity: TimeGranularity | undefined;
 }
 
 export interface CloudPulseMetricsResponse {
@@ -163,9 +184,10 @@ export interface CreateAlertDefinitionPayload {
   trigger_conditions: TriggerCondition;
   channel_ids: number[];
 }
+
 export interface MetricCriteria {
   metric: string;
-  aggregation_type: MetricAggregationType;
+  aggregate_function: MetricAggregationType;
   operator: MetricOperatorType;
   threshold: number;
   dimension_filters?: DimensionFilter[];
@@ -197,6 +219,7 @@ export interface Alert {
   label: string;
   tags: string[];
   description: string;
+  class?: AlertClass;
   has_more_resources: boolean;
   status: AlertStatusType;
   type: AlertDefinitionType;
@@ -207,14 +230,110 @@ export interface Alert {
     rules: AlertDefinitionMetricCriteria[];
   };
   trigger_conditions: TriggerCondition;
-  channels: {
-    id: string;
+  alert_channels: {
+    id: number;
     label: string;
     url: string;
-    type: 'channel';
+    type: 'alert-channel';
   }[];
   created_by: string;
   updated_by: string;
   created: string;
   updated: string;
+}
+
+interface NotificationChannelAlerts {
+  id: number;
+  label: string;
+  url: string;
+  type: 'alerts-definitions';
+}
+interface NotificationChannelBase {
+  id: number;
+  label: string;
+  channel_type: ChannelType;
+  type: AlertNotificationType;
+  status: NotificationStatus;
+  alerts: NotificationChannelAlerts[];
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+interface NotificationChannelEmail extends NotificationChannelBase {
+  channel_type: AlertNotificationEmail;
+  content: {
+    email: {
+      email_addresses: string[];
+      subject: string;
+      message: string;
+    };
+  };
+}
+
+interface NotificationChannelSlack extends NotificationChannelBase {
+  channel_type: AlertNotificationSlack;
+  content: {
+    slack: {
+      slack_webhook_url: string;
+      slack_channel: string;
+      message: string;
+    };
+  };
+}
+
+interface NotificationChannelPagerDuty extends NotificationChannelBase {
+  channel_type: AlertNotificationPagerDuty;
+  content: {
+    pagerduty: {
+      service_api_key: string;
+      attributes: string[];
+      description: string;
+    };
+  };
+}
+interface NotificationChannelWebHook extends NotificationChannelBase {
+  channel_type: AlertNotificationWebHook;
+  content: {
+    webhook: {
+      webhook_url: string;
+      http_headers: {
+        header_key: string;
+        header_value: string;
+      }[];
+    };
+  };
+}
+export type NotificationChannel =
+  | NotificationChannelEmail
+  | NotificationChannelSlack
+  | NotificationChannelWebHook
+  | NotificationChannelPagerDuty;
+
+export interface EditAlertDefinitionPayload {
+  label?: string;
+  tags?: string[];
+  description?: string;
+  entity_ids?: string[];
+  severity?: AlertSeverityType;
+  rule_criteria?: {
+    rules: MetricCriteria[];
+  };
+  trigger_conditions?: TriggerCondition;
+  channel_ids?: number[];
+  status?: AlertStatusType;
+}
+
+export interface EditAlertPayloadWithService
+  extends EditAlertDefinitionPayload {
+  serviceType: string;
+  alertId: number;
+}
+
+export type AlertStatusUpdateType = 'Enable' | 'Disable';
+
+export interface EntityAlertUpdatePayload {
+  entityId: string;
+  alert: Alert;
 }

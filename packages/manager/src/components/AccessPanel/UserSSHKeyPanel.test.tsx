@@ -1,14 +1,14 @@
+import { profileFactory, sshKeyFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { profileFactory, sshKeyFactory } from 'src/factories';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import UserSSHKeyPanel from './UserSSHKeyPanel';
+import { UserSSHKeyPanel } from './UserSSHKeyPanel';
 
 describe('UserSSHKeyPanel', () => {
   describe('restricted user', () => {

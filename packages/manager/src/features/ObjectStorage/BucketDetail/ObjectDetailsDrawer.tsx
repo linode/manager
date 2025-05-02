@@ -1,24 +1,22 @@
-import { Divider, Typography } from '@linode/ui';
+import { useProfile } from '@linode/queries';
+import { CircleProgress, Divider, Drawer, Typography } from '@linode/ui';
+import { readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
-import { useProfile } from 'src/queries/profile/profile';
+import { NotFound } from 'src/components/NotFound';
+import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
+import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
-import { truncateMiddle } from 'src/utilities/truncate';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { AccessSelect } from './AccessSelect';
-
-import type { ObjectStorageEndpointTypes } from '@linode/api-v4/lib/object-storage';
 
 export interface ObjectDetailsDrawerProps {
   bucketName: string;
   clusterId: string;
   displayName?: string;
-  endpointType?: ObjectStorageEndpointTypes;
   lastModified?: null | string;
   name?: string;
   onClose: () => void;
@@ -29,12 +27,10 @@ export interface ObjectDetailsDrawerProps {
 
 export const ObjectDetailsDrawer = React.memo(
   (props: ObjectDetailsDrawerProps) => {
-    const { data: profile } = useProfile();
     const {
       bucketName,
       clusterId,
       displayName,
-      endpointType,
       lastModified,
       name,
       onClose,
@@ -44,6 +40,19 @@ export const ObjectDetailsDrawer = React.memo(
     } = props;
     let formattedLastModified;
 
+    const { data: profile } = useProfile();
+    const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
+    const { data: bucketsData, isLoading: isLoadingEndpointData } =
+      useObjectStorageBuckets(isObjectStorageGen2Enabled);
+
+    const isLoadingEndpoint = isLoadingEndpointData || !bucketsData;
+
+    const bucket = bucketsData?.buckets.find(
+      ({ label }) => label === bucketName
+    );
+
+    const { endpoint_type: endpointType } = bucket ?? {};
+
     try {
       if (lastModified) {
         formattedLastModified = formatDate(lastModified, {
@@ -52,19 +61,20 @@ export const ObjectDetailsDrawer = React.memo(
       }
     } catch {}
 
-    const isAccessSelectEnabled =
-      open && name && endpointType !== 'E2' && endpointType !== 'E3';
+    const isEndpointTypeE2E3 = endpointType === 'E2' || endpointType === 'E3';
+    const isAccessSelectEnabled = open && name && !isEndpointTypeE2E3;
+    const shouldShowAccessSelect = !isLoadingEndpoint && isAccessSelectEnabled;
 
     return (
       <Drawer
+        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(displayName ?? 'Object Detail')}
       >
         {size ? (
           <Typography variant="subtitle2">
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(size, { base10: true }).formatted}
+            {readableBytes(size).formatted}
           </Typography>
         ) : null}
         {formattedLastModified && Boolean(profile) ? (
@@ -75,14 +85,16 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <Link external to={url}>
+            <Link bypassSanitization external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
             <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />
           </StyledLinkContainer>
         ) : null}
 
-        {isAccessSelectEnabled ? (
+        {isLoadingEndpoint ? (
+          <CircleProgress />
+        ) : shouldShowAccessSelect ? (
           <>
             <Divider spacingBottom={16} spacingTop={16} />
             <AccessSelect

@@ -1,12 +1,20 @@
-import { CircleProgress } from '@linode/ui';
+import {
+  useAllLinodesQuery,
+  usePlacementGroupQuery,
+  usePlacementGroupsQuery,
+  useRegionsQuery,
+} from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
-import { createLazyRoute } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -18,15 +26,19 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import { usePlacementGroupsQuery } from 'src/queries/placementGroups';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { PLACEMENT_GROUPS_DOCS_LINK } from '../constants';
+import {
+  PG_LANDING_TABLE_DEFAULT_ORDER,
+  PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+  PG_LANDING_TABLE_PREFERENCE_KEY,
+  PLACEMENT_GROUPS_DOCS_LINK,
+  PLACEMENT_GROUPS_LANDING_ROUTE,
+} from '../constants';
 import { PlacementGroupsCreateDrawer } from '../PlacementGroupsCreateDrawer';
 import { PlacementGroupsDeleteModal } from '../PlacementGroupsDeleteModal';
 import { PlacementGroupsEditDrawer } from '../PlacementGroupsEditDrawer';
@@ -36,22 +48,34 @@ import { PlacementGroupsRow } from './PlacementGroupsRow';
 
 import type { Filter, PlacementGroup } from '@linode/api-v4';
 
-const preferenceKey = 'placement-groups';
-
 export const PlacementGroupsLanding = React.memo(() => {
-  const history = useHistory();
-  const pagination = usePagination(1, preferenceKey);
-  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const pagination = usePaginationV2({
+    currentRoute: PLACEMENT_GROUPS_LANDING_ROUTE,
+    preferenceKey: PG_LANDING_TABLE_PREFERENCE_KEY,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+  const params = useParams({ strict: false });
+  const search = useSearch({
+    from: PLACEMENT_GROUPS_LANDING_ROUTE,
+  });
+  const { query } = search;
   const theme = useTheme();
-  const [query, setQuery] = React.useState<string>('');
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: PG_LANDING_TABLE_DEFAULT_ORDER,
+        orderBy: PG_LANDING_TABLE_DEFAULT_ORDER_BY,
+      },
+      from: PLACEMENT_GROUPS_LANDING_ROUTE,
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${PG_LANDING_TABLE_PREFERENCE_KEY}-order`,
+  });
 
   const filter: Filter = {
     ['+order']: order,
@@ -72,10 +96,6 @@ export const PlacementGroupsLanding = React.memo(() => {
     filter
   );
 
-  const selectedPlacementGroup = placementGroups?.data.find(
-    (pg) => pg.id === Number(id)
-  );
-
   const allLinodeIDsAssigned = placementGroups?.data.reduce(
     (acc, placementGroup) => {
       return acc.concat(
@@ -92,6 +112,17 @@ export const PlacementGroupsLanding = React.memo(() => {
     }
   );
 
+  const {
+    data: selectedPlacementGroup,
+    isFetching: isFetchingPlacementGroup,
+    isLoading: isLoadingPlacementGroup,
+  } = useDialogData({
+    enabled: !!params.id,
+    paramKey: 'id',
+    queryHook: usePlacementGroupQuery,
+    redirectToOnNotFound: '/placement-groups',
+  });
+
   const { data: regions } = useRegionsQuery();
   const getPlacementGroupRegion = (
     placementGroup: PlacementGroup | undefined
@@ -104,30 +135,47 @@ export const PlacementGroupsLanding = React.memo(() => {
   });
 
   const handleCreatePlacementGroup = () => {
-    history.push('/placement-groups/create');
+    navigate({ search: (prev) => prev, to: '/placement-groups/create' });
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
-    history.push(`/placement-groups/edit/${placementGroup.id}`);
+    navigate({
+      params: { action: 'edit', id: placementGroup.id },
+      search: (prev) => prev,
+      to: '/placement-groups/$action/$id',
+    });
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
-    history.push(`/placement-groups/delete/${placementGroup.id}`);
+    navigate({
+      params: { action: 'delete', id: placementGroup.id },
+      search: (prev) => prev,
+      to: '/placement-groups/$action/$id',
+    });
   };
 
   const onClosePlacementGroupDrawer = () => {
-    history.push('/placement-groups');
+    navigate({ search: (prev) => prev, to: PLACEMENT_GROUPS_LANDING_ROUTE });
   };
 
   const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
-  const isPlacementGroupDeleteModalOpen = location.pathname.includes('delete');
-  const isPlacementGroupEditDrawerOpen = location.pathname.includes('edit');
+
+  const onSearch = (searchString: string) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: undefined,
+        query: searchString || undefined,
+      }),
+      to: PLACEMENT_GROUPS_LANDING_ROUTE,
+    });
+  };
 
   if (placementGroupsLoading) {
     return <CircleProgress />;
   }
 
-  if (placementGroups?.results === 0 && query === '') {
+  if (placementGroups?.results === 0 && !query) {
     return (
       <>
         <PlacementGroupsLandingEmptyState
@@ -164,7 +212,7 @@ export const PlacementGroupsLanding = React.memo(() => {
             resourceType: 'Placement Groups',
           }),
         }}
-        breadcrumbProps={{ pathname: '/placement-groups' }}
+        breadcrumbProps={{ pathname: PLACEMENT_GROUPS_LANDING_ROUTE }}
         disabledCreateButton={isLinodeReadOnly}
         docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
@@ -177,10 +225,10 @@ export const PlacementGroupsLanding = React.memo(() => {
         hideLabel
         isSearching={isFetching}
         label="Search"
-        onSearch={setQuery}
+        onSearch={onSearch}
         placeholder="Search Placement Groups"
         sx={{ mb: 4 }}
-        value={query}
+        value={query ?? ''}
       />
       <Table aria-label="List of Placement Groups">
         <TableHead>
@@ -266,24 +314,20 @@ export const PlacementGroupsLanding = React.memo(() => {
       />
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
+        isFetching={isFetchingPlacementGroup}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupEditDrawerOpen}
+        open={params.action === 'edit'}
         region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
+        isFetching={isLoadingPlacementGroup}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupDeleteModalOpen}
+        open={params.action === 'delete'}
         selectedPlacementGroup={selectedPlacementGroup}
       />
     </>
   );
-});
-
-export const placementGroupsLandingLazyRoute = createLazyRoute(
-  '/placement-groups'
-)({
-  component: PlacementGroupsLanding,
 });

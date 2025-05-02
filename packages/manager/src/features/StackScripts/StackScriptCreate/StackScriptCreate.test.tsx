@@ -1,38 +1,26 @@
-import * as React from 'react';
+import React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { profileFactory } from 'src/factories';
-import { queryClientFactory } from 'src/queries/base';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { StackScriptCreate } from './StackScriptCreate';
 
-import type { Grants, Profile } from '@linode/api-v4/lib';
-import type { APIError } from '@linode/api-v4/lib/types';
-import type { UseQueryResult } from '@tanstack/react-query';
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => vi.fn()),
+}));
 
-const queryClient = queryClientFactory();
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 describe('StackScriptCreate', () => {
   it('should render header, inputs, and buttons', () => {
-    const { getByLabelText, getByText } = renderWithThemeAndHookFormContext({
-      component: (
-        <StackScriptCreate
-          {...reactRouterProps}
-          profile={
-            { data: profileFactory.build() } as UseQueryResult<
-              Profile,
-              APIError[]
-            >
-          }
-          grants={{ data: {} } as UseQueryResult<Grants, APIError[]>}
-          mode="create"
-          queryClient={queryClient}
-        />
-      ),
-    });
-
-    expect(getByText('Create')).toBeVisible();
+    const { getByLabelText, getByText } = renderWithTheme(
+      <StackScriptCreate />
+    );
 
     expect(getByLabelText('StackScript Label (required)')).toBeVisible();
     expect(getByLabelText('Description')).toBeVisible();
@@ -42,10 +30,6 @@ describe('StackScriptCreate', () => {
 
     const createButton = getByText('Create StackScript').closest('button');
     expect(createButton).toBeVisible();
-    expect(createButton).toBeDisabled();
-
-    const resetButton = getByText('Reset').closest('button');
-    expect(resetButton).toBeVisible();
-    expect(resetButton).toBeEnabled();
+    expect(createButton).toBeEnabled();
   });
 });

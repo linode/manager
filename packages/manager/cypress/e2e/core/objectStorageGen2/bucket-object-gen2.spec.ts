@@ -1,26 +1,31 @@
+import { regionFactory } from '@linode/utilities';
 import 'cypress-file-upload';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import {
-  accountFactory,
-  objectStorageBucketFactoryGen2,
-  objectStorageEndpointsFactory,
-  regionFactory,
-} from 'src/factories';
-import { chooseRegion } from 'support/util/regions';
-import { ObjectStorageEndpoint } from '@linode/api-v4';
-import { randomItem, randomLabel } from 'support/util/random';
 import {
   mockCreateBucket,
   mockGetBucket,
   mockGetBucketObjectFilename,
   mockGetBucketObjects,
   mockGetBucketsForRegion,
+  mockGetBucketsForRegionError,
   mockGetObjectStorageEndpoints,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
+import { randomItem, randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
+
+import {
+  accountFactory,
+  objectStorageBucketFactoryGen2,
+  objectStorageEndpointsFactory,
+} from 'src/factories';
+
+import type { ObjectStorageEndpoint } from '@linode/api-v4';
 
 describe('Object Storage Gen2 bucket object tests', () => {
   beforeEach(() => {
@@ -130,17 +135,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E0',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E0',
       s3_endpoint: undefined,
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E0',
       cors_enabled: true,
+      endpoint_type: 'E0',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -190,17 +195,17 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E1',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E1',
       s3_endpoint: 'us-sea-1.linodeobjects.com',
     });
 
-    //mockGetBuckets([]).as('getBuckets');
+    // mockGetBuckets([]).as('getBuckets');
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E1',
       cors_enabled: true,
+      endpoint_type: 'E1',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -250,16 +255,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E2',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E2',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E2',
       cors_enabled: true,
+      endpoint_type: 'E2',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -310,16 +315,16 @@ describe('Object Storage Gen2 bucket object tests', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = mockRegion.id;
     const mockBucket = objectStorageBucketFactoryGen2.build({
+      endpoint_type: 'E3',
       label: bucketLabel,
       region: mockRegion.id,
-      endpoint_type: 'E3',
       s3_endpoint: undefined,
     });
 
     mockCreateBucket({
-      label: bucketLabel,
-      endpoint_type: 'E3',
       cors_enabled: true,
+      endpoint_type: 'E3',
+      label: bucketLabel,
       region: mockRegion.id,
     }).as('createBucket');
     mockGetBucketsForRegion(mockRegion.id, [mockBucket]).as('getBuckets');
@@ -363,5 +368,117 @@ describe('Object Storage Gen2 bucket object tests', () => {
     ui.drawer.findByTitle(bucketFilename).should('be.visible');
 
     checkBucketObjectDetailsDrawer(bucketFilename, endpointTypeE3);
+  });
+
+  it('displays successfully fetched buckets, warning message for single failed fetch', () => {
+    const mockRegions = regionFactory
+      .buildList(2, {
+        capabilities: ['Object Storage'],
+      })
+      .map((region) => extendRegion(region));
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError'
+    );
+
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError',
+    ]);
+    // table with retrieved bucket
+    cy.findByText(mockBucket1.label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(mockRegions[0].label).should('be.visible');
+      });
+    // warning message
+    cy.findByTestId('notice-warning').within(() => {
+      cy.contains(
+        `There was an error loading buckets in ${mockRegions[1].label}`
+      );
+    });
+    cy.contains(
+      `If you have buckets in ${mockRegions[1].label}, you may not see them listed below.`
+    );
+  });
+
+  it('displays successfully fetched buckets, warning message for multiple failed fetches', () => {
+    const mockRegions = regionFactory.buildList(3, {
+      capabilities: ['Object Storage'],
+    });
+    mockGetRegions(mockRegions).as('getRegions');
+    const mockEndpoints = mockRegions.map((mockRegion) => {
+      return objectStorageEndpointsFactory.build({
+        endpoint_type: 'E2',
+        region: mockRegion.id,
+        s3_endpoint: `${mockRegion.id}.linodeobjects.com`,
+      });
+    });
+
+    mockGetObjectStorageEndpoints(mockEndpoints).as('getEndpoints');
+    const mockBucket1 = objectStorageBucketFactoryGen2.build({
+      label: randomLabel(),
+      region: mockRegions[0].id,
+    });
+    // this bucket should display
+    mockGetBucketsForRegion(mockRegions[0].id, [mockBucket1]).as(
+      'getBucketsForRegion'
+    );
+    // force errors for 2 regions' buckets
+    mockGetBucketsForRegionError(mockRegions[1].id).as(
+      'getBucketsForRegionError0'
+    );
+    mockGetBucketsForRegionError(mockRegions[2].id).as(
+      'getBucketsForRegionError1'
+    );
+    cy.visitWithLogin('/object-storage/buckets');
+    cy.wait([
+      '@getRegions',
+      '@getEndpoints',
+      '@getBucketsForRegion',
+      '@getBucketsForRegionError0',
+      '@getBucketsForRegionError1',
+    ]);
+    // table with retrieved bucket
+    cy.get('table tbody tr').should('have.length', 1);
+    // warning message
+    cy.findByTestId('notice-warning').within(() => {
+      cy.contains(
+        'There was an error loading buckets in the following regions:'
+      );
+      const strError1 = `${mockRegions[1].country.toUpperCase()}, ${
+        mockRegions[1].label
+      }`;
+      const strError2 = `${mockRegions[2].country.toUpperCase()}, ${
+        mockRegions[2].label
+      }`;
+      cy.get('ul>li').eq(0).contains(strError1);
+      cy.get('ul>li').eq(1).contains(strError2);
+      // bottom of warning message
+      cy.contains(
+        'If you have buckets in these regions, you may not see them listed below.'
+      );
+    });
   });
 });

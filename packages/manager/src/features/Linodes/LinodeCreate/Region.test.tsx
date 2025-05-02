@@ -1,17 +1,17 @@
-import { waitFor } from '@testing-library/react';
-import { userEvent } from '@testing-library/user-event';
-import React from 'react';
-
 import {
   grantsFactory,
-  imageFactory,
   linodeFactory,
   linodeTypeFactory,
   profileFactory,
   regionFactory,
-} from 'src/factories';
+} from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
+import React from 'react';
+
+import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Region } from './Region';
@@ -74,12 +74,10 @@ describe('Region', () => {
       })
     );
 
-    const {
-      findByText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
-      component: <Region />,
-    });
+    const { findByText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <Region />,
+      });
 
     const select = getByPlaceholderText('Select a Region');
 
@@ -112,20 +110,20 @@ describe('Region', () => {
       })
     );
 
-    const {
-      findByText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Region />,
-      options: {
-        MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
-      },
-      useFormOptions: {
-        defaultValues: {
-          linode,
+    const { findByText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Region />,
+        options: {
+          MemoryRouter: {
+            initialEntries: ['/linodes/create?type=Clone+Linode'],
+          },
         },
-      },
-    });
+        useFormOptions: {
+          defaultValues: {
+            linode,
+          },
+        },
+      });
 
     const select = getByPlaceholderText('Select a Region');
 
@@ -150,21 +148,20 @@ describe('Region', () => {
       })
     );
 
-    const {
-      findByText,
-      getByPlaceholderText,
-      getByText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Region />,
-      options: {
-        MemoryRouter: { initialEntries: ['/linodes/create?type=Clone+Linode'] },
-      },
-      useFormOptions: {
-        defaultValues: {
-          linode,
+    const { findByText, getByPlaceholderText, getByText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Region />,
+        options: {
+          MemoryRouter: {
+            initialEntries: ['/linodes/create?type=Clone+Linode'],
+          },
         },
-      },
-    });
+        useFormOptions: {
+          defaultValues: {
+            linode,
+          },
+        },
+      });
 
     const select = getByPlaceholderText('Select a Region');
 
@@ -204,20 +201,18 @@ describe('Region', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Region />,
-      options: {
-        MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
-      },
-      useFormOptions: {
-        defaultValues: {
-          image: image.id,
+    const { findByText, getByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Region />,
+        options: {
+          MemoryRouter: { initialEntries: ['/linodes/create?type=Images'] },
         },
-      },
-    });
+        useFormOptions: {
+          defaultValues: {
+            image: image.id,
+          },
+        },
+      });
 
     const regionSelect = getByLabelText('Region');
 

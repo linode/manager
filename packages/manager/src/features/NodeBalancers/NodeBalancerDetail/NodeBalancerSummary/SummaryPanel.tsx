@@ -1,37 +1,68 @@
-import { Paper, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
-import * as React from 'react';
-import { Link, useParams } from 'react-router-dom';
-
-import { TagCell } from 'src/components/TagCell/TagCell';
-import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useAllNodeBalancerConfigsQuery,
   useNodeBalancerQuery,
+  useNodeBalancersFirewallsQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useNodeBalancersFirewallsQuery } from 'src/queries/nodebalancers';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
+  useRegionsQuery,
+} from '@linode/queries';
+import { Paper, Typography } from '@linode/ui';
+import { convertMegabytesTo } from '@linode/utilities';
+import { styled } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import { Link } from 'src/components/Link';
+import { TagCell } from 'src/components/TagCell/TagCell';
+import {
+  useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
+} from 'src/features/Kubernetes/kubeUtils';
+import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 export const SummaryPanel = () => {
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
-  const { data: nodebalancer } = useNodeBalancerQuery(id);
-  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  const { id } = useParams({
+    from: '/nodebalancers/$id/summary',
+  });
+  const { data: nodebalancer } = useNodeBalancerQuery(
+    Number(id),
+    Boolean(id),
+    isLkeEnterpriseLAFeatureEnabled
+  );
+  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
+    Number(id)
+  );
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
+    Number(id)
+  );
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
+  });
+
+  // If we can't get the cluster (status === 'error'), we can assume it's been deleted
+  const { status: clusterStatus } = useKubernetesClusterQuery({
+    enabled: Boolean(nodebalancer?.lke_cluster),
+    id: nodebalancer?.lke_cluster?.id ?? -1,
+    isUsingBetaEndpoint,
+    options: {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
   });
 
   const configPorts = configs?.reduce((acc, config) => {
@@ -57,6 +88,36 @@ export const SummaryPanel = () => {
           <StyledTitle data-qa-title variant="h3">
             NodeBalancer Details
           </StyledTitle>
+          {nodebalancer.type === 'premium' && (
+            <StyledSection>
+              <Typography data-qa-type variant="body1">
+                <strong>Type: </strong>
+                Premium
+              </Typography>
+            </StyledSection>
+          )}
+          {nodebalancer.lke_cluster && (
+            <StyledSection>
+              <Typography data-qa-cluster variant="body1">
+                <strong>Cluster: </strong>
+                {clusterStatus === 'error' ? (
+                  <>
+                    <span style={{ textDecoration: 'line-through' }}>
+                      {nodebalancer.lke_cluster.label}
+                    </span>
+                    <span style={{ fontStyle: 'italic' }}> (deleted)</span>
+                  </>
+                ) : (
+                  <Link
+                    accessibleAriaLabel={`Cluster ${nodebalancer.lke_cluster.label}`}
+                    to={`/kubernetes/clusters/${nodebalancer.lke_cluster.id}/summary`}
+                  >
+                    {nodebalancer.lke_cluster.label}
+                  </Link>
+                )}
+              </Typography>
+            </StyledSection>
+          )}
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>Ports: </strong>
@@ -64,6 +125,7 @@ export const SummaryPanel = () => {
               {configPorts?.map(({ configId, port }, i) => (
                 <React.Fragment key={configId}>
                   <Link
+                    accessibleAriaLabel={`Port ${port}`}
                     className="secondaryLink"
                     to={`/nodebalancers/${nodebalancer?.id}/configurations/${configId}`}
                   >
@@ -105,7 +167,11 @@ export const SummaryPanel = () => {
             Firewall
           </StyledTitle>
           <Typography data-qa-firewall variant="body1">
-            <Link className="secondaryLink" to={`/firewalls/${linkID}`}>
+            <Link
+              accessibleAriaLabel={`Firewall ${linkText}`}
+              className="secondaryLink"
+              to={`/firewalls/${linkID}`}
+            >
               {linkText}
             </Link>
           </Typography>

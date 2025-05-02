@@ -1,24 +1,22 @@
-import { Accordion, Notice } from '@linode/ui';
+import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import EnhancedSelect from 'src/components/EnhancedSelect/Select';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import {
   useAllLinodeDisksQuery,
   useLinodeDiskChangePasswordMutation,
-} from 'src/queries/linodes/disks';
-import {
   useLinodeChangePasswordMutation,
   useLinodeQuery,
-} from 'src/queries/linodes/linodes';
+} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-const PasswordInput = React.lazy(
-  () => import('src/components/PasswordInput/PasswordInput')
+const PasswordInput = React.lazy(() =>
+  import('src/components/PasswordInput/PasswordInput').then((module) => ({
+    default: module.PasswordInput,
+  }))
 );
 
 interface Props {
@@ -89,7 +87,7 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
     ?.filter((d) => d.filesystem !== 'swap')
     .map((d) => ({ label: d.label, value: d.id }));
 
-  // If there is only one selectable disk, select it automaticly
+  // If there is only one selectable disk, select it automatically
   React.useEffect(() => {
     if (diskOptions !== undefined && diskOptions.length === 1) {
       setSelectedDiskId(diskOptions[0].value);
@@ -121,17 +119,20 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
       <form>
         {generalError && <Notice text={generalError} variant="error" />}
         {!isBareMetalInstance ? (
-          <EnhancedSelect
+          <Select
+            onChange={(_, item) =>
+              setSelectedDiskId(Number(item?.value) || null)
+            }
+            value={
+              diskOptions?.find((item) => item.value === selectedDiskId) ?? null
+            }
             data-qa-select-linode
             disabled={isReadOnly}
             errorText={disksError?.[0].reason}
-            isClearable={false}
-            isLoading={disksLoading}
             label="Disk"
-            onChange={(item) => setSelectedDiskId(item.value)}
-            options={diskOptions}
+            loading={disksLoading}
+            options={diskOptions ?? []}
             placeholder="Select a Disk"
-            value={diskOptions?.find((item) => item.value === selectedDiskId)}
           />
         ) : null}
         <React.Suspense fallback={<SuspenseLoader />}>

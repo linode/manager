@@ -9,7 +9,7 @@ import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import {
   formatProgressEvent,
@@ -45,8 +45,8 @@ export const EventRow = (props: EventRowProps) => {
   } = formatProgressEvent(event);
 
   return (
-    <TableRow data-qa-event-row data-test-id={action}>
-      <TableCell data-qa-event-message-cell parentColumn="Event">
+    <TableRow data-qa-event-row data-testid={action}>
+      <TableCell data-qa-event-message-cell>
         <Box sx={{ mt: showProgress ? 0.5 : 0 }}>{message}</Box>
         {showProgress && (
           <BarPercent
@@ -59,7 +59,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell data-qa-event-username-cell parentColumn="Username">
+        <TableCell data-qa-event-username-cell>
           <Box alignItems="center" display="flex" gap={1}>
             <Avatar
               color={
@@ -75,7 +75,7 @@ export const EventRow = (props: EventRowProps) => {
           </Box>
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="Start Date">
+      <TableCell>
         <TextTooltip
           displayText={progressEventDate}
           minWidth={130}
@@ -92,7 +92,7 @@ export const EventRow = (props: EventRowProps) => {
         )}
       </TableCell>
       <Hidden mdDown>
-        <TableCell data-qa-event-created-cell parentColumn="Duration">
+        <TableCell data-qa-event-created-cell>
           {progressEventDuration}
         </TableCell>
       </Hidden>

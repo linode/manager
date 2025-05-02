@@ -11,14 +11,15 @@ import {
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { getAll } from 'src/utilities/getAll';
+import { getAll } from '@linode/utilities';
 
-import { profileQueries } from './profile/profile';
+import { profileQueries } from '@linode/queries';
 
 import type {
   APIError,
@@ -32,7 +33,7 @@ import type {
   ResourcePage,
   UpdateDomainPayload,
 } from '@linode/api-v4';
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 export const getAllDomains = () =>
   getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
@@ -59,6 +60,11 @@ const domainQueries = createQueryKeys('domains', {
         queryFn: getAllDomains,
         queryKey: null,
       },
+      infinite: (filter: Filter) => ({
+        queryFn: ({ pageParam }) =>
+          getDomains({ page: pageParam as number }, filter),
+        queryKey: [filter],
+      }),
       paginated: (params: Params = {}, filter: Filter = {}) => ({
         queryFn: () => getDomains(params, filter),
         queryKey: [params, filter],
@@ -79,6 +85,21 @@ export const useAllDomainsQuery = (enabled: boolean = false) =>
     ...domainQueries.domains._ctx.all,
     enabled,
   });
+
+export const useDomainsInfiniteQuery = (filter: Filter, enabled: boolean) => {
+  return useInfiniteQuery<ResourcePage<Domain>, APIError[]>({
+    ...domainQueries.domains._ctx.infinite(filter),
+    enabled,
+    getNextPageParam: ({ page, pages }) => {
+      if (page === pages) {
+        return undefined;
+      }
+      return page + 1;
+    },
+    initialPageParam: 1,
+    retry: false,
+  });
+};
 
 export const useDomainQuery = (id: number, enabled: boolean = true) =>
   useQuery<Domain, APIError[]>({

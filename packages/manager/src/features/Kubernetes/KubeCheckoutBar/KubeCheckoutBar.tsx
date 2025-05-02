@@ -2,23 +2,24 @@ import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
+import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useAccountAgreements } from 'src/queries/account/agreements';
-import { useProfile } from 'src/queries/profile/profile';
+import { useAccountAgreements, useProfile } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
+  LKE_ADDITIONAL_PRICING,
 } from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
   getTotalClusterPrice,
 } from 'src/utilities/pricing/kubernetes';
 
-import { nodeWarning } from '../kubeUtils';
+import { nodeWarning } from '../constants';
 import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
@@ -119,6 +120,7 @@ export const KubeCheckoutBar = (props: Props) => {
           ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
           : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
       }
+      additionalPricing={AdditionalPricing}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
@@ -138,9 +140,6 @@ export const KubeCheckoutBar = (props: Props) => {
           <StyledBox>
             <Divider dark spacingBottom={16} spacingTop={16} />
             <StyledHeader>LKE Enterprise</StyledHeader>
-            <Typography sx={{ width: '80%' }}>
-              HA control plane, Dedicated control plane
-            </Typography>
             <Typography mt={1}>{`$${enterprisePrice?.toFixed(
               2
             )}/month`}</Typography>
@@ -148,6 +147,10 @@ export const KubeCheckoutBar = (props: Props) => {
         )}
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
+            clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
+            key={idx}
+            nodeCount={thisPool.count}
+            onRemove={() => removePool(idx)}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -164,23 +167,29 @@ export const KubeCheckoutBar = (props: Props) => {
             updateNodeCount={(updatedCount: number) =>
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
-            key={idx}
-            nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
           />
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice
-            important
-            spacingTop={16}
-            text={nodeWarning}
-            variant="warning"
-          />
+          <Notice spacingTop={16} text={nodeWarning} variant="warning" />
         )}
       </>
     </CheckoutBar>
   );
 };
+
+const AdditionalPricing = (
+  <>
+    <Divider dark spacingBottom={16} spacingTop={16} />
+    <Typography>{LKE_ADDITIONAL_PRICING}</Typography>
+    <Link
+      data-testid="additional-pricing-link"
+      to="https://www.linode.com/pricing/"
+    >
+      See pricing
+    </Link>
+    .
+  </>
+);
 
 export default RenderGuard(KubeCheckoutBar);

@@ -1,9 +1,9 @@
-import { createTestLinode } from 'support/util/linodes';
+import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { interceptLinodeResize } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { authenticate } from 'support/api/authentication';
-import { interceptLinodeResize } from 'support/intercepts/linodes';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { createTestLinode } from 'support/util/linodes';
 
 authenticate();
 describe('resize linode', () => {
@@ -33,10 +33,8 @@ describe('resize linode', () => {
           cy.contains('Linode 8 GB').should('be.visible').click();
 
           // Select warm resize option, and enter Linode label in type-to-confirm field.
-          cy.findByText('Warm resize')
-            .scrollIntoView()
-            .should('be.visible')
-            .click();
+          cy.findByText('Warm resize').as('qaWarmResize').scrollIntoView();
+          cy.get('@qaWarmResize').should('be.visible').click();
 
           cy.findByLabelText('Linode Label').type(linode.label);
 
@@ -51,7 +49,7 @@ describe('resize linode', () => {
 
       cy.wait('@linodeResize');
       cy.contains(
-        "Your linode will be warm resized and will automatically attempt to power off and restore to it's previous state."
+        'Your linode will be warm resized and will automatically attempt to power off and restore to its previous state.'
       ).should('be.visible');
     });
   });
@@ -75,10 +73,8 @@ describe('resize linode', () => {
 
           cy.contains('Linode 8 GB').should('be.visible').click();
 
-          cy.findByText('Cold resize')
-            .scrollIntoView()
-            .should('be.visible')
-            .click();
+          cy.findByText('Cold resize').as('qaColdResize').scrollIntoView();
+          cy.get('@qaColdResize').should('be.visible').click();
 
           cy.findByLabelText('Linode Label').type(linode.label);
 
@@ -155,7 +151,7 @@ describe('resize linode', () => {
     });
   });
 
-  it.only('resizes a linode by decreasing size', () => {
+  it('resizes a linode by decreasing size', () => {
     // Use `vlan_no_internet` security method.
     // This works around an issue where the Linode API responds with a 400
     // when attempting to interact with it shortly after booting up when the
@@ -198,8 +194,9 @@ describe('resize linode', () => {
       cy.contains(
         'The current disk size of your Linode is too large for the new service plan. Please resize your disk to accommodate the new plan. You can read our Resize Your Linode guide for more detailed instructions.'
       )
-        .scrollIntoView()
-        .should('be.visible');
+        .as('qaTheCurrentDisk')
+        .scrollIntoView();
+      cy.get('@qaTheCurrentDisk').should('be.visible');
 
       // Normal flow when resizing a linode to a smaller size after first resizing
       // its disk.
@@ -239,7 +236,8 @@ describe('resize linode', () => {
         .within(() => {
           cy.contains('Size (required)').should('be.visible').click();
 
-          cy.focused().clear().type(size);
+          cy.focused().clear();
+          cy.focused().type(size);
 
           ui.buttonGroup
             .findButtonByTitle('Resize')

@@ -1,7 +1,7 @@
+import { Dialog } from '@linode/ui';
+import { profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { profileFactory } from 'src/factories';
 import { extraMockPresets } from 'src/mocks/presets';
 import { setCustomProfileData } from 'src/mocks/presets/extra/account/customProfile';
 
@@ -35,9 +35,8 @@ export const ExtraPresetProfile = ({
     }),
     ...customProfileData,
   }));
-  const [isEditingCustomProfile, setIsEditingCustomProfile] = React.useState(
-    false
-  );
+  const [isEditingCustomProfile, setIsEditingCustomProfile] =
+    React.useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -109,7 +108,7 @@ export const ExtraPresetProfile = ({
         {isEnabled && (
           <div>
             <button
-              className="small"
+              className="dev-tools-button small"
               onClick={() => setIsEditingCustomProfile(true)}
             >
               edit
@@ -191,6 +190,7 @@ export const ExtraPresetProfile = ({
               <label>
                 User Type
                 <select
+                  className="dt-select"
                   name="user_type"
                   onChange={handleInputChange}
                   value={formData.user_type}
@@ -242,6 +242,7 @@ export const ExtraPresetProfile = ({
               <label>
                 Authentication Type
                 <select
+                  className="dt-select"
                   name="authentication_type"
                   onChange={handleInputChange}
                   value={formData.authentication_type}
@@ -295,7 +296,7 @@ export const ExtraPresetProfile = ({
                 value={formData.authorized_keys}
               />
             </FieldWrapper>
-            <button className="button" type="submit">
+            <button className="dev-tools-button button" type="submit">
               Save
             </button>
           </form>

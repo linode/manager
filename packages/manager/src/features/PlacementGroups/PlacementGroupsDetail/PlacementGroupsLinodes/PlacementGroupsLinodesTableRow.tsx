@@ -1,5 +1,6 @@
+import { capitalizeAllWords } from '@linode/utilities';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
@@ -21,8 +22,7 @@ import {
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { usePlacementGroupQuery } from 'src/queries/placementGroups';
-import { capitalizeAllWords } from 'src/utilities/capitalize';
+import { usePlacementGroupQuery } from '@linode/queries';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -36,7 +36,9 @@ type MigrationType = 'inbound' | 'outbound' | null;
 export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
   const { handleUnassignLinodeModal, linode } = props;
   const { label, status } = linode;
-  const { id: placementGroupId } = useParams<{ id: string }>();
+  const { id: placementGroupId } = useParams({
+    from: '/placement-groups/$id', // todo connie - check about $id/linode
+  });
   const notificationContext = React.useContext(notificationCenterContext);
   const isLinodeMigrating = Boolean(linode.placement_group?.migrating_to);
   const { data: placementGroup } = usePlacementGroupQuery(

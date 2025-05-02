@@ -1,16 +1,15 @@
-import { Notice } from '@linode/ui';
+import {
+  useAttachVolumeMutation,
+  useGrants,
+  useVolumeQuery,
+} from '@linode/queries';
+import { ActionsPanel, Notice } from '@linode/ui';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { number, object } from 'yup';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useGrants } from 'src/queries/profile/profile';
-import {
-  useAttachVolumeMutation,
-  useVolumeQuery,
-} from 'src/queries/volumes/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -116,7 +115,6 @@ export const LinodeVolumeAttachForm = (props: Props) => {
           text={
             "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
           }
-          important
           variant="error"
         />
       )}

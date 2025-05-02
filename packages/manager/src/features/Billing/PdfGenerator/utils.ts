@@ -1,5 +1,4 @@
 import autoTable from 'jspdf-autotable';
-import { pathOr } from 'ramda';
 
 import { ADDRESSES } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -195,7 +194,7 @@ export const createInvoiceItemsTable = (
   });
 };
 
-const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
+export const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
   if (!taxSummary) {
     return [];
   }
@@ -304,11 +303,7 @@ export const createFooter = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['CA', 'US'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['CA', 'US'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const remitAddress = getRemitAddress(country, isAkamaiBilling);
 
   const footerText = [];
 
@@ -330,10 +325,6 @@ export const createFooter = (
     align: 'center',
     charSpace: 0.75,
   });
-};
-
-const truncateLabel = (label: string) => {
-  return label.length > 20 ? `${label.substr(0, 20)}...` : label;
 };
 
 export const getInvoiceRegion = (
@@ -386,17 +377,14 @@ const formatDescription = (desc?: string) => {
 
   if (descChunks.length < 2) {
     /** in this case, it's probably a manual payment from admin */
-    // return desc;
-    return truncateLabel(desc);
+    return desc;
   }
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${pathOr(
-      '',
-      [2],
-      descChunks
-    )}\r\n${volID}`;
+    return `${descChunks[0]}\r\n${volLabel} ${
+      descChunks?.[2] ?? ''
+    }\r\n${volID}`;
   }
 
   if (isBackup) {
@@ -409,14 +397,14 @@ const formatDescription = (desc?: string) => {
        * If we arrive here, we're dealing with the former.
        */
       const [backupLabel, backupID] = descChunks[2].split(' ');
-      return `${base}\r\n${truncateLabel(backupLabel)}\r\n${backupID}`;
+      return `${base}\r\n${backupLabel}\r\n${backupID}`;
     }
     return base;
   }
 
   const [entityLabel, entityID] = descChunks[1].split(' ');
   const cleanedType = descChunks[0].replace(/\(pending upgrade\)/, '');
-  return `${cleanedType}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
+  return `${cleanedType}\r\n${entityLabel}\r\n${entityID}`;
 };
 
 export interface PdfResult {
@@ -446,4 +434,19 @@ export const invoiceCreatedAfterDCPricingLaunch = (_invoiceDate?: string) => {
   }
 
   return invoiceDate >= dcPricingDate;
+};
+
+export const getRemitAddress = (country: string, isAkamaiBilling: boolean) => {
+  if (!isAkamaiBilling) {
+    return ADDRESSES.linode;
+  }
+  // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
+  if (country === 'US') {
+    ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
+    return ADDRESSES.linode;
+  }
+  if (['CA'].includes(country)) {
+    return ADDRESSES.akamai.us;
+  }
+  return ADDRESSES.akamai.international;
 };

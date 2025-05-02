@@ -1,15 +1,15 @@
-import { waitFor } from '@testing-library/react';
-import React from 'react';
-
 import {
-  accountFactory,
+  grantsFactory,
   profileFactory,
   regionFactory,
   sshKeyFactory,
-} from 'src/factories';
-import { grantsFactory } from 'src/factories/grants';
+} from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
+import React from 'react';
+
+import { accountFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Security } from './Security';
@@ -130,9 +130,10 @@ describe('Security', () => {
     expect(heading.tagName).toBe('H3');
   });
 
-  it('should disable disk encryption if the selected region does not support it', async () => {
+  it('should disable disk encryption if the selected core region does not support it', async () => {
     const region = regionFactory.build({
       capabilities: [],
+      site_type: 'core',
     });
 
     const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
@@ -146,16 +147,49 @@ describe('Security', () => {
       })
     );
 
-    const {
-      findByLabelText,
-    } = renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-      component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
-      useFormOptions: { defaultValues: { region: region.id } },
-    });
+    const { findByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
 
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
     );
+  });
+
+  it('should disable the disk encryption checkbox (but show it as enabled) if the selected region is a distributed region', async () => {
+    const region = regionFactory.build({
+      capabilities: ['Disk Encryption'],
+      site_type: 'distributed',
+    });
+
+    const account = accountFactory.build({ capabilities: ['Disk Encryption'] });
+
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      }),
+      http.get('*/v4/regions', () => {
+        return HttpResponse.json(makeResourcePage([region]));
+      })
+    );
+
+    const { findByLabelText, getByLabelText } =
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+        component: <Security />,
+        options: { flags: { linodeDiskEncryption: true } },
+        useFormOptions: { defaultValues: { region: region.id } },
+      });
+
+    await findByLabelText(
+      'Distributed Compute Instances are encrypted. This setting can not be changed.'
+    );
+
+    const checkbox = getByLabelText('Encrypt Disk');
+
+    expect(checkbox).toBeChecked();
+    expect(checkbox).toBeDisabled();
   });
 });

@@ -1,9 +1,11 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Volume } from '@linode/api-v4';
-import { ui } from 'support/ui';
 import { authenticate } from 'support/api/authentication';
-import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import type { Volume } from '@linode/api-v4';
 
 authenticate();
 describe('Search Volumes', () => {
@@ -19,15 +21,16 @@ describe('Search Volumes', () => {
    */
   it('creates two volumes and make sure they show up in the table and are searchable', () => {
     const createTwoVolumes = async (): Promise<[Volume, Volume]> => {
+      const volumeRegion = chooseRegion();
       return Promise.all([
         createVolume({
           label: randomLabel(),
-          region: 'us-east',
+          region: volumeRegion.id,
           size: 10,
         }),
         createVolume({
           label: randomLabel(),
-          region: 'us-east',
+          region: volumeRegion.id,
           size: 10,
         }),
       ]);
@@ -43,8 +46,8 @@ describe('Search Volumes', () => {
 
         // Search for the first volume by label, confirm it's the only one shown.
         cy.findByPlaceholderText('Search Volumes').type(volume1.label);
-        expect(cy.findByText(volume1.label).should('be.visible'));
-        expect(cy.findByText(volume2.label).should('not.exist'));
+        cy.findByText(volume1.label).should('be.visible');
+        cy.findByText(volume2.label).should('not.exist');
 
         // Clear search, confirm both volumes are shown.
         cy.findByTestId('clear-volumes-search').click();
@@ -52,7 +55,7 @@ describe('Search Volumes', () => {
         cy.findByText(volume2.label).should('be.visible');
 
         // Use the main search bar to search and filter volumes
-        cy.get('[id="main-search"').type(volume2.label);
+        ui.mainSearch.find().type(volume2.label);
         ui.autocompletePopper.findByTitle(volume2.label).click();
 
         // Confirm that only the second volume is shown.

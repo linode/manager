@@ -1,9 +1,10 @@
+import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from './FilterConfig';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { Dashboard, TimeDuration } from '@linode/api-v4';
+import type { Dashboard, DateTimeWithPreset } from '@linode/api-v4';
 
 /**
  * This interface is used to get method parameters for this utility
@@ -24,7 +25,7 @@ interface ReusableDashboardFilterUtilProps {
   /**
    * The selected time duration
    */
-  timeDuration?: TimeDuration;
+  timeDuration?: DateTimeWithPreset;
 }
 
 /**
@@ -42,7 +43,7 @@ export const getDashboardProperties = (
       resource,
     }),
     dashboardId: dashboardObj.id,
-    duration: timeDuration ?? { unit: 'min', value: 30 },
+    duration: timeDuration ?? defaultTimeDuration(),
     resources: [String(resource)],
     savePref: false,
   };
@@ -109,9 +110,10 @@ export const checkIfFilterNeededInMetricsCall = (
     } = configuration;
 
     return (
+      // Indicates if this filter should be included in the metrics call
       configFilterKey === filterKey &&
       Boolean(isFilterable) &&
-      neededInServicePage // Indicates if this filter should be included in the metrics call
+      neededInServicePage
     );
   });
 };

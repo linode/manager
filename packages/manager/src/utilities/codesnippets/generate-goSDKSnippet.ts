@@ -78,6 +78,6 @@ export function generateGoLinodeSnippet(config: CreateLinodeRequest): string {
   }
 
   snippet += '    },\n';
-  snippet += ')\n';
+  snippet += ')';
   return snippet;
 }

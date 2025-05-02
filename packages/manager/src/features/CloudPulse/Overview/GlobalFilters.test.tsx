@@ -8,7 +8,7 @@ const mockHandleAnyFilterChange = vi.fn();
 const mockHandleDashboardChange = vi.fn();
 const mockHandleTimeDurationChange = vi.fn();
 const mockHandleToggleAppliedFilter = vi.fn();
-const timeRangeSelectId = 'cloudpulse-time-duration';
+const timeRangeSelectId = 'preset-select';
 const setup = () => {
   return renderWithTheme(
     <GlobalFilters
@@ -23,21 +23,23 @@ describe('Global filters component test', () => {
   it('Should render refresh button', () => {
     const { getByTestId } = setup();
     expect(getByTestId('global-refresh')).toBeInTheDocument();
-  }),
-    it('Should show dashboard selectcomponent', () => {
-      const { getByTestId } = setup();
+  });
 
-      expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
-    }),
-    it('Should have time range select with default value', () => {
-      const screen = setup();
+  it('Should show dashboard selectcomponent', () => {
+    const { getByTestId } = setup();
 
-      const timeRangeSelect = screen.getByTestId(timeRangeSelectId);
+    expect(getByTestId('cloudpulse-dashboard-select')).toBeInTheDocument();
+  });
 
-      expect(timeRangeSelect).toBeInTheDocument();
+  it('Should have time range select with default value', () => {
+    const screen = setup();
 
-      expect(
-        screen.getByRole('combobox', { name: 'Time Range' })
-      ).toHaveAttribute('value', 'Last 30 Minutes');
-    });
+    const timeRangeSelect = screen.getByTestId(timeRangeSelectId);
+
+    expect(timeRangeSelect).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('combobox', { name: 'Time Range' })
+    ).toHaveAttribute('value', 'Last 30 Minutes');
+  });
 });

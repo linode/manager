@@ -12,6 +12,60 @@ import type {
 } from './types';
 
 /**
+ * Based on Login's OneTrust cookie list
+ */
+export const ONE_TRUST_COOKIE_CATEGORIES = {
+  'Functional Cookies': 'C0003',
+  'Performance Cookies': 'C0002', // Analytics cookies fall into this category
+  'Social Media Cookies': 'C0004',
+  'Strictly Necessary Cookies': 'C0001',
+  'Targeting Cookies': 'C0005',
+} as const;
+
+/**
+ * Given the name of a cookie, parses the document.cookie string and returns the cookie's value.
+ * @param name cookie's name
+ * @returns value of cookie if it exists in the document; else, undefined
+ */
+export const getCookie = (name: string) => {
+  const cookies = document.cookie.split(';');
+
+  const selectedCookie = cookies.find(
+    (cookie) => cookie.trim().startsWith(name + '=') // Trim whitespace so position in cookie string doesn't matter
+  );
+
+  return selectedCookie?.trim().substring(name.length + 1);
+};
+
+/**
+ * This function parses the categories in the OptanonConsent cookie to check if consent is provided.
+ * @param optanonCookie the OptanonConsent cookie from OneTrust
+ * @param selectedCategory the category code based on cookie type
+ * @returns true if the user has consented to cookie enablement for the category; else, false
+ */
+export const checkOptanonConsent = (
+  optanonCookie: string | undefined,
+  selectedCategory: typeof ONE_TRUST_COOKIE_CATEGORIES[keyof typeof ONE_TRUST_COOKIE_CATEGORIES]
+): boolean => {
+  const optanonGroups = optanonCookie?.match(/groups=([^&]*)/);
+
+  if (!optanonCookie || !optanonGroups) {
+    return false;
+  }
+
+  // Optanon consent groups will be of the form: "C000[N]:[0/1]".
+  const unencodedOptanonGroups = decodeURIComponent(optanonGroups[1]).split(
+    ','
+  );
+  return unencodedOptanonGroups.some((consentGroup) => {
+    if (consentGroup.includes(selectedCategory)) {
+      return Number(consentGroup.split(':')[1]) === 1; // Cookie enabled
+    }
+    return false;
+  });
+};
+
+/**
  * Sends a direct call rule events to Adobe for a Component Click (and optionally, with `data`, Component Details).
  * This should be used for all custom events other than form events, which should use sendFormEvent.
  * @param eventPayload - Custom event payload

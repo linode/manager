@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Radio, Stack, Typography } from '@linode/ui';
+import { truncate } from '@linode/utilities';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { truncate } from 'src/utilities/truncate';
+import { isLKEStackScript } from 'src/features/StackScripts/stackScriptUtils';
 
 import type { StackScript } from '@linode/api-v4';
 
@@ -20,9 +21,9 @@ interface Props {
 export const StackScriptSelectionRow = (props: Props) => {
   const { disabled, isSelected, onOpenDetails, onSelect, stackscript } = props;
 
-  // Never show LKE StackScripts. We try to hide these from the user, even though they
+  // Never show LKE StackScripts. We try to hide these from the user even though they
   // are returned by the API.
-  if (stackscript.username.startsWith('lke-service-account-')) {
+  if (isLKEStackScript(stackscript)) {
     return null;
   }
 
@@ -43,7 +44,7 @@ export const StackScriptSelectionRow = (props: Props) => {
               {stackscript.username} /{' '}
               <Typography
                 component="span"
-                fontFamily={(theme) => theme.font.bold}
+                sx={(theme) => ({ font: theme.font.bold })}
               >
                 {stackscript.label}
               </Typography>
@@ -59,7 +60,7 @@ export const StackScriptSelectionRow = (props: Props) => {
           </Stack>
         </label>
       </TableCell>
-      <TableCell actionCell sx={{ minWidth: 120 }}>
+      <TableCell actionCell>
         <InlineMenuAction actionText="Show Details" onClick={onOpenDetails} />
       </TableCell>
     </TableRow>

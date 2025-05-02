@@ -1,4 +1,8 @@
-import type { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
+
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
+// @TODO Linode Interfaces - need to handle case if interface is not legacy
 
 /**
  * Escapes special characters in a string for use in YAML and shell commands.
@@ -37,7 +41,7 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
   if (config.metadata) {
     configStr += `    metadata:\n      user_data: "${config.metadata?.user_data}"\n`;
   }
-  if (config.hasOwnProperty('private_ip')) {
+  if (Object.prototype.hasOwnProperty.call(config, 'private_ip')) {
     configStr += `    private_ip: ${config.private_ip}\n`;
   }
   if (config.authorized_users && config.authorized_users.length > 0) {
@@ -75,7 +79,11 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
       .map((tag) => escapeYAMLString(tag))
       .join('"\n      - "')}"\n`;
   }
-  if (config.interfaces && config.interfaces.length > 0) {
+  if (
+    config.interfaces &&
+    config.interfaces.length > 0 &&
+    getIsLegacyInterfaceArray(config.interfaces)
+  ) {
     configStr += `    interfaces:\n`;
     config.interfaces.forEach((iface) => {
       configStr += `      - purpose: "${escapeYAMLString(iface.purpose)}"\n`;
@@ -107,5 +115,5 @@ export function generateAnsibleConfig(config: CreateLinodeRequest): string {
     });
   }
 
-  return configStr;
+  return configStr.trim();
 }

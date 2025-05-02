@@ -1,15 +1,15 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
-import { accountFactory, placementGroupFactory } from 'src/factories';
-import { regionFactory } from 'src/factories';
-import { ui } from 'support/ui/';
-import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,
   mockGetPlacementGroups,
 } from 'support/intercepts/placement-groups';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui/';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { accountFactory, placementGroupFactory } from 'src/factories';
 import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();
@@ -26,9 +26,6 @@ describe('Placement Group create flow', () => {
    */
   it('can create Placement Group', () => {
     const mockRegions = regionFactory.buildList(5, {
-      placement_group_limits: {
-        maximum_pgs_per_customer: randomNumber(),
-      },
       capabilities: [
         'Linodes',
         'NodeBalancers',
@@ -40,19 +37,22 @@ describe('Placement Group create flow', () => {
         'Vlans',
         'Premium Plans',
       ],
+      placement_group_limits: {
+        maximum_pgs_per_customer: randomNumber(),
+      },
     });
 
     const mockPlacementGroupRegion = chooseRegion({
-      regions: mockRegions,
       capabilities: ['Placement Group'],
+      regions: mockRegions,
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: randomLabel(),
-      region: mockPlacementGroupRegion.id,
-      placement_group_type: 'anti_affinity:local',
-      placement_group_policy: 'strict',
       is_compliant: true,
+      label: randomLabel(),
+      placement_group_policy: 'strict',
+      placement_group_type: 'anti_affinity:local',
+      region: mockPlacementGroupRegion.id,
     });
 
     const placementGroupLimitMessage = `Maximum placement groups in region: ${mockPlacementGroupRegion.placement_group_limits.maximum_pgs_per_customer}`;
@@ -83,9 +83,8 @@ describe('Placement Group create flow', () => {
         // Enter label, select region, and submit form.
         cy.findByLabelText('Label').type(mockPlacementGroup.label);
 
-        cy.findByLabelText('Region')
-          .click()
-          .type(`${mockPlacementGroupRegion.label}{enter}`);
+        cy.findByLabelText('Region').click();
+        cy.focused().type(`${mockPlacementGroupRegion.label}{enter}`);
 
         cy.findByText(placementGroupLimitMessage).should('be.visible');
         cy.findByText(CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE).should(

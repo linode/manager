@@ -1,8 +1,16 @@
 import { getInvoiceItems } from '@linode/api-v4/lib/account';
+import {
+  useAccount,
+  useAllAccountInvoices,
+  useAllAccountPayments,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Autocomplete, Typography } from '@linode/ui';
+import { getAll, useSet } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -32,17 +40,8 @@ import {
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSet } from 'src/hooks/useSet';
-import { useAccount } from 'src/queries/account/account';
-import {
-  useAllAccountInvoices,
-  useAllAccountPayments,
-} from 'src/queries/account/billing';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { getAll } from 'src/utilities/getAll';
 
 import { getTaxID } from '../../billingUtils';
 
@@ -93,6 +92,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     '& > .loading': {
       width: 115,
     },
+    paddingRight: 0,
     textAlign: 'right',
   },
   pdfError: {
@@ -384,7 +384,7 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   };
 
   return (
-    <Grid data-qa-billing-activity-panel xs={12}>
+    <Grid data-qa-billing-activity-panel size={12}>
       <Paper variant="outlined">
         <StyledBillingAndPaymentHistoryHeader
           className={classes.headerContainer}

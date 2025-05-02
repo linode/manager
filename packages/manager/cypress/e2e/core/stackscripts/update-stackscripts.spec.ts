@@ -1,17 +1,17 @@
+import { getImages } from '@linode/api-v4';
+import { stackScriptFactory } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
-import { randomLabel, randomPhrase } from 'support/util/random';
 import {
   mockGetStackScript,
+  mockGetStackScripts,
   mockUpdateStackScript,
   mockUpdateStackScriptError,
-  mockGetStackScripts,
 } from 'support/intercepts/stackscripts';
 import { ui } from 'support/ui';
-import { stackScriptFactory } from '@src/factories';
-import { getImages, StackScript } from '@linode/api-v4';
 import { depaginate } from 'support/util/paginate';
+import { randomLabel, randomPhrase } from 'support/util/random';
 
-import type { Image } from '@linode/api-v4';
+import type { Image, StackScript } from '@linode/api-v4';
 
 // StackScript fixture paths.
 const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
@@ -60,16 +60,14 @@ const fillOutStackscriptForm = (
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
   cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
-    .click()
-    .clear()
-    .type(label);
+    .click();
+  cy.focused().clear();
+  cy.focused().type(label);
 
   if (description) {
-    cy.findByLabelText('Description')
-      .should('be.visible')
-      .click()
-      .clear()
-      .type(description);
+    cy.findByLabelText('Description').should('be.visible').click();
+    cy.focused().clear();
+    cy.focused().type(description);
   }
 
   ui.autocomplete.findByLabel('Target Images').should('be.visible').click();
@@ -110,8 +108,8 @@ describe('Update stackscripts', () => {
       // Spread operator clones an object...
       {
         ...stackScripts[0],
-        label: stackscriptLabel,
         description: stackscriptDesc,
+        label: stackscriptLabel,
       },
       { ...stackScripts[1] },
     ];
@@ -197,15 +195,10 @@ describe('Update stackscripts', () => {
       .should('be.enabled')
       .click();
     cy.wait('@updateStackScript');
-    cy.url().should('endWith', '/stackscripts/account');
-    cy.wait('@getStackScripts');
-
-    cy.findByText(stackscriptLabel)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        cy.findByText(stackscriptDesc).should('be.visible');
-      });
+    ui.toast.assertMessage(
+      `Successfully updated StackScript ${updatedStackScripts[0].label}`
+    );
+    cy.url().should('endWith', `/stackscripts/${updatedStackScripts[0].id}`);
   });
 
   /*
@@ -217,6 +210,9 @@ describe('Update stackscripts', () => {
       is_public: false,
     });
     mockGetStackScripts(stackScripts).as('getStackScripts');
+    mockGetStackScript(stackScripts[0].id, stackScripts[0]).as(
+      'getStackScript'
+    );
     cy.visitWithLogin('/stackscripts/account');
     cy.wait('@getStackScripts');
 
@@ -232,7 +228,7 @@ describe('Update stackscripts', () => {
       .should('be.visible')
       .click();
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
         ui.button.findByTitle('Cancel').should('be.visible').click();
@@ -258,6 +254,7 @@ describe('Update stackscripts', () => {
       .findByTitle('Make StackScript Public')
       .should('be.visible')
       .click();
+    cy.wait('@getStackScript');
     const updatedStackScript = { ...stackScripts[0] };
     updatedStackScript.is_public = true;
     mockUpdateStackScript(updatedStackScript.id, updatedStackScript).as(
@@ -267,13 +264,10 @@ describe('Update stackscripts', () => {
       'mockGetStackScripts'
     );
     ui.dialog
-      .findByTitle('Woah, just a word of caution...')
+      .findByTitle(`Make StackScript ${stackScripts[0].label} Public?`)
       .should('be.visible')
       .within(() => {
-        ui.button
-          .findByTitle('Yes, make me a star!')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Confirm').should('be.visible').click();
       });
     cy.wait('@mockUpdateStackScript');
     cy.wait('@mockGetStackScripts');

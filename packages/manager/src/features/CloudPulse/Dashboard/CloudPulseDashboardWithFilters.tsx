@@ -1,15 +1,18 @@
-import { Box, CircleProgress, Divider, Paper } from '@linode/ui';
+import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
 
 import { CloudPulseAppliedFilterRenderer } from '../shared/CloudPulseAppliedFilterRenderer';
 import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardFilterBuilder';
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
+import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import { CloudPulseTimeRangeSelect } from '../shared/CloudPulseTimeRangeSelect';
+import {
+  convertToGmt,
+  defaultTimeDuration,
+} from '../Utils/CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -19,7 +22,7 @@ import {
 import { CloudPulseDashboard } from './CloudPulseDashboard';
 
 import type { FilterData, FilterValueType } from './CloudPulseDashboardLanding';
-import type { TimeDuration } from '@linode/api-v4';
+import type { DateTimeWithPreset } from '@linode/api-v4';
 
 export interface CloudPulseDashboardWithFiltersProp {
   /**
@@ -44,10 +47,9 @@ export const CloudPulseDashboardWithFilters = React.memo(
       label: {},
     });
 
-    const [timeDuration, setTimeDuration] = React.useState<TimeDuration>({
-      unit: 'min',
-      value: 30,
-    });
+    const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
+      defaultTimeDuration()
+    );
 
     const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
       false
@@ -76,8 +78,12 @@ export const CloudPulseDashboardWithFilters = React.memo(
     );
 
     const handleTimeRangeChange = React.useCallback(
-      (timeDuration: TimeDuration) => {
-        setTimeDuration(timeDuration);
+      (timeDuration: DateTimeWithPreset) => {
+        setTimeDuration({
+          ...timeDuration,
+          end: convertToGmt(timeDuration.end),
+          start: convertToGmt(timeDuration.start),
+        });
       },
       []
     );
@@ -126,27 +132,25 @@ export const CloudPulseDashboardWithFilters = React.memo(
           }}
         >
           <Grid container>
-            <Grid container item m={3} rowGap={1} xs={12}>
-              <Grid
-                columnSpacing={2}
-                container
-                item
+            <Grid item xs={12}>
+              <Box
+                display="flex"
+                flexDirection={{ lg: 'row', xs: 'column' }}
+                flexWrap="wrap"
+                gap={2}
                 justifyContent="space-between"
-                rowSpacing={2}
+                m={3}
               >
-                <Grid display={'flex'} item md={4} sm={5} xs={12}>
-                  <CloudPulseDashboardSelect
-                    defaultValue={dashboardId}
-                    isServiceIntegration
-                  />
-                </Grid>
-                <Grid display="flex" gap={1} item md={4} sm={5} xs={12}>
-                  <CloudPulseTimeRangeSelect
-                    handleStatsChange={handleTimeRangeChange}
-                    savePreferences
-                  />
-                </Grid>
-              </Grid>
+                <CloudPulseDashboardSelect
+                  defaultValue={dashboardId}
+                  isServiceIntegration
+                />
+
+                <CloudPulseDateTimeRangePicker
+                  handleStatsChange={handleTimeRangeChange}
+                  savePreferences
+                />
+              </Box>
             </Grid>
 
             <Grid item xs={12}>
@@ -164,9 +168,17 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 emitFilterChange={onFilterChange}
                 handleToggleAppliedFilter={toggleAppliedFilter}
                 isServiceAnalyticsIntegration
+                resource_ids={[resource]}
               />
             )}
-            <Grid item mb={3} mt={-3} xs={12}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                mb: 3,
+                mt: -3,
+              }}
+            >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer
                   filters={filterData.label}

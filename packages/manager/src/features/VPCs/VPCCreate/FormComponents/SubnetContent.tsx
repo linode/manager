@@ -1,11 +1,12 @@
 import { Notice } from '@linode/ui';
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import { VPC_CREATE_FORM_SUBNET_HELPER_TEXT } from '../../constants';
 import { MultipleSubnetInput } from '../MultipleSubnetInput';
@@ -15,7 +16,7 @@ import {
 } from './VPCCreateForm.styles';
 
 import type { CreateVPCPayload } from '@linode/api-v4';
-import type { LinodeCreateType } from 'src/features/Linodes/LinodeCreate/types';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
 interface Props {

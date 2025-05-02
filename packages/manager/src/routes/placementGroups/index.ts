@@ -1,54 +1,84 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { PlacementGroupsRoute } from './PlacementGroupsRoute';
+
+import type { TableSearchParams } from '../types';
+
+export interface PlacementGroupsSearchParams extends TableSearchParams {
+  query?: string;
+}
+
+const placementGroupAction = {
+  delete: 'delete',
+  edit: 'edit',
+} as const;
+
+const placementGroupLinodeAction = {
+  assign: 'assign',
+  unassign: 'unassign',
+} as const;
+
+export type PlacementGroupAction = typeof placementGroupAction[keyof typeof placementGroupAction];
+export type PlacementGroupLinodesAction = typeof placementGroupLinodeAction[keyof typeof placementGroupLinodeAction];
 
 export const placementGroupsRoute = createRoute({
   component: PlacementGroupsRoute,
   getParentRoute: () => rootRoute,
   path: 'placement-groups',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 });
 
 const placementGroupsIndexRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   path: '/',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsCreateRoute = createRoute({
   getParentRoute: () => placementGroupsRoute,
   path: 'create',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
-const placementGroupsEditRoute = createRoute({
-  getParentRoute: () => placementGroupsRoute,
-  parseParams: (params) => ({
-    id: Number(params.id),
-  }),
-  path: 'edit/$id',
-}).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
-);
+type PlacementGroupActionRouteParams<P = number | string> = {
+  action: PlacementGroupAction;
+  id: P;
+};
 
-const placementGroupsDeleteRoute = createRoute({
+const placementGroupActionRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in placementGroupAction)) {
+      throw redirect({
+        search: () => ({}),
+        to: '/placement-groups',
+      });
+    }
+  },
   getParentRoute: () => placementGroupsRoute,
-  parseParams: (params) => ({
-    id: Number(params.id),
-  }),
-  path: 'delete/$id',
+  params: {
+    parse: ({ action, id }: PlacementGroupActionRouteParams<string>) => ({
+      action,
+      id: Number(id),
+    }),
+    stringify: ({ action, id }: PlacementGroupActionRouteParams<number>) => ({
+      action,
+      id: String(id),
+    }),
+  },
+  path: '$action/$id',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLanding'
-  ).then((m) => m.placementGroupsLandingLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsLandingLazyRoute
+  )
 );
 
 const placementGroupsDetailRoute = createRoute({
@@ -57,50 +87,64 @@ const placementGroupsDetailRoute = createRoute({
     id: Number(params.id),
   }),
   path: '$id',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsDetailLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsDetailLazyRoute
+  )
 );
 
-const placementGroupsDetailLinodesRoute = createRoute({
+type PlacementGroupLinodesActionRouteParams = {
+  action: PlacementGroupLinodesAction;
+};
+
+const placementGroupLinodesActionBaseRoute = createRoute({
+  beforeLoad: async ({ params }) => {
+    if (!(params.action in placementGroupLinodeAction)) {
+      throw redirect({
+        params: {
+          id: params.id,
+        },
+        search: () => ({}),
+        to: `/placement-groups/$id`,
+      });
+    }
+  },
   getParentRoute: () => placementGroupsDetailRoute,
-  path: 'linodes',
+  params: {
+    parse: ({ action }: PlacementGroupLinodesActionRouteParams) => ({
+      action,
+    }),
+    stringify: ({ action }: PlacementGroupLinodesActionRouteParams) => ({
+      action,
+    }),
+  },
+  path: 'linodes/$action',
+  validateSearch: (search: PlacementGroupsSearchParams) => search,
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsDetailLazyRoute)
-);
-
-const placementGroupsAssignRoute = createRoute({
-  getParentRoute: () => placementGroupsDetailLinodesRoute,
-  path: 'assign',
-}).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsUnassignLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsDetailLazyRoute
+  )
 );
 
 const placementGroupsUnassignRoute = createRoute({
-  getParentRoute: () => placementGroupsDetailLinodesRoute,
+  getParentRoute: () => placementGroupLinodesActionBaseRoute,
   parseParams: (params) => ({
     linodeId: Number(params.linodeId),
   }),
-  path: 'unassign/$linodeId',
+  path: '$linodeId',
 }).lazy(() =>
-  import(
-    'src/features/PlacementGroups/PlacementGroupsDetail/PlacementGroupsDetail'
-  ).then((m) => m.placementGroupsUnassignLazyRoute)
+  import('./placementGroupsLazyRoutes').then(
+    (m) => m.placementGroupsDetailLazyRoute
+  )
 );
 
 export const placementGroupsRouteTree = placementGroupsRoute.addChildren([
-  placementGroupsIndexRoute,
+  placementGroupsIndexRoute.addChildren([placementGroupActionRoute]),
   placementGroupsCreateRoute,
-  placementGroupsEditRoute,
-  placementGroupsDeleteRoute,
   placementGroupsDetailRoute.addChildren([
-    placementGroupsDetailLinodesRoute,
-    placementGroupsAssignRoute,
-    placementGroupsUnassignRoute,
+    placementGroupLinodesActionBaseRoute.addChildren([
+      placementGroupsUnassignRoute,
+    ]),
   ]),
 ]);

@@ -1,6 +1,13 @@
 import {
+  useAllLinodesQuery,
+  useLinodeBackupRestoreMutation,
+  useLinodeQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
   Autocomplete,
   Checkbox,
+  Drawer,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -10,14 +17,8 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupRestoreMutation } from 'src/queries/linodes/backups';
-import {
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from 'src/queries/linodes/linodes';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { LinodeBackup } from '@linode/api-v4/lib/linodes';
@@ -96,6 +97,7 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Restore Backup from ${backup?.created}`}

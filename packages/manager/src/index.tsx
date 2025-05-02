@@ -1,3 +1,5 @@
+import { queryClientFactory } from '@linode/queries';
+import { getRoot } from '@linode/utilities';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
 import * as React from 'react';
@@ -17,8 +19,6 @@ import NullComponent from './components/NullComponent';
 import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-import { queryClientFactory } from './queries/base';
-import { getRoot } from './utilities/rootManager';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -47,7 +47,7 @@ const Main = () => {
     <ReduxStoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <LinodeThemeWrapper>
-          <CssBaseline />
+          <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
               <Switch>
@@ -68,7 +68,7 @@ const Main = () => {
                 <Snackbar
                   anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                   autoHideDuration={4000}
-                  hideIconVariant={true}
+                  hideIconVariant={false}
                   maxSnack={3}
                 >
                   <Switch>

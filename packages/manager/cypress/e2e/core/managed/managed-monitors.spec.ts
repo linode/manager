@@ -2,18 +2,20 @@
  * @file Integration tests for Managed monitors.
  */
 
-import { monitorFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
 import {
   mockCreateServiceMonitor,
   mockDeleteServiceMonitor,
   mockDisableServiceMonitor,
   mockEnableServiceMonitor,
+  mockGetServiceMonitor,
   mockGetServiceMonitors,
   mockUpdateServiceMonitor,
 } from 'support/intercepts/managed';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+
+import { monitorFactory } from 'src/factories/managed';
 
 // Message that's shown when no Managed service monitors are set up.
 const noMonitorsMessage = "You don't have any Monitors on your account.";
@@ -42,9 +44,9 @@ describe('Managed Monitors tab', () => {
 
     // Confirm that each monitor is listed and shows the correct status.
     [
-      { label: 'OK Test Monitor', expectedStatus: 'Verified' },
-      { label: 'Pending Test Monitor', expectedStatus: 'Pending' },
-      { label: 'Problem Test Monitor', expectedStatus: 'Failed' },
+      { expectedStatus: 'Verified', label: 'OK Test Monitor' },
+      { expectedStatus: 'Pending', label: 'Pending Test Monitor' },
+      { expectedStatus: 'Failed', label: 'Problem Test Monitor' },
     ].forEach((monitorInfo) => {
       cy.findByText(monitorInfo.label)
         .should('be.visible')
@@ -67,11 +69,11 @@ describe('Managed Monitors tab', () => {
     const monitorMenuLabel = 'Action menu for Monitor New Monitor';
 
     const originalMonitor = monitorFactory.build({
-      id: monitorId,
       body: '200',
+      credentials: [],
+      id: monitorId,
       label: originalLabel,
       status: 'ok',
-      credentials: [],
     });
 
     const newMonitor = {
@@ -79,6 +81,7 @@ describe('Managed Monitors tab', () => {
       label: newLabel,
     };
 
+    mockGetServiceMonitor(monitorId, originalMonitor).as('getMonitor');
     mockGetServiceMonitors([originalMonitor]).as('getMonitors');
     visitUrlWithManagedEnabled('/managed/monitors');
     cy.wait('@getMonitors');
@@ -90,15 +93,15 @@ describe('Managed Monitors tab', () => {
         ui.button.findByTitle('Edit').should('be.visible').click();
       });
 
+    cy.wait('@getMonitor');
+
     ui.drawer
       .findByTitle('Edit Monitor')
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Monitor Label')
-          .should('be.visible')
-          .click()
-          .clear()
-          .type(newLabel);
+        cy.findByLabelText('Monitor Label').should('be.visible').click();
+        cy.focused().clear();
+        cy.focused().type(newLabel);
 
         mockUpdateServiceMonitor(1, newMonitor).as('updateMonitor');
         mockGetServiceMonitors([newMonitor]).as('getMonitors');
@@ -159,8 +162,8 @@ describe('Managed Monitors tab', () => {
     const monitorLabel = randomLabel();
     const monitorUrl = 'https://www.example.com';
     const newMonitor = monitorFactory.build({
-      label: monitorLabel,
       address: monitorUrl,
+      label: monitorLabel,
     });
 
     mockGetServiceMonitors([]).as('getMonitors');
@@ -183,14 +186,12 @@ describe('Managed Monitors tab', () => {
       .within(() => {
         cy.findByLabelText('Monitor Label', { exact: false })
           .should('be.visible')
-          .click()
-          .type(monitorLabel);
+          .click();
+        cy.focused().type(monitorLabel);
 
         // Can't `findByLabelText` because multiple elements with "URL" label exist.
-        cy.get('input[name="address"]')
-          .should('be.visible')
-          .click()
-          .type(monitorUrl);
+        cy.get('input[name="address"]').should('be.visible').click();
+        cy.focused().type(monitorUrl);
 
         ui.buttonGroup
           .findButtonByTitle('Add Monitor')
@@ -220,12 +221,13 @@ describe('Managed Monitors tab', () => {
     const monitorMenuLabel = `Action menu for Monitor ${monitorLabel}`;
 
     const originalMonitor = monitorFactory.build({
+      address: monitorUrl,
       id: monitorId,
       label: monitorLabel,
-      address: monitorUrl,
       status: 'ok',
     });
 
+    mockGetServiceMonitor(monitorId, originalMonitor).as('getMonitor');
     mockGetServiceMonitors([originalMonitor]).as('getMonitors');
     mockDeleteServiceMonitor(monitorId).as('deleteMonitor');
     visitUrlWithManagedEnabled('/managed/monitors');
@@ -244,15 +246,15 @@ describe('Managed Monitors tab', () => {
 
     ui.actionMenuItem.findByTitle('Delete').click();
 
+    cy.wait('@getMonitor');
+
     // Fill out and submit type-to-confirm.
     ui.dialog
       .findByTitle(`Delete Monitor ${monitorLabel}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Monitor Name:')
-          .should('be.visible')
-          .click()
-          .type(monitorLabel);
+        cy.findByLabelText('Monitor Name:').should('be.visible').click();
+        cy.focused().type(monitorLabel);
 
         ui.buttonGroup
           .findButtonByTitle('Delete Monitor')

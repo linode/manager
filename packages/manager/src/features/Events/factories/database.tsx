@@ -106,6 +106,20 @@ export const database: PartialEventMap<'database'> = {
       </>
     ),
   },
+  database_migrate: {
+    finished: (e) => (
+      <>
+        Database <EventLink event={e} to="entity" /> migration{' '}
+        <strong>completed</strong>.
+      </>
+    ),
+    started: (e) => (
+      <>
+        Database <EventLink event={e} to="entity" /> migration{' '}
+        <strong>in progress</strong>.
+      </>
+    ),
+  },
   database_resize: {
     failed: (e) => (
       <>

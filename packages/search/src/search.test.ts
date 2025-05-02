@@ -35,6 +35,17 @@ describe("getAPIFilterFromQuery", () => {
     });
   });
 
+  it("handles +neq", () => {
+      const query = "status != active";
+
+      expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+        filter: {
+          status: { '+neq': "active" },
+        },
+        error: null,
+      });
+    });
+
   it("handles +lt", () => {
     const query = "size < 20";
 
@@ -149,6 +160,39 @@ describe("getAPIFilterFromQuery", () => {
     expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
       filter: {
         label: { '+contains': "my stackscript" }
+      },
+      error: null,
+    });
+  });
+
+  it("allows '@' symbol in search", () => {
+    const query = 'email: thisisafakeemail@linode.com';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        email: { '+contains': "thisisafakeemail@linode.com" }
+      },
+      error: null,
+    });
+  });
+
+  it("allows '-' symbol in search", () => {
+    const query = 'username: test-user-1';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        username: { '+contains': "test-user-1" }
+      },
+      error: null,
+    });
+  });
+
+  it("allows '_' symbol in search", () => {
+    const query = 'username: test_user_1';
+
+    expect(getAPIFilterFromQuery(query, { searchableFieldsWithoutOperator: [] })).toEqual({
+      filter: {
+        username: { '+contains': "test_user_1" }
       },
       error: null,
     });

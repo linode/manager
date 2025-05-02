@@ -1,9 +1,4 @@
-import {
-  accountFactory,
-  linodeFactory,
-  placementGroupFactory,
-  regionFactory,
-} from 'src/factories';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetLinodeDetails,
@@ -22,6 +17,9 @@ import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import { accountFactory, placementGroupFactory } from 'src/factories';
+
 import type { Linode } from '@linode/api-v4';
 
 const mockAccount = accountFactory.build();
@@ -71,10 +69,10 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinode = mockLinodes[0];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: randomLabel(),
-      region: mockPlacementGroupRegion.id,
-      members: [],
       is_compliant: true,
+      label: randomLabel(),
+      members: [],
+      region: mockPlacementGroupRegion.id,
     });
 
     const mockPlacementGroupWithLinode = {
@@ -123,7 +121,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').should('be.enabled').click();
 
@@ -139,7 +141,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(`${mockLinode.label}`);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button.findByTitle('Assign Linode').click();
       });
@@ -182,22 +188,22 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
+      is_compliant: true,
       label: randomLabel(),
       members: [],
-      region: mockPlacementGroupRegion.id,
-      is_compliant: true,
       placement_group_policy: 'flexible',
+      region: mockPlacementGroupRegion.id,
     });
 
     const mockPlacementGroupAfterAssignment = {
       ...mockPlacementGroup,
+      is_compliant: false,
       members: [
         {
-          linode_id: mockLinode.id,
           is_compliant: false,
+          linode_id: mockLinode.id,
         },
       ],
-      is_compliant: false,
     };
 
     const complianceWarning = `Placement Group ${mockPlacementGroup.label} is non-compliant. We are working to resolve compliance issues so that you can continue assigning Linodes to this Placement Group.`;
@@ -240,7 +246,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')
@@ -284,11 +294,11 @@ describe('Placement Groups Linode assignment', () => {
     });
 
     const mockPlacementGroup = placementGroupFactory.build({
+      is_compliant: true,
       label: randomLabel(),
       members: [],
-      region: mockPlacementGroupRegion.id,
-      is_compliant: true,
       placement_group_policy: 'strict',
+      region: mockPlacementGroupRegion.id,
     });
 
     const complianceErrorMessage = `Assignment would break Placement Group's compliance, non compliant Linode IDs: [${mockLinode.id}]`;
@@ -328,7 +338,11 @@ describe('Placement Groups Linode assignment', () => {
           `Linodes in ${mockPlacementGroupRegion.label} (${mockPlacementGroupRegion.id})`
         ).type(mockLinode.label);
 
-        ui.select.findItemByText(mockLinode.label).should('be.visible').click();
+        ui.autocomplete.find().should('be.visible');
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
 
         ui.button
           .findByTitle('Assign Linode')
@@ -362,22 +376,23 @@ describe('Placement Groups Linode assignment', () => {
     const mockLinodeRemaining = mockLinodes[1];
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: randomLabel(),
-      region: mockPlacementGroupRegion.id,
-      members: mockLinodes.map((linode: Linode) => ({
-        linode_id: linode.id,
-        is_compliant: true,
-      })),
       is_compliant: true,
+      label: randomLabel(),
+      members: mockLinodes.map((linode: Linode) => ({
+        is_compliant: true,
+        linode_id: linode.id,
+      })),
+      region: mockPlacementGroupRegion.id,
     });
 
     const mockPlacementGroupAfterUnassignment = {
       ...mockPlacementGroup,
-      members: [{ linode_id: mockLinodeRemaining.id, is_compliant: true }],
+      members: [{ is_compliant: true, linode_id: mockLinodeRemaining.id }],
     };
 
     mockGetRegions(mockRegions);
     mockGetLinodes(mockLinodes);
+    mockGetLinodeDetails(mockLinodeUnassigned.id, mockLinodeUnassigned);
     mockGetPlacementGroups([mockPlacementGroup]);
     mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 

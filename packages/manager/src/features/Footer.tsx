@@ -1,53 +1,90 @@
-import { Stack } from '@linode/ui';
+import { Stack, Typography } from '@linode/ui';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import {
-  SIDEBAR_COLLAPSED_WIDTH,
-  SIDEBAR_WIDTH,
-} from 'src/components/PrimaryNav/SideMenu';
 import { DEVELOPERS_LINK, FEEDBACK_LINK } from 'src/constants';
 
 import packageJson from '../../package.json';
 
-interface Props {
-  desktopMenuIsOpen: boolean;
-}
-
-export const Footer = React.memo((props: Props) => {
-  const { desktopMenuIsOpen } = props;
-
+export const Footer = React.memo(() => {
   return (
     <footer role="contentinfo">
       <Stack
+        alignItems={{
+          md: 'center',
+          xs: 'left',
+        }}
+        direction={{
+          sm: 'row',
+          xs: 'column',
+        }}
+        flexDirection={{
+          md: 'row',
+          xs: 'column',
+        }}
         sx={(theme) => ({
-          backgroundColor: theme.bg.main,
-          paddingLeft: {
-            md: desktopMenuIsOpen
-              ? `${SIDEBAR_COLLAPSED_WIDTH + 16}px`
-              : `${SIDEBAR_WIDTH + 16}px`,
-            sm: 2,
-            xs: 2,
-          },
-          paddingY: theme.spacing(2.5),
-          transition: 'padding-left .1s linear', // match the sidebar transition speed
+          borderTop: `1px solid ${theme.tokens.component.GlobalFooter.Border}`,
+          padding: `12px 16px`,
         })}
-        direction={{ sm: 'row', xs: 'column' }}
-        spacing={{ sm: 4, xs: 1 }}
+        textAlign={{
+          sm: 'left',
+          xs: 'left',
+        }}
+        display="flex"
+        justifyContent="space-between"
+        rowGap={2}
+        spacing={{ xs: 1 }}
       >
-        <Link
-          forceCopyColor
-          to={`https://github.com/linode/manager/releases/tag/linode-manager@v${packageJson.version}`}
+        <Stack
+          sx={{
+            '&&': {
+              margin: 0,
+            },
+          }}
+          direction="row"
+          flexWrap="wrap"
+          gap={3}
+          rowGap={1}
+          spacing={3}
         >
-          v{packageJson.version}
-        </Link>
-        <Link forceCopyColor to={DEVELOPERS_LINK}>
-          API Reference
-        </Link>
-        <Link forceCopyColor to={FEEDBACK_LINK}>
-          Provide Feedback
-        </Link>
+          <StyledLink
+            sx={{ paddingLeft: 0 }}
+            to={`https://github.com/linode/manager/releases/tag/linode-manager@v${packageJson.version}`}
+          >
+            v{packageJson.version}
+          </StyledLink>
+          <StyledLink to={DEVELOPERS_LINK}>API Reference</StyledLink>
+          <StyledLink to={FEEDBACK_LINK}>Provide Feedback</StyledLink>
+        </Stack>
+        <Stack
+          sx={{
+            '&&': { marginLeft: 0, marginTop: 0 },
+          }}
+          direction="row"
+          spacing={3}
+        >
+          <Typography
+            sx={(theme) => ({
+              color: theme.tokens.alias.Content.Text.Primary.Default,
+            })}
+            variant="body1"
+          >
+            © {new Date().getFullYear()} Akamai Technologies, Inc. All Rights
+            Reserved
+          </Typography>
+        </Stack>
       </Stack>
     </footer>
   );
 });
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  '&&': {
+    marginLeft: 0,
+  },
+  '&:hover': {
+    color: theme.tokens.component.GlobalFooter.Link.Hover,
+  },
+  color: theme.tokens.component.GlobalFooter.Link.Default,
+}));

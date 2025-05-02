@@ -1,27 +1,24 @@
-import { CircleProgress, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useProfile, useRegionsQuery } from '@linode/queries';
+import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
+import { readableBytes, useOpenClose } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
-import OrderBy from 'src/components/OrderBy';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useOpenClose } from 'src/hooks/useOpenClose';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useDeleteBucketMutation,
   useObjectStorageBuckets,
 } from 'src/queries/object-storage/queries';
 import { isBucketError } from 'src/queries/object-storage/requests';
-import { useProfile } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { CancelNotice } from '../CancelNotice';
 import { BucketDetailsDrawer } from './BucketDetailsDrawer';
@@ -36,13 +33,18 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
+interface Props {
+  isCreateBucketDrawerOpen?: boolean;
+}
+
 const useStyles = makeStyles()((theme: Theme) => ({
   copy: {
     marginTop: theme.spacing(),
   },
 }));
 
-export const BucketLanding = () => {
+export const BucketLanding = (props: Props) => {
+  const { isCreateBucketDrawerOpen } = props;
   const { data: profile } = useProfile();
 
   const isRestrictedUser = profile?.restricted;
@@ -60,10 +62,8 @@ export const BucketLanding = () => {
   const removeBucketConfirmationDialog = useOpenClose();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-  const [
-    bucketDetailDrawerOpen,
-    setBucketDetailDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [bucketDetailDrawerOpen, setBucketDetailDrawerOpen] =
+    React.useState<boolean>(false);
   const [selectedBucket, setSelectedBucket] = React.useState<
     ObjectStorageBucket | undefined
   >(undefined);
@@ -111,6 +111,23 @@ export const BucketLanding = () => {
       });
   };
 
+  const {
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: orderedData,
+  } = useOrderV2({
+    data: objectStorageBucketsResponse?.buckets,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/object-storage/buckets',
+    },
+    preferenceKey: 'object-storage-buckets',
+  });
+
   const closeRemoveBucketConfirmationDialog = React.useCallback(() => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
@@ -155,37 +172,28 @@ export const BucketLanding = () => {
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Buckets" />
+      <DocumentTitleSegment
+        segment={`${isCreateBucketDrawerOpen ? 'Create a Bucket' : 'Buckets'}`}
+      />
       {unavailableClusters.length > 0 && (
         <UnavailableClustersDisplay unavailableClusters={unavailableClusters} />
       )}
-      <Grid xs={12}>
-        <OrderBy
-          data={objectStorageBucketsResponse.buckets}
-          order={'asc'}
-          orderBy={'label'}
-        >
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const bucketTableProps = {
-              data: orderedData,
-              handleClickDetails,
-              handleClickRemove,
-              handleOrderChange,
-              order,
-              orderBy,
-            };
-            return <BucketTable {...bucketTableProps} />;
-          }}
-        </OrderBy>
+      <Grid size={12}>
+        <BucketTable
+          data={orderedData ?? []}
+          handleClickDetails={handleClickDetails}
+          handleClickRemove={handleClickRemove}
+          handleOrderChange={handleOrderChange}
+          order={order}
+          orderBy={orderBy}
+        />
         {/* If there's more than one Bucket, display the total usage. */}
         {objectStorageBucketsResponse.buckets.length > 1 ? (
           <Typography
             style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
-            Total storage used:{' '}
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(totalUsage, { base10: true }).formatted}
+            Total storage used: {readableBytes(totalUsage).formatted}
           </Typography>
         ) : null}
         <TransferDisplay
@@ -271,7 +279,7 @@ const Banner = React.memo(({ regionsAffected }: BannerProps) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography component="div" style={{ fontSize: '1rem' }}>
         There was an error loading buckets in{' '}
         {moreThanOneRegionAffected

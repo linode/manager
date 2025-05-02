@@ -1,11 +1,10 @@
-import { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
-import { QueryClient } from '@tanstack/react-query';
-import { MapStateToProps as _MapStateToProps } from 'react-redux';
-import { Action, Dispatch } from 'redux';
-import { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
-
-import { ApplicationState } from 'src/store';
+import type { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
+import type { MapStateToProps as _MapStateToProps } from 'react-redux';
+import type { Action, Dispatch } from 'redux';
+import type { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
+import type { ApplicationState } from 'src/store';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
   entity: EventEntity;
@@ -60,7 +59,7 @@ export interface EntitiesAsObjectState<T> {
  * and the data is the actual stats for the Client
  */
 export type RelationalDataSet<T extends {}, E = EntityError> = Record<
-  string,
+  number | string,
   Partial<{
     data: T;
     error: E;

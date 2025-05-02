@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
+import Grid2 from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
 export const StyledGridContainer = styled(Grid2, {
   label: 'StyledGridContainer',
@@ -28,12 +28,9 @@ export const StyledGridContainer = styled(Grid2, {
 export const StyledLabelTypography = styled(Typography, {
   label: 'StyledLabelTypography',
 })(({ theme }) => ({
-  background:
-    theme.palette.mode === 'dark'
-      ? theme.bg.tableHeader
-      : theme.palette.grey[200],
+  background: theme.tokens.alias.Background.Neutral,
   color: theme.palette.mode === 'dark' ? theme.color.grey6 : 'inherit',
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   height: '100%',
   padding: `${theme.spacing(0.5)} 15px`,
 }));

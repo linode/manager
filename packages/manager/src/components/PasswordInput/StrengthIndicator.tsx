@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -36,9 +36,9 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
   strengthText: {
-    fontSize: '.85rem',
     position: 'relative',
     textAlign: 'right',
+    textTransform: 'none',
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center',
     },
@@ -52,15 +52,17 @@ export const StrengthIndicator = (props: Props) => {
 
   return (
     <Grid
-      alignItems="flex-end"
+      sx={{
+        alignItems: 'center',
+        paddingLeft: 0,
+        paddingRight: 0,
+      }}
       className={classes.root}
       container
       data-qa-strength={strength}
-      spacing={1}
-      sx={{ paddingLeft: 0, paddingRight: 0 }}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
-        <Grid className={classes.blockOuter} key={idx} xs={3}>
+        <Grid className={classes.blockOuter} key={idx} size={3}>
           <div
             className={cx({
               [`strength-${strength}`]:
@@ -72,7 +74,7 @@ export const StrengthIndicator = (props: Props) => {
           />
         </Grid>
       ))}
-      <Grid className="py0" xs={3}>
+      <Grid paddingLeft={1} size={3}>
         <Typography
           className={classes.strengthText}
           data-qa-password-strength

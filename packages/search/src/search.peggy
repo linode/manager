@@ -49,7 +49,7 @@ TagQuery
   = "tag" ws* Contains ws* value:String { return { "tags": { "+contains": value } }; }
 
 NotEqualQuery
-  = Not key:FilterableField ws* Equal ws* value:String { return { [key]: { "+neq": value } }; }
+  = key:FilterableField ws* NotEqual ws* value:SearchValue { return { [key]: { "+neq": value } }; }
 
 LessThanQuery
   = key:FilterableField ws* Less ws* value:Number { return { [key]: { "+lt": value } }; }
@@ -74,9 +74,8 @@ And
   / ws* '&' ws*
   / ws
 
-Not
-  = '!'
-  / '-'
+NotEqual
+  = '!='
 
 Less
   = '<'
@@ -109,10 +108,10 @@ String "search value"
   / Word
 
 Word "word"
-  = [a-zA-Z0-9\-\.]+ { return text(); }
+  = [a-zA-Z0-9-_.@]+ { return text(); }
 
 StringWithSpaces "string with spaces"
-  = [a-zA-Z0-9\-|_\.\: ]+ { return text(); }
+  = [a-zA-Z0-9-_.:@ ]+ { return text(); }
 
 Number "numeric search value"
   = number:[0-9\.]+ { return parseFloat(number.join("")); }

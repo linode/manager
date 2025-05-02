@@ -1,4 +1,5 @@
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Link } from 'react-router-dom';
 
 import type { LinkProps } from 'react-router-dom';
@@ -8,7 +9,7 @@ import type {
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
-interface SupportLinkProps {
+export interface SupportLinkProps {
   description?: string;
   entity?: EntityForTicketDetails;
   formPayloadValues?: FormPayloadValues;

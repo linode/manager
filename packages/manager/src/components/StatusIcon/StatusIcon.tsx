@@ -46,6 +46,7 @@ const StyledDiv = styled(Box, {
 })<StatusProps>(({ theme, ...props }) => ({
   borderRadius: '50%',
   display: 'inline-block',
+  flexShrink: 0,
   height: '16px',
   marginRight: theme.spacing(),
   position: 'relative',

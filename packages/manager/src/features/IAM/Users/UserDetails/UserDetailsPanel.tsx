@@ -1,17 +1,17 @@
 import { Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Link } from 'src/components/Link';
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
 import type {
-  AccountAccessType,
+  AccountAccessRole,
+  EntityAccess,
+  EntityAccessRole,
   IamUserPermissions,
-  ResourceAccess,
-  RoleType,
   User,
 } from '@linode/api-v4';
 
@@ -26,26 +26,15 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
   const items = [
     {
       label: 'Username',
-      value: <Typography>{user.username}</Typography>,
+      value: <MaskableText isToggleable text={user.username} />,
     },
     {
       label: 'Email',
-      value: <Typography>{user.email}</Typography>,
+      value: <MaskableText isToggleable text={user.email} />,
     },
     {
-      label: 'Access',
-      value:
-        assignRolesCount > 0 ? (
-          <Typography>
-            <Link to={`/iam/users/${user.username}/roles`}>
-              {`${assignRolesCount} role${
-                assignRolesCount !== 1 ? 's' : ''
-              } assigned`}
-            </Link>
-          </Typography>
-        ) : (
-          <span>no roles assigned</span>
-        ),
+      label: 'Assigned Roles',
+      value: <Typography>{assignRolesCount}</Typography>,
     },
     {
       label: 'Last Login Status',
@@ -88,7 +77,12 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     },
     {
       label: 'Verified Phone Number',
-      value: <Typography>{user.verified_phone_number ?? 'None'}</Typography>,
+      value: (
+        <MaskableText
+          isToggleable
+          text={user.verified_phone_number ?? 'None'}
+        />
+      ),
     },
     {
       label: 'SSH Keys',
@@ -109,9 +103,29 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     <Paper>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item) => (
-          <Grid key={item.label} md={2} sm={2} xs={2}>
-            <Stack direction="row" spacing={1}>
-              <Typography fontFamily={(theme) => theme.font.bold}>
+          <Grid
+            size={{
+              md: 2,
+              sm: 2,
+              xs: 2,
+            }}
+            key={item.label}
+          >
+            <Stack
+              sx={{
+                '& > p:nth-of-type(2)': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                },
+              }}
+              direction="row"
+              spacing={1}
+            >
+              <Typography
+                sx={(theme) => ({
+                  font: theme.font.bold,
+                })}
+              >
                 {item.label}
               </Typography>
               {item.value}
@@ -126,13 +140,13 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
 const getAssignRoles = (assignedRoles: IamUserPermissions): number => {
   const accountAccessRoles = assignedRoles.account_access || [];
 
-  const resourceAccessRoles = assignedRoles.resource_access
-    ? assignedRoles.resource_access
-        .map((resource: ResourceAccess) => resource.roles)
+  const resourceAccessRoles = assignedRoles.entity_access
+    ? assignedRoles.entity_access
+        .map((resource: EntityAccess) => resource.roles)
         .flat()
     : [];
 
-  const combinedRoles: (AccountAccessType | RoleType)[] = Array.from(
+  const combinedRoles: (AccountAccessRole | EntityAccessRole)[] = Array.from(
     new Set([...accountAccessRoles, ...resourceAccessRoles])
   );
 

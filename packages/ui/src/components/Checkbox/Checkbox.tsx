@@ -2,15 +2,24 @@ import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { CheckboxCheckedIcon, CheckboxIcon } from '../../assets/icons';
+import {
+  CheckboxCheckedIcon,
+  CheckboxIcon,
+  CheckboxIndeterminateIcon,
+} from '../../assets/icons';
+import { FormControlLabel } from '../FormControlLabel';
 import { TooltipIcon } from '../TooltipIcon';
-// @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
-import { FormControlLabel } from '@mui/material';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 interface Props extends CheckboxProps {
+  /**
+   * New custom size prop (Overides and restrict 'size' to only 'small' and 'medium' per ADS)
+   *
+   * @default medium
+   */
+  size?: 'medium' | 'small';
   /**
    * Styles applied to the `FormControlLabel`. Only works when `text` is defined.
    */
@@ -49,6 +58,7 @@ export const Checkbox = (props: Props) => {
       color="primary"
       data-qa-checked={props.checked}
       icon={<CheckboxIcon />}
+      indeterminateIcon={<CheckboxIndeterminateIcon />}
       {...rest}
     />
   );
@@ -71,29 +81,48 @@ export const Checkbox = (props: Props) => {
   );
 };
 
-const StyledCheckbox = styled(_Checkbox)(({ theme, ...props }) => ({
+const StyledCheckbox = styled(_Checkbox, {
+  label: 'StyledCheckbox',
+})(({ theme, ...props }) => ({
   '& .defaultFill': {
     transition: theme.transitions.create(['fill']),
   },
-  '&:hover': {
-    color: theme.palette.primary.main,
-  },
-  color: theme.tokens.color.Neutrals[40],
+  padding: theme.tokens.spacing.S8,
   transition: theme.transitions.create(['color']),
-  ...(props.checked && {
-    color: theme.palette.primary.main,
-  }),
-  ...(props.disabled && {
-    '& .defaultFill': {
-      fill: `${theme.bg.main}`,
-      opacity: 0.5,
-    },
-    color: `${theme.tokens.color.Neutrals[40]} !important`,
-    fill: `${theme.bg.main} !important`,
+  // Unchecked & Readonly
+  ...(props.readOnly && {
+    color: theme.tokens.component.Checkbox.Empty.ReadOnly.Border,
     pointerEvents: 'none',
   }),
+  // Checked & Readonly
+  ...(props.checked &&
+    props.readOnly && {
+      svg: {
+        '#Check': {
+          fill: theme.tokens.component.Checkbox.Checked.ReadOnly.Icon,
+        },
+        border: `1px solid ${theme.tokens.component.Checkbox.Checked.ReadOnly.Border}`,
+      },
+      color: `${theme.tokens.component.Checkbox.Checked.ReadOnly.Background} !important`,
+      pointerEvents: 'none',
+    }),
+  // Indeterminate & Readonly
+  ...(props.indeterminate &&
+    props.readOnly && {
+      svg: {
+        'g rect:nth-of-type(2)': {
+          fill: theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Icon,
+        },
+        border: `1px solid ${theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Border}`,
+      },
+      color: `${theme.tokens.component.Checkbox.Checked.ReadOnly.Background} !important`,
+      pointerEvents: 'none',
+    }),
 }));
 
-const StyledFormControlLabel = styled(FormControlLabel)(() => ({
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
+  '& .MuiFormControlLabel-label': {
+    paddingTop: theme.tokens.spacing.S2,
+  },
   marginRight: 0,
 }));

@@ -1,10 +1,10 @@
 import { Button, Tooltip, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import { LinearProgress } from 'src/components/LinearProgress';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import {
   StyledActionsContainer,
@@ -92,8 +92,7 @@ export const FileUpload = React.memo((props: FileUploadProps) => {
             })}
             variant="body1"
           >
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(props.sizeInBytes, { base10: true }).formatted}
+            {readableBytes(props.sizeInBytes).formatted}
           </StyledFileSizeTypography>
           {props.percentCompleted === 100 ? (
             <FileUploadComplete

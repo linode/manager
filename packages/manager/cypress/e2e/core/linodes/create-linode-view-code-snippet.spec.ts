@@ -2,12 +2,18 @@
  * @file Linode Create view code snippets tests.
  */
 
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
-
-import { randomLabel, randomString } from 'support/util/random';
 import { linodeCreatePage } from 'support/ui/pages';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 describe('Create Linode flow to validate code snippet modal', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
   /*
    * tests for create Linode flow to validate code snippet modal.
    */
@@ -15,13 +21,15 @@ describe('Create Linode flow to validate code snippet modal', () => {
   it(`view code snippets in create linode flow`, () => {
     const linodeLabel = randomLabel();
     const rootPass = randomString(32);
-
+    const mockLinodeRegion = chooseRegion({
+      capabilities: ['Linodes'],
+    });
     cy.visitWithLogin('/linodes/create');
 
     // Set Linode label, distribution, plan type, password, etc.
     linodeCreatePage.setLabel(linodeLabel);
     linodeCreatePage.selectImage('Debian 12');
-    linodeCreatePage.selectRegionById('us-east');
+    linodeCreatePage.selectRegionById(mockLinodeRegion.id);
     linodeCreatePage.selectPlan('Shared CPU', 'Nanode 1 GB');
     linodeCreatePage.setRootPassword(rootPass);
 

@@ -4,7 +4,7 @@ import { ui } from 'support/ui';
 import { createSpy } from 'support/util/components';
 import { componentTests } from 'support/util/components';
 
-import type { SelectOptionType, SelectProps } from '@linode/ui';
+import type { SelectOption, SelectProps } from '@linode/ui';
 
 const options = [
   { label: 'Option 1', value: 'option-1' },
@@ -260,7 +260,7 @@ componentTests('Select', (mount) => {
     });
   });
 
-  const defaultProps: SelectProps = {
+  const defaultProps = {
     label: 'My Select',
     onChange: () => {},
     options,
@@ -268,10 +268,10 @@ componentTests('Select', (mount) => {
   };
 
   describe('Logic', () => {
-    const WrappedSelect = (props: Partial<SelectProps>) => {
-      const [value, setValue] = React.useState<
-        SelectOptionType | null | undefined
-      >(null);
+    const WrappedSelect = (props: Partial<SelectProps<SelectOption>>) => {
+      const [value, setValue] = React.useState<SelectOption | null | undefined>(
+        null
+      );
 
       return (
         <>
@@ -280,7 +280,9 @@ componentTests('Select', (mount) => {
             onChange={(_, newValue) =>
               setValue({
                 label: newValue?.label ?? '',
-                value: newValue?.value.replace(' ', '-').toLowerCase() ?? '',
+                value:
+                  newValue?.value.toString().replace(' ', '-').toLowerCase() ??
+                  '',
               })
             }
             textFieldProps={{

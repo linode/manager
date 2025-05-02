@@ -1,4 +1,6 @@
+import { formatPercentage } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import {
@@ -6,7 +8,6 @@ import {
   widgetFactory,
 } from 'src/factories';
 import * as CloudPulseWidgetUtils from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
-import { formatPercentage } from 'src/utilities/statMetrics';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseWidget } from './CloudPulseWidget';
@@ -19,13 +20,18 @@ const props: CloudPulseWidgetProperties = {
   availableMetrics: {
     available_aggregate_functions: ['min', 'max', 'avg'],
     dimensions: [],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',
     scrape_interval: '2m',
     unit: 'percent',
   },
-  duration: { unit: 'min', value: 30 },
+  duration: {
+    end: DateTime.now().toISO(),
+    preset: '30minutes',
+    start: DateTime.now().minus({ minutes: 30 }).toISO(),
+  },
   entityIds: ['1', '2'],
   isJweTokenFetching: false,
   resources: [
@@ -124,7 +130,7 @@ describe('Cloud pulse widgets', () => {
     expect(getByTestId('Aggregation function')).toBeInTheDocument();
 
     // Verify zoom icon
-    expect(getByTestId('zoom-in')).toBeInTheDocument();
+    expect(getByTestId('zoom-out')).toBeInTheDocument();
 
     // Verify graph component
     expect(
@@ -146,7 +152,7 @@ describe('Cloud pulse widgets', () => {
 
   it('should update preferences for zoom toggle', async () => {
     const { getByTestId } = renderWithTheme(<CloudPulseWidget {...props} />);
-    const zoomButton = getByTestId('zoom-in');
+    const zoomButton = getByTestId('zoom-out');
     await userEvent.click(zoomButton);
     expect(mockUpdatePreferences).toHaveBeenCalledWith('CPU Utilization', {
       size: 6,
@@ -169,7 +175,12 @@ describe('Cloud pulse widgets', () => {
     expect(queryMocks.useCloudPulseMetricsQuery).toHaveBeenCalledWith(
       'linode',
       expect.objectContaining({
-        aggregate_function: 'max',
+        metrics: [
+          {
+            aggregate_function: 'max',
+            name: props.widget.metric,
+          },
+        ],
       }),
       expect.any(Object)
     );

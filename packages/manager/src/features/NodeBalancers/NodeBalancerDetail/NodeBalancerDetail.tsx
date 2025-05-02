@@ -1,46 +1,44 @@
-import { CircleProgress, Notice } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
-import * as React from 'react';
 import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
-
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
-import { LandingHeader } from 'src/components/LandingHeader';
-import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
-import { TabPanels } from 'src/components/Tabs/TabPanels';
-import { Tabs } from 'src/components/Tabs/Tabs';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import {
+  useGrants,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-} from 'src/queries/nodebalancers';
-import { useGrants } from 'src/queries/profile/profile';
+} from '@linode/queries';
+import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { useMatch, useParams } from '@tanstack/react-router';
+import * as React from 'react';
+
+import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
 
+import type { NodeBalancerConfigurationsBaseProps } from './NodeBalancerConfigurations';
+
 export const NodeBalancerDetail = () => {
-  const history = useHistory();
-  const location = useLocation();
-  const { nodeBalancerId } = useParams<{ nodeBalancerId: string }>();
-  const id = Number(nodeBalancerId);
+  const { id } = useParams({
+    strict: false,
+  });
   const [label, setLabel] = React.useState<string>();
   const { data: grants } = useGrants();
 
-  const {
-    error: updateError,
-    mutateAsync: updateNodeBalancer,
-  } = useNodebalancerUpdateMutation(id);
+  const { error: updateError, mutateAsync: updateNodeBalancer } =
+    useNodebalancerUpdateMutation(Number(id));
 
-  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
+  const {
+    data: nodebalancer,
+    error,
+    isLoading,
+  } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -58,23 +56,20 @@ export const NodeBalancerDetail = () => {
     setLabel(nodebalancer?.label);
   };
 
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: `/nodebalancers/${id}/summary`,
       title: 'Summary',
+      to: '/nodebalancers/$id/summary',
     },
     {
-      routeName: `/nodebalancers/${id}/configurations`,
       title: 'Configurations',
+      to: '/nodebalancers/$id/configurations',
     },
     {
-      routeName: `/nodebalancers/${id}/settings`,
       title: 'Settings',
+      to: '/nodebalancers/$id/settings',
     },
-  ];
-
-  const matches = (pathName: string) =>
-    Boolean(matchPath(location.pathname, { path: pathName }));
+  ]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -94,10 +89,6 @@ export const NodeBalancerDetail = () => {
   const labelError = errorMap.label;
 
   const nodeBalancerLabel = label !== undefined ? label : nodebalancer?.label;
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
 
   return (
     <React.Fragment>
@@ -123,43 +114,60 @@ export const NodeBalancerDetail = () => {
           text={getRestrictedResourceText({
             resourceType: 'NodeBalancers',
           })}
-          important
           variant="warning"
         />
       )}
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
-        <TabLinkList tabs={tabs} />
-
-        <TabPanels>
-          <SafeTabPanel index={0}>
-            <NodeBalancerSummary />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <NodeBalancerConfigurations
-              grants={grants}
-              nodeBalancerLabel={nodebalancer.label}
-              nodeBalancerRegion={nodebalancer.region}
-            />
-          </SafeTabPanel>
-          <SafeTabPanel index={2}>
-            <NodeBalancerSettings />
-          </SafeTabPanel>
-        </TabPanels>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <NodeBalancerSummary />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <NodeBalancerConfigurationWrapper
+                grants={grants}
+                nodeBalancerLabel={nodebalancer.label}
+                nodeBalancerRegion={nodebalancer.region}
+              />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <NodeBalancerSettings />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
     </React.Fragment>
   );
 };
 
-export const nodeBalancerDetailLazyRoute = createLazyRoute(
-  '/nodebalancers/$nodeBalancerId'
-)({
-  component: NodeBalancerDetail,
-});
+const NodeBalancerConfigurationWrapper = (
+  props: NodeBalancerConfigurationsBaseProps
+) => {
+  const { configId, id: nodeBalancerId } = useParams({
+    strict: false,
+  });
+  const match = useMatch({
+    strict: false,
+  });
+
+  if (
+    (match.routeId === '/nodebalancers/$id/configurations' &&
+      !nodeBalancerId) ||
+    (!configId &&
+      match.routeId === '/nodebalancers/$id/configurations/$configId')
+  ) {
+    return null;
+  }
+
+  const matchProps = {
+    params: {
+      configId,
+      id: nodeBalancerId,
+    },
+  };
+
+  return <NodeBalancerConfigurations {...props} {...matchProps} />;
+};
 
 export default NodeBalancerDetail;

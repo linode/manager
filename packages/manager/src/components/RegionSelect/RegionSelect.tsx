@@ -1,12 +1,15 @@
+import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
-import { useAllAccountAvailabilitiesQuery } from 'src/queries/account/availability';
+// @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
+// as it imports GLOBAL_QUOTA_VALUE from RegionSelect's constants.ts and update the import.
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 import { RegionOption } from './RegionOption';
 import { StyledAutocompleteContainer } from './RegionSelect.styles';
 import {
@@ -16,7 +19,7 @@ import {
 
 import type { RegionSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { DisableItemOption } from 'src/components/ListItemOption';
+import type { DisableItemOption } from '@linode/ui';
 
 /**
  * A specific select for regions.
@@ -41,6 +44,7 @@ export const RegionSelect = <
     forcefullyShownRegionIds,
     helperText,
     ignoreAccountAvailability,
+    isGeckoLAEnabled,
     label,
     noMarginTop,
     onChange,
@@ -48,12 +52,11 @@ export const RegionSelect = <
     regionFilter,
     regions,
     required,
+    sx,
     tooltipText,
     value,
     width,
   } = props;
-
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
 
   const {
     data: accountAvailability,
@@ -115,6 +118,7 @@ export const RegionSelect = <
           return (
             <RegionOption
               disabledOptions={disabledRegions[region.id]}
+              isGeckoLAEnabled={isGeckoLAEnabled}
               item={region}
               key={`${region.id}-${key}`}
               props={rest}
@@ -122,6 +126,7 @@ export const RegionSelect = <
           );
         }}
         sx={(theme) => ({
+          ...sx,
           [theme.breakpoints.up('md')]: {
             width: tooltipText ? '458px' : '416px',
           },
@@ -132,9 +137,19 @@ export const RegionSelect = <
             endAdornment:
               isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
             required,
-            startAdornment: selectedRegion && (
-              <Flag country={selectedRegion?.country} mr={1} />
-            ),
+            startAdornment:
+              selectedRegion &&
+              (selectedRegion.id === 'global' ? (
+                <PublicIcon
+                  sx={{
+                    height: '24px',
+                    mr: 1,
+                    width: '24px',
+                  }}
+                />
+              ) : (
+                <Flag country={selectedRegion?.country} mr={1} />
+              )),
           },
           tooltipText,
         }}
@@ -149,10 +164,10 @@ export const RegionSelect = <
         groupBy={(option) => getRegionCountryGroup(option)}
         helperText={helperText}
         label={label ?? 'Region'}
-        loading={accountAvailabilityLoading}
+        loading={accountAvailabilityLoading || props.loading}
         loadingText="Loading regions..."
         noMarginTop={noMarginTop}
-        noOptionsText="No results"
+        noOptionsText={props.noOptionsText ?? 'No results'}
         onChange={onChange}
         options={regionOptions}
         placeholder={placeholder ?? 'Select a Region'}

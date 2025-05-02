@@ -1,13 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Notice, TextField } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
+import Lock from 'src/assets/icons/lock.svg';
+import { Stack, Typography } from '@linode/ui';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
@@ -15,11 +16,12 @@ import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { image, onClose, open } = props;
+  const { image, isFetching, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
@@ -63,8 +65,8 @@ export const EditImageDrawer = (props: Props) => {
         for (const error of errors) {
           if (
             error.field === 'label' ||
-            error.field == 'description' ||
-            error.field == 'tags'
+            error.field === 'description' ||
+            error.field === 'tags'
           ) {
             setError(error.field, { message: error.reason });
           } else {
@@ -80,7 +82,13 @@ export const EditImageDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title="Edit Image">
+    <Drawer
+      NotFoundComponent={NotFound}
+      isFetching={isFetching}
+      onClose={handleClose}
+      open={open}
+      title="Edit Image"
+    >
       {!canCreateImage && (
         <Notice
           text="You don't have permissions to edit images. Please contact an account administrator for details."
@@ -94,6 +102,17 @@ export const EditImageDrawer = (props: Props) => {
           text={formState.errors.root.message}
           variant="error"
         />
+      )}
+
+      {image?.capabilities?.includes('distributed-sites') && (
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Lock />
+          <Typography
+            sx={(theme) => ({ color: theme.textColors.textAccessTable })}
+          >
+            Encrypted
+          </Typography>
+        </Stack>
       )}
 
       <Controller

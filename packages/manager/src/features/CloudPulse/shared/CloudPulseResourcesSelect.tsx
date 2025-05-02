@@ -4,7 +4,6 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
-import { themes } from 'src/utilities/theme';
 
 import { deepEqual } from '../Utils/FilterBuilder';
 
@@ -14,6 +13,7 @@ export interface CloudPulseResources {
   id: string;
   label: string;
   region?: string;
+  tags?: string[];
 }
 
 export interface CloudPulseResourcesSelectProps {
@@ -57,7 +57,11 @@ export const CloudPulseResourcesSelect = React.memo(
       },
     };
 
-    const { data: resources, isError, isLoading } = useResourcesQuery(
+    const {
+      data: resources,
+      isError,
+      isLoading,
+    } = useResourcesQuery(
       disabled !== undefined ? !disabled : Boolean(region && resourceType),
       resourceType,
       {},
@@ -73,9 +77,8 @@ export const CloudPulseResourcesSelect = React.memo(
           }
     );
 
-    const [selectedResources, setSelectedResources] = React.useState<
-      CloudPulseResources[]
-    >();
+    const [selectedResources, setSelectedResources] =
+      React.useState<CloudPulseResources[]>();
 
     /**
      * This is used to track the open state of the autocomplete and useRef optimizes the re-renders that this component goes through and it is used for below
@@ -102,6 +105,10 @@ export const CloudPulseResourcesSelect = React.memo(
 
     // Once the data is loaded, set the state variable with value stored in preferences
     React.useEffect(() => {
+      if (disabled && !selectedResources) {
+        return;
+      }
+      // To save default values, go through side effects if disabled is false
       if (resources && savePreferences && !selectedResources) {
         const defaultResources =
           defaultValue && Array.isArray(defaultValue)
@@ -189,9 +196,6 @@ export const CloudPulseResourcesSelect = React.memo(
               msOverflowStyle: 'none',
               overflow: 'auto',
               scrollbarWidth: 'none',
-              svg: {
-                color: themes.light.color.grey3,
-              },
             },
           },
         }}

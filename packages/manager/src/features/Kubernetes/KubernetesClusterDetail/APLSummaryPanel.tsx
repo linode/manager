@@ -1,5 +1,5 @@
 import { Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import axios from 'axios';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -11,7 +11,7 @@ import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   label: {
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
   mainGridContainer: {

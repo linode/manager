@@ -10,7 +10,7 @@ import type { IamUserPermissions } from '@linode/api-v4';
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
     const user = accountUserFactory.build();
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
@@ -23,19 +23,19 @@ describe('UserDetailsPanel', () => {
     expect(getByText(user.email)).toBeVisible();
   });
 
-  it("renders 'no roles assigned' if the user doesn't have the assigned roles", async () => {
+  it("renders '0' if the user doesn't have the assigned roles", async () => {
     const user = accountUserFactory.build({ restricted: true });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
-    const { getByText } = renderWithTheme(
+    const { getAllByText, getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('no roles assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getAllByText('0')[0]).toBeVisible();
   });
 
-  it("renders '5 roles assigned' if the user has 5 different roles", async () => {
+  it("renders '5' if the user has 5 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserPermissions = {
       account_access: [
@@ -43,16 +43,16 @@ describe('UserDetailsPanel', () => {
         'linode_creator',
         'firewall_creator',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
           roles: ['linode_contributor', 'linode_creator'],
+          type: 'linode',
         },
         {
-          resource_id: 45678901,
-          resource_type: 'firewall',
+          id: 45678901,
           roles: ['firewall_admin', 'firewall_creator'],
+          type: 'firewall',
         },
       ],
     };
@@ -61,11 +61,11 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('5 roles assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText('5')).toBeVisible();
   });
 
-  it("renders '3 roles assigned' if the user has 3 different roles", async () => {
+  it("renders '3' if the user has 3 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserPermissions = {
       account_access: [
@@ -73,11 +73,11 @@ describe('UserDetailsPanel', () => {
         'linode_creator',
         'linode_contributor',
       ],
-      resource_access: [
+      entity_access: [
         {
-          resource_id: 12345678,
-          resource_type: 'linode',
+          id: 12345678,
           roles: ['linode_contributor', 'linode_creator'],
+          type: 'linode',
         },
       ],
     };
@@ -86,15 +86,15 @@ describe('UserDetailsPanel', () => {
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
     );
 
-    expect(getByText('Access')).toBeVisible();
-    expect(getByText('3 roles assigned')).toBeVisible();
+    expect(getByText('Assigned Roles')).toBeVisible();
+    expect(getByText('3')).toBeVisible();
   });
 
   it("renders the user's phone number", async () => {
     const user = accountUserFactory.build({
       verified_phone_number: '+17040000000',
     });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
@@ -106,7 +106,7 @@ describe('UserDetailsPanel', () => {
 
   it("renders the user's 2FA status", async () => {
     const user = accountUserFactory.build({ tfa_enabled: true });
-    const assignedRoles = { account_access: [], resource_access: [] };
+    const assignedRoles = { account_access: [], entity_access: [] };
 
     const { getByText } = renderWithTheme(
       <UserDetailsPanel assignedRoles={assignedRoles} user={user} />

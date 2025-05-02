@@ -1,4 +1,4 @@
-import type { mount } from 'cypress/react18';
+import type { mount } from 'cypress/react';
 import { Labelable } from './commands';
 import type { LinodeVisitOptions } from './login.ts';
 import type { TestTag } from 'support/util/tag';

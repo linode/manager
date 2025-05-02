@@ -1,30 +1,37 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Autocomplete, Notice, TextField, Typography } from '@linode/ui';
+import {
+  useAccountAgreements,
+  useAccountSettings,
+  useMutateAccountAgreements,
+  useProfile,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  Notice,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { CreateBucketSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import {
-  reportAgreementSigningError,
-  useAccountAgreements,
-  useMutateAccountAgreements,
-} from 'src/queries/account/agreements';
-import { useAccountSettings } from 'src/queries/account/settings';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
   useObjectStorageTypesQuery,
 } from 'src/queries/object-storage/queries';
-import { useProfile } from 'src/queries/profile/profile';
 import { sendCreateBucketEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
+import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
 import { BucketRegions } from './BucketRegions';
@@ -224,6 +231,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
   const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
 
+  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'add_buckets',
+  });
+
   const selectedEndpointOption = React.useMemo(() => {
     const currentEndpointType = watch('endpoint_type');
     const currentS3Endpoint = watch('s3_endpoint');
@@ -278,7 +289,12 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={isOpen}
+      title="Create Bucket"
+    >
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -297,7 +313,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               data-testid="label"
               disabled={isRestrictedUser}
               errorText={errors.label?.message}
-              label="Label"
+              label="Bucket Name"
               onBlur={field.onBlur}
               onChange={field.onChange}
               required
@@ -391,7 +407,9 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           primaryButtonProps={{
             'data-testid': 'create-bucket-button',
             disabled:
-              (showGDPRCheckbox && !state.hasSignedAgreement) || isErrorTypes,
+              (showGDPRCheckbox && !state.hasSignedAgreement) ||
+              isErrorTypes ||
+              isBucketCreationRestricted,
             label: 'Create Bucket',
             loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:

@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { MainContentBanner } from './MainContentBanner';
 
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 describe('MainContentBanner', () => {
   const mainContentBanner = {
@@ -37,7 +37,7 @@ describe('MainContentBanner', () => {
     expect(link).toBeVisible();
     expect(link).toBeEnabled();
     expect(link).toHaveRole('link');
-    expect(link).toHaveAttribute('href', 'https://akamai.com');
+    expect(link).toHaveAttribute('href', 'https://akamai.com/');
   });
 
   it('should be dismissable', async () => {

@@ -1,9 +1,9 @@
-import { Notice, Typography } from '@linode/ui';
+import { Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
 import { BLOCK_STORAGE_CLIENT_LIBRARY_UPDATE_REQUIRED_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { NotFound } from 'src/components/NotFound';
 
 import { LinodeVolumeAttachForm } from './LinodeVolumeAttachForm';
 import { LinodeVolumeCreateForm } from './LinodeVolumeCreateForm';
@@ -22,14 +22,12 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
   const { linode, onClose, open, openDetails } = props;
 
   const [mode, setMode] = React.useState<'attach' | 'create'>('create');
-  const [
-    clientLibraryCopyVisible,
-    setClientLibraryCopyVisible,
-  ] = React.useState(false);
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const [clientLibraryCopyVisible, setClientLibraryCopyVisible] =
+    React.useState(false);
+
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const linodeSupportsBlockStorageEncryption = Boolean(
     linode.capabilities?.includes('Block Storage Encryption')
@@ -40,15 +38,23 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
     setClientLibraryCopyVisible(false);
   };
 
+  const closeDrawer = () => {
+    if (mode !== 'create') {
+      setMode('create');
+    }
+    onClose();
+  };
+
   return (
     <Drawer
+      NotFoundComponent={NotFound}
+      onClose={closeDrawer}
+      open={open}
       title={
         mode === 'attach'
           ? `Attach Volume to ${linode.label}`
           : `Create Volume for ${linode.label}`
       }
-      onClose={onClose}
-      open={open}
     >
       <ModeSelection mode={mode} onChange={toggleMode} />
       {isBlockStorageEncryptionFeatureEnabled &&
@@ -62,23 +68,23 @@ export const LinodeVolumeAddDrawer = (props: Props) => {
         )}
       {mode === 'attach' ? (
         <LinodeVolumeAttachForm
+          linode={linode}
+          onClose={closeDrawer}
           setClientLibraryCopyVisible={(visible: boolean) =>
             setClientLibraryCopyVisible(visible)
           }
-          linode={linode}
-          onClose={onClose}
         />
       ) : (
         <LinodeVolumeCreateForm
+          linode={linode}
           linodeSupportsBlockStorageEncryption={
             linodeSupportsBlockStorageEncryption
           }
+          onClose={closeDrawer}
+          openDetails={openDetails}
           setClientLibraryCopyVisible={(visible: boolean) =>
             setClientLibraryCopyVisible(visible)
           }
-          linode={linode}
-          onClose={onClose}
-          openDetails={openDetails}
         />
       )}
     </Drawer>

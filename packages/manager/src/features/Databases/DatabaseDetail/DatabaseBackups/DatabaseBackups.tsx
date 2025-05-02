@@ -102,7 +102,7 @@ export const DatabaseBackups = (props: Props) => {
   const isDefaultDatabase = database?.platform === 'rdbms-default';
 
   const oldestBackup = database?.oldest_restore_time
-    ? DateTime.fromISO(database.oldest_restore_time)
+    ? DateTime.fromISO(`${database.oldest_restore_time}Z`)
     : null;
 
   const unableToRestoreCopy = !oldestBackup
@@ -143,7 +143,7 @@ export const DatabaseBackups = (props: Props) => {
           Databases are automatically backed-up with full daily backups for the
           past 14 days, and binary logs recorded continuously. Full backups are
           version-specific binary backups, which when combined with binary
-          logs allow for consistent recovery to a specific point in time (PITR).
+          logs allow for consistent recovery to a specific point in time (PITR).
         </StyledTypography>
         <Divider spacingBottom={25} spacingTop={25} />
         <Typography variant="h2">Restore a Backup</Typography>
@@ -187,7 +187,13 @@ export const DatabaseBackups = (props: Props) => {
             />
           </RadioGroup>
         )}
-        <Grid container justifyContent="flex-start" mt={2}>
+        <Grid
+          container
+          sx={{
+            justifyContent: 'flex-start',
+            mt: 2,
+          }}
+        >
           <Grid item lg={3} md={4} xs={12}>
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -206,6 +212,9 @@ export const DatabaseBackups = (props: Props) => {
             <FormControl style={{ marginTop: 0 }}>
               {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
               <Autocomplete
+                disabled={
+                  disabled || !selectedDate || versionOption === 'newest'
+                }
                 getOptionDisabled={(option) =>
                   isTimeOutsideBackup(
                     option.value,
@@ -231,9 +240,6 @@ export const DatabaseBackups = (props: Props) => {
                 }}
                 autoComplete={false}
                 className={classes.timeAutocomplete}
-                disabled={
-                  disabled || !selectedDate || versionOption === 'newest'
-                }
                 label=""
                 onChange={(_, newTime) => setSelectedTime(newTime)}
                 options={TIME_OPTIONS}

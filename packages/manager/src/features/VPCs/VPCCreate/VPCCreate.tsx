@@ -1,11 +1,9 @@
-import { Notice, Paper } from '@linode/ui';
+import { ActionsPanel, Notice, Paper } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { VPC_GETTING_STARTED_LINK } from 'src/features/VPCs/constants';
@@ -32,7 +30,7 @@ const VPCCreate = () => {
 
   return (
     <FormProvider {...form}>
-      <DocumentTitleSegment segment="Create VPC" />
+      <DocumentTitleSegment segment="Create a VPC" />
       <LandingHeader
         breadcrumbProps={{
           crumbOverrides: [
@@ -78,10 +76,6 @@ const VPCCreate = () => {
     </FormProvider>
   );
 };
-
-export const vpcCreateLazyRoute = createLazyRoute('/vpcs/create')({
-  component: VPCCreate,
-});
 
 const StyledActionsPanel = styled(ActionsPanel, {
   label: 'StyledActionsPanel',

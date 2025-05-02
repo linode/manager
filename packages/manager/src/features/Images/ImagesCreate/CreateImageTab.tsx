@@ -1,5 +1,12 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAllLinodeDisksQuery,
+  useGrants,
+  useLinodeQuery,
+  useRegionsQuery,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
   Autocomplete,
   Box,
   Button,
@@ -12,38 +19,29 @@ import {
   Typography,
 } from '@linode/ui';
 import { createImageSchema } from '@linode/validation';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { LinodeSelect } from 'src/features/Linodes/LinodeSelect/LinodeSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useCreateImageMutation } from 'src/queries/images';
-import { useAllLinodeDisksQuery } from 'src/queries/linodes/disks';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
-import { useGrants } from 'src/queries/profile/profile';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { getQueryParamsFromQueryString } from 'src/utilities/queryParams';
 
 import type { CreateImagePayload } from '@linode/api-v4';
-import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 export const CreateImageTab = () => {
-  const location = useLocation();
-
-  const queryParams = React.useMemo(
-    () =>
-      getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-        location.search
-      ),
-    [location.search]
-  );
+  const {
+    selectedDisk: selectedDiskFromSearch,
+    selectedLinode: selectedLinodeFromSearch,
+  } = useSearch({
+    strict: false,
+  });
+  const navigate = useNavigate();
 
   const {
     control,
@@ -55,7 +53,7 @@ export const CreateImageTab = () => {
     watch,
   } = useForm<CreateImagePayload>({
     defaultValues: {
-      disk_id: +queryParams.selectedDisk,
+      disk_id: selectedDiskFromSearch ? +selectedDiskFromSearch : undefined,
     },
     mode: 'onBlur',
     resolver: yupResolver(createImageSchema),
@@ -64,7 +62,6 @@ export const CreateImageTab = () => {
   const flags = useFlags();
 
   const { enqueueSnackbar } = useSnackbar();
-  const { push } = useHistory();
 
   const { mutateAsync: createImage } = useCreateImageMutation();
 
@@ -85,7 +82,10 @@ export const CreateImageTab = () => {
       enqueueSnackbar('Image scheduled for creation.', {
         variant: 'info',
       });
-      push('/images');
+      navigate({
+        search: () => ({}),
+        to: '/images',
+      });
     } catch (errors) {
       for (const error of errors) {
         if (error.field) {
@@ -98,7 +98,7 @@ export const CreateImageTab = () => {
   });
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<null | number>(
-    queryParams.selectedLinode ? +queryParams.selectedLinode : null
+    selectedLinodeFromSearch ? +selectedLinodeFromSearch : null
   );
 
   const { data: selectedLinode } = useLinodeQuery(
@@ -141,15 +141,11 @@ export const CreateImageTab = () => {
     (r) => r.id === selectedLinode?.region
   );
 
-  const linodeIsInDistributedRegion =
-    selectedLinodeRegion?.site_type === 'distributed';
-
   /**
    * The 'Object Storage' capability indicates a region can store images
    */
-  const linodeRegionSupportsImageStorage = selectedLinodeRegion?.capabilities.includes(
-    'Object Storage'
-  );
+  const linodeRegionSupportsImageStorage =
+    selectedLinodeRegion?.capabilities.includes('Object Storage');
 
   const linodeSelectHelperText = grants?.linode.some(
     (grant) => grant.permissions === 'read_only'
@@ -167,7 +163,6 @@ export const CreateImageTab = () => {
               isSingular: false,
               resourceType: 'Images',
             })}
-            important
             variant="error"
           />
         )}
@@ -182,8 +177,12 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Select Linode & Disk</Typography>
             <Typography sx={{ maxWidth: { md: '80%', sm: '100%' } }}>
-              Custom images are billed monthly at $0.10/GB. The disk you target
-              for an image needs to meet specific{' '}
+              Custom images are{' '}
+              <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image#capture-an-image">
+                encrypted
+              </Link>{' '}
+              and billed monthly at $0.10/GB. The disk you target for an image
+              needs to meet specific{' '}
               <Link to="https://techdocs.akamai.com/cloud-computing/docs/capture-an-image">
                 requirements
               </Link>
@@ -213,33 +212,18 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
-            {selectedLinode &&
-              !linodeRegionSupportsImageStorage &&
-              flags.imageServiceGen2 &&
-              flags.imageServiceGen2Ga && (
-                <Notice variant="warning">
-                  This Linode’s region doesn’t support local image storage. This
-                  image will be stored in the core compute region that’s{' '}
-                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#regions-and-captured-custom-images">
-                    geographically closest
-                  </Link>
-                  . After it’s stored, you can replicate it to other{' '}
-                  <Link to="https://www.linode.com/global-infrastructure/">
-                    core compute regions
-                  </Link>
-                  .
-                </Notice>
-              )}
-            {linodeIsInDistributedRegion && !flags.imageServiceGen2Ga && (
+            {selectedLinode && !linodeRegionSupportsImageStorage && (
               <Notice variant="warning">
-                This Linode is in a distributed compute region. These regions
-                can't store images. The image is stored in the core compute
-                region that is{' '}
-                <Link to="https://www.linode.com/global-infrastructure/">
+                This Linode’s region doesn’t support local image storage. This
+                image will be stored in the core compute region that’s{' '}
+                <Link to="https://techdocs.akamai.com/cloud-computing/docs/images#regions-and-captured-custom-images">
                   geographically closest
                 </Link>
-                . After it's stored, you can replicate it to other core compute
-                regions.
+                . After it’s stored, you can replicate it to other{' '}
+                <Link to="https://www.linode.com/global-infrastructure/">
+                  core compute regions
+                </Link>
+                .
               </Notice>
             )}
             <Controller

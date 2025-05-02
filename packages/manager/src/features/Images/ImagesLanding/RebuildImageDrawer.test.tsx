@@ -1,7 +1,8 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { imageFactory, linodeFactory } from 'src/factories';
+import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -11,6 +12,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 const props = {
   changeLinode: vi.fn(),
   image: imageFactory.build(),
+  isFetching: false,
   onClose: vi.fn(),
   open: true,
 };

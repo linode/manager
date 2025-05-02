@@ -2,10 +2,11 @@ import {
   getActiveLongviewPlan,
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
+import { useAccountSettings } from '@linode/queries';
+import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -19,7 +20,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
-import { useAccountSettings } from 'src/queries/account/settings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { SubscriptionDialog } from './SubscriptionDialog';
@@ -54,13 +54,10 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   const isManaged = Boolean(accountSettings?.managed);
 
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [newClientLoading, setNewClientLoading] =
+    React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -121,6 +118,17 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   return (
     <>
+      {isLongviewCreationRestricted && (
+        <Notice
+          sx={{ marginBottom: 2 }}
+          text={getRestrictedResourceText({
+            action: 'create',
+            isSingular: false,
+            resourceType: 'Longview Clients',
+          })}
+          variant="error"
+        />
+      )}
       <LandingHeader
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
@@ -161,7 +169,7 @@ export const LongviewLanding = (props: LongviewProps) => {
       </StyledTabs>
       <SubscriptionDialog
         clientLimit={
-          isEmpty(activeSubscriptionRequestHook.data)
+          Object.keys(activeSubscriptionRequestHook.data).length === 0
             ? 10
             : (activeSubscriptionRequestHook.data as LongviewSubscription)
                 .clients_included

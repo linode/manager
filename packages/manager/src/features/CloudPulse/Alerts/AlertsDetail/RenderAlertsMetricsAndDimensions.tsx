@@ -1,4 +1,5 @@
 import { Divider } from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 
@@ -33,7 +34,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
     return ruleCriteria.rules.map(
       (
         {
-          aggregation_type: aggregationType,
+          aggregate_function: aggregationType,
           dimension_filters: dimensionFilters,
           label,
           operator,
@@ -68,7 +69,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   }) => [
                     dimensionLabel,
                     dimensionOperatorTypeMap[dimensionOperator],
-                    value,
+                    capitalize(value),
                   ]
                 )}
                 label="Dimension Filter"

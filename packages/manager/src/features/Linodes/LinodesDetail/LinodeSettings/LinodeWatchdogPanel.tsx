@@ -8,13 +8,10 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import {
-  useLinodeQuery,
-  useLinodeUpdateMutation,
-} from 'src/queries/linodes/linodes';
+import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;
@@ -37,13 +34,24 @@ export const LinodeWatchdogPanel = (props: Props) => {
       defaultExpanded
       heading="Shutdown Watchdog"
     >
-      <Grid alignItems="center" container spacing={2}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          alignItems: 'center',
+        }}
+      >
         {Boolean(error) && (
-          <Grid xs={12}>
+          <Grid size={12}>
             <Notice text={error?.[0].reason} variant="error" />
           </Grid>
         )}
-        <Grid md={2} xs={12}>
+        <Grid
+          size={{
+            md: 2,
+            xs: 12,
+          }}
+        >
           <FormControlLabel
             aria-label={
               linode?.watchdog_enabled
@@ -68,7 +76,14 @@ export const LinodeWatchdogPanel = (props: Props) => {
             disabled={isReadOnly}
           />
         </Grid>
-        <Grid lg={8} md={10} xl={6} xs={12}>
+        <Grid
+          size={{
+            lg: 8,
+            md: 10,
+            xl: 6,
+            xs: 12,
+          }}
+        >
           <Typography data-qa-watchdog-desc>
             Shutdown Watchdog, also known as Lassie, is a Linode Manager feature
             capable of automatically rebooting your Linode if it powers off

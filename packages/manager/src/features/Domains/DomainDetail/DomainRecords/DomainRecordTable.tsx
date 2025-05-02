@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -61,9 +62,20 @@ export const DomainRecordTable = (props: DomainRecordTableProps) => {
                         <StyledTableCell
                           data-qa-column={title}
                           key={columnIndex}
-                          parentColumn={title}
                         >
-                          {render(data)}
+                          {title === 'Email' || title === 'IP Address' ? (
+                            <MaskableText
+                              isToggleable
+                              length={
+                                title === 'IP Address' ? 'ipv6' : undefined
+                              }
+                              text={data.toString()}
+                            >
+                              <>{render(data)}</>
+                            </MaskableText>
+                          ) : (
+                            render(data)
+                          )}
                         </StyledTableCell>
                       );
                     })}

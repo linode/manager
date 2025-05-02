@@ -94,5 +94,5 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const BoldTypography = styled(StyledTypography)(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
 }));

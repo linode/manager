@@ -21,13 +21,11 @@ describe('Image Table Row', () => {
     onDeploy: vi.fn(),
     onEdit: vi.fn(),
     onManageRegions: vi.fn(),
-    onRestore: vi.fn(),
-    onRetry: vi.fn(),
+    onRebuild: vi.fn(),
   };
 
-  it('should render an image row with Image Service Gen2 enabled', async () => {
+  it('should render an image row with details', async () => {
     const image = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-sites'],
       regions: [
         { region: 'us-east', status: 'available' },
         { region: 'us-southeast', status: 'available' },
@@ -37,16 +35,13 @@ describe('Image Table Row', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />
-      )
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
     );
 
     // Check to see if the row rendered some data
     expect(getByText(image.label)).toBeVisible();
     expect(getByText(image.id)).toBeVisible();
     expect(getByText('Available')).toBeVisible();
-    expect(getByText('Cloud-init, Distributed')).toBeVisible();
     expect(getByText('2 Regions')).toBeVisible();
     expect(getByText('0.29 GB')).toBeVisible(); // Size is converted from MB to GB - 300 / 1024 = 0.292
     expect(getByText('0.59 GB')).toBeVisible(); // Size is converted from MB to GB - 600 / 1024 = 0.585
@@ -62,17 +57,14 @@ describe('Image Table Row', () => {
     expect(getByText('Delete')).toBeVisible();
   });
 
-  it('should show a cloud-init icon with a tooltip when Image Service Gen 2 GA is enabled and the image supports cloud-init', () => {
+  it('should show a cloud-init icon if the image supports it', () => {
     const image = imageFactory.build({
       capabilities: ['cloud-init'],
       regions: [{ region: 'us-east', status: 'available' }],
     });
 
     const { getByLabelText } = renderWithTheme(
-      wrapWithTableBody(
-        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />,
-        { flags: { imageServiceGen2: true, imageServiceGen2Ga: true } }
-      )
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
     );
 
     expect(
@@ -80,29 +72,48 @@ describe('Image Table Row', () => {
     ).toBeVisible();
   });
 
-  it('does not show the compatibility column when Image Service Gen2 GA is enabled', () => {
+  it('should show an unencrypted icon if the image is not "Gen2" (does not have the distributed-site capability)', () => {
     const image = imageFactory.build({
-      capabilities: ['cloud-init', 'distributed-sites'],
+      capabilities: ['cloud-init'],
+      regions: [],
+      status: 'available',
     });
 
-    const { queryByText } = renderWithTheme(
-      wrapWithTableBody(
-        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />,
-        { flags: { imageServiceGen2: true, imageServiceGen2Ga: true } }
-      )
+    const { getByLabelText } = renderWithTheme(
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
     );
 
-    expect(queryByText('Cloud-init, Distributed')).not.toBeInTheDocument();
+    expect(
+      getByLabelText('This image is not encrypted.', { exact: false })
+    ).toBeVisible();
   });
 
-  it('should show N/A if multiRegionsEnabled is true, but the Image does not have any regions', () => {
+  it('should not show an unencrypted icon when a "Gen2" Image is still "creating"', () => {
+    // The API does not populate the "distributed-sites" capability until the image is done creating.
+    // We must account for this because the image would show as "Unencrypted" while it is creating,
+    // then suddenly show as encrypted once it was done creating. We don't want that.
+    // Therefore, we decided we won't show the unencrypted icon until the image is done creating to
+    // prevent confusion.
+    const image = imageFactory.build({
+      capabilities: ['cloud-init'],
+      status: 'creating',
+      type: 'manual',
+    });
+
+    const { queryByLabelText } = renderWithTheme(
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
+    );
+
+    expect(
+      queryByLabelText('This image is not encrypted.', { exact: false })
+    ).toBeNull();
+  });
+
+  it('should show N/A if Image does not have any regions', () => {
     const image = imageFactory.build({ regions: [] });
 
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />,
-        { flags: { imageServiceGen2: true } }
-      )
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
     );
 
     expect(getByText('N/A')).toBeVisible();
@@ -114,9 +125,7 @@ describe('Image Table Row', () => {
     });
 
     const { getByLabelText, getByText } = renderWithTheme(
-      wrapWithTableBody(
-        <ImageRow handlers={handlers} image={image} multiRegionsEnabled />
-      )
+      wrapWithTableBody(<ImageRow handlers={handlers} image={image} />)
     );
 
     // Open action menu
@@ -133,13 +142,9 @@ describe('Image Table Row', () => {
     expect(handlers.onDeploy).toBeCalledWith(image.id);
 
     await userEvent.click(getByText('Rebuild an Existing Linode'));
-    expect(handlers.onRestore).toBeCalledWith(image);
+    expect(handlers.onRebuild).toBeCalledWith(image);
 
     await userEvent.click(getByText('Delete'));
-    expect(handlers.onDelete).toBeCalledWith(
-      image.label,
-      image.id,
-      image.status
-    );
+    expect(handlers.onDelete).toBeCalledWith(image);
   });
 });

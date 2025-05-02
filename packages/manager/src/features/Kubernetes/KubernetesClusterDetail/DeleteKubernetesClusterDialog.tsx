@@ -19,8 +19,7 @@ const CLUSTER_DELETION_WARNINGS = [
     text: "Deleting a cluster is permanent and can't be undone.",
   },
   {
-    text:
-      'Attached Block Storage Volumes or NodeBalancers must be deleted separately.',
+    text: 'Attached Block Storage Volumes or NodeBalancers must be deleted separately.',
   },
 ];
 
@@ -55,6 +54,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Kubernetes',
       }}
+      errors={error}
       expand
       label={'Cluster Name'}
       loading={isDeleting}
@@ -63,31 +63,15 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       open={open}
       title={`Delete Cluster ${clusterLabel}`}
     >
-      {error ? <Notice text={error?.[0].reason} variant="error" /> : null}
       <Notice variant="warning">
-        <Typography component="div" sx={{ fontSize: '0.875rem' }}>
+        <Typography>
           <strong>Warning:</strong>
-          <List
-            sx={{
-              listStyleType: 'disc',
-              margin: '5px 0px 0px',
-              paddingLeft: '15px',
-            }}
-            dense
-          >
-            {CLUSTER_DELETION_WARNINGS.map((notice, idx) => (
-              <ListItem
-                sx={{
-                  display: 'list-item',
-                }}
-                disableGutters
-                key={idx}
-              >
-                {notice.text}
-              </ListItem>
-            ))}
-          </List>
         </Typography>
+        <List>
+          {CLUSTER_DELETION_WARNINGS.map((notice, idx) => (
+            <ListItem key={idx}>{notice.text}</ListItem>
+          ))}
+        </List>
       </Notice>
     </TypeToConfirmDialog>
   );

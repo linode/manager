@@ -3,14 +3,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
+import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
+import { useRegionsQuery } from '@linode/queries';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -75,7 +75,7 @@ export const Images = () => {
   if (images?.length === 0) {
     return (
       <Paper>
-        <Placeholder icon={ImageIcon} isEntity title="My Images">
+        <Placeholder icon={ComputeIcon} isEntity title="My Images">
           <Typography variant="subtitle1">
             You don&rsquo;t have any private Images. Visit the{' '}
             <Link to="/images">Images section</Link> to create an Image from one

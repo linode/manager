@@ -1,13 +1,13 @@
+import { linodeIPFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
-import { LinodeConfigInterfaceFactoryWithVPC } from 'src/factories/linodeConfigInterfaceFactory';
-import { linodeIPFactory } from 'src/factories/linodes';
+import { vpcIPFactory } from 'src/factories';
 import {
+  createVPCIPv4Display,
   ipResponseToDisplayRows,
-  vpcConfigInterfaceToDisplayRows,
 } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
-import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeIPAddressRow } from './LinodeIPAddressRow';
@@ -16,9 +16,7 @@ import type { IPAddressRowHandlers } from './LinodeIPAddressRow';
 
 const ips = linodeIPFactory.build();
 const ipDisplay = ipResponseToDisplayRows(ips)[0];
-const ipDisplayVPC = vpcConfigInterfaceToDisplayRows(
-  LinodeConfigInterfaceFactoryWithVPC.build()
-)[0];
+const ipDisplayVPC = createVPCIPv4Display([vpcIPFactory.build()])[0];
 
 const handlers: IPAddressRowHandlers = {
   handleOpenEditRDNS: vi.fn(),
@@ -33,6 +31,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
@@ -55,6 +54,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByText, queryByText } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
@@ -75,6 +75,7 @@ describe('LinodeIPAddressRow', () => {
     const { findByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={true}
           linodeId={1}
           readOnly={false}
@@ -89,7 +90,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(deleteBtn);
     const publicIpsUnassignedTooltip = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
 
     const editRDNSBtn = getByTestId('action-menu-item-edit-rdns');
@@ -98,7 +99,7 @@ describe('LinodeIPAddressRow', () => {
     fireEvent.mouseEnter(editRDNSBtn);
     const publicIpsUnassignedTooltip2 = await findByRole('tooltip');
     expect(publicIpsUnassignedTooltip2).toContainHTML(
-      PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
+      PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
     );
   });
 
@@ -106,6 +107,7 @@ describe('LinodeIPAddressRow', () => {
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
         <LinodeIPAddressRow
+          isLinodeInterface={false}
           isVPCOnlyLinode={false}
           linodeId={1}
           readOnly={false}
@@ -127,16 +129,16 @@ describe('LinodeIPAddressRow', () => {
 
 describe('ipResponseToDisplayRows', () => {
   it('should not return a Public IPv4 row if there is a VPC interface with 1:1 NAT', () => {
-    const ipDisplays = ipResponseToDisplayRows(
-      ips,
-      LinodeConfigInterfaceFactoryWithVPC.build()
-    );
+    const ipDisplays = ipResponseToDisplayRows({
+      ...ips,
+      ipv4: { ...ips.ipv4, vpc: [vpcIPFactory.build()] },
+    });
 
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'IPv4 – Public')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'Public – IPv4')
     ).toBeUndefined();
     expect(
-      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC IPv4 – NAT')
+      ipDisplays.find((ipDisplay) => ipDisplay.type === 'VPC NAT – IPv4')
     ).toBeDefined();
   });
 });

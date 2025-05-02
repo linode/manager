@@ -1,42 +1,39 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
-import {
-  accountFactory,
-  linodeFactory,
-  placementGroupFactory,
-} from 'src/factories';
-import { regionFactory } from 'src/factories';
-import { ui } from 'support/ui/';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreatePlacementGroup,
   mockGetPlacementGroups,
 } from 'support/intercepts/placement-groups';
-import { randomNumber, randomString } from 'support/util/random';
-import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
+import { mockGetRegions } from 'support/intercepts/regions';
+import { ui } from 'support/ui/';
 import { linodeCreatePage } from 'support/ui/pages';
+import { randomNumber, randomString } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
+
+import { accountFactory, placementGroupFactory } from 'src/factories';
+import { CANNOT_CHANGE_PLACEMENT_GROUP_POLICY_MESSAGE } from 'src/features/PlacementGroups/constants';
 
 const mockAccount = accountFactory.build();
 
 const mockNewarkRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes', 'Placement Group'],
+    country: 'us',
     id: 'us-east',
     label: 'Newark, NJ',
-    country: 'us',
   })
 );
 
 const mockDallasRegion = extendRegion(
   regionFactory.build({
     capabilities: ['Linodes'],
+    country: 'us',
     id: 'us-central',
     label: 'Dallas, TX',
-    country: 'us',
   })
 );
 
@@ -55,7 +52,7 @@ describe('Linode create flow with Placement Group', () => {
    */
   it('can create a linode with a newly created Placement Group', () => {
     cy.visitWithLogin('/linodes/create');
-
+    cy.wait('@getRegions');
     cy.findByText(
       'Select a Region for your Linode to see existing placement groups.'
     ).should('be.visible');
@@ -63,7 +60,9 @@ describe('Linode create flow with Placement Group', () => {
     // Region without capability
     // Choose region
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockDallasRegion.label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockDallasRegion.label, mockRegions)
+      .click();
 
     // Choose plan
     cy.findByText('Shared CPU').click();
@@ -84,7 +83,9 @@ describe('Linode create flow with Placement Group', () => {
     // Region with capability
     // Choose region
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockNewarkRegion.label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockNewarkRegion.label, mockRegions)
+      .click();
 
     // Choose plan
     cy.findByText('Shared CPU').click();
@@ -109,11 +110,11 @@ describe('Linode create flow with Placement Group', () => {
       .click();
 
     const mockPlacementGroup = placementGroupFactory.build({
-      label: 'pg-1-us-east',
-      region: mockRegions[0].id,
-      placement_group_type: 'anti_affinity:local',
-      placement_group_policy: 'strict',
       is_compliant: true,
+      label: 'pg-1-us-east',
+      placement_group_policy: 'strict',
+      placement_group_type: 'anti_affinity:local',
+      region: mockRegions[0].id,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
@@ -173,20 +174,22 @@ describe('Linode create flow with Placement Group', () => {
     const linodeLabel = 'linode-with-placement-group';
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
-      region: mockRegions[0].id,
       placement_group: {
         id: mockPlacementGroup.id,
       },
+      region: mockRegions[0].id,
     });
 
     // Confirm the Placement group assignment is accounted for in the summary.
     cy.findByText('Assigned to Placement Group')
-      .scrollIntoView()
-      .should('be.visible');
+      .as('qaAssigned')
+      .scrollIntoView();
+    cy.get('@qaAssigned').should('be.visible');
 
     // Type in a label, password and submit the form.
     mockCreateLinode(mockLinode).as('createLinode');
-    cy.get('#linode-label').clear().type('linode-with-placement-group');
+    cy.get('#linode-label').clear();
+    cy.focused().type('linode-with-placement-group');
     cy.get('#root-password').type(randomString(32));
 
     cy.findByText('Create Linode').should('be.enabled').click();
@@ -210,21 +213,21 @@ describe('Linode create flow with Placement Group', () => {
    */
   it('can assign existing Placement Group during Linode Create flow', () => {
     const mockPlacementGroup = placementGroupFactory.build({
-      label: 'pg-1-us-east',
-      region: mockRegions[0].id,
-      placement_group_type: 'anti_affinity:local',
-      placement_group_policy: 'strict',
       is_compliant: true,
+      label: 'pg-1-us-east',
+      placement_group_policy: 'strict',
+      placement_group_type: 'anti_affinity:local',
+      region: mockRegions[0].id,
     });
 
     const linodeLabel = 'linode-with-placement-group';
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
       label: linodeLabel,
-      region: mockRegions[0].id,
       placement_group: {
         id: mockPlacementGroup.id,
       },
+      region: mockRegions[0].id,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
@@ -242,9 +245,8 @@ describe('Linode create flow with Placement Group', () => {
     // Confirm that mocked Placement Group is shown in the Autocomplete, and then select it.
     cy.findByText(
       `Placement Groups in ${mockNewarkRegion.label} (${mockNewarkRegion.id})`
-    )
-      .click()
-      .type(`${mockPlacementGroup.label}`);
+    ).click();
+    cy.focused().type(`${mockPlacementGroup.label}`);
     ui.autocompletePopper
       .findByTitle(mockPlacementGroup.label)
       .should('be.visible')
@@ -252,8 +254,9 @@ describe('Linode create flow with Placement Group', () => {
 
     // Confirm the Placement group assignment is accounted for in the summary.
     cy.findByText('Assigned to Placement Group')
-      .scrollIntoView()
-      .should('be.visible');
+      .as('qaAssigned')
+      .scrollIntoView();
+    cy.get('@qaAssigned').should('be.visible');
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button

@@ -3,19 +3,17 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
+import { useAccountSettings } from '@linode/queries';
+import { isFeatureEnabledV2, useErrors, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useErrors } from 'src/hooks/useErrors';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOpenClose } from 'src/hooks/useOpenClose';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountSettings } from 'src/queries/account/settings';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 import {
   sendCreateAccessKeyEvent,
   sendEditAccessKeyEvent,
@@ -63,16 +61,12 @@ export const AccessKeyLanding = (props: Props) => {
     page_size: pagination.pageSize,
   });
 
-  const {
-    data: accountSettings,
-    refetch: requestAccountSettings,
-  } = useAccountSettings();
+  const { data: accountSettings, refetch: requestAccountSettings } =
+    useAccountSettings();
 
   // Key to display in Confirmation Modal upon creation
-  const [
-    keyToDisplay,
-    setKeyToDisplay,
-  ] = React.useState<ObjectStorageKey | null>(null);
+  const [keyToDisplay, setKeyToDisplay] =
+    React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
   const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
@@ -268,7 +262,9 @@ export const AccessKeyLanding = (props: Props) => {
 
   return (
     <div>
-      <DocumentTitleSegment segment="Access Keys" />
+      <DocumentTitleSegment
+        segment={`${accessDrawerOpen ? `Create an Access Key` : `Access Keys`}`}
+      />
       <AccessKeyTable
         data={data?.data}
         data-qa-access-key-table
@@ -286,6 +282,7 @@ export const AccessKeyLanding = (props: Props) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
+
       {isObjMultiClusterEnabled ? (
         <OMC_AccessKeyDrawer
           isRestrictedUser={props.isRestrictedUser}

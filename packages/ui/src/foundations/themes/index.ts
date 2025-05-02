@@ -5,32 +5,7 @@ import { deepmerge } from '@mui/utils';
 import { darkTheme } from './dark';
 import { lightTheme } from './light';
 
-import type {
-  AccentTypes as AccentTypesLight,
-  ActionTypes as ActionTypesLight,
-  BackgroundTypes as BackgroundTypesLight,
-  BorderRadiusTypes,
-  BorderTypes as BorderTypesLight,
-  ChartTypes,
-  ColorTypes,
-  ContentTypes as ContentTypesLight,
-  ElevationTypes as ElevationTypesLight,
-  FontTypes,
-  InteractionTypes as InteractionTypesLight,
-  RadiusTypes,
-  SpacingTypes,
-  TypographyTypes,
-} from '@linode/design-language-system';
-import type {
-  AccentTypes as AccentTypesDark,
-  ActionTypes as ActionTypesDark,
-  BackgroundTypes as BackgroundTypesDark,
-  BorderTypes as BorderTypesDark,
-  ContentTypes as ContentTypesDark,
-  ElevationTypes as ElevationTypesDark,
-  InteractionTypes as InteractionTypesDark,
-} from '@linode/design-language-system/themes/dark';
-import type { latoWeb } from '../fonts';
+import type { SpacingFunction } from '../utils';
 // Types & Interfaces
 import type {
   customDarkModeOptions,
@@ -43,18 +18,29 @@ import type {
   notificationToast,
   textColors,
 } from './light';
+import type {
+  AliasTypes as AliasTypesLight,
+  ColorTypes,
+  ComponentTypes as ComponentTypesLight,
+  FontTypes,
+  SpacingTypes,
+  TypographyTypes,
+} from '@linode/design-language-system';
+import type {
+  AliasTypes as AliasTypesDark,
+  ComponentTypes as ComponentTypesDark,
+} from '@linode/design-language-system/themes/dark';
 
 export type ThemeName = 'dark' | 'light';
 
-type AccentTypes = MergeTypes<AccentTypesLight, AccentTypesDark>;
-type ActionTypes = MergeTypes<ActionTypesLight, ActionTypesDark>;
-type BackgroundTypes = MergeTypes<BackgroundTypesLight, BackgroundTypesDark>;
-type BorderTypes = MergeTypes<BorderTypesLight, BorderTypesDark>;
-type ContentTypes = MergeTypes<ContentTypesLight, ContentTypesDark>;
-type ElevationTypes = MergeTypes<ElevationTypesLight, ElevationTypesDark>;
-type InteractionTypes = MergeTypes<InteractionTypesLight, InteractionTypesDark>;
-
-type Fonts = typeof latoWeb;
+type Fonts = {
+  bold: TypographyTypes['Body']['Bold'];
+  extrabold: TypographyTypes['Body']['Extrabold'];
+  italic: TypographyTypes['Body']['Italic'];
+  list: TypographyTypes['Body']['List'];
+  normal: TypographyTypes['Body']['Regular'];
+  semibold: TypographyTypes['Body']['Semibold'];
+};
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
   Omit<B, keyof A> &
@@ -85,13 +71,16 @@ type NotificationToast = MergeTypes<
   DarkNotificationToast
 >;
 
+type AliasTypes = MergeTypes<AliasTypesDark, AliasTypesLight>;
+type ComponentTypes = MergeTypes<ComponentTypesDark, ComponentTypesLight>;
+
 /**
  * Augmenting the Theme and ThemeOptions.
  * This allows us to add custom fields to the theme.
  * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {
-  interface Theme {
+  export interface Theme {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -106,29 +95,19 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles: any;
     name: ThemeName;
     notificationToast: NotificationToast;
+    spacingFunction: SpacingFunction;
     textColors: TextColors;
     tokens: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius: BorderRadiusTypes;
+      alias: AliasTypes;
       color: ColorTypes;
+      component: ComponentTypes;
       font: FontTypes;
       spacing: SpacingTypes;
-      // ----------------------------------------
-      accent: AccentTypes;
-      action: ActionTypes;
-      background: BackgroundTypes;
-      border: BorderTypes;
-      chart: ChartTypes;
-      content: ContentTypes;
-      elevation: ElevationTypes;
-      interaction: InteractionTypes;
-      radius: RadiusTypes;
-      typography: TypographyTypes;
     };
     visually: any;
   }
 
-  interface ThemeOptions {
+  export interface ThemeOptions {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;
     applyLinkStyles?: any;
@@ -143,24 +122,14 @@ declare module '@mui/material/styles/createTheme' {
     inputStyles?: any;
     name: ThemeName;
     notificationToast?: NotificationToast;
+    spacingFunction?: SpacingFunction;
     textColors?: DarkModeTextColors | LightModeTextColors;
     tokens?: {
-      //  ---- Global tokens: theme agnostic ----
-      borderRadius?: BorderRadiusTypes;
-      color?: ColorTypes;
-      font?: FontTypes;
-      spacing?: SpacingTypes;
-      // ----------------------------------------
-      accent?: AccentTypes;
-      action?: ActionTypes;
-      background?: BackgroundTypes;
-      border?: BorderTypes;
-      chart?: ChartTypes;
-      content?: ContentTypes;
-      elevation?: ElevationTypes;
-      interaction?: InteractionTypes;
-      radius?: RadiusTypes;
-      typography?: TypographyTypes;
+      alias: AliasTypes;
+      color: ColorTypes;
+      component: ComponentTypes;
+      font: FontTypes;
+      spacing: SpacingTypes;
     };
     visually?: any;
   }

@@ -23,6 +23,7 @@ import {
 } from './EventsLanding.styles';
 
 import type { Filter } from '@linode/api-v4';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 interface Props {
   emptyMessage?: string; // Custom message for the empty state (i.e. no events).
@@ -91,6 +92,7 @@ export const EventsLanding = (props: Props) => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Events" />
       {/* Only display this title on the main Events landing page */}
       {!entityId && <StyledH1Header title="Events" />}
       <Table aria-label="List of Events">

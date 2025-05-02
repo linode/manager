@@ -1,5 +1,6 @@
-import { CircleProgress } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { useLinodeQuery, usePreferences } from '@linode/queries';
+import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import {
   matchPath,
@@ -10,19 +11,20 @@ import {
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
-import { useLinodeQuery } from 'src/queries/linodes/linodes';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 
-const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
-const LinodeNetwork = React.lazy(
-  () => import('./LinodeNetworking/LinodeNetwork')
+const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
+const LinodeNetworking = React.lazy(() =>
+  import('./LinodeNetworking/LinodeNetworking').then((module) => ({
+    default: module.LinodeNetworking,
+  }))
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
 const LinodeConfigurations = React.lazy(
@@ -32,6 +34,7 @@ const LinodeBackup = React.lazy(() => import('./LinodeBackup/LinodeBackups'));
 const LinodeActivity = React.lazy(
   () => import('./LinodeActivity/LinodeActivity')
 );
+const LinodeAlerts = React.lazy(() => import('./LinodeAlerts/LinodeAlerts'));
 const LinodeSettings = React.lazy(
   () => import('./LinodeSettings/LinodeSettings')
 );
@@ -42,6 +45,10 @@ const LinodesDetailNavigation = () => {
   const { data: linode, error } = useLinodeQuery(id);
   const { url } = useRouteMatch();
   const history = useHistory();
+  const flags = useFlags();
+  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsBeta
+  );
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -53,8 +60,12 @@ const LinodesDetailNavigation = () => {
 
   const tabs = [
     {
-      routeName: `${url}/analytics`,
-      title: 'Analytics',
+      chip:
+        flags.aclpIntegration && isAclpMetricsPreferenceBeta ? (
+          <BetaChip />
+        ) : null,
+      routeName: `${url}/metrics`,
+      title: 'Metrics',
     },
     {
       routeName: `${url}/networking`,
@@ -80,13 +91,20 @@ const LinodesDetailNavigation = () => {
       title: 'Activity Feed',
     },
     {
+      routeName: `${url}/alerts`,
+      title: 'Alerts',
+    },
+    {
       routeName: `${url}/settings`,
       title: 'Settings',
     },
   ].filter((thisTab) => !thisTab.hidden);
 
   const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
+    return (
+      Boolean(matchPath(p, { path: location.pathname })) ||
+      location.pathname.includes(p)
+    );
   };
 
   const getIndex = () => {
@@ -128,7 +146,7 @@ const LinodesDetailNavigation = () => {
               spacingTop={32}
               variant="warning"
             >
-              <Grid xs={12}>{text}</Grid>
+              <Grid size={12}>{text}</Grid>
             </DismissibleBanner>
           ) : null
         }
@@ -139,10 +157,10 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeSummary linodeCreated={linode?.created} />
+                <LinodeMetrics linodeCreated={linode?.created} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeNetwork />
+                <LinodeNetworking />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>
@@ -160,6 +178,9 @@ const LinodesDetailNavigation = () => {
               )}
               <SafeTabPanel index={idx++}>
                 <LinodeActivity />
+              </SafeTabPanel>
+              <SafeTabPanel index={idx++}>
+                <LinodeAlerts />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeSettings />

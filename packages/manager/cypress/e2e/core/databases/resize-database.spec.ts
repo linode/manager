@@ -2,9 +2,11 @@
  * @file DBaaS integration tests for resize operations.
  */
 
-import { randomNumber, randomIp, randomString } from 'support/util/random';
-import { databaseFactory, possibleStatuses } from 'src/factories/databases';
-import { ui } from 'support/ui';
+import { accountFactory } from '@src/factories';
+import {
+  databaseConfigurationsResize,
+  mockDatabaseNodeTypes,
+} from 'support/constants/databases';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
   mockGetDatabase,
@@ -13,12 +15,12 @@ import {
   mockResize,
   mockResizeProvisioningDatabase,
 } from 'support/intercepts/databases';
-import {
-  databaseClusterConfiguration,
-  databaseConfigurationsResize,
-  mockDatabaseNodeTypes,
-} from 'support/constants/databases';
-import { accountFactory } from '@src/factories';
+import { ui } from 'support/ui';
+import { randomIp, randomNumber, randomString } from 'support/util/random';
+
+import { databaseFactory, possibleStatuses } from 'src/factories/databases';
+
+import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 /**
  * Resizes a current database cluster to a larger plan size.
@@ -39,7 +41,8 @@ const resizeDatabase = (initialLabel: string) => {
     .findByTitle(`Resize Database Cluster ${initialLabel}?`)
     .should('be.visible')
     .within(() => {
-      cy.findByLabelText('Cluster Name').click().type(initialLabel);
+      cy.findByLabelText('Cluster Name').click();
+      cy.focused().type(initialLabel);
       ui.buttonGroup
         .findButtonByTitle('Resize Cluster')
         .should('be.visible')
@@ -49,7 +52,7 @@ const resizeDatabase = (initialLabel: string) => {
 
 describe('Resizing existing clusters', () => {
   databaseConfigurationsResize.forEach(
-    (configuration: databaseClusterConfiguration) => {
+    (configuration: DatabaseClusterConfiguration) => {
       describe(`Resizes a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster (legacy DBaaS)`, () => {
         /*
          * - Tests active database resize UI flows using mocked data.
@@ -62,15 +65,15 @@ describe('Resizing existing clusters', () => {
           const allowedIp = randomIp();
           const initialPassword = randomString(16);
           const database = databaseFactory.build({
-            id: randomNumber(1, 1000),
-            type: configuration.linodeType,
-            label: initialLabel,
-            region: configuration.region.id,
-            engine: configuration.dbType,
-            cluster_size: 3,
-            status: 'active',
             allow_list: [allowedIp],
+            cluster_size: 3,
+            engine: configuration.dbType,
+            id: randomNumber(1, 1000),
+            label: initialLabel,
             platform: 'rdbms-legacy',
+            region: configuration.region.id,
+            status: 'active',
+            type: configuration.linodeType,
           });
 
           // Mock account to ensure 'Managed Databases' capability.
@@ -211,14 +214,14 @@ describe('Resizing existing clusters', () => {
           const allowedIp = randomIp();
           const initialPassword = randomString(16);
           const database = databaseFactory.build({
+            allow_list: [allowedIp],
+            cluster_size: 3,
+            engine: configuration.dbType,
             id: randomNumber(1, 1000),
-            type: configuration.linodeType,
             label: initialLabel,
             region: configuration.region.id,
-            engine: configuration.dbType,
-            cluster_size: 3,
             status: 'active',
-            allow_list: [allowedIp],
+            type: configuration.linodeType,
           });
 
           // Mock account to ensure 'Managed Databases' capability.
@@ -290,18 +293,18 @@ describe('Resizing existing clusters', () => {
               const initialLabel = configuration.label;
               const allowedIp = randomIp();
               const database = databaseFactory.build({
-                id: randomNumber(1, 1000),
-                type: configuration.linodeType,
-                label: initialLabel,
-                region: configuration.region.id,
-                engine: configuration.dbType,
-                cluster_size: 3,
-                status: dbstatus,
                 allow_list: [allowedIp],
+                cluster_size: 3,
+                engine: configuration.dbType,
                 hosts: {
                   primary: undefined,
                   secondary: undefined,
                 },
+                id: randomNumber(1, 1000),
+                label: initialLabel,
+                region: configuration.region.id,
+                status: dbstatus,
+                type: configuration.linodeType,
               });
 
               const errorMessage = `Your database is ${dbstatus}; please wait until it becomes active to perform this operation.`;

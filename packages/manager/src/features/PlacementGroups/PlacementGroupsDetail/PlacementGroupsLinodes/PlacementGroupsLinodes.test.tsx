@@ -1,17 +1,27 @@
 import * as React from 'react';
 
 import { placementGroupFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
 
+const queryMocks = vi.hoisted(() => ({
+  useSearch: vi.fn().mockReturnValue({ query: undefined }),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
 describe('PlacementGroupsLinodes', () => {
-  it('renders an error state if placement groups are undefined', () => {
-    const { getByText } = renderWithTheme(
+  it('renders an error state if placement groups are undefined', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodes
-        assignedLinodes={[]}
-        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={undefined}
         region={undefined}
@@ -23,7 +33,7 @@ describe('PlacementGroupsLinodes', () => {
     ).toBeInTheDocument();
   });
 
-  it('features the linodes table, a filter field, a create button and a docs link', () => {
+  it('features the linodes table, a filter field, a create button and a docs link', async () => {
     const placementGroup = placementGroupFactory.build({
       members: [
         {
@@ -33,10 +43,8 @@ describe('PlacementGroupsLinodes', () => {
       ],
     });
 
-    const { getByPlaceholderText, getByRole } = renderWithTheme(
+    const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
       <PlacementGroupsLinodes
-        assignedLinodes={[]}
-        isFetchingLinodes={false}
         isLinodeReadOnly={false}
         placementGroup={placementGroup}
         region={undefined}

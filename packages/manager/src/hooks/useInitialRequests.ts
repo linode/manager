@@ -3,8 +3,7 @@ import * as React from 'react';
 
 import { useAuthentication } from 'src/hooks/useAuthentication';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { accountQueries } from 'src/queries/account/queries';
-import { profileQueries } from 'src/queries/profile/profile';
+import { accountQueries, profileQueries } from '@linode/queries';
 import { redirectToLogin } from 'src/session';
 
 /**

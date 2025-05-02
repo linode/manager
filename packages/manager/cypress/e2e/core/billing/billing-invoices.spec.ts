@@ -2,7 +2,6 @@
  * @file Integration tests for account invoice functionality.
  */
 
-import type { InvoiceItem, TaxSummary } from '@linode/api-v4';
 import { invoiceFactory, invoiceItemFactory } from '@src/factories';
 import { DateTime } from 'luxon';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'support/constants/dc-specific-pricing';
@@ -15,6 +14,8 @@ import { buildArray } from 'support/util/arrays';
 import { formatUsd } from 'support/util/currency';
 import { randomItem, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion, getRegionById } from 'support/util/regions';
+
+import type { InvoiceItem, TaxSummary } from '@linode/api-v4';
 
 /**
  * Returns a string representation of a region, as shown on the invoice details page.
@@ -56,17 +57,17 @@ describe('Account invoices', () => {
 
       return invoiceItemFactory.build({
         amount: subtotal,
-        tax,
-        total: subtotal + tax,
         from: DateTime.now().minus({ days: i }).toISO(),
-        to: DateTime.now().minus({ days: i }).plus({ hours }).toISO(),
-        quantity,
-        region: chooseRegion().id,
-        unit_price: `${randomNumber(5, 300) / 10000}`,
         label: `${itemType} ${randomNumber(
           1,
           24
         )}GB - ${randomLabel()} (${randomNumber(10000, 99999)})`,
+        quantity,
+        region: chooseRegion().id,
+        tax,
+        to: DateTime.now().minus({ days: i }).plus({ hours }).toISO(),
+        total: subtotal + tax,
+        unit_price: `${randomNumber(5, 300) / 10000}`,
       });
     });
 
@@ -75,9 +76,9 @@ describe('Account invoices', () => {
       ...mockInvoiceItemsWithRegions,
       invoiceItemFactory.build({
         amount: 5,
-        total: 6,
         region: null,
         tax: 1,
+        total: 6,
       }),
     ];
 
@@ -111,10 +112,10 @@ describe('Account invoices', () => {
     // Create an Invoice object to correspond with the Invoice Items and their
     // charges.
     const mockInvoice = invoiceFactory.build({
+      date: MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED,
       id: randomNumber(10000, 99999),
-      tax: sumTax,
       subtotal: sumSubtotal,
-      total: sumTax + sumSubtotal,
+      tax: sumTax,
       tax_summary: [
         {
           name: 'PA STATE TAX',
@@ -125,7 +126,7 @@ describe('Account invoices', () => {
           tax: Math.ceil(sumTax / 2),
         },
       ],
-      date: MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED,
+      total: sumTax + sumSubtotal,
     });
 
     // All mocked invoice items.
@@ -167,14 +168,15 @@ describe('Account invoices', () => {
               // If the invoice item has a region, confirm that it is displayed
               // in the table row. Otherwise, confirm that the table cell which
               // would normally show the region is empty.
-              !!invoiceItem.region
-                ? cy
-                    .findByText(getRegionLabel(invoiceItem.region))
-                    .should('be.visible')
-                : cy
-                    .get('[data-qa-region]')
-                    .should('be.visible')
-                    .should('be.empty');
+              if (invoiceItem.region) {
+                cy.findByText(getRegionLabel(invoiceItem.region)).should(
+                  'be.visible'
+                );
+              } else {
+                cy.get('[data-qa-region]')
+                  .should('be.visible')
+                  .should('be.empty');
+              }
             });
         }
       );
@@ -197,11 +199,13 @@ describe('Account invoices', () => {
               // If the invoice item has a region, confirm that it is displayed
               // in the table row. Otherwise, confirm that "Global" is displayed
               // in the region column.
-              !!invoiceItem.region
-                ? cy
-                    .findByText(getRegionLabel(invoiceItem.region))
-                    .should('be.visible')
-                : cy.findByText('Global').should('be.visible');
+              if (invoiceItem.region) {
+                cy.findByText(getRegionLabel(invoiceItem.region)).should(
+                  'be.visible'
+                );
+              } else {
+                cy.findByText('Global').should('be.visible');
+              }
             });
         }
       );
@@ -250,8 +254,8 @@ describe('Account invoices', () => {
 
   it('does not list the region on past invoices', () => {
     const mockInvoice = invoiceFactory.build({
-      id: randomNumber(),
       date: '2023-09-30 00:00:00Z',
+      id: randomNumber(),
     });
 
     // Regular invoice items.

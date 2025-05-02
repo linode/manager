@@ -4,7 +4,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -18,14 +18,20 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
   ) => props.onCheckPassiveChange(value);
 
   return (
-    <Grid md={6} sx={{ padding: 1 }} xs={12}>
+    <Grid
+      sx={{ padding: 1 }}
+      size={{
+        md: 6,
+        xs: 12,
+      }}
+    >
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography data-qa-passive-checks-header variant="h2">
             Passive Checks
           </Typography>
         </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <FormControlLabel
             control={
               <Toggle
@@ -38,8 +44,9 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
             label="Passive Checks"
           />
           <FormHelperText>
-            Enable passive checks based on observing communication with back-end
-            nodes.
+            When enabled, the NodeBalancer monitors requests to backends. If a
+            request times out, returns a 5xx response (except 501/505), or fails
+            to connect, the backend is marked 'down' and removed from rotation.
           </FormHelperText>
         </Grid>
       </Grid>

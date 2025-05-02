@@ -1,5 +1,4 @@
-import { areArraysEqual } from 'src/utilities/areArraysEqual';
-import { sortByString } from 'src/utilities/sort-by';
+import { areArraysEqual, sortByString } from '@linode/utilities';
 
 import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
@@ -61,7 +60,7 @@ export const hasLabelOrRegionsChanged = (
 ): boolean => {
   const regionsChanged = !areArraysEqual(
     [...updatedValues.regions].sort(sortRegionOptions),
-    [...initialValues.regions?.map((region) => region.id)].sort(
+    [...initialValues.regions.map((region) => region.id)].sort(
       sortRegionOptions
     )
   );

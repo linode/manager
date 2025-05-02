@@ -6,7 +6,7 @@ export const StyledAutocompleteContainer = styled(Box, {
 })(({ theme }) => ({
   '& .MuiAutocomplete-groupLabel': {
     color: theme.color.headline,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
     fontSize: '1rem',
     lineHeight: 1,
     padding: '16px 4px 8px 10px',
@@ -19,6 +19,11 @@ export const StyledAutocompleteContainer = styled(Box, {
   },
   '& .MuiAutocomplete-root .MuiAutocomplete-inputRoot': {
     paddingRight: 8,
+  },
+  // If the subheader is empty, hide it to avoid empty padded space
+  // This can happen for options that do not belong to a region (e.g. "Global")
+  '& .MuiListSubheader-root:empty': {
+    display: 'none',
   },
   display: 'flex',
   [theme.breakpoints.down('md')]: {

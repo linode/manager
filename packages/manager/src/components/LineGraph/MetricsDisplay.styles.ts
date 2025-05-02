@@ -1,50 +1,33 @@
 import { Button, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
-import { Table } from 'src/components/Table';
-import { TableCell } from 'src/components/TableCell';
-
-export const StyledTable = styled(Table, {
-  label: 'StyledTable',
-})(({ theme }) => ({
-  border: `1px solid ${theme.borderColors.borderTable}`,
-}));
-
-export const StyledTableCell = styled(TableCell, {
-  label: 'StyledTableCell',
-})(({ theme }) => ({
-  '& > button': {
-    '&:before': {
-      content: '""',
-      display: 'inline-block',
-      height: 20,
-      marginRight: theme.spacing(1),
-      width: 20,
-    },
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    textAlign: 'left',
-    [theme.breakpoints.down('sm')]: {
-      padding: 0,
-    },
-    whiteSpace: 'nowrap',
-  },
-}));
-
-export const StyledButton = styled(Button, {
-  label: 'StyledButton',
+export const StyledLegend = styled(Button, {
+  label: 'StyledLegend',
   shouldForwardProp: omittedProps(['legendColor', 'hidden']),
 })<{ legendColor?: string }>(({ hidden, legendColor, theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  justifyContent: 'flex-start',
   padding: 0,
+  textAlign: 'left',
+  textTransform: 'none',
+  [theme.breakpoints.down('sm')]: {
+    padding: 0,
+  },
+  whiteSpace: 'nowrap',
   ...(legendColor && {
     '&:before': {
       backgroundColor: hidden
         ? theme.color.disabledText
         : theme.graphs[legendColor]
-        ? theme.graphs[legendColor]
-        : legendColor,
+          ? theme.graphs[legendColor]
+          : legendColor,
+      content: '""',
+      display: 'inline-block',
       flexShrink: 0,
+      height: 20,
+      marginRight: theme.spacing(1),
+      width: 20,
     },
   }),
 }));

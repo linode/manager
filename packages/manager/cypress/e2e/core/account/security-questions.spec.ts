@@ -2,8 +2,7 @@
  * @file Integration tests for account security questions.
  */
 
-import { profileFactory } from 'src/factories/profile';
-import { securityQuestionsFactory } from 'src/factories/profile';
+import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
 import {
   mockGetProfile,
   mockGetSecurityQuestions,
@@ -95,16 +94,16 @@ const setSecurityQuestionAnswer = (
   getSecurityQuestion(questionNumber).within(() => {
     cy.findByLabelText(`Question ${questionNumber}`)
       .should('be.visible')
-      .click()
-      .type(`${question}{enter}`);
+      .click();
+    cy.focused().type(`${question}{enter}`);
   });
 
   getSecurityQuestionAnswer(questionNumber).within(() => {
     cy.findByLabelText(`Answer ${questionNumber}`)
       .should('be.visible')
       .should('be.enabled')
-      .click()
-      .type(answer);
+      .click();
+    cy.focused().type(answer);
   });
 };
 

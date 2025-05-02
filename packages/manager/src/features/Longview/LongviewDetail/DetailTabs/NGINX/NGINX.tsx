@@ -1,16 +1,13 @@
 import { Box, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { isToday as _isToday } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { isToday as _isToday } from 'src/utilities/isToday';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
-import {
-  StyledItemGrid,
-  StyledTimeRangeSelect,
-  StyledTypography,
-} from '../CommonStyles.styles';
+import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { NGINXGraphs } from './NGINXGraphs';
 
@@ -94,7 +91,7 @@ export const NGINX = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'NGINX'} />
-      <StyledItemGrid xs={12}>
+      <Grid size={{ xs: 12 }}>
         <Box
           alignItems="center"
           display="flex"
@@ -105,16 +102,16 @@ export const NGINX = React.memo((props: Props) => {
             <StyledTypography variant="h2">NGINX</StyledTypography>
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
+            sx={{ width: 250 }}
           />
         </Box>
-      </StyledItemGrid>
-      <StyledItemGrid className="py0" xs={12}>
+      </Grid>
+      <Grid size={{ xs: 12 }} sx={{ py: 0 }}>
         <NGINXGraphs
           data={data?.Applications?.Nginx}
           end={time.end}
@@ -127,7 +124,7 @@ export const NGINX = React.memo((props: Props) => {
           start={time.start}
           timezone={timezone}
         />
-      </StyledItemGrid>
+      </Grid>
     </Grid>
   );
 });

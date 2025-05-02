@@ -1,41 +1,60 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { CreateLinodeSchema } from '@linode/validation';
+import { accountQueries, regionQueries } from '@linode/queries';
+import { isNullOrUndefined } from '@linode/utilities';
+import type { FieldErrors, Resolver } from 'react-hook-form';
 
-import { accountQueries } from 'src/queries/account/queries';
-import { regionQueries } from 'src/queries/regions/regions';
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
-import { isNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
+import { getCleanedLinodeInterfaceValues } from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
   CreateLinodeFromStackScriptSchema,
+  CreateLinodeSchema,
 } from './schemas';
-import { getLinodeCreatePayload } from './utilities';
+import { getInterfacesPayload } from './utilities';
 
-import type { LinodeCreateType } from './types';
 import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,
 } from './utilities';
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors, Resolver } from 'react-hook-form';
-import type { ObjectSchema } from 'yup';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
   queryClient: QueryClient
 ): Resolver<LinodeCreateFormValues, LinodeCreateFormContext> => {
   const schema = linodeCreateResolvers[tab ?? 'OS'];
-  return async (values, context, options) => {
-    const transformedValues = getLinodeCreatePayload(structuredClone(values));
+  return async (rawValues, context, options) => {
+    const values = structuredClone(rawValues);
+
+    // Because `interfaces` are so complex, we need to perform some transformations before
+    // we even try to valiate them with our vaidation schema.
+    if (context?.isLinodeInterfacesEnabled) {
+      values.interfaces = [];
+      values.linodeInterfaces = values.linodeInterfaces.map(
+        getCleanedLinodeInterfaceValues
+      );
+    } else {
+      values.linodeInterfaces = [];
+      values.interfaces =
+        getInterfacesPayload(values.interfaces, values.private_ip) ?? [];
+    }
+
+    if (!values.placement_group?.id) {
+      values.placement_group = undefined;
+    }
+
+    if (!values.metadata?.user_data) {
+      values.metadata = undefined;
+    }
 
     const { errors } = await yupResolver(
-      schema as ObjectSchema<CreateLinodeRequest>,
+      schema,
       {},
       { mode: 'async', raw: true }
-    )(transformedValues, context, options);
+    )(values, context, options);
 
     if (tab === 'Clone Linode' && !values.linode) {
       (errors as FieldErrors<LinodeCreateFormValues>)['linode'] = {
@@ -81,10 +100,10 @@ export const getLinodeCreateResolver = (
     }
 
     if (errors) {
-      return { errors, values };
+      return { errors, values: rawValues };
     }
 
-    return { errors: {}, values };
+    return { errors: {}, values: rawValues };
   };
 };
 

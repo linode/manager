@@ -1,10 +1,10 @@
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { grantsFactory, profileFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
@@ -24,7 +24,9 @@ describe('ImagesLandingEmptyState', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(<ImagesLandingEmptyState />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <ImagesLandingEmptyState />
+    );
 
     await waitFor(() => {
       const createImageButton = getByText('Create Image').closest('button');

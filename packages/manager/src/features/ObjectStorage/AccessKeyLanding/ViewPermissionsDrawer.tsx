@@ -1,10 +1,10 @@
-import { Typography } from '@linode/ui';
+import { Drawer, Typography } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { isFeatureEnabledV2 } from 'src/utilities/accountCapabilities';
 
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
@@ -31,20 +31,24 @@ export const ViewPermissionsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Permissions for ${objectStorageKey?.label}`}
       wide
     >
-      {!objectStorageKey ? null : objectStorageKey.bucket_access === null ? (
+      {!objectStorageKey ? null : objectStorageKey.limited === false ? (
         <Typography>
           This key has unlimited access to all buckets on your account.
         </Typography>
+      ) : objectStorageKey.bucket_access === null ? (
+        <Typography>This key has no permissions.</Typography>
       ) : (
         <>
           <Typography>
             This access key has the following permissions:
           </Typography>
+
           {isObjMultiClusterEnabled ? (
             <BucketPermissionsTable
               bucket_access={objectStorageKey.bucket_access}

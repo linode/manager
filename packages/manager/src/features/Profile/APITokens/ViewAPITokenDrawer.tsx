@@ -1,14 +1,14 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
+import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { Drawer } from 'src/components/Drawer';
+import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { AccessCell } from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 
 import {
   StyledAccessCell,
@@ -16,6 +16,8 @@ import {
   StyledPermsTable,
 } from './APITokenDrawer.styles';
 import { basePermNameMap, scopeStringToPermTuples } from './utils';
+
+import type { Token } from '@linode/api-v4/lib/profile/types';
 
 interface Props {
   onClose: () => void;
@@ -39,7 +41,12 @@ export const ViewAPITokenDrawer = (props: Props) => {
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
-    <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title={token?.label ?? 'Token'}
+    >
       <StyledPermsTable
         aria-label="Personal Access Token Permissions"
         spacingBottom={16}
@@ -73,13 +80,10 @@ export const ViewAPITokenDrawer = (props: Props) => {
                 data-qa-row={basePermNameMap[scopeTup[0]]}
                 key={scopeTup[0]}
               >
-                <StyledAccessCell padding="checkbox" parentColumn="Access">
+                <StyledAccessCell padding="checkbox">
                   {basePermNameMap[scopeTup[0]]}
                 </StyledAccessCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="No Access"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 0}
                     disabled={false}
@@ -89,10 +93,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <StyledPermissionsCell
-                  padding="checkbox"
-                  parentColumn="Read Only"
-                >
+                <StyledPermissionsCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 1}
                     disabled={false}
@@ -102,7 +103,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
                     viewOnly={true}
                   />
                 </StyledPermissionsCell>
-                <TableCell padding="checkbox" parentColumn="Read/Write">
+                <TableCell padding="checkbox">
                   <AccessCell
                     active={scopeTup[1] === 2}
                     disabled={false}

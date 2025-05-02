@@ -1,7 +1,7 @@
+import { linodeFactory } from '@linode/utilities';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { linodeFactory } from 'src/factories';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { LinodeRow, RenderFlag } from './LinodeRow';
@@ -39,6 +39,7 @@ describe('LinodeRow', () => {
         hypervisor={linode.hypervisor}
         id={linode.id}
         image={linode.image}
+        interface_generation="legacy_config"
         ipv4={linode.ipv4}
         ipv6={linode.ipv6 || ''}
         key={`linode-row-${1}`}

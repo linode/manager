@@ -1,4 +1,6 @@
 import { Box, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -11,10 +13,8 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { formatCPU } from '../../shared/formatters';
-import { StyledItemGrid } from './CommonStyles.styles';
 import { StyledLink } from './TopProcesses.styles';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -63,7 +63,7 @@ export const TopProcesses = React.memo((props: Props) => {
     : undefined;
 
   return (
-    <StyledItemGrid lg={4} xs={12}>
+    <Grid size={{ lg: 4, xs: 12 }}>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Typography variant="h2">Top Processes</Typography>
         <StyledLink to={`/longview/clients/${clientID}/processes`}>
@@ -113,7 +113,7 @@ export const TopProcesses = React.memo((props: Props) => {
           )}
         </TableBody>
       </Table>
-    </StyledItemGrid>
+    </Grid>
   );
 });
 
@@ -161,13 +161,9 @@ export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
 
   return (
     <TableRow data-testid="longview-top-process-row">
-      <TableCell data-qa-top-process-process parentColumn="Process">
-        {name}
-      </TableCell>
-      <TableCell data-qa-top-process-cpu parentColumn="CPU">
-        {formatCPU(cpu)}
-      </TableCell>
-      <TableCell data-qa-top-process-memory parentColumn="Memory">
+      <TableCell data-qa-top-process-process>{name}</TableCell>
+      <TableCell data-qa-top-process-cpu>{formatCPU(cpu)}</TableCell>
+      <TableCell data-qa-top-process-memory>
         {readableBytes(memInBytes, { round: 0 }).formatted}
       </TableCell>
     </TableRow>

@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DeletionDialog } from './DeletionDialog';
 
 import type { DeletionDialogProps } from './DeletionDialog';
-import type { ManagerPreferences } from 'src/types/ManagerPreferences';
+import type { ManagerPreferences } from '@linode/utilities';
 
 const preference: ManagerPreferences['type_to_confirm'] = true;
 
@@ -14,8 +14,8 @@ const queryMocks = vi.hoisted(() => ({
   usePreferences: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/preferences', async () => {
-  const actual = await vi.importActual('src/queries/profile/preferences');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     usePreferences: queryMocks.usePreferences,
@@ -29,6 +29,7 @@ queryMocks.usePreferences.mockReturnValue({
 describe('DeletionDialog', () => {
   const defaultArgs: DeletionDialogProps = {
     entity: 'Linode',
+    isFetching: false,
     label: 'my-linode-0',
     loading: false,
     onClose: vi.fn(),
@@ -132,9 +133,7 @@ describe('DeletionDialog', () => {
     expect(deleteButton).toBeInTheDocument();
     expect(deleteButton).toBeDisabled();
 
-    const loadingSvgIcon = deleteButton.querySelector(
-      '[data-test-id="ReloadIcon"]'
-    );
+    const loadingSvgIcon = deleteButton.querySelector('[role="progressbar"]');
 
     expect(loadingSvgIcon).toBeInTheDocument();
   });

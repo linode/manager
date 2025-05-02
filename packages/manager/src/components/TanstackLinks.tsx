@@ -53,6 +53,7 @@ const CreatedMenuItemLinkComponent = createLink(MenuItemLinkComponent);
  */
 export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
   return (
+    // @ts-expect-error need help from alban
     <CreatedLinkComponent
       {...props}
       sx={(theme) => ({
@@ -60,7 +61,7 @@ export const TanstackLink: LinkComponent<typeof LinkComponent> = (props) => {
           '&:hover': {
             textDecoration: 'underline',
           },
-          fontFamily: theme.font.normal,
+          font: theme.font.normal,
           fontSize: '0.875rem',
           minWidth: 'initial',
           padding: 0,

@@ -1,6 +1,7 @@
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -13,10 +14,9 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useProfile } from 'src/queries/profile/profile';
+import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
 
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
@@ -84,31 +84,35 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
   return (
     <Grid
       sx={{
+        alignItems: 'center',
         flex: 1,
+        justifyContent: 'space-between',
         padding: 0,
       }}
-      alignItems="center"
       container
+      data-qa-kube-entity-footer
       direction="row"
-      justifyContent="space-between"
       spacing={2}
     >
       <Grid
+        size={{
+          lg: 'auto',
+          xs: 12,
+        }}
         sx={{
           alignItems: 'center',
           display: 'flex',
           padding: 0,
+
           [theme.breakpoints.down('lg')]: {
             padding: '8px',
           },
+
           [theme.breakpoints.down('md')]: {
             display: 'grid',
             gridTemplateColumns: '50% 2fr',
           },
         }}
-        alignItems="flex-start"
-        lg="auto"
-        xs={12}
       >
         <StyledBox>
           <StyledListItem sx={{ ...sxListItemFirstChild }}>
@@ -159,15 +163,18 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
         </StyledBox>
       </Grid>
       <Grid
+        size={{
+          lg: 3.5,
+          xs: 12,
+        }}
         sx={{
+          marginLeft: 'auto',
+
           [theme.breakpoints.down('lg')]: {
             display: 'flex',
             justifyContent: 'flex-start',
           },
         }}
-        lg={3.5}
-        marginLeft="auto"
-        xs={12}
       >
         <TagCell
           sx={{

@@ -1,27 +1,33 @@
-import { Box, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
+import {
+  isNumber,
+  plansNoticesUtils,
+  pluralize,
+  scrollErrorIntoViewV2,
+} from '@linode/utilities';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
 import { ErrorMessage } from 'src/components/ErrorMessage';
+import { NotFound } from 'src/components/NotFound';
+import {
+  ADD_NODE_POOLS_DESCRIPTION,
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  nodeWarning,
+} from 'src/features/Kubernetes/constants';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { isNumber } from 'src/utilities/isNumber';
-import { plansNoticesUtils } from 'src/utilities/planNotices';
-import { pluralize } from 'src/utilities/pluralize';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
-import { nodeWarning } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
 
-import type { Region } from '@linode/api-v4';
+import type { KubernetesTier, Region } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({
@@ -45,7 +51,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   priceDisplay: {
     '& span': {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
     },
     color: theme.color.headline,
     display: 'inline',
@@ -60,6 +66,7 @@ export interface Props {
   clusterId: number;
   clusterLabel: string;
   clusterRegionId: Region['id'];
+  clusterTier: KubernetesTier;
   onClose: () => void;
   open: boolean;
   regionsData: Region[];
@@ -70,6 +77,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     clusterId,
     clusterLabel,
     clusterRegionId,
+    clusterTier,
     onClose,
     open,
     regionsData,
@@ -87,7 +95,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
   const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
-    { count: number; planId: string } | undefined
+    undefined | { count: number; planId: string }
   >(undefined);
   const [addNodePoolError, setAddNodePoolError] = React.useState<string>('');
 
@@ -101,8 +109,10 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    selectedType,
+    clusterRegionId
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -154,13 +164,20 @@ export const AddNodePoolDrawer = (props: Props) => {
     selectedRegionID: clusterRegionId,
   });
 
+  const getPlansPanelCopy = () => {
+    return clusterTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
+
   return (
     <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
       PaperProps={{
         sx: { maxWidth: '790px !important' },
       }}
-      onClose={onClose}
-      open={open}
       ref={drawerRef}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
@@ -175,32 +192,32 @@ export const AddNodePoolDrawer = (props: Props) => {
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
-          // No nanodes or GPUs in clusters
-          types={extendedTypes.filter(
-            (t) => t.class !== 'nanode' && t.class !== 'gpu'
-          )}
           addPool={handleAdd}
+          copy={getPlansPanelCopy()}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ count: 1, planId: newType });
+            }
+          }}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
           selectedRegionId={clusterRegionId}
+          selectedTier={clusterTier}
+          // No nanodes in clusters
+          types={extendedTypes.filter((t) => t.class !== 'nanode')}
           updatePlanCount={updatePlanCount}
         />
         {selectedTypeInfo &&
           selectedTypeInfo.count > 0 &&
           selectedTypeInfo.count < 3 && (
             <Notice
-              important
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}

@@ -1,14 +1,13 @@
 import { Box, StyledLinkButton, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import { readableBytes } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
+import ObjectIcon from 'src/assets/icons/objectStorage/object.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import ObjectActionMenu from './ObjectActionMenu';
 
@@ -18,7 +17,6 @@ interface Props {
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: () => void;
   handleClickDownload: (objectName: string, newTab: boolean) => void;
-  manuallyCreated: boolean;
   objectLastModified: string;
   objectSize: number;
 }
@@ -36,9 +34,16 @@ export const ObjectTableRow = (props: Props) => {
   return (
     <TableRow>
       <TableCell>
-        <Grid alignItems="center" container spacing={2} wrap="nowrap">
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            alignItems: 'center',
+          }}
+          wrap="nowrap"
+        >
           <Grid className="py0">
-            <StyledEntityIcon size={20} variant="object" {...props} />
+            <ObjectIcon size={20} />
           </Grid>
           <Grid>
             <Box alignItems="center" display="flex">
@@ -51,10 +56,7 @@ export const ObjectTableRow = (props: Props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell noWrap>
-        {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-        {readableBytes(objectSize, { base10: true }).formatted}
-      </TableCell>
+      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
       <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />
@@ -70,13 +72,3 @@ export const ObjectTableRow = (props: Props) => {
     </TableRow>
   );
 };
-
-const StyledEntityIcon = styled(EntityIcon, {
-  label: 'StyledEntityIcon',
-})<Partial<Props>>(({ theme, ...props }) => ({
-  ...(props.manuallyCreated && {
-    '& g': {
-      fill: theme.bg.lightBlue1,
-    },
-  }),
-}));

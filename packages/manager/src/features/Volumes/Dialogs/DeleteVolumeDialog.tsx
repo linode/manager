@@ -1,9 +1,8 @@
-import { Notice } from '@linode/ui';
+import { useDeleteVolumeMutation } from '@linode/queries';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useDeleteVolumeMutation } from 'src/queries/volumes/volumes';
 
 import type { Volume } from '@linode/api-v4';
 
@@ -40,6 +39,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         primaryBtnText: 'Delete',
         type: 'Volume',
       }}
+      errors={error}
       expand
       isFetching={isFetching}
       label="Volume Label"
@@ -49,8 +49,6 @@ export const DeleteVolumeDialog = (props: Props) => {
       open={open}
       title={`Delete Volume ${volume?.label}?`}
       typographyStyle={{ marginTop: '10px' }}
-    >
-      {error && <Notice text={error?.[0]?.reason} variant="error" />}
-    </TypeToConfirmDialog>
+    />
   );
 };

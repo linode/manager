@@ -1,4 +1,5 @@
-import CloseIcon from '@mui/icons-material/Close';
+import { CloseIcon } from '@linode/ui';
+import { getRoot } from '@linode/utilities';
 import Handyman from '@mui/icons-material/Handyman';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled } from '@mui/material';
@@ -7,9 +8,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { getRoot } from 'src/utilities/rootManager';
-
 import { Draggable } from './components/Draggable';
+import { DesignTokensTool } from './DesignTokensTool';
 import './dev-tools.css';
 import { EnvironmentToggleTool } from './EnvironmentToggleTool';
 import { FeatureFlagTool } from './FeatureFlagTool';
@@ -19,7 +19,7 @@ import { isMSWEnabled } from './utils';
 import type { QueryClient } from '@tanstack/react-query';
 import type { ApplicationStore } from 'src/store';
 
-export type DevToolsView = 'mocks' | 'react-query';
+export type DevToolsView = 'design-tokens' | 'mocks' | 'react-query';
 
 const reactQueryDevtoolsStyle = {
   border: '1px solid rgba(255, 255, 255, 0.25)',
@@ -40,6 +40,10 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
 
     const handleOpenMocks = () => {
       setView('mocks');
+    };
+
+    const handleOpenDesignTokens = () => {
+      setView('design-tokens');
     };
 
     const handleDraggableToggle = () => {
@@ -92,14 +96,21 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
         >
           {!isDraggable && (
             <div className="dev-tools__toggle">
-              <button onClick={() => setIsOpen(!isOpen)}>
+              <button
+                className="dev-tools-button"
+                onClick={() => setIsOpen(!isOpen)}
+              >
                 <Handyman />
               </button>
             </div>
           )}
           {isOpen && (
             <div className="dev-tools__draggable-toggle">
-              <button onClick={handleDraggableToggle} title="Toggle draggable">
+              <button
+                className="dev-tools-button"
+                onClick={handleDraggableToggle}
+                title="Toggle draggable"
+              >
                 {isDraggable ? <CloseIcon /> : <OpenInNewIcon />}
               </button>
             </div>
@@ -112,7 +123,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                 </div>
                 <div className="dev-tools__segmented-button">
                   <button
-                    className={`toggle-button ${
+                    className={`toggle-button dev-tools-button ${
                       view === 'mocks' && 'toggle-button--on'
                     }`}
                     onClick={handleOpenMocks}
@@ -120,16 +131,27 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                     Mocks
                   </button>
                   <button
-                    className={`toggle-button ${
+                    className={`toggle-button dev-tools-button ${
                       view === 'react-query' && 'toggle-button--on'
                     }`}
                     onClick={handleOpenReactQuery}
                   >
                     React Query
                   </button>
+                  <button
+                    className={`toggle-button dev-tools-button ${
+                      view === 'design-tokens' && 'toggle-button--on'
+                    }`}
+                    onClick={handleOpenDesignTokens}
+                  >
+                    Design Tokens
+                  </button>
                 </div>
                 <div>
-                  <button onClick={handleGoToPreferences}>
+                  <button
+                    className="dev-tools-button"
+                    onClick={handleGoToPreferences}
+                  >
                     Go to Preferences
                   </button>
                 </div>
@@ -154,6 +176,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                     </QueryClientProvider>
                   </StyledReactQueryDevtoolsContainer>
                 )}
+                {view === 'design-tokens' && <DesignTokensTool />}
               </div>
             </div>
           </div>

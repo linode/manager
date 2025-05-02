@@ -1,5 +1,5 @@
 import { Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -94,9 +94,16 @@ export const UserDetailsPanel = ({ user }: Props) => {
     <Paper>
       <Grid columns={{ md: 6, sm: 4, xs: 2 }} container spacing={2}>
         {items.map((item, index) => (
-          <Grid key={index} md={2} sm={2} xs={2}>
+          <Grid
+            key={index}
+            size={{
+              md: 2,
+              sm: 2,
+              xs: 2,
+            }}
+          >
             <Stack direction="row" spacing={1}>
-              <Typography fontFamily={(theme) => theme.font.bold}>
+              <Typography sx={(theme) => ({ font: theme.font.bold })}>
                 {item.label}
               </Typography>
               {item.value}

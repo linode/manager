@@ -1,16 +1,9 @@
 import { Button } from '@linode/ui';
-import { compose, isEmpty, pathOr } from 'ramda';
+import { truncateEnd } from '@linode/utilities';
 import React from 'react';
 
-import { truncateEnd } from 'src/utilities/truncate';
-
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
-import {
-  getNSRecords,
-  getTTL,
-  msToReadableTime,
-  typeEq,
-} from './DomainRecordsUtils';
+import { getNSRecords, getTimeColumn, typeEq } from './DomainRecordsUtils';
 
 import type { Props as DomainRecordsProps } from './DomainRecords';
 import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
@@ -88,19 +81,19 @@ export const generateTypes = (
         title: 'Email',
       },
       {
-        render: getTTL,
+        render: (domain: Domain) => getTimeColumn(domain, 'ttl_sec'),
         title: 'Default TTL',
       },
       {
-        render: compose(msToReadableTime, pathOr(0, ['refresh_sec'])),
+        render: (domain: Domain) => getTimeColumn(domain, 'refresh_sec'),
         title: 'Refresh Rate',
       },
       {
-        render: compose(msToReadableTime, pathOr(0, ['retry_sec'])),
+        render: (domain: Domain) => getTimeColumn(domain, 'retry_sec'),
         title: 'Retry Rate',
       },
       {
-        render: compose(msToReadableTime, pathOr(0, ['expire_sec'])),
+        render: (domain: Domain) => getTimeColumn(domain, 'expire_sec'),
         title: 'Expire Time',
       },
       {
@@ -132,14 +125,14 @@ export const generateTypes = (
       {
         render: (record: DomainRecord) => {
           const subdomain = record.name;
-          return isEmpty(subdomain)
-            ? props.domain.domain
-            : `${subdomain}.${props.domain.domain}`;
+          return Boolean(subdomain)
+            ? `${subdomain}.${props.domain.domain}`
+            : props.domain.domain;
         },
         title: 'Subdomain',
       },
       {
-        render: getTTL,
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
         title: 'TTL',
       },
       {
@@ -197,7 +190,7 @@ export const generateTypes = (
         title: 'Subdomain',
       },
       {
-        render: getTTL,
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
         title: 'TTL',
       },
       {
@@ -239,7 +232,10 @@ export const generateTypes = (
         title: 'Hostname',
       },
       { render: (record: DomainRecord) => record.target, title: 'IP Address' },
-      { render: getTTL, title: 'TTL' },
+      {
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
+        title: 'TTL',
+      },
       {
         render: (domainRecordParams: DomainRecord) => {
           const { id, name, target, ttl_sec } = domainRecordParams;
@@ -278,7 +274,10 @@ export const generateTypes = (
     columns: [
       { render: (record: DomainRecord) => record.name, title: 'Hostname' },
       { render: (record: DomainRecord) => record.target, title: 'Aliases to' },
-      { render: getTTL, title: 'TTL' },
+      {
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
+        title: 'TTL',
+      },
       {
         render: (domainRecordParams: DomainRecord) => {
           const { id, name, target, ttl_sec } = domainRecordParams;
@@ -321,7 +320,10 @@ export const generateTypes = (
         render: (record: DomainRecord) => truncateEnd(record.target, 100),
         title: 'Value',
       },
-      { render: getTTL, title: 'TTL' },
+      {
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
+        title: 'TTL',
+      },
       {
         render: (domainRecordParams: DomainRecord) => {
           const { id, name, target, ttl_sec } = domainRecordParams;
@@ -372,7 +374,10 @@ export const generateTypes = (
       },
       { render: (record: DomainRecord) => String(record.port), title: 'Port' },
       { render: (record: DomainRecord) => record.target, title: 'Target' },
-      { render: getTTL, title: 'TTL' },
+      {
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
+        title: 'TTL',
+      },
       {
         render: ({
           id,
@@ -421,7 +426,10 @@ export const generateTypes = (
         render: (record: DomainRecord) => record.target,
         title: 'Value',
       },
-      { render: getTTL, title: 'TTL' },
+      {
+        render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
+        title: 'TTL',
+      },
       {
         render: (domainRecordParams: DomainRecord) => {
           const { id, name, tag, target, ttl_sec } = domainRecordParams;

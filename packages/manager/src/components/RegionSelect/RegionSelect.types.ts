@@ -4,9 +4,8 @@ import type {
   Region,
   RegionSite,
 } from '@linode/api-v4';
-import type { EnhancedAutocompleteProps } from '@linode/ui';
+import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
 import type React from 'react';
-import type { DisableItemOption } from 'src/components/ListItemOption';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -22,6 +21,7 @@ export interface GetRegionLabel {
   includeSlug?: boolean;
   region: Region;
 }
+
 export interface RegionSelectProps<
   DisableClearable extends boolean | undefined = undefined
 > extends Omit<
@@ -49,8 +49,17 @@ export interface RegionSelectProps<
    * @default false
    */
   ignoreAccountAvailability?: boolean;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   regionFilter?: RegionFilterValue;
+  /**
+   * The regions to display in the RegionSelect dropdown.
+   *
+   * Note: if the `region.id` is "global", an additional "Global (Account level)" option will be displayed first in the dropdown, outside of any region grouping.
+   */
   regions: Region[];
   required?: boolean;
   tooltipText?: string;
@@ -78,7 +87,16 @@ export interface RegionMultiSelectProps
    */
   forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
+  /**
+   * Ignores account availability information when rendering region options
+   * @default false
+   */
+  ignoreAccountAvailability?: boolean;
   isClearable?: boolean;
+  /**
+   * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
+   */
+  isGeckoLAEnabled: boolean;
   label?: string;
   onChange: (ids: string[]) => void;
   regions: Region[];

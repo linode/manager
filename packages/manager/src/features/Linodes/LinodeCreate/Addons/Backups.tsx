@@ -1,3 +1,4 @@
+import { useAccountSettings, useRegionsQuery } from '@linode/queries';
 import {
   Checkbox,
   FormControlLabel,
@@ -12,8 +13,6 @@ import { Currency } from 'src/components/Currency';
 import { DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY } from 'src/components/Encryption/constants';
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAccountSettings } from 'src/queries/account/settings';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
@@ -64,6 +63,11 @@ export const Backups = () => {
 
   return (
     <FormControlLabel
+      checked={checked}
+      control={
+        <Checkbox sx={(theme) => ({ mt: `-${theme.tokens.spacing.S8}` })} />
+      }
+      data-testid="backups"
       disabled={
         isDistributedRegionSelected ||
         isLinodeCreateRestricted ||
@@ -83,12 +87,12 @@ export const Backups = () => {
           </Stack>
           {checked && diskEncryption === 'enabled' && (
             <Notice
-              typeProps={{
-                style: { fontSize: '0.875rem' },
-              }}
               spacingBottom={0}
               spacingTop={0}
               text={DISK_ENCRYPTION_BACKUPS_CAVEAT_COPY}
+              typeProps={{
+                style: { fontSize: '0.875rem' },
+              }}
               variant="warning"
             />
           )}
@@ -109,9 +113,6 @@ export const Backups = () => {
           </Typography>
         </Stack>
       }
-      checked={checked}
-      control={<Checkbox />}
-      data-testid="backups"
       onChange={field.onChange}
       sx={{ alignItems: 'start' }}
     />

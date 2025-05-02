@@ -1,10 +1,13 @@
+import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertSeverityType,
   AlertStatusType,
+  ChannelType,
   DimensionFilterOperatorType,
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
+import type { FieldPath } from 'react-hook-form';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
@@ -29,7 +32,7 @@ export const engineTypeOptions: Item<string, string>[] = [
   },
 ];
 
-export const MetricOperatorOptions: Item<string, MetricOperatorType>[] = [
+export const metricOperatorOptions: Item<string, MetricOperatorType>[] = [
   {
     label: '>',
     value: 'gt',
@@ -47,12 +50,12 @@ export const MetricOperatorOptions: Item<string, MetricOperatorType>[] = [
     value: 'lte',
   },
   {
-    label: '==',
+    label: '=',
     value: 'eq',
   },
 ];
 
-export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
+export const metricAggregationOptions: Item<string, MetricAggregationType>[] = [
   {
     label: 'Average',
     value: 'avg',
@@ -75,7 +78,7 @@ export const MetricAggregationOptions: Item<string, MetricAggregationType>[] = [
   },
 ];
 
-export const DimensionOperatorOptions: Item<
+export const dimensionOperatorOptions: Item<
   string,
   DimensionFilterOperatorType
 >[] = [
@@ -97,7 +100,7 @@ export const DimensionOperatorOptions: Item<
   },
 ];
 
-export const EvaluationPeriodOptions = {
+export const evaluationPeriodOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
     { label: '1 min', value: 60 },
@@ -108,7 +111,7 @@ export const EvaluationPeriodOptions = {
   ],
 };
 
-export const PollingIntervalOptions = {
+export const pollingIntervalOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
     { label: '1 min', value: 60 },
@@ -127,7 +130,17 @@ export const severityMap: Record<AlertSeverityType, string> = {
 export const alertStatusToIconStatusMap: Record<AlertStatusType, Status> = {
   disabled: 'inactive',
   enabled: 'active',
+  failed: 'error',
+  'in progress': 'other',
 };
+
+export const channelTypeOptions: Item<string, ChannelType>[] = [
+  {
+    label: 'Email',
+    value: 'email',
+  },
+];
+
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
   eq: '=',
   gt: '>',
@@ -151,3 +164,40 @@ export const dimensionOperatorTypeMap: Record<
   neq: 'not equals',
   startswith: 'starts with',
 };
+export const alertStatuses: Record<AlertStatusType, string> = {
+  disabled: 'Disabled',
+  enabled: 'Enabled',
+  failed: 'Failed',
+  'in progress': 'In Progress',
+};
+
+export const alertStatusOptions: Item<
+  string,
+  AlertStatusType
+>[] = Object.entries(alertStatuses).map(([key, label]) => ({
+  label,
+  value: key as AlertStatusType,
+}));
+
+export const engineTypeMap: Record<string, string> = {
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+};
+
+export const CREATE_ALERT_ERROR_FIELD_MAP: Record<
+  string,
+  FieldPath<CreateAlertDefinitionForm>
+> = {
+  channel_ids: 'channel_ids',
+  entity_ids: 'entity_ids',
+  rule_criteria: 'rule_criteria.rules',
+};
+
+export const MULTILINE_ERROR_SEPARATOR = '|';
+export const SINGLELINE_ERROR_SEPARATOR = '\t';
+
+export const CREATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully created. It may take a few minutes for your changes to take effect.';
+
+export const UPDATE_ALERT_SUCCESS_MESSAGE =
+  'Alert successfully updated. It may take a few minutes for your changes to take effect.';

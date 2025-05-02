@@ -1,26 +1,25 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { uploadAttachment } from '@linode/api-v4/lib/support';
+import { useCreateSupportTicketMutation } from '@linode/queries';
 import {
   Accordion,
+  ActionsPanel,
   Autocomplete,
   Box,
+  Dialog,
   Notice,
   TextField,
   Typography,
 } from '@linode/ui';
+import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Dialog } from 'src/components/Dialog/Dialog';
-import { useCreateSupportTicketMutation } from 'src/queries/support';
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { reduceAsync } from 'src/utilities/reduceAsync';
-import { scrollErrorIntoViewV2 } from 'src/utilities/scrollErrorIntoViewV2';
 import { storage, supportTicketStorageDefaults } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../AttachFileForm';
@@ -357,9 +356,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
     let requestPayload;
     if (entityType === 'bucket') {
-      const bucket_label = values.entityInputValue;
+      const bucketLabel = values.entityInputValue;
       requestPayload = {
-        bucket: bucket_label,
+        bucket: bucketLabel,
         region: _entityId,
         ...baseRequestPayload,
       };
@@ -404,7 +403,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const selectedSeverityLabel =
     selectedSeverity && SEVERITY_LABEL_MAP.get(selectedSeverity);
   const selectedSeverityOption =
-    selectedSeverity != undefined && selectedSeverityLabel != undefined
+    selectedSeverity !== undefined && selectedSeverityLabel !== undefined
       ? {
           label: selectedSeverityLabel,
           value: selectedSeverity,
@@ -423,14 +422,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         >
           {props.children || (
             <>
-              {form.formState.errors.root && (
-                <Notice
-                  data-qa-notice
-                  text={form.formState.errors.root.message}
-                  variant="error"
-                />
-              )}
-
               <Typography data-qa-support-ticket-helper-text>
                 {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
@@ -456,7 +447,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     <Autocomplete
                       onChange={(e, severity) =>
                         field.onChange(
-                          severity != null ? severity.value : undefined
+                          severity !== null ? severity.value : undefined
                         )
                       }
                       textFieldProps={{
@@ -514,6 +505,14 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 <MarkdownReference />
               </Accordion>
               <AttachFileForm files={files} updateFiles={updateFiles} />
+              {form.formState.errors.root && (
+                <Notice
+                  data-qa-notice
+                  spacingTop={16}
+                  text={form.formState.errors.root.message}
+                  variant="error"
+                />
+              )}
             </>
           )}
           <ActionsPanel

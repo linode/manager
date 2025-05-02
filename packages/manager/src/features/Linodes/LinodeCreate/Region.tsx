@@ -1,4 +1,7 @@
+import { useRegionsQuery } from '@linode/queries';
+import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
+import { getIsLegacyInterfaceArray } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -7,15 +10,11 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import {
-  isDistributedRegionSupported,
-  useIsGeckoEnabled,
-} from 'src/components/RegionSelect/RegionSelect.utils';
+import { isDistributedRegionSupported } from 'src/components/RegionSelect/RegionSelect.utils';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from 'src/queries/regions/regions';
 import { useTypeQuery } from 'src/queries/types';
 import {
   sendLinodeCreateFormInputEvent,
@@ -82,7 +81,11 @@ export const Region = React.memo(() => {
 
   const { data: regions } = useRegionsQuery();
 
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
+  const { isGeckoLAEnabled } = useIsGeckoEnabled(
+    flags.gecko2?.enabled,
+    flags.gecko2?.la
+  );
+
   const showTwoStepRegion =
     isGeckoLAEnabled && isDistributedRegionSupported(params.type ?? 'OS');
 
@@ -96,13 +99,21 @@ export const Region = React.memo(() => {
       setValue('hasSignedEUAgreement', false);
     }
 
-    if (values.interfaces?.[0].vpc_id) {
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[0].vpc_id
+    ) {
       // If a VPC is selected, clear it because VPCs are region specific
       setValue('interfaces.0.vpc_id', null);
       setValue('interfaces.0.subnet_id', null);
     }
 
-    if (values.interfaces?.[1].label) {
+    // @TODO Linode Interfaces - need to handle case if interface is not legacy
+    if (
+      getIsLegacyInterfaceArray(values.interfaces) &&
+      values.interfaces?.[1].label
+    ) {
       // If a VLAN is selected, clear it because VLANs are region specific
       setValue('interfaces.1.label', null);
       setValue('interfaces.1.ipam_address', null);
@@ -130,14 +141,19 @@ export const Region = React.memo(() => {
     }
 
     if (isDiskEncryptionFeatureEnabled) {
-      // Enable disk encryption by default if the region supports it
-      const defaultDiskEncryptionValue = region.capabilities.includes(
-        'Disk Encryption'
-      )
-        ? 'enabled'
-        : undefined;
+      if (region.site_type === 'distributed') {
+        // If a distributed region is selected, make sure we don't send disk_encryption in the payload.
+        setValue('disk_encryption', undefined);
+      } else {
+        // Enable disk encryption by default if the region supports it
+        const defaultDiskEncryptionValue =
+          region.capabilities.includes('Disk Encryption') ||
+          region.capabilities.includes('LA Disk Encryption')
+            ? 'enabled'
+            : undefined;
 
-      setValue('disk_encryption', defaultDiskEncryptionValue);
+        setValue('disk_encryption', defaultDiskEncryptionValue);
+      }
     }
 
     if (!isLabelFieldDirty) {
@@ -199,7 +215,7 @@ export const Region = React.memo(() => {
   }
 
   return (
-    <Paper>
+    <Paper data-qa-linode-region>
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
@@ -218,7 +234,7 @@ export const Region = React.memo(() => {
       <RegionHelperText />
       {showCrossDataCenterCloneWarning && (
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             Cloning a powered off instance across data centers may cause long
             periods of down time.
           </Typography>
@@ -236,6 +252,7 @@ export const Region = React.memo(() => {
         disabled={isLinodeCreateRestricted}
         disabledRegions={disabledRegions}
         errorText={fieldState.error?.message}
+        isGeckoLAEnabled={isGeckoLAEnabled}
         onChange={(e, region) => onChange(region)}
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
@@ -243,7 +260,7 @@ export const Region = React.memo(() => {
       />
       {showClonePriceWarning && (
         <Notice spacingBottom={0} spacingTop={12} variant="warning">
-          <Typography fontFamily={(theme) => theme.font.bold}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {DIFFERENT_PRICE_STRUCTURE_WARNING}{' '}
             <Link to="https://www.linode.com/pricing">Learn more.</Link>
           </Typography>

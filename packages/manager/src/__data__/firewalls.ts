@@ -14,6 +14,7 @@ export const firewall: Firewall = {
   id: 1,
   label: 'my-firewall',
   rules: {
+    fingerprint: '8a545843',
     inbound: [
       {
         action: 'ACCEPT',
@@ -34,6 +35,7 @@ export const firewall: Firewall = {
       },
     ],
     outbound_policy: 'DROP',
+    version: 1,
   },
   status: 'enabled',
   tags: [],
@@ -53,6 +55,7 @@ export const firewall2: Firewall = {
   id: 2,
   label: 'zzz',
   rules: {
+    fingerprint: '8a545843',
     inbound: [],
     inbound_policy: 'DROP',
     outbound: [
@@ -68,6 +71,7 @@ export const firewall2: Firewall = {
       },
     ],
     outbound_policy: 'DROP',
+    version: 1,
   },
   status: 'disabled',
   tags: [],

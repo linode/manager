@@ -1,6 +1,6 @@
-import type { Linode } from '@linode/api-v4';
-import { createLinodeRequestFactory, linodeFactory } from '@src/factories';
+import { createLinodeRequestFactory, linodeFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import {
   interceptGetLinodeDetails,
   interceptRebootLinodeIntoRescueMode,
@@ -11,10 +11,11 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import type { Linode } from '@linode/api-v4';
 
 // Submits the Rescue Linode dialog, initiating reboot into rescue mode.
 const rebootInRescueMode = () => {

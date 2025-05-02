@@ -1,6 +1,7 @@
+import { nodeBalancerFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { firewallFactory, nodeBalancerFactory } from 'src/factories';
+import { firewallFactory } from 'src/factories';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -10,16 +11,29 @@ import { NodeBalancerSettings } from './NodeBalancerSettings';
 vi.mock('src/hooks/useIsResourceRestricted');
 
 const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn(() => ({})),
+  useNavigate: vi.fn(() => vi.fn()),
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useParams: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/nodebalancers', async () => {
-  const actual = await vi.importActual('src/queries/nodebalancers');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useMatch: queryMocks.useMatch,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -33,6 +47,7 @@ describe('NodeBalancerSettings', () => {
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewallFactory.build({ label: 'mock-firewall-1' })] },
     });
+    queryMocks.useParams.mockReturnValue({ id: 1 });
   });
 
   afterEach(() => {
@@ -54,7 +69,6 @@ describe('NodeBalancerSettings', () => {
 
     // Firewall panel
     expect(getByText('Firewalls')).toBeVisible();
-    expect(getByText('Firewall')).toBeVisible();
     expect(getByText('Status')).toBeVisible();
     expect(getByText('Rules')).toBeVisible();
     expect(getByText('mock-firewall-1')).toBeVisible();

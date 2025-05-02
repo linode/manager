@@ -1,7 +1,6 @@
-import { accountQueries } from '../account/queries';
-import { volumeQueries } from './volumes';
+import { accountQueries, volumeQueries } from '@linode/queries';
 
-import type { EventHandlerData } from 'src/hooks/useEventHandlers';
+import type { EventHandlerData } from '@linode/queries';
 
 /**
  * An event handler that performs invalidations based on incoming volume events.

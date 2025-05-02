@@ -1,7 +1,7 @@
+import { profileFactory } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UsersActionMenu } from './UsersActionMenu';
@@ -11,8 +11,8 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 // Mock useProfile
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -59,7 +59,7 @@ describe('UsersActionMenu', () => {
 
     // Check if only the proxy user action is rendered
     expect(queryByText('View User Details')).not.toBeInTheDocument();
-    expect(queryByText('View User Roles')).not.toBeInTheDocument();
+    expect(queryByText('View Assigned Roles')).not.toBeInTheDocument();
     expect(queryByText('Delete User')).not.toBeInTheDocument();
 
     // Click "Manage Access" and verify history.push is called with the correct URL
@@ -94,11 +94,11 @@ describe('UsersActionMenu', () => {
       '/iam/users/test_user/details'
     );
 
-    // Check if "View User Roles" action is present
-    const viewRolesButton = getByText('View User Roles');
+    // Check if "View Assigned Roles" action is present
+    const viewRolesButton = getByText('View Assigned Roles');
     expect(viewRolesButton).toBeInTheDocument();
 
-    // Click "View User Roles" and verify history.push is called with the correct URL
+    // Click "View Assigned Roles" and verify history.push is called with the correct URL
     fireEvent.click(viewRolesButton);
     expect(mockHistory.push).toHaveBeenCalledWith('/iam/users/test_user/roles');
 

@@ -1,5 +1,5 @@
 import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
-import { Typography } from '@mui/material';
+import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -92,14 +92,17 @@ export const LinodeEntityDetailHeader = (
     lishLaunch(id);
   };
 
-  const isRebootNeeded =
-    isRunning &&
-    configs?.some((config) =>
-      config.interfaces.some(
-        (linodeInterface) =>
-          linodeInterface.purpose === 'vpc' && !linodeInterface.active
-      )
-    );
+  const isRebootNeeded = React.useMemo(
+    () =>
+      isRunning &&
+      configs?.some((config) =>
+        config.interfaces?.some(
+          (linodeInterface) =>
+            linodeInterface.purpose === 'vpc' && !linodeInterface.active
+        )
+      ),
+    [configs, isRunning]
+  );
 
   const formattedStatus = isRebootNeeded
     ? 'REBOOT NEEDED'
@@ -130,10 +133,11 @@ export const LinodeEntityDetailHeader = (
     },
     background: 'transparent',
     color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     fontSize: '0.875rem',
     height: theme.spacing(5),
     minWidth: 'auto',
+    padding: '2px 10px',
   };
 
   const sxBoxFlex = {
@@ -157,7 +161,7 @@ export const LinodeEntityDetailHeader = (
           sx={{ paddingX: 2 }}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
-          <Typography sx={(theme) => ({ fontFamily: theme.font.bold })}>
+          <Typography sx={(theme) => ({ font: theme.font.bold })}>
             {formattedStatus}
           </Typography>
         </Stack>
@@ -176,7 +180,7 @@ export const LinodeEntityDetailHeader = (
           >
             <ProgressDisplay
               progress={progress ?? 0}
-              sx={{ color: 'primary.main', fontFamily: theme.font.bold }}
+              sx={{ color: 'primary.main', font: theme.font.bold }}
               text={formattedTransitionText}
             />
           </Button>

@@ -10,7 +10,7 @@ type StyledMaintenanceCellProps = { maintenance: boolean };
 const statusLinkStyles = (theme: Theme) => ({
   '& p': {
     color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.bold,
+    font: theme.font.bold,
   },
   backgroundColor: 'transparent',
   border: 'none',

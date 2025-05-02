@@ -1,20 +1,20 @@
 import {
+  ActionsPanel,
+  Box,
   Button,
   CircleProgress,
+  ErrorState,
   Notice,
   Paper,
   TextField,
   Typography,
 } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Link } from 'src/components/Link';
 import {
   useBucketSSLDeleteMutation,
@@ -22,13 +22,6 @@ import {
   useBucketSSLQuery,
 } from 'src/queries/object-storage/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
-
-import {
-  StyledCertWrapper,
-  StyledFieldsWrapper,
-  StyledHelperText,
-  StyledKeyWrapper,
-} from './BucketSSL.styles';
 
 import type { CreateObjectStorageBucketSSLPayload } from '@linode/api-v4';
 
@@ -39,12 +32,11 @@ interface Props {
 
 export const BucketSSL = (props: Props) => {
   const { bucketName, clusterId } = props;
-  const theme = useTheme();
 
   return (
-    <Paper sx={{ padding: theme.spacing(3) }}>
+    <Paper>
       <Typography variant="h2">SSL/TLS Certificate</Typography>
-      <StyledHelperText>
+      <Typography sx={{ mt: 1 }}>
         Object Storage buckets are automatically served with a default TLS
         certificate that is valid for subdomains of linodeobjects.com. You can
         upload a custom certificate that will be used for the TLS portion of the
@@ -54,7 +46,7 @@ export const BucketSSL = (props: Props) => {
           custom certificates for Object Storage buckets
         </Link>
         .
-      </StyledHelperText>
+      </Typography>
       <SSLBody bucketName={bucketName} clusterId={clusterId} />
     </Paper>
   );
@@ -114,45 +106,41 @@ const AddCertForm = (props: Props) => {
           variant="error"
         />
       )}
-      <StyledFieldsWrapper>
-        <StyledCertWrapper md={6} xs={12}>
+      <Grid container spacing={2}>
+        <Grid size={{ md: 6, xs: 12 }}>
           <TextField
             data-testid="ssl-cert-input"
             errorText={errorMap.certificate}
+            expand
             fullWidth={false}
             label="Certificate"
             multiline
             name="certificate"
             onChange={formik.handleChange}
             rows="3"
-            sx={{ '& > div': { minWidth: '100%' } }}
             value={formik.values.certificate}
           />
-        </StyledCertWrapper>
-        <StyledKeyWrapper md={6} xs={12}>
+        </Grid>
+        <Grid size={{ md: 6, xs: 12 }}>
           <TextField
             data-testid="ssl-cert-input"
             errorText={errorMap.private_key}
+            expand
             fullWidth
             label="Private Key"
             multiline
             name="private_key"
             onChange={formik.handleChange}
             rows="3"
-            sx={{ '& > div': { minWidth: '100%' } }}
             value={formik.values.private_key}
           />
-        </StyledKeyWrapper>
-      </StyledFieldsWrapper>
-      <Grid>
-        <ActionsPanel
-          primaryButtonProps={{
-            label: 'Upload Certificate',
-            loading: isPending,
-            type: 'submit',
-          }}
-        />
+        </Grid>
       </Grid>
+      <Box display="flex" justifyContent="flex-end" mt={2}>
+        <Button buttonType="primary" loading={isPending} type="submit">
+          Upload Certificate
+        </Button>
+      </Box>
     </form>
   );
 };

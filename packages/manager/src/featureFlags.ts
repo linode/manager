@@ -1,5 +1,5 @@
 import type { OCA } from './features/OneClickApps/types';
-import type { TPAProvider } from '@linode/api-v4/lib/profile';
+import type { AlertServiceType, TPAProvider } from '@linode/api-v4/lib/profile';
 import type { NoticeVariant } from '@linode/ui';
 
 // These flags should correspond with active features flags in LD
@@ -76,7 +76,7 @@ export interface CloudPulseResourceTypeMapFlag {
   supportedRegionIds?: string;
 }
 
-interface gpuV2 {
+interface GpuV2 {
   egressBanner: boolean;
   planDivider: boolean;
   transferBanner: boolean;
@@ -97,37 +97,49 @@ interface AclpAlerting {
   notificationChannels: boolean;
   recentActivity: boolean;
 }
+
+interface LimitsEvolution {
+  enabled: boolean;
+  requestForIncreaseDisabledForAll: boolean;
+  requestForIncreaseDisabledForInternalAccountsOnly: boolean;
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
-  apiMaintenance: APIMaintenance;
   apicliButtonCopy: string;
+  apiMaintenance: APIMaintenance;
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
-  disallowImageUploadToNonObjRegions: boolean;
   gecko2: GeckoFeatureFlag;
-  gpuv2: gpuV2;
+  gpuv2: GpuV2;
   iam: BetaFeatureFlag;
-  imageServiceGen2: boolean;
-  imageServiceGen2Ga: boolean;
   ipv6Sharing: boolean;
+  limitsEvolution: LimitsEvolution;
+  linodeCloneFirewall: boolean;
   linodeDiskEncryption: boolean;
+  linodeInterfaces: BaseFeatureFlag;
   lkeEnterprise: LkeEnterpriseFlag;
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  objMultiCluster: boolean;
+  mtctt2025: boolean;
+  nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objMultiCluster: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -138,10 +150,11 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  taxId: BaseFeatureFlag;
   taxes: Taxes;
+  taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
+  vmHostMaintenance: BetaFeatureFlag;
 }
 
 interface MarketplaceAppOverride {
@@ -153,7 +166,7 @@ interface MarketplaceAppOverride {
    *
    * Pass `null` to hide the marketplace app
    */
-  details: Partial<OCA> | null;
+  details: null | Partial<OCA>;
   /**
    * The ID of the StackScript that powers this Marketplace app
    */
@@ -244,8 +257,8 @@ export type ProductInformationBannerLocation =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;
@@ -271,4 +284,10 @@ export interface SuppliedMaintenanceData {
 }
 export interface APIMaintenance {
   maintenances: SuppliedMaintenanceData[];
+}
+
+export interface AclpAlertServiceTypeConfig {
+  maxResourceSelectionCount: number;
+  serviceType: AlertServiceType;
+  // This can be extended to have supportedRegions, supportedFilters and other tags
 }

@@ -1,47 +1,49 @@
-import type {
-  Linode,
-  Firewall,
-  FirewallRuleType,
-  CreateLinodeRequest,
-  CreateFirewallPayload,
-  FirewallPolicyType,
-} from '@linode/api-v4';
-import { createLinode, createFirewall } from '@linode/api-v4';
-import {
-  createLinodeRequestFactory,
-  firewallFactory,
-  firewallRuleFactory,
-  firewallRulesFactory,
-} from 'src/factories';
+import { createFirewall, createLinode } from '@linode/api-v4';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import {
   interceptUpdateFirewallLinodes,
   interceptUpdateFirewallRules,
 } from 'support/intercepts/firewalls';
-import { randomItem, randomString, randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
 import { cleanUp } from 'support/util/cleanup';
+import { randomItem, randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import {
+  firewallFactory,
+  firewallRuleFactory,
+  firewallRulesFactory,
+} from 'src/factories';
+
+import type {
+  CreateFirewallPayload,
+  CreateLinodeRequest,
+  Firewall,
+  FirewallPolicyType,
+  FirewallRuleType,
+  Linode,
+} from '@linode/api-v4';
 
 const portPresetMap = {
   '22': 'SSH',
+  '53': 'DNS',
   '80': 'HTTP',
   '443': 'HTTPS',
   '3306': 'MySQL',
-  '53': 'DNS',
 };
 
 const inboundRule = firewallRuleFactory.build({
-  label: randomLabel(),
-  description: randomString(),
   action: 'ACCEPT',
+  description: randomString(),
+  label: randomLabel(),
   ports: randomItem(Object.keys(portPresetMap)),
 });
 
 const outboundRule = firewallRuleFactory.build({
-  label: randomLabel(),
-  description: randomString(),
   action: 'DROP',
+  description: randomString(),
+  label: randomLabel(),
   ports: randomItem(Object.keys(portPresetMap)),
 });
 
@@ -82,10 +84,10 @@ const addFirewallRules = (rule: FirewallRuleType, direction: string) => {
       const description = rule.description
         ? rule.description
         : 'test-description';
-      cy.contains('Label')
-        .click()
-        .type('{selectall}{backspace}' + label);
-      cy.contains('Description').click().type(description);
+      cy.contains('Label').click();
+      cy.focused().type('{selectall}{backspace}' + label);
+      cy.contains('Description').click();
+      cy.focused().type(description);
 
       const action = rule.action ? getRuleActionLabel(rule.action) : 'Accept';
       cy.contains(action).click();
@@ -139,10 +141,8 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
     .should('be.visible')
     .within(() => {
       // Fill out and submit firewall edit form.
-      cy.findByLabelText('Linodes')
-        .should('be.visible')
-        .click()
-        .type(linode.label);
+      cy.findByLabelText('Linodes').should('be.visible').click();
+      cy.focused().type(linode.label);
 
       ui.autocompletePopper
         .findByTitle(linode.label)
@@ -160,13 +160,16 @@ const createLinodeAndFirewall = async (
   firewallRequestPayload: CreateFirewallPayload
 ) => {
   return Promise.all([
+    // eslint-disable-next-line @linode/cloud-manager/no-createLinode
     createLinode(linodeRequestPayload),
     createFirewall(firewallRequestPayload),
   ]);
 };
 
 authenticate();
-describe('update firewall', () => {
+// Firewall GET API request performance issues need to be addressed in order to unskip this test
+// See M3-9619
+describe.skip('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });
@@ -440,10 +443,9 @@ describe('update firewall', () => {
       cy.visitWithLogin(`/firewalls/${firewall.id}`);
 
       cy.findByLabelText(`Edit ${firewall.label}`).click();
-      cy.get(`[id="edit-${firewall.label}-label"]`)
-        .click()
-        .clear()
-        .type(`${newFirewallLabel}{enter}`);
+      cy.get(`[id="edit-${firewall.label}-label"]`).click();
+      cy.focused().clear();
+      cy.focused().type(`${newFirewallLabel}{enter}`);
 
       // Confirm Firewall label updates in breadcrumbs.
       ui.entityHeader.find().within(() => {

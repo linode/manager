@@ -19,20 +19,6 @@ export const StyledTable = styled(Table, {
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
   shouldForwardProp: omittedProps(['isPlanCell']),
-})<StyledTableCellPropsProps>(({ theme, ...props }) => ({
+})<StyledTableCellPropsProps>(({ ...props }) => ({
   ...(props.isPlanCell && { width: '30%' }),
-  '&.emptyCell': {
-    borderRight: 'none',
-  },
-  '&.planHeaderCell': {
-    ...(props.isPlanCell && { paddingLeft: 4 }),
-  },
-  '&:last-child': {
-    paddingRight: 15,
-  },
-  '&:not(.emptyCell)': {
-    borderLeft: 'none !important',
-  },
-  borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
-  borderTop: `1px solid ${theme.borderColors.borderTable} !important`,
 }));

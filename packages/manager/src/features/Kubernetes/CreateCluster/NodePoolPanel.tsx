@@ -1,22 +1,20 @@
-import { CircleProgress } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
-import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
-import { useRegionsQuery } from 'src/queries/regions/regions';
-import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   ADD_NODE_POOLS_DESCRIPTION,
-  ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
-} from '../ClusterList/constants';
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+} from '../constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 import type {
   KubeNodePoolResponse,
+  KubernetesTier,
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
@@ -33,6 +31,7 @@ export interface NodePoolPanelProps {
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
+  selectedTier: KubernetesTier;
   types: ExtendedType[];
   typesError?: string;
   typesLoading: boolean;
@@ -66,16 +65,11 @@ const Panel = (props: NodePoolPanelProps) => {
     isSelectedRegionEligibleForPlan,
     regionsData,
     selectedRegionId,
+    selectedTier,
     types,
   } = props;
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
-
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
-
-  const regions = useRegionsQuery().data ?? [];
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -87,6 +81,7 @@ const Panel = (props: NodePoolPanelProps) => {
   const addPool = (selectedPlanType: string, nodeCount: number) => {
     addNodePool({
       count: nodeCount,
+      // eslint-disable-next-line sonarjs/pseudo-random
       id: Math.random(),
       type: selectedPlanType,
     });
@@ -97,21 +92,16 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  const regionSupportsDiskEncryption = doesRegionSupportFeature(
-    selectedRegionId ?? '',
-    regions,
-    'Disk Encryption'
-  );
+  const getPlansPanelCopy = () => {
+    return selectedTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
 
   return (
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
-          copy={
-            isDiskEncryptionFeatureEnabled && regionSupportsDiskEncryption
-              ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
-              : ADD_NODE_POOLS_DESCRIPTION
-          }
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
@@ -121,9 +111,11 @@ const Panel = (props: NodePoolPanelProps) => {
               return false;
             }
 
-            // No Nanodes or GPUs in Kubernetes clusters
-            return t.class !== 'nanode' && t.class !== 'gpu';
+            // No Nanodes in Kubernetes clusters
+            return t.class !== 'nanode';
           })}
+          copy={getPlansPanelCopy()}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           error={apiError}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
@@ -136,6 +128,7 @@ const Panel = (props: NodePoolPanelProps) => {
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
           selectedId={selectedType}
           selectedRegionId={selectedRegionId}
+          selectedTier={selectedTier}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

@@ -13,15 +13,15 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
+import { Link } from 'src/components/Link';
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
-import type { Item } from 'src/components/EnhancedSelect/Select';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   formControlDropdown: {
@@ -85,7 +85,7 @@ export const MaintenanceWindow = (props: Props) => {
   const [
     modifiedWeekSelectionMap,
     setModifiedWeekSelectionMap,
-  ] = React.useState<Item<number>[]>([]);
+  ] = React.useState<SelectOption<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -97,7 +97,7 @@ export const MaintenanceWindow = (props: Props) => {
 
   const weekSelectionModifier = (
     day: string,
-    weekSelectionMap: Item<number>[]
+    weekSelectionMap: SelectOption<number>[]
   ) => {
     const modifiedMap = weekSelectionMap.map((weekSelectionElement) => {
       return {

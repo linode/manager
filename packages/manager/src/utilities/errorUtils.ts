@@ -1,7 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { pathOr } from 'ramda';
-
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 
 /**
  *
@@ -55,8 +54,7 @@ export const getErrorStringOrDefault = (
   if (typeof errors === 'string') {
     return errors;
   }
-  const apiErrors = pathOr(errors, ['response', 'data', 'errors'], errors);
-  return pathOr<string>(defaultError, [0, 'reason'], apiErrors);
+  return errors?.[0]?.reason ?? defaultError;
 };
 
 /**

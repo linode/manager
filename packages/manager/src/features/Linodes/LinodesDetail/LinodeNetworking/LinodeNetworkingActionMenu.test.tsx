@@ -38,7 +38,8 @@ describe('LinodeNetworkingActionMenu', () => {
       <LinodeNetworkingActionMenu
         {...props}
         ipAddress={mockLinodeIPv4}
-        ipType="IPv4 – Public"
+        ipType="Public – IPv4"
+        isLinodeInterface={false}
       />
     );
 
@@ -54,7 +55,8 @@ describe('LinodeNetworkingActionMenu', () => {
       <LinodeNetworkingActionMenu
         {...props}
         ipAddress={mockLinodeIPv6Range}
-        ipType="IPv6 – Range"
+        ipType="Range – IPv6"
+        isLinodeInterface={false}
       />
     );
 

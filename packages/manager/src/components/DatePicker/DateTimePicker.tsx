@@ -1,5 +1,5 @@
+import { ActionsPanel, InputAdornment, TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
-import { InputAdornment, TextField } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { Grid, Popover } from '@mui/material';
@@ -9,11 +9,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import React, { useEffect, useState } from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
+import { timezones } from 'src/assets/timezones/timezones';
 
 import { TimeZoneSelect } from './TimeZoneSelect';
 
-import type { TextFieldProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { DateCalendarProps } from '@mui/x-date-pickers/DateCalendar';
 import type { DateTime } from 'luxon';
@@ -21,12 +20,15 @@ import type { DateTime } from 'luxon';
 export interface DateTimePickerProps {
   /** Additional props for the DateCalendar */
   dateCalendarProps?: Partial<DateCalendarProps<DateTime>>;
+  disabledTimeZone?: boolean;
   /** Error text for the date picker field */
   errorText?: string;
   /** Format for displaying the date-time */
   format?: string;
   /** Label for the input field */
   label?: string;
+  /** Minimum date-time before which all date-time will be disabled */
+  minDate?: DateTime;
   /** Callback when the "Apply" button is clicked */
   onApply?: () => void;
   /** Callback when the "Cancel" button is clicked */
@@ -61,9 +63,11 @@ export interface DateTimePickerProps {
 
 export const DateTimePicker = ({
   dateCalendarProps = {},
+  disabledTimeZone = false,
   errorText = '',
   format = 'yyyy-MM-dd HH:mm',
   label = 'Select Date and Time',
+  minDate,
   onApply,
   onCancel,
   onChange,
@@ -92,11 +96,6 @@ export const DateTimePicker = ({
     timeZoneSelectProps.value || null
   );
 
-  const TimePickerFieldProps: TextFieldProps = {
-    label: timeSelectProps?.label ?? 'Select Time',
-    noMarginTop: true,
-  };
-
   const handleDateChange = (newDate: DateTime | null) => {
     setSelectedDateTime((prev) =>
       newDate
@@ -109,7 +108,7 @@ export const DateTimePicker = ({
   };
 
   const handleTimeChange = (newTime: DateTime | null) => {
-    if (newTime) {
+    if (newTime && !newTime.invalidReason) {
       setSelectedDateTime((prev) =>
         prev ? prev.set({ hour: newTime.hour, minute: newTime.minute }) : prev
       );
@@ -172,9 +171,9 @@ export const DateTimePicker = ({
           }}
           value={
             selectedDateTime
-              ? `${selectedDateTime.toFormat(format)}${
-                  selectedTimeZone ? ` (${selectedTimeZone})` : ''
-                }`
+              ? `${selectedDateTime.toFormat(format)}${generateTimeZone(
+                  selectedTimeZone
+                )}`
               : ''
           }
           errorText={errorText}
@@ -193,6 +192,7 @@ export const DateTimePicker = ({
       >
         <Box padding={2}>
           <DateCalendar
+            minDate={minDate}
             onChange={handleDateChange}
             value={selectedDateTime || null}
             {...dateCalendarProps}
@@ -205,7 +205,7 @@ export const DateTimePicker = ({
                 fontSize: '0.875rem',
               },
               '& .MuiPickersCalendarHeader-label': {
-                fontFamily: theme.font.bold,
+                font: theme.font.bold,
               },
               '& .MuiPickersCalendarHeader-root': {
                 borderBottom: `1px solid ${theme.borderColors.divider}`,
@@ -228,6 +228,11 @@ export const DateTimePicker = ({
             {showTime && (
               <Grid item xs={4}>
                 <TimePicker
+                  minTime={
+                    minDate?.toISODate() === selectedDateTime?.toISODate()
+                      ? minDate
+                      : undefined
+                  }
                   slotProps={{
                     actionBar: {
                       sx: (theme: Theme) => ({
@@ -237,6 +242,7 @@ export const DateTimePicker = ({
                         padding: 0,
                       }),
                     },
+
                     layout: {
                       sx: (theme: Theme) => ({
                         '& .MuiPickersLayout-contentWrapper': {
@@ -255,10 +261,13 @@ export const DateTimePicker = ({
                         },
                       }),
                     },
-                    textField: TimePickerFieldProps,
                   }}
+                  sx={{
+                    marginTop: 0,
+                  }}
+                  data-qa-time="time-picker"
+                  label={timeSelectProps?.label || 'Select Time'}
                   onChange={handleTimeChange}
-                  slots={{ textField: TextField }}
                   value={selectedDateTime || null}
                 />
               </Grid>
@@ -266,6 +275,7 @@ export const DateTimePicker = ({
             {showTimeZone && (
               <Grid item xs={7}>
                 <TimeZoneSelect
+                  disabled={disabledTimeZone}
                   label={timeZoneSelectProps?.label || 'Timezone'}
                   noMarginTop
                   onChange={handleTimeZoneChange}
@@ -293,4 +303,20 @@ export const DateTimePicker = ({
       </Popover>
     </LocalizationProvider>
   );
+};
+
+const generateTimeZone = (selectedTimezone: null | string): string => {
+  const offset = timezones.find((zone) => zone.name === selectedTimezone)
+    ?.offset;
+  if (!offset) {
+    return '';
+  }
+  const minutes = (Math.abs(offset * 60) % 60).toLocaleString(undefined, {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+  const hours = Math.floor(Math.abs(offset));
+  const isPositive = Math.abs(offset) === offset ? '+' : '-';
+
+  return ` (GMT${isPositive}${hours}:${minutes})`;
 };

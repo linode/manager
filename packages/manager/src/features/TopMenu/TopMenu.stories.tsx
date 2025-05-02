@@ -12,8 +12,6 @@ export const Default: StoryObj<TopMenuProps> = {
 const meta: Meta<TopMenuProps> = {
   args: {
     desktopMenuToggle: () => null,
-    isSideMenuOpen: false,
-    openSideMenu: () => null,
     username: 'User 1',
   },
   component: TopMenu,

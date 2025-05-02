@@ -17,10 +17,12 @@ export const useResourcesQuery = (
     select: (resources) => {
       return resources.map((resource) => {
         return {
-          id: resource.id,
+          engineType: resource.engine,
+          id: String(resource.id),
           label: resource.label,
           region: resource.region,
           regions: resource.regions ? resource.regions : [],
+          tags: resource.tags,
         };
       });
     },

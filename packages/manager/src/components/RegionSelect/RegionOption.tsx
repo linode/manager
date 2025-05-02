@@ -1,21 +1,24 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, ListItemOption, Stack } from '@linode/ui';
+import PublicIcon from '@mui/icons-material/Public';
 import React from 'react';
 
-import { Flag } from 'src/components/Flag';
-import { ListItemOption } from 'src/components/ListItemOption';
-import { useIsGeckoEnabled } from 'src/components/RegionSelect/RegionSelect.utils';
+// @todo: modularization - Move `Flag` component to `@linode/shared` package.
+import { Flag } from '../Flag';
 
 import type { Region } from '@linode/api-v4';
-import type { ListItemProps } from 'src/components/ListItemOption';
+import type { ListItemOptionProps } from '@linode/ui';
+
+interface RegionOptionProps extends ListItemOptionProps<Region> {
+  isGeckoLAEnabled: boolean;
+}
 
 export const RegionOption = ({
   disabledOptions,
+  isGeckoLAEnabled,
   item,
   props,
   selected,
-}: ListItemProps<Region>) => {
-  const { isGeckoLAEnabled } = useIsGeckoEnabled();
-
+}: RegionOptionProps) => {
   return (
     <ListItemOption
       disabledOptions={disabledOptions}
@@ -23,8 +26,27 @@ export const RegionOption = ({
       props={props}
       selected={selected}
     >
-      <Stack alignItems="center" direction="row" gap={1} width="100%">
-        <Flag country={item.country} />
+      <Stack
+        sx={(theme) => ({
+          '&:hover .public-icon': {
+            color: `${theme.tokens.color.Neutrals.White}`,
+          },
+        })}
+        alignItems="center"
+        direction="row"
+        gap={1}
+        width="100%"
+      >
+        {item.id === 'global' ? (
+          <PublicIcon
+            sx={(theme) => ({
+              color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
+            })}
+            className="public-icon"
+          />
+        ) : (
+          <Flag country={item.country} />
+        )}
         {isGeckoLAEnabled ? item.label : `${item.label} (${item.id})`}
         <Box flexGrow={1} />
         {isGeckoLAEnabled && `(${item.id})`}

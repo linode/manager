@@ -11,8 +11,37 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => vi.fn()),
+  useOrderV2: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
+vi.mock('src/hooks/useOrderV2', async () => {
+  const actual = await vi.importActual('src/hooks/useOrderV2');
+  return {
+    ...actual,
+    useOrderV2: queryMocks.useOrderV2,
+  };
+});
+
 describe('ObjectStorageLanding', () => {
-  beforeAll(() => server.listen());
+  beforeAll(() => {
+    server.listen();
+    queryMocks.useSearch.mockReturnValue({
+      order: 'asc',
+      orderBy: 'label',
+    });
+  });
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 
@@ -123,6 +152,11 @@ describe('ObjectStorageLanding', () => {
 
   it('renders rows for each Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2);
+    queryMocks.useOrderV2.mockReturnValue({
+      order: 'asc',
+      orderBy: 'label',
+      sortedData: buckets,
+    });
 
     // Mock Clusters
     server.use(
@@ -145,9 +179,9 @@ describe('ObjectStorageLanding', () => {
     await screen.findByText(buckets[1].label);
   });
 
-  it('renders a "Total usage" section if there is more than one Bucket', async () => {
+  it('renders a "Total usage" section using base2 calculations if there is more than one Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2, {
-      size: 1e9 * 5,
+      size: 1024 * 1024 * 1024 * 5, // 5 GB in base2 (5 GiB)
     });
 
     // Mock Clusters

@@ -1,9 +1,8 @@
-import { createLazyRoute } from '@tanstack/react-router';
+import { useVPCQuery, useVPCsQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
-import { CircleProgress } from '@linode/ui';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -13,13 +12,18 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useVPCsQuery } from 'src/queries/vpcs/vpcs';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  VPC_CREATE_ROUTE,
+  VPC_LANDING_ROUTE,
+  VPC_LANDING_TABLE_PREFERENCE_KEY,
+} from 'src/features/VPCs/constants';
+import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { VPCDeleteDialog } from './VPCDeleteDialog';
 import { VPCEditDrawer } from './VPCEditDrawer';
@@ -28,18 +32,22 @@ import { VPCRow } from './VPCRow';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 
-const preferenceKey = 'vpcs';
-const VPC_CREATE_ROUTE = 'vpcs/create';
-
 const VPCLanding = () => {
-  const pagination = usePagination(1, preferenceKey);
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
+  const pagination = usePaginationV2({
+    currentRoute: VPC_LANDING_ROUTE,
+    preferenceKey: VPC_LANDING_TABLE_PREFERENCE_KEY,
+  });
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: VPC_LANDING_ROUTE,
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${VPC_LANDING_TABLE_PREFERENCE_KEY}-order`,
+  });
 
   const filter = {
     ['+order']: order,
@@ -54,29 +62,40 @@ const VPCLanding = () => {
     filter
   );
 
-  const history = useHistory();
-
-  const [selectedVPC, setSelectedVPC] = React.useState<VPC | undefined>();
-
-  const [editVPCDrawerOpen, setEditVPCDrawerOpen] = React.useState(false);
-  const [deleteVPCDialogOpen, setDeleteVPCDialogOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const params = useParams({ strict: false });
 
   const handleEditVPC = (vpc: VPC) => {
-    setSelectedVPC(vpc);
-    setEditVPCDrawerOpen(true);
+    navigate({
+      params: { action: 'edit', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/$action',
+    });
   };
 
   const handleDeleteVPC = (vpc: VPC) => {
-    setSelectedVPC(vpc);
-    setDeleteVPCDialogOpen(true);
+    navigate({
+      params: { action: 'delete', vpcId: vpc.id },
+      to: '/vpcs/$vpcId/$action',
+    });
+  };
+
+  const onCloseVPCDrawer = () => {
+    navigate({ to: VPC_LANDING_ROUTE });
   };
 
   const createVPC = () => {
-    history.push(VPC_CREATE_ROUTE);
+    navigate({ to: VPC_CREATE_ROUTE });
   };
 
   const isVPCCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_vpcs',
+  });
+
+  const { data: selectedVPC, isFetching: isFetchingVPC } = useDialogData({
+    enabled: !!params.vpcId,
+    paramKey: 'vpcId',
+    queryHook: useVPCQuery,
+    redirectToOnNotFound: '/vpcs',
   });
 
   if (error) {
@@ -100,10 +119,6 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
-        createButtonText="Create VPC"
-        docsLink={VPC_DOCS_LINK}
-        onButtonClick={createVPC}
-        title={VPC_LABEL}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -111,7 +126,12 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
+        breadcrumbProps={{ pathname: '/vpcs' }}
+        createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
+        docsLink={VPC_DOCS_LINK}
+        onButtonClick={createVPC}
+        title={VPC_LABEL}
       />
       <Table>
         <TableHead>
@@ -148,7 +168,7 @@ const VPCLanding = () => {
             <Hidden mdDown>
               <TableCell>Linodes</TableCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
@@ -171,22 +191,19 @@ const VPCLanding = () => {
         pageSize={pagination.pageSize}
       />
       <VPCDeleteDialog
-        id={selectedVPC?.id}
-        label={selectedVPC?.label}
-        onClose={() => setDeleteVPCDialogOpen(false)}
-        open={deleteVPCDialogOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'delete'}
+        vpc={selectedVPC}
       />
       <VPCEditDrawer
-        onClose={() => setEditVPCDrawerOpen(false)}
-        open={editVPCDrawerOpen}
+        isFetching={isFetchingVPC}
+        onClose={onCloseVPCDrawer}
+        open={params.action === 'edit'}
         vpc={selectedVPC}
       />
     </>
   );
 };
-
-export const vpcLandingLazyRoute = createLazyRoute('/')({
-  component: VPCLanding,
-});
 
 export default VPCLanding;

@@ -1,6 +1,5 @@
 import { Checkbox } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
-import { intersection, pathOr } from 'ramda';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -16,8 +15,8 @@ import type { DiskSelection } from './utilities';
 import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export interface DisksProps {
-  diskSelection: DiskSelection;
   disks: Disk[];
+  diskSelection: DiskSelection;
   handleSelect: (id: number) => void;
   selectedConfigIds: number[];
 }
@@ -38,7 +37,12 @@ export const Disks = (props: DisksProps) => {
         return (
           <React.Fragment>
             <Grid container>
-              <Grid md={9} xs={12}>
+              <Grid
+                size={{
+                  md: 9,
+                  xs: 12,
+                }}
+              >
                 <Table aria-label="List of Disks">
                   <TableHead>
                     <TableRow>
@@ -58,15 +62,9 @@ export const Disks = (props: DisksProps) => {
                         const isConfigSelected =
                           // Is there anything in common between this disk's
                           // associatedConfigIds and the selectedConfigsIds?
-                          intersection(
-                            pathOr(
-                              [],
-                              [disk.id, 'associatedConfigIds'],
-                              diskSelection
-                            ),
-                            selectedConfigIds
-                          ).length > 0;
-
+                          (
+                            diskSelection?.[disk.id]?.associatedConfigIds ?? []
+                          ).some((num) => selectedConfigIds.includes(num));
                         return (
                           <TableRow data-qa-disk={disk.label} key={disk.id}>
                             <TableCell>
@@ -75,6 +73,7 @@ export const Disks = (props: DisksProps) => {
                                 data-testid={`checkbox-${disk.id}`}
                                 disabled={isConfigSelected}
                                 onChange={() => handleSelect(disk.id)}
+                                size="small"
                                 text={disk.label}
                               />
                             </TableCell>

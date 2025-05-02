@@ -1,32 +1,38 @@
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface CredentialActionMenuProps {
-  credentialID: number;
+  credentialId: number;
   label: string;
-  openDialog: (id: number, label: string) => void;
-  openForEdit: (id: number) => void;
 }
 
-const CredentialActionMenu = (props: CredentialActionMenuProps) => {
+export const CredentialActionMenu = (props: CredentialActionMenuProps) => {
+  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { credentialID, label, openDialog, openForEdit } = props;
+  const { credentialId, label } = props;
 
   const onClickForEdit = () => {
-    openForEdit(credentialID);
+    navigate({
+      params: { credentialId },
+      to: '/managed/credentials/$credentialId/edit',
+    });
   };
 
   const onClickForDelete = () => {
-    openDialog(credentialID, label);
+    navigate({
+      params: { credentialId },
+      to: '/managed/credentials/$credentialId/delete',
+    });
   };
 
   const actions: Action[] = [
@@ -41,7 +47,6 @@ const CredentialActionMenu = (props: CredentialActionMenuProps) => {
   ];
 
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {matchesSmDown ? (
         <ActionMenu
@@ -62,5 +67,3 @@ const CredentialActionMenu = (props: CredentialActionMenuProps) => {
     </>
   );
 };
-
-export default CredentialActionMenu;

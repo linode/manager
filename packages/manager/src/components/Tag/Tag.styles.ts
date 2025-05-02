@@ -10,9 +10,10 @@ export const StyledChip = styled(Chip, {
     '&:hover': {
       borderBottomRightRadius: props.onDelete && 0,
       borderTopRightRadius: props.onDelete && 0,
+      color: `${theme.color.white} !important`,
     },
     borderRadius: 4,
-    fontFamily: theme.font.normal,
+    font: theme.font.normal,
     maxWidth: 350,
     padding: '7px 10px',
   },
@@ -23,16 +24,12 @@ export const StyledChip = styled(Chip, {
     borderTopRightRadius: 0,
     padding: '7px 10px',
   },
-  '&:focus': {
-    ['& .StyledDeleteButton']: {
+  '&:focus, &:hover, &.Mui-focusVisible': {
+    ['& .MuiChip-deleteIcon']: {
       color: theme.color.tagIcon,
     },
-    backgroundColor: theme.color.tagButtonBg,
-  },
-  // Overrides MUI chip default styles so these appear as separate elements.
-  '&:hover': {
-    ['& .StyledDeleteButton']: {
-      color: theme.color.tagIcon,
+    ['& .MuiChip-label']: {
+      color: theme.color.tagButtonText,
     },
     backgroundColor: theme.color.tagButtonBg,
   },
@@ -71,20 +68,16 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
   label: 'StyledDeleteButton',
 })(({ theme }) => ({
   '& svg': {
-    borderRadius: theme.tokens.borderRadius.None,
+    borderRadius: theme.tokens.alias.Radius.Default,
     color: theme.color.tagIcon,
     height: 15,
     width: 15,
   },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    color: theme.color.black,
-  },
-  '&:hover': {
+  '&:focus, &:hover': {
     '& svg': {
-      color: theme.color.tagIconHover,
+      color: theme.color.white,
     },
-    backgroundColor: theme.color.buttonPrimaryHover,
+    backgroundColor: `${theme.color.buttonPrimaryHover} !important`,
   },
   borderBottomRightRadius: 3,
   borderLeft: `1px solid ${
@@ -92,7 +85,7 @@ export const StyledDeleteButton = styled(StyledLinkButton, {
       ? theme.tokens.color.Neutrals.White
       : theme.tokens.color.Neutrals[100]
   }`,
-  borderRadius: theme.tokens.borderRadius.None,
+  borderRadius: theme.tokens.alias.Radius.Default,
   borderTopRightRadius: 3,
   height: 30,
   margin: 0,

@@ -132,7 +132,7 @@ export const WithReadableRemoveCTA: Story = {
             RemoveButton={() => (
               <Button
                 sx={(theme) => ({
-                  fontFamily: theme.font.normal,
+                  font: theme.font.normal,
                   fontSize: '0.875rem',
                 })}
                 variant="text"

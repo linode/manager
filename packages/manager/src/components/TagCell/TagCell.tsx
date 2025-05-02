@@ -7,7 +7,7 @@ import {
 } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Tag } from 'src/components/Tag/Tag';
@@ -241,7 +241,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.tokens.color.Neutrals.White,
   },
   backgroundColor: theme.color.tagButtonBg,
-  borderRadius: theme.tokens.borderRadius.None,
+  borderRadius: theme.tokens.alias.Radius.Default,
   color: theme.color.tagIcon,
   height: 30,
   marginLeft: theme.spacing(0.5),

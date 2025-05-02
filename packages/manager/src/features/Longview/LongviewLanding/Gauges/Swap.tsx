@@ -1,11 +1,10 @@
 import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientData from 'src/containers/longview.stats.container';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import { baseGaugeProps } from './common';
 
@@ -25,17 +24,8 @@ export const SwapGauge = withClientData<Props>((ownProps) => ownProps.clientID)(
 
     const theme = useTheme();
 
-    const freeMemory = pathOr<number>(
-      0,
-      ['Memory', 'swap', 'free', 0, 'y'],
-      longviewClientData
-    );
-    const usedMemory = pathOr<number>(
-      0,
-      ['Memory', 'swap', 'used', 0, 'y'],
-      longviewClientData
-    );
-
+    const freeMemory = longviewClientData?.Memory?.swap?.free?.[0]?.y ?? 0;
+    const usedMemory = longviewClientData?.Memory?.swap?.used?.[0]?.y ?? 0;
     const totalMemory = usedMemory + freeMemory;
 
     const generateText = (): {

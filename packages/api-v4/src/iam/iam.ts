@@ -1,6 +1,7 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { IamUserPermissions, IamAccountPermissions } from './types';
+
+import type { IamAccountPermissions, IamUserPermissions } from './types';
 
 /**
  * getUserPermissions
@@ -14,11 +15,11 @@ import { IamUserPermissions, IamAccountPermissions } from './types';
 export const getUserPermissions = (username: string) =>
   Request<IamUserPermissions>(
     setURL(
-      `${BETA_API_ROOT}/iam/role-permissions/users/${encodeURIComponent(
-        username
-      )}`
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+        username,
+      )}/role-permissions`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 /**
  * updateUserPermissions
@@ -31,16 +32,16 @@ export const getUserPermissions = (username: string) =>
  */
 export const updateUserPermissions = (
   username: string,
-  data: Partial<IamUserPermissions>
+  data: IamUserPermissions,
 ) =>
   Request<IamUserPermissions>(
     setURL(
-      `${BETA_API_ROOT}/iam/role-permissions/users/${encodeURIComponent(
-        username
-      )}`
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+        username,
+      )}/role-permissions`,
     ),
     setMethod('PUT'),
-    setData(data)
+    setData(data),
   );
 
 /**
@@ -52,6 +53,6 @@ export const updateUserPermissions = (
 export const getAccountPermissions = () => {
   return Request<IamAccountPermissions>(
     setURL(`${BETA_API_ROOT}/iam/role-permissions`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };

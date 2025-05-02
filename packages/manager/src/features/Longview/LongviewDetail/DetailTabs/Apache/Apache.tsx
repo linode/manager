@@ -1,15 +1,13 @@
 import { Box, Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import { isToday as _isToday } from '@linode/utilities';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { isToday as _isToday } from 'src/utilities/isToday';
+import { TimeRangeSelect } from 'src/features/Longview/shared/TimeRangeSelect';
 
-import {
-  StyledTimeRangeSelect,
-  StyledTypography,
-} from '../CommonStyles.styles';
+import { StyledTypography } from '../CommonStyles.styles';
 import { useGraphs } from '../OverviewGraphs/useGraphs';
 import { ApacheGraphs } from './ApacheGraphs';
 
@@ -82,7 +80,7 @@ export const Apache = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Apache'} />
-      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} xs={12}>
+      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} size={12}>
         <Box
           alignItems="center"
           display="flex"
@@ -94,20 +92,16 @@ export const Apache = React.memo((props: Props) => {
             {version && <Typography variant="body1">{version}</Typography>}
           </div>
 
-          <StyledTimeRangeSelect
+          <TimeRangeSelect
             defaultValue="Past 30 Minutes"
             handleStatsChange={handleStatsChange}
             hideLabel
             label="Select Time Range"
-            small
+            sx={{ width: 250 }}
           />
         </Box>
       </Grid>
-      <Grid
-        className="py0"
-        sx={{ boxSizing: 'border-box', margin: '0' }}
-        xs={12}
-      >
+      <Grid size={12} sx={{ boxSizing: 'border-box', margin: '0', py: 0 }}>
         <ApacheGraphs
           data={data?.Applications?.Apache}
           end={time.end}

@@ -4,10 +4,34 @@ import * as React from 'react';
 
 import type { APIError } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
-import type { AllParams, LinkProps } from '@tanstack/react-router';
+import type {
+  LinkProps,
+  ValidateUseParamsResult,
+} from '@tanstack/react-router';
 import type { MigrationRouteTree } from 'src/routes';
 
-type ParamsType = AllParams<MigrationRouteTree>;
+type ExtractKeys<T> = T extends object ? keyof T : never;
+type ParamsTypeKeys = ExtractKeys<ValidateUseParamsResult<MigrationRouteTree>>;
+type SingleIdQueryHook<TEntity> = (
+  id: number | string,
+  enabled?: boolean
+) => UseQueryResult<TEntity, APIError[]>;
+
+type DualIdQueryHook<TEntity> = (
+  primaryId: number | string,
+  secondaryId: number | string,
+  enabled?: boolean
+) => UseQueryResult<TEntity, APIError[]>;
+
+type QueryHook<TEntity> = DualIdQueryHook<TEntity> | SingleIdQueryHook<TEntity>;
+
+interface Props<TEntity> {
+  enabled?: boolean;
+  paramKey: ParamsTypeKeys;
+  queryHook: QueryHook<TEntity>;
+  redirectToOnNotFound: LinkProps['to'];
+  secondaryParamKey?: ParamsTypeKeys;
+}
 
 interface Props<TEntity> {
   /**
@@ -20,18 +44,20 @@ interface Props<TEntity> {
    * The key of the parameter in the URL that will be used to fetch the entity.
    * ex: 'volumeId' for `/volumes/$volumeId`
    */
-  paramKey: keyof ParamsType;
+  paramKey: ParamsTypeKeys;
   /**
    * The query hook to fetch the entity.
    */
-  queryHook: (
-    id: number | string | undefined,
-    enabled?: boolean
-  ) => UseQueryResult<TEntity, APIError[]>;
+  queryHook: QueryHook<TEntity>;
   /**
    * The route to redirect to if the entity is not found.
    */
   redirectToOnNotFound: LinkProps['to'];
+  /**
+   * The key of the secondary parameter in the URL that will be used to fetch the entity.
+   * ex: 'subnetId' for `/vpcs/$vpcId/subnets/$subnetId`
+   */
+  secondaryParamKey?: ParamsTypeKeys;
 }
 
 /**
@@ -41,7 +67,7 @@ interface Props<TEntity> {
  * It will return the data for the entity that the dialog is going to target, including its loading state.
  * It is usually used on a feature landing page, where the dialog is triggered by a route change.
  *
- * It should be instantiated as follow:
+ * It should be instantiated as follow (single id):
  *
  * const {
  *  data: {entity},
@@ -52,23 +78,60 @@ interface Props<TEntity> {
  *   queryHook: useEntityQuery, // ex: useVolumeQuery
  *   redirectToOnNotFound: '/entities', // ex: '/volumes'
  * });
+ *
+ * It should be instantiated as follow (dual id):
+ *
+ * const {
+ *  data: {entity},
+ *  isFetching: isFetchingEntity,
+ * } = useDialogRouteGuard({
+ *   enabled: !!params.entityId && !!params.secondaryEntityId,
+ *   paramKey: 'entityId', // ex: 'vpcId'
+ *   queryHook: useEntityQuery, // ex: useSubnetQuery
+ *   redirectToOnNotFound: '/entities', // ex: '/vpcs/$vpcId/subnets'
+ *   secondaryParamKey: 'secondaryEntityId', // ex: 'subnetId'
+ * });
  */
 export const useDialogData = <TEntity>({
   enabled = true,
   paramKey,
   queryHook,
   redirectToOnNotFound,
+  secondaryParamKey,
 }: Props<TEntity>) => {
   const params = useParams({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const query = queryHook(params[paramKey], enabled);
+
+  const primaryId = params[paramKey as keyof typeof params];
+  const secondaryId = secondaryParamKey
+    ? params[secondaryParamKey as keyof typeof params]
+    : undefined;
+
+  // Ensure IDs are actually valid values, not just truthy
+  const isValidPrimaryId =
+    typeof primaryId === 'string' || typeof primaryId === 'number';
+  const isValidSecondaryId =
+    typeof secondaryId === 'string' || typeof secondaryId === 'number';
+  const shouldRunQuery =
+    enabled && isValidPrimaryId && (!secondaryParamKey || isValidSecondaryId);
+
+  const query = secondaryParamKey
+    ? (queryHook as DualIdQueryHook<TEntity>)(
+        primaryId as number | string,
+        secondaryId as number | string,
+        shouldRunQuery
+      )
+    : (queryHook as SingleIdQueryHook<TEntity>)(
+        primaryId as number | string,
+        shouldRunQuery
+      );
 
   React.useEffect(() => {
     if (enabled && !query.isLoading && !query.data) {
       enqueueSnackbar('Not found!', { variant: 'error' });
       navigate({
-        params: {},
+        params: undefined,
         to: redirectToOnNotFound,
       });
     }

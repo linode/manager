@@ -1,10 +1,8 @@
 import { Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
-import { Link } from 'react-router-dom';
+import Grid from '@mui/material/Grid2';
 
 import { TableCell } from 'src/components/TableCell';
-import { TableRow } from 'src/components/TableRow';
 
 import type { Theme } from '@mui/material/styles';
 
@@ -12,54 +10,13 @@ const libRadioLabel = {
   cursor: 'pointer',
 };
 
-const stackScriptUsernameStyling = (theme: Theme) => {
-  return {
-    ...libRadioLabel,
-    color: theme.textColors.tableStatic,
-    fontSize: '0.875rem',
-    lineHeight: '1.125rem',
-  };
-};
-
-const rowStyles = {
-  '& > button': {
-    height: 46,
-  },
-  height: 46,
-};
-
-const libTitle = (theme: Theme) => {
-  return {
-    fontSize: '0.875rem',
-    lineHeight: '1.125rem',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    [theme.breakpoints.down('md')]: {
-      wordBreak: 'break-all',
-    },
-    whiteSpace: 'nowrap' as const,
-  };
-};
-
-export const StyledTitleTypography = styled(Typography, {
-  label: 'StyledTitleTypography',
-})(({ theme }) => ({
-  ...libTitle(theme),
-}));
-
-export const StyledTitleTableCell = styled(TableCell, {
-  label: 'StyledTitleTableCell',
-})(({ theme }) => ({
-  ...libTitle(theme),
-}));
-
 export const StyledDetailsButton = styled(Button, {
   label: 'StyledDetailsButton',
 })(({ theme }) => ({
   '&:hover, &:focus': {
     backgroundColor: 'transparent',
   },
-  fontFamily: theme.font.normal,
+  font: theme.font.normal,
   fontSize: '0.875rem',
   marginTop: 0,
   padding: theme.spacing(),
@@ -124,16 +81,6 @@ export const StyledImagesTableCell = styled(TableCell, {
   whiteSpace: 'pre-wrap',
 });
 
-export const StyledTableRow = styled(TableRow, { label: 'StyledTableRow' })({
-  ...rowStyles,
-});
-
-export const StyledRowTableCell = styled(TableCell, {
-  label: 'StyledRowTableCell',
-})({
-  ...rowStyles,
-});
-
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',
 })(({ theme }) => ({
@@ -147,27 +94,20 @@ export const StyledTypography = styled(Typography, {
   whiteSpace: 'nowrap',
 }));
 
+const stackScriptUsernameStyling = (theme: Theme) => {
+  return {
+    ...libRadioLabel,
+    color: theme.textColors.tableStatic,
+    fontSize: '0.875rem',
+    lineHeight: '1.125rem',
+  };
+};
+
 export const StyledUsernameLabel = styled('label', {
   label: 'StyledUsernameLabel',
 })(({ theme }) => ({
   ...stackScriptUsernameStyling(theme),
 }));
-
-export const StyledLabelSpan = styled('span', { label: 'StyledLabelSpan' })({
-  ...libRadioLabel,
-});
-
-export const StyledUsernameSpan = styled('span', {
-  label: 'StyledUsernameSpan',
-})(({ theme }) => ({
-  ...stackScriptUsernameStyling(theme),
-}));
-
-export const StyledLink = styled(Link, { label: 'StyledLink' })(
-  ({ theme }) => ({
-    color: theme.textColors.tableStatic,
-  })
-);
 
 export const StyledStackScriptSectionTableCell = styled(TableCell, {
   label: 'StyledStackScriptSectionTableCell',

@@ -1,37 +1,30 @@
+import { useProfile } from '@linode/queries';
 import { Stack, Tooltip } from '@linode/ui';
+import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
+import UnlockIcon from 'src/assets/icons/unlock.svg';
 import { Hidden } from 'src/components/Hidden';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useFlags } from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile/profile';
 import { formatDate } from 'src/utilities/formatDate';
-import { pluralize } from 'src/utilities/pluralize';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 import { ImagesActionMenu } from './ImagesActionMenu';
 import { ImageStatus } from './ImageStatus';
 
 import type { Handlers } from './ImagesActionMenu';
-import type { Event, Image, ImageCapabilities } from '@linode/api-v4';
-
-const capabilityMap: Record<ImageCapabilities, string> = {
-  'cloud-init': 'Cloud-init',
-  'distributed-sites': 'Distributed',
-};
+import type { Event, Image } from '@linode/api-v4';
 
 interface Props {
   event?: Event;
   handlers: Handlers;
   image: Image;
-  multiRegionsEnabled?: boolean; // TODO Image Service v2: delete after GA
 }
 
 export const ImageRow = (props: Props) => {
-  const { event, handlers, image, multiRegionsEnabled } = props;
+  const { event, handlers, image } = props;
 
   const {
     capabilities,
@@ -43,14 +36,10 @@ export const ImageRow = (props: Props) => {
     size,
     status,
     total_size,
+    type,
   } = image;
 
   const { data: profile } = useProfile();
-  const flags = useFlags();
-
-  const compatibilitiesList = multiRegionsEnabled
-    ? capabilities.map((capability) => capabilityMap[capability]).join(', ')
-    : '';
 
   const isFailedUpload =
     image.status === 'pending_upload' && event?.status === 'failed';
@@ -79,27 +68,39 @@ export const ImageRow = (props: Props) => {
   return (
     <TableRow data-qa-image-cell={id} key={id}>
       <TableCell data-qa-image-label noWrap>
-        {capabilities.includes('cloud-init') &&
-        flags.imageServiceGen2 &&
-        flags.imageServiceGen2Ga ? (
-          <Stack alignItems="center" direction="row" gap={1.5}>
-            <Tooltip title="This image supports our Metadata service via cloud-init.">
-              <div style={{ display: 'flex' }}>
-                <CloudInitIcon />
-              </div>
-            </Tooltip>
-            {label}
+        <Stack
+          alignItems="center"
+          direction="row"
+          gap={2}
+          justifyContent="space-between"
+        >
+          {label}
+          <Stack alignItems="center" direction="row" gap={1}>
+            {type === 'manual' &&
+              status !== 'creating' &&
+              !image.capabilities.includes('distributed-sites') && (
+                <Tooltip title="This image is not encrypted. You can recreate the image to enable encryption and then delete this image.">
+                  <div style={{ display: 'flex' }}>
+                    <UnlockIcon height="20px" width="20px" />
+                  </div>
+                </Tooltip>
+              )}
+            {type === 'manual' && capabilities.includes('cloud-init') && (
+              <Tooltip title="This image supports our Metadata service via cloud-init.">
+                <div style={{ display: 'flex' }}>
+                  <CloudInitIcon />
+                </div>
+              </Tooltip>
+            )}
           </Stack>
-        ) : (
-          label
-        )}
+        </Stack>
       </TableCell>
       <Hidden smDown>
         <TableCell noWrap>
           <ImageStatus event={event} image={image} />
         </TableCell>
       </Hidden>
-      {multiRegionsEnabled && (
+      {type === 'manual' && (
         <Hidden smDown>
           <TableCell>
             {regions.length > 0 ? (
@@ -112,15 +113,10 @@ export const ImageRow = (props: Props) => {
           </TableCell>
         </Hidden>
       )}
-      {multiRegionsEnabled && !flags.imageServiceGen2Ga && (
-        <Hidden smDown>
-          <TableCell>{compatibilitiesList}</TableCell>
-        </Hidden>
-      )}
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}
       </TableCell>
-      {multiRegionsEnabled && (
+      {type === 'manual' && (
         <Hidden mdDown>
           <TableCell>
             {getSizeForImage(total_size, status, event?.status)}
@@ -134,16 +130,18 @@ export const ImageRow = (props: Props) => {
           })}
         </TableCell>
       </Hidden>
-      <Hidden smDown>
-        {expiry && (
+      {type === 'automatic' && (
+        <Hidden smDown>
           <TableCell data-qa-image-date>
-            {formatDate(expiry, {
-              timezone: profile?.timezone,
-            })}
+            {expiry
+              ? formatDate(expiry, {
+                  timezone: profile?.timezone,
+                })
+              : 'N/A'}
           </TableCell>
-        )}
-      </Hidden>
-      {multiRegionsEnabled && (
+        </Hidden>
+      )}
+      {type === 'manual' && (
         <Hidden mdDown>
           <TableCell>{id}</TableCell>
         </Hidden>

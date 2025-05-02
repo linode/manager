@@ -1,7 +1,7 @@
+import { profileFactory } from '@linode/utilities';
 import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { profileFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CloseAccountSetting from './CloseAccountSetting';
@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useProfile: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/profile/profile', async () => {
-  const actual = await vi.importActual('src/queries/profile/profile');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useProfile: queryMocks.useProfile,
@@ -25,13 +25,9 @@ vi.mock('src/queries/profile/profile', async () => {
 });
 
 describe('Close Account Settings', () => {
-  it('should render subheading text', () => {
-    const { container } = renderWithTheme(<CloseAccountSetting />);
-    const subheading = container.querySelector(
-      '[data-qa-panel-subheading="true"]'
-    );
-    expect(subheading).toBeInTheDocument();
-    expect(subheading?.textContent).toBe('Close Account');
+  it('should render a heading and button', () => {
+    const { getAllByText } = renderWithTheme(<CloseAccountSetting />);
+    expect(getAllByText('Close Account')).toHaveLength(2);
   });
 
   it('should render a Close Account Button', () => {
@@ -41,10 +37,9 @@ describe('Close Account Settings', () => {
 
     const { getByTestId } = renderWithTheme(<CloseAccountSetting />);
     const button = getByTestId('close-account-button');
-    const span = button.querySelector('span');
     expect(button).toBeInTheDocument();
     expect(button).toBeEnabled();
-    expect(span).toHaveTextContent('Close Account');
+    expect(button).toHaveTextContent('Close Account');
   });
 
   it('should render a disabled Close Account button with tooltip for a parent account user', async () => {

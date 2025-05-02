@@ -3,8 +3,16 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import {
+  useAllLinodesQuery,
+  useAllPlacementGroupsQuery,
+  useAssignLinodesToPlacementGroup,
+} from '@linode/queries';
+import { LinodeSelect } from '@linode/shared';
+import {
+  ActionsPanel,
   Box,
   Divider,
+  Drawer,
   Notice,
   Stack,
   TooltipIcon,
@@ -13,17 +21,10 @@ import {
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { Drawer } from 'src/components/Drawer';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
-import {
-  useAllPlacementGroupsQuery,
-  useAssignLinodesToPlacementGroup,
-} from 'src/queries/placementGroups';
+import { NotFound } from 'src/components/NotFound';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-import { LinodeSelect } from '../Linodes/LinodeSelect/LinodeSelect';
 import {
   getLinodesFromAllPlacementGroups,
   hasPlacementGroupReachedCapacity,
@@ -142,6 +143,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
 
   return (
     <Drawer
+      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title={`Assign Linodes to Placement Group ${label}`}

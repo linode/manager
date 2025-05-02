@@ -2,25 +2,24 @@
  * @file Cypress integration tests for VM Placement Groups deletion flows.
  */
 
+import { linodeFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockDeletePlacementGroup,
+  mockDeletePlacementGroupError,
+  mockGetPlacementGroup,
   mockGetPlacementGroups,
   mockUnassignPlacementGroupLinodes,
-  mockDeletePlacementGroupError,
   mockUnassignPlacementGroupLinodesError,
 } from 'support/intercepts/placement-groups';
-import {
-  accountFactory,
-  linodeFactory,
-  placementGroupFactory,
-} from 'src/factories';
-import { headers as emptyStatePageHeaders } from 'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLandingEmptyStateData';
-import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 import { ui } from 'support/ui';
 import { buildArray } from 'support/util/arrays';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import { randomLabel, randomNumber } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { accountFactory, placementGroupFactory } from 'src/factories';
+import { headers as emptyStatePageHeaders } from 'src/features/PlacementGroups/PlacementGroupsLanding/PlacementGroupsLandingEmptyStateData';
 
 // Mock an account with 'Placement Group' capability.
 const mockAccount = accountFactory.build();
@@ -55,13 +54,14 @@ describe('Placement Group deletion', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
@@ -141,8 +141,8 @@ describe('Placement Group deletion', () => {
     // Linodes that are assigned to the Placement Group being deleted.
     const mockPlacementGroupLinodes = buildArray(3, () =>
       linodeFactory.build({
-        label: randomLabel(),
         id: randomNumber(),
+        label: randomLabel(),
         region: mockPlacementGroupRegion.id,
       })
     );
@@ -150,31 +150,32 @@ describe('Placement Group deletion', () => {
     // Placement Group that will be deleted.
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: mockPlacementGroupLinodes.map((linode) => ({
-        linode_id: linode.id,
         is_compliant: true,
+        linode_id: linode.id,
       })),
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     // Second unrelated Placement Group to verify landing page content after deletion.
     const secondMockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     mockGetLinodes(mockPlacementGroupLinodes).as('getLinodes');
     mockGetPlacementGroups([mockPlacementGroup, secondMockPlacementGroup]).as(
       'getPlacementGroups'
     );
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
-    cy.wait(['@getPlacementGroups', '@getLinodes']);
+    cy.wait(['@getPlacementGroups']);
 
     // Click "Delete" button next to the mock Placement Group, and initially mock
     // an API error response and confirm that the error message is displayed in the
@@ -190,72 +191,30 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    // The Placement Groups landing page fires off a Linode GET request upon
-    // clicking the "Delete" button so that Cloud knows which Linodes are assigned
-    // to the selected Placement Group.
-    cy.wait('@getLinodes');
-
     mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
 
-    // Close dialog and re-open it. This is a workaround to prevent Cypress
-    // failures triggered by React re-rendering after fetching Linodes.
-    //
-    // Tanstack Query is configured to respond with cached data for the `useAllLinodes`
-    // query hook while awaiting the HTTP request response. Because the Placement
-    // Groups landing page fetches Linodes upon opening the deletion modal, there
-    // is a brief period of time where Linode labels are rendered using cached data,
-    // then re-rendered after the real API request resolves. This re-render occasionally
-    // triggers Cypress failures.
-    //
-    // Opening the deletion modal for the same Placement Group a second time
-    // does not trigger another HTTP GET request, this helps circumvent the
-    // issue because the cached/problematic HTTP request is already long resolved
-    // and there is less risk of a re-render occurring while Cypress interacts
-    // with the dialog.
-    //
-    // TODO Consider removing this workaround after M3-8717 is implemented.
     ui.dialog
       .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
       .should('be.visible')
       .within(() => {
-        ui.drawerCloseButton.find().click();
-      });
+        cy.get('[data-qa-selection-list]').within(() => {
+          // Select the first Linode to unassign
+          const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
 
-    cy.findByText(mockPlacementGroup.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
-
-    ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-qa-selection-list]')
-          .should('be.visible')
-          .within(() => {
-            // Select the first Linode to unassign
-            const mockLinodeToUnassign = mockPlacementGroupLinodes[0];
-
-            cy.findByText(mockLinodeToUnassign.label)
-              .closest('li')
-              .should('be.visible')
-              .within(() => {
-                ui.button
-                  .findByTitle('Unassign')
-                  .should('be.visible')
-                  .should('be.enabled')
-                  .click();
-              });
-          });
+          cy.findByText(mockLinodeToUnassign.label)
+            .should('be.visible')
+            .closest('li')
+            .within(() => {
+              ui.button
+                .findByTitle('Unassign')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
+        });
 
         cy.wait('@UnassignPlacementGroupError');
         cy.findByText(PlacementGroupErrorMessage).should('be.visible');
@@ -296,6 +255,9 @@ describe('Placement Group deletion', () => {
               placementGroupAfterUnassignment,
               secondMockPlacementGroup,
             ]).as('getPlacementGroups');
+            mockGetPlacementGroup(placementGroupAfterUnassignment).as(
+              'getPlacementGroups'
+            );
 
             cy.findByText(mockLinode.label)
               .should('be.visible')
@@ -308,10 +270,7 @@ describe('Placement Group deletion', () => {
                   .click();
               });
 
-            // Cloud fires off 2 requests to fetch Linodes: once before the unassignment,
-            // and again after. Wait for both of these requests to resolve to reduce the
-            // risk of a re-render occurring when unassigning the next Linode.
-            cy.wait(['@unassignLinode', '@getLinodes', '@getLinodes']);
+            cy.wait(['@unassignLinode']);
             cy.findByText(mockLinode.label).should('not.exist');
           });
         });
@@ -356,13 +315,14 @@ describe('Placement Group deletion', () => {
     const mockPlacementGroupRegion = chooseRegion();
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     mockGetPlacementGroups([mockPlacementGroup]).as('getPlacementGroups');
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
     cy.wait('@getPlacementGroups');
@@ -457,8 +417,8 @@ describe('Placement Group deletion', () => {
     // Linodes that are assigned to the Placement Group being deleted.
     const mockPlacementGroupLinodes = buildArray(3, () =>
       linodeFactory.build({
-        label: randomLabel(),
         id: randomNumber(),
+        label: randomLabel(),
         region: mockPlacementGroupRegion.id,
       })
     );
@@ -466,31 +426,32 @@ describe('Placement Group deletion', () => {
     // Placement Group that will be deleted.
     const mockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: mockPlacementGroupLinodes.map((linode) => ({
-        linode_id: linode.id,
         is_compliant: true,
+        linode_id: linode.id,
       })),
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     // Second unrelated Placement Group to verify landing page content after deletion.
     const secondMockPlacementGroup = placementGroupFactory.build({
       id: randomNumber(),
+      is_compliant: true,
       label: randomLabel(),
       members: [],
       region: mockPlacementGroupRegion.id,
-      is_compliant: true,
     });
 
     mockGetLinodes(mockPlacementGroupLinodes).as('getLinodes');
     mockGetPlacementGroups([mockPlacementGroup, secondMockPlacementGroup]).as(
       'getPlacementGroups'
     );
+    mockGetPlacementGroup(mockPlacementGroup).as('getPlacementGroup');
 
     cy.visitWithLogin('/placement-groups');
-    cy.wait(['@getPlacementGroups', '@getLinodes']);
+    cy.wait(['@getPlacementGroups']);
 
     // Click "Delete" button next to the mock Placement Group.
     cy.findByText(mockPlacementGroup.label)
@@ -504,35 +465,11 @@ describe('Placement Group deletion', () => {
           .click();
       });
 
-    // The Placement Groups landing page fires off a Linode GET request upon
-    // clicking the "Delete" button so that Cloud knows which Linodes are assigned
-    // to the selected Placement Group.
-    cy.wait('@getLinodes');
-
     // Click "Delete" button next to the mock Placement Group, mock an HTTP 500 error and confirm UI displays the message.
     mockUnassignPlacementGroupLinodesError(
       mockPlacementGroup.id,
       PlacementGroupErrorMessage
     ).as('UnassignPlacementGroupError');
-
-    ui.dialog
-      .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)
-      .should('be.visible')
-      .within(() => {
-        ui.drawerCloseButton.find().should('be.visible').click();
-      });
-
-    // Click "Delete" button next to the mock Placement Group again.
-    cy.findByText(mockPlacementGroup.label)
-      .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
 
     ui.dialog
       .findByTitle(`Delete Placement Group ${mockPlacementGroup.label}`)

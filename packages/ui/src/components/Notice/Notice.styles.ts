@@ -2,46 +2,72 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
   error: {
-    borderLeft: `5px solid ${theme.palette.error.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
+    background: theme.tokens.component.NotificationBanner.Error.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Error.StatusIcon,
+    },
   },
   icon: {
+    '& g': {
+      stroke: theme.tokens.color.Neutrals.White,
+    },
     color: theme.tokens.color.Neutrals.White,
-    left: -25, // This value must be static regardless of theme selection
-    position: 'absolute',
-  },
-  important: {
-    backgroundColor: theme.palette.background.paper,
-    borderLeftWidth: 32,
-    fontFamily: theme.font.normal,
-    padding: theme.spacing(1),
+    width: 20,
+    height: 20,
+    position: 'relative',
   },
   info: {
-    borderLeft: `5px solid ${theme.palette.info.dark}`,
-  },
-  noticeText: {
-    fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    lineHeight: '20px',
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
+    background:
+      theme.tokens.component.NotificationBanner.Informative.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Informative.StatusIcon,
+    },
   },
   root: {
-    '& + .notice': {
-      marginTop: `${theme.spacing()} !important`,
-    },
-    alignItems: 'center',
-    borderRadius: 1,
     display: 'flex',
-    fontSize: '1rem',
+    alignItems: 'center',
+    '& + .notice': {
+      marginTop: `${theme.spacingFunction(8)} !important`,
+    },
+    borderRadius: 1,
+    padding: `10px ${theme.spacingFunction(12)}`,
+    '& .MuiTypography-root': {
+      width: '100%',
+    },
+    '& p': {
+      fontSize: theme.tokens.font.FontSize.Xs,
+      font: theme.font.semibold,
+      position: 'relative',
+      top: 1,
+      margin: 0,
+    },
+    '& ul': {
+      paddingLeft: 20,
+      margin: 0,
+      listStyleType: 'disc',
+      '& li': {
+        display: 'list-item',
+        padding: 0,
+      },
+    },
     maxWidth: '100%',
-    padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
     position: 'relative',
   },
   success: {
-    borderLeft: `5px solid ${theme.palette.success.dark}`,
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
+    background: theme.tokens.component.NotificationBanner.Success.Background,
+    '& path': {
+      fill: theme.tokens.component.NotificationBanner.Success.StatusIcon,
+    },
   },
   warning: {
-    borderLeft: `5px solid ${theme.palette.warning.dark}`,
-  },
-  warningIcon: {
-    color: theme.tokens.color.Neutrals[80],
+    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
+    background: theme.tokens.component.NotificationBanner.Warning.Background,
+    // Only update outer triangle color
+    '& .css-1j6o9qe-icon path:first-of-type': {
+      fill: theme.tokens.component.NotificationBanner.Warning.StatusIcon,
+    },
   },
 }));

@@ -1,12 +1,24 @@
-import { Box, Notice, Stack, Typography } from '@linode/ui';
+import {
+  useAccountSettings,
+  useAllLinodesQuery,
+  useMutateAccountSettings,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Box,
+  Drawer,
+  Notice,
+  Stack,
+  Typography,
+} from '@linode/ui';
+import { isNumber, pluralize } from '@linode/utilities';
 import { styled } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { DisplayPrice } from 'src/components/DisplayPrice';
-import { Drawer } from 'src/components/Drawer';
 import { Link } from 'src/components/Link';
+import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -14,14 +26,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import {
-  useAccountSettings,
-  useMutateAccountSettings,
-} from 'src/queries/account/settings';
-import { useAllLinodesQuery } from 'src/queries/linodes/linodes';
 import { useAllTypes } from 'src/queries/types';
-import { isNumber } from 'src/utilities/isNumber';
-import { pluralize } from 'src/utilities/pluralize';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 
@@ -51,10 +56,8 @@ export const BackupDrawer = (props: Props) => {
 
   const { data: types, isLoading: typesLoading } = useAllTypes(open);
 
-  const {
-    data: accountSettings,
-    isLoading: accountSettingsLoading,
-  } = useAccountSettings();
+  const { data: accountSettings, isLoading: accountSettingsLoading } =
+    useAccountSettings();
 
   const {
     error: updateAccountSettingsError,
@@ -62,9 +65,8 @@ export const BackupDrawer = (props: Props) => {
     mutateAsync: updateAccountSettings,
   } = useMutateAccountSettings();
 
-  const [shouldEnableAutoEnroll, setShouldEnableAutoEnroll] = React.useState(
-    true
-  );
+  const [shouldEnableAutoEnroll, setShouldEnableAutoEnroll] =
+    React.useState(true);
 
   const {
     data: enableBackupsResult,
@@ -87,7 +89,7 @@ export const BackupDrawer = (props: Props) => {
 
   const renderBackupsTable = () => {
     if (linodesLoading || typesLoading || accountSettingsLoading) {
-      return <TableRowLoading columns={3} />;
+      return <TableRowLoading columns={4} />;
     }
     if (linodesError) {
       return <TableRowError colSpan={4} message={linodesError?.[0]?.reason} />;
@@ -95,10 +97,12 @@ export const BackupDrawer = (props: Props) => {
     return linodesWithoutBackups.map((linode) => (
       <BackupLinodeRow
         error={
-          (enableBackupsResult?.find(
-            (result) =>
-              result.linode.id === linode.id && result.status === 'rejected'
-          ) as EnableBackupsRejectedResult | undefined)?.reason?.[0]?.reason
+          (
+            enableBackupsResult?.find(
+              (result) =>
+                result.linode.id === linode.id && result.status === 'rejected'
+            ) as EnableBackupsRejectedResult | undefined
+          )?.reason?.[0]?.reason
         }
         key={linode.id}
         linode={linode}
@@ -114,8 +118,9 @@ export const BackupDrawer = (props: Props) => {
     const result = await enableBackups(linodesWithoutBackups);
 
     const hasFailures = result.some((r) => r.status === 'rejected');
-    const successfulEnables = result.filter((r) => r.status === 'fulfilled')
-      .length;
+    const successfulEnables = result.filter(
+      (r) => r.status === 'fulfilled'
+    ).length;
 
     if (hasFailures) {
       // Just stop because the React Query error state will update and
@@ -143,7 +148,13 @@ all new Linodes will automatically be backed up.`
   });
 
   return (
-    <Drawer onClose={onClose} open={open} title="Enable All Backups" wide>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={onClose}
+      open={open}
+      title="Enable All Backups"
+      wide
+    >
       <Stack spacing={2}>
         <Typography variant="body1">
           Three backup slots are executed and rotated automatically: a daily
@@ -178,10 +189,10 @@ all new Linodes will automatically be backed up.`
           </StyledTypography>
           &nbsp;
           <DisplayPrice
+            interval="mo"
             price={
               isNumber(totalBackupsPrice) ? totalBackupsPrice : UNKNOWN_PRICE
             }
-            interval="mo"
           />
         </StyledPricingBox>
         <ActionsPanel
@@ -212,7 +223,7 @@ all new Linodes will automatically be backed up.`
   );
 };
 
-const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(({}) => ({
+const StyledPricingBox = styled(Box, { label: 'StyledPricingBox' })(() => ({
   alignItems: 'center',
   display: 'flex',
 }));

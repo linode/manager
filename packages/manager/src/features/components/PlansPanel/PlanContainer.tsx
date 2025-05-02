@@ -1,5 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ export interface PlanSelectionFilterOptionsTable {
   planFilter?: (plan: PlanWithAvailability) => boolean;
 }
 
-interface PlanSelectionDividers {
+export interface PlanSelectionDividers {
   flag: boolean;
   planType: LinodeTypeClass;
   tables: PlanSelectionFilterOptionsTable[];
@@ -33,8 +33,8 @@ export interface PlanContainerProps {
   isCreate?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
-  planType?: LinodeTypeClass;
   plans: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   selectedDiskSize?: number;
   selectedId?: string;
   selectedRegionId?: Region['id'];
@@ -178,7 +178,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
                     : plans;
                   return [
                     filteredPlans.length > 0 && (
-                      <Grid key={table.header} xs={12}>
+                      <Grid key={table.header} size={12}>
                         <Typography variant="h3">{table.header}</Typography>
                       </Grid>
                     ),
@@ -192,7 +192,7 @@ export const PlanContainer = (props: PlanContainerProps) => {
         )}
       </Hidden>
       <Hidden lgDown={isCreate} mdDown={!isCreate}>
-        <Grid xs={12}>
+        <Grid size={12}>
           {planSelectionDividers.map((planSelectionDivider) =>
             planType === planSelectionDivider.planType &&
             planSelectionDivider.flag ? (

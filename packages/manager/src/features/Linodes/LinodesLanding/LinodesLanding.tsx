@@ -1,10 +1,10 @@
-import { CircleProgress } from '@linode/ui';
+import { CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -82,11 +82,13 @@ type RouteProps = RouteComponentProps<Params>;
 
 export interface LinodesLandingProps {
   LandingHeader?: React.ReactElement;
+  filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
+  regionFilter: RegionFilter;
   someLinodesHaveScheduledMaintenance: boolean;
   /** Keep track of total number of linodes for filtering and empty state landing page logic */
   totalNumLinodes: number;
@@ -189,6 +191,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      filteredLinodesLoading,
       grants,
       handleRegionFilter,
       linodesData,
@@ -196,6 +199,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestError,
       linodesRequestLoading,
       profile,
+      regionFilter,
       totalNumLinodes,
     } = this.props;
 
@@ -213,8 +217,8 @@ class ListLinodes extends React.Component<CombinedProps, State> {
     const componentProps = {
       openDialog: this.openDialog,
       openPowerActionDialog: this.openPowerDialog,
-      someLinodesHaveMaintenance: this.props
-        .someLinodesHaveScheduledMaintenance,
+      someLinodesHaveMaintenance:
+        this.props.someLinodesHaveScheduledMaintenance,
     };
 
     if (linodesRequestError) {
@@ -269,7 +273,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           open={this.state.linodeMigrateOpen}
         />
         <LinodeRebuildDialog
-          linodeId={this.state.selectedLinodeID ?? -1}
+          linodeId={this.state.selectedLinodeID}
           linodeLabel={this.state.selectedLinodeLabel}
           onClose={this.closeDialogs}
           open={this.state.rebuildDialogOpen}
@@ -407,9 +411,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={true}
+                              regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
                             />
@@ -422,9 +428,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                   : ListView
                               }
                               display={linodeViewPreference}
+                              filteredLinodesLoading={filteredLinodesLoading}
                               handleRegionFilter={handleRegionFilter}
                               linodeViewPreference={linodeViewPreference}
                               linodesAreGrouped={false}
+                              regionFilter={regionFilter}
                               toggleGroupLinodes={toggleGroupLinodes}
                               toggleLinodeView={toggleLinodeView}
                               updatePageUrl={this.updatePageUrl}

@@ -1,4 +1,5 @@
-import { Box, CircleProgress, Typography } from '@linode/ui';
+import { Box, CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from '@mui/material';
@@ -8,7 +9,6 @@ import * as React from 'react';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import {
   convertNetworkToUnit,
   generateNetworkUnits,
@@ -18,10 +18,9 @@ import {
   STATS_NOT_READY_MESSAGE,
   useLinodeStatsByDate,
   useLinodeTransferByDate,
-} from 'src/queries/linodes/stats';
-import { useProfile } from 'src/queries/profile/profile';
+  useProfile,
+} from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 import type { Stats } from '@linode/api-v4/lib/linodes';
 import type {
@@ -157,7 +156,7 @@ export const TransferHistory = React.memo((props: Props) => {
     );
 
     return (
-      <Box marginLeft={-5}>
+      <Box>
         <AreaChart
           areas={[
             {

@@ -1,11 +1,26 @@
 import Axios from 'axios';
-import { v4 } from 'uuid';
 
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
+import { generateCodeChallenge, generateCodeVerifier } from 'src/pkce';
+import { clearNonceAndCodeVerifierFromLocalStorage } from 'src/store/authentication/authentication.helpers';
 import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
+
+// If there are local storage overrides, use those. Otherwise use variables set in the ENV.
+const localStorageOverrides = getEnvLocalStorageOverrides();
+const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
+const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+
+let codeVerifier: string = '';
+let codeChallenge: string = '';
+
+export async function generateCodeVerifierAndChallenge(): Promise<void> {
+  codeVerifier = await generateCodeVerifier();
+  codeChallenge = await generateCodeChallenge(codeVerifier);
+  authentication.codeVerifier.set(codeVerifier);
+}
 
 /**
  * Creates a URL with the supplied props as a stringified query. The shape of the query is required
@@ -18,32 +33,19 @@ import {
  */
 export const genOAuthEndpoint = (
   redirectUri: string,
-  scope = '*',
+  scope: string = '*',
   nonce: string
-) => {
-  // If there are local storage overrides, use those. Otherwise use variables set in the ENV.
-  const localStorageOverrides = getEnvLocalStorageOverrides();
-  const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
-  const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
-  const redirect_uri = `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`;
-
+): string => {
   if (!clientID) {
     throw new Error('No CLIENT_ID specified.');
   }
 
-  try {
-    // Validate the redirect_uri via URL constructor
-    // It does not really do that much since our protocol is a safe constant,
-    // but it prevents common warnings with security scanning tools thinking otherwise.
-    new URL(redirect_uri);
-  } catch (error) {
-    throw new Error('Invalid redirect URI');
-  }
-
   const query = {
     client_id: clientID,
-    redirect_uri,
-    response_type: 'token',
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
+    redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${redirectUri}`,
+    response_type: 'code',
     scope,
     state: nonce,
   };
@@ -61,8 +63,11 @@ export const genOAuthEndpoint = (
  * @param scope {string}
  * @returns {string} - OAuth authorization endpoint URL
  */
-export const prepareOAuthEndpoint = (redirectUri: string, scope = '*') => {
-  const nonce = v4();
+export const prepareOAuthEndpoint = (
+  redirectUri: string,
+  scope: string = '*'
+): string => {
+  const nonce = window.crypto.randomUUID();
   authentication.nonce.set(nonce);
   return genOAuthEndpoint(redirectUri, scope, nonce);
 };
@@ -75,10 +80,12 @@ export const prepareOAuthEndpoint = (redirectUri: string, scope = '*') => {
  * @param {string} queryString - any additional query you want to add
  * to the returnTo path
  */
-export const redirectToLogin = (
+export const redirectToLogin = async (
   returnToPath: string,
   queryString: string = ''
 ) => {
+  clearNonceAndCodeVerifierFromLocalStorage();
+  await generateCodeVerifierAndChallenge();
   const redirectUri = `${returnToPath}${queryString}`;
   window.location.assign(prepareOAuthEndpoint(redirectUri));
 };
@@ -88,12 +95,8 @@ export interface RevokeTokenSuccess {
 }
 
 export const revokeToken = (client_id: string, token: string) => {
-  const localStorageOverrides = getEnvLocalStorageOverrides();
-
-  const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
-
   return Axios({
-    baseURL: loginURL,
+    baseURL: loginRoot,
     data: new URLSearchParams({ client_id, token }).toString(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',

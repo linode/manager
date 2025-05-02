@@ -6,14 +6,14 @@ import { TableCell } from 'src/components/TableCell';
 export const StyledTableCell = styled(TableCell, {
   label: 'StyledTableCell',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.875rem',
 }));
 
 export const StyledLabelTableCell = styled(TableCell, {
   label: 'StyledLabelTableCell',
 })(({ theme }) => ({
-  fontFamily: theme.font.bold,
+  font: theme.font.bold,
   fontSize: '0.875rem',
   minWidth: 200,
   paddingLeft: 10,

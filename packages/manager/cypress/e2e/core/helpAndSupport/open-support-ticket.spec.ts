@@ -1,9 +1,27 @@
-/* eslint-disable prettier/prettier */
+// must turn off sort-objects rule in this file bc mockTicket.description is set by formatDescription fn in which attribute order is nonalphabetical and affects test result
+/* eslint-disable perfectionist/sort-objects */
+import { linodeFactory } from '@linode/utilities';
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
-import { interceptGetProfile } from 'support/intercepts/profile';
+import { mockGetAccount } from 'support/intercepts/account';
+import { mockGetDomains } from 'support/intercepts/domains';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import {
+  mockCreateLinodeAccountLimitError,
+  mockGetLinodeDetails,
+  mockGetLinodes,
+} from 'support/intercepts/linodes';
+import { mockGetClusters } from 'support/intercepts/lke';
+import { interceptGetProfile } from 'support/intercepts/profile';
+import {
+  mockAttachSupportTicketFile,
+  mockCreateSupportTicket,
+  mockGetSupportTicket,
+  mockGetSupportTicketReplies,
+  mockGetSupportTickets,
+} from 'support/intercepts/support';
 import { ui } from 'support/ui';
+import { linodeCreatePage } from 'support/ui/pages';
 import {
   randomItem,
   randomLabel,
@@ -11,19 +29,13 @@ import {
   randomPhrase,
   randomString,
 } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
 import {
   accountFactory,
   domainFactory,
-  linodeFactory,
   supportTicketFactory,
 } from 'src/factories';
-import {
-  mockAttachSupportTicketFile,
-  mockCreateSupportTicket,
-  mockGetSupportTicket,
-  mockGetSupportTickets,
-  mockGetSupportTicketReplies,
-} from 'support/intercepts/support';
 import {
   ACCOUNT_LIMIT_DIALOG_TITLE,
   ACCOUNT_LIMIT_FIELD_NAME_TO_LABEL_MAP,
@@ -34,20 +46,11 @@ import {
   SMTP_HELPER_TEXT,
 } from 'src/features/Support/SupportTickets/constants';
 import { formatDescription } from 'src/features/Support/SupportTickets/ticketUtils';
-import { mockGetAccount } from 'support/intercepts/account';
-import {
+
+import type {
   EntityType,
   TicketType,
 } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-import {
-  mockCreateLinodeAccountLimitError,
-  mockGetLinodeDetails,
-  mockGetLinodes,
-} from 'support/intercepts/linodes';
-import { mockGetDomains } from 'support/intercepts/domains';
-import { mockGetClusters } from 'support/intercepts/lke';
-import { linodeCreatePage } from 'support/ui/pages';
-import { chooseRegion } from 'support/util/regions';
 
 describe('open support tickets', () => {
   /*
@@ -97,15 +100,21 @@ describe('open support tickets', () => {
       mockAttachSupportTicketFile(ticketId).as('attachmentPost');
 
       cy.contains('Open New Ticket').click();
-      cy.get('input[placeholder="Enter a title for your ticket."]')
-        .click({ scrollBehavior: false })
-        .type(ticketLabel);
+      cy.get('input[placeholder="Enter a title for your ticket."]').click({
+        scrollBehavior: false,
+      });
+      cy.focused().type(ticketLabel);
       cy.findByLabelText('Severity').should('not.exist');
-      cy.get('[data-qa-ticket-entity-type]').click();
-      cy.contains('General/Account/Billing').should('be.visible');
-      cy.get('[data-qa-ticket-description="true"]')
-        .click()
-        .type(ticketDescription);
+      ui.autocomplete
+        .findByLabel('What is this regarding?')
+        .type('General/Account/Billing');
+
+      ui.autocompletePopper
+        .findByTitle('General/Account/Billing')
+        .should('be.visible')
+        .click();
+      cy.get('[data-qa-ticket-description="true"]').click();
+      cy.focused().type(ticketDescription);
       cy.get('[id="attach-file"]').attachFile(image);
       cy.get('[value="test_screenshot.png"]').should('be.visible');
       cy.get('[data-qa-submit="true"]').click();
@@ -172,18 +181,14 @@ describe('open support tickets', () => {
       .within(() => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
-          .click()
-          .type(mockTicket.summary);
+          .click();
+        cy.focused().type(mockTicket.summary);
 
-        cy.findByLabelText('Severity')
-          .should('be.visible')
-          .click()
-          .type(`${mockTicket.severity}{downarrow}{enter}`);
+        cy.findByLabelText('Severity').should('be.visible').click();
+        cy.focused().type(`${mockTicket.severity}{downarrow}{enter}`);
 
-        cy.get('[data-qa-ticket-description]')
-          .should('be.visible')
-          .click()
-          .type(mockTicket.description);
+        cy.get('[data-qa-ticket-description]').should('be.visible').click();
+        cy.focused().type(mockTicket.description);
 
         ui.button
           .findByTitle('Open Ticket')
@@ -294,20 +299,14 @@ describe('open support tickets', () => {
         cy.findByText('Links to public information are required.');
 
         // Complete the rest of the form.
-        cy.get('[data-qa-ticket-use-case]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.useCase);
+        cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
+        cy.focused().type(mockFormFields.useCase);
 
-        cy.get('[data-qa-ticket-email-domains]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.emailDomains);
+        cy.get('[data-qa-ticket-email-domains]').should('be.visible').click();
+        cy.focused().type(mockFormFields.emailDomains);
 
-        cy.get('[data-qa-ticket-public-info]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.publicInfo);
+        cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
+        cy.focused().type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -465,18 +464,14 @@ describe('open support tickets', () => {
         // Complete the rest of the form.
         cy.findByLabelText('Total number of Linodes you need?')
           .should('be.visible')
-          .click()
-          .type(mockFormFields.numberOfEntities);
+          .click();
+        cy.focused().type(mockFormFields.numberOfEntities);
 
-        cy.get('[data-qa-ticket-use-case]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.useCase);
+        cy.get('[data-qa-ticket-use-case]').should('be.visible').click();
+        cy.focused().type(mockFormFields.useCase);
 
-        cy.get('[data-qa-ticket-public-info]')
-          .should('be.visible')
-          .click()
-          .type(mockFormFields.publicInfo);
+        cy.get('[data-qa-ticket-public-info]').should('be.visible').click();
+        cy.focused().type(mockFormFields.publicInfo);
 
         // Confirm there is no description field or file upload section.
         cy.findByText('Description').should('not.exist');
@@ -551,17 +546,14 @@ describe('open support tickets', () => {
       .within(() => {
         cy.findByLabelText('Title', { exact: false })
           .should('be.visible')
-          .click()
-          .type(mockTicket.summary);
+          .click();
+        cy.focused().type(mockTicket.summary);
 
-        cy.get('[data-qa-ticket-description]')
-          .should('be.visible')
-          .click()
-          .type(mockTicket.description);
+        cy.get('[data-qa-ticket-description]').should('be.visible').click();
+        cy.focused().type(mockTicket.description);
 
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`Linodes{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.focused().type(`Linodes{downarrow}{enter}`);
 
         // Attempt to submit the form without an entity selected and confirm validation error.
         ui.button
@@ -572,9 +564,8 @@ describe('open support tickets', () => {
         cy.findByText('Please select a Linode.').should('be.visible');
 
         // Select an entity type for which there are no entities.
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`Kubernetes{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.focused().type(`Kubernetes{downarrow}{enter}`);
 
         // Confirm the validation error clears when a new entity type is selected.
         cy.findByText('Please select a Linode.').should('not.exist');
@@ -588,15 +579,12 @@ describe('open support tickets', () => {
           .should('be.disabled');
 
         // Select another entity type.
-        cy.get('[data-qa-ticket-entity-type]')
-          .click()
-          .type(`{selectall}{del}Domains{uparrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-type]').click();
+        cy.focused().type(`{selectall}{del}Domains{uparrow}{enter}`);
 
         // Select an entity.
-        cy.get('[data-qa-ticket-entity-id]')
-          .should('be.visible')
-          .click()
-          .type(`${mockDomain.domain}{downarrow}{enter}`);
+        cy.get('[data-qa-ticket-entity-id]').should('be.visible').click();
+        cy.focused().type(`${mockDomain.domain}{downarrow}{enter}`);
 
         ui.button
           .findByTitle('Open Ticket')

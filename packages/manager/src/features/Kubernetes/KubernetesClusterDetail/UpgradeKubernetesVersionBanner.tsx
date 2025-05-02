@@ -1,5 +1,4 @@
 import { Button, Typography } from '@linode/ui';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
@@ -37,21 +36,13 @@ export const UpgradeKubernetesVersionBanner = (props: Props) => {
       {nextVersion ? (
         <DismissibleBanner
           actionButton={actionButton}
+          forceImportantIconVerticalCenter
           preferenceKey={`${clusterID}-${currentVersion}`}
           variant="info"
         >
-          <Grid
-            alignItems="center"
-            container
-            direction="row"
-            justifyContent="space-between"
-          >
-            <Grid>
-              <Typography>
-                A new version of Kubernetes is available ({nextVersion}).
-              </Typography>
-            </Grid>
-          </Grid>
+          <Typography>
+            A new version of Kubernetes is available ({nextVersion}).
+          </Typography>
         </DismissibleBanner>
       ) : null}
       <UpgradeVersionModal

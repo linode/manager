@@ -1,24 +1,29 @@
+import { linodeFactory } from '@linode/utilities';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
-  linodeFactory,
-  firewallFactory,
-  firewallTemplateFactory,
-} from 'src/factories';
+  mockCreateFirewall,
+  mockCreateFirewallError,
+  mockGetFirewalls,
+  mockGetFirewallTemplate,
+} from 'support/intercepts/firewalls';
+import { mockApiInternalUser } from 'support/intercepts/general';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
-import {
-  mockGetFirewalls,
-  mockCreateFirewall,
-  mockGetTemplate,
-  mockCreateFirewallError,
-} from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
+import { firewallFactory, firewallTemplateFactory } from 'src/factories';
+
 describe('Create Linode with Firewall', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      linodeInterfaces: { enabled: false },
+    });
+  });
   /*
    * - Confirms UI flow to create a Linode with an existing Firewall using mock API data.
    * - Confirms that Firewall is reflected in create summary section.
@@ -51,7 +56,8 @@ describe('Create Linode with Firewall', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign Firewall').click().type(`${mockFirewall.label}`);
+    cy.findByText('Assign Firewall').click();
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -59,11 +65,10 @@ describe('Create Linode with Firewall', () => {
       .click();
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -126,7 +131,8 @@ describe('Create Linode with Firewall', () => {
         cy.get('[data-testid="submit"]').click();
         cy.findByText('Label is required.');
         // Fill out and submit firewall create form.
-        cy.contains('Label').click().type(mockFirewall.label);
+        cy.contains('Label').click();
+        cy.focused().type(mockFirewall.label);
         ui.buttonGroup
           .findButtonByTitle('Create Firewall')
           .should('be.visible')
@@ -140,7 +146,8 @@ describe('Create Linode with Firewall', () => {
     );
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign Firewall').click().type(`${mockFirewall.label}`);
+    cy.findByText('Assign Firewall').click();
+    cy.focused().type(`${mockFirewall.label}`);
 
     ui.autocompletePopper
       .findByTitle(mockFirewall.label)
@@ -148,11 +155,10 @@ describe('Create Linode with Firewall', () => {
       .click();
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -179,19 +185,6 @@ describe('Create Linode with Firewall', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can generate and assign a compliant Firewall during Linode Create flow', () => {
-    cy.intercept(
-      {
-        middleware: true,
-        url: /\/v4(?:beta)?\/.*/,
-      },
-      (req) => {
-        // Re-add internal-only header
-        req.on('response', (res) => {
-          res.headers['akamai-internal-account'] = '*';
-        });
-      }
-    );
-
     const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
 
     const mockFirewall = firewallFactory.build({
@@ -209,9 +202,10 @@ describe('Create Linode with Firewall', () => {
       slug: 'akamai-non-prod',
     });
 
+    mockApiInternalUser();
     mockCreateFirewall(mockFirewall).as('createFirewall');
     mockGetFirewalls([mockFirewall]).as('getFirewall');
-    mockGetTemplate(mockTemplate).as('getTemplate');
+    mockGetFirewallTemplate(mockTemplate).as('getTemplate');
     mockCreateLinode(mockLinode).as('createLinode');
     mockGetLinodeDetails(mockLinode.id, mockLinode);
 
@@ -263,11 +257,10 @@ describe('Create Linode with Firewall', () => {
     cy.findByText(mockFirewall.label).should('be.visible');
 
     // Confirm Firewall assignment indicator is shown in Linode summary.
-    cy.get('[data-qa-linode-create-summary]')
-      .scrollIntoView()
-      .within(() => {
-        cy.findByText('Firewall Assigned').should('be.visible');
-      });
+    cy.get('[data-qa-linode-create-summary]').scrollIntoView();
+    cy.get('[data-qa-linode-create-summary]').within(() => {
+      cy.findByText('Firewall Assigned').should('be.visible');
+    });
 
     // Create Linode and confirm contents of outgoing API request payload.
     ui.button
@@ -293,19 +286,6 @@ describe('Create Linode with Firewall', () => {
    * - Mocks an error response to the Create Firewall call.
    */
   it('displays errors encountered while trying to generate a compliant firewall', () => {
-    cy.intercept(
-      {
-        middleware: true,
-        url: /\/v4(?:beta)?\/.*/,
-      },
-      (req) => {
-        // Re-add internal-only header
-        req.on('response', (res) => {
-          res.headers['akamai-internal-account'] = '*';
-        });
-      }
-    );
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -317,8 +297,9 @@ describe('Create Linode with Firewall', () => {
 
     const mockError = 'Mock error';
 
+    mockApiInternalUser();
     mockGetFirewalls([mockFirewall]).as('getFirewall');
-    mockGetTemplate(mockTemplate).as('getTemplate');
+    mockGetFirewallTemplate(mockTemplate).as('getTemplate');
     mockCreateFirewallError(mockError).as('createFirewall');
 
     cy.visitWithLogin('/linodes/create');

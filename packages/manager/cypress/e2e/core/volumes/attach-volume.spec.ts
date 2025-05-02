@@ -1,18 +1,20 @@
 import { createVolume } from '@linode/api-v4/lib/volumes';
-import { Linode, Volume } from '@linode/api-v4';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
-import { volumeRequestPayloadFactory } from 'src/factories/volume';
+import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
+import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import {
   interceptAttachVolume,
   // interceptDetachVolume,
 } from 'support/intercepts/volumes';
-import { randomLabel, randomString } from 'support/util/random';
 import { ui } from 'support/ui';
-import { chooseRegion } from 'support/util/regions';
-import { interceptGetLinodeConfigs } from 'support/intercepts/configs';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { randomLabel, randomString } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
+
+import { volumeRequestPayloadFactory } from 'src/factories/volume';
+
+import type { Linode, Volume } from '@linode/api-v4';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -66,10 +68,10 @@ describe('volume attach and detach flows', () => {
     });
 
     const linodeRequest = createLinodeRequestFactory.build({
+      booted: false,
       label: randomLabel(),
       region: commonRegion.id,
       root_pass: randomString(32),
-      booted: false,
     });
 
     const entityPromise = Promise.all([
@@ -100,10 +102,8 @@ describe('volume attach and detach flows', () => {
           .click();
 
         ui.drawer.findByTitle(`Attach Volume ${volume.label}`).within(() => {
-          cy.findByLabelText('Linode')
-            .should('be.visible')
-            .click()
-            .type(linode.label);
+          cy.findByLabelText('Linode').should('be.visible').click();
+          cy.focused().type(linode.label);
 
           ui.autocompletePopper
             .findByTitle(linode.label)

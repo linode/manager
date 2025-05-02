@@ -1,13 +1,12 @@
 import { addPromotion } from '@linode/api-v4/lib';
-import { Notice, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, TextField, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { accountQueries } from 'src/queries/account/queries';
+import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -78,11 +77,11 @@ const PromoDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={actions}
+      error={error}
       onClose={onClose}
       open={open}
       title="Add promo code"
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography>
         Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.

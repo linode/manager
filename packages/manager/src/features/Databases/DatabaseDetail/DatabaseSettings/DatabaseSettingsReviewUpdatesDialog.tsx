@@ -1,9 +1,8 @@
-import { Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { usePatchDatabaseMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -79,11 +78,11 @@ export const DatabaseSettingsReviewUpdatesDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={renderActions}
+      error={error}
       onClose={onClose}
       open={open}
       title="Maintenance Updates"
     >
-      {error && <Notice text={error} variant="error" />}
       <Typography>
         During the maintenance there is a brief service interruption.
       </Typography>

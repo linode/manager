@@ -1,18 +1,18 @@
-import { ui } from 'support/ui';
-import { randomLabel } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
-import { linodeFactory } from '@src/factories';
+import { linodeFactory } from '@linode/utilities';
 import {
-  dcPricingPlanPlaceholder,
-  dcPricingMockLinodeTypes,
   dcPricingDocsLabel,
   dcPricingDocsUrl,
+  dcPricingMockLinodeTypes,
+  dcPricingPlanPlaceholder,
 } from 'support/constants/dc-specific-pricing';
 import {
   mockCreateLinode,
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
+import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
 
 describe('Create Linode with DC-specific pricing', () => {
   /*

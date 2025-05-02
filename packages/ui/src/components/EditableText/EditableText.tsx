@@ -1,5 +1,5 @@
+import { CloseIcon } from '@linode/ui';
 import Check from '@mui/icons-material/Check';
-import Close from '@mui/icons-material/Close';
 import Edit from '@mui/icons-material/Edit';
 import React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -13,7 +13,7 @@ import type { TextFieldProps } from '../TextField';
 import type { Theme } from '@mui/material/styles';
 import type { PropsWithChildren } from 'react';
 
-const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
+const useStyles = makeStyles<void, 'editIcon' | 'icon' | 'breadcrumbText'>()(
   (theme: Theme, _params, classes) => ({
     button: {
       '&[aria-label="Save"]': {
@@ -66,7 +66,7 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
       borderLeft: '1px solid transparent',
     },
     input: {
-      fontFamily: theme.font.bold,
+      font: theme.font.bold,
       fontSize: '1.125rem',
       padding: 0,
       paddingLeft: 2,
@@ -99,7 +99,12 @@ const useStyles = makeStyles<void, 'editIcon' | 'icon'>()(
         textDecoration: 'underline !important',
       },
     },
-  })
+    breadcrumbText: {
+      color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
+      fontSize: '1rem !important',
+      paddingLeft: 0,
+    },
+  }),
 );
 
 interface BaseProps extends Omit<TextFieldProps, 'label'> {
@@ -135,6 +140,10 @@ interface BaseProps extends Omit<TextFieldProps, 'label'> {
    * Optional suffix to append to the text when it is not in editing mode
    */
   textSuffix?: string;
+  /**
+   * Whether this EditableText is used as a breadcrumb
+   */
+  isBreadcrumb?: boolean;
 }
 
 interface PropsWithoutLink extends BaseProps {
@@ -163,7 +172,7 @@ interface PropsWithLink extends BaseProps {
 export type EditableTextProps = PropsWithLink | PropsWithoutLink;
 
 export const EditableText = (props: EditableTextProps) => {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));
   const [text, setText] = React.useState(props.text);
@@ -173,6 +182,7 @@ export const EditableText = (props: EditableTextProps) => {
     disabledBreadcrumbEditButton,
     errorText,
     handleAnalyticsEvent,
+    isBreadcrumb,
     labelLink,
     onCancel,
     onEdit,
@@ -237,7 +247,7 @@ export const EditableText = (props: EditableTextProps) => {
   };
   const labelText = (
     <H1Header
-      className={classes.root}
+      className={cx(classes.root, { [classes.breadcrumbText]: isBreadcrumb })}
       data-qa-editable-text
       title={`${text}${textSuffix ?? ''}`}
     />
@@ -245,7 +255,7 @@ export const EditableText = (props: EditableTextProps) => {
 
   return !isEditing && !errorText ? (
     <div
-      className={`${classes.container} ${classes.initial} ${className}`}
+      className={cx(classes.container, classes.initial, className)}
       data-testid={'editable-text'}
     >
       {!!labelLink ? (
@@ -258,7 +268,7 @@ export const EditableText = (props: EditableTextProps) => {
       {/** pencil icon */}
       <Button
         aria-label={`Edit ${text}`}
-        className={`${classes.button} ${classes.editIcon}`}
+        className={cx(classes.button, classes.editIcon)}
         data-qa-edit-button
         disabled={disabledBreadcrumbEditButton}
         onClick={openEdit}
@@ -268,11 +278,13 @@ export const EditableText = (props: EditableTextProps) => {
     </div>
   ) : (
     <ClickAwayListener mouseEvent="onMouseDown" onClickAway={cancelEditing}>
-      <div className={`${classes.container} ${className}`} data-qa-edit-field>
+      <div className={cx(classes.container, className)} data-qa-edit-field>
         <TextField
           {...rest}
           inputProps={{
-            className: classes.input,
+            className: cx(classes.input, {
+              [classes.breadcrumbText]: isBreadcrumb,
+            }),
           }}
           InputProps={{ className: classes.inputRoot }}
           // eslint-disable-next-line
@@ -301,7 +313,7 @@ export const EditableText = (props: EditableTextProps) => {
           data-qa-cancel-edit
           onClick={cancelEditing}
         >
-          <Close className={classes.icon} />
+          <CloseIcon className={classes.icon} data-testid="CloseIcon" />
         </Button>
       </div>
     </ClickAwayListener>

@@ -1,5 +1,4 @@
 ---
-version: '3.4'
 
 # Environment variables that will be exposed to every Cypress runner.
 x-e2e-env:
@@ -38,6 +37,7 @@ x-e2e-env:
   CY_TEST_FEATURE_FLAGS: ${CY_TEST_FEATURE_FLAGS}
   CY_TEST_TAGS: ${CY_TEST_TAGS}
   CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
+  CY_TEST_RESET_PREFERENCES: ${CY_TEST_RESET_PREFERENCES}
 
   # Cypress environment variables for alternative parallelization.
   CY_TEST_SPLIT_RUN: ${CY_TEST_SPLIT_RUN}
@@ -49,6 +49,7 @@ x-e2e-env:
 
   # Cypress reporting.
   CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
+  CY_TEST_HTML_REPORT: ${CY_TEST_HTML_REPORT}
   CY_TEST_USER_REPORT: ${CY_TEST_USER_REPORT}
 
   # Cloud Manager build environment.
@@ -83,7 +84,7 @@ x-e2e-runners:
     target: e2e
   env_file: ./packages/manager/.env
   volumes: *default-volumes
-  entrypoint: 'yarn'
+  entrypoint: 'pnpm'
 
 services:
   # Serves a local instance of Cloud Manager for Cypress to use for its tests.
@@ -164,7 +165,7 @@ services:
     entrypoint:
       - "/bin/sh"
       - "-c"
-      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} & yarn $0 $@"
+      - "caddy reverse-proxy --from $${CYPRESS_BASE_URL} --to $${REVERSE_PROXY_URL} > /dev/null 2>&1 & pnpm $0 $@"
 
   # Cypress component test runner service.
   #
@@ -191,7 +192,7 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
-    entrypoint: ['yarn', 'cy:e2e']
+    entrypoint: ['pnpm', 'cy:e2e']
 
   # Component test runner.
   # Does not require any Cloud Manager environment to run.
@@ -201,7 +202,7 @@ services:
     environment:
       CY_TEST_DISABLE_RETRIES: ${CY_TEST_DISABLE_RETRIES}
       CY_TEST_JUNIT_REPORT: ${CY_TEST_JUNIT_REPORT}
-    entrypoint: ['yarn', 'cy:component:run']
+    entrypoint: ['pnpm', 'cy:component:run']
 
   # End-to-end test runner for Cloud's synthetic monitoring tests.
   # Configured to run against a remote Cloud instance hosted at some URL.
@@ -211,4 +212,4 @@ services:
     environment:
       <<: *default-env
       MANAGER_OAUTH: ${MANAGER_OAUTH}
-    entrypoint: ['yarn', 'cy:e2e']
+    entrypoint: ['pnpm', 'cy:e2e']

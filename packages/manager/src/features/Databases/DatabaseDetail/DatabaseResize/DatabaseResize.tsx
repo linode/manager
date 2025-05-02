@@ -2,15 +2,16 @@ import {
   Box,
   CircleProgress,
   Divider,
+  ErrorState,
   Notice,
   Paper,
   Typography,
 } from '@linode/ui';
+import { formatStorageUnits } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
 import { DatabaseNodeSelector } from 'src/features/Databases/DatabaseCreate/DatabaseNodeSelector';
@@ -18,9 +19,8 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import {
   StyledGrid,

@@ -37,6 +37,7 @@ const mockData: MetricDefinition[] = [
         values: [],
       },
     ],
+    is_alertable: true,
     label: 'CPU utilization',
     metric: 'system_cpu_utilization_percent',
     metric_type: 'gauge',
@@ -95,7 +96,7 @@ describe('Metric component tests', () => {
     expect(
       within(dataFieldContainer).getByRole('button', {
         name:
-          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way.',
+          'Represents the metric you want to receive alerts for. Choose the one that helps you evaluate performance of your service in the most efficient way. For multiple metrics we use the AND method by default.',
       })
     );
     const dataFieldInput = within(dataFieldContainer).getByRole('button', {
@@ -155,8 +156,9 @@ describe('Metric component tests', () => {
       container.getByRole('option', { name: 'Average' })
     ).toBeInTheDocument();
 
-    await user.click(await container.findByRole('option', { name: 'Average' }));
+    const option = await container.findByRole('option', { name: 'Average' });
 
+    await user.click(option);
     expect(
       within(aggregationTypeContainer).getByRole('combobox')
     ).toHaveAttribute('value', 'Average');
@@ -194,9 +196,10 @@ describe('Metric component tests', () => {
     expect(
       await container.findByRole('option', { name: '>' })
     ).toBeInTheDocument();
-    expect(container.getByRole('option', { name: '==' })).toBeInTheDocument();
+    expect(container.getByRole('option', { name: '=' })).toBeInTheDocument();
     expect(container.getByRole('option', { name: '<' })).toBeInTheDocument();
-    await user.click(await container.findByRole('option', { name: '>' }));
+    const option = await container.findByRole('option', { name: '>' });
+    await user.click(option);
 
     expect(within(operatorContainer).getByRole('combobox')).toHaveAttribute(
       'value',
@@ -219,6 +222,9 @@ describe('Metric component tests', () => {
         ),
         useFormOptions: {
           defaultValues: {
+            rule_criteria: {
+              rules: [mockData[0]],
+            },
             serviceType: 'linode',
           },
         },

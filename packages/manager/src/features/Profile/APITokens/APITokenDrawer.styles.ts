@@ -14,7 +14,7 @@ export const StyledSelectCell = styled(TableCell, {
   label: 'StyledSelectCell',
 })(({ theme }) => ({
   borderBottom: `2px solid ${theme.color.grey2}`,
-  fontFamily: 'LatoWebBold', // we keep this bold at all times
+  font: theme.font.bold,
   fontSize: '.9rem',
 }));
 

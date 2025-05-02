@@ -1,13 +1,17 @@
-import { imageFactory, regionFactory } from 'src/factories';
+import { regionFactory } from '@linode/utilities';
 import {
   mockGetCustomImages,
+  mockGetImage,
   mockGetRecoveryImages,
   mockUpdateImageRegions,
 } from 'support/intercepts/images';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import type { Image, Region } from '@linode/api-v4';
 import { extendRegion } from 'support/util/regions';
+
+import { imageFactory } from 'src/factories';
+
+import type { Image, Region } from '@linode/api-v4';
 
 describe('Manage Image Replicas', () => {
   /**
@@ -16,8 +20,8 @@ describe('Manage Image Replicas', () => {
    */
   it("updates an Image's regions", () => {
     const regionOptions: Partial<Region> = {
-      site_type: 'core',
       capabilities: ['Object Storage'],
+      site_type: 'core',
     };
     const region1 = extendRegion(regionFactory.build(regionOptions));
     const region2 = extendRegion(regionFactory.build(regionOptions));
@@ -25,18 +29,19 @@ describe('Manage Image Replicas', () => {
     const region4 = extendRegion(regionFactory.build(regionOptions));
 
     const image = imageFactory.build({
-      size: 50,
-      total_size: 100,
       capabilities: ['distributed-sites'],
       regions: [
         { region: region1.id, status: 'available' },
         { region: region2.id, status: 'available' },
       ],
+      size: 50,
+      total_size: 100,
     });
 
     mockGetRegions([region1, region2, region3, region4]).as('getRegions');
     mockGetCustomImages([image]).as('getImages');
     mockGetRecoveryImages([]);
+    mockGetImage(image.id, image).as('getImage');
 
     cy.visitWithLogin('/images');
     cy.wait(['@getImages', '@getRegions']);
@@ -53,6 +58,8 @@ describe('Manage Image Replicas', () => {
           .should('be.enabled')
           .click();
       });
+
+    cy.wait('@getImage');
 
     // Verify the Manage Replicas drawer opens and contains basic content
     ui.drawer
@@ -127,12 +134,12 @@ describe('Manage Image Replicas', () => {
 
     const updatedImage: Image = {
       ...image,
-      total_size: 150,
       regions: [
         { region: region2.id, status: 'available' },
         { region: region3.id, status: 'pending replication' },
         { region: region4.id, status: 'pending replication' },
       ],
+      total_size: 150,
     };
 
     // mock the POST /v4/images/:id:regions response

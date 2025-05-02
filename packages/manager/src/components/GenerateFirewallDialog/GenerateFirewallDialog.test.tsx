@@ -1,7 +1,11 @@
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { firewallFactory, firewallTemplateFactory } from 'src/factories';
+import {
+  firewallFactory,
+  firewallRuleFactory,
+  firewallTemplateFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -11,7 +15,23 @@ import { GenerateFirewallDialog } from './GenerateFirewallDialog';
 describe('GenerateFirewallButton', () => {
   it('Can successfully generate a firewall', async () => {
     const firewalls = firewallFactory.buildList(2);
-    const template = firewallTemplateFactory.build();
+    const template = firewallTemplateFactory.build({
+      rules: {
+        // due to an updated firewallTemplateFactory, we need to specify values for this test
+        inbound: [
+          firewallRuleFactory.build({
+            description: 'firewall-rule-1 description',
+            label: 'firewall-rule-1',
+          }),
+        ],
+        outbound: [
+          firewallRuleFactory.build({
+            description: 'firewall-rule-2 description',
+            label: 'firewall-rule-2',
+          }),
+        ],
+      },
+    });
     const createFirewallCallback = vi.fn();
     const onClose = vi.fn();
     const onFirewallGenerated = vi.fn();
@@ -55,14 +75,14 @@ describe('GenerateFirewallButton', () => {
     expect(onFirewallGenerated).toHaveBeenCalledWith(
       expect.objectContaining({
         label: `${template.slug}-1`,
-        rules: template.rules,
+        rules: { ...template.rules, fingerprint: '8a545843', version: 1 },
       })
     );
 
     expect(createFirewallCallback).toHaveBeenCalledWith(
       expect.objectContaining({
         label: `${template.slug}-1`,
-        rules: template.rules,
+        rules: { ...template.rules, fingerprint: '8a545843', version: 1 },
       })
     );
   });

@@ -1,13 +1,23 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FormHelperText, Notice, Stack, TextField } from '@linode/ui';
-import { createSubnetSchema } from '@linode/validation';
+import {
+  useCreateSubnetMutation,
+  useGrants,
+  useProfile,
+  useVPCQuery,
+} from '@linode/queries';
+import {
+  ActionsPanel,
+  Drawer,
+  FormHelperText,
+  Notice,
+  Stack,
+  TextField,
+} from '@linode/ui';
+import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
-import { Drawer } from 'src/components/Drawer';
-import { useGrants, useProfile } from 'src/queries/profile/profile';
-import { useCreateSubnetMutation, useVPCQuery } from 'src/queries/vpcs/vpcs';
+import { NotFound } from 'src/components/NotFound';
 import {
   DEFAULT_SUBNET_IPV4_VALUE,
   RESERVED_IP_NUMBER,
@@ -15,7 +25,7 @@ import {
   getRecommendedSubnetIPv4,
 } from 'src/utilities/subnets';
 
-import type { CreateSubnetPayload } from '@linode/api-v4';
+import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -34,7 +44,7 @@ export const SubnetCreateDrawer = (props: Props) => {
 
   const recommendedIPv4 = getRecommendedSubnetIPv4(
     DEFAULT_SUBNET_IPV4_VALUE,
-    vpc?.subnets?.map((subnet) => subnet.ipv4 ?? '') ?? []
+    vpc?.subnets?.map((subnet: Subnet) => subnet.ipv4 ?? '') ?? []
   );
 
   const {
@@ -51,12 +61,12 @@ export const SubnetCreateDrawer = (props: Props) => {
     setError,
     watch,
   } = useForm<CreateSubnetPayload>({
-    defaultValues: {
+    mode: 'onBlur',
+    resolver: yupResolver(createSubnetSchemaIPv4),
+    values: {
       ipv4: recommendedIPv4,
       label: '',
     },
-    mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchema),
   });
 
   const ipv4 = watch('ipv4');
@@ -80,18 +90,22 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
+    <Drawer
+      NotFoundComponent={NotFound}
+      onClose={handleClose}
+      open={open}
+      title={'Create Subnet'}
+    >
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
       {userCannotAddSubnet && (
         <Notice
+          spacingBottom={8}
+          spacingTop={16}
           text={
             "You don't have permissions to create a new Subnet. Please contact an account administrator for details."
           }
-          important
-          spacingBottom={8}
-          spacingTop={16}
           variant="error"
         />
       )}

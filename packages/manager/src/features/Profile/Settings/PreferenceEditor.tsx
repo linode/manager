@@ -1,14 +1,10 @@
-import { Box, Button, Notice, Typography } from '@linode/ui';
+import { Box, Button, Dialog, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
-import { Dialog } from 'src/components/Dialog/Dialog';
 import { Link } from 'src/components/Link';
-import {
-  useMutatePreferences,
-  usePreferences,
-} from 'src/queries/profile/preferences';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 
-import type { DialogProps } from 'src/components/Dialog/Dialog';
+import type { DialogProps } from '@linode/ui';
 
 type Props = Pick<DialogProps, 'onClose' | 'open'>;
 

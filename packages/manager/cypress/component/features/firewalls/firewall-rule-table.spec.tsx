@@ -393,212 +393,226 @@ const testDiscardOutboundRuleDragViaKeyboard = () => {
     .should('have.attr', 'aria-disabled', 'true');
 };
 
-componentTests('Firewall Rules Table', (mount) => {
-  /**
-   * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
-   * - Press `Space/Enter` key once to activate keyboard sensor on the selected row.
-   * - Use `Up/Down` arrow keys to move the row up or down.
-   * - Press `Space/Enter` key again to drop the focused row.
-   * - Press `Esc` key to discard drag and drop operation.
-   *
-   * Confirms:
-   * - All keyboard interactions on Firewall Rules table rows work as expected for
-   *   both normal (no vertical scrollbar) and smaller window sizes (with vertical scrollbar).
-   * - `CustomKeyboardSensor` works as expected.
-   * - All Mouse interactions on Firewall Rules table rows work as expected.
-   */
-  describe('Keyboard and Mouse Drag and Drop Interactions', () => {
-    describe('Normal window (no vertical scrollbar)', () => {
-      beforeEach(() => {
-        cy.viewport(1536, 960);
-      });
-
-      describe('Inbound Rules:', () => {
+componentTests(
+  'Firewall Rules Table',
+  (mount) => {
+    /**
+     * Keyboard keys used to perform interactions with rows in the Firewall Rules table:
+     * - Press `Space/Enter` key once to activate keyboard sensor on the selected row.
+     * - Use `Up/Down` arrow keys to move the row up or down.
+     * - Press `Space/Enter` key again to drop the focused row.
+     * - Press `Esc` key to discard drag and drop operation.
+     *
+     * Confirms:
+     * - All keyboard interactions on Firewall Rules table rows work as expected for
+     *   both normal (no vertical scrollbar) and smaller window sizes (with vertical scrollbar).
+     * - `CustomKeyboardSensor` works as expected.
+     * - All Mouse interactions on Firewall Rules table rows work as expected.
+     */
+    describe('Keyboard and Mouse Drag and Drop Interactions', () => {
+      describe('Normal window (no vertical scrollbar)', () => {
         beforeEach(() => {
-          mount(
-            <FirewallRulesLanding
-              rules={{
-                inbound: mockInboundRules,
-                inbound_policy: 'ACCEPT',
-                outbound_policy: 'DROP',
-              }}
-              disabled={false}
-              firewallID={randomNumber()}
-            />
-          );
-          verifyFirewallWithRules({
-            includeInbound: true,
-            includeOutbound: false,
+          cy.viewport(1536, 960);
+        });
+
+        describe('Inbound Rules:', () => {
+          beforeEach(() => {
+            mount(
+              <FirewallRulesLanding
+                rules={{
+                  fingerprint: '8a545843',
+                  inbound: mockInboundRules,
+                  inbound_policy: 'ACCEPT',
+                  outbound_policy: 'DROP',
+                  version: 1,
+                }}
+                disabled={false}
+                firewallID={randomNumber()}
+              />
+            );
+            verifyFirewallWithRules({
+              includeInbound: true,
+              includeOutbound: false,
+            });
+          });
+
+          it('should move Inbound rule rows using keyboard interaction', () => {
+            testMoveInboundRuleRowsViaKeyboard();
+          });
+
+          it('should cancel the Inbound rules drag operation with the keyboard `Esc` key', () => {
+            testDiscardInboundRuleDragViaKeyboard();
+          });
+
+          it('should move Inbound rules rows using mouse interaction', () => {
+            // Drag the 1st row rule to 2nd row position.
+            dragRowToPositionViaMouse(inboundAriaLabel, 1, 2);
+
+            // Verify the order and labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(inboundAriaLabel, [
+              inboundRule2,
+              inboundRule1,
+              inboundRule3,
+            ]);
+
+            // Drag the 3rd row rule to 2nd row position.
+            dragRowToPositionViaMouse(inboundAriaLabel, 3, 2);
+
+            // Verify the order and labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(inboundAriaLabel, [
+              inboundRule2,
+              inboundRule3,
+              inboundRule1,
+            ]);
+
+            // Drag the 3rd row rule to 1st position.
+            dragRowToPositionViaMouse(inboundAriaLabel, 3, 1);
+
+            // Verify the order and labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(inboundAriaLabel, [
+              inboundRule1,
+              inboundRule2,
+              inboundRule3,
+            ]);
           });
         });
 
-        it('should move Inbound rule rows using keyboard interaction', () => {
-          testMoveInboundRuleRowsViaKeyboard();
-        });
+        describe('Outbound Rules:', () => {
+          beforeEach(() => {
+            mount(
+              <FirewallRulesLanding
+                rules={{
+                  fingerprint: '8a545843',
+                  inbound_policy: 'ACCEPT',
+                  outbound: mockOutboundRules,
+                  outbound_policy: 'DROP',
+                  version: 1,
+                }}
+                disabled={false}
+                firewallID={randomNumber()}
+              />
+            );
+            verifyFirewallWithRules({
+              includeInbound: false,
+              includeOutbound: true,
+            });
+          });
 
-        it('should cancel the Inbound rules drag operation with the keyboard `Esc` key', () => {
-          testDiscardInboundRuleDragViaKeyboard();
-        });
+          it('should move Outbound rule rows using keyboard interaction', () => {
+            testMoveOutboundRulesViaKeyboard();
+          });
 
-        it('should move Inbound rules rows using mouse interaction', () => {
-          // Drag the 1st row rule to 2nd row position.
-          dragRowToPositionViaMouse(inboundAriaLabel, 1, 2);
+          it('should cancel the Outbound rules drag operation with the keyboard `Esc` key', () => {
+            testDiscardOutboundRuleDragViaKeyboard();
+          });
 
-          // Verify the order and labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(inboundAriaLabel, [
-            inboundRule2,
-            inboundRule1,
-            inboundRule3,
-          ]);
+          it('should move Outbound rules rows using mouse interaction', () => {
+            // Drag the 1st row rule to 2nd row position.
+            dragRowToPositionViaMouse(outboundAriaLabel, 1, 2);
 
-          // Drag the 3rd row rule to 2nd row position.
-          dragRowToPositionViaMouse(inboundAriaLabel, 3, 2);
+            // Verify the labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(outboundAriaLabel, [
+              outboundRule2,
+              outboundRule1,
+              outboundRule3,
+            ]);
 
-          // Verify the order and labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(inboundAriaLabel, [
-            inboundRule2,
-            inboundRule3,
-            inboundRule1,
-          ]);
+            // Drag the 3rd row rule to 2nd row position.
+            dragRowToPositionViaMouse(outboundAriaLabel, 3, 2);
 
-          // Drag the 3rd row rule to 1st position.
-          dragRowToPositionViaMouse(inboundAriaLabel, 3, 1);
+            // Verify the order and labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(outboundAriaLabel, [
+              outboundRule2,
+              outboundRule3,
+              outboundRule1,
+            ]);
 
-          // Verify the order and labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(inboundAriaLabel, [
-            inboundRule1,
-            inboundRule2,
-            inboundRule3,
-          ]);
+            // Drag the 3rd row rule to 1st position.
+            dragRowToPositionViaMouse(outboundAriaLabel, 3, 1);
+
+            // Verify the order and labels in the 1st, 2nd, and 3rd rows.
+            verifyTableRowOrder(outboundAriaLabel, [
+              outboundRule1,
+              outboundRule2,
+              outboundRule3,
+            ]);
+          });
         });
       });
 
-      describe('Outbound Rules:', () => {
+      describe('Window with vertical scrollbar', () => {
         beforeEach(() => {
-          mount(
-            <FirewallRulesLanding
-              rules={{
-                inbound_policy: 'ACCEPT',
-                outbound: mockOutboundRules,
-                outbound_policy: 'DROP',
-              }}
-              disabled={false}
-              firewallID={randomNumber()}
-            />
-          );
-          verifyFirewallWithRules({
-            includeInbound: false,
-            includeOutbound: true,
+          // Browser window with vertical scroll bar enabled (smaller screens).
+          cy.viewport(800, 400);
+          cy.window().should('have.property', 'innerWidth', 800);
+          cy.window().should('have.property', 'innerHeight', 400);
+        });
+
+        describe('Inbound Rules:', () => {
+          beforeEach(() => {
+            mount(
+              <FirewallRulesLanding
+                rules={{
+                  fingerprint: '8a545843',
+                  inbound: mockInboundRules,
+                  inbound_policy: 'ACCEPT',
+                  outbound_policy: 'DROP',
+                  version: 1,
+                }}
+                disabled={false}
+                firewallID={randomNumber()}
+              />
+            );
+            verifyFirewallWithRules({
+              includeInbound: true,
+              includeOutbound: false,
+              isSmallViewport: true,
+            });
+          });
+
+          it('should move Inbound rule rows using keyboard interaction', () => {
+            testMoveInboundRuleRowsViaKeyboard();
+          });
+
+          it('should cancel the Inbound rules drag operation with the keyboard `Esc` key', () => {
+            testDiscardInboundRuleDragViaKeyboard();
           });
         });
 
-        it('should move Outbound rule rows using keyboard interaction', () => {
-          testMoveOutboundRulesViaKeyboard();
-        });
+        describe('Outbound Rules:', () => {
+          beforeEach(() => {
+            mount(
+              <FirewallRulesLanding
+                rules={{
+                  fingerprint: '8a545843',
+                  inbound_policy: 'ACCEPT',
+                  outbound: mockOutboundRules,
+                  outbound_policy: 'DROP',
+                  version: 1,
+                }}
+                disabled={false}
+                firewallID={randomNumber()}
+              />
+            );
+            verifyFirewallWithRules({
+              includeInbound: false,
+              includeOutbound: true,
+              isSmallViewport: true,
+            });
+          });
 
-        it('should cancel the Outbound rules drag operation with the keyboard `Esc` key', () => {
-          testDiscardOutboundRuleDragViaKeyboard();
-        });
+          it('should move Outbound rule rows using keyboard interaction', () => {
+            testMoveOutboundRulesViaKeyboard();
+          });
 
-        it('should move Outbound rules rows using mouse interaction', () => {
-          // Drag the 1st row rule to 2nd row position.
-          dragRowToPositionViaMouse(outboundAriaLabel, 1, 2);
-
-          // Verify the labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(outboundAriaLabel, [
-            outboundRule2,
-            outboundRule1,
-            outboundRule3,
-          ]);
-
-          // Drag the 3rd row rule to 2nd row position.
-          dragRowToPositionViaMouse(outboundAriaLabel, 3, 2);
-
-          // Verify the order and labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(outboundAriaLabel, [
-            outboundRule2,
-            outboundRule3,
-            outboundRule1,
-          ]);
-
-          // Drag the 3rd row rule to 1st position.
-          dragRowToPositionViaMouse(outboundAriaLabel, 3, 1);
-
-          // Verify the order and labels in the 1st, 2nd, and 3rd rows.
-          verifyTableRowOrder(outboundAriaLabel, [
-            outboundRule1,
-            outboundRule2,
-            outboundRule3,
-          ]);
+          it('should cancel the Outbound rules drag operation with the keyboard `Esc` key', () => {
+            testDiscardOutboundRuleDragViaKeyboard();
+          });
         });
       });
     });
-
-    describe('Window with vertical scrollbar', () => {
-      beforeEach(() => {
-        // Browser window with vertical scroll bar enabled (smaller screens).
-        cy.viewport(800, 400);
-        cy.window().should('have.property', 'innerWidth', 800);
-        cy.window().should('have.property', 'innerHeight', 400);
-      });
-
-      describe('Inbound Rules:', () => {
-        beforeEach(() => {
-          mount(
-            <FirewallRulesLanding
-              rules={{
-                inbound: mockInboundRules,
-                inbound_policy: 'ACCEPT',
-                outbound_policy: 'DROP',
-              }}
-              disabled={false}
-              firewallID={randomNumber()}
-            />
-          );
-          verifyFirewallWithRules({
-            includeInbound: true,
-            includeOutbound: false,
-            isSmallViewport: true,
-          });
-        });
-
-        it('should move Inbound rule rows using keyboard interaction', () => {
-          testMoveInboundRuleRowsViaKeyboard();
-        });
-
-        it('should cancel the Inbound rules drag operation with the keyboard `Esc` key', () => {
-          testDiscardInboundRuleDragViaKeyboard();
-        });
-      });
-
-      describe('Outbound Rules:', () => {
-        beforeEach(() => {
-          mount(
-            <FirewallRulesLanding
-              rules={{
-                inbound_policy: 'ACCEPT',
-                outbound: mockOutboundRules,
-                outbound_policy: 'DROP',
-              }}
-              disabled={false}
-              firewallID={randomNumber()}
-            />
-          );
-          verifyFirewallWithRules({
-            includeInbound: false,
-            includeOutbound: true,
-            isSmallViewport: true,
-          });
-        });
-
-        it('should move Outbound rule rows using keyboard interaction', () => {
-          testMoveOutboundRulesViaKeyboard();
-        });
-
-        it('should cancel the Outbound rules drag operation with the keyboard `Esc` key', () => {
-          testDiscardOutboundRuleDragViaKeyboard();
-        });
-      });
-    });
-  });
-});
+  },
+  {
+    useTanstackRouter: true,
+  }
+);

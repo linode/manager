@@ -70,6 +70,7 @@ export const accountCapabilities = [
   'Kubernetes',
   'Kubernetes Enterprise',
   'Linodes',
+  'Linode Interfaces',
   'LKE HA Control Planes',
   'LKE Network Access Control List (IP ACL)',
   'Machine Images',
@@ -87,12 +88,22 @@ export const accountCapabilities = [
   'VPCs',
 ] as const;
 
-export type AccountCapability = typeof accountCapabilities[number];
+export type AccountCapability = (typeof accountCapabilities)[number];
 
 export interface AccountAvailability {
   region: string; // will be slug of dc (matches id field of region object returned by API)
   unavailable: Capabilities[];
 }
+
+export const linodeInterfaceAccountSettings = [
+  'legacy_config_only',
+  'legacy_config_default_but_linode_allowed',
+  'linode_default_but_legacy_config_allowed',
+  'linode_only',
+] as const;
+
+export type LinodeInterfaceAccountSetting =
+  (typeof linodeInterfaceAccountSettings)[number];
 
 export interface AccountSettings {
   managed: boolean;
@@ -100,6 +111,7 @@ export interface AccountSettings {
   network_helper: boolean;
   backups_enabled: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
+  interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
 }
 
 export interface ActivePromotion {
@@ -193,12 +205,14 @@ export type GlobalGrantTypes =
   | 'add_linodes'
   | 'add_longview'
   | 'add_databases'
+  | 'add_kubernetes'
   | 'add_nodebalancers'
   | 'add_stackscripts'
   | 'add_volumes'
   | 'add_vpcs'
   | 'cancel_account'
   | 'child_account_access'
+  | 'add_buckets'
   | 'longview_subscription';
 
 export interface GlobalGrants {
@@ -254,6 +268,7 @@ export type AgreementType = 'eu_model' | 'privacy_policy';
 export interface Agreements {
   eu_model: boolean;
   privacy_policy: boolean;
+  billing_agreement: boolean;
 }
 
 export type NotificationType =
@@ -320,6 +335,7 @@ export const EventActionKeys = [
   'database_scale',
   'database_update_failed',
   'database_update',
+  'database_migrate',
   'database_upgrade',
   'disk_create',
   'disk_delete',
@@ -358,6 +374,9 @@ export const EventActionKeys = [
   'image_delete',
   'image_update',
   'image_upload',
+  'interface_create',
+  'interface_delete',
+  'interface_update',
   'ipaddress_update',
   'ipv6pool_add',
   'ipv6pool_delete',
@@ -477,7 +496,7 @@ export const EventActionKeys = [
   'vpc_update',
 ] as const;
 
-export type EventAction = typeof EventActionKeys[number];
+export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
   | 'scheduled'

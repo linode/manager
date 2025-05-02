@@ -13,13 +13,10 @@
  * @link [axe-core rule tags](https://www.deque.com/axe/core-documentation/api-documentation/#axecore-tags)
  */
 export const checkComponentA11y = (rulesetTag: string = 'wcag22aa') => {
-  // Specify a custom aXe core path to account for monorepo package layout.
-  const axeCorePath = '../../node_modules/axe-core/axe.min.js';
-
   // Perform checks against component only and not the surrounding HTML.
   const componentContext = '[data-cy-root]';
 
-  cy.injectAxe({ axeCorePath });
+  cy.injectAxe();
   cy.checkA11y(componentContext, {
     runOnly: {
       type: 'tag',

@@ -2,15 +2,12 @@ import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
 import type { FilterValue, TimeDuration } from '@linode/api-v4';
-import type {
-  BaseSelectProps,
-  Item,
-} from 'src/components/EnhancedSelect/Select';
+import type { EnhancedAutocompleteProps, SelectOption } from '@linode/ui';
 
 export interface CloudPulseTimeRangeSelectProps
   extends Omit<
-    BaseSelectProps<Item<Labels, Labels>, false>,
-    'defaultValue' | 'onChange'
+    EnhancedAutocompleteProps<SelectOption<Labels>, false>,
+    'defaultValue' | 'onChange' | 'options'
   > {
   defaultValue?: Partial<FilterValue>;
   handleStatsChange?: (
@@ -44,14 +41,14 @@ export const CloudPulseTimeRangeSelect = React.memo(
       savePreferences,
     } = props;
     const options = generateSelectOptions();
-    const getDefaultValue = React.useCallback((): Item<Labels, Labels> => {
+    const getDefaultValue = React.useCallback((): SelectOption<Labels> => {
       if (!savePreferences) {
         return options[0];
       }
       return options.find((o) => o.label === defaultValue) || options[0];
     }, [defaultValue]);
     const [selectedTimeRange, setSelectedTimeRange] = React.useState<
-      Item<Labels, Labels>
+      SelectOption<Labels>
     >(getDefaultValue());
 
     React.useEffect(() => {
@@ -70,7 +67,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaultValue]); // need to execute when there is change in default value
-    const handleChange = (item: Item<Labels, Labels>) => {
+    const handleChange = (item: SelectOption<Labels>) => {
       setSelectedTimeRange(item);
 
       if (handleStatsChange) {
@@ -83,7 +80,7 @@ export const CloudPulseTimeRangeSelect = React.memo(
     };
     return (
       <Autocomplete
-        onChange={(e, value: Item<Labels, Labels>) => {
+        onChange={(e, value: SelectOption<Labels>) => {
           handleChange(value);
         }}
         textFieldProps={{
@@ -104,15 +101,15 @@ export const CloudPulseTimeRangeSelect = React.memo(
 );
 
 /**
- * react-select option generator that aims to remain a pure function
+ * Select option generator that aims to remain a pure function
  * and take in the current datetime as an argument and generate select values
  * based on what it's passed.
  *
  *
  * @param { string } currentYear - the current year
  */
-export const generateSelectOptions = (): Item<Labels, Labels>[] => {
-  const baseOptions: Item<Labels, Labels>[] = [
+export const generateSelectOptions = (): SelectOption<Labels>[] => {
+  const baseOptions: SelectOption<Labels>[] = [
     {
       label: PAST_30_MINUTES,
       value: PAST_30_MINUTES,

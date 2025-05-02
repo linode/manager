@@ -1,4 +1,3 @@
-import { has } from 'ramda';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
@@ -49,7 +48,7 @@ export const DomainRecordActionMenu = (props: DomainRecordActionMenuProps) => {
       },
       title: 'Edit',
     },
-    has('deleteData', props)
+    Boolean(props.deleteData)
       ? {
           onClick: () => {
             handleDelete();

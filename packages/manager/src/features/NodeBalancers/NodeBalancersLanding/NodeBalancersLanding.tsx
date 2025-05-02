@@ -1,10 +1,9 @@
-import { CircleProgress } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
+import { CircleProgress, ErrorState } from '@linode/ui';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -16,26 +15,21 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNodeBalancersQuery } from 'src/queries/nodebalancers';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
+
 const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [
-    selectedNodeBalancerId,
-    setSelectedNodeBalancerId,
-  ] = React.useState<number>(-1);
-
-  const history = useHistory();
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const params = useParams({ strict: false });
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
@@ -62,14 +56,15 @@ export const NodeBalancersLanding = () => {
     filter
   );
 
-  const selectedNodeBalancer = data?.data.find(
-    (nodebalancer) => nodebalancer.id === selectedNodeBalancerId
-  );
-
-  const onDelete = (nodeBalancerId: number) => {
-    setSelectedNodeBalancerId(nodeBalancerId);
-    setIsDeleteDialogOpen(true);
-  };
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+  } = useDialogData({
+    enabled: !!params.id,
+    paramKey: 'id',
+    queryHook: useNodeBalancerQuery,
+    redirectToOnNotFound: '/nodebalancers',
+  });
 
   if (error) {
     return (
@@ -91,6 +86,9 @@ export const NodeBalancersLanding = () => {
     <>
       <DocumentTitleSegment segment="NodeBalancers" />
       <LandingHeader
+        breadcrumbProps={{
+          pathname: '/nodebalancers',
+        }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -101,7 +99,7 @@ export const NodeBalancersLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         entity="NodeBalancer"
-        onButtonClick={() => history.push('/nodebalancers/create')}
+        onButtonClick={() => navigate({ to: '/nodebalancers/create' })}
         title="NodeBalancers"
       />
       <Table>
@@ -133,16 +131,12 @@ export const NodeBalancersLanding = () => {
                 Region
               </TableSortCell>
             </Hidden>
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.data.map((nodebalancer) => (
-            <NodeBalancerTableRow
-              key={nodebalancer.id}
-              onDelete={() => onDelete(nodebalancer.id)}
-              {...nodebalancer}
-            />
+            <NodeBalancerTableRow key={nodebalancer.id} {...nodebalancer} />
           ))}
         </TableBody>
       </Table>
@@ -156,17 +150,12 @@ export const NodeBalancersLanding = () => {
       />
       <TransferDisplay spacingTop={18} />
       <NodeBalancerDeleteDialog
-        id={selectedNodeBalancerId}
-        label={selectedNodeBalancer?.label ?? ''}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        open={isDeleteDialogOpen}
+        isFetching={isFetchingNodeBalancer}
+        open={match.routeId === '/nodebalancers/$id/delete'}
+        selectedNodeBalancer={selectedNodeBalancer}
       />
     </>
   );
 };
-
-export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
-  component: NodeBalancersLanding,
-});
 
 export default NodeBalancersLanding;

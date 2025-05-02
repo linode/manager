@@ -1,24 +1,24 @@
 import {
+  ActionsPanel,
   Autocomplete,
   Button,
   Divider,
   FormHelperText,
   Notice,
+  Select,
+  SelectedIcon,
+  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import * as React from 'react';
 
-import { ActionsPanel } from 'src/components/ActionsPanel/ActionsPanel';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 
-import {
-  ALGORITHM_HELPER_TEXT,
-  SESSION_STICKINESS_DEFAULTS,
-} from './constants';
+import { SESSION_STICKINESS_DEFAULTS } from './constants';
 import { ActiveCheck } from './NodeBalancerActiveCheck';
 import { NodeBalancerConfigNode } from './NodeBalancerConfigNode';
 import { PassiveCheck } from './NodeBalancerPassiveCheck';
@@ -202,7 +202,7 @@ export const NodeBalancerConfigPanel = (
   const tcpSelected = protocol === 'tcp';
 
   return (
-    <Grid data-qa-label-header xs={12}>
+    <Grid data-qa-label-header size={12}>
       {globalFormError && (
         <Notice
           className={`error-for-scroll-${configIdx}`}
@@ -211,13 +211,19 @@ export const NodeBalancerConfigPanel = (
         />
       )}
       <Grid container spacing={2}>
-        <Grid md={3} xs={6}>
+        <Grid
+          size={{
+            md: 3,
+            xs: 6,
+          }}
+        >
           <TextField
-            InputProps={{ id: `port-${configIdx}` }}
             data-qa-port
             disabled={disabled}
             errorGroup={forEdit ? `${configIdx}` : undefined}
             errorText={errorMap.port || errorMap.configs}
+            helperText="The unique inbound port that this NodeBalancer configuration will listen on."
+            InputProps={{ id: `port-${configIdx}` }}
             label="Port"
             noMarginTop
             onChange={onPortChange}
@@ -225,39 +231,167 @@ export const NodeBalancerConfigPanel = (
             type="number"
             value={port || ''}
           />
-          <FormHelperText>Listen on this port.</FormHelperText>
         </Grid>
-        <Grid md={3} xs={6}>
-          <Autocomplete
+        <Grid
+          size={{
+            md: 3,
+            xs: 6,
+          }}
+        >
+          <Select
+            disabled={disabled}
+            errorText={errorMap.protocol}
+            helperText="Load balancing protocols: UDP and TCP (Layer 4); HTTP and HTTPS (Layer 7)."
+            id={`protocol-${configIdx}`}
+            label="Protocol"
+            onChange={onProtocolChange}
+            options={protocolOptions}
             textFieldProps={{
+              noMarginTop: true,
               dataAttrs: {
                 'data-qa-protocol-select': true,
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.protocol}
-            id={`protocol-${configIdx}`}
-            label="Protocol"
-            noMarginTop
-            onChange={onProtocolChange}
-            options={protocolOptions}
-            size="small"
             value={defaultProtocol || protocolOptions[0]}
           />
         </Grid>
 
+        <Grid
+          size={{
+            md: 3,
+            xs: 6,
+          }}
+        >
+          <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={disabled}
+            errorText={errorMap.algorithm}
+            helperText="Controls how new connections are allocated across backend nodes."
+            id={`algorithm-${configIdx}`}
+            label="Algorithm"
+            noMarginTop
+            onChange={(_, selected) => {
+              props.onAlgorithmChange(selected.value);
+            }}
+            options={algOptions}
+            renderOption={(props, option, state) => (
+              <li {...props}>
+                <Stack alignItems="center" direction="row" gap={1}>
+                  <Stack>
+                    <b>{option.label}</b>
+                    {option.description}
+                  </Stack>
+                  {state.selected && <SelectedIcon visible />}
+                </Stack>
+              </li>
+            )}
+            size="small"
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-algorithm-select': true,
+              },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
+            }}
+            value={defaultAlg || algOptions[0]}
+          />
+        </Grid>
+
+        <Grid
+          size={{
+            md: 3,
+            xs: 6,
+          }}
+        >
+          <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={disabled}
+            errorText={errorMap.stickiness}
+            helperText="Routes subsequent requests from the client to the same backend."
+            id={`session-stickiness-${configIdx}`}
+            label="Session Stickiness"
+            noMarginTop
+            onChange={(_, selected) => {
+              props.onSessionStickinessChange(selected.value);
+            }}
+            options={sessionOptions}
+            renderOption={(props, option, state) => (
+              <li {...props}>
+                <Stack alignItems="center" direction="row" gap={1}>
+                  <Stack>
+                    <b>{option.label}</b>
+                    {option.description}
+                  </Stack>
+                  {state.selected && <SelectedIcon visible />}
+                </Stack>
+              </li>
+            )}
+            size="small"
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-session-stickiness-select': true,
+              },
+              errorGroup: forEdit ? `${configIdx}` : undefined,
+            }}
+            value={defaultSession || sessionOptions[1]}
+          />
+        </Grid>
+
+        {tcpSelected && (
+          <Grid
+            size={{
+              md: 6,
+              xs: 12,
+            }}
+          >
+            <Select
+              disabled={disabled}
+              errorText={errorMap.proxy_protocol}
+              helperText={
+                <>
+                  Proxy Protocol preserves the initial TCP connection
+                  information.{' '}
+                  <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
+                    Learn more
+                  </Link>
+                  .
+                </>
+              }
+              id={`proxy-protocol-${configIdx}`}
+              label="Proxy Protocol"
+              onChange={(_, selected) => {
+                props.onProxyProtocolChange(selected.value);
+              }}
+              options={proxyProtocolOptions}
+              textFieldProps={{
+                noMarginTop: true,
+                dataAttrs: {
+                  'data-qa-proxy-protocol-select': true,
+                },
+                errorGroup: forEdit ? `${configIdx}` : undefined,
+              }}
+              value={selectedProxyProtocol || proxyProtocolOptions[0]}
+            />
+          </Grid>
+        )}
+
         {protocol === 'https' && (
-          <Grid container spacing={2} xs={12}>
-            <Grid md={5} sm={6} xs={12}>
+          <Grid container size={12} spacing={2}>
+            <Grid
+              size={{
+                md: 6,
+                xs: 12,
+              }}
+            >
               <TextField
                 data-qa-cert-field
                 data-testid="ssl-certificate"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_cert}
+                expand
                 label="SSL Certificate"
                 multiline
                 onChange={onSslCertificateChange}
@@ -266,13 +400,19 @@ export const NodeBalancerConfigPanel = (
                 value={sslCertificate || ''}
               />
             </Grid>
-            <Grid md={5} sm={6} xs={12}>
+            <Grid
+              size={{
+                md: 6,
+                xs: 12,
+              }}
+            >
               <TextField
                 data-qa-private-key-field
                 data-testid="private-key"
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.ssl_key}
+                expand
                 label="Private Key"
                 multiline
                 onChange={onPrivateKeyChange}
@@ -284,110 +424,24 @@ export const NodeBalancerConfigPanel = (
           </Grid>
         )}
 
-        {tcpSelected && (
-          <Grid md={6} xs={12}>
-            <Autocomplete
-              onChange={(_, selected) => {
-                props.onProxyProtocolChange(selected.value);
-              }}
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-proxy-protocol-select': true,
-                },
-                errorGroup: forEdit ? `${configIdx}` : undefined,
-              }}
-              autoHighlight
-              disableClearable
-              disabled={disabled}
-              errorText={errorMap.proxy_protocol}
-              id={`proxy-protocol-${configIdx}`}
-              label="Proxy Protocol"
-              noMarginTop
-              options={proxyProtocolOptions}
-              size="small"
-              value={selectedProxyProtocol || proxyProtocolOptions[0]}
-            />
-            <FormHelperText>
-              Proxy Protocol preserves initial TCP connection information.
-              Please consult{' '}
-              <Link to="https://techdocs.akamai.com/cloud-computing/docs/using-proxy-protocol-with-nodebalancers">
-                our Proxy Protocol guide
-              </Link>
-              {` `}
-              for information on the differences between each option.
-            </FormHelperText>
-          </Grid>
-        )}
-
-        <Grid md={tcpSelected ? 6 : 3} xs={6}>
-          <Autocomplete
-            onChange={(_, selected) => {
-              props.onAlgorithmChange(selected.value);
-            }}
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-algorithm-select': true,
-              },
-              errorGroup: forEdit ? `${configIdx}` : undefined,
-            }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.algorithm}
-            id={`algorithm-${configIdx}`}
-            label="Algorithm"
-            noMarginTop
-            options={algOptions}
-            size="small"
-            value={defaultAlg || algOptions[0]}
-          />
-          <FormHelperText>{ALGORITHM_HELPER_TEXT[algorithm]}</FormHelperText>
-        </Grid>
-
-        <Grid md={3} xs={6}>
-          <Autocomplete
-            onChange={(_, selected) => {
-              props.onSessionStickinessChange(selected.value);
-            }}
-            textFieldProps={{
-              dataAttrs: {
-                'data-qa-session-stickiness-select': true,
-              },
-              errorGroup: forEdit ? `${configIdx}` : undefined,
-            }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.stickiness}
-            id={`session-stickiness-${configIdx}`}
-            label="Session Stickiness"
-            noMarginTop
-            options={sessionOptions}
-            size="small"
-            value={defaultSession || sessionOptions[1]}
-          />
-          <FormHelperText>
-            Route subsequent requests from the client to the same backend.
-          </FormHelperText>
-        </Grid>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
         <ActiveCheck errorMap={errorMap} {...props} />
         {protocol !== 'udp' && <PassiveCheck {...props} />}
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Typography data-qa-backend-ip-header variant="h2">
             Backend Nodes
           </Typography>
           {nodeMessage && (
-            <Grid xs={12}>
+            <Grid size={12}>
               <Notice
                 spacingBottom={0}
                 spacingTop={8}
@@ -401,10 +455,10 @@ export const NodeBalancerConfigPanel = (
           )}
         </Grid>
         <Grid
+          size={12}
           sx={{
             paddingBottom: '24px',
           }}
-          xs={12}
         >
           <Grid container spacing={2} sx={{ padding: 0 }}>
             {nodes?.map((node, nodeIdx) => (
@@ -425,7 +479,7 @@ export const NodeBalancerConfigPanel = (
                 removeNode={removeNode}
               />
             ))}
-            <Grid xs={12}>
+            <Grid size={12}>
               <Button
                 buttonType="outlined"
                 disabled={disabled}
@@ -438,14 +492,16 @@ export const NodeBalancerConfigPanel = (
         </Grid>
       </Grid>
       <React.Fragment>
-        <Grid xs={12}>
+        <Grid size={12}>
           <Divider />
         </Grid>
         <Grid
-          alignItems="center"
           container
-          justifyContent="flex-end"
           spacing={2}
+          sx={{
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+          }}
         >
           <StyledActionsPanel
             primaryButtonProps={

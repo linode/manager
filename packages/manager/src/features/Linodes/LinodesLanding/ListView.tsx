@@ -19,7 +19,6 @@ export const ListView = (props: RenderLinodesProps) => {
   return (
     // eslint-disable-next-line
     <>
-      {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode, idx: number) => (
         <LinodeRow
           handlers={{
@@ -44,6 +43,7 @@ export const ListView = (props: RenderLinodesProps) => {
           hypervisor={linode.hypervisor}
           id={linode.id}
           image={linode.image}
+          interface_generation={linode.interface_generation}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6 || ''}
           key={`linode-row-${idx}`}

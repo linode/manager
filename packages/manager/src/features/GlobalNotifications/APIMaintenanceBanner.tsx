@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { queryPresets } from 'src/queries/base';
+import { queryPresets } from '@linode/queries';
 import { useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
@@ -64,7 +64,6 @@ export const APIMaintenanceBanner = React.memo((props: Props) => {
 
     return (
       <DismissibleBanner
-        important
         key={scheduledAPIMaintenance.id}
         preferenceKey={scheduledAPIMaintenance.id}
         variant="warning"

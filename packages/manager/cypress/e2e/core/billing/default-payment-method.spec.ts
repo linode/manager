@@ -1,30 +1,31 @@
-import type { CreditCardData } from '@linode/api-v4';
 import { paymentMethodFactory } from '@src/factories/accountPayment';
 import {
-  mockSetDefaultPaymentMethod,
   mockGetPaymentMethods,
+  mockSetDefaultPaymentMethod,
 } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 
+import type { CreditCardData } from '@linode/api-v4';
+
 const paymentMethodGpay = (isDefault: boolean) => {
   return paymentMethodFactory.build({
+    data: { card_type: 'Visa', expiry: '07/2025', last_four: '2045' },
     id: 434357,
-    type: 'google_pay',
     is_default: isDefault,
-    data: { card_type: 'Visa', last_four: '2045', expiry: '07/2025' },
+    type: 'google_pay',
   });
 };
 
 const paymentMethodCC = (isDefault: boolean) => {
   return paymentMethodFactory.build({
-    id: 420330,
-    type: 'credit_card',
-    is_default: isDefault,
     data: {
       card_type: 'American Express',
-      last_four: '2222',
       expiry: '07/2025',
+      last_four: '2222',
     },
+    id: 420330,
+    is_default: isDefault,
+    type: 'credit_card',
   });
 };
 

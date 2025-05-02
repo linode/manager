@@ -21,8 +21,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/placementGroups', async () => {
-  const actual = await vi.importActual('src/queries/placementGroups');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAllPlacementGroupsQuery: queryMocks.useAllPlacementGroupsQuery,
@@ -46,7 +46,7 @@ describe('PlacementGroupsCreateDrawer', () => {
     expect(radioInputs[0]).toBeChecked();
   });
 
-  it('Placement Group Type select should have the correct options', async () => {
+  it('Placement Group Type select should have the correct options', () => {
     const { getByPlaceholderText, getByText } = renderWithTheme(
       <PlacementGroupsCreateDrawer {...commonProps} />
     );
@@ -107,9 +107,9 @@ describe('PlacementGroupsCreateDrawer', () => {
       expect(
         queryMocks.useCreatePlacementGroup().mutateAsync
       ).toHaveBeenCalledWith({
-        placement_group_type: 'anti_affinity:local',
-        placement_group_policy: 'strict',
         label: 'my-label',
+        placement_group_policy: 'strict',
+        placement_group_type: 'anti_affinity:local',
         region: 'us-east',
       });
     });
