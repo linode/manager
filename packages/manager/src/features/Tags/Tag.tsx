@@ -1,10 +1,9 @@
-import { Box, Button, CircleProgress, Divider, Stack, Typography } from '@linode/ui';
+import { useTagObjectsQuery } from '@linode/queries';
+import { Button, CircleProgress, Divider, ErrorState, Stack, Typography } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useTagObjectsQuery } from 'src/queries/tags';
 
 const Tag = () => {
   const params = tagDetailsLazyRoute.useParams();

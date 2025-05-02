@@ -1,9 +1,8 @@
+import { useCreateTagMutation } from '@linode/queries';
 import { Box, Button, Stack, TextField } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-
-import { useCreateTagMutation } from 'src/queries/tags';
 
 import type { TagRequest } from '@linode/api-v4';
 
@@ -40,6 +39,8 @@ export const CreateTagForm = (props: Props) => {
     <form onSubmit={form.handleSubmit((values) => mutateAsync(values))}>
       <Stack spacing={2}>
         <Controller
+          control={form.control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               errorText={fieldState.error?.message}
@@ -49,8 +50,6 @@ export const CreateTagForm = (props: Props) => {
               value={field.value}
             />
           )}
-          control={form.control}
-          name="label"
         />
         <Box display="flex" justifyContent="flex-end">
           <Button

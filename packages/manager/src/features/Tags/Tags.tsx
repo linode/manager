@@ -1,10 +1,9 @@
-import { CircleProgress } from '@linode/ui';
+import { useAllTagsQuery, useDeleteTagMutation } from '@linode/queries';
+import { CircleProgress, Drawer, ErrorState } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Drawer } from 'src/components/Drawer';
-import { ErrorState } from 'src/components/ErrorState/ErrorState';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
@@ -13,7 +12,6 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { useAllTagsQuery, useDeleteTagMutation } from 'src/queries/tags';
 
 import { CreateTagForm } from './CreateTagDrawer';
 
