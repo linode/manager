@@ -513,30 +513,25 @@ export type EventSource = 'platform' | 'user';
 
 export interface Event {
   action: EventAction;
-  complete_time?: null | string;
+  complete_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
   created: string;
-  description?: null | string;
+  description?: null | string; // @TODO VM & Host Maintenance: verify new fields
   /*
     NOTE: events before the duration key was added will have a duration of 0
   */
   duration: null | number;
   entity: Entity | null;
   id: number;
-  /**
-   * Tentative fields from Host & VM Maintenance Policy project.
-   *
-   * TODO: verify final state of these fields.
-   */
-  maintenance_policy_set?: MaintenancePolicyType | null;
+  maintenance_policy_set?: MaintenancePolicyType | null; // @TODO VM & Host Maintenance: verify new fields
   message: null | string;
-  not_before?: null | string;
+  not_before?: null | string; // @TODO VM & Host Maintenance: verify new fields
   percent_complete: null | number;
   rate: null | string;
   read: boolean;
   secondary_entity: Entity | null;
   seen: boolean;
-  source?: EventSource | null;
-  start_time?: null | string;
+  source?: EventSource | null; // @TODO VM & Host Maintenance: verify new fields
+  start_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
   status: EventStatus;
   time_remaining: null | string;
   username: null | string;
@@ -573,15 +568,33 @@ export interface SaveCreditCardData {
 }
 
 export interface AccountMaintenance {
+  complete_time: string;
+  description: string;
   entity: {
     id: number;
     label: string;
     type: string;
     url: string;
   };
+  maintenance_policy_set: MaintenancePolicyType;
+  not_before: string;
   reason: string;
-  status: 'completed' | 'pending' | 'started';
-  type: 'cold_migration' | 'live_migration' | 'reboot' | 'volume_migration';
+  source: 'platform' | 'user';
+  start_time: string;
+  status:
+    | 'canceled'
+    | 'completed'
+    | 'in-progress'
+    | 'pending'
+    | 'scheduled'
+    | 'started';
+  type:
+    | 'cold_migration'
+    | 'linode_migrate'
+    | 'linode_poweroff_on'
+    | 'live_migration'
+    | 'reboot'
+    | 'volume_migration';
   when: string;
 }
 

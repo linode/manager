@@ -344,7 +344,7 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
-  // TODO Host & VM Maintenance: copy is not final
+  // @TODO Host & VM Maintenance: copy is not final
   linode_poweroff_on: {
     failed: (e) => (
       <>

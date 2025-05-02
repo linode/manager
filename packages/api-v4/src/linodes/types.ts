@@ -614,10 +614,6 @@ export interface CreateLinodeRequest {
    */
   label?: null | string;
   /**
-   * If true, the created Linode will have private networking enabled and assigned a private IPv4 address.
-   * @default false
-   */
-  /**
    * Allows customers to specify which strategy this Linode should follow during
    * maintenance events.
    */
@@ -635,6 +631,10 @@ export interface CreateLinodeRequest {
    * An object that assigns this the Linode to a placement group upon creation.
    */
   placement_group?: CreateLinodePlacementGroupPayload | null;
+  /**
+   * If true, the created Linode will have private networking enabled and assigned a private IPv4 address.
+   * @default false
+   */
   private_ip?: boolean | null;
   /**
    * The Region where the Linode will be located.
