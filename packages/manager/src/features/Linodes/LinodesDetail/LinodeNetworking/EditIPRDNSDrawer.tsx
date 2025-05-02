@@ -39,6 +39,13 @@ export const EditIPRDNSDrawer = (props: Props) => {
       enqueueSnackbar(`Successfully updated RDNS for ${ip?.address}`, {
         variant: 'success',
       });
+      enqueueSnackbar(
+        'RDNS updates may take up to 1 hour to reflect in the UI',
+        {
+          variant: 'info',
+          persist: true,
+        }
+      );
       handleClose();
     },
   });
