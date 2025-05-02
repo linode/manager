@@ -63,9 +63,9 @@ export const AlertsLanding = React.memo(() => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <LandingHeader
         breadcrumbProps={{ pathname: '/alerts' }}
-        className="landing-header-mb-4"
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
+        spacingBottom={4}
       />
       <Tabs index={activeTabIndex} onChange={handleChange}>
         <TabLinkList tabs={accessibleTabs} />

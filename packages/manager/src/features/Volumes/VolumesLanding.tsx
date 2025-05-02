@@ -196,11 +196,11 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
-        className="landing-header-mb-16"
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
+        spacingBottom={16}
         title="Volumes"
       />
       <TextField

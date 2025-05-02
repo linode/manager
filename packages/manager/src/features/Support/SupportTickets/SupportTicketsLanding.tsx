@@ -63,11 +63,11 @@ const SupportTicketsLanding = () => {
       <DocumentTitleSegment segment="Support Tickets" />
       <LandingHeader
         buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
-        className="landing-header-mb-4"
         createButtonText="Open New Ticket"
         data-qa-breadcrumb
         onButtonClick={() => setDrawerOpen(true)}
         onButtonKeyPress={handleButtonKeyPress}
+        spacingBottom={4}
         title="Tickets"
       />
       <Tabs

@@ -180,9 +180,9 @@ export const LongviewDetail = (props: CombinedProps) => {
           labelTitle: `longview${client?.id}`,
           pathname: `/longview/clients/${client?.id}`,
         }}
-        className="landing-header-mb-4"
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
+        spacingBottom={4}
         title={client.label}
       />
       {notifications.map((thisNotification, idx) => (

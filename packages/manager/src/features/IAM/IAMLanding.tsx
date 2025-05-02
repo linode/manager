@@ -64,7 +64,7 @@ export const IdentityAccessLanding = React.memo(() => {
   return (
     <>
       <DocumentTitleSegment segment="Identity and Access" />
-      <LandingHeader {...landingHeaderProps} className="landing-header-mb-4" />
+      <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
       <Tabs index={getDefaultTabIndex()} onChange={navToURL}>
         <TabLinkList tabs={tabs} />

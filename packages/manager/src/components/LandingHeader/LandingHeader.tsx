@@ -17,7 +17,6 @@ export interface LandingHeaderProps {
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: Partial<BreadcrumbProps>;
   buttonDataAttrs?: { [key: string]: boolean | string };
-  className?: 'landing-header' | 'landing-header-mb-4' | 'landing-header-mb-16';
   createButtonText?: string;
   disabledBreadcrumbEditButton?: boolean;
   disabledCreateButton?: boolean;
@@ -31,6 +30,7 @@ export interface LandingHeaderProps {
   onDocsClick?: () => void;
   removeCrumbX?: number | number[];
   shouldHideDocsAndCreateButtons?: boolean;
+  spacingBottom?: 0 | 4 | 16 | 24;
   title?: JSX.Element | string;
 }
 
@@ -44,7 +44,6 @@ export const LandingHeader = ({
   breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
-  className = 'landing-header',
   createButtonText,
   disabledBreadcrumbEditButton,
   disabledCreateButton,
@@ -58,6 +57,7 @@ export const LandingHeader = ({
   onDocsClick,
   removeCrumbX,
   shouldHideDocsAndCreateButtons,
+  spacingBottom = 24,
   title,
 }: LandingHeaderProps) => {
   const theme = useTheme();
@@ -78,12 +78,13 @@ export const LandingHeader = ({
 
   return (
     <Grid
-      className={className}
+      className="landing-header"
       container
       data-qa-entity-header
       sx={{
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginBottom: spacingBottom !== undefined ? `${spacingBottom}px` : 0,
         width: '100%',
       }}
     >

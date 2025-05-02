@@ -81,9 +81,9 @@ export const UserDetailsLanding = () => {
           },
           pathname: location.pathname,
         }}
-        className="landing-header-mb-4"
         docsLink={IAM_DOCS_LINK}
         removeCrumbX={4}
+        spacingBottom={4}
         title={username}
       />
       <Tabs index={getDefaultTabIndex()} onChange={navToURL}>

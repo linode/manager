@@ -43,7 +43,6 @@ export const StackScriptsLanding = () => {
             resourceType: 'StackScripts',
           }),
         }}
-        className="landing-header-mb-4"
         disabledCreateButton={isStackScriptCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
@@ -51,6 +50,7 @@ export const StackScriptsLanding = () => {
           navigate({ to: '/stackscripts/create' });
         }}
         removeCrumbX={1}
+        spacingBottom={4}
         title="StackScripts"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>

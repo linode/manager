@@ -119,23 +119,9 @@ body.searchOverlay #main-content {
   margin-right: 0 !important;
 }
 
-.content-wrapper > .landing-header:first-child, .content-wrapper > .landing-header-mb-4:first-child, .content-wrapper > .landing-header-mb-16:first-child {
-  margin-top: 0;
-}
-
-.content-wrapper > .landing-header {
+/* Only apply margin-top if .landing-header is NOT the first child of its parent */
+.content-wrapper > .landing-header:not(:first-child) {
   margin-top: 24px;
-  margin-bottom: 24px;
-}
-
-.content-wrapper > .landing-header-mb-4 {
-  margin-top: 24px;
-  margin-bottom: 4px;
-}
-
-.content-wrapper > .landing-header-mb-16 {
-  margin-top: 24px;
-  margin-bottom: 16px;
 }
 
 .visually-hidden,

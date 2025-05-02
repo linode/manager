@@ -450,13 +450,13 @@ export const ImagesLanding = () => {
             resourceType: 'Images',
           }),
         }}
-        className="landing-header-mb-16"
         disabledCreateButton={isCreateImageRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/images"
         entity="Image"
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
       <TextField

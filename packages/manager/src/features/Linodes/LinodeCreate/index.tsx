@@ -192,7 +192,6 @@ export const LinodeCreate = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
-        className="landing-header-mb-4"
         docsLabel="Getting Started"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() =>
@@ -202,6 +201,7 @@ export const LinodeCreate = () => {
             label: 'Getting Started',
           })
         }
+        spacingBottom={4}
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
