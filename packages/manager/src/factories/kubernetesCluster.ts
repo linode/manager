@@ -78,7 +78,7 @@ export const kubernetesAPIResponse =
 
 export const kubernetesVersionFactory =
   Factory.Sync.makeFactory<KubernetesVersion>({
-    id: '1.24',
+    id: Factory.each((id) => `1.3${id}`),
   });
 
 export const kubernetesStandardTierVersionFactory =
