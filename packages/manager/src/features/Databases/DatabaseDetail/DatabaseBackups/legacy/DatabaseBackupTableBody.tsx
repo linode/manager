@@ -1,9 +1,12 @@
-import { APIError, DatabaseBackup, ResourcePage } from '@linode/api-v4';
 import React from 'react';
+
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+
 import { BackupTableRow } from './DatabaseBackupTableRow';
+
+import type { APIError, DatabaseBackup, ResourcePage } from '@linode/api-v4';
 
 interface Props {
   backups?: ResourcePage<DatabaseBackup>;

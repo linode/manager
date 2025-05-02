@@ -73,14 +73,11 @@ export const KubernetesLanding = () => {
   const { push } = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ClusterDialogState>(defaultDialogState);
 
-  const [
-    upgradeDialog,
-    setUpgradeDialogState,
-  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
+  const [upgradeDialog, setUpgradeDialogState] =
+    React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -110,9 +107,8 @@ export const KubernetesLanding = () => {
     isUsingBetaEndpoint,
   });
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const openUpgradeDialog = (
     clusterID: number,
@@ -246,6 +242,9 @@ export const KubernetesLanding = () => {
         <TableBody>
           {data?.data.map((cluster) => (
             <KubernetesClusterRow
+              cluster={cluster}
+              key={`kubernetes-cluster-list-${cluster.id}`}
+              openDeleteDialog={openDialog}
               openUpgradeDialog={() =>
                 openUpgradeDialog(
                   cluster.id,
@@ -254,9 +253,6 @@ export const KubernetesLanding = () => {
                   cluster.k8s_version
                 )
               }
-              cluster={cluster}
-              key={`kubernetes-cluster-list-${cluster.id}`}
-              openDeleteDialog={openDialog}
             />
           ))}
         </TableBody>

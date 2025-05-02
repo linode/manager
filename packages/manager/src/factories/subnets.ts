@@ -8,8 +8,8 @@ import type {
 // NOTE: Changing to fixed array length for the interfaces and linodes fields of the
 // subnetAssignedLinodeDataFactory and subnetFactory respectively -- see [M3-7227] for more details
 
-export const subnetAssignedLinodeDataFactory = Factory.Sync.makeFactory<SubnetAssignedLinodeData>(
-  {
+export const subnetAssignedLinodeDataFactory =
+  Factory.Sync.makeFactory<SubnetAssignedLinodeData>({
     id: Factory.each((i) => i),
     interfaces: Factory.each((i) =>
       Array.from({ length: 5 }, (_, arrIdx) => ({
@@ -18,8 +18,7 @@ export const subnetAssignedLinodeDataFactory = Factory.Sync.makeFactory<SubnetAs
         id: i * 10 + arrIdx,
       }))
     ),
-  }
-);
+  });
 
 export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
   created: '2023-07-12T16:08:53',

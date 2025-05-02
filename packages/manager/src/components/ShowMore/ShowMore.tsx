@@ -31,6 +31,12 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
     <React.Fragment>
       <Chip
         {...chipProps}
+        aria-label={`+${items.length} ${ariaItemType}`}
+        clickable
+        component={'button'}
+        data-qa-show-more-chip
+        label={`+${items.length}`}
+        onClick={handleClick}
         sx={
           anchorEl
             ? {
@@ -39,12 +45,6 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
               }
             : null
         }
-        aria-label={`+${items.length} ${ariaItemType}`}
-        clickable
-        component={'button'}
-        data-qa-show-more-chip
-        label={`+${items.length}`}
-        onClick={handleClick}
       />
 
       <StyledPopover

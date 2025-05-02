@@ -95,8 +95,8 @@ describe('Removable Selections List', () => {
     const { queryAllByText } = renderWithTheme(
       <RemovableSelectionsList
         {...props}
-        RemoveButton={() => <Button>Remove Linode</Button>}
         isRemovable
+        RemoveButton={() => <Button>Remove Linode</Button>}
       />
     );
     expect(queryAllByText('Remove Linode')).toHaveLength(5);

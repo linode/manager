@@ -3,7 +3,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { Tag, TagProps } from './Tag';
+import { Tag } from './Tag';
+
+import type { TagProps } from './Tag';
 
 describe('Tag Component', () => {
   const defaultProps: TagProps = {

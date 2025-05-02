@@ -118,7 +118,7 @@ export const NetworkGraphs = (props: Props) => {
           xs: 12,
         }}
       >
-        <Paper variant="outlined" sx={{ height: 500 }}>
+        <Paper sx={{ height: 500 }} variant="outlined">
           <StatsPanel
             renderBody={() => (
               <Graph
@@ -140,7 +140,7 @@ export const NetworkGraphs = (props: Props) => {
           xs: 12,
         }}
       >
-        <Paper variant="outlined" sx={{ height: 500 }}>
+        <Paper sx={{ height: 500 }} variant="outlined">
           <StatsPanel
             renderBody={() => (
               <Graph
@@ -213,6 +213,8 @@ const Graph = (props: GraphProps) => {
           dataKey: 'Private Out',
         },
       ]}
+      ariaLabel={ariaLabel}
+      data={timeData}
       legendRows={[
         {
           data: metrics.publicIn,
@@ -239,15 +241,13 @@ const Graph = (props: GraphProps) => {
           legendTitle: 'Private Out',
         },
       ]}
+      showLegend
+      timezone={timezone}
+      unit={` ${unit}/s`}
       xAxis={{
         tickFormat: xAxisTickFormat,
         tickGap: 60,
       }}
-      ariaLabel={ariaLabel}
-      data={timeData}
-      showLegend
-      timezone={timezone}
-      unit={` ${unit}/s`}
     />
   );
 };

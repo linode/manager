@@ -57,6 +57,7 @@ const handleLoginChange = (provider: TPAProvider) => {
 const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
     <ActionsPanel
+      className="p0"
       primaryButtonProps={{
         'aria-describedby': 'external-site',
         'data-testid': 'confirm-login-change',
@@ -71,7 +72,6 @@ const renderActions = (onClose: () => void, provider: TPAProvider) => {
         label: 'Cancel',
         onClick: onClose,
       }}
-      className="p0"
     />
   );
 };

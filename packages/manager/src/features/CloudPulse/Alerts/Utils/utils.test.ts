@@ -13,8 +13,8 @@ import {
 
 import type { AlertValidationSchemaProps } from './utils';
 import type {
-  APIError,
   Alert,
+  APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
 import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
