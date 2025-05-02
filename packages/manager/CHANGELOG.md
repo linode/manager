@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fix incorrect card sizing at 1920px+ in LKE Tier panel ([#12076](https://github.com/linode/manager/pull/12076))
 - Bugs in Linode Create, Landing & Detail Pages ([#12028](https://github.com/linode/manager/pull/12028))
 - Bug displaying the incorrect cluster version number in upgrade completion dialog on LKE cluster details page ([#12139](https://github.com/linode/manager/pull/12139))
+- Fix persisting ACL IP validation error on clear ([#12144](https://github.com/linode/manager/pull/12144))
 
 ### Tech Stories:
 
@@ -77,7 +78,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - IAM RBAC: Add logic for getting a description for the facade roles ([#12053](https://github.com/linode/manager/pull/12053))
 - IAM RBAC: Fix bugs in the Entities component and the loading state for tabs ([#12062](https://github.com/linode/manager/pull/12062))
 - CloudPulse: Update metrics API request payload and legend row titles as part of api upgrade from v1beta to v2beta ([#12063](https://github.com/linode/manager/pull/12063))
-- Fix persisting ACL IP validation error and disable fields if user selects to provide IPs later ([#12067](https://github.com/linode/manager/pull/12067))
+- Disable ACL IP address fields if user selects to provide IPs later ([#12067](https://github.com/linode/manager/pull/12067))
 - Add label field to CreateFirewallDrawer form when using firewall templates ([#12069](https://github.com/linode/manager/pull/12069))
 - CloudPulse: Show regions based on available resources and dependent filters in dashboards `GlobalFilter` section ([#12078](https://github.com/linode/manager/pull/12078))
 - Pass widget filters configuration from dashboards in metrics call in cloudpulse dashboards ([#12079](https://github.com/linode/manager/pull/12079))
