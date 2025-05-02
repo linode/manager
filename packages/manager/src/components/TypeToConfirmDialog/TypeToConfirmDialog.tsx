@@ -18,6 +18,7 @@ interface EntityInfo {
     | 'detachment'
     | 'resizing'
     | 'restoration';
+  error?: APIError[] | null | string | undefined;
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
@@ -26,6 +27,7 @@ interface EntityInfo {
     | 'Alert'
     | 'Bucket'
     | 'Database'
+    | 'Domain'
     | 'Kubernetes'
     | 'Linode'
     | 'Load Balancer'
@@ -223,6 +225,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           style={{ padding: 0 }}
         />
       }
+      entityError={entity.error}
       error={errors ? errors[0].reason : undefined}
       isFetching={isFetching}
       onClose={onClose}

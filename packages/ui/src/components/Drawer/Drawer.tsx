@@ -182,7 +182,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Box>
         ) : errorText &&
           (errorText === 'Not Found' || errorText === 'Not found') ? (
-          <NotFound />
+          <NotFound alignTop />
         ) : (
           <>
             {errorText && <ErrorState errorText={errorText} />}

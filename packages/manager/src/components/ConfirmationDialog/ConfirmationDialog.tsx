@@ -2,13 +2,17 @@ import { Dialog, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import type { APIError } from '@linode/api-v4';
 import type { DialogProps } from '@linode/ui';
-
 export interface ConfirmationDialogProps extends DialogProps {
   /**
    * The actions to be displayed in the dialog.
    */
   actions?: ((props: DialogProps) => JSX.Element) | JSX.Element;
+  /**
+   * The error to be displayed in case fetching the entity failed.
+   */
+  entityError?: APIError[] | null | string | undefined;
 }
 
 /**
@@ -24,10 +28,15 @@ export const ConfirmationDialog = React.forwardRef<
   HTMLDivElement,
   ConfirmationDialogProps
 >((props, ref) => {
-  const { actions, children, ...dialogProps } = props;
+  const { actions, children, entityError, ...dialogProps } = props;
 
   return (
-    <Dialog {...dialogProps} PaperProps={{ role: undefined }} ref={ref}>
+    <Dialog
+      {...dialogProps}
+      error={entityError}
+      PaperProps={{ role: undefined }}
+      ref={ref}
+    >
       <StyledDialogContentSection>{children}</StyledDialogContentSection>
       <Stack direction="row" justifyContent="flex-end" spacing={2}>
         {actions && typeof actions === 'function'
