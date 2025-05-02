@@ -365,6 +365,14 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           }}
         >
           <Autocomplete
+            disableClearable
+            disabled={isReadOnly}
+            errorText={errorMap.country}
+            keepSearchEnabledOnMobile
+            label="Country"
+            onChange={(_event, value) => handleCountryChange(value)}
+            options={countryResults}
+            placeholder="Select a Country"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-contact-country': true,
@@ -374,14 +382,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
             value={countryResults.find(
               ({ value }) => value === formik.values.country
             )}
-            disableClearable
-            disabled={isReadOnly}
-            errorText={errorMap.country}
-            keepSearchEnabledOnMobile
-            label="Country"
-            onChange={(_event, value) => handleCountryChange(value)}
-            options={countryResults}
-            placeholder="Select a Country"
           />
         </Grid>
         <Grid
@@ -392,9 +392,15 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         >
           {formik.values.country === 'US' || formik.values.country == 'CA' ? (
             <Autocomplete
+              disableClearable
+              disabled={isReadOnly}
+              errorText={errorMap.state}
+              keepSearchEnabledOnMobile
+              label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
               onChange={(_event, value) =>
                 formik.setFieldValue('state', value?.value)
               }
+              options={filteredRegionResults}
               placeholder={
                 formik.values.country === 'US'
                   ? 'Enter state'
@@ -411,12 +417,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                   ({ value }) => value === formik.values.state
                 ) ?? undefined
               }
-              disableClearable
-              disabled={isReadOnly}
-              errorText={errorMap.state}
-              keepSearchEnabledOnMobile
-              label={`${formik.values.country === 'US' ? 'State' : 'Province'}`}
-              options={filteredRegionResults}
             />
           ) : (
             <TextField
@@ -490,14 +490,17 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         </Grid>
         {nonUSCountry && (
           <Grid
+            size={12}
             sx={{
               alignItems: 'flex-start',
               display: 'flex',
               marginTop: (theme) => theme.tokens.spacing.S16,
             }}
-            size={12}
           >
             <Checkbox
+              checked={billingAgreementChecked}
+              data-testid="tax-id-checkbox"
+              id="taxIdAgreementCheckbox"
               onChange={() =>
                 setBillingAgreementChecked(!billingAgreementChecked)
               }
@@ -505,9 +508,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
                 marginRight: theme.tokens.spacing.S8,
                 padding: 0,
               })}
-              checked={billingAgreementChecked}
-              data-testid="tax-id-checkbox"
-              id="taxIdAgreementCheckbox"
             />
             <Typography component="label" htmlFor="taxIdAgreementCheckbox">
               {TAX_ID_AGREEMENT_TEXT}{' '}
@@ -519,6 +519,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
         )}
       </Grid>
       <ActionsPanel
+        className={classes.actions}
         primaryButtonProps={{
           'data-testid': 'save-contact-info',
           disabled: isReadOnly || (nonUSCountry && !billingAgreementChecked),
@@ -531,7 +532,6 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
           label: 'Cancel',
           onClick: onClose,
         }}
-        className={classes.actions}
       />
     </form>
   );

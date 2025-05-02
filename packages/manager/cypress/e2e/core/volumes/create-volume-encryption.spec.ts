@@ -7,8 +7,8 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetLinodeDetails,
   mockGetLinodeDisks,
-  mockGetLinodeVolumes,
   mockGetLinodes,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVolume, mockGetVolumes } from 'support/intercepts/volumes';

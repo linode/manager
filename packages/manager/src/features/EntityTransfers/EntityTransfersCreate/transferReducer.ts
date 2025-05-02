@@ -12,12 +12,12 @@ export const defaultTransferState: TransferState = TRANSFERABLE_ENTITIES.reduce(
 );
 
 export type TransferAction =
+  | { entitiesToAdd: Entity[]; entityType: TransferableEntity; type: 'ADD' }
   | {
       entitiesToRemove: string[];
       entityType: TransferableEntity;
       type: 'REMOVE';
     }
-  | { entitiesToAdd: Entity[]; entityType: TransferableEntity; type: 'ADD' }
   | { entity: Entity; entityType: TransferableEntity; type: 'TOGGLE' }
   | { entityType: TransferableEntity; type: 'RESET' };
 
@@ -39,6 +39,11 @@ export const transferReducer = produce(
         });
         break;
 
+      // Reset the state
+      case 'RESET':
+        draft[action.entityType] = {};
+        break;
+
       case 'TOGGLE':
         const entity = action.entity;
         const type = draft[action.entityType];
@@ -47,11 +52,6 @@ export const transferReducer = produce(
         } else {
           type[entity.id] = entity.label;
         }
-        break;
-
-      // Reset the state
-      case 'RESET':
-        draft[action.entityType] = {};
         break;
     }
   }

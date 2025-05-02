@@ -33,9 +33,9 @@ import {
 
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
-  APIError,
   Alert,
   AlertServiceType,
+  APIError,
   EditAlertPayloadWithService,
 } from '@linode/api-v4';
 
@@ -146,6 +146,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             1. General Information
           </Typography>
           <Controller
+            control={control}
+            name="label"
             render={({ field, fieldState }) => (
               <TextField
                 data-testid="alert-name"
@@ -158,10 +160,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 value={field.value ?? ''}
               />
             )}
-            control={control}
-            name="label"
           />
           <Controller
+            control={control}
+            name="description"
             render={({ field, fieldState }) => (
               <TextField
                 errorText={fieldState.error?.message}
@@ -174,8 +176,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
                 value={field.value ?? ''}
               />
             )}
-            control={control}
-            name="description"
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />

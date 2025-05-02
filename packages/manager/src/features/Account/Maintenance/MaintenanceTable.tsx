@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
@@ -97,12 +96,12 @@ export const MaintenanceTable = ({ type }: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={7}
           responsive={{
             2: { smDown: true },
             3: { xsDown: true },
             5: { mdDown: true },
           }}
-          columns={7}
           rows={1}
         />
       );

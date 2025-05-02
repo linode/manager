@@ -1,5 +1,6 @@
-import { AccountBeta, Beta } from '@linode/api-v4';
 import { DateTime } from 'luxon';
+
+import type { AccountBeta, Beta } from '@linode/api-v4';
 
 type BetaStatus = 'active' | 'available' | 'historical' | 'no_status';
 type GenericBeta = AccountBeta | Beta;

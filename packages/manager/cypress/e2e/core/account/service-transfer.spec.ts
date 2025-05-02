@@ -498,14 +498,14 @@ describe('Account service transfers', () => {
    */
   it('can not initiate a service transfer by managed users', () => {
     // Mock Linodes to initiate a service transfer.
-    const mockLinodes = new Array(5).fill(null).map(
-      (item: null, index: number): Linode => {
+    const mockLinodes = new Array(5)
+      .fill(null)
+      .map((item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
         });
-      }
-    );
+      });
 
     mockGetLinodes(mockLinodes).as('getLinodes');
     const errorMessage = 'You cannot initiate transfers with Managed enabled.';

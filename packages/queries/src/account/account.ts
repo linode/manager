@@ -9,8 +9,8 @@ import { useGrants, useProfile } from '../profile';
 import { accountQueries } from './queries';
 
 import type {
-  APIError,
   Account,
+  APIError,
   ChildAccountPayload,
   RequestOptions,
   ResourcePage,

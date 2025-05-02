@@ -46,11 +46,8 @@ describe('CloudPulseTagsSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-      getByTestId,
-    } = renderWithTheme(<CloudPulseTagsSelect {...props} />);
+    const { getByLabelText, getByPlaceholderText, getByTestId } =
+      renderWithTheme(<CloudPulseTagsSelect {...props} />);
     expect(getByTestId('tags-select')).toBeInTheDocument();
     expect(getByLabelText(LABEL_SUBTITLE)).toBeInTheDocument();
     expect(getByPlaceholderText('Select Tags')).toBeInTheDocument();

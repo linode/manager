@@ -62,16 +62,16 @@ export const PaginationFooter = (props: Props) => {
 
   return (
     <Box
+      alignItems="center"
+      data-qa-table-pagination
+      display="flex"
+      justifyContent="space-between"
       sx={{
         background: theme.bg.bgPaper,
         border: `1px solid ${theme.tokens.component.Table.Row.Border}`,
         borderTop: 0,
         ...sx,
       }}
-      alignItems="center"
-      data-qa-table-pagination
-      display="flex"
-      justifyContent="space-between"
     >
       {!isShowingAll && (
         <PaginationControls
@@ -84,6 +84,8 @@ export const PaginationFooter = (props: Props) => {
       {!fixedSize ? (
         <Box data-qa-pagination-page-size padding={0.5}>
           <Select
+            hideLabel
+            label="Number of items to show"
             listItemProps={(value) => {
               return {
                 dataAttributes: {
@@ -91,14 +93,12 @@ export const PaginationFooter = (props: Props) => {
                 },
               };
             }}
+            onChange={(_e, value) => handleSizeChange(Number(value.value))}
+            options={finalOptions}
             value={{
               label: defaultPagination?.label ?? '',
               value: defaultPagination?.value ?? '',
             }}
-            hideLabel
-            label="Number of items to show"
-            onChange={(_e, value) => handleSizeChange(Number(value.value))}
-            options={finalOptions}
           />
         </Box>
       ) : null}

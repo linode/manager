@@ -34,18 +34,12 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const attachedFirewalls = attachedFirewallData?.data;
 
   const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
-  const [
-    deviceToBeRemoved,
-    setDeviceToBeRemoved,
-  ] = React.useState<FirewallDevice>();
-  const [
-    isRemoveDeviceDialogOpen,
-    setIsRemoveDeviceDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    isAddFirewallDrawerOpen,
-    setIsAddFirewalDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [deviceToBeRemoved, setDeviceToBeRemoved] =
+    React.useState<FirewallDevice>();
+  const [isRemoveDeviceDialogOpen, setIsRemoveDeviceDialogOpen] =
+    React.useState<boolean>(false);
+  const [isAddFirewallDrawerOpen, setIsAddFirewalDrawerOpen] =
+    React.useState<boolean>(false);
 
   const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
     setDeviceToBeRemoved(device);

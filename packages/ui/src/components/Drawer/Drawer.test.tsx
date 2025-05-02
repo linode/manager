@@ -20,7 +20,7 @@ describe('Drawer', () => {
     ['render', true],
   ])('should %s a Dialog with title when open is %s', (_, isOpen) => {
     const { queryByTestId, queryByText } = renderWithTheme(
-      <Drawer {...defaultArgs} open={isOpen} />
+      <Drawer {...defaultArgs} open={isOpen} />,
     );
 
     const title = queryByText('This is a Drawer');
@@ -39,7 +39,7 @@ describe('Drawer', () => {
     const { getByText } = renderWithTheme(
       <Drawer {...defaultArgs} open={true}>
         <p>Child items can go here!</p>
-      </Drawer>
+      </Drawer>,
     );
 
     expect(getByText('Child items can go here!')).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe('Drawer', () => {
         >
           Close
         </Button>
-      </Drawer>
+      </Drawer>,
     );
 
     const closeButton = getByRole('button', { name: 'Close' });
@@ -69,7 +69,7 @@ describe('Drawer', () => {
 
   it('should render a Dialog with a loading spinner if isFetching is true', () => {
     const { getByRole } = renderWithTheme(
-      <Drawer {...defaultArgs} isFetching open={true} />
+      <Drawer {...defaultArgs} isFetching open={true} />,
     );
 
     expect(getByRole('progressbar')).toBeVisible();

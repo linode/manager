@@ -38,8 +38,8 @@ const CredentialDrawer = (props: CredentialDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Edit Credential: ${label}`}

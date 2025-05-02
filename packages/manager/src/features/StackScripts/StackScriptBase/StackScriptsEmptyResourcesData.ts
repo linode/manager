@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -21,18 +21,15 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Getting Started with StackScripts',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-stackscripts',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-stackscripts',
     },
     {
       text: 'Create a StackScript',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/create-a-stackscript',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-stackscript',
     },
     {
       text: 'Write a Custom Script for Use with StackScripts',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/write-a-custom-script-for-use-with-stackscripts',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/write-a-custom-script-for-use-with-stackscripts',
     },
   ],
   moreInfo: {
