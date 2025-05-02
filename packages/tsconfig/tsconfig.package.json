@@ -10,7 +10,8 @@
     "strict": true,
     "noUnusedLocals": true,
     "declarationMap": true,
-    "incremental": true
+    "incremental": true,
+    "isolatedDeclarations": true
   },
   "include": [
     "src"
