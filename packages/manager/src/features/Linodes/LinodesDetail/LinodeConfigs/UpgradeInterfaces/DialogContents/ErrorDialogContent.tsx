@@ -10,6 +10,7 @@ import {
 import React from 'react';
 
 import { ERROR_DRY_RUN_COPY } from '../constants';
+import { initialState } from '../UpgradeInterfacesDialog';
 
 import type {
   ErrorDialogState,
@@ -19,7 +20,7 @@ import type {
 export const ErrorDialogContent = (
   props: UpgradeInterfacesDialogContentProps<ErrorDialogState>
 ) => {
-  const { onClose, state } = props;
+  const { onClose, state, setDialogState } = props;
   const { errors, isDryRun } = state;
 
   return (
@@ -42,9 +43,22 @@ export const ErrorDialogContent = (
           ))}
         </List>
       )}
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          marginTop: 2,
+          gap: 2,
+        }}
+      >
         <Button buttonType="secondary" onClick={onClose}>
           Close
+        </Button>
+        <Button
+          buttonType="primary"
+          onClick={() => setDialogState({ ...initialState })}
+        >
+          Return to Overview
         </Button>
       </Box>
     </Stack>

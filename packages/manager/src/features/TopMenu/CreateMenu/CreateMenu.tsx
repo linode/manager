@@ -33,8 +33,8 @@ export type CreateEntity =
   | 'NodeBalancer'
   | 'Object Storage'
   | 'Placement Group'
-  | 'VPC'
-  | 'Volume';
+  | 'Volume'
+  | 'VPC';
 
 export interface CreateMenuLink extends BaseNavLink {
   description?: string;
@@ -165,11 +165,11 @@ export const CreateMenu = () => {
         Create
       </Button>
       <Popover
+        anchorEl={anchorEl}
         anchorOrigin={{
           horizontal: 'left',
           vertical: 'bottom',
         }}
-        anchorEl={anchorEl}
         aria-labelledby="create-menu"
         id="basic-menu"
         onClose={handleClose}

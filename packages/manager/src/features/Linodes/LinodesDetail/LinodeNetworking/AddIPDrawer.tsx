@@ -72,13 +72,8 @@ interface Props {
 }
 
 export const AddIPDrawer = (props: Props) => {
-  const {
-    linodeId,
-    linodeIsInDistributedRegion,
-    onClose,
-    open,
-    readOnly,
-  } = props;
+  const { linodeId, linodeIsInDistributedRegion, onClose, open, readOnly } =
+    props;
 
   const {
     error: ipv4Error,
@@ -96,10 +91,8 @@ export const AddIPDrawer = (props: Props) => {
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);
 
-  const [
-    selectedIPv6Prefix,
-    setSelectedIPv6Prefix,
-  ] = React.useState<IPv6Prefix | null>(null);
+  const [selectedIPv6Prefix, setSelectedIPv6Prefix] =
+    React.useState<IPv6Prefix | null>(null);
 
   const { data: ips } = useLinodeIPsQuery(linodeId, open);
 
@@ -190,11 +183,11 @@ export const AddIPDrawer = (props: Props) => {
           <Box>
             {ipOptions.map((option, idx) => (
               <FormControlLabel
+                control={<Radio />}
+                data-qa-radio={option.label}
                 disabled={
                   option.value === 'v4Private' && linodeIsInDistributedRegion
                 }
-                control={<Radio />}
-                data-qa-radio={option.label}
                 key={idx}
                 label={option.label}
                 value={option.value}

@@ -332,15 +332,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </OrderBy>
       <AlertConfirmationDialog
-        message={`Are you sure you want to ${
-          isEnabled ? 'disable' : 'enable'
-        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
       />
       <TypeToConfirmDialog
         entity={{

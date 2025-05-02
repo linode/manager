@@ -1,4 +1,5 @@
 import { array, number, object, string } from 'yup';
+
 import { MAX_VOLUME_SIZE } from './constants';
 
 const createSizeValidation = (minSize: number = 10) =>
@@ -8,7 +9,7 @@ const createSizeValidation = (minSize: number = 10) =>
     .min(minSize, `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`)
     .max(
       MAX_VOLUME_SIZE,
-      `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`
+      `Size must be between ${minSize} and ${MAX_VOLUME_SIZE}.`,
     )
     .required(`A size is required.`);
 

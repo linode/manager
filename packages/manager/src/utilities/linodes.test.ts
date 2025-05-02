@@ -2,6 +2,7 @@ import { linodeFactory } from '@linode/utilities';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { accountFactory, accountMaintenanceFactory } from 'src/factories';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 
 import {
   addMaintenanceToLinodes,
@@ -9,7 +10,6 @@ import {
   useIsLinodeInterfacesEnabled,
 } from './linodes';
 import { wrapWithTheme } from './testHelpers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 
 describe('addMaintenanceToLinodes', () => {
   it('adds relevant maintenance items to Linodes', () => {

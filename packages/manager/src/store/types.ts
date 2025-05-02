@@ -1,7 +1,8 @@
+import type { MapStateToProps as _MapStateToProps } from 'react-redux';
+
 import type { Event, Entity as EventEntity } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { QueryClient } from '@tanstack/react-query';
-import type { MapStateToProps as _MapStateToProps } from 'react-redux';
 import type { Action, Dispatch } from 'redux';
 import type { ThunkDispatch as _ThunkDispatch, ThunkAction } from 'redux-thunk';
 import type { ApplicationState } from 'src/store';

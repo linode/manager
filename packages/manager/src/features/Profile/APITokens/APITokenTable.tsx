@@ -1,3 +1,8 @@
+import {
+  useAppTokensQuery,
+  usePersonalAccessTokensQuery,
+  useProfile,
+} from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -17,11 +22,6 @@ import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constan
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import {
-  useProfile,
-  useAppTokensQuery,
-  usePersonalAccessTokensQuery,
-} from '@linode/queries';
 
 import { APITokenMenu } from './APITokenMenu';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -195,12 +195,12 @@ export const APITokenTable = (props: Props) => {
         </Typography>
         {type === 'Personal Access Token' && (
           <Button
-            tooltipText={
-              isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
-            }
             buttonType="primary"
             disabled={isProxyUser}
             onClick={() => setIsCreateOpen(true)}
+            tooltipText={
+              isProxyUser ? PROXY_USER_RESTRICTED_TOOLTIP_TEXT : undefined
+            }
           >
             Create a Personal Access Token
           </Button>

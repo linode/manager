@@ -28,13 +28,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build();
     const renderedAlert = (
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -46,13 +46,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const renderedAlert = (
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -74,13 +74,13 @@ describe('Alert Row', () => {
     const renderedAlert = (
       <Router history={history}>
         <AlertTableRow
+          alert={alert}
           handlers={{
             handleDelete: vi.fn(),
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
             handleStatusChange: vi.fn(),
           }}
-          alert={alert}
           services={mockServices}
         />
       </Router>
@@ -95,13 +95,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'enabled' });
     const { getAllByLabelText, getByTestId } = renderWithTheme(
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -116,13 +116,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -135,13 +135,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -154,13 +154,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'in progress', type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );
@@ -177,13 +177,13 @@ describe('Alert Row', () => {
     const alert = alertFactory.build({ status: 'in progress', type: 'user' });
     const { getByLabelText, getByText } = renderWithTheme(
       <AlertTableRow
+        alert={alert}
         handlers={{
           handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
         }}
-        alert={alert}
         services={mockServices}
       />
     );

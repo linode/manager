@@ -97,9 +97,6 @@ export const LinodesLandingWrapper = React.memo(() => {
 
   return (
     <LinodesLanding
-      someLinodesHaveScheduledMaintenance={Boolean(
-        someLinodesHaveScheduledMaintenance
-      )}
       filteredLinodesLoading={filteredLinodesLoading}
       handleRegionFilter={handleRegionFilter}
       linodesData={filteredLinodesData}
@@ -107,6 +104,9 @@ export const LinodesLandingWrapper = React.memo(() => {
       linodesRequestError={error ?? undefined}
       linodesRequestLoading={allLinodesLoading}
       regionFilter={regionFilter}
+      someLinodesHaveScheduledMaintenance={Boolean(
+        someLinodesHaveScheduledMaintenance
+      )}
       totalNumLinodes={allLinodes?.length ?? 0}
     />
   );
