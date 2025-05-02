@@ -104,7 +104,7 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
       helperText={
         !selectedRegion
-          ? 'Select a Region for your Linode to see existing placement groups.'
+          ? 'Select a Region to see available placement groups.'
           : undefined
       }
       label={label}
