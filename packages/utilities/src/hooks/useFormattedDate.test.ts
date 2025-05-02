@@ -1,7 +1,8 @@
 import { renderHook } from '@testing-library/react';
-import { useFormattedDate } from './useFormattedDate';
 import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
+
+import { useFormattedDate } from './useFormattedDate';
 
 describe('useFormattedDate', () => {
   it('returns the correctly formatted date', () => {

@@ -1,9 +1,9 @@
 import React from 'react';
+import type { MemoExoticComponent } from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
 import type { AlertResourceFiltersProps } from './types';
-import type { MemoExoticComponent } from 'react';
 
 export interface AlertResourcesFilterRendererProps {
   /**

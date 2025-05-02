@@ -54,19 +54,19 @@ describe('GDPR agreement', () => {
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('fr-par').click();
+    ui.regionSelect.findItemByRegionId('fr-par', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
 
     cy.wait('@getAgreements');
 
     // London should have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('eu-west').click();
+    ui.regionSelect.findItemByRegionId('eu-west', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('be.visible');
 
     // Newark should not have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('us-east').click();
+    ui.regionSelect.findItemByRegionId('us-east', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
   });
 
@@ -83,19 +83,19 @@ describe('GDPR agreement', () => {
 
     // Paris should not have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('fr-par').click();
+    ui.regionSelect.findItemByRegionId('fr-par', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
 
     cy.wait('@getAgreements');
 
     // London should not have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('eu-west').click();
+    ui.regionSelect.findItemByRegionId('eu-west', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
 
     // Newark should not have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('us-east').click();
+    ui.regionSelect.findItemByRegionId('us-east', mockRegions).click();
     cy.get('[data-testid="eu-agreement-checkbox"]').should('not.exist');
   });
 
@@ -114,7 +114,7 @@ describe('GDPR agreement', () => {
 
     // Paris should have the agreement
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionId('fr-par').click();
+    ui.regionSelect.findItemByRegionId('fr-par', mockRegions).click();
 
     cy.wait('@getAgreements');
 

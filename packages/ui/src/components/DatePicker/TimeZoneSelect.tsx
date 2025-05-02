@@ -4,7 +4,7 @@ import React from 'react';
 
 import { timezones } from '../../utilities/timezones';
 
-type Timezone = typeof timezones[number];
+type Timezone = (typeof timezones)[number];
 
 interface TimeZoneSelectProps {
   disabled?: boolean;
@@ -48,9 +48,6 @@ export const TimeZoneSelect = ({
 }: TimeZoneSelectProps) => {
   return (
     <Autocomplete
-      value={
-        timezoneOptions.find((option) => option.value === value) ?? undefined
-      }
       autoHighlight
       disabled={disabled}
       errorText={errorText}
@@ -61,6 +58,9 @@ export const TimeZoneSelect = ({
       options={timezoneOptions}
       placeholder="Choose a Timezone"
       sx={{ flex: 2 }}
+      value={
+        timezoneOptions.find((option) => option.value === value) ?? undefined
+      }
     />
   );
 };

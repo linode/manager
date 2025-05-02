@@ -61,24 +61,20 @@ export const AccessKeyLanding = (props: Props) => {
     page_size: pagination.pageSize,
   });
 
-  const {
-    data: accountSettings,
-    refetch: requestAccountSettings,
-  } = useAccountSettings();
+  const { data: accountSettings, refetch: requestAccountSettings } =
+    useAccountSettings();
 
   // Key to display in Confirmation Modal upon creation
-  const [
-    keyToDisplay,
-    setKeyToDisplay,
-  ] = React.useState<ObjectStorageKey | null>(null);
+  const [keyToDisplay, setKeyToDisplay] =
+    React.useState<null | ObjectStorageKey>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+  const [keyToEdit, setKeyToEdit] = React.useState<null | ObjectStorageKey>(
     null
   );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+  const [keyToRevoke, setKeyToRevoke] = React.useState<null | ObjectStorageKey>(
     null
   );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
@@ -246,7 +242,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const openDrawer: OpenAccessDrawer = (
     mode: MODE,
-    objectStorageKey: ObjectStorageKey | null = null
+    objectStorageKey: null | ObjectStorageKey = null
   ) => {
     setKeyToEdit(objectStorageKey);
     if (mode !== 'creating') {

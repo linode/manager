@@ -1,6 +1,5 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountUserFactory } from '@src/factories/accountUsers';
-import { grantsFactory } from '@src/factories/grants';
 import { userPermissionsGrants } from 'support/constants/user-permissions';
 import {
   mockGetUser,
@@ -145,7 +144,7 @@ const assertAllGlobalPermissions = (enabled: boolean) => {
  * @param billingAccess - Billing access to select.
  */
 const selectBillingAccess = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -159,7 +158,7 @@ const selectBillingAccess = (
  * @param billingAccess - Selected billing access to assert.
  */
 const assertBillingAccessSelected = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')

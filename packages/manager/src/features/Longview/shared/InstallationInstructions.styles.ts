@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 
 export const StyledInstructionGrid = styled(Grid, {
   label: 'StyledInstructionGrid',

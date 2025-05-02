@@ -11,7 +11,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import {
   useAccountPermissions,
   useAccountUserPermissions,
@@ -25,11 +24,8 @@ import {
   getRoleByName,
 } from '../../Shared/utilities';
 
-import type {
-  DrawerModes,
-  EntitiesRole,
-  ExtendedEntityRole,
-} from '../../Shared/utilities';
+import type { DrawerModes, EntitiesRole } from '../../Shared/types';
+import type { ExtendedEntityRole } from '../../Shared/utilities';
 
 interface Props {
   mode: DrawerModes;
@@ -131,12 +127,7 @@ export const ChangeRoleForEntityDrawer = ({
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Change Role"
-    >
+    <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
@@ -171,10 +162,10 @@ export const ChangeRoleForEntityDrawer = ({
 
         {selectedRole && (
           <AssignedPermissionsPanel
-            assignedEntities={[]}
             key={selectedRole.name}
             mode={mode}
             role={selectedRole}
+            value={[]}
           />
         )}
 

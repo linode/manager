@@ -5,13 +5,14 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 
-import type { ExtendedRoleMap } from '../utilities';
+import type { ExtendedRoleView } from '../types';
 
 const mockOnChangeRole = vi.fn();
 const mockOnUnassignRole = vi.fn();
 const mockOnViewEntities = vi.fn();
+const mockOnUpdateEntities = vi.fn();
 
-const mockAccountRole: ExtendedRoleMap = {
+const mockAccountRole: ExtendedRoleView = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
@@ -22,7 +23,7 @@ const mockAccountRole: ExtendedRoleMap = {
   permissions: ['create_linode', 'update_linode', 'update_firewall'],
 };
 
-const mockEntityRole: ExtendedRoleMap = {
+const mockEntityRole: ExtendedRoleView = {
   access: 'entity_access',
   description: 'Access to update a linode instance',
   entity_ids: [12345678],
@@ -38,6 +39,7 @@ describe('AssignedRolesActionMenu', () => {
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
+        handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
         role={mockAccountRole}
       />
@@ -58,6 +60,7 @@ describe('AssignedRolesActionMenu', () => {
       <AssignedRolesActionMenu
         handleChangeRole={mockOnChangeRole}
         handleUnassignRole={mockOnUnassignRole}
+        handleUpdateEntities={mockOnUpdateEntities}
         handleViewEntities={mockOnViewEntities}
         role={mockEntityRole}
       />

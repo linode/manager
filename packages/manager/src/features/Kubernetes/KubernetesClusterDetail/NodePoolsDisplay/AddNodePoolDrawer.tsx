@@ -9,7 +9,11 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
+import {
+  ADD_NODE_POOLS_DESCRIPTION,
+  ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
+  nodeWarning,
+} from 'src/features/Kubernetes/constants';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -18,7 +22,7 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
-import { nodeWarning } from '../../constants';
+import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
 import { hasInvalidNodePoolPrice } from './utils';
 
@@ -90,7 +94,7 @@ export const AddNodePoolDrawer = (props: Props) => {
   const extendedTypes = filterCurrentTypes(types?.map(extendType));
 
   const [selectedTypeInfo, setSelectedTypeInfo] = React.useState<
-    { count: number; planId: string } | undefined
+    undefined | { count: number; planId: string }
   >(undefined);
   const [addNodePoolError, setAddNodePoolError] = React.useState<string>('');
 
@@ -104,8 +108,10 @@ export const AddNodePoolDrawer = (props: Props) => {
     ? extendedTypes.find((thisType) => thisType.id === selectedTypeInfo.planId)
     : undefined;
 
-  const pricePerNode = getLinodeRegionPrice(selectedType, clusterRegionId)
-    ?.monthly;
+  const pricePerNode = getLinodeRegionPrice(
+    selectedType,
+    clusterRegionId
+  )?.monthly;
 
   const totalPrice =
     selectedTypeInfo && isNumber(pricePerNode)
@@ -157,14 +163,19 @@ export const AddNodePoolDrawer = (props: Props) => {
     selectedRegionID: clusterRegionId,
   });
 
+  const getPlansPanelCopy = () => {
+    return clusterTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
+      : ADD_NODE_POOLS_DESCRIPTION;
+  };
+
   return (
     <Drawer
+      onClose={onClose}
+      open={open}
       PaperProps={{
         sx: { maxWidth: '790px !important' },
       }}
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
       ref={drawerRef}
       title={`Add a Node Pool: ${clusterLabel}`}
       wide
@@ -179,17 +190,19 @@ export const AddNodePoolDrawer = (props: Props) => {
       )}
       <form className={classes.plans}>
         <KubernetesPlansPanel
-          onSelect={(newType: string) => {
-            if (selectedTypeInfo?.planId !== newType) {
-              setSelectedTypeInfo({ count: 1, planId: newType });
-            }
-          }}
           addPool={handleAdd}
+          copy={getPlansPanelCopy()}
           getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           isSubmitting={isPending}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onSelect={(newType: string) => {
+            if (selectedTypeInfo?.planId !== newType) {
+              setSelectedTypeInfo({ count: 1, planId: newType });
+            }
+          }}
           regionsData={regionsData}
           resetValues={resetDrawer}
           selectedId={selectedTypeInfo?.planId}
@@ -203,7 +216,6 @@ export const AddNodePoolDrawer = (props: Props) => {
           selectedTypeInfo.count > 0 &&
           selectedTypeInfo.count < 3 && (
             <Notice
-              important
               spacingBottom={16}
               spacingTop={8}
               text={nodeWarning}

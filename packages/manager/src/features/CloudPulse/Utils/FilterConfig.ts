@@ -101,6 +101,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
+        dependency: ['engine'],
         filterKey: 'region',
         filterType: 'string',
         isFilterable: false,

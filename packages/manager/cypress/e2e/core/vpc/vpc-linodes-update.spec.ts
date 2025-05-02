@@ -8,8 +8,8 @@ import {
 } from '@linode/utilities';
 import { linodeConfigFactory, subnetFactory, vpcFactory } from '@src/factories';
 import {
-  vpcAssignLinodeRebootNotice,
-  vpcUnassignLinodeRebootNotice,
+  vpcConfigProfileInterfaceRebootNotice,
+  vpcLinodeInterfaceShutDownNotice,
 } from 'support/constants/vpc';
 import {
   mockCreateLinodeConfigInterfaces,
@@ -133,8 +133,11 @@ describe('VPC assign/unassign flows', () => {
       .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
       .should('be.visible')
       .within(() => {
-        // confirm that the user is warned that a reboot is required
-        cy.findByText(vpcAssignLinodeRebootNotice).should('be.visible');
+        // confirm that the user is warned that a reboot / shutdown is required
+        cy.findByText(vpcLinodeInterfaceShutDownNotice).should('be.visible');
+        cy.findByText(vpcConfigProfileInterfaceRebootNotice).should(
+          'be.visible'
+        );
 
         ui.button
           .findByTitle('Assign Linode')
@@ -253,8 +256,11 @@ describe('VPC assign/unassign flows', () => {
       )
       .should('be.visible')
       .within(() => {
-        // confirm that the user is warned that a reboot is required
-        cy.findByText(vpcUnassignLinodeRebootNotice).should('be.visible');
+        // confirm that the user is warned that a reboot / shutdown is required
+        cy.findByText(vpcLinodeInterfaceShutDownNotice).should('be.visible');
+        cy.findByText(vpcConfigProfileInterfaceRebootNotice).should(
+          'be.visible'
+        );
 
         ui.button
           .findByTitle('Unassign Linodes')
@@ -277,7 +283,7 @@ describe('VPC assign/unassign flows', () => {
         cy.wait('@getLinodeConfigs');
 
         // the select option won't disappear unless click on somewhere else
-        cy.findByText(vpcUnassignLinodeRebootNotice).click();
+        cy.findByText(vpcLinodeInterfaceShutDownNotice).click();
         // confirm that unassigned Linode(s) are displayed on the details page
         cy.findByText('Linodes to be Unassigned from Subnet (1)').should(
           'be.visible'
@@ -294,7 +300,7 @@ describe('VPC assign/unassign flows', () => {
         cy.wait('@getLinodeConfigs');
 
         // confirm that unassigned Linode(s) are displayed on the details page
-        cy.findByText(vpcUnassignLinodeRebootNotice).click();
+        cy.findByText(vpcLinodeInterfaceShutDownNotice).click();
         cy.findByText('Linodes to be Unassigned from Subnet (2)').should(
           'be.visible'
         );

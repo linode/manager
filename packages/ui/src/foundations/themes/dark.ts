@@ -5,11 +5,11 @@ import {
   Badge,
   Border,
   Button,
-  Component,
   Color,
-  Font,
+  Component,
   Content,
   Dropdown,
+  Font,
   GlobalHeader,
   Interaction,
   NotificationToast,
@@ -109,28 +109,28 @@ export const customDarkModeOptions = {
 export const notificationToast = {
   default: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
-    borderLeft: `48px solid ${NotificationToast.Error.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Error.IconBackground}`,
   },
   info: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
   success: {
     backgroundColor: NotificationToast.Success.Background,
-    borderLeft: `48px solid ${NotificationToast.Success.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Success.IconBackground}`,
   },
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
-    borderLeft: `48px solid ${NotificationToast.Warning.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
-    borderLeft: `48px solid ${NotificationToast.Informative.Border}`,
+    borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
   },
 } as const;
 
@@ -265,7 +265,11 @@ export const darkTheme: ThemeOptions = {
           color: Select.Default.Icon,
         },
         tag: {
-          '.MuiChip-deleteIcon': { color: Content.Text.Primary.Default },
+          '.MuiChip-deleteIcon': {
+            color: Content.Text.Primary.Default,
+            width: 'auto',
+            height: 'auto',
+          },
           backgroundColor: customDarkModeOptions.bg.lightBlue1,
         },
       },
@@ -345,11 +349,12 @@ export const darkTheme: ThemeOptions = {
         {
           props: { color: 'error' },
           style: {
-            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus': {
-              backgroundColor: Background.Negativesubtle,
-              border: `1px solid ${Border.Negative}`,
-              color: Content.Text.Negative,
-            },
+            '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
+              {
+                backgroundColor: Background.Negativesubtle,
+                border: `1px solid ${Border.Negative}`,
+                color: Content.Text.Negative,
+              },
             '&[aria-disabled="true"]': {
               backgroundColor: 'transparent',
               border: `1px solid ${Button.Secondary.Disabled.Border}`,
@@ -601,11 +606,12 @@ export const darkTheme: ThemeOptions = {
             border: `1px solid ${TextField.Focus.Border}`,
             color: TextField.Focus.Text,
           },
-          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover': {
-            backgroundColor: TextField.Disabled.Background,
-            border: `1px solid ${TextField.Disabled.Border}`,
-            color: TextField.Disabled.Text,
-          },
+          '&:disabled, &[aria-disabled="true"], &.Mui-disabled, &.Mui-disabled:hover':
+            {
+              backgroundColor: TextField.Disabled.Background,
+              border: `1px solid ${TextField.Disabled.Border}`,
+              color: TextField.Disabled.Text,
+            },
           '&:hover': {
             backgroundColor: TextField.Hover.Background,
             border: `1px solid ${TextField.Hover.Border}`,
@@ -838,9 +844,11 @@ export const darkTheme: ThemeOptions = {
           // Zebra Striping
           '&.MuiTable-zebra': {
             // Linodes Group by Tag: First Row is the Title
-            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)': MuiTableZebraStyles,
+            '&.MuiTable-groupByTag .MuiTableRow-root:not(:first-of-type):nth-of-type(odd)':
+              MuiTableZebraStyles,
             // Default Striping
-            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)': MuiTableZebraStyles,
+            '&:not(.MuiTable-groupByTag) .MuiTableRow-root:not(.MuiTableRow-nested):nth-of-type(even)':
+              MuiTableZebraStyles,
           },
           // Nested Tables
           '.MuiTable-root': {
@@ -907,9 +915,10 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.Row.Background.Hover,
           },
           // Disable hover for nested rows (VPC)
-          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover': {
-            backgroundColor: Table.Row.Background.Default,
-          },
+          '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
+            {
+              backgroundColor: Table.Row.Background.Default,
+            },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
             backgroundColor: Interaction.Background.Disabled,

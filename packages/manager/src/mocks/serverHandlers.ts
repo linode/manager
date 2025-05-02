@@ -11,6 +11,8 @@ import {
   accountBetaFactory,
   betaFactory,
   dedicatedTypeFactory,
+  grantFactory,
+  grantsFactory,
   linodeFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -27,11 +29,10 @@ import {
   securityQuestionsFactory,
 } from '@linode/utilities';
 import { DateTime } from 'luxon';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 
 import { MOCK_THEME_STORAGE_KEY } from 'src/dev-tools/ThemeSelector';
 import {
-  VLANFactory,
   // abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
@@ -50,6 +51,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
+  dimensionFilterFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -102,15 +104,17 @@ import {
   supportReplyFactory,
   supportTicketFactory,
   tagFactory,
+  VLANFactory,
   volumeFactory,
   volumeTypeFactory,
   vpcFactory,
+  widgetFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
+import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
@@ -119,6 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { MTC_TT } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -474,9 +479,26 @@ const gpuTypesRX = linodeTypeFactory.buildList(7, {
   gpus: 1,
   transfer: 5000,
 });
-const premiumTypes = linodeTypeFactory.buildList(7, {
-  class: 'premium',
-});
+const premiumTypes = [
+  ...linodeTypeFactory.buildList(6, {
+    class: 'premium',
+  }),
+  linodeTypeFactory.build({
+    class: 'premium',
+    disk: 10240000,
+    id: 'g8-premium-128-ht',
+    label: 'Premium HT 512 GB',
+    memory: 524288,
+    network_out: 40000,
+    price: {
+      hourly: 7.0,
+      monthly: 5040.0,
+    },
+    transfer: 24000,
+    vcpus: 128,
+  }),
+];
+
 const acceleratedType = linodeTypeFactory.buildList(7, {
   accelerated_devices: 1,
   class: 'accelerated',
@@ -700,7 +722,22 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
+    const mtcTTLinodes = [
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-1',
+        region: 'us-iad',
+        type: 'g8-premium-128-ht',
+        id: 1234,
+      }),
+      linodeFactory.build({
+        label: 'mtc-tt-custom-plan-linode-2',
+        region: 'no-east',
+        type: 'g8-premium-128-ht',
+        id: 1235,
+      }),
+    ];
     const linodes = [
+      ...mtcTTLinodes,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -805,14 +842,23 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const id = Number(params.id);
-    return HttpResponse.json(
-      linodeFactory.build({
-        backups: { enabled: false },
-        id,
-        label: 'Gecko Distributed Region Test',
-        region: 'us-den-10',
-      })
-    );
+    const linodeMTCTTPlanDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'mtc-tt-custom-plan-linode',
+      region: 'us-iad',
+      type: 'g8-premium-128-ht',
+    });
+    const linodeDetail = linodeFactory.build({
+      id,
+      backups: { enabled: false },
+      label: 'Gecko Distributed Region Test',
+      region: 'us-den-10',
+    });
+    const response = [1234, 1235].includes(id)
+      ? linodeMTCTTPlanDetail
+      : linodeDetail;
+    return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
     const firewalls = firewallFactory.buildList(10);
@@ -1041,6 +1087,20 @@ export const handlers = [
       }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
+  }),
+  http.get('*/v4*/object-storage/quotas*', () => {
+    const quotas = [
+      quotaFactory.build({
+        description: 'The total capacity of your Object Storage account',
+        endpoint_type: 'E0',
+        quota_limit: 1_000_000_000_000_000,
+        quota_name: 'Total Capacity',
+        resource_metric: 'byte',
+        s3_endpoint: 'endpoint1',
+      }),
+    ];
+
+    return HttpResponse.json(makeResourcePage(quotas));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -1887,7 +1947,7 @@ export const handlers = [
     return HttpResponse.json(null, { status: 400 });
   }),
   http.get('*managed/services', () => {
-    const monitors = monitorFactory.buildList(5);
+    const monitors = monitorFactory.buildList(25);
     const downUnresolvedMonitor = monitorFactory.build({
       id: 998,
       status: 'problem',
@@ -2009,7 +2069,7 @@ export const handlers = [
       body: null,
       entity: null,
       label: "We've updated our policies.",
-      // eslint-disable-next-line xss/no-mixed-html
+
       message:
         "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
       severity: 'minor',
@@ -2245,16 +2305,36 @@ export const handlers = [
       ])
     );
   }),
-  http.get('*regions/:regionId/availability', () => {
+  http.get('*regions/:regionId/availability', ({ params }) => {
+    const selectedRegion = params.regionId as string;
+
     return HttpResponse.json([
       regionAvailabilityFactory.build({
         plan: 'g6-standard-6',
-        region: 'us-east',
+        region: selectedRegion,
       }),
       regionAvailabilityFactory.build({
         plan: 'g6-standard-7',
-        region: 'us-east',
+        region: selectedRegion,
       }),
+      // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
+      ...(MTC_TT['availability_regions'].includes(
+        selectedRegion as (typeof MTC_TT)['availability_regions'][number]
+      )
+        ? [
+            regionAvailabilityFactory.build({
+              available: true,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]
+        : [
+            regionAvailabilityFactory.build({
+              available: false,
+              plan: 'g8-premium-128-ht',
+              region: selectedRegion,
+            }),
+          ]),
     ]);
   }),
 
@@ -2634,6 +2714,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'Linode Dashboard',
           service_type: 'linode',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     } else if (params.serviceType === 'dbaas') {
@@ -2641,6 +2730,15 @@ export const handlers = [
         dashboardFactory.build({
           label: 'DBaaS Dashboard',
           service_type: 'dbaas',
+          widgets: [
+            widgetFactory.build({
+              label: 'CPU utilization',
+              metric: 'system_cpu_utilization_percent',
+              unit: '%',
+              group_by: ['entity_id'],
+              y_label: 'system_cpu_utilization_ratio',
+            }),
+          ],
         })
       );
     }
@@ -2793,7 +2891,11 @@ export const handlers = [
           metric: 'system_cpu_utilization_percent',
           size: 12,
           unit: '%',
+          group_by: ['entity_id'],
           y_label: 'system_cpu_utilization_ratio',
+          filters: dimensionFilterFactory.buildList(5, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith']),
+          }),
         },
         {
           aggregate_function: 'avg',
@@ -2803,6 +2905,7 @@ export const handlers = [
           metric: 'system_memory_usage_by_resource',
           size: 12,
           unit: 'Bytes',
+          group_by: ['entity_id'],
           y_label: 'system_memory_usage_bytes',
         },
         {
@@ -2814,6 +2917,10 @@ export const handlers = [
           size: 6,
           unit: 'Bytes',
           y_label: 'system_network_io_bytes_total',
+          filters: dimensionFilterFactory.buildList(3, {
+            operator: pickRandom(['endswith', 'eq', 'neq', 'startswith', 'in']),
+          }),
+          group_by: ['entity_id'],
         },
         {
           aggregate_function: 'avg',
@@ -2823,6 +2930,7 @@ export const handlers = [
           metric: 'system_disk_OPS_total',
           size: 6,
           unit: 'OPS',
+          group_by: ['entity_id'],
           y_label: 'system_disk_operations_total',
         },
       ],
@@ -2835,7 +2943,9 @@ export const handlers = [
         result: [
           {
             metric: {
-              test: 'Test1',
+              entity_id: '123',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-1',
             },
             values: [
               [1721854379, '0.2744841110560275'],
@@ -2876,7 +2986,9 @@ export const handlers = [
           // })),
           {
             metric: {
-              test2: 'Test2',
+              entity_id: '456',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-2',
             },
             values: [
               [1721854379, '0.3744841110560275'],
@@ -2896,7 +3008,9 @@ export const handlers = [
           },
           {
             metric: {
-              test3: 'Test3',
+              entity_id: '789',
+              metric_name: 'average_cpu_usage',
+              node_id: 'primary-3',
             },
             values: [
               [1721854379, '0.3744841110560275'],

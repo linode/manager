@@ -1,6 +1,7 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import Search from 'src/assets/icons/search.svg';
@@ -10,7 +11,6 @@ import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { ConvertedItems } from '../SearchHOC';
-import type { RouteComponentProps } from 'react-router-dom';
 
 interface SelectedItem {
   data: { source: string };
@@ -25,13 +25,8 @@ interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
  */
 const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
   const [inputValue, setInputValue] = React.useState('');
-  const {
-    history,
-    searchAlgolia,
-    searchEnabled,
-    searchError,
-    searchResults,
-  } = props;
+  const { history, searchAlgolia, searchEnabled, searchError, searchResults } =
+    props;
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -61,7 +56,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       : '/support/search/';
   };
 
-  const handleSelect = (selected: ConvertedItems | SelectedItem | null) => {
+  const handleSelect = (selected: ConvertedItems | null | SelectedItem) => {
     if (!selected || !inputValue) {
       return;
     }
@@ -81,18 +76,26 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     <React.Fragment>
       {searchError && (
         <Notice
+          spacingTop={8}
           sx={(theme) => ({
             '& p': {
               color: theme.tokens.color.Neutrals.White,
             },
           })}
-          spacingTop={8}
           variant="error"
         >
           {searchError}
         </Notice>
       )}
       <Autocomplete
+        disabled={!searchEnabled}
+        inputValue={inputValue}
+        keepSearchEnabledOnMobile
+        label="Search for answers"
+        onChange={(_, selected) => handleSelect(selected)}
+        onInputChange={(_, value) => onInputValueChange(value)}
+        options={options}
+        placeholder="Search"
         renderOption={(props, option) => {
           return (
             <SearchItem
@@ -119,14 +122,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           },
           hideLabel: true,
         }}
-        disabled={!searchEnabled}
-        inputValue={inputValue}
-        keepSearchEnabledOnMobile
-        label="Search for answers"
-        onChange={(_, selected) => handleSelect(selected)}
-        onInputChange={(_, value) => onInputValueChange(value)}
-        options={options}
-        placeholder="Search"
       />
     </React.Fragment>
   );

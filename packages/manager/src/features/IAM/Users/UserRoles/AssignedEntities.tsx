@@ -1,33 +1,27 @@
-import { Box, Button, Chip, Tooltip } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
 import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import { useCalculateHiddenItems } from '../../Shared/utilities';
+import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
+import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
-  entities: string[];
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  roleName: AccountAccessRole | EntityAccessRole;
+  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
+  role: ExtendedRoleView;
 }
 
 export const AssignedEntities = ({
-  entities,
   onButtonClick,
-  roleName,
+  onRemoveAssignment,
+  role,
 }: Props) => {
   const theme = useTheme();
 
-  const handleDelete = () => {};
-
-  const {
-    calculateHiddenItems,
-    containerRef,
-    itemRefs,
-    numHiddenItems,
-  } = useCalculateHiddenItems(entities);
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(role.entity_names!);
 
   const handleResize = React.useMemo(
     () => debounce(() => calculateHiddenItems(), 100),
@@ -46,46 +40,56 @@ export const AssignedEntities = ({
     };
   }, [calculateHiddenItems, handleResize]);
 
-  const items = entities?.map((name: string, index: number) => (
-    <div
-      key={name}
-      ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
-      style={{ display: 'inline-block', marginRight: 8 }}
-    >
-      <Chip
-        sx={{
-          backgroundColor:
-            theme.name === 'light'
-              ? theme.tokens.color.Ultramarine[20]
-              : theme.tokens.color.Neutrals.Black,
-          color: theme.tokens.alias.Content.Text.Primary.Default,
-        }}
-        data-testid="entities"
-        deleteIcon={<CloseIcon />}
-        key={name}
-        label={name}
-        onDelete={handleDelete}
-      />
-    </div>
-  ));
+  const combinedEntities: CombinedEntity[] = React.useMemo(
+    () =>
+      role.entity_names!.map((name, index) => ({
+        name,
+        id: role.entity_ids![index],
+      })),
+    [role.entity_names, role.entity_ids]
+  );
+
+  const items = combinedEntities?.map(
+    (entity: CombinedEntity, index: number) => (
+      <div
+        key={entity.id}
+        ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
+        style={{ display: 'inline-block', marginRight: 8 }}
+      >
+        <Chip
+          data-testid="entities"
+          deleteIcon={<CloseIcon data-testid="CloseIcon" />}
+          label={entity.name}
+          onDelete={() => onRemoveAssignment(entity, role)}
+          sx={{
+            backgroundColor:
+              theme.name === 'light'
+                ? theme.tokens.color.Ultramarine[20]
+                : theme.tokens.color.Neutrals.Black,
+            color: theme.tokens.alias.Content.Text.Primary.Default,
+          }}
+        />
+      </div>
+    )
+  );
 
   return (
     <Box sx={{ alignItems: 'center', display: 'flex', maxWidth: '800px' }}>
       <div
+        ref={containerRef}
         style={{
           WebkitBoxOrient: 'vertical',
           WebkitLineClamp: 1,
           display: '-webkit-box',
           overflow: 'hidden',
         }}
-        ref={containerRef}
       >
         {items}
       </div>
       {numHiddenItems > 0 && (
         <Box
           sx={{
-            aligIitems: 'center',
+            alignItems: 'center',
             backgroundColor:
               theme.name === 'light'
                 ? theme.tokens.color.Ultramarine[20]
@@ -99,12 +103,12 @@ export const AssignedEntities = ({
         >
           <Tooltip placement="top" title="Click to View All Entities">
             <Button
+              onClick={() => onButtonClick(role.name as EntityAccessRole)}
               sx={{
                 color: theme.tokens.alias.Content.Text.Primary.Default,
                 font: theme.tokens.alias.Typography.Label.Regular.Xs,
                 padding: 0,
               }}
-              onClick={() => onButtonClick(roleName)}
             >
               +{numHiddenItems}
             </Button>

@@ -5,7 +5,10 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT } from 'src/features/Linodes/PublicIPAddressesTooltip';
+import {
+  PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT,
+  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT,
+} from 'src/features/Linodes/PublicIPAddressesTooltip';
 
 import type { IPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
@@ -15,6 +18,7 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
+  isLinodeInterface: boolean;
   isOnlyPublicIP: boolean;
   isVPCOnlyLinode: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
@@ -29,6 +33,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ipAddress,
     ipType,
     isOnlyPublicIP,
+    isLinodeInterface,
     isVPCOnlyLinode,
     onEdit,
     onRemove,
@@ -40,8 +45,8 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     'Private – IPv4',
     'Reserved IPv4 (private)',
     'Reserved IPv4 (public)',
-    'VPC NAT – IPv4',
     'VPC – IPv4',
+    'VPC NAT – IPv4',
   ].includes(ipType);
 
   const deletableIPTypes = ['Private – IPv4', 'Public – IPv4', 'Range – IPv6'];
@@ -57,6 +62,13 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
+  const isPublicIPNotAssignedCopy = isLinodeInterface
+    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT
+    : PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT;
+
+  const isAssociatedWithLinodeInterface =
+    'address' in ipAddress && ipAddress.interface_id !== null;
+
   const getAriaLabel = (): string => {
     if ('address' in ipAddress) {
       return `Action menu for IP Address ${ipAddress.address}`;
@@ -66,7 +78,11 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   };
 
   const actions = [
-    onRemove && ipAddress && !is116Range && deletableIPTypes.includes(ipType)
+    onRemove &&
+    ipAddress &&
+    !is116Range &&
+    deletableIPTypes.includes(ipType) &&
+    !isAssociatedWithLinodeInterface
       ? {
           disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
           id: 'delete',
@@ -77,10 +93,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
-            : isOnlyPublicIP
-            ? isOnlyPublicIPTooltip
-            : undefined,
+              ? isPublicIPNotAssignedCopy
+              : isOnlyPublicIP
+                ? isOnlyPublicIPTooltip
+                : undefined,
         }
       : null,
     onEdit && ipAddress && showEdit
@@ -94,8 +110,8 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           tooltip: readOnly
             ? readOnlyTooltip
             : isVPCOnlyLinode
-            ? PUBLIC_IP_ADDRESSES_TOOLTIP_TEXT
-            : undefined,
+              ? isPublicIPNotAssignedCopy
+              : undefined,
         }
       : null,
   ].filter(Boolean) as Action[];

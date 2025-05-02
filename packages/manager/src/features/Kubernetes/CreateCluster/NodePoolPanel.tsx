@@ -1,20 +1,16 @@
-import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { doesRegionSupportFeature } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { useFlags } from 'src/hooks/useFlags';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
 import { extendType } from 'src/utilities/extendType';
 
 import {
   ADD_NODE_POOLS_DESCRIPTION,
-  ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
-  ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION,
-} from '../ClusterList/constants';
+} from '../constants';
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
+import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
 import type {
   KubeNodePoolResponse,
@@ -73,11 +69,7 @@ const Panel = (props: NodePoolPanelProps) => {
     types,
   } = props;
 
-  const flags = useFlags();
-
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
-
-  const regions = useRegionsQuery().data ?? [];
 
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
@@ -100,27 +92,9 @@ const Panel = (props: NodePoolPanelProps) => {
     setSelectedType(planId);
   };
 
-  // "Disk Encryption" indicates general availability and "LA Disk Encryption" indicates limited availability
-  const regionSupportsDiskEncryption =
-    doesRegionSupportFeature(
-      selectedRegionId ?? '',
-      regions,
-      'Disk Encryption'
-    ) ||
-    doesRegionSupportFeature(
-      selectedRegionId ?? '',
-      regions,
-      'LA Disk Encryption'
-    );
-
   const getPlansPanelCopy = () => {
-    // TODO - LKE-E: Remove the 'ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION' copy once LDE is enabled on LKE-E.
-    if (selectedTier === 'enterprise') {
-      return `${ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION} ${ADD_NODE_POOLS_NO_ENCRYPTION_DESCRIPTION}`;
-    }
-    // @TODO LDE: once LDE has been fully rolled out and is in GA in all regions, remove the feature flag condition
-    return regionSupportsDiskEncryption && flags.linodeDiskEncryption
-      ? `${ADD_NODE_POOLS_DESCRIPTION} ${ADD_NODE_POOLS_ENCRYPTION_DESCRIPTION}`
+    return selectedTier === 'enterprise'
+      ? ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION
       : ADD_NODE_POOLS_DESCRIPTION;
   };
 
@@ -128,9 +102,24 @@ const Panel = (props: NodePoolPanelProps) => {
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
+          copy={getPlansPanelCopy()}
+          error={apiError}
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
+          hasSelectedRegion={hasSelectedRegion}
+          header="Add Node Pools"
+          isAPLEnabled={isAPLEnabled}
+          isPlanPanelDisabled={isPlanPanelDisabled}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onAdd={addPool}
+          onSelect={(newType: string) => setSelectedType(newType)}
+          regionsData={regionsData}
+          resetValues={() => null} // In this flow we don't want to clear things on tab changes
+          selectedId={selectedType}
+          selectedRegionId={selectedRegionId}
+          selectedTier={selectedTier}
           types={extendedTypes.filter((t) => {
             if (!isAcceleratedLKEPlansEnabled && t.class === 'accelerated') {
               // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
@@ -140,20 +129,6 @@ const Panel = (props: NodePoolPanelProps) => {
             // No Nanodes in Kubernetes clusters
             return t.class !== 'nanode';
           })}
-          copy={getPlansPanelCopy()}
-          error={apiError}
-          hasSelectedRegion={hasSelectedRegion}
-          header="Add Node Pools"
-          isAPLEnabled={isAPLEnabled}
-          isPlanPanelDisabled={isPlanPanelDisabled}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onAdd={addPool}
-          onSelect={(newType: string) => setSelectedType(newType)}
-          regionsData={regionsData}
-          resetValues={() => null} // In this flow we don't want to clear things on tab changes
-          selectedId={selectedType}
-          selectedRegionId={selectedRegionId}
-          selectedTier={selectedTier}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

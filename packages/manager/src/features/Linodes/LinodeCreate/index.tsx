@@ -12,6 +12,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -70,7 +71,6 @@ import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,
 } from './utilities';
-import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
@@ -97,9 +97,8 @@ export const LinodeCreate = () => {
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
-  const {
-    handleLinodeCreateAnalyticsFormError,
-  } = useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
+  const { handleLinodeCreateAnalyticsFormError } =
+    useHandleLinodeCreateAnalyticsFormError(params.type ?? 'OS');
 
   const currentTabIndex = getTabIndex(params.type);
 
@@ -110,16 +109,16 @@ export const LinodeCreate = () => {
   const onTabChange = (index: number) => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
+
+      // Update tab "type" query param. (This changes the selected tab)
+      setParams({ type: newTab });
+
+      // Get the default values for the new tab and reset the form
       defaultValues(
         { ...params, type: newTab },
         queryClient,
         isLinodeInterfacesEnabled
-      ).then((values) => {
-        // Reset the form values
-        form.reset(values);
-        // Update tab "type" query param. (This changes the selected tab)
-        setParams({ type: newTab });
-      });
+      ).then(form.reset);
     }
   };
 
@@ -193,6 +192,8 @@ export const LinodeCreate = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        docsLabel="Getting Started"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() =>
           sendLinodeCreateFormInputEvent({
             createType: params.type ?? 'OS',
@@ -200,8 +201,6 @@ export const LinodeCreate = () => {
             label: 'Getting Started',
           })
         }
-        docsLabel="Getting Started"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -218,13 +217,12 @@ export const LinodeCreate = () => {
             </TabList>
             {isLinodeCreateRestricted && (
               <Notice
+                sx={{ marginBottom: 2 }}
                 text={getRestrictedResourceText({
                   action: 'create',
                   isSingular: false,
                   resourceType: 'Linodes',
                 })}
-                important
-                sx={{ marginBottom: 2 }}
                 variant="error"
               />
             )}

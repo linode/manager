@@ -36,6 +36,7 @@ export const VPCDetails = ({ regionId }: Props) => {
             label="VPC"
             loading={isLoading}
             noMarginTop
+            noOptionsText="You have no VPCs in this Linode's region."
             onBlur={field.onBlur}
             onChange={(e, vpc) => {
               field.onChange(vpc?.id ?? null);

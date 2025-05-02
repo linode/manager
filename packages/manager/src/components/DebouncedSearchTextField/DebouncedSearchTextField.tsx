@@ -1,5 +1,6 @@
 import {
   CircleProgress,
+  CloseIcon,
   IconButton,
   InputAdornment,
   TextField,
@@ -7,7 +8,6 @@ import {
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import Close from 'src/assets/icons/close.svg';
 import Search from 'src/assets/icons/search.svg';
 
 import type { InputProps, TextFieldProps } from '@linode/ui';
@@ -94,6 +94,13 @@ export const DebouncedSearchTextField = React.memo(
 
     return (
       <TextField
+        className={className}
+        data-qa-debounced-search
+        defaultValue={defaultValue}
+        hideLabel={hideLabel}
+        label={label}
+        onChange={debouncedOnChange}
+        placeholder={placeholder || 'Filter by query'}
         slotProps={{
           input: {
             endAdornment: (
@@ -101,17 +108,17 @@ export const DebouncedSearchTextField = React.memo(
                 {isSearching && <CircleProgress noPadding size="xs" />}
                 {clearable && Boolean(textFieldValue) && (
                   <IconButton
+                    aria-label="Clear"
                     onClick={() => {
                       setTextFieldValue('');
                       onSearch('');
                     }}
+                    size="small"
                     sx={{
                       padding: 0,
                     }}
-                    aria-label="Clear"
-                    size="small"
                   >
-                    <Close />
+                    <CloseIcon />
                   </IconButton>
                 )}
               </InputAdornment>
@@ -124,13 +131,6 @@ export const DebouncedSearchTextField = React.memo(
             ...inputSlotProps,
           },
         }}
-        className={className}
-        data-qa-debounced-search
-        defaultValue={defaultValue}
-        hideLabel={hideLabel}
-        label={label}
-        onChange={debouncedOnChange}
-        placeholder={placeholder || 'Filter by query'}
         value={textFieldValue}
         {...restOfTextFieldProps}
       />

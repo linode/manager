@@ -13,7 +13,7 @@ export const useAdobeAnalytics = () => {
 
   React.useEffect(() => {
     // Load Adobe Analytics Launch Script
-    if (!!ADOBE_ANALYTICS_URL) {
+    if (ADOBE_ANALYTICS_URL) {
       loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
         .then((data) => {
           const adobeScriptTags = document.querySelectorAll(

@@ -1,11 +1,12 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
-import { EditInterfaceDrawer } from './EditInterfaceDrawer/EditInterfaceDrawer';
+import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
+import { InterfaceSettingsForm } from './InterfaceSettingsForm';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -20,6 +21,8 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+
   const [selectedInterfaceId, setSelectedInterfaceId] = useState<number>();
 
   const onDelete = (interfaceId: number) => {
@@ -50,9 +53,14 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         }}
       >
         <Typography variant="h3">Network Interfaces</Typography>
-        <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
-          Add Network Interface
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+            Interface Settings
+          </Button>
+          <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
+            Add Network Interface
+          </Button>
+        </Stack>
       </Paper>
       <LinodeInterfacesTable
         handlers={{ onDelete, onEdit, onShowDetails }}
@@ -64,13 +72,6 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         open={isAddDrawerOpen}
         regionId={regionId}
       />
-      <EditInterfaceDrawer
-        interfaceId={selectedInterfaceId}
-        linodeId={linodeId}
-        onClose={() => setIsEditDrawerOpen(false)}
-        open={isEditDrawerOpen}
-        regionId={regionId}
-      />
       <DeleteInterfaceDialog
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
@@ -78,13 +79,35 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         open={isDeleteDialogOpen}
       />
       <InterfaceDetailsDrawer
-        onClose={() => {
-          history.replace(`/linodes/${linodeId}/networking`);
-        }}
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
+        onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
         open={location.pathname.includes('networking/interfaces')}
       />
+      <Drawer
+        onClose={() => setIsEditDrawerOpen(false)}
+        open={isEditDrawerOpen}
+        title={`Edit Network Interface${selectedInterfaceId ? ` (ID: ${selectedInterfaceId})` : ''}`}
+      >
+        {selectedInterfaceId && (
+          <EditInterfaceDrawerContents
+            interfaceId={selectedInterfaceId}
+            linodeId={linodeId}
+            onClose={() => setIsEditDrawerOpen(false)}
+            regionId={regionId}
+          />
+        )}
+      </Drawer>
+      <Drawer
+        onClose={() => setIsSettingsDrawerOpen(false)}
+        open={isSettingsDrawerOpen}
+        title="Interface Settings"
+      >
+        <InterfaceSettingsForm
+          linodeId={linodeId}
+          onClose={() => setIsSettingsDrawerOpen(false)}
+        />
+      </Drawer>
     </Box>
   );
 };

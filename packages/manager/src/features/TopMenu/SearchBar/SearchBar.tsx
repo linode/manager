@@ -1,12 +1,12 @@
 import {
   Autocomplete,
   Box,
+  CloseIcon,
   IconButton,
   InputAdornment,
   TextField,
 } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import Close from '@mui/icons-material/Close';
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -47,7 +47,7 @@ export const SearchBar = () => {
   });
 
   // MUI Autocomplete state
-  const [value, setValue] = React.useState<SearchResultItem | null>(null);
+  const [value, setValue] = React.useState<null | SearchResultItem>(null);
   const [searchActive, setSearchActive] = React.useState<boolean>(false);
   const [menuOpen, setMenuOpen] = React.useState<boolean>(false);
 
@@ -185,24 +185,45 @@ export const SearchBar = () => {
           Main search
         </label>
         <Autocomplete<SearchResultItem, false, boolean, false>
+          autoHighlight
+          data-qa-main-search
+          disableClearable
           filterOptions={(options) => {
             /* Need to override the default RS filtering; otherwise entities whose label
              * doesn't match the search term will be automatically filtered, meaning that
              * searching by tag won't work. */
             return options;
           }}
+          inputValue={searchText}
+          keepSearchEnabledOnMobile
+          label={label}
+          loading={isLoading}
+          multiple={false}
+          noOptionsText="No results"
+          onBlur={handleBlur}
           onChange={(_, value) => {
             if (value) {
               onSelect(value);
             }
           }}
+          onClose={handleClose}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          onOpen={handleOpen}
+          open={menuOpen && searchText !== ''}
+          options={options}
+          placeholder={label}
+          popupIcon={null}
           renderInput={(params) => {
             return (
               <TextField
                 {...params}
+                hideLabel
+                label={label}
                 onChange={(e) => {
                   handleSearchChange(e.target.value);
                 }}
+                placeholder={label}
                 slotProps={{
                   htmlInput: {
                     ...params.inputProps,
@@ -219,6 +240,10 @@ export const SearchBar = () => {
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
+                          aria-label="close menu"
+                          color="inherit"
+                          onClick={toggleSearch}
+                          size="large"
                           sx={{
                             '> svg': {
                               '&:hover': {
@@ -235,12 +260,8 @@ export const SearchBar = () => {
                               display: 'none',
                             },
                           }}
-                          aria-label="close menu"
-                          color="inherit"
-                          onClick={toggleSearch}
-                          size="large"
                         >
-                          <Close />
+                          <CloseIcon />
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -286,9 +307,6 @@ export const SearchBar = () => {
                     paddingRight: theme.tokens.spacing.S8,
                   },
                 }}
-                hideLabel
-                label={label}
-                placeholder={label}
               />
             );
           }}
@@ -300,13 +318,13 @@ export const SearchBar = () => {
               return (
                 <StyledSearchSuggestion
                   {...rest}
+                  key={`${key}-${value}`}
                   sx={(theme) => ({
                     '&.MuiButtonBase-root.MuiMenuItem-root': {
                       padding: `${theme.spacing(1)} !important`,
                     },
                     font: theme.font.bold,
                   })}
-                  key={`${key}-${value}`}
                 >
                   {option.icon && (
                     <Box
@@ -350,24 +368,6 @@ export const SearchBar = () => {
           sx={{
             maxWidth: '100%',
           }}
-          autoHighlight
-          data-qa-main-search
-          disableClearable
-          inputValue={searchText}
-          keepSearchEnabledOnMobile
-          label={label}
-          loading={isLoading}
-          multiple={false}
-          noOptionsText="No results"
-          onBlur={handleBlur}
-          onClose={handleClose}
-          onFocus={handleFocus}
-          onKeyDown={handleKeyDown}
-          onOpen={handleOpen}
-          open={menuOpen && searchText !== ''}
-          options={options}
-          placeholder={label}
-          popupIcon={null}
           value={value}
         />
       </Box>

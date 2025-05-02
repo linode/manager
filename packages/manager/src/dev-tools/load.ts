@@ -76,9 +76,9 @@ export async function loadDevTools(
 
     const seeds = await populateSeeds(emptyStore);
 
-    const seedPromises = (Object.keys(
-      seedContext
-    ) as (keyof MockState)[]).map((key) => updateSeedContext(key, seeds));
+    const seedPromises = (Object.keys(seedContext) as (keyof MockState)[]).map(
+      (key) => updateSeedContext(key, seeds)
+    );
 
     await Promise.all(seedPromises);
 
@@ -99,6 +99,14 @@ export async function loadDevTools(
       firewalls: [
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
+      ],
+      kubernetesClusters: [
+        ...initialContext.kubernetesClusters,
+        ...(seedContext?.kubernetesClusters || []),
+      ],
+      kubernetesNodePools: [
+        ...initialContext.kubernetesNodePools,
+        ...(seedContext?.kubernetesNodePools || []),
       ],
       linodeConfigs: [
         ...initialContext.linodeConfigs,

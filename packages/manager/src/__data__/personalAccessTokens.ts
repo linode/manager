@@ -1,5 +1,6 @@
-import { Token } from '@linode/api-v4/lib/profile';
 import { DateTime } from 'luxon';
+
+import type { Token } from '@linode/api-v4/lib/profile';
 
 export const personalAccessTokens: Token[] = [
   {

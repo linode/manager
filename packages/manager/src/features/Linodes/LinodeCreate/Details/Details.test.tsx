@@ -1,9 +1,8 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { grantsFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Details } from './Details';
@@ -47,9 +46,7 @@ describe('Linode Create Details', () => {
 
     await waitFor(() => {
       expect(
-        getByText(
-          'Select a Region for your Linode to see existing placement groups.'
-        )
+        getByText('Select a Region to see available placement groups.')
       ).toBeVisible();
     });
   });

@@ -2,11 +2,11 @@ import {
   configFactory,
   linodeBackupFactory,
   linodeFactory,
-  linodeIPFactory,
   linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
   linodeInterfaceSettingsFactory,
+  linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
 } from '@linode/utilities';
@@ -32,10 +32,10 @@ import type {
   InterfaceGenerationType,
   Linode,
   LinodeBackupsResponse,
-  LinodeIPsResponse,
   LinodeInterface,
-  LinodeInterfaceSettings,
   LinodeInterfaces,
+  LinodeInterfaceSettings,
+  LinodeIPsResponse,
   RegionalNetworkUtilization,
   Stats,
   UpgradeInterfaceData,
@@ -182,13 +182,8 @@ const addFirewallDevice = async (inputs: {
   interfaceType: FirewallDeviceEntityType;
   mockState: MockState;
 }) => {
-  const {
-    entityId,
-    entityLabel,
-    firewallId,
-    interfaceType,
-    mockState,
-  } = inputs;
+  const { entityId, entityLabel, firewallId, interfaceType, mockState } =
+    inputs;
   const firewall = await mswDB.get('firewalls', firewallId);
   if (firewall) {
     const entity = {
@@ -825,7 +820,7 @@ export const createLinodeInterface = (mockState: MockState) => [
 export const deleteLinodeInterface = (mockState: MockState) => [
   http.delete(
     '*/v4*/linodes/instances/:id/interfaces/:interfaceId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const linodeId = Number(params.id);
       const interfaceId = Number(params.interfaceId);
       const linode = await mswDB.get('linodes', linodeId);

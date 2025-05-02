@@ -1,9 +1,9 @@
+import { useAllPlacementGroupsQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
 import { PLACEMENT_GROUP_HAS_NO_CAPACITY } from 'src/features/PlacementGroups/constants';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useAllPlacementGroupsQuery } from '@linode/queries';
 
 import { PlacementGroupSelectOption } from './PlacementGroupSelectOption';
 
@@ -20,7 +20,7 @@ export interface PlacementGroupsSelectProps {
    * A callback to execute when the selected Placement Group changes.
    * The selection is handled by a parent component.
    */
-  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  handlePlacementGroupChange: (selected: null | PlacementGroup) => void;
   /**
    * The label for the TextField component.
    */
@@ -97,12 +97,26 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
 
   return (
     <Autocomplete
+      clearOnBlur={true}
+      data-testid="placement-groups-select"
+      disabled={Boolean(!selectedRegion?.id) || disabled}
+      errorText={error?.[0]?.reason}
+      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
+      helperText={
+        !selectedRegion
+          ? 'Select a Region to see available placement groups.'
+          : undefined
+      }
+      label={label}
+      loading={isFetching}
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
       onChange={(_, selectedOption) => {
         handlePlacementGroupChange(selectedOption ?? null);
       }}
+      options={placementGroups ?? []}
+      placeholder="None"
       renderOption={(props, option, { selected }) => {
         const { key, ...rest } = props;
 
@@ -120,15 +134,6 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
           />
         );
       }}
-      clearOnBlur={true}
-      data-testid="placement-groups-select"
-      disabled={Boolean(!selectedRegion?.id) || disabled}
-      errorText={error?.[0]?.reason}
-      getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
-      label={label}
-      loading={isFetching}
-      options={placementGroups ?? []}
-      placeholder="None"
       sx={sx}
       value={selection}
       {...textFieldProps}

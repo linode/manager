@@ -29,8 +29,14 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
 
   return (
     <React.Fragment>
-      <StyledChip
+      <Chip
         {...chipProps}
+        aria-label={`+${items.length} ${ariaItemType}`}
+        clickable
+        component={'button'}
+        data-qa-show-more-chip
+        label={`+${items.length}`}
+        onClick={handleClick}
         sx={
           anchorEl
             ? {
@@ -39,12 +45,6 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
               }
             : null
         }
-        aria-label={`+${items.length} ${ariaItemType}`}
-        clickable
-        component={'button'}
-        data-qa-show-more-chip
-        label={`+${items.length}`}
-        onClick={handleClick}
       />
 
       <StyledPopover
@@ -61,28 +61,6 @@ export const ShowMore = <T extends {}>(props: ShowMoreProps<T>) => {
     </React.Fragment>
   );
 };
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-  '& .MuiChip-label': {
-    paddingLeft: 6,
-    paddingRight: 6,
-  },
-  '&:focus': {
-    backgroundColor: theme.bg.lightBlue1,
-    outline: `1px dotted ${theme.tokens.color.Neutrals[50]}`,
-  },
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.tokens.color.Neutrals.White,
-  },
-  backgroundColor: theme.bg.lightBlue1,
-  font: theme.font.bold,
-  lineHeight: 1,
-  marginLeft: theme.spacing(0.5),
-  paddingLeft: 2,
-  paddingRight: 2,
-  position: 'relative',
-}));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
   '& .MuiPopover-paper': {

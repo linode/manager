@@ -17,7 +17,7 @@ type Option<T = number | string> = {
 
 export type SelectOption<
   T = number | string,
-  Nullable extends boolean = false
+  Nullable extends boolean = false,
 > = Nullable extends true
   ? AutocompleteValue<Option<T>, false, false, false>
   : Option<T>;
@@ -96,10 +96,8 @@ export interface SelectProps<T extends { label: string }>
   /**
    * The props for the ListItem component.
    */
-  listItemProps?: (
-    value: T
-  ) => {
-    dataAttributes?: Record<string, T | boolean | string>;
+  listItemProps?: (value: T) => {
+    dataAttributes?: Record<string, boolean | string | T>;
   };
   /**
    * The callback function that is invoked when the value changes.
@@ -132,7 +130,7 @@ export interface SelectProps<T extends { label: string }>
  * For any other use-cases, use the Autocomplete component directly.
  */
 export const Select = <T extends SelectOption = SelectOption>(
-  props: SelectProps<T>
+  props: SelectProps<T>,
 ) => {
   const {
     autoFocus = false,
@@ -155,7 +153,7 @@ export const Select = <T extends SelectOption = SelectOption>(
 
   const handleChange = (
     event: React.SyntheticEvent,
-    value: SelectOption | null | string
+    value: null | SelectOption | string,
   ) => {
     if (creatable && typeof value === 'string') {
       onChange?.(event, {
@@ -169,30 +167,44 @@ export const Select = <T extends SelectOption = SelectOption>(
         value: optionValue,
       } as T);
     } else {
-      onChange?.(event, (null as unknown) as T);
+      onChange?.(event, null as unknown as T);
     }
   };
 
   const _options = React.useMemo(
     () => getOptions({ creatable, inputValue, options }),
-    [creatable, inputValue, options]
+    [creatable, inputValue, options],
   );
 
   return (
     <Autocomplete<SelectOption, false, boolean, boolean>
       {...rest}
+      disableClearable={!clearable}
+      forcePopupIcon
+      freeSolo={creatable}
+      getOptionDisabled={(option: SelectOption) => option.value === ''}
       isOptionEqualToValue={(option, value) => {
         if (!option || !value) {
           return false;
         }
         return option.value === value.value;
       }}
+      keepSearchEnabledOnMobile={keepSearchEnabledOnMobile}
+      label={label}
+      noOptionsText={noOptionsText}
+      onChange={handleChange}
+      onInputChange={(_, value) => setInputValue(value)}
+      options={_options}
       renderInput={(params) => (
         <TextField
           // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           {...params}
           {...textFieldProps}
+          errorText={props.errorText}
+          helperText={props.helperText}
+          hideLabel={hideLabel}
+          inputId={params.id}
           InputProps={{
             ...params.InputProps,
             ...textFieldProps?.InputProps,
@@ -215,10 +227,6 @@ export const Select = <T extends SelectOption = SelectOption>(
             readOnly: !creatable && !searchable,
             sx: { cursor: creatable || searchable ? 'text' : 'pointer' },
           }}
-          errorText={props.errorText}
-          helperText={props.helperText}
-          hideLabel={hideLabel}
-          inputId={params.id}
           label={label}
           placeholder={props.placeholder}
           required={props.required}
@@ -233,6 +241,7 @@ export const Select = <T extends SelectOption = SelectOption>(
             {...(option.create || option.noOptions
               ? undefined
               : listItemProps?.(option as T)?.dataAttributes)}
+            key={option.create ? `create-${option.value}` : key}
             sx={
               option.noOptions
                 ? {
@@ -240,7 +249,6 @@ export const Select = <T extends SelectOption = SelectOption>(
                   }
                 : null
             }
-            key={option.create ? `create-${option.value}` : key}
           >
             {option.create ? (
               <>
@@ -252,6 +260,7 @@ export const Select = <T extends SelectOption = SelectOption>(
           </ListItem>
         );
       }}
+      selectOnFocus={false}
       sx={{
         ...sx,
         ...(!creatable && !searchable
@@ -264,17 +273,6 @@ export const Select = <T extends SelectOption = SelectOption>(
             }
           : null),
       }}
-      disableClearable={!clearable}
-      forcePopupIcon
-      freeSolo={creatable}
-      getOptionDisabled={(option: SelectOption) => option.value === ''}
-      keepSearchEnabledOnMobile={keepSearchEnabledOnMobile}
-      label={label}
-      noOptionsText={noOptionsText}
-      onChange={handleChange}
-      onInputChange={(_, value) => setInputValue(value)}
-      options={_options}
-      selectOnFocus={false}
     />
   );
 };
@@ -314,13 +312,13 @@ const getOptions = ({ creatable, inputValue, options }: GetOptionsProps) => {
     const matchingOptions = options.filter(
       (opt) =>
         opt.label.toLowerCase().includes(inputValue.toLowerCase()) ||
-        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase())
+        opt.value.toString().toLowerCase().includes(inputValue.toLowerCase()),
     );
 
     const exactMatch = matchingOptions.some(
       (opt) =>
         opt.label.toLowerCase() === inputValue.toLowerCase() ||
-        opt.value.toString().toLowerCase() === inputValue.toLowerCase()
+        opt.value.toString().toLowerCase() === inputValue.toLowerCase(),
     );
 
     // If there's an exact match, don't show is as a create option

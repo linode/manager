@@ -23,8 +23,8 @@ const sxTextField = {
   height: 34,
   margin: '0 5px',
   minHeight: 30,
-  minWidth: 40,
-  width: 53,
+  minWidth: 53,
+  maxWidth: 70,
 };
 
 interface EnhancedNumberInputProps {
@@ -88,19 +88,14 @@ export const EnhancedNumberInput = React.memo(
           aria-label="Subtract 1"
           buttonType="outlined"
           data-testid={'decrement-button'}
-          disableFocusRipple
           disabled={disabled || value === min}
+          disableFocusRipple
           name="Subtract 1"
           onClick={decrementValue}
         >
           <MinusIcon />
         </StyledButton>
         <TextField
-          sx={{
-            ...sxTextField,
-            '.MuiInputBase-input': sxTextFieldBase,
-            '.MuiInputBase-root': sxTextField,
-          }}
           aria-live="polite"
           data-testid={'quantity-input'}
           disabled={disabled}
@@ -110,6 +105,11 @@ export const EnhancedNumberInput = React.memo(
           min={min}
           name="Quantity"
           onChange={onChange}
+          sx={{
+            ...sxTextField,
+            '.MuiInputBase-input': sxTextFieldBase,
+            '.MuiInputBase-root': sxTextField,
+          }}
           type="number"
           value={value}
         />
@@ -117,8 +117,8 @@ export const EnhancedNumberInput = React.memo(
           aria-label="Add 1"
           buttonType="outlined"
           data-testid={'increment-button'}
-          disableFocusRipple
           disabled={disabled || value === max}
+          disableFocusRipple
           name="Add 1"
           onClick={incrementValue}
         >

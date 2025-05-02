@@ -534,7 +534,6 @@ export interface Event {
   rate: null | string;
   read: boolean;
   secondary_entity: Entity | null;
-
   seen: boolean;
   source?: EventSource | null;
   start_time?: null | string;

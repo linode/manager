@@ -76,10 +76,17 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     );
   }
   if (field.maximum !== undefined) {
-    validator = validator.max(
-      field.maximum,
-      `${key} must be at most ${field.maximum}`,
-    );
+    if (field.maximum > Number.MAX_SAFE_INTEGER) {
+      validator = validator.max(
+        Number.MAX_SAFE_INTEGER,
+        `${key} must be at most ${Number.MAX_SAFE_INTEGER}`,
+      );
+    } else {
+      validator = validator.max(
+        field.maximum,
+        `${key} must be at most ${field.maximum}`,
+      );
+    }
   }
   if (field.minLength !== undefined) {
     validator = validator.min(
@@ -94,13 +101,29 @@ const applyConstraints = (validator: any, key: string, field: any) => {
     );
   }
   if (field.pattern) {
-    let pattern = field.pattern;
+    const pattern = field.pattern;
     if (key === 'default_time_zone') {
-      pattern = '^(SYSTEM|[+-](0[0-9]|1[0-2]):([0-5][0-9]))$';
+      validator = validator.matches(
+        new RegExp(pattern),
+        `${key} must be an IANA timezone, 'SYSTEM', or a valid UTC offset (e.g., '+03:00')`,
+      );
+    } else {
+      validator = validator.matches(
+        new RegExp(pattern),
+        `Please ensure that ${key} follows the format ${field.example}`,
+      );
     }
-    validator = validator.matches(
-      new RegExp(pattern),
-      `Please ensure that ${key} follows the format ${field.example}`,
+  }
+  // custom validation for wal_sender_timeout since it has a special case
+  // where it can be 0 or between 5000 and 10800000
+  if (key === 'wal_sender_timeout') {
+    validator = validator.test(
+      'is-zero-or-in-range',
+      `${key} must be 0 or between 5000 and 10800000`,
+      (value: boolean | number | string) => {
+        if (typeof value !== 'number') return false;
+        return value === 0 || (value >= 5000 && value <= 10800000);
+      },
     );
   }
   if (key === 'timezone') {
@@ -108,7 +131,16 @@ const applyConstraints = (validator: any, key: string, field: any) => {
       validator = validator.required('timezone cannot be empty');
     }
   }
-
+  if (key === 'net_buffer_length') {
+    validator = validator.test(
+      'is-multiple-of-1024',
+      `${key} must be a multiple of 1024`,
+      (value: boolean | number | string) => {
+        if (typeof value !== 'number') return false;
+        return value % 1024 === 0;
+      },
+    );
+  }
   return validator;
 };
 

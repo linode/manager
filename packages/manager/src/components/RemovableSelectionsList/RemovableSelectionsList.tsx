@@ -1,5 +1,4 @@
-import { Box, IconButton } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Box, CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
 
 import {
@@ -26,15 +25,6 @@ export type RemovableItem = {
 
 export interface RemovableSelectionsListProps {
   /**
-   * The custom label component
-   */
-  LabelComponent?: React.ComponentType<{ selection: RemovableItem }>;
-  /**
-   * Overrides the render of the X Button
-   * Has no effect if isRemovable is false
-   */
-  RemoveButton?: (props: ButtonProps) => JSX.Element;
-  /**
    * If true, disable all items when one is removed to prevent race conditions with multiple removals.
    */
   disableItemsOnRemove?: boolean;
@@ -54,6 +44,10 @@ export interface RemovableSelectionsListProps {
    * If false, hide the remove button
    */
   isRemovable?: boolean;
+  /**
+   * The custom label component
+   */
+  LabelComponent?: React.ComponentType<{ selection: RemovableItem }>;
   /**
    * The maxHeight of the list component, in px. The default max height is 427px.
    */
@@ -76,6 +70,11 @@ export interface RemovableSelectionsListProps {
    * Displays the value of this key as the label of the data item, rather than data.label
    */
   preferredDataLabel?: string;
+  /**
+   * Overrides the render of the X Button
+   * Has no effect if isRemovable is false
+   */
+  RemoveButton?: (props: ButtonProps) => JSX.Element;
   /**
    * The data to display in the list
    */
@@ -166,12 +165,12 @@ export const RemovableSelectionsList = (
                   {isRemovable &&
                     (RemoveButton ? (
                       <RemoveButton
+                        disabled={disableItemsOnRemove && isRemoving}
                         loading={
                           showLoadingIndicatorOnRemove &&
                           isRemoving &&
                           removingItemId === selection.id
                         }
-                        disabled={disableItemsOnRemove && isRemoving}
                         onClick={() => handleOnClick(selection)}
                       />
                     ) : (
@@ -185,7 +184,7 @@ export const RemovableSelectionsList = (
                         onClick={() => handleOnClick(selection)}
                         size="medium"
                       >
-                        <Close />
+                        <CloseIcon />
                       </IconButton>
                     ))}
                 </SelectedOptionsListItem>

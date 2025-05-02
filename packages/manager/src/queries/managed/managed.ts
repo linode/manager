@@ -7,30 +7,32 @@ import {
   deleteServiceMonitor,
   disableServiceMonitor,
   enableServiceMonitor,
+  getCredential,
   getCredentials,
   getLinodeSettings,
+  getManagedContact,
   getManagedContacts,
   getManagedIssues,
   getManagedStats,
-  getSSHPubKey,
+  getServiceMonitor,
   getServices,
+  getSSHPubKey,
   updateContact,
   updateCredential,
   updateLinodeSettings,
   updatePassword,
   updateServiceMonitor,
 } from '@linode/api-v4';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { getAll } from '@linode/utilities';
-
 import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
   queryPresets,
 } from '@linode/queries';
+import { getAll } from '@linode/utilities';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { extendIssues } from './helpers';
 
 import type { ExtendedIssue } from './types';
@@ -42,10 +44,10 @@ import type {
   ManagedCredential,
   ManagedIssue,
   ManagedLinodeSetting,
-  ManagedSSHPubKey,
-  ManagedSSHSetting,
   ManagedServiceMonitor,
   ManagedServicePayload,
+  ManagedSSHPubKey,
+  ManagedSSHSetting,
   ManagedStats,
   UpdateCredentialPayload,
   UpdatePasswordPayload,
@@ -71,10 +73,18 @@ const _getAllIssues = () =>
 const getAllIssues = () => _getAllIssues().then((data) => extendIssues(data));
 
 const managedQueries = createQueryKeys('managed', {
+  contact: (id: number) => ({
+    queryFn: () => getManagedContact(id),
+    queryKey: [id],
+  }),
   contacts: {
     queryFn: getAllContacts,
     queryKey: null,
   },
+  credential: (id: number) => ({
+    queryFn: () => getCredential(id),
+    queryKey: [id],
+  }),
   credentials: {
     queryFn: getAllCredentials,
     queryKey: null,
@@ -87,6 +97,10 @@ const managedQueries = createQueryKeys('managed', {
     queryFn: getAllLinodeSettings,
     queryKey: null,
   },
+  monitor: (id: number) => ({
+    queryFn: () => getServiceMonitor(id),
+    queryKey: [id],
+  }),
   monitors: {
     queryFn: getAllMonitors,
     queryKey: null,
@@ -107,6 +121,15 @@ export const useManagedSSHKey = () =>
     ...queryPresets.oneTimeFetch,
   });
 
+export const useManagedCredentialQuery = (
+  id: number,
+  enabled: boolean = true
+) =>
+  useQuery<ManagedCredential, APIError[]>({
+    ...managedQueries.credential(id),
+    enabled,
+  });
+
 export const useAllLinodeSettingsQuery = () =>
   useQuery<ManagedLinodeSetting[], APIError[]>({
     ...managedQueries.linodeSettings,
@@ -120,9 +143,22 @@ export const useAllManagedCredentialsQuery = () =>
 export const useAllManagedContactsQuery = () =>
   useQuery<ManagedContact[], APIError[]>(managedQueries.contacts);
 
+export const useManagedContactQuery = (id: number, enabled: boolean = true) =>
+  useQuery<ManagedContact, APIError[]>({
+    ...managedQueries.contact(id),
+    enabled,
+  });
+
 export const useAllManagedIssuesQuery = () =>
   useQuery<ExtendedIssue[], APIError[]>({
     ...managedQueries.issues,
+    refetchInterval: 20000,
+  });
+
+export const useGetMonitorQuery = (id: number, enabled: boolean = true) =>
+  useQuery<ManagedServiceMonitor, APIError[]>({
+    ...managedQueries.monitor(id),
+    enabled,
     refetchInterval: 20000,
   });
 

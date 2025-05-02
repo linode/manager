@@ -46,8 +46,8 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
   display: 'grid' | 'list';
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  linodeViewPreference: 'grid' | 'list';
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -55,6 +55,7 @@ interface DisplayLinodesProps extends OrderByProps<LinodeWithMaintenance> {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
+  regionFilter: RegionFilter;
   someLinodesHaveMaintenance: boolean;
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
@@ -73,6 +74,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
     linodesAreGrouped,
     order,
     orderBy,
+    regionFilter,
     toggleGroupLinodes,
     toggleLinodeView,
     updatePageUrl,
@@ -152,13 +154,16 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     sx={{ borderBottom: 0, padding: 1 }}
                     variant="outlined"
                   >
-                    <RegionTypeFilter handleRegionFilter={handleRegionFilter} />
+                    <RegionTypeFilter
+                      handleRegionFilter={handleRegionFilter}
+                      regionFilter={regionFilter}
+                    />
                   </Paper>
                 )}
                 <TableWrapper
                   {...tableWrapperProps}
-                  linodeViewPreference={linodeViewPreference}
                   linodesAreGrouped={linodesAreGrouped}
+                  linodeViewPreference={linodeViewPreference}
                   toggleGroupLinodes={toggleGroupLinodes}
                   toggleLinodeView={toggleLinodeView}
                 >
@@ -182,6 +187,7 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                     >
                       <RegionTypeFilter
                         handleRegionFilter={handleRegionFilter}
+                        regionFilter={regionFilter}
                       />
                     </Paper>
                   )}
@@ -214,9 +220,13 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                       </div>
                       <Tooltip placement="top-end" title="Group by tag">
                         <IconButton
+                          aria-describedby={groupByDescriptionId}
+                          aria-label="Toggle group by tag"
                           className={
                             linodesAreGrouped ? 'MuiIconButton-isActive' : ''
                           }
+                          disableRipple
+                          onClick={toggleGroupLinodes}
                           sx={(theme) => ({
                             ':hover': {
                               color: theme.tokens.color.Brand[60],
@@ -224,10 +234,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                             color:
                               theme.tokens.component.Table.HeaderNested.Icon,
                           })}
-                          aria-describedby={groupByDescriptionId}
-                          aria-label="Toggle group by tag"
-                          disableRipple
-                          onClick={toggleGroupLinodes}
                         >
                           <GroupByTag />
                         </IconButton>
@@ -245,9 +251,6 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
             <Grid size={12}>
               {
                 <PaginationFooter
-                  sx={{
-                    border: 0,
-                  }}
                   count={data.length}
                   eventCategory={'linodes landing'}
                   handlePageChange={handlePageChange}
@@ -256,6 +259,9 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
                   pageSize={pageSize}
                   // Disabling showAll as it is impacting page performance.
                   showAll={false}
+                  sx={{
+                    border: 0,
+                  }}
                 />
               }
             </Grid>

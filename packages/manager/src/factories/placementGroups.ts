@@ -54,11 +54,10 @@ export const placementGroupFactory = Factory.Sync.makeFactory<PlacementGroup>({
   region: 'us-east',
 });
 
-export const createPlacementGroupPayloadFactory = Factory.Sync.makeFactory<CreatePlacementGroupPayload>(
-  {
+export const createPlacementGroupPayloadFactory =
+  Factory.Sync.makeFactory<CreatePlacementGroupPayload>({
     label: Factory.each((id) => `mock-pg-${id}`),
     placement_group_policy: 'strict',
     placement_group_type: 'anti_affinity:local',
     region: pickRandom(['us-east', 'us-southeast', 'ca-central']),
-  }
-);
+  });

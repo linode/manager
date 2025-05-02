@@ -2,9 +2,9 @@ import {
   createNodeBalancer,
   deleteNodeBalancer,
   getNodeBalancerFirewalls,
+  getNodeBalancers,
   getNodeBalancerStats,
   getNodeBalancerTypes,
-  getNodeBalancers,
   updateNodeBalancer,
 } from './handlers/nodebalancers';
 

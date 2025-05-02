@@ -5,14 +5,12 @@ import { accountQueries } from './queries';
 
 import type {
   AccountMaintenance,
-  MaintenancePolicy,
-} from '@linode/api-v4/lib/account';
-import type {
   APIError,
   Filter,
+  MaintenancePolicy,
   Params,
   ResourcePage,
-} from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
 
 export const useAllAccountMaintenanceQuery = (
   params: Params = {},

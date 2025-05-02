@@ -2,7 +2,7 @@ import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithThemeAndRouter,
@@ -155,11 +155,8 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const {
-      getByRole,
-      getByText,
-      queryByTestId,
-    } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByRole, getByText, queryByTestId } =
+      await renderWithThemeAndRouter(<VPCDetail />);
 
     const loadingState = queryByTestId(loadingTestId);
     if (loadingState) {

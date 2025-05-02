@@ -10,10 +10,8 @@ export const useUpgradeToLinodeInterfaces = (options: {
 }) => {
   const { linodeId, selectedConfig, setDialogState } = options;
 
-  const {
-    isPending,
-    mutateAsync: upgradeInterfaces,
-  } = useUpgradeToLinodeInterfacesMutation(linodeId);
+  const { isPending, mutateAsync: upgradeInterfaces } =
+    useUpgradeToLinodeInterfacesMutation(linodeId);
 
   return {
     isPending,
