@@ -1,4 +1,4 @@
-import { BETA_API_ROOT as API_ROOT } from 'src/constants';
+import { BETA_API_ROOT as API_ROOT } from '../constants';
 
 import Request, {
   setData,
@@ -14,7 +14,7 @@ import type {
   MetricDefinition,
   ServiceTypesList,
 } from './types';
-import type { Filter, Params, ResourcePage } from 'src/types';
+import type { Filter, Params, ResourcePage } from '../types';
 
 export const getMetricDefinitionsByServiceType = (
   serviceType: string,

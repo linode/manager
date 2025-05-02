@@ -98,6 +98,9 @@ importers:
         specifier: ^1.4.0
         version: 1.5.0
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       axios-mock-adapter:
         specifier: ^1.22.0
         version: 1.22.0(axios@1.8.3)
@@ -669,6 +672,8 @@ importers:
         specifier: ^3.2.0
         version: 3.3.0(rollup@4.39.0)(typescript@5.7.3)(vite@6.3.2(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
 
+  packages/tsconfig: {}
+
   packages/ui:
     dependencies:
       '@emotion/react':
@@ -794,6 +799,9 @@ importers:
         specifier: ^1.4.0
         version: 1.5.0
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       concurrently:
         specifier: ^9.0.1
         version: 9.1.0

@@ -58,7 +58,8 @@
   "devDependencies": {
     "axios-mock-adapter": "^1.22.0",
     "concurrently": "^9.0.1",
-    "tsup": "^8.4.0"
+    "tsup": "^8.4.0",
+    "@linode/tsconfig": "workspace:*"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
