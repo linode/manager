@@ -72,6 +72,7 @@ export const ManagedLanding = () => {
           ],
           pathname: '/managed',
         }}
+        className="landing-header-mb-4"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-the-linode-managed-service"
         entity="Managed"
         extraActions={<SupportWidget />}
