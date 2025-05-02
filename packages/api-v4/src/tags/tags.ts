@@ -6,11 +6,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page, ResourcePage } from '../types';
 import { Tag, TaggedObject, TagRequest } from './types';
 
-import type { Filter, ResourcePage as Page, Params } from '../types';
-import type { Tag, TagRequest } from './types';
+import type { Filter, Params, ResourcePage as Page, ResourcePage } from '../types';
 
 export const getTags = (params?: Params, filter?: Filter) =>
   Request<Page<Tag>>(
