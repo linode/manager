@@ -66,15 +66,15 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
   const supportedRegionsFromResources = supportedRegions?.filter(
-    ({ id }) =>
+    ({ id, label }) =>
       resources?.some(({ region }) => region === id) &&
-      searchText &&
-      id.includes(searchText)
+      (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
   );
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
+
   return (
     <Stack gap={2}>
       <AlertListNoticeMessages

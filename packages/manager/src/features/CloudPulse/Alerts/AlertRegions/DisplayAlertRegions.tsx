@@ -1,0 +1,90 @@
+import { Box, Checkbox } from '@linode/ui';
+import { TableBody, TableHead } from '@mui/material';
+import React from 'react';
+
+import Paginate from 'src/components/Paginate';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { Table } from 'src/components/Table';
+import { TableCell } from 'src/components/TableCell/TableCell';
+import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
+import { TableRow } from 'src/components/TableRow';
+import { TableSortCell } from 'src/components/TableSortCell';
+
+import type { Region } from '@linode/api-v4';
+
+interface DisplayAlertRegionProps {
+  regions?: Region[];
+}
+
+export const DisplayAlertRegions = React.memo(
+  (props: DisplayAlertRegionProps) => {
+    const { regions } = props;
+    return (
+      <Paginate data={regions ?? []}>
+        {({
+          count,
+          page,
+          pageSize,
+          handlePageChange,
+          handlePageSizeChange,
+          data: paginatedData,
+        }) => (
+          <Box>
+            <Table
+              colCount={2}
+              data-qa="region-tabls"
+              data-testid="region-table"
+              size="small"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <Box>
+                      <Checkbox />
+                    </Box>
+                  </TableCell>
+                  <TableSortCell
+                    active={true}
+                    data-qa-header="Region"
+                    data-qa-sorting="Region"
+                    direction="asc"
+                    handleClick={() => {}}
+                    label="Region"
+                  >
+                    Region
+                  </TableSortCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableContentWrapper
+                  length={regions?.length ?? 0}
+                  loading={false}
+                >
+                  {paginatedData?.map(({ label, id }) => {
+                    return (
+                      <TableRow key={id}>
+                        <TableCell>
+                          <Checkbox />
+                        </TableCell>
+
+                        <TableCell>{label}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableContentWrapper>
+              </TableBody>
+            </Table>
+            <PaginationFooter
+              count={count}
+              eventCategory="Regions Table"
+              handlePageChange={handlePageChange}
+              handleSizeChange={handlePageSizeChange}
+              page={page}
+              pageSize={pageSize}
+            />
+          </Box>
+        )}
+      </Paginate>
+    );
+  }
+);
