@@ -18,13 +18,17 @@ export const useInterfaceAndFirewallDataForLinode = (inputs: {
   linodeId: number;
 }) => {
   const { configId, interfaceId, isLinodeInterface, linodeId } = inputs;
+  console.log('explain', configId, interfaceId, isLinodeInterface, linodeId);
 
   // query to fetch firewalls if this Linode uses config profile interfaces
   const {
     data: attachedFirewallsConfig,
     error: firewallsErrorConfig,
     isLoading: firewallsLoadingConfig,
-  } = useLinodeFirewallsQuery(linodeId, !isLinodeInterface);
+  } = useLinodeFirewallsQuery(
+    linodeId,
+    Boolean(configId && linodeId && !isLinodeInterface)
+  );
 
   // query to fetch firewalls for a Linode Interface (firewalls are attached at the interface level)
   const {
@@ -34,8 +38,9 @@ export const useInterfaceAndFirewallDataForLinode = (inputs: {
   } = useLinodeInterfaceFirewallsQuery(
     linodeId,
     interfaceId,
-    isLinodeInterface
+    Boolean(isLinodeInterface && interfaceId && !configId)
   );
+  console.log(firewallsErrorConfig, firewallsErrorLinodeInterface);
 
   // Depending on which query was fired to fetch firewalls, return appropriate data
   const attachedFirewalls =
