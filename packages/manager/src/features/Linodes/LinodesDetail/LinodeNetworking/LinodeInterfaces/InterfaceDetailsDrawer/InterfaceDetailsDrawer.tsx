@@ -3,8 +3,6 @@ import { Box, Button, Drawer } from '@linode/ui';
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
-
 import { InterfaceDetailsContent } from './InterfaceDetailsContent';
 
 interface Props {
@@ -31,7 +29,6 @@ export const InterfaceDetailsDrawer = (props: Props) => {
     <Drawer
       error={error?.[0].reason}
       isFetching={isLoading}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Network Interface Details${

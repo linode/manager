@@ -491,7 +491,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                           },
                         },
                       }}
-                      sx={{ width: '500px'}}
+                      sx={{ width: '500px' }}
                       title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
                     >
                       <Chip

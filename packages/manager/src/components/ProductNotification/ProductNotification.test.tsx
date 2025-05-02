@@ -2,10 +2,9 @@ import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  ProductNotification,
-  ProductNotificationProps,
-} from './ProductNotification';
+import { ProductNotification } from './ProductNotification';
+
+import type { ProductNotificationProps } from './ProductNotification';
 
 describe('ProductNotification', () => {
   test('renders a notice with the correct severity level and text', () => {

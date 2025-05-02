@@ -1,9 +1,9 @@
+import { useProfile } from '@linode/queries';
 import { Divider, Paper, Stack } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useProfile } from '@linode/queries';
 
 import { AvatarForm } from './AvatarForm';
 import { EmailForm } from './EmailForm';

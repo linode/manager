@@ -30,6 +30,15 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
   const options = kernelsToGroupedItems(kernels);
   return (
     <Autocomplete
+      autoHighlight
+      disableClearable
+      disabled={readOnly}
+      errorText={errorText}
+      groupBy={(option) => option.kernelType}
+      label="Select a Kernel"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={options}
+      placeholder="Select a Kernel"
       renderOption={(props, kernel) => {
         const { key, ...rest } = props;
         return (
@@ -41,15 +50,6 @@ export const KernelSelect = React.memo((props: KernelSelectProps) => {
       textFieldProps={{
         errorGroup: 'linode-config-drawer',
       }}
-      autoHighlight
-      disableClearable
-      disabled={readOnly}
-      errorText={errorText}
-      groupBy={(option) => option.kernelType}
-      label="Select a Kernel"
-      onChange={(_, selected) => onChange(selected.value)}
-      options={options}
-      placeholder="Select a Kernel"
       value={getSelectedKernelId(selectedKernel, options)}
     />
   );
@@ -71,7 +71,7 @@ export const kernelsToGroupedItems = (kernels: Kernel[]) => {
     let group = '';
     if (
       kernel.label.match(/latest/i) ||
-      ['GRUB (Legacy)', 'GRUB 2'].includes(kernel.label) ||
+      ['GRUB 2', 'GRUB (Legacy)'].includes(kernel.label) ||
       kernel.label === 'Direct Disk'
     ) {
       group = 'Current';

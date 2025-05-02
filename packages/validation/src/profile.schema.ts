@@ -1,5 +1,5 @@
-import { array, boolean, number, object, string } from 'yup';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
+import { array, boolean, number, object, string } from 'yup';
 
 export const createPersonalAccessTokenSchema = object({
   scopes: string(),
@@ -48,7 +48,7 @@ export const SendCodeToPhoneNumberSchema = object({
         return false;
       }
       return isPossiblePhoneNumber(phone_number, iso_code);
-    }
+    },
   ),
 });
 
@@ -64,7 +64,7 @@ export const VerifyPhoneNumberCodeSchema = object({
         }
 
         return /^\d+$/.test(value);
-      }
+      },
     ),
 });
 
@@ -77,7 +77,7 @@ export const SecurityQuestionsSchema = object({
           .min(3, 'Answers must be at least 3 characters.')
           .max(17, 'Answers must be at most 17 characters.')
           .required('You must provide an answer to each security question.'),
-      }).required()
+      }).required(),
     )
     .length(3, 'You must answer all 3 security questions.')
     .required(),

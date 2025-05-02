@@ -3,10 +3,10 @@ import React from 'react';
 
 import { VLANFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { VLANSelect, getVLANSelectFilter } from './VLANSelect';
+import { getVLANSelectFilter, VLANSelect } from './VLANSelect';
 
 describe('VLANSelect', () => {
   it('should render a default "VLAN" label', () => {

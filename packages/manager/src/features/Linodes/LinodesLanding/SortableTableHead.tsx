@@ -18,8 +18,8 @@ import type { OrderByProps } from 'src/components/OrderBy';
 // here, just a lot of trial and error based on maximum expected column sizes.
 
 interface Props {
-  linodeViewPreference: 'grid' | 'list';
   linodesAreGrouped: boolean;
+  linodeViewPreference: 'grid' | 'list';
   toggleGroupLinodes: () => boolean;
   toggleLinodeView: () => 'grid' | 'list';
 }
@@ -50,21 +50,26 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
     <TableHead data-qa-table-head role="rowgroup">
       <TableRow>
         <TableSortCell
+          active={isActive('label')}
+          data-qa-sort-label={order}
+          direction={order}
+          handleClick={handleOrderChange}
+          label="label"
           sx={{
             [theme.breakpoints.down('lg')]: {
               width: '20%',
             },
             width: '24%',
           }}
-          active={isActive('label')}
-          data-qa-sort-label={order}
-          direction={order}
-          handleClick={handleOrderChange}
-          label="label"
         >
           Label
         </TableSortCell>
         <TableSortCell
+          active={isActive('_statusPriority')}
+          direction={order}
+          handleClick={handleOrderChange}
+          label="_statusPriority"
+          noWrap
           sx={{
             [theme.breakpoints.down('md')]: {
               width: '25%',
@@ -74,26 +79,21 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
             },
             width: '20%',
           }}
-          active={isActive('_statusPriority')}
-          direction={order}
-          handleClick={handleOrderChange}
-          label="_statusPriority"
-          noWrap
         >
           Status
         </TableSortCell>
         <Hidden smDown>
           <TableSortCell
+            active={isActive('type')}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="type"
             sx={{
               [theme.breakpoints.only('sm')]: {
                 width: '15%',
               },
               width: '14%',
             }}
-            active={isActive('type')}
-            direction={order}
-            handleClick={handleOrderChange}
-            label="type"
           >
             Plan
           </TableSortCell>
@@ -108,17 +108,17 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           </TableSortCell>
           <Hidden lgDown>
             <TableSortCell
+              active={isActive('region')}
+              data-qa-sort-region={order}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="region"
               sx={{
                 [theme.breakpoints.down('sm')]: {
                   width: '18%',
                 },
                 width: '14%',
               }}
-              active={isActive('region')}
-              data-qa-sort-region={order}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="region"
             >
               Region
             </TableSortCell>
@@ -126,17 +126,17 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
         </Hidden>
         <Hidden lgDown>
           <TableSortCell
+            active={isActive('backups:last_successful')}
+            direction={order}
+            handleClick={handleOrderChange}
+            label="backups:last_successful"
+            noWrap
             sx={{
               [theme.breakpoints.down('sm')]: {
                 width: '18%',
               },
               width: '14%',
             }}
-            active={isActive('backups:last_successful')}
-            direction={order}
-            handleClick={handleOrderChange}
-            label="backups:last_successful"
-            noWrap
           >
             Last Backup
           </TableSortCell>
@@ -158,18 +158,18 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
             </div>
             <Tooltip placement="top" title="Summary view">
               <IconButton
+                aria-describedby={displayViewDescriptionId}
+                aria-label="Toggle display"
                 className={
                   linodeViewPreference === 'grid'
                     ? 'MuiIconButton-isActive'
                     : ''
                 }
+                disableRipple
+                onClick={toggleLinodeView}
                 sx={{
                   padding: 0,
                 }}
-                aria-describedby={displayViewDescriptionId}
-                aria-label="Toggle display"
-                disableRipple
-                onClick={toggleLinodeView}
               >
                 <GridView />
               </IconButton>

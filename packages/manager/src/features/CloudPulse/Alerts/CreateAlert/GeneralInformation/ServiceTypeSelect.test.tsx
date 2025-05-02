@@ -55,7 +55,7 @@ describe('ServiceTypeSelect component tests', () => {
         <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
       ),
     });
-    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(
       await screen.findByRole('option', {
         name: 'Linode',
@@ -74,7 +74,7 @@ describe('ServiceTypeSelect component tests', () => {
         <CloudPulseServiceSelect isDisabled={false} name="serviceType" />
       ),
     });
-    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', { name: 'Linode' })
     );

@@ -2,7 +2,6 @@ import { Drawer, Typography } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -12,7 +11,7 @@ import { BucketPermissionsTable } from './BucketPermissionsTable';
 import type { ObjectStorageKey } from '@linode/api-v4';
 
 export interface Props {
-  objectStorageKey: ObjectStorageKey | null;
+  objectStorageKey: null | ObjectStorageKey;
   onClose: () => void;
   open: boolean;
 }
@@ -31,7 +30,6 @@ export const ViewPermissionsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Permissions for ${objectStorageKey?.label}`}

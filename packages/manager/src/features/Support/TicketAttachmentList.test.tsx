@@ -6,8 +6,8 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  TicketAttachmentList,
   addIconsToAttachments,
+  TicketAttachmentList,
 } from './TicketAttachmentList';
 
 const props = {

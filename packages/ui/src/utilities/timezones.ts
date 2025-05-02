@@ -1,7 +1,6 @@
 /* This file borrowed from https://github.com/vahnag/react-timezone */
 /* Timezones are borrowed from Google Calendar */
 
-// eslint-disable-next-line max-len
 // [...$0.children].map(el => ({ label: (el.getAttribute('aria-label')|| '').replace(/\(.*?\)(.+)/, '$1').trim(), name: el.getAttribute('data-value'), offset: +(el.getAttribute('aria-label')|| '').replace(/\(.*?(-?[0-9]{2}):([0-9]{2})\).*/, (all, one, two) => +one + (two / 60) * (one > 0 ? 1 : -1)) }))
 
 export const timezones = [

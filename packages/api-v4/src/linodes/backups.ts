@@ -1,7 +1,9 @@
 import { CreateSnapshotSchema } from '@linode/validation/lib/linodes.schema';
+
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { LinodeBackup, LinodeBackupsResponse } from './types';
+
+import type { LinodeBackup, LinodeBackupsResponse } from './types';
 
 type Backup = LinodeBackup;
 
@@ -15,7 +17,7 @@ type Backup = LinodeBackup;
 export const getLinodeBackups = (id: number) =>
   Request<LinodeBackupsResponse>(
     setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(id)}/backups`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -29,10 +31,10 @@ export const enableBackups = (linodeId: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/backups/enable`
+        linodeId,
+      )}/backups/enable`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -46,10 +48,10 @@ export const cancelBackups = (linodeId: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/backups/cancel`
+        linodeId,
+      )}/backups/cancel`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -64,10 +66,10 @@ export const cancelBackups = (linodeId: number) =>
 export const takeSnapshot = (linodeId: number, label: string) =>
   Request<Backup>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/backups`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/backups`,
     ),
     setMethod('POST'),
-    setData({ label }, CreateSnapshotSchema)
+    setData({ label }, CreateSnapshotSchema),
   );
 
 /**
@@ -85,14 +87,14 @@ export const restoreBackup = (
   linodeId: number,
   backupId: number,
   targetLinodeId: number,
-  overwrite: boolean
+  overwrite: boolean,
 ) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/backups/${encodeURIComponent(backupId)}/restore`
+        linodeId,
+      )}/backups/${encodeURIComponent(backupId)}/restore`,
     ),
     setMethod('POST'),
-    setData({ linode_id: targetLinodeId, overwrite })
+    setData({ linode_id: targetLinodeId, overwrite }),
   );

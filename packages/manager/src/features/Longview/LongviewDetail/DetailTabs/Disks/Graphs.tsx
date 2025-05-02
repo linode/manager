@@ -17,9 +17,9 @@ export interface GraphProps {
   endTime: number;
   free: Stat[];
   iFree: Stat[];
-  iTotal: Stat[];
   isMounted: boolean;
   isSwap: boolean;
+  iTotal: Stat[];
   loading: boolean;
   reads: Stat[];
   startTime: number;
@@ -54,10 +54,10 @@ export const Graphs = React.memo((props: GraphProps) => {
   const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
 
   const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
-  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
-    iFree,
-    iTotal,
-  ]);
+  const _inodes = React.useMemo(
+    () => formatINodes(iFree, iTotal),
+    [iFree, iTotal]
+  );
 
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
@@ -78,6 +78,7 @@ export const Graphs = React.memo((props: GraphProps) => {
         {sysInfoType.toLowerCase() !== 'openvz' && (
           <div data-testid="diskio-graph">
             <LongviewLineGraph
+              ariaLabel="Disk I/O Graph"
               data={[
                 {
                   backgroundColor: theme.graphs.diskIO.write,
@@ -92,7 +93,6 @@ export const Graphs = React.memo((props: GraphProps) => {
                   label: 'Read',
                 },
               ]}
-              ariaLabel="Disk I/O Graph"
               loading={loading}
               nativeLegend
               showToday={isToday}
@@ -112,6 +112,7 @@ export const Graphs = React.memo((props: GraphProps) => {
             <React.Fragment>
               <div data-testid="space-graph">
                 <LongviewLineGraph
+                  ariaLabel="Disk Space Graph"
                   data={[
                     {
                       backgroundColor: theme.graphs.space,
@@ -120,7 +121,6 @@ export const Graphs = React.memo((props: GraphProps) => {
                       label: 'Space',
                     },
                   ]}
-                  ariaLabel="Disk Space Graph"
                   nativeLegend
                   showToday={isToday}
                   subtitle="GB"
@@ -132,6 +132,7 @@ export const Graphs = React.memo((props: GraphProps) => {
               </div>
               <div data-testid="inodes-graph">
                 <LongviewLineGraph
+                  ariaLabel="Inodes Graph"
                   data={[
                     {
                       backgroundColor: theme.graphs.inodes,
@@ -140,7 +141,6 @@ export const Graphs = React.memo((props: GraphProps) => {
                       label: 'Inodes',
                     },
                   ]}
-                  ariaLabel="Inodes Graph"
                   nativeLegend
                   showToday={isToday}
                   // @todo replace with byte-to-target converter after rebase

@@ -59,10 +59,10 @@ export const TicketRow = ({ ticket }: Props) => {
       </Hidden>
       <Hidden mdDown>
         <TableCell
+          data-qa-support-entity
           sx={{
             lineHeight: 1.1,
           }}
-          data-qa-support-entity
         >
           {renderEntityLink(ticket)}
         </TableCell>

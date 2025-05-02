@@ -1,9 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
 import { Chip } from '@linode/ui';
+import { action } from '@storybook/addon-actions';
+import React from 'react';
 
 import { Breadcrumb } from './Breadcrumb';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const withBadgeCrumbs = [
   {
@@ -18,7 +19,7 @@ const withBadgeCrumbs = [
             textDecoration: 'none',
           }}
         >
-          <Chip label="beta" component="span" />
+          <Chip component="span" label="beta" />
         </span>
       </>
     ),
