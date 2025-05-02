@@ -20,9 +20,7 @@ describe('PlacementGroupPanel', () => {
       });
 
     expect(
-      getByText(
-        'Select a Region for your Linode to see existing placement groups.'
-      )
+      getByText('Select a Region to see available placement groups.')
     ).toBeVisible();
   });
 

@@ -102,6 +102,11 @@ export const PlacementGroupsSelect = (props: PlacementGroupsSelectProps) => {
       disabled={Boolean(!selectedRegion?.id) || disabled}
       errorText={error?.[0]?.reason}
       getOptionLabel={(placementGroup: PlacementGroup) => placementGroup.label}
+      helperText={
+        !selectedRegion
+          ? 'Select a Region to see available placement groups.'
+          : undefined
+      }
       label={label}
       loading={isFetching}
       noOptionsText={
