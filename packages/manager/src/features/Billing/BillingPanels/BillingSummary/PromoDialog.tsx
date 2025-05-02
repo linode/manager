@@ -1,4 +1,5 @@
 import { addPromotion } from '@linode/api-v4/lib';
+import { accountQueries } from '@linode/queries';
 import { ActionsPanel, TextField, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -87,11 +87,11 @@ const PromoDialog = (props: Props) => {
         the Promotions panel on the Billing Info tab.
       </Typography>
       <TextField
+        className={classes.input}
+        label="Promo code"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setPromoCode(e.target.value)
         }
-        className={classes.input}
-        label="Promo code"
         value={promoCode}
       />
     </ConfirmationDialog>

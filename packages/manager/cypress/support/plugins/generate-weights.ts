@@ -24,14 +24,14 @@ export interface SpecWeights {
     datetime: string;
 
     /**
-     * Total test weight.
-     */
-    totalWeight: number;
-
-    /**
      * Total test run duration in milliseconds.
      */
     totalDuration: number;
+
+    /**
+     * Total test weight.
+     */
+    totalWeight: number;
   };
   /**
    * Array of spec weights.
@@ -74,14 +74,14 @@ export const specWeightsSchema: ObjectSchema<SpecWeights> = object({
  */
 interface SpecResult {
   /**
-   * Relative path to spec file.
-   */
-  filepath: string;
-
-  /**
    * Spec run duration in milliseconds.
    */
   duration: number;
+
+  /**
+   * Relative path to spec file.
+   */
+  filepath: string;
 }
 
 /**
@@ -92,7 +92,7 @@ interface SpecResult {
 export const generateTestWeights: CypressPlugin = (on, config) => {
   const specResults: SpecResult[] = [];
 
-  if (!!config.env[envVarName]) {
+  if (config.env[envVarName]) {
     const writeFilepath = config.env[envVarName];
 
     // Capture duration after each spec runs.
@@ -115,15 +115,15 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
       'after:run',
       (
         results:
-          | CypressCommandLine.CypressRunResult
           | CypressCommandLine.CypressFailedRunResult
+          | CypressCommandLine.CypressRunResult
       ) => {
         // Determine whether this is a failed run. "Failed" in this context means
         // that Cypress itself failed to run, not that the test results contained failures.
         const isFailedResult = (
           results:
-            | CypressCommandLine.CypressRunResult
             | CypressCommandLine.CypressFailedRunResult
+            | CypressCommandLine.CypressRunResult
         ): results is CypressCommandLine.CypressFailedRunResult => {
           return 'failures' in results;
         };
@@ -137,15 +137,13 @@ export const generateTestWeights: CypressPlugin = (on, config) => {
               totalWeight,
               totalDuration,
             },
-            weights: specResults.map(
-              (specResult: SpecResult): SpecWeight => {
-                return {
-                  filepath: specResult.filepath,
-                  duration: specResult.duration,
-                  weight: (specResult.duration / totalDuration) * totalWeight,
-                };
-              }
-            ),
+            weights: specResults.map((specResult: SpecResult): SpecWeight => {
+              return {
+                filepath: specResult.filepath,
+                duration: specResult.duration,
+                weight: (specResult.duration / totalDuration) * totalWeight,
+              };
+            }),
           };
 
           const resolvePath = resolve(writeFilepath);

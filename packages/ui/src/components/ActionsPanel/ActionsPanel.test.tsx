@@ -20,7 +20,7 @@ describe('ActionsPanel', () => {
           'data-testid': primaryButtonTestId,
           label: 'Submit',
         }}
-      />
+      />,
     );
     expect(screen.getByTestId(primaryButtonTestId)).toBeInTheDocument();
   });
@@ -37,7 +37,7 @@ describe('ActionsPanel', () => {
           'data-testid': secondaryButtonTestId,
           label: 'Cancel',
         }}
-      />
+      />,
     );
     expect(screen.getByTestId(secondaryButtonTestId)).toBeInTheDocument();
   });
@@ -56,7 +56,7 @@ describe('ActionsPanel', () => {
           label: 'Submit',
           onClick: mockHandler,
         }}
-      />
+      />,
     );
     await userEvent.click(screen.getByTestId(primaryButtonTestId));
     expect(mockHandler).toHaveBeenCalledTimes(1);
@@ -71,7 +71,7 @@ describe('ActionsPanel', () => {
           label: 'Cancel',
           onClick: mockHandler,
         }}
-      />
+      />,
     );
     await userEvent.click(screen.getByTestId(secondaryButtonTestId));
     expect(mockHandler).toHaveBeenCalledTimes(1);

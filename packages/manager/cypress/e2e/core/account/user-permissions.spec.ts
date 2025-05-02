@@ -144,7 +144,7 @@ const assertAllGlobalPermissions = (enabled: boolean) => {
  * @param billingAccess - Billing access to select.
  */
 const selectBillingAccess = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -158,7 +158,7 @@ const selectBillingAccess = (
  * @param billingAccess - Selected billing access to assert.
  */
 const assertBillingAccessSelected = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')

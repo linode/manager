@@ -41,6 +41,11 @@ export const NodeBalancerDeleteDialog = ({
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
       }}
+      errors={error ?? undefined}
+      expand
+      label={'NodeBalancer Label'}
+      loading={isPending || isFetching}
+      onClick={onDelete}
       onClose={
         match.routeId === '/nodebalancers/$id/settings/delete'
           ? () =>
@@ -50,11 +55,6 @@ export const NodeBalancerDeleteDialog = ({
               })
           : () => navigate({ to: '/nodebalancers' })
       }
-      errors={error ?? undefined}
-      expand
-      label={'NodeBalancer Label'}
-      loading={isPending || isFetching}
-      onClick={onDelete}
       open={open}
       title={`Delete ${label}?`}
       typographyStyle={{ marginTop: '20px' }}

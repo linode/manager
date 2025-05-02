@@ -30,8 +30,8 @@ export const IPv6Ranges = ({ linodeId }: Props) => {
     <Stack spacing={1.5}>
       <Typography variant="h3">IPv6 Ranges</Typography>
       <Typography>
-        IPv6 addresses are allocated as ranges, which you can choose to
-        distribute and further route yourself.{' '}
+        IPv6 addresses are allocated in ranges, which you can distribute and
+        route as needed.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-ipv6-on-linode#additional-ipv6-addresses">
           Learn more
         </Link>

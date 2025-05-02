@@ -5,7 +5,7 @@ import React from 'react';
 
 import { imageFactory, linodeDiskFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { CreateImageTab } from './CreateImageTab';
@@ -110,12 +110,8 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByText,
-      queryByText,
-    } = await renderWithThemeAndRouter(<CreateImageTab />);
+    const { findByText, getByLabelText, getByText, queryByText } =
+      await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 
@@ -200,11 +196,8 @@ describe('CreateImageTab', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      queryByText,
-    } = await renderWithThemeAndRouter(<CreateImageTab />);
+    const { findByText, getByLabelText, queryByText } =
+      await renderWithThemeAndRouter(<CreateImageTab />);
 
     const linodeSelect = getByLabelText('Linode');
 

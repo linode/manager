@@ -3,7 +3,9 @@ import * as React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { ObjectActionMenu, Props } from './ObjectActionMenu';
+import { ObjectActionMenu } from './ObjectActionMenu';
+
+import type { Props } from './ObjectActionMenu';
 
 vi.mock('src/components/ActionMenu/ActionMenu');
 

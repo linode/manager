@@ -13,8 +13,8 @@ import {
 import { parseAPIDate } from 'src/utilities/date';
 
 import {
-  StyledCopyDiv,
   StyledCopyableTextField,
+  StyledCopyDiv,
   StyledDialog,
   StyledInputDiv,
   StyledTypography,
@@ -98,12 +98,12 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <Tooltip open={tooltipOpen[0]} title="Copied!">
           <StyledCopyDiv>
             <Button
+              buttonType="outlined"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferCopyTokenEvent();
                 handleCopy(0, transfer.token);
               }}
-              buttonType="outlined"
             >
               Copy Token
             </Button>
@@ -122,12 +122,12 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
         <Tooltip open={tooltipOpen[1]} title="Copied!">
           <StyledCopyDiv>
             <Button
+              buttonType="primary"
               onClick={() => {
                 // @analytics
                 debouncedSendEntityTransferDraftEmailEvent();
                 handleCopy(1, draftEmail);
               }}
-              buttonType="primary"
             >
               Copy Draft Email
             </Button>

@@ -25,7 +25,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 export const EditVolumeDrawer = (props: Props) => {
@@ -35,9 +35,8 @@ export const EditVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -85,8 +84,8 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Volume"

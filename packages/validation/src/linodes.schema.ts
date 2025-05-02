@@ -1,14 +1,15 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
 // We must use a default export for ipaddr.js so our packages node compatibility
 // Refer to https://github.com/linode/manager/issues/8675
 import ipaddr from 'ipaddr.js';
+import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+
 import { vpcsValidateIP } from './vpcs.schema';
 
 const VPC_INTERFACE_IP_RULE =
   'A VPC interface must have an IPv4, an IPv6, or both, but not neither.';
 
 // Functions for test validations
-const validateIP = (ipAddress?: string | null) => {
+const validateIP = (ipAddress?: null | string) => {
   if (!ipAddress) {
     return true;
   }
@@ -23,7 +24,7 @@ const validateIP = (ipAddress?: string | null) => {
   return true;
 };
 
-const test_vpcsValidateIP = (value?: string | null) => {
+const test_vpcsValidateIP = (value?: null | string) => {
   // Since the field is optional, return true here to prevent an incorrect test failure.
   if (value === undefined || value === null) {
     return true;
@@ -36,7 +37,7 @@ const test_vpcsValidateIP = (value?: string | null) => {
   });
 };
 
-const validateIPv6PrefixLengthIs64 = (value?: string | null) => {
+const validateIPv6PrefixLengthIs64 = (value?: null | string) => {
   if (value === undefined || value === null) {
     return false;
   }

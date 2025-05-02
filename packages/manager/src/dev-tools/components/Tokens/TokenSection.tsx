@@ -40,11 +40,11 @@ export const TokenSection = ({
 
     return Object.entries(groupValue).map(([key, value]) => (
       <Stack
+        key={key}
+        spacing={2}
         sx={{
           mb: 2,
         }}
-        key={key}
-        spacing={2}
       >
         {parentPath.length === 0 && (
           <Typography
