@@ -205,6 +205,7 @@ export const PlacementGroupsLanding = React.memo(() => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{ pathname: PLACEMENT_GROUPS_LANDING_ROUTE }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -212,7 +213,6 @@ export const PlacementGroupsLanding = React.memo(() => {
             resourceType: 'Placement Groups',
           }),
         }}
-        breadcrumbProps={{ pathname: PLACEMENT_GROUPS_LANDING_ROUTE }}
         disabledCreateButton={isLinodeReadOnly}
         docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
@@ -285,13 +285,13 @@ export const PlacementGroupsLanding = React.memo(() => {
                 placementGroup,
                 linodes
               )}
+              disabled={isLinodeReadOnly}
               handleDeletePlacementGroup={() =>
                 handleDeletePlacementGroup(placementGroup)
               }
               handleEditPlacementGroup={() =>
                 handleEditPlacementGroup(placementGroup)
               }
-              disabled={isLinodeReadOnly}
               key={`pg-${placementGroup.id}`}
               placementGroup={placementGroup}
               region={getPlacementGroupRegion(placementGroup)}

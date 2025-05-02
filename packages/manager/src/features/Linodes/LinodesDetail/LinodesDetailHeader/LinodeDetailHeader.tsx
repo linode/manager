@@ -207,11 +207,11 @@ export const LinodeDetailHeader = () => {
           },
           pathname: `/linodes/${linode.label}`,
         }}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() => {
           sendLinodeCreateFlowDocsClickEvent('Getting Started');
         }}
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         title="Create"
       />
       <LinodeEntityDetail

@@ -132,6 +132,8 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={3}>
       <DebouncedSearchTextField
+        clearable
+        hideLabel
         inputSlotProps={
           searchParseError
             ? {
@@ -145,6 +147,9 @@ export const StackScriptLandingTable = (props: Props) => {
               }
             : {}
         }
+        isSearching={isFetching}
+        label="Search"
+        noMarginTop
         onSearch={(value) => {
           if (!value) {
             navigate({
@@ -164,11 +169,6 @@ export const StackScriptLandingTable = (props: Props) => {
             });
           }
         }}
-        clearable
-        hideLabel
-        isSearching={isFetching}
-        label="Search"
-        noMarginTop
         placeholder="Search by Label, Username, or Description"
         tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
@@ -240,6 +240,7 @@ export const StackScriptLandingTable = (props: Props) => {
           {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
           {isFetchingNextPage && (
             <TableRowLoading
+              columns={type === 'account' ? 6 : 5}
               responsive={
                 type === 'account'
                   ? {
@@ -252,29 +253,28 @@ export const StackScriptLandingTable = (props: Props) => {
                       3: { lgDown: true },
                     }
               }
-              columns={type === 'account' ? 6 : 5}
             />
           )}
         </TableBody>
       </Table>
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptMakePublicDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
         open={location.pathname.includes('make-public')}
         stackscript={selectedStackScript}
       />
       <StackScriptDeleteDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
         open={location.pathname.includes('delete')}
         stackscript={selectedStackScript}
       />

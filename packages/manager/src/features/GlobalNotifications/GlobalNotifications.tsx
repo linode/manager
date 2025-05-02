@@ -1,5 +1,4 @@
 import { useProfile, useSecurityQuestions } from '@linode/queries';
-
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 
@@ -67,10 +66,10 @@ export const GlobalNotifications = () => {
             onClose={() => sessionContext.updateState({ isOpen: false })}
           />
           <SessionExpirationDialog
+            isOpen={Boolean(sessionExpirationContext.isOpen)}
             onClose={() =>
               sessionExpirationContext.updateState({ isOpen: false })
             }
-            isOpen={Boolean(sessionExpirationContext.isOpen)}
           />
         </>
       )}

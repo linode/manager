@@ -1,9 +1,9 @@
 import { generateTimeOfDay } from './customEventAnalytics';
 import {
-  ONE_TRUST_COOKIE_CATEGORIES,
   checkOptanonConsent,
   getCookie,
   getFormattedStringFromFormEventOptions,
+  ONE_TRUST_COOKIE_CATEGORIES,
   waitForAdobeAnalyticsToBeLoaded,
 } from './utils';
 

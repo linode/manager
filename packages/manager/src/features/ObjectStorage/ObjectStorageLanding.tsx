@@ -123,6 +123,7 @@ export const ObjectStorageLanding = () => {
         }`}
       />
       <LandingHeader
+        breadcrumbProps={{ pathname: '/object-storage' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -130,7 +131,6 @@ export const ObjectStorageLanding = () => {
             resourceType: 'Buckets',
           }),
         }}
-        breadcrumbProps={{ pathname: '/object-storage' }}
         className="landing-header-mb-4"
         createButtonText={createButtonText}
         disabledCreateButton={isBucketCreationRestricted}
@@ -165,11 +165,11 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 closeAccessDrawer={() => {
                   navigate({ to: '/object-storage/access-keys' });
                   openDrawer.close();
                 }}
-                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
                 openAccessDrawer={handleOpenAccessDrawer}

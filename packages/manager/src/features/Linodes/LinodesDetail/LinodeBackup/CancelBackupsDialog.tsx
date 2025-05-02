@@ -1,10 +1,10 @@
+import { useLinodeBackupsCancelMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupsCancelMutation } from '@linode/queries';
 import { sendBackupsDisabledEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 interface Props {

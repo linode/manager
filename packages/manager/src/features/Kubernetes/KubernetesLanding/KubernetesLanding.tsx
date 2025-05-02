@@ -242,6 +242,9 @@ export const KubernetesLanding = () => {
         <TableBody>
           {data?.data.map((cluster) => (
             <KubernetesClusterRow
+              cluster={cluster}
+              key={`kubernetes-cluster-list-${cluster.id}`}
+              openDeleteDialog={openDialog}
               openUpgradeDialog={() =>
                 openUpgradeDialog(
                   cluster.id,
@@ -250,9 +253,6 @@ export const KubernetesLanding = () => {
                   cluster.k8s_version
                 )
               }
-              cluster={cluster}
-              key={`kubernetes-cluster-list-${cluster.id}`}
-              openDeleteDialog={openDialog}
             />
           ))}
         </TableBody>

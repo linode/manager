@@ -44,12 +44,12 @@ export const StackScriptsLanding = () => {
           }),
         }}
         className="landing-header-mb-4"
-        onButtonClick={() => {
-          navigate({ to: '/stackscripts/create' });
-        }}
         disabledCreateButton={isStackScriptCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
+        onButtonClick={() => {
+          navigate({ to: '/stackscripts/create' });
+        }}
         removeCrumbX={1}
         title="StackScripts"
       />

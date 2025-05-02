@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Chip, Stack } from '@linode/ui';
 import React from 'react';
 
@@ -7,7 +8,6 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
@@ -62,10 +62,10 @@ export const KubernetesClusterRow = (props: Props) => {
     >
       <TableCell data-qa-cluster-label>
         <Stack
+          alignItems="center"
           direction="row"
           justifyContent="space-between"
           spacing={1}
-          alignItems="center"
         >
           <Link tabIndex={0} to={`/kubernetes/clusters/${cluster.id}/summary`}>
             {cluster.label}
@@ -101,11 +101,11 @@ export const KubernetesClusterRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell>
         <ClusterActionMenu
+          clusterId={cluster.id}
+          clusterLabel={cluster.label}
           openDialog={() =>
             openDeleteDialog(cluster.id, cluster.label, pools ?? [])
           }
-          clusterId={cluster.id}
-          clusterLabel={cluster.label}
         />
       </TableCell>
     </TableRow>

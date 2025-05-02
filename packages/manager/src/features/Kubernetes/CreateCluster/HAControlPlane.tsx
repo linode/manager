@@ -60,6 +60,7 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
   return (
     <FormControl data-testid="ha-control-plane-form" disabled={isAPLEnabled}>
       <FormLabel
+        id="ha-radio-buttons-group-label"
         sx={(theme) => ({
           '&&.MuiFormLabel-root.Mui-focused': {
             color:
@@ -68,7 +69,6 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
                 : theme.color.black,
           },
         })}
-        id="ha-radio-buttons-group-label"
       >
         <Typography variant="inherit">HA Control Plane</Typography>
       </FormLabel>
@@ -91,6 +91,8 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
         value={isAPLEnabled ? 'yes' : undefined}
       >
         <FormControlLabel
+          checked={isAPLEnabled ? true : undefined}
+          control={<Radio data-testid="ha-radio-button-yes" />}
           label={
             <Box alignItems="center" display="flex" flexDirection="row">
               <Typography>
@@ -101,16 +103,14 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
               </Typography>
               {isAPLEnabled && (
                 <TooltipIcon
+                  status="help"
                   text={
                     'Enabled by default when Akamai App Platform is enabled.'
                   }
-                  status="help"
                 />
               )}
             </Box>
           }
-          checked={isAPLEnabled ? true : undefined}
-          control={<Radio data-testid="ha-radio-button-yes" />}
           name="yes"
           value="yes"
         />

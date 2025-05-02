@@ -141,10 +141,10 @@ export const PlacementGroupsLinodes = (props: Props) => {
   return (
     <Stack spacing={3}>
       <Grid
+        container
         sx={{
           justifyContent: 'space-between',
         }}
-        container
       >
         <Grid
           size={{
@@ -167,15 +167,15 @@ export const PlacementGroupsLinodes = (props: Props) => {
         </Grid>
         <Grid>
           <Button
+            buttonType="primary"
+            data-testid="add-linode-to-placement-group-button"
+            disabled={hasReachedCapacity || isLinodeReadOnly}
+            onClick={handleAssignLinodesDrawer}
             tooltipText={
               isLinodeReadOnly
                 ? ''
                 : MAX_NUMBER_OF_LINODES_IN_PLACEMENT_GROUP_MESSAGE
             }
-            buttonType="primary"
-            data-testid="add-linode-to-placement-group-button"
-            disabled={hasReachedCapacity || isLinodeReadOnly}
-            onClick={handleAssignLinodesDrawer}
           >
             Assign Linode to Placement Group
           </Button>

@@ -43,32 +43,32 @@ export const PlacementGroupPolicyRadioGroup = (props: Props) => {
       />
       <FormLabel htmlFor={ariaIdentifier}>Placement Group Policy</FormLabel>
       <RadioGroup
+        id={ariaIdentifier}
+        name="placement_group_policy"
         onChange={(event) => {
           handleChange(event);
           setFieldValue('placement_group_policy', event.target.value);
         }}
-        id={ariaIdentifier}
-        name="placement_group_policy"
         value={value}
       >
         <FormControlLabel
+          control={<Radio />}
+          disabled={disabledPlacementGroupCreateButton}
           label={
             <Typography>
               <strong>Strict.</strong> {PLACEMENT_GROUP_POLICY_STRICT}
             </Typography>
           }
-          control={<Radio />}
-          disabled={disabledPlacementGroupCreateButton}
           value={'strict'}
         />
         <FormControlLabel
+          control={<Radio />}
+          disabled={disabledPlacementGroupCreateButton}
           label={
             <Typography>
               <strong>Flexible.</strong> {PLACEMENT_GROUP_POLICY_FLEXIBLE}
             </Typography>
           }
-          control={<Radio />}
-          disabled={disabledPlacementGroupCreateButton}
           sx={{ mt: 2 }}
           value={'flexible'}
         />

@@ -112,13 +112,13 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
+      isFetching={isFetching}
+      NotFoundComponent={NotFound}
       onClose={() => {
         navigate({
           to: '/managed/contacts',
         });
       }}
-      NotFoundComponent={NotFound}
-      isFetching={isFetching}
       open={isOpen}
       title={`${isEditing ? 'Edit' : 'Add'} Contact`}
     >
@@ -215,6 +215,9 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                 </Grid>
 
                 <Select
+                  creatable
+                  errorText={errors.group}
+                  label="Group"
                   onChange={(_, selectedGroup) =>
                     setFieldValue('group', selectedGroup?.value)
                   }
@@ -222,6 +225,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                     label: group.groupName,
                     value: group.groupName,
                   }))}
+                  placeholder="Create or Select a Group"
                   value={
                     values.group
                       ? {
@@ -230,10 +234,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
                         }
                       : null
                   }
-                  creatable
-                  errorText={errors.group}
-                  label="Group"
-                  placeholder="Create or Select a Group"
                 />
 
                 <ActionsPanel

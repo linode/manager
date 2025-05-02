@@ -232,7 +232,6 @@ export const DomainRecords = (props: Props) => {
     openForEditTXTRecord: (fields) => openForEditing('TXT', fields),
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const types = React.useMemo(
     () => generateTypes(props, handlers),
     [domain, domainRecords]
@@ -318,12 +317,12 @@ export const DomainRecords = (props: Props) => {
         })}
       </Stack>
       <ConfirmationDialog
+        actions={renderDialogActions}
         error={
           state.confirmDialog.errors
             ? getErrorStringOrDefault(state.confirmDialog.errors)
             : undefined
         }
-        actions={renderDialogActions}
         onClose={handleCloseDialog}
         open={state.confirmDialog.open}
         ref={confirmDialogRef}

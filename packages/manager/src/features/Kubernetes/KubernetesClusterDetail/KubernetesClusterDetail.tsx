@@ -106,14 +106,14 @@ export const KubernetesClusterDetail = () => {
           },
           pathname: location.pathname,
         }}
+        createButtonText="Upgrade to HA"
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         onButtonClick={
           showHighAvailability && !isClusterHighlyAvailable
             ? handleUpgradeToHA
             : undefined
         }
-        createButtonText="Upgrade to HA"
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
       <Box>

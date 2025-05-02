@@ -37,9 +37,8 @@ import type { LinodeCreateFormValues } from './utilities';
 import type { Region as RegionType } from '@linode/api-v4';
 
 export const Region = React.memo(() => {
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const flags = useFlags();
   const queryClient = useQueryClient();
@@ -198,16 +197,16 @@ export const Region = React.memo(() => {
   if (showTwoStepRegion) {
     return (
       <TwoStepRegion
+        disabled={isLinodeCreateRestricted}
+        disabledRegions={disabledRegions}
+        errorText={fieldState.error?.message}
+        onChange={onChange}
         regionFilter={
           // We don't want the Image Service Gen2 work to abide by Gecko feature flags
           hideDistributedRegions && params.type !== 'Images'
             ? 'core'
             : undefined
         }
-        disabled={isLinodeCreateRestricted}
-        disabledRegions={disabledRegions}
-        errorText={fieldState.error?.message}
-        onChange={onChange}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}
       />
@@ -219,6 +218,8 @@ export const Region = React.memo(() => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
+          href="https://www.linode.com/pricing"
+          label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
               createType: params.type ?? 'OS',
@@ -227,8 +228,6 @@ export const Region = React.memo(() => {
               label: DOCS_LINK_LABEL_DC_PRICING,
             })
           }
-          href="https://www.linode.com/pricing"
-          label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
       <RegionHelperText />
@@ -241,12 +240,6 @@ export const Region = React.memo(() => {
         </Notice>
       )}
       <RegionSelect
-        regionFilter={
-          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
-          hideDistributedRegions && params.type !== 'Images'
-            ? 'core'
-            : undefined
-        }
         currentCapability="Linodes"
         disableClearable
         disabled={isLinodeCreateRestricted}
@@ -254,6 +247,12 @@ export const Region = React.memo(() => {
         errorText={fieldState.error?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}
         onChange={(e, region) => onChange(region)}
+        regionFilter={
+          // We don't want the Image Service Gen2 work to abide by Gecko feature flags
+          hideDistributedRegions && params.type !== 'Images'
+            ? 'core'
+            : undefined
+        }
         regions={regions ?? []}
         textFieldProps={{ onBlur: field.onBlur }}
         value={field.value}

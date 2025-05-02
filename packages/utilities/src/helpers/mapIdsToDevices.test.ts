@@ -1,9 +1,9 @@
-import { linodeFactory, nodeBalancerFactory } from '../factories';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
+import { linodeFactory, nodeBalancerFactory } from '../factories';
 import { mapIdsToDevices } from './mapIdsToDevices';
 
-import type { NodeBalancer, Linode } from '@linode/api-v4';
+import type { Linode, NodeBalancer } from '@linode/api-v4';
 
 describe('mapIdsToDevices', () => {
   const linodes = linodeFactory.buildList(5);
@@ -15,7 +15,7 @@ describe('mapIdsToDevices', () => {
 
   it('works with a single NodeBalancer ID', () => {
     expect(mapIdsToDevices<NodeBalancer>(1, nodebalancers)).toBe(
-      nodebalancers[0]
+      nodebalancers[0],
     );
   });
 

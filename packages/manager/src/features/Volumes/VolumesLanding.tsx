@@ -204,6 +204,7 @@ export const VolumesLanding = () => {
         title="Volumes"
       />
       <TextField
+        hideLabel
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
@@ -221,11 +222,10 @@ export const VolumesLanding = () => {
           ),
           sx: { mb: 3 },
         }}
+        label="Search"
         onChange={debounce(400, (e) => {
           onSearch(e);
         })}
-        hideLabel
-        label="Search"
         placeholder="Search Volumes"
         value={query ?? ''}
       />
