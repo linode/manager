@@ -35,7 +35,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fix incorrect card sizing at 1920px+ in LKE Tier panel ([#12076](https://github.com/linode/manager/pull/12076))
 - Bugs in Linode Create, Landing & Detail Pages ([#12028](https://github.com/linode/manager/pull/12028))
 - Bug displaying the incorrect cluster version number in upgrade completion dialog on LKE cluster details page ([#12139](https://github.com/linode/manager/pull/12139))
-- Fix persisting ACL IP validation error on clear ([#12144](https://github.com/linode/manager/pull/12144))
+- Persisting ACL IP validation error on clear ([#12144](https://github.com/linode/manager/pull/12144))
 
 ### Tech Stories:
 
