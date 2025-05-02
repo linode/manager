@@ -265,10 +265,6 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
               queryClient.invalidateQueries({
                 queryKey: vpcQueries.vpc(iface.vpc.vpc_id).queryKey,
               });
-              queryClient.invalidateQueries({
-                queryKey: vpcQueries.vpc(iface.vpc.vpc_id)._ctx.subnets
-                  .queryKey,
-              });
             }
           }
         }
