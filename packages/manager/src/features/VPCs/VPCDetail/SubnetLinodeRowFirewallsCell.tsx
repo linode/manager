@@ -33,7 +33,6 @@ export const LinodeInterfaceFirewallCell = (props: {
   linodeId: number;
 }) => {
   const { linodeId, interfaceId } = props;
-  // query to fetch firewalls for a Linode Interface (firewalls are attached at the interface level)
   const {
     data: attachedFirewalls,
     error,
