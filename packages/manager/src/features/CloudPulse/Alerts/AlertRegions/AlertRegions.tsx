@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+// This will be removed once feature is completed
 import { useRegionsQuery } from '@linode/queries';
 import { Box, Checkbox, CircleProgress, Stack } from '@linode/ui';
 import React from 'react';
