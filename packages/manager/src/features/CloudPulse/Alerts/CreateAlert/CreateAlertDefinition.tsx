@@ -28,6 +28,7 @@ import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroup
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertRegions } from './Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
@@ -214,6 +215,9 @@ export const CreateAlertDefinition = () => {
             <AlertEntityGroupingSelect name="type" />
             {entityGroupingWatcher === 'user' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
+            )}
+            {entityGroupingWatcher === 'region-user' && (
+              <CloudPulseModifyAlertRegions name="entity_ids" />
             )}
             <MetricCriteriaField
               name="rule_criteria.rules"
