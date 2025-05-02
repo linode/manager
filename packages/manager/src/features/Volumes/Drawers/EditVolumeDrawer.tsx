@@ -13,7 +13,6 @@ import React from 'react';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -85,7 +84,6 @@ export const EditVolumeDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Volume"

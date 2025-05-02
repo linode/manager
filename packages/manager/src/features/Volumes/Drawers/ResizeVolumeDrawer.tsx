@@ -9,7 +9,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -96,7 +95,6 @@ export const ResizeVolumeDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Resize Volume"

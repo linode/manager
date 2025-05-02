@@ -17,7 +17,6 @@ import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   calculateAvailableIPv4sRFC1918,
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -90,12 +89,7 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title={'Create Subnet'}
-    >
+    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}

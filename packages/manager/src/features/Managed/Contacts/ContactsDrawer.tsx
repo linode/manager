@@ -6,7 +6,6 @@ import { useMatch } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
@@ -113,7 +112,6 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={() => {
         navigate({
           to: '/managed/contacts',

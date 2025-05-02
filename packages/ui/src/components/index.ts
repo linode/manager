@@ -32,6 +32,7 @@ export * from './List';
 export * from './ListItem';
 export * from './ListItemOption';
 export * from './NewFeatureChip';
+export * from './NotFound/NotFound';
 export * from './Notice';
 export * from './Paper';
 export * from './Radio';

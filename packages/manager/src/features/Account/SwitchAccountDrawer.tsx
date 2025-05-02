@@ -2,7 +2,6 @@ import { Drawer, Notice, StyledLinkButton, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { NotFound } from 'src/components/NotFound';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
@@ -124,12 +123,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Switch Account"
-    >
+    <Drawer onClose={onClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
         <Notice text={createTokenErrorReason} variant="error" />
       )}
