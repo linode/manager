@@ -346,12 +346,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                 resourceType: 'Linodes',
                               }),
                             }}
-                            onButtonClick={() =>
-                              this.props.history.push('/linodes/create')
-                            }
                             disabledCreateButton={isLinodesGrantReadOnly}
                             docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
                             entity="Linode"
+                            onButtonClick={() =>
+                              this.props.history.push('/linodes/create')
+                            }
                             title="Linodes"
                           />
                         )}

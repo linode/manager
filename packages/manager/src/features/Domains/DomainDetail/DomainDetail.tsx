@@ -3,8 +3,8 @@ import {
   ErrorState,
   Notice,
   Paper,
-  Typography,
   Stack,
+  Typography,
 } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';

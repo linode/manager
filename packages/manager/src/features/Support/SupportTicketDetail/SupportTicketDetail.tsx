@@ -105,7 +105,7 @@ export const SupportTicketDetail = () => {
             />
           ))}
         <Grid container spacing={2}>
-          <Grid style={{ padding: 0 }} size={12}>
+          <Grid size={12} style={{ padding: 0 }}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}
             {ticket.description && (
               <ExpandableTicketPanel
