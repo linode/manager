@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles';
 import { Global } from '@linode/design-language-system';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Chip } from '../Chip';

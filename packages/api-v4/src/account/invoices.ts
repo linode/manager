@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { Invoice, InvoiceItem } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { Invoice, InvoiceItem } from './types';
 
 /**
  * getInvoices
@@ -14,7 +15,7 @@ export const getInvoices = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -28,7 +29,7 @@ export const getInvoices = (params?: Params, filter?: Filter) =>
 export const getInvoice = (invoiceId: number) =>
   Request<Invoice>(
     setURL(`${API_ROOT}/account/invoices/${encodeURIComponent(invoiceId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -43,13 +44,13 @@ export const getInvoice = (invoiceId: number) =>
 export const getInvoiceItems = (
   invoiceId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<ResourcePage<InvoiceItem>>(
     setURL(
-      `${API_ROOT}/account/invoices/${encodeURIComponent(invoiceId)}/items`
+      `${API_ROOT}/account/invoices/${encodeURIComponent(invoiceId)}/items`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );

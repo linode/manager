@@ -190,14 +190,8 @@ describe('Integration Tests for Edit Alert', () => {
       .click();
 
     cy.wait('@updateDefinitions').then(({ request, response }) => {
-      const {
-        created_by,
-        description,
-        severity,
-        status,
-        type,
-        updated_by,
-      } = alertDetails;
+      const { created_by, description, severity, status, type, updated_by } =
+        alertDetails;
 
       const resourceIds: string[] = request.body.entity_ids.map((id: number) =>
         String(id)

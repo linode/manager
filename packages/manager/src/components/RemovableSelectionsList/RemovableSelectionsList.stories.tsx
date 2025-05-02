@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Button } from '@linode/ui';
 import * as React from 'react';
 
@@ -129,6 +128,9 @@ export const WithReadableRemoveCTA: Story = {
       return (
         <>
           <RemovableSelectionsList
+            headerText="Linodes to remove"
+            noDataText="No Linodes available"
+            onRemove={handleRemove}
             RemoveButton={() => (
               <Button
                 sx={(theme) => ({
@@ -140,9 +142,6 @@ export const WithReadableRemoveCTA: Story = {
                 Remove
               </Button>
             )}
-            headerText="Linodes to remove"
-            noDataText="No Linodes available"
-            onRemove={handleRemove}
             selectionData={data}
           />
           <Button onClick={resetList} sx={{ marginTop: 2 }}>

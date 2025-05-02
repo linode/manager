@@ -2,9 +2,10 @@ import logicQueryParser from 'logic-query-parser';
 import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 
-import type { SearchField, SearchableItem } from './search.interfaces';
+import type { SearchableItem, SearchField } from './search.interfaces';
 
-export const COMPRESSED_IPV6_REGEX = /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
+export const COMPRESSED_IPV6_REGEX =
+  /^([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?::([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4}){0,7})?$/;
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips', 'value'];
 
 // =============================================================================
@@ -36,9 +37,8 @@ export const refinedSearch = (
   // wrap this in a try/catch.
   try {
     const binaryTree = logicQueryParser.parse(formattedQuery);
-    const queryJSON: QueryJSON = logicQueryParser.utils.binaryTreeToQueryJson(
-      binaryTree
-    );
+    const queryJSON: QueryJSON =
+      logicQueryParser.utils.binaryTreeToQueryJson(binaryTree);
 
     // 3. Test the parsed query against each item.
     const results: SearchableItem[] = [];

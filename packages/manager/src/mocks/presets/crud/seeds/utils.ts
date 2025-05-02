@@ -23,6 +23,10 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'ip-addresses:crud':
       await mswDB.deleteAll('ipAddresses', mockState, 'seedState');
       break;
+    case 'kubernetes:crud':
+      await mswDB.deleteAll('kubernetesClusters', mockState, 'seedState');
+      await mswDB.deleteAll('kubernetesNodePools', mockState, 'seedState');
+      break;
     case 'linodes:crud':
       await mswDB.deleteAll('linodes', mockState, 'seedState');
       await mswDB.deleteAll('linodeConfigs', mockState, 'seedState');
@@ -35,11 +39,11 @@ export const removeSeeds = async (seederId: MockSeeder['id']) => {
     case 'placement-groups:crud':
       await mswDB.deleteAll('placementGroups', mockState, 'seedState');
       break;
-    case 'volumes:crud':
-      await mswDB.deleteAll('volumes', mockState, 'seedState');
-      break;
     case 'support-tickets:crud':
       await mswDB.deleteAll('supportTickets', mockState, 'seedState');
+      break;
+    case 'volumes:crud':
+      await mswDB.deleteAll('volumes', mockState, 'seedState');
       break;
     case 'vpcs:crud':
       await mswDB.deleteAll('vpcs', mockState, 'seedState');

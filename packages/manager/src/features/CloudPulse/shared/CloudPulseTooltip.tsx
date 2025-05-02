@@ -8,6 +8,9 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
 
   return (
     <Tooltip
+      data-qa-tooltip={title}
+      data-testid={title}
+      placement={placement ?? 'top-start'}
       PopperProps={{
         modifiers: [
           {
@@ -18,9 +21,6 @@ export const CloudPulseTooltip = React.memo((props: TooltipProps) => {
           },
         ],
       }}
-      data-qa-tooltip={title}
-      data-testid={title}
-      placement={placement ?? 'top-start'}
       title={title}
     >
       <span>{children}</span>

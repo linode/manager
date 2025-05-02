@@ -14,10 +14,11 @@ interface Props {
 export const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, linodeLabel, onClose, open } = props;
 
-  const { data: linode, error, isLoading } = useLinodeQuery(
-    linodeId ?? -1,
-    linodeId !== undefined
-  );
+  const {
+    data: linode,
+    error,
+    isLoading,
+  } = useLinodeQuery(linodeId ?? -1, linodeId !== undefined);
 
   return (
     <Dialog

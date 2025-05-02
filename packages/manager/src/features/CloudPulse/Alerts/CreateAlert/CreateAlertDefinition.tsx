@@ -174,6 +174,8 @@ export const CreateAlertDefinition = () => {
               1. General Information
             </Typography>
             <Controller
+              control={control}
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
                   data-testid="alert-name"
@@ -186,10 +188,10 @@ export const CreateAlertDefinition = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="label"
             />
             <Controller
+              control={control}
+              name="description"
               render={({ field, fieldState }) => (
                 <TextField
                   errorText={fieldState.error?.message}
@@ -202,8 +204,6 @@ export const CreateAlertDefinition = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="description"
             />
             <CloudPulseServiceSelect
               handleServiceTypeChange={handleServiceTypeChange}
@@ -212,11 +212,11 @@ export const CreateAlertDefinition = () => {
             <CloudPulseAlertSeveritySelect name="severity" />
             <CloudPulseModifyAlertResources name="entity_ids" />
             <MetricCriteriaField
+              name="rule_criteria.rules"
+              serviceType={serviceTypeWatcher!}
               setMaxInterval={(interval: number) =>
                 setMaxScrapeInterval(interval)
               }
-              name="rule_criteria.rules"
-              serviceType={serviceTypeWatcher!}
             />
             <TriggerConditions
               maxScrapingInterval={maxScrapeInterval}

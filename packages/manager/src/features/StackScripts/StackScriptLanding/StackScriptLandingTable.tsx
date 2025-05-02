@@ -64,12 +64,10 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -85,15 +83,13 @@ export const StackScriptLandingTable = (props: Props) => {
         : 'stackscripts-landing-community',
   });
 
-  const {
-    data: selectedStackScript,
-    isFetching: isFetchingStackScript,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useStackScriptQuery,
-    redirectToOnNotFound: '/stackscripts/account',
-  });
+  const { data: selectedStackScript, isFetching: isFetchingStackScript } =
+    useDialogData({
+      enabled: !!id,
+      paramKey: 'id',
+      queryHook: useStackScriptQuery,
+      redirectToOnNotFound: '/stackscripts/account',
+    });
 
   const {
     data,
@@ -136,6 +132,8 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
+        clearable
+        hideLabel
         inputSlotProps={
           searchParseError
             ? {
@@ -149,6 +147,9 @@ export const StackScriptLandingTable = (props: Props) => {
               }
             : {}
         }
+        isSearching={isFetching}
+        label="Search"
+        noMarginTop
         onSearch={(value) => {
           if (!value) {
             navigate({
@@ -168,11 +169,6 @@ export const StackScriptLandingTable = (props: Props) => {
             });
           }
         }}
-        clearable
-        hideLabel
-        isSearching={isFetching}
-        label="Search"
-        noMarginTop
         placeholder="Search by Label, Username, or Description"
         tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
@@ -244,6 +240,7 @@ export const StackScriptLandingTable = (props: Props) => {
           {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
           {isFetchingNextPage && (
             <TableRowLoading
+              columns={type === 'account' ? 6 : 5}
               responsive={
                 type === 'account'
                   ? {
@@ -256,29 +253,28 @@ export const StackScriptLandingTable = (props: Props) => {
                       3: { lgDown: true },
                     }
               }
-              columns={type === 'account' ? 6 : 5}
             />
           )}
         </TableBody>
       </Table>
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptMakePublicDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
         open={location.pathname.includes('make-public')}
         stackscript={selectedStackScript}
       />
       <StackScriptDeleteDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
         open={location.pathname.includes('delete')}
         stackscript={selectedStackScript}
       />

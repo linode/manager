@@ -80,7 +80,7 @@ export const useAllVPCsQuery = (options: AllVPCsOptions) =>
 export const useVPCsQuery = (
   params: Params,
   filter: Filter,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<ResourcePage<VPC>, APIError[]>({
     ...vpcQueries.paginated(params, filter),
@@ -147,7 +147,7 @@ export const useSubnetsQuery = (
   vpcId: number,
   params: Params,
   filter: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery<ResourcePage<Subnet>, APIError[]>({
     ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.paginated(params, filter),
@@ -158,7 +158,7 @@ export const useSubnetsQuery = (
 export const useSubnetQuery = (
   vpcId: number,
   subnetId: number,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) =>
   useQuery<Subnet, APIError[]>({
     ...vpcQueries.vpc(vpcId)._ctx.subnets._ctx.subnet(subnetId),
