@@ -80,7 +80,7 @@ export interface VPCIP {
   }[];
   ipv6_is_public: boolean | null;
   ipv6_range: null | string;
-  linode_id: number;
+  linode_id: null | number;
   nat_1_1: string;
   nodebalancer_id: null | number;
   prefix: null | number;
