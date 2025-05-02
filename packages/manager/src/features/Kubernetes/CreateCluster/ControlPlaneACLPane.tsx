@@ -8,6 +8,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { FormLabel, styled } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
@@ -66,17 +67,19 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY
             : CREATE_CLUSTER_STANDARD_TIER_ACL_COPY}
         </Typography>
-        <FormControlLabel
-          control={
-            <StyledACLToggle
-              checked={enableControlPlaneACL}
-              disabled={isEnterpriseCluster}
-              name="ipacl-checkbox"
-              onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
-            />
-          }
-          label="Enable Control Plane ACL"
-        />
+        <Grid>
+          <FormControlLabel
+            control={
+              <StyledACLToggle
+                checked={enableControlPlaneACL}
+                disabled={isEnterpriseCluster}
+                name="ipacl-checkbox"
+                onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
+              />
+            }
+            label="Enable Control Plane ACL"
+          />
+        </Grid>
       </FormControl>
       {enableControlPlaneACL && (
         <Box marginBottom={2}>
