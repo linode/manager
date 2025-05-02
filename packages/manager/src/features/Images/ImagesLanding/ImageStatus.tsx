@@ -45,8 +45,9 @@ export const ImageStatus = (props: Props) => {
     );
   }
 
-  const imageRegionStatus = image.regions.find((r) => r.status !== 'available')
-    ?.status;
+  const imageRegionStatus = image.regions.find(
+    (r) => r.status !== 'available'
+  )?.status;
 
   if (imageRegionStatus) {
     // If we have any non-available region statuses, expose the first one as the Image's status to the user

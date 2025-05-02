@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Controller } from 'react-hook-form';
+import type { Control } from 'react-hook-form';
 
 import {
   DefaultTTLField,
@@ -12,9 +13,9 @@ import {
   RefreshRateField,
   RetryRateField,
   ServiceField,
-  TTLField,
   TagField,
   TextField,
+  TTLField,
   WeightField,
 } from './DomainRecordDrawerFields';
 import { defaultFieldsState } from './DomainRecordDrawerUtils';
@@ -24,7 +25,6 @@ import type {
   EditableDomainFields,
   EditableRecordFields,
 } from './DomainRecordDrawer';
-import type { Control } from 'react-hook-form';
 
 type FieldRenderFunction = (idx: number) => JSX.Element;
 
@@ -37,13 +37,13 @@ interface DrawerTypes {
   AAAA: RecordTypeFields;
   CAA: RecordTypeFields;
   CNAME: RecordTypeFields;
+  master: RecordTypeFields;
   MX: RecordTypeFields;
   NS: RecordTypeFields;
   PTR: RecordTypeFields;
+  slave: RecordTypeFields;
   SRV: RecordTypeFields;
   TXT: RecordTypeFields;
-  master: RecordTypeFields;
-  slave: RecordTypeFields;
 }
 
 export const generateDrawerTypes = (
@@ -58,6 +58,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`aaaa-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -70,13 +73,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`aaaa-name-${idx}`}
-            name="name"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`aaaa-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -89,13 +92,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`aaaa-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`aaaa-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="aaaa-ttl-sec"
@@ -103,9 +106,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`aaaa-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -114,6 +114,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`caa-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -126,26 +129,26 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`caa-name-${idx}`}
-            name="name"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`caa-tag-${idx}`}
+            name="tag"
             render={({ field }) => (
               <TagField
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['tag']}
               />
             )}
-            control={control}
-            key={`caa-tag-${idx}`}
-            name="tag"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`caa-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -158,13 +161,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`caa-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`caa-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="caa-ttl-sec"
@@ -172,9 +175,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`caa-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -183,6 +183,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`cname-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 data-testid="cname-name"
@@ -196,13 +199,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`cname-name-${idx}`}
-            name="name"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`cname-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -215,13 +218,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`cname-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`cname-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="cname-ttl-sec"
@@ -229,9 +232,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`cname-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -240,6 +240,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`mx-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -252,13 +255,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`mx-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`mx-priority-${idx}`}
+            name="priority"
             render={({ field, fieldState }) => (
               <PriorityField
                 errorText={fieldState.error?.message}
@@ -270,13 +273,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['priority']}
               />
             )}
-            control={control}
-            key={`mx-priority-${idx}`}
-            name="priority"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`mx-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="mx-ttl-sec"
@@ -284,13 +287,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`mx-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`mx-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -303,9 +306,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`mx-name-${idx}`}
-            name="name"
           />
         ),
       ],
@@ -314,6 +314,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`ns-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -326,13 +329,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`ns-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`ns-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 data-testid="ns-name"
@@ -346,13 +349,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`ns-name-${idx}`}
-            name="name"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`ns-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="ns-ttl-sec"
@@ -360,9 +363,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`ns-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -374,6 +374,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-service-${idx}`}
+            name="service"
             render={({ field, fieldState }) => (
               <ServiceField
                 errorText={fieldState.error?.message}
@@ -382,26 +385,26 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['service']}
               />
             )}
-            control={control}
-            key={`srv-service-${idx}`}
-            name="service"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-protocol-${idx}`}
+            name="protocol"
             render={({ field }) => (
               <ProtocolField
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['protocol']}
               />
             )}
-            control={control}
-            key={`srv-protocol-${idx}`}
-            name="protocol"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-priority-${idx}`}
+            name="priority"
             render={({ field, fieldState }) => (
               <PriorityField
                 errorText={fieldState.error?.message}
@@ -413,13 +416,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['priority']}
               />
             )}
-            control={control}
-            key={`srv-priority-${idx}`}
-            name="priority"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-weight-${idx}`}
+            name="weight"
             render={({ field, fieldState }) => (
               <WeightField
                 errorText={fieldState.error?.message}
@@ -428,13 +431,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['weight']}
               />
             )}
-            control={control}
-            key={`srv-weight-${idx}`}
-            name="weight"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-port-${idx}`}
+            name="port"
             render={({ field, fieldState }) => (
               <PortField
                 errorText={fieldState.error?.message}
@@ -443,13 +446,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['port']}
               />
             )}
-            control={control}
-            key={`srv-port-${idx}`}
-            name="port"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -462,13 +465,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`srv-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`srv-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="srv-ttl-sec"
@@ -476,9 +479,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`srv-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -487,6 +487,9 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`txt-name-${idx}`}
+            name="name"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 data-testid="txt-name"
@@ -500,13 +503,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['name']}
               />
             )}
-            control={control}
-            key={`txt-name-${idx}`}
-            name="name"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`txt-target-${idx}`}
+            name="target"
             render={({ field, fieldState }) => (
               <NameOrTargetField
                 domain={props.domain}
@@ -520,13 +523,13 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['target']}
               />
             )}
-            control={control}
-            key={`txt-target-${idx}`}
-            name="target"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`txt-ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <TTLField
                 data-testid="txt-ttl-sec"
@@ -534,9 +537,6 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`txt-ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
       ],
@@ -545,45 +545,48 @@ export const generateDrawerTypes = (
       fields: [
         (idx: number) => (
           <Controller
+            control={control}
+            key={`domain-${idx}`}
+            name="domain"
             render={({ field, fieldState }) => (
               <TextField
-                value={
-                  field.value ??
-                  (defaultFieldsState(props)['domain'] as number | string)
-                }
                 errorText={fieldState.error?.message}
                 label="Domain"
                 onBlur={field.onBlur}
                 onChange={field.onChange}
+                value={
+                  field.value ??
+                  (defaultFieldsState(props)['domain'] as number | string)
+                }
               />
             )}
-            control={control}
-            key={`domain-${idx}`}
-            name="domain"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`soa-email-${idx}`}
+            name="soa_email"
             render={({ field, fieldState }) => (
               <TextField
-                value={
-                  field.value ??
-                  (defaultFieldsState(props)['soa_email'] as number | string)
-                }
                 errorText={fieldState.error?.message}
                 label="SOA Email"
                 onBlur={field.onBlur}
                 onChange={field.onChange}
                 trimmed
+                value={
+                  field.value ??
+                  (defaultFieldsState(props)['soa_email'] as number | string)
+                }
               />
             )}
-            control={control}
-            key={`soa-email-${idx}`}
-            name="soa_email"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`axfr-ips-${idx}`}
+            name="axfr_ips"
             render={({ field, fieldState }) => (
               <DomainTransferField
                 errorText={fieldState.error?.message}
@@ -591,13 +594,13 @@ export const generateDrawerTypes = (
                 value={field.value}
               />
             )}
-            control={control}
-            key={`axfr-ips-${idx}`}
-            name="axfr_ips"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`ttl-sec-${idx}`}
+            name="ttl_sec"
             render={({ field }) => (
               <DefaultTTLField
                 data-testid="ttl-sec"
@@ -605,48 +608,45 @@ export const generateDrawerTypes = (
                 value={field.value ?? defaultFieldsState(props)['ttl_sec']}
               />
             )}
-            control={control}
-            key={`ttl-sec-${idx}`}
-            name="ttl_sec"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`refresh-sec-${idx}`}
+            name="refresh_sec"
             render={({ field }) => (
               <RefreshRateField
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['refresh_sec']}
               />
             )}
-            control={control}
-            key={`refresh-sec-${idx}`}
-            name="refresh_sec"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`retry-sec-${idx}`}
+            name="retry_sec"
             render={({ field }) => (
               <RetryRateField
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['retry_sec']}
               />
             )}
-            control={control}
-            key={`retry-sec-${idx}`}
-            name="retry_sec"
           />
         ),
         (idx: number) => (
           <Controller
+            control={control}
+            key={`expire-sec-${idx}`}
+            name="expire_sec"
             render={({ field }) => (
               <ExpireField
                 onChange={field.onChange}
                 value={field.value ?? defaultFieldsState(props)['expire_sec']}
               />
             )}
-            control={control}
-            key={`expire-sec-${idx}`}
-            name="expire_sec"
           />
         ),
       ],

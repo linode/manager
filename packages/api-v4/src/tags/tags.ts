@@ -9,12 +9,15 @@ import Request, {
 import { Filter, Params, ResourcePage as Page, ResourcePage } from '../types';
 import { Tag, TaggedObject, TagRequest } from './types';
 
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { Tag, TagRequest } from './types';
+
 export const getTags = (params?: Params, filter?: Filter) =>
   Request<Page<Tag>>(
     setURL(`${API_ROOT}/tags`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 export const createTag = (data: TagRequest) =>
@@ -23,7 +26,7 @@ export const createTag = (data: TagRequest) =>
 export const deleteTag = (label: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/tags/${encodeURIComponent(label)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 export const getTaggedObjects = (label: string, params?: Params) =>

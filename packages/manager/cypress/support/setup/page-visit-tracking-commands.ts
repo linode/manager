@@ -31,22 +31,20 @@ Cypress.Commands.add(
   'expectNewPageVisit',
   { prevSubject: false },
   (alias: string) => {
-    return cy
-      .get<any>(alias, { log: false })
-      .then((pageLoadId) => {
-        const log = Cypress.log({
-          autoEnd: false,
-          end: false,
-          message: `Expecting window not to have page visit ID ${pageLoadId}`,
-          name: 'expectNewPageVisit',
-        });
-
-        cy.window({ log: false }).should(
-          'not.have.prop',
-          'cypress-visit-id',
-          pageLoadId
-        );
-        log.end();
+    return cy.get<any>(alias, { log: false }).then((pageLoadId) => {
+      const log = Cypress.log({
+        autoEnd: false,
+        end: false,
+        message: `Expecting window not to have page visit ID ${pageLoadId}`,
+        name: 'expectNewPageVisit',
       });
+
+      cy.window({ log: false }).should(
+        'not.have.prop',
+        'cypress-visit-id',
+        pageLoadId
+      );
+      log.end();
+    });
   }
 );

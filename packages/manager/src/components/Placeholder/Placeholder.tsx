@@ -1,4 +1,4 @@
-import { Button, H1Header, Typography, fadeIn } from '@linode/ui';
+import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -127,12 +127,12 @@ export const Placeholder = (props: PlaceholderProps) => {
         </StyledIconWrapper>
 
         <H1Header
+          data-qa-placeholder-title
+          renderAsSecondary={renderAsSecondary}
           sx={{
             gridArea: 'title',
             textAlign: 'center',
           }}
-          data-qa-placeholder-title
-          renderAsSecondary={renderAsSecondary}
           title={title}
         />
         {hasSubtitle ? (

@@ -4,6 +4,7 @@ import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
 import { number, object } from 'yup';
 
 import { Link } from 'src/components/Link';
@@ -11,7 +12,6 @@ import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
 
 import type { FirewallDeviceEntityType } from '@linode/api-v4';
-import type { Resolver } from 'react-hook-form';
 
 interface Values {
   firewallId: number;
@@ -59,20 +59,20 @@ export const AddFirewallForm = (props: Props) => {
           create one, go to <Link to="/firewalls/create">Firewalls</Link>.
         </Typography>
         <Controller
+          control={form.control}
+          name="firewallId"
           render={({ field, fieldState }) => (
             <FirewallSelect
-              textFieldProps={{
-                inputRef: field.ref,
-              }}
               errorText={fieldState.error?.message}
               label="Firewall"
               onChange={(e, value) => field.onChange(value?.id)}
               placeholder="Select a Firewall"
+              textFieldProps={{
+                inputRef: field.ref,
+              }}
               value={field.value}
             />
           )}
-          control={form.control}
-          name="firewallId"
         />
         <ActionsPanel
           primaryButtonProps={{

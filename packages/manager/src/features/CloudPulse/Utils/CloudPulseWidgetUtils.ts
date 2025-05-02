@@ -375,18 +375,18 @@ export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
   switch (preset) {
-    case '30minutes':
-      return { unit: 'min', value: 30 };
     case '1hour':
       return { unit: 'hr', value: 1 };
-    case '24hours':
-      return { unit: 'hr', value: 24 };
-    case '12hours':
-      return { unit: 'hr', value: 12 };
     case '7days':
       return { unit: 'days', value: 7 };
+    case '12hours':
+      return { unit: 'hr', value: 12 };
+    case '24hours':
+      return { unit: 'hr', value: 24 };
     case '30days':
       return { unit: 'days', value: 30 };
+    case '30minutes':
+      return { unit: 'min', value: 30 };
     default:
       return undefined;
   }

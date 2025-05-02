@@ -7,8 +7,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -22,8 +22,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Get Started with the Linode Kubernetes Engine (LKE)',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine',
     },
     {
       text: 'Create and Administer a Kubernetes Cluster on LKE',
@@ -31,8 +30,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Using the Kubernetes Dashboard',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-the-kubernetes-dashboard-on-lke',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/an-overview-of-the-kubernetes-dashboard-on-lke',
     },
     {
       text: 'A Beginner\u{2019}s Guide to Kubernetes',

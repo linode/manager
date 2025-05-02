@@ -43,12 +43,12 @@ export const StackScriptsLanding = () => {
             resourceType: 'StackScripts',
           }),
         }}
-        onButtonClick={() => {
-          navigate({ to: '/stackscripts/create' });
-        }}
         disabledCreateButton={isStackScriptCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/stackscripts"
         entity="StackScript"
+        onButtonClick={() => {
+          navigate({ to: '/stackscripts/create' });
+        }}
         removeCrumbX={1}
         title="StackScripts"
       />

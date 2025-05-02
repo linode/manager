@@ -80,11 +80,11 @@ export const NotificationCenterNotificationsContainer = (
 
       <Hidden smUp>
         <Accordion
+          defaultExpanded={true}
+          heading={header}
           headingNumberCount={
             notifications.length > 0 ? notifications.length : undefined
           }
-          defaultExpanded={true}
-          heading={header}
         >
           <NotificationCenterNotifications
             content={notifications}

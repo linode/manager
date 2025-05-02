@@ -17,12 +17,8 @@ interface Props {
 }
 
 export const FinalCrumb = React.memo((props: Props) => {
-  const {
-    crumb,
-    disabledBreadcrumbEditButton,
-    labelOptions,
-    onEditHandlers,
-  } = props;
+  const { crumb, disabledBreadcrumbEditButton, labelOptions, onEditHandlers } =
+    props;
 
   const linkProps = labelOptions?.linkTo
     ? {
@@ -50,11 +46,11 @@ export const FinalCrumb = React.memo((props: Props) => {
   return (
     <StyledDiv>
       <StyledH1Header
+        dataQaEl={crumb}
         sx={{
           ...(labelOptions &&
             labelOptions.noCap && { textTransform: 'initial' }),
         }}
-        dataQaEl={crumb}
         title={crumb}
       />
     </StyledDiv>

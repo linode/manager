@@ -1,17 +1,17 @@
-import { Button, CircleProgress, ErrorState } from '@linode/ui';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import * as React from 'react';
-
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { PAYPAL_CLIENT_ID } from 'src/constants';
 import {
   useAccount,
   useAllPaymentMethodsQuery,
   useProfile,
 } from '@linode/queries';
+import { Button, CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import * as React from 'react';
+
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { BillingActivityPanel } from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
@@ -54,13 +54,13 @@ export const BillingDetail = () => {
     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
-        sx={{
-          paddingTop: 1,
-        }}
         columnSpacing={2}
         container
         data-testid="billing-detail"
         rowSpacing={2}
+        sx={{
+          paddingTop: 1,
+        }}
       >
         <BillingSummary
           balance={account?.balance ?? 0}

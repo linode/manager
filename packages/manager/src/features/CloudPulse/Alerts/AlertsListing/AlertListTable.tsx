@@ -22,7 +22,7 @@ import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
-import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
+import type { Alert, AlertServiceType, APIError } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertsListTableProps {
@@ -283,15 +283,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </OrderBy>
       <AlertConfirmationDialog
-        message={`Are you sure you want to ${
-          isEnabled ? 'disable' : 'enable'
-        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
       />
     </>
   );
