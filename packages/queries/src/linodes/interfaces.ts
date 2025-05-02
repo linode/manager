@@ -247,9 +247,6 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
           queryClient.invalidateQueries({
             queryKey: linodeQueries.linode(linodeId).queryKey,
           });
-          queryClient.invalidateQueries({
-            queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-          });
 
           // Simlar to deleting the interface - because we don't easily know the interface's Firewall here,
           // we'll just invalidate all firewall queries.

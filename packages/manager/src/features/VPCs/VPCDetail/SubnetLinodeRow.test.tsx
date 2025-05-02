@@ -15,7 +15,7 @@ import {
 } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -82,26 +82,22 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-        />
-      )
-    );
+    const { getAllByRole, getAllByText, getByTestId, getByText } =
+      renderWithTheme(
+        wrapWithTableBody(
+          <SubnetLinodeRow
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isVPCLKEEnterpriseCluster={false}
+            linodeId={linodeFactory1.id}
+            subnet={subnetFactory.build()}
+            subnetId={1}
+            subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+          />
+        )
+      );
 
-    // Loading state should render
+    // Loading states should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -113,7 +109,6 @@ describe('SubnetLinodeRow', () => {
     );
 
     getAllByText('10.0.0.0');
-    getByText(mockFirewall0);
 
     const plusChipButton = getAllByRole('button')[1];
     expect(plusChipButton).toHaveTextContent('+1');
@@ -127,6 +122,9 @@ describe('SubnetLinodeRow', () => {
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
+    waitFor(() => {
+      getByText(mockFirewall0);
+    });
   });
 
   it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
@@ -148,24 +146,20 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const {
-      getAllByRole,
-      getAllByText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
-        />
-      )
-    );
+    const { getAllByRole, getAllByText, getByTestId, getByText } =
+      renderWithTheme(
+        wrapWithTableBody(
+          <SubnetLinodeRow
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isVPCLKEEnterpriseCluster={false}
+            linodeId={linodeFactory1.id}
+            subnet={subnetFactory.build()}
+            subnetId={1}
+            subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
+          />
+        )
+      );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -180,7 +174,9 @@ describe('SubnetLinodeRow', () => {
 
     getAllByText('10.0.0.0');
     getAllByText('10.0.0.1');
-    getByText(mockFirewall0);
+    waitFor(() => {
+      getByText(mockFirewall0);
+    });
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
@@ -215,15 +211,15 @@ describe('SubnetLinodeRow', () => {
     const { getAllByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
-          subnetInterfaces={[
-            { active: true, config_id: config.id, id: vpcInterface.id },
-          ]}
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
           subnet={subnetFactory.build()}
           subnetId={0}
+          subnetInterfaces={[
+            { active: true, config_id: config.id, id: vpcInterface.id },
+          ]}
         />
       )
     );
