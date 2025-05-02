@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { stackScriptFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { UserDefinedFields } from './UserDefinedFields';
@@ -45,14 +45,13 @@ describe('UserDefinedFields', () => {
       })
     );
 
-    const {
-      findByLabelText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <UserDefinedFields />,
-      useFormOptions: {
-        defaultValues: { stackscript_id: stackscript.id },
-      },
-    });
+    const { findByLabelText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <UserDefinedFields />,
+        useFormOptions: {
+          defaultValues: { stackscript_id: stackscript.id },
+        },
+      });
 
     for (const udf of stackscript.user_defined_fields) {
       // eslint-disable-next-line no-await-in-loop
@@ -80,19 +79,18 @@ describe('UserDefinedFields', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <UserDefinedFields />,
-      useFormOptions: {
-        defaultValues: {
-          stackscript_data: getDefaultUDFData(stackscript.user_defined_fields),
-          stackscript_id: stackscript.id,
+    const { findByText, getByLabelText, getByText } =
+      renderWithThemeAndHookFormContext({
+        component: <UserDefinedFields />,
+        useFormOptions: {
+          defaultValues: {
+            stackscript_data: getDefaultUDFData(
+              stackscript.user_defined_fields
+            ),
+            stackscript_id: stackscript.id,
+          },
         },
-      },
-    });
+      });
 
     // Very the title renders
     await findByText(`${stackscript.label} Setup`);

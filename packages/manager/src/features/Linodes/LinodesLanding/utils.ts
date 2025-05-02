@@ -26,16 +26,16 @@ export type ExtendedStatus = 'busy' | 'maintenance' | LinodeStatus;
 // Given a Linode's status, assign it a priority so the "Status" column can be sorted in this way.
 export const statusToPriority = (status: ExtendedStatus): number => {
   switch (status) {
-    case 'maintenance':
-      return 1;
-    case 'stopped':
-      return 2;
     case 'busy':
       return 3;
-    case 'running':
-      return 4;
+    case 'maintenance':
+      return 1;
     case 'offline':
       return 5;
+    case 'running':
+      return 4;
+    case 'stopped':
+      return 2;
     default:
       // All long-running statuses ("resizing", "cloning", etc.) are given priority 3.
       return 3;

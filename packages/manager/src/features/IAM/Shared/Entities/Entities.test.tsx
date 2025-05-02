@@ -7,7 +7,8 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { Entities } from './Entities';
-import { EntitiesOption } from '../types';
+
+import type { EntitiesOption } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),

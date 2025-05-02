@@ -22,10 +22,11 @@ interface Props {
 export const StackScriptDetailsDialog = (props: Props) => {
   const { id, onClose, open } = props;
 
-  const { data: stackscript, error, isLoading } = useStackScriptQuery(
-    id ?? -1,
-    id !== undefined
-  );
+  const {
+    data: stackscript,
+    error,
+    isLoading,
+  } = useStackScriptQuery(id ?? -1, id !== undefined);
 
   const title = stackscript
     ? `${stackscript.username} / ${stackscript.label}`

@@ -89,15 +89,15 @@ describe('BillingSummary', () => {
     renderWithTheme(
       <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
         <BillingSummary
+          balance={0}
+          balanceUninvoiced={5}
+          paymentMethods={[]}
           promotions={promoFactory.buildList(1, {
             credit_monthly_cap: '20.00',
             credit_remaining: '15.50',
             expire_dt: '2020-01-01T12:00:00',
             summary: 'MY_PROMO_CODE',
           })}
-          balance={0}
-          balanceUninvoiced={5}
-          paymentMethods={[]}
         />
       </PayPalScriptProvider>
     );

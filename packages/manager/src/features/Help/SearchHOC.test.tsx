@@ -16,7 +16,6 @@ import {
 
 describe('internal methods', () => {
   describe('getDocsResultLabel', () => {
-    // eslint-disable-next-line xss/no-mixed-html
     it('should return a label with highlighted content marked as <em>', () => {
       const label = getDocsResultLabel(docs_result, true);
       expect(label).toBe(docs_result._highlightResult.title.value);
@@ -47,7 +46,7 @@ describe('internal methods', () => {
     it('should return a normal string unchanged', () => {
       expect(cleanDescription('just a description')).toBe('just a description');
     });
-    /* eslint-disable xss/no-mixed-html */
+
     it('should trim a <t> tag', () => {
       expect(cleanDescription('<t>I have a tag')).toBe('I have a tag');
     });
@@ -57,7 +56,7 @@ describe('internal methods', () => {
       );
     });
   });
-  /* eslint-enable xss/no-mixed-html */
+
   describe('getCommunityResultLabel', () => {
     it('should use the highlighted title if available', () => {
       const label4 = getCommunityResultLabel(community_question, true);

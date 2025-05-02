@@ -45,7 +45,7 @@ const meta: Meta<typeof Dialog> = {
     fullWidth: false,
     maxWidth: 'md',
     onClose: action('onClose'),
-    open: true,
+    open: false,
     style: { position: 'unset' },
     title: 'This is a Dialog',
   },
@@ -58,11 +58,32 @@ export default meta;
 type Story = StoryObj<typeof Dialog>;
 
 export const Default: Story = {
-  render: (args) => (
-    <Dialog {...args}>
-      <div>This a basic dialog with children in it.</div>
-    </Dialog>
-  ),
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [{ open }, updateArgs] = useArgs();
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => updateArgs({ open: true })}
+            sx={{ m: 4 }}
+          >
+            Click to open Dialog
+          </Button>
+          <Dialog
+            {...args}
+            onClose={() => updateArgs({ open: false })}
+            open={open}
+          >
+            <div>This a basic dialog with children in it.</div>
+          </Dialog>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
+  },
 };
 
 export const Fetching: Story = {
@@ -109,6 +130,76 @@ export const Fetching: Story = {
             >
               Close This Thing
             </Button>
+          </Dialog>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
+  },
+};
+
+export const NotFound: Story = {
+  args: {
+    error: 'Not Found',
+    onClose: action('onClose'),
+    open: false,
+    title: 'My Dialog',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [{ open }, updateArgs] = useArgs();
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => updateArgs({ open: true })}
+            sx={{ m: 4 }}
+          >
+            Click to open Dialog
+          </Button>
+          <Dialog
+            {...args}
+            onClose={() => updateArgs({ open: false })}
+            open={open}
+          >
+            <div>This a basic dialog with children in it.</div>
+          </Dialog>
+        </>
+      );
+    };
+
+    return DrawerExampleWrapper();
+  },
+};
+
+export const WithError: Story = {
+  args: {
+    error: 'Some other Error',
+    onClose: action('onClose'),
+    open: false,
+    title: 'My Dialog',
+  },
+  render: (args) => {
+    const DrawerExampleWrapper = () => {
+      const [{ open }, updateArgs] = useArgs();
+
+      return (
+        <>
+          <Button
+            buttonType="primary"
+            onClick={() => updateArgs({ open: true })}
+            sx={{ m: 4 }}
+          >
+            Click to open Dialog
+          </Button>
+          <Dialog
+            {...args}
+            onClose={() => updateArgs({ open: false })}
+            open={open}
+          >
+            <div>This a basic dialog with children in it.</div>
           </Dialog>
         </>
       );

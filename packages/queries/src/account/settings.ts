@@ -37,13 +37,13 @@ export const useMutateAccountSettings = () => {
  */
 export const updateAccountSettingsData = (
   newData: Partial<AccountSettings>,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): void => {
   queryClient.setQueryData<AccountSettings>(
     accountQueries.settings.queryKey,
     (oldData: AccountSettings) => ({
       ...oldData,
       ...newData,
-    })
+    }),
   );
 };

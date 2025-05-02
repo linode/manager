@@ -1,19 +1,21 @@
 import {
-  CreateTransferPayload,
-  EntityTransfer,
   createEntityTransfer,
   getEntityTransfer,
   getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
 import {
-  useProfile,
   creationHandlers,
   listToItemsByID,
   queryPresets,
+  useProfile,
 } from '@linode/queries';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import type {
+  CreateTransferPayload,
+  EntityTransfer,
+} from '@linode/api-v4/lib/entity-transfers';
+import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
 export const queryKey = 'entity-transfers';
 

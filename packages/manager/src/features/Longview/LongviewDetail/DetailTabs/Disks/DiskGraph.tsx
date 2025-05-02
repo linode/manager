@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { Disk } from '../../../request.types';
 import { Graphs } from './Graphs';
+
+import type { Disk } from '../../../request.types';
 
 interface Props {
   diskLabel: string;
@@ -42,9 +43,9 @@ export const DiskGraph = (props: Props) => {
       endTime={endTime}
       free={free}
       iFree={iFree}
-      iTotal={iTotal}
       isMounted={mounted === 0 ? false : true}
       isSwap={isSwap === 0 ? false : true}
+      iTotal={iTotal}
       loading={loading}
       reads={reads}
       startTime={startTime}

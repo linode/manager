@@ -2,10 +2,10 @@ import { profileFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { TimezoneForm, getOptionLabel } from './TimezoneForm';
+import { getOptionLabel, TimezoneForm } from './TimezoneForm';
 
 describe('Timezone change form', () => {
   beforeEach(() => {

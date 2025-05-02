@@ -40,7 +40,7 @@ export type MockPresetBase = {
  * Mock Preset Baseline
  */
 export type MockPresetBaselineGroup = {
-  id: 'API State' | 'Account State' | 'General';
+  id: 'Account State' | 'API State' | 'General';
 };
 export type MockPresetBaselineId =
   | 'baseline:account-activation'
@@ -60,8 +60,8 @@ export interface MockPresetBaseline extends MockPresetBase {
  */
 export type MockPresetExtraGroup = {
   id:
-    | 'API'
     | 'Account'
+    | 'API'
     | 'Capabilities'
     | 'Limits'
     | 'Managed'

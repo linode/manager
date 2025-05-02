@@ -2,6 +2,7 @@ import {
   NodeBalancerSchema,
   UpdateNodeBalancerSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,18 +11,19 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import type { Filter, Params, ResourcePage as Page, PriceType } from '../types';
+import {
+  combineNodeBalancerConfigNodeAddressAndPort,
+  combineNodeBalancerConfigNodeAddressAndPortBeta,
+} from './utils';
+
+import type { Firewall } from '../firewalls/types';
+import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
 import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
   NodebalancerVpcConfig,
 } from './types';
-import {
-  combineNodeBalancerConfigNodeAddressAndPort,
-  combineNodeBalancerConfigNodeAddressAndPortBeta,
-} from './utils';
-import type { Firewall } from '../firewalls/types';
 
 /**
  * getNodeBalancers
@@ -33,7 +35,7 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/nodebalancers`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -46,7 +48,7 @@ export const getNodeBalancers = (params?: Params, filters?: Filter) =>
 export const getNodeBalancer = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -59,9 +61,9 @@ export const getNodeBalancer = (nodeBalancerId: number) =>
 export const getNodeBalancerBeta = (nodeBalancerId: number) =>
   Request<NodeBalancer>(
     setURL(
-      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`
+      `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -75,12 +77,12 @@ export const getNodeBalancerBeta = (nodeBalancerId: number) =>
  */
 export const updateNodeBalancer = (
   nodeBalancerId: number,
-  data: Partial<NodeBalancer>
+  data: Partial<NodeBalancer>,
 ) =>
   Request<NodeBalancer>(
     setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
     setMethod('PUT'),
-    setData(data, UpdateNodeBalancerSchema)
+    setData(data, UpdateNodeBalancerSchema),
   );
 
 /**
@@ -95,8 +97,8 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
     setData(
       data,
       NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPort
-    )
+      combineNodeBalancerConfigNodeAddressAndPort,
+    ),
   );
 
 /**
@@ -111,8 +113,8 @@ export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
     setData(
       data,
       NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPortBeta
-    )
+      combineNodeBalancerConfigNodeAddressAndPortBeta,
+    ),
   );
 
 /**
@@ -125,7 +127,7 @@ export const createNodeBalancerBeta = (data: CreateNodeBalancerPayload) =>
 export const deleteNodeBalancer = (nodeBalancerId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`)
+    setURL(`${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}`),
   );
 
 /**
@@ -138,9 +140,9 @@ export const deleteNodeBalancer = (nodeBalancerId: number) =>
 export const getNodeBalancerStats = (nodeBalancerId: number) => {
   return Request<NodeBalancerStats>(
     setURL(
-      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/stats`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/stats`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };
 
@@ -153,17 +155,17 @@ export const getNodeBalancerStats = (nodeBalancerId: number) => {
 export const getNodeBalancerFirewalls = (
   nodeBalancerId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<Firewall>>(
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/firewalls`
+        nodeBalancerId,
+      )}/firewalls`,
     ),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -176,7 +178,7 @@ export const getNodeBalancerTypes = (params?: Params) =>
   Request<Page<PriceType>>(
     setURL(`${API_ROOT}/nodebalancers/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -189,17 +191,17 @@ export const getNodeBalancerTypes = (params?: Params) =>
 export const getNodeBalancerVPCConfigsBeta = (
   nodeBalancerId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<NodebalancerVpcConfig>>(
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/vpcs`
+        nodeBalancerId,
+      )}/vpcs`,
     ),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 /**
  * getNodeBalancerVPCConfigBeta
@@ -210,13 +212,13 @@ export const getNodeBalancerVPCConfigsBeta = (
  */
 export const getNodeBalancerVPCConfigBeta = (
   nodeBalancerId: number,
-  nbVpcConfigId: number
+  nbVpcConfigId: number,
 ) =>
   Request<NodebalancerVpcConfig>(
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/vpcs/${encodeURIComponent(nbVpcConfigId)}`
+        nodeBalancerId,
+      )}/vpcs/${encodeURIComponent(nbVpcConfigId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );

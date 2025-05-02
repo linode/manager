@@ -16,7 +16,7 @@ interface Props {
   options: SelectQuestionOption[];
   questionResponse: SecurityQuestion | undefined;
   securityQuestionRef?: React.RefObject<HTMLInputElement>;
-  setFieldValue: (field: string, value: SecurityQuestion | number) => void;
+  setFieldValue: (field: string, value: number | SecurityQuestion) => void;
 }
 
 export const QuestionAndAnswerPair = (props: Props) => {

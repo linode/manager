@@ -155,8 +155,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const newPrefilledTitle = _prefilledTitle
     ? _prefilledTitle
     : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
-    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
-    : undefined;
+      ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+      : undefined;
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
@@ -210,8 +210,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
-    .current;
+  const debouncedSave = React.useRef(
+    debounce(500, false, saveFormData)
+  ).current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
@@ -426,6 +427,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
               <Controller
+                control={form.control}
+                name="summary"
                 render={({ field, fieldState }) => (
                   <TextField
                     data-qa-ticket-summary
@@ -438,32 +441,30 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     value={summary}
                   />
                 )}
-                control={form.control}
-                name="summary"
               />
               {hasSeverityCapability && (
                 <Controller
+                  control={form.control}
+                  name="selectedSeverity"
                   render={({ field }) => (
                     <Autocomplete
+                      autoHighlight
+                      data-qa-ticket-severity
+                      label="Severity"
                       onChange={(e, severity) =>
                         field.onChange(
                           severity !== null ? severity.value : undefined
                         )
                       }
+                      options={SEVERITY_OPTIONS}
+                      sx={{ maxWidth: 'initial' }}
                       textFieldProps={{
                         tooltipPosition: 'right',
                         tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
                       }}
-                      autoHighlight
-                      data-qa-ticket-severity
-                      label="Severity"
-                      options={SEVERITY_OPTIONS}
-                      sx={{ maxWidth: 'initial' }}
                       value={selectedSeverityOption ?? null}
                     />
                   )}
-                  control={form.control}
-                  name="selectedSeverity"
                 />
               )}
             </>
@@ -481,19 +482,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
               <Box mt={1}>
                 <Controller
+                  control={form.control}
+                  name="description"
                   render={({ field, fieldState }) => (
                     <TabbedReply
+                      error={fieldState.error?.message}
+                      handleChange={field.onChange}
                       placeholder={
                         'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
                       }
-                      error={fieldState.error?.message}
-                      handleChange={field.onChange}
                       required
                       value={description}
                     />
                   )}
-                  control={form.control}
-                  name="description"
                 />
               </Box>
               <Accordion

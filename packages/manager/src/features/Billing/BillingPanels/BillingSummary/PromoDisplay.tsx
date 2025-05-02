@@ -60,10 +60,10 @@ const PromoDisplay = React.memo(
               {summary}
             </Typography>
             <TooltipIcon
+              status="help"
               sxTooltipIcon={{
                 padding: `0px 8px`,
               }}
-              status="help"
               text={description}
             />
           </Box>

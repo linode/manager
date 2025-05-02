@@ -3,8 +3,10 @@ import React from 'react';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Tab, TabLinkList } from './TabLinkList'; // Import your component and Tab type
+import { TabLinkList } from './TabLinkList'; // Import your component and Tab type
 import { Tabs } from './Tabs';
+
+import type { Tab } from './TabLinkList';
 
 describe('TabLinkList', () => {
   const tabs: Tab[] = [
