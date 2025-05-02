@@ -42,6 +42,7 @@ export const CloudPulseAppliedFilter = (
             {filterValue.map((value, index) => {
               return (
                 <Chip
+                  data-qa-value={`${label} ${value}`}
                   key={`${label} ${value}`}
                   label={value}
                   sx={(theme) => ({
@@ -53,7 +54,6 @@ export const CloudPulseAppliedFilter = (
                     py: 0.5,
                     width: { sm: 'fit-content', xs: '98%' },
                   })}
-                  data-qa-value={`${label} ${value}`}
                 />
               );
             })}
