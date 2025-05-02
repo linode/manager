@@ -18,7 +18,6 @@ import * as React from 'react';
 
 import { BLOCK_STORAGE_CLONING_INHERITANCE_CAVEAT } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -98,7 +97,6 @@ export const CloneVolumeDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Clone Volume"

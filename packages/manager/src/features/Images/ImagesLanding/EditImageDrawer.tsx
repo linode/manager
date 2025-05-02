@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import Lock from 'src/assets/icons/lock.svg';
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
 
@@ -79,7 +78,6 @@ export const EditImageDrawer = (props: Props) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Edit Image"

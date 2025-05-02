@@ -2,8 +2,6 @@ import { Drawer } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
-import { NotFound } from 'src/components/NotFound';
-
 import UpdateContactInformationForm from './UpdateContactInformationForm';
 
 const useStyles = makeStyles()(() => ({
@@ -31,7 +29,6 @@ export const BillingContactDrawer = (props: Props) => {
   return (
     <Drawer
       className={classes.drawer}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Edit Billing Contact Info"

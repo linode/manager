@@ -13,7 +13,6 @@ import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   useCreateMonitorMutation,
   useUpdateMonitorMutation,
@@ -176,7 +175,6 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={() => navigate({ to: '/managed/monitors' })}
       open={open}
       title={isEditing ? 'Edit Monitor' : 'Add Monitor'}

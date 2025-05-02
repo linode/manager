@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 import { object, string } from 'yup';
 
-import { NotFound } from 'src/components/NotFound';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { Disk } from '@linode/api-v4/lib/linodes';
@@ -56,12 +55,7 @@ export const RenameDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Rename Disk"
-    >
+    <Drawer onClose={onClose} open={open} title="Rename Disk">
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice

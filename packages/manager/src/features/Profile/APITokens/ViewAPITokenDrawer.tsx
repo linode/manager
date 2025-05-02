@@ -2,7 +2,6 @@ import { useProfile } from '@linode/queries';
 import { Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -41,12 +40,7 @@ export const ViewAPITokenDrawer = (props: Props) => {
     profile?.user_type !== 'parent' || isChildAccountAccessRestricted;
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title={token?.label ?? 'Token'}
-    >
+    <Drawer onClose={onClose} open={open} title={token?.label ?? 'Token'}>
       <StyledPermsTable
         aria-label="Personal Access Token Permissions"
         spacingBottom={16}

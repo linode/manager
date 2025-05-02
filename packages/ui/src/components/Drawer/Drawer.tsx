@@ -4,22 +4,24 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
+import { NotFound } from '../NotFound/NotFound';
 import { Typography } from '../Typography';
 
+import type { APIError } from '../../utilities/error';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
-// simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
-interface APIError {
-  field?: string;
-  reason: string;
-}
-
-interface BaseProps extends _DrawerProps {
+export interface DrawerProps extends _DrawerProps {
+  /**
+   * Error that will be shown in the drawer, such as an API error for data passed to the drawer (NotFound for instance).
+   * Those are different from errors that are shown in the drawer's content, such as a form submission or validation error.
+   * It prevents the drawer from showing broken content.
+   */
   error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
@@ -38,14 +40,6 @@ interface BaseProps extends _DrawerProps {
   wide?: boolean;
 }
 
-interface PropsWithNotFound extends BaseProps {
-  NotFoundComponent?: React.ComponentType<
-    React.PropsWithChildren<{ className?: string }>
-  >;
-}
-
-export type DrawerProps = PropsWithNotFound;
-
 /**
  * ## Overview
  * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
@@ -60,7 +54,6 @@ export type DrawerProps = PropsWithNotFound;
 export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
     const {
-      NotFoundComponent,
       children,
       error,
       isFetching,
@@ -115,6 +108,8 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
     }
+
+    const errorText = getErrorText(error);
 
     return (
       <_Drawer
@@ -181,20 +176,18 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             </IconButton>
           </Grid>
         </Grid>
-        {error ? (
-          error === 'Not Found' && NotFoundComponent ? (
-            <NotFoundComponent />
-          ) : (
-            <ErrorState
-              errorText={Array.isArray(error) ? error[0].reason : error}
-            />
-          )
-        ) : isFetching ? (
+        {isFetching ? (
           <Box display="flex" justifyContent="center" mt={12}>
             <CircleProgress size="md" />
           </Box>
+        ) : errorText &&
+          (errorText === 'Not Found' || errorText === 'Not found') ? (
+          <NotFound />
         ) : (
-          children
+          <>
+            {errorText && <ErrorState errorText={errorText} />}
+            {children}
+          </>
         )}
       </_Drawer>
     );

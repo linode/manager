@@ -8,7 +8,6 @@ import { useMatch, useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -156,7 +155,6 @@ export const NodeBalancerFirewalls = (props: Props) => {
         }
       />
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={() =>
           navigate({
             params: { id: String(nodeBalancerId) },

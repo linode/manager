@@ -3,8 +3,6 @@ import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
-
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -116,12 +114,7 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     return (
-      <Drawer
-        NotFoundComponent={NotFound}
-        onClose={onClose}
-        open={isOpen}
-        title={title}
-      >
+      <Drawer onClose={onClose} open={isOpen} title={title}>
         <Formik
           initialValues={getInitialFormValues(ruleToModify)}
           onSubmit={onSubmit}

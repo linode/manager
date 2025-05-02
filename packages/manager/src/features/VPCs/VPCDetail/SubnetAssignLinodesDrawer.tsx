@@ -28,7 +28,6 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
@@ -469,7 +468,6 @@ export const SubnetAssignLinodesDrawer = (
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleOnClose}
       open={open}
       title={`Assign Linodes to subnet: ${subnet?.label} (${
