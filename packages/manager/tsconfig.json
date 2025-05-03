@@ -1,4 +1,5 @@
 {
+  "extends": "@linode/tsconfig/app",
   "compilerOptions": {
     /* Language and Environment */
     "jsx": "react",
