@@ -19,7 +19,6 @@ import * as React from 'react';
 
 import { Code } from 'src/components/Code/Code';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { TextTooltip } from 'src/components/TextTooltip';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { sendEvent } from 'src/utilities/analytics/utils';
@@ -89,12 +88,7 @@ export const ResizeDiskDrawer = (props: Props) => {
   }, [open]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title={`Resize ${disk?.label}`}
-    >
+    <Drawer onClose={onClose} open={open} title={`Resize ${disk?.label}`}>
       <form onSubmit={formik.handleSubmit}>
         {formik.status && (
           <Notice

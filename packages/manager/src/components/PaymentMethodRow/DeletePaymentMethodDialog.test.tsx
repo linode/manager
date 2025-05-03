@@ -6,7 +6,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { DeletePaymentMethodDialog } from './DeletePaymentMethodDialog';
 
 const props = {
-  error: 'some error',
+  error: undefined,
   loading: false,
   onClose: vi.fn(),
   onDelete: vi.fn(),

@@ -5,12 +5,12 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

@@ -73,18 +73,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
 
   return (
     <>
-      {!selectedRegion && (
-        <Notice
-          dataTestId="placement-groups-no-region-notice"
-          spacingBottom={0}
-          spacingTop={16}
-          variant="warning"
-        >
-          <Typography sx={{ font: theme.font.bold }}>
-            Select a Region for your Linode to see existing placement groups.
-          </Typography>
-        </Notice>
-      )}
       {selectedRegion && !hasRegionPlacementGroupCapability && (
         <Notice
           dataTestId="placement-groups-no-capability-notice"

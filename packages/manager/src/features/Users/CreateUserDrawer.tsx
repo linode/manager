@@ -11,7 +11,6 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -116,12 +115,7 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Drawer
-        NotFoundComponent={NotFound}
-        onClose={onClose}
-        open={open}
-        title="Add a User"
-      >
+      <Drawer onClose={onClose} open={open} title="Add a User">
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           data-qa-create-username
