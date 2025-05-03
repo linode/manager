@@ -247,7 +247,7 @@ export const CredentialList = () => {
         }}
         errors={deleteError}
         isFetching={isFetchingSelectedCredential}
-        label={`Delete ${selectedCredential?.label || 'Unknown'}?`}
+        label="Credential Name"
         loading={isDeleting}
         onClick={handleDelete}
         onClose={() => navigate({ to: '/managed/credentials' })}
