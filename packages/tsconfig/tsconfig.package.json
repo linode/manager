@@ -10,6 +10,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "declarationMap": true,
+    "forceConsistentCasingInFileNames": true,
     "incremental": true,
   },
   "include": [

@@ -1,14 +1,7 @@
 {
+  "extends": "@linode/tsconfig/package",
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
-    "noEmit": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "noEmit": true, // We don't need type declorations emitted because we treat @linode/search as a local-only package right now
   },
   "include": ["src"]
 }

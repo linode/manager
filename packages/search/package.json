@@ -15,7 +15,11 @@
     "peggy": "^4.0.3",
     "@linode/api-v4": "workspace:*"
   },
+  "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
+    "vite" : "^6.3.4"
+  },
   "peerDependencies": {
-    "vite": "^6.3.2"
+    "vite": "^5 || ^6"
   }
 }
