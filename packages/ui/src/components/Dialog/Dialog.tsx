@@ -101,14 +101,16 @@ export const Dialog = React.forwardRef(
     // This is to prevent flashes of content during the drawer's closing transition,
     // and its content becomes potentially undefined
     const lastChildrenRef = React.useRef(children);
+    const lastErrorRef = React.useRef(error);
     const lastTitleRef = React.useRef(title);
     // Update refs when the drawer is open and content is matched
-    if (open && children) {
+    if (open) {
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
+      lastErrorRef.current = error;
     }
 
-    const errorText = getErrorText(error);
+    const errorText = getErrorText(lastErrorRef.current);
 
     return (
       <StyledDialog

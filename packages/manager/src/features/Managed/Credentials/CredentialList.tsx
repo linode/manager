@@ -1,9 +1,8 @@
-import { Button } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { Button, Notice, Typography } from '@linode/ui';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -13,7 +12,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialogData } from 'src/hooks/useDialogData';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedCredentialsQuery,
@@ -39,6 +38,7 @@ import type { FormikBag } from 'formik';
 export type FormikProps = FormikBag<{}, CredentialPayload>;
 
 export const CredentialList = () => {
+  const params = useParams({ strict: false });
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
@@ -50,18 +50,21 @@ export const CredentialList = () => {
 
   const credentials = data || [];
 
-  const { data: selectedCredential, isFetching: isFetchingSelectedCredential } =
-    useDialogData({
-      enabled:
-        match.routeId === '/managed/credentials/$credentialId/edit' ||
-        match.routeId === '/managed/credentials/$credentialId/delete',
-      paramKey: 'credentialId',
-      queryHook: useManagedCredentialQuery,
-      redirectToOnNotFound: '/managed/credentials',
-    });
+  const {
+    data: selectedCredential,
+    isFetching: isFetchingSelectedCredential,
+    error: selectedCredentialError,
+  } = useManagedCredentialQuery(
+    params.credentialId ?? -1,
+    match.routeId === '/managed/credentials/$credentialId/edit' ||
+      match.routeId === '/managed/credentials/$credentialId/delete'
+  );
 
-  const [deleteError, setDeleteError] = React.useState<string | undefined>();
-  const { mutateAsync: deleteCredential } = useDeleteCredentialMutation();
+  const {
+    mutateAsync: deleteCredential,
+    isPending: isDeleting,
+    error: deleteError,
+  } = useDeleteCredentialMutation();
   const { mutateAsync: updatePassword } = useUpdateCredentialPasswordMutation(
     selectedCredential?.id || -1
   );
@@ -87,16 +90,12 @@ export const CredentialList = () => {
   });
 
   const handleDelete = () => {
-    deleteCredential({ id: selectedCredential?.id || -1 })
-      .then(() => {
-        enqueueSnackbar('Credential deleted successfully.', {
-          variant: 'success',
-        });
-        navigate({ to: '/managed/credentials' });
-      })
-      .catch((err) => {
-        setDeleteError(err[0].reason || 'Unable to delete this Credential.');
+    deleteCredential({ id: selectedCredential?.id || -1 }).then(() => {
+      enqueueSnackbar('Credential deleted successfully.', {
+        variant: 'success',
       });
+      navigate({ to: '/managed/credentials' });
+    });
   };
 
   const handleUpdatePassword = (
@@ -238,23 +237,36 @@ export const CredentialList = () => {
           </>
         )}
       </Paginate>
-      <DeletionDialog
-        entity="credential"
-        error={deleteError}
-        label={selectedCredential?.label || ''}
-        loading={isFetchingSelectedCredential}
-        onClose={() => {
-          setDeleteError(undefined);
-          navigate({ to: '/managed/credentials' });
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: selectedCredential?.label || 'Unknown',
+          primaryBtnText: 'Delete Credential',
+          type: 'Managed Credential',
+          error: selectedCredentialError,
         }}
-        onDelete={handleDelete}
+        errors={deleteError}
+        isFetching={isFetchingSelectedCredential}
+        label={`Delete ${selectedCredential?.label || 'Unknown'}?`}
+        loading={isDeleting}
+        onClick={handleDelete}
+        onClose={() => navigate({ to: '/managed/credentials' })}
         open={isDeleteDialogOpen}
-      />
+        title={`Delete Credential ${selectedCredential?.label || 'Unknown'}?`}
+      >
+        <Notice variant="warning">
+          <Typography>
+            <strong>Warning:</strong> Deleting this credential is permanent and
+            can’t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
       <AddCredentialDrawer
         onClose={() => navigate({ to: '/managed/credentials' })}
         open={isAddDrawerOpen}
       />
       <UpdateCredentialDrawer
+        credentialError={selectedCredentialError}
         isFetching={isFetchingSelectedCredential}
         label={selectedCredential ? selectedCredential.label : ''}
         onClose={() => navigate({ to: '/managed/credentials' })}

@@ -103,13 +103,15 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     // and its content becomes potentially undefined
     const lastChildrenRef = React.useRef(children);
     const lastTitleRef = React.useRef(title);
+    const lastErrorRef = React.useRef(error);
     // Update refs when the drawer is open and content is matched
-    if (open && children) {
+    if (open) {
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
+      lastErrorRef.current = error;
     }
 
-    const errorText = getErrorText(error);
+    const errorText = getErrorText(lastErrorRef.current);
 
     return (
       <_Drawer
