@@ -1,13 +1,14 @@
-import { Button } from '@linode/ui';
+import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteDomainMutation } from 'src/queries/domains';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import type { APIError } from '@linode/api-v4';
 export interface DeleteDomainProps {
+  domainError: APIError[] | null;
   domainId: number;
   domainLabel: string;
   // Function that is invoked after Domain has been successfully deleted.
@@ -15,7 +16,7 @@ export interface DeleteDomainProps {
 }
 
 export const DeleteDomain = (props: DeleteDomainProps) => {
-  const { domainId, domainLabel } = props;
+  const { domainError, domainId, domainLabel } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -42,19 +43,28 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
       <StyledButton buttonType="outlined" onClick={() => setOpen(true)}>
         Delete Domain
       </StyledButton>
-      <DeletionDialog
-        entity="domain"
-        error={
-          error
-            ? getAPIErrorOrDefault(error, 'Error deleting domain.')[0].reason
-            : undefined
-        }
-        label={domainLabel}
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          error: domainError,
+          name: domainLabel ?? 'Unknown',
+          primaryBtnText: 'Delete Domain',
+          type: 'Domain',
+        }}
+        errors={error}
+        label="Domain Name"
         loading={isPending}
+        onClick={onDelete}
         onClose={() => setOpen(false)}
-        onDelete={onDelete}
         open={open}
-      />
+        title={`Delete ${domainLabel ?? 'Unknown'}`}
+      >
+        <Notice variant="warning">
+          <Typography>
+            Warning: Deleting this domain is permanent and can’t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
     </>
   );
 };
