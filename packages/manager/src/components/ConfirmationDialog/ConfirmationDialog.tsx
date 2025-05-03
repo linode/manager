@@ -33,7 +33,7 @@ export const ConfirmationDialog = React.forwardRef<
   return (
     <Dialog
       {...dialogProps}
-      error={entityError}
+      error={props.error || entityError}
       PaperProps={{ role: undefined }}
       ref={ref}
     >

@@ -57,7 +57,7 @@ export const DeleteDomain = (props: DeleteDomainProps) => {
         onClick={onDelete}
         onClose={() => setOpen(false)}
         open={open}
-        title={`Delete ${domainLabel ?? 'Unknown'}`}
+        title={`Delete Domain ${domainLabel ?? 'Unknown'}?`}
       >
         <Notice variant="warning">
           <Typography>

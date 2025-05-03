@@ -368,7 +368,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
           action: 'deletion',
           error: domainError,
           name: selectedDomain?.domain ?? 'Unknown',
-          primaryBtnText: 'Delete',
+          primaryBtnText: 'Delete Domain',
           type: 'Domain',
         }}
         errors={deleteError}
@@ -378,7 +378,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
         onClick={removeDomain}
         onClose={navigateToDomains}
         open={params.action === 'delete'}
-        title={`Delete ${selectedDomain?.domain ?? 'Unknown'}?`}
+        title={`Delete Domain ${selectedDomain?.domain ?? 'Unknown'}?`}
       >
         <Notice variant="warning">
           <Typography>
