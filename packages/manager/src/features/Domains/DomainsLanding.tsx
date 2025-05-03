@@ -344,6 +344,7 @@ export const DomainsLanding = (props: DomainsLandingProps) => {
       />
       <DisableDomainDialog
         domain={selectedDomain}
+        domainError={domainError}
         isFetching={isFetchingDomain}
         onClose={navigateToDomains}
         open={params.action === 'disable'}
