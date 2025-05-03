@@ -354,6 +354,9 @@ importers:
       '@4tw/cypress-drag-drop':
         specifier: ^2.3.0
         version: 2.3.0(cypress@14.3.0)
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@storybook/addon-a11y':
         specifier: ^8.6.7
         version: 8.6.9(storybook@8.6.9(prettier@3.5.3))
