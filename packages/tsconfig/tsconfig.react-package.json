@@ -1,1 +1,6 @@
-{}
+{
+  "extends": "./tsconfig.package.json",
+  "compilerOptions": {
+    "jsx": "react"
+  }
+}
