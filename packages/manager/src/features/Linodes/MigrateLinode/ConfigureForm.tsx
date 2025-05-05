@@ -35,7 +35,7 @@ interface Props {
   backupEnabled: Linode['backups']['enabled'];
   currentRegion: string;
   errorText?: string;
-  handlePlacementGroupChange: (selected: PlacementGroup | null) => void;
+  handlePlacementGroupChange: (selected: null | PlacementGroup) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
   isMTCTTLinode?: boolean;

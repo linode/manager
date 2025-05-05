@@ -107,7 +107,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     string | undefined
   >();
   const [placementGroupSelection, setPlacementGroupSelection] =
-    React.useState<PlacementGroup | null>();
+    React.useState<null | PlacementGroup>();
 
   const [hasConfirmed, setConfirmed] = React.useState<boolean>(false);
 
@@ -294,20 +294,20 @@ export const MigrateLinode = React.memo((props: Props) => {
           />
         ) : null}
         <Button
+          buttonType="primary"
           disabled={
             !!disabledText ||
             !hasConfirmed ||
             !selectedRegion ||
             (showGDPRCheckbox && !hasSignedAgreement)
           }
+          loading={isPending}
+          onClick={handleMigrate}
           sx={{
             [theme.breakpoints.down('md')]: {
               marginTop: theme.spacing(2),
             },
           }}
-          buttonType="primary"
-          loading={isPending}
-          onClick={handleMigrate}
         >
           Enter Migration Queue
         </Button>

@@ -49,14 +49,15 @@ export const AlertsResourcesNotice = React.memo(
     return (
       <StyledNotice gap={1} variant="info">
         <Typography
+          data-testid="selection_notice"
           sx={(theme) => ({
             fontFamily: theme.tokens.alias.Typography.Body.Bold,
           })}
-          data-testid="selection_notice"
         >
           {selectedResources} of {totalResources} entities are selected.
         </Typography>
         <Tooltip
+          placement="right-start"
           slotProps={{
             tooltip: {
               sx: {
@@ -69,7 +70,6 @@ export const AlertsResourcesNotice = React.memo(
               <AlertMaxSelectionText maxSelectionCount={maxSelectionCount} />
             ) : undefined
           }
-          placement="right-start"
         >
           <Button
             data-testid={

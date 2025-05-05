@@ -12,6 +12,8 @@ export const VLANInterface = () => {
   return (
     <Stack spacing={2}>
       <Controller
+        control={control}
+        name="vlan.vlan_label"
         render={({ field, fieldState }) => (
           <VLANSelect
             errorText={fieldState.error?.message}
@@ -19,10 +21,10 @@ export const VLANInterface = () => {
             value={field.value ?? null}
           />
         )}
-        control={control}
-        name="vlan.vlan_label"
       />
       <Controller
+        control={control}
+        name="vlan.ipam_address"
         render={({ field, fieldState }) => (
           <TextField
             errorText={fieldState.error?.message}
@@ -36,8 +38,6 @@ export const VLANInterface = () => {
             value={field.value ?? ''}
           />
         )}
-        control={control}
-        name="vlan.ipam_address"
       />
     </Stack>
   );

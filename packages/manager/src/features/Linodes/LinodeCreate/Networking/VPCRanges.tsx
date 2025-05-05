@@ -56,6 +56,7 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
                 <TextField
                   errorText={fieldState.error?.message}
                   hideLabel
+                  inputRef={field.ref}
                   label={`IP Range ${index}`}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
@@ -69,7 +70,7 @@ export const VPCRanges = ({ disabled, interfaceIndex }: Props) => {
             <IconButton
               aria-label={`Remove IP Range ${index}`}
               onClick={() => remove(index)}
-              sx={{ padding: 0.75 }}
+              sx={{ padding: 1 }}
             >
               <CloseIcon />
             </IconButton>

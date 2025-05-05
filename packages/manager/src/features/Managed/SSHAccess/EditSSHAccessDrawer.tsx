@@ -13,7 +13,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -81,7 +80,6 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={() => navigate({ to: '/managed/ssh-access' })}
       open={isOpen}
@@ -183,15 +181,15 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                                 value: removePrefixLength(option.value),
                               })),
                           ]}
+                          errorText={ipError}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
                           }
+                          linodeId={linodeSetting.id}
                           value={{
                             label: ip === 'any' ? 'Any' : ip,
                             value: ip,
                           }}
-                          errorText={ipError}
-                          linodeId={linodeSetting.id}
                         />
                       </Grid>
 

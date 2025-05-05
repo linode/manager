@@ -1,8 +1,8 @@
+import { useLinodeQuery } from '@linode/queries';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useLinodeQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 import { EventLink } from '../EventLink';

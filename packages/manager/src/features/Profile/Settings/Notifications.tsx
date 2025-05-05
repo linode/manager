@@ -1,7 +1,6 @@
+import { useMutateProfile, useProfile } from '@linode/queries';
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
-
-import { useMutateProfile, useProfile } from '@linode/queries';
 
 export const Notifications = () => {
   const { data: profile, isLoading } = useProfile();
@@ -17,18 +16,18 @@ export const Notifications = () => {
       <FormControlLabel
         control={
           <Toggle
+            checked={areEmailNotificationsEnabled}
             onChange={(_, checked) =>
               updateProfile({
                 email_notifications: checked,
               })
             }
-            checked={areEmailNotificationsEnabled}
           />
         }
+        disabled={isPending || isLoading}
         label={`Email alerts for account activity are ${
           areEmailNotificationsEnabled ? 'enabled' : 'disabled'
         }`}
-        disabled={isPending || isLoading}
       />
     </Paper>
   );

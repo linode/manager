@@ -38,9 +38,8 @@ export interface CloudPulseDashboardWithFiltersProp {
 export const CloudPulseDashboardWithFilters = React.memo(
   (props: CloudPulseDashboardWithFiltersProp) => {
     const { dashboardId, resource } = props;
-    const { data: dashboard, isError } = useCloudPulseDashboardByIdQuery(
-      dashboardId
-    );
+    const { data: dashboard, isError } =
+      useCloudPulseDashboardByIdQuery(dashboardId);
 
     const [filterData, setFilterData] = React.useState<FilterData>({
       id: {},
@@ -51,9 +50,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       defaultTimeDuration()
     );
 
-    const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
-      false
-    );
+    const [showAppliedFilters, setShowAppliedFilters] =
+      React.useState<boolean>(false);
 
     const toggleAppliedFilter = (isVisible: boolean) => {
       setShowAppliedFilters(isVisible);
@@ -173,11 +171,11 @@ export const CloudPulseDashboardWithFilters = React.memo(
             )}
             <Grid
               item
-              xs={12}
               sx={{
                 mb: 3,
                 mt: -3,
               }}
+              xs={12}
             >
               {showAppliedFilters && (
                 <CloudPulseAppliedFilterRenderer

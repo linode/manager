@@ -1,3 +1,4 @@
+import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -7,7 +8,6 @@ import { SelectableTableRow } from 'src/components/SelectableTableRow/Selectable
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 

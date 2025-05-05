@@ -1,9 +1,9 @@
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 
 export const adjustDateSegment = (
   date: DateTime,
   segment: number,
-  step: number
+  step: number,
 ) => {
   switch (segment) {
     case 0:

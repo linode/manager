@@ -1,6 +1,8 @@
 import { styled } from '@mui/material/styles';
-import { TabList as ReachTabList, TabListProps } from '@reach/tabs';
+import { TabList as ReachTabList } from '@reach/tabs';
 import * as React from 'react';
+
+import type { TabListProps } from '@reach/tabs';
 
 interface TabListPropsWithClassName extends TabListProps {
   className?: string;

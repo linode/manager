@@ -201,35 +201,35 @@ export const getQuotas = () => [
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 45,
+                  usage: 45,
                 })
               );
             case 'GPU':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 3,
+                  usage: 3,
                 })
               );
             case 'Shared CPU':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 24,
+                  usage: 24,
                 })
               );
             case 'VPU':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 7,
+                  usage: 7,
                 })
               );
             default:
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: null,
+                  usage: null,
                 })
               );
           }
@@ -237,7 +237,7 @@ export const getQuotas = () => [
           return makeResponse(
             quotaUsageFactory.build({
               quota_limit: quota.quota_limit,
-              used: pickRandom([2, 27, 5, 38, 49]),
+              usage: pickRandom([2, 27, 5, 38, 49]),
             })
           );
         case 'object-storage':
@@ -246,28 +246,28 @@ export const getQuotas = () => [
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 75,
+                  usage: 75,
                 })
               );
             case 'Number of Objects':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 10_000_000,
+                  usage: 10_000_000,
                 })
               );
             case 'Total Capacity':
               return makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: 100_000_000_000_000,
+                  usage: 100_000_000_000_000,
                 })
               );
             default:
               makeResponse(
                 quotaUsageFactory.build({
                   quota_limit: quota.quota_limit,
-                  used: null,
+                  usage: null,
                 })
               );
           }

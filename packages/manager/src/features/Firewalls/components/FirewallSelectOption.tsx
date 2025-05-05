@@ -22,11 +22,8 @@ interface Props {
 export const FirewallSelectOption = (props: Props) => {
   const { hideDefaultChip, listItemProps, option, state } = props;
 
-  const {
-    defaultNumEntities,
-    isDefault,
-    tooltipText,
-  } = useDefaultFirewallChipInformation(option.id);
+  const { defaultNumEntities, isDefault, tooltipText } =
+    useDefaultFirewallChipInformation(option.id);
 
   return (
     <li {...listItemProps}>

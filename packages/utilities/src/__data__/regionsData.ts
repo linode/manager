@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import type { Region } from '@linode/api-v4/lib/regions';
 
 export const regions: Region[] = [
   {

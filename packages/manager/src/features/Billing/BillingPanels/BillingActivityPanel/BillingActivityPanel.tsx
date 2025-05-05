@@ -193,15 +193,11 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const pdfErrors = useSet();
   const pdfLoading = useSet();
 
-  const [
-    selectedTransactionType,
-    setSelectedTransactionType,
-  ] = React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
+  const [selectedTransactionType, setSelectedTransactionType] =
+    React.useState<TransactionTypeOptions>(transactionTypeOptions[2]);
 
-  const [
-    selectedTransactionDate,
-    setSelectedTransactionDate,
-  ] = React.useState<TransactionDateOptions>(transactionDateOptions[3]);
+  const [selectedTransactionDate, setSelectedTransactionDate] =
+    React.useState<TransactionDateOptions>(transactionDateOptions[3]);
 
   const endDate = getCutoffFromDateRange(selectedTransactionDate);
   const filter = makeFilter(endDate);
@@ -362,6 +358,9 @@ export const BillingActivityPanel = React.memo((props: Props) => {
                 ? downloadInvoicePDF
                 : downloadPaymentPDF
             }
+            hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
+            isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
+            key={`${thisItem.type}-${thisItem.id}`}
             sxRow={
               lastItem
                 ? {
@@ -371,9 +370,6 @@ export const BillingActivityPanel = React.memo((props: Props) => {
                   }
                 : {}
             }
-            hasError={pdfErrors.has(`${thisItem.type}-${thisItem.id}`)}
-            isLoading={pdfLoading.has(`${thisItem.type}-${thisItem.id}`)}
-            key={`${thisItem.type}-${thisItem.id}`}
             {...thisItem}
           />
         );
@@ -418,34 +414,34 @@ export const BillingActivityPanel = React.memo((props: Props) => {
           </div>
           <div className={classes.headerRight}>
             <Autocomplete
+              className={classes.transactionType}
+              disableClearable
+              label="Transaction Types"
+              noMarginTop
               onChange={(_, item) => {
                 setSelectedTransactionType(item);
                 pdfErrors.clear();
                 pdfLoading.clear();
               }}
+              options={transactionTypeOptions}
               value={transactionTypeOptions.find(
                 (option) => option.value === selectedTransactionType.value
               )}
-              className={classes.transactionType}
-              disableClearable
-              label="Transaction Types"
-              noMarginTop
-              options={transactionTypeOptions}
             />
             <Autocomplete
+              className={classes.transactionDate}
+              disableClearable
+              label="Transaction Dates"
+              noMarginTop
               onChange={(_, item) => {
                 setSelectedTransactionDate(item);
                 pdfErrors.clear();
                 pdfLoading.clear();
               }}
+              options={transactionDateOptions}
               value={transactionDateOptions.find(
                 (option) => option.value === selectedTransactionDate.value
               )}
-              className={classes.transactionDate}
-              disableClearable
-              label="Transaction Dates"
-              noMarginTop
-              options={transactionDateOptions}
             />
           </div>
         </StyledBillingAndPaymentHistoryHeader>

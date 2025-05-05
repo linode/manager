@@ -64,9 +64,10 @@ describe('TPAProviders component', () => {
   });
 
   test('Should open the dialog when the button is clicked', async () => {
-    const {
-      getByTestId,
-    } = renderWithTheme(<TPAProviders authType="password" />, { flags });
+    const { getByTestId } = renderWithTheme(
+      <TPAProviders authType="password" />,
+      { flags }
+    );
 
     const button = getByTestId('Button-Google');
     await userEvent.click(button);

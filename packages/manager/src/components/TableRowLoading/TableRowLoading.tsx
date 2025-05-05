@@ -60,15 +60,15 @@ export const TableRowLoading = ({
   for (let i = 0; i < rows; i++) {
     tableRows.push(
       <TableRow
+        aria-label="Table content is loading"
+        data-testid="table-row-loading"
+        key={`table-loading-row-${i}`}
         sx={{
           ...sx,
           '&& :last-child': {
             paddingRight: '15px',
           },
         }}
-        aria-label="Table content is loading"
-        data-testid="table-row-loading"
-        key={`table-loading-row-${i}`}
       >
         {cols}
       </TableRow>

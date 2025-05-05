@@ -5,7 +5,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { NotFound } from 'src/components/NotFound';
 import {
   ACCESS_CONTROLS_DRAWER_TEXT,
   ACCESS_CONTROLS_DRAWER_TEXT_LEGACY,
@@ -144,22 +143,17 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
     };
   };
 
-  const {
-    handleSubmit,
-    isSubmitting,
-    resetForm,
-    setValues,
-    values,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
-      _allowList: database?.allow_list?.map(stringToExtendedIP),
-    },
-    onSubmit: handleUpdateAccessControlsClick,
-    validate: (values: Values) => onValidate(values),
-    validateOnBlur: false,
-    validateOnChange: false,
-  });
+  const { handleSubmit, isSubmitting, resetForm, setValues, values } =
+    useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        _allowList: database?.allow_list?.map(stringToExtendedIP),
+      },
+      onSubmit: handleUpdateAccessControlsClick,
+      validate: (values: Values) => onValidate(values),
+      validateOnBlur: false,
+      validateOnChange: false,
+    });
 
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {
@@ -182,12 +176,7 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
 
   const learnMoreLink = isDefaultDB ? LEARN_MORE_LINK : LEARN_MORE_LINK_LEGACY;
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Manage Access"
-    >
+    <Drawer onClose={onClose} open={open} title="Manage Access">
       <React.Fragment>
         {error ? <Notice text={error} variant="error" /> : null}
         {allowListErrors
@@ -207,21 +196,21 @@ const AddAccessControlDrawer = (props: CombinedProps) => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
+            aria-label="Allowed IP Addresses or Ranges"
             buttonText={
               values._allowList && values._allowList.length > 0
                 ? 'Add Another IP'
                 : 'Add an IP'
             }
-            placeholder={
-              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
-            }
-            aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             forDatabaseAccessControls
             inputProps={{ autoFocus: true }}
             ips={values._allowList!}
             onBlur={handleIPBlur}
             onChange={handleIPChange}
+            placeholder={
+              isDefaultDB ? ipV6FieldPlaceholder : ipFieldPlaceholder
+            }
             title="Allowed IP Addresses or Ranges"
           />
           <ActionsPanel
