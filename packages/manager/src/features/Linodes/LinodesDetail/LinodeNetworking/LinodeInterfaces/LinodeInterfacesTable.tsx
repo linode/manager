@@ -1,3 +1,4 @@
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -22,12 +23,20 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
         <TableRow>
           <TableCell>Type</TableCell>
           <TableCell>ID</TableCell>
-          <TableCell>MAC Address</TableCell>
+          <Hidden smDown>
+            <TableCell>MAC Address</TableCell>
+          </Hidden>
           <TableCell>IP Addresses</TableCell>
-          <TableCell>Version</TableCell>
+          <Hidden lgDown>
+            <TableCell>Version</TableCell>
+          </Hidden>
           <TableCell>Firewall</TableCell>
-          <TableCell>Updated</TableCell>
-          <TableCell>Created</TableCell>
+          <Hidden mdDown>
+            <TableCell>Updated</TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell>Created</TableCell>
+          </Hidden>
           <TableCell />
         </TableRow>
       </TableHead>
