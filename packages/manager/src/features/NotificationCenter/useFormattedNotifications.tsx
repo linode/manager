@@ -3,7 +3,7 @@ import {
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
-import { StyledLinkButton, Typography } from '@linode/ui';
+import { LinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
@@ -386,12 +386,9 @@ const ComplianceNotification = () => {
       Please review the compliance update for guidance regarding the EU Standard
       Contractual Clauses and its application to users located in Europe as well
       as deployments in Linode’s London and Frankfurt data centers
-      <StyledLinkButton
-        onClick={() => complianceModelContext.open()}
-        sx={{ minHeight: 0 }}
-      >
+      <LinkButton onClick={() => complianceModelContext.open()}>
         Review compliance update.
-      </StyledLinkButton>
+      </LinkButton>
     </Typography>
   );
 };

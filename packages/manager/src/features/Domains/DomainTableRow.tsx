@@ -1,4 +1,4 @@
-import { StyledLinkButton } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -31,9 +31,9 @@ export const DomainTableRow = React.memo((props: DomainTableRowProps) => {
               {domain.domain}
             </Link>
           ) : (
-            <StyledLinkButton onClick={() => props.onEdit(domain)}>
+            <LinkButton onClick={() => props.onEdit(domain)}>
               {domain.domain}
-            </StyledLinkButton>
+            </LinkButton>
           )}
         </StyledDiv>
       </TableCell>

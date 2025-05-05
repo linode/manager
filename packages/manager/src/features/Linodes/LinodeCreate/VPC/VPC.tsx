@@ -5,6 +5,7 @@ import {
   Checkbox,
   Divider,
   FormControlLabel,
+  LinkButton,
   Notice,
   Paper,
   Stack,
@@ -16,7 +17,6 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 import {

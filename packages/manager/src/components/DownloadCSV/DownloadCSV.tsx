@@ -1,4 +1,4 @@
-import { Button, StyledLinkButton } from '@linode/ui';
+import { Button, LinkButton } from '@linode/ui';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 
@@ -42,10 +42,10 @@ export const DownloadCSV = ({
 }: DownloadCSVProps) => {
   const renderButton =
     buttonType === 'styledLink' ? (
-      <StyledLinkButton onClick={onClick} sx={sx}>
+      <LinkButton onClick={onClick}>
         <DownloadIcon />
         {text}
-      </StyledLinkButton>
+      </LinkButton>
     ) : (
       <Button buttonType={buttonType} onClick={onClick} sx={sx}>
         {text}

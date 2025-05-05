@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { StyledActionButton } from '../../Button/StyledActionButton';
+import { ActionButton } from '../../Button/ActionButton';
 import { Stack } from '../../Stack';
 import { Typography } from '../../Typography/Typography';
 
@@ -91,7 +91,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         const isSelected = selectedPreset === preset.label;
         const { endDate, startDate } = preset.getRange();
         return (
-          <StyledActionButton
+          <ActionButton
             key={preset.label}
             onClick={() => {
               onPresetSelect(startDate, endDate, preset.label);
@@ -126,7 +126,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
             variant="text"
           >
             {preset.label}
-          </StyledActionButton>
+          </ActionButton>
         );
       })}
     </Stack>

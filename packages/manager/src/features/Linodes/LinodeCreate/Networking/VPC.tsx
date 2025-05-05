@@ -4,6 +4,7 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
+  LinkButton,
   Notice,
   Stack,
   TextField,
@@ -13,7 +14,6 @@ import {
 import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,

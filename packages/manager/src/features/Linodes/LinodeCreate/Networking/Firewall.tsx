@@ -1,8 +1,7 @@
-import { Box, Stack } from '@linode/ui';
+import { Box, LinkButton, Stack } from '@linode/ui';
 import React, { useState } from 'react';
 import { useController } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -36,7 +35,7 @@ export const Firewall = () => {
         />
         <Box>
           <LinkButton
-            isDisabled={isLinodeCreateRestricted}
+            disabled={isLinodeCreateRestricted}
             onClick={() => setIsDrawerOpen(true)}
           >
             Create Firewall

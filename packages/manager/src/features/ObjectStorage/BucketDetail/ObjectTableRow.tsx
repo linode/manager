@@ -1,4 +1,4 @@
-import { Box, StyledLinkButton, Typography } from '@linode/ui';
+import { Box, LinkButton, Typography } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -48,9 +48,9 @@ export const ObjectTableRow = (props: Props) => {
           <Grid>
             <Box alignItems="center" display="flex">
               <Typography>
-                <StyledLinkButton onClick={handleClickDetails}>
+                <LinkButton onClick={handleClickDetails}>
                   {displayName}
-                </StyledLinkButton>
+                </LinkButton>
               </Typography>
             </Box>
           </Grid>

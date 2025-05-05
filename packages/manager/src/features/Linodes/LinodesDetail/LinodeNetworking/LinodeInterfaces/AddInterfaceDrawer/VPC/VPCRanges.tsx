@@ -1,6 +1,7 @@
 import {
   CloseIcon,
   IconButton,
+  LinkButton,
   Stack,
   TextField,
   TooltipIcon,
@@ -8,7 +9,6 @@ import {
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { VPCRangesDescription } from 'src/features/VPCs/components/VPCRangesDescription';
 
 import type { CreateInterfaceFormValues } from '../utilities';

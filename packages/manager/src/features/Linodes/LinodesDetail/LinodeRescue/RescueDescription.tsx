@@ -1,5 +1,5 @@
 import { useLinodeFirewallsQuery } from '@linode/queries';
-import { Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { LinkButton, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -43,9 +43,9 @@ export const RescueDescription = (props: Props) => {
       {linodeId && isBareMetal ? (
         <Typography sx={{ marginTop: theme.spacing(1) }}>
           {`When your Linode has successfully rebooted into Rescue Mode, use the `}
-          <StyledLinkButton onClick={() => lishLaunch(linodeId)}>
+          <LinkButton onClick={() => lishLaunch(linodeId)}>
             LISH Console
-          </StyledLinkButton>
+          </LinkButton>
           {` to access it.`}
         </Typography>
       ) : null}

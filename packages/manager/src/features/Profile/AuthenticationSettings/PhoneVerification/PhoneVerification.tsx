@@ -5,14 +5,20 @@ import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from '@linode/queries';
-import { Box, Button, InputAdornment, TextField, Typography } from '@linode/ui';
+import {
+  Box,
+  Button,
+  InputAdornment,
+  LinkButton,
+  TextField,
+  Typography,
+} from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 
 import { countries } from './countries';
@@ -238,7 +244,7 @@ export const PhoneVerification = ({
               errorText={verifyError?.[0].reason}
               helperText={
                 <LinkButton
-                  isDisabled={isResending}
+                  disabled={isResending}
                   isLoading={isResending}
                   onClick={onResendVerificationCode}
                 >

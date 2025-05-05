@@ -1,4 +1,4 @@
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, LinkButton, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import React, { useState } from 'react';
@@ -6,7 +6,6 @@ import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 import {

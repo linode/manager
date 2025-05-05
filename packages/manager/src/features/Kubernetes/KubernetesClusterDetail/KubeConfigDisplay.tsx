@@ -1,10 +1,4 @@
-import {
-  Box,
-  CircleProgress,
-  Stack,
-  StyledLinkButton,
-  Typography,
-} from '@linode/ui';
+import { Box, CircleProgress, LinkButton, Stack, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { useSnackbar } from 'notistack';
@@ -218,7 +212,7 @@ export const KubeConfigDisplay = (props: Props) => {
           Kubeconfig:
         </Typography>
         <div className={classes.kubeconfigElements}>
-          <StyledLinkButton
+          <LinkButton
             aria-label={`Download kubeconfig for ${clusterLabel}`}
             className={classes.kubeconfigElement}
             onClick={downloadKubeConfig}
@@ -230,16 +224,16 @@ export const KubeConfigDisplay = (props: Props) => {
             <Typography className={classes.kubeconfigFileText}>
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="View kubeconfig details"
             className={classes.kubeconfigElement}
             onClick={handleOpenDrawer}
           >
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="Copy kubeconfig token"
             className={classes.kubeconfigElement}
             onClick={onCopyToken}
@@ -254,8 +248,8 @@ export const KubeConfigDisplay = (props: Props) => {
               <CopyIcon className={classes.kubeconfigIcons} />
             )}
             <Box className={classes.kubeconfigFileText}>Copy Token</Box>
-          </StyledLinkButton>
-          <StyledLinkButton
+          </LinkButton>
+          <LinkButton
             aria-label="Reset kubeconfig"
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
@@ -274,7 +268,7 @@ export const KubeConfigDisplay = (props: Props) => {
             >
               Reset
             </Typography>
-          </StyledLinkButton>
+          </LinkButton>
         </div>
       </Box>
     </Stack>

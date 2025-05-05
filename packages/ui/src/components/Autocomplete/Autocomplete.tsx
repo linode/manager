@@ -8,9 +8,9 @@ import { CircleProgress } from '../CircleProgress';
 import { InputAdornment } from '../InputAdornment';
 import { TextField } from '../TextField';
 import {
+  AutocompleteSelectAllListItem,
   CustomPopper,
   SelectedIcon,
-  StyledListItem,
 } from './Autocomplete.styles';
 
 import type { TextFieldProps } from '../TextField';
@@ -181,24 +181,22 @@ export const Autocomplete = <
       }
       renderOption={(props, option, state, ownerState) => {
         const isSelectAllOption = option === selectAllOption;
-        const ListItem = isSelectAllOption ? StyledListItem : 'li';
+        const ListItem = isSelectAllOption
+          ? AutocompleteSelectAllListItem
+          : 'li';
 
         return renderOption ? (
           renderOption(props, option, state, ownerState)
         ) : (
           <ListItem {...props} data-qa-option key={props.key}>
-            <>
-              <Box
-                sx={{
-                  flexGrow: 1,
-                }}
-              >
-                {rest.getOptionLabel
-                  ? rest.getOptionLabel(option)
-                  : option.label}
-              </Box>
-              <SelectedIcon visible={state.selected} />
-            </>
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
+            >
+              {rest.getOptionLabel ? rest.getOptionLabel(option) : option.label}
+            </Box>
+            {state.selected && <SelectedIcon />}
           </ListItem>
         );
       }}

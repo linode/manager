@@ -3,9 +3,9 @@ import {
   Box,
   Button,
   CircleProgress,
+  LinkButton,
   Notice,
   Stack,
-  StyledLinkButton,
   Typography,
 } from '@linode/ui';
 import React, { useState } from 'react';
@@ -116,7 +116,7 @@ export const ChildAccountList = React.memo(
     const renderChildAccounts = childAccounts?.map((childAccount, idx) => {
       const euuid = childAccount.euuid;
       return (
-        <StyledLinkButton
+        <LinkButton
           disabled={isSwitchingChildAccounts}
           key={`child-account-link-button-${idx}`}
           onClick={(event) => {
@@ -129,17 +129,18 @@ export const ChildAccountList = React.memo(
               userType,
             });
           }}
-          sx={(theme) => ({
-            marginBottom: theme.spacing(2),
-          })}
         >
           {childAccount.company}
-        </StyledLinkButton>
+        </LinkButton>
       );
     });
 
     return (
-      <Stack alignItems={'flex-start'} data-testid="child-account-list">
+      <Stack
+        alignItems={'flex-start'}
+        data-testid="child-account-list"
+        spacing={1}
+      >
         {!isSwitchingChildAccounts && !isLoading && renderChildAccounts}
         {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
         {isFetchingNextPage && <CircleProgress size="sm" />}

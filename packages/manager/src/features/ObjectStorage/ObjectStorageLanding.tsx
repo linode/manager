@@ -1,4 +1,4 @@
-import { StyledLinkButton, Typography } from '@linode/ui';
+import { LinkButton, Typography } from '@linode/ui';
 import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useMatch, useNavigate } from '@tanstack/react-router';
@@ -210,11 +210,11 @@ export const BillingNotice = React.memo(() => {
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
         <Link to="/account/settings">Account Settings</Link>, or{' '}
-        <StyledLinkButton
+        <LinkButton
           onClick={() => navigate({ to: '/object-storage/buckets/create' })}
         >
           create a Bucket.
-        </StyledLinkButton>
+        </LinkButton>
       </Typography>
     </DismissibleBanner>
   );

@@ -1,10 +1,10 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
 import {
   Autocomplete,
+  AutocompleteSelectAllListItem,
   Chip,
   CloseIcon,
   Stack,
-  StyledListItem,
 } from '@linode/ui';
 import React from 'react';
 
@@ -132,9 +132,9 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             if (!option.site_type) {
               // Render options like "Select All / Deselect All"
               return (
-                <StyledListItem {...rest} key={key}>
+                <AutocompleteSelectAllListItem {...rest} key={key}>
                   {option.label}
-                </StyledListItem>
+                </AutocompleteSelectAllListItem>
               );
             }
 

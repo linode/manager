@@ -6,10 +6,9 @@ import { IconButton } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Bell from 'src/assets/icons/notification.svg';
-import { LinkButton } from 'src/components/LinkButton';
+import { Link } from 'src/components/Link';
 import { NotificationCenterEvent } from 'src/features/NotificationCenter/Events/NotificationCenterEvent';
 import {
   notificationCenterContext as _notificationContext,
@@ -27,7 +26,6 @@ import {
 import { topMenuIconButtonSx, TopMenuTooltip } from '../TopMenuTooltip';
 
 export const NotificationMenu = () => {
-  const history = useHistory();
   const { dismissNotifications } = useDismissibleNotifications();
   const { data: notifications } = useNotificationsQuery();
   const formattedNotifications = useFormattedNotifications();
@@ -148,14 +146,14 @@ export const NotificationMenu = () => {
         <Box>
           <Box display="flex" justifyContent="space-between" px={2}>
             <Typography variant="h3">Events</Typography>
-            <LinkButton
+            <Link
               onClick={() => {
-                history.push('/events');
                 handleClose();
               }}
+              to="/events"
             >
               View all events
-            </LinkButton>
+            </Link>
           </Box>
           <Divider spacingBottom={0} />
 

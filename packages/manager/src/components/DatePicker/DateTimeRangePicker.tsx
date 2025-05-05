@@ -1,4 +1,4 @@
-import { Autocomplete, Box, StyledActionButton } from '@linode/ui';
+import { ActionButton, Autocomplete, Box } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { DateTime } from 'luxon';
@@ -310,7 +310,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             value={endDateTime}
           />
           <Box alignContent={startDateError ? 'center' : 'flex-end'}>
-            <StyledActionButton
+            <ActionButton
               data-qa-buttons="true"
               onClick={() => {
                 setShowPresets(true);
@@ -320,7 +320,7 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
               variant="text"
             >
               Presets
-            </StyledActionButton>
+            </ActionButton>
           </Box>
         </Box>
       )}

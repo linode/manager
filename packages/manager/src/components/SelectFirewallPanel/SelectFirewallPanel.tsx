@@ -1,5 +1,12 @@
 import { useFirewallsQuery } from '@linode/queries';
-import { Autocomplete, Box, Paper, Stack, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  LinkButton,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,7 +16,6 @@ import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 
 import { AkamaiBanner } from '../AkamaiBanner/AkamaiBanner';
 import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewallDialog';
-import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
@@ -98,7 +104,7 @@ export const SelectFirewallPanel = (props: Props) => {
           value={selectedFirewall}
         />
         <StyledLinkButtonBox>
-          <LinkButton isDisabled={disabled} onClick={handleCreateFirewallClick}>
+          <LinkButton disabled={disabled} onClick={handleCreateFirewallClick}>
             Create Firewall
           </LinkButton>
         </StyledLinkButtonBox>

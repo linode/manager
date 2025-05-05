@@ -1,8 +1,8 @@
 import {
   Accordion,
+  ActionButton,
   Box,
   Stack,
-  StyledActionButton,
   Tooltip,
   Typography,
 } from '@linode/ui';
@@ -153,7 +153,7 @@ export const NodePool = (props: Props) => {
               position="absolute"
               right={(theme) => theme.spacing(5)}
             >
-              <StyledActionButton
+              <ActionButton
                 compactY
                 onClick={(e) => {
                   e.stopPropagation();
@@ -161,8 +161,8 @@ export const NodePool = (props: Props) => {
                 }}
               >
                 Labels and Taints
-              </StyledActionButton>
-              <StyledActionButton
+              </ActionButton>
+              <ActionButton
                 compactY
                 onClick={(e) => {
                   e.stopPropagation();
@@ -170,13 +170,13 @@ export const NodePool = (props: Props) => {
                 }}
               >
                 Autoscale Pool
-              </StyledActionButton>
+              </ActionButton>
               {autoscaler.enabled && (
                 <Typography mx={1}>
                   (Min {autoscaler.min} / Max {autoscaler.max})
                 </Typography>
               )}
-              <StyledActionButton
+              <ActionButton
                 compactY
                 onClick={(e) => {
                   e.stopPropagation();
@@ -184,8 +184,8 @@ export const NodePool = (props: Props) => {
                 }}
               >
                 Resize Pool
-              </StyledActionButton>
-              <StyledActionButton
+              </ActionButton>
+              <ActionButton
                 compactY
                 onClick={(e) => {
                   e.stopPropagation();
@@ -193,7 +193,7 @@ export const NodePool = (props: Props) => {
                 }}
               >
                 Recycle Pool Nodes
-              </StyledActionButton>
+              </ActionButton>
               <Tooltip
                 disableFocusListener={!isOnlyNodePool}
                 disableHoverListener={!isOnlyNodePool}
@@ -202,7 +202,7 @@ export const NodePool = (props: Props) => {
                 title="Clusters must contain at least one node pool."
               >
                 <div>
-                  <StyledActionButton
+                  <ActionButton
                     compactY
                     disabled={isOnlyNodePool}
                     onClick={(e) => {
@@ -211,7 +211,7 @@ export const NodePool = (props: Props) => {
                     }}
                   >
                     Delete Pool
-                  </StyledActionButton>
+                  </ActionButton>
                 </div>
               </Tooltip>
             </Stack>

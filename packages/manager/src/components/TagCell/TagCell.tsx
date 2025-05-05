@@ -2,8 +2,7 @@ import {
   CircleProgress,
   IconButton,
   omittedProps,
-  StyledPlusIcon,
-  StyledTagButton,
+  TagButton,
 } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import Grid from '@mui/material/Grid2';
@@ -91,10 +90,8 @@ export const TagCell = (props: TagCellProps) => {
   };
 
   const AddButton = (props: { panel?: boolean }) => (
-    <StyledTagButton
-      buttonType="outlined"
+    <TagButton
       disabled={disabled}
-      endIcon={<StyledPlusIcon disabled={disabled} />}
       onClick={() => setAddingTag(true)}
       panel={props.panel}
       title="Add a tag"
@@ -105,7 +102,7 @@ export const TagCell = (props: TagCellProps) => {
       }`}
     >
       Add a tag
-    </StyledTagButton>
+    </TagButton>
   );
 
   return (

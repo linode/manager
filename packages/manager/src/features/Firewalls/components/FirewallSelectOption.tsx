@@ -36,7 +36,7 @@ export const FirewallSelectOption = (props: Props) => {
             tooltipText={tooltipText}
           />
         )}
-        {state.selected && <SelectedIcon visible />}
+        {state.selected && <SelectedIcon />}
       </Stack>
     </li>
   );

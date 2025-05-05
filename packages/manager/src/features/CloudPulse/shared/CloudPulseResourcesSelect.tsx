@@ -1,4 +1,8 @@
-import { Autocomplete, SelectedIcon, StyledListItem } from '@linode/ui';
+import {
+  Autocomplete,
+  AutocompleteSelectAllListItem,
+  SelectedIcon,
+} from '@linode/ui';
 import { Box } from '@mui/material';
 import React from 'react';
 
@@ -182,7 +186,7 @@ export const CloudPulseResourcesSelect = React.memo(
             !isSelectAllORDeslectAllOption;
 
           const ListItem = isSelectAllORDeslectAllOption
-            ? StyledListItem
+            ? AutocompleteSelectAllListItem
             : 'li';
 
           return (
@@ -192,10 +196,8 @@ export const CloudPulseResourcesSelect = React.memo(
               data-qa-option
               key={key}
             >
-              <>
-                <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
-                <SelectedIcon visible={isResourceSelected || false} />
-              </>
+              <Box sx={{ flexGrow: 1 }}>{option.label}</Box>
+              {isResourceSelected && <SelectedIcon />}
             </ListItem>
           );
         }}

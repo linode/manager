@@ -215,7 +215,7 @@ export const CustomRenderOptions: RegionStory = {
           <CustomValue>{option.value}</CustomValue>
           <CustomDescription>{option.label}</CustomDescription>
         </Stack>
-        <SelectedIcon visible={selected} />
+        {selected && <SelectedIcon />}
       </StyledListItem>
     ),
   },

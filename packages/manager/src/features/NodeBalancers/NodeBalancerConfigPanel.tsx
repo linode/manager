@@ -283,7 +283,7 @@ export const NodeBalancerConfigPanel = (
                     <b>{option.label}</b>
                     {option.description}
                   </Stack>
-                  {state.selected && <SelectedIcon visible />}
+                  {state.selected && <SelectedIcon />}
                 </Stack>
               </li>
             )}
@@ -324,7 +324,7 @@ export const NodeBalancerConfigPanel = (
                     <b>{option.label}</b>
                     {option.description}
                   </Stack>
-                  {state.selected && <SelectedIcon visible />}
+                  {state.selected && <SelectedIcon />}
                 </Stack>
               </li>
             )}

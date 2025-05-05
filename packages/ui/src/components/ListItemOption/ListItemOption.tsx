@@ -1,4 +1,3 @@
-import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
@@ -15,7 +14,7 @@ export interface ListItemOptionProps<T> {
   item: T & { id: number | string };
   maxHeight?: number;
   props: React.HTMLAttributes<HTMLLIElement>;
-  selected?: boolean;
+  selected: boolean;
 }
 
 export interface DisableItemOption {
@@ -64,7 +63,7 @@ export const ListItemOption = <T,>({
           : ''
       }
     >
-      <StyledDisabledItem
+      <ListItem
         {...rest}
         aria-disabled={undefined}
         className={
@@ -84,33 +83,29 @@ export const ListItemOption = <T,>({
               ? onClick(e)
               : null
         }
-        style={{
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
+          gap: 1,
           maxHeight,
+          '&.Mui-disabled': {
+            cursor: 'not-allowed',
+          },
+          '&.MuiAutocomplete-option': {
+            minHeight: 'auto !important',
+            padding: '8px 10px !important',
+          },
+          '&.MuiListItem-root[aria-disabled="true"]:active': {
+            pointerEvents: 'none !important',
+          },
         }}
       >
         {children}
         {isItemOptionDisabled && (
           <Box sx={visuallyHidden}>{itemOptionDisabledReason}</Box>
         )}
-        {selected && <SelectedIcon style={{ marginLeft: 8 }} visible />}
-      </StyledDisabledItem>
+        {selected && <SelectedIcon />}
+      </ListItem>
     </Tooltip>
   );
 };
-
-export const StyledDisabledItem = styled(ListItem, {
-  label: 'StyledDisabledItem',
-})(() => ({
-  '&.Mui-disabled': {
-    cursor: 'not-allowed',
-  },
-  '&.MuiAutocomplete-option': {
-    minHeight: 'auto !important',
-    padding: '8px 10px !important',
-  },
-  '&.MuiListItem-root[aria-disabled="true"]:active': {
-    pointerEvents: 'none !important',
-  },
-}));

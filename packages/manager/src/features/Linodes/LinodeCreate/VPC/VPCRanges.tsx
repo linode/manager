@@ -1,8 +1,13 @@
-import { Box, CloseIcon, IconButton, Stack, TextField } from '@linode/ui';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  LinkButton,
+  Stack,
+  TextField,
+} from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-
-import { LinkButton } from 'src/components/LinkButton';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 

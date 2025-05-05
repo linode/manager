@@ -6,7 +6,7 @@ import { Box } from '../../Box/Box';
 import { IconButton } from '../../IconButton';
 import { Stack } from '../../Stack/Stack';
 import { Typography } from '../../Typography/Typography';
-import { DayBox } from './Calendar.styles';
+import { DayBox } from './DayBox';
 
 import type { DateTime } from 'luxon';
 

@@ -90,7 +90,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
                 </Typography>
                 <Typography color="inherit">{option.linode.label}</Typography>
               </Stack>
-              {selected && <SelectedIcon visible />}
+              {selected && <SelectedIcon />}
             </Box>
           </li>
         );

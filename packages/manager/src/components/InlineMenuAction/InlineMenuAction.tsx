@@ -1,4 +1,4 @@
-import { StyledActionButton } from '@linode/ui';
+import { ActionButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -52,7 +52,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
   }
 
   return (
-    <StyledActionButton
+    <ActionButton
       // TODO: We need to define what buttonType this will be in the future for now 'secondary' works...
       buttonType="primary"
       disabled={disabled}
@@ -64,7 +64,7 @@ export const InlineMenuAction = (props: InlineMenuActionProps) => {
       {...rest}
     >
       {actionText}
-    </StyledActionButton>
+    </ActionButton>
   );
 };
 

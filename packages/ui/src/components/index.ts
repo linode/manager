@@ -28,6 +28,7 @@ export * from './IconButton';
 export * from './Input';
 export * from './InputAdornment';
 export * from './InputLabel';
+export * from './LinkButton/LinkButton';
 export * from './List';
 export * from './ListItem';
 export * from './ListItemOption';

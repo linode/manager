@@ -1,11 +1,5 @@
 import { useAccount } from '@linode/queries';
-import {
-  ActionsPanel,
-  Box,
-  Stack,
-  StyledActionButton,
-  Typography,
-} from '@linode/ui';
+import { ActionButton, ActionsPanel, Box, Stack, Typography } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -180,17 +174,17 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               <Hidden smDown>
                 {isLkeEnterpriseLAFeatureEnabled &&
                 cluster.tier === 'enterprise' ? undefined : (
-                  <StyledActionButton
+                  <ActionButton
                     disabled={Boolean(dashboardError) || !dashboard}
                     endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}
                   >
                     Kubernetes Dashboard
-                  </StyledActionButton>
+                  </ActionButton>
                 )}
-                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
+                <ActionButton onClick={() => setIsDeleteDialogOpen(true)}>
                   Delete Cluster
-                </StyledActionButton>
+                </ActionButton>
               </Hidden>
             </Box>
           </EntityHeader>

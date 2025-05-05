@@ -1,4 +1,4 @@
-import { CircleProgress, StyledLinkButton } from '@linode/ui';
+import { Button, CircleProgress } from '@linode/ui';
 import React from 'react';
 
 import { useStyles } from '../NotificationCenter.styles';
@@ -63,9 +63,16 @@ export const NotificationCenterNotifications = React.memo(
         ))}
         {content.length > count ? (
           <StyledLToggleContainer display="flex" justifyContent="flex-end">
-            <StyledLinkButton
+            <Button
               aria-label={`Display all ${content.length} items`}
               data-testid="showMoreButton"
+              endIcon={
+                <StyledCaret
+                  className={cx({
+                    [classes.inverted]: showAll,
+                  })}
+                />
+              }
               onClick={() => setShowAll(!showAll)}
               sx={(theme) => ({
                 color: 'primary.main',
@@ -74,12 +81,7 @@ export const NotificationCenterNotifications = React.memo(
               })}
             >
               {showAll ? 'Collapse' : `${content.length - count} more`}
-              <StyledCaret
-                className={cx({
-                  [classes.inverted]: showAll,
-                })}
-              />
-            </StyledLinkButton>
+            </Button>
           </StyledLToggleContainer>
         ) : null}
       </>

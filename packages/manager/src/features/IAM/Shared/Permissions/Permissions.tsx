@@ -1,4 +1,4 @@
-import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
+import { LinkButton, TooltipIcon, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -82,12 +82,9 @@ export const Permissions = ({ permissions }: Props) => {
 
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>
-              <StyledLinkButton
-                onClick={() => setShowAll(!showAll)}
-                type="button"
-              >
+              <LinkButton onClick={() => setShowAll(!showAll)}>
                 {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
-              </StyledLinkButton>
+              </LinkButton>
             </StyledBox>
           )}
         </StyledContainer>

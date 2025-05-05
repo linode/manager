@@ -10,6 +10,7 @@ import {
   Chip,
   CircleProgress,
   ErrorState,
+  LinkButton,
   Paper,
   Typography,
 } from '@linode/ui';
@@ -21,7 +22,6 @@ import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { LinkButton } from 'src/components/LinkButton';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';

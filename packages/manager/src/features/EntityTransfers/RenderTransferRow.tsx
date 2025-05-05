@@ -1,4 +1,4 @@
-import { StyledLinkButton } from '@linode/ui';
+import { LinkButton } from '@linode/ui';
 import { capitalize, pluralize } from '@linode/utilities';
 import * as React from 'react';
 
@@ -61,9 +61,9 @@ export const RenderTransferRow = React.memo((props: Props) => {
       <StyledTokenTableCell noWrap>
         <StyledDiv>
           <MaskableText isToggleable text={token}>
-            <StyledLinkButton onClick={() => handleTokenClick(token, entities)}>
+            <LinkButton onClick={() => handleTokenClick(token, entities)}>
               {token}
-            </StyledLinkButton>
+            </LinkButton>
           </MaskableText>
           <div data-qa-copy-token>
             <StyledCopyTooltip text={token} />

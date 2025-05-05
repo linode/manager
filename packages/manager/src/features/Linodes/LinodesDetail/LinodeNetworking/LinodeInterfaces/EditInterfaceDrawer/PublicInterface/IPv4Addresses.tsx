@@ -1,8 +1,7 @@
-import { Box, Notice, Stack, Typography } from '@linode/ui';
+import { Box, LinkButton, Notice, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { LinkButton } from 'src/components/LinkButton';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

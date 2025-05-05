@@ -1,4 +1,3 @@
+export * from './ActionButton';
 export * from './Button';
-export * from './StyledActionButton';
-export * from './StyledLinkButton';
-export * from './StyledTagButton';
+export * from './TagButton';

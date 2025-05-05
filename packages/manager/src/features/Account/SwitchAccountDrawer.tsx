@@ -1,4 +1,4 @@
-import { Drawer, Notice, StyledLinkButton, Typography } from '@linode/ui';
+import { Drawer, LinkButton, Notice, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -139,7 +139,7 @@ export const SwitchAccountDrawer = (props: Props) => {
         {isProxyUser && (
           <>
             {' or '}
-            <StyledLinkButton
+            <LinkButton
               aria-label="parent-account-link"
               disabled={isSubmitting}
               onClick={() => {
@@ -148,7 +148,7 @@ export const SwitchAccountDrawer = (props: Props) => {
               }}
             >
               switch back to your account
-            </StyledLinkButton>
+            </LinkButton>
           </>
         )}
         .
