@@ -123,7 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { MTC_TT } from 'src/features/components/PlansPanel/constants';
+import { MTC } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -729,28 +729,28 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
-    const nonMTCTTPlanInMTCSupportedRegionsLinode = linodeFactory.build({
-      label: 'non-mtc-tt-plan-in-mtc-supported-regions-linode',
+    const nonMTCPlanInMTCSupportedRegionsLinode = linodeFactory.build({
+      label: 'non-mtc-plan-in-mtc-supported-regions-linode',
       region: 'us-iad',
       id: 1003,
     });
-    const mtcTTLinodes = [
+    const mtcLinodes = [
       linodeFactory.build({
-        label: 'mtc-tt-custom-plan-linode-1',
+        label: 'mtc-custom-plan-linode-1',
         region: 'us-iad',
         type: 'g8-premium-128-ht',
         id: 1001,
       }),
       linodeFactory.build({
-        label: 'mtc-tt-custom-plan-linode-2',
+        label: 'mtc-custom-plan-linode-2',
         region: 'no-east',
         type: 'g8-premium-128-ht',
         id: 1002,
       }),
     ];
     const linodes = [
-      ...mtcTTLinodes,
-      nonMTCTTPlanInMTCSupportedRegionsLinode,
+      ...mtcLinodes,
+      nonMTCPlanInMTCSupportedRegionsLinode,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -855,18 +855,18 @@ export const handlers = [
 
   http.get('*/linode/instances/:id', async ({ params }) => {
     const mockLinodeDetailById = (id: number) => {
-      const linodeMTCTTPlanDetails = [
+      const linodeMTCPlanDetails = [
         linodeFactory.build({
           id,
           backups: { enabled: false },
-          label: 'mtc-tt-custom-plan-linode-1',
+          label: 'mtc-custom-plan-linode-1',
           region: 'us-iad',
           type: 'g8-premium-128-ht',
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
-          label: 'mtc-tt-custom-plan-linode-2',
+          label: 'mtc-custom-plan-linode-2',
           region: 'no-east',
           type: 'g8-premium-128-ht',
         }),
@@ -874,7 +874,7 @@ export const handlers = [
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
         id,
         backups: { enabled: false },
-        label: 'non-mtc-tt-plan-in-mtc-supported-regions-linode',
+        label: 'non-mtc-plan-in-mtc-supported-regions-linode',
         region: 'us-iad',
       });
       const linodeInDistributedRegionDetail = linodeFactory.build({
@@ -894,9 +894,9 @@ export const handlers = [
         case 1000:
           return linodeInDistributedRegionDetail;
         case 1001:
-          return linodeMTCTTPlanDetails[0];
+          return linodeMTCPlanDetails[0];
         case 1002:
-          return linodeMTCTTPlanDetails[1];
+          return linodeMTCPlanDetails[1];
         case 1003:
           return linodeNonMTCPlanInMTCSupportedRegionsDetail;
         default:
@@ -2365,8 +2365,8 @@ export const handlers = [
         region: selectedRegion,
       }),
       // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
-      ...(MTC_TT['availability_regions'].includes(
-        selectedRegion as (typeof MTC_TT)['availability_regions'][number]
+      ...(MTC['availability_regions'].includes(
+        selectedRegion as (typeof MTC)['availability_regions'][number]
       )
         ? [
             regionAvailabilityFactory.build({
@@ -2731,6 +2731,9 @@ export const handlers = [
       );
     }
   ),
+  http.delete('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json({});
+  }),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(7))

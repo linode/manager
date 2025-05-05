@@ -24,6 +24,7 @@ export * from './FormControl';
 export * from './FormControlLabel';
 export * from './FormHelperText';
 export * from './H1Header';
+export * from './Hidden/Hidden';
 export * from './IconButton';
 export * from './Input';
 export * from './InputAdornment';

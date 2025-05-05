@@ -22,7 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
-  isMTCTTPlan,
+  isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -46,6 +46,7 @@ export interface PlansPanelProps {
   header?: string;
   isCreate?: boolean;
   isLegacyDatabase?: boolean;
+  isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
@@ -79,6 +80,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     header,
     isCreate,
     isLegacyDatabase,
+    isResize,
     linodeID,
     onSelect,
     regionsData,
@@ -110,8 +112,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
       return false;
     }
 
-    // Do not display MTC_TT plans if the feature flag is not enabled.
-    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc2025 && isMTCPlan(type)) {
       return false;
     }
 
@@ -166,6 +168,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disabledClasses,
         disabledSmallerPlans,
         isLegacyDatabase,
+        isResize,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId: selectedRegionID,

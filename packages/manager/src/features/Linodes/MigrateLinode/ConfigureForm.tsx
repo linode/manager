@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Flag } from 'src/components/Flag';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { MTC_TT } from 'src/features/components/PlansPanel/constants';
+import { MTC } from 'src/features/components/PlansPanel/constants';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -157,9 +157,9 @@ export const ConfigureForm = React.memo((props: Props) => {
       }
 
       // If mtc2025 flag is enabled, apply MTC region filtering.
-      if (flags.mtctt2025) {
-        const isMtcRegion = MTC_TT['availability_regions'].includes(
-          eachRegion.id as (typeof MTC_TT)['availability_regions'][number]
+      if (flags.mtc2025) {
+        const isMtcRegion = MTC['availability_regions'].includes(
+          eachRegion.id as (typeof MTC)['availability_regions'][number]
         );
 
         // For MTC Linodes, only show MTC regions.
