@@ -12,13 +12,14 @@ import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertDefinitionType } from '@linode/api-v4';
 
 interface AlertEntityGroupingSelectProps {
+  disabled?: boolean;
   name: FieldPathByValue<CreateAlertDefinitionForm, AlertDefinitionType | null>;
 }
 
 export const AlertEntityGroupingSelect = (
   props: AlertEntityGroupingSelectProps
 ) => {
-  const { name } = props;
+  const { name, disabled } = props;
   const { control } = useFormContext<CreateAlertDefinitionForm>();
   return (
     <Controller
@@ -27,6 +28,7 @@ export const AlertEntityGroupingSelect = (
       render={({ field, fieldState }) => (
         <Autocomplete
           data-testid="entity-grouping"
+          disabled={disabled}
           errorText={fieldState.error?.message}
           label="Entity Grouping"
           onBlur={field.onBlur}
@@ -51,9 +53,7 @@ export const AlertEntityGroupingSelect = (
           }}
           value={
             field.value !== null
-              ? entityGroupingOptions.find(
-                  (option) => option.value === field.value
-                )
+              ? entityGroupingOptions.find(({ value }) => value === field.value)
               : entityGroupingOptions[0]
           }
         />
