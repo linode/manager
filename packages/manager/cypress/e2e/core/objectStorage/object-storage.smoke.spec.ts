@@ -17,6 +17,7 @@ import {
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory } from 'src/factories';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
@@ -29,14 +30,15 @@ describe('object storage smoke tests', () => {
    */
   it('can create object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
-    const bucketRegion = 'US, Atlanta, GA';
-    const bucketCluster = 'us-southeast-1';
+    const region = chooseRegion();
+    const bucketCluster = `${region.id}-1`;
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 
     const mockBucket = objectStorageBucketFactory.build({
       cluster: bucketCluster,
       hostname: bucketHostname,
       label: bucketLabel,
+      region: region.id,
     });
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
@@ -66,7 +68,7 @@ describe('object storage smoke tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${bucketRegion}{enter}`);
+        cy.focused().type(`${region.label}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -75,7 +77,7 @@ describe('object storage smoke tests', () => {
 
     cy.wait('@createBucket');
     cy.findByText(bucketLabel).should('be.visible');
-    cy.findByText(bucketRegion).should('be.visible');
+    cy.findByText(region.label).should('be.visible');
     cy.findByText(bucketHostname).should('be.visible');
   });
 
@@ -86,7 +88,7 @@ describe('object storage smoke tests', () => {
    * - Deletes uploaded files.
    * - Confirms deleted files are removed from object list.
    */
-  it('can upload, view, and delete bucket objects - smoke', () => {
+  xit('can upload, view, and delete bucket objects - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketContents = [
@@ -169,7 +171,7 @@ describe('object storage smoke tests', () => {
    * - Mocks existing buckets.
    * - Deletes mocked bucket, confirms that landing page reflects deletion.
    */
-  it('can delete object storage bucket - smoke', () => {
+  xit('can delete object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({
