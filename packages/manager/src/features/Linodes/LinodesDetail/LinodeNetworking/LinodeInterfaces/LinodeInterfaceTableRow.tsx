@@ -47,8 +47,6 @@ export const LinodeInterfaceTableRow = (props: Props) => {
         <TableCell>
           <DateTimeDisplay value={updated} />
         </TableCell>
-      </Hidden>
-      <Hidden smDown>
         <TableCell>
           <DateTimeDisplay value={created} />
         </TableCell>

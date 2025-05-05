@@ -33,8 +33,6 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
           <TableCell>Firewall</TableCell>
           <Hidden mdDown>
             <TableCell>Updated</TableCell>
-          </Hidden>
-          <Hidden smDown>
             <TableCell>Created</TableCell>
           </Hidden>
           <TableCell />
