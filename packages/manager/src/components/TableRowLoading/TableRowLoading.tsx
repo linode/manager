@@ -1,11 +1,11 @@
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from '../Hidden';
 import { Skeleton } from '../Skeleton';
 import { TableCell } from '../TableCell/TableCell';
 import { TableRow } from '../TableRow/TableRow';
 
-import type { HiddenProps } from '../Hidden';
+import type { HiddenProps } from '@linode/ui';
 import type { SxProps } from '@mui/material/styles';
 
 export interface TableRowLoadingProps {

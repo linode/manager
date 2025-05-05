@@ -1,4 +1,5 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
+import { Hidden } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -6,7 +7,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

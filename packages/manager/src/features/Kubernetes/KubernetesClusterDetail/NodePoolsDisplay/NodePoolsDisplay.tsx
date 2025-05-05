@@ -7,9 +7,9 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Hidden } from '@mui/material';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 

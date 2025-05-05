@@ -1,9 +1,9 @@
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Chip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

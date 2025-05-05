@@ -1,9 +1,9 @@
 import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { SelectableTableRow } from 'src/components/SelectableTableRow/SelectableTableRow';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';

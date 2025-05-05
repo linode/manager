@@ -1,5 +1,6 @@
 import { useLinodesQuery, useProfile } from '@linode/queries';
 import { Button, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -7,7 +8,6 @@ import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';

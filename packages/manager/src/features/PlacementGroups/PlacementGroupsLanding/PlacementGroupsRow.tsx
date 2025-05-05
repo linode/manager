@@ -3,9 +3,9 @@ import {
   PLACEMENT_GROUP_TYPES,
 } from '@linode/api-v4';
 import { List, ListItem, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
