@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
@@ -78,6 +79,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const distributedRegionTooltipText =
     'Cloning is currently not supported for distributed region instances.';
 
+  const linodeMTCResizingTooltipText =
+    'Resizing is not supported for this plan type.';
+
+  const isMTCLinode = Boolean(linodeType && isMTCPlan(linodeType));
+
   const actionConfigs: ActionConfig[] = [
     {
       condition: isVisible,
@@ -140,12 +146,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: isLinodeReadOnly || hasHostMaintenance,
+      disabled: isLinodeReadOnly || hasHostMaintenance || isMTCLinode,
       isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenResizeDialog,
       title: 'Resize',
       tooltipAction: 'resize',
-      tooltipText: maintenanceTooltipText,
+      tooltipText: isMTCLinode
+        ? linodeMTCResizingTooltipText
+        : maintenanceTooltipText,
     },
     {
       condition: true,

@@ -7,7 +7,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
-  isMTCTTPlan,
+  isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
 } from 'src/features/components/PlansPanel/utils';
@@ -82,8 +82,8 @@ export const KubernetesPlansPanel = (props: Props) => {
     plan === 'shared' && Boolean(isAPLEnabled);
 
   const _types = types.filter((type) => {
-    // Do not display MTC_TT plans if the feature flag is not enabled.
-    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc2025 && isMTCPlan(type)) {
       return false;
     }
 
