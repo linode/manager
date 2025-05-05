@@ -5,6 +5,7 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
 import { randomLabel } from 'support/util/random';
+import { chooseRegion } from 'support/util/regions';
 
 import type { Image, Linode } from '@linode/api-v4';
 
@@ -24,7 +25,10 @@ describe('Search Images', () => {
     cy.defer(
       () =>
         createTestLinode(
-          { image: 'linode/debian12', region: 'us-east' },
+          {
+            image: 'linode/debian12',
+            region: chooseRegion({ capabilities: ['Linodes'] }).id,
+          },
           { waitForDisks: true }
         ),
       'create linode'
