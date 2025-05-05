@@ -50,6 +50,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'vmHostMaintenance',
     label: 'VM Host Maintenance Policy',
   },
+  { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
 
 interface RenderFlagItemProps {
