@@ -24,6 +24,7 @@ export const HostNamesList = ({ objectStorageKey }: Props) => {
   return (
     <Box>
       <StyledBoxShadowWrapper
+        displayShadow={currentListHeight > maxHeight}
         sx={(theme) => ({
           backgroundColor: theme.bg.main,
           border: `1px solid ${
@@ -33,19 +34,18 @@ export const HostNamesList = ({ objectStorageKey }: Props) => {
           }`,
           minHeight: '34px',
         })}
-        displayShadow={currentListHeight > maxHeight}
       >
         <StyledScrollBox maxHeight={`${maxHeight}px`}>
           <StyledHostNamesList ref={listRef}>
             {objectStorageKey?.regions.map((region, index) => (
               <CopyableTextField
-                value={`${regionsLookup?.[region.id]?.label}: ${
-                  region.s3_endpoint
-                }`}
                 hideLabel
                 key={index}
                 label="Create a Filesystem"
                 sx={{ border: 'none', maxWidth: '100%' }}
+                value={`${regionsLookup?.[region.id]?.label}: ${
+                  region.s3_endpoint
+                }`}
               />
             ))}
           </StyledHostNamesList>

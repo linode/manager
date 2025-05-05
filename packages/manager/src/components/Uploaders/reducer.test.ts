@@ -1,7 +1,6 @@
-import {
-  ObjectUploaderState,
-  curriedObjectUploaderReducer as reducer,
-} from './reducer';
+import { curriedObjectUploaderReducer as reducer } from './reducer';
+
+import type { ObjectUploaderState } from './reducer';
 
 describe('reducer', () => {
   const baseState: ObjectUploaderState = {

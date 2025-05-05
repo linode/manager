@@ -66,6 +66,7 @@ export const MySQLGraphs = (props: Props) => {
       <Grid container direction="column" spacing={0}>
         <Grid size={{ xs: 12 }}>
           <LongviewLineGraph
+            ariaLabel="Queries Per Second Graph"
             data={[
               {
                 backgroundColor: theme.graphs.queries.select,
@@ -92,7 +93,6 @@ export const MySQLGraphs = (props: Props) => {
                 label: 'DELETE',
               },
             ]}
-            ariaLabel="Queries Per Second Graph"
             error={error}
             loading={loading}
             nativeLegend
@@ -106,6 +106,7 @@ export const MySQLGraphs = (props: Props) => {
           <Grid container direction="row">
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Throughput Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.darkGreen,
@@ -120,7 +121,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Outbound',
                   },
                 ]}
-                ariaLabel="Throughput Graph"
                 error={error}
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
@@ -135,6 +135,7 @@ export const MySQLGraphs = (props: Props) => {
             </StyledSmallGraphGrid>
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Connections Per Second Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.connections.accepted,
@@ -143,7 +144,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Connections',
                   },
                 ]}
-                ariaLabel="Connections Per Second Graph"
                 error={error}
                 loading={loading}
                 nativeLegend
@@ -160,6 +160,7 @@ export const MySQLGraphs = (props: Props) => {
           <Grid container direction="row">
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Slow Queries Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.slowQueries,
@@ -168,7 +169,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Slow Queries',
                   },
                 ]}
-                ariaLabel="Slow Queries Graph"
                 error={error}
                 loading={loading}
                 nativeLegend
@@ -179,6 +179,7 @@ export const MySQLGraphs = (props: Props) => {
             </StyledSmallGraphGrid>
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Aborted Clients and Connections Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.aborted.connections,
@@ -203,7 +204,6 @@ export const MySQLGraphs = (props: Props) => {
                     label: 'Clients',
                   },
                 ]}
-                ariaLabel="Aborted Clients and Connections Graph"
                 error={error}
                 loading={loading}
                 nativeLegend

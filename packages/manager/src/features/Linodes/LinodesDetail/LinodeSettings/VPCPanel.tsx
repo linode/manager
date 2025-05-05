@@ -43,10 +43,10 @@ export interface VPCPanelProps {
   subnetError?: string;
   toggleAssignPublicIPv4Address: () => void;
   toggleAutoassignIPv4WithinVPCEnabled: () => void;
+  vpcIdError?: string;
   vpcIPRangesError?: string;
   vpcIPv4AddressOfLinode: string | undefined;
   vpcIPv4Error?: string;
-  vpcIdError?: string;
 }
 
 const ERROR_GROUP_STRING = 'vpc-errors';
@@ -127,16 +127,25 @@ export const VPCPanel = (props: VPCPanelProps) => {
 
   return (
     <Paper
+      data-testid="vpc-panel"
       sx={{
         padding: 0,
       }}
-      data-testid="vpc-panel"
     >
       <Stack>
         <Autocomplete
+          autoHighlight
+          clearIcon={null}
+          disabled={!regionSupportsVPCs}
+          errorText={vpcIdError ?? vpcError}
+          label={'VPC'}
+          loading={isLoading}
+          noOptionsText="No VPCs exist in this Linode's region."
           onChange={(_, selectedVPC) => {
             handleSelectVPC(selectedVPC?.value || -1);
           }}
+          options={vpcDropdownOptions}
+          placeholder={'Select a VPC'}
           textFieldProps={{
             tooltipText: REGION_CAVEAT_HELPER_TEXT,
           }}
@@ -147,22 +156,19 @@ export const VPCPanel = (props: VPCPanelProps) => {
                 ) ?? null)
               : defaultVPCValue
           }
-          autoHighlight
-          clearIcon={null}
-          disabled={!regionSupportsVPCs}
-          errorText={vpcIdError ?? vpcError}
-          label={'VPC'}
-          loading={isLoading}
-          noOptionsText="No VPCs exist in this Linode's region."
-          options={vpcDropdownOptions}
-          placeholder={'Select a VPC'}
         />
         {selectedVPCId !== -1 && regionSupportsVPCs && (
           <Stack data-testid="subnet-and-additional-options-section">
             <Autocomplete
+              autoHighlight
+              clearIcon={null}
+              errorText={subnetError}
+              label="Subnet"
               onChange={(_, selectedSubnet) => {
                 handleSubnetChange(selectedSubnet?.value);
               }}
+              options={subnetDropdownOptions}
+              placeholder="Select Subnet"
               textFieldProps={{
                 errorGroup: ERROR_GROUP_STRING,
               }}
@@ -171,23 +177,17 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   (option) => option.value === selectedSubnetId
                 ) ?? null
               }
-              autoHighlight
-              clearIcon={null}
-              errorText={subnetError}
-              label="Subnet"
-              options={subnetDropdownOptions}
-              placeholder="Select Subnet"
             />
             {selectedSubnetId && (
               <>
                 <Box
+                  alignItems="center"
+                  display="flex"
+                  flexDirection="row"
                   sx={(theme) => ({
                     marginLeft: '2px',
                     paddingTop: theme.spacing(),
                   })}
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="row"
                 >
                   <FormControlLabel
                     control={
@@ -196,6 +196,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         onChange={toggleAutoassignIPv4WithinVPCEnabled}
                       />
                     }
+                    data-testid="vpc-ipv4-checkbox"
                     label={
                       <Box
                         alignItems="center"
@@ -212,7 +213,6 @@ export const VPCPanel = (props: VPCPanelProps) => {
                         />
                       </Box>
                     }
-                    data-testid="vpc-ipv4-checkbox"
                   />
                 </Box>
                 {!autoassignIPv4WithinVPC && (
@@ -226,12 +226,12 @@ export const VPCPanel = (props: VPCPanelProps) => {
                   />
                 )}
                 <Box
+                  alignItems="center"
+                  display="flex"
                   sx={(theme) => ({
                     marginLeft: '2px',
                     marginTop: !autoassignIPv4WithinVPC ? theme.spacing() : 0,
                   })}
-                  alignItems="center"
-                  display="flex"
                 >
                   <FormControlLabel
                     control={

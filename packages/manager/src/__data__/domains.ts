@@ -1,4 +1,4 @@
-import { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
+import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
 
 export const domain1: Domain = {
   axfr_ips: [],

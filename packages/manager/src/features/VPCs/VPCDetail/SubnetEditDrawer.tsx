@@ -9,8 +9,6 @@ import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
 import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
@@ -77,7 +75,6 @@ export const SubnetEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
@@ -94,6 +91,8 @@ export const SubnetEditDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -105,8 +104,6 @@ export const SubnetEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <TextField
           disabled

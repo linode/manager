@@ -166,11 +166,11 @@ export const KubernetesPlansPanel = (props: Props) => {
   return (
     <TabbedPanel
       copy={copy}
-      notice={notice}
       error={error}
       handleTabChange={() => resetValues()}
       header={header || ' '}
       initTab={initialTab >= 0 ? initialTab : 0}
+      notice={notice}
       sx={{ padding: 0 }}
       tabs={tabs}
     />

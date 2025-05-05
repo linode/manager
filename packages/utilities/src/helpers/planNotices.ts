@@ -64,14 +64,14 @@ export const getCapabilityFromPlanType = (
   planType: LinodeTypeClass,
 ): Capabilities => {
   switch (planType) {
+    case 'accelerated': {
+      return 'NETINT Quadra T1U';
+    }
     case 'gpu': {
       return 'GPU Linodes';
     }
     case 'premium': {
       return 'Premium Plans';
-    }
-    case 'accelerated': {
-      return 'NETINT Quadra T1U';
     }
     default: {
       return 'Linodes';

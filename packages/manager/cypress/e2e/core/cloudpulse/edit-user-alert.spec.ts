@@ -5,7 +5,7 @@
  * It verifies that alert details are correctly displayed, interactive, and editable.
  */
 
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import {
   EVALUATION_PERIOD_DESCRIPTION,
   METRIC_DESCRIPTION_DATA_FIELD,
@@ -25,6 +25,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -105,6 +106,9 @@ const notificationChannels = notificationChannelFactory.build({
   label: 'Channel-1',
   type: 'custom',
 });
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 
 describe('Integration Tests for Edit Alert', () => {
   /*
@@ -125,6 +129,7 @@ describe('Integration Tests for Edit Alert', () => {
     // Mocking various API responses
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetRegions(regions);
     mockGetCloudPulseServices([alertDetails.service_type]);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
@@ -363,7 +368,10 @@ describe('Integration Tests for Edit Alert', () => {
           cy.findByText('Databases').should('be.visible');
           cy.findByText('user1').should('be.visible');
           cy.findByText(
-            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
+            formatDate(updated, {
+              format: 'MMM dd, yyyy, h:mm a',
+              timezone: 'GMT',
+            })
           ).should('be.visible');
         });
     });

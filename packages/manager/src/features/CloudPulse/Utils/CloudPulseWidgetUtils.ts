@@ -28,6 +28,11 @@ import type { MetricsDisplayRow } from 'src/components/LineGraph/MetricsDisplay'
 
 interface LabelNameOptionsProps {
   /**
+   * Boolean to check if metric name should be hidden
+   */
+  hideMetricName?: boolean;
+
+  /**
    * label for the graph title
    */
   label: string;
@@ -99,6 +104,11 @@ interface MetricRequestProps {
 
 interface DimensionNameProperties {
   /**
+   * Boolean to check if metric name should be hidden
+   */
+  hideMetricName?: boolean;
+
+  /**
    * metric key-value to generate dimension name
    */
   metric: { [label: string]: string };
@@ -141,6 +151,12 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
   const dimension: { [timestamp: number]: { [label: string]: number } } = {};
   const areas: AreaProps[] = [];
   const colors = Object.values(Alias.Chart.Categorical);
+
+  // check whether to hide metric name or not based on the number of unique metric names
+  const hideMetricName =
+    new Set(metricsList?.data?.result?.map(({ metric }) => metric.metric_name))
+      .size <= 1;
+
   if (status === 'success') {
     metricsList?.data?.result?.forEach(
       (graphData: CloudPulseMetricsList, index) => {
@@ -165,6 +181,7 @@ export const generateGraphData = (props: GraphDataOptionsProps): GraphData => {
           metric: transformedData.metric,
           resources,
           unit,
+          hideMetricName,
         };
         const labelName = getLabelName(labelOptions);
         const data = seriesDataFormatter(transformedData.values, start, end);
@@ -285,14 +302,14 @@ export const getCloudPulseMetricRequest = (
  * @returns generated label name for graph dimension
  */
 export const getLabelName = (props: LabelNameOptionsProps): string => {
-  const { label, metric, resources, unit } = props;
+  const { label, metric, resources, unit, hideMetricName = false } = props;
   // aggregated metric, where metric keys will be 0
   if (!Object.keys(metric).length) {
     // in this case return widget label and unit
     return `${label} (${unit})`;
   }
 
-  return getDimensionName({ metric, resources });
+  return getDimensionName({ metric, resources, hideMetricName });
 };
 
 /**
@@ -301,11 +318,15 @@ export const getLabelName = (props: LabelNameOptionsProps): string => {
  */
 // ... existing code ...
 export const getDimensionName = (props: DimensionNameProperties): string => {
-  const { metric, resources } = props;
+  const { metric, resources, hideMetricName = false } = props;
   return Object.entries(metric)
     .map(([key, value]) => {
       if (key === 'entity_id') {
         return mapResourceIdToName(value, resources);
+      }
+
+      if (key === 'metric_name' && hideMetricName) {
+        return '';
       }
 
       return value ?? '';
@@ -354,18 +375,18 @@ export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
   switch (preset) {
-    case '30minutes':
-      return { unit: 'min', value: 30 };
     case '1hour':
       return { unit: 'hr', value: 1 };
-    case '24hours':
-      return { unit: 'hr', value: 24 };
-    case '12hours':
-      return { unit: 'hr', value: 12 };
     case '7days':
       return { unit: 'days', value: 7 };
+    case '12hours':
+      return { unit: 'hr', value: 12 };
+    case '24hours':
+      return { unit: 'hr', value: 24 };
     case '30days':
       return { unit: 'days', value: 30 };
+    case '30minutes':
+      return { unit: 'min', value: 30 };
     default:
       return undefined;
   }

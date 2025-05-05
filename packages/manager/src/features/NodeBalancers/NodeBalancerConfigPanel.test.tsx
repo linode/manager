@@ -181,17 +181,13 @@ describe('NodeBalancerConfigPanel', () => {
   });
 
   it('renders fields specific to the Active Health Check type of HTTP Status', () => {
-    const {
-      getByLabelText,
-      getByTestId,
-      getByText,
-      queryByTestId,
-    } = renderWithTheme(
-      <NodeBalancerConfigPanel
-        {...nbConfigPanelMockPropsForTest}
-        healthCheckType="http"
-      />
-    );
+    const { getByLabelText, getByTestId, getByText, queryByTestId } =
+      renderWithTheme(
+        <NodeBalancerConfigPanel
+          {...nbConfigPanelMockPropsForTest}
+          healthCheckType="http"
+        />
+      );
 
     activeHealthChecksFormInputs.forEach((formLabel) => {
       expect(getByLabelText(formLabel)).toBeVisible();

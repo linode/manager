@@ -1,9 +1,9 @@
-import { Capabilities, Region } from '@linode/api-v4/lib/regions';
+import type { Capabilities, Region } from '@linode/api-v4/lib/regions';
 
 export const doesRegionSupportFeature = (
   region: string,
   regionsData: Region[],
-  feature: Capabilities
+  feature: Capabilities,
 ) => {
   const regionMetaData = regionsData.find((thisRegion) => {
     return thisRegion.id === region;
@@ -16,7 +16,7 @@ export const doesRegionSupportFeature = (
 
 export const regionsWithFeature = (
   regionsData: Region[],
-  feature: Capabilities
+  feature: Capabilities,
 ) => {
   return regionsData.filter((region) => region.capabilities.includes(feature));
 };

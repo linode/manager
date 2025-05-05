@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -21,18 +21,15 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Getting Started with Cloud Firewalls',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls',
     },
     {
       text: 'Manage Firewall Rules',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/manage-firewall-rules',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/manage-firewall-rules',
     },
     {
       text: 'Comparing Cloud Firewalls to Linux Firewall Software',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/comparing-cloud-firewalls-to-linux-firewall-software',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/comparing-cloud-firewalls-to-linux-firewall-software',
     },
   ],
   moreInfo: {
@@ -46,8 +43,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       external: true,
-      text:
-        'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
+      text: 'Linode Cloud Firewall Explained | Clear and Intuitive Network Control to and from All your Servers',
       to: 'https://www.youtube.com/watch?v=GsUUtsI_RSA',
     },
     {

@@ -13,7 +13,6 @@ import React from 'react';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -25,7 +24,7 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
 }
 
 export const EditVolumeDrawer = (props: Props) => {
@@ -35,9 +34,8 @@ export const EditVolumeDrawer = (props: Props) => {
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -85,7 +83,6 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

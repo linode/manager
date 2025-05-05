@@ -180,8 +180,7 @@ export const LinodeResize = (props: Props) => {
     types ?? []
   );
 
-  const currentTypes =
-    types?.filter((thisType) => !Boolean(thisType.successor)) ?? [];
+  const currentTypes = types?.filter((thisType) => !thisType.successor) ?? [];
 
   return (
     <Dialog
@@ -257,18 +256,18 @@ export const LinodeResize = (props: Props) => {
             Auto Resize Disk
             {disksError ? (
               <TooltipIcon
+                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
-                status="help"
                 text={`There was an error loading your Linode&rsquo; disks.`}
               />
             ) : isSmaller ? (
               <TooltipIcon
+                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
-                status="help"
                 text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
               />
             ) : !_shouldEnableAutoResizeDiskOption ? (

@@ -5,8 +5,6 @@ import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
 import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
@@ -70,7 +68,6 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
@@ -87,6 +84,8 @@ export const VPCEditDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -98,10 +97,10 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <Controller
+          control={control}
+          name="description"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -114,8 +113,6 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="description"
         />
         <ActionsPanel
           primaryButtonProps={{
