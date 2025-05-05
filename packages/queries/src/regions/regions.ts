@@ -43,7 +43,7 @@ export const useRegionQuery = (regionId: string) => {
     enabled: Boolean(regionId),
     initialData() {
       const regions = queryClient.getQueryData(
-        queryOptions(regionQueries.regions).queryKey
+        queryOptions(regionQueries.regions).queryKey,
       );
       return regions?.find((r) => r.id === regionId);
     },
@@ -73,7 +73,7 @@ export const useRegionsAvailabilitiesQuery = (enabled: boolean = true) =>
 
 export const useRegionAvailabilityQuery = (
   regionId: string,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<RegionAvailability[], APIError[]>({
     ...regionQueries.availability._ctx.region(regionId),

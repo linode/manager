@@ -1,11 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateLinodeInterfaceMutation } from '@linode/queries';
-import { Notice, omitProps, Stack } from '@linode/ui';
+import { Notice, Stack } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { getLinodeInterfacePayload } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
+import {
+  getCleanedLinodeInterfaceValues,
+  getLinodeInterfacePayload,
+} from 'src/features/Linodes/LinodeCreate/Networking/utilities';
 
 import { Actions } from './Actions';
 import { InterfaceFirewall } from './InterfaceFirewall';
@@ -41,7 +44,7 @@ export const AddInterfaceForm = (props: Props) => {
       },
     },
     async resolver(rawValues, context, options) {
-      const valuesWithOnlySelectedInterface = getLinodeInterfacePayload(
+      const valuesWithOnlySelectedInterface = getCleanedLinodeInterfaceValues(
         structuredClone(rawValues)
       );
 
@@ -59,7 +62,7 @@ export const AddInterfaceForm = (props: Props) => {
 
   const onSubmit = async (values: CreateInterfaceFormValues) => {
     try {
-      await mutateAsync(omitProps(values, ['purpose']));
+      await mutateAsync(getLinodeInterfacePayload(values));
 
       enqueueSnackbar('Successfully added network interface.', {
         variant: 'success',
@@ -79,8 +82,8 @@ export const AddInterfaceForm = (props: Props) => {
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Notice
-            text="Adding a network interface requires the Linode to be shut down. Changes will take effect when the Linode is powered on. "
-            variant="warning"
+            text="To add a network interface, the Linode must be shut down. Changes apply when it's powered on."
+            variant="info"
           />
           {form.formState.errors.root && (
             <Notice
@@ -96,7 +99,7 @@ export const AddInterfaceForm = (props: Props) => {
           {selectedInterfacePurpose === 'vpc' && (
             <VPCInterface regionId={regionId} />
           )}
-          <InterfaceFirewall />
+          {selectedInterfacePurpose !== 'vlan' && <InterfaceFirewall />}
           <Actions onClose={onClose} />
         </Stack>
       </form>

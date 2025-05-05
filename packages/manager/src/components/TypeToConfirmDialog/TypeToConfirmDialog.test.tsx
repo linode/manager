@@ -99,13 +99,13 @@ describe('TypeToConfirmDialog Component', () => {
     });
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
+        disableTypeToConfirmInput
         entity={{
           action: 'deletion',
           name: 'test',
           primaryBtnText: 'Delete',
           type: 'Linode',
         }}
-        disableTypeToConfirmInput
         label={'Linode Label'}
         loading={false}
         open={true}
@@ -128,13 +128,13 @@ describe('TypeToConfirmDialog Component', () => {
     });
     const { getByTestId } = renderWithTheme(
       <TypeToConfirmDialog
+        disableTypeToConfirmSubmit
         entity={{
           action: 'deletion',
           name: 'test',
           primaryBtnText: 'Delete',
           type: 'Linode',
         }}
-        disableTypeToConfirmSubmit
         label={'Linode Label'}
         loading={false}
         open={true}

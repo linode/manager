@@ -1,5 +1,4 @@
-import { Box, Button, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { Box, Button, CloseIcon, Typography } from '@linode/ui';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
@@ -92,7 +91,7 @@ export const AppDetailDrawer = (props: Props) => {
           data-qa-close-drawer
           onClick={onClose}
         >
-          <Close />
+          <CloseIcon />
         </IconButton>
       </Box>
       {selectedApp ? (
@@ -111,13 +110,13 @@ export const AppDetailDrawer = (props: Props) => {
               src={`/assets/white/${selectedApp?.details?.logo_url}`}
             />
             <Typography
+              className={classes.appName}
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML({
                   sanitizingTier: 'flexible',
                   text: displayLabel,
                 }),
               }}
-              className={classes.appName}
               data-qa-drawer-title={displayLabel}
               data-testid="app-name"
               variant="h2"
@@ -129,13 +128,13 @@ export const AppDetailDrawer = (props: Props) => {
                 {selectedApp?.details.summary}
               </Typography>
               <Typography
+                className={classes.description}
                 dangerouslySetInnerHTML={{
                   __html: sanitizeHTML({
                     sanitizingTier: 'flexible',
                     text: selectedApp?.details?.description,
                   }),
                 }}
-                className={classes.description}
                 variant="body1"
               />
             </Box>

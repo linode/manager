@@ -7,13 +7,13 @@ import {
   Box,
   Button,
   CircleProgress,
+  CloseIcon,
   IconButton,
   InputAdornment,
   Stack,
   TextField,
   TooltipIcon,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
@@ -81,25 +81,18 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
-  const {
-    data: stackscript,
-    isLoading: isSelectedStackScriptLoading,
-  } = useStackScriptQuery(
-    params.stackScriptID ?? -1,
-    hasPreselectedStackScript
-  );
+  const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
+    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
 
   const filter =
     type === 'Community'
       ? communityStackScriptFilter
       : accountStackScriptFilter;
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const {
     data,
@@ -168,6 +161,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   return (
     <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
       <TextField
+        hideLabel
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
@@ -185,7 +179,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             </InputAdornment>
           ),
         }}
-        hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
@@ -212,6 +205,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <TableBody>
           {stackscripts?.map((stackscript) => (
             <StackScriptSelectionRow
+              isSelected={field.value === stackscript.id}
+              key={stackscript.id}
+              onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
               onSelect={async () => {
                 setValue('image', null);
                 setValue(
@@ -231,9 +227,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
                   );
                 }
               }}
-              isSelected={field.value === stackscript.id}
-              key={stackscript.id}
-              onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
               stackscript={stackscript}
             />
           ))}

@@ -1,4 +1,5 @@
 import { makePayment } from '@linode/api-v4/lib/account/payments';
+import { accountQueries, useAccount, useClientToken } from '@linode/queries';
 import { CircleProgress, Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import {
@@ -13,7 +14,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
-import { useAccount, useClientToken, accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { SetSuccess } from './types';
@@ -38,6 +38,9 @@ const useStyles = makeStyles()(() => ({
   },
   root: {
     position: 'relative',
+    // We pass colorScheme: none to fix a dark mode issue
+    // https://github.com/paypal/paypal-js/issues/584#issuecomment-2652308317
+    colorScheme: 'none',
   },
 }));
 
@@ -255,5 +258,3 @@ export const PayPalButton = (props: Props) => {
     </div>
   );
 };
-
-export default PayPalButton;

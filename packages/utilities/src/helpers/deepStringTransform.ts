@@ -2,7 +2,7 @@
 // function to the value recursively. Useful for redacting string patterns.
 export const deepStringTransform = (
   value: any,
-  fn: (s: string) => string
+  fn: (s: string) => string,
 ): any => {
   if (typeof value === 'string') {
     return fn(value);

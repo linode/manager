@@ -9,7 +9,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
 import {
   ADD_NODE_POOLS_DESCRIPTION,
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
@@ -172,7 +171,6 @@ export const AddNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       PaperProps={{

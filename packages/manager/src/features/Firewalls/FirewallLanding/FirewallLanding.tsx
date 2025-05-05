@@ -1,11 +1,11 @@
 import { useFirewallsQuery } from '@linode/queries';
 import { Button, CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -144,6 +144,7 @@ const FirewallLanding = () => {
         }`}
       />
       <LandingHeader
+        breadcrumbProps={{ pathname: '/firewalls' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -151,6 +152,9 @@ const FirewallLanding = () => {
             resourceType: 'Firewalls',
           }),
         }}
+        disabledCreateButton={isFirewallsCreationRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
+        entity="Firewall"
         extraActions={
           secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
             <Button
@@ -161,10 +165,6 @@ const FirewallLanding = () => {
             </Button>
           ) : undefined
         }
-        breadcrumbProps={{ pathname: '/firewalls' }}
-        disabledCreateButton={isFirewallsCreationRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
-        entity="Firewall"
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
       />
@@ -176,6 +176,7 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '20%' }}
             >
               Label
             </TableSortCell>
@@ -184,14 +185,15 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="status"
+              sx={{ width: '10%' }}
             >
               Status
             </TableSortCell>
             <Hidden smDown>
-              <TableCell>Rules</TableCell>
-              <TableCell>Services</TableCell>
+              <TableCell sx={{ width: '15%' }}>Rules</TableCell>
+              <TableCell sx={{ width: '45%' }}>Services</TableCell>
             </Hidden>
-            <TableCell />
+            <TableCell sx={{ width: '10%' }} />
           </TableRow>
         </TableHead>
         <TableBody>

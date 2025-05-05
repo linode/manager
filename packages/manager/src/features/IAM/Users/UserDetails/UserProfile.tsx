@@ -1,10 +1,9 @@
-import { CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { useAccountUser } from '@linode/queries';
+import { CircleProgress, ErrorState, NotFound, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NotFound } from 'src/components/NotFound';
-import { useAccountUser } from '@linode/queries';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
@@ -33,7 +32,10 @@ export const UserProfile = () => {
   return (
     <>
       <DocumentTitleSegment segment={`${username} - Profile`} />
-      <Stack spacing={2} sx={(theme) => ({ marginTop: theme.spacing(2) })}>
+      <Stack
+        spacing={2}
+        sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}
+      >
         <UserDetailsPanel assignedRoles={assignedRoles} user={user} />
         <UsernamePanel user={user} />
         <UserEmailPanel user={user} />

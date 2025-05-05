@@ -4,7 +4,7 @@ import React from 'react';
 
 import { linodeConfigFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { PromptDialogContent } from './PromptDialogContent';
@@ -46,7 +46,7 @@ describe('PromptDialogContent', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    getByText('Upgrade Dry Run');
+    getByText('Perform Dry Run');
     getByText('Upgrade Interfaces');
     getByText('Cancel');
   });

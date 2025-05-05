@@ -52,15 +52,17 @@ describe('Linode create flow with Placement Group', () => {
    */
   it('can create a linode with a newly created Placement Group', () => {
     cy.visitWithLogin('/linodes/create');
-
-    cy.findByText(
-      'Select a Region for your Linode to see existing placement groups.'
-    ).should('be.visible');
+    cy.wait('@getRegions');
+    cy.findByText('Select a Region to see available placement groups.').should(
+      'be.visible'
+    );
 
     // Region without capability
     // Choose region
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockDallasRegion.label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockDallasRegion.label, mockRegions)
+      .click();
 
     // Choose plan
     cy.findByText('Shared CPU').click();
@@ -81,7 +83,9 @@ describe('Linode create flow with Placement Group', () => {
     // Region with capability
     // Choose region
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(mockNewarkRegion.label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(mockNewarkRegion.label, mockRegions)
+      .click();
 
     // Choose plan
     cy.findByText('Shared CPU').click();

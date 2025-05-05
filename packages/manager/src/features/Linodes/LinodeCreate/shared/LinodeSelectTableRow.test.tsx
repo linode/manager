@@ -4,7 +4,7 @@ import React from 'react';
 
 import { imageFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   renderWithThemeAndHookFormContext,
   wrapWithTableBody,

@@ -64,7 +64,7 @@ export const getTotalTraffic = (
   outBits: number,
   length: number,
   inBitsV6?: number,
-  outBitsV6?: number
+  outBitsV6?: number,
 ): TotalTrafficResults => {
   if (inBitsV6) {
     inBits += inBitsV6;

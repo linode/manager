@@ -52,9 +52,8 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
   const [checked, setChecked] = React.useState(false);
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const { classes } = useStyles();

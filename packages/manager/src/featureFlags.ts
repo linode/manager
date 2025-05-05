@@ -136,7 +136,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtctt2025: boolean;
+  mtc2025: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
@@ -155,6 +155,7 @@ export interface Flags {
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: BetaFeatureFlag;
+  vpcIpv6: boolean;
 }
 
 interface MarketplaceAppOverride {

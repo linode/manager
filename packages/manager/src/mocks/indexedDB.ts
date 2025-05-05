@@ -469,9 +469,9 @@ export const mswDB = {
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([objectStore], 'readwrite');
       const store = transaction.objectStore(objectStore);
-      // eslint-disable-next-line xss/no-mixed-html
+
       const sanitizedData = JSON.parse(JSON.stringify(data));
-      // eslint-disable-next-line xss/no-mixed-html
+
       const request = store.put({ id: 1, ...sanitizedData });
 
       request.onsuccess = () => {
@@ -502,10 +502,9 @@ export const mswDB = {
       storeRequest.onsuccess = () => {
         const mockState = storeRequest.result;
         if (mockState && mockState[entity]) {
-          const index = mockState[
-            entity
-          ].findIndex((item: [number, { id: number }] | { id: number }) =>
-            findItem(item, id)
+          const index = mockState[entity].findIndex(
+            (item: [number, { id: number }] | { id: number }) =>
+              findItem(item, id)
           );
 
           if (index !== -1) {
@@ -526,10 +525,9 @@ export const mswDB = {
             return;
           }
 
-          const index = seedState[
-            entity
-          ].findIndex((item: [number, { id: number }] | { id: number }) =>
-            findItem(item, id)
+          const index = seedState[entity].findIndex(
+            (item: [number, { id: number }] | { id: number }) =>
+              findItem(item, id)
           );
 
           if (index === -1) {

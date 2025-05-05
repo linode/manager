@@ -95,9 +95,16 @@ export const ScheduleSettings = (props: Props) => {
         )}
         <StyledFormControl>
           <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={isReadOnly}
+            label="Day of Week"
+            noMarginTop
             onChange={(_, selected) =>
               settingsForm.setFieldValue('day', selected?.value)
             }
+            options={dayOptions}
+            placeholder="Choose a day"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-weekday-select': true,
@@ -106,20 +113,20 @@ export const ScheduleSettings = (props: Props) => {
             value={dayOptions.find(
               (item) => item.value === settingsForm.values.day
             )}
-            autoHighlight
-            disableClearable
-            disabled={isReadOnly}
-            label="Day of Week"
-            noMarginTop
-            options={dayOptions}
-            placeholder="Choose a day"
           />
         </StyledFormControl>
         <FormControl>
           <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={isReadOnly}
+            label="Time of Day"
+            noMarginTop
             onChange={(_, selected) =>
               settingsForm.setFieldValue('window', selected?.value)
             }
+            options={windowOptions}
+            placeholder="Choose a time"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-time-select': true,
@@ -128,13 +135,6 @@ export const ScheduleSettings = (props: Props) => {
             value={windowOptions.find(
               (item) => item.value === settingsForm.values.window
             )}
-            autoHighlight
-            disableClearable
-            disabled={isReadOnly}
-            label="Time of Day"
-            noMarginTop
-            options={windowOptions}
-            placeholder="Choose a time"
           />
           <FormHelperText sx={{ marginLeft: 0 }}>
             Time displayed in{' '}

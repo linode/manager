@@ -36,17 +36,15 @@ export const UpgradeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
 
   const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
-  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
-    false
-  );
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] =
+    React.useState(false);
 
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);

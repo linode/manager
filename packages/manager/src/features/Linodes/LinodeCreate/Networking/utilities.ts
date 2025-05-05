@@ -1,3 +1,5 @@
+import { omitProps } from '@linode/ui';
+
 import type {
   APIError,
   CreateLinodeInterfacePayload,
@@ -19,7 +21,7 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
  */
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
   purpose: InterfacePurpose;
-  vpc: VPC | null;
+  vpc: null | VPC;
 }
 
 /**
@@ -28,12 +30,10 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
  * this function to mutate the `CreateLinodeInterfacePayload` so that only the desired values
  * are kept for the selected interface type (Public, VPC, VLAN).
  */
-export const getLinodeInterfacePayload = (
+export const getCleanedLinodeInterfaceValues = (
   networkInterface: LinodeCreateInterface
-) => {
-  const cleanedInterface = {
-    ...networkInterface,
-  };
+): LinodeCreateInterface => {
+  const cleanedInterface = { ...networkInterface };
 
   for (const key of ['public', 'vlan', 'vpc'] as const) {
     if (key !== networkInterface.purpose) {
@@ -42,6 +42,33 @@ export const getLinodeInterfacePayload = (
   }
 
   return cleanedInterface;
+};
+
+/**
+ * Intended to be used right before sending a paylaod to the API (but after client side validation)
+ * Cleans the given LinodeCreateInterface, turning it into a valid CreateLinodeInterfacePayload object via:
+ * - Removes the 'purpose' field
+ * - if the interface is a VPC interface, removes the 'vpc_id' field
+ */
+export const getLinodeInterfacePayload = (
+  networkInterface: LinodeCreateInterface
+): CreateLinodeInterfacePayload => {
+  // ensure only one interface type is present
+  const cleanedValues = getCleanedLinodeInterfaceValues(networkInterface);
+
+  if (cleanedValues.vpc) {
+    const vpcValues = omitProps(cleanedValues.vpc, ['vpc_id']);
+    return { ...omitProps(cleanedValues, ['purpose']), vpc: vpcValues };
+  }
+
+  // The API errors saying address is invalid if we pass an empty string.
+  // Therefore, we will transform an empty string to `null`.
+  // Ideally we should try putting this at the validation level if we can in the future.
+  if (cleanedValues.vlan?.ipam_address === '') {
+    cleanedValues.vlan.ipam_address = null;
+  }
+
+  return omitProps(cleanedValues, ['purpose']);
 };
 
 /**
@@ -96,6 +123,7 @@ const legacyFieldToNewFieldMap = {
   '].ipv4.vpc': '].vpc.ipv4.addresses.0.address',
   '].label': '].vlan.vlan_lanel',
   '].subnet_id': '].vpc.subnet_id',
+  '].ipam_address': '].vlan.ipam_address',
 };
 
 /**

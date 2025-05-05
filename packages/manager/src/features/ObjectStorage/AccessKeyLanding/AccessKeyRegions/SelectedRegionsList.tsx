@@ -41,8 +41,8 @@ export const SelectedRegionsList = ({
 
   return (
     <RemovableSelectionsList
-      LabelComponent={SelectedRegion}
       headerText=""
+      LabelComponent={SelectedRegion}
       noDataText=""
       onRemove={handleRemove}
       selectionData={selectedRegions}
