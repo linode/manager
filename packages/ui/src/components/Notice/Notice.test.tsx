@@ -10,7 +10,7 @@ describe('Notice Component', () => {
     const { container } = renderWithTheme(<Notice />);
     const notice = container.firstChild;
 
-    expect(notice).toHaveStyle('margin-bottom: 8px');
+    expect(notice).toHaveStyle('margin-bottom: 1rem');
     expect(notice).toHaveStyle('margin-left: 0');
     expect(notice).toHaveStyle('margin-top: 0');
   });
@@ -65,13 +65,6 @@ describe('Notice Component', () => {
 
     expect(container.firstChild).toHaveStyle('border-left: 4px solid #d63c42;');
     expect(container.firstChild).toHaveStyle('background: #ffe5e5;');
-  });
-
-  it('displays icon for important notices', () => {
-    const { getByTestId } = renderWithTheme(<Notice important />);
-    const icon = getByTestId('notice-important');
-
-    expect(icon).toBeInTheDocument();
   });
 
   it('handles bypassValidation prop', () => {

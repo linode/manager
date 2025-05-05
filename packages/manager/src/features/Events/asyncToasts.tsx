@@ -27,14 +27,14 @@ interface ToastOption {
 }
 
 interface ToastOptions {
-  failure?: ToastOption | boolean;
-  success?: ToastOption | boolean;
+  failure?: boolean | ToastOption;
+  success?: boolean | ToastOption;
 }
 
 export const createToast = (options: ToastOptions) => {
   const toastConfig: Toast = {};
 
-  const getToastMessage = (option: ToastOption | boolean): ToastMessage => {
+  const getToastMessage = (option: boolean | ToastOption): ToastMessage => {
     const message: ToastMessage['message'] = (e) => getEventMessage(e);
 
     if (typeof option === 'boolean') {

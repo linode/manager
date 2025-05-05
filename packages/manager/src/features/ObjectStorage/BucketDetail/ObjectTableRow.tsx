@@ -1,11 +1,11 @@
 import { Box, StyledLinkButton, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import ObjectIcon from 'src/assets/icons/objectStorage/object.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -37,10 +37,10 @@ export const ObjectTableRow = (props: Props) => {
         <Grid
           container
           spacing={2}
-          wrap="nowrap"
           sx={{
             alignItems: 'center',
           }}
+          wrap="nowrap"
         >
           <Grid className="py0">
             <ObjectIcon size={20} />
@@ -56,10 +56,7 @@ export const ObjectTableRow = (props: Props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell noWrap>
-        {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-        {readableBytes(objectSize, { base10: true }).formatted}
-      </TableCell>
+      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
       <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />

@@ -5,7 +5,7 @@ import * as React from 'react';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { TableCell } from 'src/components/TableCell';
 
-import ActionMenu from './MonitorActionMenu';
+import { MonitorActionMenu } from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 import {
   StyledGrid,
@@ -21,19 +21,10 @@ import type { ExtendedIssue } from 'src/queries/managed/types';
 interface MonitorRowProps {
   issues: ExtendedIssue[];
   monitor: ManagedServiceMonitor;
-  openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: (id: number, label: string) => void;
-  openMonitorDrawer: (id: number, mode: string) => void;
 }
 
 export const MonitorRow = (props: MonitorRowProps) => {
-  const {
-    issues,
-    monitor,
-    openDialog,
-    openHistoryDrawer,
-    openMonitorDrawer,
-  } = props;
+  const { issues, monitor } = props;
 
   const Icon = statusIconMap[monitor.status];
 
@@ -53,10 +44,10 @@ export const MonitorRow = (props: MonitorRowProps) => {
         <Grid
           container
           spacing={2}
-          wrap="nowrap"
           sx={{
             alignItems: 'center',
           }}
+          wrap="nowrap"
         >
           <StyledGrid>
             <Icon height={30} width={30} />
@@ -99,12 +90,9 @@ export const MonitorRow = (props: MonitorRowProps) => {
         <Typography>{monitor.address}</Typography>
       </TableCell>
       <TableCell actionCell>
-        <ActionMenu
+        <MonitorActionMenu
           label={monitor.label}
-          monitorID={monitor.id}
-          openDialog={openDialog}
-          openHistoryDrawer={openHistoryDrawer}
-          openMonitorDrawer={openMonitorDrawer}
+          monitorId={monitor.id}
           status={monitor.status}
         />
       </TableCell>

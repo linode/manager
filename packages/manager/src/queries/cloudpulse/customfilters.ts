@@ -60,14 +60,12 @@ export const useGetCustomFiltersQuery = (
     ): CloudPulseServiceTypeFiltersOptions[] => {
       // whatever field we receive, just return id and label
       return filters
-        .map(
-          (filter): CloudPulseServiceTypeFiltersOptions => {
-            return {
-              id: getStringValue(filter, idField) ?? '',
-              label: getStringValue(filter, labelField) ?? '',
-            };
-          }
-        )
+        .map((filter): CloudPulseServiceTypeFiltersOptions => {
+          return {
+            id: getStringValue(filter, idField) ?? '',
+            label: getStringValue(filter, labelField) ?? '',
+          };
+        })
         .filter(({ id, label }) => id.length && label.length);
     },
   });

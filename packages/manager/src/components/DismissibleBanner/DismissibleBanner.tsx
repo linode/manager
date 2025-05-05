@@ -12,6 +12,16 @@ interface Props extends NoticeProps {
    */
   actionButton?: JSX.Element;
   /**
+   * If false, the banner will not be dismissible
+   *
+   * @default true
+   */
+  dismissible?: boolean;
+  /**
+   * If true, the important icon will be vertically centered with the text no matter the height of the text.
+   */
+  forceImportantIconVerticalCenter?: boolean;
+  /**
    * Additional controls to pass to the Dismissible Banner
    */
   options?: DismissibleNotificationOptions;
@@ -38,7 +48,14 @@ interface Props extends NoticeProps {
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
 export const DismissibleBanner = (props: Props) => {
-  const { actionButton, children, options, preferenceKey, ...rest } = props;
+  const {
+    actionButton,
+    children,
+    dismissible = true, // Default to true if not provided
+    options,
+    preferenceKey,
+    ...rest
+  } = props;
 
   const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
@@ -54,24 +71,36 @@ export const DismissibleBanner = (props: Props) => {
       aria-label={`Dismiss ${preferenceKey} banner`}
       data-testid="notice-dismiss"
       onClick={handleDismiss}
-      sx={{ padding: 1, paddingRight: 2 }}
+      sx={(theme) => ({
+        padding: theme.spacingFunction(2),
+        '& svg': {
+          width: 16,
+          height: 16,
+          '& path': {
+            fill: theme.tokens.component.NotificationBanner.Icon,
+          },
+        },
+      })}
     >
       <CloseIcon />
     </IconButton>
   );
 
   return (
-    <Notice
-      bgcolor={(theme) => theme.palette.background.paper}
-      display="flex"
-      gap={1}
-      justifyContent="space-between"
-      {...rest}
-    >
-      {children}
-      <Stack alignItems="center" direction="row" spacing={1}>
-        {actionButton}
-        {dismissibleButton}
+    <Notice bgcolor={(theme) => theme.palette.background.paper} {...rest}>
+      <Stack direction="row">
+        <Stack direction="column" flex={1} justifyContent="center">
+          {children}
+        </Stack>
+        <Stack
+          alignSelf="flex-start"
+          direction="row"
+          justifyContent="flex-end"
+          spacing={1}
+        >
+          {actionButton}
+          {dismissible ? dismissibleButton : null}
+        </Stack>
       </Stack>
     </Notice>
   );

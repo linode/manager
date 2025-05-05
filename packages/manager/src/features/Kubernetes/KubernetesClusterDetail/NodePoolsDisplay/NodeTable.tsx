@@ -7,7 +7,6 @@ import * as React from 'react';
 import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
-import { DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -76,9 +75,8 @@ export const NodeTable = React.memo((props: Props) => {
   const { data: profile } = useProfile();
 
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -150,38 +148,38 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableHead>
                   <TableRow>
                     <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '35%',
-                      })}
                       active={orderBy === 'label'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'label'}
-                    >
-                      Linode
-                    </TableSortCell>
-                    <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '25%',
-                      })}
-                      active={orderBy === 'instanceStatus'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'instanceStatus'}
-                    >
-                      Status
-                    </TableSortCell>
-                    <TableSortCell
                       sx={(theme) => ({
                         ...theme.applyTableHeaderStyles,
                         width: '35%',
                       })}
+                    >
+                      Linode
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'instanceStatus'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'instanceStatus'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '25%',
+                      })}
+                    >
+                      Status
+                    </TableSortCell>
+                    <TableSortCell
                       active={orderBy === 'ip'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'ip'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                     >
                       IP Address
                     </TableSortCell>
@@ -194,6 +192,8 @@ export const NodeTable = React.memo((props: Props) => {
                       <TableRow>
                         <TableCell colSpan={4}>
                           <ErrorState
+                            compact
+                            CustomIcon={EmptyStateCloud}
                             errorText={
                               <Box>
                                 <Typography
@@ -209,8 +209,6 @@ export const NodeTable = React.memo((props: Props) => {
                                 </Typography>
                               </Box>
                             }
-                            CustomIcon={EmptyStateCloud}
-                            compact
                           />
                         </TableCell>
                       </TableRow>
@@ -269,20 +267,11 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        encryptionStatus={encryptionStatus}
                         regionSupportsDiskEncryption={
                           regionSupportsDiskEncryption
                         }
-                        /**
-                         * M3-9517: Once LDE starts releasing regions with LDE enabled, LDE will still be disabled for the LKE-E LA launch, so hide this tooltip
-                         * explaining how LDE can be enabled on LKE-E node pools.
-                         * TODO - LKE-E: Clean up this enterprise cluster checks once LDE is enabled for LKE-E.
-                         */
-                        tooltipText={
-                          clusterTier === 'enterprise'
-                            ? undefined
-                            : DISK_ENCRYPTION_NODE_POOL_GUIDANCE_COPY
-                        }
-                        encryptionStatus={encryptionStatus}
+                        tooltipText={undefined}
                       />
                     </Box>
                   ) : (

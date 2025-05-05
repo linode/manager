@@ -157,10 +157,10 @@ export const DatabaseNodeSelector = (props: Props) => {
         upgrades and maintenance.
       </Typography>
       <FormControl
+        disabled={isRestricted}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           handleNodeChange(+e.target.value as ClusterSize);
         }}
-        disabled={isRestricted}
       >
         {error ? <Notice text={error} variant="error" /> : null}
         <RadioGroup

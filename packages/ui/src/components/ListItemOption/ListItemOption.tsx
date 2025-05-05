@@ -2,9 +2,9 @@ import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
 import React from 'react';
 
+import { SelectedIcon } from '../Autocomplete';
 import { Box } from '../Box';
 import { ListItem } from '../ListItem';
-import { SelectedIcon } from '../Autocomplete';
 import { Tooltip } from '../Tooltip';
 
 import type { ListItemComponentsPropsOverrides } from '@mui/material/ListItem';
@@ -45,6 +45,12 @@ export const ListItemOption = <T,>({
 
   return (
     <Tooltip
+      disableFocusListener={!isItemOptionDisabled}
+      disableHoverListener={!isItemOptionDisabled}
+      disableTouchListener={!isItemOptionDisabled}
+      enterDelay={200}
+      enterNextDelay={200}
+      enterTouchDelay={200}
       PopperProps={{
         sx: {
           '& .MuiTooltip-tooltip': {
@@ -57,15 +63,10 @@ export const ListItemOption = <T,>({
           ? itemOptionDisabledReason
           : ''
       }
-      disableFocusListener={!isItemOptionDisabled}
-      disableHoverListener={!isItemOptionDisabled}
-      disableTouchListener={!isItemOptionDisabled}
-      enterDelay={200}
-      enterNextDelay={200}
-      enterTouchDelay={200}
     >
       <StyledDisabledItem
         {...rest}
+        aria-disabled={undefined}
         className={
           isItemOptionDisabled ? `${className} Mui-disabled` : className
         }
@@ -75,20 +76,19 @@ export const ListItemOption = <T,>({
             'data-testid': item.id,
           } as ListItemComponentsPropsOverrides,
         }}
+        data-qa-disabled-item={isItemOptionDisabled}
         onClick={(e) =>
           isItemOptionDisabled
             ? e.preventDefault()
             : onClick
-            ? onClick(e)
-            : null
+              ? onClick(e)
+              : null
         }
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           maxHeight,
         }}
-        aria-disabled={undefined}
-        data-qa-disabled-item={isItemOptionDisabled}
       >
         {children}
         {isItemOptionDisabled && (

@@ -107,12 +107,13 @@ interface LimitsEvolution {
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
-  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpAlerting: AclpAlerting;
+  aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpIntegration: boolean;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
-  apiMaintenance: APIMaintenance;
   apicliButtonCopy: string;
+  apiMaintenance: APIMaintenance;
   apl: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
@@ -135,9 +136,10 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
+  mtc2025: boolean;
   nodebalancerVpc: boolean;
-  objMultiCluster: boolean;
   objectStorageGen2: BaseFeatureFlag;
+  objMultiCluster: boolean;
   productInformationBanners: ProductInformationBannerFlag[];
   promos: boolean;
   promotionalOffers: PromotionalOffer[];
@@ -148,11 +150,12 @@ export interface Flags {
   supportTicketSeverity: boolean;
   taxBanner: TaxBanner;
   taxCollectionBanner: TaxCollectionBanner;
-  taxId: BaseFeatureFlag;
   taxes: Taxes;
+  taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: BetaFeatureFlag;
+  vpcIpv6: boolean;
 }
 
 interface MarketplaceAppOverride {
@@ -164,7 +167,7 @@ interface MarketplaceAppOverride {
    *
    * Pass `null` to hide the marketplace app
    */
-  details: Partial<OCA> | null;
+  details: null | Partial<OCA>;
   /**
    * The ID of the StackScript that powers this Marketplace app
    */
@@ -255,8 +258,8 @@ export type ProductInformationBannerLocation =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 interface ProductInformationBannerDecoration {
   important: 'false' | 'true' | boolean;

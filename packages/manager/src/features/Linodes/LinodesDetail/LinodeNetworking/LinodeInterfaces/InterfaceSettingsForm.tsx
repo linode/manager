@@ -113,7 +113,7 @@ export const InterfaceSettingsForm = (props: Props) => {
       <Stack divider={<Divider />} spacing={2}>
         <Stack spacing={2}>
           <Stack spacing={1}>
-            <Typography variant="h3">Default Route</Typography>
+            <Typography variant="h3">Default Route Selection</Typography>
             {form.formState.errors.default_route?.message && (
               <Notice
                 text={form.formState.errors.default_route?.message}
@@ -121,8 +121,8 @@ export const InterfaceSettingsForm = (props: Props) => {
               />
             )}
             <Typography>
-              The default route is the route your Linode uses when traffic
-              doesn&rsquo;t have a specific route to a destination.
+              The network interface default route is the route a device uses
+              when it doesn&rsquo;t have a specific route to a destination.
             </Typography>
             <Notice variant="info">
               <Typography
@@ -182,8 +182,9 @@ export const InterfaceSettingsForm = (props: Props) => {
             Linode&rsquo;s internal network configuration files during each
             system boot.{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/automatically-configure-networking">
-              Learn more.
+              Learn more
             </Link>
+            .
           </Typography>
           <Controller
             control={form.control}
@@ -192,7 +193,7 @@ export const InterfaceSettingsForm = (props: Props) => {
               <FormControlLabel
                 checked={field.value ?? false}
                 control={<Toggle />}
-                label="Automatically configure networking"
+                label="Enable Network Helper"
                 onChange={field.onChange}
                 sx={{ ml: '-10px !important' }}
               />

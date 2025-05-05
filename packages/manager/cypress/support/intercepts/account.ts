@@ -25,6 +25,7 @@ import type {
   Token,
   User,
 } from '@linode/api-v4';
+import type { APIErrorContents } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account and mocks response.
@@ -384,6 +385,25 @@ export const mockUpdateAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
   return cy.intercept('PUT', apiMatcher('account/settings'), settings);
+};
+
+/**
+ * Intercepts PUT request to update account settings and mocks an API error response.
+ *
+ * @param errorMessage - API error message with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccountSettingsError = (
+  errorContents: APIErrorContents = 'An unknown error has occurred',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('account/settings'),
+    makeErrorResponse(errorContents, statusCode)
+  );
 };
 
 /**

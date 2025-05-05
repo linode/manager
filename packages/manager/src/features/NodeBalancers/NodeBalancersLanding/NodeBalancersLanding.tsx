@@ -1,10 +1,10 @@
 import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -56,15 +56,13 @@ export const NodeBalancersLanding = () => {
     filter
   );
 
-  const {
-    data: selectedNodeBalancer,
-    isFetching: isFetchingNodeBalancer,
-  } = useDialogData({
-    enabled: !!params.id,
-    paramKey: 'id',
-    queryHook: useNodeBalancerQuery,
-    redirectToOnNotFound: '/nodebalancers',
-  });
+  const { data: selectedNodeBalancer, isFetching: isFetchingNodeBalancer } =
+    useDialogData({
+      enabled: !!params.id,
+      paramKey: 'id',
+      queryHook: useNodeBalancerQuery,
+      redirectToOnNotFound: '/nodebalancers',
+    });
 
   if (error) {
     return (

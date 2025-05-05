@@ -4,6 +4,7 @@ import {
   useSubnetsQuery,
 } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
   useLocation,
@@ -16,7 +17,6 @@ import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -113,7 +113,11 @@ export const VPCSubnetsTable = (props: Props) => {
     };
   };
 
-  const { data: subnets, error, isLoading } = useSubnetsQuery(
+  const {
+    data: subnets,
+    error,
+    isLoading,
+  } = useSubnetsQuery(
     vpcId,
     {
       page: pagination.page,
@@ -256,16 +260,16 @@ export const VPCSubnetsTable = (props: Props) => {
   const SubnetTableRowHead = (
     <TableRow>
       <TableSortCell
+        active={orderBy === 'label'}
+        direction={order}
+        handleClick={handleOrderChange}
+        label="label"
         sx={(theme) => ({
           [theme.breakpoints.down('sm')]: {
             width: '50%',
           },
           width: '24%',
         })}
-        active={orderBy === 'label'}
-        direction={order}
-        handleClick={handleOrderChange}
-        label="label"
       >
         Subnet Label
       </TableSortCell>
@@ -360,6 +364,12 @@ export const VPCSubnetsTable = (props: Props) => {
     <>
       <Box display="flex" flexWrap="wrap" justifyContent="space-between">
         <DebouncedSearchTextField
+          debounceTime={250}
+          hideLabel
+          isSearching={false}
+          label="Filter Subnets by label or id"
+          onSearch={handleSearch}
+          placeholder="Filter Subnets by label or id"
           sx={{
             marginBottom: theme.spacingFunction(16),
             [theme.breakpoints.up('sm')]: {
@@ -367,21 +377,15 @@ export const VPCSubnetsTable = (props: Props) => {
             },
             width: '250px',
           }}
-          debounceTime={250}
-          hideLabel
-          isSearching={false}
-          label="Filter Subnets by label or id"
-          onSearch={handleSearch}
-          placeholder="Filter Subnets by label or id"
           value={query ?? ''}
         />
         <Button
-          sx={{
-            marginBottom: theme.spacingFunction(16),
-          }}
           buttonType="primary"
           disabled={isVPCLKEEnterpriseCluster}
           onClick={handleSubnetCreate}
+          sx={{
+            marginBottom: theme.spacingFunction(16),
+          }}
         >
           Create Subnet
         </Button>
@@ -392,10 +396,10 @@ export const VPCSubnetsTable = (props: Props) => {
         vpcId={vpcId}
       />
       <CollapsibleTable
+        TableItems={getTableItems()}
         TableRowEmpty={
           <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
         }
-        TableItems={getTableItems()}
         TableRowHead={SubnetTableRowHead}
       />
       <PaginationFooter
@@ -406,12 +410,12 @@ export const VPCSubnetsTable = (props: Props) => {
         pageSize={pagination.pageSize}
       />
       <SubnetUnassignLinodesDrawer
+        isFetching={isFetchingSubnet || isFetchingLinode}
+        onClose={onCloseSubnetDrawer}
         open={
           params.subnetAction === 'unassign' ||
           params.linodeAction === 'unassign'
         }
-        isFetching={isFetchingSubnet || isFetchingLinode}
-        onClose={onCloseSubnetDrawer}
         singleLinodeToBeUnassigned={selectedLinode}
         subnet={selectedSubnet}
         vpcId={vpcId}

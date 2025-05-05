@@ -3,8 +3,6 @@ import { capitalize } from '@linode/utilities';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
-
 import {
   formValueToIPs,
   getInitialFormValues,
@@ -74,7 +72,6 @@ export const FirewallRuleDrawer = React.memo(
     }: FormState) => {
       // The validated IPs may have errors, so set them to state so we see the errors.
       const validatedIPs = validateIPs(ips, {
-        // eslint-disable-next-line sonarjs/no-duplicate-string
         allowEmptyAddress: addresses !== 'ip/netmask',
       });
       setIPs(validatedIPs);
@@ -117,12 +114,7 @@ export const FirewallRuleDrawer = React.memo(
     };
 
     return (
-      <Drawer
-        NotFoundComponent={NotFound}
-        onClose={onClose}
-        open={isOpen}
-        title={title}
-      >
+      <Drawer onClose={onClose} open={isOpen} title={title}>
         <Formik
           initialValues={getInitialFormValues(ruleToModify)}
           onSubmit={onSubmit}

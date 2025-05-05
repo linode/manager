@@ -6,9 +6,9 @@ import {
   Drawer,
   FormControlLabel,
   Notice,
+  omittedProps,
   TextField,
   Typography,
-  omittedProps,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {
@@ -21,7 +21,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
@@ -186,7 +185,6 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}
@@ -227,6 +225,8 @@ export const KubeControlPlaneACLDrawer = (
           </StyledTypography>
           <Box sx={{ marginTop: 1 }}>
             <Controller
+              control={control}
+              name="acl.enabled"
               render={({ field }) => (
                 <FormControlLabel
                   control={
@@ -234,6 +234,9 @@ export const KubeControlPlaneACLDrawer = (
                       checked={
                         isEnterpriseCluster ? true : (field.value ?? false)
                       }
+                      disabled={isEnterpriseCluster}
+                      name="ipacl-checkbox"
+                      onBlur={field.onBlur}
                       onChange={() => {
                         setValue('acl.enabled', !field.value, {
                           shouldDirty: true,
@@ -262,16 +265,11 @@ export const KubeControlPlaneACLDrawer = (
                           );
                         }
                       }}
-                      disabled={isEnterpriseCluster}
-                      name="ipacl-checkbox"
-                      onBlur={field.onBlur}
                     />
                   }
                   label="Enable Control Plane ACL"
                 />
               )}
-              control={control}
-              name="acl.enabled"
             />
           </Box>
           <Divider sx={{ marginBottom: 3, marginTop: 1.5 }} />
@@ -286,6 +284,8 @@ export const KubeControlPlaneACLDrawer = (
                 string to use for tracking this change.
               </StyledTypography>
               <Controller
+                control={control}
+                name="acl.revision-id"
                 render={({ field, fieldState }) => (
                   <TextField
                     disabled={!acl.enabled}
@@ -296,8 +296,6 @@ export const KubeControlPlaneACLDrawer = (
                     value={field.value}
                   />
                 )}
-                control={control}
-                name="acl.revision-id"
               />
               <Divider sx={{ marginBottom: 3, marginTop: 3 }} />
             </>
@@ -316,10 +314,12 @@ export const KubeControlPlaneACLDrawer = (
           )}
           <Box sx={{ maxWidth: 450 }}>
             <Controller
+              control={control}
+              name="acl.addresses.ipv4"
               render={({ field }) => (
                 <MultipleNonExtendedIPInput
                   buttonText="Add IPv4 Address"
-                  disabled={!acl.enabled}
+                  disabled={!acl.enabled || isACLAcknowledgementChecked}
                   ipErrors={errors.acl?.addresses?.ipv4}
                   isLinkStyled
                   nonExtendedIPs={field.value ?? ['']}
@@ -328,15 +328,15 @@ export const KubeControlPlaneACLDrawer = (
                   title="IPv4 Addresses or CIDRs"
                 />
               )}
-              control={control}
-              name="acl.addresses.ipv4"
             />
             <Box marginTop={2}>
               <Controller
+                control={control}
+                name="acl.addresses.ipv6"
                 render={({ field }) => (
                   <MultipleNonExtendedIPInput
                     buttonText="Add IPv6 Address"
-                    disabled={!acl.enabled}
+                    disabled={!acl.enabled || isACLAcknowledgementChecked}
                     ipErrors={errors.acl?.addresses?.ipv6}
                     isLinkStyled
                     nonExtendedIPs={field.value ?? ['']}
@@ -345,8 +345,6 @@ export const KubeControlPlaneACLDrawer = (
                     title="IPv6 Addresses or CIDRs"
                   />
                 )}
-                control={control}
-                name="acl.addresses.ipv6"
               />
             </Box>
           </Box>
@@ -354,10 +352,10 @@ export const KubeControlPlaneACLDrawer = (
             <FormControlLabel
               control={
                 <Checkbox
+                  name="acl-acknowledgement"
                   onChange={() =>
                     setIsACLAcknowledgementChecked(!isACLAcknowledgementChecked)
                   }
-                  name="acl-acknowledgement"
                 />
               }
               data-qa-checkbox="acl-acknowledgement"

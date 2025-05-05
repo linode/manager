@@ -1,6 +1,7 @@
 import { Box, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -8,7 +9,6 @@ import { AlertResources } from '../../AlertsResources/AlertsResources';
 import { getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { FieldPathByValue } from 'react-hook-form';
 
 export interface CloudPulseModifyAlertResourcesProp {
   /**
@@ -47,6 +47,8 @@ export const CloudPulseModifyAlertResources = React.memo(
 
     return (
       <Controller
+        control={control}
+        name={name}
         render={({ field, fieldState }) => (
           <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
             <Typography ref={titleRef} variant="h2">
@@ -72,8 +74,6 @@ export const CloudPulseModifyAlertResources = React.memo(
             </Box>
           </Box>
         )}
-        control={control}
-        name={name}
       />
     );
   }

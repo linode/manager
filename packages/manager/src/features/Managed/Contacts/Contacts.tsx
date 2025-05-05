@@ -1,12 +1,11 @@
 import { Button } from '@linode/ui';
-import { useDialog, useOpenClose } from '@linode/utilities';
+import { Hidden } from '@linode/ui';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,73 +14,90 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDialogData } from 'src/hooks/useDialogData';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedContactsQuery,
   useDeleteContactMutation,
+  useManagedContactQuery,
 } from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { generateGroupsFromContacts } from '../utils';
 import {
   StyledHeaderGrid,
   StyledTypography,
   StyledWrapperGrid,
 } from './Contacts.styles';
 import ContactDrawer from './ContactsDrawer';
-import ContactTableContact from './ContactsTableContent';
+import { ContactsTableContent } from './ContactsTableContent';
 
-import type { ManagedContactGroup, Mode } from './common';
-import type { ManagedContact } from '@linode/api-v4/lib/managed';
-
-const Contacts = () => {
+export const Contacts = () => {
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
 
-  const {
-    data,
-    dataUpdatedAt,
-    error,
-    isLoading,
-  } = useAllManagedContactsQuery();
+  const { data, dataUpdatedAt, error, isLoading } =
+    useAllManagedContactsQuery();
 
   const contacts = data || [];
 
-  const [selectedContactId, setSelectedContactId] = React.useState<
-    null | number
-  >(null);
+  const { data: selectedContact, isFetching: isSelectedContactFetching } =
+    useDialogData({
+      enabled:
+        match.routeId === '/managed/contacts/$contactId/edit' ||
+        match.routeId === '/managed/contacts/$contactId/delete',
+      paramKey: 'contactId',
+      queryHook: useManagedContactQuery,
+      redirectToOnNotFound: '/managed/contacts',
+    });
 
-  const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
-    'create'
+  const [deleteError, setDeleteError] = React.useState<string | undefined>(
+    undefined
   );
-
   const { mutateAsync: deleteContact } = useDeleteContactMutation();
 
   const {
-    closeDialog,
-    dialog,
-    handleError,
-    openDialog,
-    submitDialog,
-  } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
+    handleOrderChange,
+    order,
+    orderBy,
+    sortedData: sortedContacts,
+  } = useOrderV2({
+    data: contacts,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'name',
+      },
+      from: '/managed/contacts',
+    },
+    preferenceKey: 'managed-contacts',
+  });
 
   const handleDelete = () => {
-    submitDialog(dialog.entityID)
+    deleteContact({ id: selectedContact?.id || -1 })
       .then(() => {
         enqueueSnackbar('Contact deleted successfully.', {
           variant: 'success',
         });
       })
-      .catch((e) =>
-        handleError(
+      .catch((e) => {
+        setDeleteError(
           getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
-        )
-      );
+        );
+      });
   };
-
-  const contactDrawer = useOpenClose();
 
   // Ref for handling "scrollTo" on Paginated component.
   const contactsTableRef = React.createRef<HTMLDivElement>();
 
   const groups = generateGroupsFromContacts(contacts);
+
+  const isCreateContactDialogOpen = match.routeId === '/managed/contacts/add';
+  const isDeleteContactDialogOpen =
+    match.routeId === '/managed/contacts/$contactId/delete';
+  const isEditContactDialogOpen =
+    match.routeId === '/managed/contacts/$contactId/edit';
 
   return (
     <>
@@ -100,171 +116,120 @@ const Contacts = () => {
       >
         <StyledWrapperGrid>
           <Button
-            onClick={() => {
-              setContactDrawerMode('create');
-              contactDrawer.open();
-            }}
             buttonType="primary"
+            onClick={() => {
+              navigate({
+                to: '/managed/contacts/add',
+              });
+            }}
+            sx={{ mb: 1 }}
           >
             Add Contact
           </Button>
         </StyledWrapperGrid>
       </StyledHeaderGrid>
-      <OrderBy data={contacts} order="asc" orderBy="name">
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+      <Paginate data={sortedContacts || []} scrollToRef={contactsTableRef}>
+        {({
+          count,
+          data: paginatedData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => {
           return (
-            <Paginate data={orderedData} scrollToRef={contactsTableRef}>
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-              }) => {
-                return (
-                  <>
-                    <Table aria-label="List of Your Managed Contacts">
-                      <TableHead>
-                        <TableRow>
-                          <TableSortCell
-                            active={orderBy === 'name'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            label="name"
-                          >
-                            Name
-                          </TableSortCell>
-                          <Hidden mdDown>
-                            <TableSortCell
-                              active={orderBy === 'group'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              label="group"
-                            >
-                              Group
-                            </TableSortCell>
-                          </Hidden>
-                          <TableSortCell
-                            active={orderBy === 'email'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            label="email"
-                          >
-                            E-mail
-                          </TableSortCell>
-                          <Hidden xsDown>
-                            <TableSortCell
-                              active={orderBy === 'phone:primary'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              label="phone:primary"
-                            >
-                              Primary Phone
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'phone:secondary'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              label="phone:secondary"
-                            >
-                              Secondary Phone
-                            </TableSortCell>
-                          </Hidden>
-                          <TableCell />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <ContactTableContact
-                          openDialog={(contactId: number) => {
-                            const selectedContact = contacts.find(
-                              (thisContact) => thisContact.id === contactId
-                            );
-                            const label = selectedContact
-                              ? selectedContact.name
-                              : '';
-                            openDialog(contactId, label);
-                          }}
-                          openDrawer={(contactId: number) => {
-                            setSelectedContactId(contactId);
-                            setContactDrawerMode('edit');
-                            contactDrawer.open();
-                          }}
-                          contacts={paginatedData}
-                          error={error}
-                          lastUpdated={dataUpdatedAt}
-                          loading={isLoading}
-                        />
-                      </TableBody>
-                    </Table>
-                    <PaginationFooter
-                      count={count}
-                      eventCategory="managed contacts"
-                      handlePageChange={handlePageChange}
-                      handleSizeChange={handlePageSizeChange}
-                      page={page}
-                      pageSize={pageSize}
-                    />
-                  </>
-                );
-              }}
-            </Paginate>
+            <>
+              <Table aria-label="List of Your Managed Contacts">
+                <TableHead>
+                  <TableRow>
+                    <TableSortCell
+                      active={orderBy === 'name'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="name"
+                    >
+                      Name
+                    </TableSortCell>
+                    <Hidden mdDown>
+                      <TableSortCell
+                        active={orderBy === 'group'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="group"
+                      >
+                        Group
+                      </TableSortCell>
+                    </Hidden>
+                    <TableSortCell
+                      active={orderBy === 'email'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="email"
+                    >
+                      E-mail
+                    </TableSortCell>
+                    <Hidden xsDown>
+                      <TableSortCell
+                        active={orderBy === 'phone:primary'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="phone:primary"
+                      >
+                        Primary Phone
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'phone:secondary'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="phone:secondary"
+                      >
+                        Secondary Phone
+                      </TableSortCell>
+                    </Hidden>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <ContactsTableContent
+                    contacts={paginatedData}
+                    error={error}
+                    lastUpdated={dataUpdatedAt}
+                    loading={isLoading}
+                  />
+                </TableBody>
+              </Table>
+              <PaginationFooter
+                count={count}
+                eventCategory="managed contacts"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </>
           );
         }}
-      </OrderBy>
+      </Paginate>
       <DeletionDialog
         entity="contact"
-        error={dialog.error}
-        label={dialog.entityLabel || ''}
-        loading={dialog.isLoading}
-        onClose={closeDialog}
+        error={deleteError}
+        label={selectedContact?.name || ''}
+        loading={isSelectedContactFetching}
+        onClose={() => {
+          setDeleteError(undefined);
+          navigate({
+            to: '/managed/contacts',
+          });
+        }}
         onDelete={handleDelete}
-        open={dialog.isOpen}
+        open={isDeleteContactDialogOpen}
       />
       <ContactDrawer
-        closeDrawer={contactDrawer.close}
-        contact={contacts.find((contact) => contact.id === selectedContactId)}
+        contact={selectedContact}
         groups={groups}
-        isOpen={contactDrawer.isOpen}
-        mode={contactDrawerMode}
+        isFetching={isSelectedContactFetching}
+        isOpen={isEditContactDialogOpen || isCreateContactDialogOpen}
       />
     </>
   );
-};
-
-export default Contacts;
-
-/**
- * Generate groups from a list of Managed Contacts.
- *
- * @param contacts: Linode.ManagedContact[]
- * A list of contacts to generate groups from.
- */
-export const generateGroupsFromContacts = (
-  contacts: ManagedContact[]
-): ManagedContactGroup[] => {
-  const groups: ManagedContactGroup[] = [];
-
-  contacts.forEach((contact) => {
-    // If the contact doesn't have a group, don't do anything. Otherwise we'd have `null` groups.
-    if (typeof contact.group !== 'string') {
-      return;
-    }
-
-    // Have we tracked this group yet?
-    const idx = groups.findIndex((group) => group.groupName === contact.group);
-
-    // If not, add a new group.
-    if (idx === -1) {
-      groups.push({
-        contactNames: [contact.name],
-        groupName: contact.group,
-      });
-    } else {
-      // If we've already tracked the group, just add this contact's name.
-      groups[idx].contactNames.push(contact.name);
-    }
-  });
-
-  return groups;
 };

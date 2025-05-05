@@ -177,16 +177,16 @@ export const predefinedFirewallFromRule = (
   }
 
   switch (ports) {
-    case portPresets.ssh:
-      return 'ssh';
+    case portPresets.dns:
+      return 'dns';
     case portPresets.http:
       return 'http';
     case portPresets.https:
       return 'https';
     case portPresets.mysql:
       return 'mysql';
-    case portPresets.dns:
-      return 'dns';
+    case portPresets.ssh:
+      return 'ssh';
     default:
       return undefined;
   }

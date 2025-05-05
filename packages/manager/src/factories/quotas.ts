@@ -13,5 +13,5 @@ export const quotaFactory = Factory.Sync.makeFactory<Quota>({
 
 export const quotaUsageFactory = Factory.Sync.makeFactory<QuotaUsage>({
   quota_limit: 50,
-  used: 25,
+  usage: 25,
 });

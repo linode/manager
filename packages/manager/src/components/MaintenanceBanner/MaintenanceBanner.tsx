@@ -68,7 +68,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
   }
 
   return (
-    <Notice important variant="warning">
+    <Notice variant="warning">
       <Typography lineHeight="20px">
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
@@ -94,12 +94,12 @@ const generateIntroText = (
   end?: null | string,
   timezone?: string
 ) => {
-  const maintenanceInProgress = !!start
+  const maintenanceInProgress = start
     ? isPast(start)(new Date().toISOString())
     : false;
 
   /** we're on the Linode Detail Screen */
-  if (!!type) {
+  if (type) {
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
@@ -112,7 +112,7 @@ const generateIntroText = (
     }
 
     /** migration or reboot happening at a later date */
-    if (!!start) {
+    if (start) {
       /**
        * we're going to display both the raw and humanized versions of the date
        * to the user here.

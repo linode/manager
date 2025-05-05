@@ -1,10 +1,10 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -20,6 +20,8 @@ import {
 } from '../constants';
 import {
   hasUnrecommendedConfiguration as _hasUnrecommendedConfiguration,
+  getLinodeInterfacePrimaryIPv4,
+  getLinodeInterfaceRanges,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
@@ -83,15 +85,13 @@ export const SubnetLinodeRow = (props: Props) => {
    * The below hook gives us the relevant firewall and interface data depending on
    * interface type.
    */
-  const {
-    firewallsInfo,
-    interfacesInfo,
-  } = useInterfaceAndFirewallDataForLinode({
-    configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
-    interfaceId,
-    isLinodeInterface,
-    linodeId,
-  });
+  const { firewallsInfo, interfacesInfo } =
+    useInterfaceAndFirewallDataForLinode({
+      configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
+      interfaceId,
+      isLinodeInterface,
+      linodeId,
+    });
 
   const { attachedFirewalls, firewallsError, firewallsLoading } = firewallsInfo;
   const {
@@ -158,16 +158,16 @@ export const SubnetLinodeRow = (props: Props) => {
         sx={{ alignItems: 'center', display: 'flex' }}
       >
         <TooltipIcon
-          text={
-            <Typography>
-              {isLinodeInterface
-                ? '@TODO Linode Interfaces - confirm copy? This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
-                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
-            </Typography>
-          }
           icon={<StyledWarningIcon />}
           status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
+          text={
+            <Typography>
+              {isLinodeInterface
+                ? 'This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
+                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
+            </Typography>
+          }
         />
         {linkifiedLinodeLabel}
       </Box>
@@ -238,15 +238,17 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {isRebootNeeded && (
               <InlineMenuAction
+                actionText="Reboot"
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(linode, 'Reboot', subnet);
                 }}
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             {showPowerButton && (
               <InlineMenuAction
+                actionText={isOffline ? 'Power On' : 'Power Off'}
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
@@ -254,8 +256,6 @@ export const SubnetLinodeRow = (props: Props) => {
                     subnet
                   );
                 }}
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             <InlineMenuAction
@@ -310,9 +310,7 @@ const getSubnetLinodeIPv4CellString = (
   if ('purpose' in interfaceData) {
     return getIPv4LinkForConfigInterface(interfaceData);
   } else {
-    const primaryIPv4 = interfaceData.vpc?.ipv4.addresses.find(
-      (address) => address.primary
-    )?.address;
+    const primaryIPv4 = getLinodeInterfacePrimaryIPv4(interfaceData);
     return <span key={interfaceData.id}>{primaryIPv4 ?? 'None'}</span>;
   }
 };
@@ -352,9 +350,7 @@ const getIPRangesCellContents = (
       interfaceData?.ip_ranges ?? []
     );
   } else {
-    const linodeInterfaceVPCRanges = interfaceData.vpc?.ipv4.ranges.map(
-      (range) => range.range
-    );
+    const linodeInterfaceVPCRanges = getLinodeInterfaceRanges(interfaceData);
     return determineNoneSingleOrMultipleWithChip(
       linodeInterfaceVPCRanges ?? []
     );

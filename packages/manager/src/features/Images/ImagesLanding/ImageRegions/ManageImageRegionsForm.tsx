@@ -4,6 +4,7 @@ import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
@@ -19,7 +20,6 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
-import type { Resolver } from 'react-hook-form';
 
 interface Props {
   image: Image | undefined;
@@ -113,19 +113,36 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Link>{' '}
         for details on managing your Linux system's disk space.
       </Typography>
+      <Notice spacingTop={16} variant="info">
+        <Typography fontSize="inherit">
+          As part of our limited promotional period, image replicas are free of
+          charge until Q4 2025. Starting in Q4, replicas will be subject to our
+          standard monthly rate of &#36;0.10/GB. When replicas become billable,
+          your monthly charge will be calculated using the value in the All
+          Replicas column.{' '}
+          <Link
+            to={
+              'https://www.linode.com/blog/compute/image-service-improvements-akamai-cdn/'
+            }
+          >
+            Learn more
+          </Link>
+          .
+        </Typography>
+      </Notice>
       <RegionMultiSelect
-        onChange={(regionIds) =>
-          setValue('regions', regionIds, {
-            shouldDirty: true,
-            shouldValidate: true,
-          })
-        }
         currentCapability="Object Storage" // Images use Object Storage as the storage backend
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         isGeckoLAEnabled={isGeckoLAEnabled}
         label="Add Regions"
+        onChange={(regionIds) =>
+          setValue('regions', regionIds, {
+            shouldDirty: true,
+            shouldValidate: true,
+          })
+        }
         placeholder="Select regions or type to search"
         regions={regions?.filter((r) => r.site_type === 'core') ?? []}
         renderTags={() => null}
@@ -162,6 +179,8 @@ export const ManageImageReplicasForm = (props: Props) => {
 
             return (
               <ImageRegionRow
+                disableRemoveButton={isLastAvailableRegion}
+                key={regionId}
                 onRemove={() =>
                   setValue(
                     'regions',
@@ -169,8 +188,6 @@ export const ManageImageReplicasForm = (props: Props) => {
                     { shouldDirty: true, shouldValidate: true }
                   )
                 }
-                disableRemoveButton={isLastAvailableRegion}
-                key={regionId}
                 region={regionId}
                 status={status}
               />

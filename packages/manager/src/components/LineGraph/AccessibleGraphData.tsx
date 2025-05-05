@@ -69,10 +69,10 @@ const AccessibleGraphData = (props: GraphTabledDataProps) => {
     return (
       !hidden && (
         <table
+          key={`accessible-graph-data-table-${tableID}`}
           summary={`This table contains the data for the ${
             ariaLabel && label ? ariaLabel + ` (${label})` : 'graph below'
           }`}
-          key={`accessible-graph-data-table-${tableID}`}
         >
           <thead>{TableHeader}</thead>
           <tbody>{TableBody}</tbody>

@@ -55,15 +55,13 @@ export const NodeBalancerSettings = () => {
     nodebalancer?.client_conn_throttle
   );
 
-  const {
-    data: selectedNodeBalancer,
-    isFetching: isFetchingNodeBalancer,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useNodeBalancerQuery,
-    redirectToOnNotFound: '/nodebalancers',
-  });
+  const { data: selectedNodeBalancer, isFetching: isFetchingNodeBalancer } =
+    useDialogData({
+      enabled: !!id,
+      paramKey: 'id',
+      queryHook: useNodeBalancerQuery,
+      redirectToOnNotFound: '/nodebalancers',
+    });
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -112,14 +110,14 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
+          data-qa-connection-throttle
+          disabled={isNodeBalancerReadOnly}
+          errorText={throttleError?.[0].reason}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">/ second</InputAdornment>
             ),
           }}
-          data-qa-connection-throttle
-          disabled={isNodeBalancerReadOnly}
-          errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
           placeholder="0"
@@ -131,15 +129,15 @@ export const NodeBalancerSettings = () => {
           to this number per second. 0 to disable.
         </FormHelperText>
         <Button
+          buttonType="primary"
+          data-qa-label-save
+          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
+          loading={isUpdatingThrottle}
           onClick={() =>
             updateNodeBalancerThrottle({
               client_conn_throttle: connectionThrottle,
             })
           }
-          buttonType="primary"
-          data-qa-label-save
-          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
-          loading={isUpdatingThrottle}
           sx={sxButton}
         >
           Save
@@ -147,15 +145,15 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
+          buttonType="primary"
+          data-testid="delete-nodebalancer"
+          disabled={isNodeBalancerReadOnly}
           onClick={() =>
             navigate({
               params: { id: String(id) },
               to: '/nodebalancers/$id/settings/delete',
             })
           }
-          buttonType="primary"
-          data-testid="delete-nodebalancer"
-          disabled={isNodeBalancerReadOnly}
         >
           Delete
         </Button>

@@ -32,8 +32,8 @@ import type { FirewallRuleDrawerMode } from './FirewallRuleDrawer.types';
 import type { Category } from './shared';
 import type {
   FirewallPolicyType,
-  FirewallRuleType,
   FirewallRules,
+  FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { APIError } from '@linode/api-v4/lib/types';
 
@@ -53,9 +53,8 @@ interface Drawer {
 
 export const FirewallRulesLanding = React.memo((props: Props) => {
   const { disabled, firewallID, rules } = props;
-  const { mutateAsync: updateFirewallRules } = useUpdateFirewallRulesMutation(
-    firewallID
-  );
+  const { mutateAsync: updateFirewallRules } =
+    useUpdateFirewallRulesMutation(firewallID);
   const { data: devices } = useAllFirewallDevicesQuery(firewallID);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -95,10 +94,8 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
   const [generalErrors, setGeneralErrors] = React.useState<
     APIError[] | undefined
   >();
-  const [
-    discardChangesModalOpen,
-    setDiscardChangesModalOpen,
-  ] = React.useState<boolean>(false);
+  const [discardChangesModalOpen, setDiscardChangesModalOpen] =
+    React.useState<boolean>(false);
 
   const openRuleDrawer = (
     category: Category,
@@ -116,10 +113,10 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         category === 'inbound' && mode === 'create'
           ? '/firewalls/$id/rules/add/inbound'
           : category === 'inbound' && mode === 'edit'
-          ? `/firewalls/$id/rules/edit/inbound/$ruleId`
-          : category === 'outbound' && mode === 'create'
-          ? '/firewalls/$id/rules/add/outbound'
-          : `/firewalls/$id/rules/edit/outbound/$ruleId`,
+            ? `/firewalls/$id/rules/edit/inbound/$ruleId`
+            : category === 'outbound' && mode === 'create'
+              ? '/firewalls/$id/rules/add/outbound'
+              : `/firewalls/$id/rules/edit/outbound/$ruleId`,
     });
   };
 
@@ -319,12 +316,14 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
     }
   }, [status, reset]);
 
-  const inboundRules = React.useMemo(() => editorStateToRules(inboundState), [
-    inboundState,
-  ]);
-  const outboundRules = React.useMemo(() => editorStateToRules(outboundState), [
-    outboundState,
-  ]);
+  const inboundRules = React.useMemo(
+    () => editorStateToRules(inboundState),
+    [inboundState]
+  );
+  const outboundRules = React.useMemo(
+    () => editorStateToRules(outboundState),
+    [outboundState]
+  );
 
   // This is for the Rule Drawer. If there is a rule to modify,
   // we need to pass it to the drawer to pre-populate the form fields.
@@ -385,7 +384,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           text={
             "You don't have permissions to modify this Firewall. Please contact an account administrator for details."
           }
-          important
           variant="error"
         />
       ) : null}
@@ -394,19 +392,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       )}
       <StyledDiv>
         <FirewallRuleTable
+          category="inbound"
+          disabled={disabled}
           handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('inbound', idx)
           }
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('inbound', 'edit', idx)
           }
+          handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('inbound', startIdx, endIdx)
           }
-          category="inbound"
-          disabled={disabled}
-          handleDeleteFirewallRule={(idx) => handleDeleteRule('inbound', idx)}
-          handlePolicyChange={handlePolicyChange}
           handleUndo={(idx) => handleUndo('inbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.inbound}
@@ -415,19 +413,19 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
       </StyledDiv>
       <StyledDiv>
         <FirewallRuleTable
+          category="outbound"
+          disabled={disabled}
           handleCloneFirewallRule={(idx: number) =>
             handleCloneRule('outbound', idx)
           }
+          handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
           handleOpenRuleDrawerForEditing={(idx: number) =>
             openRuleDrawer('outbound', 'edit', idx)
           }
+          handlePolicyChange={handlePolicyChange}
           handleReorder={(startIdx: number, endIdx: number) =>
             handleReorder('outbound', startIdx, endIdx)
           }
-          category="outbound"
-          disabled={disabled}
-          handleDeleteFirewallRule={(idx) => handleDeleteRule('outbound', idx)}
-          handlePolicyChange={handlePolicyChange}
           handleUndo={(idx) => handleUndo('outbound', idx)}
           openRuleDrawer={openRuleDrawer}
           policy={policy.outbound}
@@ -435,13 +433,13 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         />
       </StyledDiv>
       <FirewallRuleDrawer
+        category={ruleDrawer.category}
         isOpen={
           location.pathname.endsWith('add/inbound') ||
           location.pathname.endsWith('add/outbound') ||
           location.pathname.endsWith(`edit/inbound/${ruleDrawer.ruleIdx}`) ||
           location.pathname.endsWith(`edit/outbound/${ruleDrawer.ruleIdx}`)
         }
-        category={ruleDrawer.category}
         mode={ruleDrawer.mode}
         onClose={closeRuleDrawer}
         onSubmit={ruleDrawer.mode === 'create' ? handleAddRule : handleEditRule}
@@ -461,6 +459,7 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
         }}
       />
       <DiscardChangesDialog
+        handleClose={() => setDiscardChangesModalOpen(false)}
         handleDiscard={() => {
           setDiscardChangesModalOpen(false);
           setGeneralErrors(undefined);
@@ -471,7 +470,6 @@ export const FirewallRulesLanding = React.memo((props: Props) => {
           inboundDispatch({ type: 'DISCARD_CHANGES' });
           outboundDispatch({ type: 'DISCARD_CHANGES' });
         }}
-        handleClose={() => setDiscardChangesModalOpen(false)}
         isOpen={discardChangesModalOpen}
       />
     </>
@@ -495,8 +493,8 @@ interface DiscardChangesDialogProps {
   isOpen: boolean;
 }
 
-export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
-  (props) => {
+export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> =
+  React.memo((props) => {
     const { handleClose, handleDiscard, isOpen } = props;
 
     const actions = React.useCallback(
@@ -527,5 +525,4 @@ export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.m
         </Typography>
       </ConfirmationDialog>
     );
-  }
-);
+  });

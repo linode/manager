@@ -1,3 +1,4 @@
+import { Checkbox } from '@linode/ui';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
@@ -7,9 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import {
   StyledCheckAllTableCell,
-  StyledCheckbox,
   StyledDebouncedSearchTextField,
-  StyledEmptyCheckbox,
   StyledPaginationFooter,
   StyledTable,
   StyledTypography,
@@ -45,10 +44,6 @@ export const TransferTable = React.memo((props: Props) => {
     return toggleSelectAll(e.target.checked);
   };
 
-  const ConditionalCheckbox = hasSelectedAll
-    ? StyledCheckbox
-    : StyledEmptyCheckbox;
-
   return (
     <>
       <StyledTypography variant="h2">Linodes</StyledTypography>
@@ -65,12 +60,13 @@ export const TransferTable = React.memo((props: Props) => {
         <TableHead>
           <TableRow>
             <StyledCheckAllTableCell>
-              <ConditionalCheckbox
+              <Checkbox
+                checked={hasSelectedAll}
                 inputProps={{
                   'aria-label': `Select all services on page`,
                 }}
-                checked={hasSelectedAll}
                 onChange={handleToggleAll}
+                size="small"
               />
             </StyledCheckAllTableCell>
             {headers.map((thisHeader) => (

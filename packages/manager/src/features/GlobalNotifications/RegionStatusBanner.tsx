@@ -1,8 +1,8 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useRegionsQuery } from '@linode/queries';
 
 const getFacilitiesList = (warnings: string[]) => (
   <ul>
@@ -63,7 +63,7 @@ export const RegionStatusBanner = React.memo(() => {
   }
 
   return (
-    <Notice data-testid="status-banner" important variant="warning">
+    <Notice data-testid="status-banner" variant="warning">
       {renderBanner(labelsOfRegionsWithOutages)}
     </Notice>
   );

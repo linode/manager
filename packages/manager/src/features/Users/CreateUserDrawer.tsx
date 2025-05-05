@@ -9,14 +9,13 @@ import {
 } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { User } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { RouteComponentProps } from 'react-router-dom';
 
 interface Props {
   onClose: () => void;
@@ -35,6 +34,26 @@ interface State {
 interface CreateUserDrawerProps extends Props, RouteComponentProps<{}> {}
 
 class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
+  state: State = {
+    email: '',
+    errors: [],
+    restricted: false,
+    submitting: false,
+    username: '',
+  };
+
+  componentDidUpdate(prevProps: CreateUserDrawerProps) {
+    if (this.props.open === true && prevProps.open === false) {
+      this.setState({
+        email: '',
+        errors: [],
+        restricted: false,
+        submitting: false,
+        username: '',
+      });
+    }
+  }
+
   handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({
       email: e.target.value,
@@ -85,26 +104,6 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
       });
   };
 
-  state: State = {
-    email: '',
-    errors: [],
-    restricted: false,
-    submitting: false,
-    username: '',
-  };
-
-  componentDidUpdate(prevProps: CreateUserDrawerProps) {
-    if (this.props.open === true && prevProps.open === false) {
-      this.setState({
-        email: '',
-        errors: [],
-        restricted: false,
-        submitting: false,
-        username: '',
-      });
-    }
-  }
-
   render() {
     const { onClose, open } = this.props;
     const { email, errors, restricted, submitting, username } = this.state;
@@ -116,12 +115,7 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
     const generalError = hasErrorFor('none');
 
     return (
-      <Drawer
-        NotFoundComponent={NotFound}
-        onClose={onClose}
-        open={open}
-        title="Add a User"
-      >
+      <Drawer onClose={onClose} open={open} title="Add a User">
         {generalError && <Notice text={generalError} variant="error" />}
         <TextField
           data-qa-create-username

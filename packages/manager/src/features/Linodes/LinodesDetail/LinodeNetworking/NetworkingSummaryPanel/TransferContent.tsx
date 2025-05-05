@@ -1,6 +1,6 @@
 import { CircleProgress, Notice } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';
@@ -60,11 +60,10 @@ export const TransferContent = (props: ContentProps) => {
   if (error) {
     return (
       <Notice
+        spacingBottom={0}
         text={
           'Network transfer information for this Linode is currently unavailable.'
         }
-        important
-        spacingBottom={0}
         variant="error"
       />
     );

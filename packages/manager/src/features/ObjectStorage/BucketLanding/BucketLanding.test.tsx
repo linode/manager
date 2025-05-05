@@ -6,7 +6,7 @@ import {
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BucketLanding } from './BucketLanding';
@@ -179,9 +179,9 @@ describe('ObjectStorageLanding', () => {
     await screen.findByText(buckets[1].label);
   });
 
-  it('renders a "Total usage" section if there is more than one Bucket', async () => {
+  it('renders a "Total usage" section using base2 calculations if there is more than one Bucket', async () => {
     const buckets = objectStorageBucketFactory.buildList(2, {
-      size: 1e9 * 5,
+      size: 1024 * 1024 * 1024 * 5, // 5 GB in base2 (5 GiB)
     });
 
     // Mock Clusters

@@ -115,7 +115,6 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     <form onSubmit={handleSubmit}>
       {isReadOnly && (
         <Notice
-          important
           text={
             "You don't have permissions to add a Volume for this Linode. Please contact an account administrator for details."
           }

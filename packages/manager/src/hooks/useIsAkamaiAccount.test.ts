@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useIsAkamaiAccount } from './useIsAkamaiAccount';

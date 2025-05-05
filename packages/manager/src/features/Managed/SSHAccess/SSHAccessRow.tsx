@@ -1,21 +1,20 @@
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import ActionMenu from './SSHAccessActionMenu';
+import { SSHAccessActionMenu } from './SSHAccessActionMenu';
 
 import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 
 interface SSHAccessRowProps {
   linodeSetting: ManagedLinodeSetting;
-  openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessRow = (props: SSHAccessRowProps) => {
-  const { linodeSetting, openDrawer } = props;
+  const { linodeSetting } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;
 
@@ -47,15 +46,12 @@ export const SSHAccessRow = (props: SSHAccessRowProps) => {
         <TableCell data-qa-managed-port>{linodeSetting.ssh.port}</TableCell>
       </Hidden>
       <TableCell actionCell>
-        <ActionMenu
+        <SSHAccessActionMenu
           isEnabled={isAccessEnabled}
           linodeId={linodeSetting.id}
           linodeLabel={linodeSetting.label}
-          openDrawer={openDrawer}
         />
       </TableCell>
     </TableRow>
   );
 };
-
-export default SSHAccessRow;

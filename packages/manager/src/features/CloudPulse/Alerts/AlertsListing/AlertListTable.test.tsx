@@ -11,11 +11,13 @@ import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
   useEditAlertDefinition: vi.fn(),
+  useDeleteAlertDefinitionMutation: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
   ...vi.importActual('src/queries/cloudpulse/alerts'),
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
+  useDeleteAlertDefinitionMutation: queryMocks.useDeleteAlertDefinitionMutation,
 }));
 
 queryMocks.useEditAlertDefinition.mockReturnValue({
@@ -24,6 +26,11 @@ queryMocks.useEditAlertDefinition.mockReturnValue({
   reset: vi.fn(),
 });
 const mockScroll = vi.fn();
+queryMocks.useDeleteAlertDefinitionMutation.mockReturnValue({
+  isError: false,
+  mutateAsync: vi.fn().mockResolvedValue({}),
+  reset: vi.fn(),
+});
 
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
@@ -57,17 +64,17 @@ describe('Alert List Table test', () => {
 
   it('should render the alert row', async () => {
     const updated = new Date().toISOString();
-    const { getByText } = renderWithTheme(
+    const alert = alertFactory.build({
+      created_by: 'user1',
+      label: 'Test Alert',
+      service_type: 'linode',
+      status: 'enabled',
+      updated,
+      updated_by: 'user2',
+    });
+    const { getByTestId, getByText } = renderWithTheme(
       <AlertsListTable
-        alerts={[
-          alertFactory.build({
-            created_by: 'user1',
-            label: 'Test Alert',
-            service_type: 'linode',
-            status: 'enabled',
-            updated,
-          }),
-        ]}
+        alerts={[alert]}
         isLoading={false}
         scrollToElement={mockScroll}
         services={[{ label: 'Linode', value: 'linode' }]}
@@ -76,14 +83,15 @@ describe('Alert List Table test', () => {
     expect(getByText('Test Alert')).toBeVisible();
     expect(getByText('Linode')).toBeVisible();
     expect(getByText('Enabled')).toBeVisible();
-    expect(getByText('user1')).toBeVisible();
-    expect(
-      getByText(
-        formatDate(updated, {
-          format: 'MMM dd, yyyy, h:mm a',
-        })
-      )
-    ).toBeVisible();
+
+    expect(getByTestId(`created-by-${alert.id}`).textContent).toBe('user1');
+    expect(getByTestId(`updated-by-${alert.id}`).textContent).toBe('user2');
+
+    expect(getByTestId(`updated-${alert.id}`).textContent).toBe(
+      formatDate(updated, {
+        format: 'MMM dd, yyyy, h:mm a',
+      })
+    );
   });
 
   it('should show success snackbar when enabling alert succeeds', async () => {
@@ -206,4 +214,5 @@ describe('Alert List Table test', () => {
     expect(screen.getByText('tag1')).toBeVisible();
     expect(screen.getByText('tag2')).toBeVisible();
   });
+  // TODO: Add tests for the delete alert functionality once API's are available
 });

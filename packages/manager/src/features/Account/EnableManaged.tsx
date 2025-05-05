@@ -1,8 +1,14 @@
 import { enableManaged } from '@linode/api-v4/lib/managed';
 import { updateAccountSettingsData, useLinodesQuery } from '@linode/queries';
-import { Accordion, ActionsPanel, Button, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Box,
+  Button,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { pluralize } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -35,21 +41,19 @@ export const ManagedContent = (props: ContentProps) => {
   }
 
   return (
-    <Grid container direction="column" spacing={2}>
-      <Grid>
-        <Typography variant="body1">
-          Linode Managed includes Backups, Longview Pro, cPanel, and
-          round-the-clock monitoring to help keep your systems up and running.
-          +$100/month per Linode.{'  '}
-          <Link to="https://linode.com/managed">Learn more</Link>.
-        </Typography>
-      </Grid>
-      <Grid>
+    <Stack spacing={2}>
+      <Typography variant="body1">
+        Linode Managed includes Backups, Longview Pro, cPanel, and
+        round-the-clock monitoring to help keep your systems up and running.
+        +$100/month per Linode.{'  '}
+        <Link to="https://linode.com/managed">Learn more</Link>.
+      </Typography>
+      <Box>
         <Button buttonType="outlined" onClick={openConfirmationModal}>
           Add Linode Managed
         </Button>
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 };
 
@@ -102,12 +106,15 @@ export const EnableManaged = (props: Props) => {
 
   return (
     <>
-      <Accordion defaultExpanded={true} heading="Linode Managed">
+      <Paper>
+        <Typography marginBottom={1} variant="h2">
+          Linode Managed
+        </Typography>
         <ManagedContent
           isManaged={isManaged}
           openConfirmationModal={() => setOpen(true)}
         />
-      </Accordion>
+      </Paper>
       <ConfirmationDialog
         actions={actions}
         error={error}

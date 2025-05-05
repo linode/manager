@@ -1,3 +1,8 @@
+import {
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -15,14 +20,9 @@ import {
 } from 'src/components/PrimaryNav/constants';
 import { useIsACLPEnabled } from 'src/features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useIsIAMEnabled } from 'src/features/IAM/Shared/utilities';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useAccountSettings,
-  useMutatePreferences,
-  usePreferences,
-} from '@linode/queries';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';
@@ -54,8 +54,8 @@ export type NavEntity =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 export type ProductFamily =
   | 'Compute'
@@ -110,175 +110,176 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const productFamilyLinkGroups: ProductFamilyLinkGroup<
-    PrimaryLinkType[]
-  >[] = React.useMemo(
-    () => [
-      {
-        links: [],
-      },
-      {
-        icon: <Compute />,
-        links: [
-          {
-            activeLinks: [
-              '/managed',
-              '/managed/summary',
-              '/managed/monitors',
-              '/managed/ssh-access',
-              '/managed/credentials',
-              '/managed/contacts',
-            ],
-            display: 'Managed',
-            hide: !isManaged,
-            href: '/managed',
-          },
-          {
-            activeLinks: ['/linodes', '/linodes/create'],
-            display: 'Linodes',
-            href: '/linodes',
-          },
-          {
-            activeLinks: [
-              '/images/create/create-image',
-              '/images/create/upload-image',
-            ],
-            display: 'Images',
-            href: '/images',
-          },
-          {
-            activeLinks: ['/kubernetes/create'],
-            display: 'Kubernetes',
-            href: '/kubernetes/clusters',
-          },
-          {
-            display: 'StackScripts',
-            href: '/stackscripts',
-          },
-          {
-            betaChipClassName: 'beta-chip-placement-groups',
-            display: 'Placement Groups',
-            hide: !isPlacementGroupsEnabled,
-            href: '/placement-groups',
-          },
-          {
-            attr: { 'data-qa-one-click-nav-btn': true },
-            display: 'Marketplace',
-            href: '/linodes/create?type=One-Click',
-          },
-        ],
-        name: 'Compute',
-      },
-      {
-        icon: <Storage />,
-        links: [
-          {
-            activeLinks: [
-              '/object-storage/buckets',
-              '/object-storage/access-keys',
-            ],
-            display: 'Object Storage',
-            href: '/object-storage/buckets',
-          },
-          {
-            display: 'Volumes',
-            href: '/volumes',
-          },
-        ],
-        name: 'Storage',
-      },
-      {
-        icon: <Networking />,
-        links: [
-          {
-            display: 'VPC',
-            href: '/vpcs',
-          },
-          {
-            display: 'Firewalls',
-            href: '/firewalls',
-          },
-          {
-            display: 'NodeBalancers',
-            href: '/nodebalancers',
-          },
-          {
-            display: 'Domains',
-            href: '/domains',
-          },
-        ],
-        name: 'Networking',
-      },
-      {
-        icon: <Database />,
-        links: [
-          {
-            display: 'Databases',
-            hide: !isDatabasesEnabled,
-            href: '/databases',
-            isBeta: isDatabasesV2Beta,
-          },
-        ],
-        name: 'Databases',
-      },
-      {
-        icon: <Monitor />,
-        links: [
-          {
-            display: 'Metrics',
-            hide: !isACLPEnabled,
-            href: '/metrics',
-            isBeta: flags.aclp?.beta,
-          },
-          {
-            display: 'Alerts',
-            hide: !isAlertsEnabled,
-            href: '/alerts',
-            isBeta: flags.aclp?.beta,
-          },
-          {
-            display: 'Longview',
-            href: '/longview',
-          },
-        ],
-        name: 'Monitor',
-      },
-      {
-        icon: <More />,
-        links: [
-          {
-            display: 'Betas',
-            hide: !flags.selfServeBetas,
-            href: '/betas',
-          },
-          {
-            display: 'Identity & Access',
-            hide: !isIAMEnabled,
-            href: '/iam',
-            icon: <IAM />,
-            isBeta: isIAMBeta,
-          },
-          {
-            display: 'Account',
-            href: '/account',
-          },
-          {
-            display: 'Help & Support',
-            href: '/support',
-          },
-        ],
-        name: 'More',
-      },
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      isDatabasesEnabled,
-      isDatabasesV2Beta,
-      isManaged,
-      isPlacementGroupsEnabled,
-      isACLPEnabled,
-    ]
-  );
+  const productFamilyLinkGroups: ProductFamilyLinkGroup<PrimaryLinkType[]>[] =
+    React.useMemo(
+      () => [
+        {
+          links: [],
+        },
+        {
+          icon: <Compute />,
+          links: [
+            {
+              activeLinks: [
+                '/managed',
+                '/managed/summary',
+                '/managed/monitors',
+                '/managed/ssh-access',
+                '/managed/credentials',
+                '/managed/contacts',
+              ],
+              display: 'Managed',
+              hide: !isManaged,
+              href: '/managed',
+            },
+            {
+              activeLinks: ['/linodes', '/linodes/create'],
+              display: 'Linodes',
+              href: '/linodes',
+            },
+            {
+              activeLinks: [
+                '/images/create/create-image',
+                '/images/create/upload-image',
+              ],
+              display: 'Images',
+              href: '/images',
+            },
+            {
+              activeLinks: ['/kubernetes/create'],
+              display: 'Kubernetes',
+              href: '/kubernetes/clusters',
+            },
+            {
+              display: 'StackScripts',
+              href: '/stackscripts',
+            },
+            {
+              betaChipClassName: 'beta-chip-placement-groups',
+              display: 'Placement Groups',
+              hide: !isPlacementGroupsEnabled,
+              href: '/placement-groups',
+            },
+            {
+              attr: { 'data-qa-one-click-nav-btn': true },
+              display: 'Marketplace',
+              href: '/linodes/create?type=One-Click',
+            },
+          ],
+          name: 'Compute',
+        },
+        {
+          icon: <Storage />,
+          links: [
+            {
+              activeLinks: [
+                '/object-storage/buckets',
+                '/object-storage/access-keys',
+              ],
+              display: 'Object Storage',
+              href: '/object-storage/buckets',
+            },
+            {
+              display: 'Volumes',
+              href: '/volumes',
+            },
+          ],
+          name: 'Storage',
+        },
+        {
+          icon: <Networking />,
+          links: [
+            {
+              display: 'VPC',
+              href: '/vpcs',
+            },
+            {
+              display: 'Firewalls',
+              href: '/firewalls',
+            },
+            {
+              display: 'NodeBalancers',
+              href: '/nodebalancers',
+            },
+            {
+              display: 'Domains',
+              href: '/domains',
+            },
+          ],
+          name: 'Networking',
+        },
+        {
+          icon: <Database />,
+          links: [
+            {
+              display: 'Databases',
+              hide: !isDatabasesEnabled,
+              href: '/databases',
+              isBeta: isDatabasesV2Beta,
+            },
+          ],
+          name: 'Databases',
+        },
+        {
+          icon: <Monitor />,
+          links: [
+            {
+              display: 'Metrics',
+              hide: !isACLPEnabled,
+              href: '/metrics',
+              isBeta: flags.aclp?.beta,
+            },
+            {
+              display: 'Alerts',
+              hide: !isAlertsEnabled,
+              href: '/alerts',
+              isBeta: flags.aclp?.beta,
+            },
+            {
+              display: 'Longview',
+              href: '/longview',
+            },
+          ],
+          name: 'Monitor',
+        },
+        {
+          icon: <More />,
+          links: [
+            {
+              display: 'Betas',
+              hide: !flags.selfServeBetas,
+              href: '/betas',
+            },
+            {
+              display: 'Identity & Access',
+              hide: !isIAMEnabled,
+              href: '/iam',
+              icon: <IAM />,
+              isBeta: isIAMBeta,
+            },
+            {
+              display: 'Account',
+              href: '/account',
+            },
+            {
+              display: 'Help & Support',
+              href: '/support',
+            },
+          ],
+          name: 'More',
+        },
+      ],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [
+        isDatabasesEnabled,
+        isDatabasesV2Beta,
+        isManaged,
+        isPlacementGroupsEnabled,
+        isACLPEnabled,
+        isIAMBeta,
+        isIAMEnabled,
+      ]
+    );
 
   const accordionClicked = (index: number) => {
     let updatedCollapsedAccordions: number[] = [0, 1, 2, 3, 4, 5];
@@ -381,10 +382,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Box
+      alignItems="flex-start"
+      display="flex"
+      flexDirection="column"
+      gap={0}
       height={{
         md: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
         xs: '100%',
       }}
+      id="main-navigation"
+      justifyContent="flex-start"
+      ref={primaryNavRef}
+      role="navigation"
       sx={{
         '&:hover': {
           '.primary-nav-toggle': {
@@ -393,25 +402,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           },
         },
       }}
-      alignItems="flex-start"
-      display="flex"
-      flexDirection="column"
-      gap={0}
-      id="main-navigation"
-      justifyContent="flex-start"
-      ref={primaryNavRef}
-      role="navigation"
     >
       <Box
+        display="flex"
+        flexDirection="column"
+        ref={navItemsRef}
         sx={(theme) => ({
           flexGrow: 1,
           overflowX: 'hidden',
           overflowY: 'auto',
           scrollbarColor: `${theme.color.grey4} transparent `,
         })}
-        display="flex"
-        flexDirection="column"
-        ref={navItemsRef}
         width="100%"
       >
         {productFamilyLinkGroups.map((productFamily, idx) => {
@@ -450,6 +451,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return (
             <div key={idx} style={{ width: 'inherit' }}>
               <StyledAccordion
+                expanded={!collapsedAccordions.includes(idx)}
                 heading={
                   <>
                     <Box component="span" flexShrink={0}>
@@ -463,7 +465,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 isActiveProductFamily={
                   activeProductFamily === productFamily.name
                 }
-                expanded={!collapsedAccordions.includes(idx)}
                 isCollapsed={isCollapsed}
                 onChange={() => accordionClicked(idx)}
               >

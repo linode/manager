@@ -1,11 +1,14 @@
-import { Theme, useTheme } from '@mui/material/styles';
+import { useProfile } from '@linode/queries';
+import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { Action, ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useProfile } from '@linode/queries';
+
+import type { Theme } from '@mui/material/styles';
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   isProxyUser: boolean;

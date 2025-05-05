@@ -12,7 +12,6 @@ import * as React from 'react';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
@@ -78,7 +77,6 @@ export const BucketDetailsDrawer = React.memo(
 
     return (
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(label ?? 'Bucket Detail')}
@@ -117,8 +115,7 @@ export const BucketDetailsDrawer = React.memo(
         )}
         {typeof size === 'number' && (
           <Typography variant="subtitle2">
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(size, { base10: true }).formatted}
+            {readableBytes(size).formatted}
           </Typography>
         )}
         {/* @TODO OBJ Multicluster: use region instead of cluster if isObjMultiClusterEnabled. */}

@@ -41,9 +41,8 @@ export const CloudPulseDashboardLanding = () => {
 
   const [dashboard, setDashboard] = React.useState<Dashboard>();
 
-  const [showAppliedFilters, setShowAppliedFilters] = React.useState<boolean>(
-    false
-  );
+  const [showAppliedFilters, setShowAppliedFilters] =
+    React.useState<boolean>(false);
 
   const toggleAppliedFilter = (isVisible: boolean) => {
     setShowAppliedFilters(isVisible);

@@ -40,6 +40,16 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
   );
   return (
     <RegionMultiSelect
+      currentCapability={undefined} // this is a required property, no specific capability required here
+      disableSelectAll
+      isClearable
+      isGeckoLAEnabled={isGeckoLAEnabled}
+      label="Select Regions"
+      limitTags={1}
+      onChange={handleRegionChange}
+      placeholder={selectedRegion.length ? '' : 'Select Regions'}
+      regions={regionOptions}
+      selectedIds={selectedRegion.map((region) => region.id)}
       slotProps={{
         popper: {
           placement: 'bottom',
@@ -51,16 +61,6 @@ export const AlertsRegionFilter = React.memo((props: AlertsRegionProps) => {
       textFieldProps={{
         hideLabel: true,
       }}
-      currentCapability={undefined} // this is a required property, no specific capability required here
-      disableSelectAll
-      isClearable
-      isGeckoLAEnabled={isGeckoLAEnabled}
-      label="Select Regions"
-      limitTags={1}
-      onChange={handleRegionChange}
-      placeholder={selectedRegion.length ? '' : 'Select Regions'}
-      regions={regionOptions}
-      selectedIds={selectedRegion.map((region) => region.id)}
     />
   );
 });
