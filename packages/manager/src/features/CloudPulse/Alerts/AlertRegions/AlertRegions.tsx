@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// This will be removed once feature is completed
 import { useRegionsQuery } from '@linode/queries';
 import { Box, Checkbox, CircleProgress, Stack } from '@linode/ui';
 import React from 'react';
@@ -20,26 +18,17 @@ interface AlertRegionsProps {
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType, handleChange } = props;
+  const { serviceType } = props;
   const flags = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
-  const [showSelected, setShowSelected] = React.useState<boolean>(false);
-  const {
-    data: regions,
-    isError: isRegionsError,
-    isLoading: isRegionsLoading,
-  } = useRegionsQuery();
+  const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
 
   const resourceFilterMap: Record<string, Filter> = {
     dbaas: {
       platform: 'rdbms-default',
     },
   };
-  const {
-    data: resources,
-    isError: isResourcesError,
-    isLoading: isResourcesLoading,
-  } = useResourcesQuery(
+  const { data: resources, isLoading: isResourcesLoading } = useResourcesQuery(
     Boolean(serviceType && regions?.length),
     serviceType === null ? undefined : serviceType,
     {},
