@@ -1,8 +1,6 @@
 import { ActionsPanel, Drawer } from '@linode/ui';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
-
 import { IssueCalendar } from './IssueCalendar';
 
 import type { ManagedIssue } from '@linode/api-v4/lib/managed';
@@ -20,7 +18,6 @@ export const HistoryDrawer = (props: HistoryDrawerProps) => {
   return (
     <Drawer
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Issue History: ${monitorLabel}`}

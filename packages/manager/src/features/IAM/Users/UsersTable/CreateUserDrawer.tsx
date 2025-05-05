@@ -3,8 +3,6 @@ import { ActionsPanel, Box, Drawer, Notice, TextField } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
 interface Props {
   onClose: () => void;
   open: boolean;
@@ -49,12 +47,7 @@ export const CreateUserDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Add a User"
-    >
+    <Drawer onClose={handleClose} open={open} title="Add a User">
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
