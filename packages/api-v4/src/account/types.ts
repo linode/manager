@@ -588,13 +588,7 @@ export interface AccountMaintenance {
     | 'pending'
     | 'scheduled'
     | 'started';
-  type:
-    | 'cold_migration'
-    | 'linode_migrate'
-    | 'linode_poweroff_on'
-    | 'live_migration'
-    | 'reboot'
-    | 'volume_migration';
+  type: 'cold_migration' | 'live_migration' | 'reboot' | 'volume_migration';
   when: string;
 }
 
