@@ -1,4 +1,4 @@
-import { Autocomplete, Notice, Typography } from '@linode/ui';
+import { Autocomplete, Notice, TextField, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import React from 'react';
 
@@ -6,16 +6,16 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { useAccountEntities } from 'src/queries/entities/entities';
 
+import { getFormattedEntityType } from '../utilities';
 import {
   getCreateLinkForEntityType,
-  getFormattedEntityType,
-  placeholderMap,
-  transformedAccountEntities,
-} from '../utilities';
+  getEntitiesByType,
+  getPlaceholder,
+  mapEntitiesToOptions,
+} from './utils';
 
-import type { DrawerModes, EntitiesOption } from '../utilities';
+import type { DrawerModes, EntitiesOption } from '../types';
 import type {
-  AccountEntity,
   EntityType,
   EntityTypePermissions,
   IamAccessType,
@@ -46,7 +46,7 @@ export const Entities = ({
       return [];
     }
     const typeEntities = getEntitiesByType(type, entities.data);
-    return typeEntities ? transformedEntities(typeEntities) : [];
+    return typeEntities ? mapEntitiesToOptions(typeEntities) : [];
   }, [entities, access, type]);
 
   if (access === 'account_access') {
@@ -54,8 +54,10 @@ export const Entities = ({
       <>
         <FormLabel>
           <Typography
-            marginBottom={0.5}
-            sx={{ marginTop: theme.tokens.spacing.S12 }}
+            sx={{
+              marginTop: theme.tokens.spacing.S12,
+              marginBottom: theme.tokens.spacing.S4,
+            }}
             variant="inherit"
           >
             Entities
@@ -73,7 +75,7 @@ export const Entities = ({
   return (
     <>
       <Autocomplete
-        errorText={errorText}
+        disabled={!memoizedEntities.length}
         getOptionLabel={(option) => option.label}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label="Entities"
@@ -88,7 +90,20 @@ export const Entities = ({
           value.length,
           memoizedEntities.length
         )}
-        readOnly={getReadonlyState(mode, memoizedEntities.length)}
+        readOnly={mode === 'change-role'}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            error={!!errorText}
+            errorText={errorText}
+            label="Entities"
+            placeholder={getPlaceholder(
+              type,
+              value.length,
+              memoizedEntities.length
+            )}
+          />
+        )}
         sx={{ marginTop: theme.tokens.spacing.S12 }}
         value={value || []}
       />
@@ -104,39 +119,4 @@ export const Entities = ({
       )}
     </>
   );
-};
-
-const getPlaceholder = (
-  type: EntityType | EntityTypePermissions,
-  currentValueLength: number,
-  possibleEntitiesLength: number
-): string =>
-  currentValueLength > 0
-    ? ' '
-    : possibleEntitiesLength === 0
-      ? 'None'
-      : placeholderMap[type] || 'Select';
-
-const getReadonlyState = (
-  mode: DrawerModes | undefined,
-  possibleEntitiesLength: number
-): boolean => mode === 'change-role' || possibleEntitiesLength === 0;
-
-const transformedEntities = (
-  entities: { id: number; label: string }[]
-): EntitiesOption[] => {
-  return entities.map((entity) => ({
-    label: entity.label,
-    value: entity.id,
-  }));
-};
-
-const getEntitiesByType = (
-  roleEntityType: EntityType | EntityTypePermissions,
-  entities: AccountEntity[]
-): Pick<AccountEntity, 'id' | 'label'>[] | undefined => {
-  const entitiesMap = transformedAccountEntities(entities);
-
-  // Find the first matching entity by type
-  return entitiesMap.get(roleEntityType as EntityType);
 };

@@ -6,7 +6,7 @@ import { array, number, object, string } from 'yup';
 export const IP_ERROR_MESSAGE =
   'Must be a valid IPv4 or IPv6 address or range.';
 
-export const validateIP = (ipAddress?: string | null): boolean => {
+export const validateIP = (ipAddress?: null | string): boolean => {
   // ''is falsy, so we must specify that it is OK
   if (ipAddress !== '' && !ipAddress) {
     return false;
@@ -205,7 +205,7 @@ export const UpdateFirewallSchema = object().shape({
 
 export const FirewallDeviceSchema = object({
   type: string()
-    .oneOf(['linode', 'nodebalancer'])
+    .oneOf(['linode', 'nodebalancer', 'interface'])
     .required('Device type is required.'),
   id: number().required('ID is required.'),
 });

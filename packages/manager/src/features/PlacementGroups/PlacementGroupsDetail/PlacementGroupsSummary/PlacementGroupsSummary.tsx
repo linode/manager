@@ -54,6 +54,8 @@ export const PlacementGroupsSummary = (props: Props) => {
 
         <Box display="flex">
           <DescriptionList
+            displayMode="grid"
+            gridProps={{ columns: 2 }}
             items={[
               {
                 description: `${linodesCount} of ${region?.placement_group_limits.maximum_linodes_per_pg}`,
@@ -77,8 +79,6 @@ export const PlacementGroupsSummary = (props: Props) => {
                 title: 'Placement Group Policy',
               },
             ]}
-            displayMode="grid"
-            gridProps={{ columns: 2 }}
             stackAt={theme.breakpoints.values.sm}
           />
         </Box>

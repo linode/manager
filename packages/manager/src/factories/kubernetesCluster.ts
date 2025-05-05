@@ -40,8 +40,8 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   type: 'g6-standard-1',
 });
 
-export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesCluster>(
-  {
+export const kubernetesClusterFactory =
+  Factory.Sync.makeFactory<KubernetesCluster>({
     control_plane: { high_availability: true },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
@@ -51,23 +51,20 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesClust
     status: 'ready',
     tags: [],
     updated: '2020-04-08T16:58:21',
-  }
-);
+  });
 
-export const kubeEndpointFactory = Factory.Sync.makeFactory<KubernetesEndpointResponse>(
-  {
+export const kubeEndpointFactory =
+  Factory.Sync.makeFactory<KubernetesEndpointResponse>({
     endpoint: `https://${crypto.randomUUID && crypto.randomUUID()}`,
-  }
-);
+  });
 
-export const kubernetesDashboardUrlFactory = Factory.Sync.makeFactory<KubernetesDashboardResponse>(
-  {
+export const kubernetesDashboardUrlFactory =
+  Factory.Sync.makeFactory<KubernetesDashboardResponse>({
     url: `https://${crypto.randomUUID && crypto.randomUUID()}`,
-  }
-);
+  });
 
-export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>(
-  {
+export const kubernetesAPIResponse =
+  Factory.Sync.makeFactory<KubernetesCluster>({
     control_plane: { high_availability: true },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
@@ -77,44 +74,38 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     status: 'ready',
     tags: [],
     updated: '2020-04-08T16:58:21',
-  }
-);
+  });
 
-export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
-  {
+export const kubernetesVersionFactory =
+  Factory.Sync.makeFactory<KubernetesVersion>({
     id: '1.24',
-  }
-);
+  });
 
-export const kubernetesStandardTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
-  {
-    id: Factory.each((id) => `'v1.3${id}'`),
+export const kubernetesStandardTierVersionFactory =
+  Factory.Sync.makeFactory<KubernetesTieredVersion>({
+    id: Factory.each((id) => `v1.3${id}`),
     tier: 'standard',
-  }
-);
+  });
 
-export const kubernetesEnterpriseTierVersionFactory = Factory.Sync.makeFactory<KubernetesTieredVersion>(
-  {
-    id: Factory.each((id) => `'v1.31.${id}+lke1'`),
+export const kubernetesEnterpriseTierVersionFactory =
+  Factory.Sync.makeFactory<KubernetesTieredVersion>({
+    id: Factory.each((id) => `v1.31.${id}+lke1`),
     tier: 'enterprise',
-  }
-);
+  });
 
-export const kubernetesControlPlaneACLOptionsFactory = Factory.Sync.makeFactory<ControlPlaneACLOptions>(
-  {
+export const kubernetesControlPlaneACLOptionsFactory =
+  Factory.Sync.makeFactory<ControlPlaneACLOptions>({
     addresses: {
       ipv4: ['10.0.0.0/24', '10.0.1.0/24'],
       ipv6: ['8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'],
     },
     enabled: true,
     'revision-id': '67497a9c5fc8491889a7ef8107493e92',
-  }
-);
+  });
 
-export const kubernetesControlPlaneACLFactory = Factory.Sync.makeFactory<KubernetesControlPlaneACLPayload>(
-  {
+export const kubernetesControlPlaneACLFactory =
+  Factory.Sync.makeFactory<KubernetesControlPlaneACLPayload>({
     acl: {
       ...kubernetesControlPlaneACLOptionsFactory.build(),
     },
-  }
-);
+  });

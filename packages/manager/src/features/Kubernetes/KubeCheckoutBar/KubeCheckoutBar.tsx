@@ -1,3 +1,4 @@
+import { useAccountAgreements, useProfile } from '@linode/queries';
 import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -5,14 +6,13 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useAccountAgreements, useProfile } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
+  LKE_ADDITIONAL_PRICING,
   LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
   LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE,
-  LKE_ADDITIONAL_PRICING,
 } from 'src/utilities/pricing/constants';
 import {
   getKubernetesMonthlyPrice,
@@ -96,6 +96,7 @@ export const KubeCheckoutBar = (props: Props) => {
 
   return (
     <CheckoutBar
+      additionalPricing={AdditionalPricing}
       agreement={
         showGDPRCheckbox ? (
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
@@ -115,17 +116,16 @@ export const KubeCheckoutBar = (props: Props) => {
             })
           : undefined
       }
-      priceSelectionText={
-        enterprisePrice
-          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
-          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
-      }
-      additionalPricing={AdditionalPricing}
       data-qa-checkout-bar
       disabled={disableCheckout}
       heading="Cluster Summary"
       isMakingRequest={submitting}
       onDeploy={createCluster}
+      priceSelectionText={
+        enterprisePrice
+          ? LKE_ENTERPRISE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+          : LKE_CREATE_CLUSTER_CHECKOUT_MESSAGE
+      }
       submitText="Create Cluster"
     >
       <>
@@ -171,12 +171,7 @@ export const KubeCheckoutBar = (props: Props) => {
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />
         {showWarning && (
-          <Notice
-            important
-            spacingTop={16}
-            text={nodeWarning}
-            variant="warning"
-          />
+          <Notice spacingTop={16} text={nodeWarning} variant="warning" />
         )}
       </>
     </CheckoutBar>

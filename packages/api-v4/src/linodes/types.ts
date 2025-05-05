@@ -18,38 +18,38 @@ export type EncryptionStatus = 'disabled' | 'enabled';
 export type InterfaceGenerationType = 'legacy_config' | 'linode';
 
 export interface LinodeSpecs {
-  disk: number;
-  memory: number;
-  vcpus: number;
-  transfer: number;
-  gpus: number;
   accelerated_devices: number;
+  disk: number;
+  gpus: number;
+  memory: number;
+  transfer: number;
+  vcpus: number;
 }
 
 export interface Linode {
-  id: number;
   alerts: LinodeAlerts;
   backups: LinodeBackups;
   capabilities: LinodeCapabilities[];
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
-  region: string;
-  image: string | null;
   group: string;
+  hypervisor: Hypervisor;
+  id: number;
+  image: null | string;
   interface_generation?: InterfaceGenerationType; // @TODO Linode Interfaces - Remove optionality once fully rolled out
   ipv4: string[];
-  ipv6: string | null;
+  ipv6: null | string;
   label: string;
-  lke_cluster_id: number | null;
+  lke_cluster_id: null | number;
   placement_group?: LinodePlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
-  type: string | null;
-  status: LinodeStatus;
-  updated: string;
-  hypervisor: Hypervisor;
-  specs: LinodeSpecs;
-  watchdog_enabled: boolean;
-  tags: string[];
+  region: string;
   site_type: RegionSite;
+  specs: LinodeSpecs;
+  status: LinodeStatus;
+  tags: string[];
+  type: null | string;
+  updated: string;
+  watchdog_enabled: boolean;
 }
 
 export interface LinodeAlerts {
@@ -62,14 +62,14 @@ export interface LinodeAlerts {
 
 export interface LinodeBackups {
   enabled: boolean;
+  last_successful: null | string;
   schedule: LinodeBackupSchedule;
-  last_successful: string | null;
 }
 
 export type LinodeCapabilities =
   | 'Block Storage Encryption'
-  | 'SMTP Enabled'
-  | 'Block Storage Performance B1';
+  | 'Block Storage Performance B1'
+  | 'SMTP Enabled';
 
 export type Window =
   | 'Scheduling'
@@ -86,18 +86,18 @@ export type Window =
   | 'W22';
 
 export type Day =
+  | 'Friday'
+  | 'Monday'
+  | 'Saturday'
   | 'Scheduling'
   | 'Sunday'
-  | 'Monday'
-  | 'Tuesday'
-  | 'Wednesday'
   | 'Thursday'
-  | 'Friday'
-  | 'Saturday';
+  | 'Tuesday'
+  | 'Wednesday';
 
 export interface LinodeBackupSchedule {
-  window: Window | null;
   day: Day | null;
+  window: null | Window;
 }
 
 export interface LinodeBackupsResponse {
@@ -108,37 +108,37 @@ export interface LinodeBackupsResponse {
   };
 }
 
-export type Filesystem = 'raw' | 'swap' | 'ext4' | 'ext3' | 'initrd';
+export type Filesystem = 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
 
 export interface LinodeBackupDisk {
-  size: number;
-  label: string;
   filesystem: Filesystem;
+  label: string;
+  size: number;
 }
 
 export interface LinodeBackup {
+  available: boolean;
+  configs: string[];
+  created: string;
+  disks: LinodeBackupDisk[];
+  finished: string;
   id: number;
-  label: string | null;
+  label: null | string;
+  region: string;
   status: LinodeBackupStatus;
   type: LinodeBackupType;
-  region: string;
-  created: string;
   updated: string;
-  finished: string;
-  configs: string[];
-  disks: LinodeBackupDisk[];
-  available: boolean;
 }
 
 export type LinodeBackupType = 'auto' | 'snapshot';
 
 export type LinodeBackupStatus =
+  | 'failed'
+  | 'needsPostProcessing'
+  | 'paused'
   | 'pending'
   | 'running'
-  | 'paused'
-  | 'needsPostProcessing'
   | 'successful'
-  | 'failed'
   | 'userAborted';
 
 export interface LinodeIPsResponse {
@@ -147,31 +147,31 @@ export interface LinodeIPsResponse {
 }
 
 export interface LinodeIPsResponseIPV4 {
-  public: IPAddress[];
   private: IPAddress[];
-  shared: IPAddress[];
+  public: IPAddress[];
   reserved: IPAddress[];
+  shared: IPAddress[];
   vpc: VPCIP[];
 }
 
 export interface LinodeIPsResponseIPV6 {
+  global: IPRange[];
   link_local: IPAddress;
   slaac: IPAddress;
-  global: IPRange[];
 }
 
 export type LinodeStatus =
-  | 'offline'
   | 'booting'
-  | 'running'
-  | 'shutting_down'
-  | 'rebooting'
-  | 'rebuilding'
-  | 'provisioning'
+  | 'cloning'
   | 'deleting'
   | 'migrating'
-  | 'cloning'
+  | 'offline'
+  | 'provisioning'
+  | 'rebooting'
+  | 'rebuilding'
   | 'restoring'
+  | 'running'
+  | 'shutting_down'
   | 'stopped';
 
 // ---------------------------------------------------------------------
@@ -179,46 +179,56 @@ export type LinodeStatus =
 // ----------------------------------------------------------------------
 export type InterfacePurpose = 'public' | 'vlan' | 'vpc';
 
+// IPv4
 export interface ConfigInterfaceIPv4 {
-  vpc?: string | null;
-  nat_1_1?: string | null;
+  nat_1_1?: null | string;
+  vpc?: null | string;
+}
+
+export interface IPv6SLAAC {
+  address: string;
+  range: string;
 }
 
 export interface ConfigInterfaceIPv6 {
-  vpc?: string | null;
+  is_public: boolean;
+  ranges: {
+    range?: string;
+  }[];
+  slaac: IPv6SLAAC[];
 }
 
 // The legacy interface type - for Configuration Profile Interfaces
 export interface Interface {
-  id: number;
-  label: string | null;
-  purpose: InterfacePurpose;
-  ipam_address: string | null;
-  primary?: boolean;
   active: boolean;
-  subnet_id?: number | null;
-  vpc_id?: number | null;
+  id: number;
+  ip_ranges?: string[];
+  ipam_address: null | string;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
-  ip_ranges?: string[];
+  label: null | string;
+  primary?: boolean;
+  purpose: InterfacePurpose;
+  subnet_id?: null | number;
+  vpc_id?: null | number;
 }
 
 export interface InterfacePayload {
-  /**
-   * Required to specify a VLAN
-   */
-  label?: string | null;
-  purpose: InterfacePurpose;
+  ip_ranges?: null | string[];
   /**
    * Used for VLAN, but is optional
    */
-  ipam_address?: string | null;
-  primary?: boolean;
-  subnet_id?: number | null;
-  vpc_id?: number | null;
+  ipam_address?: null | string;
   ipv4?: ConfigInterfaceIPv4;
   ipv6?: ConfigInterfaceIPv6;
-  ip_ranges?: string[] | null;
+  /**
+   * Required to specify a VLAN
+   */
+  label?: null | string;
+  primary?: boolean;
+  purpose: InterfacePurpose;
+  subnet_id?: null | number;
+  vpc_id?: null | number;
 }
 
 export interface ConfigInterfaceOrderPayload {
@@ -227,25 +237,25 @@ export interface ConfigInterfaceOrderPayload {
 
 export type UpdateConfigInterfacePayload = Pick<
   Interface,
-  'primary' | 'ipv4' | 'ipv6' | 'ip_ranges'
+  'ip_ranges' | 'ipv4' | 'ipv6' | 'primary'
 >;
 
 export interface Config {
-  id: number;
-  kernel: string;
   comments: string;
-  memory_limit: number;
-  root_device: string;
-  run_level: 'default' | 'single' | 'binbash';
-  virt_mode: 'paravirt' | 'fullvirt';
-  helpers: any;
-  label: string;
-  devices: Devices;
   created: string;
-  updated: string;
-  initrd: string | null;
+  devices: Devices;
+  helpers: any;
+  id: number;
+  initrd: null | string;
   // If a Linode is using new Linode Interfaces, the interfaces in the Config object will be returned as null.
   interfaces: Interface[] | null;
+  kernel: string;
+  label: string;
+  memory_limit: number;
+  root_device: string;
+  run_level: 'binbash' | 'default' | 'single';
+  updated: string;
+  virt_mode: 'fullvirt' | 'paravirt';
 }
 
 // ----------------------------------------------------------
@@ -268,35 +278,44 @@ export type ModifyLinodeInterfacePayload = InferType<
 
 // GET object
 export interface LinodeInterface {
+  created: string;
+  default_route: DefaultRoute;
   id: number;
   mac_address: string;
-  default_route: DefaultRoute;
-  version: number;
-  created: string;
+  public: null | PublicInterfaceData;
   updated: string;
-  vpc: VPCInterfaceData | null;
-  public: PublicInterfaceData | null;
-  vlan: {
-    vlan_label: string;
+  version: number;
+  vlan: null | {
     ipam_address: string;
-  } | null;
+    vlan_label: string;
+  };
+  vpc: null | VPCInterfaceData;
 }
 
 export interface LinodeInterfaces {
   interfaces: LinodeInterface[];
 }
 
+export interface LinodeInterfaceIPv6 {
+  is_public: boolean;
+  ranges: {
+    range: string;
+  }[];
+  slaac: IPv6SLAAC[];
+}
+
 export interface VPCInterfaceData {
-  vpc_id: number;
-  subnet_id: number;
-  ipv4: {
+  ipv4?: {
     addresses: {
       address: string;
-      primary: boolean;
       nat_1_1_address?: string;
+      primary: boolean;
     }[];
     ranges: { range: string }[];
   };
+  ipv6?: LinodeInterfaceIPv6;
+  subnet_id: number;
+  vpc_id: number;
 }
 
 export interface PublicInterfaceData {
@@ -311,43 +330,43 @@ export interface PublicInterfaceData {
     }[];
   };
   ipv6: {
-    slaac: {
-      address: string;
-      prefix: string;
+    ranges: {
+      range: string;
+      route_target: null | string;
     }[];
     shared: {
       range: string;
-      route_target: string | null;
+      route_target: null | string;
     }[];
-    ranges: {
-      range: string;
-      route_target: string | null;
+    slaac: {
+      address: string;
+      prefix: string;
     }[];
   };
 }
 
 // Other Linode Interface types
-export type LinodeInterfaceStatus = 'active' | 'inactive' | 'deleted';
+export type LinodeInterfaceStatus = 'active' | 'deleted' | 'inactive';
 
 export interface LinodeInterfaceHistory {
+  created: string;
+  event_id: number;
+  interface_data: string; // will come in as JSON string object that we'll need to parse
   interface_history_id: number;
   interface_id: number;
   linode_id: number;
-  event_id: number;
-  version: number;
-  interface_data: string; // will come in as JSON string object that we'll need to parse
   status: LinodeInterfaceStatus;
-  created: string;
+  version: number;
 }
 
 export interface LinodeInterfaceSettings {
-  network_helper: boolean;
   default_route: {
-    ipv4_interface_id?: number | null;
     ipv4_eligible_interface_ids: number[];
-    ipv6_interface_id?: number | null;
+    ipv4_interface_id?: null | number;
     ipv6_eligible_interface_ids: number[];
+    ipv6_interface_id?: null | number;
   };
+  network_helper: boolean;
 }
 
 export type LinodeInterfaceSettingsPayload = InferType<
@@ -374,30 +393,30 @@ export interface VolumeDevice {
 }
 
 export interface Devices {
-  sda: null | DiskDevice | VolumeDevice;
-  sdb: null | DiskDevice | VolumeDevice;
-  sdc: null | DiskDevice | VolumeDevice;
-  sdd: null | DiskDevice | VolumeDevice;
-  sde: null | DiskDevice | VolumeDevice;
-  sdf: null | DiskDevice | VolumeDevice;
-  sdg: null | DiskDevice | VolumeDevice;
-  sdh: null | DiskDevice | VolumeDevice;
+  sda: DiskDevice | null | VolumeDevice;
+  sdb: DiskDevice | null | VolumeDevice;
+  sdc: DiskDevice | null | VolumeDevice;
+  sdd: DiskDevice | null | VolumeDevice;
+  sde: DiskDevice | null | VolumeDevice;
+  sdf: DiskDevice | null | VolumeDevice;
+  sdg: DiskDevice | null | VolumeDevice;
+  sdh: DiskDevice | null | VolumeDevice;
 }
 
-export type KernelArchitecture = 'x86_64' | 'i386';
+export type KernelArchitecture = 'i386' | 'x86_64';
 
 export interface Kernel {
-  id: string;
-  label: string;
-  version: string;
-  kvm: boolean;
   architecture: KernelArchitecture;
-  pvops: boolean;
-  deprecated: boolean;
   /**
    * @example 2009-10-26T04:00:00
    */
   built: string;
+  deprecated: boolean;
+  id: string;
+  kvm: boolean;
+  label: string;
+  pvops: boolean;
+  version: string;
 }
 
 export interface NetStats {
@@ -418,46 +437,46 @@ export interface StatsData {
 }
 
 export interface Stats {
-  title: string;
   data: StatsData;
+  title: string;
 }
 
 export interface Disk {
+  created: string;
+  disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
+  filesystem: Filesystem;
   id: number;
   label: string;
-  status: DiskStatus;
   size: number;
-  filesystem: Filesystem;
-  created: string;
+  status: DiskStatus;
   updated: string;
-  disk_encryption?: EncryptionStatus; // @TODO LDE: remove optionality once LDE is fully rolled out
 }
 
-export type DiskStatus = 'ready' | 'not ready' | 'deleting';
+export type DiskStatus = 'deleting' | 'not ready' | 'ready';
 
 export interface LinodeConfigCreationData {
-  label: string;
-  devices: Devices;
-  initrd: string | number | null;
-  kernel?: string;
   comments?: string;
-  memory_limit?: number;
-  run_level?: 'default' | 'single' | 'binbash';
-  virt_mode?: 'fullvirt' | 'paravirt';
+  devices: Devices;
   helpers: {
-    updatedb_disabled: boolean;
+    devtmpfs_automount: boolean;
     distro: boolean;
     modules_dep: boolean;
     network?: boolean;
-    devtmpfs_automount: boolean;
+    updatedb_disabled: boolean;
   };
-  root_device: string;
+  initrd: null | number | string;
   interfaces?: InterfacePayload[];
+  kernel?: string;
+  label: string;
+  memory_limit?: number;
+  root_device: string;
+  run_level?: 'binbash' | 'default' | 'single';
+  virt_mode?: 'fullvirt' | 'paravirt';
 }
 
 export interface PriceObject {
-  monthly: number | null;
-  hourly: number | null;
+  hourly: null | number;
+  monthly: null | number;
 }
 
 export interface RegionPriceObject extends PriceObject {
@@ -465,71 +484,68 @@ export interface RegionPriceObject extends PriceObject {
 }
 
 export interface BaseType {
+  disk: number;
   id: string;
   label: string;
-  disk: number;
   memory: number;
   vcpus: number;
 }
 export interface LinodeType extends BaseType {
-  transfer: number;
-  class: LinodeTypeClass;
-  successor: string | null;
-  network_out: number;
-  gpus: number;
   accelerated_devices: number;
-  price: PriceObject;
-  region_prices: RegionPriceObject[];
   addons: {
     backups: { price: PriceObject; region_prices: RegionPriceObject[] };
   };
+  class: LinodeTypeClass;
+  gpus: number;
+  network_out: number;
+  price: PriceObject;
+  region_prices: RegionPriceObject[];
+  successor: null | string;
+  transfer: number;
 }
 
 export type LinodeTypeClass =
   | 'accelerated'
-  | 'nanode'
-  | 'standard'
   | 'dedicated'
-  | 'highmem'
   | 'gpu'
+  | 'highmem'
   | 'metal'
+  | 'nanode'
+  | 'premium'
   | 'prodedicated'
-  | 'premium';
+  | 'standard';
 
 export interface IPAllocationRequest {
-  type: 'ipv4';
   public: boolean;
+  type: 'ipv4';
 }
 
 export interface UserData {
-  user_data: string | null;
+  user_data: null | string;
 }
 
 export interface CreateLinodePlacementGroupPayload {
-  id: number;
   /**
    * This parameter is silent in Cloud Manager, but still needs to be represented in the API types.
    *
    * @default false
    */
   compliant_only?: boolean;
+  id: number;
 }
 
 export interface CreateLinodeRequest {
   /**
-   * The Linode Type of the Linode you are creating.
+   * A list of public SSH keys that will be automatically appended to the root user’s
+   * `~/.ssh/authorized_keys`file when deploying from an Image.
    */
-  type: string;
+  authorized_keys?: null | string[];
   /**
-   * The Region where the Linode will be located.
+   * A list of usernames. If the usernames have associated SSH keys,
+   * the keys will be appended to the root users `~/.ssh/authorized_keys`
+   * file automatically when deploying from an Image.
    */
-  region: string;
-  /**
-   * A StackScript ID that will cause the referenced StackScript to be run during deployment of this Linode.
-   *
-   * This field cannot be used when deploying from a Backup or a Private Image.
-   */
-  stackscript_id?: number | null;
+  authorized_users?: null | string[];
   /**
    * A Backup ID from another Linode’s available backups.
    *
@@ -539,26 +555,7 @@ export interface CreateLinodeRequest {
    *
    * This field and the image field are mutually exclusive.
    */
-  backup_id?: number | null;
-  /**
-   * When deploying from an Image, this field is optional, otherwise it is ignored.
-   * This is used to set the swap disk size for the newly-created Linode.
-   * @default 512
-   */
-  swap_size?: number | null;
-  /**
-   * An Image ID to deploy the Linode Disk from.
-   */
-  image?: string | null;
-  /**
-   * This sets the root user’s password on a newly-created Linode Disk when deploying from an Image.
-   */
-  root_pass?: string;
-  /**
-   * A list of public SSH keys that will be automatically appended to the root user’s
-   * `~/.ssh/authorized_keys`file when deploying from an Image.
-   */
-  authorized_keys?: string[] | null;
+  backup_id?: null | number;
   /**
    * If this field is set to true, the created Linode will automatically be enrolled in the Linode Backup service.
    * This will incur an additional charge. The cost for the Backup service is dependent on the Type of Linode deployed.
@@ -569,10 +566,6 @@ export interface CreateLinodeRequest {
    */
   backups_enabled?: boolean | null;
   /**
-   * This field is required only if the StackScript being deployed requires input data from the User for successful completion
-   */
-  stackscript_data?: any;
-  /**
    * If it is deployed from an Image or a Backup and you wish it to remain offline after deployment, set this to false.
    *
    * @default true if the Linode is created with an Image or from a Backup.
@@ -580,31 +573,18 @@ export interface CreateLinodeRequest {
    */
   booted?: boolean | null;
   /**
-   * The Linode’s label is for display purposes only.
-   * If no label is provided for a Linode, a default will be assigned.
+   * A property with a string literal type indicating whether the Linode is encrypted or unencrypted.
+   * @default 'enabled' (if the region supports LDE)
    */
-  label?: string | null;
+  disk_encryption?: EncryptionStatus | null;
   /**
-   * An array of tags applied to this object.
-   *
-   * Tags are for organizational purposes only.
+   * The `id` of the Firewall to attach this Linode to upon creation.
    */
-  tags?: string[] | null;
+  firewall_id?: null | number;
   /**
-   * If true, the created Linode will have private networking enabled and assigned a private IPv4 address.
-   * @default false
+   * An Image ID to deploy the Linode Disk from.
    */
-  private_ip?: boolean | null;
-  /**
-   * A list of usernames. If the usernames have associated SSH keys,
-   * the keys will be appended to the root users `~/.ssh/authorized_keys`
-   * file automatically when deploying from an Image.
-   */
-  authorized_users?: string[] | null;
-  /**
-   * An array of Network Interfaces to add to this Linode’s Configuration Profile.
-   */
-  interfaces?: InterfacePayload[] | CreateLinodeInterfacePayload[];
+  image?: null | string;
   /**
    * When present, used by the API to determine what type of interface objects (legacy
    * config interfaces or new Linode Interfaces) are in the above interfaces field.
@@ -618,38 +598,77 @@ export interface CreateLinodeRequest {
    */
   interface_generation?: InterfaceGenerationType | null;
   /**
-   * Default value mirrors network_helper in AccountSettings object. Should only be
-   * present when using Linode Interfaces.
+   * An array of Network Interfaces to add to this Linode’s Configuration Profile.
    */
-  network_helper?: boolean;
+  interfaces?: CreateLinodeInterfacePayload[] | InterfacePayload[];
   /**
    * An array of IPv4 addresses for this Linode
    * Must be empty if Linode is configured to use new Linode Interfaces.
    */
   ipv4?: string[];
   /**
+   * The Linode’s label is for display purposes only.
+   * If no label is provided for a Linode, a default will be assigned.
+   */
+  label?: null | string;
+  /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */
-  metadata?: UserData | null;
+  metadata?: null | UserData;
   /**
-   * The `id` of the Firewall to attach this Linode to upon creation.
+   * Default value mirrors network_helper in AccountSettings object. Should only be
+   * present when using Linode Interfaces.
    */
-  firewall_id?: number | null;
+  network_helper?: boolean;
   /**
    * An object that assigns this the Linode to a placement group upon creation.
    */
   placement_group?: CreateLinodePlacementGroupPayload | null;
   /**
-   * A property with a string literal type indicating whether the Linode is encrypted or unencrypted.
-   * @default 'enabled' (if the region supports LDE)
+   * If true, the created Linode will have private networking enabled and assigned a private IPv4 address.
+   * @default false
    */
-  disk_encryption?: EncryptionStatus | null;
+  private_ip?: boolean | null;
+  /**
+   * The Region where the Linode will be located.
+   */
+  region: string;
+  /**
+   * This sets the root user’s password on a newly-created Linode Disk when deploying from an Image.
+   */
+  root_pass?: string;
+  /**
+   * This field is required only if the StackScript being deployed requires input data from the User for successful completion
+   */
+  stackscript_data?: any;
+  /**
+   * A StackScript ID that will cause the referenced StackScript to be run during deployment of this Linode.
+   *
+   * This field cannot be used when deploying from a Backup or a Private Image.
+   */
+  stackscript_id?: null | number;
+  /**
+   * When deploying from an Image, this field is optional, otherwise it is ignored.
+   * This is used to set the swap disk size for the newly-created Linode.
+   * @default 512
+   */
+  swap_size?: null | number;
+  /**
+   * An array of tags applied to this object.
+   *
+   * Tags are for organizational purposes only.
+   */
+  tags?: null | string[];
+  /**
+   * The Linode Type of the Linode you are creating.
+   */
+  type: string;
 }
 
 export interface MigrateLinodeRequest {
   placement_group?: {
-    id: number;
     compliant_only?: boolean;
+    id: number;
   };
   region: string;
 }
@@ -660,39 +679,39 @@ export type RescueRequestObject = Pick<
 >;
 
 export interface LinodeCloneData {
-  linode_id?: number;
-  region?: string | null;
-  type?: string | null;
-  label?: string | null;
   backups_enabled?: boolean | null;
-  tags?: string[] | null;
   configs?: number[];
   disks?: number[];
+  label?: null | string;
+  linode_id?: number;
+  region?: null | string;
+  tags?: null | string[];
+  type?: null | string;
 }
 
 export type RebuildRequest = InferType<typeof RebuildLinodeSchema>;
 
 export interface LinodeDiskCreationData {
-  label: string;
-  size: number;
-  filesystem?: 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
-  read_only?: boolean;
-  image?: string;
   authorized_keys?: string[];
   authorized_users?: string[];
+  filesystem?: 'ext3' | 'ext4' | 'initrd' | 'raw' | 'swap';
+  image?: string;
+  label: string;
+  read_only?: boolean;
   root_pass?: string;
-  stackscript_id?: number;
+  size: number;
   stackscript_data?: any;
+  stackscript_id?: number;
 }
 
-export type MigrationTypes = 'warm' | 'cold';
+export type MigrationTypes = 'cold' | 'warm';
 
 export interface ResizeLinodePayload {
-  type: string;
   /** @default true */
   allow_auto_disk_resize?: boolean;
   /** @default 'cold' */
   migration_type?: MigrationTypes;
+  type: string;
 }
 
 export interface DeleteInterfaceIds {
@@ -702,8 +721,8 @@ export interface DeleteInterfaceIds {
 }
 
 export interface LinodeLishData {
-  weblish_url: string;
   glish_url: string;
   monitor_url: string;
+  weblish_url: string;
   ws_protocols: string[];
 }

@@ -26,13 +26,20 @@ import {
   dashboardFactory,
   dashboardMetricFactory,
   databaseFactory,
+  dimensionFilterFactory,
   kubeLinodeFactory,
   widgetFactory,
 } from 'src/factories';
 import { generateGraphData } from 'src/features/CloudPulse/Utils/CloudPulseWidgetUtils';
 import { formatToolTip } from 'src/features/CloudPulse/Utils/unitConversion';
 
-import type { CloudPulseMetricsResponse, Database } from '@linode/api-v4';
+import type {
+  CloudPulseMetricsResponse,
+  Dashboard,
+  Database,
+  DimensionFilter,
+  Widgets,
+} from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 import type { Interception } from 'support/cypress-exports';
 
@@ -86,6 +93,13 @@ const dashboard = dashboardFactory.build({
       metric: name,
       unit,
       y_label: yLabel,
+      filters: [
+        dimensionFilterFactory.build({
+          dimension_label: 'dimension_1',
+          operator: 'startswith',
+          value: 'value_1',
+        }),
+      ],
     });
   }),
 });
@@ -141,7 +155,6 @@ const getWidgetLegendRowValuesFromResponse = (
 ) => {
   // Generate graph data using the provided parameters
   const graphData = generateGraphData({
-    flags,
     label,
     metricsList: responsePayload,
     resources: [
@@ -151,7 +164,6 @@ const getWidgetLegendRowValuesFromResponse = (
         region: 'us-ord',
       },
     ],
-    serviceType,
     status: 'success',
     unit,
   });
@@ -175,11 +187,20 @@ const databaseMock: Database = databaseFactory.build({
     secondary: undefined,
   },
   label: clusterName,
-  region: mockRegion.label,
+  region: mockRegion.id,
   status: 'provisioning',
   type: engine,
   version: '1',
 });
+
+const validateWidgetFilters = (widget: Widgets) => {
+  expect(widget.filters).to.have.length(1);
+  widget.filters.forEach((filter: DimensionFilter) => {
+    expect(filter.dimension_label).to.equal('dimension_1');
+    expect(filter.operator).to.equal('startswith');
+    expect(filter.value).to.equal('value_1');
+  });
+};
 
 describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
@@ -202,7 +223,13 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
     cy.visitWithLogin('/metrics');
 
     // Wait for the services and dashboard API calls to complete before proceeding
-    cy.wait(['@fetchServices', '@fetchDashboard']);
+    cy.wait(['@fetchServices']);
+    cy.wait('@fetchDashboard').then((interception: Interception) => {
+      const dashboards = interception.response?.body?.data as Dashboard[];
+      const dashboard = dashboards[0];
+      expect(dashboard.widgets).to.have.length(4);
+      dashboard.widgets.forEach(validateWidgetFilters);
+    });
 
     // Selecting a dashboard from the autocomplete input.
     ui.autocomplete
@@ -274,7 +301,29 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .type(`${nodeType}{enter}`);
 
     // Wait for all metrics query requests to resolve.
-    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
+    cy.get('@getMetrics.all')
+      .should('have.length', 4)
+      .each((xhr: unknown) => {
+        const interception = xhr as Interception;
+        const { body: requestPayload } = interception.request;
+        const { filters } = requestPayload;
+
+        // Validate filter for "dimension_1"
+        const dimension1Filter = filters.filter(
+          (filter: DimensionFilter) => filter.dimension_label === 'dimension_1'
+        );
+        expect(dimension1Filter).to.have.length(1);
+        expect(dimension1Filter[0].operator).to.equal('startswith');
+        expect(dimension1Filter[0].value).to.equal('value_1');
+
+        // Validate filter for "node_type"
+        const nodeTypeFilter = filters.filter(
+          (filter: DimensionFilter) => filter.dimension_label === 'node_type'
+        );
+        expect(nodeTypeFilter).to.have.length(1);
+        expect(nodeTypeFilter[0].operator).to.equal('eq');
+        expect(nodeTypeFilter[0].value).to.equal('secondary');
+      });
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
@@ -369,7 +418,7 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
               .to.have.property('response')
               .with.property('statusCode', 200);
             expect(testData.expectedAggregation).to.equal(
-              interception.request.body.aggregate_function
+              interception.request.body.metrics[0].aggregate_function
             );
           });
 
@@ -417,15 +466,16 @@ describe('Integration Tests for DBaaS Dashboard ', () => {
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        const { metric, relative_time_duration: timeRange } = requestPayload;
-        const metricData = metrics.find(({ name }) => name === metric);
+        const { metrics: metric, relative_time_duration: timeRange } =
+          requestPayload;
+        const metricData = metrics.find(({ name }) => name === metric[0].name);
 
         if (!metricData) {
           throw new Error(
-            `Unexpected metric name '${metric}' included in the outgoing refresh API request`
+            `Unexpected metric name '${metric[0].name}' included in the outgoing refresh API request`
           );
         }
-        expect(metric).to.equal(metricData.name);
+        expect(metric[0].name).to.equal(metricData.name);
         expect(timeRange).to.have.property('unit', 'hr');
         expect(timeRange).to.have.property('value', 24);
       });

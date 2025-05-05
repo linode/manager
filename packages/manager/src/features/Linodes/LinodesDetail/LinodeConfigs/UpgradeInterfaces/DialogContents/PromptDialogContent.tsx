@@ -17,6 +17,15 @@ import type {
   UpgradeInterfacesDialogContentProps,
 } from '../types';
 
+const upgradingImpacts = [
+  'New Linode Interfaces are created to match the existing Configuration Profile Interfaces.',
+  'The Linode will only use Linode Interfaces and cannot revert to Configuration Profile Interfaces.',
+  'Private IPv4 addresses are not supported on public Linode Interfaces—services relying on a private IPv4 will no longer function.',
+  'All firewalls are removed from the Linode. Any previously attached firewalls are reassigned to the new public and VPC interfaces. Default firewalls are not applied if none were originally attached.',
+  'Public interfaces retain the Linode’s existing MAC address and SLAAC IPv6 address.',
+  'Configuration Profile Interfaces are removed from the Configurations tab. The new Linode Interfaces will appear in the Network tab.',
+];
+
 export const PromptDialogContent = (
   props: UpgradeInterfacesDialogContentProps<PromptDialogState>
 ) => {
@@ -24,10 +33,8 @@ export const PromptDialogContent = (
 
   const [isDryRun, setIsDryRun] = React.useState<boolean>(true);
 
-  const {
-    data: configs,
-    isLoading: isLoadingConfigs,
-  } = useAllLinodeConfigsQuery(linodeId, open);
+  const { data: configs, isLoading: isLoadingConfigs } =
+    useAllLinodeConfigsQuery(linodeId, open);
 
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
@@ -74,30 +81,22 @@ export const PromptDialogContent = (
   return (
     <Stack gap={2}>
       <Typography>
-        Upgrading allows interface connections to be directly associated with
-        the Linode and not the Linode&apos;s configuration profile.
+        Upgrading allows interface connections to be associated directly with
+        the Linode, rather than its configuration profile.
       </Typography>
       <Typography>
-        It is recommended that you perform a dry run before upgrading to verify
-        and resolve potential conflicts during the upgrade.
+        We recommend performing a dry run before upgrading to identify and
+        resolve any potential conflicts.
       </Typography>
       <Typography>
-        <strong>Upgrading will have the following impact:</strong>
+        <strong>What happens after the upgrade:</strong>
       </Typography>
       <List dense sx={{ listStyleType: 'disc', pl: 3 }}>
-        <ListItem disablePadding sx={{ display: 'list-item' }}>
-          Any firewall attached to the Linode will be removed and a default
-          firewall will be attached to the new interface automatically.
-        </ListItem>
-        <ListItem disablePadding sx={{ display: 'list-item' }}>
-          If a firewall is not currently assigned, one will be added during the
-          upgrade to improve security.
-        </ListItem>{' '}
-        <ListItem disablePadding sx={{ display: 'list-item' }}>
-          All networking configurations will be deleted from the configuration
-          profile and re-assigned to the neew interfaces in the Linode Network
-          tab.
-        </ListItem>
+        {upgradingImpacts.map((copy, idx) => (
+          <ListItem disablePadding key={idx} sx={{ display: 'list-item' }}>
+            {copy}
+          </ListItem>
+        ))}
       </List>
       <Box
         sx={{
@@ -115,7 +114,7 @@ export const PromptDialogContent = (
           loading={isPendingDryRun}
           onClick={upgradeDryRun}
         >
-          Upgrade Dry Run
+          Perform Dry Run
         </Button>
         <Button
           buttonType="primary"

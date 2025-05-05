@@ -3,8 +3,7 @@ import {
   useAllTagsQuery,
   useProfile,
 } from '@linode/queries';
-import { Autocomplete, Chip } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Autocomplete, Chip, CloseIcon } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
@@ -60,15 +59,8 @@ export interface TagsInputProps {
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const {
-    disabled,
-    hideLabel,
-    label,
-    noMarginTop,
-    onChange,
-    tagError,
-    value,
-  } = props;
+  const { disabled, hideLabel, label, noMarginTop, onChange, tagError, value } =
+    props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
@@ -159,6 +151,16 @@ export const TagsInput = (props: TagsInputProps) => {
 
   return (
     <Autocomplete
+      autoHighlight
+      clearOnBlur
+      disableCloseOnSelect={false}
+      disabled={disabled}
+      errorText={error}
+      filterOptions={filterOptions}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
+      label={label || 'Add Tags'}
+      multiple
+      noOptionsText={'No results.'}
       onChange={(_, newValue, reason, details) => {
         const detailsOption = details?.option;
         if (
@@ -171,6 +173,8 @@ export const TagsInput = (props: TagsInputProps) => {
           onChange(newValue);
         }
       }}
+      options={accountTagItems}
+      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
       renderTags={(tagValue, getTagProps) => {
         return tagValue.map((option, index) => (
           <Chip
@@ -182,18 +186,6 @@ export const TagsInput = (props: TagsInputProps) => {
           />
         ));
       }}
-      autoHighlight
-      clearOnBlur
-      disableCloseOnSelect={false}
-      disabled={disabled}
-      errorText={error}
-      filterOptions={filterOptions}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      label={label || 'Add Tags'}
-      multiple
-      noOptionsText={'No results.'}
-      options={accountTagItems}
-      placeholder={value.length === 0 ? 'Type to choose or create a tag.' : ''}
       textFieldProps={{ hideLabel, noMarginTop }}
       value={value}
     />

@@ -3,8 +3,9 @@
  */
 
 import { getLinodeKernels } from '@linode/api-v4';
-import { depaginate } from './paginate';
 import { pageSize } from 'support/constants/api';
+
+import { depaginate } from './paginate';
 
 import type { Kernel } from '@linode/api-v4';
 

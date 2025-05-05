@@ -13,12 +13,14 @@ import {
   mockGetAccountSettings,
 } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetPrices } from 'support/intercepts/network-transfer';
 import {
   mockCancelObjectStorage,
   mockCreateAccessKey,
   mockGetAccessKeys,
   mockGetBuckets,
   mockGetClusters,
+  mockGetObjectStorageTypes,
 } from 'support/intercepts/object-storage';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
@@ -29,6 +31,7 @@ import type {
   AccountSettings,
   ObjectStorageCluster,
   ObjectStorageClusterID,
+  PriceType,
   Region,
 } from '@linode/api-v4';
 
@@ -113,10 +116,90 @@ describe('Object Storage enrollment', () => {
       }),
     ];
 
+    const mockPrices: PriceType[] = [
+      {
+        id: 'distributed_network_transfer',
+        label: 'Distributed Network Transfer',
+        price: {
+          hourly: 0.01,
+          monthly: null,
+        },
+        region_prices: [],
+        transfer: 0,
+      },
+      {
+        id: 'network_transfer',
+        label: 'Network Transfer',
+        price: {
+          hourly: 0.005,
+          monthly: null,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.015,
+            monthly: null,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.007,
+            monthly: null,
+          },
+        ],
+        transfer: 0,
+      },
+    ];
+    const mockObjectStorageTypes = [
+      {
+        id: 'objectstorage',
+        label: 'Object Storage',
+        price: {
+          hourly: 0.0075,
+          monthly: 5,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.0075,
+            monthly: 5,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.0075,
+            monthly: 5,
+          },
+        ],
+        transfer: 1000,
+      },
+      {
+        id: 'objectstorage-overage',
+        label: 'Object Storage Overage',
+        price: {
+          hourly: 0.02,
+          monthly: null,
+        },
+        region_prices: [
+          {
+            id: 'id-cgk',
+            hourly: 0.024,
+            monthly: null,
+          },
+          {
+            id: 'br-gru',
+            hourly: 0.028,
+            monthly: null,
+          },
+        ],
+        transfer: 0,
+      },
+    ];
     const mockAccessKey = objectStorageKeyFactory.build({
       label: randomLabel(),
     });
-
+    mockGetPrices(mockPrices).as('getPrices');
+    mockGetObjectStorageTypes(mockObjectStorageTypes).as(
+      'getObjectStorageTypes'
+    );
     mockGetAccountSettings(mockAccountSettings).as('getAccountSettings');
     mockGetClusters(mockClusters).as('getClusters');
     mockGetBuckets([]).as('getBuckets');
@@ -140,7 +223,7 @@ describe('Object Storage enrollment', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-
+    cy.wait(['@getPrices', '@getObjectStorageTypes']);
     ui.drawer
       .findByTitle('Create Bucket')
       .should('be.visible')
@@ -350,8 +433,7 @@ describe('Object Storage enrollment', () => {
     cy.visitWithLogin('/account/settings');
     cy.wait(['@getProfile', '@getAccountSettings']);
 
-    ui.accordion
-      .findByTitle('Object Storage')
+    cy.findByTestId('object-storage')
       .should('be.visible')
       .within(() => {
         // Confirm that the user is informed that cancelling OBJ will delete their buckets and keys.

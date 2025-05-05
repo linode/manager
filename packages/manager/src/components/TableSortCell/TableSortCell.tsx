@@ -27,6 +27,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
     isLoading,
     label,
     noWrap,
+    sx,
     ...rest
   } = props;
 
@@ -38,20 +39,21 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
-      sx={{
-        whiteSpace: noWrap ? 'nowrap' : '',
-      }}
       onClick={onHandleClick}
       role="columnheader"
       sortDirection={direction}
+      sx={{
+        whiteSpace: noWrap ? 'nowrap' : '',
+        ...sx,
+      }}
       {...rest}
     >
       <TableSortLabel
-        IconComponent={ArrowDown}
         active={active}
         aria-label={`Sort by ${label}`}
         direction={direction}
         hideSortIcon={true}
+        IconComponent={ArrowDown}
       >
         {children}
         {!active && <Sort />}

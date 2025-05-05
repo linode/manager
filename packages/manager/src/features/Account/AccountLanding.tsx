@@ -184,11 +184,11 @@ const AccountLanding = () => {
     }
     landingHeaderProps.extraActions = canSwitchBetweenParentOrProxyAccount ? (
       <SwitchAccountButton
+        data-testid="switch-account-button"
         onClick={() => {
           sendSwitchAccountEvent('Account Landing');
           handleAccountSwitch();
         }}
-        data-testid="switch-account-button"
       />
     ) : undefined;
   }

@@ -38,7 +38,7 @@ export const InterfaceFirewall = ({ index }: Props) => {
         <FirewallSelect
           disabled={isLinodeCreateRestricted}
           errorText={fieldState.error?.message}
-          label={`${labelMap[interfaceType]} Interface Firewall`}
+          label={`${labelMap[interfaceType ?? 'public']} Interface Firewall`}
           onBlur={field.onBlur}
           onChange={(e, firewall) => field.onChange(firewall?.id ?? null)}
           placeholder="None"

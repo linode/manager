@@ -6,21 +6,16 @@ import { Link } from 'src/components/Link';
 
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
-import {
-  type DrawerModes,
-  type EntitiesOption,
-  type ExtendedRole,
-  type ExtendedRoleMap,
-  getFacadeRoleDescription,
-} from '../utilities';
+import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
 
+import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   errorText?: string;
   mode?: DrawerModes;
   onChange?: (value: EntitiesOption[]) => void;
-  role: ExtendedRole | ExtendedRoleMap;
+  role: ExtendedRole | ExtendedRoleView;
   sx?: SxProps<Theme>;
   value?: EntitiesOption[];
 }

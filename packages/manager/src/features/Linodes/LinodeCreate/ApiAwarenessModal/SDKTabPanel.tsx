@@ -1,4 +1,4 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Autocomplete, Notice, Typography } from '@linode/ui';
 import React, { useMemo, useState } from 'react';
 
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
@@ -21,14 +21,19 @@ const sdkOptions = [
   { label: 'Python (linode_api4-python)', value: 'python' },
 ] as const;
 
-type OptionType = typeof sdkOptions[number];
+type OptionType = (typeof sdkOptions)[number];
 
 export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
   const [selectedSDK, setSelectedSDK] = useState<OptionType | undefined>();
 
-  const linodegoSnippet = useMemo(() => generateGoLinodeSnippet(payLoad), [
-    payLoad,
-  ]);
+  // @TODO - Linode Interfaces
+  // DX support (CLI, integrations, sdks) for Linode Interfaces is not yet available. Remove this when it is.
+  const showDXCodeSnippets = payLoad.interface_generation !== 'linode';
+
+  const linodegoSnippet = useMemo(
+    () => generateGoLinodeSnippet(payLoad),
+    [payLoad]
+  );
 
   const pythonLinodeSnippet = useMemo(
     () => generatePythonLinodeSnippet(payLoad),
@@ -56,18 +61,30 @@ export const SDKTabPanel = ({ payLoad }: SDKTabPanelProps) => {
       />
       {selectedSDK && (
         <>
+          {!showDXCodeSnippets && (
+            <Notice
+              spacingTop={16}
+              text={`SDK support for ${selectedSDK.label} to create Linodes using Linode Interfaces is
+              coming soon.`}
+              variant="info"
+            />
+          )}
           {selectedSDK.value === 'go' ? (
             <GoSDKResources />
           ) : (
             <PythonSDKResources />
           )}
-          <CodeBlock
-            code={
-              selectedSDK.value === 'go' ? linodegoSnippet : pythonLinodeSnippet
-            }
-            analyticsLabel={selectedSDK.value}
-            language={selectedSDK.value}
-          />
+          {showDXCodeSnippets && (
+            <CodeBlock
+              analyticsLabel={selectedSDK.value}
+              code={
+                selectedSDK.value === 'go'
+                  ? linodegoSnippet
+                  : pythonLinodeSnippet
+              }
+              language={selectedSDK.value}
+            />
+          )}
         </>
       )}
     </SafeTabPanel>

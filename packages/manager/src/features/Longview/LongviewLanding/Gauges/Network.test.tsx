@@ -3,7 +3,7 @@ import * as React from 'react';
 import { network as mockNetworkData } from 'src/__data__/longview';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NetworkGauge, generateUsedNetworkAsBytes } from './Network';
+import { generateUsedNetworkAsBytes, NetworkGauge } from './Network';
 
 const mockError = [{ CODE: 0, SEVERITY: 3, TEXT: 'no reason' }];
 

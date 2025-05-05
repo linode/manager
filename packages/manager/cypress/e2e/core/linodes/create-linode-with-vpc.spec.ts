@@ -156,11 +156,7 @@ describe('Create Linode with VPCs', () => {
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockUpdatedSubnet]).as('getSubnets');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfig({
-      config: mockLinodeConfig,
-      configId: mockLinodeConfig.id,
-      linodeId: mockLinode.id,
-    }).as('getLinodeConfig');
+    mockGetLinodeConfig(mockLinode.id, mockLinodeConfig).as('getLinodeConfig');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();
@@ -328,11 +324,7 @@ describe('Create Linode with VPCs', () => {
     mockGetVPC(mockVPC).as('getVPC');
     mockGetSubnets(mockVPC.id, [mockUpdatedSubnet]).as('getSubnets');
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetLinodeConfig({
-      config: mockLinodeConfig,
-      configId: mockLinodeConfig.id,
-      linodeId: mockLinode.id,
-    }).as('getLinodeConfig');
+    mockGetLinodeConfig(mockLinode.id, mockLinodeConfig).as('getLinodeConfig');
 
     cy.visit(`/vpcs/${mockVPC.id}`);
     cy.findByLabelText(`expand ${mockSubnet.label} row`).click();

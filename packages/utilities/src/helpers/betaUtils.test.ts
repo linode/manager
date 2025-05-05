@@ -1,18 +1,17 @@
 import { DateTime } from 'luxon';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { accountBetaFactory, betaFactory } from '../factories';
 import {
-  hasStarted,
   canEnd,
-  willEnd,
-  willStart,
+  getBetaStatus,
   hasEnded,
+  hasStarted,
   isCustomerEnrolled,
   wasCustomerEnrolled,
-  getBetaStatus,
+  willEnd,
+  willStart,
 } from './betaUtils';
-
-import { accountBetaFactory, betaFactory } from '../factories';
 
 const generateTestBetas = () => ({
   activeNeverEndingBeta: betaFactory.build({

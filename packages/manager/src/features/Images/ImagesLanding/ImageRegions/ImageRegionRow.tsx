@@ -1,10 +1,16 @@
-import { Box, IconButton, Stack, Tooltip, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { useRegionsQuery } from '@linode/queries';
+import {
+  Box,
+  CloseIcon,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { Flag } from 'src/components/Flag';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
-import { useRegionsQuery } from '@linode/queries';
 
 import type { ImageRegionStatus, ImageStatus } from '@linode/api-v4';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
@@ -48,7 +54,7 @@ export const ImageRegionRow = (props: Props) => {
               onClick={onRemove}
               sx={{ p: 0.5 }}
             >
-              <Close />
+              <CloseIcon />
             </IconButton>
           </span>
         </Tooltip>

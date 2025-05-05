@@ -4,7 +4,6 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   useAccountUserPermissions,
   useAccountUserPermissionsMutation,
@@ -13,17 +12,14 @@ import {
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';
 
-import type {
-  EntitiesOption,
-  ExtendedRoleMap,
-  UpdateEntitiesFormValues,
-} from '../utilities';
+import type { EntitiesOption, ExtendedRoleView } from '../types';
+import type { UpdateEntitiesFormValues } from '../utilities';
 import type { EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
   open: boolean;
-  role: ExtendedRoleMap | undefined;
+  role: ExtendedRoleView | undefined;
 }
 
 export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
@@ -112,12 +108,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Update List of Entities"
-    >
+    <Drawer onClose={handleClose} open={open} title="Update List of Entities">
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}

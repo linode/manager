@@ -22,6 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
+  isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -45,14 +46,15 @@ export interface PlansPanelProps {
   header?: string;
   isCreate?: boolean;
   isLegacyDatabase?: boolean;
+  isResize?: boolean;
   linodeID?: number | undefined;
   onSelect: (key: string) => void;
   regionsData?: Region[];
   selectedId?: string;
   selectedRegionID?: string;
   showLimits?: boolean;
-  tabDisabledMessage?: string;
   tabbedPanelInnerClass?: string;
+  tabDisabledMessage?: string;
   types: PlanSelectionType[];
 }
 
@@ -78,6 +80,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     header,
     isCreate,
     isLegacyDatabase,
+    isResize,
     linodeID,
     onSelect,
     regionsData,
@@ -106,6 +109,11 @@ export const PlansPanel = (props: PlansPanelProps) => {
 
   const _types = types.filter((type) => {
     if (!isAcceleratedLinodePlansEnabled && type.class === 'accelerated') {
+      return false;
+    }
+
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc2025 && isMTCPlan(type)) {
       return false;
     }
 
@@ -160,6 +168,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
         disabledClasses,
         disabledSmallerPlans,
         isLegacyDatabase,
+        isResize,
         plans: plansMap,
         regionAvailabilities,
         selectedRegionId: selectedRegionID,
@@ -173,6 +182,10 @@ export const PlansPanel = (props: PlansPanelProps) => {
           return (
             <>
               <PlanInformation
+                disabledClasses={disabledClasses}
+                flow="linode"
+                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
+                hasSelectedRegion={hasSelectedRegion}
                 hideLimitedAvailabilityBanner={
                   showDistributedRegionPlanTable ||
                   !flags.disableLargestGbPlans ||
@@ -181,10 +194,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan(
                   plan
                 )}
-                disabledClasses={disabledClasses}
-                flow="linode"
-                hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
-                hasSelectedRegion={hasSelectedRegion}
                 planType={plan}
                 regionsData={regionsData || []}
               />
@@ -201,8 +210,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
                 isCreate={isCreate}
                 linodeID={linodeID}
                 onSelect={onSelect}
-                planType={plan}
                 plans={plansForThisLinodeTypeClass}
+                planType={plan}
                 selectedId={selectedId}
                 selectedRegionId={selectedRegionID}
                 showLimits={showLimits}
