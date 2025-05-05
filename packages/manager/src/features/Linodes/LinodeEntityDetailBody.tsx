@@ -1,5 +1,5 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Chip, Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
@@ -33,6 +33,7 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
+import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
 import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
@@ -482,18 +483,31 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 >
                   Configuration Profile
                   <span>
-                    <Chip
-                      component="span"
-                      disabled={!canUpgradeInterfaces}
-                      label="UPGRADE"
-                      onClick={openUpgradeInterfacesDialog}
-                      size="small"
-                      sx={(theme) => ({
-                        backgroundColor: theme.color.tagButtonBg,
-                        color: theme.tokens.color.Neutrals[80],
-                        marginLeft: theme.spacingFunction(12),
-                      })}
-                    />
+                    <Tooltip
+                      slotProps={{
+                        tooltip: {
+                          sx: {
+                            maxWidth: '260px',
+                          },
+                        },
+                      }}
+                      sx={{ width: '500px' }}
+                      title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
+                    >
+                      <Chip
+                        aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
+                        component="span"
+                        disabled={!canUpgradeInterfaces}
+                        label="UPGRADE"
+                        onClick={openUpgradeInterfacesDialog}
+                        size="small"
+                        sx={(theme) => ({
+                          backgroundColor: theme.color.tagButtonBg,
+                          color: theme.tokens.color.Neutrals[80],
+                          marginLeft: theme.spacingFunction(12),
+                        })}
+                      />
+                    </Tooltip>
                     {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
                       <TooltipIcon
                         status="help"

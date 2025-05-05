@@ -1,8 +1,8 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link } from 'react-router-dom';
-
 import type { LinkProps } from 'react-router-dom';
+
 import type {
   EntityType,
   FormPayloadValues,
@@ -37,6 +37,7 @@ const SupportLink = (props: SupportLinkProps) => {
 
   return (
     <Link
+      onClick={onClick}
       to={{
         pathname: '/support/tickets',
         state: {
@@ -48,7 +49,6 @@ const SupportLink = (props: SupportLinkProps) => {
           title,
         },
       }}
-      onClick={onClick}
     >
       {text}
     </Link>

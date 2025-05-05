@@ -1,4 +1,4 @@
-import { TooltipIcon, convertToKebabCase } from '@linode/ui';
+import { convertToKebabCase, TooltipIcon } from '@linode/ui';
 import { IconButton, ListItemText } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -89,6 +89,14 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
   return (
     <>
       <IconButton
+        aria-controls={open ? menuId : undefined}
+        aria-expanded={open ? 'true' : undefined}
+        aria-haspopup="true"
+        aria-label={ariaLabel}
+        color="inherit"
+        id={buttonId}
+        onClick={handleClick}
+        onKeyDown={handleKeyPress}
         sx={(theme) => ({
           ':hover': {
             backgroundColor: theme.color.buttonPrimaryHover,
@@ -101,25 +109,24 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
           minWidth: '40px',
           padding: '10px',
         })}
-        aria-controls={open ? menuId : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        aria-label={ariaLabel}
-        color="inherit"
-        id={buttonId}
-        onClick={handleClick}
-        onKeyDown={handleKeyPress}
       >
         <KebabIcon />
       </IconButton>
       <Menu
-        MenuListProps={{
-          'aria-labelledby': buttonId,
-        }}
+        anchorEl={anchorEl}
         anchorOrigin={{
           horizontal: 'right',
           vertical: 'bottom',
         }}
+        data-qa-action-menu
+        disableScrollLock
+        id={menuId}
+        marginThreshold={0}
+        MenuListProps={{
+          'aria-labelledby': buttonId,
+        }}
+        onClose={handleClose}
+        open={open}
         slotProps={{
           paper: {
             sx: (theme) => ({
@@ -131,17 +138,14 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
           horizontal: 'right',
           vertical: 'top',
         }}
-        anchorEl={anchorEl}
-        data-qa-action-menu
-        disableScrollLock
-        id={menuId}
-        marginThreshold={0}
-        onClose={handleClose}
-        open={open}
         transitionDuration={225}
       >
         {actionsList.map((a, idx) => (
           <MenuItem
+            data-qa-action-menu-item={a.title}
+            data-testid={a.title}
+            disabled={a.disabled}
+            key={idx}
             onClick={(e) => {
               if (!a.disabled) {
                 handleClose(e);
@@ -151,10 +155,6 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
                 e.stopPropagation();
               }
             }}
-            data-qa-action-menu-item={a.title}
-            data-testid={a.title}
-            disabled={a.disabled}
-            key={idx}
             onMouseEnter={handleMouseEnter}
           >
             <ListItemText primaryTypographyProps={{ color: 'inherit' }}>

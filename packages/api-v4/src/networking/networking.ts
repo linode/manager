@@ -4,6 +4,7 @@ import {
   shareAddressesSchema,
   updateIPSchema,
 } from '@linode/validation/lib/networking.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -12,8 +13,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CreateIPv6RangePayload,
   IPAddress,
   IPAssignmentPayload,
@@ -32,7 +34,7 @@ export const getIPs = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/networking/ips`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -43,7 +45,7 @@ export const getIPs = (params?: Params, filters?: Filter) =>
 export const getIP = (address: string) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -56,11 +58,11 @@ export const getIP = (address: string) =>
  * IPv4 addresses, this will be set to a default value provided by Linode if not
  * explicitly set.
  */
-export const updateIP = (address: string, rdns: string | null = null) =>
+export const updateIP = (address: string, rdns: null | string = null) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${encodeURIComponent(address)}`),
     setData({ rdns }, updateIPSchema),
-    setMethod('PUT')
+    setMethod('PUT'),
   );
 
 /**
@@ -80,7 +82,7 @@ export const allocateIp = (payload: any) =>
   Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/`),
     setData(payload, allocateIPSchema),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -99,7 +101,7 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ips/assign`),
     setMethod('POST'),
-    setData(payload, assignAddressesSchema)
+    setData(payload, assignAddressesSchema),
   );
 
 /**
@@ -121,7 +123,7 @@ export const shareAddressesv4 = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ipv4/share`),
     setMethod('POST'),
-    setData(payload, shareAddressesSchema)
+    setData(payload, shareAddressesSchema),
   );
 
 /**
@@ -142,7 +144,7 @@ export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${BETA_API_ROOT}/networking/ips/share`),
     setMethod('POST'),
-    setData(payload, shareAddressesSchema)
+    setData(payload, shareAddressesSchema),
   );
 
 /**
@@ -153,7 +155,7 @@ export const getIPv6Pools = (params?: Params) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -165,7 +167,7 @@ export const getIPv6Ranges = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -177,7 +179,7 @@ export const getIPv6RangeInfo = (range: string, params?: Params) =>
   Request<IPRangeInformation>(
     setURL(`${API_ROOT}/networking/ipv6/ranges/${encodeURIComponent(range)}`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -189,6 +191,6 @@ export const createIPv6Range = (payload: CreateIPv6RangePayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('POST'),
-    setData(payload)
+    setData(payload),
   );
 };

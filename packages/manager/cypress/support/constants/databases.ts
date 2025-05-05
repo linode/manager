@@ -1,23 +1,24 @@
-import type {
-  ClusterSize,
-  Engine,
-  Region,
-  DatabaseEngine,
-  DatabaseType,
-} from '@linode/api-v4';
+import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
 import { randomIp, randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-import { databaseEngineFactory, databaseTypeFactory } from '@src/factories';
+
+import type {
+  ClusterSize,
+  DatabaseEngine,
+  DatabaseType,
+  Engine,
+  Region,
+} from '@linode/api-v4';
 
 export interface DatabaseClusterConfiguration {
   clusterSize: ClusterSize;
   dbType: Engine;
   engine: string;
+  ip: string;
   label: string;
   linodeType: string;
   region: Region;
   version: string;
-  ip: string;
 }
 
 /**

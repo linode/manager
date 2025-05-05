@@ -1,17 +1,17 @@
+import { useChildAccountsInfiniteQuery } from '@linode/queries';
 import {
-  Typography,
   Box,
   Button,
   CircleProgress,
   Notice,
   Stack,
   StyledLinkButton,
+  Typography,
 } from '@linode/ui';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import ErrorStateCloud from 'src/assets/icons/error-state-cloud.svg';
-import { useChildAccountsInfiniteQuery } from '@linode/queries';
 
 import type { Filter, UserType } from '@linode/api-v4';
 
@@ -24,10 +24,10 @@ interface ChildAccountListProps {
     euuid: string;
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>;
     onClose: () => void;
-    userType: UserType | undefined;
+    userType: undefined | UserType;
   }) => void;
   searchQuery: string;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 export const ChildAccountList = React.memo(
@@ -45,10 +45,8 @@ export const ChildAccountList = React.memo(
       ...(searchQuery && { company: { '+contains': searchQuery } }),
     };
 
-    const [
-      isSwitchingChildAccounts,
-      setIsSwitchingChildAccounts,
-    ] = useState<boolean>(false);
+    const [isSwitchingChildAccounts, setIsSwitchingChildAccounts] =
+      useState<boolean>(false);
     const {
       data,
       fetchNextPage,
@@ -103,11 +101,11 @@ export const ChildAccountList = React.memo(
             Try again or contact support if the issue persists.
           </Typography>
           <Button
+            buttonType="primary"
+            onClick={() => refetchChildAccounts()}
             sx={(theme) => ({
               marginTop: theme.spacing(2),
             })}
-            buttonType="primary"
-            onClick={() => refetchChildAccounts()}
           >
             Try again
           </Button>
@@ -119,6 +117,8 @@ export const ChildAccountList = React.memo(
       const euuid = childAccount.euuid;
       return (
         <StyledLinkButton
+          disabled={isSwitchingChildAccounts}
+          key={`child-account-link-button-${idx}`}
           onClick={(event) => {
             setIsSwitchingChildAccounts(true);
             onSwitchAccount({
@@ -132,8 +132,6 @@ export const ChildAccountList = React.memo(
           sx={(theme) => ({
             marginBottom: theme.spacing(2),
           })}
-          disabled={isSwitchingChildAccounts}
-          key={`child-account-link-button-${idx}`}
         >
           {childAccount.company}
         </StyledLinkButton>

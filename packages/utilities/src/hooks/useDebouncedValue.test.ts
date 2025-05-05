@@ -9,7 +9,7 @@ describe('useDebouncedValue', () => {
 
     const { rerender, result } = renderHook(
       ({ value }) => useDebouncedValue(value, 500),
-      { initialProps: { value: 'test' } }
+      { initialProps: { value: 'test' } },
     );
 
     expect(result.current).toBe('test');

@@ -20,7 +20,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { APIError, Alert, EntityAlertUpdatePayload } from '@linode/api-v4';
+import type { Alert, APIError, EntityAlertUpdatePayload } from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -195,14 +195,14 @@ export const AlertInformationActionTable = (
         )}
       </OrderBy>
       <AlertConfirmationDialog
-        message={`Are you sure you want to
-              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isLoading}
         isOpen={isDialogOpen}
+        message={`Are you sure you want to
+              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
       />
     </>
   );

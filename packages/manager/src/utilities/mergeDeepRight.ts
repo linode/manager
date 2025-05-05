@@ -5,7 +5,7 @@
  */
 export const mergeDeepRight = <
   T extends Record<string, any>,
-  U extends Record<string, any>
+  U extends Record<string, any>,
 >(
   obj1: T,
   obj2: U
@@ -25,13 +25,16 @@ export const mergeDeepRight = <
     }
   }
 
-  return Object.keys({ ...obj1, ...obj2 }).reduce((acc: any, key: string) => {
-    const val1 = obj1[key];
-    const val2 = obj2[key];
+  return Object.keys({ ...obj1, ...obj2 }).reduce(
+    (acc: any, key: string) => {
+      const val1 = obj1[key];
+      const val2 = obj2[key];
 
-    acc[key] = mergeDeepRight(val1, val2);
-    return acc;
-  }, {} as T & U);
+      acc[key] = mergeDeepRight(val1, val2);
+      return acc;
+    },
+    {} as T & U
+  );
 };
 
 // using a custom function to check for an object since typescript classifies arrays, dates and maps as type 'object'

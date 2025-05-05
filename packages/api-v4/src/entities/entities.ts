@@ -1,7 +1,8 @@
-import { ResourcePage } from 'src/types';
 import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setURL } from '../request';
-import { AccountEntity } from './types';
+
+import type { AccountEntity } from './types';
+import type { ResourcePage } from 'src/types';
 
 /**
  * getAccountEntities
@@ -12,6 +13,6 @@ import { AccountEntity } from './types';
 export const getAccountEntities = () => {
   return Request<ResourcePage<AccountEntity>>(
     setURL(`${BETA_API_ROOT}/entities`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };

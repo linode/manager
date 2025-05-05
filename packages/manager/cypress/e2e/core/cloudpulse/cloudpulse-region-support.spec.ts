@@ -16,16 +16,21 @@ import {
   mockGetCloudPulseDashboards,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
+import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
-import { accountFactory, dashboardFactory, databaseFactory, widgetFactory } from 'src/factories';
+import {
+  accountFactory,
+  dashboardFactory,
+  databaseFactory,
+  widgetFactory,
+} from 'src/factories';
 
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
-import { Database } from '@linode/api-v4';
-import { mockGetDatabases } from 'support/intercepts/databases';
 
 const { dashboardName, id, metrics, serviceType } = widgetDetails.dbaas;
 

@@ -1,4 +1,4 @@
-import { Notice, omittedProps, Chip } from '@linode/ui';
+import { Chip, Notice, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { Table } from 'src/components/Table';

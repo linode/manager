@@ -1,10 +1,13 @@
 import { useAccountSettings } from '@linode/queries';
 import {
+  BetaChip,
   Box,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
+  Stack,
+  Typography,
 } from '@linode/ui';
 import React from 'react';
 import { useController } from 'react-hook-form';
@@ -61,13 +64,47 @@ export const InterfaceGeneration = () => {
           >
             <FormControlLabel
               control={<Radio />}
-              label="Configuration Profile Interfaces (Legacy)"
-              value="legacy_config"
+              label={
+                <Stack mt={1.25} spacing={0.5}>
+                  <Stack direction="row">
+                    <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                      Linode Interfaces
+                    </Typography>
+                    <BetaChip />
+                  </Stack>
+                  <Typography>
+                    Linode Interfaces are the preferred option for VPCs and are
+                    managed directly through a Linode’s Network settings.
+                  </Typography>
+                  <Typography>
+                    Cloud Firewalls are assigned to individual VPC and public
+                    interfaces.
+                  </Typography>
+                </Stack>
+              }
+              sx={{ alignItems: 'flex-start' }}
+              value="linode"
             />
             <FormControlLabel
               control={<Radio />}
-              label="Linode Interfaces (New)"
-              value="linode"
+              label={
+                <Stack mt={1.25} spacing={0.5}>
+                  <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                    Configuration Profile Interfaces (Legacy)
+                  </Typography>
+                  <Typography>
+                    Interfaces in the Configuration Profile are part of a
+                    Linode’s configuration.
+                  </Typography>
+                  <Typography>
+                    Cloud Firewalls are applied at the Linode level and
+                    automatically cover all non-VLAN interfaces in the
+                    Configuration Profile.
+                  </Typography>
+                </Stack>
+              }
+              sx={{ alignItems: 'flex-start' }}
+              value="legacy_config"
             />
           </RadioGroup>
         </FormControl>

@@ -15,9 +15,8 @@ export const enterpriseKubernetesVersions = ['v1.31.1+lke1'];
 /**
  * The latest Kubernetes version available for cluster creation via Cloud Manager.
  */
-export const latestKubernetesVersion = getLatestKubernetesVersion(
-  kubernetesVersions
-);
+export const latestKubernetesVersion =
+  getLatestKubernetesVersion(kubernetesVersions);
 
 /**
  * The latest standard tier Kubernetes version available for cluster creation via Cloud Manager.

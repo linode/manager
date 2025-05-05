@@ -1,12 +1,12 @@
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { DimensionFilterField } from './DimensionFilterField';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface DimensionFilterProps {
   /**
@@ -55,6 +55,9 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
           ))}
       </Stack>
       <Button
+        compactX
+        data-qa-buttons="true"
+        disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
         onClick={() =>
           append({
             dimension_label: null,
@@ -62,9 +65,6 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
             value: null,
           })
         }
-        compactX
-        data-qa-buttons="true"
-        disabled={dimensionFilterWatcher && dimensionFilterWatcher.length === 5}
         size="small"
         sx={{ justifyContent: 'start', width: '160px' }}
         tooltipText="You can add up to 5 dimension filters."

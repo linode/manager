@@ -63,7 +63,7 @@ export const Calendar = ({
         onClick={() => onDateClick(currentDay, focusedField)}
       >
         {day}
-      </DayBox>
+      </DayBox>,
     );
   }
 

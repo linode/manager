@@ -19,10 +19,14 @@ export const Footer = React.memo(() => {
           sm: 'row',
           xs: 'column',
         }}
+        display="flex"
         flexDirection={{
           md: 'row',
           xs: 'column',
         }}
+        justifyContent="space-between"
+        rowGap={2}
+        spacing={{ xs: 1 }}
         sx={(theme) => ({
           borderTop: `1px solid ${theme.tokens.component.GlobalFooter.Border}`,
           padding: `12px 16px`,
@@ -31,22 +35,18 @@ export const Footer = React.memo(() => {
           sm: 'left',
           xs: 'left',
         }}
-        display="flex"
-        justifyContent="space-between"
-        rowGap={2}
-        spacing={{ xs: 1 }}
       >
         <Stack
-          sx={{
-            '&&': {
-              margin: 0,
-            },
-          }}
           direction="row"
           flexWrap="wrap"
           gap={3}
           rowGap={1}
           spacing={3}
+          sx={{
+            '&&': {
+              margin: 0,
+            },
+          }}
         >
           <StyledLink
             sx={{ paddingLeft: 0 }}
@@ -58,11 +58,11 @@ export const Footer = React.memo(() => {
           <StyledLink to={FEEDBACK_LINK}>Provide Feedback</StyledLink>
         </Stack>
         <Stack
+          direction="row"
+          spacing={3}
           sx={{
             '&&': { marginLeft: 0, marginTop: 0 },
           }}
-          direction="row"
-          spacing={3}
         >
           <Typography
             sx={(theme) => ({

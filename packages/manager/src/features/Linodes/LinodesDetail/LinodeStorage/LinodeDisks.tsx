@@ -1,3 +1,8 @@
+import {
+  useAllLinodeDisksQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -16,11 +21,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-  useGrants,
-} from '@linode/queries';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { CreateDiskDrawer } from './CreateDiskDrawer';
@@ -120,6 +120,9 @@ export const LinodeDisks = () => {
         </Typography>
         <Stack direction="row" spacing={1}>
           <Button
+            buttonType="primary"
+            disabled={readOnly || !hasFreeDiskSpace}
+            onClick={() => setIsCreateDrawerOpen(true)}
             tooltipAnalyticsEvent={() =>
               sendEvent({
                 action: `Open:tooltip`,
@@ -127,9 +130,6 @@ export const LinodeDisks = () => {
                 label: `Add a Disk help icon tooltip`,
               })
             }
-            buttonType="primary"
-            disabled={readOnly || !hasFreeDiskSpace}
-            onClick={() => setIsCreateDrawerOpen(true)}
             tooltipText={!hasFreeDiskSpace ? noFreeDiskSpaceWarning : undefined}
           >
             Add a Disk
