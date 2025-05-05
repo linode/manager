@@ -227,7 +227,7 @@ export const MigrateLinode = React.memo((props: Props) => {
     addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
 
-  const isMTCTTLinode = Boolean(type && isMTCTTPlan(type));
+  const isMTCLinode = Boolean(type && isMTCTTPlan(type));
 
   return (
     <Dialog
@@ -270,7 +270,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         currentRegion={region}
         handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
-        isMTCTTLinode={isMTCTTLinode}
+        isMTCLinode={isMTCLinode}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
       />

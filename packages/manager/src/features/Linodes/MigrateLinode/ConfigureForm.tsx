@@ -38,7 +38,7 @@ interface Props {
   handlePlacementGroupChange: (selected: null | PlacementGroup) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
-  isMTCTTLinode?: boolean;
+  isMTCLinode?: boolean;
   linodeType: Linode['type'];
   selectedRegion: string | undefined;
 }
@@ -53,7 +53,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     handlePlacementGroupChange,
     handleSelectRegion,
     helperText,
-    isMTCTTLinode,
+    isMTCLinode,
     linodeType,
     selectedRegion,
   } = props;
@@ -156,15 +156,15 @@ export const ConfigureForm = React.memo((props: Props) => {
         return false;
       }
 
-      // If mtctt2025 flag is enabled, apply MTC region filtering.
+      // If mtc2025 flag is enabled, apply MTC region filtering.
       if (flags.mtctt2025) {
         const isMtcRegion = MTC_TT['availability_regions'].includes(
           eachRegion.id as (typeof MTC_TT)['availability_regions'][number]
         );
 
-        // For MTC_TT Linodes, only show MTC regions.
-        // For non-MTC_TT Linodes, exclude MTC regions.
-        return isMTCTTLinode ? isMtcRegion : !isMtcRegion;
+        // For MTC Linodes, only show MTC regions.
+        // For non-MTC Linodes, exclude MTC regions.
+        return isMTCLinode ? isMtcRegion : !isMtcRegion;
       }
 
       // If flag is disabled, show all regions.
