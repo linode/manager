@@ -122,9 +122,9 @@ export const LandingHeader = ({
               <span
                 style={{
                   marginLeft: xsDown
-                    ? `${theme.spacingFunction(16)}`
+                    ? theme.spacingFunction(16)
                     : undefined,
-                  marginRight: `${theme.spacingFunction(16)}`,
+                  marginRight: theme.spacingFunction(16),
                 }}
               >
                 <DocsLink
