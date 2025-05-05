@@ -1,11 +1,11 @@
 import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Chip, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

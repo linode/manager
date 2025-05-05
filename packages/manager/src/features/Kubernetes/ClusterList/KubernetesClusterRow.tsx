@@ -1,9 +1,9 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Chip, Stack } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
