@@ -23,6 +23,7 @@ interface EntityInfo {
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
   type:
     | 'AccountSetting'
+    | 'Alert'
     | 'Bucket'
     | 'Database'
     | 'Kubernetes'

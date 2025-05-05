@@ -30,6 +30,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -47,6 +48,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -74,6 +76,7 @@ describe('Alert Row', () => {
         <AlertTableRow
           alert={alert}
           handlers={{
+            handleDelete: vi.fn(),
             handleDetails: vi.fn(),
             handleEdit: vi.fn(),
             handleStatusChange: vi.fn(),
@@ -94,6 +97,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -114,6 +118,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -132,6 +137,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -150,6 +156,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),
@@ -172,6 +179,7 @@ describe('Alert Row', () => {
       <AlertTableRow
         alert={alert}
         handlers={{
+          handleDelete: vi.fn(),
           handleDetails: vi.fn(),
           handleEdit: vi.fn(),
           handleStatusChange: vi.fn(),

@@ -2684,6 +2684,9 @@ export const handlers = [
       );
     }
   ),
+  http.delete('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json({});
+  }),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(7))
