@@ -40,7 +40,6 @@ export const AlertsTable = ({
   handleDetails,
   handleEdit,
   handleStatusChange,
-  handleDelete,
   services,
 }: UngroupedAlertsProps) => {
   return (
@@ -53,7 +52,6 @@ export const AlertsTable = ({
             handleDetails: () => handleDetails(alert),
             handleEdit: () => handleEdit(alert),
             handleStatusChange: () => handleStatusChange(alert),
-            handleDelete: () => handleDelete(alert),
           }}
           key={alert.id}
           services={services}

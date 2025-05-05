@@ -50,7 +50,6 @@ export const GroupedAlertsTable = ({
   handleDetails,
   handleEdit,
   handleStatusChange,
-  handleDelete,
   services,
 }: GroupedAlertsProps) => {
   const theme = useTheme();
@@ -76,7 +75,6 @@ export const GroupedAlertsTable = ({
     handleDetails: () => handleDetails(alert),
     handleEdit: () => handleEdit(alert),
     handleStatusChange: () => handleStatusChange(alert),
-    handleDelete: () => handleDelete(alert),
   });
 
   return (
