@@ -62,7 +62,7 @@ export const DisplayAlertRegions = React.memo(
                 >
                   {paginatedData?.map(({ label, id }) => {
                     return (
-                      <TableRow key={id}>
+                      <TableRow data-testid={`region-row-${id}`} key={id}>
                         <TableCell>
                           <Checkbox />
                         </TableCell>
