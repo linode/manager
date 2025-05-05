@@ -21,7 +21,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
@@ -186,7 +185,6 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}

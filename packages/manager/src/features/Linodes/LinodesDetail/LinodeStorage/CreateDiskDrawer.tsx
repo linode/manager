@@ -21,7 +21,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ModeSelect } from 'src/components/ModeSelect/ModeSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
@@ -135,12 +134,7 @@ export const CreateDiskDrawer = (props: Props) => {
   ];
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Create Disk"
-    >
+    <Drawer onClose={onClose} open={open} title="Create Disk">
       <form onSubmit={formik.handleSubmit}>
         {disabled && <LinodePermissionsError />}
         <ModeSelect

@@ -1,9 +1,9 @@
 import { useVPCQuery, useVPCsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';

@@ -2,7 +2,6 @@ import { Drawer, Typography } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -31,7 +30,6 @@ export const ViewPermissionsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Permissions for ${objectStorageKey?.label}`}
