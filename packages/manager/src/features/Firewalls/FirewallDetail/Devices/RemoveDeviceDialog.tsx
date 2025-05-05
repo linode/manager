@@ -12,10 +12,11 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 
 import { formattedTypes } from './constants';
 
-import type { FirewallDevice } from '@linode/api-v4';
+import type { APIError, FirewallDevice } from '@linode/api-v4';
 
 export interface Props {
   device: FirewallDevice | undefined;
+  firewallError?: APIError[] | null;
   firewallId: number;
   firewallLabel: string;
   isFetching?: boolean;
@@ -27,6 +28,7 @@ export interface Props {
 export const RemoveDeviceDialog = React.memo((props: Props) => {
   const {
     device,
+    firewallError,
     firewallId,
     firewallLabel,
     isFetching,
@@ -117,7 +119,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0]?.reason}
+      error={error?.[0]?.reason || firewallError?.[0]?.reason}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
