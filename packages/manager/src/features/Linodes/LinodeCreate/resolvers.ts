@@ -98,6 +98,7 @@ export const getLinodeCreateResolver = (
 
       if (!firewallId) {
         (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+          // This message does not get surfaced, see FirewallAuthorization.tsx
           message: 'You must select a Firewall or bypass the Firewall policy.',
           type: 'validate',
         };
