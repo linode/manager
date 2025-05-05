@@ -38,6 +38,7 @@ export const ActionButton = ({ sx, ...props }: ButtonProps) => {
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      {...props}
     />
   );
 };

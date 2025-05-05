@@ -6,14 +6,16 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
-const useStyles = makeStyles()((theme) => ({ root: theme.applyLinkStyles }));
+const useStyles = makeStyles()((theme) => ({
+  root: theme.applyLinkStyles,
+}));
 
 export const LinkButton = (props: Props) => {
-  const { classes } = useStyles();
-  const { isLoading, ...rest } = props;
+  const { classes, cx } = useStyles();
+  const { isLoading, className, ...rest } = props;
 
   const Button = (
-    <button className={classes.root} tabIndex={0} type="button" {...rest} />
+    <button className={cx(classes.root, className)} type="button" {...rest} />
   );
 
   if (isLoading) {
