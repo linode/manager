@@ -282,6 +282,7 @@ export type NotificationType =
   | 'payment_due'
   | 'promotion'
   | 'reboot_scheduled'
+  | 'security_reboot_maintenance_scheduled'
   | 'tax_id_verifying'
   | 'ticket_abuse'
   | 'ticket_important'
