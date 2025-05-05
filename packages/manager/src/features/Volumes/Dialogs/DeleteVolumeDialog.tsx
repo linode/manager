@@ -4,17 +4,18 @@ import * as React from 'react';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const DeleteVolumeDialog = (props: Props) => {
-  const { isFetching, onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume, volumeError } = props;
 
   const {
     error,
@@ -38,6 +39,7 @@ export const DeleteVolumeDialog = (props: Props) => {
         name: volume?.label,
         primaryBtnText: 'Delete',
         type: 'Volume',
+        error: volumeError,
       }}
       errors={error}
       expand
