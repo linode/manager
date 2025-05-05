@@ -22,7 +22,7 @@ import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
   getPlanSelectionsByPlanType,
-  isMTCTTPlan,
+  isMTCPlan,
   planTabInfoContent,
   replaceOrAppendPlaceholder512GbPlans,
   useIsAcceleratedPlansEnabled,
@@ -112,8 +112,8 @@ export const PlansPanel = (props: PlansPanelProps) => {
       return false;
     }
 
-    // Do not display MTC_TT plans if the feature flag is not enabled.
-    if (!flags.mtctt2025 && isMTCTTPlan(type)) {
+    // Do not display MTC plans if the feature flag is not enabled.
+    if (!flags.mtc2025 && isMTCPlan(type)) {
       return false;
     }
 

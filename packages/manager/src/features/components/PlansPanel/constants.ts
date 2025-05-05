@@ -32,7 +32,7 @@ export const TRANSFER_COSTS_LINK =
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
 
-export const MTC_TT = {
+export const MTC = {
   availability_regions: ['us-iad', 'no-east'], // Currently available in iad/oslo regions.
   available_types: ['g8-premium-64-ht', 'g8-premium-128-ht'],
 } as const;
