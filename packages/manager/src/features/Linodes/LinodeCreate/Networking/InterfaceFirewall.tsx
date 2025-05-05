@@ -61,7 +61,7 @@ export const InterfaceFirewall = ({ index }: Props) => {
             }
             text={
               flags.secureVmCopy?.linodeCreate?.text ??
-              'All Akamai accounts must apply an InfoSec-compliant firewall to all their Linodes.'
+              'All accounts must apply an compliant firewall to all their Linodes.'
             }
           />
         )}
