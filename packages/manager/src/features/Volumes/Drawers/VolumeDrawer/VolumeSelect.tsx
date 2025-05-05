@@ -16,8 +16,23 @@ export const VolumeSelect = (props: Props) => {
   const { disabled, error, name, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
+  const [searchedVolume, setSearchedVolume] = React.useState<null | {
+    id: number;
+    label: string;
+  }>(null);
+
+  const searchFilter = inputValue
+    ? {
+        '+or': [
+          { label: { '+contains': inputValue } },
+          { tags: { '+contains': inputValue } },
+        ],
+      }
+    : {};
+
   const { data, fetchNextPage, hasNextPage, isLoading } =
     useInfiniteVolumesQuery({
+      ...searchFilter,
       ...(region ? { region } : {}),
       '+order': 'asc',
       // linode_id: null,  <- if the API let us, we would do this
@@ -28,12 +43,21 @@ export const VolumeSelect = (props: Props) => {
     .flatMap((page) => page.data)
     .map(({ id, label }) => ({ id, label }));
 
+  if (
+    searchedVolume &&
+    options &&
+    !options.some((item) => item.id === searchedVolume.id)
+  ) {
+    options?.push({ id: searchedVolume.id, label: searchedVolume.label });
+  }
+
   const selectedVolume = options?.find((option) => option.id === value) ?? null;
 
   return (
     <Autocomplete
       disabled={disabled}
       errorText={error}
+      filterOptions={(options) => options}
       helperText={
         region && "Only volumes in this Linode's region are attachable."
       }
@@ -55,11 +79,16 @@ export const VolumeSelect = (props: Props) => {
       }}
       loading={isLoading}
       onBlur={onBlur}
-      onChange={(event, value) => {
-        onChange(value?.id ?? -1);
+      onChange={(_, value, reason) => {
+        if (reason === 'selectOption' && value) {
+          setSearchedVolume(value);
+        } else if (reason === 'clear') {
+          setSearchedVolume(null);
+        }
         setInputValue('');
+        onChange(value?.id ?? -1);
       }}
-      onInputChange={(event, value, reason) => {
+      onInputChange={(_, value, reason) => {
         if (reason === 'input') {
           setInputValue(value);
         } else {
