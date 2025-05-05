@@ -21,18 +21,6 @@ export const ProductInformationBanner = React.memo(
     const { bannerLocation, ...rest } = props;
     const { productInformationBanners } = useFlags();
 
-    // const thisBanner = {
-    //   bannerLocation: 'Linodes',
-    //   decoration: {
-    //     important: 'true',
-    //     variant: 'warning',
-    //   },
-    //   expirationDate: '2030-08-01',
-    //   key: 'key1',
-    //   // safe
-    //   message: 'Test message',
-    // };
-
     const thisBanner = (productInformationBanners ?? []).find(
       (thisBanner) => thisBanner.bannerLocation === bannerLocation
     );

@@ -4,7 +4,7 @@ export const StyledPreContainerDiv = styled('div', { label: 'StyledDiv' })({
   alignItems: 'center',
   display: 'flex',
   flexWrap: 'wrap',
-  height: 34,
+  minHeight: 34,
 });
 
 export const StyledRootDiv = styled('div', { label: 'StyledRootDiv' })(
