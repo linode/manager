@@ -71,6 +71,7 @@ interface SubnetAssignLinodesDrawerProps {
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
   vpcRegion: string;
 }
@@ -89,7 +90,8 @@ interface LinodeAndInterfaceData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId, vpcRegion } =
+    props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -467,11 +469,12 @@ export const SubnetAssignLinodesDrawer = (
 
   return (
     <Drawer
+      error={subnetError}
       isFetching={isFetching}
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label} (${
-        subnet?.ipv4 ?? subnet?.ipv6
+      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'} (${
+        subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
       })`}
     >
       {userCannotAssignLinodes && (
