@@ -101,6 +101,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Add non-dismissible option support to Dismissible Banner ([#12115](https://github.com/linode/manager/pull/12115))
 - Add mocks and update `PlansPanel` to support `mtc-tt-2025` plans in selected regions (#12050)
 - IAM RBAC: Implement method to merge user-selected roles into existing roles ([#12125](https://github.com/linode/manager/pull/12125))
+- Support Akamai Employee Banners on the Linode Create flow when using Linode Interfaces ([#12143](https://github.com/linode/manager/pull/12143))
 - Add navigation to Linode Network tab after successfully upgrading interfaces ([#12146](https://github.com/linode/manager/pull/12146))
 - Fix "Error retrieving Firewalls" message in Subnet Linode Row after upgrading interfaces ([#12146](https://github.com/linode/manager/pull/12146))
 
