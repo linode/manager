@@ -1,4 +1,4 @@
-import { Chip, LinkButton, omittedProps } from '@linode/ui';
+import { Button, Chip, omittedProps } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import type { TagProps } from './Tag';
@@ -64,7 +64,7 @@ export const StyledChip = styled(Chip, {
   }),
 }));
 
-export const StyledDeleteButton = styled(LinkButton, {
+export const StyledDeleteButton = styled(Button, {
   label: 'StyledDeleteButton',
 })(({ theme }) => ({
   '& svg': {
