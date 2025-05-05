@@ -177,6 +177,10 @@ const genericLinkStyle = {
     color: Action.Primary.Hover,
     textDecoration: 'underline',
   },
+  '&:hover': {
+    color: Action.Primary.Hover,
+    textDecoration: 'underline',
+  },
   background: 'none',
   border: 'none',
   color: Action.Primary.Default,

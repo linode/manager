@@ -1,21 +1,19 @@
-import { Box, CircleProgress, useTheme } from '@linode/ui';
+import { Box, CircleProgress } from '@linode/ui';
 import * as React from 'react';
+import { makeStyles } from 'tss-react/mui';
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
 }
 
+const useStyles = makeStyles()((theme) => ({ root: theme.applyLinkStyles }));
+
 export const LinkButton = (props: Props) => {
-  const theme = useTheme();
-  const { isLoading, style, ...rest } = props;
+  const { classes } = useStyles();
+  const { isLoading, ...rest } = props;
 
   const Button = (
-    <button
-      style={{ ...theme.applyLinkStyles, ...style }}
-      tabIndex={0}
-      type="button"
-      {...rest}
-    />
+    <button className={classes.root} tabIndex={0} type="button" {...rest} />
   );
 
   if (isLoading) {
