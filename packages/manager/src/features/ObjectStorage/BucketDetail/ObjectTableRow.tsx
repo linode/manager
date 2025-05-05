@@ -1,11 +1,10 @@
-import { Box, LinkButton, Typography } from '@linode/ui';
+import { Box, Hidden, LinkButton, Typography } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import ObjectIcon from 'src/assets/icons/objectStorage/object.svg';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 

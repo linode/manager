@@ -4,6 +4,7 @@ import {
 } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import {
   useLocation,
   useNavigate,
@@ -14,7 +15,6 @@ import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';

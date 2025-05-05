@@ -1,9 +1,8 @@
-import { LinkButton } from '@linode/ui';
+import { Hidden, LinkButton } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

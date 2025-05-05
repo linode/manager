@@ -1,5 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { ActionButton, ActionsPanel, Box, Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -8,7 +9,6 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
 import {
   getKubeControlPlaneACL,
