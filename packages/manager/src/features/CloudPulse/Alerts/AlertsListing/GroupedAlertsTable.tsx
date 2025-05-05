@@ -46,6 +46,7 @@ interface GroupedAlertsProps {
 
 export const GroupedAlertsTable = ({
   groupedAlerts,
+  handleDelete,
   handleDetails,
   handleEdit,
   handleStatusChange,
@@ -71,6 +72,7 @@ export const GroupedAlertsTable = ({
   );
 
   const createAlertHandlers = (alert: Alert) => ({
+    handleDelete: () => handleDelete(alert),
     handleDetails: () => handleDetails(alert),
     handleEdit: () => handleEdit(alert),
     handleStatusChange: () => handleStatusChange(alert),

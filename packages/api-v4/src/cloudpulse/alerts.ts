@@ -114,8 +114,8 @@ export const deleteEntityFromAlert = (
       `${API_ROOT}/monitor/service/${encodeURIComponent(
         serviceType,
       )}/entity/${encodeURIComponent(
-        entityId
-      )}/alert-definition/${encodeURIComponent(alertId)}`
+        entityId,
+      )}/alert-definition/${encodeURIComponent(alertId)}`,
     ),
     setMethod('DELETE'),
   );

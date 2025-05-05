@@ -11,7 +11,6 @@ export interface ActionHandlers {
    * Callback for delete action
    */
   handleDelete: () => void;
-
   /**
    * Callback for show details action
    */

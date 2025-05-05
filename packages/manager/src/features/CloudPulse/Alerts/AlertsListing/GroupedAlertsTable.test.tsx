@@ -22,7 +22,6 @@ const mockHandleDetails = vi.fn();
 const mockHandleEdit = vi.fn();
 const mockHandleStatusChange = vi.fn();
 const mockHandleDelete = vi.fn();
-
 const mockServices: Item<string, AlertServiceType>[] = [
   { label: 'Linode', value: 'linode' },
   { label: 'Databases', value: 'dbaas' },

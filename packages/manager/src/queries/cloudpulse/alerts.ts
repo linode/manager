@@ -1,6 +1,7 @@
 import {
   addEntityToAlert,
   createAlertDefinition,
+  deleteAlertDefinition,
   deleteEntityFromAlert,
   editAlertDefinition,
 } from '@linode/api-v4/lib/cloudpulse';
@@ -19,6 +20,7 @@ import type {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
+  DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
   NotificationChannel,

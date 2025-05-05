@@ -1,12 +1,12 @@
 import { IconButton } from '@linode/ui';
 import { Tooltip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import { GroupByTagToggle } from 'src/components/GroupByTagToggle';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';

@@ -18,6 +18,9 @@ vi.mock('./PrimaryNav', () => {
 const closeMenuMock = vi.fn();
 const desktopMenuToggle = vi.fn();
 
+const resizeDesktop = () => resizeScreenSize(breakpoints.values.lg);
+const resizeMobile = () => resizeScreenSize(breakpoints.values.sm);
+
 describe('SideMenu Component', () => {
   it('renders without crashing', () => {
     renderWithTheme(
@@ -33,6 +36,7 @@ describe('SideMenu Component', () => {
   });
 
   it('renders expanded menu (desktop)', () => {
+    resizeDesktop();
     renderWithTheme(
       <SideMenu
         closeMenu={closeMenuMock}
@@ -50,6 +54,7 @@ describe('SideMenu Component', () => {
   });
 
   it('renders collapsed menu (desktop)', () => {
+    resizeDesktop();
     renderWithTheme(
       <SideMenu
         closeMenu={closeMenuMock}
@@ -69,6 +74,7 @@ describe('SideMenu Component', () => {
   });
 
   it('expands collapsed menu on hover (desktop)', async () => {
+    resizeDesktop();
     renderWithTheme(
       <SideMenu
         closeMenu={closeMenuMock}
@@ -87,7 +93,7 @@ describe('SideMenu Component', () => {
   });
 
   it('handles open state on mobile', () => {
-    resizeScreenSize(breakpoints.values.sm);
+    resizeMobile();
 
     renderWithTheme(
       <SideMenu
@@ -106,7 +112,7 @@ describe('SideMenu Component', () => {
   });
 
   it('handles close state on mobile', () => {
-    resizeScreenSize(breakpoints.values.sm);
+    resizeMobile();
 
     renderWithTheme(
       <SideMenu
