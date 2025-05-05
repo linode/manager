@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import { NotFound } from 'src/components/NotFound';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 import {
@@ -84,12 +83,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Assign New Roles"
-    >
+    <Drawer onClose={onClose} open={open} title="Assign New Roles">
       {' '}
       <FormProvider {...form}>
         <form onSubmit={onSubmit}>

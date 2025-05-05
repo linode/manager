@@ -337,3 +337,8 @@ export interface EntityAlertUpdatePayload {
   alert: Alert;
   entityId: string;
 }
+
+export interface DeleteAlertPayload {
+  alertId: number;
+  serviceType: string;
+}
