@@ -97,8 +97,8 @@ export const SuccessDialogContent = (
             onClick={() => {
               const newPath = location.pathname
                 .split('/')
-                // remove 'upgrade-interfaces' from URL
-                .slice(0, -1)
+                // keep only xxx/linodes/:linodeId
+                .slice(0, 3)
                 // join everything back together
                 .join('/')
                 .concat('/networking');
