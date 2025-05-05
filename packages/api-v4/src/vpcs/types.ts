@@ -44,6 +44,7 @@ export interface Subnet extends CreateSubnetPayload {
   created: string;
   id: number;
   linodes: SubnetAssignedLinodeData[];
+  nodebalancers: SubnetAssignedNodeBalancerData[];
   updated: string;
 }
 
@@ -62,6 +63,11 @@ export interface SubnetAssignedLinodeData {
   interfaces: SubnetLinodeInterfaceData[];
 }
 
+export interface SubnetAssignedNodeBalancerData {
+  id: number;
+  ipv4_range: string;
+}
+
 export interface VPCIP {
   active: boolean;
   address: null | string;
@@ -74,8 +80,9 @@ export interface VPCIP {
   }[];
   ipv6_is_public: boolean | null;
   ipv6_range: null | string;
-  linode_id: number;
+  linode_id: null | number;
   nat_1_1: string;
+  nodebalancer_id: null | number;
   prefix: null | number;
   region: string;
   subnet_id: number;
