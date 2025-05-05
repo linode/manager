@@ -12,7 +12,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
 import { EnableObjectStorageModal } from '../EnableObjectStorageModal';
@@ -156,7 +155,6 @@ export const AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}

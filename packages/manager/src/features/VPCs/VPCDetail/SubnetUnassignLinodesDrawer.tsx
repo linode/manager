@@ -19,7 +19,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
@@ -309,7 +308,6 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     return (
       <Drawer
         isFetching={isFetching}
-        NotFoundComponent={NotFound}
         onClose={handleOnClose}
         open={open}
         title={`Unassign Linodes from subnet: ${subnet?.label} (${

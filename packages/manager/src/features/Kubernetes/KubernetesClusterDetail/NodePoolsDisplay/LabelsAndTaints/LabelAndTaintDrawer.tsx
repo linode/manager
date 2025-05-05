@@ -11,7 +11,6 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -116,7 +115,6 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}

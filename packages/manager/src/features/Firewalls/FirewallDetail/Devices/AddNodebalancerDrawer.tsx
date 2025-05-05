@@ -12,7 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
@@ -173,7 +172,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={() => {
         setSelectedNodebalancers([]);
         setLocalError(undefined);
