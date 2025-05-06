@@ -32,7 +32,7 @@ import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
-import type { KubeNodePoolResponse, KubernetesTier } from '@linode/api-v4';
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface ClusterDialogState {
   loading: boolean;
@@ -43,11 +43,8 @@ interface ClusterDialogState {
 }
 
 interface UpgradeDialogState {
-  currentVersion: string;
   open: boolean;
   selectedClusterID: number;
-  selectedClusterLabel: string;
-  selectedClusterTier: KubernetesTier;
 }
 
 const defaultDialogState = {
@@ -59,12 +56,8 @@ const defaultDialogState = {
 };
 
 const defaultUpgradeDialogState = {
-  currentVersion: '',
-  nextVersion: null,
   open: false,
   selectedClusterID: 0,
-  selectedClusterLabel: '',
-  selectedClusterTier: 'standard' as KubernetesTier,
 };
 
 const preferenceKey = 'kubernetes';
@@ -110,18 +103,10 @@ export const KubernetesLanding = () => {
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
 
-  const openUpgradeDialog = (
-    clusterID: number,
-    clusterLabel: string,
-    clusterTier: KubernetesTier,
-    currentVersion: string
-  ) => {
+  const openUpgradeDialog = (clusterID: number) => {
     setUpgradeDialogState({
-      currentVersion,
       open: true,
       selectedClusterID: clusterID,
-      selectedClusterLabel: clusterLabel,
-      selectedClusterTier: clusterTier,
     });
   };
 
@@ -245,14 +230,7 @@ export const KubernetesLanding = () => {
               cluster={cluster}
               key={`kubernetes-cluster-list-${cluster.id}`}
               openDeleteDialog={openDialog}
-              openUpgradeDialog={() =>
-                openUpgradeDialog(
-                  cluster.id,
-                  cluster.label,
-                  cluster?.tier ?? 'standard', // TODO LKE: remove fallback once LKE-E is in GA and tier is required
-                  cluster.k8s_version
-                )
-              }
+              openUpgradeDialog={() => openUpgradeDialog(cluster.id)}
             />
           ))}
         </TableBody>
@@ -274,9 +252,6 @@ export const KubernetesLanding = () => {
       />
       <UpgradeVersionModal
         clusterID={upgradeDialog.selectedClusterID}
-        clusterLabel={upgradeDialog.selectedClusterLabel}
-        clusterTier={upgradeDialog.selectedClusterTier}
-        currentVersion={upgradeDialog.currentVersion}
         isOpen={upgradeDialog.open}
         onClose={closeUpgradeDialog}
       />
