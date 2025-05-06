@@ -1,6 +1,8 @@
 import { regionFactory } from '@linode/utilities';
-import { render, screen, within } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import React from 'react';
+
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
@@ -8,7 +10,7 @@ const regions = regionFactory.buildList(10);
 
 describe('DisplayAlertRegions', () => {
   it('should render the regions table', () => {
-    render(<DisplayAlertRegions regions={regions} />);
+    renderWithTheme(<DisplayAlertRegions regions={regions} />);
 
     const table = screen.getByTestId('region-table');
     expect(table).toBeInTheDocument();
@@ -18,7 +20,7 @@ describe('DisplayAlertRegions', () => {
   });
 
   it('should display checkbox and label', () => {
-    render(<DisplayAlertRegions regions={regions} />);
+    renderWithTheme(<DisplayAlertRegions regions={regions} />);
 
     const row = screen.getByTestId(`region-row-${regions[0].id}`);
 
