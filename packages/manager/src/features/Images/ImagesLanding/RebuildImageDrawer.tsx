@@ -6,22 +6,22 @@ import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { NotFound } from 'src/components/NotFound';
 import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDetail/LinodeRebuild/utils';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
-import type { Image } from '@linode/api-v4';
+import type { APIError, Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  imageError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const RebuildImageDrawer = (props: Props) => {
-  const { image, isFetching, onClose, open } = props;
+  const { image, imageError, isFetching, onClose, open } = props;
 
   const history = useHistory();
   const { permissionedLinodes: availableLinodes } =
@@ -56,8 +56,8 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={imageError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Rebuild an Existing Linode from an Image"

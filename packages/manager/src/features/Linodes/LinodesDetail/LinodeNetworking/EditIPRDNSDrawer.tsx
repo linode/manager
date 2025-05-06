@@ -4,7 +4,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { IPAddress } from '@linode/api-v4/lib/networking';
@@ -59,12 +58,7 @@ export const EditIPRDNSDrawer = (props: Props) => {
   const errorMap = getErrorMap(['rdns'], error);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Edit Reverse DNS"
-    >
+    <Drawer onClose={handleClose} open={open} title="Edit Reverse DNS">
       <form onSubmit={formik.handleSubmit}>
         {Boolean(errorMap.none) && (
           <Notice variant="error">{errorMap.none}</Notice>

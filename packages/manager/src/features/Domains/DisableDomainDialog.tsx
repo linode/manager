@@ -5,10 +5,11 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import type { Domain } from '@linode/api-v4';
+import type { APIError, Domain } from '@linode/api-v4';
 
 interface DisableDomainDialogProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
@@ -16,7 +17,7 @@ interface DisableDomainDialogProps {
 
 export const DisableDomainDialog = React.memo(
   (props: DisableDomainDialogProps) => {
-    const { domain, isFetching, onClose, open } = props;
+    const { domain, domainError, isFetching, onClose, open } = props;
     const {
       error,
       isPending,
@@ -56,11 +57,12 @@ export const DisableDomainDialog = React.memo(
             secondaryButtonProps={{ label: 'Cancel', onClick: onClose }}
           />
         }
+        entityError={domainError}
         error={error?.[0]?.reason}
         isFetching={isFetching}
         onClose={onClose}
         open={open}
-        title={`Disable Domain ${domain?.domain}?`}
+        title={`Disable Domain ${domain?.domain ?? 'Unknown'}?`}
       >
         Are you sure you want to disable this DNS zone?
       </ConfirmationDialog>

@@ -2,24 +2,24 @@ import { Drawer, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
-import { NotFound } from 'src/components/NotFound';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const VolumeDetailsDrawer = (props: Props) => {
-  const { isFetching, onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume, volumeError } = props;
 
   return (
     <Drawer
+      error={volumeError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Volume Configuration"

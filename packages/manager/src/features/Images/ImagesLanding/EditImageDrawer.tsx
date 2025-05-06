@@ -6,7 +6,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import Lock from 'src/assets/icons/lock.svg';
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateImageMutation } from 'src/queries/images';
 
@@ -16,12 +15,13 @@ import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  imageError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { image, isFetching, onClose, open } = props;
+  const { image, imageError, isFetching, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
@@ -78,8 +78,8 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={imageError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title="Edit Image"

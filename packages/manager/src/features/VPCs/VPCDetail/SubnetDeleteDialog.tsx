@@ -4,18 +4,19 @@ import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
-import type { Subnet } from '@linode/api-v4';
+import type { APIError, Subnet } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
 export const SubnetDeleteDialog = (props: Props) => {
-  const { isFetching, onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -45,6 +46,7 @@ export const SubnetDeleteDialog = (props: Props) => {
         name: subnet?.label,
         primaryBtnText: 'Delete',
         type: 'Subnet',
+        error: subnetError,
       }}
       errors={error}
       expand
