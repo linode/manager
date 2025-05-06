@@ -12,12 +12,9 @@ import {
   mockDeleteBucketObjectS3,
   mockGetBucketObjects,
   mockGetBuckets,
+  mockGetBucketsForRegion,
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
-} from 'support/intercepts/object-storage';
-import {
-  mockGetBucketsForRegion,
-  // mockGetClusters,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
@@ -38,7 +35,8 @@ describe('object storage smoke tests', () => {
   it('can create object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
     const region = chooseRegion();
-    const bucketCluster = `${region.id}-1`;
+    console.log('region ', region);
+    const bucketCluster = 'pl-labkrk2-1';
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 
     const mockBucket = objectStorageBucketFactory.build({
@@ -47,6 +45,7 @@ describe('object storage smoke tests', () => {
       label: bucketLabel,
       region: region.id,
     });
+    console.log('mockBucket ', mockBucket);
     // const mockCluster = objectStorageClusterFactory.build({
     //   id: 'pl-labkrk2-1',
     //   region: region.id,
@@ -60,16 +59,19 @@ describe('object storage smoke tests', () => {
       objectStorageGen2: { enabled: false },
     }).as('getFeatureFlags');
 
-    mockGetBuckets([]).as('getBuckets');
-
-    mockGetBucketsForRegion('pl-labkrk2-1', [mockBucket]).as(
-      'getBucketsForRegion'
+    // mockGetBuckets([]).as('getBuckets');
+    mockGetBucketsForRegion(bucketCluster, []).as(
+      'getBucketsForRegionBeforePost'
+    );
+    mockGetBucketsForRegion(bucketCluster, [mockBucket]).as(
+      'getBucketsForRegionAfterPost'
     );
     // mockGetClusters([mockCluster]).as('getClusters')
     mockCreateBucket(mockBucket).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
-    cy.wait(['@getBuckets']);
+    // cy.wait('@getBuckets');
+    cy.wait('@getBucketsForRegionBeforePost');
 
     ui.landingPageEmptyStateResources.find().within(() => {
       cy.findByText('Getting Started Guides').should('be.visible');
@@ -84,7 +86,7 @@ describe('object storage smoke tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${region.label}{enter}`);
+        cy.focused().type(`${bucketCluster}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -92,7 +94,7 @@ describe('object storage smoke tests', () => {
       });
 
     cy.wait(['@createBucket']);
-    cy.wait(['@getBucketsForRegion']);
+    cy.wait(['@getBucketsForRegionAfterPost']);
     // TODO: mock getBuckets w/ mocked bucket
     cy.findByText(bucketLabel).should('be.visible');
     cy.findByText(region.label).should('be.visible');
