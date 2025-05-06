@@ -123,12 +123,12 @@ export const NewDetailTemplate = () => {
         </Box>
 
         {/* SECTION 3/4: 66%/33% width, 2 columns */}
-        <Grid container sx={{ mb: 3 }}>
-          <Grid size={8} sx={{ pr: 6 }}>
+        <Grid container sx={{ mb: 3, backgroundColor: 'lightblue' }}>
+          <Grid size={{ xs: 12, md: 8 }} sx={{ pr: { xs: 0, md: 6 } }}>
             <SectionHeader>66%/33% width - 2 columns</SectionHeader>
             <LabelValue label="Label 3.1" value={loremIpsum} />
           </Grid>
-          <Grid size={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <SectionHeader>66%/33% width - 2 columns</SectionHeader>
             <LabelValue label="Label 4.1" value="Value 4.1" />
             <LabelValue label="Label 4.2" value="Value 4.2" />
