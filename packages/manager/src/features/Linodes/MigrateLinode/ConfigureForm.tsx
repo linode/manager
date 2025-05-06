@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Flag } from 'src/components/Flag';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
+import { MTC } from 'src/features/components/PlansPanel/constants';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -37,6 +38,7 @@ interface Props {
   handlePlacementGroupChange: (selected: null | PlacementGroup) => void;
   handleSelectRegion: (id: string) => void;
   helperText?: string;
+  isMTCLinode?: boolean;
   linodeType: Linode['type'];
   selectedRegion: string | undefined;
 }
@@ -51,6 +53,7 @@ export const ConfigureForm = React.memo((props: Props) => {
     handlePlacementGroupChange,
     handleSelectRegion,
     helperText,
+    isMTCLinode,
     linodeType,
     selectedRegion,
   } = props;
@@ -100,7 +103,7 @@ export const ConfigureForm = React.memo((props: Props) => {
   };
 
   const country =
-    regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
+    regions?.find((thisRegion) => thisRegion.id === currentRegion)?.country ??
     'us';
 
   const shouldDisplayPriceComparison = Boolean(
@@ -146,6 +149,28 @@ export const ConfigureForm = React.memo((props: Props) => {
   const linodeIsInDistributedRegion =
     currentActualRegion?.site_type === 'distributed';
 
+  const filteredRegions =
+    regions?.filter((eachRegion) => {
+      // Ignore current region.
+      if (eachRegion.id === currentRegion) {
+        return false;
+      }
+
+      // If mtc2025 flag is enabled, apply MTC region filtering.
+      if (flags.mtc2025) {
+        const isMtcRegion = MTC['availability_regions'].includes(
+          eachRegion.id as (typeof MTC)['availability_regions'][number]
+        );
+
+        // For MTC Linodes, only show MTC regions.
+        // For non-MTC Linodes, exclude MTC regions.
+        return isMTCLinode ? isMtcRegion : !isMtcRegion;
+      }
+
+      // If flag is disabled, show all regions.
+      return true;
+    }) ?? [];
+
   return (
     <StyledPaper>
       <Typography variant="h3">Configure Migration</Typography>
@@ -177,11 +202,7 @@ export const ConfigureForm = React.memo((props: Props) => {
                 ? 'distributed'
                 : 'core'
             }
-            regions={
-              regions?.filter(
-                (eachRegion) => eachRegion.id !== currentRegion
-              ) ?? []
-            }
+            regions={filteredRegions}
             textFieldProps={{
               helperText,
             }}
