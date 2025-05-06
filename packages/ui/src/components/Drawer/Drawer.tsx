@@ -148,7 +148,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           <Grid>
             {isFetching ? null : (
               <Typography
-                data-qa-drawer-title={title}
+                data-qa-drawer-title={lastTitleRef.current}
                 data-testid="drawer-title"
                 id={titleID}
                 sx={(theme) => ({
@@ -157,7 +157,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                 })}
                 variant="h2"
               >
-                {title}
+                {lastTitleRef.current}
               </Typography>
             )}
           </Grid>
@@ -188,7 +188,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         ) : (
           <>
             {errorText && <ErrorState errorText={errorText} />}
-            {children}
+            {lastChildrenRef.current}
           </>
         )}
       </_Drawer>

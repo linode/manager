@@ -168,7 +168,7 @@ export const Dialog = React.forwardRef(
             ) : (
               <>
                 {errorText && <ErrorState errorText={errorText} />}
-                {children}
+                {lastChildrenRef.current}
               </>
             )}
           </DialogContent>
