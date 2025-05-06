@@ -693,3 +693,22 @@ export const getDefaultInterfaceGenerationFromAccountSetting = (
   }
   return undefined;
 };
+
+export const getDoesEmployeeNeedToAssignFirewall = (
+  legacyFirewallId: LinodeCreateFormValues['firewall_id'],
+  linodeInterfaces: LinodeCreateFormValues['linodeInterfaces'],
+  interfaceGeneration: LinodeCreateFormValues['interface_generation']
+) => {
+  if (interfaceGeneration === 'linode') {
+    // VLAN Linode interfaces do not support Firewalls, so we don't consider them.
+    const interfacesThatMayHaveInternetConnectivity = linodeInterfaces.filter(
+      (i) => i.purpose !== 'vlan'
+    );
+
+    return !interfacesThatMayHaveInternetConnectivity.every(
+      (i) => i.firewall_id
+    );
+  }
+
+  return !legacyFirewallId;
+};
