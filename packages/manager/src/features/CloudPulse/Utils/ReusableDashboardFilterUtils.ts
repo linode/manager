@@ -1,5 +1,6 @@
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from './FilterConfig';
+import { CloudPulseAvailableViews } from './models';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -68,10 +69,13 @@ export const checkMandatoryFiltersSelected = (
   }
 
   return serviceTypeConfig.filters.every(({ configuration }) => {
-    const { filterKey, neededInServicePage } = configuration;
+    const { filterKey, requiredInViews } = configuration;
 
     // If the filter is not needed or optional, skip it
-    if (!neededInServicePage || configuration.isOptional) {
+    if (
+      !requiredInViews.includes(CloudPulseAvailableViews.service) ||
+      configuration.isOptional
+    ) {
       return true;
     }
 
@@ -106,14 +110,14 @@ export const checkIfFilterNeededInMetricsCall = (
     const {
       filterKey: configFilterKey,
       isFilterable,
-      neededInServicePage,
+      requiredInViews,
     } = configuration;
 
     return (
       // Indicates if this filter should be included in the metrics call
       configFilterKey === filterKey &&
       Boolean(isFilterable) &&
-      neededInServicePage
+      requiredInViews.includes(CloudPulseAvailableViews.service)
     );
   });
 };
@@ -151,7 +155,7 @@ export const checkIfFilterBuilderNeeded = (dashboard?: Dashboard): boolean => {
     return false;
   }
 
-  return serviceTypeConfig.filters.some(
-    ({ configuration }) => configuration.neededInServicePage
+  return serviceTypeConfig.filters.some(({ configuration }) =>
+    configuration.requiredInViews.includes(CloudPulseAvailableViews.service)
   );
 };

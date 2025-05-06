@@ -134,10 +134,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    */
   name: string;
   /**
-   * This will be helpful, when we build a reusable component for integrating in service page, whether to show the filter there or not
-   */
-  neededInServicePage: boolean;
-  /**
    * This is an optional field, needed if the select type is static, this is the list of options to be displayed in dropdown component
    */
   options?: CloudPulseServiceTypeFiltersOptions[];
@@ -149,6 +145,10 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    *  This controls the order of rendering the filtering componenents
    */
   priority: number;
+  /**
+   *  This is helpful to determine the views in which the filter should be shown
+   */
+  requiredInViews: CloudPulseAvailableViews[];
   /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */
@@ -184,4 +184,19 @@ export enum CloudPulseSelectTypes {
    */
   // eslint-disable-next-line sonarjs/future-reserved-words
   static,
+}
+
+/**
+ * CloudPulseAvailableViews holds the views in which the filter should be shown
+ */
+export enum CloudPulseAvailableViews {
+  /**
+   * This is the centralized view, where the filter should be shown
+   */
+  central,
+
+  /**
+   * This is the service page view, where the filter should be shown
+   */
+  service,
 }
