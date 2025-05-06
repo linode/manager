@@ -17,7 +17,10 @@ import {
   mockResetPassword,
 } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetAllImages } from 'support/intercepts/images';
+import {
+  mockGetCustomImages,
+  mockGetRecoveryImages,
+} from 'support/intercepts/images';
 import {
   mockGetLinodeDetails,
   mockGetLinodeVolumes,
@@ -163,7 +166,7 @@ describe('restricted user details pages', () => {
       .should('be.visible')
       .should('be.disabled');
 
-    // Confirm that the buttons the action menu are disabled
+    // Confirm that the buttons in the action menu are disabled
     ui.actionMenu
       .findByTitle(`Action menu for Linode ${mockLinode.label}`)
       .should('be.visible')
@@ -196,11 +199,36 @@ describe('restricted user details pages', () => {
   it("should disable action elements and buttons in the 'Images' details page", () => {
     const imageEOLDate = new Date();
     imageEOLDate.setFullYear(imageEOLDate.getFullYear() + 1);
-    console.log(`imageEOLDate: ${JSON.stringify(imageEOLDate)}`);
-    const mockImage = imageFactory.build({
+    const mockCustomImage = imageFactory.build({
       eol: imageEOLDate.toISOString(),
       label: randomLabel(),
+      type: 'manual',
     });
+    const mockRecoveryImage = imageFactory.build({
+      eol: imageEOLDate.toISOString(),
+      label: randomLabel(),
+      type: 'automatic',
+    });
+    // const mockCustomImages: Image[] = new Array(3)
+    //   .fill(null)
+    //   .map((_item: null, index: number): Image => {
+    //     return imageFactory.build({
+    //       eol: imageEOLDate.toISOString(),
+    //       label: `Image ${index}`,
+    //       tags: [index % 2 === 0 ? 'even' : 'odd', 'nums'],
+    //       type: 'manual',
+    //     });
+    //   });
+    // const mockRecoveryImages: Image[] = new Array(3)
+    //   .fill(null)
+    //   .map((_item: null, index: number): Image => {
+    //     return imageFactory.build({
+    //       eol: imageEOLDate.toISOString(),
+    //       label: `Image ${index}`,
+    //       tags: [index % 2 === 0 ? 'even' : 'odd', 'nums'],
+    //       type: 'automatic',
+    //     });
+    //   });
     const actions = [
       'Edit',
       'Deploy to New Linode',
@@ -214,17 +242,18 @@ describe('restricted user details pages', () => {
       'Rebuild an Existing Linode': 'rebuild Linodes',
     };
 
-    // Mock setup to display the Image landing page in an non-empty state
-    mockGetAllImages([mockImage]).as('getImages');
+    // Mock setup to display the Image landing page in a non-empty state
+    mockGetCustomImages([mockCustomImage]).as('getCustomImages');
+    mockGetRecoveryImages([mockRecoveryImage]).as('getRecoveryImages');
 
     cy.visitWithLogin(`/images`);
-    cy.wait(['@getImages', '@getProfile']);
+    cy.wait(['@getCustomImages', '@getProfile', '@getRecoveryImages']);
 
     cy.findByText(
       `You don't have permissions to create Images. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
 
-    // Confirm that the "Create Image" button is visibale and disable
+    // Confirm that the "Create Image" button is visible and disabled
     ui.button
       .findByTitle('Create Image')
       .should('be.visible')
@@ -234,9 +263,25 @@ describe('restricted user details pages', () => {
       `You don't have permissions to create Images. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
 
-    // TODO: M3-9522 - There is something wrong with the headers of "Recovery Images" table
-    // Confirm that action menu items of each image are disabled
-    cy.get(`[id="action-menu-for-image-${mockImage.label}-button"]`)
+    // Confirm that action menu items of each image are disabled in "Custom Images" table
+    cy.get(`[id="action-menu-for-image-${mockCustomImage.label}-button"]`)
+      .first()
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    actions.forEach((menuItem: string) => {
+      const tooltipMessage = `You don't have permissions to ${actionsMap[menuItem]}. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
+
+      ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
+      ui.button
+        .findByAttribute('aria-label', tooltipMessage)
+        .trigger('mouseover');
+      ui.tooltip.findByText(tooltipMessage);
+    });
+    cy.reload();
+
+    // Confirm that action menu items of each image are disabled in "Recovery Images" table
+    cy.get(`[id="action-menu-for-image-${mockRecoveryImage.label}-button"]`)
       .first()
       .should('be.visible')
       .should('be.enabled')
@@ -556,20 +601,5 @@ describe('restricted user details pages', () => {
     ui.tooltip.findByText(
       `You don't have permissions to create Longview Clients. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
-
-    // TODO: M3-9586 The action buttion is not diabled
-    // Confirm that the 'Delete' button in the action menu is disabled
-    ui.actionMenu
-      .findByTitle(`Action menu for Longview Client ${client.label}`)
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-    // const menuItem = 'Delete';
-    // const tooltipMessage = `You don't have permissions to ${menuItem.toLocaleLowerCase()} this Longview Client. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`;
-    // ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
-    // ui.button
-    //   .findByAttribute('aria-label', tooltipMessage)
-    //   .trigger('mouseover');
-    // ui.tooltip.findByText(tooltipMessage);
   });
 });
