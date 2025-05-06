@@ -100,41 +100,38 @@ export const NewDetailTemplate = () => {
         {/* SECTION 1: Full width, 1 column */}
         <Box sx={{ mb: 3, backgroundColor: 'lightyellow' }}>
           <SectionHeader>full width 1 column</SectionHeader>
-          <LabelValue label="Label" value={loremIpsum} />
+          <LabelValue label="Label 1.1" value={loremIpsum} />
         </Box>
 
         {/* SECTION 2: Full width, 3 columns */}
         <Box sx={{ mb: 3, backgroundColor: 'lightcoral' }}>
           <SectionHeader>FULL WIDTH 3 COLUMNS</SectionHeader>
           <Grid container>
-            {/* First column (A) */}
             <Grid
               size={{ xs: 12, sm: 6, md: 4 }}
               order={{ xs: 1, sm: 1, md: 1 }}
             >
-              <LabelValue label="Label 1.1" value="Value 1.1" />
-              <LabelValue label="Label 1.2" value="Value 1.2" />
-              <LabelValue label="Label 1.3" value="Value 1.3" />
+              <LabelValue label="Label 2.1 A" value="Value 2.1 A" />
+              <LabelValue label="Label 2.2 A" value="Value 2.2 A" />
+              <LabelValue label="Label 2.3 A" value="Value 2.3 A" />
             </Grid>
 
-            {/* Second column (B) */}
             <Grid
               size={{ xs: 12, sm: 6, md: 4 }}
               order={{ xs: 2, sm: 3, md: 2 }}
             >
-              <LabelValue label="Label 2.1" value="Value 2.1" />
-              <LabelValue label="Label 2.2" value="Value 2.2" />
-              <LabelValue label="Label 2.3" value="Value 2.3" />
+              <LabelValue label="Label 2.1 B" value="Value 2.1 B" />
+              <LabelValue label="Label 2.2 B" value="Value 2.2 B" />
+              <LabelValue label="Label 2.3 B" value="Value 2.3 B" />
             </Grid>
 
-            {/* Third column (C) */}
             <Grid
               size={{ xs: 12, sm: 6, md: 4 }}
               order={{ xs: 3, sm: 2, md: 3 }}
             >
-              <LabelValue label="Label 3.1" value="Value 3.1" />
-              <LabelValue label="Label 3.2" value="Value 3.2" />
-              <LabelValue label="Label 3.3" value="Value 3.3" />
+              <LabelValue label="Label 2.1 C" value="Value 2.1 C" />
+              <LabelValue label="Label 2.2 C" value="Value 2.2 C" />
+              <LabelValue label="Label 2.3 C" value="Value 2.3 C" />
             </Grid>
           </Grid>
         </Box>
