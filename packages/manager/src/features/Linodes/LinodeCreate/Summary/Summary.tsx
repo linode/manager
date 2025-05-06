@@ -37,6 +37,7 @@ export const Summary = () => {
     diskEncryption,
     clusterSize,
     linodeInterfaces,
+    interfaceGeneration,
   ] = useWatch({
     control,
     name: [
@@ -53,6 +54,7 @@ export const Summary = () => {
       'disk_encryption',
       'stackscript_data.cluster_size',
       'linodeInterfaces',
+      'interface_generation',
     ],
   });
 
@@ -69,16 +71,17 @@ export const Summary = () => {
   const price = getLinodePrice({ clusterSize, regionId, type });
 
   const hasVPC = isLinodeInterfacesEnabled
-    ? linodeInterfaces?.some((i) => i.vpc?.subnet_id)
+    ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
     : vpcId;
 
   const hasVLAN = isLinodeInterfacesEnabled
-    ? linodeInterfaces?.some((i) => i.vlan?.vlan_label)
+    ? linodeInterfaces?.some((i) => i.purpose === 'vlan' && i.vlan?.vlan_label)
     : vlanLabel;
 
-  const hasFirewall = isLinodeInterfacesEnabled
-    ? linodeInterfaces.some((i) => i.firewall_id)
-    : firewallId;
+  const hasFirewall =
+    interfaceGeneration === 'linode'
+      ? linodeInterfaces.some((i) => i.firewall_id)
+      : firewallId;
 
   const summaryItems = [
     {

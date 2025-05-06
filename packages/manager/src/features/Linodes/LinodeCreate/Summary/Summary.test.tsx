@@ -342,7 +342,9 @@ describe('Linode Create Summary', () => {
         renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
           component: <Summary />,
           useFormOptions: {
-            defaultValues: { linodeInterfaces: [{ vpc: { subnet_id: 2 } }] },
+            defaultValues: {
+              linodeInterfaces: [{ purpose: 'vpc', vpc: { subnet_id: 2 } }],
+            },
           },
           options: { flags: { linodeInterfaces: { enabled: true } } },
         });
@@ -357,7 +359,9 @@ describe('Linode Create Summary', () => {
           component: <Summary />,
           useFormOptions: {
             defaultValues: {
-              linodeInterfaces: [{ vlan: { vlan_label: 'my-test-vlan-1' } }],
+              linodeInterfaces: [
+                { purpose: 'vlan', vlan: { vlan_label: 'my-test-vlan-1' } },
+              ],
             },
           },
           options: { flags: { linodeInterfaces: { enabled: true } } },
@@ -372,7 +376,10 @@ describe('Linode Create Summary', () => {
         renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
           component: <Summary />,
           useFormOptions: {
-            defaultValues: { linodeInterfaces: [{ firewall_id: 5 }] },
+            defaultValues: {
+              linodeInterfaces: [{ firewall_id: 5 }],
+              interface_generation: 'linode',
+            },
           },
           options: { flags: { linodeInterfaces: { enabled: true } } },
         });
