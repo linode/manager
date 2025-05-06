@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 /**
  * @param [ref] {React.RefObject<any>} - If provided with a React Ref Object we will scroll to the
  * top of it.

@@ -3,10 +3,10 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 interface ResourcesLinksSubSectionProps {
-  MoreLink?: (props: { className?: any }) => JSX.Element;
   children?: JSX.Element | JSX.Element[];
   external?: boolean;
   icon?: JSX.Element;
+  MoreLink?: (props: { className?: any }) => JSX.Element;
   title?: string;
 }
 

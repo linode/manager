@@ -94,6 +94,13 @@ export const DebouncedSearchTextField = React.memo(
 
     return (
       <TextField
+        className={className}
+        data-qa-debounced-search
+        defaultValue={defaultValue}
+        hideLabel={hideLabel}
+        label={label}
+        onChange={debouncedOnChange}
+        placeholder={placeholder || 'Filter by query'}
         slotProps={{
           input: {
             endAdornment: (
@@ -101,15 +108,15 @@ export const DebouncedSearchTextField = React.memo(
                 {isSearching && <CircleProgress noPadding size="xs" />}
                 {clearable && Boolean(textFieldValue) && (
                   <IconButton
+                    aria-label="Clear"
                     onClick={() => {
                       setTextFieldValue('');
                       onSearch('');
                     }}
+                    size="small"
                     sx={{
                       padding: 0,
                     }}
-                    aria-label="Clear"
-                    size="small"
                   >
                     <CloseIcon />
                   </IconButton>
@@ -124,13 +131,6 @@ export const DebouncedSearchTextField = React.memo(
             ...inputSlotProps,
           },
         }}
-        className={className}
-        data-qa-debounced-search
-        defaultValue={defaultValue}
-        hideLabel={hideLabel}
-        label={label}
-        onChange={debouncedOnChange}
-        placeholder={placeholder || 'Filter by query'}
         value={textFieldValue}
         {...restOfTextFieldProps}
       />

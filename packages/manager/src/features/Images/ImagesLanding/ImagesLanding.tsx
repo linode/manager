@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -23,10 +24,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -668,7 +667,6 @@ export const ImagesLanding = () => {
       />
       <Drawer
         isFetching={isFetchingSelectedImage}
-        NotFoundComponent={NotFound}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}
         title={`Manage Replicas for ${selectedImage?.label}`}

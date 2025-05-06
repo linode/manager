@@ -281,24 +281,24 @@ export const TextField = (props: TextFieldProps) => {
       }}
     >
       <Box
+        alignItems={'center'}
+        className={hideLabel ? 'visually-hidden' : ''}
+        data-testid="inputLabelWrapper"
+        display="flex"
         sx={{
           ...(labelPosition !== 'left' && {
             marginBottom: theme.spacing(1),
             ...(!noMarginTop && { marginTop: theme.spacing(2) }),
           }),
         }}
-        alignItems={'center'}
-        className={hideLabel ? 'visually-hidden' : ''}
-        data-testid="inputLabelWrapper"
-        display="flex"
       >
         <InputLabel
+          data-qa-textfield-label={label}
+          htmlFor={validInputId}
           sx={{
             marginBottom: 0,
             transform: 'none',
           }}
-          data-qa-textfield-label={label}
-          htmlFor={validInputId}
           {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
         >
           {label}
@@ -311,11 +311,11 @@ export const TextField = (props: TextFieldProps) => {
         </InputLabel>
         {labelTooltipText && (
           <TooltipIcon
+            status="help"
             sxTooltipIcon={{
               marginLeft: `${theme.spacing(0.5)}`,
               padding: `${theme.spacing(0.5)}`,
             }}
-            status="help"
             text={labelTooltipText}
             width={tooltipWidth}
           />
@@ -324,11 +324,11 @@ export const TextField = (props: TextFieldProps) => {
 
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
+          data-qa-textfield-helper-text
+          id={helperTextId}
           sx={{
             marginTop: 0,
           }}
-          data-qa-textfield-helper-text
-          id={helperTextId}
         >
           {helperText}
         </FormHelperText>
@@ -345,6 +345,17 @@ export const TextField = (props: TextFieldProps) => {
         <_TextField
           {...textFieldProps}
           {...dataAttrs}
+          className={className}
+          error={!!error || !!errorText}
+          fullWidth
+          helperText={''}
+          /**
+           * Set _helperText_ and _label_ to no value because we want to
+           * have the ability to put the helper text under the label at the top.
+           */
+          label={''}
+          onBlur={handleBlur}
+          onChange={handleChange}
           slotProps={{
             htmlInput: {
               'aria-describedby': helperText ? helperTextId : undefined,
@@ -392,17 +403,6 @@ export const TextField = (props: TextFieldProps) => {
             }),
             ...props.sx,
           }}
-          className={className}
-          error={!!error || !!errorText}
-          fullWidth
-          helperText={''}
-          /**
-           * Set _helperText_ and _label_ to no value because we want to
-           * have the ability to put the helper text under the label at the top.
-           */
-          label={''}
-          onBlur={handleBlur}
-          onChange={handleChange}
           type={type}
           /*
            * Let us explicitly pass an empty string to the input
@@ -415,15 +415,15 @@ export const TextField = (props: TextFieldProps) => {
         </_TextField>
         {tooltipText && (
           <TooltipIcon
+            classes={{ popper: tooltipClasses }}
+            onMouseEnter={tooltipOnMouseEnter}
+            status="info"
             sxTooltipIcon={{
               height: '34px',
               margin: '0px 0px 0px 4px',
               padding: '17px',
               width: '34px',
             }}
-            classes={{ popper: tooltipClasses }}
-            onMouseEnter={tooltipOnMouseEnter}
-            status="info"
             text={tooltipText}
             tooltipPosition={tooltipPosition}
             width={tooltipWidth}
@@ -432,6 +432,8 @@ export const TextField = (props: TextFieldProps) => {
       </Box>
       {errorText && (
         <FormHelperText
+          data-qa-textfield-error-text={label}
+          role="alert"
           sx={{
             ...((editable || hasAbsoluteError) && {
               position: 'absolute',
@@ -447,8 +449,6 @@ export const TextField = (props: TextFieldProps) => {
             top: 42,
             width: '100%',
           }}
-          data-qa-textfield-error-text={label}
-          role="alert"
         >
           {errorText}
         </FormHelperText>

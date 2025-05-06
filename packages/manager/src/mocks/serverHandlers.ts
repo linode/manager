@@ -114,6 +114,7 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { accountUserFactory } from 'src/factories/accountUsers';
 import { LinodeKernelFactory } from 'src/factories/linodeKernel';
+import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
 const getRandomWholeNumber = (min: number, max: number) =>
@@ -122,7 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { MTC_TT } from 'src/features/components/PlansPanel/constants';
+import { MTC } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -668,11 +669,16 @@ export const handlers = [
   http.get('*/linode/types-legacy', () => {
     return HttpResponse.json(makeResourcePage(linodeTypeFactory.buildList(0)));
   }),
-  ...[nanodeType, ...standardTypes, ...dedicatedTypes, proDedicatedType].map(
-    (type) =>
-      http.get(`*/linode/types/${type.id}`, () => {
-        return HttpResponse.json(type);
-      })
+  ...[
+    nanodeType,
+    ...standardTypes,
+    ...dedicatedTypes,
+    ...premiumTypes,
+    proDedicatedType,
+  ].map((type) =>
+    http.get(`*/linode/types/${type.id}`, () => {
+      return HttpResponse.json(type);
+    })
   ),
   http.get(`*/linode/types/*`, () => {
     return HttpResponse.json(linodeTypeFactory.build());
@@ -693,10 +699,12 @@ export const handlers = [
       label: 'Gecko Distributed Region Test',
       region: 'us-den-10',
       site_type: 'distributed',
+      id: 1000,
     });
     const onlineLinodes = linodeFactory.buildList(40, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
+      region: 'us-ord',
     });
     const linodeWithEligibleVolumes = linodeFactory.build({
       id: 20,
@@ -721,22 +729,28 @@ export const handlers = [
       label: 'multiple-ips',
       tags: ['test1', 'test2', 'test3'],
     });
-    const mtcTTLinodes = [
+    const nonMTCPlanInMTCSupportedRegionsLinode = linodeFactory.build({
+      label: 'non-mtc-plan-in-mtc-supported-regions-linode',
+      region: 'us-iad',
+      id: 1003,
+    });
+    const mtcLinodes = [
       linodeFactory.build({
-        label: 'mtc-tt-custom-plan-linode-1',
+        label: 'mtc-custom-plan-linode-1',
         region: 'us-iad',
         type: 'g8-premium-128-ht',
-        id: 1234,
+        id: 1001,
       }),
       linodeFactory.build({
-        label: 'mtc-tt-custom-plan-linode-2',
+        label: 'mtc-custom-plan-linode-2',
         region: 'no-east',
         type: 'g8-premium-128-ht',
-        id: 1235,
+        id: 1002,
       }),
     ];
     const linodes = [
-      ...mtcTTLinodes,
+      ...mtcLinodes,
+      nonMTCPlanInMTCSupportedRegionsLinode,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
       linodeInDistributedRegion,
@@ -840,23 +854,57 @@ export const handlers = [
   }),
 
   http.get('*/linode/instances/:id', async ({ params }) => {
+    const mockLinodeDetailById = (id: number) => {
+      const linodeMTCPlanDetails = [
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'mtc-custom-plan-linode-1',
+          region: 'us-iad',
+          type: 'g8-premium-128-ht',
+        }),
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'mtc-custom-plan-linode-2',
+          region: 'no-east',
+          type: 'g8-premium-128-ht',
+        }),
+      ];
+      const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'non-mtc-plan-in-mtc-supported-regions-linode',
+        region: 'us-iad',
+      });
+      const linodeInDistributedRegionDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'Gecko Distributed Region Test',
+        region: 'us-den-10',
+      });
+      const linodeDetail = linodeFactory.build({
+        id,
+        backups: { enabled: false },
+        label: 'linode-detail',
+        region: 'us-ord',
+      });
+
+      switch (id) {
+        case 1000:
+          return linodeInDistributedRegionDetail;
+        case 1001:
+          return linodeMTCPlanDetails[0];
+        case 1002:
+          return linodeMTCPlanDetails[1];
+        case 1003:
+          return linodeNonMTCPlanInMTCSupportedRegionsDetail;
+        default:
+          return linodeDetail;
+      }
+    };
     const id = Number(params.id);
-    const linodeMTCTTPlanDetail = linodeFactory.build({
-      id,
-      backups: { enabled: false },
-      label: 'mtc-tt-custom-plan-linode',
-      region: 'us-iad',
-      type: 'g8-premium-128-ht',
-    });
-    const linodeDetail = linodeFactory.build({
-      id,
-      backups: { enabled: false },
-      label: 'Gecko Distributed Region Test',
-      region: 'us-den-10',
-    });
-    const response = [1234, 1235].includes(id)
-      ? linodeMTCTTPlanDetail
-      : linodeDetail;
+    const response = mockLinodeDetailById(id);
     return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
@@ -1086,6 +1134,20 @@ export const handlers = [
       }),
     ];
     return HttpResponse.json(makeResourcePage(endpoints));
+  }),
+  http.get('*/v4*/object-storage/quotas*', () => {
+    const quotas = [
+      quotaFactory.build({
+        description: 'The total capacity of your Object Storage account',
+        endpoint_type: 'E0',
+        quota_limit: 1_000_000_000_000_000,
+        quota_name: 'Total Capacity',
+        resource_metric: 'byte',
+        s3_endpoint: 'endpoint1',
+      }),
+    ];
+
+    return HttpResponse.json(makeResourcePage(quotas));
   }),
   http.get('*object-storage/buckets/*/*/access', async () => {
     await sleep(2000);
@@ -2054,7 +2116,7 @@ export const handlers = [
       body: null,
       entity: null,
       label: "We've updated our policies.",
-      // eslint-disable-next-line xss/no-mixed-html
+
       message:
         "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
       severity: 'minor',
@@ -2303,8 +2365,8 @@ export const handlers = [
         region: selectedRegion,
       }),
       // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
-      ...(MTC_TT['availability_regions'].includes(
-        selectedRegion as (typeof MTC_TT)['availability_regions'][number]
+      ...(MTC['availability_regions'].includes(
+        selectedRegion as (typeof MTC)['availability_regions'][number]
       )
         ? [
             regionAvailabilityFactory.build({
@@ -2669,6 +2731,9 @@ export const handlers = [
       );
     }
   ),
+  http.delete('*/monitor/services/:serviceType/alert-definitions/:id', () => {
+    return HttpResponse.json({});
+  }),
   http.get('*/monitor/alert-channels', () => {
     return HttpResponse.json(
       makeResourcePage(notificationChannelFactory.buildList(7))

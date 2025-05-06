@@ -1,5 +1,5 @@
 // must turn off sort-objects rule in this file bc mockTicket.description is set by formatDescription fn in which attribute order is nonalphabetical and affects test result
-/* eslint-disable perfectionist/sort-objects */
+
 import { linodeFactory } from '@linode/utilities';
 /* eslint-disable sonarjs/no-duplicate-string */
 import 'cypress-file-upload';
