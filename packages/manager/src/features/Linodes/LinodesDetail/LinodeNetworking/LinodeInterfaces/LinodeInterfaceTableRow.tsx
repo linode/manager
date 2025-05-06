@@ -43,10 +43,12 @@ export const LinodeInterfaceTableRow = (props: Props) => {
       <TableCell>
         <LinodeInterfaceFirewall interfaceId={id} linodeId={linodeId} />
       </TableCell>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay value={updated} />
         </TableCell>
+      </Hidden>
+      <Hidden mdDown>
         <TableCell>
           <DateTimeDisplay value={created} />
         </TableCell>

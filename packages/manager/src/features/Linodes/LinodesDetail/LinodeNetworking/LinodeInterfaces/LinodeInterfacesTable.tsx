@@ -31,8 +31,10 @@ export const LinodeInterfacesTable = ({ handlers, linodeId }: Props) => {
             <TableCell>Version</TableCell>
           </Hidden>
           <TableCell>Firewall</TableCell>
-          <Hidden mdDown>
+          <Hidden lgDown>
             <TableCell>Updated</TableCell>
+          </Hidden>
+          <Hidden mdDown>
             <TableCell>Created</TableCell>
           </Hidden>
           <TableCell />
