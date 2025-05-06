@@ -14,17 +14,18 @@ import React from 'react';
 
 import { useCloneDomainMutation } from 'src/queries/domains';
 
-import type { Domain } from '@linode/api-v4';
+import type { APIError, Domain } from '@linode/api-v4';
 
 interface CloneDomainDrawerProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
-  const { domain, isFetching, onClose: _onClose, open } = props;
+  const { domain, domainError, isFetching, onClose: _onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -59,6 +60,7 @@ export const CloneDomainDrawer = (props: CloneDomainDrawerProps) => {
 
   return (
     <Drawer
+      error={domainError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
