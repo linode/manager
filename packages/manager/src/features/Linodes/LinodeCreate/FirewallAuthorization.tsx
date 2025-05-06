@@ -17,34 +17,31 @@ export const FirewallAuthorization = () => {
     name: 'firewallOverride',
   });
 
-  const [
-    legacyFirewallId,
-    firstLinodeInterfaceFirewallId,
-    firstLinodeInterfaceType,
-    interfaceGeneration,
-  ] = useWatch({
-    name: [
-      'firewall_id',
-      'linodeInterfaces.0.firewall_id',
-      'linodeInterfaces.0.purpose',
-      'interface_generation',
-    ],
+  const [legacyFirewallId, linodeInterfaces, interfaceGeneration] = useWatch({
+    name: ['firewall_id', 'linodeInterfaces', 'interface_generation'],
     control,
   });
 
-  // Special case ❗️
-  // VLAN interfaces do not support Firewalls, so we hide this notice
-  // if that's what the user selects.
-  if (firstLinodeInterfaceType === 'vlan' && interfaceGeneration === 'linode') {
+  // Handle Linode Interfaces
+  if (interfaceGeneration === 'linode') {
+    // VLAN Linode interfaces do not support Firewalls, so we don't consider them.
+    const interfacesThatMayHaveInternetConnectivity = linodeInterfaces.filter(
+      (i) => i.purpose !== 'vlan'
+    );
+
+    // If every interface that could have internet connectivity has a Firewall,
+    // we can early return (Not show the notice to the user)
+    if (interfacesThatMayHaveInternetConnectivity.every((i) => i.firewall_id)) {
+      return null;
+    }
+  }
+  // Handle legacy Interfaces
+  else if (legacyFirewallId) {
+    // Firewall is selected, so we can early return. (Not show the notice to the user)
     return null;
   }
 
-  const firewallId =
-    interfaceGeneration === 'linode'
-      ? firstLinodeInterfaceFirewallId
-      : legacyFirewallId;
-
-  if (firewallId || !(fieldState.isDirty || fieldState.error)) {
+  if (!(fieldState.isDirty || fieldState.error)) {
     return null;
   }
 

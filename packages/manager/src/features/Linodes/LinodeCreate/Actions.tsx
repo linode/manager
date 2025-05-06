@@ -1,7 +1,7 @@
 import { Box, Button } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -22,41 +22,12 @@ export const Actions = () => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { formState, getValues, trigger, control } =
+  const { formState, getValues, trigger } =
     useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
-
-  const [
-    legacyFirewallId,
-    firstLinodeInterfaceFirewallId,
-    firstLinodeInterfaceType,
-    interfaceGeneration,
-  ] = useWatch({
-    name: [
-      'firewall_id',
-      'linodeInterfaces.0.firewall_id',
-      'linodeInterfaces.0.purpose',
-      'interface_generation',
-    ],
-    control,
-  });
-
-  const firewallId =
-    interfaceGeneration === 'linode'
-      ? firstLinodeInterfaceFirewallId
-      : legacyFirewallId;
-
-  const userNeedsToTakeActionAboutInternalFirewallPolicy =
-    interfaceGeneration === 'linode' && firstLinodeInterfaceType === 'vlan'
-      ? false
-      : 'firewallOverride' in formState.errors && !firewallId;
-
-  const disableSubmitButton =
-    isLinodeCreateRestricted ||
-    userNeedsToTakeActionAboutInternalFirewallPolicy;
 
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
@@ -80,7 +51,7 @@ export const Actions = () => {
       </Button>
       <Button
         buttonType="primary"
-        disabled={disableSubmitButton}
+        disabled={isLinodeCreateRestricted}
         loading={formState.isSubmitting}
         type="submit"
       >

@@ -87,18 +87,30 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    // If we're dealing with an employee account and they did not bypass
-    // the firewall banner....
+    // If we're dealing with an employee account and the employee did not bypass/override the Firewall warning
     if (context?.secureVMNoticesEnabled && !values.firewallOverride) {
-      // Get the selected Firewall ID depending on what Interface Generation is selected
-      const firewallId =
-        values.interface_generation === 'linode'
-          ? values.linodeInterfaces[0].firewall_id
-          : values.firewall_id;
+      // Handle Linode Interfaces
+      if (values.interface_generation === 'linode') {
+        const interfacesThatMayHaveInternetConnectivity =
+          values.linodeInterfaces.filter((i) => i.purpose !== 'vlan');
 
-      if (!firewallId) {
+        // If any Linode Interface that may have internet connectivity does not have a firewall, show the authorization banner.
+        if (
+          interfacesThatMayHaveInternetConnectivity.some((i) => !i.firewall_id)
+        ) {
+          (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] =
+            {
+              // This message does not get surfaced, but triggers an error so that FirewallAuthorization.tsx renders
+              message:
+                'You must select a Firewall or bypass the Firewall policy.',
+              type: 'validate',
+            };
+        }
+      }
+      // Handle legacy Interfaces
+      else if (!values.firewall_id) {
         (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
-          // This message does not get surfaced, see FirewallAuthorization.tsx
+          // This message does not get surfaced, but triggers an error so that FirewallAuthorization.tsx renders
           message: 'You must select a Firewall or bypass the Firewall policy.',
           type: 'validate',
         };
