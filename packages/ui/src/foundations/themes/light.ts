@@ -439,6 +439,8 @@ export const lightTheme: ThemeOptions = {
               backgroundColor: primaryColors.main,
               color: primaryColors.white,
             },
+            width: 'auto',
+            height: 'auto',
             borderRadius: '50%',
             color: Content.Text.Primary.Default,
             fontSize: '16px',
@@ -629,6 +631,29 @@ export const lightTheme: ThemeOptions = {
           color: Component.Checkbox.Empty.Default.Border,
         },
       },
+      defaultProps: {
+        size: 'medium',
+      },
+      variants: [
+        {
+          props: { size: 'small' },
+          style: {
+            svg: {
+              height: '16px',
+              width: '16px',
+            },
+          },
+        },
+        {
+          props: { size: 'medium' },
+          style: {
+            svg: {
+              height: '20px',
+              width: '20px',
+            },
+          },
+        },
+      ],
     },
     MuiChip: {
       styleOverrides: {
@@ -1124,7 +1149,11 @@ export const lightTheme: ThemeOptions = {
         outlined: {
           border: `1px solid ${Color.Neutrals[30]}`,
         },
-        root: {},
+        root: {
+          '& .notice': {
+            width: 'fit-content',
+          },
+        },
         rounded: {
           borderRadius: 0,
         },

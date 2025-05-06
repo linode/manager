@@ -12,6 +12,7 @@ import type {
   FirewallSettings,
   FirewallTemplate,
 } from '@linode/api-v4';
+import type { APIErrorContents } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch Firewalls.
@@ -20,6 +21,22 @@ import type {
  */
 export const interceptGetFirewalls = (): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('networking/firewalls*'));
+};
+
+/**
+ * Mocks the GET request to get a single Firewall
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewall = (
+  firewallId: number,
+  firewall: Firewall
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/${firewallId}`),
+    firewall
+  );
 };
 
 /**
@@ -132,6 +149,22 @@ export const interceptUpdateFirewallLinodes = (
 };
 
 /**
+ * Mocks the GET request to get a Firewall's devices
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetFirewallDevices = (
+  firewallId: number,
+  firewallDevices: FirewallDevice[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`networking/firewalls/${firewallId}/devices*`),
+    paginateResponse(firewallDevices)
+  );
+};
+
+/**
  * Mocks the POST request to add a Firewall device.
  *
  * @returns Cypress chainable.
@@ -144,6 +177,26 @@ export const mockAddFirewallDevice = (
     'POST',
     apiMatcher(`networking/firewalls/${firewallId}/devices`),
     firewallDevice
+  );
+};
+
+/**
+ * Intercepts POST request to add a firewall device and mocks an API error response.
+ *
+ * @param errorContents - API error with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAddFirewallDeviceError = (
+  firewallId: number,
+  errorContents: APIErrorContents = 'Unable to add firewall device.',
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`networking/firewalls/${firewallId}/devices`),
+    makeErrorResponse(errorContents, statusCode)
   );
 };
 
@@ -195,5 +248,41 @@ export const mockGetFirewallSettings = (
     'GET',
     apiMatcher('networking/firewalls/settings'),
     makeResponse(settings)
+  );
+};
+
+/**
+ * Intercepts PUT request to update Firewall settings and mocks response.
+ *
+ * @param settings - Firewall settings object with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateFirewallSettings = (
+  settings: FirewallSettings
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('networking/firewalls/settings'),
+    makeResponse(settings)
+  );
+};
+
+/**
+ * Intercepts PUT request to update Firewall settings and mocks an API error response.
+ *
+ * @param errorContents - API error with which to mock response.
+ * @param statusCode - HTTP status code with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateFirewallSettingsError = (
+  errorContents: APIErrorContents = 'An unknown error has occurred',
+  statusCode: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher('networking/firewalls/settings'),
+    makeErrorResponse(errorContents, statusCode)
   );
 };

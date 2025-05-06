@@ -16,6 +16,26 @@ import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
+// Shared import restrictions between different rule contexts
+const restrictedImportPaths = [
+  'rxjs',
+  '@mui/core',
+  '@mui/system',
+  '@mui/icons-material',
+  {
+    name: '@mui/material',
+    importNames: ['Typography'],
+    message:
+      'Please use Typography component from @linode/ui instead of @mui/material',
+  },
+  {
+    name: 'react-router-dom',
+    importNames: ['Link'],
+    message:
+      'Please use the Link component from src/components/Link instead of react-router-dom',
+  },
+];
+
 export const baseConfig = [
   // 1. Ignores
   {
@@ -79,21 +99,15 @@ export const baseConfig = [
       'no-new-wrappers': 'error',
       'no-restricted-imports': [
         'error',
-        'rxjs',
-        '@mui/core',
-        '@mui/system',
-        '@mui/icons-material',
         {
-          importNames: ['Typography'],
-          message:
-            'Please use Typography component from @linode/ui instead of @mui/material',
-          name: '@mui/material',
-        },
-        {
-          importNames: ['Link'],
-          message:
-            'Please use the Link component from src/components/Link instead of react-router-dom',
-          name: 'react-router-dom',
+          paths: restrictedImportPaths,
+          patterns: [
+            {
+              group: ['**/cypress/**'],
+              message:
+                'Cypress modules should only be imported in Cypress testing directories',
+            },
+          ],
         },
       ],
       'no-restricted-syntax': [
@@ -113,6 +127,12 @@ export const baseConfig = [
       'object-shorthand': 'warn',
       'sort-keys': 'off',
       'spaced-comment': 'warn',
+    },
+  },
+  {
+    files: ['**/cypress.config.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
     },
   },
 
@@ -333,6 +353,9 @@ export const baseConfig = [
               ],
             ];
           }
+          if (rule === 'prefer-explicit-assert') {
+            return [`testing-library/${rule}`, 'off'];
+          }
           // All other rules just get set to warn
           return [`testing-library/${rule}`, 'warn'];
         })
@@ -363,6 +386,14 @@ export const baseConfig = [
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
       '@typescript-eslint/no-unused-expressions': 'off',
+      // Maintain standard import restrictions but allow Cypress imports
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: restrictedImportPaths,
+          // Intentionally omit patterns to allow Cypress imports here
+        },
+      ],
     },
   },
 
@@ -375,6 +406,7 @@ export const baseConfig = [
       'src/features/Firewalls/**/*',
       'src/features/Images/**/*',
       'src/features/Longview/**/*',
+      'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',

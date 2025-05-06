@@ -76,15 +76,15 @@ describe('create a database cluster, mocked data', () => {
           configuration.clusterSize == 1
             ? '1 Node'
             : configuration.clusterSize == 2
-            ? '2 Nodes'
-            : '3 Nodes';
+              ? '2 Nodes'
+              : '3 Nodes';
 
         const nodes =
           configuration.clusterSize == 1
             ? 'Primary (1 Node)'
             : configuration.clusterSize == 2
-            ? 'Primary (+1 Node)'
-            : 'Primary (+2 Nodes)';
+              ? 'Primary (+1 Node)'
+              : 'Primary (+2 Nodes)';
 
         const clusterCpuType =
           configuration.linodeType.indexOf('-dedicated-') !== -1

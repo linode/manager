@@ -239,13 +239,20 @@ export const getConfigAPIError = (
  * Determines if a restart is required based on dirty fields.
  */
 export const hasRestartCluster = (
-  dirtyFields: any,
-  configs: ConfigurationOption[]
+  currentConfigs: ConfigurationOption[],
+  initialConfigs: ConfigurationOption[]
 ): string => {
-  return configs.some((config, index) => {
-    const isDirtyValue = dirtyFields.configs?.[index]?.value;
-    return isDirtyValue && config.requires_restart;
-  })
-    ? 'Save and Restart Service'
-    : 'Save';
+  const requiresRestart = currentConfigs.some((currentConfig) => {
+    const initialConfig = initialConfigs.find(
+      (item) => item.label === currentConfig.label
+    );
+
+    const isNewConfig = !initialConfig;
+    const hasChangedValue =
+      initialConfig && initialConfig.value !== currentConfig.value;
+
+    return (isNewConfig || hasChangedValue) && currentConfig.requires_restart;
+  });
+
+  return requiresRestart ? 'Save and Restart Service' : 'Save';
 };

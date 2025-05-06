@@ -14,17 +14,17 @@ import React, { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
+import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 import {
   REGION_CAVEAT_HELPER_TEXT,
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
 } from 'src/features/VPCs/constants';
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 
-import { VPCAvailability } from './VPCAvailability';
+import { VPCAvailabilityNotice } from './VPCAvailabilityNotice';
 import { VPCRanges } from './VPCRanges';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import { VPCPublicIPLabel } from 'src/features/VPCs/components/VPCPublicIPLabel';
 
 interface Props {
   index: number;
@@ -63,13 +63,7 @@ export const VPC = ({ index }: Props) => {
   return (
     <Box>
       <Stack spacing={1.5}>
-        {!regionId && (
-          <Notice
-            text="Select a region to see available VPCs."
-            variant="warning"
-          />
-        )}
-        {selectedRegion && !regionSupportsVPCs && <VPCAvailability />}
+        {selectedRegion && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Controller
           control={control}
           name={`linodeInterfaces.${index}.vpc.vpc_id`}
@@ -77,9 +71,13 @@ export const VPC = ({ index }: Props) => {
             <Autocomplete
               disabled={!regionSupportsVPCs}
               errorText={error?.[0].reason ?? fieldState.error?.message}
+              helperText={
+                !regionId ? 'Select a region to see available VPCs.' : undefined
+              }
               label="VPC"
               loading={isLoading}
               noMarginTop
+              noOptionsText="There are no VPCs in the selected region."
               onBlur={field.onBlur}
               onChange={(e, vpc) => {
                 field.onChange(vpc?.id ?? null);

@@ -1,5 +1,4 @@
-import { IconButton, Stack, Typography } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
+import { CloseIcon, IconButton, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
@@ -100,7 +99,7 @@ export const RemovableSelectionsListTable = (
                 onClick={() => handleOnClick(selection)}
                 size="medium"
               >
-                <Close />
+                <CloseIcon />
               </IconButton>
             )}
           </TableCell>

@@ -1,3 +1,14 @@
+## [2025-05-06] - v0.11.0
+
+### Fixed:
+
+- `CloseButton` svg enforcing a hardcoded color ([#12039](https://github.com/linode/manager/pull/12039))
+- Broken text layout for `Notice`s with multiple child elements ([#12120](https://github.com/linode/manager/pull/12120))
+
+### Tech Stories:
+
+- Re-export everything from `@mui/material/styles` ([#12106](https://github.com/linode/manager/pull/12106))
+
 ## [2025-04-22] - v0.10.0
 
 ### Added:

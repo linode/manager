@@ -26,6 +26,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCInterface } from 'src/hooks/useVPCInterface';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
 import { DeleteIPDialog } from './DeleteIPDialog';
@@ -63,6 +64,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
   const { data: ips, error, isLoading } = useLinodeIPsQuery(linodeID);
   const { data: linode } = useLinodeQuery(linodeID);
   const { data: regions } = useRegionsQuery();
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const linodeIsInDistributedRegion = getIsDistributedRegion(
     regions ?? [],
@@ -75,8 +77,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+
   const { isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface: linode?.interface_generation === 'linode',
+    isLinodeInterface,
     linodeId: linodeID,
   });
 
@@ -142,6 +146,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
+  const showAddIPButton =
+    !isLinodeInterfacesEnabled || linode?.interface_generation !== 'linode';
+
   const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
@@ -161,11 +168,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         {isSmallScreen ? (
           <ActionMenu
             actionsList={[
-              {
-                disabled: isLinodesGrantReadOnly,
-                onClick: () => setIsAddDrawerOpen(true),
-                title: 'Add an IP Address',
-              },
+              ...(showAddIPButton
+                ? [
+                    {
+                      disabled: isLinodesGrantReadOnly,
+                      onClick: () => setIsAddDrawerOpen(true),
+                      title: 'Add an IP Address',
+                    },
+                  ]
+                : []),
               {
                 disabled: isLinodesGrantReadOnly,
                 onClick: () => setIsTransferDialogOpen(true),
@@ -195,13 +206,15 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               IP Sharing
             </Button>
-            <Button
-              buttonType="primary"
-              disabled={isLinodesGrantReadOnly}
-              onClick={() => setIsAddDrawerOpen(true)}
-            >
-              Add an IP Address
-            </Button>
+            {showAddIPButton && (
+              <Button
+                buttonType="primary"
+                disabled={isLinodesGrantReadOnly}
+                onClick={() => setIsAddDrawerOpen(true)}
+              >
+                Add an IP Address
+              </Button>
+            )}
           </Stack>
         )}
       </Paper>
@@ -238,6 +251,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                   <LinodeIPAddressRow
                     {...ipDisplay}
                     {...handlers}
+                    isLinodeInterface={isLinodeInterface}
                     isVPCOnlyLinode={
                       isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
                     }
