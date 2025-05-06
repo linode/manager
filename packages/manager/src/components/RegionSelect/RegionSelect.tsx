@@ -148,7 +148,6 @@ export const RegionSelect = <
           },
         })}
         textFieldProps={{
-          ...props.textFieldProps,
           slotProps: {
             input: {
               endAdornment:
@@ -165,10 +164,18 @@ export const RegionSelect = <
                     }}
                   />
                 ) : (
-                  <Flag country={selectedRegion?.country} mr={1} />
+                  <Flag
+                    country={selectedRegion?.country}
+                    mr={1}
+                    sx={{
+                      '&&': { width: '24px' },
+                      boxShadow: 'none',
+                    }}
+                  />
                 )),
             },
           },
+          required,
           tooltipText,
         }}
         value={selectedRegion as Region}
