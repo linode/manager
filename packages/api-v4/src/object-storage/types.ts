@@ -155,6 +155,7 @@ export interface CreateObjectStorageObjectURLPayload {
 export type ObjectStorageClusterID =
   | 'ap-south-1'
   | 'eu-central-1'
+  | 'pl-labkrk2-1'
   | 'us-east-1'
   | 'us-southeast-1';
 

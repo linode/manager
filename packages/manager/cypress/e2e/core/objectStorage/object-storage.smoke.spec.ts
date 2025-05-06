@@ -15,12 +15,19 @@ import {
   mockUploadBucketObject,
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
+import {
+  mockGetBucketsForRegion,
+  // mockGetClusters,
+} from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
 import { accountFactory } from 'src/factories';
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import {
+  objectStorageBucketFactory,
+  // objectStorageClusterFactory,
+} from 'src/factories/objectStorage';
 
 describe('object storage smoke tests', () => {
   /*
@@ -40,7 +47,12 @@ describe('object storage smoke tests', () => {
       label: bucketLabel,
       region: region.id,
     });
-
+    // const mockCluster = objectStorageClusterFactory.build({
+    //   id: 'pl-labkrk2-1',
+    //   region: region.id,
+    //   domain: 'abc.com'
+    // });
+    // console.log('mockClustermockCluster', mockCluster)
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       gecko2: false,
@@ -50,10 +62,14 @@ describe('object storage smoke tests', () => {
 
     mockGetBuckets([]).as('getBuckets');
 
+    mockGetBucketsForRegion('pl-labkrk2-1', [mockBucket]).as(
+      'getBucketsForRegion'
+    );
+    // mockGetClusters([mockCluster]).as('getClusters')
     mockCreateBucket(mockBucket).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
-    cy.wait('@getBuckets');
+    cy.wait(['@getBuckets']);
 
     ui.landingPageEmptyStateResources.find().within(() => {
       cy.findByText('Getting Started Guides').should('be.visible');
@@ -75,7 +91,9 @@ describe('object storage smoke tests', () => {
           .click();
       });
 
-    cy.wait('@createBucket');
+    cy.wait(['@createBucket']);
+    cy.wait(['@getBucketsForRegion']);
+    // TODO: mock getBuckets w/ mocked bucket
     cy.findByText(bucketLabel).should('be.visible');
     cy.findByText(region.label).should('be.visible');
     cy.findByText(bucketHostname).should('be.visible');

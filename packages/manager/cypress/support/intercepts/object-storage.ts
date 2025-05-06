@@ -87,6 +87,7 @@ export const mockGetBucketsForRegion = (
   regionId: string,
   buckets: ObjectStorageBucket[]
 ): Cypress.Chainable<null> => {
+  console.log('mockGetBucketsForRegionmockGetBucketsForRegion');
   return cy.intercept(
     'GET',
     apiMatcher(`object-storage/buckets/${regionId}*`),
@@ -484,6 +485,7 @@ export const mockCancelObjectStorage = (): Cypress.Chainable => {
 export const mockGetClusters = (
   clusters: ObjectStorageCluster[]
 ): Cypress.Chainable => {
+  console.log('mockGetClustersmockGetClusters');
   return cy.intercept(
     'GET',
     apiMatcher('object-storage/clusters*'),
