@@ -1,7 +1,6 @@
+import { useLinodeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { useLinodeQuery } from '@linode/queries';
 
 interface Option {
   label: string;

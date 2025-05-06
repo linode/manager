@@ -30,17 +30,17 @@ export const AlertsEngineTypeFilter = React.memo(
 
     return (
       <Autocomplete
-        onChange={(e, engineOption) =>
-          handleSelection(engineOption?.id, 'engineType')
-        }
-        textFieldProps={{
-          hideLabel: true,
-        }}
         autoHighlight
         clearOnBlur
         label="Database Engine"
+        onChange={(e, engineOption) =>
+          handleSelection(engineOption?.id, 'engineType')
+        }
         options={engineOptions}
         placeholder="Select a Database Engine"
+        textFieldProps={{
+          hideLabel: true,
+        }}
       />
     );
   }

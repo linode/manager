@@ -1,4 +1,5 @@
 import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
+import { Hidden } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -6,17 +7,14 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { reportException } from 'src/exceptionReporting';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
-import {
-  ActionType,
-  getRestrictedResourceText,
-} from 'src/features/Account/utils';
+import type { ActionType } from 'src/features/Account/utils';
 
 interface Props {
   clusterId: number;
@@ -47,7 +45,7 @@ export const ClusterActionMenu = (props: Props) => {
       onClick: () => {
         downloadKubeConfig();
       },
-      disabled: disabled,
+      disabled,
       title: 'Download kubeconfig',
       tooltip: getTooltipText('download'),
     },
@@ -55,7 +53,7 @@ export const ClusterActionMenu = (props: Props) => {
       onClick: () => {
         openDialog();
       },
-      disabled: disabled,
+      disabled,
       title: 'Delete',
       tooltip: getTooltipText('delete'),
     },
@@ -93,8 +91,8 @@ export const ClusterActionMenu = (props: Props) => {
         actions.map((action) => {
           return (
             <InlineMenuAction
-              disabled={disabled}
               actionText={action.title}
+              disabled={disabled}
               key={action.title}
               onClick={action.onClick}
               tooltip={action.tooltip}

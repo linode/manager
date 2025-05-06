@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
@@ -43,7 +43,7 @@ export const Default: Story = {
         display: 'flex',
       }}
     >
-      <Grid sx={{ ...sxGridItem }} size="auto">
+      <Grid size="auto" sx={{ ...sxGridItem }}>
         <EntityIcon {...args} />
         <StyledLabel fontSize="0.875rem">{args.variant}</StyledLabel>
       </Grid>

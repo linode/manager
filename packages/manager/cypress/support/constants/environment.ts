@@ -3,9 +3,9 @@
  */
 
 export interface ViewportSize {
-  width: number;
   height: number;
   label?: string;
+  width: number;
 }
 
 // Array of common mobile viewports against which to test.

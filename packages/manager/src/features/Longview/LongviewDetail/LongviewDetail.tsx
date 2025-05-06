@@ -1,9 +1,10 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -13,7 +14,6 @@ import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useTabs } from 'src/hooks/useTabs';
-import { useProfile } from '@linode/queries';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';

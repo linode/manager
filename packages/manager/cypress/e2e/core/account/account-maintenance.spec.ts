@@ -169,15 +169,14 @@ describe('Maintenance', () => {
               expectedPendingMigrationContent.length
             );
             // Map the parsedCsv to match the structure of expectedCsvContent
-            const actualPendingMigrationCsvContent = parsedCsvPendingMigration.map(
-              (entry: any) => ({
+            const actualPendingMigrationCsvContent =
+              parsedCsvPendingMigration.map((entry: any) => ({
                 entity_label: entry['Entity Label'],
                 entity_type: entry['Entity Type'],
                 reason: entry['Reason'],
                 status: entry['Status'],
                 type: entry['Type'],
-              })
-            );
+              }));
 
             expect(actualPendingMigrationCsvContent).to.deep.equal(
               expectedPendingMigrationContent
@@ -199,15 +198,14 @@ describe('Maintenance', () => {
           .click();
 
         // Map the expected CSV content to match the structure of the downloaded CSV
-        const expectedCompletedMigrationContent = accountcompletedMaintenance.map(
-          (maintenance) => ({
+        const expectedCompletedMigrationContent =
+          accountcompletedMaintenance.map((maintenance) => ({
             entity_label: maintenance.entity.label,
             entity_type: maintenance.entity.type,
             reason: maintenance.reason,
             status: maintenance.status,
             type: maintenance.type,
-          })
-        );
+          }));
 
         // Read the downloaded CSV and compare its content to the expected CSV content
         cy.readFile(`${downloadsFolder}/${fileName}`)
@@ -221,15 +219,14 @@ describe('Maintenance', () => {
             );
 
             // Map the parsedCsv to match the structure of expectedCsvContent
-            const actualCompletedMigrationCsvContent = parsedCsvCompletedMigration.map(
-              (entry: any) => ({
+            const actualCompletedMigrationCsvContent =
+              parsedCsvCompletedMigration.map((entry: any) => ({
                 entity_label: entry['Entity Label'],
                 entity_type: entry['Entity Type'],
                 reason: entry['Reason'],
                 status: entry['Status'],
                 type: entry['Type'],
-              })
-            );
+              }));
 
             expect(actualCompletedMigrationCsvContent).to.deep.equal(
               expectedCompletedMigrationContent

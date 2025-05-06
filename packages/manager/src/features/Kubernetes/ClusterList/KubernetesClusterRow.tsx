@@ -1,13 +1,14 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Chip, Stack } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
@@ -20,7 +21,6 @@ import { ClusterActionMenu } from './ClusterActionMenu';
 import { ClusterChips } from './ClusterChips';
 
 import type { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 export interface Props {
   cluster: KubernetesCluster;
@@ -69,10 +69,10 @@ export const KubernetesClusterRow = (props: Props) => {
     >
       <TableCell data-qa-cluster-label>
         <Stack
+          alignItems="center"
           direction="row"
           justifyContent="space-between"
           spacing={1}
-          alignItems="center"
         >
           <Link tabIndex={0} to={`/kubernetes/clusters/${cluster.id}/summary`}>
             {cluster.label}
@@ -108,12 +108,12 @@ export const KubernetesClusterRow = (props: Props) => {
       </Hidden>
       <TableCell actionCell>
         <ClusterActionMenu
-          openDialog={() =>
-            openDeleteDialog(cluster.id, cluster.label, pools ?? [])
-          }
           clusterId={cluster.id}
           clusterLabel={cluster.label}
           disabled={isLKEClusterReadOnly}
+          openDialog={() =>
+            openDeleteDialog(cluster.id, cluster.label, pools ?? [])
+          }
         />
       </TableCell>
     </TableRow>

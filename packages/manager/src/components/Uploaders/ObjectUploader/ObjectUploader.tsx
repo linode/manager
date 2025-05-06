@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
+import type { FileRejection } from 'react-dropzone';
 import { debounce } from 'throttle-debounce';
 
 import { fetchBucketAndUpdateCache } from 'src/queries/object-storage/utilities';
@@ -13,11 +14,11 @@ import { sendObjectsQueuedForUploadEvent } from 'src/utilities/analytics/customE
 import { uploadObject } from '../../../features/ObjectStorage/requests';
 import { FileUpload } from '../FileUpload';
 import {
+  curriedObjectUploaderReducer,
+  defaultState,
   MAX_FILE_SIZE_IN_BYTES,
   MAX_NUM_UPLOADS,
   MAX_PARALLEL_UPLOADS,
-  curriedObjectUploaderReducer,
-  defaultState,
   pathOrFileName,
 } from '../reducer';
 import {
@@ -29,7 +30,6 @@ import {
 
 import type { ObjectUploaderAction } from '../reducer';
 import type { AxiosProgressEvent } from 'axios';
-import type { FileRejection } from 'react-dropzone';
 
 interface Props {
   /**
@@ -260,11 +260,11 @@ export const ObjectUploader = React.memo((props: Props) => {
             const path = (upload.file as any).path || upload.file.name;
             return (
               <FileUpload
+                dispatch={dispatch}
+                displayName={upload.file.name}
                 error={
                   upload.status === 'ERROR' ? 'Error uploading object.' : ''
                 }
-                dispatch={dispatch}
-                displayName={upload.file.name}
                 fileName={path}
                 key={idx}
                 overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}

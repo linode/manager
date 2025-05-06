@@ -26,6 +26,7 @@ import {
 import { VPCCreateDrawer } from 'src/features/VPCs/VPCCreateDrawer/VPCCreateDrawer';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 
+import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
@@ -96,6 +97,7 @@ export const VPC = () => {
             Learn more.
           </Link>
         </Typography>
+        {region && !regionSupportsVPCs && <VPCAvailabilityNotice />}
         <Stack spacing={1.5}>
           <Controller
             control={control}
@@ -105,8 +107,8 @@ export const VPC = () => {
                 disabled={!regionSupportsVPCs}
                 errorText={error?.[0].reason ?? fieldState.error?.message}
                 helperText={
-                  regionId && !regionSupportsVPCs
-                    ? 'VPC is not available in the selected region.'
+                  !regionId
+                    ? 'Select a region to see available VPCs.'
                     : undefined
                 }
                 label="Assign VPC"

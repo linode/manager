@@ -27,7 +27,7 @@ const LabelWithTooltip = ({
 );
 
 interface Props {
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   checked: boolean;
   handleToggle: () => void;
   mode: MODE;

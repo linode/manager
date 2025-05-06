@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
 export const buckets: ObjectStorageBucket[] = [
   {

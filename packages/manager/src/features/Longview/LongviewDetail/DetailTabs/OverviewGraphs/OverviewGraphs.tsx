@@ -82,13 +82,13 @@ export const OverviewGraphs = (props: Props) => {
           }}
         >
           <Grid
+            container
+            direction="row"
+            spacing={4}
             sx={{
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
-            container
-            direction="row"
-            spacing={4}
           >
             <Grid
               size={{

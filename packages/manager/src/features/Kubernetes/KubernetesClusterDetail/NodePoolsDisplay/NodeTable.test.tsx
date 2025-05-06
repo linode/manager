@@ -4,10 +4,10 @@ import * as React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodeTable, encryptionStatusTestId } from './NodeTable';
+import { encryptionStatusTestId, NodeTable } from './NodeTable';
 
 import type { Props } from './NodeTable';
 import type { KubernetesTier } from '@linode/api-v4';
@@ -56,13 +56,12 @@ describe('NodeTable', () => {
     return {
       ...actual,
       __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
+      useIsDiskEncryptionFeatureEnabled:
+        mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(() => {
           return {
             isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
           };
-        }
-      ),
+        }),
     };
   });
 
