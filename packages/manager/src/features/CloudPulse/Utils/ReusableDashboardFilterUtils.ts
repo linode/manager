@@ -69,11 +69,11 @@ export const checkMandatoryFiltersSelected = (
   }
 
   return serviceTypeConfig.filters.every(({ configuration }) => {
-    const { filterKey, requiredInViews } = configuration;
+    const { filterKey, neededInViews } = configuration;
 
     // If the filter is not needed or optional, skip it
     if (
-      !requiredInViews.includes(CloudPulseAvailableViews.service) ||
+      !neededInViews.includes(CloudPulseAvailableViews.service) ||
       configuration.isOptional
     ) {
       return true;
@@ -110,14 +110,14 @@ export const checkIfFilterNeededInMetricsCall = (
     const {
       filterKey: configFilterKey,
       isFilterable,
-      requiredInViews,
+      neededInViews,
     } = configuration;
 
     return (
       // Indicates if this filter should be included in the metrics call
       configFilterKey === filterKey &&
       Boolean(isFilterable) &&
-      requiredInViews.includes(CloudPulseAvailableViews.service)
+      neededInViews.includes(CloudPulseAvailableViews.service)
     );
   });
 };
@@ -156,6 +156,6 @@ export const checkIfFilterBuilderNeeded = (dashboard?: Dashboard): boolean => {
   }
 
   return serviceTypeConfig.filters.some(({ configuration }) =>
-    configuration.requiredInViews.includes(CloudPulseAvailableViews.service)
+    configuration.neededInViews.includes(CloudPulseAvailableViews.service)
   );
 };
