@@ -15,6 +15,7 @@ export type Capabilities =
   | 'LA Disk Encryption' // @TODO LDE: Remove once LDE is fully rolled out in every DC
   | 'Linode Interfaces'
   | 'Linodes'
+  | 'Maintenance Policy'
   | 'Managed Databases'
   | 'Metadata'
   | 'NETINT Quadra T1U'
