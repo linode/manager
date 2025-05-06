@@ -7,7 +7,7 @@ import {
   TAGS,
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes } from './models';
+import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
@@ -577,7 +577,11 @@ export const getFilters = (
 ): CloudPulseServiceTypeFilters[] | undefined => {
   return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
-      ? config.configuration.neededInServicePage
-      : config.configuration.filterKey !== RELATIVE_TIME_DURATION
+      ? config.configuration.requiredInViews.includes(
+          CloudPulseAvailableViews.service
+        )
+      : config.configuration.requiredInViews.includes(
+          CloudPulseAvailableViews.central
+        )
   );
 };

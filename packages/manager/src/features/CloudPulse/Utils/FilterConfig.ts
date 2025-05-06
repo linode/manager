@@ -1,5 +1,5 @@
 import { RESOURCE_ID } from './constants';
-import { CloudPulseSelectTypes } from './models';
+import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
@@ -17,8 +17,8 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: false,
         isMetricsFilter: false,
         name: 'Region',
-        neededInServicePage: false,
         priority: 1,
+        requiredInViews: [CloudPulseAvailableViews.central],
       },
       name: 'Region',
     },
@@ -32,7 +32,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMultiSelect: true,
         isOptional: true,
         name: 'Tags',
-        neededInServicePage: false,
+        requiredInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Tags',
         priority: 4,
       },
@@ -47,7 +47,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: true,
         isMultiSelect: true,
         name: 'Resources',
-        neededInServicePage: false,
+        requiredInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Resources',
         priority: 2,
       },
@@ -61,7 +61,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: true,
         isMultiSelect: false,
         name: TIME_DURATION,
-        neededInServicePage: false,
+        requiredInViews: [],
         placeholder: 'Select a Duration',
         priority: 3,
       },
@@ -82,7 +82,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
         name: 'Database Engine',
-        neededInServicePage: false,
+        requiredInViews: [CloudPulseAvailableViews.central],
         options: [
           {
             id: 'mysql',
@@ -107,8 +107,8 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: false,
         isMetricsFilter: false,
         name: 'Region',
-        neededInServicePage: false,
         priority: 1,
+        requiredInViews: [CloudPulseAvailableViews.central],
       },
       name: 'Region',
     },
@@ -121,7 +121,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: true,
         isMultiSelect: true,
         name: 'Database Clusters',
-        neededInServicePage: false,
+        requiredInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Database Clusters',
         priority: 3,
       },
@@ -135,7 +135,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: true,
         isMultiSelect: false,
         name: TIME_DURATION,
-        neededInServicePage: false, // we will have a static time duration component, no need render from filter builder
+        requiredInViews: [], // we will have a static time duration component, no need render from filter builder
         placeholder: 'Select a Duration',
         priority: 4,
       },
@@ -150,7 +150,10 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false, // if it is false, it will go as a part of filter params, else global filter
         isMultiSelect: false,
         name: 'Node Type',
-        neededInServicePage: true,
+        requiredInViews: [
+          CloudPulseAvailableViews.service,
+          CloudPulseAvailableViews.central,
+        ],
         placeholder: 'Select a Node Type',
         priority: 5,
       },
