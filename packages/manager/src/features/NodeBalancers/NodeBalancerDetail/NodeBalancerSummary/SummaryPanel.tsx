@@ -3,7 +3,9 @@ import {
   useNodeBalancerQuery,
   useNodeBalancersFirewallsQuery,
   useNodebalancerUpdateMutation,
+  useNodeBalancerVPCConfigsBetaQuery,
   useRegionsQuery,
+  useVPCQuery,
 } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
@@ -50,6 +52,36 @@ export const SummaryPanel = () => {
     grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
+  });
+
+  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(Number(id));
+
+  const { data: vpcDetails } = useVPCQuery(
+    Number(vpcConfig?.data[0].vpc_id) || -1,
+    Boolean(vpcConfig?.data[0].vpc_id)
+  );
+
+  const nbVPCConfigs = vpcConfig?.data ?? [];
+  const subnets = vpcDetails?.subnets ?? [];
+
+  // Map subnets by ID for fast lookup
+  const subnetMap = subnets.reduce<Record<number, (typeof subnets)[0]>>(
+    (map, subnet) => {
+      map[subnet.id] = subnet;
+      return map;
+    },
+    []
+  );
+
+  // Merge VPC config data with subnet labels
+  const mergedSubnets = nbVPCConfigs.map((config) => {
+    const subnet = subnetMap[config.subnet_id];
+    return {
+      id: config.subnet_id,
+      label: subnet?.label ?? `Subnet ${config.subnet_id}`,
+      ipv4Range: config.ipv4_range,
+      oldipv4: subnet?.ipv4,
+    };
   });
 
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
@@ -192,6 +224,57 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
+      <StyledSummarySection>
+        <StyledTitle
+          data-qa-title
+          sx={{ display: 'flex', justifyContent: 'space-between' }}
+          variant="h3"
+        >
+          VPC
+          <Typography>
+            <s>
+              <Link to={`nodebalancers/${Number(id)}/summary`}>Edit</Link>
+            </s>
+          </Typography>
+        </StyledTitle>
+
+        <StyledSection>
+          <Typography data-qa-ports variant="body1">
+            <strong>VPC:</strong>{' '}
+            {vpcConfig?.data.length === 0
+              ? undefined
+              : vpcConfig?.data.map((vpc, i) => (
+                  <React.Fragment key={vpc.id}>
+                    <Link className="secondaryLink" to={`/vpcs/${vpc.vpc_id}`}>
+                      {vpcDetails?.label}
+                    </Link>
+                    {i < vpcConfig.data.length - 1 ? ', ' : ''}
+                  </React.Fragment>
+                ))}
+          </Typography>
+        </StyledSection>
+
+        <StyledSection>
+          <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+            <strong>Subnets:</strong>
+          </Typography>
+
+          {mergedSubnets.map((subnet) => (
+            <React.Fragment key={subnet.id}>
+              <Typography
+                style={{ wordBreak: 'break-word', marginTop: '8px' }}
+                variant="body1"
+              >
+                {`${subnet.label}:`}
+              </Typography>
+              <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+                {subnet.ipv4Range} <s>{`(${subnet.oldipv4})`}</s>
+              </Typography>
+            </React.Fragment>
+          ))}
+        </StyledSection>
+      </StyledSummarySection>
+
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags
