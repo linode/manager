@@ -17,7 +17,9 @@ export const StyledAkamaiLogo = styled(AkamaiLogo, {
 export const StyledWarningIcon = styled(WarningOutlinedIcon, {
   label: 'StyledWarningIcon',
 })(({ theme }) => ({
-  color: theme.tokens.color.Neutrals.Black,
+  '& > path': {
+    fill: theme.tokens.color.Neutrals.Black,
+  },
 }));
 
 export const StyledBanner = styled(Stack, {
