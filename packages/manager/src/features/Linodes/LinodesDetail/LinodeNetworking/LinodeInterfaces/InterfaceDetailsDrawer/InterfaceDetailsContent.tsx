@@ -12,7 +12,7 @@ import { VPCInterfaceDetailsContent } from './VPCInterfaceDetailsContent';
 import type { LinodeInterface } from '@linode/api-v4';
 
 export const InterfaceDetailsContent = (props: LinodeInterface) => {
-  const { created, default_route, id, mac_address, updated } = props;
+  const { created, default_route, id, mac_address, updated, version } = props;
   const type = getLinodeInterfaceType(props);
 
   return (
@@ -48,6 +48,12 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       {props.public && <PublicInterfaceDetailsContent {...props.public} />}
       {props.vpc && <VPCInterfaceDetailsContent {...props.vpc} />}
       {props.vlan && <VlanInterfaceDetailsContent {...props.vlan} />}
+      <Stack>
+        <Typography>
+          <strong>Version</strong>
+        </Typography>
+        <Typography>{version}</Typography>
+      </Stack>
       <Stack>
         <Typography>
           <strong>Created</strong>

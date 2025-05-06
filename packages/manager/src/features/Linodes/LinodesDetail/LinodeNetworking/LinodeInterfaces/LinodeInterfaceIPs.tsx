@@ -20,7 +20,7 @@ export const LinodeInterfaceIPs = ({ linodeInterface }: Props) => {
   }
 
   return (
-    <Stack direction="row" spacing={1.5}>
+    <Stack alignItems={'center'} direction="row" spacing={1.5}>
       <MaskableText isToggleable text={primary} />
       {ips.length > 0 && (
         <ShowMore
