@@ -333,7 +333,7 @@ export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
   serviceType: string;
-  type: AlertDefinitionType;
+  type: AlertDefinitionType | null;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';

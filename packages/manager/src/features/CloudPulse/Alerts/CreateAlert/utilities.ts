@@ -69,6 +69,7 @@ export const filterEditFormValues = (
     serviceType,
     severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
+    type: formValues.type,
   };
 };
 
