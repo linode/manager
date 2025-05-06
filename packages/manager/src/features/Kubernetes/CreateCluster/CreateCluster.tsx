@@ -48,7 +48,7 @@ import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
-import { stringToExtendedIP } from 'src/utilities/ipUtils';
+import { stringToExtendedIP, validateIPs } from 'src/utilities/ipUtils';
 import {
   DOCS_LINK_LABEL_DC_PRICING,
   UNKNOWN_PRICE,
@@ -537,10 +537,18 @@ export const CreateCluster = () => {
                 enableControlPlaneACL={controlPlaneACL}
                 errorText={errorMap.control_plane}
                 handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                  setIPv4Addr(newIpV4Addr);
+                  const validatedIPs = validateIPs(newIpV4Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  });
+                  setIPv4Addr(validatedIPs);
                 }}
                 handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                  setIPv6Addr(newIpV6Addr);
+                  const validatedIPs = validateIPs(newIpV6Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv6 address.',
+                  });
+                  setIPv6Addr(validatedIPs);
                 }}
                 handleIsAcknowledgementChecked={(isChecked: boolean) => {
                   setIsACLAcknowledgementChecked(isChecked);

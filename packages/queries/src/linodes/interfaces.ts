@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { firewallQueries } from '../firewalls';
 import { networkingQueries } from '../networking';
+import { vpcQueries } from '../vpcs';
 import { linodeQueries } from './linodes';
 
 import type {
@@ -240,13 +241,30 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
   return useMutation<UpgradeInterfaceData, APIError[], UpgradeInterfacePayload>(
     {
       mutationFn: (data) => upgradeToLinodeInterface(linodeId, data),
-      onSuccess() {
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId).queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-        });
+      onSuccess(upgradeData) {
+        // only invalidate queries if this is an actual upgrade, not a dry run
+        if (upgradeData.dry_run === false) {
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId).queryKey,
+          });
+
+          // Simlar to deleting the interface - because we don't easily know the interface's Firewall here,
+          // we'll just invalidate all firewall queries.
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewall._def,
+          });
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+
+          for (const iface of upgradeData.interfaces) {
+            if (iface.vpc) {
+              queryClient.invalidateQueries({
+                queryKey: vpcQueries.vpc(iface.vpc.vpc_id).queryKey,
+              });
+            }
+          }
+        }
       },
     },
   );

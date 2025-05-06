@@ -82,7 +82,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, getByText } =
+    const { getAllByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -97,7 +97,7 @@ describe('SubnetLinodeRow', () => {
         )
       );
 
-    // Loading state should render
+    // Loading states should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -109,7 +109,6 @@ describe('SubnetLinodeRow', () => {
     );
 
     getAllByText('10.0.0.0');
-    getByText(mockFirewall0);
 
     const plusChipButton = getAllByRole('button')[1];
     expect(plusChipButton).toHaveTextContent('+1');
@@ -123,6 +122,8 @@ describe('SubnetLinodeRow', () => {
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
+    const firewall = await findByText(mockFirewall0);
+    expect(firewall).toBeVisible();
   });
 
   it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
@@ -144,7 +145,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, getByText } =
+    const { getAllByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -172,7 +173,8 @@ describe('SubnetLinodeRow', () => {
 
     getAllByText('10.0.0.0');
     getAllByText('10.0.0.1');
-    getByText(mockFirewall0);
+    const firewall = await findByText(mockFirewall0);
+    expect(firewall).toBeVisible();
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
