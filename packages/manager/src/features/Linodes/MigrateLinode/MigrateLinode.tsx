@@ -28,6 +28,7 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { MBpsInterDC } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
@@ -226,6 +227,8 @@ export const MigrateLinode = React.memo((props: Props) => {
     addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
 
+  const isMTCLinode = Boolean(type && isMTCPlan(type));
+
   return (
     <Dialog
       fullHeight
@@ -267,6 +270,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         currentRegion={region}
         handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
+        isMTCLinode={isMTCLinode}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
       />
