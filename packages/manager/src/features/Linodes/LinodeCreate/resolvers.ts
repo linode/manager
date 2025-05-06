@@ -93,7 +93,7 @@ export const getLinodeCreateResolver = (
     // If
     // - we're dealing with an employee account
     // - and the employee did not bypass/override the Firewall warning
-    // - and their networking configuration requires a firewall
+    // - and their networking configuration "requires" a firewall
     if (
       context?.secureVMNoticesEnabled &&
       !values.firewallOverride &&
