@@ -2,6 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
+  AlertDefinitionType,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -99,6 +100,12 @@ export const dimensionOperatorOptions: Item<
     label: 'Starts with',
     value: 'startswith',
   },
+];
+
+export const entityGroupingOptions: Item<string, AlertDefinitionType>[] = [
+  { label: 'Entity Level', value: 'user' },
+  { label: 'Account Level', value: 'account-user' },
+  { label: 'Region Level', value: 'region-user' },
 ];
 
 export const textFieldOperators = ['endswith', 'startswith'];

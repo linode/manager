@@ -280,6 +280,7 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions: triggerConditions,
+    type,
   }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
@@ -300,6 +301,7 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions: triggerConditions,
+    type,
   };
 };
 

@@ -8,7 +8,11 @@ export type DimensionFilterOperatorType =
   | 'eq'
   | 'neq'
   | 'startswith';
-export type AlertDefinitionType = 'system' | 'user';
+export type AlertDefinitionType =
+  | 'account-user'
+  | 'region-user'
+  | 'system'
+  | 'user';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -329,6 +333,7 @@ export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
   serviceType: string;
+  type: AlertDefinitionType | null;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';

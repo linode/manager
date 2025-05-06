@@ -1,3 +1,4 @@
+import { type AlertSeverityType } from '@linode/api-v4';
 import {
   createAlertDefinitionSchema,
   metricCriteria,
@@ -5,7 +6,7 @@ import {
 } from '@linode/validation';
 import { array, mixed, number, object, string } from 'yup';
 
-import type { AlertSeverityType } from '@linode/api-v4';
+import type { AlertDefinitionType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -80,6 +81,10 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
     trigger_conditions: triggerConditionSchema,
+    type: mixed<AlertDefinitionType>()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
   })
 );
 

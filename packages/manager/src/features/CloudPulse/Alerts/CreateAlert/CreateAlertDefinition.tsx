@@ -24,9 +24,11 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
+import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroupingSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertRegions } from './Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
@@ -62,6 +64,7 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
+  type: 'user',
 };
 
 const overrides = [
@@ -111,7 +114,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-
+  const entityGroupingWatcher = useWatch({ control, name: 'type' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -138,7 +141,6 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-
   const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
     if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
@@ -210,7 +212,13 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <CloudPulseModifyAlertResources name="entity_ids" />
+            <AlertEntityGroupingSelect name="type" />
+            {entityGroupingWatcher === 'user' && (
+              <CloudPulseModifyAlertResources name="entity_ids" />
+            )}
+            {entityGroupingWatcher === 'region-user' && (
+              <CloudPulseModifyAlertRegions name="entity_ids" />
+            )}
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
