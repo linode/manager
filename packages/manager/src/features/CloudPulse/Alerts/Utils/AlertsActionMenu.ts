@@ -11,10 +11,10 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export const getAlertTypeToActionsList = (
   {
+    handleDelete,
     handleDetails,
     handleEdit,
     handleStatusChange,
-    handleDelete,
   }: ActionHandlers,
   alertStatus: AlertStatusType
 ): Record<AlertDefinitionType, Action[]> => ({

@@ -1,6 +1,7 @@
 import { Global } from '@linode/design-language-system';
 import { Box, IconButton, Tooltip } from '@linode/ui';
-import { Hidden, styled } from '@mui/material';
+import { Hidden } from '@linode/ui';
+import { styled } from '@mui/material';
 import React from 'react';
 
 import PinFilledIcon from 'src/assets/icons/pin-filled.svg';

@@ -83,10 +83,10 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
   const { mutateAsync: deleteAlertDefinition } =
     useDeleteAlertDefinitionMutation();
+
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
-
   const [deleteState, setDeleteState] = React.useState({
     isDialogOpen: false,
     isDeleting: false,
@@ -173,6 +173,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     },
     [deleteAlertDefinition]
   );
+
   const isEnabled = selectedAlert.status !== 'disabled';
 
   const handleScrollAndPageChange = (

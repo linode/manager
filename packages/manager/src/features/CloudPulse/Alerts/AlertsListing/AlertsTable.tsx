@@ -36,10 +36,10 @@ interface UngroupedAlertsProps {
 
 export const AlertsTable = ({
   alerts,
+  handleDelete,
   handleDetails,
   handleEdit,
   handleStatusChange,
-  handleDelete,
   services,
 }: UngroupedAlertsProps) => {
   return (
@@ -48,10 +48,10 @@ export const AlertsTable = ({
         <AlertTableRow
           alert={alert}
           handlers={{
+            handleDelete: () => handleDelete(alert),
             handleDetails: () => handleDetails(alert),
             handleEdit: () => handleEdit(alert),
             handleStatusChange: () => handleStatusChange(alert),
-            handleDelete: () => handleDelete(alert),
           }}
           key={alert.id}
           services={services}

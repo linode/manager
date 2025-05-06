@@ -1,10 +1,10 @@
 import {
   addEntityToAlert,
   createAlertDefinition,
+  deleteAlertDefinition,
   deleteEntityFromAlert,
   editAlertDefinition,
 } from '@linode/api-v4/lib/cloudpulse';
-import { deleteAlertDefinition } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
 import {
   keepPreviousData,
@@ -19,16 +19,12 @@ import type {
   Alert,
   AlertServiceType,
   CreateAlertDefinitionPayload,
+  DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
   NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
-import type {
-  APIError,
-  DeleteAlertPayload,
-  Filter,
-  Params,
-} from '@linode/api-v4/lib/types';
+import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
 export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   const queryClient = useQueryClient();
