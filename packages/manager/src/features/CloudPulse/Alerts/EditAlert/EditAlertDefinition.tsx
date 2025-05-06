@@ -19,6 +19,7 @@ import {
 } from '../constants';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { AlertEntityGroupingSelect } from '../CreateAlert/GeneralInformation/AlertEntityGroupingSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
@@ -81,7 +82,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { mutateAsync: editAlert } = useEditAlertDefinition();
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
-
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -179,6 +179,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
+          <AlertEntityGroupingSelect disabled name="type" />
           <CloudPulseModifyAlertResources name="entity_ids" />
           <MetricCriteriaField
             name="rule_criteria.rules"
