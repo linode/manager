@@ -144,7 +144,7 @@ export const Select = <T extends SelectOption = SelectOption>(
     hideLabel = false,
     keepSearchEnabledOnMobile = false,
     label,
-    labelPosition,
+    labelPosition = 'top',
     listItemProps,
     loading = false,
     noOptionsText = 'No options available',
