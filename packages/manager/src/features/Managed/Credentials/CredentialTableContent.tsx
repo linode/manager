@@ -1,5 +1,3 @@
-import { ManagedCredential } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
@@ -8,16 +6,17 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 
 import CredentialRow from './CredentialRow';
 
+import type { ManagedCredential } from '@linode/api-v4/lib/managed';
+import type { APIError } from '@linode/api-v4/lib/types';
+
 interface CredentialTableContentProps {
   credentials: ManagedCredential[];
   error?: APIError[] | null;
   loading: boolean;
-  openDialog: (id: number, label: string) => void;
-  openForEdit: (id: number) => void;
 }
 
 export const CredentialTableContent = (props: CredentialTableContentProps) => {
-  const { credentials, error, loading, openDialog, openForEdit } = props;
+  const { credentials, error, loading } = props;
   if (loading) {
     return <TableRowLoading columns={3} />;
   }
@@ -41,8 +40,6 @@ export const CredentialTableContent = (props: CredentialTableContentProps) => {
         <CredentialRow
           credential={credential}
           key={`managed-credential-row-${idx}`}
-          openDialog={openDialog}
-          openForEdit={openForEdit}
         />
       ))}
     </>

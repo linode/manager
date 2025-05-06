@@ -1,10 +1,10 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { accountQueries, regionQueries } from '@linode/queries';
-import { isNullOrUndefined } from '@linode/utilities';
+import type { FieldErrors, Resolver } from 'react-hook-form';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
 
-import { getLinodeInterfacePayload } from './Networking/utilities';
+import { getCleanedLinodeInterfaceValues } from './Networking/utilities';
 import {
   CreateLinodeFromBackupSchema,
   CreateLinodeFromMarketplaceAppSchema,
@@ -19,7 +19,6 @@ import type {
 } from './utilities';
 import type { LinodeCreateType } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldErrors, Resolver } from 'react-hook-form';
 
 export const getLinodeCreateResolver = (
   tab: LinodeCreateType | undefined,
@@ -34,7 +33,7 @@ export const getLinodeCreateResolver = (
     if (context?.isLinodeInterfacesEnabled) {
       values.interfaces = [];
       values.linodeInterfaces = values.linodeInterfaces.map(
-        getLinodeInterfacePayload
+        getCleanedLinodeInterfaceValues
       );
     } else {
       values.linodeInterfaces = [];
@@ -88,15 +87,22 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    const secureVMViolation =
-      context?.secureVMNoticesEnabled &&
-      !values.firewallOverride &&
-      isNullOrUndefined(values.firewall_id);
+    // If we're dealing with an employee account and they did not bypass
+    // the firewall banner....
+    if (context?.secureVMNoticesEnabled && !values.firewallOverride) {
+      // Get the selected Firewall ID depending on what Interface Generation is selected
+      const firewallId =
+        values.interface_generation === 'linode'
+          ? values.linodeInterfaces[0].firewall_id
+          : values.firewall_id;
 
-    if (secureVMViolation) {
-      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
-        type: 'validate',
-      };
+      if (!firewallId) {
+        (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+          // This message does not get surfaced, see FirewallAuthorization.tsx
+          message: 'You must select a Firewall or bypass the Firewall policy.',
+          type: 'validate',
+        };
+      }
     }
 
     if (errors) {

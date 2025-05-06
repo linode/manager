@@ -8,11 +8,11 @@ import {
   Typography,
 } from '@linode/ui';
 import { FormLabel, styled } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { validateIPs } from 'src/utilities/ipUtils';
 
 import {
   CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY,
@@ -67,30 +67,26 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             ? CREATE_CLUSTER_ENTERPRISE_TIER_ACL_COPY
             : CREATE_CLUSTER_STANDARD_TIER_ACL_COPY}
         </Typography>
-        <FormControlLabel
-          control={
-            <StyledACLToggle
-              checked={enableControlPlaneACL}
-              disabled={isEnterpriseCluster}
-              name="ipacl-checkbox"
-              onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
-            />
-          }
-          label="Enable Control Plane ACL"
-        />
+        <Grid>
+          <FormControlLabel
+            control={
+              <StyledACLToggle
+                checked={enableControlPlaneACL}
+                disabled={isEnterpriseCluster}
+                name="ipacl-checkbox"
+                onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
+              />
+            }
+            label="Enable Control Plane ACL"
+          />
+        </Grid>
       </FormControl>
       {enableControlPlaneACL && (
         <Box marginBottom={2}>
           <Box sx={{ marginBottom: 1, maxWidth: 450 }}>
             <MultipleIPInput
-              onBlur={(_ips: ExtendedIP[]) => {
-                const validatedIPs = validateIPs(_ips, {
-                  allowEmptyAddress: true,
-                  errorMessage: 'Must be a valid IPv4 address.',
-                });
-                handleIPv4Change(validatedIPs);
-              }}
               buttonText="Add IPv4 Address"
+              disabled={isAcknowledgementChecked}
               ips={ipV4Addr}
               isLinkStyled
               onChange={handleIPv4Change}
@@ -98,14 +94,8 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             />
             <Box marginTop={2}>
               <MultipleIPInput
-                onBlur={(_ips: ExtendedIP[]) => {
-                  const validatedIPs = validateIPs(_ips, {
-                    allowEmptyAddress: true,
-                    errorMessage: 'Must be a valid IPv6 address.',
-                  });
-                  handleIPv6Change(validatedIPs);
-                }}
                 buttonText="Add IPv6 Address"
+                disabled={isAcknowledgementChecked}
                 ips={ipV6Addr}
                 isLinkStyled
                 onChange={handleIPv6Change}
@@ -117,10 +107,10 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             <FormControlLabel
               control={
                 <Checkbox
+                  name="acl-acknowledgement"
                   onChange={() =>
                     handleIsAcknowledgementChecked(!isAcknowledgementChecked)
                   }
-                  name="acl-acknowledgement"
                 />
               }
               data-qa-checkbox="acl-acknowledgement"

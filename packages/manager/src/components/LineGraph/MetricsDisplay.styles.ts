@@ -10,6 +10,7 @@ export const StyledLegend = styled(Button, {
   justifyContent: 'flex-start',
   padding: 0,
   textAlign: 'left',
+  textTransform: 'none',
   [theme.breakpoints.down('sm')]: {
     padding: 0,
   },
@@ -19,8 +20,8 @@ export const StyledLegend = styled(Button, {
       backgroundColor: hidden
         ? theme.color.disabledText
         : theme.graphs[legendColor]
-        ? theme.graphs[legendColor]
-        : legendColor,
+          ? theme.graphs[legendColor]
+          : legendColor,
       content: '""',
       display: 'inline-block',
       flexShrink: 0,

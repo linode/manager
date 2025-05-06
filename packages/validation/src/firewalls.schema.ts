@@ -205,7 +205,7 @@ export const UpdateFirewallSchema = object().shape({
 
 export const FirewallDeviceSchema = object({
   type: string()
-    .oneOf(['linode', 'nodebalancer'])
+    .oneOf(['linode', 'nodebalancer', 'interface'])
     .required('Device type is required.'),
   id: number().required('ID is required.'),
 });

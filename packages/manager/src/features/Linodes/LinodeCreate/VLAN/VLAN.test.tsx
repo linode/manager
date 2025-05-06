@@ -2,8 +2,7 @@ import { regionFactory } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { VLAN } from './VLAN';
@@ -37,8 +36,8 @@ describe('VLAN', () => {
     const region = regionFactory.build({ capabilities: ['Vlans'] });
 
     server.use(
-      http.get('*/v4/regions', () => {
-        return HttpResponse.json(makeResourcePage([region]));
+      http.get(`*/v4/regions/${region.id}`, () => {
+        return HttpResponse.json(region);
       })
     );
 

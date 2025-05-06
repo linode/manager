@@ -3,8 +3,7 @@ import {
   useAllTagsQuery,
   useProfile,
 } from '@linode/queries';
-import { Autocomplete, Chip } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Autocomplete, Chip, CloseIcon } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { concat } from 'ramda';
 import * as React from 'react';
@@ -60,15 +59,8 @@ export interface TagsInputProps {
 }
 
 export const TagsInput = (props: TagsInputProps) => {
-  const {
-    disabled,
-    hideLabel,
-    label,
-    noMarginTop,
-    onChange,
-    tagError,
-    value,
-  } = props;
+  const { disabled, hideLabel, label, noMarginTop, onChange, tagError, value } =
+    props;
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 

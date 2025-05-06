@@ -1,12 +1,13 @@
 import { useVolumeQuery, useVolumesQuery } from '@linode/queries';
 import {
   CircleProgress,
+  CloseIcon,
   ErrorState,
   IconButton,
   InputAdornment,
+  Notice,
   TextField,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
@@ -23,6 +24,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -71,6 +73,8 @@ export const VolumesLanding = () => {
   });
   const { query } = search;
 
+  const { _isRestrictedUser } = useAccountManagement();
+
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -90,7 +94,12 @@ export const VolumesLanding = () => {
     }),
   };
 
-  const { data: volumes, error, isFetching, isLoading } = useVolumesQuery(
+  const {
+    data: volumes,
+    error,
+    isFetching,
+    isLoading,
+  } = useVolumesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -98,9 +107,8 @@ export const VolumesLanding = () => {
     filter
   );
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const { data: selectedVolume, isFetching: isFetchingVolume } = useDialogData({
     enabled: !!params.volumeId,
@@ -166,6 +174,16 @@ export const VolumesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
+      {_isRestrictedUser && (
+        <Notice
+          text={getRestrictedResourceText({
+            action: ['create', 'edit'],
+            resourceType: 'Volumes',
+            isSingular: false,
+          })}
+          variant="warning"
+        />
+      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Volumes',

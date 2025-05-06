@@ -17,18 +17,20 @@ interface Props {
 export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
   const { data, error, isPending } = useLinodeInterfacesQuery(linodeId);
 
+  const cols = 9;
+
   if (isPending) {
-    return <TableRowLoading columns={8} rows={1} />;
+    return <TableRowLoading columns={cols} rows={1} />;
   }
 
   if (error) {
-    return <TableRowError colSpan={8} message={error?.[0].reason} />;
+    return <TableRowError colSpan={cols} message={error?.[0].reason} />;
   }
 
   if (data.interfaces.length === 0) {
     return (
       <TableRowEmpty
-        colSpan={8}
+        colSpan={cols}
         message="No Network Interfaces exist on this Linode."
       />
     );

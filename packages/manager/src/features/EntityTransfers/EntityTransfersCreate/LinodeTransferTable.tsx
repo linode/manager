@@ -85,6 +85,7 @@ export const LinodeTransferTable = React.memo((props: Props) => {
         lastUpdated={dataUpdatedAt}
         length={data?.results ?? 0}
         loading={isLoading}
+        loadingProps={{ columns: columns.length + 1 }}
       >
         {linodesCurrentPage.map((thisLinode) => (
           <LinodeRow

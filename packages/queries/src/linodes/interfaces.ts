@@ -7,6 +7,9 @@ import {
 } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { firewallQueries } from '../firewalls';
+import { networkingQueries } from '../networking';
+import { vpcQueries } from '../vpcs';
 import { linodeQueries } from './linodes';
 
 import type {
@@ -99,10 +102,40 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
   return useMutation<LinodeInterface, APIError[], CreateLinodeInterfacePayload>(
     {
       mutationFn: (data) => createLinodeInterface(linodeId, data),
-      onSuccess() {
+      onSuccess(linodeInterface, variables) {
+        // Invalidate the list of interfaces
         queryClient.invalidateQueries({
           queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
         });
+
+        // Invalidate the Linode's IPs because adding a new interface likely adds IPs to the Linode
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+        });
+
+        // Invaliate networking queries because IPs likely changed
+        queryClient.invalidateQueries({
+          queryKey: networkingQueries._def,
+        });
+
+        // Invalidate the Linode itself in case IPs changed
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+          exact: true,
+        });
+
+        // If a Firewall is attached at the time of creation...
+        if (variables.firewall_id) {
+          // Invalidate all Firewall lists
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+
+          // Invalidate the specific firewall
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+          });
+        }
       },
     },
   );
@@ -125,16 +158,7 @@ export const useUpdateLinodeInterfaceMutation = (
       ...options,
       onSuccess(linodeInterface, variables, context) {
         options?.onSuccess?.(linodeInterface, variables, context);
-        // Invalidate this Linode's interface queries
-        queryClient.invalidateQueries({
-          queryKey:
-            linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces
-              .queryKey,
-        });
-        // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
-        });
+
         // Set the specific interface in the cache
         queryClient.setQueryData(
           linodeQueries
@@ -142,6 +166,29 @@ export const useUpdateLinodeInterfaceMutation = (
             ._ctx.interfaces._ctx.interface(linodeInterface.id).queryKey,
           linodeInterface,
         );
+
+        // Invalidate this Linode's interface queries
+        queryClient.invalidateQueries({
+          queryKey:
+            linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interfaces
+              .queryKey,
+        });
+
+        // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+        });
+
+        // Invaliate networking queries because IPs likely changed
+        queryClient.invalidateQueries({
+          queryKey: networkingQueries._def,
+        });
+
+        // Invalidate the Linode itself
+        queryClient.invalidateQueries({
+          queryKey: linodeQueries.linode(linodeId).queryKey,
+          exact: true,
+        });
       },
     },
   );
@@ -157,8 +204,33 @@ export const useDeleteLinodeInterfaceMutation = (
     ...options,
     onSuccess(...params) {
       options?.onSuccess?.(...params);
+
+      // remove the cached interface
+      queryClient.removeQueries({
+        queryKey: linodeQueries
+          .linode(linodeId)
+          ._ctx.interfaces._ctx.interface(params[1]).queryKey,
+      });
+
+      // Invalidate the interfaces list
       queryClient.invalidateQueries({
         queryKey: linodeQueries.linode(linodeId)._ctx.interfaces.queryKey,
+      });
+
+      // Invalidate a Linode's IPs because this edit action can change a Linode's IPs
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
+
+      // Because we don't easily know the interface's Firewall here,
+      // we'll just invalidate all firewall queries.
+      // If this ever needs to be optimized, we can fetch the interface's firewalls before deletion,
+      // and do a more granular invalidation knowing the firewall ID.
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewall._def,
+      });
+      queryClient.invalidateQueries({
+        queryKey: firewallQueries.firewalls.queryKey,
       });
     },
   });
@@ -169,13 +241,30 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
   return useMutation<UpgradeInterfaceData, APIError[], UpgradeInterfacePayload>(
     {
       mutationFn: (data) => upgradeToLinodeInterface(linodeId, data),
-      onSuccess() {
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId).queryKey,
-        });
-        queryClient.invalidateQueries({
-          queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-        });
+      onSuccess(upgradeData) {
+        // only invalidate queries if this is an actual upgrade, not a dry run
+        if (upgradeData.dry_run === false) {
+          queryClient.invalidateQueries({
+            queryKey: linodeQueries.linode(linodeId).queryKey,
+          });
+
+          // Simlar to deleting the interface - because we don't easily know the interface's Firewall here,
+          // we'll just invalidate all firewall queries.
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewall._def,
+          });
+          queryClient.invalidateQueries({
+            queryKey: firewallQueries.firewalls.queryKey,
+          });
+
+          for (const iface of upgradeData.interfaces) {
+            if (iface.vpc) {
+              queryClient.invalidateQueries({
+                queryKey: vpcQueries.vpc(iface.vpc.vpc_id).queryKey,
+              });
+            }
+          }
+        }
       },
     },
   );

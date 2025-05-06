@@ -144,6 +144,7 @@ const FirewallLanding = () => {
         }`}
       />
       <LandingHeader
+        breadcrumbProps={{ pathname: '/firewalls' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -151,6 +152,9 @@ const FirewallLanding = () => {
             resourceType: 'Firewalls',
           }),
         }}
+        disabledCreateButton={isFirewallsCreationRestricted}
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
+        entity="Firewall"
         extraActions={
           secureVMNoticesEnabled && flags.secureVmCopy?.generateActionText ? (
             <Button
@@ -161,10 +165,6 @@ const FirewallLanding = () => {
             </Button>
           ) : undefined
         }
-        breadcrumbProps={{ pathname: '/firewalls' }}
-        disabledCreateButton={isFirewallsCreationRestricted}
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
-        entity="Firewall"
         onButtonClick={onOpenCreateDrawer}
         title="Firewalls"
       />
@@ -176,6 +176,7 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="label"
+              sx={{ width: '20%' }}
             >
               Label
             </TableSortCell>
@@ -184,14 +185,15 @@ const FirewallLanding = () => {
               direction={order}
               handleClick={handleOrderChange}
               label="status"
+              sx={{ width: '10%' }}
             >
               Status
             </TableSortCell>
             <Hidden smDown>
-              <TableCell>Rules</TableCell>
-              <TableCell>Services</TableCell>
+              <TableCell sx={{ width: '15%' }}>Rules</TableCell>
+              <TableCell sx={{ width: '45%' }}>Services</TableCell>
             </Hidden>
-            <TableCell />
+            <TableCell sx={{ width: '10%' }} />
           </TableRow>
         </TableHead>
         <TableBody>

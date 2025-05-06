@@ -13,7 +13,7 @@ import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
-import { useInterfaceAndFirewallDataForLinode } from '../../../hooks/useInterfaceAndFirewallDataForLinode';
+import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
 import {
   VPC_REBOOT_MESSAGE,
   WARNING_ICON_UNRECOMMENDED_CONFIG,
@@ -25,10 +25,13 @@ import {
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
+import {
+  ConfigInterfaceFirewallCell,
+  LinodeInterfaceFirewallCell,
+} from './SubnetLinodeRowFirewallsCell';
 
 import type {
   APIError,
-  Firewall,
   Interface,
   Linode,
   LinodeInterface,
@@ -82,18 +85,16 @@ export const SubnetLinodeRow = (props: Props) => {
 
   /**
    * We need to handle support for both legacy interfaces and Linode interfaces.
-   * The below hook gives us the relevant firewall and interface data depending on
+   * The below hook gives us the relevant interface data depending on
    * interface type.
    */
-  const { firewallsInfo, interfacesInfo } =
-    useInterfaceAndFirewallDataForLinode({
-      configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
-      interfaceId,
-      isLinodeInterface,
-      linodeId,
-    });
+  const { interfacesInfo } = useInterfaceDataForLinode({
+    configId, // subnet.linodes.interfaces data now includes config_id, so we no longer have to fetch all configs
+    interfaceId,
+    isLinodeInterface,
+    linodeId,
+  });
 
-  const { attachedFirewalls, firewallsError, firewallsLoading } = firewallsInfo;
   const {
     config, // undefined if this Linode is using Linode Interfaces. Used to determine an unrecommended configuration
     configInterface, // undefined if this Linode is using Linode Interfaces
@@ -158,16 +159,16 @@ export const SubnetLinodeRow = (props: Props) => {
         sx={{ alignItems: 'center', display: 'flex' }}
       >
         <TooltipIcon
-          text={
-            <Typography>
-              {isLinodeInterface
-                ? '@TODO Linode Interfaces - confirm copy? This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
-                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
-            </Typography>
-          }
           icon={<StyledWarningIcon />}
           status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
+          text={
+            <Typography>
+              {isLinodeInterface
+                ? 'This Linode’s Network Interfaces setup is not recommended. To avoid potential connectivity issues, set this Linode’s VPC interface as the default IPv4 route.'
+                : 'This Linode is using a configuration profile with a Networking setting that is not recommended. To avoid potential connectivity issues, edit the Linode’s configuration.'}
+            </Typography>
+          }
         />
         {linkifiedLinodeLabel}
       </Box>
@@ -225,28 +226,31 @@ export const SubnetLinodeRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell>
-          {getFirewallsCellString(
-            attachedFirewalls?.data ?? [],
-            firewallsLoading,
-            firewallsError ?? undefined
-          )}
-        </TableCell>
+        {isLinodeInterface ? (
+          <LinodeInterfaceFirewallCell
+            interfaceId={interfaceId}
+            linodeId={linodeId}
+          />
+        ) : (
+          <ConfigInterfaceFirewallCell linodeId={linodeId} />
+        )}
       </Hidden>
       <TableCell actionCell>
         {!isVPCLKEEnterpriseCluster && (
           <>
             {isRebootNeeded && (
               <InlineMenuAction
+                actionText="Reboot"
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(linode, 'Reboot', subnet);
                 }}
-                actionText="Reboot"
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             {showPowerButton && (
               <InlineMenuAction
+                actionText={isOffline ? 'Power On' : 'Power Off'}
+                disabled={isVPCLKEEnterpriseCluster}
                 onClick={() => {
                   handlePowerActionsLinode(
                     linode,
@@ -254,8 +258,6 @@ export const SubnetLinodeRow = (props: Props) => {
                     subnet
                   );
                 }}
-                actionText={isOffline ? 'Power On' : 'Power Off'}
-                disabled={isVPCLKEEnterpriseCluster}
               />
             )}
             <InlineMenuAction
@@ -268,26 +270,6 @@ export const SubnetLinodeRow = (props: Props) => {
       </TableCell>
     </TableRow>
   );
-};
-
-const getFirewallsCellString = (
-  data: Firewall[],
-  loading: boolean,
-  error?: APIError[]
-): JSX.Element | string => {
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return 'Error retrieving Firewalls';
-  }
-
-  if (data.length === 0) {
-    return 'None';
-  }
-
-  return getFirewallLinks(data);
 };
 
 const getSubnetLinodeIPv4CellString = (
@@ -355,30 +337,6 @@ const getIPRangesCellContents = (
       linodeInterfaceVPCRanges ?? []
     );
   }
-};
-
-const getFirewallLinks = (data: Firewall[]): JSX.Element => {
-  const firstThreeFirewalls = data.slice(0, 3);
-  return (
-    <>
-      {firstThreeFirewalls.map((firewall, idx) => (
-        <Link
-          className="link secondaryLink"
-          data-testid="firewall-row-link"
-          key={firewall.id}
-          to={`/firewalls/${firewall.id}`}
-        >
-          {idx > 0 && `, `}
-          {firewall.label}
-        </Link>
-      ))}
-      {data.length > 3 && (
-        <span>
-          {`, `}plus {data.length - 3} more.
-        </span>
-      )}
-    </>
-  );
 };
 
 export const SubnetLinodeTableRowHead = (

@@ -17,7 +17,7 @@ export const populateChangelogEntry = (entries, changelogContent) => {
         if (entries && entries.length > 0) {
           changelogContent.push(`\n### ${type}:\n`);
           entries.forEach(({ content }) => {
-            const tokens = md.parse(content);
+            const tokens = md.parse(content, {});
             let description = '';
 
             for (const token of tokens) {

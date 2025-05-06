@@ -212,9 +212,7 @@ export const OMC_BucketLanding = (props: Props) => {
             style={{ marginTop: 18, textAlign: 'center', width: '100%' }}
             variant="body1"
           >
-            Total storage used:{' '}
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(totalUsage, { base10: true }).formatted}
+            Total storage used: {readableBytes(totalUsage).formatted}
           </Typography>
         ) : null}
         <TransferDisplay spacingTop={buckets.length > 1 ? 8 : 18} />

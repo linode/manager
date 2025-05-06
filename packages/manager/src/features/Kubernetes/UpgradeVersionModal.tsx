@@ -7,46 +7,48 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { Link } from 'src/components/Link';
 import {
   getNextVersion,
+  useKubernetesBetaEndpoint,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesClusterQuery,
+} from 'src/queries/kubernetes';
 
 import { LocalStorageWarningNotice } from './KubernetesClusterDetail/LocalStorageWarningNotice';
 
-import type { KubernetesTier } from '@linode/api-v4/lib/kubernetes';
-
 interface Props {
   clusterID: number;
-  clusterLabel: string;
-  clusterTier: KubernetesTier;
-  currentVersion: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const UpgradeDialog = (props: Props) => {
-  const {
-    clusterID,
-    clusterLabel,
-    clusterTier,
-    currentVersion,
-    isOpen,
-    onClose,
-  } = props;
+  const { clusterID, isOpen, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterID
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
+
+  const { data: cluster } = useKubernetesClusterQuery({
+    id: clusterID,
+    isUsingBetaEndpoint,
+  });
+
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterID);
+
+  const { versions } = useLkeStandardOrEnterpriseVersions(
+    cluster?.tier ?? 'standard'
+  ); // TODO LKE: remove fallback once LKE-E is in GA and tier is required
+
+  const nextVersion = getNextVersion(
+    cluster?.k8s_version ?? '',
+    versions ?? []
   );
 
-  const { versions } = useLkeStandardOrEnterpriseVersions(clusterTier);
-
-  const nextVersion = getNextVersion(currentVersion, versions ?? []);
-
-  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
-    false
-  );
+  const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] =
+    React.useState(false);
 
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
@@ -99,7 +101,7 @@ export const UpgradeDialog = (props: Props) => {
     ? 'Upgrade complete'
     : `Upgrade Kubernetes version ${
         nextVersion ? `to ${nextVersion}` : ''
-      } on ${clusterLabel}?`;
+      } on ${cluster?.label}?`;
 
   const actions = (
     <ActionsPanel
@@ -132,7 +134,7 @@ export const UpgradeDialog = (props: Props) => {
         {hasUpdatedSuccessfully ? (
           <>
             The cluster’s Kubernetes version has been updated successfully to{' '}
-            <strong>{nextVersion}</strong>. <br /> <br />
+            <strong>{cluster?.k8s_version}</strong>. <br /> <br />
             To upgrade your existing worker nodes, you can recycle all nodes
             (which may have a performance impact) or perform other upgrade
             methods. When recycling nodes, all nodes are deleted on a rolling
@@ -146,8 +148,8 @@ export const UpgradeDialog = (props: Props) => {
           </>
         ) : (
           <>
-            Upgrade the Kubernetes version on <strong>{clusterLabel}</strong>{' '}
-            from <strong>{currentVersion}</strong> to{' '}
+            Upgrade the Kubernetes version on <strong>{cluster?.label}</strong>{' '}
+            from <strong>{cluster?.k8s_version}</strong> to{' '}
             <strong>{nextVersion}</strong>. This upgrades the control plane on
             your cluster and ensures that any new worker nodes are created using
             the newer Kubernetes version.{' '}

@@ -300,16 +300,15 @@ export const ObjectUploader = React.memo((props: Props) => {
   );
 });
 
-export const onUploadProgressFactory = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
-) => (progressEvent: AxiosProgressEvent) => {
-  dispatch({
-    data: {
-      percentComplete:
-        (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
-    },
-    filesToUpdate: [fileName],
-    type: 'UPDATE_FILES',
-  });
-};
+export const onUploadProgressFactory =
+  (dispatch: (value: ObjectUploaderAction) => void, fileName: string) =>
+  (progressEvent: AxiosProgressEvent) => {
+    dispatch({
+      data: {
+        percentComplete:
+          (progressEvent.loaded / (progressEvent.total ?? 1)) * 100,
+      },
+      filesToUpdate: [fileName],
+      type: 'UPDATE_FILES',
+    });
+  };

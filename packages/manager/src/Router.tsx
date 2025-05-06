@@ -7,6 +7,7 @@ import { useGlobalErrors } from 'src/hooks/useGlobalErrors';
 
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
+import { ErrorBoundaryFallback } from './features/ErrorBoundary/ErrorBoundaryFallback';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
 import { router } from './routes';
 
@@ -29,5 +30,9 @@ export const Router = () => {
     },
   });
 
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorBoundaryFallback useTanStackRouterBoundary={true}>
+      <RouterProvider router={router} />
+    </ErrorBoundaryFallback>
+  );
 };

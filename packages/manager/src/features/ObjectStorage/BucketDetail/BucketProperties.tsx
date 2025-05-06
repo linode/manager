@@ -24,7 +24,7 @@ export const BucketProperties = React.memo((props: Props) => {
 
   return (
     <>
-      <BucketBreadcrumb bucketName={label} history={history} prefix={prefix} />
+      <BucketBreadcrumb bucketName={label} prefix={prefix} />
       <StyledText>{hostname}</StyledText>
 
       <StyledRootContainer>

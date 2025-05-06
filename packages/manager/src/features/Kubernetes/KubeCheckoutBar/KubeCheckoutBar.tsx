@@ -147,6 +147,10 @@ export const KubeCheckoutBar = (props: Props) => {
         )}
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
+            clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
+            key={idx}
+            nodeCount={thisPool.count}
+            onRemove={() => removePool(idx)}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -163,9 +167,6 @@ export const KubeCheckoutBar = (props: Props) => {
             updateNodeCount={(updatedCount: number) =>
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
-            key={idx}
-            nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
           />
         ))}
         <Divider dark spacingBottom={0} spacingTop={16} />

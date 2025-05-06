@@ -12,6 +12,12 @@ interface Props extends NoticeProps {
    */
   actionButton?: JSX.Element;
   /**
+   * If false, the banner will not be dismissible
+   *
+   * @default true
+   */
+  dismissible?: boolean;
+  /**
    * If true, the important icon will be vertically centered with the text no matter the height of the text.
    */
   forceImportantIconVerticalCenter?: boolean;
@@ -42,7 +48,14 @@ interface Props extends NoticeProps {
  * - Call to action: Primary Button or text link allows a user to take action directly from the banner.
  */
 export const DismissibleBanner = (props: Props) => {
-  const { actionButton, children, options, preferenceKey, ...rest } = props;
+  const {
+    actionButton,
+    children,
+    dismissible = true, // Default to true if not provided
+    options,
+    preferenceKey,
+    ...rest
+  } = props;
 
   const { handleDismiss, hasDismissedBanner } = useDismissibleBanner(
     preferenceKey,
@@ -75,17 +88,19 @@ export const DismissibleBanner = (props: Props) => {
 
   return (
     <Notice bgcolor={(theme) => theme.palette.background.paper} {...rest}>
-      <Stack direction="column" flex={1} justifyContent="center">
-        {children}
-      </Stack>
-      <Stack
-        alignSelf="flex-start"
-        direction="row"
-        justifyContent="flex-end"
-        spacing={1}
-      >
-        {actionButton}
-        {dismissibleButton}
+      <Stack direction="row">
+        <Stack direction="column" flex={1} justifyContent="center">
+          {children}
+        </Stack>
+        <Stack
+          alignSelf="flex-start"
+          direction="row"
+          justifyContent="flex-end"
+          spacing={1}
+        >
+          {actionButton}
+          {dismissible ? dismissibleButton : null}
+        </Stack>
       </Stack>
     </Notice>
   );

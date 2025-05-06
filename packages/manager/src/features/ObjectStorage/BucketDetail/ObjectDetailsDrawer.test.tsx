@@ -49,7 +49,6 @@ describe('ObjectDetailsDrawer', () => {
       screen.findByText(/^Last modified: 2019-12-31/)
     ).resolves.toBeInTheDocument();
 
-    expect(screen.getByText('12.3 KB')).toBeVisible();
     expect(screen.getByText(/^https:\/\/my-bucket/)).toBeVisible();
   });
 
@@ -60,6 +59,30 @@ describe('ObjectDetailsDrawer', () => {
 
     await waitFor(() => {
       expect(() => screen.getByTestId('lastModified')).toThrow();
+    });
+  });
+
+  describe('readableBytes edge cases in Object Storage', () => {
+    it('displays bytes correctly for sizes under 1 KB threshold', () => {
+      renderWithTheme(<ObjectDetailsDrawer {...props} size={1000} />);
+
+      // Values under 1024 bytes should remain as bytes
+      expect(screen.getByText('1000 bytes')).toBeVisible();
+    });
+
+    it('uses base2 calculations (1024-based) for KB display', () => {
+      renderWithTheme(<ObjectDetailsDrawer {...props} size={1024} />);
+
+      // 1024 bytes = 1 KB in base2 (not 1.02 KB as it would be in base10)
+      expect(screen.getByText('1 KB')).toBeVisible();
+    });
+
+    it('converts base10 MB values correctly to base2 display', () => {
+      renderWithTheme(<ObjectDetailsDrawer {...props} size={1000000} />);
+
+      // 1,000,000 bytes / 1024 = 976.56 KB (rounded to 977 KB)
+      // Since this is less than 1 MB in base2, it displays as KB
+      expect(screen.getByText('977 KB')).toBeVisible();
     });
   });
 });

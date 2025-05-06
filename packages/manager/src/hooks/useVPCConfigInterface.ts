@@ -1,5 +1,7 @@
 import { useAllLinodeConfigsQuery, useVPCQuery } from '@linode/queries';
 
+import { getPrimaryInterfaceIndex } from 'src/features/Linodes/LinodesDetail/LinodeConfigs/utilities';
+
 import type { Interface } from '@linode/api-v4/lib/linodes/types';
 
 export const useVPCConfigInterface = (
@@ -9,8 +11,7 @@ export const useVPCConfigInterface = (
   const { data: configs } = useAllLinodeConfigsQuery(linodeId, enabled);
   let configInterfaceWithVPC: Interface | undefined;
 
-  // eslint-disable-next-line no-unused-expressions
-  configs?.find((config) => {
+  const configWithVPCInterface = configs?.find((config) => {
     const interfaces = config.interfaces;
 
     const interfaceWithVPC = interfaces?.find(
@@ -21,17 +22,27 @@ export const useVPCConfigInterface = (
       configInterfaceWithVPC = interfaceWithVPC;
     }
 
-    return interfaceWithVPC;
+    return config;
   });
+
+  const primaryInterfaceIndex = getPrimaryInterfaceIndex(
+    configWithVPCInterface?.interfaces ?? []
+  );
+
+  const vpcInterfaceIndex = configWithVPCInterface?.interfaces?.findIndex(
+    (_interface) => _interface.id === configInterfaceWithVPC?.id
+  );
 
   const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
     configInterfaceWithVPC?.vpc_id ?? -1,
     Boolean(configInterfaceWithVPC) && enabled
   );
 
-  // A VPC-only Linode is a Linode that has at least one config interface with primary set to true and purpose vpc and no ipv4.nat_1_1 value
+  // A VPC-only Linode is a Linode that has at least one primary VPC interface (either explicit or implicit) and purpose vpc and no ipv4.nat_1_1 value
   const isVPCOnlyLinode = Boolean(
-    configInterfaceWithVPC?.primary && !configInterfaceWithVPC.ipv4?.nat_1_1
+    (configInterfaceWithVPC?.primary ||
+      primaryInterfaceIndex === vpcInterfaceIndex) &&
+      !configInterfaceWithVPC?.ipv4?.nat_1_1
   );
 
   return {

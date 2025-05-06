@@ -4,7 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { VLANSelect } from 'src/components/VLANSelect';
 
-import type { CreateInterfaceFormValues } from './utilities';
+import type { CreateInterfaceFormValues } from '../utilities';
 
 export const VLANInterface = () => {
   const { control } = useFormContext<CreateInterfaceFormValues>();

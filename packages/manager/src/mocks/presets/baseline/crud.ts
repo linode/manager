@@ -6,6 +6,7 @@ import { linodeCrudPreset } from 'src/mocks/presets/crud/linodes';
 
 import { domainCrudPreset } from '../crud/domains';
 import { firewallCrudPreset } from '../crud/firewalls';
+import { kubernetesCrudPreset } from '../crud/kubernetes';
 import { nodeBalancerCrudPreset } from '../crud/nodebalancers';
 import { placementGroupsCrudPreset } from '../crud/placementGroups';
 import { quotasCrudPreset } from '../crud/quotas';
@@ -20,6 +21,7 @@ export const baselineCrudPreset: MockPresetBaseline = {
   handlers: [
     ...domainCrudPreset.handlers,
     ...firewallCrudPreset.handlers,
+    ...kubernetesCrudPreset.handlers,
     ...linodeCrudPreset.handlers,
     ...placementGroupsCrudPreset.handlers,
     ...quotasCrudPreset.handlers,

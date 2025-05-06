@@ -32,20 +32,21 @@ export const KubernetesClusterDetail = () => {
 
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
-  const { data: cluster, error, isLoading } = useKubernetesClusterQuery({
+  const {
+    data: cluster,
+    error,
+    isLoading,
+  } = useKubernetesClusterQuery({
     id,
     isUsingBetaEndpoint,
   });
   const { data: regionsData } = useRegionsQuery();
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    id
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(id);
 
-  const {
-    isClusterHighlyAvailable,
-    showHighAvailability,
-  } = getKubeHighAvailability(account, cluster);
+  const { isClusterHighlyAvailable, showHighAvailability } =
+    getKubeHighAvailability(account, cluster);
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
@@ -89,7 +90,6 @@ export const KubernetesClusterDetail = () => {
       />
       <UpgradeKubernetesVersionBanner
         clusterID={cluster?.id}
-        clusterLabel={cluster?.label}
         clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         currentVersion={cluster?.k8s_version}
       />

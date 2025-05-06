@@ -1,6 +1,7 @@
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  mockGetCluster,
   mockGetClusterPools,
   mockGetClusters,
   mockGetKubeconfig,
@@ -237,6 +238,7 @@ describe('LKE landing page', () => {
 
     const updatedCluster = { ...cluster, k8s_version: newVersion };
 
+    mockGetCluster(cluster).as('getCluster');
     mockGetClusters([cluster]).as('getClusters');
     mockGetKubernetesVersions([newVersion, oldVersion]).as('getVersions');
     mockUpdateCluster(cluster.id, updatedCluster).as('updateCluster');
@@ -249,6 +251,8 @@ describe('LKE landing page', () => {
     cy.findByText(oldVersion).should('be.visible');
 
     cy.findByText('UPGRADE').should('be.visible').should('be.enabled').click();
+
+    cy.wait(['@getCluster']);
 
     ui.dialog
       .findByTitle(
@@ -303,6 +307,7 @@ describe('LKE landing page', () => {
 
     const updatedCluster = { ...cluster, k8s_version: newVersion };
 
+    mockGetCluster(cluster).as('getCluster');
     mockGetClusters([cluster]).as('getClusters');
     mockGetTieredKubernetesVersions('enterprise', [
       { id: newVersion, tier: 'enterprise' },
@@ -318,6 +323,8 @@ describe('LKE landing page', () => {
     cy.findByText(oldVersion).should('be.visible');
 
     cy.findByText('UPGRADE').should('be.visible').should('be.enabled').click();
+
+    cy.wait(['@getCluster']);
 
     ui.dialog
       .findByTitle(

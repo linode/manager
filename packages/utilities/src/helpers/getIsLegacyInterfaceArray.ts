@@ -9,11 +9,11 @@ import type {
  * @param interfaces the interfaces to confirm
  * @returns if interfaces is type InterfacePayload
  *
- * @TODO Linode Interfaces - may need to update some logic to to depend on Account Settings for Interfaces soon
+ * @TODO Linode Interfaces - may need to update some logic to depend on Account Settings for Interfaces soon
  * For now, an undefined/empty interfaces array will return true to match existing behavior
  */
 export const getIsLegacyInterfaceArray = (
-  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined
+  interfaces: CreateLinodeInterfacePayload[] | InterfacePayload[] | undefined,
 ): interfaces is InterfacePayload[] => {
   return (
     interfaces === undefined ||

@@ -244,7 +244,7 @@ describe('rebuild linode', () => {
   it('rebuilds a linode from Account StackScript', () => {
     cy.tag('method:e2e');
     const image = 'Alpine 3.18';
-    const region = 'us-east';
+    const region = chooseRegion().id;
 
     // Create a StackScript to rebuild a Linode.
     const linodeRequest = createLinodeRequestFactory.build({
@@ -351,7 +351,10 @@ describe('rebuild linode', () => {
   });
 
   it('can rebuild a Linode reusing existing user data', () => {
-    const region = regionFactory.build({ capabilities: ['Metadata'] });
+    const region = regionFactory.build({
+      capabilities: ['Metadata'],
+      id: chooseRegion().id,
+    });
     const linode = linodeFactory.build({
       region: region.id,
       // has_user_data: true - add this when we add the type to make this test more realistic

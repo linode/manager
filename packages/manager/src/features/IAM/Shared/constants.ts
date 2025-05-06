@@ -11,3 +11,11 @@ export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entities ass
 // TODO: update the link when it's ready - UIE-8534
 export const IAM_DOCS_LINK =
   'https://www.linode.com/docs/platform/identity-access-management/';
+
+export const PAID_ENTITY_TYPES = [
+  'database',
+  'linode',
+  'nodebalancer',
+  'volume',
+  'image',
+];

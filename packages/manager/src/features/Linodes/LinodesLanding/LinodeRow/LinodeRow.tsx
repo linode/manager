@@ -107,7 +107,7 @@ export const LinodeRow = (props: Props) => {
         maintenance={Boolean(maintenance)}
         statusCell
       >
-        {!Boolean(maintenance) ? (
+        {!maintenance ? (
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
