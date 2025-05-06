@@ -1,5 +1,4 @@
-import { Box, IconButton, Stack, TextField } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, CloseIcon, IconButton, Stack, TextField } from '@linode/ui';
 import React from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -25,6 +24,8 @@ export const VPCRanges = () => {
           spacing={0.5}
         >
           <Controller
+            control={control}
+            name={`interfaces.0.ip_ranges.${index}`}
             render={({ field, fieldState }) => (
               <TextField
                 errorText={fieldState.error?.message}
@@ -38,8 +39,6 @@ export const VPCRanges = () => {
                 value={field.value}
               />
             )}
-            control={control}
-            name={`interfaces.0.ip_ranges.${index}`}
           />
           <IconButton
             aria-label={`Remove IP Range ${index}`}

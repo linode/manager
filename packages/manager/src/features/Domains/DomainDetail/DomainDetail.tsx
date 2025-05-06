@@ -5,8 +5,8 @@ import {
   Paper,
   Typography,
 } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -31,10 +31,11 @@ export const DomainDetail = () => {
   const domainId = params.domainId;
   const location = useLocation();
   const locationState = location.state as DomainState;
-  const { data: domain, error, isLoading } = useDomainQuery(
-    domainId,
-    !!domainId
-  );
+  const {
+    data: domain,
+    error,
+    isLoading,
+  } = useDomainQuery(domainId, !!domainId);
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
   const {
     data: records,
@@ -109,14 +110,14 @@ export const DomainDetail = () => {
           },
           pathname: location.pathname,
         }}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         extraActions={
           <DownloadDNSZoneFileButton
             domainId={domain.id}
             domainLabel={domain.domain}
           />
         }
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
       {locationState?.recordError && (
@@ -145,6 +146,7 @@ export const DomainDetail = () => {
           </StyledPaper>
           <StyledDiv>
             <DeleteDomain
+              domainError={error}
               domainId={domain.id}
               domainLabel={domain.domain}
               onSuccess={() => navigate({ to: '/domains' })}

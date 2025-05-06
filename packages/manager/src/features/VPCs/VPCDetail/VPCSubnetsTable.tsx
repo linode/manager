@@ -4,6 +4,7 @@ import {
   useSubnetsQuery,
 } from '@linode/queries';
 import { Box, Button, CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import {
   useLocation,
@@ -16,7 +17,6 @@ import * as React from 'react';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -27,7 +27,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -126,20 +125,21 @@ export const VPCSubnetsTable = (props: Props) => {
     generateSubnetsXFilter(query ?? '')
   );
 
-  const { data: selectedSubnet, isFetching: isFetchingSubnet } = useDialogData({
-    enabled: !!params.vpcId && !!params.subnetId,
-    paramKey: 'vpcId',
-    queryHook: useSubnetQuery,
-    redirectToOnNotFound: '/vpcs/$vpcId',
-    secondaryParamKey: 'subnetId',
-  });
+  const {
+    data: selectedSubnet,
+    isFetching: isFetchingSubnet,
+    error: selectedSubnetError,
+  } = useSubnetQuery(
+    vpcId,
+    params.subnetId ?? -1,
+    !!params.vpcId && !!params.subnetId
+  );
 
-  const { data: selectedLinode, isFetching: isFetchingLinode } = useDialogData({
-    enabled: !!params.linodeId,
-    paramKey: 'linodeId',
-    queryHook: useLinodeQuery,
-    redirectToOnNotFound: '/vpcs/$vpcId',
-  });
+  const {
+    data: selectedLinode,
+    isFetching: isFetchingLinode,
+    error: selectedLinodeError,
+  } = useLinodeQuery(params.linodeId ?? -1, !!params.linodeId);
 
   const handleSearch = (searchText: string) => {
     navigate({
@@ -411,6 +411,7 @@ export const VPCSubnetsTable = (props: Props) => {
       />
       <SubnetUnassignLinodesDrawer
         isFetching={isFetchingSubnet || isFetchingLinode}
+        linodeError={selectedLinodeError}
         onClose={onCloseSubnetDrawer}
         open={
           params.subnetAction === 'unassign' ||
@@ -418,6 +419,7 @@ export const VPCSubnetsTable = (props: Props) => {
         }
         singleLinodeToBeUnassigned={selectedLinode}
         subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
         vpcId={vpcId}
       />
       <SubnetAssignLinodesDrawer
@@ -425,6 +427,7 @@ export const VPCSubnetsTable = (props: Props) => {
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'assign'}
         subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
         vpcId={vpcId}
         vpcRegion={vpcRegion}
       />
@@ -433,6 +436,7 @@ export const VPCSubnetsTable = (props: Props) => {
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'delete'}
         subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
         vpcId={vpcId}
       />
       <SubnetEditDrawer
@@ -440,6 +444,7 @@ export const VPCSubnetsTable = (props: Props) => {
         onClose={onCloseSubnetDrawer}
         open={params.subnetAction === 'edit'}
         subnet={selectedSubnet}
+        subnetError={selectedSubnetError}
         vpcId={vpcId}
       />
       <PowerActionsDialog

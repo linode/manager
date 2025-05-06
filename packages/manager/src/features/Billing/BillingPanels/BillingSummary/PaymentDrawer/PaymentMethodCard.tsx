@@ -1,6 +1,5 @@
 import { Chip } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import {
@@ -41,12 +40,12 @@ const getIcon = (paymentMethod: PaymentMethod) => {
 
 const getHeading = (paymentMethod: PaymentMethod) => {
   switch (paymentMethod.type) {
-    case 'paypal':
-      return thirdPartyPaymentMap[paymentMethod.type].label;
     case 'google_pay':
       return `${thirdPartyPaymentMap[paymentMethod.type].label} ${
         paymentMethod.data.card_type
       } ****${paymentMethod.data.last_four}`;
+    case 'paypal':
+      return thirdPartyPaymentMap[paymentMethod.type].label;
     default:
       return `${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
   }
@@ -83,56 +82,31 @@ export const PaymentMethodCard = (props: Props) => {
     return <Icon />;
   };
 
-  const sxVariant = {
-    flexShrink: 0,
-    paddingLeft: { sm: 1, xs: 0 },
-  };
-
-  const renderVariant = () => {
-    return is_default ? (
-      <Grid
-        sx={sxVariant}
-        size={{
-          md: 2,
-          xs: 3,
-        }}
-      >
-        <Chip component="span" label="DEFAULT" size="small" />
-      </Grid>
-    ) : null;
-  };
-
   return (
-    <Grid size={12}>
-      <SelectionCard
-        sxCardBase={{
-          flexWrap: 'nowrap',
-        }}
-        sxCardBaseHeading={{
-          flex: 'inherit',
-        }}
-        sxCardBaseIcon={{
-          justifyContent: 'center',
-          padding: 0,
-          width: 45,
-        }}
-        sxCardBaseSubheading={{
-          color: cardIsExpired ? theme.color.red : undefined,
-        }}
-        sxGrid={{
-          minWidth: '100%',
-          padding: 0,
-        }}
-        checked={id === paymentMethodId}
-        disabled={disabled}
-        heading={heading}
-        onClick={() => handlePaymentMethodChange(id, cardIsExpired)}
-        renderIcon={renderIcon}
-        renderVariant={renderVariant}
-        subheadings={[subHeading]}
-      />
-    </Grid>
+    <SelectionCard
+      checked={id === paymentMethodId}
+      disabled={disabled}
+      heading={heading}
+      onClick={() => handlePaymentMethodChange(id, cardIsExpired)}
+      renderIcon={renderIcon}
+      renderVariant={
+        is_default ? () => <Chip label="DEFAULT" size="small" /> : undefined
+      }
+      subheadings={[subHeading]}
+      sxCardBase={{
+        flexWrap: 'nowrap',
+      }}
+      sxCardBaseHeading={{
+        flex: 'inherit',
+      }}
+      sxCardBaseIcon={{
+        justifyContent: 'center',
+        padding: 0,
+        width: 45,
+      }}
+      sxCardBaseSubheading={{
+        color: cardIsExpired ? theme.color.red : undefined,
+      }}
+    />
   );
 };
-
-export default PaymentMethodCard;

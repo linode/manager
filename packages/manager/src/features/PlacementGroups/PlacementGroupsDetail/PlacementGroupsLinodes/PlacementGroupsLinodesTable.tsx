@@ -66,12 +66,12 @@ export const PlacementGroupsLinodesTable = React.memo((props: Props) => {
       </TableHead>
       <TableBody>
         <TableContentWrapper
-          loadingProps={{
-            columns: 3,
-          }}
           error={_error}
           length={linodes.length}
           loading={isFetchingLinodes}
+          loadingProps={{
+            columns: 3,
+          }}
         >
           {linodes.map((linode) => (
             <PlacementGroupsLinodesTableRow

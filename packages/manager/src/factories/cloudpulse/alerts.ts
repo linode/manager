@@ -1,25 +1,24 @@
 import { Factory } from '@linode/utilities';
 
 import type {
+  Alert,
   AlertDefinitionDimensionFilter,
   AlertDefinitionMetricCriteria,
   CreateAlertDefinitionPayload,
   MetricCriteria,
   TriggerCondition,
-  Alert,
 } from '@linode/api-v4';
 
-export const alertDimensionsFactory = Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>(
-  {
+export const alertDimensionsFactory =
+  Factory.Sync.makeFactory<AlertDefinitionDimensionFilter>({
     dimension_label: 'state',
     label: 'State of CPU',
     operator: 'eq',
     value: 'idle',
-  }
-);
+  });
 
-export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>(
-  {
+export const alertRulesFactory =
+  Factory.Sync.makeFactory<AlertDefinitionMetricCriteria>({
     aggregate_function: 'avg',
     dimension_filters: alertDimensionsFactory.buildList(1),
     label: 'CPU Usage',
@@ -27,17 +26,15 @@ export const alertRulesFactory = Factory.Sync.makeFactory<AlertDefinitionMetricC
     operator: 'eq',
     threshold: 60,
     unit: 'Bytes',
-  }
-);
+  });
 
-export const triggerConditionFactory = Factory.Sync.makeFactory<TriggerCondition>(
-  {
+export const triggerConditionFactory =
+  Factory.Sync.makeFactory<TriggerCondition>({
     criteria_condition: 'ALL',
     evaluation_period_seconds: 300,
     polling_interval_seconds: 300,
     trigger_occurrences: 5,
-  }
-);
+  });
 export const cpuRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   aggregate_function: 'avg',
   dimension_filters: [
@@ -60,8 +57,8 @@ export const memoryRulesFactory = Factory.Sync.makeFactory<MetricCriteria>({
   threshold: 1000,
 });
 
-export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefinitionPayload>(
-  {
+export const alertDefinitionFactory =
+  Factory.Sync.makeFactory<CreateAlertDefinitionPayload>({
     channel_ids: [1, 2, 3],
     description: 'This is a default alert description.',
     entity_ids: ['1', '2', '3', '4', '5'],
@@ -72,8 +69,7 @@ export const alertDefinitionFactory = Factory.Sync.makeFactory<CreateAlertDefini
     severity: 1,
     tags: ['tag1', 'tag2'],
     trigger_conditions: triggerConditionFactory.build(),
-  }
-);
+  });
 
 export const alertFactory = Factory.Sync.makeFactory<Alert>({
   alert_channels: [

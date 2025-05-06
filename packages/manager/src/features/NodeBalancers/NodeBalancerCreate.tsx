@@ -1,8 +1,8 @@
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
-  useNodeBalancerTypesQuery,
   useNodebalancerCreateMutation,
+  useNodeBalancerTypesQuery,
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
@@ -116,24 +116,19 @@ const NodeBalancerCreate = () => {
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
-  const [
-    nodeBalancerFields,
-    setNodeBalancerFields,
-  ] = React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+  const [nodeBalancerFields, setNodeBalancerFields] =
+    React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
-  const [
-    deleteConfigConfirmDialog,
-    setDeleteConfigConfirmDialog,
-  ] = React.useState<{
-    errors?: APIError[];
-    idxToDelete?: number;
-    open: boolean;
-    submitting: boolean;
-  }>(defaultDeleteConfigConfirmDialogState);
+  const [deleteConfigConfirmDialog, setDeleteConfigConfirmDialog] =
+    React.useState<{
+      errors?: APIError[];
+      idxToDelete?: number;
+      open: boolean;
+      submitting: boolean;
+    }>(defaultDeleteConfigConfirmDialogState);
 
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
@@ -164,16 +159,15 @@ const NodeBalancerCreate = () => {
       return { ...prev, configs: newConfigs };
     });
 
-  const removeNodeBalancerConfigNode = (configIdx: number) => (
-    nodeIdx: number
-  ) =>
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs];
-      newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
-        (_, idx) => idx !== nodeIdx
-      );
-      return { ...prev, configs: newConfigs };
-    });
+  const removeNodeBalancerConfigNode =
+    (configIdx: number) => (nodeIdx: number) =>
+      setNodeBalancerFields((prev) => {
+        const newConfigs = [...prev.configs];
+        newConfigs[configIdx].nodes = newConfigs[configIdx].nodes.filter(
+          (_, idx) => idx !== nodeIdx
+        );
+        return { ...prev, configs: newConfigs };
+      });
 
   const setNodeValue = (
     cidx: number,
@@ -358,7 +352,7 @@ const NodeBalancerCreate = () => {
   };
 
   const onConfigValueChange = <
-    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors
+    Key extends keyof NodeBalancerConfigFieldsWithStatusAndErrors,
   >(
     configId: number,
     key: Key,
@@ -438,8 +432,9 @@ const NodeBalancerCreate = () => {
     selectedRegionId: nodeBalancerFields.region ?? '',
   });
 
-  const regionLabel = regions?.find((r) => r.id === nodeBalancerFields.region)
-    ?.label;
+  const regionLabel = regions?.find(
+    (r) => r.id === nodeBalancerFields.region
+  )?.label;
 
   const price = getDCSpecificPriceByType({
     regionId: nodeBalancerFields.region,
@@ -501,12 +496,11 @@ const NodeBalancerCreate = () => {
       )}
       {isRestricted && (
         <Notice
+          spacingTop={16}
           text={getRestrictedResourceText({
             action: 'create',
             resourceType: 'NodeBalancers',
           })}
-          important
-          spacingTop={16}
           variant="error"
         />
       )}
@@ -521,6 +515,9 @@ const NodeBalancerCreate = () => {
             value={nodeBalancerFields.label || ''}
           />
           <TagsInput
+            disabled={isRestricted}
+            onChange={tagsChange}
+            tagError={hasErrorFor('tags')}
             value={
               nodeBalancerFields.tags
                 ? nodeBalancerFields.tags.map((tag) => ({
@@ -529,9 +526,6 @@ const NodeBalancerCreate = () => {
                   }))
                 : []
             }
-            disabled={isRestricted}
-            onChange={tagsChange}
-            tagError={hasErrorFor('tags')}
           />
         </Paper>
         <Paper>
@@ -543,10 +537,6 @@ const NodeBalancerCreate = () => {
             justifyContent="space-between"
           >
             <RegionSelect
-              textFieldProps={{
-                helperText: <RegionHelperText mb={2} />,
-                helperTextPosition: 'top',
-              }}
               currentCapability="NodeBalancers"
               disableClearable
               errorText={hasErrorFor('region')}
@@ -554,6 +544,10 @@ const NodeBalancerCreate = () => {
               noMarginTop
               onChange={(e, region) => regionChange(region?.id ?? '')}
               regions={regions ?? []}
+              textFieldProps={{
+                helperText: <RegionHelperText mb={2} />,
+                helperTextPosition: 'top',
+              }}
               value={nodeBalancerFields.region ?? ''}
             />
             <DocsLink
@@ -563,6 +557,8 @@ const NodeBalancerCreate = () => {
           </Stack>
         </Paper>
         <SelectFirewallPanel
+          disabled={isRestricted}
+          entityType="nodebalancer"
           handleFirewallChange={(firewallId: number) => {
             setNodeBalancerFields((prev) => ({
               ...prev,
@@ -576,29 +572,35 @@ const NodeBalancerCreate = () => {
               <Link to={FIREWALL_GET_STARTED_LINK}>Learn more</Link>.
             </Typography>
           }
-          disabled={isRestricted}
-          entityType="nodebalancer"
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
-          const onChange = (key: keyof NodeBalancerConfigFieldsWithStatus) => (
-            value: any
-          ) => onConfigValueChange(idx, key, value);
+          const onChange =
+            (key: keyof NodeBalancerConfigFieldsWithStatus) => (value: any) =>
+              onConfigValueChange(idx, key, value);
 
           return (
             <Accordion
+              defaultExpanded
               heading={`Configuration - Port ${
                 nodeBalancerFields.configs[idx].port ?? ''
               }`}
+              key={idx}
               sx={{
                 padding: 1,
               }}
-              defaultExpanded
-              key={idx}
             >
               <NodeBalancerConfigPanel
+                addNode={addNodeBalancerConfigNode(idx)}
+                algorithm={nodeBalancerFields.configs[idx].algorithm!}
+                checkBody={nodeBalancerFields.configs[idx].check_body!}
+                checkPassive={nodeBalancerFields.configs[idx].check_passive!}
+                checkPath={nodeBalancerFields.configs[idx].check_path!}
+                configIdx={idx}
+                disabled={isRestricted}
+                errors={nodeBalancerConfig.errors}
                 healthCheckAttempts={
                   nodeBalancerFields.configs[idx].check_attempts!
                 }
@@ -608,6 +610,17 @@ const NodeBalancerCreate = () => {
                 healthCheckTimeout={
                   nodeBalancerFields.configs[idx].check_timeout!
                 }
+                healthCheckType={nodeBalancerFields.configs[idx].check!}
+                nodeBalancerRegion={nodeBalancerFields.region}
+                nodes={nodeBalancerFields.configs[idx].nodes}
+                onAlgorithmChange={onChange('algorithm')}
+                onCheckBodyChange={onChange('check_body')}
+                onCheckPassiveChange={onChange('check_passive')}
+                onCheckPathChange={onChange('check_path')}
+                onDelete={onDeleteConfig(idx)}
+                onHealthCheckAttemptsChange={onChange('check_attempts')}
+                onHealthCheckIntervalChange={onChange('check_interval')}
+                onHealthCheckTimeoutChange={onChange('check_timeout')}
                 onHealthCheckTypeChange={(value) => {
                   onChange('check')(value);
                   afterHealthCheckTypeUpdate(idx);
@@ -627,37 +640,18 @@ const NodeBalancerCreate = () => {
                 onNodeWeightChange={(nodeIndex, value) =>
                   onNodeWeightChange(idx, nodeIndex, value)
                 }
+                onPortChange={onChange('port')}
+                onPrivateKeyChange={onChange('ssl_key')}
                 onProtocolChange={(value) => {
                   onChange('protocol')(value);
                   afterProtocolUpdate(idx);
                 }}
-                onUdpCheckPortChange={(value) =>
-                  onChange('udp_check_port')(value)
-                }
-                addNode={addNodeBalancerConfigNode(idx)}
-                algorithm={nodeBalancerFields.configs[idx].algorithm!}
-                checkBody={nodeBalancerFields.configs[idx].check_body!}
-                checkPassive={nodeBalancerFields.configs[idx].check_passive!}
-                checkPath={nodeBalancerFields.configs[idx].check_path!}
-                configIdx={idx}
-                disabled={isRestricted}
-                errors={nodeBalancerConfig.errors}
-                healthCheckType={nodeBalancerFields.configs[idx].check!}
-                nodeBalancerRegion={nodeBalancerFields.region}
-                nodes={nodeBalancerFields.configs[idx].nodes}
-                onAlgorithmChange={onChange('algorithm')}
-                onCheckBodyChange={onChange('check_body')}
-                onCheckPassiveChange={onChange('check_passive')}
-                onCheckPathChange={onChange('check_path')}
-                onDelete={onDeleteConfig(idx)}
-                onHealthCheckAttemptsChange={onChange('check_attempts')}
-                onHealthCheckIntervalChange={onChange('check_interval')}
-                onHealthCheckTimeoutChange={onChange('check_timeout')}
-                onPortChange={onChange('port')}
-                onPrivateKeyChange={onChange('ssl_key')}
                 onProxyProtocolChange={onChange('proxy_protocol')}
                 onSessionStickinessChange={onChange('stickiness')}
                 onSslCertificateChange={onChange('ssl_cert')}
+                onUdpCheckPortChange={(value) =>
+                  onChange('udp_check_port')(value)
+                }
                 port={nodeBalancerFields.configs[idx].port!}
                 privateKey={nodeBalancerFields.configs[idx].ssl_key!}
                 protocol={nodeBalancerFields.configs[idx].protocol!}
@@ -692,26 +686,26 @@ const NodeBalancerCreate = () => {
         </Box>
       )}
       <Box
+        display="flex"
+        justifyContent={'flex-end'}
         sx={{
           marginTop: theme.spacing(4),
         }}
-        display="flex"
-        justifyContent={'flex-end'}
       >
         <Button
+          buttonType="primary"
+          data-qa-deploy-nodebalancer
           disabled={
             (showGDPRCheckbox && !hasSignedAgreement) ||
             isRestricted ||
             isInvalidPrice
           }
+          loading={isPending}
+          onClick={onCreate}
           sx={{
             flexShrink: 0,
             mx: matchesSmDown ? theme.spacing(1) : null,
           }}
-          buttonType="primary"
-          data-qa-deploy-nodebalancer
-          loading={isPending}
-          onClick={onCreate}
           tooltipText={isInvalidPrice ? PRICE_ERROR_TOOLTIP_TEXT : ''}
         >
           Create NodeBalancer
@@ -746,9 +740,9 @@ const NodeBalancerCreate = () => {
 };
 
 /* @todo: move to own file */
-export const lensFrom = (p1: (number | string)[]) => (
-  p2: (number | string)[]
-) => lensPath([...p1, ...p2]);
+export const lensFrom =
+  (p1: (number | string)[]) => (p2: (number | string)[]) =>
+    lensPath([...p1, ...p2]);
 
 const getPathAndFieldFromFieldString = (value: string) => {
   let field = value;

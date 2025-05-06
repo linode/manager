@@ -34,29 +34,6 @@ export const LinodesLandingEmptyState = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Linodes" />
       <ResourcesSection
-        CustomResource={() => (
-          <ResourcesLinksSubSection
-            MoreLink={(props) => (
-              <ResourcesMoreLink
-                onClick={getLinkOnClick(
-                  linkAnalyticsEvent,
-                  APPS_MORE_LINKS_TEXT
-                )}
-                to="/linodes/create?type=One-Click"
-                {...props}
-              >
-                {APPS_MORE_LINKS_TEXT}
-                <span style={{ left: 2, position: 'relative', top: 4 }}>
-                  <PointerIcon />
-                </span>
-              </ResourcesMoreLink>
-            )}
-            icon={<MarketplaceIcon />}
-            title="Deploy an App"
-          >
-            <AppsSection />
-          </ResourcesLinksSubSection>
-        )}
         buttonProps={[
           {
             children: 'Create Linode',
@@ -76,6 +53,29 @@ export const LinodesLandingEmptyState = () => {
             }),
           },
         ]}
+        CustomResource={() => (
+          <ResourcesLinksSubSection
+            icon={<MarketplaceIcon />}
+            MoreLink={(props) => (
+              <ResourcesMoreLink
+                onClick={getLinkOnClick(
+                  linkAnalyticsEvent,
+                  APPS_MORE_LINKS_TEXT
+                )}
+                to="/linodes/create?type=One-Click"
+                {...props}
+              >
+                {APPS_MORE_LINKS_TEXT}
+                <span style={{ left: 2, position: 'relative', top: 4 }}>
+                  <PointerIcon />
+                </span>
+              </ResourcesMoreLink>
+            )}
+            title="Deploy an App"
+          >
+            <AppsSection />
+          </ResourcesLinksSubSection>
+        )}
         descriptionMaxWidth={500}
         gettingStartedGuidesData={gettingStartedGuides}
         headers={headers}

@@ -12,6 +12,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { getPlacementGroupLinodes } from './utils';
 
 import type {
+  APIError,
   Linode,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
@@ -25,6 +26,7 @@ interface Props {
   onClose: () => void;
   open: boolean;
   selectedPlacementGroup: PlacementGroup | undefined;
+  selectedPlacementGroupError: APIError[] | null;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
@@ -35,6 +37,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     onClose,
     open,
     selectedPlacementGroup,
+    selectedPlacementGroupError,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -97,14 +100,15 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
 
   return (
     <TypeToConfirmDialog
+      disableTypeToConfirmInput={isDisabled}
+      disableTypeToConfirmSubmit={isDisabled}
       entity={{
         action: 'deletion',
         name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
+        error: selectedPlacementGroupError,
       }}
-      disableTypeToConfirmInput={isDisabled}
-      disableTypeToConfirmSubmit={isDisabled}
       expand
       isFetching={isFetching}
       label="Placement Group"
@@ -112,7 +116,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup?.label}`}
+      title={`Delete Placement Group ${selectedPlacementGroup?.label ?? 'Unknown'}`}
     >
       {error && (
         <Notice
@@ -128,19 +132,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             <Typography>
               <strong>Warning:</strong>
             </Typography>
-            <List
-              sx={(theme) => ({
-                '& > li': {
-                  display: 'list-item',
-                  fontSize: '0.875rem',
-                  pb: 0,
-                  pl: 0,
-                },
-                listStyle: 'disc',
-                ml: theme.spacing(2),
-                mt: theme.spacing(),
-              })}
-            >
+            <List>
               <ListItem>
                 Deleting a placement group is permanent and cannot be undone.
               </ListItem>
@@ -151,19 +143,6 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             </List>
           </Notice>
           <RemovableSelectionsList
-            RemoveButton={(props: ButtonProps) => (
-              <Button
-                {...props}
-                sx={(theme) => ({
-                  font: theme.font.normal,
-                  fontSize: '0.875rem',
-                })}
-                disabled={disableUnassignButton || props.disabled}
-                variant="text"
-              >
-                Unassign
-              </Button>
-            )}
             disableItemsOnRemove
             hasEncounteredMutationError={Boolean(unassignLinodeError)}
             headerText={`Linodes assigned to Placement Group ${selectedPlacementGroup?.label}`}
@@ -171,6 +150,19 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
             maxWidth={540}
             noDataText="No Linodes assigned to this Placement Group."
             onRemove={handleUnassignLinode}
+            RemoveButton={(props: ButtonProps) => (
+              <Button
+                {...props}
+                disabled={disableUnassignButton || props.disabled}
+                sx={(theme) => ({
+                  font: theme.font.normal,
+                  fontSize: '0.875rem',
+                })}
+                variant="text"
+              >
+                Unassign
+              </Button>
+            )}
             selectionData={assignedLinodes ?? []}
             showLoadingIndicatorOnRemove
             sx={{ mb: 3, mt: 1 }}

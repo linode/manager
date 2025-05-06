@@ -1,6 +1,6 @@
 {
   "name": "@linode/queries",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "description": "Linode Utility functions library",
   "main": "src/index.js",
   "module": "src/index.ts",

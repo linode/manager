@@ -1,5 +1,5 @@
+import { CloseIcon } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
-import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -67,6 +67,11 @@ export const Tag = (props: TagProps) => {
   return (
     <StyledChip
       {...props}
+      aria-label={`Search for Tag '${label}'`}
+      className={className}
+      clickable
+      component={component}
+      data-qa-tag={label}
       deleteIcon={
         chipProps.onDelete ? (
           <StyledDeleteButton
@@ -74,15 +79,10 @@ export const Tag = (props: TagProps) => {
             data-qa-delete-tag
             title="Delete tag"
           >
-            <Close />
+            <CloseIcon />
           </StyledDeleteButton>
         ) : undefined
       }
-      aria-label={`Search for Tag '${label}'`}
-      className={className}
-      clickable
-      component={component}
-      data-qa-tag={label}
       label={_label}
       onClick={handleClick}
       role="button"

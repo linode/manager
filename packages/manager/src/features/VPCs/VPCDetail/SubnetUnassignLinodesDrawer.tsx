@@ -19,7 +19,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
@@ -40,10 +39,12 @@ import type {
 
 interface Props {
   isFetching: boolean;
+  linodeError?: APIError[] | null;
   onClose: () => void;
   open: boolean;
   singleLinodeToBeUnassigned?: Linode;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
@@ -60,10 +61,12 @@ interface LinodeAndInterfaceData extends Linode {
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({
     isFetching,
+    linodeError,
     onClose,
     open,
     singleLinodeToBeUnassigned,
     subnet,
+    subnetError,
     vpcId,
   }: Props) => {
     const { data: profile } = useProfile();
@@ -308,17 +311,16 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     return (
       <Drawer
+        error={subnetError || linodeError}
         isFetching={isFetching}
-        NotFoundComponent={NotFound}
         onClose={handleOnClose}
         open={open}
-        title={`Unassign Linodes from subnet: ${subnet?.label} (${
-          subnet?.ipv4 ?? subnet?.ipv6
+        title={`Unassign Linodes from subnet: ${subnet?.label ?? 'Unknown'} (${
+          subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
         {userCannotUnassignLinodes && (
           <Notice
-            important
             text={`You don't have permissions to unassign Linodes from ${subnet?.label}. Please contact an account administrator for details.`}
             variant="error"
           />

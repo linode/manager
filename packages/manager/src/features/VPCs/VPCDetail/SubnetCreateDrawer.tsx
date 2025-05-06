@@ -17,12 +17,11 @@ import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
 import {
-  DEFAULT_SUBNET_IPV4_VALUE,
-  RESERVED_IP_NUMBER,
   calculateAvailableIPv4sRFC1918,
+  DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,
+  RESERVED_IP_NUMBER,
 } from 'src/utilities/subnets';
 
 import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
@@ -90,29 +89,25 @@ export const SubnetCreateDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title={'Create Subnet'}
-    >
+    <Drawer onClose={handleClose} open={open} title={'Create Subnet'}>
       {errors.root?.message && (
         <Notice spacingBottom={8} text={errors.root.message} variant="error" />
       )}
       {userCannotAddSubnet && (
         <Notice
+          spacingBottom={8}
+          spacingTop={16}
           text={
             "You don't have permissions to create a new Subnet. Please contact an account administrator for details."
           }
-          important
-          spacingBottom={8}
-          spacingTop={16}
           variant="error"
         />
       )}
       <form onSubmit={handleSubmit(onCreateSubnet)}>
         <Stack>
           <Controller
+            control={control}
+            name="label"
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter a subnet label"
@@ -125,10 +120,10 @@ export const SubnetCreateDrawer = (props: Props) => {
                 value={field.value}
               />
             )}
-            control={control}
-            name="label"
           />
           <Controller
+            control={control}
+            name="ipv4"
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter an IPv4"
@@ -140,8 +135,6 @@ export const SubnetCreateDrawer = (props: Props) => {
                 value={field.value}
               />
             )}
-            control={control}
-            name="ipv4"
           />
           {numberOfAvailableIPs && (
             <FormHelperText>

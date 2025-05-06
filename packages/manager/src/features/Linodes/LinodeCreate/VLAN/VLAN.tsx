@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionQuery } from '@linode/queries';
 import {
   Accordion,
   Stack,
@@ -6,7 +6,6 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { doesRegionSupportFeature } from '@linode/utilities';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -14,15 +13,13 @@ import { Link } from 'src/components/Link';
 import { VLANSelect } from 'src/components/VLANSelect';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
+import { VLANAvailabilityNotice } from '../Networking/VLANAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
-import { VLANAvailabilityNotice } from './VLANAvailabilityNotice';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const VLAN = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
-
-  const { data: regions } = useRegionsQuery();
 
   const { params } = useLinodeCreateQueryParams();
 
@@ -32,11 +29,10 @@ export const VLAN = () => {
 
   const [imageId, regionId] = useWatch({ control, name: ['image', 'region'] });
 
-  const regionSupportsVLANs = doesRegionSupportFeature(
-    regionId,
-    regions ?? [],
-    'Vlans'
-  );
+  const { data: selectedRegion } = useRegionQuery(regionId);
+
+  const regionSupportsVLANs =
+    selectedRegion?.capabilities.includes('Vlans') ?? false;
 
   const isCreatingFromBackup = params.type === 'Backups';
 
@@ -69,7 +65,7 @@ export const VLAN = () => {
       }
       sx={{ margin: '0 !important', padding: 1 }}
     >
-      <VLANAvailabilityNotice />
+      {selectedRegion && !regionSupportsVLANs && <VLANAvailabilityNotice />}
       <Typography variant="body1">
         VLANs are used to create a private L2 Virtual Local Area Network between
         Linodes. A VLAN created or attached in this section will be assigned to
@@ -81,28 +77,38 @@ export const VLAN = () => {
         </Link>
         .
       </Typography>
-      <Stack columnGap={2} direction="row" flexWrap="wrap" mt={2}>
+      <Stack
+        alignItems="flex-start"
+        direction="row"
+        flexWrap="wrap"
+        gap={2}
+        mt={2}
+      >
         <Controller
+          control={control}
+          name="interfaces.1.label"
           render={({ field, fieldState }) => (
             <VLANSelect
               disabled={disabled}
               errorText={fieldState.error?.message}
               filter={{ region: regionId }}
+              helperText={
+                !regionId
+                  ? 'Select a region to see available VLANs.'
+                  : undefined
+              }
               onBlur={field.onBlur}
               onChange={field.onChange}
               sx={{ width: 300 }}
               value={field.value ?? null}
             />
           )}
-          control={control}
-          name="interfaces.1.label"
         />
         <Controller
+          control={control}
+          name="interfaces.1.ipam_address"
           render={({ field, fieldState }) => (
             <TextField
-              tooltipText={
-                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
-              }
               containerProps={{ maxWidth: 335 }}
               disabled={disabled}
               errorText={fieldState.error?.message}
@@ -112,11 +118,12 @@ export const VLAN = () => {
               onChange={field.onChange}
               optional
               placeholder="192.0.2.0/24"
+              tooltipText={
+                'IPAM address must use IP/netmask format, e.g. 192.0.2.0/24.'
+              }
               value={field.value ?? ''}
             />
           )}
-          control={control}
-          name="interfaces.1.ipam_address"
         />
       </Stack>
     </Accordion>

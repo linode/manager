@@ -1,12 +1,12 @@
 import {
   Button,
+  CloseIcon,
   InputLabel,
   Notice,
   TextField,
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import Close from '@mui/icons-material/Close';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -27,10 +27,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
     paddingTop: theme.spacing(1.5),
   },
   button: {
-    '& :hover, & :focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.tokens.color.Neutrals.White,
-    },
     '& > span': {
       padding: 2,
     },
@@ -293,7 +289,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
                 disabled={disabled}
                 onClick={() => removeInput(idx)}
               >
-                <Close data-testid={`delete-ip-${idx}`} />
+                <CloseIcon data-testid={`delete-ip-${idx}`} />
               </Button>
             )}
           </Grid>

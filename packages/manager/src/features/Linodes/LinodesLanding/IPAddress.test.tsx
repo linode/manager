@@ -152,19 +152,14 @@ describe('IPAddress masked', () => {
       data: preferences,
     });
 
-    const {
-      container,
-      getAllByTestId,
-      getAllByText,
-      getByText,
-      queryByText,
-    } = renderWithTheme(
-      <IPAddress
-        ips={['8.8.8.8', '8.8.40.4']}
-        showAll={false}
-        showMore={true}
-      />
-    );
+    const { container, getAllByTestId, getAllByText, getByText, queryByText } =
+      renderWithTheme(
+        <IPAddress
+          ips={['8.8.8.8', '8.8.40.4']}
+          showAll={false}
+          showMore={true}
+        />
+      );
 
     const visibilityToggles = getAllByTestId('VisibilityTooltip');
 

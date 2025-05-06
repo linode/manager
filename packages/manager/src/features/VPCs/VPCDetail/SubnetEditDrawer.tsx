@@ -9,15 +9,14 @@ import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
-import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
+import type { APIError, ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
@@ -25,7 +24,7 @@ const IP_HELPER_TEXT =
   'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
-  const { isFetching, onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId } = props;
 
   const {
     isPending,
@@ -77,7 +76,7 @@ export const SubnetEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={subnetError}
       isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
@@ -88,13 +87,14 @@ export const SubnetEditDrawer = (props: Props) => {
       )}
       {readOnly && (
         <Notice
-          important
           text={`You don't have permissions to edit ${subnet?.label}. Please contact an account administrator for details.`}
           variant="error"
         />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -106,8 +106,6 @@ export const SubnetEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <TextField
           disabled

@@ -24,14 +24,6 @@ export default function preload<P>(requests: RequestMap<P>) {
       static displayName = `PromiseLoader(${
         Component.displayName || Component.name
       })`;
-      handleDone = () => {
-        if (!this.mounted) {
-          return;
-        }
-
-        this.setState((prevState) => ({ ...prevState, loading: false }));
-      };
-
       mounted: boolean = false;
 
       state = { loading: true };
@@ -68,6 +60,14 @@ export default function preload<P>(requests: RequestMap<P>) {
       componentWillUnmount() {
         this.mounted = false;
       }
+
+      handleDone = () => {
+        if (!this.mounted) {
+          return;
+        }
+
+        this.setState((prevState) => ({ ...prevState, loading: false }));
+      };
 
       render() {
         const { loading, ...responses } = this.state;

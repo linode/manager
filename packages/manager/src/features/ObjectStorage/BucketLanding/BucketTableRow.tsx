@@ -1,5 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import {
   getRegionsByRegionId,
   isFeatureEnabledV2,
@@ -8,7 +9,6 @@ import {
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
@@ -89,7 +89,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
           <Typography data-qa-region variant="body1">
             {isObjMultiClusterEnabled && regionsLookup && region
               ? regionsLookup[region].label
-              : clusterRegion?.label ?? cluster}
+              : (clusterRegion?.label ?? cluster)}
           </Typography>
         </StyledBucketRegionCell>
       </Hidden>
@@ -109,8 +109,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
       </Hidden>
       <StyledBucketSizeCell noWrap>
         <Typography data-qa-size variant="body1">
-          {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-          {readableBytes(size, { base10: true }).formatted}
+          {readableBytes(size).formatted}
         </Typography>
       </StyledBucketSizeCell>
 

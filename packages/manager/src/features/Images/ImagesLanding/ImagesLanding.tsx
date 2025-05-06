@@ -2,6 +2,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
   CircleProgress,
+  CloseIcon,
   Drawer,
   ErrorState,
   IconButton,
@@ -11,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -23,10 +24,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -37,7 +36,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -262,14 +260,11 @@ export const ImagesLanding = () => {
     }
   );
 
-  const { data: selectedImage, isFetching: isFetchingSelectedImage } =
-    useDialogData({
-      enabled: !!selectedImageId,
-      paramKey: 'imageId',
-      queryHook: useImageQuery,
-      redirectToOnNotFound: '/images',
-    });
-
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+    error: selectedImageError,
+  } = useImageQuery(selectedImageId, !!selectedImageId);
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
   const { events } = useEventsInfiniteQuery();
@@ -347,7 +342,6 @@ export const ImagesLanding = () => {
          * is ensuring the image is removed from the list, to prevent the user
          * from taking any action on the Image.
          */
-        // this.props.onDelete();
         enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info',
         });
@@ -429,7 +423,6 @@ export const ImagesLanding = () => {
     <React.Fragment>
       {isCreateImageRestricted && (
         <Notice
-          important
           sx={{ marginBottom: 2 }}
           text={getRestrictedResourceText({
             action: 'create',
@@ -657,22 +650,24 @@ export const ImagesLanding = () => {
       </Paper>
       <EditImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'rebuild'}
       />
       <Drawer
+        error={selectedImageError}
         isFetching={isFetchingSelectedImage}
-        NotFoundComponent={NotFound}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}
-        title={`Manage Replicas for ${selectedImage?.label}`}
+        title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
       >
         <ManageImageReplicasForm
           image={selectedImage}
@@ -696,6 +691,7 @@ export const ImagesLanding = () => {
             }}
           />
         }
+        entityError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'delete'}

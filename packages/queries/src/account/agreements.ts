@@ -5,7 +5,7 @@ import { queryPresets } from '../base';
 import { useProfile } from '../profile';
 import { accountQueries } from './queries';
 
-import type { APIError, Agreements } from '@linode/api-v4';
+import type { Agreements, APIError } from '@linode/api-v4';
 
 export const useAccountAgreements = (enabled?: boolean) => {
   const { data: profile } = useProfile();
@@ -37,14 +37,13 @@ export const useMutateAccountAgreements = () => {
 
           for (const key in variables) {
             if (variables[key as keyof Agreements] !== undefined) {
-              newAgreements[key as keyof Agreements] = variables[
-                key as keyof Agreements
-              ]!;
+              newAgreements[key as keyof Agreements] =
+                variables[key as keyof Agreements]!;
             }
           }
 
           return newAgreements;
-        }
+        },
       );
     },
   });

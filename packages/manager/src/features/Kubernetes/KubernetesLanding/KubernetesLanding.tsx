@@ -1,5 +1,6 @@
 import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +12,6 @@ import {
   DISK_ENCRYPTION_UPDATE_PROTECT_CLUSTERS_COPY,
 } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -32,7 +32,7 @@ import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
-import type { KubeNodePoolResponse, KubernetesTier } from '@linode/api-v4';
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface ClusterDialogState {
   loading: boolean;
@@ -43,11 +43,8 @@ interface ClusterDialogState {
 }
 
 interface UpgradeDialogState {
-  currentVersion: string;
   open: boolean;
   selectedClusterID: number;
-  selectedClusterLabel: string;
-  selectedClusterTier: KubernetesTier;
 }
 
 const defaultDialogState = {
@@ -59,12 +56,8 @@ const defaultDialogState = {
 };
 
 const defaultUpgradeDialogState = {
-  currentVersion: '',
-  nextVersion: null,
   open: false,
   selectedClusterID: 0,
-  selectedClusterLabel: '',
-  selectedClusterTier: 'standard' as KubernetesTier,
 };
 
 const preferenceKey = 'kubernetes';
@@ -73,14 +66,11 @@ export const KubernetesLanding = () => {
   const { push } = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
-  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
-    defaultDialogState
-  );
+  const [dialog, setDialogState] =
+    React.useState<ClusterDialogState>(defaultDialogState);
 
-  const [
-    upgradeDialog,
-    setUpgradeDialogState,
-  ] = React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
+  const [upgradeDialog, setUpgradeDialogState] =
+    React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -110,22 +100,13 @@ export const KubernetesLanding = () => {
     isUsingBetaEndpoint,
   });
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
-  const openUpgradeDialog = (
-    clusterID: number,
-    clusterLabel: string,
-    clusterTier: KubernetesTier,
-    currentVersion: string
-  ) => {
+  const openUpgradeDialog = (clusterID: number) => {
     setUpgradeDialogState({
-      currentVersion,
       open: true,
       selectedClusterID: clusterID,
-      selectedClusterLabel: clusterLabel,
-      selectedClusterTier: clusterTier,
     });
   };
 
@@ -246,17 +227,10 @@ export const KubernetesLanding = () => {
         <TableBody>
           {data?.data.map((cluster) => (
             <KubernetesClusterRow
-              openUpgradeDialog={() =>
-                openUpgradeDialog(
-                  cluster.id,
-                  cluster.label,
-                  cluster?.tier ?? 'standard', // TODO LKE: remove fallback once LKE-E is in GA and tier is required
-                  cluster.k8s_version
-                )
-              }
               cluster={cluster}
               key={`kubernetes-cluster-list-${cluster.id}`}
               openDeleteDialog={openDialog}
+              openUpgradeDialog={() => openUpgradeDialog(cluster.id)}
             />
           ))}
         </TableBody>
@@ -278,9 +252,6 @@ export const KubernetesLanding = () => {
       />
       <UpgradeVersionModal
         clusterID={upgradeDialog.selectedClusterID}
-        clusterLabel={upgradeDialog.selectedClusterLabel}
-        clusterTier={upgradeDialog.selectedClusterTier}
-        currentVersion={upgradeDialog.currentVersion}
         isOpen={upgradeDialog.open}
         onClose={closeUpgradeDialog}
       />

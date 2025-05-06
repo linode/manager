@@ -2,6 +2,7 @@ import {
   createOAuthClientSchema,
   updateOAuthClientSchema,
 } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,8 +11,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { OAuthClient, OAuthClientRequest } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { OAuthClient, OAuthClientRequest } from './types';
 
 /**
  * getOAuthClients
@@ -24,7 +26,7 @@ export const getOAuthClients = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -38,7 +40,7 @@ export const getOAuthClients = (params?: Params, filter?: Filter) =>
 export const getOAuthClient = (clientId: number) =>
   Request<string>(
     setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -59,7 +61,7 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
   Request<OAuthClientWithSecret>(
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('POST'),
-    setData(data, createOAuthClientSchema)
+    setData(data, createOAuthClientSchema),
   );
 
 /**
@@ -76,10 +78,10 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
   Request<OAuthClientWithSecret>(
     setURL(
       `${API_ROOT}/account/oauth-clients/${encodeURIComponent(
-        clientId
-      )}/reset-secret`
+        clientId,
+      )}/reset-secret`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -91,12 +93,12 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
  */
 export const updateOAuthClient = (
   clientId: string,
-  data: Partial<OAuthClientRequest>
+  data: Partial<OAuthClientRequest>,
 ) =>
   Request<OAuthClient>(
     setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
     setMethod('PUT'),
-    setData(data, updateOAuthClientSchema)
+    setData(data, updateOAuthClientSchema),
   );
 
 /**
@@ -114,5 +116,5 @@ export const updateOAuthClient = (
 export const deleteOAuthClient = (clientId: number | string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/oauth-clients/${encodeURIComponent(clientId)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );

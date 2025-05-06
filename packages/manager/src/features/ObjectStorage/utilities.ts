@@ -6,7 +6,7 @@ import type { ObjectStorageEndpoint } from '@linode/api-v4/lib/object-storage';
 import type { FormikProps } from 'formik';
 
 export const generateObjectUrl = (hostname: string, objectName: string) => {
-  return `https://${hostname}/${objectName}`;
+  return `https://${hostname}/${encodeURIComponent(objectName)}`;
 };
 
 // Objects ending with a / and having a size of 0 are often used to represent
@@ -96,7 +96,7 @@ export const displayName = (objectName: string) => {
 export const tableUpdateAction = (
   currentPrefix: string,
   objectName: string
-): { name: string; type: 'FILE' | 'FOLDER' } | null => {
+): null | { name: string; type: 'FILE' | 'FOLDER' } => {
   if (objectName.startsWith(currentPrefix) || currentPrefix === '') {
     // If the prefix matches the beginning of the objectName, we "subtract" it
     // from the objectName, and make decisions based on that.

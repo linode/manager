@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
@@ -67,15 +66,13 @@ export const ObjectDetailsDrawer = React.memo(
 
     return (
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(displayName ?? 'Object Detail')}
       >
         {size ? (
           <Typography variant="subtitle2">
-            {/* to convert from binary units (GiB) to decimal units (GB) we need to pass the base10 flag */}
-            {readableBytes(size, { base10: true }).formatted}
+            {readableBytes(size).formatted}
           </Typography>
         ) : null}
         {formattedLastModified && Boolean(profile) ? (
@@ -86,7 +83,7 @@ export const ObjectDetailsDrawer = React.memo(
 
         {url ? (
           <StyledLinkContainer>
-            <Link external to={url}>
+            <Link bypassSanitization external to={url}>
               {truncateMiddle(url, 50)}
             </Link>
             <StyledCopyTooltip sx={{ marginLeft: 4 }} text={url} />

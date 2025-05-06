@@ -77,8 +77,10 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     id: linodeID,
   });
 
+  const isLinodeInterface = linode?.interface_generation === 'linode';
+
   const { isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface: linode?.interface_generation === 'linode',
+    isLinodeInterface,
     linodeId: linodeID,
   });
 
@@ -144,6 +146,9 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     return null;
   }
 
+  const showAddIPButton =
+    !isLinodeInterfacesEnabled || linode?.interface_generation !== 'linode';
+
   const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
@@ -163,7 +168,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         {isSmallScreen ? (
           <ActionMenu
             actionsList={[
-              ...(!isLinodeInterfacesEnabled
+              ...(showAddIPButton
                 ? [
                     {
                       disabled: isLinodesGrantReadOnly,
@@ -201,7 +206,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             >
               IP Sharing
             </Button>
-            {!isLinodeInterfacesEnabled && (
+            {showAddIPButton && (
               <Button
                 buttonType="primary"
                 disabled={isLinodesGrantReadOnly}
@@ -246,6 +251,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                   <LinodeIPAddressRow
                     {...ipDisplay}
                     {...handlers}
+                    isLinodeInterface={isLinodeInterface}
                     isVPCOnlyLinode={
                       isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
                     }

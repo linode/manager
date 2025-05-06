@@ -1,6 +1,11 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
-import { Autocomplete, Chip, Stack, StyledListItem } from '@linode/ui';
-import CloseIcon from '@mui/icons-material/Close';
+import {
+  Autocomplete,
+  Chip,
+  CloseIcon,
+  Stack,
+  StyledListItem,
+} from '@linode/ui';
 import React from 'react';
 
 // @todo: modularization - Move `getRegionCountryGroup` utility to `@linode/shared` package
@@ -150,7 +155,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
               <Chip
                 {...getTagProps({ index })}
                 data-testid={option.id}
-                deleteIcon={<CloseIcon />}
+                deleteIcon={<CloseIcon data-testid="CloseIcon" />}
                 key={index}
                 label={<RegionChipLabel region={option} />}
                 onDelete={() => handleRemoveOption(option.id)}

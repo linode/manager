@@ -1,5 +1,20 @@
-## [2025-04-08] - v0.2.0
+## [2025-05-06] - v0.4.0
 
+### Tech Stories:
+
+- Re-export everything from `@tanstack/react-query` ([#12106](https://github.com/linode/manager/pull/12106))
+
+## [2025-04-22] - v0.3.0
+
+### Added:
+
+- Linode Config related queries to get a single Config and a single Config Profile Interface ([#11953](https://github.com/linode/manager/pull/11953))
+
+### Tech Stories:
+
+- Eslint Overhaul ([#11941](https://github.com/linode/manager/pull/11941))
+
+## [2025-04-08] - v0.2.0
 
 ### Added:
 
@@ -9,10 +24,9 @@
 
 ### Upcoming Features:
 
-- Add Firewall Settings query  ([#11828](https://github.com/linode/manager/pull/11828))
+- Add Firewall Settings query ([#11828](https://github.com/linode/manager/pull/11828))
 
 ## [2025-03-25] - v0.1.0
-
 
 ### Added:
 

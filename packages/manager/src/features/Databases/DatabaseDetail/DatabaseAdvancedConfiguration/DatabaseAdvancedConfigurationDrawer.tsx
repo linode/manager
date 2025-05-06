@@ -18,7 +18,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import {
   useDatabaseEngineConfig,
   useDatabaseMutation,
@@ -87,7 +86,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
 
   const {
     control,
-    formState: { isDirty, dirtyFields },
+    formState: { isDirty },
     handleSubmit,
     reset,
     watch,
@@ -166,12 +165,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Advanced Configuration"
-    >
+    <Drawer onClose={handleClose} open={open} title="Advanced Configuration">
       <form onSubmit={handleSubmit(onSubmit)} ref={formContainerRef}>
         {Boolean(updateDatabaseError) && !updateDatabaseError?.[0].field && (
           <Notice spacingBottom={16} spacingTop={16} variant="error">
@@ -183,7 +177,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         </Typography>
         <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
 
-        <Notice important sx={{ mb: 1, mt: 3 }} variant="info">
+        <Notice sx={{ mb: 1, mt: 3 }} variant="info">
           <Typography>{ADVANCED_CONFIG_INFO}</Typography>
         </Notice>
 
@@ -252,7 +246,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             disabled: !isDirty,
-            label: hasRestartCluster(dirtyFields, configs),
+            label: hasRestartCluster(configs, existingConfigurations),
             loading: isUpdating,
             type: 'submit',
             title: 'Save',

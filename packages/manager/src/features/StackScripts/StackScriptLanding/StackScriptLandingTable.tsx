@@ -4,8 +4,9 @@ import {
 } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import {
-  useLocation,
+  useMatch,
   useNavigate,
   useParams,
   useSearch,
@@ -14,7 +15,6 @@ import React from 'react';
 import { Waypoint } from 'react-waypoint';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -27,7 +27,6 @@ import {
   accountStackScriptFilter,
   communityStackScriptFilter,
 } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
@@ -46,13 +45,9 @@ interface Props {
 export const StackScriptLandingTable = (props: Props) => {
   const { type } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = useParams({
-    strict: false,
-  });
-  const { query } = useSearch({
-    from: '/stackscripts',
-  });
+  const { id } = useParams({ strict: false });
+  const { query } = useSearch({ from: '/stackscripts' });
+  const match = useMatch({ strict: false });
 
   const filter =
     type === 'community'
@@ -64,12 +59,10 @@ export const StackScriptLandingTable = (props: Props) => {
       ? { order: 'desc' as const, orderBy: 'deployments_total' }
       : { order: 'desc' as const, orderBy: 'updated' };
 
-  const {
-    error: searchParseError,
-    filter: searchFilter,
-  } = getAPIFilterFromQuery(query, {
-    searchableFieldsWithoutOperator: ['username', 'label', 'description'],
-  });
+  const { error: searchParseError, filter: searchFilter } =
+    getAPIFilterFromQuery(query, {
+      searchableFieldsWithoutOperator: ['username', 'label', 'description'],
+    });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -87,13 +80,9 @@ export const StackScriptLandingTable = (props: Props) => {
 
   const {
     data: selectedStackScript,
+    error: selectedStackScriptError,
     isFetching: isFetchingStackScript,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useStackScriptQuery,
-    redirectToOnNotFound: '/stackscripts/account',
-  });
+  } = useStackScriptQuery(Number(id), !!id);
 
   const {
     data,
@@ -136,6 +125,8 @@ export const StackScriptLandingTable = (props: Props) => {
   return (
     <Stack spacing={1}>
       <DebouncedSearchTextField
+        clearable
+        hideLabel
         inputSlotProps={
           searchParseError
             ? {
@@ -149,6 +140,9 @@ export const StackScriptLandingTable = (props: Props) => {
               }
             : {}
         }
+        isSearching={isFetching}
+        label="Search"
+        noMarginTop
         onSearch={(value) => {
           if (!value) {
             navigate({
@@ -168,11 +162,6 @@ export const StackScriptLandingTable = (props: Props) => {
             });
           }
         }}
-        clearable
-        hideLabel
-        isSearching={isFetching}
-        label="Search"
-        noMarginTop
         placeholder="Search by Label, Username, or Description"
         tooltipText={<StackScriptSearchHelperText />}
         tooltipWidth={300}
@@ -244,6 +233,7 @@ export const StackScriptLandingTable = (props: Props) => {
           {query && stackscripts?.length === 0 && <TableRowEmpty colSpan={6} />}
           {isFetchingNextPage && (
             <TableRowLoading
+              columns={type === 'account' ? 6 : 5}
               responsive={
                 type === 'account'
                   ? {
@@ -256,31 +246,32 @@ export const StackScriptLandingTable = (props: Props) => {
                       3: { lgDown: true },
                     }
               }
-              columns={type === 'account' ? 6 : 5}
             />
           )}
         </TableBody>
       </Table>
       {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
       <StackScriptMakePublicDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
-        open={location.pathname.includes('make-public')}
+        open={match.routeId === '/stackscripts/account/$id/make-public'}
         stackscript={selectedStackScript}
+        stackscriptError={selectedStackScriptError}
       />
       <StackScriptDeleteDialog
+        isFetching={isFetchingStackScript}
         onClose={() => {
           navigate({
             to: `/stackscripts`,
           });
         }}
-        isFetching={isFetchingStackScript}
-        open={location.pathname.includes('delete')}
+        open={match.routeId === '/stackscripts/account/$id/delete'}
         stackscript={selectedStackScript}
+        stackscriptError={selectedStackScriptError}
       />
     </Stack>
   );

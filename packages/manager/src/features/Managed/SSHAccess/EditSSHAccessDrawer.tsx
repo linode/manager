@@ -13,7 +13,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 
 import { IPSelect } from 'src/components/IPSelect/IPSelect';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
@@ -23,17 +22,18 @@ import { isPrivateIP, removePrefixLength } from 'src/utilities/ipUtils';
 
 import { DEFAULTS } from './common';
 
-import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import type { APIError, ManagedLinodeSetting } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 
 interface EditSSHAccessDrawerProps {
   isFetching: boolean;
   isOpen: boolean;
+  linodeError: APIError[] | null;
   linodeSetting?: ManagedLinodeSetting;
 }
 
 export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
-  const { isFetching, isOpen, linodeSetting } = props;
+  const { isFetching, isOpen, linodeError, linodeSetting } = props;
   const navigate = useNavigate();
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
     linodeSetting?.id || -1
@@ -81,7 +81,7 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={linodeError}
       isFetching={isFetching}
       onClose={() => navigate({ to: '/managed/ssh-access' })}
       open={isOpen}
@@ -183,15 +183,15 @@ export const EditSSHAccessDrawer = (props: EditSSHAccessDrawerProps) => {
                                 value: removePrefixLength(option.value),
                               })),
                           ]}
+                          errorText={ipError}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
                           }
+                          linodeId={linodeSetting.id}
                           value={{
                             label: ip === 'any' ? 'Any' : ip,
                             value: ip,
                           }}
-                          errorText={ipError}
-                          linodeId={linodeSetting.id}
                         />
                       </Grid>
 

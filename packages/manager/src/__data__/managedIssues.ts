@@ -1,4 +1,4 @@
-import { ManagedIssue } from '@linode/api-v4';
+import type { ManagedIssue } from '@linode/api-v4';
 
 export const managedIssues: ManagedIssue[] = [
   {
