@@ -2,11 +2,11 @@ import styled from '@emotion/styled';
 import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import InfoOutline from '@mui/icons-material/InfoOutlined';
 import WarningSolid from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import InfoOutline from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
 import { Tooltip, tooltipClasses } from '../Tooltip';
@@ -139,7 +139,14 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = <HelpOutline sx={sxRootStyle} />;
       break;
     case 'info':
-      renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
+      renderIcon = (
+        <InfoOutline
+          style={{
+            color: theme.tokens.alias.Content.Icon.Primary.Default,
+            flexShrink: 0,
+          }}
+        />
+      );
       break;
     case 'other':
       renderIcon = icon ?? null;
