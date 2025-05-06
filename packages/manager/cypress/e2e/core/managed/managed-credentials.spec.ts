@@ -230,7 +230,7 @@ describe('Managed Credentials tab', () => {
       .findByTitle(`Delete Credential ${credentialLabel}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Credential Name:').should('be.visible').click();
+        cy.findByLabelText('Credential Name').should('be.visible').click();
         cy.focused().type(credentialLabel);
 
         ui.buttonGroup

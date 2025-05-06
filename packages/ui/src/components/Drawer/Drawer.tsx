@@ -103,13 +103,15 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     // and its content becomes potentially undefined
     const lastChildrenRef = React.useRef(children);
     const lastTitleRef = React.useRef(title);
+    const lastErrorRef = React.useRef(error);
     // Update refs when the drawer is open and content is matched
-    if (open && children) {
+    if (open) {
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
+      lastErrorRef.current = error;
     }
 
-    const errorText = getErrorText(error);
+    const errorText = getErrorText(lastErrorRef.current);
 
     return (
       <_Drawer
@@ -146,7 +148,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           <Grid>
             {isFetching ? null : (
               <Typography
-                data-qa-drawer-title={title}
+                data-qa-drawer-title={lastTitleRef.current}
                 data-testid="drawer-title"
                 id={titleID}
                 sx={(theme) => ({
@@ -155,7 +157,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
                 })}
                 variant="h2"
               >
-                {title}
+                {lastTitleRef.current}
               </Typography>
             )}
           </Grid>
@@ -182,11 +184,11 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
           </Box>
         ) : errorText &&
           (errorText === 'Not Found' || errorText === 'Not found') ? (
-          <NotFound />
+          <NotFound alignTop />
         ) : (
           <>
             {errorText && <ErrorState errorText={errorText} />}
-            {children}
+            {lastChildrenRef.current}
           </>
         )}
       </_Drawer>

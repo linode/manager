@@ -12,6 +12,7 @@ describe('VPC Delete Dialog', () => {
     onClose: vi.fn(),
     open: true,
     vpc: vpcFactory.build({ label: 'vpc-1' }),
+    vpcError: null,
   };
 
   it('renders a VPC delete dialog correctly', async () => {

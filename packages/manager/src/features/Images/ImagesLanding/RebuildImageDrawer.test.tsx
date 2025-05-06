@@ -12,6 +12,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 const props = {
   changeLinode: vi.fn(),
   image: imageFactory.build(),
+  imageError: null,
   isFetching: false,
   onClose: vi.fn(),
   open: true,

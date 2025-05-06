@@ -12,6 +12,7 @@ import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToCo
 import { getPlacementGroupLinodes } from './utils';
 
 import type {
+  APIError,
   Linode,
   PlacementGroup,
   UnassignLinodesFromPlacementGroupPayload,
@@ -25,6 +26,7 @@ interface Props {
   onClose: () => void;
   open: boolean;
   selectedPlacementGroup: PlacementGroup | undefined;
+  selectedPlacementGroupError: APIError[] | null;
 }
 
 export const PlacementGroupsDeleteModal = (props: Props) => {
@@ -35,6 +37,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
     onClose,
     open,
     selectedPlacementGroup,
+    selectedPlacementGroupError,
   } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
@@ -104,6 +107,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
         name: selectedPlacementGroup?.label,
         primaryBtnText: 'Delete',
         type: 'Placement Group',
+        error: selectedPlacementGroupError,
       }}
       expand
       isFetching={isFetching}
@@ -112,7 +116,7 @@ export const PlacementGroupsDeleteModal = (props: Props) => {
       onClick={onDelete}
       onClose={handleClose}
       open={open}
-      title={`Delete Placement Group ${selectedPlacementGroup?.label}`}
+      title={`Delete Placement Group ${selectedPlacementGroup?.label ?? 'Unknown'}`}
     >
       {error && (
         <Notice

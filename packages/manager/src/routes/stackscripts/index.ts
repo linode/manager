@@ -35,19 +35,21 @@ const stackScriptsAccountRoute = createRoute({
 );
 
 const stackScriptsAccountMakePublicRoute = createRoute({
-  getParentRoute: () => stackScriptsAccountRoute,
+  getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
-  path: '$id/make-public',
-});
+  path: 'account/$id/make-public',
+}).lazy(() =>
+  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+);
 
 const stackScriptsDeleteRoute = createRoute({
-  getParentRoute: () => stackScriptsAccountRoute,
+  getParentRoute: () => stackScriptsRoute,
   parseParams: (params) => ({
     id: Number(params.id),
   }),
-  path: '$id/delete',
+  path: 'account/$id/delete',
 }).lazy(() =>
   import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
 );

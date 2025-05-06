@@ -39,10 +39,12 @@ import type {
 
 interface Props {
   isFetching: boolean;
+  linodeError?: APIError[] | null;
   onClose: () => void;
   open: boolean;
   singleLinodeToBeUnassigned?: Linode;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
@@ -59,10 +61,12 @@ interface LinodeAndInterfaceData extends Linode {
 export const SubnetUnassignLinodesDrawer = React.memo(
   ({
     isFetching,
+    linodeError,
     onClose,
     open,
     singleLinodeToBeUnassigned,
     subnet,
+    subnetError,
     vpcId,
   }: Props) => {
     const { data: profile } = useProfile();
@@ -307,11 +311,12 @@ export const SubnetUnassignLinodesDrawer = React.memo(
 
     return (
       <Drawer
+        error={subnetError || linodeError}
         isFetching={isFetching}
         onClose={handleOnClose}
         open={open}
-        title={`Unassign Linodes from subnet: ${subnet?.label} (${
-          subnet?.ipv4 ?? subnet?.ipv6
+        title={`Unassign Linodes from subnet: ${subnet?.label ?? 'Unknown'} (${
+          subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
         })`}
       >
         {userCannotUnassignLinodes && (

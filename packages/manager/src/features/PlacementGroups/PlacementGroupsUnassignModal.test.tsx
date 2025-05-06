@@ -34,6 +34,7 @@ describe('PlacementGroupsUnassignModal', () => {
         onClose={() => null}
         open
         selectedLinode={linode}
+        selectedLinodeError={null}
       />
     );
 

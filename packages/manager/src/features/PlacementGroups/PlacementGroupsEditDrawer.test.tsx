@@ -38,6 +38,7 @@ describe('PlacementGroupsEditDrawer', () => {
           placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
+        selectedPlacementGroupError={null}
       />
     );
 

@@ -11,6 +11,7 @@ describe('Edit VPC Drawer', () => {
     onClose: vi.fn(),
     open: true,
     vpc: vpcFactory.build(),
+    vpcError: null,
   };
 
   it('Should render a title, label input, description input, and action buttons', () => {

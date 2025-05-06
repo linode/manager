@@ -17,14 +17,12 @@ import {
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 
 import type { ManagedContactGroup } from './common';
-import type {
-  ContactPayload,
-  ManagedContact,
-} from '@linode/api-v4/lib/managed';
+import type { APIError, ContactPayload, ManagedContact } from '@linode/api-v4';
 import type { FormikHelpers } from 'formik';
 
 interface ContactsDrawerProps {
   contact?: ManagedContact;
+  contactError: APIError[] | null;
   groups: ManagedContactGroup[];
   isFetching: boolean;
   isOpen: boolean;
@@ -41,7 +39,7 @@ const emptyContactPayload: ContactPayload = {
 };
 
 const ContactsDrawer = (props: ContactsDrawerProps) => {
-  const { contact, groups, isFetching, isOpen } = props;
+  const { contact, contactError, groups, isFetching, isOpen } = props;
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const isEditing = match.routeId === '/managed/contacts/$contactId/edit';
@@ -111,6 +109,7 @@ const ContactsDrawer = (props: ContactsDrawerProps) => {
 
   return (
     <Drawer
+      error={contactError}
       isFetching={isFetching}
       onClose={() => {
         navigate({

@@ -5,17 +5,18 @@ import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
+import type { APIError, UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
+  vpcError: APIError[] | null;
 }
 
 export const VPCEditDrawer = (props: Props) => {
-  const { isFetching, onClose, open, vpc } = props;
+  const { isFetching, onClose, open, vpc, vpcError } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -68,6 +69,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={vpcError}
       isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}

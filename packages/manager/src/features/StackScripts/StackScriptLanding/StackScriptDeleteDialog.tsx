@@ -5,17 +5,18 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { StackScript } from '@linode/api-v4';
+import type { APIError, StackScript } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   stackscript: StackScript | undefined;
+  stackscriptError: APIError[] | null;
 }
 
 export const StackScriptDeleteDialog = (props: Props) => {
-  const { isFetching, onClose, open, stackscript } = props;
+  const { isFetching, onClose, open, stackscript, stackscriptError } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { error, isPending, mutate } = useDeleteStackScriptMutation(
@@ -45,11 +46,11 @@ export const StackScriptDeleteDialog = (props: Props) => {
           </Button>
         </Stack>
       }
-      error={error?.[0].reason}
+      error={error?.[0].reason ?? stackscriptError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      title={`Delete StackScript ${stackscript?.label}?`}
+      title={`Delete StackScript ${stackscript?.label ?? 'Unknown'}?`}
     >
       <Typography>Are you sure you want to delete this StackScript?</Typography>
     </ConfirmationDialog>

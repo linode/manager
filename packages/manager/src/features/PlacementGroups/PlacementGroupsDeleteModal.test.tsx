@@ -36,6 +36,7 @@ const props = {
   isLoading: false,
   onClose: vi.fn(),
   open: true,
+  selectedPlacementGroupError: null,
 };
 
 describe('PlacementGroupsDeleteModal', () => {

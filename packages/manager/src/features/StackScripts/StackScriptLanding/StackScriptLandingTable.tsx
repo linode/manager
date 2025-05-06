@@ -6,7 +6,7 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import {
-  useLocation,
+  useMatch,
   useNavigate,
   useParams,
   useSearch,
@@ -27,7 +27,6 @@ import {
   accountStackScriptFilter,
   communityStackScriptFilter,
 } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import { StackScriptSearchHelperText } from '../Partials/StackScriptSearchHelperText';
@@ -46,13 +45,9 @@ interface Props {
 export const StackScriptLandingTable = (props: Props) => {
   const { type } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const { id } = useParams({
-    strict: false,
-  });
-  const { query } = useSearch({
-    from: '/stackscripts',
-  });
+  const { id } = useParams({ strict: false });
+  const { query } = useSearch({ from: '/stackscripts' });
+  const match = useMatch({ strict: false });
 
   const filter =
     type === 'community'
@@ -83,13 +78,11 @@ export const StackScriptLandingTable = (props: Props) => {
         : 'stackscripts-landing-community',
   });
 
-  const { data: selectedStackScript, isFetching: isFetchingStackScript } =
-    useDialogData({
-      enabled: !!id,
-      paramKey: 'id',
-      queryHook: useStackScriptQuery,
-      redirectToOnNotFound: '/stackscripts/account',
-    });
+  const {
+    data: selectedStackScript,
+    error: selectedStackScriptError,
+    isFetching: isFetchingStackScript,
+  } = useStackScriptQuery(Number(id), !!id);
 
   const {
     data,
@@ -265,8 +258,9 @@ export const StackScriptLandingTable = (props: Props) => {
             to: `/stackscripts`,
           });
         }}
-        open={location.pathname.includes('make-public')}
+        open={match.routeId === '/stackscripts/account/$id/make-public'}
         stackscript={selectedStackScript}
+        stackscriptError={selectedStackScriptError}
       />
       <StackScriptDeleteDialog
         isFetching={isFetchingStackScript}
@@ -275,8 +269,9 @@ export const StackScriptLandingTable = (props: Props) => {
             to: `/stackscripts`,
           });
         }}
-        open={location.pathname.includes('delete')}
+        open={match.routeId === '/stackscripts/account/$id/delete'}
         stackscript={selectedStackScript}
+        stackscriptError={selectedStackScriptError}
       />
     </Stack>
   );

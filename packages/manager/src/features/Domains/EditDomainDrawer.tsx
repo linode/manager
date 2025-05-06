@@ -20,18 +20,19 @@ import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from './domainUtils';
 
-import type { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import type { APIError, Domain, UpdateDomainPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
-  const { domain, isFetching, onClose, open } = props;
+  const { domain, domainError, isFetching, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -123,6 +124,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
 
   return (
     <Drawer
+      error={domainError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
