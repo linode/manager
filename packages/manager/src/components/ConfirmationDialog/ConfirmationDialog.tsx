@@ -12,7 +12,7 @@ export interface ConfirmationDialogProps extends DialogProps {
   /**
    * The error to be displayed in case fetching the entity failed.
    */
-  entityError?: APIError[] | null | string | undefined;
+  entityError?: APIError[] | null | string;
 }
 
 /**
