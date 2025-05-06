@@ -26,7 +26,7 @@ describe('ComponentRenderer component tests', () => {
         isMultiSelect: true,
         isOptional: true,
         name: 'Tags',
-        requiredInViews: [CloudPulseAvailableViews.central],
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Tags',
         priority: 4,
       },
@@ -67,7 +67,7 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: false,
         name: 'Region',
         priority: 1,
-        requiredInViews: [CloudPulseAvailableViews.central],
+        neededInViews: [CloudPulseAvailableViews.central],
       },
       name: 'Region',
     };
@@ -107,7 +107,7 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: true,
         isMultiSelect: true,
         name: 'Resources',
-        requiredInViews: [CloudPulseAvailableViews.central],
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Resources',
         priority: 2,
       },
@@ -149,7 +149,7 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: false,
         isMultiSelect: false,
         name: 'Node Type',
-        requiredInViews: [
+        neededInViews: [
           CloudPulseAvailableViews.service,
           CloudPulseAvailableViews.central,
         ],

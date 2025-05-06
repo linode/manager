@@ -577,10 +577,10 @@ export const getFilters = (
 ): CloudPulseServiceTypeFilters[] | undefined => {
   return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
-      ? config.configuration.requiredInViews.includes(
+      ? config.configuration.neededInViews.includes(
           CloudPulseAvailableViews.service
         )
-      : config.configuration.requiredInViews.includes(
+      : config.configuration.neededInViews.includes(
           CloudPulseAvailableViews.central
         )
   );

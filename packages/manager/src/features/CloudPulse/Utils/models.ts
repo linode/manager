@@ -134,6 +134,10 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    */
   name: string;
   /**
+   *  This is helpful to determine the views in which the filter should be shown
+   */
+  neededInViews: CloudPulseAvailableViews[];
+  /**
    * This is an optional field, needed if the select type is static, this is the list of options to be displayed in dropdown component
    */
   options?: CloudPulseServiceTypeFiltersOptions[];
@@ -145,10 +149,6 @@ export interface CloudPulseServiceTypeFiltersConfiguration {
    *  This controls the order of rendering the filtering componenents
    */
   priority: number;
-  /**
-   *  This is helpful to determine the views in which the filter should be shown
-   */
-  requiredInViews: CloudPulseAvailableViews[];
   /**
    * default is predefined filters like (region, resources, timeduration) or dynamic / static
    */
