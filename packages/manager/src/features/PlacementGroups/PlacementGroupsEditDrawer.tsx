@@ -39,6 +39,7 @@ export const PlacementGroupsEditDrawer = (
     open,
     region,
     selectedPlacementGroup: placementGroup,
+    selectedPlacementGroupError,
   } = props;
 
   const { error, mutateAsync } = useMutatePlacementGroup(
@@ -106,6 +107,7 @@ export const PlacementGroupsEditDrawer = (
 
   return (
     <Drawer
+      error={selectedPlacementGroupError}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}
