@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { StyledLabelBox, StyledListItem } from './LinodeEntityDetail.styles';
 import { getLinodeInterfaceType } from './LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
@@ -26,8 +25,6 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   const { cluster, linodeId, linodeLkeClusterId } = props;
 
   const theme = useTheme();
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
   const { data: linodeInterfaces } = useLinodeInterfacesQuery(linodeId);
 
@@ -64,7 +61,6 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   const vpcInterfaceFirewall = interfaceFirewalls.VPC;
 
   if (
-    !isLinodeInterfacesEnabled &&
     !linodeLkeClusterId &&
     !publicInterfaceFirewall &&
     !vpcInterfaceFirewall
@@ -73,9 +69,7 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   }
 
   const hideLKECellRightBorder =
-    !publicInterfaceFirewall &&
-    !vpcInterfaceFirewall &&
-    !isLinodeInterfacesEnabled;
+    !publicInterfaceFirewall && !vpcInterfaceFirewall;
 
   return (
     <Grid
@@ -149,20 +143,18 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
           {vpcInterfaceFirewall && `(ID: ${vpcInterfaceFirewall.id})`}
         </StyledListItem>
       )}
-      {isLinodeInterfacesEnabled && (
-        <StyledListItem
-          sx={{
-            ...(!linodeLkeClusterId &&
-            !vpcInterfaceFirewall &&
-            !publicInterfaceFirewall
-              ? { paddingLeft: 0 }
-              : {}),
-            borderRight: 'unset',
-          }}
-        >
-          <StyledLabelBox component="span">Interfaces:</StyledLabelBox> Linode
-        </StyledListItem>
-      )}
+      <StyledListItem
+        sx={{
+          ...(!linodeLkeClusterId &&
+          !vpcInterfaceFirewall &&
+          !publicInterfaceFirewall
+            ? { paddingLeft: 0 }
+            : {}),
+          borderRight: 'unset',
+        }}
+      >
+        <StyledLabelBox component="span">Interfaces:</StyledLabelBox> Linode
+      </StyledListItem>
     </Grid>
   );
 };
