@@ -9,6 +9,7 @@ import { configureMultiReporters } from './cypress/support/plugins/configure-mul
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
 import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
 import { fetchAccount } from './cypress/support/plugins/fetch-account';
+import { fetchLinodeClusters } from './cypress/support/plugins/fetch-linode-clusters';
 import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
 import { generateTestWeights } from './cypress/support/plugins/generate-weights';
 import { enableHtmlReport } from './cypress/support/plugins/html-report';
@@ -97,6 +98,7 @@ export default defineConfig({
         discardPassedTestRecordings,
         fetchAccount,
         fetchLinodeRegions,
+        fetchLinodeClusters,
         resetUserPreferences,
         regionOverrideCheck,
         featureFlagOverrides,
