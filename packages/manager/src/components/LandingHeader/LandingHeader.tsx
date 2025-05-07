@@ -78,7 +78,6 @@ export const LandingHeader = ({
 
   return (
     <StyledLandingHeaderGrid
-      className="landing-header"
       container
       data-qa-entity-header
       sx={{
@@ -164,14 +163,14 @@ export const LandingHeader = ({
   );
 };
 
-const StyledActions = styled('div')(() => ({
+const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: '24px',
+  gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
 }));
 
-const StyledLandingHeaderGrid = styled(Grid)({
+const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
   '&:not(:first-child)': {
-    marginTop: 24,
+    marginTop: theme.spacingFunction(24),
   },
-});
+}));
