@@ -213,7 +213,7 @@ export const useKubernetesClustersInfiniteQuery = (
 };
 
 interface KubernetesClustersQueryOptions {
-  enabled: boolean;
+  enabled?: boolean;
   filter: Filter;
   isUsingBetaEndpoint: boolean;
   params: Params;
