@@ -127,7 +127,9 @@ describe('IP Addresses', () => {
     cy.wait(['@updateIPAddress']);
 
     // confirm RDNS toast message
-    ui.toast.assertMessage(`Successfully updated RDNS for ${linodeIPv4}`);
+    ui.toast.assertMessage(
+      `Successfully updated RDNS for ${linodeIPv4}. RDNS entry updates may take up to one hour to show.`
+    );
   });
 
   it('validates the action menu title (aria-label) for the IP address in the table row', () => {
