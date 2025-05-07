@@ -9,15 +9,14 @@ import { modifySubnetSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
-import type { ModifySubnetPayload, Subnet } from '@linode/api-v4';
+import type { APIError, ModifySubnetPayload, Subnet } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
 }
 
@@ -25,7 +24,7 @@ const IP_HELPER_TEXT =
   'Once a subnet is created its IP range cannot be edited.';
 
 export const SubnetEditDrawer = (props: Props) => {
-  const { isFetching, onClose, open, subnet, vpcId } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId } = props;
 
   const {
     isPending,
@@ -77,8 +76,8 @@ export const SubnetEditDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={subnetError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleDrawerClose}
       open={open}
       title="Edit Subnet"

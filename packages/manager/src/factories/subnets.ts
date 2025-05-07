@@ -32,5 +32,6 @@ export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
       })
     )
   ),
+  nodebalancers: [],
   updated: '2023-07-12T16:08:53',
 });

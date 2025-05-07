@@ -1,9 +1,9 @@
 import { Box, Button } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Hidden } from 'src/components/Hidden';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
 import { Link } from '../Link';
