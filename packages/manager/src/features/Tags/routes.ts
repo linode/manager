@@ -12,6 +12,11 @@ export const tagsLandingRoute = createRoute({
   path: '/',
 }).lazy(() => import('./Tags').then((r) => r.tagsLandingLazyRoute));
 
+export const tagsV2LandingRoute = createRoute({
+  getParentRoute: () => tagsRoute,
+  path: '/groups',
+}).lazy(() => import('./TagsV2').then((r) => r.tagsV2LandingLazyRoute));
+
 export const tagDetailsRoute = createRoute({
   getParentRoute: () => tagsRoute,
   path: '$tag',
@@ -20,4 +25,5 @@ export const tagDetailsRoute = createRoute({
 export const tagsRoutes = tagsRoute.addChildren([
   tagsLandingRoute,
   tagDetailsRoute,
+  tagsV2LandingRoute,
 ]);
