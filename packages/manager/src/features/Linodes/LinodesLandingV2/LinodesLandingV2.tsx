@@ -4,7 +4,6 @@ import {
   Autocomplete,
   CircleProgress,
   CloseIcon,
-  ErrorState,
   Hidden,
   IconButton,
   InputAdornment,
@@ -30,7 +29,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeRow } from '../LinodesLanding/LinodeRow/LinodeRow';
 import { LinodesLandingEmptyState } from '../LinodesLanding/LinodesLandingEmptyState';
@@ -80,16 +78,6 @@ export const LinodesLandingV2 = () => {
 
   if (isLoading) {
     return <CircleProgress />;
-  }
-
-  if (error && !query) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your Linodes.')[0].reason
-        }
-      />
-    );
   }
 
   if (data?.results === 0 && !debouncedQuery) {
@@ -224,23 +212,9 @@ export const LinodesLandingV2 = () => {
             >
               Label
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
+            <TableCell>Status</TableCell>
             <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'plan'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="plan"
-              >
-                Plan
-              </TableSortCell>
+              <TableCell>Plan</TableCell>
               <TableCell>Public IP Address</TableCell>
             </Hidden>
             <Hidden lgDown>
