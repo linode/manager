@@ -19,7 +19,6 @@ import {
   VPC_LANDING_TABLE_PREFERENCE_KEY,
 } from 'src/features/VPCs/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -95,12 +94,11 @@ const VPCLanding = () => {
     globalGrantType: 'add_vpcs',
   });
 
-  const { data: selectedVPC, isFetching: isFetchingVPC } = useDialogData({
-    enabled: !!params.vpcId,
-    paramKey: 'vpcId',
-    queryHook: useVPCQuery,
-    redirectToOnNotFound: '/vpcs',
-  });
+  const {
+    data: selectedVPC,
+    isFetching: isFetchingVPC,
+    error: selectedVPCError,
+  } = useVPCQuery(params.vpcId ?? -1, !!params.vpcId);
 
   if (error) {
     return (
@@ -199,12 +197,14 @@ const VPCLanding = () => {
         onClose={onCloseVPCDrawer}
         open={params.action === 'delete'}
         vpc={selectedVPC}
+        vpcError={selectedVPCError}
       />
       <VPCEditDrawer
         isFetching={isFetchingVPC}
         onClose={onCloseVPCDrawer}
         open={params.action === 'edit'}
         vpc={selectedVPC}
+        vpcError={selectedVPCError}
       />
     </>
   );

@@ -11,6 +11,7 @@ const domainId = 1;
 const domainLabel = 'example.com';
 
 const props: DeleteDomainProps = {
+  domainError: null,
   domainId,
   domainLabel,
 };
