@@ -1,6 +1,7 @@
 import { useAllTagsQuery, useDeleteTagMutation } from '@linode/queries';
 import { CircleProgress, Drawer, ErrorState } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
+import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -20,8 +21,21 @@ const Tags = () => {
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const { mutate } = useDeleteTagMutation();
+  const { enqueueSnackbar } = useSnackbar();
+
   const { data: tags, error, isPending } = useAllTagsQuery();
+  const { mutate } = useDeleteTagMutation({
+    onSuccess(data, tag) {
+      enqueueSnackbar(`Successfully deleted tag "${tag}".`, {
+        variant: 'success',
+      });
+    },
+    onError(error) {
+      enqueueSnackbar(`Unable to delete tag: ${error[0].reason}`, {
+        variant: 'error',
+      });
+    },
+  });
 
   if (isPending) {
     return <CircleProgress />;

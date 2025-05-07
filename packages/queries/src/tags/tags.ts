@@ -23,7 +23,11 @@ import type {
   TaggedObject,
   TagRequest,
 } from '@linode/api-v4';
-import type { MutationOptions, QueryClient } from '@tanstack/react-query';
+import type {
+  MutationOptions,
+  QueryClient,
+  UseMutationOptions,
+} from '@tanstack/react-query';
 
 const tagQueries = createQueryKeys('tags', {
   all: {
@@ -49,7 +53,7 @@ export const useTagObjectsQuery = (label: string) =>
   });
 
 export const useCreateTagMutation = (
-  options?: MutationOptions<Tag, APIError[], TagRequest>
+  options?: MutationOptions<Tag, APIError[], TagRequest>,
 ) => {
   const queryClient = useQueryClient();
 
@@ -69,19 +73,21 @@ export const useCreateTagMutation = (
   });
 };
 
-export const useDeleteTagMutation = () => {
+export const useDeleteTagMutation = (
+  options?: UseMutationOptions<{}, APIError[], string>,
+) => {
   const queryClient = useQueryClient();
 
   const query = queryOptions(tagQueries.all);
 
   return useMutation<{}, APIError[], string>({
     mutationFn: deleteTag,
-    onError(errors) {
-    },
-    onSuccess(_, tag) {
+    ...options,
+    onSuccess(response, tag, context) {
+      options?.onSuccess?.(response, tag, context);
       queryClient.setQueryData(
         query.queryKey,
-        (tags) => tags?.filter((t) => t.label !== tag) ?? []
+        (tags) => tags?.filter((t) => t.label !== tag) ?? [],
       );
     },
   });
@@ -94,7 +100,7 @@ const getAllTags = (passedParams: Params = {}, passedFilter: Filter = {}) =>
 
 const getAllTaggedObjected = (tag: string) =>
   getAll<TaggedObject>((params) => getTaggedObjects(tag, params))().then(
-    (data) => data.data
+    (data) => data.data,
   );
 
 export const updateTagsSuggestionsData = (
