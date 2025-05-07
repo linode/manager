@@ -1,4 +1,4 @@
-import { linodeFactory } from '@linode/utilities';
+import { linodeFactory, regionFactory } from '@linode/utilities';
 import {
   dcPricingDocsLabel,
   dcPricingDocsUrl,
@@ -10,9 +10,10 @@ import {
   mockGetLinodeType,
   mockGetLinodeTypes,
 } from 'support/intercepts/linodes';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
-import { getRegionById } from 'support/util/regions';
+import { extendRegion } from 'support/util/regions';
 
 describe('Create Linode with DC-specific pricing', () => {
   /*
@@ -22,15 +23,28 @@ describe('Create Linode with DC-specific pricing', () => {
    */
   it('shows DC-specific pricing information during create flow', () => {
     const linodeLabel = randomLabel();
-    const initialRegion = getRegionById('us-west');
-    const newRegion = getRegionById('us-east');
+    const initialRegion = extendRegion(
+      regionFactory.build({
+        id: 'us-west',
+        label: 'Fremont, CA',
+        capabilities: ['Backups', 'Linodes'],
+      })
+    );
+    const newRegion = extendRegion(
+      regionFactory.build({
+        id: 'us-east',
+        label: 'Newark, NJ',
+        capabilities: ['Backups', 'Linodes'],
+      })
+    );
 
     const mockLinode = linodeFactory.build({
       label: linodeLabel,
       region: initialRegion.id,
       type: dcPricingMockLinodeTypes[0].id,
     });
-
+    const mockRegions = [initialRegion, newRegion];
+    mockGetRegions(mockRegions).as('getRegions');
     const currentPrice = dcPricingMockLinodeTypes[0].region_prices.find(
       (regionPrice) => regionPrice.id === initialRegion.id
     )!;
@@ -53,7 +67,7 @@ describe('Create Linode with DC-specific pricing', () => {
 
     // intercept request
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getLinodeTypes']);
+    cy.wait(['@getLinodeTypes', '@getRegions']);
 
     mockCreateLinode(mockLinode).as('linodeCreated');
 
@@ -74,7 +88,9 @@ describe('Create Linode with DC-specific pricing', () => {
     // Check the 'Backups' add on
     cy.get('[data-testid="backups"]').should('be.visible').click();
     ui.regionSelect.find().click();
-    ui.regionSelect.findItemByRegionLabel(initialRegion.label).click();
+    ui.regionSelect
+      .findItemByRegionLabel(initialRegion.label, mockRegions)
+      .click();
     cy.findByText('Shared CPU').click();
     cy.get(`[id="${dcPricingMockLinodeTypes[0].id}"]`).click();
     // Confirm that the backup prices are displayed as expected.
