@@ -147,6 +147,7 @@ export const DomainDetail = () => {
           </StyledPaper>
           <StyledDiv>
             <DeleteDomain
+              domainError={error}
               domainId={domain.id}
               domainLabel={domain.domain}
               onSuccess={() => navigate({ to: '/domains' })}

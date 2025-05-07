@@ -1,10 +1,8 @@
-import { Button } from '@linode/ui';
-import { Hidden } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { Button, Hidden, Notice, Typography } from '@linode/ui';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -14,14 +12,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialogData } from 'src/hooks/useDialogData';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedContactsQuery,
   useDeleteContactMutation,
   useManagedContactQuery,
 } from 'src/queries/managed/managed';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { generateGroupsFromContacts } from '../utils';
 import {
@@ -34,6 +31,7 @@ import { ContactsTableContent } from './ContactsTableContent';
 
 export const Contacts = () => {
   const navigate = useNavigate();
+  const params = useParams({ strict: false });
   const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
 
@@ -42,20 +40,21 @@ export const Contacts = () => {
 
   const contacts = data || [];
 
-  const { data: selectedContact, isFetching: isSelectedContactFetching } =
-    useDialogData({
-      enabled:
-        match.routeId === '/managed/contacts/$contactId/edit' ||
-        match.routeId === '/managed/contacts/$contactId/delete',
-      paramKey: 'contactId',
-      queryHook: useManagedContactQuery,
-      redirectToOnNotFound: '/managed/contacts',
-    });
-
-  const [deleteError, setDeleteError] = React.useState<string | undefined>(
-    undefined
+  const {
+    data: selectedContact,
+    isFetching: isSelectedContactFetching,
+    error: selectedContactError,
+  } = useManagedContactQuery(
+    params.contactId ?? -1,
+    match.routeId === '/managed/contacts/$contactId/edit' ||
+      match.routeId === '/managed/contacts/$contactId/delete'
   );
-  const { mutateAsync: deleteContact } = useDeleteContactMutation();
+
+  const {
+    mutateAsync: deleteContact,
+    isPending: isDeleting,
+    error: deleteError,
+  } = useDeleteContactMutation();
 
   const {
     handleOrderChange,
@@ -75,17 +74,14 @@ export const Contacts = () => {
   });
 
   const handleDelete = () => {
-    deleteContact({ id: selectedContact?.id || -1 })
-      .then(() => {
-        enqueueSnackbar('Contact deleted successfully.', {
-          variant: 'success',
-        });
-      })
-      .catch((e) => {
-        setDeleteError(
-          getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
-        );
+    deleteContact({ id: selectedContact?.id || -1 }).then(() => {
+      enqueueSnackbar('Contact deleted successfully.', {
+        variant: 'success',
       });
+      navigate({
+        to: '/managed/contacts',
+      });
+    });
   };
 
   // Ref for handling "scrollTo" on Paginated component.
@@ -210,22 +206,37 @@ export const Contacts = () => {
           );
         }}
       </Paginate>
-      <DeletionDialog
-        entity="contact"
-        error={deleteError}
-        label={selectedContact?.name || ''}
-        loading={isSelectedContactFetching}
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          error: selectedContactError,
+          name: selectedContact?.name || 'Unknown',
+          primaryBtnText: 'Delete Contact',
+          type: 'Managed Contact',
+        }}
+        errors={deleteError}
+        isFetching={isSelectedContactFetching}
+        label="Contact Name"
+        loading={isDeleting}
+        onClick={handleDelete}
         onClose={() => {
-          setDeleteError(undefined);
           navigate({
             to: '/managed/contacts',
           });
         }}
-        onDelete={handleDelete}
         open={isDeleteContactDialogOpen}
-      />
+        title={`Delete Contact ${selectedContact?.name || 'Unknown'}?`}
+      >
+        <Notice variant="warning">
+          <Typography>
+            <strong>Warning:</strong> Deleting this contact is permanent and
+            can’t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
       <ContactDrawer
         contact={selectedContact}
+        contactError={selectedContactError}
         groups={groups}
         isFetching={isSelectedContactFetching}
         isOpen={isEditContactDialogOpen || isCreateContactDialogOpen}

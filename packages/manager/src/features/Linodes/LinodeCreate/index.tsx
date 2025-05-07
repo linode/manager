@@ -266,7 +266,7 @@ export const LinodeCreate = () => {
           <EUAgreement />
           <Summary />
           <SMTP />
-          <FirewallAuthorization />
+          {secureVMNoticesEnabled && <FirewallAuthorization />}
           <Actions />
         </Stack>
       </form>

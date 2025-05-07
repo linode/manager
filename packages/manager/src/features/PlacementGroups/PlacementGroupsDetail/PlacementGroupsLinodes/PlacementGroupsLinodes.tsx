@@ -7,7 +7,6 @@ import * as React from 'react';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { hasPlacementGroupReachedCapacity } from 'src/features/PlacementGroups/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -82,12 +81,11 @@ export const PlacementGroupsLinodes = (props: Props) => {
     placementGroup?.members.some((pgLinode) => pgLinode.linode_id === linode.id)
   );
 
-  const { data: selectedLinode, isFetching: isFetchingLinode } = useDialogData({
-    enabled: !!params.linodeId,
-    paramKey: 'linodeId',
-    queryHook: useLinodeQuery,
-    redirectToOnNotFound: '/placement-groups/$id',
-  });
+  const {
+    data: selectedLinode,
+    isFetching: isFetchingLinode,
+    error: selectedLinodeError,
+  } = useLinodeQuery(Number(params.linodeId), !!params.linodeId);
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -206,6 +204,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
         onClose={handleCloseDrawer}
         open={params.action === 'unassign'}
         selectedLinode={selectedLinode}
+        selectedLinodeError={selectedLinodeError}
       />
     </Stack>
   );

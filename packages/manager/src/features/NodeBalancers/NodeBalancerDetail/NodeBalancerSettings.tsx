@@ -14,7 +14,6 @@ import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
@@ -23,12 +22,8 @@ import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
-  const { id } = useParams({
-    strict: false,
-  });
+  const match = useMatch({ strict: false });
+  const { id } = useParams({ strict: false });
   const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
@@ -55,13 +50,11 @@ export const NodeBalancerSettings = () => {
     nodebalancer?.client_conn_throttle
   );
 
-  const { data: selectedNodeBalancer, isFetching: isFetchingNodeBalancer } =
-    useDialogData({
-      enabled: !!id,
-      paramKey: 'id',
-      queryHook: useNodeBalancerQuery,
-      redirectToOnNotFound: '/nodebalancers',
-    });
+  const {
+    data: selectedNodeBalancer,
+    isFetching: isFetchingNodeBalancer,
+    error: nodeBalancerError,
+  } = useNodeBalancerQuery(Number(id), !!id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -160,6 +153,7 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
+        nodeBalancerError={nodeBalancerError}
         open={match.routeId === '/nodebalancers/$id/settings/delete'}
         selectedNodeBalancer={selectedNodeBalancer}
       />
