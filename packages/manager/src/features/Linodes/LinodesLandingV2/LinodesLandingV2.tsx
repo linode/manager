@@ -149,10 +149,12 @@ export const LinodesLandingV2 = () => {
             if (!value) {
               // remove site_type from query
               newQuery = newQuery.replace(/site_type = \S+/g, '');
-            } 
-            else if (newQuery?.includes('site_type')) {
+            } else if (newQuery?.includes('site_type')) {
               // update site_type
-              newQuery = newQuery.replace(/site_type = \S+/g, `site_type = ${value.label.toLowerCase()}`)
+              newQuery = newQuery.replace(
+                /site_type = \S+/g,
+                `site_type = ${value.label.toLowerCase()}`
+              );
             } else {
               // add site type to query
               newQuery += ` site_type = ${value.label.toLowerCase()}`;
@@ -164,9 +166,11 @@ export const LinodesLandingV2 = () => {
           placeholder="Filter by site type"
           sx={{ minWidth: 250 }}
           textFieldProps={{ hideLabel: true }}
-          value={siteTypeOptions.find((o) =>
-            query?.includes(`site_type = ${o.label.toLowerCase()}`)
-          ) ?? null}
+          value={
+            siteTypeOptions.find((o) =>
+              query?.includes(`site_type = ${o.label.toLowerCase()}`)
+            ) ?? null
+          }
         />
         <Autocomplete
           disableSelectAll
@@ -231,7 +235,14 @@ export const LinodesLandingV2 = () => {
               <TableCell>Last Backup</TableCell>
             </Hidden>
             <Hidden lgDown>
-              <TableCell>Tags</TableCell>
+              <TableSortCell
+                active={orderBy === 'tags'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="tags"
+              >
+                Tags
+              </TableSortCell>
             </Hidden>
             <TableCell />
           </TableRow>
