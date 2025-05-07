@@ -108,7 +108,8 @@ const passwordComplexityError = 'Password does not meet strength requirement.';
 
 authenticate();
 describe('rebuild linode', () => {
-  const image = 'Alpine 3.18';
+  // TODO M3-9872 - Dynamically retrieve most recent Alpine Image label.
+  const image = 'Alpine 3.20';
   const rootPassword = randomString(16);
 
   before(() => {
@@ -180,6 +181,7 @@ describe('rebuild linode', () => {
     cy.tag('method:e2e', 'env:stackScripts');
     const stackScriptId = 443929;
     const stackScriptName = 'OpenLiteSpeed-WordPress';
+    // TODO M3-9872 - Dynamically retrieve latest AlmaLinux version's label.
     const image = 'AlmaLinux 9';
 
     const linodeCreatePayload = createLinodeRequestFactory.build({
@@ -243,12 +245,13 @@ describe('rebuild linode', () => {
    */
   it('rebuilds a linode from Account StackScript', () => {
     cy.tag('method:e2e');
-    const image = 'Alpine 3.18';
+    // TODO M3-9872 - Dynamically retrieve most recent Alpine Image label.
+    const image = 'Alpine 3.20';
     const region = chooseRegion().id;
 
     // Create a StackScript to rebuild a Linode.
     const linodeRequest = createLinodeRequestFactory.build({
-      image: 'linode/alpine3.18',
+      image: 'linode/alpine3.20',
       label: randomLabel(),
       region,
       root_pass: randomString(16),
@@ -258,7 +261,7 @@ describe('rebuild linode', () => {
       deployments_active: 0,
       deployments_total: 0,
       description: randomString(),
-      images: ['linode/alpine3.18'],
+      images: ['linode/alpine3.20'],
       is_public: false,
       label: randomLabel(),
       logo_url: '',
