@@ -104,13 +104,13 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
-interface TimeOptions {
+interface AlertTimeDuration {
   label: string;
   value: number;
 }
 interface AclpAlertingTimeOptions {
-  evaluationPeriodOptions: TimeOptions[];
-  pollingIntervalOptions: TimeOptions[];
+  evaluationPeriodOptions: AlertTimeDuration[];
+  pollingIntervalOptions: AlertTimeDuration[];
 }
 
 export interface Flags {
