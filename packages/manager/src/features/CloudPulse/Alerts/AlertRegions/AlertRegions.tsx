@@ -22,6 +22,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const flags = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const [selectedRegions, setSelectedRegions] = React.useState<string[]>([]);
 
   const resourceFilterMap: Record<string, Filter> = {
     dbaas: {
@@ -36,6 +37,15 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       ...(resourceFilterMap[serviceType ?? ''] ?? {}),
     }
   );
+
+  const handleSelectionChange = (regionId: string, isChecked: boolean) => {
+    if (isChecked) {
+      setSelectedRegions((prev) => [...prev, regionId]);
+      return;
+    }
+
+    setSelectedRegions((prev) => prev.filter((id) => id !== regionId));
+  };
 
   const supportedRegions = React.useMemo<Region[] | undefined>(() => {
     const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
@@ -56,11 +66,30 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
   }, [flags.aclpResourceTypeMap, regions, serviceType]);
 
-  const supportedRegionsFromResources = supportedRegions?.filter(
-    ({ id, label }) =>
-      resources?.some(({ region }) => region === id) &&
-      (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
-  );
+  const supportedRegionsFromResources =
+    supportedRegions?.filter(
+      ({ id, label }) =>
+        resources?.some(({ region }) => region === id) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+    ) ?? [];
+
+  const filteredRegionsWithStatus: AlertRegion[] =
+    supportedRegionsFromResources.map(({ label, id }) => {
+      const data = { label, id };
+
+      if (selectedRegions.includes(id)) {
+        return {
+          ...data,
+          checked: true,
+        };
+      }
+      return {
+        ...data,
+        checked: false,
+      };
+    });
+
+
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
@@ -100,7 +129,10 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         />
       </Box>
 
-      <DisplayAlertRegions regions={supportedRegionsFromResources} />
+      <DisplayAlertRegions
+        handleSelectionChange={handleSelectionChange}
+        regions={filteredRegionsWithStatus}
+      />
     </Stack>
   );
 });

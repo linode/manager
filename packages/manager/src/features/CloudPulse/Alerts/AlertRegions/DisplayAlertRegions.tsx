@@ -10,15 +10,21 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { Region } from '@linode/api-v4';
+export interface AlertRegion {
+  checked: boolean;
+  id: string;
+  label: string;
+}
 
 interface DisplayAlertRegionProps {
-  regions?: Region[];
+  handleSelectionChange: (regionId: string, isChecked: boolean) => void;
+
+  regions?: AlertRegion[];
 }
 
 export const DisplayAlertRegions = React.memo(
   (props: DisplayAlertRegionProps) => {
-    const { regions } = props;
+    const { regions, handleSelectionChange } = props;
     return (
       <Paginate data={regions ?? []}>
         {({
@@ -60,11 +66,16 @@ export const DisplayAlertRegions = React.memo(
                   length={regions?.length ?? 0}
                   loading={false}
                 >
-                  {paginatedData?.map(({ label, id }) => {
+                  {paginatedData?.map(({ label, id, checked }) => {
                     return (
                       <TableRow data-testid={`region-row-${id}`} key={id}>
                         <TableCell>
-                          <Checkbox />
+                          <Checkbox
+                            checked={checked}
+                            onChange={(_, status) =>
+                              handleSelectionChange(id, status)
+                            }
+                          />
                         </TableCell>
 
                         <TableCell>{label}</TableCell>
