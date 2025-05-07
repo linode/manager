@@ -4,7 +4,7 @@ import {
   useNodeBalancersFirewallsQuery,
 } from '@linode/queries';
 import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -18,7 +18,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
-import { useDialogData } from 'src/hooks/useDialogData';
 
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
@@ -30,6 +29,7 @@ interface Props {
 
 export const NodeBalancerFirewalls = (props: Props) => {
   const { nodeBalancerId } = props;
+  const params = useParams({ strict: false });
   const navigate = useNavigate();
   const match = useMatch({
     strict: false,
@@ -46,20 +46,22 @@ export const NodeBalancerFirewalls = (props: Props) => {
     match.routeId ===
     '/nodebalancers/$id/settings/unassign-firewall/$firewallId';
 
-  const { data: selectedFirewall, isFetching: isFetchingSelectedFirewall } =
-    useDialogData({
-      enabled: isUnassignFirewallRoute,
-      paramKey: 'firewallId',
-      queryHook: useFirewallQuery,
-      redirectToOnNotFound: '/nodebalancers/$id/settings',
-    });
+  const {
+    data: selectedFirewall,
+    isFetching: isFetchingSelectedFirewall,
+    error: selectedFireWallError,
+  } = useFirewallQuery(Number(params.firewallId), isUnassignFirewallRoute);
 
-  const { data: devices, isFetching: isFetchingDevices } = useDialogData({
-    enabled: isUnassignFirewallRoute,
-    paramKey: 'firewallId',
-    queryHook: useAllFirewallDevicesQuery,
-    redirectToOnNotFound: '/nodebalancers/$id/settings',
-  });
+  const {
+    data: devices,
+    isFetching: isFetchingDevices,
+    error: selectedFirewallDevicesError,
+  } = useAllFirewallDevicesQuery(
+    Number(params.firewallId),
+    isUnassignFirewallRoute
+  );
+
+  const firewallError = selectedFireWallError || selectedFirewallDevicesError;
 
   const handleClickUnassign = (firewall: Firewall) => {
     navigate({
@@ -139,6 +141,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
             device.entity.type === 'nodebalancer' &&
             device.entity.id === nodeBalancerId
         )}
+        firewallError={firewallError}
         firewallId={selectedFirewall?.id ?? -1}
         firewallLabel={selectedFirewall?.label ?? ''}
         isFetching={isFetchingDevices || isFetchingSelectedFirewall}

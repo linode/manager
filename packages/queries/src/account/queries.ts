@@ -9,6 +9,7 @@ import {
   getChildAccounts,
   getClientToken,
   getGrants,
+  getMaintenancePolicies,
   getNetworkUtilization,
   getOAuthClients,
   getUser,
@@ -87,6 +88,10 @@ export const accountQueries = createQueryKeys('account', {
         queryFn: () => getAccountMaintenance(params, filter),
         queryKey: [params, filter],
       }),
+      policies: {
+        queryFn: getMaintenancePolicies,
+        queryKey: null,
+      },
     },
     queryKey: null,
   },
