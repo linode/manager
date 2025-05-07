@@ -22,7 +22,7 @@ interface Props {
   linodeLkeClusterId: null | number;
 }
 
-export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
+export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   const { cluster, linodeId, linodeLkeClusterId } = props;
 
   const theme = useTheme();

@@ -1,11 +1,10 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -14,9 +13,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -33,15 +30,14 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
-import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
+import { LinodeEntityDetailRowConfigFirewall } from './LinodeEntityDetailRowConfigFirewall';
+import { LinodeEntityDetailRowInterfaceFirewall } from './LinodeEntityDetailRowInterfaceFirewall';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type {
   EncryptionStatus,
-  Firewall,
   Interface,
   InterfaceGenerationType,
   Linode,
@@ -66,7 +62,6 @@ export interface Props extends LinodeEntityDetailProps {
 
 export interface BodyProps {
   encryptionStatus: EncryptionStatus | undefined;
-  firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
   interfaceGeneration: InterfaceGenerationType | undefined;
@@ -90,7 +85,6 @@ export interface BodyProps {
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     encryptionStatus,
-    firewalls,
     gbRAM,
     gbStorage,
     interfaceGeneration,
@@ -111,13 +105,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
-  const location = useLocation();
-  const history = useHistory();
-
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
-
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -130,21 +117,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
   const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
-
-  const { canUpgradeInterfaces, unableToUpgradeReasons } =
-    useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
-
-  const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
-    unableToUpgradeReasons
-  );
-
-  // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
-  // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
-  // since each interface can have a firewall.
-  const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
   // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
@@ -409,118 +383,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      {(linodeLkeClusterId ||
-        attachedFirewall ||
-        isLinodeInterfacesEnabled) && (
-        <Grid
-          container
-          direction="row"
-          sx={{
-            borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
-              16
-            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
-            [theme.breakpoints.down('md')]: {
-              paddingLeft: 2,
-            },
-          }}
-        >
-          {linodeLkeClusterId && (
-            <StyledListItem
-              sx={{
-                ...(!attachedFirewall && !isLinodeInterfacesEnabled
-                  ? { borderRight: 'unset' }
-                  : {}),
-                paddingLeft: 0,
-              }}
-            >
-              <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-              <Link
-                data-testid="assigned-lke-cluster-label"
-                to={`/kubernetes/clusters/${linodeLkeClusterId}`}
-              >
-                {cluster?.label ?? `${linodeLkeClusterId}`}
-              </Link>
-              &nbsp;
-              {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-            </StyledListItem>
-          )}
-          {!isLinodeInterface && attachedFirewall && (
-            <StyledListItem
-              sx={{
-                ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
-                ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
-              }}
-            >
-              <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
-              <Link
-                data-testid="assigned-firewall"
-                to={`/firewalls/${attachedFirewall.id}`}
-              >
-                {attachedFirewall.label ?? `${attachedFirewall.id}`}
-              </Link>
-              &nbsp;
-              {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-            </StyledListItem>
-          )}
-          {isLinodeInterfacesEnabled && (
-            <StyledListItem
-              sx={{
-                ...(!linodeLkeClusterId &&
-                (isLinodeInterface || !attachedFirewall)
-                  ? { paddingLeft: 0 }
-                  : {}),
-                borderRight: 'unset',
-              }}
-            >
-              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-              {isLinodeInterface ? (
-                'Linode'
-              ) : (
-                <Box
-                  component="span"
-                  sx={{ alignItems: 'center', display: 'flex' }}
-                >
-                  Configuration Profile
-                  <span>
-                    <Tooltip
-                      slotProps={{
-                        tooltip: {
-                          sx: {
-                            maxWidth: '260px',
-                          },
-                        },
-                      }}
-                      sx={{ width: '500px' }}
-                      title={DEFAULT_UPGRADE_BUTTON_HELPER_TEXT}
-                    >
-                      <Chip
-                        aria-label="Upgrade Configuration Profile Interfaces to Linode Interfaces"
-                        component="span"
-                        disabled={!canUpgradeInterfaces}
-                        label="UPGRADE"
-                        onClick={openUpgradeInterfacesDialog}
-                        size="small"
-                        sx={(theme) => ({
-                          backgroundColor: theme.color.tagButtonBg,
-                          color: theme.tokens.color.Neutrals[80],
-                          marginLeft: theme.spacingFunction(12),
-                        })}
-                      />
-                    </Tooltip>
-                    {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
-                      <TooltipIcon
-                        status="help"
-                        sxTooltipIcon={{ padding: 0 }}
-                        text={unableToUpgradeTooltipText}
-                      />
-                    )}
-                  </span>
-                </Box>
-              )}
-            </StyledListItem>
-          )}
-        </Grid>
+      {isLinodeInterface ? (
+        <LinodeEntityDetailRowInterfaceFirewall
+          cluster={cluster}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+        />
+      ) : (
+        <LinodeEntityDetailRowConfigFirewall
+          cluster={cluster}
+          interfaceGeneration={interfaceGeneration}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+          region={region}
+        />
       )}
     </>
   );

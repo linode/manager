@@ -2,7 +2,7 @@ import { useLinodeFirewallsQuery } from '@linode/queries';
 import { Box, Chip, Tooltip, TooltipIcon, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
@@ -29,6 +29,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
   const { cluster, linodeId, linodeLkeClusterId, interfaceGeneration, region } =
     props;
 
+  const location = useLocation();
   const history = useHistory();
   const theme = useTheme();
 
