@@ -6,9 +6,12 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { AlertsResourcesNotice } from '../AlertsResources/AlertsResourcesNotice';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
+import type { SelectDeselectAll } from '../AlertsResources/AlertsResources';
+import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
 
@@ -89,7 +92,14 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       };
     });
 
+  const handleSelectAll = (action: SelectDeselectAll) => {
+    let regionIds: string[] = [];
+    if (action === 'Select All') {
+      regionIds = filteredRegionsWithStatus?.map((region) => region.id) ?? [];
+    }
 
+    setSelectedRegions(regionIds);
+  };
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
@@ -128,7 +138,11 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value="Show Selected"
         />
       </Box>
-
+      <AlertsResourcesNotice
+        handleSelectionChange={handleSelectAll}
+        selectedResources={selectedRegions.length}
+        totalResources={filteredRegionsWithStatus.length}
+      />
       <DisplayAlertRegions
         handleSelectionChange={handleSelectionChange}
         regions={filteredRegionsWithStatus}
