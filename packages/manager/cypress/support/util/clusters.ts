@@ -27,7 +27,7 @@ export const getOverrideCluster = (): ObjectStorageCluster | undefined => {
 
   try {
     return getClusterById(overrideClusterId);
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 };
