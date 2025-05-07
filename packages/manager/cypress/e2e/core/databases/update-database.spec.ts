@@ -331,7 +331,6 @@ const validateActionItems = (state: string, label: string) => {
 
 describe('Update database clusters', () => {
   const successStatus = ['active', 'provisioning'];
-  // const successStatus = ['active', 'provisioning'];
 
   databaseConfigurations.forEach(
     (configuration: DatabaseClusterConfiguration) => {
