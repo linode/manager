@@ -16,8 +16,10 @@ import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -34,8 +36,6 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 
 import { LinodeRow } from '../LinodesLanding/LinodeRow/LinodeRow';
 import { LinodesLandingEmptyState } from '../LinodesLanding/LinodesLandingEmptyState';
-import { Code } from 'src/components/Code/Code';
-import { Link } from 'src/components/Link';
 
 const siteTypeOptions = [{ label: 'Core' }, { label: 'Distributed' }];
 
@@ -147,8 +147,11 @@ export const LinodesLandingV2 = () => {
           tooltipText={
             <Stack spacing={2}>
               <Typography>
-                You can prepending your search with supported attributes to
-                narrow your search.{' '}
+                You can prepending your search with supported attributes and
+                operators like <Code>:</Code> (contains), <Code>=</Code>
+                (equals), <Code>!=</Code> (not equal), <Code>&gt;</Code>{' '}
+                (greater than), <Code>&lt;</Code> (less than) to narrow your
+                search.{' '}
               </Typography>
               <Stack spacing={0.5}>
                 <Typography sx={(theme) => ({ font: theme.font.bold })}>
@@ -163,10 +166,16 @@ export const LinodesLandingV2 = () => {
                 <Typography fontSize="0.8rem">
                   <Code>region = us-mia</Code>
                 </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>id &gt; 76581655</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>status = offline</Code>
+                </Typography>
               </Stack>
               <Typography>
-                You can also use operators like <Code>and</Code>, <Code>or</Code>, <Code>:</Code> (contains), <Code>=</Code>
-                (equals) to perform more complex searches.{' '}
+                You can also use operators like <Code>and</Code> and{' '}
+                <Code>or</Code> to perform more complex searches.{' '}
                 <Link to="https://linode.com/fake-docs-page">Learn more.</Link>
               </Typography>
               <Stack spacing={0.5}>
