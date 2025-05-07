@@ -19,11 +19,12 @@ import {
   getSupportedRegionIds,
   scrollToElement,
 } from '../Utils/AlertResourceUtils';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { AlertsResourcesNotice } from './AlertsResourcesNotice';
 import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
+import type { SelectDeselectAll } from '../constants';
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
   AlertAdditionalFilterKey,
@@ -93,8 +94,6 @@ export interface AlertResourcesProp {
    */
   serviceType?: AlertServiceType;
 }
-
-export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
@@ -454,11 +453,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           resources &&
           resources.length > 0 && (
             <Grid item xs={12}>
-              <AlertsResourcesNotice
+              <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
-                selectedResources={selectedResources.length}
-                totalResources={resources?.length ?? 0}
+                selectedCount={selectedResources.length}
+                totalCount={resources?.length ?? 0}
               />
             </Grid>
           )}

@@ -6,11 +6,11 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
-import { AlertsResourcesNotice } from '../AlertsResources/AlertsResourcesNotice';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { SelectDeselectAll } from '../AlertsResources/AlertsResources';
+import type { SelectDeselectAll } from '../constants';
 import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter, Region } from '@linode/api-v4';
 import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
@@ -138,10 +138,10 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value="Show Selected"
         />
       </Box>
-      <AlertsResourcesNotice
+      <AlertSelectedInfoNotice
         handleSelectionChange={handleSelectAll}
-        selectedResources={selectedRegions.length}
-        totalResources={filteredRegionsWithStatus.length}
+        selectedCount={selectedRegions.length}
+        totalCount={filteredRegionsWithStatus.length}
       />
       <DisplayAlertRegions
         handleSelectionChange={handleSelectionChange}

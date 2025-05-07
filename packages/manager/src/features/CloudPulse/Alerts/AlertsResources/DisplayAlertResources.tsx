@@ -13,7 +13,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 
 import { isAllPageSelected, isSomeSelected } from '../Utils/AlertResourceUtils';
-import { AlertMaxSelectionText } from './AlertMaxSelectionText';
+import { AlertMaxSelectionText } from '../Utils/AlertMaxSelectionText';
 import { serviceTypeBasedColumns } from './constants';
 
 import type { AlertServiceType } from '@linode/api-v4';
