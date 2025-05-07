@@ -1,4 +1,8 @@
-import { useLinodeInterfacesQuery } from '@linode/queries';
+import {
+  linodeQueries,
+  useLinodeInterfacesQuery,
+  useQueries,
+} from '@linode/queries';
 import { useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import * as React from 'react';
@@ -7,8 +11,10 @@ import { Link } from 'src/components/Link';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { StyledLabelBox, StyledListItem } from './LinodeEntityDetail.styles';
+import { getLinodeInterfaceType } from './LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 
-import type { KubernetesCluster } from '@linode/api-v4';
+import type { LinodeInterfaceType } from './LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
+import type { Firewall, KubernetesCluster } from '@linode/api-v4';
 
 interface Props {
   cluster: KubernetesCluster | undefined;
@@ -28,14 +34,48 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
   const nonVlanInterfaces =
     linodeInterfaces?.interfaces.filter((iface) => !iface.vlan) ?? [];
 
-  const attachedFirewall = {
-    label: 'will delete soon',
-    id: 1,
-  };
+  const interfaceFirewalls = useQueries({
+    queries: nonVlanInterfaces.map(
+      (iface) =>
+        linodeQueries.linode(linodeId)._ctx.interfaces._ctx.interface(iface.id)
+          ._ctx.firewalls
+    ),
+    combine(result) {
+      return result.reduce<Record<LinodeInterfaceType, Firewall | undefined>>(
+        (acc, res, index) => {
+          if (res.data) {
+            const firewalls = res.data.data;
+            const shownFirewall =
+              (firewalls.find((firewall) => firewall.status === 'enabled') ??
+              firewalls.length > 0)
+                ? firewalls[0]
+                : undefined;
+            const iface = nonVlanInterfaces[index];
+            acc[getLinodeInterfaceType(iface)] = shownFirewall;
+          }
+          return acc;
+        },
+        { VPC: undefined, Public: undefined, VLAN: undefined }
+      );
+    },
+  });
 
-  if (!isLinodeInterfacesEnabled && !linodeLkeClusterId && !attachedFirewall) {
+  const publicInterfaceFirewall = interfaceFirewalls.Public;
+  const vpcInterfaceFirewall = interfaceFirewalls.VPC;
+
+  if (
+    !isLinodeInterfacesEnabled &&
+    !linodeLkeClusterId &&
+    !publicInterfaceFirewall &&
+    !vpcInterfaceFirewall
+  ) {
     return null;
   }
+
+  const hideLKECellRightBorder =
+    !publicInterfaceFirewall &&
+    !vpcInterfaceFirewall &&
+    !isLinodeInterfacesEnabled;
 
   return (
     <Grid
@@ -54,9 +94,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
       {linodeLkeClusterId && (
         <StyledListItem
           sx={{
-            ...(!attachedFirewall && !isLinodeInterfacesEnabled
-              ? { borderRight: 'unset' }
-              : {}),
+            ...(hideLKECellRightBorder ? { borderRight: 'unset' } : {}),
             paddingLeft: 0,
           }}
         >
@@ -71,50 +109,52 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
           {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
         </StyledListItem>
       )}
-      {attachedFirewall && (
-        <>
-          <StyledListItem
-            sx={{
-              ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
-              ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
-            }}
+      {publicInterfaceFirewall && (
+        <StyledListItem
+          sx={{
+            ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
+          }}
+        >
+          <StyledLabelBox component="span">
+            Public Interface Firewall:
+          </StyledLabelBox>{' '}
+          <Link
+            data-testid="assigned-public-firewall"
+            to={`/firewalls/${publicInterfaceFirewall.id}`}
           >
-            <StyledLabelBox component="span">
-              Public Interface Firewall:
-            </StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-firewall"
-              to={`/firewalls/${attachedFirewall.id}`}
-            >
-              {attachedFirewall.label ?? `${attachedFirewall.id}`}
-            </Link>
-            &nbsp;
-            {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-          </StyledListItem>
-          <StyledListItem
-            sx={{
-              ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
-              ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
-            }}
+            {publicInterfaceFirewall.label ?? `${publicInterfaceFirewall.id}`}
+          </Link>
+          &nbsp;
+          {publicInterfaceFirewall && `(ID: ${publicInterfaceFirewall.id})`}
+        </StyledListItem>
+      )}
+      {vpcInterfaceFirewall && (
+        <StyledListItem
+          sx={{
+            ...(!linodeLkeClusterId && !publicInterfaceFirewall
+              ? { paddingLeft: 0 }
+              : {}),
+          }}
+        >
+          <StyledLabelBox component="span">
+            VPC Interface Firewall:
+          </StyledLabelBox>{' '}
+          <Link
+            data-testid="assigned-vpc-firewall"
+            to={`/firewalls/${vpcInterfaceFirewall.id}`}
           >
-            <StyledLabelBox component="span">
-              VPC Interface Firewall:
-            </StyledLabelBox>{' '}
-            <Link
-              data-testid="assigned-firewall"
-              to={`/firewalls/${attachedFirewall.id}`}
-            >
-              {attachedFirewall.label ?? `${attachedFirewall.id}`}
-            </Link>
-            &nbsp;
-            {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-          </StyledListItem>
-        </>
+            {vpcInterfaceFirewall.label ?? `${vpcInterfaceFirewall.id}`}
+          </Link>
+          &nbsp;
+          {vpcInterfaceFirewall && `(ID: ${vpcInterfaceFirewall.id})`}
+        </StyledListItem>
       )}
       {isLinodeInterfacesEnabled && (
         <StyledListItem
           sx={{
-            ...(!linodeLkeClusterId && !attachedFirewall
+            ...(!linodeLkeClusterId &&
+            !vpcInterfaceFirewall &&
+            !publicInterfaceFirewall
               ? { paddingLeft: 0 }
               : {}),
             borderRight: 'unset',
