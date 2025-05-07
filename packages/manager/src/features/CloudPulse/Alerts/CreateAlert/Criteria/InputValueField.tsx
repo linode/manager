@@ -59,7 +59,6 @@ export const InputValueField = (props: InputValueFieldProps) => {
       options={options}
       value={options.find((option) => option.value === value) ?? null}
       {...rest}
-      fullWidth
     />
   );
 };
