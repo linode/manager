@@ -317,8 +317,12 @@ describe('restricted user cannot create database', () => {
   });
 
   it('cannot create database from Create menu', () => {
+    mockGetDatabaseEngines(mockDatabaseEngineTypes).as('getDatabaseEngines');
+    mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
+
     // Login and wait for application to load
     cy.visitWithLogin('/databases/create');
+    cy.wait(['@getDatabaseTypes', '@getDatabaseEngines']);
 
     // table present for restricted user but its inputs will be disabled
     cy.get('table[aria-label="List of Linode Plans"]').should('exist');
