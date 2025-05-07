@@ -1,7 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   ActionsPanel,
-  Button,
   CircleProgress,
   Divider,
   Drawer,
@@ -11,7 +10,9 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
+import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -57,6 +58,10 @@ interface Props {
 interface FormValues {
   configs: ConfigurationOption[];
 }
+const StyledAddButtonWrapper = styled('div')(({ theme }) => ({
+  minWidth: 'auto',
+  width: '70px',
+}));
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const { database, onClose, open } = props;
@@ -196,15 +201,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             />
           </Grid>
           <Grid size={2}>
-            <Button
-              buttonType="primary"
-              disabled={!selectedConfig}
-              onClick={() => handleAddConfiguration(selectedConfig)}
-              sx={{ minWidth: 'auto', width: '70px' }}
-              title="Add"
-            >
-              Add
-            </Button>
+            <StyledAddButtonWrapper>
+              <Button
+                disabled={!selectedConfig}
+                onClick={() => handleAddConfiguration(selectedConfig)}
+                title="Add"
+                variant="primary"
+              >
+                Add
+              </Button>
+            </StyledAddButtonWrapper>
           </Grid>
         </Grid>
         <Divider spacingBottom={20} spacingTop={24} />

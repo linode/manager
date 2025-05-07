@@ -5,7 +5,11 @@ import * as React from 'react';
 import { accountFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  mockMatchMedia,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import DatabaseCreate from './DatabaseCreate';
 const loadingTestId = 'circle-progress';
@@ -122,15 +126,18 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { findByText, getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    const createClusterButtonSpan = await findByText('Create Database Cluster');
-    const createClusterButton = createClusterButtonSpan.closest('button');
 
-    expect(createClusterButton).toBeInTheDocument();
+    const buttonHost = getByTestId('create-database-cluster');
+    const createClusterButton = buttonHost
+      ? await getShadowRootElement(buttonHost, 'button')
+      : null;
+
+    expect(buttonHost).toBeInTheDocument();
     expect(createClusterButton).toBeDisabled();
   });
 
@@ -168,15 +175,18 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const { findByText, getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    const createClusterButtonSpan = await findByText('Create Database Cluster');
-    const createClusterButton = createClusterButtonSpan.closest('button');
 
-    expect(createClusterButton).toBeInTheDocument();
+    const buttonHost = getByTestId('create-database-cluster');
+    const createClusterButton = buttonHost
+      ? await getShadowRootElement(buttonHost, 'button')
+      : null;
+
+    expect(buttonHost).toBeInTheDocument();
     expect(createClusterButton).toBeEnabled();
   });
 

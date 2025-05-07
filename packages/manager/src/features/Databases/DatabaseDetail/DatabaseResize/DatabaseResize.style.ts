@@ -1,6 +1,6 @@
-import { Button } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
+import { Button } from 'akamai-cds-react-components';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 
