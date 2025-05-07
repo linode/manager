@@ -97,6 +97,43 @@ export const NewDetailTemplate = () => {
       </Box>
 
       <Box sx={{ p: 3 }}>
+        {/* SECTION 0: Dummy content */}
+        <Box sx={{ mb: 3, backgroundColor: 'white' }}>
+          <Grid container>
+            <Grid size={{ xs: 12, md: 8 }} sx={{ pr: { xs: 0, md: 6 } }}>
+              <SectionHeader>SUMMARY</SectionHeader>
+
+              <Grid container>
+                <Grid size={{ xs: 12, sm: 6 }} sx={{ mb: { xs: 3, sm: 0 } }}>
+                  <LabelValue label="Status" value="Running" />
+                  <LabelValue label="CPU Core" value="1" />
+                  <LabelValue label="RAM" value="2 GM" />
+                  <LabelValue label="Volumes" value="0" />
+                </Grid>
+
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <LabelValue label="Linode ID" value="44557799" />
+                  <LabelValue label="Created" value="2025-05-20 23:30" />
+                  <LabelValue label="Region" value="Washington, DC" />
+                  <LabelValue label="Plan" value="Dedicated 4 GB" />
+                  <LabelValue label="Encryption" value="🔒 Encrypted" />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 4 }} sx={{ mt: { xs: 3, md: 0 } }}>
+              <SectionHeader>VPC</SectionHeader>
+              <LabelValue label="Label" value="VPC-01-East" />
+              <LabelValue label="Subnets" value="fe-group" />
+              <LabelValue label="VPC IPv4" value="0.0.0.0" />
+
+              <SectionHeader>LKE</SectionHeader>
+              <LabelValue label="LKE Cluster" value="Dongo (175094)" />
+              <LabelValue label="LKE Cluster" value="Dongo (175094)" />
+            </Grid>
+          </Grid>
+        </Box>
+
         {/* SECTION 1: Full width, 1 column */}
         <Box sx={{ mb: 3, backgroundColor: 'lightyellow' }}>
           <SectionHeader>full width 1 column</SectionHeader>
