@@ -9,6 +9,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { Tags } from 'src/components/Tags/Tags';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
@@ -45,6 +46,7 @@ export const LinodeRow = (props: Props) => {
     label,
     maintenance,
     region,
+    tags,
     status,
     type,
   } = props;
@@ -158,6 +160,11 @@ export const LinodeRow = (props: Props) => {
             linodeId={id}
             mostRecentBackup={backups.last_successful}
           />
+        </TableCell>
+      </Hidden>
+      <Hidden lgDown>
+        <TableCell>
+          <Tags tags={tags} />
         </TableCell>
       </Hidden>
       <TableCell actionCell data-qa-notifications>

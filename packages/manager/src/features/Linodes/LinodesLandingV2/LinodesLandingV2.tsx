@@ -47,13 +47,16 @@ export const LinodesLandingV2 = () => {
     [search]
   );
 
-  const query = useDebouncedValue(queryParams.get('query'));
+  const query = queryParams.get('query')
+
+  const debouncedQuery = useDebouncedValue(query);
+
   const { data: tags } = useAllTagsQuery();
 
   const pagination = usePagination();
   const { handleOrderChange, order, orderBy } = useOrder();
 
-  const { error: searchParseError, filter } = getAPIFilterFromQuery(query, {
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(debouncedQuery, {
     searchableFieldsWithoutOperator: ['label', 'tags', 'ipv4'],
   });
 
@@ -161,10 +164,29 @@ export const LinodesLandingV2 = () => {
           label="Tags"
           limitTags={1}
           multiple
+          onChange={(e, tags) => {
+            let newQuery = query ?? '';
+            //  remove existing tags from query
+            newQuery = newQuery.replace(/\(tag: [^)]*\)/g, "");
+            newQuery = newQuery.replace(/tag:\s*([^\s]+)\s*/g, '');
+            // update query with selected tags
+            if (tags.length > 0) {
+              if (tags.length === 1) {
+                newQuery += " "+tags.map((tag) => `tag: ${tag.label}`) + "";
+              } else {
+                newQuery += " ("+tags.map((tag) => `tag: ${tag.label}`).join(' or ') + ")";
+              }
+            }
+            queryParams.set('query', newQuery.trim());
+            history.push({ search: queryParams.toString() });
+          }}
           options={tags ?? []}
           placeholder="Filter by tags"
           sx={{ minWidth: 250 }}
           textFieldProps={{ hideLabel: true }}
+          value={
+            tags?.filter((tag) => query?.includes(`tag: ${tag.label}`)) ?? []
+          }
         />
       </Stack>
       <Table>
@@ -210,12 +232,15 @@ export const LinodesLandingV2 = () => {
             <Hidden lgDown>
               <TableCell>Last Backup</TableCell>
             </Hidden>
+            <Hidden lgDown>
+              <TableCell>Tags</TableCell>
+            </Hidden>
             <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {data?.data.length === 0 && (
-            <TableRowEmpty colSpan={6} message="No Linodes found" />
+            <TableRowEmpty colSpan={8} message="No Linodes found" />
           )}
           {data?.data.map((linode) => (
             <LinodeRow
