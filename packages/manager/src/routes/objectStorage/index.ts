@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { ObjectStorageRoute } from './ObjectStorageRoute';
@@ -14,6 +14,9 @@ export const objectStorageRoute = createRoute({
 });
 
 const objectStorageIndexRoute = createRoute({
+  beforeLoad: async () => {
+    throw redirect({ to: '/object-storage/buckets' });
+  },
   getParentRoute: () => objectStorageRoute,
   path: '/',
 }).lazy(() =>
