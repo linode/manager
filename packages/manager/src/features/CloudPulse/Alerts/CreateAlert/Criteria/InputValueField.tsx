@@ -40,7 +40,12 @@ export const InputValueField = (props: InputValueFieldProps) => {
 
   if (isTextField) {
     return (
-      <TextField {...rest} onChange={(event) => onChange(event.target.value)} />
+      <TextField
+        {...rest}
+        onChange={(event) => onChange(event.target.value)}
+        sx={{ width: '256px' }}
+        value={value}
+      />
     );
   }
 
@@ -54,6 +59,7 @@ export const InputValueField = (props: InputValueFieldProps) => {
       options={options}
       value={options.find((option) => option.value === value) ?? null}
       {...rest}
+      fullWidth
     />
   );
 };
