@@ -21,10 +21,15 @@ describe('Kubernetes Landing', () => {
   afterEach(() => {
     vi.resetAllMocks();
   });
-  it('should have the "Create Cluster" button disabled for restricted users', () => {
+  it('should have the "Create Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { container } = renderWithTheme(<KubernetesLanding />);
+    const loadingTestId = 'circle-progress';
+
+    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
+
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const createClusterButton = container.querySelector('button');
 

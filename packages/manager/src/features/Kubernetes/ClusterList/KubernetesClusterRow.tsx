@@ -7,6 +7,7 @@ import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
@@ -44,6 +45,12 @@ export const KubernetesClusterRow = (props: Props) => {
   const { versions } = useLkeStandardOrEnterpriseVersions(
     cluster.tier ?? 'standard' // TODO LKE: remove fallback once LKE-E is in GA and tier is required
   );
+
+  const isLKEClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster.id,
+  });
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -103,6 +110,7 @@ export const KubernetesClusterRow = (props: Props) => {
         <ClusterActionMenu
           clusterId={cluster.id}
           clusterLabel={cluster.label}
+          disabled={isLKEClusterReadOnly}
           openDialog={() =>
             openDeleteDialog(cluster.id, cluster.label, pools ?? [])
           }
