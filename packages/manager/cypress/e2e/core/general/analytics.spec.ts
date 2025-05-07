@@ -13,6 +13,8 @@ describe('Script loading and user interaction test', () => {
   });
 
   it("checks if each environment's Adobe Launch script is loaded and the page is responsive to user interaction", () => {
+    cy.tag('purpose:syntheticTesting');
+
     for (const url of ADOBE_LAUNCH_URLS) {
       cy.then(() => {
         cy.window().then((window) => {
@@ -54,6 +56,7 @@ describe('Script loading and user interaction test', () => {
           });
 
         cy.url().should('endWith', '/profile/display');
+        cy.reload();
       });
     }
   });
