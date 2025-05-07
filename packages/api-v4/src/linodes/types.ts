@@ -8,6 +8,7 @@ import type {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
+import type { MaintenancePolicyId } from 'src/account';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -41,6 +42,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
+  maintenance_policy_id?: MaintenancePolicyId;
   placement_group?: LinodePlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
   region: string;
   site_type: RegionSite;
@@ -611,6 +613,11 @@ export interface CreateLinodeRequest {
    * If no label is provided for a Linode, a default will be assigned.
    */
   label?: null | string;
+  /**
+   * Allows customers to specify which strategy this Linode should follow during
+   * maintenance events.
+   */
+  maintenance_policy_id?: null | number;
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */

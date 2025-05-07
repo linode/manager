@@ -8,6 +8,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { LinodeInterfaceTableRow } from './LinodeInterfaceTableRow';
 
 import type { InterfaceActionHandlers } from './LinodeInterfaceActionMenu';
+import type { HiddenProps } from '@linode/ui';
 
 interface Props {
   handlers: InterfaceActionHandlers;
@@ -19,8 +20,15 @@ export const LinodeInterfacesTableContent = ({ handlers, linodeId }: Props) => {
 
   const cols = 9;
 
+  const hiddenCols: Record<number, HiddenProps> = {
+    3: { smDown: true },
+    5: { lgDown: true },
+    7: { lgDown: true },
+    8: { mdDown: true },
+  };
+
   if (isPending) {
-    return <TableRowLoading columns={cols} rows={1} />;
+    return <TableRowLoading columns={cols} responsive={hiddenCols} rows={1} />;
   }
 
   if (error) {
