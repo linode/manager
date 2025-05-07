@@ -158,3 +158,32 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
     </Grid>
   );
 };
+
+export const LKEClusterCell = ({
+  hideLKECellRightBorder,
+  cluster,
+  linodeLkeClusterId,
+}: {
+  cluster: KubernetesCluster | undefined;
+  hideLKECellRightBorder: boolean;
+  linodeLkeClusterId: number;
+}) => {
+  return (
+    <StyledListItem
+      sx={{
+        ...(hideLKECellRightBorder ? { borderRight: 'unset' } : {}),
+        paddingLeft: 0,
+      }}
+    >
+      <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
+      <Link
+        data-testid="assigned-lke-cluster-label"
+        to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+      >
+        {cluster?.label ?? `${linodeLkeClusterId}`}
+      </Link>
+      &nbsp;
+      {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
+    </StyledListItem>
+  );
+};

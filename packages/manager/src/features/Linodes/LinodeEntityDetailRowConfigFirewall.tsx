@@ -9,6 +9,7 @@ import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { StyledLabelBox, StyledListItem } from './LinodeEntityDetail.styles';
+import { LKEClusterCell } from './LinodeEntityDetailRowInterfaceFirewall';
 import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
 import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 
@@ -71,24 +72,13 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
       }}
     >
       {linodeLkeClusterId && (
-        <StyledListItem
-          sx={{
-            ...(!attachedFirewall && !isLinodeInterfacesEnabled
-              ? { borderRight: 'unset' }
-              : {}),
-            paddingLeft: 0,
-          }}
-        >
-          <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-          <Link
-            data-testid="assigned-lke-cluster-label"
-            to={`/kubernetes/clusters/${linodeLkeClusterId}`}
-          >
-            {cluster?.label ?? `${linodeLkeClusterId}`}
-          </Link>
-          &nbsp;
-          {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-        </StyledListItem>
+        <LKEClusterCell
+          cluster={cluster}
+          hideLKECellRightBorder={
+            !attachedFirewall && !isLinodeInterfacesEnabled
+          }
+          linodeLkeClusterId={linodeLkeClusterId}
+        />
       )}
       {attachedFirewall && (
         <StyledListItem
