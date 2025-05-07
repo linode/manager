@@ -2,6 +2,7 @@ import { useAllTagsQuery, useLinodesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Autocomplete,
+  Box,
   CircleProgress,
   CloseIcon,
   Hidden,
@@ -9,6 +10,7 @@ import {
   InputAdornment,
   Stack,
   TextField,
+  Typography,
 } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
@@ -32,6 +34,8 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 
 import { LinodeRow } from '../LinodesLanding/LinodeRow/LinodeRow';
 import { LinodesLandingEmptyState } from '../LinodesLanding/LinodesLandingEmptyState';
+import { Code } from 'src/components/Code/Code';
+import { Link } from 'src/components/Link';
 
 const siteTypeOptions = [{ label: 'Core' }, { label: 'Distributed' }];
 
@@ -140,6 +144,48 @@ export const LinodesLandingV2 = () => {
             history.push({ search: queryParams.toString() });
           }}
           placeholder="Find Linode by attribute or tag"
+          tooltipText={
+            <Stack spacing={2}>
+              <Typography>
+                You can prepending your search with supported attributes to
+                narrow your search.{' '}
+              </Typography>
+              <Stack spacing={0.5}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  Examples
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>label: my-linode</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>ipv4: 192.168.235.146</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>region = us-mia</Code>
+                </Typography>
+              </Stack>
+              <Typography>
+                You can also use operators like <Code>and</Code>, <Code>or</Code>, <Code>:</Code> (contains), <Code>=</Code>
+                (equals) to perform more complex searches.{' '}
+                <Link to="https://linode.com/fake-docs-page">Learn more.</Link>
+              </Typography>
+              <Stack spacing={0.5}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  Examples
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>tag: production or tag: staging</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>label: my-linode and tag: dev</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>region = us-mia and tag: test</Code>
+                </Typography>
+              </Stack>
+            </Stack>
+          }
+          tooltipWidth={350}
           value={query ?? ''}
         />
         <Autocomplete
