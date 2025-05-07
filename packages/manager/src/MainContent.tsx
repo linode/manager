@@ -330,7 +330,9 @@ export const MainContent = () => {
                     id="main-content"
                     role="main"
                     sx={(theme) => ({
-                      boxSizing: 'content-box',
+                      boxSizing: {
+                        md: 'content-box',
+                      },
                       flex: 1,
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
