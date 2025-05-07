@@ -119,11 +119,6 @@ body.searchOverlay #main-content {
   margin-right: 0 !important;
 }
 
-/* Only apply margin-top if .landing-header is NOT the first child of its parent */
-.content-wrapper > .landing-header:not(:first-child) {
-  margin-top: 24px;
-}
-
 .visually-hidden,
 .label-visually-hidden span:last-child {
   /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */

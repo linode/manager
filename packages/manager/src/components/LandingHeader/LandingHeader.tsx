@@ -77,7 +77,7 @@ export const LandingHeader = ({
     : `${title} Landing`;
 
   return (
-    <Grid
+    <StyledLandingHeaderGrid
       className="landing-header"
       container
       data-qa-entity-header
@@ -121,9 +121,7 @@ export const LandingHeader = ({
             {betaFeedbackLink && (
               <span
                 style={{
-                  marginLeft: xsDown
-                    ? theme.spacingFunction(16)
-                    : undefined,
+                  marginLeft: xsDown ? theme.spacingFunction(16) : undefined,
                   marginRight: theme.spacingFunction(16),
                 }}
               >
@@ -143,7 +141,7 @@ export const LandingHeader = ({
               />
             ) : null}
             {renderActions && (
-              <Actions>
+              <StyledActions>
                 {extraActions}
                 {onButtonClick ? (
                   <Button
@@ -157,17 +155,23 @@ export const LandingHeader = ({
                     {createButtonText ?? `Create ${entity}`}
                   </Button>
                 ) : null}
-              </Actions>
+              </StyledActions>
             )}
           </Grid>
         </Grid>
       )}
-    </Grid>
+    </StyledLandingHeaderGrid>
   );
 };
 
-const Actions = styled('div')(() => ({
+const StyledActions = styled('div')(() => ({
   display: 'flex',
   gap: '24px',
   justifyContent: 'flex-end',
 }));
+
+const StyledLandingHeaderGrid = styled(Grid)({
+  '&:not(:first-child)': {
+    marginTop: 24,
+  },
+});
