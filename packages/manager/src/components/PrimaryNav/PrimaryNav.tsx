@@ -53,8 +53,8 @@ export type NavEntity =
   | 'NodeBalancers'
   | 'Object Storage'
   | 'Placement Groups'
-  | 'Tags'
   | 'StackScripts'
+  | 'Tags'
   | 'Volumes'
   | 'VPC';
 
