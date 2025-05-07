@@ -24,6 +24,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
@@ -81,7 +82,7 @@ export const LinodesLandingV2 = () => {
     return <CircleProgress />;
   }
 
-  if (error) {
+  if (error && !query) {
     return (
       <ErrorState
         errorText={
@@ -91,7 +92,7 @@ export const LinodesLandingV2 = () => {
     );
   }
 
-  if (data?.results === 0 && !query) {
+  if (data?.results === 0 && !debouncedQuery) {
     return <LinodesLandingEmptyState />;
   }
 
@@ -150,7 +151,7 @@ export const LinodesLandingV2 = () => {
             queryParams.set('query', e.target.value);
             history.push({ search: queryParams.toString() });
           }}
-          placeholder="Search Linodes"
+          placeholder="Find Linode by attribute or tag"
           value={query ?? ''}
         />
         <Autocomplete
@@ -262,6 +263,7 @@ export const LinodesLandingV2 = () => {
           </TableRow>
         </TableHead>
         <TableBody>
+          {error && <TableRowError colSpan={8} message={error[0].reason} />}
           {data?.data.length === 0 && (
             <TableRowEmpty colSpan={8} message="No Linodes found" />
           )}
