@@ -9,8 +9,8 @@ import {
 } from 'support/constants/databases';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
-  mockGetDatabaseCredentials,
   mockGetDatabase,
+  mockGetDatabaseCredentials,
   mockGetDatabases,
   mockGetDatabaseTypes,
   mockResetPassword,
@@ -20,9 +20,7 @@ import {
   mockUpdateDatabase,
   mockUpdateSuspendResumeDatabase,
 } from 'support/intercepts/databases';
-
 import { ui } from 'support/ui';
-
 import {
   randomIp,
   randomLabel,
@@ -33,7 +31,6 @@ import {
 import { databaseFactory } from 'src/factories/databases';
 
 import type { Database } from '@linode/api-v4';
-
 import type { DatabaseClusterConfiguration } from 'support/constants/databases';
 
 /**
