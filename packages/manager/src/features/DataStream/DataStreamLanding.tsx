@@ -36,11 +36,11 @@ export const DataStreamLanding = React.memo(() => {
 
   const tabs = [
     {
-      routeName: `/datastream/streams`,
+      routeName: '/datastream/streams',
       title: 'Streams',
     },
     {
-      routeName: `/datastream/destinations`,
+      routeName: '/datastream/destinations',
       title: 'Destinations',
     },
   ];
