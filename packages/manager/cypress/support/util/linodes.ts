@@ -10,6 +10,15 @@ import {
   promptDialogUpgradeDetails,
   promptDialogUpgradeWhatHappensTitle,
   upgradeInterfacesButtonText,
+  legacyInterfacesDescriptionText1,
+  legacyInterfacesDescriptionText2,
+  legacyInterfacesLabelText,
+  linodeInterfacesDescriptionText1,
+  linodeInterfacesDescriptionText2,
+  linodeInterfacesLabelText,
+  networkConnectionDescriptionText,
+  networkConnectionSectionText,
+  networkInterfaceTypeSectionText,
 } from 'support/constants/linode-interfaces';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { ui } from 'support/ui';
@@ -308,4 +317,24 @@ export const assertUpgradeSummary = (
       'be.visible'
     );
   }
+};
+
+/**
+ * Check the elements of Linode Interfaces.
+ *
+ * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
+ */
+export const checkLinodeInterfacesElements = (
+  linodeInterfacesEnabled: boolean = true
+): void => {
+  const expectedBehavior = linodeInterfacesEnabled ? 'be.visible' : 'not.exist';
+  cy.findByText(networkInterfaceTypeSectionText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(legacyInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(networkConnectionSectionText).should(expectedBehavior);
+  cy.findByText(networkConnectionDescriptionText).should(expectedBehavior);
 };
