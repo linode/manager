@@ -6,12 +6,12 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Tag, TaggedObject, TagRequest } from './types';
 
-import type { Filter, Params, ResourcePage as Page, ResourcePage } from '../types';
+import type { Filter, Params, ResourcePage } from '../types';
+import type { Tag, TaggedObject, TagRequest } from './types';
 
 export const getTags = (params?: Params, filter?: Filter) =>
-  Request<Page<Tag>>(
+  Request<ResourcePage<Tag>>(
     setURL(`${API_ROOT}/tags`),
     setMethod('GET'),
     setParams(params),
@@ -31,5 +31,5 @@ export const getTaggedObjects = (label: string, params?: Params) =>
   Request<ResourcePage<TaggedObject>>(
     setURL(`${API_ROOT}/tags/${encodeURIComponent(label)}`),
     setParams(params),
-    setMethod('GET')
+    setMethod('GET'),
   );

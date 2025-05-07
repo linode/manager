@@ -4,6 +4,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+import { tagsRoutes } from 'src/features/Tags/routes';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
@@ -28,7 +29,6 @@ import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
-import { tagsRoutes } from 'src/features/Tags/routes';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {

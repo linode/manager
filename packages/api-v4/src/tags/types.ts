@@ -1,5 +1,5 @@
-import { Image } from '../images';
-import { Linode } from '../linodes';
+import type { Image } from '../images';
+import type { Linode } from '../linodes';
 
 export interface Tag {
   label: string;
@@ -11,5 +11,5 @@ export interface TagRequest {
 }
 
 export type TaggedObject =
-  | { type: 'linode'; data: Linode }
-  | { type: 'image'; data: Image };
+  | { data: Image; type: 'image' }
+  | { data: Linode; type: 'linode' };
