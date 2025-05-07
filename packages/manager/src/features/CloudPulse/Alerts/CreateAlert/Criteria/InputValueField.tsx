@@ -42,6 +42,7 @@ export const InputValueField = (props: InputValueFieldProps) => {
     return (
       <TextField
         {...rest}
+        errorText={errorText}
         onChange={(event) => onChange(event.target.value)}
         sx={{ width: '256px' }}
         value={value}
