@@ -45,7 +45,7 @@ export const InputValueField = (props: InputValueFieldProps) => {
         errorText={errorText}
         onChange={(event) => onChange(event.target.value)}
         sx={{ width: '256px' }}
-        value={value}
+        value={value === null ? '' : value}
       />
     );
   }
