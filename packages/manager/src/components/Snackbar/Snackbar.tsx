@@ -25,7 +25,7 @@ declare module 'notistack' {
 const StyledMaterialDesignContent = styled(MaterialDesignContent)(
   ({ theme }: { theme: Theme }) => ({
     '#notistack-snackbar': {
-      alignItems: 'center',
+      alignItems: 'flex-start',
       position: 'relative',
     },
     '#notistack-snackbar > svg': {
