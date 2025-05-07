@@ -25,22 +25,6 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     {
       configuration: {
         dependency: ['region'],
-        filterKey: 'tags',
-        filterType: 'string',
-        isFilterable: false,
-        isMetricsFilter: false,
-        isMultiSelect: true,
-        isOptional: true,
-        name: 'Tags',
-        neededInServicePage: false,
-        placeholder: 'Select Tags',
-        priority: 4,
-      },
-      name: 'Tags',
-    },
-    {
-      configuration: {
-        dependency: ['region', 'tags'],
         filterKey: 'resource_id',
         filterType: 'string',
         isFilterable: true,
