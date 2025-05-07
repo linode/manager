@@ -3,7 +3,7 @@ import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import WarningSolid from '@mui/icons-material/Warning';
-import { useTheme } from '@mui/material/styles';
+import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import InfoOutline from '../../assets/icons/info-outlined.svg';
@@ -131,6 +131,18 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     width: labelTooltipIconSize === 'small' ? 16 : 20,
   };
 
+  const cdsIconProps = {
+    rootStyle: {
+      color: theme.tokens.alias.Content.Icon.Primary.Default,
+      '&:hover': {
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      },
+      height: 20,
+      width: 20,
+    },
+    viewBox: '0 0 20 20',
+  };
+
   switch (status) {
     case 'error':
       renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
@@ -140,11 +152,10 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       break;
     case 'info':
       renderIcon = (
-        <InfoOutline
-          style={{
-            color: theme.tokens.alias.Content.Icon.Primary.Default,
-            flexShrink: 0,
-          }}
+        <SvgIcon
+          component={InfoOutline}
+          sx={cdsIconProps.rootStyle}
+          viewBox={cdsIconProps.viewBox}
         />
       );
       break;
