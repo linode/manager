@@ -34,6 +34,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { LinodeRow } from '../LinodesLanding/LinodeRow/LinodeRow';
 import { LinodesLandingEmptyState } from '../LinodesLanding/LinodesLandingEmptyState';
 
+const siteTypeOptions = [{ label: 'Core' }, { label: 'Distributed' }];
+
 export const LinodesLandingV2 = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -47,7 +49,7 @@ export const LinodesLandingV2 = () => {
     [search]
   );
 
-  const query = queryParams.get('query')
+  const query = queryParams.get('query');
 
   const debouncedQuery = useDebouncedValue(query);
 
@@ -56,9 +58,12 @@ export const LinodesLandingV2 = () => {
   const pagination = usePagination();
   const { handleOrderChange, order, orderBy } = useOrder();
 
-  const { error: searchParseError, filter } = getAPIFilterFromQuery(debouncedQuery, {
-    searchableFieldsWithoutOperator: ['label', 'tags', 'ipv4'],
-  });
+  const { error: searchParseError, filter } = getAPIFilterFromQuery(
+    debouncedQuery,
+    {
+      searchableFieldsWithoutOperator: ['label', 'tags', 'ipv4'],
+    }
+  );
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -150,14 +155,29 @@ export const LinodesLandingV2 = () => {
         />
         <Autocomplete
           label="Site Type"
-          options={[
-            { label: 'All' },
-            { label: 'Core' },
-            { label: 'Distributed' },
-          ]}
+          onChange={(e, value) => {
+            let newQuery = query ?? '';
+            if (!value) {
+              // remove site_type from query
+              newQuery = newQuery.replace(/site_type = \S+/g, '');
+            } 
+            else if (newQuery?.includes('site_type')) {
+              // update site_type
+              newQuery = newQuery.replace(/site_type = \S+/g, `site_type = ${value.label.toLowerCase()}`)
+            } else {
+              // add site type to query
+              newQuery += ` site_type = ${value.label.toLowerCase()}`;
+            }
+            queryParams.set('query', newQuery.trim());
+            history.push({ search: queryParams.toString() });
+          }}
+          options={siteTypeOptions}
           placeholder="Filter by site type"
           sx={{ minWidth: 250 }}
           textFieldProps={{ hideLabel: true }}
+          value={siteTypeOptions.find((o) =>
+            query?.includes(`site_type = ${o.label.toLowerCase()}`)
+          ) ?? null}
         />
         <Autocomplete
           disableSelectAll
@@ -167,14 +187,17 @@ export const LinodesLandingV2 = () => {
           onChange={(e, tags) => {
             let newQuery = query ?? '';
             //  remove existing tags from query
-            newQuery = newQuery.replace(/\(tag: [^)]*\)/g, "");
+            newQuery = newQuery.replace(/\(tag: [^)]*\)/g, '');
             newQuery = newQuery.replace(/tag:\s*([^\s]+)\s*/g, '');
             // update query with selected tags
             if (tags.length > 0) {
               if (tags.length === 1) {
-                newQuery += " "+tags.map((tag) => `tag: ${tag.label}`) + "";
+                newQuery += ' ' + tags.map((tag) => `tag: ${tag.label}`) + '';
               } else {
-                newQuery += " ("+tags.map((tag) => `tag: ${tag.label}`).join(' or ') + ")";
+                newQuery +=
+                  ' (' +
+                  tags.map((tag) => `tag: ${tag.label}`).join(' or ') +
+                  ')';
               }
             }
             queryParams.set('query', newQuery.trim());

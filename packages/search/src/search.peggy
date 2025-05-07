@@ -72,7 +72,7 @@ And
   = ws+ 'and'i ws+
   / ws* '&&' ws*
   / ws* '&' ws*
-  / ws
+  / ws*
 
 NotEqual
   = '!='
@@ -101,7 +101,7 @@ Quote
   / "\'"
 
 FilterableField "filterable field"
-  = [a-zA-Z0-9\-\.]+ { return text(); }
+  = [a-zA-Z0-9\-\.\_]+ { return text(); }
 
 String "search value"
   = Quote value:StringWithSpaces Quote { return value }
