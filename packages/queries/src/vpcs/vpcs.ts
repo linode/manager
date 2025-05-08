@@ -18,7 +18,11 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { getAllVPCsRequest } from './requests';
+import {
+  getAllVPCIPsRequest,
+  getAllVPCsIPsRequest,
+  getAllVPCsRequest,
+} from './requests';
 
 import type {
   CreateSubnetPayload,
@@ -27,6 +31,7 @@ import type {
   Subnet,
   UpdateVPCPayload,
   VPC,
+  VPCIP,
 } from '@linode/api-v4';
 import type {
   APIError,
@@ -64,6 +69,14 @@ export const vpcQueries = createQueryKeys('vpcs', {
     queryFn: () => getVPC(vpcId),
     queryKey: [vpcId],
   }),
+  vpcIps: (vpcId: number, filter: Filter = {}) => ({
+    queryFn: () => getAllVPCIPsRequest(vpcId, filter),
+    queryKey: [filter],
+  }),
+  vpcsIps: (filter: Filter = {}) => ({
+    queryFn: () => getAllVPCsIPsRequest(filter),
+    queryKey: [filter],
+  }),
 });
 
 interface AllVPCsOptions {
@@ -93,6 +106,17 @@ export const useVPCQuery = (id: number, enabled: boolean = true) =>
   useQuery<VPC, APIError[]>({
     ...vpcQueries.vpc(id),
     enabled,
+  });
+
+export const useVPCsIPsQuery = (filter: Filter) => {
+  return useQuery<VPCIP[], APIError[]>({
+    ...vpcQueries.vpcsIps(filter),
+  });
+};
+
+export const useVPCIPsQuery = (id: number, filter: Filter) =>
+  useQuery<VPCIP[], APIError[]>({
+    ...vpcQueries.vpcIps(id, filter),
   });
 
 export const useCreateVPCMutation = () => {
