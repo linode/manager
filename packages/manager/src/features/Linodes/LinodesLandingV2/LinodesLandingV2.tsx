@@ -2,7 +2,6 @@ import { useAllTagsQuery, useLinodesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Autocomplete,
-  Box,
   CircleProgress,
   CloseIcon,
   Hidden,
