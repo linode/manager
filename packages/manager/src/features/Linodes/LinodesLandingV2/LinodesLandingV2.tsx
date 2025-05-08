@@ -219,7 +219,7 @@ export const LinodesLandingV2 = () => {
             let newQuery = query ?? '';
             //  remove existing tags from query
             newQuery = newQuery.replace(/\(tag: [^)]*\)/g, '');
-            newQuery = newQuery.replace(/tag:\s*"([^\s]+)"\s*/g, '');
+            newQuery = newQuery.replace(/tag:\s*".*"\s*/g, '');
             // update query with selected tags
             if (tags.length > 0) {
               if (tags.length === 1) {
