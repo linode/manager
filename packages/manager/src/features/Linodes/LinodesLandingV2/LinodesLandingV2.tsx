@@ -234,8 +234,20 @@ export const LinodesLandingV2 = () => {
           }}
           options={tags ?? []}
           placeholder="Filter by tags"
-          sx={{ minWidth: 250 }}
-          textFieldProps={{ hideLabel: true }}
+          sx={{ maxWidth: 300 }}
+          textFieldProps={{
+            hideLabel: true,
+            tooltipText: (
+              <Typography>
+                Want to see your Linodes grouped by tag?{' '}
+                <Link
+                  to={`/tags/groups?query=${[...(query?.matchAll(/tag:\s*([a-zA-Z0-9_-]+)/g) ?? [])].map((match) => match[1]).join(',')}`}
+                >
+                  Go here
+                </Link>
+              </Typography>
+            ),
+          }}
           value={
             tags?.filter((tag) => query?.includes(`tag: ${tag.label}`)) ?? []
           }
