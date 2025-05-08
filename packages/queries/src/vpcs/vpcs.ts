@@ -65,13 +65,13 @@ export const vpcQueries = createQueryKeys('vpcs', {
         },
         queryKey: null,
       },
+      vpcIps: (vpcId: number, filter: Filter = {}) => ({
+        queryFn: () => getAllVPCIPsRequest(vpcId, filter),
+        queryKey: [filter],
+      }),
     },
     queryFn: () => getVPC(vpcId),
     queryKey: [vpcId],
-  }),
-  vpcIps: (vpcId: number, filter: Filter = {}) => ({
-    queryFn: () => getAllVPCIPsRequest(vpcId, filter),
-    queryKey: [filter],
   }),
   vpcsIps: (filter: Filter = {}) => ({
     queryFn: () => getAllVPCsIPsRequest(filter),
@@ -108,15 +108,21 @@ export const useVPCQuery = (id: number, enabled: boolean = true) =>
     enabled,
   });
 
-export const useVPCsIPsQuery = (filter: Filter) => {
+export const useVPCsIPsQuery = (filter: Filter, enabled: boolean = false) => {
   return useQuery<VPCIP[], APIError[]>({
     ...vpcQueries.vpcsIps(filter),
+    enabled,
   });
 };
 
-export const useVPCIPsQuery = (id: number, filter: Filter) =>
+export const useVPCIPsQuery = (
+  id: number,
+  filter: Filter,
+  enabled: boolean = false,
+) =>
   useQuery<VPCIP[], APIError[]>({
-    ...vpcQueries.vpcIps(id, filter),
+    ...vpcQueries.vpc(id)._ctx.vpcIps(id, filter),
+    enabled,
   });
 
 export const useCreateVPCMutation = () => {
