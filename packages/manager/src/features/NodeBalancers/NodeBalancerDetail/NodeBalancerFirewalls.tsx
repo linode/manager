@@ -4,11 +4,10 @@ import {
   useNodeBalancersFirewallsQuery,
 } from '@linode/queries';
 import { Box, Button, Drawer, Stack, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -19,7 +18,6 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
-import { useDialogData } from 'src/hooks/useDialogData';
 
 import { NodeBalancerFirewallsRow } from './NodeBalancerFirewallsRow';
 
@@ -31,6 +29,7 @@ interface Props {
 
 export const NodeBalancerFirewalls = (props: Props) => {
   const { nodeBalancerId } = props;
+  const params = useParams({ strict: false });
   const navigate = useNavigate();
   const match = useMatch({
     strict: false,
@@ -50,19 +49,19 @@ export const NodeBalancerFirewalls = (props: Props) => {
   const {
     data: selectedFirewall,
     isFetching: isFetchingSelectedFirewall,
-  } = useDialogData({
-    enabled: isUnassignFirewallRoute,
-    paramKey: 'firewallId',
-    queryHook: useFirewallQuery,
-    redirectToOnNotFound: '/nodebalancers/$id/settings',
-  });
+    error: selectedFireWallError,
+  } = useFirewallQuery(Number(params.firewallId), isUnassignFirewallRoute);
 
-  const { data: devices, isFetching: isFetchingDevices } = useDialogData({
-    enabled: isUnassignFirewallRoute,
-    paramKey: 'firewallId',
-    queryHook: useAllFirewallDevicesQuery,
-    redirectToOnNotFound: '/nodebalancers/$id/settings',
-  });
+  const {
+    data: devices,
+    isFetching: isFetchingDevices,
+    error: selectedFirewallDevicesError,
+  } = useAllFirewallDevicesQuery(
+    Number(params.firewallId),
+    isUnassignFirewallRoute
+  );
+
+  const firewallError = selectedFireWallError || selectedFirewallDevicesError;
 
   const handleClickUnassign = (firewall: Firewall) => {
     navigate({
@@ -112,14 +111,14 @@ export const NodeBalancerFirewalls = (props: Props) => {
           to your NodeBalancer. Only inbound rules are applied to NodeBalancers.
         </Typography>
         <Button
+          buttonType="primary"
+          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
           onClick={() =>
             navigate({
               params: { id: String(nodeBalancerId) },
               to: '/nodebalancers/$id/settings/add-firewall',
             })
           }
-          buttonType="primary"
-          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
           tooltipText="NodeBalanacers can only have one Firewall assigned."
         >
           Add Firewall
@@ -142,20 +141,21 @@ export const NodeBalancerFirewalls = (props: Props) => {
             device.entity.type === 'nodebalancer' &&
             device.entity.id === nodeBalancerId
         )}
+        firewallError={firewallError}
+        firewallId={selectedFirewall?.id ?? -1}
+        firewallLabel={selectedFirewall?.label ?? ''}
+        isFetching={isFetchingDevices || isFetchingSelectedFirewall}
         onClose={() =>
           navigate({
             params: { id: String(nodeBalancerId) },
             to: '/nodebalancers/$id/settings',
           })
         }
+        onService
         open={
           match.routeId ===
           '/nodebalancers/$id/settings/unassign-firewall/$firewallId'
         }
-        firewallId={selectedFirewall?.id ?? -1}
-        firewallLabel={selectedFirewall?.label ?? ''}
-        isFetching={isFetchingDevices || isFetchingSelectedFirewall}
-        onService
       />
       <Drawer
         onClose={() =>
@@ -164,19 +164,18 @@ export const NodeBalancerFirewalls = (props: Props) => {
             to: '/nodebalancers/$id/settings',
           })
         }
-        NotFoundComponent={NotFound}
         open={match.routeId === '/nodebalancers/$id/settings/add-firewall'}
         title="Add Firewall"
       >
         <AddFirewallForm
+          entityId={nodeBalancerId}
+          entityType="nodebalancer"
           onCancel={() =>
             navigate({
               params: { id: String(nodeBalancerId) },
               to: '/nodebalancers/$id/settings',
             })
           }
-          entityId={nodeBalancerId}
-          entityType="nodebalancer"
         />
       </Drawer>
     </Stack>

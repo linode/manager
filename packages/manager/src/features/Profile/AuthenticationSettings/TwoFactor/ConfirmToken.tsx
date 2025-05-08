@@ -37,11 +37,11 @@ export const ConfirmToken = React.memo((props: Props) => {
       />
       {twoFactorConfirmed && (
         <StyledWarningNotice
+          spacingBottom={8}
+          spacingTop={16}
           text={
             'Confirming a new key will invalidate codes generated from any previous key.'
           }
-          spacingBottom={8}
-          spacingTop={16}
           variant="warning"
         />
       )}

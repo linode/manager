@@ -43,15 +43,14 @@ export const MemoryGraph = (props: GraphProps) => {
   const swap = data.Memory?.swap.used ?? [];
 
   // Determine the unit based on the largest value
-  const unit = React.useMemo(() => getMaxUnit([buffers, cache, used, swap]), [
-    buffers,
-    cache,
-    used,
-    swap,
-  ]);
+  const unit = React.useMemo(
+    () => getMaxUnit([buffers, cache, used, swap]),
+    [buffers, cache, used, swap]
+  );
 
   return (
     <LongviewLineGraph
+      ariaLabel="Memory Usage Graph"
       data={[
         {
           backgroundColor: theme.graphs.memory.swap,
@@ -78,7 +77,6 @@ export const MemoryGraph = (props: GraphProps) => {
           label: 'Used',
         },
       ]}
-      ariaLabel="Memory Usage Graph"
       error={error}
       formatData={(value: number) => convertBytesToTarget(unit, value)}
       formatTooltip={(value: number) => readableBytes(value).formatted}

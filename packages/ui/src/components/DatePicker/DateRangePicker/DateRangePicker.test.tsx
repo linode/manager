@@ -29,22 +29,22 @@ describe('DateRangePicker', () => {
     expect(
       screen.getByRole('textbox', {
         name: 'Start Date',
-      })
+      }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
         name: 'End Date',
-      })
+      }),
     ).toBeVisible();
     expect(
       screen.getByRole('textbox', {
         name: 'Start Date',
-      })
+      }),
     ).toHaveAttribute('placeholder', 'YYYY-MM-DD');
     expect(
       screen.getByRole('textbox', {
         name: 'End Date',
-      })
+      }),
     ).toHaveAttribute('placeholder', 'YYYY-MM-DD');
   });
 
@@ -119,11 +119,11 @@ describe('DateRangePicker - Format Validation', () => {
       renderWithTheme(<DateRangePicker {...Props} />);
 
       expect(
-        screen.getByRole('textbox', { name: 'Start Date' })
+        screen.getByRole('textbox', { name: 'Start Date' }),
       ).toHaveAttribute('placeholder', format.toLocaleUpperCase());
       expect(screen.getByRole('textbox', { name: 'End Date' })).toHaveAttribute(
         'placeholder',
-        format.toLocaleUpperCase()
+        format.toLocaleUpperCase(),
       );
 
       // Define the expected values for each format
@@ -147,7 +147,7 @@ describe('DateRangePicker - Format Validation', () => {
 
       expect(startDateField).toHaveValue(formattedTestDate);
       expect(endDateField).toHaveValue(formattedTestDate);
-    }
+    },
   );
 
   it('should prevent invalid date input for each format', async () => {

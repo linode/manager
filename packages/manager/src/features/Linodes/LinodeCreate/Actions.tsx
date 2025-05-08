@@ -1,7 +1,7 @@
 import { Box, Button } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -22,18 +22,41 @@ export const Actions = () => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const {
-    formState,
-    getValues,
-    trigger,
-  } = useFormContext<LinodeCreateFormValues>();
+  const { formState, getValues, trigger, control } =
+    useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
 
+  const [
+    legacyFirewallId,
+    firstLinodeInterfaceFirewallId,
+    firstLinodeInterfaceType,
+    interfaceGeneration,
+  ] = useWatch({
+    name: [
+      'firewall_id',
+      'linodeInterfaces.0.firewall_id',
+      'linodeInterfaces.0.purpose',
+      'interface_generation',
+    ],
+    control,
+  });
+
+  const firewallId =
+    interfaceGeneration === 'linode'
+      ? firstLinodeInterfaceFirewallId
+      : legacyFirewallId;
+
+  const userNeedsToTakeActionAboutInternalFirewallPolicy =
+    interfaceGeneration === 'linode' && firstLinodeInterfaceType === 'vlan'
+      ? false
+      : 'firewallOverride' in formState.errors && !firewallId;
+
   const disableSubmitButton =
-    isLinodeCreateRestricted || 'firewallOverride' in formState.errors;
+    isLinodeCreateRestricted ||
+    userNeedsToTakeActionAboutInternalFirewallPolicy;
 
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
@@ -64,12 +87,12 @@ export const Actions = () => {
         Create Linode
       </Button>
       <ApiAwarenessModal
+        isOpen={isAPIAwarenessModalOpen}
+        onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(
           structuredClone(getValues()),
           isLinodeInterfacesEnabled
         )}
-        isOpen={isAPIAwarenessModalOpen}
-        onClose={() => setIsAPIAwarenessModalOpen(false)}
       />
     </Box>
   );

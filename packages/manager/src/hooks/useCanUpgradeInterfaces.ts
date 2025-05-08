@@ -44,7 +44,7 @@ export const useCanUpgradeInterfaces = (
     regionSupportsLinodeInterfaces;
 
   const unableToUpgradeReasons: CannotUpgradeInterfaceReasons[] = [];
-  if (!!linodeLkeId) {
+  if (linodeLkeId) {
     unableToUpgradeReasons.push('isLkeLinode');
   }
   if (isLegacyConfigOnlyAccount) {

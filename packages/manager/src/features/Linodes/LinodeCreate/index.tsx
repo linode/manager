@@ -12,6 +12,7 @@ import { createLazyRoute } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -70,7 +71,6 @@ import type {
   LinodeCreateFormContext,
   LinodeCreateFormValues,
 } from './utilities';
-import type { SubmitHandler } from 'react-hook-form';
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
@@ -192,6 +192,8 @@ export const LinodeCreate = () => {
     <FormProvider {...form}>
       <DocumentTitleSegment segment="Create a Linode" />
       <LandingHeader
+        docsLabel="Getting Started"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         onDocsClick={() =>
           sendLinodeCreateFormInputEvent({
             createType: params.type ?? 'OS',
@@ -199,8 +201,6 @@ export const LinodeCreate = () => {
             label: 'Getting Started',
           })
         }
-        docsLabel="Getting Started"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started"
         title="Create"
       />
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -265,7 +265,7 @@ export const LinodeCreate = () => {
           <EUAgreement />
           <Summary />
           <SMTP />
-          <FirewallAuthorization />
+          {secureVMNoticesEnabled && <FirewallAuthorization />}
           <Actions />
         </Stack>
       </form>

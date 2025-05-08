@@ -50,7 +50,7 @@ export interface DialogState<T> {
  */
 
 export const useDialog = <T extends number | string | undefined>(
-  request: (params?: T) => Promise<any>
+  request: (params?: T) => Promise<any>,
 ): {
   closeDialog: () => void;
   dialog: DialogState<T>;

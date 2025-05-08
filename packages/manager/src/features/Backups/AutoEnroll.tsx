@@ -26,6 +26,8 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
     >
       {error && <Notice text={error} variant="error" />}
       <FormControlLabel
+        checked={enabled}
+        control={<Toggle />}
         label={
           <Stack spacing={0.5}>
             <Typography sx={(theme) => ({ font: theme.font.bold })}>
@@ -44,8 +46,6 @@ export const AutoEnroll = (props: AutoEnrollProps) => {
             </Typography>
           </Stack>
         }
-        checked={enabled}
-        control={<Toggle />}
         onChange={toggle}
         sx={{ gap: 1 }}
       />
