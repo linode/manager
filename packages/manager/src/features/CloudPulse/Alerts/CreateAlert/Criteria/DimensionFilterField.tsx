@@ -178,7 +178,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 onBlur={field.onBlur}
                 onChange={(value: null | string) => field.onChange(value)}
                 options={valueOptions()}
-                placeholder="Enter a Value"
+                placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
                 sx={{ flex: 1 }}
                 value={field.value}
               />
