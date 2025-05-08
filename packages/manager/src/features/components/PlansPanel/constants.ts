@@ -34,7 +34,7 @@ export const ACCELERATED_COMPUTE_INSTANCES_LINK =
 
 export const MTC = {
   availability_regions: ['us-iad', 'no-east'], // Currently available in iad/oslo regions.
-  available_types: ['g8-premium-64-ht', 'g8-premium-128-ht'],
+  available_types: ['g8-premium-128-ht'],
 } as const;
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
