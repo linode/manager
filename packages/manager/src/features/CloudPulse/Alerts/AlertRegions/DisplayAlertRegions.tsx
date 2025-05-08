@@ -19,12 +19,22 @@ export interface AlertRegion {
 interface DisplayAlertRegionProps {
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
 
+  isAllSelected?: boolean;
+
+  isSomeSelected?: boolean;
   regions?: AlertRegion[];
+  showSelected?: boolean;
 }
 
 export const DisplayAlertRegions = React.memo(
   (props: DisplayAlertRegionProps) => {
-    const { regions, handleSelectionChange } = props;
+    const {
+      regions,
+      handleSelectionChange,
+      isSomeSelected,
+      isAllSelected,
+      showSelected,
+    } = props;
     return (
       <Paginate data={regions ?? []}>
         {({
@@ -46,7 +56,10 @@ export const DisplayAlertRegions = React.memo(
                 <TableRow>
                   <TableCell>
                     <Box>
-                      <Checkbox />
+                      <Checkbox
+                        checked={!isSomeSelected && isAllSelected}
+                        indeterminate={isSomeSelected && !isAllSelected}
+                      />
                     </Box>
                   </TableCell>
                   <TableSortCell
@@ -66,22 +79,24 @@ export const DisplayAlertRegions = React.memo(
                   length={regions?.length ?? 0}
                   loading={false}
                 >
-                  {paginatedData?.map(({ label, id, checked }) => {
-                    return (
-                      <TableRow data-testid={`region-row-${id}`} key={id}>
-                        <TableCell>
-                          <Checkbox
-                            checked={checked}
-                            onChange={(_, status) =>
-                              handleSelectionChange(id, status)
-                            }
-                          />
-                        </TableCell>
+                  {paginatedData
+                    ?.filter(({ checked }) => (showSelected ? checked : true))
+                    .map(({ label, id, checked }) => {
+                      return (
+                        <TableRow data-testid={`region-row-${id}`} key={id}>
+                          <TableCell>
+                            <Checkbox
+                              checked={checked}
+                              onChange={(_, status) =>
+                                handleSelectionChange(id, status)
+                              }
+                            />
+                          </TableCell>
 
-                        <TableCell>{label}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCell>{label}</TableCell>
+                        </TableRow>
+                      );
+                    })}
                 </TableContentWrapper>
               </TableBody>
             </Table>

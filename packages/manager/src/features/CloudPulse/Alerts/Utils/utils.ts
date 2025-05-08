@@ -3,6 +3,8 @@ import { array, object, string } from 'yup';
 
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
+import type { AlertRegion } from '../AlertRegions/DisplayAlertRegions';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
@@ -13,10 +15,14 @@ import type {
   APIError,
   EditAlertPayloadWithService,
   NotificationChannel,
+  Region,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  CloudPulseResourceTypeMapFlag,
+} from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -445,4 +451,62 @@ export const handleMultipleError = <T extends FieldValues>(
     // Apply the consolidated error message to the form field
     setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
   }
+};
+
+/**
+ *
+ * @param serviceType
+ * @param searchText
+ * @param selectedRegions
+ * @param resources
+ * @param regions
+ * @param aclpResourceTypeMap
+ * @returns
+ */
+export const getFilteredRegions = (
+  serviceType: AlertServiceType | null,
+  searchText: string,
+  selectedRegions: string[],
+  resources?: CloudPulseResources[] | undefined,
+  regions?: Region[] | undefined,
+  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[] | undefined
+): AlertRegion[] => {
+  const resourceTypeFlag = aclpResourceTypeMap?.find(
+    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  );
+  let supportedRegions = regions;
+  if (
+    resourceTypeFlag?.supportedRegionIds !== null &&
+    resourceTypeFlag?.supportedRegionIds !== undefined
+  ) {
+    const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
+      .split(',')
+      .map((regionId: string) => regionId.trim());
+
+    supportedRegions =
+      supportedRegions?.filter(({ id }) =>
+        supportedRegionsIdList.includes(id)
+      ) ?? [];
+  }
+
+  const supportedRegionsFromResources =
+    supportedRegions?.filter(
+      ({ id, label }) =>
+        resources?.some(({ region }) => region === id) &&
+        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+    ) ?? [];
+  return supportedRegionsFromResources.map(({ label, id }) => {
+    const data = { label, id };
+
+    if (selectedRegions.includes(id)) {
+      return {
+        ...data,
+        checked: true,
+      };
+    }
+    return {
+      ...data,
+      checked: false,
+    };
+  });
 };
