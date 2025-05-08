@@ -1,6 +1,7 @@
 import {
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
@@ -272,6 +273,55 @@ describe('Linode Entity Detail', () => {
     await waitFor(() => {
       expect(getByText('Linode')).toBeVisible();
       expect(queryByTestId(assignedFirewallTestId)).not.toBeInTheDocument();
+    });
+  });
+
+  it('should display the public and VPC firewalls for a Linode using new interfaces', async () => {
+    const mockLinode = linodeFactory.build({ interface_generation: 'linode' });
+    const mockPublicInterface = linodeInterfaceFactoryPublic.build();
+    const mockVPCInterface = linodeInterfaceFactoryVPC.build();
+    const mockFirewall = firewallFactory.build();
+    const account = accountFactory.build({
+      capabilities: ['Linode Interfaces'],
+    });
+
+    server.use(
+      http.get('*/v4/account', () => {
+        return HttpResponse.json(account);
+      }),
+      http.get('*/linode/instances/:linodeId', () => {
+        return HttpResponse.json(mockLinode);
+      }),
+      http.get('*/linode/instances/:linodeId/interfaces', () => {
+        return HttpResponse.json({
+          interfaces: [mockPublicInterface, mockVPCInterface],
+        });
+      }),
+      http.get(
+        '*/linode/instances/:linodeId/interfaces/:interfaceId/firewalls',
+        () => {
+          return HttpResponse.json(makeResourcePage([mockFirewall]));
+        }
+      )
+    );
+
+    const { getByText } = renderWithTheme(
+      <LinodeEntityDetail
+        handlers={handlers}
+        id={mockLinode.id}
+        linode={mockLinode}
+      />,
+      {
+        flags: {
+          linodeInterfaces: { enabled: true },
+        },
+      }
+    );
+
+    await waitFor(() => {
+      expect(getByText('Linode')).toBeVisible();
+      expect(getByText('Public Interface Firewall:')).toBeVisible();
+      expect(getByText('VPC Interface Firewall:')).toBeVisible();
     });
   });
 
