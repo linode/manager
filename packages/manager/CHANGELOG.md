@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [2025-05-09] - v1.141.1
 
-### fixed:
+### Fixed:
 
 - State issue with Object Storage access key drawer
 
