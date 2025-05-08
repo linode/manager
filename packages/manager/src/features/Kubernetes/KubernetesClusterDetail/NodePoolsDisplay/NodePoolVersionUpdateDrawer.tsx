@@ -51,7 +51,7 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
       return;
     }
     if (open) {
-      setValue('update_strategy', nodePool.update_strategy);
+      setValue('update_strategy', nodePool?.update_strategy);
     }
   }, [nodePool, open]);
 
@@ -110,11 +110,15 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
               <Autocomplete
                 label="Version Update Strategy"
                 onChange={(e, updateStrategy) =>
-                  field.onChange(updateStrategy?.value ?? null)
+                  field.onChange(updateStrategy?.value)
                 }
                 options={updateStrategyOptions}
-                placeholder="Select a Role"
-                textFieldProps={{ hideLabel: true }}
+                placeholder="Select an Update Strategy"
+                value={
+                  updateStrategyOptions.find(
+                    (option) => option.value === field.value
+                  ) ?? null
+                }
               />
             )}
           />
