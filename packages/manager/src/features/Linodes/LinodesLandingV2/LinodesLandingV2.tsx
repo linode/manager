@@ -181,6 +181,7 @@ export const LinodesLandingV2 = () => {
         <Autocomplete
           label="Site Type"
           onChange={(e, value) => {
+            // This code is very bad. We will need to improve or go a different route.
             let newQuery = query ?? '';
             if (!value) {
               // remove site_type from query
@@ -214,6 +215,7 @@ export const LinodesLandingV2 = () => {
           limitTags={1}
           multiple
           onChange={(e, tags) => {
+            // This code is very bad. We will need to improve or go a different route.
             let newQuery = query ?? '';
             //  remove existing tags from query
             newQuery = newQuery.replace(/\(tag: [^)]*\)/g, '');
@@ -237,6 +239,7 @@ export const LinodesLandingV2 = () => {
           sx={{ maxWidth: 300 }}
           textFieldProps={{
             hideLabel: true,
+            // We may or maynot want to hide this
             tooltipText: (
               <Typography>
                 Want to see your Linodes grouped by tag?{' '}
