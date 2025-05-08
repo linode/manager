@@ -123,7 +123,6 @@ export const InterfaceType = ({ index }: Props) => {
               )}
               renderVariant={() => (
                 <TooltipIcon
-                  status="help"
                   sxTooltipIcon={{ p: 0.5 }}
                   text={interfaceType.description}
                 />

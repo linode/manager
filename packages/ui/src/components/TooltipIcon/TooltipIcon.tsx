@@ -129,6 +129,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       >
         <SvgIcon
           component={InfoOutline}
+          data-testid="tooltip-info-icon"
           sx={cdsIconProps.rootStyle}
           viewBox={cdsIconProps.viewBox}
         />

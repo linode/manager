@@ -21,7 +21,6 @@ export const PublicIPAddressesTooltip = ({
 }) => {
   return (
     <TooltipIcon
-      status="help"
       sxTooltipIcon={sxTooltipIcon}
       text={
         isLinodeInterface ? (

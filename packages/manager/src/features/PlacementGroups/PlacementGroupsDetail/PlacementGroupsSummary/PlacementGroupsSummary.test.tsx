@@ -47,7 +47,7 @@ describe('PlacementGroups Summary', () => {
 
     expect(getByText('Placement Group Configuration')).toBeInTheDocument();
     expect(getByText('Linodes')).toBeInTheDocument();
-    expect(getByTestId('HelpOutlineIcon')).toBeInTheDocument();
+    expect(getByTestId('tooltip-info-icon')).toBeInTheDocument();
     expect(getByText('Placement Group Type')).toBeInTheDocument();
     expect(getByText('Region')).toBeInTheDocument();
   });

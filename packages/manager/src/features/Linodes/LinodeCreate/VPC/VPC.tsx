@@ -216,7 +216,6 @@ export const VPC = () => {
                                   in the VPC
                                 </Typography>
                                 <TooltipIcon
-                                  status="help"
                                   text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                                 />
                               </Stack>

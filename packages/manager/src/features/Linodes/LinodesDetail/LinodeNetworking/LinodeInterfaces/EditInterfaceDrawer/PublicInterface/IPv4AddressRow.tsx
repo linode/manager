@@ -51,7 +51,6 @@ export const IPv4AddressRow = (props: Props) => {
           {primary && <Chip color="primary" label="Primary" />}
           {error && (
             <TooltipIcon
-              status="error"
               sxTooltipIcon={{ padding: 0 }}
               text={
                 <ErrorMessage

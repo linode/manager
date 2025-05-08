@@ -167,7 +167,6 @@ export const LinodeEntityDetailHeader = (
         </Stack>
         {isRebootNeeded && (
           <TooltipIcon
-            status="help"
             sxTooltipIcon={{ padding: 0 }}
             text={VPC_REBOOT_MESSAGE}
           />

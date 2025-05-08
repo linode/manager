@@ -302,7 +302,6 @@ export const TextField = (props: TextFieldProps) => {
         {labelTooltipText && labelTooltipIconPosition === 'left' && (
           <TooltipIcon
             labelTooltipIconSize={labelTooltipIconSize}
-            status="help"
             sxTooltipIcon={sxTooltipIconLeft}
             text={labelTooltipText}
             width={tooltipWidth}
@@ -432,7 +431,6 @@ export const TextField = (props: TextFieldProps) => {
           <TooltipIcon
             classes={{ popper: tooltipClasses }}
             onMouseEnter={tooltipOnMouseEnter}
-            status="info"
             sxTooltipIcon={{
               height: '34px',
               margin: '0px 0px 0px 4px',

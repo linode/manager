@@ -75,11 +75,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   const showUsableStorageTooltip = (cellName: string) =>
     cellName === 'Usable Storage';
 
-  const showTooltip = (
-    status: TooltipIconStatus,
-    text: JSX.Element | string,
-    width?: number
-  ) => {
+  const showTooltip = (text: JSX.Element | string, width?: number) => {
     return (
       <TooltipIcon
         sxTooltipIcon={{
@@ -134,12 +130,10 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                   : cellName}
                 {showTransferTooltip(cellName) &&
                   showTooltip(
-                    'help',
                     'Some plans do not include bundled network transfer. If the transfer allotment is 0, all outbound network transfer is subject to charges.'
                   )}
                 {showUsableStorageTooltip(cellName) &&
                   showTooltip(
-                    'help',
                     'Usable storage is smaller than the actual plan storage due to the overhead from the database platform.',
                     240
                   )}

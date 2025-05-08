@@ -132,7 +132,6 @@ export const StackScriptLandingTable = (props: Props) => {
             ? {
                 endAdornment: (
                   <TooltipIcon
-                    status="error"
                     sxTooltipIcon={{ p: 0.75 }}
                     text={searchParseError.message}
                   />

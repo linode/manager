@@ -47,7 +47,6 @@ export const TableCell = (props: TableCellProps) => {
         <>
           {props.children}
           <TooltipIcon
-            status="error"
             style={{ paddingBottom: 0, paddingTop: 0 }}
             text={errorText}
           />

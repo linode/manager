@@ -129,7 +129,6 @@ export const LinodeRow = (props: Props) => {
           <div style={{ alignItems: 'center', display: 'flex' }}>
             <strong>Maintenance Scheduled</strong>
             <TooltipIcon
-              status="help"
               sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}
               tooltipPosition="top"

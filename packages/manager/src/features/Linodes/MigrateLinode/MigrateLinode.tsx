@@ -311,7 +311,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         >
           Enter Migration Queue
         </Button>
-        {!!disabledText && <TooltipIcon status="help" text={disabledText} />}
+        {!!disabledText && <TooltipIcon text={disabledText} />}
       </Box>
     </Dialog>
   );

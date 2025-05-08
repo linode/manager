@@ -49,14 +49,12 @@ export const VLAN = () => {
           <Typography variant="h2">VLAN</Typography>
           {isCreatingFromBackup && (
             <TooltipIcon
-              status="help"
               sxTooltipIcon={{ p: 0 }}
               text="You cannot attach a VLAN when deploying to a new Linode from a backup."
             />
           )}
           {!imageId && !isCreatingFromBackup && (
             <TooltipIcon
-              status="help"
               sxTooltipIcon={{ p: 0 }}
               text="You must select an Image to attach a VLAN."
             />

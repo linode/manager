@@ -43,7 +43,6 @@ export const AssignIPRanges = (props: Props) => {
         </Typography>
         {includeDescriptionInTooltip ? (
           <TooltipIcon
-            status="help"
             sxTooltipIcon={{
               marginLeft: theme.spacing(0.5),
               padding: theme.spacing(0.5),

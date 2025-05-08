@@ -256,7 +256,6 @@ export const LinodeResize = (props: Props) => {
             Auto Resize Disk
             {disksError ? (
               <TooltipIcon
-                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
@@ -264,7 +263,6 @@ export const LinodeResize = (props: Props) => {
               />
             ) : isSmaller ? (
               <TooltipIcon
-                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}
@@ -272,7 +270,6 @@ export const LinodeResize = (props: Props) => {
               />
             ) : !_shouldEnableAutoResizeDiskOption ? (
               <TooltipIcon
-                status="help"
                 sxTooltipIcon={{
                   marginLeft: '-2px',
                 }}

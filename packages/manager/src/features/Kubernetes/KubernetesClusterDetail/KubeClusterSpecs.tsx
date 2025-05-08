@@ -100,7 +100,6 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
         ${UNKNOWN_PRICE}/month
         <TooltipIcon
           classes={{ popper: classes.tooltip }}
-          status="help"
           sxTooltipIcon={{
             marginBottom: theme.spacing(0.5),
             marginLeft: theme.spacing(1),

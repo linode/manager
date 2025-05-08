@@ -61,7 +61,6 @@ export const VPCRanges = () => {
           Add IPv4 Range
         </LinkButton>
         <TooltipIcon
-          status="help"
           sxTooltipIcon={{ p: 0.5 }}
           text={<VPCRangesDescription />}
         />

@@ -1019,7 +1019,6 @@ export const LinodeConfigDialog = (props: Props) => {
                 )}
                 {isLegacyConfigInterface && (
                   <TooltipIcon
-                    status="help"
                     sx={{ tooltip: { maxWidth: 350 } }}
                     sxTooltipIcon={{
                       paddingBottom: 0,
