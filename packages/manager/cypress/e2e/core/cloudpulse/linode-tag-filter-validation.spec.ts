@@ -107,7 +107,8 @@ const metricsAPIResponsePayload = cloudPulseMetricsResponseFactory.build({
   data: generateRandomMetricsData(timeDurationToSelect, '5 min'),
 });
 
-describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
+// Reason : Tag filter is not needed as per template
+describe.skip('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
@@ -130,6 +131,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
     }).as('fetchpreferences');
   });
 
+  // Reason : Tag filter is not needed as per template
   it('Select a resource without applying any tags', () => {
     cy.visitWithLogin('metrics');
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
@@ -156,6 +158,7 @@ describe('Integration Tests for Linode Dashboard with Dynamic Mocking', () => {
       });
   });
 
+  // Reason : Tag filter is not needed as per template
   it('Verify the users tag preferences are correctly applied and reflected in the system', () => {
     mockGetUserPreferences({
       aclpPreference: {

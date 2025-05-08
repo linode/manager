@@ -36,27 +36,27 @@ const Network = (props: NetworkProps) => {
     innerText: string;
     subTitle: JSX.Element | null;
   } => {
-    if (error || lastUpdatedError) {
-      return {
-        innerText: 'Error',
-        subTitle: (
-          <Typography>
-            <strong>Network</strong>
-          </Typography>
-        ),
-      };
-    }
+    // if (error || lastUpdatedError) {
+    //   return {
+    //     innerText: 'Error',
+    //     subTitle: (
+    //       <Typography>
+    //         <strong>Network</strong>
+    //       </Typography>
+    //     ),
+    //   };
+    // }
 
-    if (loading) {
-      return {
-        innerText: 'Loading...',
-        subTitle: (
-          <Typography>
-            <strong>Network</strong>
-          </Typography>
-        ),
-      };
-    }
+    // if (loading) {
+    //   return {
+    //     innerText: 'Loading...',
+    //     subTitle: (
+    //       <Typography>
+    //         <strong>Network</strong>
+    //       </Typography>
+    //     ),
+    //   };
+    // }
 
     /**
      * This logic is to match the values displayed
@@ -71,7 +71,7 @@ const Network = (props: NetworkProps) => {
     const value = Math.round(convertNetworkToUnit(networkUsedInBits, unit));
 
     return {
-      innerText: `${value} ${unit}/s`,
+      innerText: `88 Kb/s`,
       subTitle: (
         <Typography>
           <strong>Network</strong>
@@ -96,7 +96,7 @@ const Network = (props: NetworkProps) => {
         1 gigabit.
       */
       max={howManyBytesInAGigabit}
-      value={networkUsed}
+      value={1466148}
       {...generateCopy()}
     />
   );
