@@ -3,7 +3,6 @@ import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 
 import type { APIError, Volume } from '@linode/api-v4';
@@ -13,10 +12,11 @@ interface Props {
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const ManageTagsDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { data: grants } = useGrants();
 
@@ -69,8 +69,8 @@ export const ManageTagsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={volumeError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title="Manage Volume Tags"

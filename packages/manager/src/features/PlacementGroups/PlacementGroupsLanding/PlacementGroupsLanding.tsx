@@ -5,6 +5,7 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
 import {
   useLocation,
@@ -15,7 +16,6 @@ import {
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -26,7 +26,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -116,12 +115,8 @@ export const PlacementGroupsLanding = React.memo(() => {
     data: selectedPlacementGroup,
     isFetching: isFetchingPlacementGroup,
     isLoading: isLoadingPlacementGroup,
-  } = useDialogData({
-    enabled: !!params.id,
-    paramKey: 'id',
-    queryHook: usePlacementGroupQuery,
-    redirectToOnNotFound: '/placement-groups',
-  });
+    error: selectedPlacementGroupError,
+  } = usePlacementGroupQuery(Number(params.id), !!params.id);
 
   const { data: regions } = useRegionsQuery();
   const getPlacementGroupRegion = (
@@ -319,6 +314,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         open={params.action === 'edit'}
         region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
+        selectedPlacementGroupError={selectedPlacementGroupError}
       />
       <PlacementGroupsDeleteModal
         disableUnassignButton={isLinodeReadOnly}
@@ -327,6 +323,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         onClose={onClosePlacementGroupDrawer}
         open={params.action === 'delete'}
         selectedPlacementGroup={selectedPlacementGroup}
+        selectedPlacementGroupError={selectedPlacementGroupError}
       />
     </>
   );

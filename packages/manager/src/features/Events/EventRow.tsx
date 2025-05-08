@@ -1,12 +1,12 @@
 import { useProfile } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { BarPercent } from 'src/components/BarPercent';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TextTooltip } from 'src/components/TextTooltip';

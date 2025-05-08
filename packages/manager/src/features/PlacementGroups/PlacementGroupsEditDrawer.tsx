@@ -7,6 +7,7 @@ import {
   ActionsPanel,
   Divider,
   Drawer,
+  NotFound,
   Notice,
   Stack,
   TextField,
@@ -21,7 +22,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
-import { NotFound } from 'src/components/NotFound';
 import { getFormikErrorsFromAPIErrors } from 'src/utilities/formikErrorUtils';
 
 import type { PlacementGroupsEditDrawerProps } from './types';
@@ -39,6 +39,7 @@ export const PlacementGroupsEditDrawer = (
     open,
     region,
     selectedPlacementGroup: placementGroup,
+    selectedPlacementGroupError,
   } = props;
 
   const { error, mutateAsync } = useMutatePlacementGroup(
@@ -106,8 +107,8 @@ export const PlacementGroupsEditDrawer = (
 
   return (
     <Drawer
+      error={selectedPlacementGroupError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={

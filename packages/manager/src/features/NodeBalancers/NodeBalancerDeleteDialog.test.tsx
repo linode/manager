@@ -10,6 +10,7 @@ import type { ManagerPreferences } from '@linode/utilities';
 
 const props = {
   isFetching: false,
+  nodeBalancerError: null,
   open: true,
   selectedNodeBalancer: nodeBalancerFactory.build(),
 };
