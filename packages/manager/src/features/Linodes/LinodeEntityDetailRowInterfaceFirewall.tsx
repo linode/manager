@@ -30,11 +30,14 @@ interface Props {
 export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   const { cluster, linodeId, linodeLkeClusterId } = props;
 
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const theme = useTheme();
 
-  const { data: linodeInterfaces } = useLinodeInterfacesQuery(linodeId);
-
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { data: linodeInterfaces } = useLinodeInterfacesQuery(
+    linodeId,
+    isLinodeInterfacesEnabled
+  );
 
   const nonVlanInterfaces =
     linodeInterfaces?.interfaces.filter((iface) => !iface.vlan) ?? [];
@@ -68,12 +71,7 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
   const publicInterfaceFirewall = interfaceFirewalls.Public;
   const vpcInterfaceFirewall = interfaceFirewalls.VPC;
 
-  if (
-    !linodeLkeClusterId &&
-    !publicInterfaceFirewall &&
-    !vpcInterfaceFirewall &&
-    !isLinodeInterfacesEnabled
-  ) {
+  if (!linodeLkeClusterId && !isLinodeInterfacesEnabled) {
     return null;
   }
 
@@ -102,32 +100,39 @@ export const LinodeEntityDetailRowInterfaceFirewall = (props: Props) => {
             linodeLkeClusterId={linodeLkeClusterId}
           />
         )}
-        {publicInterfaceFirewall && (
-          <FirewallCell
-            cellLabel="Public Interface Firewall:"
-            firewall={publicInterfaceFirewall}
-            hidePaddingLeft={!linodeLkeClusterId}
-          />
+        {isLinodeInterfacesEnabled && (
+          <>
+            {publicInterfaceFirewall && (
+              <FirewallCell
+                cellLabel="Public Interface Firewall:"
+                firewall={publicInterfaceFirewall}
+                hidePaddingLeft={!linodeLkeClusterId}
+              />
+            )}
+            {vpcInterfaceFirewall && (
+              <FirewallCell
+                cellLabel="VPC Interface Firewall:"
+                firewall={vpcInterfaceFirewall}
+                hidePaddingLeft={
+                  !linodeLkeClusterId && !publicInterfaceFirewall
+                }
+              />
+            )}
+            <StyledListItem
+              sx={{
+                ...(!linodeLkeClusterId &&
+                !vpcInterfaceFirewall &&
+                !publicInterfaceFirewall
+                  ? { paddingLeft: 0 }
+                  : {}),
+                borderRight: 'unset',
+              }}
+            >
+              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
+              Linode
+            </StyledListItem>
+          </>
         )}
-        {vpcInterfaceFirewall && (
-          <FirewallCell
-            cellLabel="VPC Interface Firewall:"
-            firewall={vpcInterfaceFirewall}
-            hidePaddingLeft={!linodeLkeClusterId && !publicInterfaceFirewall}
-          />
-        )}
-        <StyledListItem
-          sx={{
-            ...(!linodeLkeClusterId &&
-            !vpcInterfaceFirewall &&
-            !publicInterfaceFirewall
-              ? { paddingLeft: 0 }
-              : {}),
-            borderRight: 'unset',
-          }}
-        >
-          <StyledLabelBox component="span">Interfaces:</StyledLabelBox> Linode
-        </StyledListItem>
       </StyledBox>
     </Grid>
   );
