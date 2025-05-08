@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -18,7 +18,9 @@ import {
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
+  getAlertBoxStyles,
   getSchemaWithEntityIdValidation,
   handleMultipleError,
 } from '../Utils/utils';
@@ -218,6 +220,22 @@ export const CreateAlertDefinition = () => {
             )}
             {entityGroupingWatcher === 'region-user' && (
               <CloudPulseModifyAlertRegions name="entity_ids" />
+            )}
+            {entityGroupingWatcher === 'account-user' && (
+              <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
+                <Typography variant="h2">2. Entities</Typography>
+                <Box
+                  sx={(theme) => ({
+                    ...getAlertBoxStyles(theme),
+                    overflow: 'auto',
+                  })}
+                >
+                  <AlertListNoticeMessages
+                    errorMessage="All entities associated with current account will be included in this alert definition"
+                    variant="warning"
+                  />
+                </Box>
+              </Box>
             )}
             <MetricCriteriaField
               name="rule_criteria.rules"
