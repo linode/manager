@@ -1,9 +1,8 @@
 import { useAllTagsQuery, useDeleteTagMutation } from '@linode/queries';
 import { CircleProgress, Drawer, ErrorState } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { createLazyRoute, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -17,8 +16,7 @@ import { TableRow } from 'src/components/TableRow';
 import { CreateTagForm } from './CreateTagDrawer';
 
 const Tags = () => {
-  const history = useHistory();
-
+  const navigate = useNavigate();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -67,7 +65,14 @@ const Tags = () => {
               <TableCell actionCell>
                 <InlineMenuAction
                   actionText="View in Search"
-                  onClick={() => history.push(`/search?query=tag:${tag.label}`)}
+                  onClick={() =>
+                    navigate({
+                      search: {
+                        query: `tag:${tag.label}`,
+                      },
+                      to: '/search',
+                    })
+                  }
                 />
                 <InlineMenuAction
                   actionText="Delete"

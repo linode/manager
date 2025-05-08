@@ -1,6 +1,10 @@
 import { useAllTagsQuery, useLinodesQuery } from '@linode/queries';
 import { Autocomplete, Hidden, Stack, Typography } from '@linode/ui';
-import { createLazyRoute, useNavigate } from '@tanstack/react-router';
+import {
+  createLazyRoute,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -16,17 +20,36 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { LinodeRow } from '../Linodes/LinodesLanding/LinodeRow/LinodeRow';
 
 export const TagsV2 = () => {
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const { data: tags } = useAllTagsQuery();
   const navigate = useNavigate();
-  const pagination = usePagination();
-  const { handleOrderChange, order, orderBy } = useOrder();
+  const search = useSearch({
+    from: '/tags/groups',
+  });
+  const pagination = usePaginationV2({
+    currentRoute: '/tags/groups',
+    preferenceKey: 'tags-v2-table',
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/tags/groups',
+    },
+    preferenceKey: 'tags-v2-table',
+  });
+  const selectedTags = search.query?.split(',') ?? [];
 
   return (
     <>
@@ -56,7 +79,32 @@ export const TagsV2 = () => {
           label="Tags"
           multiple
           onChange={(e, tags) => {
-            setSelectedTags(tags.map((tag) => tag.label));
+            if (tags.length === 0) {
+              navigate({
+                search: (prev) => ({
+                  ...prev,
+                  query: undefined,
+                }),
+                to: '/tags/groups',
+              });
+            } else {
+              navigate({
+                search: (prev) => ({
+                  ...prev,
+                  query: tags.map((tag) => tag.label).join(','),
+                }),
+                to: '/tags/groups',
+              });
+            }
+          }}
+          onReset={() => {
+            navigate({
+              search: (prev) => ({
+                ...prev,
+                query: undefined,
+              }),
+              to: '/tags/groups',
+            });
           }}
           options={tags ?? []}
           placeholder="Select tags to view Linodes"
@@ -140,17 +188,13 @@ interface TaggedLinodesTableProps {
   handleOrderChange: (orderBy: string, order: 'asc' | 'desc') => void;
   order: 'asc' | 'desc';
   orderBy: string;
-  pagination: ReturnType<typeof usePagination>;
+  pagination: ReturnType<typeof usePaginationV2>;
   tag: string;
 }
 
-const TaggedLinodesTable = ({
-  handleOrderChange,
-  order,
-  orderBy,
-  pagination,
-  tag,
-}: TaggedLinodesTableProps) => {
+const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
+  const { handleOrderChange, order, orderBy, pagination, tag } = props;
+
   const { data, error, isLoading } = useLinodesQuery(
     {
       page: pagination.page,
