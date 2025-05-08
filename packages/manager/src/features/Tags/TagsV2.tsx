@@ -109,6 +109,7 @@ export const TagsV2 = () => {
           options={tags ?? []}
           placeholder="Select tags to view Linodes"
           sx={{ minWidth: 250 }}
+          value={(tags ?? []).filter((tag) => selectedTags.includes(tag.label))}
         />
         {selectedTags.length === 0 ? (
           <Table>
