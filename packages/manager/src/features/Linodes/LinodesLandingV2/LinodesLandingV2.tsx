@@ -3,12 +3,8 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import {
   Autocomplete,
   CircleProgress,
-  CloseIcon,
   Hidden,
-  IconButton,
-  InputAdornment,
   Stack,
-  TextField,
   Typography,
 } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
@@ -16,6 +12,7 @@ import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { Code } from 'src/components/Code/Code';
+import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
@@ -115,31 +112,16 @@ export const LinodesLandingV2 = () => {
         justifyContent="space-between"
         mb={1}
       >
-        <TextField
+        <DebouncedSearchTextField
+          clearable
           containerProps={{ flexGrow: 1 }}
           errorText={searchParseError?.message}
           hideLabel
-          InputProps={{
-            endAdornment: query && (
-              <InputAdornment position="end">
-                {isFetching && <CircleProgress size="sm" />}
-
-                <IconButton
-                  aria-label="Clear"
-                  onClick={() => {
-                    queryParams.delete('query');
-                    history.push({ search: queryParams.toString() });
-                  }}
-                  size="small"
-                >
-                  <CloseIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+          isSearching={isFetching}
           label="Search"
-          onChange={(e) => {
-            queryParams.set('query', e.target.value);
+          loading={isFetching}
+          onSearch={(query) => {
+            queryParams.set('query', query);
             history.push({ search: queryParams.toString() });
           }}
           placeholder="Find Linode by attribute or tag"

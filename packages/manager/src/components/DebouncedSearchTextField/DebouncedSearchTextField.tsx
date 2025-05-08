@@ -73,7 +73,7 @@ export const DebouncedSearchTextField = React.memo(
       ...restOfTextFieldProps
     } = props;
 
-    const [textFieldValue, setTextFieldValue] = React.useState<string>('');
+    const [textFieldValue, setTextFieldValue] = React.useState<string>(value);
 
     // Memoize the debounced onChange handler to prevent unnecessary re-creations.
     const debouncedOnChange = React.useMemo(
@@ -87,7 +87,7 @@ export const DebouncedSearchTextField = React.memo(
 
     // Synchronize the internal state with the prop value when the value prop changes.
     React.useEffect(() => {
-      if (value && value !== textFieldValue) {
+      if (value !== textFieldValue) {
         setTextFieldValue(value);
       }
     }, [value]);
