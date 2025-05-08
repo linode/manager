@@ -244,7 +244,7 @@ export const LinodesLandingV2 = () => {
               <Typography>
                 Want to see your Linodes grouped by tag?{' '}
                 <Link
-                  to={`/tags/groups?query=${[...(query?.matchAll(/tag:\s*([a-zA-Z0-9_-]+)/g) ?? [])].map((match) => match[1]).join(',')}`}
+                  to={`/tags/groups?query=${[...(query?.matchAll(/tag:\s*"([a-zA-Z0-9=_-]+)"/g) ?? [])].map((match) => match[1]).join(',')}`}
                 >
                   Go here
                 </Link>
