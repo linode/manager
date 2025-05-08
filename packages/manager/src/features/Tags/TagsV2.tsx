@@ -6,6 +6,7 @@ import {
   useSearch,
 } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -26,6 +27,7 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { LinodeRow } from '../Linodes/LinodesLanding/LinodeRow/LinodeRow';
 
 export const TagsV2 = () => {
+  const history = useHistory();
   const { data: tags } = useAllTagsQuery();
   const navigate = useNavigate();
   const search = useSearch({
@@ -68,9 +70,7 @@ export const TagsV2 = () => {
         }}
         docsLink="#"
         entity="Linodes"
-        onButtonClick={() =>
-          navigate({ search: () => ({}), to: '/linodes/create' })
-        }
+        onButtonClick={() => history.push('/linodes/create')}
         title="Linodes / Group by Tags"
       />
       <Stack spacing={2}>
