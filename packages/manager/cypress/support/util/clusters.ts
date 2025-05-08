@@ -27,7 +27,7 @@ export const getOverrideCluster = (): ObjectStorageCluster | undefined => {
 
   try {
     return getClusterById(overrideClusterId);
-  } catch (e) {
+  } catch (_e) {
     return undefined;
   }
 };
@@ -67,15 +67,9 @@ export const clusters: ObjectStorageCluster[] = Cypress.env(
 ) as ObjectStorageCluster[];
 
 /**
- * Returns an array of Region objects that meet the given criteria.
+ * Returns an array of cluster objects that meet the given criteria.
  *
- * @param options - Object describing Region selection criteria.
- * @param detectOverrideRegion - Whether override region should be detected and applied.
- *
- * @throws If no regions meet the desired criteria.
- * @throws If an override region is specified which does not meet the given criteria.
- *
- * @returns Array of Region objects that meet criteria specified by `options` param.
+ * @returns Array of ObjectStorageCluster objects.
  */
 const resolveSearchClusters = (): ObjectStorageCluster[] => {
   const overrideCluster = getOverrideCluster();
