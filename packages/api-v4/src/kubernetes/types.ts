@@ -49,7 +49,7 @@ export interface KubeNodePoolResponse {
 
 export interface KubeNodePoolResponseBeta extends KubeNodePoolResponse {
   k8s_version: string;
-  upgrade_strategy: NodePoolUpgradeStrategy;
+  update_strategy: NodePoolUpgradeStrategy;
 }
 
 export interface PoolNodeResponse {

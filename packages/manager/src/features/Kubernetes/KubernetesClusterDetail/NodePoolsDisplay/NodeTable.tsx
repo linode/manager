@@ -1,5 +1,6 @@
 import { useAllLinodesQuery, useProfile } from '@linode/queries';
 import { Box, ErrorState, TooltipIcon, Typography } from '@linode/ui';
+import { capitalizeAllWords } from '@linode/utilities';
 import { DateTime, Interval } from 'luxon';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
@@ -19,10 +20,14 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
+import {
+  useKubernetesNodePoolBetaQuery,
+  useUpdateNodePoolMutation,
+} from 'src/queries/kubernetes';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { NodeRow as _NodeRow } from './NodeRow';
 import {
   StyledNotEncryptedBox,
@@ -74,9 +79,13 @@ export const NodeTable = React.memo((props: Props) => {
 
   const { data: profile } = useProfile();
 
+  const { data: pool } = useKubernetesNodePoolBetaQuery(clusterId, poolId);
+
   const { data: linodes, error, isLoading } = useAllLinodesQuery();
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
+
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
     clusterId,
@@ -266,6 +275,15 @@ export const NodeTable = React.memo((props: Props) => {
                         Pool ID {poolId}
                       </Typography>
                       <StyledVerticalDivider />
+                      {pool && isLkeEnterpriseLAFeatureEnabled && (
+                        <>
+                          <Typography sx={{ textWrap: 'nowrap' }}>
+                            Version {pool?.k8s_version} (
+                            {capitalizeAllWords(pool?.update_strategy, '_')})
+                          </Typography>
+                          <StyledVerticalDivider />
+                        </>
+                      )}
                       <EncryptedStatus
                         encryptionStatus={encryptionStatus}
                         regionSupportsDiskEncryption={
