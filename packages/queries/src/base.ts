@@ -32,7 +32,7 @@ export const queryPresets = {
 /**
  * A list of API v4 error reasons for which we should *not* retry the API request.
  */
-const reasonsToNotRety = ['Unauthorized', 'Not found'];
+const reasonsToNotRety = ['Unauthorized', 'Not found', 'Could not apply filter'];
 
 /**
  * Number of times a query is retried by default.

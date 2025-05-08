@@ -4,19 +4,21 @@ import {
   Autocomplete,
   CircleProgress,
   CloseIcon,
-  ErrorState,
   Hidden,
   IconButton,
   InputAdornment,
   Stack,
   TextField,
+  Typography,
 } from '@linode/ui';
 import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import { Code } from 'src/components/Code/Code';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -30,7 +32,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { LinodeRow } from '../LinodesLanding/LinodeRow/LinodeRow';
 import { LinodesLandingEmptyState } from '../LinodesLanding/LinodesLandingEmptyState';
@@ -80,16 +81,6 @@ export const LinodesLandingV2 = () => {
 
   if (isLoading) {
     return <CircleProgress />;
-  }
-
-  if (error && !query) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your Linodes.')[0].reason
-        }
-      />
-    );
   }
 
   if (data?.results === 0 && !debouncedQuery) {
@@ -152,6 +143,57 @@ export const LinodesLandingV2 = () => {
             history.push({ search: queryParams.toString() });
           }}
           placeholder="Find Linode by attribute or tag"
+          tooltipText={
+            <Stack spacing={2}>
+              <Typography>
+                You can prepending your search with supported attributes and
+                operators like <Code>:</Code> (contains), <Code>=</Code>
+                (equals), <Code>!=</Code> (not equal), <Code>&gt;</Code>{' '}
+                (greater than), <Code>&lt;</Code> (less than) to narrow your
+                search.{' '}
+              </Typography>
+              <Stack spacing={0.5}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  Examples
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>label: my-linode</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>ipv4: 192.168.235.146</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>region = us-mia</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>id &gt; 76581655</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>status = offline</Code>
+                </Typography>
+              </Stack>
+              <Typography>
+                You can also use operators like <Code>and</Code> and{' '}
+                <Code>or</Code> to perform more complex searches.{' '}
+                <Link to="https://linode.com/fake-docs-page">Learn more.</Link>
+              </Typography>
+              <Stack spacing={0.5}>
+                <Typography sx={(theme) => ({ font: theme.font.bold })}>
+                  Examples
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>tag: production or tag: staging</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>label: my-linode and tag: dev</Code>
+                </Typography>
+                <Typography fontSize="0.8rem">
+                  <Code>region = us-mia and tag: test</Code>
+                </Typography>
+              </Stack>
+            </Stack>
+          }
+          tooltipWidth={350}
           value={query ?? ''}
         />
         <Autocomplete
@@ -161,10 +203,12 @@ export const LinodesLandingV2 = () => {
             if (!value) {
               // remove site_type from query
               newQuery = newQuery.replace(/site_type = \S+/g, '');
-            } 
-            else if (newQuery?.includes('site_type')) {
+            } else if (newQuery?.includes('site_type')) {
               // update site_type
-              newQuery = newQuery.replace(/site_type = \S+/g, `site_type = ${value.label.toLowerCase()}`)
+              newQuery = newQuery.replace(
+                /site_type = \S+/g,
+                `site_type = ${value.label.toLowerCase()}`
+              );
             } else {
               // add site type to query
               newQuery += ` site_type = ${value.label.toLowerCase()}`;
@@ -176,9 +220,11 @@ export const LinodesLandingV2 = () => {
           placeholder="Filter by site type"
           sx={{ minWidth: 250 }}
           textFieldProps={{ hideLabel: true }}
-          value={siteTypeOptions.find((o) =>
-            query?.includes(`site_type = ${o.label.toLowerCase()}`)
-          ) ?? null}
+          value={
+            siteTypeOptions.find((o) =>
+              query?.includes(`site_type = ${o.label.toLowerCase()}`)
+            ) ?? null
+          }
         />
         <Autocomplete
           disableSelectAll
@@ -224,23 +270,9 @@ export const LinodesLandingV2 = () => {
             >
               Label
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
+            <TableCell>Status</TableCell>
             <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'plan'}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="plan"
-              >
-                Plan
-              </TableSortCell>
+              <TableCell>Plan</TableCell>
               <TableCell>Public IP Address</TableCell>
             </Hidden>
             <Hidden lgDown>
@@ -257,7 +289,14 @@ export const LinodesLandingV2 = () => {
               <TableCell>Last Backup</TableCell>
             </Hidden>
             <Hidden lgDown>
-              <TableCell>Tags</TableCell>
+              <TableSortCell
+                active={orderBy === 'tags'}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="tags"
+              >
+                Tags
+              </TableSortCell>
             </Hidden>
             <TableCell />
           </TableRow>
