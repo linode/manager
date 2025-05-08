@@ -219,15 +219,15 @@ export const LinodesLandingV2 = () => {
             let newQuery = query ?? '';
             //  remove existing tags from query
             newQuery = newQuery.replace(/\(tag: [^)]*\)/g, '');
-            newQuery = newQuery.replace(/tag:\s*([^\s]+)\s*/g, '');
+            newQuery = newQuery.replace(/tag:\s*"([^\s]+)"\s*/g, '');
             // update query with selected tags
             if (tags.length > 0) {
               if (tags.length === 1) {
-                newQuery += ' ' + tags.map((tag) => `tag: ${tag.label}`) + '';
+                newQuery += ' ' + tags.map((tag) => `tag: "${tag.label}"`) + '';
               } else {
                 newQuery +=
                   ' (' +
-                  tags.map((tag) => `tag: ${tag.label}`).join(' or ') +
+                  tags.map((tag) => `tag: "${tag.label}"`).join(' or ') +
                   ')';
               }
             }
@@ -252,7 +252,7 @@ export const LinodesLandingV2 = () => {
             ),
           }}
           value={
-            tags?.filter((tag) => query?.includes(`tag: ${tag.label}`)) ?? []
+            tags?.filter((tag) => query?.includes(`tag: "${tag.label}"`)) ?? []
           }
         />
       </Stack>
