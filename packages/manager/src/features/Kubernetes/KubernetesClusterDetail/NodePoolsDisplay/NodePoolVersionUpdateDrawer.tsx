@@ -5,12 +5,18 @@ import {
   Notice,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { useUpdateNodePoolBetaMutation } from 'src/queries/kubernetes';
+import {
+  useKubernetesTieredVersionsQuery,
+  useUpdateNodePoolBetaMutation,
+} from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
+
+import { getNextVersion } from '../../kubeUtils';
 
 import type {
   KubeNodePoolResponseBeta,
@@ -38,13 +44,19 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
 
   const typesQuery = useSpecificTypes(nodePool?.type ? [nodePool.type] : []);
 
+  const { data: versions } = useKubernetesTieredVersionsQuery('enterprise');
+  const { isPending, mutateAsync: updateNodePoolBeta } =
+    useUpdateNodePoolBetaMutation(clusterId, nodePool?.id ?? -1);
+
+  const nextVersion = getNextVersion(
+    nodePool?.k8s_version ?? '',
+    versions ?? []
+  );
+
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {},
     });
-
-  const { isPending, mutateAsync: updateNodePoolBeta } =
-    useUpdateNodePoolBetaMutation(clusterId, nodePool?.id ?? -1);
 
   React.useEffect(() => {
     if (!nodePool) {
@@ -122,6 +134,29 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
               />
             )}
           />
+          <Grid
+            container
+            direction="column"
+            spacing={2}
+            sx={{
+              marginY: 4,
+            }}
+          >
+            <Grid container size={12}>
+              <Grid size={6}>Current Node Pool version: </Grid>
+              <Grid size={4}>
+                <Typography component="span">
+                  {nodePool?.k8s_version}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container size={12}>
+              <Grid size={6}> Version on next upgrade: </Grid>
+              <Grid size={4}>
+                <Typography component="span">{nextVersion}</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
 
           <ActionsPanel
             primaryButtonProps={{
