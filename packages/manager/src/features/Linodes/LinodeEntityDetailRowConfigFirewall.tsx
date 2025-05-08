@@ -4,12 +4,18 @@ import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Link } from 'src/components/Link';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { StyledLabelBox, StyledListItem } from './LinodeEntityDetail.styles';
-import { LKEClusterCell } from './LinodeEntityDetailRowInterfaceFirewall';
+import {
+  StyledBox,
+  StyledLabelBox,
+  StyledListItem,
+} from './LinodeEntityDetail.styles';
+import {
+  FirewallCell,
+  LKEClusterCell,
+} from './LinodeEntityDetailRowInterfaceFirewall';
 import { DEFAULT_UPGRADE_BUTTON_HELPER_TEXT } from './LinodesDetail/LinodeConfigs/LinodeConfigs';
 import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
 
@@ -36,7 +42,10 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(linodeId);
+  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
+    linodeId,
+    interfaceGeneration !== 'linode'
+  );
   const attachedFirewalls = attachedFirewallData?.data ?? [];
   const attachedFirewall =
     attachedFirewalls.find((firewall) => firewall.status === 'enabled') ??
@@ -68,35 +77,37 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
         )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
         [theme.breakpoints.down('md')]: {
           paddingLeft: 2,
+          display: 'grid',
+          gridTemplateColumns: '50% 2fr',
+        },
+        [theme.breakpoints.down('sm')]: {
+          paddingLeft: 2,
+          display: 'flex',
         },
       }}
     >
-      {linodeLkeClusterId && (
-        <LKEClusterCell
-          cluster={cluster}
-          hideLKECellRightBorder={
-            !attachedFirewall && !isLinodeInterfacesEnabled
-          }
-          linodeLkeClusterId={linodeLkeClusterId}
-        />
-      )}
-      {attachedFirewall && (
-        <StyledListItem
-          sx={{
-            ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
-            ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
-          }}
-        >
-          <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
-          <Link
-            data-testid="assigned-firewall"
-            to={`/firewalls/${attachedFirewall.id}`}
-          >
-            {attachedFirewall.label ?? `${attachedFirewall.id}`}
-          </Link>
-          &nbsp;
-          {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-        </StyledListItem>
+      {(linodeLkeClusterId || attachedFirewall) && (
+        <StyledBox>
+          {linodeLkeClusterId && (
+            <LKEClusterCell
+              cluster={cluster}
+              hideLKECellRightBorder={
+                !attachedFirewall && !isLinodeInterfacesEnabled
+              }
+              linodeLkeClusterId={linodeLkeClusterId ?? 1}
+            />
+          )}
+          {attachedFirewall && (
+            <FirewallCell
+              additionalSx={
+                !isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}
+              }
+              cellLabel="Firewall:"
+              firewall={attachedFirewall}
+              hidePaddingLeft={!linodeLkeClusterId}
+            />
+          )}
+        </StyledBox>
       )}
       {isLinodeInterfacesEnabled && (
         <StyledListItem

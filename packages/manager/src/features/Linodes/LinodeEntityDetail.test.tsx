@@ -241,9 +241,8 @@ describe('Linode Entity Detail', () => {
     });
   });
 
-  it('should display the interface type for a Linode with Linode interfaces and does not display firewall link', async () => {
+  it('should display the interface type for a Linode with Linode interfaces', async () => {
     const mockLinode = linodeFactory.build({ interface_generation: 'linode' });
-    const mockFirewall = firewallFactory.build({ label: 'test-firewall' });
     const account = accountFactory.build({
       capabilities: ['Linode Interfaces'],
     });
@@ -254,9 +253,6 @@ describe('Linode Entity Detail', () => {
       }),
       http.get('*/linode/instances/:linodeId', () => {
         return HttpResponse.json(mockLinode);
-      }),
-      http.get('*/linode/instances/:linodeId/firewalls', () => {
-        return HttpResponse.json(makeResourcePage([mockFirewall]));
       })
     );
 
