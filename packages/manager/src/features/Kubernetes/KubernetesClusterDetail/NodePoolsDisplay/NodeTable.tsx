@@ -9,6 +9,7 @@ import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
+import { LinkButton } from 'src/components/LinkButton';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -272,14 +273,18 @@ export const NodeTable = React.memo((props: Props) => {
                       display="flex"
                     >
                       <Typography sx={{ textWrap: 'nowrap' }}>
-                        Pool ID {poolId}
+                        <strong>Pool ID:</strong> {poolId}
                       </Typography>
                       <StyledVerticalDivider />
                       {pool && isLkeEnterpriseLAFeatureEnabled && (
                         <>
                           <Typography sx={{ textWrap: 'nowrap' }}>
-                            Version {pool?.k8s_version} (
-                            {capitalizeAllWords(pool?.update_strategy, '_')})
+                            <strong>Version:</strong>{' '}
+                            <LinkButton onClick={() => null}>
+                              {pool?.k8s_version} (
+                              {capitalizeAllWords(pool?.update_strategy, '_')}{' '}
+                              Updates)
+                            </LinkButton>
                           </Typography>
                           <StyledVerticalDivider />
                         </>
