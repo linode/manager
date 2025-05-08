@@ -1,10 +1,10 @@
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalizeAllWords, formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';

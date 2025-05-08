@@ -1,11 +1,11 @@
 import { useProfile } from '@linode/queries';
 import { Paper, Stack, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { formatDate } from 'src/utilities/formatDate';
