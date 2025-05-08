@@ -294,8 +294,11 @@ export const NodeTable = React.memo((props: Props) => {
                                 }
                               >
                                 {pool?.k8s_version} (
-                                {capitalizeAllWords(pool?.update_strategy, '_')}{' '}
-                                Updates)
+                                {capitalizeAllWords(pool?.update_strategy, '_')}
+                                {pool?.update_strategy === 'on_recycle'
+                                  ? ' Update'
+                                  : ''}
+                                )
                               </LinkButton>
                             </Typography>
                             <StyledVerticalDivider />

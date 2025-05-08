@@ -11,7 +11,7 @@ export type Label = {
   [key: string]: string;
 };
 
-export type NodePoolUpgradeStrategy = 'on_recycle' | 'rolling_update';
+export type NodePoolUpdateStrategy = 'on_recycle' | 'rolling_update';
 export interface Taint {
   effect: KubernetesTaintEffect;
   key: string;
@@ -49,7 +49,7 @@ export interface KubeNodePoolResponse {
 
 export interface KubeNodePoolResponseBeta extends KubeNodePoolResponse {
   k8s_version: string;
-  update_strategy: NodePoolUpgradeStrategy;
+  update_strategy: NodePoolUpdateStrategy;
 }
 
 export interface PoolNodeResponse {
@@ -72,7 +72,7 @@ export interface UpdateNodePoolData {
 }
 export interface UpdateNodePoolDataBeta extends UpdateNodePoolData {
   k8s_version: string;
-  upgrade_strategy?: NodePoolUpgradeStrategy;
+  update_strategy?: NodePoolUpdateStrategy;
 }
 
 export interface AutoscaleSettings {

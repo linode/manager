@@ -8,13 +8,13 @@ import {
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
+import { useUpdateNodePoolBetaMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import type {
   KubeNodePoolResponseBeta,
-  NodePoolUpgradeStrategy,
+  NodePoolUpdateStrategy,
 } from '@linode/api-v4';
 
 export interface Props {
@@ -25,12 +25,12 @@ export interface Props {
 }
 
 interface VersionUpdateFormFields {
-  update_strategy: NodePoolUpgradeStrategy;
+  update_strategy: NodePoolUpdateStrategy;
 }
 
 const updateStrategyOptions = [
-  { label: 'on_recycle', value: 'On Recycle Updates' },
-  { label: 'rolling_update', value: 'Rolling Updates' },
+  { label: 'On Recycle Updates', value: 'on_recycle' },
+  { label: 'Rolling Updates', value: 'rolling_update' },
 ];
 
 export const NodePoolVersionUpdateDrawer = (props: Props) => {
@@ -43,10 +43,8 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
       defaultValues: {},
     });
 
-  const { isPending, mutateAsync: updateNodePool } = useUpdateNodePoolMutation(
-    clusterId,
-    nodePool?.id ?? -1
-  );
+  const { isPending, mutateAsync: updateNodePoolBeta } =
+    useUpdateNodePoolBetaMutation(clusterId, nodePool?.id ?? -1);
 
   React.useEffect(() => {
     if (!nodePool) {
@@ -59,8 +57,8 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
-      await updateNodePool({
-        // update_strategy: values.update_strategy,
+      await updateNodePoolBeta({
+        update_strategy: values.update_strategy,
       });
       handleClose();
     } catch (errResponse) {
@@ -99,8 +97,8 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Typography
-            marginBottom={(theme) => theme.spacing(3)}
-            marginTop={(theme) => theme.spacing()}
+            marginBottom={(theme) => theme.spacingFunction(12)}
+            marginTop={(theme) => theme.spacingFunction(4)}
           >
             Choose how you would like your node pools to update. TODO: something
             about how this related to cluster versioning.
@@ -112,7 +110,7 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
               <Autocomplete
                 label="Version Update Strategy"
                 onChange={(e, updateStrategy) =>
-                  field.onChange(updateStrategy ?? null)
+                  field.onChange(updateStrategy?.value ?? null)
                 }
                 options={updateStrategyOptions}
                 placeholder="Select a Role"

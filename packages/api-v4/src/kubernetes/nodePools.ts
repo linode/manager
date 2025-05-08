@@ -39,25 +39,6 @@ export const getNodePools = (
   );
 
 /**
- * getNodePoolsBeta
- *
- * Gets a list of all node pools (with additional beta fields) associated with the specified cluster
- */
-export const getNodePoolsBeta = (
-  clusterID: number,
-  params?: Params,
-  filters?: Filter,
-) =>
-  Request<Page<KubeNodePoolResponseBeta>>(
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filters),
-    setURL(
-      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`,
-    ),
-  );
-
-/**
  * getNodePool
  *
  * Returns a single node pool
