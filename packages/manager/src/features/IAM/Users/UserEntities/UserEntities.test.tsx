@@ -1,4 +1,5 @@
-import { fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -50,11 +51,11 @@ describe('UserEntities', () => {
       }),
     });
 
-    const { getByText } = renderWithTheme(<UserEntities />);
+    renderWithTheme(<UserEntities />);
 
-    expect(getByText('Assigned Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entity Access')).toBeVisible();
 
-    expect(getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeInTheDocument();
+    expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
   it('should display no entities text if no roles are assigned to user', async () => {
@@ -65,11 +66,11 @@ describe('UserEntities', () => {
       }),
     });
 
-    const { getByText } = renderWithTheme(<UserEntities />);
+    renderWithTheme(<UserEntities />);
 
-    expect(getByText('Assigned Entities')).toBeInTheDocument();
+    expect(screen.getByText('Entity Access')).toBeVisible();
 
-    expect(getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeInTheDocument();
+    expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
   it('should display entities and menu when data is available', async () => {
@@ -85,16 +86,16 @@ describe('UserEntities', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByLabelText, getByText } = renderWithTheme(<UserEntities />);
+    renderWithTheme(<UserEntities />);
 
-    expect(getByText('firewall_admin')).toBeInTheDocument();
-    expect(getByText('firewall-1')).toBeInTheDocument();
+    expect(screen.getByText('firewall_admin')).toBeVisible();
+    expect(screen.getByText('firewall-1')).toBeVisible();
 
-    const actionMenuButton = getAllByLabelText('action menu')[0];
-    expect(actionMenuButton).toBeInTheDocument();
+    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    expect(actionMenuButton).toBeVisible();
 
-    fireEvent.click(actionMenuButton);
-    expect(getByText('Change Role')).toBeInTheDocument();
-    expect(getByText('Remove Assignment')).toBeInTheDocument();
+    await userEvent.click(actionMenuButton);
+    expect(screen.getByText('Change Role')).toBeVisible();
+    expect(screen.getByText('Remove')).toBeVisible();
   });
 });

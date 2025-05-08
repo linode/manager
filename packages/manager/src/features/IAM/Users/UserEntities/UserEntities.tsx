@@ -3,8 +3,8 @@ import {
   CircleProgress,
   ErrorState,
   Paper,
-  Stack,
   Typography,
+  useTheme,
 } from '@linode/ui';
 import { isEmpty } from 'ramda';
 import React from 'react';
@@ -18,6 +18,8 @@ import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 
 export const UserEntities = () => {
+  const theme = useTheme();
+
   const { username } = useParams<{ username: string }>();
   const { data: assignedRoles, isLoading } = useAccountUserPermissions(
     username ?? ''
@@ -40,14 +42,20 @@ export const UserEntities = () => {
     <>
       <DocumentTitleSegment segment={`${username} - User Entities`} />
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
-        <Stack spacing={3}>
-          <Typography variant="h2">Assigned Entities</Typography>
-          {hasAssignedRoles ? (
-            <AssignedEntitiesTable />
-          ) : (
-            <NoAssignedRoles text={NO_ASSIGNED_ENTITIES_TEXT} />
-          )}
-        </Stack>
+        <Typography variant="h2">Entity Access</Typography>
+        <Typography
+          sx={{
+            margin: `${theme.tokens.spacing.S12} 0 ${theme.tokens.spacing.S20}`,
+          }}
+          variant="body1"
+        >
+          View and manage entities attached to user&apos;s entity access roles.
+        </Typography>
+        {hasAssignedRoles ? (
+          <AssignedEntitiesTable />
+        ) : (
+          <NoAssignedRoles text={NO_ASSIGNED_ENTITIES_TEXT} />
+        )}
       </Paper>
     </>
   );

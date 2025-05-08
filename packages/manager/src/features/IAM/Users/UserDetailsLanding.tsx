@@ -48,7 +48,7 @@ export const UserDetailsLanding = () => {
     },
     {
       routeName: `/iam/users/${username}/entities`,
-      title: 'Assigned Entities',
+      title: 'Entity Access',
     },
   ];
 

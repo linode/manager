@@ -130,7 +130,10 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want to assign.
+          Select a role you want{' '}
+          {role?.access === 'account_access'
+            ? 'to assign.'
+            : 'the entities to be attached to.'}
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 

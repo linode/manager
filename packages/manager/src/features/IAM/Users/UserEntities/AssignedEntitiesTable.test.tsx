@@ -1,4 +1,5 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -43,9 +44,9 @@ describe('AssignedEntitiesTable', () => {
       data: {},
     });
 
-    const { getByText } = renderWithTheme(<AssignedEntitiesTable />);
+    renderWithTheme(<AssignedEntitiesTable />);
 
-    getByText('No Entities are assigned.');
+    expect(screen.getByText('No Entities are assigned.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
@@ -57,20 +58,18 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByLabelText, getByText } = renderWithTheme(
-      <AssignedEntitiesTable />
-    );
+    renderWithTheme(<AssignedEntitiesTable />);
 
-    expect(getByText('no_devices')).toBeInTheDocument();
-    expect(getByText('Firewall')).toBeInTheDocument();
-    expect(getByText('firewall_admin')).toBeInTheDocument();
+    expect(screen.getByText('no_devices')).toBeVisible();
+    expect(screen.getByText('Firewall')).toBeVisible();
+    expect(screen.getByText('firewall_admin')).toBeVisible();
 
-    const actionMenuButton = getAllByLabelText('action menu')[0];
-    expect(actionMenuButton).toBeInTheDocument();
+    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    expect(actionMenuButton).toBeVisible();
 
-    fireEvent.click(actionMenuButton);
-    expect(getByText('Change Role')).toBeInTheDocument();
-    expect(getByText('Remove Assignment')).toBeInTheDocument();
+    await userEvent.click(actionMenuButton);
+    expect(screen.getByText('Change Role')).toBeVisible();
+    expect(screen.getByText('Remove')).toBeVisible();
   });
 
   it('should display empty state when no roles match filters', async () => {
@@ -82,15 +81,13 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <AssignedEntitiesTable />
-    );
+    renderWithTheme(<AssignedEntitiesTable />);
 
-    const searchInput = getByPlaceholderText('Search');
-    fireEvent.change(searchInput, { target: { value: 'NonExistentRole' } });
+    const searchInput = screen.getByPlaceholderText('Search');
+    await userEvent.type(searchInput, 'NonExistentRole');
 
     await waitFor(() => {
-      expect(getByText('No Entities are assigned.')).toBeInTheDocument();
+      expect(screen.getByText('No Entities are assigned.')).toBeVisible();
     });
   });
 
@@ -103,17 +100,13 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, queryByText } = renderWithTheme(
-      <AssignedEntitiesTable />
-    );
+    renderWithTheme(<AssignedEntitiesTable />);
 
-    const searchInput = getByPlaceholderText('Search');
-    fireEvent.change(searchInput, {
-      target: { value: 'no_devices' },
-    });
+    const searchInput = screen.getByPlaceholderText('Search');
+    await userEvent.type(searchInput, 'no_devices');
 
     await waitFor(() => {
-      expect(queryByText('no_devices')).toBeInTheDocument();
+      expect(screen.queryByText('no_devices')).toBeVisible();
     });
   });
 
@@ -126,15 +119,13 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, queryByText } = renderWithTheme(
-      <AssignedEntitiesTable />
-    );
+    renderWithTheme(<AssignedEntitiesTable />);
 
-    const autocomplete = getByPlaceholderText('All Assigned Entities');
-    fireEvent.change(autocomplete, { target: { value: 'Firewalls' } });
+    const autocomplete = screen.getByPlaceholderText('All Entities');
+    await userEvent.type(autocomplete, 'Firewalls');
 
     await waitFor(() => {
-      expect(queryByText('no_devices')).toBeInTheDocument();
+      expect(screen.queryByText('no_devices')).toBeVisible();
     });
   });
 });
