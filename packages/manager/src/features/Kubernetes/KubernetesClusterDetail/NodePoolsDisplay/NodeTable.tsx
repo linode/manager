@@ -282,28 +282,33 @@ export const NodeTable = React.memo((props: Props) => {
                           <strong>Pool ID:</strong> {poolId}
                         </Typography>
                         <StyledVerticalDivider />
-                        {pool && isLkeEnterpriseLAFeatureEnabled && (
-                          <>
-                            <Typography sx={{ textWrap: 'nowrap' }}>
-                              <strong>Version:</strong>{' '}
-                              <LinkButton
-                                onClick={() =>
-                                  setIsVersionUpdateDrawerOpen(
-                                    !isVersionUpdateDrawerOpen
+                        {isLkeEnterpriseLAFeatureEnabled &&
+                          clusterTier === 'enterprise' &&
+                          pool && (
+                            <>
+                              <Typography sx={{ textWrap: 'nowrap' }}>
+                                <strong>Version:</strong>{' '}
+                                <LinkButton
+                                  onClick={() =>
+                                    setIsVersionUpdateDrawerOpen(
+                                      !isVersionUpdateDrawerOpen
+                                    )
+                                  }
+                                >
+                                  {pool?.k8s_version} (
+                                  {capitalizeAllWords(
+                                    pool?.update_strategy ?? '',
+                                    '_'
+                                  )}
+                                  {pool?.update_strategy === 'on_recycle'
+                                    ? ' Update'
+                                    : ''}
                                   )
-                                }
-                              >
-                                {pool?.k8s_version} (
-                                {capitalizeAllWords(pool?.update_strategy, '_')}
-                                {pool?.update_strategy === 'on_recycle'
-                                  ? ' Update'
-                                  : ''}
-                                )
-                              </LinkButton>
-                            </Typography>
-                            <StyledVerticalDivider />
-                          </>
-                        )}
+                                </LinkButton>
+                              </Typography>
+                              <StyledVerticalDivider />
+                            </>
+                          )}
                         <EncryptedStatus
                           encryptionStatus={encryptionStatus}
                           regionSupportsDiskEncryption={
