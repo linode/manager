@@ -16,6 +16,7 @@ import {
   getKubernetesTypes,
   getKubernetesTypesBeta,
   getKubernetesVersions,
+  getNodePoolBeta,
   getNodePools,
   recycleAllNodes,
   recycleClusterNodes,
@@ -40,6 +41,7 @@ import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -130,6 +132,12 @@ export const kubernetesQueries = createQueryKeys('kubernetes', {
         queryKey: null,
       },
       pools: {
+        contextQueries: {
+          pool: (poolId: number) => ({
+            queryFn: () => getNodePoolBeta(id, poolId),
+            queryKey: [poolId],
+          }),
+        },
         queryFn: () => getAllNodePoolsForCluster(id),
         queryKey: null,
       },
@@ -438,6 +446,17 @@ export const useRecycleClusterMutation = (clusterId: number) => {
         queryKey: kubernetesQueries.cluster(clusterId)._ctx.pools.queryKey,
       });
     },
+  });
+};
+
+export const useKubernetesNodePoolBetaQuery = (
+  clusterId: number,
+  poolId: number,
+  options?: { enabled?: boolean; refetchInterval?: number }
+) => {
+  return useQuery<KubeNodePoolResponseBeta, APIError[]>({
+    ...kubernetesQueries.cluster(clusterId)._ctx.pools._ctx.pool(poolId),
+    ...options,
   });
 };
 
