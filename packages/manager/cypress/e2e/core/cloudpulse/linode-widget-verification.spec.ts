@@ -218,10 +218,10 @@ describe('Integration Tests for Linode Dashboard ', () => {
 
     // Select a resource from the autocomplete input.
     ui.autocomplete
-      .findByLabel('Resources')
+      .findByLabel('Linode Label(s)')
       .should('be.visible')
       .type(`${resource}{enter}`);
-    ui.autocomplete.findByLabel('Resources').click();
+    ui.autocomplete.findByLabel('Linode Label(s)').click();
 
     cy.findByText(resource).should('be.visible');
 
@@ -235,7 +235,7 @@ describe('Integration Tests for Linode Dashboard ', () => {
         cy.get(`[data-qa-value="Region US, Chicago, IL"]`)
           .should('be.visible')
           .should('have.text', 'US, Chicago, IL');
-        cy.get(`[data-qa-value="Resources ${resource}"]`)
+        cy.get(`[data-qa-value="Linode Label(s) ${resource}"]`)
           .should('be.visible')
           .should('have.text', resource);
       });
