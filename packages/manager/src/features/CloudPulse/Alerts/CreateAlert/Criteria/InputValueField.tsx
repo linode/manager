@@ -40,7 +40,13 @@ export const InputValueField = (props: InputValueFieldProps) => {
 
   if (isTextField) {
     return (
-      <TextField {...rest} onChange={(event) => onChange(event.target.value)} />
+      <TextField
+        {...rest}
+        errorText={errorText}
+        onChange={(event) => onChange(event.target.value)}
+        sx={{ width: '256px' }}
+        value={value === null ? '' : value}
+      />
     );
   }
 

@@ -12,10 +12,11 @@ interface Props {
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const ManageTagsDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { data: grants } = useGrants();
 
@@ -68,6 +69,7 @@ export const ManageTagsDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
