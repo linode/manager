@@ -3,6 +3,7 @@ import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
 
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
@@ -48,7 +49,6 @@ import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
-import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -310,7 +310,11 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         <ProductInformationBanner bannerLocation="Linodes" />
         <BackupsCTA />
         <DismissibleBanner
-          actionButton={<Button buttonType="primary">Go to new UI</Button>}
+          actionButton={
+            <Link to="/linodes/new">
+              <Button buttonType="primary">Go to new UI</Button>
+            </Link>
+          }
           dismissible={false}
           forceImportantIconVerticalCenter
           preferenceKey="this-is-temporary-do-not-ship-this"
@@ -321,22 +325,20 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             group by tag changes.
           </Typography>
         </DismissibleBanner>
-         <LandingHeader
-                              buttonDataAttrs={{
-                                tooltipText: getRestrictedResourceText({
-                                  action: 'create',
-                                  isSingular: false,
-                                  resourceType: 'Linodes',
-                                }),
-                              }}
-                              disabledCreateButton={isLinodesGrantReadOnly}
-                              docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
-                              entity="Linode"
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
-                              title="Linodes"
-                            />
+        <LandingHeader
+          buttonDataAttrs={{
+            tooltipText: getRestrictedResourceText({
+              action: 'create',
+              isSingular: false,
+              resourceType: 'Linodes',
+            }),
+          }}
+          disabledCreateButton={isLinodesGrantReadOnly}
+          docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
+          entity="Linode"
+          onButtonClick={() => this.props.history.push('/linodes/create')}
+          title="Linodes"
+        />
         <PreferenceToggle
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
