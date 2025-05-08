@@ -67,6 +67,11 @@ interface BaseProps {
    */
   inputId?: string;
   /**
+   * Position of the label. Supports 'top' (default) or 'left'.
+   * @default 'top'
+   */
+  labelPosition?: 'left' | 'top';
+  /**
    * Displays a loading spinner at the end of the Text Field
    * @default false
    */
@@ -145,6 +150,7 @@ export const TextField = (props: TextFieldProps) => {
     hideLabel,
     inputId,
     inputProps,
+    labelPosition,
     label,
     labelTooltipText,
     loading,
@@ -263,6 +269,14 @@ export const TextField = (props: TextFieldProps) => {
           display: 'flex',
           flexWrap: 'wrap',
         }),
+        ...(!noMarginTop &&
+          labelPosition === 'left' && { marginTop: theme.spacing(3) }),
+        ...(labelPosition === 'left' && {
+          flexDirection: 'row',
+          display: 'flex',
+          gap: theme.spacing(1),
+          alignItems: 'center',
+        }),
         ...containerProps?.sx,
       }}
     >
@@ -272,8 +286,10 @@ export const TextField = (props: TextFieldProps) => {
         data-testid="inputLabelWrapper"
         display="flex"
         sx={{
-          marginBottom: theme.spacing(1),
-          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+          ...(labelPosition !== 'left' && {
+            marginBottom: theme.spacing(1),
+            ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+          }),
         }}
       >
         <InputLabel
@@ -323,6 +339,7 @@ export const TextField = (props: TextFieldProps) => {
             display: 'flex',
             width: '100%',
           }),
+          width: '100%',
         }}
       >
         <_TextField
@@ -400,7 +417,7 @@ export const TextField = (props: TextFieldProps) => {
           <TooltipIcon
             classes={{ popper: tooltipClasses }}
             onMouseEnter={tooltipOnMouseEnter}
-            status="help"
+            status="info"
             sxTooltipIcon={{
               height: '34px',
               margin: '0px 0px 0px 4px',

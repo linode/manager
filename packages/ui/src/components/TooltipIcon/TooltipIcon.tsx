@@ -112,8 +112,8 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const sxRootStyle = {
     '&&': {
-      fill: theme.tokens.color.Neutrals[50],
-      stroke: theme.tokens.color.Neutrals[50],
+      fill: theme.tokens.color.Neutrals[70],
+      stroke: theme.tokens.color.Neutrals[70],
       strokeWidth: 0,
     },
     '&:hover': {
@@ -121,7 +121,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       fill: theme.palette.primary.main,
       stroke: theme.palette.primary.main,
     },
-    color: theme.tokens.color.Neutrals[50],
+    color: theme.tokens.color.Neutrals[70],
     height: 20,
     width: 20,
   };
@@ -134,7 +134,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = <HelpOutline sx={sxRootStyle} />;
       break;
     case 'info':
-      renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
+      renderIcon = <InfoOutline sx={sxRootStyle} />;
       break;
     case 'other':
       renderIcon = icon ?? null;

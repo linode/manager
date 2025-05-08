@@ -378,10 +378,14 @@ export const lightTheme: ThemeOptions = {
           height: 'inherit',
           paddingBottom: 0,
         },
+        paper: {
+          boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+          marginTop: 4,
+        },
         listbox: {
-          backgroundColor: bg.white,
-          border: `1px solid ${primaryColors.main}`,
+          backgroundColor: Select.Default.Background,
           padding: '4px',
+          border: 'none',
         },
         loading: {
           border: `1px solid ${primaryColors.main}`,
@@ -1242,7 +1246,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         icon: {
-          color: `${Color.Neutrals[50]} !important`,
+          color: `${Select.Disabled.Icon} !important`,
           height: 28,
           marginRight: 4,
           marginTop: -2,
