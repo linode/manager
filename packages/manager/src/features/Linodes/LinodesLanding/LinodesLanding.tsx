@@ -1,4 +1,4 @@
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import * as React from 'react';
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
@@ -48,6 +48,7 @@ import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 
 interface State {
   deleteDialogOpen: boolean;
@@ -307,6 +308,35 @@ class ListLinodes extends React.Component<CombinedProps, State> {
         )}
         <DocumentTitleSegment segment="Linodes" />
         <ProductInformationBanner bannerLocation="Linodes" />
+        <BackupsCTA />
+        <DismissibleBanner
+          actionButton={<Button buttonType="primary">Go to new UI</Button>}
+          dismissible={false}
+          forceImportantIconVerticalCenter
+          preferenceKey="this-is-temporary-do-not-ship-this"
+          variant="tip"
+        >
+          <Typography>
+            This is a proof of concept for Linodes landing page changes and
+            group by tag changes.
+          </Typography>
+        </DismissibleBanner>
+         <LandingHeader
+                              buttonDataAttrs={{
+                                tooltipText: getRestrictedResourceText({
+                                  action: 'create',
+                                  isSingular: false,
+                                  resourceType: 'Linodes',
+                                }),
+                              }}
+                              disabledCreateButton={isLinodesGrantReadOnly}
+                              docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
+                              entity="Linode"
+                              onButtonClick={() =>
+                                this.props.history.push('/linodes/create')
+                              }
+                              title="Linodes"
+                            />
         <PreferenceToggle
           preferenceKey="linodes_group_by_tag"
           preferenceOptions={[false, true]}
@@ -333,32 +363,6 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                 }) => {
                   return (
                     <React.Fragment>
-                      <React.Fragment>
-                        <BackupsCTA />
-                        {this.props.LandingHeader ? (
-                          this.props.LandingHeader
-                        ) : (
-                          <div>
-                            <LandingHeader
-                              buttonDataAttrs={{
-                                tooltipText: getRestrictedResourceText({
-                                  action: 'create',
-                                  isSingular: false,
-                                  resourceType: 'Linodes',
-                                }),
-                              }}
-                              disabledCreateButton={isLinodesGrantReadOnly}
-                              docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
-                              entity="Linode"
-                              onButtonClick={() =>
-                                this.props.history.push('/linodes/create')
-                              }
-                              title="Linodes"
-                            />
-                          </div>
-                        )}
-                      </React.Fragment>
-
                       <OrderBy
                         data={(linodesData ?? []).map((linode) => {
                           // Determine the priority of this Linode's status.
