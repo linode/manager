@@ -127,7 +127,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       fill: theme.palette.primary.main,
       stroke: theme.palette.primary.main,
     },
-    color: theme.tokens.color.Neutrals[50],
     height: labelTooltipIconSize === 'small' ? 16 : 20,
     width: labelTooltipIconSize === 'small' ? 16 : 20,
   };

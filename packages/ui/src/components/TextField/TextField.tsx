@@ -185,8 +185,8 @@ export const TextField = (props: TextFieldProps) => {
   const sxTooltipIconLeft = {
     marginRight: `${theme.spacingFunction(4)}`,
     padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(2)}`,
-    '&& svg': {
-      color: `${theme.tokens.color.Neutrals[90]}`,
+    '& svg': {
+      color: `${theme.tokens.component.Label.Icon}`,
     },
   };
 
