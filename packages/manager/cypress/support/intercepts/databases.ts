@@ -128,6 +128,46 @@ export const mockUpdateDatabase = (
 };
 
 /**
+ * Intercepts PUT request to suspend an active database and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockSuspendDatabase = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${engine}/instances/${id}/suspend`),
+    responseData
+  );
+};
+
+/**
+ * Intercepts PUT request to suspend an active database and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockResumeDatabase = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`databases/${engine}/instances/${id}/resume`),
+    responseData
+  );
+};
+
+/**
  * Intercepts POST request to reset an active database's password and mocks response.
  *
  * @param id - Database ID.
@@ -172,7 +212,7 @@ export const mockResizeProvisioningDatabase = (
  *
  * @returns Cypress chainable.
  */
-export const mockUpdateProvisioningDatabase = (
+export const mockUpdateSuspendResumeDatabase = (
   id: number,
   engine: string,
   responseErrorMessage?: string | undefined
@@ -215,7 +255,7 @@ export const mockResetPassword = (
  *
  * @returns Cypress chainable.
  */
-export const mockResetPasswordProvisioningDatabase = (
+export const mockResetPasswordSuspendResumeDatabase = (
   id: number,
   engine: string,
   responseErrorMessage?: string | undefined
