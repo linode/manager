@@ -13,7 +13,6 @@ import { StyledTable, StyledTableCell } from './PlanContainer.styles';
 import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass } from '@linode/api-v4/';
-import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
@@ -83,7 +82,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   ) => {
     return (
       <TooltipIcon
-        status={status}
         sxTooltipIcon={{
           height: 12,
           marginTop: '-2px',

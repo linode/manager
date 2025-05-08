@@ -134,7 +134,6 @@ export const DescriptionList = (props: DescriptionListProps) => {
               <Typography component="dd">{description}</Typography>
               {tooltip && (
                 <TooltipIcon
-                  status="help"
                   sxTooltipIcon={{ px: 1, py: 0, top: -2 }}
                   text={tooltip?.text}
                   tooltipPosition={tooltip?.position}

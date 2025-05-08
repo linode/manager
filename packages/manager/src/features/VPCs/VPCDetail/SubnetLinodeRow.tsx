@@ -24,7 +24,6 @@ import {
   getLinodeInterfaceRanges,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
-import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import {
   ConfigInterfaceFirewallCell,
   LinodeInterfaceFirewallCell,
@@ -159,8 +158,6 @@ export const SubnetLinodeRow = (props: Props) => {
         sx={{ alignItems: 'center', display: 'flex' }}
       >
         <TooltipIcon
-          icon={<StyledWarningIcon />}
-          status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
           text={
             <Typography>
@@ -198,7 +195,6 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {'Reboot Needed'}
             <TooltipIcon
-              status="help"
               sxTooltipIcon={{ paddingRight: 0 }}
               text={VPC_REBOOT_MESSAGE}
             />
