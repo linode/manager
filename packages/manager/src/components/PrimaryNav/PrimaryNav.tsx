@@ -54,6 +54,7 @@ export type NavEntity =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
+  | 'Tags'
   | 'Volumes'
   | 'VPC';
 
@@ -249,6 +250,10 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
               display: 'Betas',
               hide: !flags.selfServeBetas,
               href: '/betas',
+            },
+            {
+              display: 'Tags',
+              href: '/tags',
             },
             {
               display: 'Identity & Access',

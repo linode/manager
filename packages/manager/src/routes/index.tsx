@@ -4,6 +4,7 @@ import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
+import { tagsRoutes } from 'src/features/Tags/routes';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
@@ -63,6 +64,7 @@ export const routeTree = rootRoute.addChildren([
   supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
+  tagsRoutes,
 ]);
 
 export const router = createRouter({
@@ -99,9 +101,12 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   placementGroupsRouteTree,
   stackScriptsRouteTree,
   volumesRouteTree,
+  tagsRoutes,
   vpcsRouteTree,
 ]);
+
 export type MigrationRouteTree = typeof migrationRouteTree;
+
 export const migrationRouter = createRouter({
   context: {
     queryClient: new QueryClient(),

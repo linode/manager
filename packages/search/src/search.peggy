@@ -55,7 +55,13 @@ LessThanQuery
   = key:FilterableField ws* Less ws* value:Number { return { [key]: { "+lt": value } }; }
 
 GreaterThanQuery
-  = key:FilterableField ws* Greater ws* value:Number { return { [key]: { "+gt": value } }; }
+  = key:FilterableField ws* Greater ws* value:Number {
+    if (key === 'created' || key === 'updated') {
+      //  return { [key]: { "+gt": new Date(String(value)).toISOString() } };
+      return { [key]: { "+gt": "2018-01-01T00:01:01" } };
+    }
+    return { [key]: { "+gt": value } };
+  }
 
 GreaterThanOrEqualTo
   = key:FilterableField ws* Gte ws* value:Number { return { [key]: { "+gte": value } }; }
@@ -72,7 +78,7 @@ And
   = ws+ 'and'i ws+
   / ws* '&&' ws*
   / ws* '&' ws*
-  / ws
+  / ws*
 
 NotEqual
   = '!='
@@ -101,7 +107,7 @@ Quote
   / "\'"
 
 FilterableField "filterable field"
-  = [a-zA-Z0-9\-\.]+ { return text(); }
+  = [a-zA-Z0-9\-\.\_]+ { return text(); }
 
 String "search value"
   = Quote value:StringWithSpaces Quote { return value }
@@ -111,7 +117,7 @@ Word "word"
   = [a-zA-Z0-9-_.@]+ { return text(); }
 
 StringWithSpaces "string with spaces"
-  = [a-zA-Z0-9-_.:@ ]+ { return text(); }
+  = [a-zA-Z0-9-_.:@ =]+ { return text(); }
 
 Number "numeric search value"
   = number:[0-9\.]+ { return parseFloat(number.join("")); }
