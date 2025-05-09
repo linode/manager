@@ -9,12 +9,13 @@ import {
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
+  mapEntityTypesForSelect,
   mergeAssignedRolesIntoExistingRoles,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { ExtendedRoleView } from './types';
+import type { EntitiesRole, ExtendedRoleView, RoleView } from './types';
 import type { AssignNewRoleFormValues } from './utilities';
 import type { EntityAccess } from '@linode/api-v4';
 
@@ -739,5 +740,52 @@ describe('mergeAssignedRolesIntoExistingRoles', () => {
         },
       ],
     });
+  });
+});
+
+describe('mapEntityTypesForSelect', () => {
+  it('should map entity types to select options with the correct label and value', () => {
+    const mockData: EntitiesRole[] = [
+      {
+        access: 'entity_access',
+        entity_id: 1,
+        entity_name: 'test 1',
+        entity_type: 'linode',
+        id: 'linode_contributor-1',
+        role_name: 'linode_contributor',
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockData, 's');
+
+    expect(result).toEqual([
+      {
+        label: 'Linodes',
+        value: 'linode',
+      },
+    ]);
+  });
+
+  it('should map roles to select options with the correct label and value', () => {
+    const mockRole: RoleView[] = [
+      {
+        access: 'account_access',
+        description: 'Account volume admin',
+        entity_ids: [1],
+        entity_type: 'volume',
+        id: 'account_volume_admin',
+        name: 'account_volume_admin',
+        permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockRole, ' Roles');
+
+    expect(result).toEqual([
+      {
+        label: 'Volume Roles',
+        value: 'volume',
+      },
+    ]);
   });
 });

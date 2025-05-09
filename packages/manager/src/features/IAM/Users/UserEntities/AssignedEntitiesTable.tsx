@@ -1,4 +1,4 @@
-import { Autocomplete, Typography } from '@linode/ui';
+import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -22,30 +22,31 @@ import {
   getFilteredRoles,
   getFormattedEntityType,
   groupAccountEntitiesByType,
+  mapEntityTypesForSelect,
 } from '../../Shared/utilities';
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
-import {
-  addEntityNamesToRoles,
-  getEntityTypes,
-  getSearchableFields,
-} from './utils';
+import { addEntityNamesToRoles, getSearchableFields } from './utils';
 
-import type {
-  DrawerModes,
-  EntitiesRole,
-  EntitiesType,
-} from '../../Shared/types';
+import type { DrawerModes, EntitiesRole } from '../../Shared/types';
+import type { EntityType } from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface LocationState {
   selectedRole?: string;
 }
 
+const ALL_ENTITIES_OPTION: SelectOption = {
+  label: 'All Entities',
+  value: 'all',
+};
+
 type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
 export const AssignedEntitiesTable = () => {
   const { username } = useParams<{ username: string }>();
   const location = useLocation();
+  const theme = useTheme();
 
   const locationState = location.state as LocationState;
 
@@ -63,7 +64,9 @@ export const AssignedEntitiesTable = () => {
 
   const [query, setQuery] = React.useState(locationState?.selectedRole ?? '');
 
-  const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
+  const [entityType, setEntityType] = React.useState<null | SelectOption>(
+    ALL_ENTITIES_OPTION
+  );
 
   const [drawerMode, setDrawerMode] =
     React.useState<DrawerModes>('assign-role');
@@ -84,17 +87,20 @@ export const AssignedEntitiesTable = () => {
     isLoading: assignedRolesLoading,
   } = useAccountUserPermissions(username ?? '');
 
-  const { entityTypes, roles } = React.useMemo(() => {
+  const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
-      return { entityTypes: [], roles: [] };
+      return { filterableOptions: [], roles: [] };
     }
     const transformedEntities = groupAccountEntitiesByType(entities.data);
 
     const roles = addEntityNamesToRoles(assignedRoles, transformedEntities);
 
-    const entityTypes = getEntityTypes(roles);
+    const filterableOptions = [
+      ALL_ENTITIES_OPTION,
+      ...mapEntityTypesForSelect(roles, 's'),
+    ];
 
-    return { entityTypes, roles };
+    return { filterableOptions, roles };
   }, [assignedRoles, entities]);
 
   const handleChangeRole = (role: EntitiesRole, mode: DrawerModes) => {
@@ -125,7 +131,7 @@ export const AssignedEntitiesTable = () => {
     }
 
     const filteredRoles = getFilteredRoles({
-      entityType: entityType?.rawValue,
+      entityType: entityType?.value as 'all' | EntityType,
       getSearchableFields,
       query,
       roles,
@@ -200,19 +206,19 @@ export const AssignedEntitiesTable = () => {
       <Grid
         container
         direction="row"
+        rowSpacing={1}
         sx={{
           alignItems: 'center',
           justifyContent: 'flex-start',
-          marginBottom: 3,
+          marginBottom: theme.tokens.spacing.S12,
         }}
       >
         <DebouncedSearchTextField
           clearable
           containerProps={{
             sx: {
-              marginBottom: { md: 0, xs: 2 },
               marginRight: { md: 2, xs: 0 },
-              width: { md: '410px', xs: '100%' },
+              width: { md: '416px', xs: '100%' },
             },
           }}
           hideLabel
@@ -222,15 +228,13 @@ export const AssignedEntitiesTable = () => {
           sx={{ height: 34 }}
           value={query}
         />
-        <Autocomplete
+        <Select
+          hideLabel
           label="Select type"
           onChange={(_, selected) => setEntityType(selected ?? null)}
-          options={entityTypes}
+          options={filterableOptions}
           placeholder="All Entities"
-          textFieldProps={{
-            containerProps: { sx: { minWidth: 250 } },
-            hideLabel: true,
-          }}
+          sx={{ minWidth: 250 }}
           value={entityType}
         />
       </Grid>
@@ -242,6 +246,7 @@ export const AssignedEntitiesTable = () => {
               direction={order}
               handleClick={() => handleOrderChange('entity_name')}
               label="entity"
+              style={{ width: '35%' }}
             >
               Entity
             </TableSortCell>
@@ -250,6 +255,7 @@ export const AssignedEntitiesTable = () => {
               direction={order}
               handleClick={() => handleOrderChange('entity_type')}
               label="entityType"
+              style={{ width: '35%' }}
               sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
               Entity type

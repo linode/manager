@@ -34,12 +34,6 @@ export interface EntitiesRole {
   role_name: EntityAccessRole;
 }
 
-export interface EntitiesType {
-  label: string;
-  rawValue?: EntityType | EntityTypePermissions;
-  value?: string;
-}
-
 export interface CombinedEntity {
   id: number;
   name: string;
@@ -55,3 +49,10 @@ export type DrawerModes =
   | 'assign-role'
   | 'change-role'
   | 'change-role-for-entity';
+
+export interface FilteredRolesOptions {
+  entityType?: 'all' | EntityType | EntityTypePermissions;
+  getSearchableFields: (role: EntitiesRole | ExtendedRoleView) => string[];
+  query: string;
+  roles: EntitiesRole[] | RoleView[];
+}
