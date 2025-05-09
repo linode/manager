@@ -330,24 +330,15 @@ export const MainContent = () => {
                     id="main-content"
                     role="main"
                     sx={(theme) => ({
-                      boxSizing: {
-                        md: 'content-box',
-                      },
                       flex: 1,
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
-                      pb: {
-                        md: theme.spacingFunction(32),
-                      },
-                      pt: {
-                        md: theme.spacingFunction(24),
-                        xs: theme.spacingFunction(16),
-                      },
+                      pb: theme.spacingFunction(32),
+                      pt: theme.spacingFunction(24),
                       px: {
-                        md: theme.spacingFunction(24),
+                        md: theme.spacingFunction(16),
                         xs: 0,
                       },
-                      py: theme.spacingFunction(24),
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
