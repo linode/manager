@@ -61,7 +61,7 @@ export const VLANSelect = (props: Props) => {
   } = props;
 
   const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(value ?? '');
 
   useEffect(() => {
     if (!value && inputValue) {
