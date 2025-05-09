@@ -212,6 +212,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
+        spacingBottom={16}
         title="Placement Groups"
       />
       <DebouncedSearchTextField
