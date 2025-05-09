@@ -212,6 +212,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         docsLink={PLACEMENT_GROUPS_DOCS_LINK}
         entity="Placement Group"
         onButtonClick={handleCreatePlacementGroup}
+        spacingBottom={16}
         title="Placement Groups"
       />
       <DebouncedSearchTextField
@@ -222,7 +223,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         label="Search"
         onSearch={onSearch}
         placeholder="Search Placement Groups"
-        sx={{ mb: 4 }}
+        sx={{ mb: 3 }}
         value={query ?? ''}
       />
       <Table aria-label="List of Placement Groups">

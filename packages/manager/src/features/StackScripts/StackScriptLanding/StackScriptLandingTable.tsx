@@ -123,7 +123,7 @@ export const StackScriptLandingTable = (props: Props) => {
   }
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={3}>
       <DebouncedSearchTextField
         clearable
         hideLabel

@@ -182,6 +182,7 @@ export const LongviewDetail = (props: CombinedProps) => {
         }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
+        spacingBottom={4}
         title={client.label}
       />
       {notifications.map((thisNotification, idx) => (

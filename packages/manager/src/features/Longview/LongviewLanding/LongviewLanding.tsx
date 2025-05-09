@@ -144,6 +144,7 @@ export const LongviewLanding = (props: LongviewProps) => {
         loading={newClientLoading}
         onButtonClick={handleAddClient}
         removeCrumbX={1}
+        spacingBottom={4}
         title="Longview"
       />
       <StyledTabs index={tabIndex} onChange={handleTabChange}>

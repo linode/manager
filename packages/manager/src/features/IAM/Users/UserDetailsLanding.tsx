@@ -83,6 +83,7 @@ export const UserDetailsLanding = () => {
         }}
         docsLink={IAM_DOCS_LINK}
         removeCrumbX={4}
+        spacingBottom={4}
         title={username}
       />
       <Tabs index={getDefaultTabIndex()} onChange={navToURL}>

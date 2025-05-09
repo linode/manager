@@ -74,6 +74,7 @@ export const BucketDetailLanding = React.memo(() => {
         // Purposefully not using the title prop here because we want to use the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
+        spacingBottom={4}
       />
 
       <Tabs index={tabIndex} onChange={handleTabChange}>

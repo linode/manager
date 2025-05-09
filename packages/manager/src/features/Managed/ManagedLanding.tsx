@@ -76,6 +76,7 @@ export const ManagedLanding = () => {
         entity="Managed"
         extraActions={<SupportWidget />}
         removeCrumbX={1}
+        spacingBottom={4}
         title="Managed"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>

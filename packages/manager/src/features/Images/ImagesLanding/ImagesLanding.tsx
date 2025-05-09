@@ -450,10 +450,11 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
       <TextField
-        containerProps={{ mb: 2 }}
+        containerProps={{ mb: 3 }}
         errorText={searchParseError?.message}
         hideLabel
         InputProps={{
