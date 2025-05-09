@@ -2779,7 +2779,7 @@ export const handlers = [
       );
     }
 
-    if (params.serviceType === 'linode ') {
+    if (params.serviceType === 'linode') {
       response.data.push(
         dashboardFactory.build({
           id: 2,
