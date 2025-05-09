@@ -886,7 +886,7 @@ export const lightTheme: ThemeOptions = {
           '&.Mui-focused': {
             color: Color.Neutrals[70],
           },
-          color: Color.Neutrals[70],
+          color: Component.Label.Text,
           font: Typography.Body.Bold,
           marginBottom: 8,
         },
@@ -1285,6 +1285,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           fontSize: 20,
+          color: Component.Label.InfoIcon,
         },
       },
     },
