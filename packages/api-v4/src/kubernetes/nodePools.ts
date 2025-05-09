@@ -12,6 +12,7 @@ import Request, {
 import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateNodePoolData,
+  CreateNodePoolDataBeta,
   KubeNodePoolResponse,
   UpdateNodePoolData,
 } from './types';
@@ -58,6 +59,23 @@ export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`),
     setData(data, nodePoolSchema),
+  );
+
+/**
+ * createNodePool
+ *
+ * Adds a node pool to the specified cluster with beta fields.
+ */
+export const createNodePoolBeta = (
+  clusterID: number,
+  data: CreateNodePoolDataBeta,
+) =>
+  Request<KubeNodePoolResponseBeta>(
+    setMethod('POST'),
+    setURL(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(clusterID)}/pools`,
+    ),
+    setData(data, nodePoolBetaSchema),
   );
 
 /**
