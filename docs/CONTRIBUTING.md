@@ -46,6 +46,7 @@ Two reviews from members of the Cloud Manager team are required before merge. Af
 
 Follow these best practices to write a good changeset:
 
+- Summarize your changes succinctly in 150 characters or less. A changeset shouldn't describe every line of code edited in the PR.
 - Use a consistent tense in all changeset entries. We have chosen to use **imperative (present)** tense. (This follows established [git commit message best practices](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).)
 - Avoid starting a changeset with the verb "Add", "Remove", "Change" or "Fix" when listed under that respective `Added`, `Removed`, `Changed` or `Fixed` section. It is unnecessary repetition.
 - For `Fixed` changesets, describe the bug that needed to be fixed, rather than the fix itself. (e.g. say "Missing button labels in action buttons" rather than "Make label prop required for action buttons").

@@ -16,11 +16,12 @@ import {
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
+import { chooseCluster } from 'support/util/clusters';
 import { randomLabel } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
 
 import { accountFactory } from 'src/factories';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
-
 describe('object storage smoke tests', () => {
   /*
    * - Tests core object storage bucket create flow using mocked API responses.
@@ -28,17 +29,16 @@ describe('object storage smoke tests', () => {
    * - Confirms bucket is listed in table.
    */
   it('can create object storage bucket - smoke', () => {
+    const mockCluster = chooseCluster();
     const bucketLabel = randomLabel();
-    const bucketRegion = 'US, Atlanta, GA';
-    const bucketCluster = 'us-southeast-1';
-    const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
-
+    const mockRegion = getRegionById(mockCluster.region);
+    const bucketHostname = `${bucketLabel}.${mockCluster.id}.linodeobjects.com`;
     const mockBucket = objectStorageBucketFactory.build({
-      cluster: bucketCluster,
+      cluster: mockCluster.id,
       hostname: bucketHostname,
       label: bucketLabel,
+      region: mockCluster.region,
     });
-
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
     mockAppendFeatureFlags({
       gecko2: false,
@@ -47,7 +47,6 @@ describe('object storage smoke tests', () => {
     }).as('getFeatureFlags');
 
     mockGetBuckets([]).as('getBuckets');
-
     mockCreateBucket(mockBucket).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
@@ -66,7 +65,7 @@ describe('object storage smoke tests', () => {
         cy.findByLabelText('Bucket Name (required)').click();
         cy.focused().type(bucketLabel);
         ui.regionSelect.find().click();
-        cy.focused().type(`${bucketRegion}{enter}`);
+        cy.focused().type(`${mockCluster.id}{enter}`);
         ui.buttonGroup
           .findButtonByTitle('Create Bucket')
           .should('be.visible')
@@ -75,8 +74,8 @@ describe('object storage smoke tests', () => {
 
     cy.wait('@createBucket');
     cy.findByText(bucketLabel).should('be.visible');
-    cy.findByText(bucketRegion).should('be.visible');
-    cy.findByText(bucketHostname).should('be.visible');
+    cy.findByText(mockRegion.label).should('be.visible');
+    cy.findByText(mockBucket.hostname).should('be.visible');
   });
 
   /*

@@ -133,7 +133,7 @@ export const ChangeRoleForEntityDrawer = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want to assign to the entity.
+          Select a role you want the entity to be attached to.
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 

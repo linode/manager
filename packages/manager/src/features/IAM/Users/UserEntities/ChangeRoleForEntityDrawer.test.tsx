@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -53,13 +53,13 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleForEntityDrawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(
-      <ChangeRoleForEntityDrawer {...props} />
-    );
+    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
 
     // Verify title renders
-    getByText('Change Role');
-    getByText('Select a role you want to assign to the entity.');
+    expect(screen.getByText('Change Role')).toBeVisible();
+    expect(
+      screen.getByText('Select a role you want the entity to be attached to.')
+    ).toBeVisible();
   });
 
   it('should allow changing role for entity from "linode_contributor" to "linode_viewer"', async () => {
@@ -80,21 +80,15 @@ describe('ChangeRoleForEntityDrawer', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(
-      <ChangeRoleForEntityDrawer {...props} />
-    );
+    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
 
     const autocomplete = screen.getByRole('combobox');
 
-    act(() => {
-      // Open the dropdown
-      fireEvent.click(autocomplete);
+    // Open the dropdown
+    await userEvent.click(autocomplete);
 
-      // Type to filter options
-      fireEvent.change(autocomplete, {
-        target: { value: 'linode_viewer' },
-      });
-    });
+    // Type to filter options
+    await userEvent.type(autocomplete, 'linode_viewer');
 
     // Wait for and select the "linode_viewer" option
     const newRole = await screen.findByText('linode_viewer');
@@ -104,7 +98,7 @@ describe('ChangeRoleForEntityDrawer', () => {
       expect(autocomplete).toHaveValue('linode_viewer');
     });
 
-    await userEvent.click(getByText('Save Changes'));
+    await userEvent.click(screen.getByText('Save Changes'));
 
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({
