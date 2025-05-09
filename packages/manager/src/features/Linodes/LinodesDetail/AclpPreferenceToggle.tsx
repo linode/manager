@@ -11,15 +11,27 @@ export interface AclpPreferenceToggleType {
   type: 'alerts' | 'metrics';
 }
 
-const preferenceConfig = {
+interface PreferenceConfigItem {
+  getBannerText: (isBeta: boolean | undefined) => JSX.Element;
+  getButtonText: (isBeta: boolean | undefined) => string;
+  preferenceKey: string;
+  updateKey: keyof ManagerPreferences;
+  usePreferenceSelector: (
+    preferences: ManagerPreferences | undefined
+  ) => boolean | undefined;
+}
+
+const preferenceConfig: Record<
+  AclpPreferenceToggleType['type'],
+  PreferenceConfigItem
+> = {
   metrics: {
-    usePreferenceSelector: (preferences: ManagerPreferences | undefined) =>
-      preferences?.isAclpMetricsBeta,
+    usePreferenceSelector: (preferences) => preferences?.isAclpMetricsBeta,
     updateKey: 'isAclpMetricsBeta',
     preferenceKey: 'metrics-preference',
-    getButtonText: (isBeta: boolean | undefined) =>
+    getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Metrics' : 'Try the Metrics (Beta)',
-    getBannerText: (isBeta: boolean | undefined) =>
+    getBannerText: (isBeta) =>
       isBeta ? (
         <span>
           Welcome to <strong>Metrics (Beta)</strong> with more options and
@@ -34,13 +46,12 @@ const preferenceConfig = {
       ),
   },
   alerts: {
-    usePreferenceSelector: (preferences: ManagerPreferences | undefined) =>
-      preferences?.isAclpAlertsBeta,
+    usePreferenceSelector: (preferences) => preferences?.isAclpAlertsBeta,
     updateKey: 'isAclpAlertsBeta',
     preferenceKey: 'alerts-preference',
-    getButtonText: (isBeta: boolean | undefined) =>
+    getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Alerts' : 'Try Alerts (Beta)',
-    getBannerText: (isBeta: boolean | undefined) =>
+    getBannerText: (isBeta) =>
       isBeta ? (
         <span>
           Welcome to <strong>Alerts (Beta)</strong> with more options and

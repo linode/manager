@@ -9,7 +9,7 @@ import { AclpPreferenceToggle } from './AclpPreferenceToggle';
 
 import type { AclpPreferenceToggleType } from './AclpPreferenceToggle';
 
-interface ExpectedAclpPreferenceValues {
+interface ExpectedAclpPreferenceItem {
   betaModeBannertext: string;
   betaModeButtonText: string;
   legacyModeBannerText: string;
@@ -19,7 +19,7 @@ interface ExpectedAclpPreferenceValues {
 
 const expectedAclpPreferences: Record<
   AclpPreferenceToggleType['type'],
-  ExpectedAclpPreferenceValues
+  ExpectedAclpPreferenceItem
 > = {
   metrics: {
     preference: true,
