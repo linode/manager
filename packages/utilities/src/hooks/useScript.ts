@@ -60,7 +60,10 @@ export const loadScript = (
       }
     } else {
       // Grab existing script status from attribute and set to state.
-      options?.setStatus?.(script.getAttribute('data-status') as ScriptStatus);
+      const existingStatus = script.getAttribute('data-status') as ScriptStatus;
+      options?.setStatus?.(existingStatus);
+      // Resolve with the existing status
+      resolve({ status: existingStatus });
     }
     // Script event handler to update status in state
     // Note: Even if the script already exists we still need to add
