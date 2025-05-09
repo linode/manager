@@ -152,29 +152,40 @@ export const Autocomplete = <
                 loading={loading}
                 noMarginTop={noMarginTop}
                 placeholder={placeholder ?? 'Select an option'}
-                required={textFieldProps?.InputProps?.required}
+                required={
+                  textFieldProps?.required ||
+                  textFieldProps?.InputProps?.required
+                } // TODO: Remove backwards compatibility once migration is complete
                 tooltipText={textFieldProps?.tooltipText}
                 {...params}
                 {...textFieldProps}
-                InputProps={{
-                  ...params.InputProps,
-                  ...textFieldProps?.InputProps,
-                  endAdornment: (
-                    <>
-                      {loading && (
-                        <InputAdornment position="end">
-                          <CircleProgress noPadding size="xs" />
-                        </InputAdornment>
-                      )}
-                      {textFieldProps?.InputProps?.endAdornment}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-                inputProps={{
-                  ...params.inputProps,
-                  ...textFieldProps?.inputProps,
-                  readOnly: isReadonly && !keepSearchEnabledOnMobile,
+                slotProps={{
+                  ...textFieldProps?.slotProps,
+                  htmlInput: {
+                    ...textFieldProps?.slotProps?.htmlInput,
+                    ...params.inputProps,
+                    ...textFieldProps?.inputProps, // TODO: Remove backwards compatibility once migration is complete
+                    readOnly: isReadonly && !keepSearchEnabledOnMobile,
+                  },
+                  input: {
+                    ...params.InputProps,
+                    ...textFieldProps?.InputProps, // TODO: Remove backwards compatibility once migration is complete
+                    ...textFieldProps?.slotProps?.input,
+                    endAdornment: (
+                      <>
+                        {/* TODO: Remove backwards compatibility once migration is complete */}
+                        {textFieldProps?.InputProps?.endAdornment}
+                        {/* @ts-expect-error - This is a legitimate property on slotProps.input */}
+                        {textFieldProps?.slotProps?.input?.endAdornment}
+                        {loading && (
+                          <InputAdornment position="end">
+                            <CircleProgress noPadding size="xs" />
+                          </InputAdornment>
+                        )}
+                        {params.InputProps.endAdornment}
+                      </>
+                    ),
+                  },
                 }}
               />
             )

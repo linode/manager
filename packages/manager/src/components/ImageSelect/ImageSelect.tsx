@@ -189,19 +189,21 @@ export const ImageSelect = (props: Props) => {
           );
         }}
         textFieldProps={{
-          InputProps: {
-            startAdornment:
-              !multiple && value && !Array.isArray(value) ? (
-                <InputAdornment position="start">
-                  <OSIcon
-                    fontSize="20px"
-                    height="20px"
-                    os={value.vendor ?? ''}
-                    position="relative"
-                    top={1}
-                  />
-                </InputAdornment>
-              ) : null,
+          slotProps: {
+            input: {
+              startAdornment:
+                !multiple && value && !Array.isArray(value) ? (
+                  <InputAdornment position="start">
+                    <OSIcon
+                      fontSize="20px"
+                      height="20px"
+                      os={value.vendor ?? ''}
+                      position="relative"
+                      top={1}
+                    />
+                  </InputAdornment>
+                ) : null,
+            },
           },
         }}
         {...rest}
