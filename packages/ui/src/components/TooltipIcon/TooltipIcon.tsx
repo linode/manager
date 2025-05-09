@@ -94,9 +94,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
   const cdsIconProps = {
     rootStyle: {
       color: theme.tokens.alias.Content.Icon.Primary.Default,
-      '&:hover': {
-        color: theme.tokens.alias.Content.Icon.Primary.Hover,
-      },
       height: labelTooltipIconSize === 'small' ? 16 : 20,
       width: labelTooltipIconSize === 'small' ? 16 : 20,
     },
@@ -125,7 +122,12 @@ export const TooltipIcon = (props: TooltipIconProps) => {
           e.stopPropagation();
         }}
         size="large"
-        sx={sxTooltipIcon}
+        sx={{
+          ...sxTooltipIcon,
+          '&:hover > svg': {
+            color: theme.tokens.alias.Content.Icon.Primary.Hover,
+          },
+        }}
       >
         <SvgIcon
           component={InfoOutline}

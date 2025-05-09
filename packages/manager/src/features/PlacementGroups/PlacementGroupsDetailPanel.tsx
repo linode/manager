@@ -148,9 +148,6 @@ export const PlacementGroupsDetailPanel = (props: Props) => {
               mt: -0.75,
               p: 0,
             })}
-            sxEndIcon={{
-              color: theme.color.grey4,
-            }}
             tooltipText="This region has reached its Placement Group capacity."
             variant="text"
           >

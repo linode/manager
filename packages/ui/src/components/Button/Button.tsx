@@ -1,8 +1,8 @@
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import { styled, SvgIcon } from '@mui/material';
 import _Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import InfoOutline from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';
 import { Tooltip } from '../Tooltip';
 
@@ -123,7 +123,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-testid={rest['data-testid'] || 'button'}
         disableRipple={disabled || rest.disableRipple}
         endIcon={
-          (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
+          (showTooltip && (
+            <SvgIcon
+              component={InfoOutline}
+              sx={{ ...sxEndIcon, top: 1, position: 'relative' }}
+            />
+          )) ||
+          rest.endIcon
         }
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}
