@@ -196,7 +196,7 @@ export enum CloudPulseAvailableViews {
   central,
 
   /**
-   * Represents the service page's Metrics view. If present in a filter's view configuration, that filter will be shown in the service page 
+   * Represents the service page's Metrics view. If present in a filter's view configuration, that filter will be shown in the service page
    */
   service,
 }
