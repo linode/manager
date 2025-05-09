@@ -21,7 +21,6 @@ import {
   getKubeControlPlaneACL,
   useIsLkeEnterpriseEnabled,
 } from 'src/features/Kubernetes/kubeUtils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterQuery,
@@ -79,14 +78,14 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
 
-  const { data: selectedCluster, isFetching: isFetchingSelectedCluster } =
-    useDialogData({
-      enabled:
-        match.routeId === '/kubernetes/clusters/$clusterID/summary/delete',
-      queryHook: useKubernetesClusterQuery,
-      paramKey: 'clusterID',
-      redirectToOnNotFound: '/kubernetes/clusters/$clusterID/summary',
-    });
+  const {
+    data: selectedCluster,
+    isFetching: isFetchingSelectedCluster,
+    error: selectedClusterError,
+  } = useKubernetesClusterQuery({
+    id: cluster.id,
+    enabled: match.routeId === '/kubernetes/clusters/$clusterID/summary/delete',
+  });
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
@@ -241,6 +240,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
+        clusterError={selectedClusterError}
         clusterId={selectedCluster?.id ?? 0}
         clusterLabel={selectedCluster?.label ?? ''}
         isFetching={isFetchingSelectedCluster}
