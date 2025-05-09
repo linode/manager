@@ -65,9 +65,13 @@ export const EditRangeRDNSDrawer = (props: Props) => {
         address: values.address ?? '',
         rdns: values.rdns === '' ? null : values.rdns,
       });
-      enqueueSnackbar(`Successfully updated RDNS for ${range?.range}`, {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        `Successfully updated RDNS for ${range?.range}. RDNS entry updates may take up to one hour to show.`,
+        {
+          variant: 'success',
+          persist: true,
+        }
+      );
       handleClose();
     },
   });

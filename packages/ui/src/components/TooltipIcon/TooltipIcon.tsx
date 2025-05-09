@@ -41,6 +41,11 @@ export interface TooltipIconProps
    */
   icon?: JSX.Element;
   /**
+   * Size of the tooltip icon
+   * * @default small
+   */
+  labelTooltipIconSize?: 'large' | 'small';
+  /**
    * Enables a leaveDelay of 3000ms
    * @default false
    */
@@ -100,6 +105,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     tooltipAnalyticsEvent,
     tooltipPosition,
     width,
+    labelTooltipIconSize,
   } = props;
 
   const handleOpenTooltip = () => {
@@ -121,9 +127,8 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       fill: theme.palette.primary.main,
       stroke: theme.palette.primary.main,
     },
-    color: theme.tokens.color.Neutrals[50],
-    height: 20,
-    width: 20,
+    height: labelTooltipIconSize === 'small' ? 16 : 20,
+    width: labelTooltipIconSize === 'small' ? 16 : 20,
   };
 
   switch (status) {

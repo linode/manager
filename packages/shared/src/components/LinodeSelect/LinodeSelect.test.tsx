@@ -21,7 +21,7 @@ describe('LinodeSelect', () => {
     const options: Linode[] = []; // Assuming no options are available
     const onSelectionChange = vi.fn();
 
-    const screen = renderWithWrappers(
+    const { getByText, getByTestId } = renderWithWrappers(
       <LinodeSelect
         multiple={false}
         noOptionsMessage={customNoOptionsMessage} // Pass the custom message via prop
@@ -32,14 +32,14 @@ describe('LinodeSelect', () => {
       [QueryClientWrapper(), ThemeWrapper()],
     );
 
-    const input = screen.getByTestId(TEXTFIELD_ID);
+    const input = getByTestId(TEXTFIELD_ID);
 
     // Open the dropdown
     await userEvent.click(input);
 
     await waitFor(() => {
       // The custom no options message should be displayed when there are no options available
-      expect(screen.getByText(customNoOptionsMessage)).toBeInTheDocument();
+      expect(getByText(customNoOptionsMessage)).toBeInTheDocument();
     });
   });
 

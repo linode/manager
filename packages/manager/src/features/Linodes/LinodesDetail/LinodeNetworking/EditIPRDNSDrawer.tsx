@@ -35,9 +35,13 @@ export const EditIPRDNSDrawer = (props: Props) => {
         address: ip?.address ?? '',
         rdns: values.rdns === '' ? null : values.rdns,
       });
-      enqueueSnackbar(`Successfully updated RDNS for ${ip?.address}`, {
-        variant: 'success',
-      });
+      enqueueSnackbar(
+        `Successfully updated RDNS for ${ip?.address}. RDNS entry updates may take up to one hour to show.`,
+        {
+          variant: 'success',
+          persist: true,
+        }
+      );
       handleClose();
     },
   });

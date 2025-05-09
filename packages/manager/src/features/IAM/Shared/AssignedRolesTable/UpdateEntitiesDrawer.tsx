@@ -115,7 +115,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
-            Add or remove entities the role should apply to.
+            Add or remove entities attached to the role.
           </Typography>
 
           {role && (
@@ -142,7 +142,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
                 value={field.value}
               />
             )}
-            rules={{ required: 'Entities are required.' }}
+            rules={{ required: 'Select entities.' }}
           />
 
           <ActionsPanel
