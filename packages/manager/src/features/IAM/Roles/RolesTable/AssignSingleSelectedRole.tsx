@@ -1,32 +1,26 @@
-import { Autocomplete, Button, DeleteIcon } from '@linode/ui';
 import { Divider, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getRoleByName } from 'src/features/IAM/Shared/utilities';
+import { RoleView } from 'src/features/IAM/Shared/types';
 
 import type { IamAccountPermissions } from '@linode/api-v4';
-import type {
-  AssignNewRoleFormValues,
-  RolesType,
-} from 'src/features/IAM/Shared/utilities';
+import type { AssignNewRoleFormValues } from 'src/features/IAM/Shared/utilities';
 
 interface Props {
   hideDetails: boolean;
   index: number;
-  onRemove: (idx: number) => void;
-  options: RolesType[];
   permissions: IamAccountPermissions;
+  role: RoleView;
 }
 
-export const AssignSingleRole = ({
-  index,
-  onRemove,
-  options,
-  permissions,
+export const AssignSingleSelectedRole = ({
   hideDetails,
+  index,
+  permissions,
+  role,
 }: Props) => {
   const theme = useTheme();
 
@@ -48,20 +42,7 @@ export const AssignSingleRole = ({
           name={`roles.${index}`}
           render={({ field: { onChange, value } }) => (
             <>
-              <Autocomplete
-                label="Assign New Roles"
-                onChange={(event, newValue) => {
-                  onChange({
-                    ...value,
-                    role: newValue,
-                  });
-                }}
-                options={options}
-                placeholder="Select a Role"
-                textFieldProps={{ hideLabel: true }}
-                value={value?.role || null}
-              />
-              {value?.role && (
+              {!!role && (
                 <AssignedPermissionsPanel
                   hideDetails={hideDetails}
                   mode="assign-role"
@@ -71,25 +52,14 @@ export const AssignSingleRole = ({
                       entities: updatedEntities,
                     });
                   }}
-                  role={getRoleByName(permissions, value.role?.value)!}
-                  value={value.entities || []}
+                  role={role}
+                  showName={true}
+                  value={[]}
                 />
               )}
             </>
           )}
         />
-      </Box>
-      <Box
-        sx={{
-          flex: '0 1 auto',
-          marginTop:
-            index === 0 ? -theme.tokens.spacing.S4 : theme.tokens.spacing.S16,
-          verticalAlign: 'top',
-        }}
-      >
-        <Button disabled={index === 0} onClick={() => onRemove(index)}>
-          <DeleteIcon />
-        </Button>
       </Box>
     </Box>
   );
