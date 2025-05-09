@@ -14,7 +14,10 @@ import {
   ADD_NODE_POOLS_ENTERPRISE_DESCRIPTION,
   nodeWarning,
 } from 'src/features/Kubernetes/constants';
-import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
+import {
+  useCreateNodePoolBetaMutation,
+  useCreateNodePoolMutation,
+} from 'src/queries/kubernetes';
 import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
@@ -24,6 +27,7 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
+import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
@@ -83,11 +87,20 @@ export const AddNodePoolDrawer = (props: Props) => {
   } = props;
   const { classes } = useStyles();
   const { data: types } = useAllTypes(open);
+
+  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  const {
+    error: errorBeta,
+    isPending: isPendingBeta,
+    mutateAsync: createPoolBeta,
+  } = useCreateNodePoolBetaMutation(clusterId);
   const {
     error,
     isPending,
     mutateAsync: createPool,
   } = useCreateNodePoolMutation(clusterId);
+
   const drawerRef = React.useRef<HTMLDivElement>(null);
 
   // Only want to use current types here.
@@ -132,7 +145,11 @@ export const AddNodePoolDrawer = (props: Props) => {
       setAddNodePoolError(error?.[0].reason);
       scrollErrorIntoViewV2(drawerRef);
     }
-  }, [error]);
+    if (errorBeta) {
+      setAddNodePoolError(errorBeta?.[0].reason);
+      scrollErrorIntoViewV2(drawerRef);
+    }
+  }, [error, errorBeta]);
 
   const resetDrawer = () => {
     setSelectedTypeInfo(undefined);
@@ -145,6 +162,14 @@ export const AddNodePoolDrawer = (props: Props) => {
   const handleAdd = () => {
     if (!selectedTypeInfo) {
       return;
+    }
+    if (isLkeEnterpriseLAFeatureEnabled) {
+      return createPoolBeta({
+        count: selectedTypeInfo.count,
+        type: selectedTypeInfo.planId,
+      }).then(() => {
+        onClose();
+      });
     }
     return createPool({
       count: selectedTypeInfo.count,
@@ -196,7 +221,7 @@ export const AddNodePoolDrawer = (props: Props) => {
           hasSelectedRegion={hasSelectedRegion}
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          isSubmitting={isPending}
+          isSubmitting={isPending || isPendingBeta}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           onSelect={(newType: string) => {
             if (selectedTypeInfo?.planId !== newType) {
