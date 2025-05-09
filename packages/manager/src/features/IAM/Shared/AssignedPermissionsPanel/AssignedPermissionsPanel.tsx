@@ -21,25 +21,27 @@ interface Props {
   mode?: DrawerModes;
   onChange?: (value: EntitiesOption[]) => void;
   role: ExtendedRole | ExtendedRoleView;
+  showName?: boolean;
   sx?: SxProps<Theme>;
   value?: EntitiesOption[];
 }
 
 export const AssignedPermissionsPanel = ({
   errorText,
+  hideDetails,
   mode,
   onChange,
   role,
+  showName,
   sx,
   value,
-  hideDetails,
 }: Props) => {
   // TODO: update the link for the description when it's ready - UIE-8534
   return (
     <StyledPaper sx={{ ...sx }}>
       {!hideDetails && (
         <>
-          <StyledTitle>Description</StyledTitle>
+          <StyledTitle>{showName && role.name ? role.name : 'Description'}</StyledTitle>
           <StyledDescription>
             {role.permissions.length ? (
               role.description
