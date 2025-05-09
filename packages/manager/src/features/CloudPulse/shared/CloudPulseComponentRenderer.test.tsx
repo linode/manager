@@ -12,6 +12,7 @@ import {
   getResourcesProperties,
   getTagsProperties,
 } from '../Utils/FilterBuilder';
+import { CloudPulseAvailableViews } from '../Utils/models';
 
 describe('ComponentRenderer component tests', () => {
   it('it should render provided tag filter in props', () => {
@@ -25,7 +26,7 @@ describe('ComponentRenderer component tests', () => {
         isMultiSelect: true,
         isOptional: true,
         name: 'Tags',
-        neededInServicePage: false,
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Tags',
         priority: 4,
       },
@@ -65,8 +66,8 @@ describe('ComponentRenderer component tests', () => {
         isFilterable: false,
         isMetricsFilter: false,
         name: 'Region',
-        neededInServicePage: false,
         priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
       },
       name: 'Region',
     };
@@ -106,7 +107,7 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: true,
         isMultiSelect: true,
         name: 'Resources',
-        neededInServicePage: false,
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Resources',
         priority: 2,
       },
@@ -148,7 +149,10 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: false,
         isMultiSelect: false,
         name: 'Node Type',
-        neededInServicePage: true,
+        neededInViews: [
+          CloudPulseAvailableViews.service,
+          CloudPulseAvailableViews.central,
+        ],
         placeholder: 'Select a Node Type',
         priority: 5,
       },
