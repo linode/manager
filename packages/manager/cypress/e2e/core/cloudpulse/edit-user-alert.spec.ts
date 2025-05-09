@@ -46,7 +46,13 @@ import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 // Feature flag setup
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+const flags: Partial<Flags> = {
+  aclp: { beta: true, enabled: true },
+  aclpAlertingTimeOptions: {
+    evaluationPeriodOptions: [{ label: '5 min', value: 300 }],
+    pollingIntervalOptions: [{ label: '5 min', value: 300 }],
+  },
+};
 const mockAccount = accountFactory.build();
 
 // Mock alert details

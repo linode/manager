@@ -45,7 +45,13 @@ export interface MetricDetails {
   ruleIndex: number;
   threshold: string;
 }
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+const flags: Partial<Flags> = {
+  aclp: { beta: true, enabled: true },
+  aclpAlertingTimeOptions: {
+    evaluationPeriodOptions: [{ label: '5 min', value: 300 }],
+    pollingIntervalOptions: [{ label: '5 min', value: 300 }],
+  },
+};
 // Create mock data
 const mockAccount = accountFactory.build();
 const mockRegion = regionFactory.build({
