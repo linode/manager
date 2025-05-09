@@ -31,6 +31,7 @@ export type ManagerPreferences = Partial<{
   domains_group_by_tag: boolean;
   firewall_beta_notification: boolean;
   gst_banner_dismissed: boolean;
+  isAclpAlertsBeta: boolean;
   isAclpMetricsBeta: boolean;
   isTableStripingEnabled: boolean;
   linode_news_banner_dismissed: boolean;
