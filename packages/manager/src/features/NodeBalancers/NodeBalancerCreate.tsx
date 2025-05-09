@@ -1,17 +1,21 @@
 import {
   useAccountAgreements,
+  useAllVPCsQuery,
   useMutateAccountAgreements,
-  useNodebalancerCreateMutation,
+  useNodebalancerCreateBetaMutation,
   useNodeBalancerTypesQuery,
   useProfile,
+  useRegionQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Accordion,
   ActionsPanel,
+  Autocomplete,
   Box,
   Button,
+  InputAdornment,
   Notice,
   Paper,
   Stack,
@@ -55,6 +59,7 @@ import {
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
+import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
@@ -63,7 +68,7 @@ import {
 } from './utils';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, VPC } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 
@@ -78,6 +83,11 @@ interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
   tags?: string[];
+  vpcs?: {
+    ipv4_range: string;
+    ipv6_range?: string;
+    subnet_id: number;
+  }[];
 }
 
 const errorResources = {
@@ -114,10 +124,13 @@ const NodeBalancerCreate = () => {
     error,
     isPending,
     mutateAsync: createNodeBalancer,
-  } = useNodebalancerCreateMutation();
+  } = useNodebalancerCreateBetaMutation();
 
   const [nodeBalancerFields, setNodeBalancerFields] =
     React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
+
+  const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
+  const [subnetError, setSubnetError] = React.useState<string | undefined>();
 
   const [hasSignedAgreement, setHasSignedAgreement] =
     React.useState<boolean>(false);
@@ -130,6 +143,18 @@ const NodeBalancerCreate = () => {
       submitting: boolean;
     }>(defaultDeleteConfigConfirmDialogState);
 
+  const { data: region } = useRegionQuery(nodeBalancerFields?.region ?? '');
+  const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
+
+  const {
+    data: vpcs,
+    error: vpcError,
+    isLoading: isVPCLoading,
+  } = useAllVPCsQuery({
+    enabled: regionSupportsVPCs,
+    filter: { region: nodeBalancerFields?.region },
+  });
+
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
   const theme = useTheme<Theme>();
@@ -138,6 +163,22 @@ const NodeBalancerCreate = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
   });
+
+  React.useEffect(() => {
+    if (error) {
+      const err = error?.find((err) =>
+        err.field?.includes('subnet_id')
+      )?.reason;
+      setSubnetError(err);
+    }
+  }, [error]);
+
+  const getVPCSubnetLabelFromId = (subnetId: number): string => {
+    const subnet = selectedVPC?.subnets.find(
+      ({ id, ...rest }) => id === subnetId
+    );
+    return subnet?.label || '';
+  };
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -285,8 +326,26 @@ const NodeBalancerCreate = () => {
   };
 
   const onCreate = () => {
+    if (selectedVPC && nodeBalancerFields?.vpcs === undefined) {
+      setSubnetError('Subnet is required');
+      return;
+    }
+
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
+    if (
+      nodeBalancerRequestData?.vpcs &&
+      nodeBalancerRequestData.vpcs.length > 0
+    ) {
+      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map(
+        (vpc) => ({
+          ...vpc,
+          ipv4_range: vpc.ipv4_range.endsWith('/30')
+            ? vpc.ipv4_range
+            : `${vpc.ipv4_range}/30`,
+        })
+      );
+    }
     nodeBalancerRequestData.configs = transformConfigsForRequest(
       nodeBalancerRequestData.configs
     );
@@ -416,6 +475,50 @@ const NodeBalancerCreate = () => {
     resetNodeAddresses();
   };
 
+  const subnetChange = (subnetIds: null | number[]) => {
+    if (
+      nodeBalancerFields?.vpcs?.every((vpc) =>
+        subnetIds?.some((id) => id === vpc.subnet_id)
+      )
+    ) {
+      return;
+    }
+    if (subnetIds === null) {
+      setNodeBalancerFields((prev) => {
+        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
+        const { vpcs: _, ...rest } = prev;
+        return { ...rest };
+      });
+    } else {
+      const vpcs = subnetIds.map((id) => ({ subnet_id: id, ipv4_range: '' }));
+      setNodeBalancerFields((prev) => ({
+        ...prev,
+        vpcs,
+      }));
+    }
+  };
+
+  const ipv4Change = (ipv4Range: string, index: number) => {
+    if (nodeBalancerFields?.vpcs?.[index].ipv4_range === ipv4Range) {
+      return;
+    }
+    if (ipv4Range === '') {
+      setNodeBalancerFields((prev) => {
+        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
+        const { vpcs: _, ...rest } = prev;
+        return { ...rest };
+      });
+    }
+    const vpcs = nodeBalancerFields?.vpcs;
+    if (vpcs) {
+      vpcs[index].ipv4_range = ipv4Range;
+      setNodeBalancerFields((prev) => ({
+        ...prev,
+        vpcs,
+      }));
+    }
+  };
+
   const onCloseConfirmation = () =>
     setDeleteConfigConfirmDialog(clone(defaultDeleteConfigConfirmDialogState));
 
@@ -446,6 +549,10 @@ const NodeBalancerCreate = () => {
 
   if (regionLabel) {
     summaryItems.push({ title: regionLabel });
+  }
+
+  if (nodeBalancerFields.vpcs?.length) {
+    summaryItems.push({ title: 'VPC Assigned' });
   }
 
   if (nodeBalancerFields.firewall_id) {
@@ -574,6 +681,99 @@ const NodeBalancerCreate = () => {
           }
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
+        {flags.nodebalancerVpc && (
+          <Paper data-testid="vpc-panel">
+            <Stack spacing={2}>
+              <Typography variant="h2">VPC</Typography>
+              <Stack spacing={1.5}>
+                <Autocomplete
+                  disabled={isRestricted}
+                  errorText={vpcError?.[0].reason}
+                  helperText={
+                    nodeBalancerFields?.region && !regionSupportsVPCs
+                      ? 'VPC is not available in the selected region.'
+                      : undefined
+                  }
+                  label="Assign VPC"
+                  loading={isVPCLoading}
+                  noMarginTop
+                  noOptionsText={
+                    !nodeBalancerFields?.region
+                      ? 'Select a region to see available VPCs.'
+                      : 'There are no VPCs in the selected region.'
+                  }
+                  onChange={(e, vpc) => {
+                    setSelectedVPC(vpc ?? null);
+
+                    if (vpc && vpc.subnets.length === 1) {
+                      // If the user selects a VPC and the VPC only has one subnet,
+                      // preselect that subnet for the user.
+                      subnetChange([vpc.subnets[0].id]);
+                    } else {
+                      // Otherwise, just clear the selected subnet
+                      subnetChange(null);
+                    }
+                  }}
+                  options={vpcs ?? []}
+                  placeholder="None"
+                  textFieldProps={{
+                    tooltipText: NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
+                  }}
+                  value={selectedVPC ?? null}
+                />
+                {selectedVPC && (
+                  <>
+                    <Autocomplete
+                      errorText={subnetError}
+                      getOptionLabel={(subnet) =>
+                        `${subnet.label} (${subnet.ipv4})`
+                      }
+                      label="Subnet"
+                      noMarginTop
+                      onChange={(_, subnet) =>
+                        subnetChange(subnet ? [subnet.id] : null)
+                      }
+                      options={selectedVPC?.subnets ?? []}
+                      placeholder="Select Subnet"
+                      value={
+                        selectedVPC?.subnets.find(
+                          (subnet) =>
+                            subnet.id ===
+                            nodeBalancerFields?.vpcs?.[0].subnet_id
+                        ) ?? null
+                      }
+                    />
+                    {nodeBalancerFields?.vpcs &&
+                      nodeBalancerFields.vpcs.map((vpc, index) => (
+                        <TextField
+                          errorText={hasErrorFor(`vpcs[${index}].ipv4_range`)}
+                          key={`${vpc.subnet_id}`}
+                          label={`NodeBalancer IPv4 CIDR for ${getVPCSubnetLabelFromId(vpc.subnet_id)}`}
+                          noMarginTop
+                          onChange={(e) =>
+                            ipv4Change(e.target.value ?? '', index)
+                          }
+                          // eslint-disable-next-line sonarjs/no-hardcoded-ip
+                          placeholder="10.0.0.24"
+                          required
+                          slotProps={{
+                            input: {
+                              endAdornment: (
+                                <InputAdornment position="end">
+                                  /30
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
+                          value={vpc.ipv4_range}
+                        />
+                      ))}
+                  </>
+                )}
+              </Stack>
+            </Stack>
+          </Paper>
+        )}
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
