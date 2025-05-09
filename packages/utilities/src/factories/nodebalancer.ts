@@ -6,6 +6,7 @@ import type {
   NodeBalancerConfig,
   NodeBalancerConfigNode,
   NodeBalancerStats,
+  NodebalancerVpcConfig,
 } from '@linode/api-v4/lib/nodebalancers/types';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
@@ -61,6 +62,16 @@ export const nodeBalancerConfigNodeFactory =
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
+  });
+
+export const nodeBalancerConfigVPCFactory =
+  Factory.Sync.makeFactory<NodebalancerVpcConfig>({
+    id: Factory.each((i) => i),
+    ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
+    ipv6_range: null,
+    nodebalancer_id: Factory.each((i) => 1000 + i),
+    subnet_id: Factory.each((i) => 2000 + i),
+    vpc_id: Factory.each((i) => 3000 + i),
   });
 
 export const nodeBalancerStatsFactory =

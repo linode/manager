@@ -20,6 +20,7 @@ import {
   useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
+import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
@@ -54,6 +55,8 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
+  const flags = useFlags();
+
   const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(Number(id));
 
   const { data: vpcDetails } = useVPCQuery(
@@ -64,23 +67,13 @@ export const SummaryPanel = () => {
   const nbVPCConfigs = vpcConfig?.data ?? [];
   const subnets = vpcDetails?.subnets ?? [];
 
-  // Map subnets by ID for fast lookup
-  const subnetMap = subnets.reduce<Record<number, (typeof subnets)[0]>>(
-    (map, subnet) => {
-      map[subnet.id] = subnet;
-      return map;
-    },
-    []
-  );
-
-  // Merge VPC config data with subnet labels
   const mergedSubnets = nbVPCConfigs.map((config) => {
-    const subnet = subnetMap[config.subnet_id];
+    const subnet = subnets.find((s) => s.id === config.subnet_id);
+
     return {
       id: config.subnet_id,
       label: subnet?.label ?? `Subnet ${config.subnet_id}`,
       ipv4Range: config.ipv4_range,
-      oldipv4: subnet?.ipv4,
     };
   });
 
@@ -224,57 +217,54 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
-      <StyledSummarySection>
-        <StyledTitle
-          data-qa-title
-          sx={{ display: 'flex', justifyContent: 'space-between' }}
-          variant="h3"
-        >
-          VPC
-          <Typography>
-            <s>
-              <Link to={`nodebalancers/${Number(id)}/summary`}>Edit</Link>
-            </s>
-          </Typography>
-        </StyledTitle>
+      {flags.nodebalancerVpc && vpcConfig?.data.length && (
+        <StyledSummarySection>
+          <StyledTitle
+            data-qa-title
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            variant="h3"
+          >
+            VPC
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-ports variant="body1">
+              <strong>VPC:</strong>{' '}
+              {vpcConfig?.data.length === 0
+                ? undefined
+                : vpcConfig?.data.map((vpc, i) => (
+                    <React.Fragment key={vpc.id}>
+                      <Link
+                        className="secondaryLink"
+                        to={`/vpcs/${vpc.vpc_id}`}
+                      >
+                        {vpcDetails?.label}
+                      </Link>
+                      {i < vpcConfig.data.length - 1 ? ', ' : ''}
+                    </React.Fragment>
+                  ))}
+            </Typography>
+          </StyledSection>
+          <StyledSection>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+              <strong>Subnets:</strong>
+            </Typography>
 
-        <StyledSection>
-          <Typography data-qa-ports variant="body1">
-            <strong>VPC:</strong>{' '}
-            {vpcConfig?.data.length === 0
-              ? undefined
-              : vpcConfig?.data.map((vpc, i) => (
-                  <React.Fragment key={vpc.id}>
-                    <Link className="secondaryLink" to={`/vpcs/${vpc.vpc_id}`}>
-                      {vpcDetails?.label}
-                    </Link>
-                    {i < vpcConfig.data.length - 1 ? ', ' : ''}
-                  </React.Fragment>
-                ))}
-          </Typography>
-        </StyledSection>
-
-        <StyledSection>
-          <Typography style={{ wordBreak: 'break-word' }} variant="body1">
-            <strong>Subnets:</strong>
-          </Typography>
-
-          {mergedSubnets.map((subnet) => (
-            <React.Fragment key={subnet.id}>
-              <Typography
-                style={{ wordBreak: 'break-word', marginTop: '8px' }}
-                variant="body1"
-              >
-                {`${subnet.label}:`}
-              </Typography>
-              <Typography style={{ wordBreak: 'break-word' }} variant="body1">
-                {subnet.ipv4Range} <s>{`(${subnet.oldipv4})`}</s>
-              </Typography>
-            </React.Fragment>
-          ))}
-        </StyledSection>
-      </StyledSummarySection>
-
+            {mergedSubnets.map((subnet) => (
+              <React.Fragment key={subnet.id}>
+                <Typography
+                  style={{ wordBreak: 'break-word', marginTop: '8px' }}
+                  variant="body1"
+                >
+                  {`${subnet.label}:`}
+                </Typography>
+                <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+                  {subnet.ipv4Range}
+                </Typography>
+              </React.Fragment>
+            ))}
+          </StyledSection>
+        </StyledSummarySection>
+      )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags
