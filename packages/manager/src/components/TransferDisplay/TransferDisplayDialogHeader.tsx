@@ -28,7 +28,6 @@ export const TransferDisplayDialogHeader = React.memo((props: Props) => {
             },
           },
         }}
-        status="help"
         sxTooltipIcon={{ left: -2, top: -2 }}
         text={tooltipText}
       />

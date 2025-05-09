@@ -55,11 +55,7 @@ export const Permissions = ({ permissions }: Props) => {
           Permissions
         </Typography>
 
-        <TooltipIcon
-          status="help"
-          sxTooltipIcon={sxTooltipIcon}
-          text="Link is coming..."
-        />
+        <TooltipIcon sxTooltipIcon={sxTooltipIcon} text="Link is coming..." />
       </StyledGrid>
       {!permissions.length ? (
         <Typography>

@@ -1,26 +1,14 @@
 import styled from '@emotion/styled';
-import SuccessOutline from '@mui/icons-material/CheckCircleOutlined';
-import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import HelpOutline from '@mui/icons-material/HelpOutline';
-import InfoOutline from '@mui/icons-material/InfoOutlined';
-import WarningSolid from '@mui/icons-material/Warning';
-import { useTheme } from '@mui/material/styles';
+import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
 
+import InfoOutline from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
 import { Tooltip, tooltipClasses } from '../Tooltip';
 
 import type { TooltipProps } from '../Tooltip';
 import type { SxProps, Theme } from '@mui/material/styles';
-
-export type TooltipIconStatus =
-  | 'error'
-  | 'help'
-  | 'info'
-  | 'other'
-  | 'success'
-  | 'warning';
 
 interface EnhancedTooltipProps extends TooltipProps {
   width?: number;
@@ -36,11 +24,6 @@ export interface TooltipIconProps
    */
   className?: string;
   /**
-   * Use this custom icon when `status` is `other`
-   * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
-   */
-  icon?: JSX.Element;
-  /**
    * Size of the tooltip icon
    * * @default small
    */
@@ -50,10 +33,6 @@ export interface TooltipIconProps
    * @default false
    */
   leaveDelay?: number;
-  /**
-   * Sets the icon and color
-   */
-  status: TooltipIconStatus;
   /**
    * Pass specific styles to the Tooltip
    */
@@ -96,9 +75,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const {
     classes,
-    icon,
     leaveDelay,
-    status,
     sx,
     sxTooltipIcon,
     text,
@@ -114,45 +91,14 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     }
   };
 
-  let renderIcon: JSX.Element | null;
-
-  const sxRootStyle = {
-    '&&': {
-      fill: theme.tokens.color.Neutrals[50],
-      stroke: theme.tokens.color.Neutrals[50],
-      strokeWidth: 0,
+  const cdsIconProps = {
+    rootStyle: {
+      color: theme.tokens.alias.Content.Icon.Primary.Default,
+      height: labelTooltipIconSize === 'small' ? 16 : 20,
+      width: labelTooltipIconSize === 'small' ? 16 : 20,
     },
-    '&:hover': {
-      color: theme.palette.primary.main,
-      fill: theme.palette.primary.main,
-      stroke: theme.palette.primary.main,
-    },
-    height: labelTooltipIconSize === 'small' ? 16 : 20,
-    width: labelTooltipIconSize === 'small' ? 16 : 20,
+    viewBox: '0 0 20 20',
   };
-
-  switch (status) {
-    case 'error':
-      renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
-      break;
-    case 'help':
-      renderIcon = <HelpOutline sx={sxRootStyle} />;
-      break;
-    case 'info':
-      renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
-      break;
-    case 'other':
-      renderIcon = icon ?? null;
-      break;
-    case 'success':
-      renderIcon = <SuccessOutline style={{ color: theme.color.blue }} />;
-      break;
-    case 'warning':
-      renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
-      break;
-    default:
-      renderIcon = null;
-  }
 
   return (
     <StyledTooltip
@@ -176,9 +122,19 @@ export const TooltipIcon = (props: TooltipIconProps) => {
           e.stopPropagation();
         }}
         size="large"
-        sx={sxTooltipIcon}
+        sx={{
+          ...sxTooltipIcon,
+          '&:hover > svg': {
+            color: theme.tokens.alias.Content.Icon.Primary.Hover,
+          },
+        }}
       >
-        {renderIcon}
+        <SvgIcon
+          component={InfoOutline}
+          data-testid="tooltip-info-icon"
+          sx={cdsIconProps.rootStyle}
+          viewBox={cdsIconProps.viewBox}
+        />
       </IconButton>
     </StyledTooltip>
   );

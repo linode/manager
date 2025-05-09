@@ -207,10 +207,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                           Auto-assign a VPC IPv4 address for this Linode in the
                           VPC
                         </Typography>
-                        <TooltipIcon
-                          status="help"
-                          text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
-                        />
+                        <TooltipIcon text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
                       </Box>
                     }
                   />

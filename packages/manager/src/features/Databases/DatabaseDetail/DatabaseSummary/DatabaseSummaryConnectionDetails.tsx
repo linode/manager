@@ -122,16 +122,11 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           <CopyTooltip className={classes.inlineCopyToolTip} text={value} />
         )}
         {isLegacy && (
-          <TooltipIcon
-            status="help"
-            sxTooltipIcon={sxTooltipIcon}
-            text={privateHostCopy}
-          />
+          <TooltipIcon sxTooltipIcon={sxTooltipIcon} text={privateHostCopy} />
         )}
         {!isLegacy && hasHost && (
           <TooltipIcon
             componentsProps={hostTooltipComponentProps}
-            status="help"
             sxTooltipIcon={sxTooltipIcon}
             text={HOST_TOOLTIP_COPY}
           />
@@ -166,7 +161,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       {disableDownloadCACertificateBtn && (
         <span className="tooltipIcon">
           <TooltipIcon
-            status="help"
             sxTooltipIcon={sxTooltipIcon}
             text="Your Database Cluster is currently provisioning."
           />
@@ -219,7 +213,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
           {disableShowBtn && (
             <TooltipIcon
-              status="help"
               sxTooltipIcon={sxTooltipIcon}
               text={
                 database.status === 'provisioning'
@@ -265,7 +258,6 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               {!isLegacy && (
                 <TooltipIcon
                   componentsProps={hostTooltipComponentProps}
-                  status="help"
                   sxTooltipIcon={sxTooltipIcon}
                   text={HOST_TOOLTIP_COPY}
                 />

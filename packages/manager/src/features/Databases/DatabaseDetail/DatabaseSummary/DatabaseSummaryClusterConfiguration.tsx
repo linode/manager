@@ -178,11 +178,7 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
           {database.total_disk_size_gb ? (
             <>
               {database.total_disk_size_gb} GB
-              <TooltipIcon
-                status="help"
-                sxTooltipIcon={sxTooltipIcon}
-                text={STORAGE_COPY}
-              />
+              <TooltipIcon sxTooltipIcon={sxTooltipIcon} text={STORAGE_COPY} />
             </>
           ) : (
             convertMegabytesTo(type.disk, true)

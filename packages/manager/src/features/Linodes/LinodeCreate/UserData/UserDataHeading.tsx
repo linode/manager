@@ -28,7 +28,6 @@ export const UserDataHeading = () => {
       <Stack direction="row" spacing={1}>
         <Typography variant="h2">Add User Data</Typography>
         <TooltipIcon
-          status="help"
           sxTooltipIcon={{ p: 0 }}
           text={
             <>

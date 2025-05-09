@@ -9,7 +9,6 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
-import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import {
@@ -266,11 +265,7 @@ export const ContactInformation = React.memo((props: Props) => {
                     <strong>Tax ID</strong> {taxId}
                   </StyledTypography>
                   {taxIdIsVerifyingNotification && (
-                    <TooltipIcon
-                      icon={<StyledAutorenewIcon />}
-                      status="other"
-                      text={taxIdIsVerifyingNotification.label}
-                    />
+                    <TooltipIcon text={taxIdIsVerifyingNotification.label} />
                   )}
                 </Box>
               )}

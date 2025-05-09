@@ -71,13 +71,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   };
 
   const renderError = (errorMsg: string) => {
-    return (
-      <TooltipIcon
-        status="error"
-        sxTooltipIcon={sxTooltipIcon}
-        text={errorMsg}
-      />
-    );
+    return <TooltipIcon sxTooltipIcon={sxTooltipIcon} text={errorMsg} />;
   };
 
   const hasMaxPaymentMethods = paymentMethods

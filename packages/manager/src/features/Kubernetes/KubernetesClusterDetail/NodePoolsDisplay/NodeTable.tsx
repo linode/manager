@@ -329,7 +329,7 @@ export const EncryptedStatus = ({
       <StyledNotEncryptedBox>
         <Typography sx={{ whiteSpace: 'nowrap' }}>Not Encrypted</Typography>
         {regionSupportsDiskEncryption && tooltipText ? (
-          <TooltipIcon status="help" text={tooltipText} />
+          <TooltipIcon text={tooltipText} />
         ) : null}
       </StyledNotEncryptedBox>
     </>

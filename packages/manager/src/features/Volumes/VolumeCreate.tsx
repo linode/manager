@@ -165,7 +165,6 @@ export const VolumeCreate = () => {
     return (
       <TooltipIcon
         classes={{ popper: classes.tooltip }}
-        status="help"
         sxTooltipIcon={{
           marginBottom: '6px',
           marginLeft: theme.spacing(),

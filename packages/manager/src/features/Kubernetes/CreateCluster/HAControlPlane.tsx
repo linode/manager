@@ -103,7 +103,6 @@ export const HAControlPlane = (props: HAControlPlaneProps) => {
               </Typography>
               {isAPLEnabled && (
                 <TooltipIcon
-                  status="help"
                   text={
                     'Enabled by default when Akamai App Platform is enabled.'
                   }
