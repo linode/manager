@@ -209,7 +209,6 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
       },
     ]);
   });

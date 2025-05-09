@@ -70,7 +70,6 @@ describe('Create Linode with VPCs', () => {
       active: true,
       primary: true,
       subnet_id: mockSubnet.id,
-      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -139,7 +138,6 @@ describe('Create Linode with VPCs', () => {
       const expectedVpcInterface = requestPayload['interfaces'][0];
 
       // Confirm that request payload includes VPC interface.
-      expect(expectedVpcInterface['vpc_id']).to.equal(mockVPC.id);
       expect(expectedVpcInterface['ipv4']).to.deep.equal({});
       expect(expectedVpcInterface['subnet_id']).to.equal(mockSubnet.id);
       expect(expectedVpcInterface['purpose']).to.equal('vpc');
@@ -201,7 +199,6 @@ describe('Create Linode with VPCs', () => {
       active: true,
       primary: true,
       subnet_id: mockSubnet.id,
-      vpc_id: mockVPC.id,
     });
 
     const mockLinodeConfig = linodeConfigFactory.build({
@@ -308,7 +305,6 @@ describe('Create Linode with VPCs', () => {
       const expectedVpcInterface = requestPayload['interfaces'][0];
 
       // Confirm that request payload includes VPC interface.
-      expect(expectedVpcInterface['vpc_id']).to.equal(mockVPC.id);
       expect(expectedVpcInterface['ipv4']).to.deep.equal({ nat_1_1: 'any' });
       expect(expectedVpcInterface['subnet_id']).to.equal(mockSubnet.id);
       expect(expectedVpcInterface['purpose']).to.equal('vpc');

@@ -248,6 +248,7 @@ export const getInterfacesPayload = (
   }
 
   if (hasVPC) {
+    delete vpcInterface.vpc_id;
     return [vpcInterface];
   }
 
