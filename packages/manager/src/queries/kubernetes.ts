@@ -42,6 +42,7 @@ import type {
   CreateNodePoolData,
   CreateNodePoolDataBeta,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,

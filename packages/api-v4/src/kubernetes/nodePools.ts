@@ -1,6 +1,9 @@
-import { nodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
+import {
+  nodePoolBetaSchema,
+  nodePoolSchema,
+} from '@linode/validation/lib/kubernetes.schema';
 
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -14,6 +17,7 @@ import type {
   CreateNodePoolData,
   CreateNodePoolDataBeta,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   UpdateNodePoolData,
 } from './types';
 
