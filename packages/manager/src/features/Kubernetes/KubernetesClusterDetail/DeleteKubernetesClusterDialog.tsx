@@ -4,9 +4,10 @@ import * as React from 'react';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 
-import type { KubeNodePoolResponse } from '@linode/api-v4';
+import type { APIError, KubeNodePoolResponse } from '@linode/api-v4';
 
 export interface DeleteKubernetesClusterDialogProps {
+  clusterError: APIError[] | null;
   clusterId: number;
   clusterLabel: string;
   isFetching: boolean;

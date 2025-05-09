@@ -12,6 +12,7 @@ import type { ManagerPreferences } from '@linode/utilities';
 const props: DeleteKubernetesClusterDialogProps = {
   clusterId: 1,
   clusterLabel: 'this-cluster',
+  clusterError: null,
   isFetching: false,
   onClose: vi.fn(),
   open: true,

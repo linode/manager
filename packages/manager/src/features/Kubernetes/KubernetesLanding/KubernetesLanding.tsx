@@ -1,7 +1,7 @@
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -24,6 +24,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
@@ -32,28 +33,10 @@ import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
-import type { KubeNodePoolResponse } from '@linode/api-v4';
-
-interface ClusterDialogState {
-  loading: boolean;
-  open: boolean;
-  selectedClusterID: number;
-  selectedClusterLabel: string;
-  selectedClusterNodePools: KubeNodePoolResponse[];
-}
-
 interface UpgradeDialogState {
   open: boolean;
   selectedClusterID: number;
 }
-
-const defaultDialogState = {
-  loading: false,
-  open: false,
-  selectedClusterID: 0,
-  selectedClusterLabel: '',
-  selectedClusterNodePools: [],
-};
 
 const defaultUpgradeDialogState = {
   open: false,
@@ -63,11 +46,19 @@ const defaultUpgradeDialogState = {
 const preferenceKey = 'kubernetes';
 
 export const KubernetesLanding = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const pagination = usePagination(1, preferenceKey);
+  const { clusterID } = useParams({ strict: false });
 
-  const [dialog, setDialogState] =
-    React.useState<ClusterDialogState>(defaultDialogState);
+  const {
+    data: selectedCluster,
+    isFetching: isFetchingSelectedCluster,
+    error: selectedClusterError,
+  } = useKubernetesClusterQuery({
+    id: Number(clusterID),
+    enabled: !!clusterID,
+  });
 
   const [upgradeDialog, setUpgradeDialogState] =
     React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
@@ -113,22 +104,8 @@ export const KubernetesLanding = () => {
     setUpgradeDialogState({ ...upgradeDialog, open: false });
   };
 
-  const openDialog = (
-    clusterID: number,
-    clusterLabel: string,
-    clusterPools: KubeNodePoolResponse[]
-  ) => {
-    setDialogState({
-      loading: false,
-      open: true,
-      selectedClusterID: clusterID,
-      selectedClusterLabel: clusterLabel,
-      selectedClusterNodePools: clusterPools,
-    });
-  };
-
   const closeDialog = () => {
-    setDialogState({ ...dialog, open: false });
+    navigate({ to: '/kubernetes/clusters' });
   };
 
   if (error) {
@@ -175,7 +152,7 @@ export const KubernetesLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         entity="Cluster"
-        onButtonClick={() => push('/kubernetes/create')}
+        onButtonClick={() => navigate({ to: '/kubernetes/create' })}
         removeCrumbX={1}
         title="Kubernetes"
       />
@@ -236,7 +213,6 @@ export const KubernetesLanding = () => {
             <KubernetesClusterRow
               cluster={cluster}
               key={`kubernetes-cluster-list-${cluster.id}`}
-              openDeleteDialog={openDialog}
               openUpgradeDialog={() => openUpgradeDialog(cluster.id)}
             />
           ))}
@@ -252,10 +228,12 @@ export const KubernetesLanding = () => {
       />
       <TransferDisplay spacingTop={18} />
       <DeleteKubernetesClusterDialog
-        clusterId={dialog.selectedClusterID}
-        clusterLabel={dialog.selectedClusterLabel}
+        clusterError={selectedClusterError}
+        clusterId={selectedCluster?.id ?? -1}
+        clusterLabel={selectedCluster?.label ?? 'Unknown'}
+        isFetching={isFetchingSelectedCluster}
         onClose={closeDialog}
-        open={dialog.open}
+        open={match.routeId === '/kubernetes/clusters/$clusterID/delete'}
       />
       <UpgradeVersionModal
         clusterID={upgradeDialog.selectedClusterID}
