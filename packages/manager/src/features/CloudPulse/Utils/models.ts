@@ -191,12 +191,12 @@ export enum CloudPulseSelectTypes {
  */
 export enum CloudPulseAvailableViews {
   /**
-   * This is the centralized view, where the filter should be shown
+   * Represents the centralized Metrics view. If present in a filter's view configuration, that filter will be shown in the central page
    */
   central,
 
   /**
-   * This is the service page view, where the filter should be shown
+   * Represents the service page's Metrics view. If present in a filter's view configuration, that filter will be shown in the service page 
    */
   service,
 }
