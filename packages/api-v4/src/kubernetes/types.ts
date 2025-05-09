@@ -64,8 +64,8 @@ export interface CreateNodePoolData {
 }
 
 export interface CreateNodePoolDataBeta extends CreateNodePoolData {
-  k8s_version: string;
-  update_strategy: NodePoolUpdateStrategy;
+  k8s_version?: string;
+  update_strategy?: NodePoolUpdateStrategy;
 }
 
 export interface UpdateNodePoolData {
