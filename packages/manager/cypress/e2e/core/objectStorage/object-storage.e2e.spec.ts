@@ -81,9 +81,6 @@ describe('object storage end-to-end tests', () => {
     const bucketCluster = bucketClusterObj.id;
     const bucketRegion = getRegionById(bucketClusterObj.region).label;
     const bucketHostname = `${bucketLabel}.${bucketClusterObj.domain}`;
-
-    console.log('bucketClusterObj ', bucketClusterObj);
-    console.log('bucketRegion', bucketRegion);
     interceptGetBuckets().as('getBuckets');
     interceptCreateBucket().as('createBucket');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
