@@ -1,8 +1,4 @@
-import {
-  useLinodeFirewallsQuery,
-  useLinodeVolumesQuery,
-  useRegionsQuery,
-} from '@linode/queries';
+import { useLinodeVolumesQuery, useRegionsQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -70,13 +66,6 @@ export const LinodeEntityDetail = (props: Props) => {
       linodeId: linode.id,
     });
 
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
-    linode.id,
-    !isLinodeInterface
-  );
-
-  const attachedFirewalls = attachedFirewallData?.data ?? [];
-
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'linode',
@@ -129,7 +118,6 @@ export const LinodeEntityDetail = (props: Props) => {
         body={
           <LinodeEntityDetailBody
             encryptionStatus={linode.disk_encryption}
-            firewalls={attachedFirewalls}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
             interfaceGeneration={linode.interface_generation}
