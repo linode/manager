@@ -198,6 +198,7 @@ export const VolumesLanding = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
+        spacingBottom={16}
         title="Volumes"
       />
       <TextField
@@ -217,7 +218,7 @@ export const VolumesLanding = () => {
               </IconButton>
             </InputAdornment>
           ),
-          sx: { mb: 2 },
+          sx: { mb: 3 },
         }}
         label="Search"
         onChange={debounce(400, (e) => {
