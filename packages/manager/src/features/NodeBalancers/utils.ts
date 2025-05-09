@@ -1,3 +1,8 @@
+import {
+  type APIError,
+  type NodeBalancerConfigNode,
+  type Protocol,
+} from '@linode/api-v4';
 import { filter, isNil } from 'ramda';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -14,11 +19,6 @@ import type {
   NodeBalancerConfigFieldsWithStatus,
   NodeBalancerConfigNodeFields,
 } from './types';
-import type {
-  APIError,
-  NodeBalancerConfigNode,
-  Protocol,
-} from '@linode/api-v4';
 
 export const createNewNodeBalancerConfigNode =
   (): NodeBalancerConfigNodeFields => ({

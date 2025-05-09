@@ -10,6 +10,7 @@ import {
   getNodeBalancers,
   getNodeBalancerStats,
   getNodeBalancerTypes,
+  getNodeBalancerVPCConfigsBeta,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
@@ -37,6 +38,7 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerStats,
+  NodebalancerVpcConfig,
   Params,
   PriceType,
   ResourcePage,
@@ -75,6 +77,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
       }),
       stats: {
         queryFn: () => getNodeBalancerStats(id),
+        queryKey: null,
+      },
+      vpcsBeta: {
+        queryFn: () => getNodeBalancerVPCConfigsBeta(id),
         queryKey: null,
       },
     },
@@ -361,3 +367,9 @@ export const nodebalancerEventHandler = ({
     });
   }
 };
+
+export const useNodeBalancerVPCConfigsBetaQuery = (nodebalancerId: number) =>
+  useQuery<ResourcePage<NodebalancerVpcConfig>, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.vpcsBeta,
+    enabled: Boolean(nodebalancerId),
+  });
