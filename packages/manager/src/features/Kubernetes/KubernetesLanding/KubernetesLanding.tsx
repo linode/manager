@@ -29,7 +29,6 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
 import { DeleteKubernetesClusterDialog } from '../KubernetesClusterDetail/DeleteKubernetesClusterDialog';
-import { useKubernetesBetaEndpoint } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
 
@@ -90,10 +89,8 @@ export const KubernetesLanding = () => {
     globalGrantType: 'add_lkes',
   });
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { data, error, isLoading } = useKubernetesClustersQuery({
     filter,
-    isUsingBetaEndpoint,
     params: {
       page: pagination.page,
       page_size: pagination.pageSize,

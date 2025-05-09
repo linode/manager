@@ -68,7 +68,7 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(cluster.tier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
   const matchesColGapBreakpointDown = useMediaQuery(
     theme.breakpoints.down(theme.breakpoints.values.lg)

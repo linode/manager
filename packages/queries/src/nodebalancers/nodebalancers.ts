@@ -4,7 +4,6 @@ import {
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
   getNodeBalancer,
-  getNodeBalancerBeta,
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
   getNodeBalancers,
@@ -68,10 +67,9 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
         queryFn: () => getNodeBalancerFirewalls(id),
         queryKey: null,
       },
-      nodebalancer: (isUsingBetaEndpoint: boolean = false) => ({
-        queryFn: () =>
-          isUsingBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
-        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
+      nodebalancer: () => ({
+        queryFn: () => getNodeBalancer(id),
+        queryKey: ['v4'],
       }),
       stats: {
         queryFn: () => getNodeBalancerStats(id),
@@ -122,15 +120,9 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (
-  id: number,
-  enabled = true,
-  isUsingBetaEndpoint = false,
-) => {
+export const useNodeBalancerQuery = (id: number, enabled = true) => {
   return useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries
-      .nodebalancer(id)
-      ._ctx.nodebalancer(isUsingBetaEndpoint),
+    ...nodebalancerQueries.nodebalancer(id)._ctx.nodebalancer(),
     enabled,
   });
 };

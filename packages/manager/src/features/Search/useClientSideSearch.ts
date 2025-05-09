@@ -4,7 +4,6 @@ import { useAllVolumesQuery } from '@linode/queries';
 import { useAllNodeBalancersQuery } from '@linode/queries';
 import { useAllAccountStackScriptsQuery } from '@linode/queries';
 
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -42,12 +41,11 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: domainsError,
     isLoading: domainsLoading,
   } = useAllDomainsQuery(enabled);
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const {
     data: clusters,
     error: lkeClustersError,
     isLoading: lkeClustersLoading,
-  } = useAllKubernetesClustersQuery({ enabled, isUsingBetaEndpoint });
+  } = useAllKubernetesClustersQuery({ enabled });
   const {
     data: volumes,
     error: volumesError,

@@ -12,7 +12,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY } from 'src/components/Encryption/constants';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { Link } from 'src/components/Link';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
@@ -164,13 +163,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
-
   const { data: cluster } = useKubernetesClusterQuery({
-    enabled: Boolean(linodeLkeClusterId) && !isAPLAvailabilityLoading,
+    enabled: Boolean(linodeLkeClusterId),
     id: linodeLkeClusterId ?? -1,
-    isUsingBetaEndpoint,
   });
 
   return (

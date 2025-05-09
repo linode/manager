@@ -13,16 +13,12 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import {
-  useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 export const SummaryPanel = () => {
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { id } = useParams({
@@ -56,7 +52,6 @@ export const SummaryPanel = () => {
   const { status: clusterStatus } = useKubernetesClusterQuery({
     enabled: Boolean(nodebalancer?.lke_cluster),
     id: nodebalancer?.lke_cluster?.id ?? -1,
-    isUsingBetaEndpoint,
     options: {
       refetchOnMount: false,
       refetchOnReconnect: false,

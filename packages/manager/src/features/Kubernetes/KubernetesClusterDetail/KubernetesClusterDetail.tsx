@@ -6,7 +6,6 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import {
   getKubeHighAvailability,
   useAPLAvailability,
@@ -30,15 +29,12 @@ export const KubernetesClusterDetail = () => {
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
 
-  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-
   const {
     data: cluster,
     error,
     isLoading,
   } = useKubernetesClusterQuery({
     id,
-    isUsingBetaEndpoint,
   });
   const { data: regionsData } = useRegionsQuery();
 

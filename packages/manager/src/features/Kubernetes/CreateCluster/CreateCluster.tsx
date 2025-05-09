@@ -40,7 +40,6 @@ import {
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
-  useCreateKubernetesClusterBetaMutation,
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
@@ -128,7 +127,7 @@ export const CreateCluster = () => {
     data: kubernetesHighAvailabilityTypesData,
     isError: isErrorKubernetesTypes,
     isLoading: isLoadingKubernetesTypes,
-  } = useKubernetesTypesQuery(selectedTier === 'enterprise');
+  } = useKubernetesTypesQuery();
 
   // LKE-E does not support APL at this time.
   const isAPLSupported = showAPL && selectedTier === 'standard';
@@ -195,7 +194,7 @@ export const CreateCluster = () => {
     useCreateKubernetesClusterMutation();
 
   const { mutateAsync: createKubernetesClusterBeta } =
-    useCreateKubernetesClusterBetaMutation();
+    useCreateKubernetesClusterMutation();
 
   const { isLkeEnterpriseLAFeatureEnabled, isLkeEnterpriseLAFlagEnabled } =
     useIsLkeEnterpriseEnabled();
