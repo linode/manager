@@ -126,6 +126,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           (showTooltip && (
             <SvgIcon
               component={InfoOutline}
+              data-testid="tooltip-info-icon"
               sx={{ ...sxEndIcon, top: 1, position: 'relative' }}
             />
           )) ||

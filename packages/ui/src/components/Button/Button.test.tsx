@@ -25,7 +25,7 @@ describe('Button', () => {
       </Button>,
     );
 
-    const helpIcon = getByTestId('HelpOutlineIcon');
+    const helpIcon = getByTestId('tooltip-info-icon');
     expect(helpIcon).toBeInTheDocument();
   });
 
