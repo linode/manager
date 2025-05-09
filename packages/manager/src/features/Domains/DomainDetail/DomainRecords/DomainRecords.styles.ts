@@ -15,7 +15,6 @@ export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
       },
     },
     margin: 0,
-    marginTop: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),

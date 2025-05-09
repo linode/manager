@@ -26,7 +26,7 @@ const StyledReachTabList = styled(ReachTabList)(({ theme }) => ({
   '&[data-reach-tab-list]': {
     background: 'none !important',
     boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
-    marginBottom: theme.spacing(),
+    marginBottom: theme.spacingFunction(16),
     [theme.breakpoints.down('lg')]: {
       overflowX: 'auto',
       padding: 1,

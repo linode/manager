@@ -281,7 +281,7 @@ export const CreateDomain = () => {
   };
 
   return (
-    <Grid container>
+    <>
       <DocumentTitleSegment segment="Create a Domain" />
       <LandingHeader
         docsLabel="Docs"
@@ -442,7 +442,7 @@ export const CreateDomain = () => {
           </StyledForm>
         </Paper>
       </StyledGrid>
-    </Grid>
+    </>
   );
 };
 
