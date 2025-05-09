@@ -57,6 +57,11 @@ export interface CreateNodePoolData {
   type: string;
 }
 
+export interface CreateNodePoolDataBeta extends CreateNodePoolData {
+  k8s_version: string;
+  update_strategy: NodePoolUpdateStrategy;
+}
+
 export interface UpdateNodePoolData {
   autoscaler: AutoscaleSettings;
   count: number;
