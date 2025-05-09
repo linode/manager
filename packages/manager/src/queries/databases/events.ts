@@ -29,10 +29,10 @@ export const databaseEventsHandler = ({
 
       if (!engine) {
         // eslint-disable-next-line no-console
-        return console.warn(
-          'Unable to get DBaaS engine from entity URL in event',
-          event.id
-        );
+        // return console.warn(
+        //   'Unable to get DBaaS engine from entity URL in event',
+        //   event.id
+        // );
       }
 
       invalidateQueries({

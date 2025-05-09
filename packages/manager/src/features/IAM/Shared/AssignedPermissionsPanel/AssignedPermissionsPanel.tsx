@@ -13,18 +13,22 @@ import type { SxProps, Theme } from '@mui/material';
 
 interface Props {
   errorText?: string;
+  hideDetails?: boolean;
   mode?: DrawerModes;
   onChange?: (value: EntitiesOption[]) => void;
   role: ExtendedRole | ExtendedRoleView;
+  showName?: boolean;
   sx?: SxProps<Theme>;
   value?: EntitiesOption[];
 }
 
 export const AssignedPermissionsPanel = ({
   errorText,
+  hideDetails = false,
   mode,
   onChange,
   role,
+  showName = false,
   sx,
   value,
 }: Props) => {
@@ -43,30 +47,45 @@ export const AssignedPermissionsPanel = ({
         ...sx,
       }}
     >
-      <Typography
-        sx={(theme) => ({
-          font: theme.tokens.alias.Typography.Label.Bold.S,
-        })}
-      >
-        Description
-      </Typography>
-      <Typography
-        sx={{
-          marginBottom: theme.tokens.spacing.S8,
-          marginTop: theme.tokens.spacing.S2,
-          overflowWrap: 'anywhere',
-          wordBreak: 'normal',
-        }}
-      >
-        {role.permissions.length ? (
-          role.description
-        ) : (
-          <>
-            {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
-          </>
-        )}
-      </Typography>
-      <Permissions permissions={role.permissions} />
+      {showName && role.name && (
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+          })}
+        >
+          {role.name}
+        </Typography>
+      )}
+      {!hideDetails && (
+        <>
+          {!showName && (
+            <Typography
+              sx={(theme) => ({
+                font: theme.tokens.alias.Typography.Label.Bold.S,
+              })}
+            >
+              Description
+            </Typography>
+          )}
+          <Typography
+            sx={{
+              marginBottom: theme.tokens.spacing.S8,
+              marginTop: theme.tokens.spacing.S2,
+              overflowWrap: 'anywhere',
+              wordBreak: 'normal',
+            }}
+          >
+            {role.permissions.length ? (
+              role.description
+            ) : (
+              <>
+                {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
+              </>
+            )}
+          </Typography>
+          <Permissions permissions={role.permissions} />
+        </>
+      )}
       {mode !== 'change-role-for-entity' && (
         <Entities
           access={role.access}
