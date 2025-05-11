@@ -13,22 +13,15 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 export const SummaryPanel = () => {
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-
   const { id } = useParams({
     from: '/nodebalancers/$id/summary',
   });
-  const { data: nodebalancer } = useNodeBalancerQuery(
-    Number(id),
-    Boolean(id),
-    isLkeEnterpriseLAFeatureEnabled
-  );
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
   const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
