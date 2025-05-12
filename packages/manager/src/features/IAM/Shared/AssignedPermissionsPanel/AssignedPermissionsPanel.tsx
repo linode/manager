@@ -8,8 +8,8 @@ import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
 import {
   StyledDescription,
   StyledEntityBox,
+  StyledPaper,
   StyledTitle,
-  StylesPaper,
 } from './AssignedPermissionsPanel.style';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
@@ -36,7 +36,7 @@ export const AssignedPermissionsPanel = ({
 }: Props) => {
   // TODO: update the link for the description when it's ready - UIE-8534
   return (
-    <StylesPaper sx={{ ...sx }}>
+    <StyledPaper sx={{ ...sx }}>
       {!hideDetails && (
         <>
           <StyledTitle>Description</StyledTitle>
@@ -64,6 +64,6 @@ export const AssignedPermissionsPanel = ({
           />
         </StyledEntityBox>
       )}
-    </StylesPaper>
+    </StyledPaper>
   );
 };

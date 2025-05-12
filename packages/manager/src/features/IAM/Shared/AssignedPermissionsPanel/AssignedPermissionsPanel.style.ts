@@ -1,6 +1,6 @@
 import { Box, Paper, styled, Typography } from '@linode/ui';
 
-export const StylesPaper = styled(Paper)(({ theme }) => ({
+export const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor:
     theme.name === 'light'
       ? theme.tokens.color.Neutrals[5]
