@@ -19,6 +19,7 @@ import type {
   KubeNodePoolResponse,
   KubeNodePoolResponseBeta,
   UpdateNodePoolData,
+  UpdateNodePoolDataBeta,
 } from './types';
 
 /**
@@ -48,6 +49,21 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}`,
+    ),
+  );
+
+/**
+ * getNodePoolBeta
+ *
+ * Returns a single node pool with additional beta fields
+ */
+export const getNodePoolBeta = (clusterID: number, nodePoolID: number) =>
+  Request<KubeNodePoolResponseBeta>(
+    setMethod('GET'),
+    setURL(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
         clusterID,
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
@@ -100,6 +116,26 @@ export const updateNodePool = (
       )}/pools/${encodeURIComponent(nodePoolID)}`,
     ),
     setData(data, nodePoolSchema),
+  );
+
+/**
+ * updateNodePoolBeta
+ *
+ * Change the type, count, upgrade_strategy, or k8_version of a node pool
+ */
+export const updateNodePoolBeta = (
+  clusterID: number,
+  nodePoolID: number,
+  data: Partial<UpdateNodePoolDataBeta>,
+) =>
+  Request<KubeNodePoolResponseBeta>(
+    setMethod('PUT'),
+    setURL(
+      `${BETA_API_ROOT}/lke/clusters/${encodeURIComponent(
+        clusterID,
+      )}/pools/${encodeURIComponent(nodePoolID)}`,
+    ),
+    setData(data, nodePoolBetaSchema),
   );
 
 /**

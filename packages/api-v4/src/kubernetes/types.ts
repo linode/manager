@@ -79,6 +79,12 @@ export interface UpdateNodePoolData {
   taints: Taint[];
 }
 
+export interface UpdateNodePoolDataBeta extends UpdateNodePoolData {
+  firewall_id?: number;
+  k8s_version?: string;
+  update_strategy?: NodePoolUpdateStrategy;
+}
+
 export interface AutoscaleSettings {
   enabled: boolean;
   max: number;
