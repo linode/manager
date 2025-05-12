@@ -186,6 +186,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   data-testid="value"
                   disabled={!dimensionFieldWatcher}
                   errorText={fieldState.error?.message}
+                  isOptionEqualToValue={(option, value) =>
+                    value.value === option.value
+                  }
                   label="Value"
                   onBlur={field.onBlur}
                   onChange={(
