@@ -24,19 +24,25 @@ export const StackScriptRow = (props: Props) => {
 
   return (
     <TableRow data-qa-table-row={stackscript.label}>
-      <TableCell noWrap sx={{ maxWidth: 300 }}>
+      <TableCell sx={{ maxWidth: { lg: 400, md: 300, sm: 200, xs: 225 } }}>
         <Stack>
-          <Typography sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            <Link to={`/stackscripts/${stackscript.id}`}>
-              {stackscript.username} / <span>{stackscript.label}</span>
-            </Link>
-          </Typography>
+          <Link
+            style={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+            to={`/stackscripts/${stackscript.id}`}
+          >
+            {stackscript.username} / <span>{stackscript.label}</span>
+          </Link>
           <Typography
             sx={(theme) => ({
               color: theme.textColors.tableHeader,
               fontSize: '.75rem',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             })}
           >
             {stackscript.description}
