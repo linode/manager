@@ -24,8 +24,8 @@ export const StackScriptRow = (props: Props) => {
 
   return (
     <TableRow data-qa-table-row={stackscript.label}>
-      <TableCell>
-        <Stack sx={{ maxWidth: 400 }}>
+      <TableCell sx={{ maxWidth: { lg: 400, md: 300, sm: 200, xs: 225 } }}>
+        <Stack>
           <Link
             style={{
               textOverflow: 'ellipsis',
