@@ -13,7 +13,7 @@ import { getAlertBoxStyles } from '../../Utils/utils';
 import type { CreateAlertDefinitionForm } from '../types';
 
 interface CloudPulseModifyAlertRegionsProp {
-  name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, string[] | undefined>;
 }
 
 export const CloudPulseModifyAlertRegions = React.memo(

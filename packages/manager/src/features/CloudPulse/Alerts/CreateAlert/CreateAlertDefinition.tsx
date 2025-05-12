@@ -67,6 +67,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   type: 'user',
+  regions: [],
 };
 
 const overrides = [
@@ -219,7 +220,7 @@ export const CreateAlertDefinition = () => {
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
             {entityGroupingWatcher === 'region-user' && (
-              <CloudPulseModifyAlertRegions name="entity_ids" />
+              <CloudPulseModifyAlertRegions name="regions" />
             )}
             {entityGroupingWatcher === 'account-user' && (
               <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>

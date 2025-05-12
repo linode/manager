@@ -52,7 +52,7 @@ export interface AlertResourcesProp {
   /**
    * The set of resource ids associated with the alerts, that needs to be displayed
    */
-  alertResourceIds: string[];
+  alertResourceIds?: string[];
 
   /**
    * The type of the alert system | user
@@ -99,7 +99,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
   const {
     alertClass,
     alertLabel,
-    alertResourceIds,
+    alertResourceIds = [],
     alertType,
     errorText,
     handleResourcesSelection,

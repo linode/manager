@@ -64,7 +64,7 @@ export const triggerConditionSchema = triggerConditionValidation.concat(
 
 export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
   object({
-    entity_ids: array().of(string().defined()).required(),
+    entity_ids: array().of(string().defined()),
     rule_criteria: object({
       rules: array()
         .of(metricCriteriaSchema)
@@ -85,6 +85,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
+    regions: array().of(string().defined()),
   })
 );
 
