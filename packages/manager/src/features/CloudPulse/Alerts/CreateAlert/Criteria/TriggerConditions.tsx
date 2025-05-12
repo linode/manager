@@ -4,10 +4,8 @@ import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import {
-  evaluationPeriodOptions,
-  pollingIntervalOptions,
-} from '../../constants';
+import { useFlags } from 'src/hooks/useFlags';
+
 import { getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
@@ -15,6 +13,7 @@ import type {
   CreateAlertDefinitionPayload,
   TriggerCondition,
 } from '@linode/api-v4';
+
 interface TriggerConditionProps {
   /**
    * maximum scraping interval value for a metric to filter the evaluation period and polling interval options
@@ -33,17 +32,16 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
     control,
     name: 'serviceType',
   });
+  const { aclpAlertingTimeOptions } = useFlags();
   const getPollingIntervalOptions = () => {
-    const options = serviceTypeWatcher
-      ? pollingIntervalOptions[serviceTypeWatcher]
-      : [];
+    if (!serviceTypeWatcher || !aclpAlertingTimeOptions) return [];
+    const options = aclpAlertingTimeOptions.pollingIntervalOptions;
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
 
   const getEvaluationPeriodOptions = () => {
-    const options = serviceTypeWatcher
-      ? evaluationPeriodOptions[serviceTypeWatcher]
-      : [];
+    if (!serviceTypeWatcher || !aclpAlertingTimeOptions) return [];
+    const options = aclpAlertingTimeOptions.pollingIntervalOptions;
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
 
@@ -52,7 +50,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       sx={(theme) => ({
         ...getAlertBoxStyles(theme),
         borderRadius: 1,
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacingFunction(2),
         p: 2,
       })}
     >

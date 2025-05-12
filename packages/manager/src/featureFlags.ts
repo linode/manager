@@ -104,10 +104,20 @@ interface LimitsEvolution {
   requestForIncreaseDisabledForInternalAccountsOnly: boolean;
 }
 
+interface AlertTimeDuration {
+  label: string;
+  value: number;
+}
+interface AclpAlertingTimeOptions {
+  evaluationPeriodOptions: AlertTimeDuration[];
+  pollingIntervalOptions: AlertTimeDuration[];
+}
+
 export interface Flags {
   acceleratedPlans: AcceleratedPlansFlag;
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
+  aclpAlertingTimeOptions: AclpAlertingTimeOptions;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpIntegration: boolean;
   aclpReadEndpoint: string;
