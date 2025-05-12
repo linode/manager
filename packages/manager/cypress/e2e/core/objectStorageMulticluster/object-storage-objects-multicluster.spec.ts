@@ -133,7 +133,6 @@ describe('Object Storage Multicluster objects', () => {
   it('can upload, access, and delete objects', () => {
     const bucketLabel = randomLabel();
     const bucketClusterObj = chooseCluster();
-    console.log('bucketClusterObj ', bucketClusterObj);
     const bucketRegionId = bucketClusterObj.region;
     const bucketPage = `/object-storage/buckets/${bucketRegionId}/${bucketLabel}/objects`;
     const bucketFolderName = randomLabel();
@@ -149,7 +148,7 @@ describe('Object Storage Multicluster objects', () => {
     ).then(() => {
       interceptUploadBucketObjectS3(
         bucketLabel,
-        bucketClusterObj.id,
+        bucketClusterObj.domain,
         bucketFiles[0].name
       ).as('uploadObject');
 
@@ -202,7 +201,7 @@ describe('Object Storage Multicluster objects', () => {
       cy.findByText(emptyFolderMessage).should('be.visible');
       interceptUploadBucketObjectS3(
         bucketLabel,
-        bucketClusterObj.id,
+        bucketClusterObj.domain,
         `${bucketFolderName}/${bucketFiles[1].name}`
       ).as('uploadObject');
       uploadFile(bucketFiles[1].path, bucketFiles[1].name);

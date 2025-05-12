@@ -303,13 +303,10 @@ export const mockUploadBucketObject = (
  */
 export const interceptUploadBucketObjectS3 = (
   label: string,
-  cluster: string,
+  domain: string,
   filename: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'PUT',
-    `https://${cluster}.linodeobjects.com/${label}/${filename}*`
-  );
+  return cy.intercept('PUT', `https://${domain}/${label}/${filename}*`);
 };
 
 /**
