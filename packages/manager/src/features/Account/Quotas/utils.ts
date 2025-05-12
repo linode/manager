@@ -113,6 +113,7 @@ interface GetQuotaIncreaseFormDefaultValuesProps {
     limit: number;
     metric: string;
   };
+  neededIn: string;
   profile: Profile | undefined;
   quantity: number;
   quota: Quota;
@@ -124,6 +125,7 @@ interface GetQuotaIncreaseFormDefaultValuesProps {
  */
 export const getQuotaIncreaseMessage = ({
   convertedMetrics,
+  neededIn,
   profile,
   quantity,
   quota,
@@ -135,6 +137,7 @@ export const getQuotaIncreaseMessage = ({
   if (!profile) {
     return {
       description: '',
+      neededIn: 'Less than 7 days',
       notes: '',
       quantity: '0',
       summary: `Increase ${selectedService.label} Quota`,
@@ -150,7 +153,10 @@ export const getQuotaIncreaseMessage = ({
       convertedMetrics.metric
     }<br>\n**New Quota Requested**: ${quantity?.toLocaleString()} ${
       convertedMetrics.metric
+    }<br>\n**Needed in**: ${
+      neededIn
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
+    neededIn: 'Less than 7 days',
     notes: '',
     quantity: String(quantity),
     summary: `Increase ${selectedService.label} Quota`,
@@ -212,9 +218,10 @@ export const pluralizeMetric = (value: number, unit: string) => {
 export const getQuotaIncreaseFormSchema = (currentLimit: number) =>
   object({
     description: string().required('Description is required.'),
+    neededIn: string().required('Needed in is required.'),
     notes: string()
-      .optional()
-      .max(255, 'Notes must be less than 255 characters.'),
+      .required('Description is required.')
+      .max(255, 'Description must be less than 255 characters.'),
     quantity: string()
       .required('Quantity is required')
       .test(

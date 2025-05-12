@@ -34,7 +34,7 @@ describe('QuotasIncreaseForm', () => {
     );
     expect(getByLabelText('New Quota (required)')).toHaveValue(0);
     expect(getByText('In us-east - current quota: 100 GB')).toBeInTheDocument();
-    expect(getByLabelText('Notes')).toHaveValue('');
+    expect(getByLabelText('Description (required)')).toHaveValue('');
     expect(getByText('Ticket Preview')).toBeInTheDocument();
     expect(
       getByTestId('quota-increase-form-preview').firstChild?.firstChild
@@ -66,21 +66,21 @@ describe('QuotasIncreaseForm', () => {
     );
 
     const quantityInput = getByLabelText('New Quota (required)');
-    const notesInput = getByLabelText('Notes');
+    const descriptionInput = getByLabelText('Description (required)');
     const preview = getByTestId('quota-increase-form-preview');
     const previewContent = getByTestId('quota-increase-form-preview-content');
 
     await waitFor(() => {
       act(() => {
         fireEvent.change(quantityInput, { target: { value: 2 } });
-        fireEvent.change(notesInput, { target: { value: 'test!' } });
+        fireEvent.change(descriptionInput, { target: { value: 'test!' } });
         fireEvent.click(preview);
       });
     });
 
     await waitFor(() => {
       expect(previewContent).toHaveTextContent(
-        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GB Region: us-east test!'
+        'Increase Object Storage QuotaUser: mock-user Email: mock-user@linode.com Quota Name: Linode Dedicated vCPUs Current Quota: 100 GB New Quota Requested: 2 GB Needed in: Less than 7 days Region: us-east test!'
       );
     });
   });
