@@ -38,7 +38,7 @@ export const getAllDomains = () =>
 
 const getAllDomainRecords = (domainId: number) =>
   getAll<DomainRecord>((params) => getDomainRecords(domainId, params))().then(
-    ({ data }) => data
+    ({ data }) => data,
   );
 
 const domainQueries = createQueryKeys('domains', {
@@ -121,7 +121,7 @@ export const useCreateDomainMutation = () => {
       // Set Domain in cache
       queryClient.setQueryData(
         domainQueries.domain(domain.id).queryKey,
-        domain
+        domain,
       );
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
@@ -145,7 +145,7 @@ export const useCloneDomainMutation = (id: number) => {
       // Set Domain in cache
       queryClient.setQueryData(
         domainQueries.domain(domain.id).queryKey,
-        domain
+        domain,
       );
     },
   });
@@ -164,7 +164,7 @@ export const useImportZoneMutation = () => {
       // Set Domain in cache
       queryClient.setQueryData(
         domainQueries.domain(domain.id).queryKey,
-        domain
+        domain,
       );
     },
   });
@@ -205,7 +205,7 @@ export const useUpdateDomainMutation = () => {
       // Update domain in cache
       queryClient.setQueryData<Domain>(
         domainQueries.domain(domain.id).queryKey,
-        domain
+        domain,
       );
     },
   });
