@@ -252,7 +252,7 @@ export const AssignedEntitiesTable = () => {
               label="entityType"
               sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
-              Entity type
+              Entity Type
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'role_name'}
