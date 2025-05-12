@@ -40,25 +40,22 @@ export const AssignSingleSelectedRole = ({
         <Controller
           control={control}
           name={`roles.${index}`}
-          render={({ field: { onChange, value } }) => (
-            <>
-              {!!role && (
-                <AssignedPermissionsPanel
-                  hideDetails={hideDetails}
-                  mode="assign-role"
-                  onChange={(updatedEntities) => {
-                    onChange({
-                      ...value,
-                      entities: updatedEntities,
-                    });
-                  }}
-                  role={role}
-                  showName={true}
-                  value={[]}
-                />
-              )}
-            </>
-          )}
+          render={({ field: { onChange, value } }) =>
+            !!role && (
+              <AssignedPermissionsPanel
+                hideDetails={hideDetails}
+                mode="assign-role"
+                onChange={(updatedEntities) => {
+                  onChange({
+                    ...value,
+                    entities: updatedEntities
+                  });
+                }}
+                role={role}
+                showName={true}
+                value={[]}
+              />
+            )}
         />
       </Box>
     </Box>

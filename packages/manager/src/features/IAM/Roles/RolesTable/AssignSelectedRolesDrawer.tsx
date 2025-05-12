@@ -108,7 +108,7 @@ export const AssignSelectedRolesDrawer = ({
             direction="column"
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacing(2),
+              marginBottom: theme.spacingFunction(16),
             })}
           >
             <Typography variant={'h3'}>Users</Typography>
@@ -133,7 +133,7 @@ export const AssignSelectedRolesDrawer = ({
             spacing={2}
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacing(2),
+              marginBottom: theme.spacingFunction(16),
             })}
           >
             <Typography variant={'h3'}>Roles</Typography>
