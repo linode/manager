@@ -103,7 +103,6 @@ describe('restricted user details pages', () => {
 
     // Mock the APL feature flag to be disabled.
     mockAppendFeatureFlags({
-      apl: false,
       dbaasV2: { beta: false, enabled: false },
     });
   });
