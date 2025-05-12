@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from '@linode/ui';
 import React from 'react';
 
-import type { SxProps, Theme } from '@mui/material';
+import type { EnhancedAutocompleteProps } from '@linode/ui';
 
 interface InputValueFieldOption {
   /**
@@ -15,7 +15,8 @@ interface InputValueFieldOption {
   value: string;
 }
 
-interface InputValueFieldProps {
+interface InputValueFieldProps
+  extends EnhancedAutocompleteProps<InputValueFieldOption> {
   /**
    * qa id for the input field
    */
@@ -27,33 +28,9 @@ interface InputValueFieldProps {
   'data-testid'?: string;
 
   /**
-   * boolean value to disable the input field
-   */
-  disabled?: boolean;
-
-  /**
-   * The error text to display when the input is invalid.
-   */
-  errorText?: string;
-
-  /**
-   * A function to determine if an option is equal to the selected value.
-   * This is used to compare the selected value with the options in the dropdown.
-   */
-  isOptionEqualToValue?: (
-    option: InputValueFieldOption,
-    value: InputValueFieldOption
-  ) => boolean;
-
-  /**
    * A boolean value that indicates whether the input field is a text field or an autocomplete field.
    */
   isTextField: boolean;
-
-  /**
-   * The label to display for the input field.
-   */
-  label: string;
 
   /**
    * function to handle the blur event of the input field.
@@ -65,21 +42,6 @@ interface InputValueFieldProps {
    * This function is called when the user selects an option or types in the text field.
    */
   onChange: (value: null | string) => void;
-
-  /**
-   * options for the autocomplete field.
-   */
-  options?: InputValueFieldOption[];
-
-  /**
-   * The placeholder text to display when the input field is empty.
-   */
-  placeholder?: string;
-
-  /**
-   * The sx prop allows you to pass in custom styles to the component.
-   */
-  sx?: SxProps<Theme>;
 
   /**
    * This is the value that will be displayed in the text field or selected in the autocomplete dropdown.
@@ -95,16 +57,26 @@ export const InputValueField = (props: InputValueFieldProps) => {
     value,
     options = [],
     onChange,
-    ...rest
+    sx,
+    placeholder,
+    onBlur,
+    label,
+    disabled,
+    'data-testid': dataTestId,
+    'data-qa-dimension-filter': dataQaDimensionFilter,
   } = props;
 
   if (isTextField) {
     return (
       <TextField
-        {...rest}
+        data-testid={dataTestId}
+        disabled={disabled}
         errorText={errorText}
+        label={label}
+        onBlur={onBlur}
         onChange={(event) => onChange(event.target.value)}
-        sx={{ width: '256px' }}
+        placeholder={placeholder}
+        sx={{ width: '256px', ...sx }}
         value={value === null ? '' : value}
       />
     );
@@ -112,14 +84,19 @@ export const InputValueField = (props: InputValueFieldProps) => {
 
   return (
     <Autocomplete
+      data-qa-dimension-filter={dataQaDimensionFilter}
+      disabled={disabled}
       errorText={errorText}
       isOptionEqualToValue={isOptionEqualToValue}
-      onChange={(_, selected: { label: string; value: string }, operation) => {
+      label={label}
+      onBlur={onBlur}
+      onChange={(_, selected: InputValueFieldOption, operation) => {
         onChange(operation === 'selectOption' ? selected.value : null);
       }}
       options={options}
+      placeholder={placeholder}
+      sx={sx}
       value={options.find((option) => option.value === value) ?? null}
-      {...rest}
     />
   );
 };
