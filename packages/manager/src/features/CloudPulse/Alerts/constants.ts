@@ -101,8 +101,6 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
-export const textFieldOperators = ['endswith', 'startswith'];
-
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
