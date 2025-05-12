@@ -14,7 +14,6 @@ import {
   getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
-  getTagsProperties,
   getTimeDurationProperties,
   shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
@@ -50,33 +49,6 @@ it('test getRegionProperties method', () => {
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
     expect(label).toEqual(name);
-  }
-});
-
-it('test getTagsProperties', () => {
-  const tagsConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Tags'
-  );
-
-  expect(tagsConfig).toBeDefined();
-
-  if (tagsConfig) {
-    const { disabled, handleTagsChange, label, region, resourceType } =
-      getTagsProperties(
-        {
-          config: tagsConfig,
-          dashboard: mockDashboard,
-          dependentFilters: { region: 'us-east' },
-          isServiceAnalyticsIntegration: true,
-        },
-        vi.fn()
-      );
-    const { name } = tagsConfig.configuration;
-    expect(handleTagsChange).toBeDefined();
-    expect(disabled).toEqual(false);
-    expect(label).toEqual(name);
-    expect(region).toEqual('us-east');
-    expect(resourceType).toEqual('linode');
   }
 });
 
@@ -262,9 +234,9 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: 'us-east', tags: undefined },
+      { region: undefined,},
       mockDashboard,
-      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+      { region: 'us-east'} // tags are defined in preferences which confirms that this optional filter was selected
     );
     expect(result).toEqual(true);
   });
@@ -342,9 +314,7 @@ it('test buildXfilter method', () => {
       tags: ['test1', 'test2'],
     });
 
-    expect(JSON.stringify(result)).toEqual(
-      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"},{"tags":"test2"}]}'
-    );
+    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
 
     result = buildXFilter(resourceSelectionConfig, {});
 
