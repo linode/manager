@@ -58,13 +58,6 @@ const mockNodePools = nodePoolFactory.buildList(2);
 describe('LKE cluster updates', () => {
   // TODO Add LKE update tests to cover flows when APL is enabled.
   describe('APL disabled', () => {
-    beforeEach(() => {
-      // Mock the APL feature flag to be disabled.
-      mockAppendFeatureFlags({
-        apl: false,
-      });
-    });
-
     /*
      * - Confirms UI flow of upgrading a cluster to high availability control plane using mocked data.
      * - Confirms that user is shown a warning and agrees to billing changes before upgrading.

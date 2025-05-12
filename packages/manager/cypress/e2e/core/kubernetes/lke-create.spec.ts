@@ -425,11 +425,6 @@ describe('LKE Cluster Creation with APL enabled', () => {
       dedicated8Type,
       nanodeType,
     ];
-    mockAppendFeatureFlags({
-      apl: {
-        enabled: true,
-      },
-    }).as('getFeatureFlags');
     mockGetAccountBeta({
       description:
         'Akamai App Platform is a platform that combines developer and operations-centric tools, automation and self-service to streamline the application lifecycle when using Kubernetes. This process will pre-register you for an upcoming beta.',

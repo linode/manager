@@ -28,7 +28,7 @@ export interface KubernetesCluster {
   region: string;
   status: string; // @todo enum this
   tags: string[];
-  /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality, in line with the apl_enabled approach.
+  /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality.
    * @todo LKE-E - Make this field required once LKE-E is in GA. tier defaults to 'standard' in the API.
    */
   tier?: KubernetesTier;

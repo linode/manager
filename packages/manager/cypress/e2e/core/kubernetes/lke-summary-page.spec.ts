@@ -1,5 +1,4 @@
 import { latestKubernetesVersion } from 'support/constants/lke';
-import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetApiEndpoints,
   mockGetCluster,
@@ -39,10 +38,6 @@ const buildTags = (num: number) => {
 
 describe('LKE summary page', () => {
   beforeEach(() => {
-    // Mock the APL feature flag to be disabled.
-    mockAppendFeatureFlags({
-      apl: false,
-    });
     mockGetCluster(mockCluster).as('getCluster');
     mockGetKubeconfig(mockCluster.id, mockKubeconfigResponse).as(
       'getKubeconfig'
