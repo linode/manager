@@ -83,6 +83,7 @@ describe('Migrate Linode With Firewall', () => {
    * - Confirms that user is warned of migration consequences.
    */
   it('test migrate flow - mocking all data', () => {
+    cy.tag('env:multipleRegions');
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
       label: randomLabel(),
