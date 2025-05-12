@@ -87,9 +87,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
       {' '}
       <FormProvider {...form}>
         <form onSubmit={onSubmit}>
-          <Typography sx={{ marginBottom: 2.5 }}>
+          <Typography sx={{ marginBottom: 3 }}>
             Select a role you want to assign to a user. Some roles require
-            selecting resources they should apply to. Configure the first role
+            selecting entities they should apply to. Configure the first role
             and continue adding roles or save the assignment.
             <Link to=""> Learn more about roles and permissions.</Link>
           </Typography>
@@ -99,7 +99,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             spacing={2}
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacing(2),
+              marginBottom: theme.tokens.spacing.S16,
             })}
           >
             <Typography variant={'h3'}>Roles</Typography>

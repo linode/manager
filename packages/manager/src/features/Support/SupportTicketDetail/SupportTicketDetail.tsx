@@ -69,7 +69,7 @@ export const SupportTicketDetail = () => {
   }).toString();
 
   return (
-    <StyledStack spacing={2}>
+    <>
       <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
       <LandingHeader
         breadcrumbProps={{
@@ -92,55 +92,57 @@ export const SupportTicketDetail = () => {
         }}
         title={ticketTitle}
       />
-      <TicketStatus {...ticket} />
-      {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
-      {attachmentErrors !== undefined &&
-        !isEmpty(attachmentErrors) &&
-        attachmentErrors?.map((error, idx: number) => (
-          <AttachmentError
-            fileName={error.file}
-            key={idx}
-            reason={error.error}
-          />
-        ))}
-      <Grid container spacing={2}>
-        <Grid size={12} style={{ padding: 0 }}>
-          {/* If the ticket isn't blank, display it, followed by replies (if any). */}
-          {ticket.description && (
-            <ExpandableTicketPanel
-              isCurrentUser={profile?.username === ticket.opened_by}
-              key={ticket.id}
-              ticket={ticket}
-            />
-          )}
-          {replies?.map((reply: SupportReply, idx: number) => (
-            <ExpandableTicketPanel
-              isCurrentUser={profile?.username === reply.created_by}
+      <StyledStack spacing={2}>
+        <TicketStatus {...ticket} />
+        {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
+        {attachmentErrors !== undefined &&
+          !isEmpty(attachmentErrors) &&
+          attachmentErrors?.map((error, idx: number) => (
+            <AttachmentError
+              fileName={error.file}
               key={idx}
-              open={idx === replies.length - 1}
-              parentTicket={ticket ? ticket.id : undefined}
-              reply={reply}
-              ticketUpdated={ticket ? ticket.updated : ''}
+              reason={error.error}
             />
           ))}
-          {repliesLoading && <CircleProgress size="sm" />}
-          {repliesError ? (
-            <ErrorState errorText={repliesError?.[0].reason} />
-          ) : null}
-          {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
-          <TicketAttachmentList attachments={ticket.attachments} />
-          {/* If the ticket is open, allow users to reply to it. */}
-          {['new', 'open'].includes(ticket.status) && (
-            <ReplyContainer
-              closable={ticket.closable}
-              lastReply={replies && replies[replies?.length - 1]}
-              reloadAttachments={refetch}
-              ticketId={ticket.id}
-            />
-          )}
+        <Grid container spacing={2}>
+          <Grid size={12} style={{ padding: 0 }}>
+            {/* If the ticket isn't blank, display it, followed by replies (if any). */}
+            {ticket.description && (
+              <ExpandableTicketPanel
+                isCurrentUser={profile?.username === ticket.opened_by}
+                key={ticket.id}
+                ticket={ticket}
+              />
+            )}
+            {replies?.map((reply: SupportReply, idx: number) => (
+              <ExpandableTicketPanel
+                isCurrentUser={profile?.username === reply.created_by}
+                key={idx}
+                open={idx === replies.length - 1}
+                parentTicket={ticket ? ticket.id : undefined}
+                reply={reply}
+                ticketUpdated={ticket ? ticket.updated : ''}
+              />
+            ))}
+            {repliesLoading && <CircleProgress size="sm" />}
+            {repliesError ? (
+              <ErrorState errorText={repliesError?.[0].reason} />
+            ) : null}
+            {hasNextPage && <Waypoint onEnter={() => fetchNextPage()} />}
+            <TicketAttachmentList attachments={ticket.attachments} />
+            {/* If the ticket is open, allow users to reply to it. */}
+            {['new', 'open'].includes(ticket.status) && (
+              <ReplyContainer
+                closable={ticket.closable}
+                lastReply={replies && replies[replies?.length - 1]}
+                reloadAttachments={refetch}
+                ticketId={ticket.id}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </StyledStack>
+      </StyledStack>
+    </>
   );
 };
 

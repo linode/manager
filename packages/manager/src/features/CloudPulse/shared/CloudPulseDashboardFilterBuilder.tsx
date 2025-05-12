@@ -12,7 +12,6 @@ import {
   DASHBOARD_ID,
   NODE_TYPE,
   REGION,
-  RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
   TAGS,
@@ -26,9 +25,9 @@ import {
   getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -322,25 +321,18 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         );
       }
 
-      return filters
-        .filter(
-          (config) =>
-            isServiceAnalyticsIntegration
-              ? config.configuration.neededInServicePage
-              : config.configuration.filterKey !== RELATIVE_TIME_DURATION // time duration is always defined explicitly
-        )
-        .map((filter, index) => (
-          <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
-            {RenderComponent({
-              componentKey:
-                filter.configuration.type !== undefined
-                  ? 'customSelect'
-                  : filter.configuration.filterKey,
-              componentProps: { ...getProps(filter) },
-              key: index + filter.configuration.filterKey,
-            })}
-          </Grid>
-        ));
+      return filters.map((filter, index) => (
+        <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
+          {RenderComponent({
+            componentKey:
+              filter.configuration.type !== undefined
+                ? 'customSelect'
+                : filter.configuration.filterKey,
+            componentProps: { ...getProps(filter) },
+            key: index + filter.configuration.filterKey,
+          })}
+        </Grid>
+      ));
     }, [dashboard, getProps, isServiceAnalyticsIntegration]);
 
     if (
