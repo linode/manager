@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { subnetFactory, vpcFactory, vpcIPFactory } from 'src/factories';
+import { subnetFactory, vpcFactory } from 'src/factories';
 import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
@@ -415,10 +415,7 @@ export const deleteSubnet = (mockState: MockState) => [
   ),
 ];
 
-// TODO: integrate with DB if needed
-const vpcIPs = vpcIPFactory.buildList(10);
-
-export const getVPCIPs = () => [
+export const getVPCIPs = (mockState: MockState) => [
   http.get(
     '*/v4beta/vpcs/ips',
     async ({
@@ -427,7 +424,7 @@ export const getVPCIPs = () => [
       StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
     > => {
       return makePaginatedResponse({
-        data: vpcIPs,
+        data: mockState.vpcsIps,
         request,
       });
     }
@@ -441,7 +438,14 @@ export const getVPCIPs = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
     > => {
-      const specificVPCIPs = vpcIPs.filter((ip) => ip.vpc_id === +params.vpcId);
+      const vpcsIPs = await mswDB.getAll('vpcsIps');
+      const specificVPCIPs = vpcsIPs?.filter(
+        (ip) => ip.vpc_id === +params.vpcId
+      );
+
+      if (!specificVPCIPs) {
+        return makeNotFoundResponse();
+      }
 
       return makePaginatedResponse({
         data: specificVPCIPs,
