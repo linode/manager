@@ -140,6 +140,13 @@ const NewDetailTemplateC = React.lazy(() =>
     })
   )
 );
+const NewDetailTemplateD = React.lazy(() =>
+  import('src/features/NewDetailTemplate/NewDetailTemplateD').then(
+    (module) => ({
+      default: module.NewDetailTemplateD,
+    })
+  )
+);
 const LinodesRoutes = React.lazy(() =>
   import('src/features/Linodes').then((module) => ({
     default: module.LinodesRoutes,
@@ -420,6 +427,10 @@ export const MainContent = () => {
                               <Route
                                 component={NewDetailTemplateC}
                                 path="/new-detail-template-c"
+                              />
+                              <Route
+                                component={NewDetailTemplateD}
+                                path="/new-detail-template-d"
                               />
                               {isDatabasesEnabled && (
                                 <Route
