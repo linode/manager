@@ -59,7 +59,7 @@ const props = {
 describe('Payment Info Panel', () => {
   it('Shows loading animation when loading', () => {
     const { getByLabelText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} loading={true} />
       </PayPalScriptProvider>
     );
@@ -69,7 +69,7 @@ describe('Payment Info Panel', () => {
 
   it('Shows Add Payment button for Linode customers and hides it for Akamai customers', () => {
     const { getByTestId, queryByText, rerender } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} loading={false} />
       </PayPalScriptProvider>
     );
@@ -78,7 +78,7 @@ describe('Payment Info Panel', () => {
 
     rerender(
       wrapWithTheme(
-        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} isAkamaiCustomer={true} />
         </PayPalScriptProvider>
       )
@@ -89,7 +89,7 @@ describe('Payment Info Panel', () => {
 
   it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
     const { getByTestId } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
       </PayPalScriptProvider>
     );
@@ -102,7 +102,7 @@ describe('Payment Info Panel', () => {
 
   it('Lists all payment methods for Linode customers', () => {
     const { getByTestId } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} />
       </PayPalScriptProvider>
     );
@@ -116,7 +116,7 @@ describe('Payment Info Panel', () => {
 
   it('Hides payment methods and shows text for Akamai customers', () => {
     const { getByTestId, queryByTestId } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentInformation {...props} isAkamaiCustomer={true} />
       </PayPalScriptProvider>
     );
@@ -139,7 +139,7 @@ describe('Payment Info Panel', () => {
       });
 
       const { getByTestId } = renderWithTheme(
-        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation
             {...props}
             profile={queryMocks.useProfile().data}
@@ -170,7 +170,7 @@ describe('Payment Info Panel', () => {
       });
 
       const { getByTestId } = renderWithTheme(
-        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} />
         </PayPalScriptProvider>
       );
