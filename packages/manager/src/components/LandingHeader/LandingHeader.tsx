@@ -170,7 +170,7 @@ const StyledActions = styled('div')(({ theme }) => ({
 }));
 
 const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
-  '&:not(:first-child)': {
+  '&:not(:first-of-type)': {
     marginTop: theme.spacingFunction(24),
   },
 }));
