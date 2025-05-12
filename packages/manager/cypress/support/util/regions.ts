@@ -132,44 +132,6 @@ const disallowedRegionIds = [
   'ca-central',
 ];
 
-const databaseMockRegion: ExtendedRegion = {
-  id: 'pl-labkrk-2',
-  label: 'PL, Krakow',
-  country: 'pl',
-  capabilities: [
-    'Linodes',
-    'Block Storage Encryption',
-    'Backups',
-    'NodeBalancers',
-    'Block Storage',
-    'Object Storage',
-    'GPU Linodes',
-    'Kubernetes',
-    'Cloud Firewall',
-    'Vlans',
-    'VPCs',
-    'Block Storage Migrations',
-    'Managed Databases',
-    'Metadata',
-    'Premium Plans',
-    'Placement Group',
-    'StackScripts',
-    'NETINT Quadra T1U',
-    'Linode Interfaces',
-  ],
-  status: 'ok',
-  resolvers: {
-    ipv4: '172.24.224.240,172.24.224.229,172.24.224.236,172.24.224.238,172.24.224.235,172.24.224.241,172.24.224.230,172.24.224.239,172.24.224.233,172.24.224.234',
-    ipv6: '2600:3c11:e001::1,2600:3c11:e001::2,2600:3c11:e001::3,2600:3c11:e001::4,2600:3c11:e001::5,2600:3c11:e001::6,2600:3c11:e001::7,2600:3c11:e001::8,2600:3c11:e001::9,2600:3c11:e001::10',
-  },
-  placement_group_limits: {
-    maximum_pgs_per_customer: null,
-    maximum_linodes_per_pg: 5,
-  },
-  site_type: 'core',
-  apiLabel: 'Krakow, PL',
-};
-
 /**
  * Returns an object describing a Cloud Manager region if specified by the user.
  *
@@ -364,16 +326,11 @@ const resolveSearchRegions = (
   ).filter((region: Region) => !allDisallowedRegionIds.includes(region.id));
 
   if (!capableRegions.length) {
-    if (requiredCapabilities.includes('Managed Databases')) {
-      // Return a mock region if it searchs for Database
-      capableRegions.push(databaseMockRegion);
-    } else {
-      throw new Error(
-        `No regions are available with the required capabilities: ${requiredCapabilities.join(
-          ', '
-        )}`
-      );
-    }
+    throw new Error(
+      `No regions are available with the required capabilities: ${requiredCapabilities.join(
+        ', '
+      )}`
+    );
   }
 
   return capableRegions;
