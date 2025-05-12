@@ -260,14 +260,10 @@ export const LinodeConfigDialog = (props: Props) => {
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const { isAPLAvailabilityLoading, isUsingBetaEndpoint } =
-    useKubernetesBetaEndpoint();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const { data: cluster } = useKubernetesClusterQuery({
-    enabled:
-      isLkeEnterpriseLAFeatureEnabled &&
-      Boolean(linode?.lke_cluster_id) &&
-      !isAPLAvailabilityLoading,
+    enabled: isLkeEnterpriseLAFeatureEnabled && Boolean(linode?.lke_cluster_id),
     id: linode?.lke_cluster_id ?? -1,
     isUsingBetaEndpoint,
   });

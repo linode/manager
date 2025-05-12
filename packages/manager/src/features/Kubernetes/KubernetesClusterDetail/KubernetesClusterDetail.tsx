@@ -7,10 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
-import {
-  getKubeHighAvailability,
-  useAPLAvailability,
-} from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -28,7 +25,6 @@ export const KubernetesClusterDetail = () => {
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
   const location = useLocation();
-  const { showAPL } = useAPLAvailability();
 
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
@@ -118,18 +114,17 @@ export const KubernetesClusterDetail = () => {
       <Box>
         <Stack spacing={1}>
           <KubeSummaryPanel cluster={cluster} />
-          {showAPL && cluster.apl_enabled && (
-            <Box>
-              <LandingHeader
-                docsLabel="Docs"
-                docsLink="https://apl-docs.net/"
-                removeCrumbX={[1, 2, 3]}
-                title="Application Platform for LKE"
-              />
+          <Box>
+            <LandingHeader
+              docsLabel="Docs"
+              docsLink="https://apl-docs.net/"
+              removeCrumbX={[1, 2, 3]}
+              title="Application Platform for LKE"
+            />
 
-              <APLSummaryPanel cluster={cluster} />
-            </Box>
-          )}
+            <APLSummaryPanel cluster={cluster} />
+          </Box>
+
           <NodePoolsDisplay
             clusterCreated={cluster.created}
             clusterID={cluster.id}

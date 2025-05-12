@@ -20,7 +20,6 @@ export interface Taint {
 }
 
 export interface KubernetesCluster {
-  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
   control_plane: ControlPlaneOptions;
   created: string;
   id: number;
@@ -131,7 +130,6 @@ export interface ControlPlaneOptions {
 }
 
 export interface CreateKubeClusterPayload {
-  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
   control_plane?: ControlPlaneOptions;
   k8s_version?: string; // Will be caught by Yup if undefined
   label?: string; // Label will be assigned by the API if not provided
