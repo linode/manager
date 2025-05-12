@@ -39,6 +39,11 @@ export const AssignedPermissionsPanel = ({
   // TODO: update the link for the description when it's ready - UIE-8534
   return (
     <StyledPaper sx={{ ...sx }}>
+      {hideDetails && showName && (
+        <>
+          <StyledTitle showName={showName}>{role.name}</StyledTitle>
+        </>
+      )}
       {!hideDetails && (
         <>
           <StyledTitle>{showName && role.name ? role.name : 'Description'}</StyledTitle>
