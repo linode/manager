@@ -129,13 +129,13 @@ export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/lke/versions`),
   );
 
-/** getKubernetesTieredVersions
+/** getKubernetesTieredVersionsBeta
  *
  * Returns a paginated list of available Kubernetes tiered versions from the beta API.
  *
  */
 
-export const getKubernetesTieredVersions = (
+export const getKubernetesTieredVersionsBeta = (
   tier: string,
   params?: Params,
   filters?: Filter,
@@ -159,13 +159,16 @@ export const getKubernetesVersion = (versionID: string) =>
     setURL(`${API_ROOT}/lke/versions/${encodeURIComponent(versionID)}`),
   );
 
-/** getKubernetesTieredVersion
+/** getKubernetesTieredVersionBeta
  *
- * Returns a single tiered Kubernetes version by ID from the API.
+ * Returns a single tiered Kubernetes version by ID from the beta API.
  *
  */
 
-export const getKubernetesTieredVersion = (tier: string, versionID: string) =>
+export const getKubernetesTieredVersionBeta = (
+  tier: string,
+  versionID: string,
+) =>
   Request<KubernetesTieredVersion>(
     setMethod('GET'),
     setURL(

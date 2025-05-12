@@ -9,7 +9,7 @@ import {
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
-  getKubernetesTieredVersions,
+  getKubernetesTieredVersionsBeta,
   getKubernetesTypes,
   getKubernetesVersions,
   getNodePools,
@@ -484,7 +484,7 @@ const getAllKubernetesVersions = () =>
 
 const getAllKubernetesTieredVersionsBeta = (tier: string) =>
   getAll<KubernetesTieredVersion>((params, filters) =>
-    getKubernetesTieredVersions(tier, params, filters)
+    getKubernetesTieredVersionsBeta(tier, params, filters)
   )().then((data) => data.data);
 
 const getAllAPIEndpointsForCluster = (clusterId: number) =>
