@@ -1,4 +1,4 @@
-import { accountBetaFactory, linodeTypeFactory } from '@linode/utilities';
+import { linodeTypeFactory } from '@linode/utilities';
 import { renderHook } from '@testing-library/react';
 
 import {
@@ -14,7 +14,6 @@ import {
   getLatestVersion,
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
-  useAPLAvailability,
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from './kubeUtils';
@@ -222,25 +221,6 @@ describe('helper functions', () => {
         RAM: 0,
         Storage: 0,
       });
-    });
-  });
-
-  describe('APL availability', () => {
-    it('should return true if the apl flag is true and beta is active', async () => {
-      const accountBeta = accountBetaFactory.build({
-        enrolled: '2023-01-15T00:00:00Z',
-        id: 'apl',
-      });
-
-      queryMocks.useAccountBetaQuery.mockReturnValue({
-        data: accountBeta,
-      });
-      queryMocks.useFlags.mockReturnValue({
-        apl: true,
-      });
-
-      const { result } = renderHook(() => useAPLAvailability());
-      expect(result.current.showAPL).toBe(true);
     });
   });
 
