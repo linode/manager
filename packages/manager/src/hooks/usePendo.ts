@@ -3,6 +3,7 @@ import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript`
 import React from 'react';
 
 import { ADOBE_ANALYTICS_URL, APP_ROOT, PENDO_API_KEY } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 
 declare global {
   interface Window {
@@ -66,7 +67,7 @@ export const usePendo = () => {
   const visitorId = getUniquePendoId(profile?.uid.toString());
 
   React.useEffect(() => {
-    if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
+    if (PENDO_API_KEY && ADOBE_ANALYTICS_URL) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
@@ -97,53 +98,60 @@ export const usePendo = () => {
         })(methodNames[index]);
       });
 
-      // Load Pendo script into the head HTML tag, then initialize Pendo with metadata
+      // Ensure the Adobe Launch script is loaded, then initialize Pendo with metadata
       loadScript(ADOBE_ANALYTICS_URL, {
         location: 'head',
       }).then(() => {
-        window.pendo.initialize({
-          account: {
-            id: accountId, // Highly recommended, required if using Pendo Feedback
-            // name:         // Optional
-            // is_paying:    // Recommended if using Pendo Feedback
-            // monthly_value:// Recommended if using Pendo Feedback
-            // planLevel:    // Optional
-            // planPrice:    // Optional
-            // creationDate: // Optional
+        try {
+          window.pendo.initialize({
+            account: {
+              id: accountId, // Highly recommended, required if using Pendo Feedback
+              // name:         // Optional
+              // is_paying:    // Recommended if using Pendo Feedback
+              // monthly_value:// Recommended if using Pendo Feedback
+              // planLevel:    // Optional
+              // planPrice:    // Optional
+              // creationDate: // Optional
 
-            // You can add any additional account level key-values here,
-            // as long as it's not one of the above reserved names.
-          },
-          // Controls what URLs we send to Pendo. Refer to: https://agent.pendo.io/advanced/location/.
-          location: {
-            transforms: [
-              {
-                action: 'Clear',
-                attr: 'hash',
-              },
-              {
-                action: 'Clear',
-                attr: 'search',
-              },
-              {
-                action: 'Replace',
-                attr: 'pathname',
-                data(url: string) {
-                  return transformUrl(url);
+              // You can add any additional account level key-values here,
+              // as long as it's not one of the above reserved names.
+            },
+            // Controls what URLs we send to Pendo. Refer to: https://agent.pendo.io/advanced/location/.
+            location: {
+              transforms: [
+                {
+                  action: 'Clear',
+                  attr: 'hash',
                 },
-              },
-            ],
-          },
-          visitor: {
-            id: visitorId, // Required if user is logged in
-            // email:        // Recommended if using Pendo Feedback, or NPS Email
-            // full_name:    // Recommended if using Pendo Feedback
-            // role:         // Optional
+                {
+                  action: 'Clear',
+                  attr: 'search',
+                },
+                {
+                  action: 'Replace',
+                  attr: 'pathname',
+                  data(url: string) {
+                    return transformUrl(url);
+                  },
+                },
+              ],
+            },
+            visitor: {
+              id: visitorId, // Required if user is logged in
+              // email:        // Recommended if using Pendo Feedback, or NPS Email
+              // full_name:    // Recommended if using Pendo Feedback
+              // role:         // Optional
 
-            // You can add any additional visitor level key-values here,
-            // as long as it's not one of the above reserved names.
-          },
-        });
+              // You can add any additional visitor level key-values here,
+              // as long as it's not one of the above reserved names.
+            },
+          });
+        } catch (error) {
+          reportException(
+            'An error occurred when trying to initialize Pendo.',
+            { error }
+          );
+        }
       });
     }
   }, [accountId, visitorId]);
