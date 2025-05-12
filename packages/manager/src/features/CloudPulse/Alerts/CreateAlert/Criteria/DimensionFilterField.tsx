@@ -169,6 +169,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             name={`${name}.value`}
             render={({ field, fieldState }) => (
               <InputValueField
+                currentValue={field.value}
                 data-qa-dimension-filter={`${name}-value`}
                 data-testid="value"
                 disabled={!dimensionFieldWatcher}
@@ -176,11 +177,10 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 isTextField={isTextField}
                 label="Value"
                 onBlur={field.onBlur}
-                onChange={(value: null | string) => field.onChange(value)}
+                onValueChange={(value: null | string) => field.onChange(value)}
                 options={valueOptions()}
                 placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
                 sx={{ flex: 1 }}
-                value={field.value}
               />
             )}
           />
