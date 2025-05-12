@@ -104,6 +104,7 @@ export const ObjectStorageLanding = () => {
   const createButtonAction = () => {
     if (isAccessKeysTab) {
       navigate({ to: '/object-storage/access-keys/create' });
+      handleOpenAccessDrawer('creating');
     } else {
       navigate({ to: '/object-storage/buckets/create' });
     }
@@ -138,6 +139,7 @@ export const ObjectStorageLanding = () => {
         onButtonClick={createButtonAction}
         removeCrumbX={1}
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+        spacingBottom={4}
         title="Object Storage"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>

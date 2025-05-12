@@ -163,7 +163,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     if (!selectedTypeInfo) {
       return;
     }
-    if (isLkeEnterpriseLAFeatureEnabled) {
+    if (isLkeEnterpriseLAFeatureEnabled && clusterTier === 'enterprise') {
       return createPoolBeta({
         count: selectedTypeInfo.count,
         type: selectedTypeInfo.planId,
