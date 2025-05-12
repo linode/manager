@@ -3,11 +3,6 @@ import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript`
 import React from 'react';
 
 import { ADOBE_ANALYTICS_URL, APP_ROOT, PENDO_API_KEY } from 'src/constants';
-// import {
-//   ONE_TRUST_COOKIE_CATEGORIES,
-//   checkOptanonConsent,
-//   getCookie,
-// } from 'src/utilities/analytics/utils';
 
 declare global {
   interface Window {
@@ -69,26 +64,6 @@ export const usePendo = () => {
 
   const accountId = getUniquePendoId(account?.euuid);
   const visitorId = getUniquePendoId(profile?.uid.toString());
-
-  // const optanonCookie = getCookie('OptanonConsent');
-  // // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
-  // // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
-  // const hasConsentEnabled =
-  //   APP_ROOT.includes('localhost') ||
-  //   checkOptanonConsent(
-  //     optanonCookie,
-  //     ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
-  //   );
-
-  // const optanonCookie = getCookie('OptanonConsent');
-  // Since OptanonConsent cookie always has a .linode.com domain, only check for consent in dev/staging/prod envs.
-  // When running the app locally, do not try to check for OneTrust cookie consent, just enable Pendo.
-  // const hasConsentEnabled =
-  //   APP_ROOT.includes('localhost') ||
-  //   checkOptanonConsent(
-  //     optanonCookie,
-  //     ONE_TRUST_COOKIE_CATEGORIES['Performance Cookies']
-  //   );
 
   React.useEffect(() => {
     if (ADOBE_ANALYTICS_URL && PENDO_API_KEY) {
