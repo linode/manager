@@ -69,7 +69,7 @@ export const InputValueField = (props: InputValueFieldProps) => {
   if (isTextField) {
     return (
       <TextField
-        data-testid={dataTestId}
+        data-testId={dataTestId}
         disabled={disabled}
         errorText={errorText}
         label={label}
@@ -85,6 +85,7 @@ export const InputValueField = (props: InputValueFieldProps) => {
   return (
     <Autocomplete
       data-qa-dimension-filter={dataQaDimensionFilter}
+      data-testId={dataTestId}
       disabled={disabled}
       errorText={errorText}
       isOptionEqualToValue={isOptionEqualToValue}
