@@ -14,7 +14,7 @@ Important notes:
 
 - Pendo is only loaded if a valid `PENDO_API_KEY` is configured as an environment variable. In our preview, development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
 - We [self-host](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent) and load the Pendo agent from Adobe Launch, rather than from the CDN, and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
-- As configured by Adobe Launch, Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in the pre-preview environment. Pendo will not run on localhost:3000 because it needs a Optanon cookie with the linode.com domain for consent.
+- As configured by Adobe Launch, Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in preview environments. Pendo will not run on localhost:3000 because it needs a Optanon cookie with the linode.com domain for consent.
 - At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
 - Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
 

@@ -31,8 +31,6 @@ export const useAdobeAnalytics = () => {
           }
 
           // Fire the first page view for the landing page
-          // eslint-disable-next-line no-console
-          console.log(window._satellite, window.location.pathname);
           window._satellite.track('page view', {
             url: window.location.pathname,
           });
