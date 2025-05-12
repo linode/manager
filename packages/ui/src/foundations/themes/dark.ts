@@ -533,6 +533,7 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-disabled': {
             color: `${Color.Neutrals[50]} !important`,
           },
+          color: Content.Text.Primary.Default,
         },
         root: {},
       },
@@ -560,7 +561,7 @@ export const darkTheme: ThemeOptions = {
           '&.Mui-focused': {
             color: Color.Neutrals[40],
           },
-          color: Component.Label.Text,
+          color: Color.Neutrals[40],
         },
       },
     },
@@ -802,14 +803,6 @@ export const darkTheme: ThemeOptions = {
           backgroundColor: Color.Neutrals[100],
           boxShadow: `0 0 5px ${Color.Neutrals[100]}`,
           color: Content.Text.Primary.Default,
-        },
-      },
-    },
-    MuiSvgIcon: {
-      styleOverrides: {
-        root: {
-          fontSize: 20,
-          color: Component.Label.InfoIcon,
         },
       },
     },
