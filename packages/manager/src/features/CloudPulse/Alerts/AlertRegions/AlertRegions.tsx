@@ -16,13 +16,13 @@ import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
-  handleChange?: (regionIds: string[]) => void;
+  handleChange: (regionIds: string[]) => void;
   serviceType: AlertServiceType | null;
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const { serviceType } = props;
-  const flags = useFlags();
+  const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
   const [selectedRegions, setSelectedRegions] = React.useState<string[]>([]);
@@ -53,22 +53,14 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
 
   const filteredRegionsWithStatus: AlertRegion[] = React.useMemo(
     () =>
-      getFilteredRegions(
+      getFilteredRegions({
         serviceType,
-        searchText,
         selectedRegions,
         resources,
         regions,
-        flags.aclpResourceTypeMap
-      ),
-    [
-      flags.aclpResourceTypeMap,
-      regions,
-      resources,
-      searchText,
-      selectedRegions,
-      serviceType,
-    ]
+        aclpResourceTypeMap,
+      }),
+    [aclpResourceTypeMap, regions, resources, selectedRegions, serviceType]
   );
 
   const handleSelectAll = React.useCallback(
@@ -127,13 +119,19 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         totalCount={filteredRegionsWithStatus.length}
       />
       <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleSelectionChange}
         isAllSelected={
           filteredRegionsWithStatus.length > 0 &&
           selectedRegions.length === filteredRegionsWithStatus.length
         }
-        isSomeSelected={selectedRegions.length > 0}
-        regions={filteredRegionsWithStatus}
+        isSomeSelected={
+          selectedRegions.length > 0 &&
+          selectedRegions.length !== filteredRegionsWithStatus.length
+        }
+        regions={filteredRegionsWithStatus.filter(({ label }) =>
+          label.toLowerCase().includes(searchText.toLowerCase())
+        )}
         showSelected={showSelected}
       />
     </Stack>

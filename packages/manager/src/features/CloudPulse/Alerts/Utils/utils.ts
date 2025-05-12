@@ -133,6 +133,30 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
    */
   singleLineErrorSeparator: string;
 }
+
+interface FilterRegionProps {
+  /**
+   * The resource type map flag
+   */
+  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The selected region ids
+   */
+  selectedRegions: string[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: AlertServiceType | null;
+}
+
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypeList List of available service types in Cloud Pulse
@@ -455,22 +479,17 @@ export const handleMultipleError = <T extends FieldValues>(
 
 /**
  *
- * @param serviceType
- * @param searchText
- * @param selectedRegions
- * @param resources
- * @param regions
- * @param aclpResourceTypeMap
- * @returns
+ * @param props The props required to filter the regions
+ * @returns The filtered regions based on the selected regions and resources
  */
-export const getFilteredRegions = (
-  serviceType: AlertServiceType | null,
-  searchText: string,
-  selectedRegions: string[],
-  resources?: CloudPulseResources[] | undefined,
-  regions?: Region[] | undefined,
-  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[] | undefined
-): AlertRegion[] => {
+export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
+  const {
+    aclpResourceTypeMap,
+    regions,
+    resources,
+    selectedRegions,
+    serviceType,
+  } = props;
   const resourceTypeFlag = aclpResourceTypeMap?.find(
     (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
   );
@@ -489,11 +508,21 @@ export const getFilteredRegions = (
       ) ?? [];
   }
 
+  const regionToResourceCount: { [region: string]: number } =
+    resources?.reduce(
+      (previous, { region }) => {
+        if (!region) return previous;
+        return {
+          ...previous,
+          [region]: (previous[region] ?? 0) + 1,
+        };
+      },
+      {} as { [region: string]: number }
+    ) ?? {};
+
   const supportedRegionsFromResources =
-    supportedRegions?.filter(
-      ({ id, label }) =>
-        resources?.some(({ region }) => region === id) &&
-        (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+    supportedRegions?.filter(({ id }) =>
+      resources?.some(({ region }) => region === id)
     ) ?? [];
   return supportedRegionsFromResources.map(({ label, id }) => {
     const data = { label, id };
@@ -502,11 +531,13 @@ export const getFilteredRegions = (
       return {
         ...data,
         checked: true,
+        count: regionToResourceCount[id] ?? 0,
       };
     }
     return {
       ...data,
       checked: false,
+      count: regionToResourceCount[id] ?? 0,
     };
   });
 };

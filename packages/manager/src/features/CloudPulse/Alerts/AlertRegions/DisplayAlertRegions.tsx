@@ -10,15 +10,18 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
+import type { SelectDeselectAll } from '../constants';
+
 export interface AlertRegion {
   checked: boolean;
+  count: number;
   id: string;
   label: string;
 }
 
 interface DisplayAlertRegionProps {
+  handleSelectAll: (action: SelectDeselectAll) => void;
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
-
   isAllSelected?: boolean;
 
   isSomeSelected?: boolean;
@@ -34,7 +37,9 @@ export const DisplayAlertRegions = React.memo(
       isSomeSelected,
       isAllSelected,
       showSelected,
+      handleSelectAll,
     } = props;
+
     return (
       <Paginate data={regions ?? []}>
         {({
@@ -59,6 +64,11 @@ export const DisplayAlertRegions = React.memo(
                       <Checkbox
                         checked={!isSomeSelected && isAllSelected}
                         indeterminate={isSomeSelected && !isAllSelected}
+                        onChange={(_, checked) =>
+                          handleSelectAll(
+                            checked ? 'Select All' : 'Deselect All'
+                          )
+                        }
                       />
                     </Box>
                   </TableCell>
@@ -72,6 +82,16 @@ export const DisplayAlertRegions = React.memo(
                   >
                     Region
                   </TableSortCell>
+                  <TableSortCell
+                    active={true}
+                    data-qa-header="associated-entities"
+                    data-qa-sorting="associated-header"
+                    direction="asc"
+                    handleClick={() => {}}
+                    label="Associated Entities"
+                  >
+                    Associated Entities
+                  </TableSortCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -81,7 +101,7 @@ export const DisplayAlertRegions = React.memo(
                 >
                   {paginatedData
                     ?.filter(({ checked }) => (showSelected ? checked : true))
-                    .map(({ label, id, checked }) => {
+                    .map(({ label, id, checked, count }) => {
                       return (
                         <TableRow data-testid={`region-row-${id}`} key={id}>
                           <TableCell>
@@ -94,6 +114,7 @@ export const DisplayAlertRegions = React.memo(
                           </TableCell>
 
                           <TableCell>{label}</TableCell>
+                          <TableCell>{count}</TableCell>
                         </TableRow>
                       );
                     })}
