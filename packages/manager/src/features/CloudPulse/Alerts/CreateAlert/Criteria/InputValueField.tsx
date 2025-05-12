@@ -18,6 +18,11 @@ interface InputValueFieldOption {
 interface InputValueFieldProps
   extends EnhancedAutocompleteProps<InputValueFieldOption> {
   /**
+   * The current value of the input field.
+   */
+  currentValue: null | string;
+
+  /**
    * qa id for the input field
    */
   'data-qa-dimension-filter'?: string;
@@ -41,12 +46,7 @@ interface InputValueFieldProps
    * A function to handle changes to the input value.
    * This function is called when the user selects an option or types in the text field.
    */
-  onChange: (value: null | string) => void;
-
-  /**
-   * This is the value that will be displayed in the text field or selected in the autocomplete dropdown.
-   */
-  value: null | string;
+  onValueChange: (value: null | string) => void;
 }
 
 export const InputValueField = (props: InputValueFieldProps) => {
@@ -54,9 +54,9 @@ export const InputValueField = (props: InputValueFieldProps) => {
     isTextField,
     isOptionEqualToValue,
     errorText,
-    value,
+    currentValue,
     options = [],
-    onChange,
+    onValueChange,
     sx,
     placeholder,
     onBlur,
@@ -74,10 +74,10 @@ export const InputValueField = (props: InputValueFieldProps) => {
         errorText={errorText}
         label={label}
         onBlur={onBlur}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}
         sx={{ width: '256px', ...sx }}
-        value={value === null ? '' : value}
+        value={currentValue ?? ''}
       />
     );
   }
@@ -91,12 +91,12 @@ export const InputValueField = (props: InputValueFieldProps) => {
       label={label}
       onBlur={onBlur}
       onChange={(_, selected: InputValueFieldOption, operation) => {
-        onChange(operation === 'selectOption' ? selected.value : null);
+        onValueChange(operation === 'selectOption' ? selected.value : null);
       }}
       options={options}
       placeholder={placeholder}
       sx={sx}
-      value={options.find((option) => option.value === value) ?? null}
+      value={options.find((option) => option.value === currentValue) ?? null}
     />
   );
 };
