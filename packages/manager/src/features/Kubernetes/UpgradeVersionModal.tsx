@@ -29,6 +29,7 @@ export const UpgradeDialog = (props: Props) => {
 
   const { data: cluster } = useKubernetesClusterQuery({
     id: clusterID,
+    enabled: Boolean(clusterID),
   });
 
   const { mutateAsync: updateKubernetesCluster } =

@@ -1,6 +1,6 @@
 import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
 
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -144,7 +144,7 @@ export const getKubernetesTieredVersions = (
     setMethod('GET'),
     setXFilter(filters),
     setParams(params),
-    setURL(`${API_ROOT}/lke/tiers/${encodeURIComponent(tier)}/versions`),
+    setURL(`${BETA_API_ROOT}/lke/tiers/${encodeURIComponent(tier)}/versions`),
   );
 
 /** getKubernetesVersion
@@ -169,7 +169,7 @@ export const getKubernetesTieredVersion = (tier: string, versionID: string) =>
   Request<KubernetesTieredVersion>(
     setMethod('GET'),
     setURL(
-      `${API_ROOT}/lke/tiers/${encodeURIComponent(
+      `${BETA_API_ROOT}/lke/tiers/${encodeURIComponent(
         tier,
       )}/versions/${encodeURIComponent(versionID)}`,
     ),
