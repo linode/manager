@@ -1,4 +1,4 @@
-import { Autocomplete, Box } from '@linode/ui';
+import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
@@ -7,7 +7,6 @@ import type { FieldPathByValue } from 'react-hook-form';
 
 import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
-import { InputValueField } from './InputValueField';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
@@ -167,22 +166,48 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           <Controller
             control={control}
             name={`${name}.value`}
-            render={({ field, fieldState }) => (
-              <InputValueField
-                currentValue={field.value}
-                data-qa-dimension-filter={`${name}-value`}
-                data-testid="value"
-                disabled={!dimensionFieldWatcher}
-                errorText={fieldState.error?.message}
-                isTextField={isTextField}
-                label="Value"
-                onBlur={field.onBlur}
-                onValueChange={(value: null | string) => field.onChange(value)}
-                options={valueOptions()}
-                placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
-                sx={{ flex: 1 }}
-              />
-            )}
+            render={({ field, fieldState }) =>
+              isTextField ? (
+                <TextField
+                  data-qa-dimension-filter={`${name}-value`}
+                  data-testid="value"
+                  disabled={!dimensionFieldWatcher}
+                  errorText={fieldState.error?.message}
+                  label="Value"
+                  onBlur={field.onBlur}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  sx={{ flex: 1, width: '256px' }}
+                  value={field.value ?? ''}
+                />
+              ) : (
+                <Autocomplete
+                  data-qa-dimension-filter={`${name}-value`}
+                  data-testid="value"
+                  disabled={!dimensionFieldWatcher}
+                  errorText={fieldState.error?.message}
+                  label="Value"
+                  onBlur={field.onBlur}
+                  onChange={(
+                    _,
+                    selected: { label: string; value: string },
+                    operation
+                  ) => {
+                    field.onChange(
+                      operation === 'selectOption' ? selected.value : null
+                    );
+                  }}
+                  options={valueOptions()}
+                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  sx={{ flex: 1 }}
+                  value={
+                    valueOptions().find(
+                      (option) => option.value === field.value
+                    ) ?? null
+                  }
+                />
+              )
+            }
           />
           <Box alignContent="center" mt={5}>
             <ClearIconButton handleClick={onFilterDelete} />
