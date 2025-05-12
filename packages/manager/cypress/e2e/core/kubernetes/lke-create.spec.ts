@@ -431,7 +431,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
       ended: null,
       enrolled: '2024-11-04T21:39:41',
       id: 'apl',
-      label: 'Akamai App Platform Beta',
+      label: 'Akamai App Platform',
       started: '2024-10-31T18:00:00',
     }).as('getAccountBeta');
     mockCreateCluster(mockedLKECluster).as('createCluster');
@@ -1363,7 +1363,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       mockGetAccountBeta(
         accountBetaFactory.build({
           id: 'apl',
-          label: 'Akamai App Platform Beta',
+          label: 'Akamai App Platform',
         })
       ).as('getAccountBeta');
       mockGetAccount(

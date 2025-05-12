@@ -28,7 +28,7 @@ export const APLCopy = () => (
   </Typography>
 );
 
-const APL_UNSUPPORTED_CHIP_COPY = ' - COMING SOON';
+const APL_UNSUPPORTED_CHIP_COPY = 'COMING SOON';
 
 export const ApplicationPlatform = (props: APLProps) => {
   const { isSectionDisabled, setAPL, setHighAvailability } = props;
@@ -47,8 +47,6 @@ export const ApplicationPlatform = (props: APLProps) => {
     setIsAPLChecked(isSectionDisabled ? false : undefined);
     setIsAPLNotChecked(isSectionDisabled ? true : undefined);
   }, [isSectionDisabled]);
-
-  const CHIP_COPY = `BETA${isSectionDisabled ? APL_UNSUPPORTED_CHIP_COPY : ''}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAPL(e.target.value === 'yes');
@@ -69,13 +67,15 @@ export const ApplicationPlatform = (props: APLProps) => {
       >
         <Box alignItems="center" display="flex" flexDirection="row">
           <Typography data-testid="apl-label">Akamai App Platform</Typography>
-          <Chip
-            color="primary"
-            data-testid="apl-beta-chip"
-            label={CHIP_COPY}
-            size="small"
-            sx={{ ml: 1 }}
-          />
+          {isSectionDisabled && (
+            <Chip
+              color="primary"
+              data-testid="apl-beta-chip"
+              label={APL_UNSUPPORTED_CHIP_COPY}
+              size="small"
+              sx={{ ml: 1 }}
+            />
+          )}
         </Box>
       </FormLabel>
       <APLCopy />
