@@ -49,7 +49,7 @@ const DataItem = ({ label, value, icon }) => (
         sm: '230px',
         md: '250px',
       },
-      mb: 2,
+      mb: 0,
     }}
   >
     <Typography variant="body2" color="text.secondary">
@@ -79,9 +79,8 @@ const InfoSection = ({ title, items, isLast = false }) => {
         sx={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: 2,
+          gap: 1,
           '& > *': {
-            // Ensure flex items don't grow beyond their specified width
             flexGrow: 0,
             flexShrink: 0,
           },
