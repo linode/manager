@@ -262,11 +262,6 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
               className={classes.input}
               errorText={thisIP.error}
               hideLabel
-              InputProps={{
-                'aria-label': `${title} ip-address-${idx}`,
-                disabled,
-                ...props.inputProps,
-              }}
               // Prevent unique ID errors, since TextField sets the input element's ID to the label
               label={`domain-transfer-ip-${idx}`}
               onBlur={(e) => handleBlur(e, idx)}
@@ -274,6 +269,13 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
                 handleChange(e, idx)
               }
               placeholder={placeholder}
+              slotProps={{
+                input: {
+                  'aria-label': `${title} ip-address-${idx}`,
+                  disabled,
+                  ...props.inputProps,
+                },
+              }}
               value={thisIP.address}
             />
           </Grid>

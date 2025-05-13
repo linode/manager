@@ -346,24 +346,27 @@ export const TextField = (props: TextFieldProps) => {
               'aria-invalid': !!error || !!errorText,
               'data-testid': 'textfield-input',
               id: validInputId,
-              ...inputProps, // Included for backward compatibility until migration is complete
+              ...inputProps, // TODO: Remove backwards compatibility once migration is complete
               ...slotProps?.htmlInput,
             },
             input: {
+              ...(InputProps as SlotComponentProps<React.ElementType, {}, {}>), // TODO: Remove backwards compatibility once migration is complete
+              ...slotProps?.input, // When using TextField directly
               className,
               disableUnderline: true,
-              endAdornment: loading && (
+              endAdornment: loading ? (
                 <InputAdornment position="end">
                   <CircleProgress noPadding size="xs" />
                 </InputAdornment>
+              ) : (
+                /* @ts-expect-error - This is a legitimate property on slotProps.input */
+                slotProps?.input?.endAdornment
               ),
               sx: {
                 ...(expand && {
                   maxWidth: '100%',
                 }),
               },
-              ...(InputProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
-              ...slotProps?.input,
             },
             select: {
               IconComponent: KeyboardArrowDown,
@@ -374,7 +377,7 @@ export const TextField = (props: TextFieldProps) => {
                 transformOrigin: { horizontal: 'left', vertical: 'top' },
               },
               disableUnderline: true,
-              ...(SelectProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
+              ...(SelectProps as SlotComponentProps<React.ElementType, {}, {}>), // TODO: Remove backwards compatibility once migration is complete
               ...slotProps?.select,
             },
             ...slotProps,
