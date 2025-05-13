@@ -59,9 +59,9 @@ const preferenceConfig: Record<
         </span>
       ) : (
         <span>
-          Try the new <strong>Alerts (Beta)</strong> with more options for more
-          options, including customizable alerts. You can switch back to the
-          current view at any time.
+          Try the new <strong>Alerts (Beta)</strong> for more options, including
+          customizable alerts. You can switch back to the current view at any
+          time.
         </span>
       ),
   },

@@ -33,7 +33,7 @@ const expectedAclpPreferences: Record<
   alerts: {
     preference: true,
     legacyModeBannerText:
-      'Try the new Alerts (Beta) with more options for more options, including customizable alerts. You can switch back to the current view at any time.',
+      'Try the new Alerts (Beta) for more options, including customizable alerts. You can switch back to the current view at any time.',
     betaModeBannertext:
       'Welcome to Alerts (Beta) with more options and greater flexibility.',
     legacyModeButtonText: 'Try Alerts (Beta)',
