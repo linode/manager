@@ -2759,11 +2759,13 @@ export const handlers = [
     const response = {
       data: [] as Dashboard[],
     };
-    if (params.serviceType === 'linode') {
+
+    if (params.serviceType === 'dbaas') {
       response.data.push(
         dashboardFactory.build({
-          label: 'Linode Dashboard',
-          service_type: 'linode',
+          id: 1,
+          label: 'DBaaS Dashboard',
+          service_type: 'dbaas',
           widgets: [
             widgetFactory.build({
               label: 'CPU utilization',
@@ -2775,11 +2777,14 @@ export const handlers = [
           ],
         })
       );
-    } else if (params.serviceType === 'dbaas') {
+    }
+
+    if (params.serviceType === 'linode') {
       response.data.push(
         dashboardFactory.build({
-          label: 'DBaaS Dashboard',
-          service_type: 'dbaas',
+          id: 2,
+          label: 'Linode Dashboard',
+          service_type: 'linode',
           widgets: [
             widgetFactory.build({
               label: 'CPU utilization',

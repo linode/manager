@@ -157,7 +157,7 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeMetrics linodeCreated={linode?.created} />
+                <LinodeMetrics linodeCreated={linode?.created} linodeId={id} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
