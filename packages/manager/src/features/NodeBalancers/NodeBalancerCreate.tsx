@@ -2,6 +2,7 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
   useNodebalancerCreateBetaMutation,
+  useNodebalancerCreateMutation,
   useNodeBalancerTypesQuery,
   useProfile,
   useRegionsQuery,
@@ -115,10 +116,16 @@ const NodeBalancerCreate = () => {
   const { data: types } = useNodeBalancerTypesQuery();
 
   const {
-    error,
-    isPending,
-    mutateAsync: createNodeBalancer,
+    error: createNodeBalancerBetaError,
+    isPending: createNodeBalancerBetaIsPending,
+    mutateAsync: createNodeBalancerBeta,
   } = useNodebalancerCreateBetaMutation();
+
+  const {
+    error: createNodebalancerError,
+    isPending: createNodeBalancerIsPending,
+    mutateAsync: createNodeBalancer,
+  } = useNodebalancerCreateMutation();
 
   const [nodeBalancerFields, setNodeBalancerFields] =
     React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
@@ -330,7 +337,11 @@ const NodeBalancerCreate = () => {
       }).catch(reportAgreementSigningError);
     }
 
-    createNodeBalancer(nodeBalancerRequestData)
+    const createNodeBalancerFn = isNodebalancerVPCEnabled
+      ? createNodeBalancerBeta
+      : createNodeBalancer;
+
+    createNodeBalancerFn(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         navigate({
           params: { id: String(nodeBalancer.id) },
@@ -494,6 +505,10 @@ const NodeBalancerCreate = () => {
 
   const confirmationConfigError = () =>
     (deleteConfigConfirmDialog.errors || []).map((e) => e.reason).join(',');
+
+  const error = isNodebalancerVPCEnabled
+    ? createNodeBalancerBetaError
+    : createNodebalancerError;
 
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
   const generalError = hasErrorFor('none');
@@ -795,7 +810,9 @@ const NodeBalancerCreate = () => {
             isRestricted ||
             isInvalidPrice
           }
-          loading={isPending}
+          loading={
+            createNodeBalancerIsPending || createNodeBalancerBetaIsPending
+          }
           onClick={onCreate}
           sx={{
             flexShrink: 0,
