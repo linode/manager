@@ -20,9 +20,10 @@ import {
   useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
-import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
+
+import { useIsNodebalancerVPCEnabled } from '../../utils';
 
 export const SummaryPanel = () => {
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
@@ -55,16 +56,16 @@ export const SummaryPanel = () => {
     id: nodebalancer?.id,
   });
 
-  const flags = useFlags();
+  const flags = useIsNodebalancerVPCEnabled();
 
   const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
     Number(id),
-    flags.nodebalancerVpc
+    flags.isNodebalancerVPCEnabled
   );
 
   const { data: vpcDetails } = useVPCQuery(
-    Number(vpcConfig?.data[0].vpc_id) || -1,
-    Boolean(vpcConfig?.data[0].vpc_id)
+    Number(vpcConfig?.data[0]?.vpc_id) || -1,
+    Boolean(vpcConfig?.data[0]?.vpc_id)
   );
 
   const nbVPCConfigs = vpcConfig?.data ?? [];
@@ -220,7 +221,7 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
-      {flags.nodebalancerVpc && vpcConfig?.data.length && (
+      {flags.isNodebalancerVPCEnabled && vpcConfig?.data.length && (
         <StyledSummarySection>
           <StyledTitle
             data-qa-title
