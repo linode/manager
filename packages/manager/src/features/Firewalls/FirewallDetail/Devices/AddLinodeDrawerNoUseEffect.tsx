@@ -36,6 +36,12 @@ interface Props {
   open: boolean;
 }
 
+interface InterfaceDeviceInfo {
+  interfaceId: number;
+  linodeId: number;
+  linodeLabel: string;
+}
+
 export const AddLinodeDrawer = (props: Props) => {
   const { helperText, onClose, open } = props;
 
@@ -87,7 +93,9 @@ export const AddLinodeDrawer = (props: Props) => {
         >
       >((acc, res, index) => {
         if (res.data) {
-          const nonVlanInterfaces = res.data.interfaces.filter((iface) => !iface.vlan);
+          const nonVlanInterfaces = res.data.interfaces.filter(
+            (iface) => !iface.vlan
+          );
           if (nonVlanInterfaces.length > 0) {
             acc[linodesUsingLinodeInterfaces[index].id] = {
               interfaces: nonVlanInterfaces,
@@ -100,7 +108,9 @@ export const AddLinodeDrawer = (props: Props) => {
     },
   });
 
-  const linodesWithMultipleInterfaces = Object.values(linodesWithNonVlanInterfaces)
+  const linodesWithMultipleInterfaces = Object.values(
+    linodesWithNonVlanInterfaces
+  )
     .filter(({ interfaces }) => interfaces.length > 1)
     .map(({ linode }) => linode);
 
@@ -110,7 +120,6 @@ export const AddLinodeDrawer = (props: Props) => {
       return false;
     }
     // Exclude a Linode if it uses Linode Interfaces and every interface has a firewall already
-    // @todo ignore VLAN?
     if (linodesWithNonVlanInterfaces[linode.id]) {
       if (
         linodesWithNonVlanInterfaces[linode.id].interfaces.every((i) =>
@@ -142,8 +151,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
   // Key is the Linode ID, value is the interfaces to add
   const [interfacesToAdd, setInterfacesToAdd] = React.useState<
-    Record<number, number[]>
-  >([]);
+    Record<number, InterfaceDeviceInfo[]>
+  >({});
 
   const [localError, setLocalError] = React.useState<string | undefined>(
     undefined
@@ -166,24 +175,30 @@ export const AddLinodeDrawer = (props: Props) => {
     // When a Linode uses Linode Interfaces and it only has one interface, we don't show the
     // Interface select for that Linode. Therefore, here, we need to make sure we add the single
     // interface if the linode is selected.
-    let interfaceIds: number[] = [];
-    for (const { linode, interfaces } of Object.values(linodesWithNonVlanInterfaces)) {
+    let interfaceInfos: InterfaceDeviceInfo[] = [];
+    for (const { linode, interfaces } of Object.values(
+      linodesWithNonVlanInterfaces
+    )) {
       if (selectedLinodes.includes(linode) && interfaces.length === 1) {
-        interfaceIds.push(interfaces[0].id);
+        interfaceInfos.push({
+          interfaceId: interfaces[0].id,
+          linodeId: linode.id,
+          linodeLabel: linode.label,
+        });
       }
     }
 
     for (const linodeId in interfacesToAdd) {
       if (selectedLinodes.some((l) => l.id === Number(linodeId))) {
-        interfaceIds = [...interfaceIds, ...interfacesToAdd[linodeId]];
+        interfaceInfos = [...interfaceInfos, ...interfacesToAdd[linodeId]];
       }
     }
 
     const interfaceResults = await Promise.allSettled(
-      interfaceIds.map((interfaceId) =>
+      interfaceInfos.map((interfaceInfo) =>
         addDevice({
           firewallId: Number(id),
-          id: interfaceId,
+          id: interfaceInfo.interfaceId,
           type: 'interface',
         })
       )
@@ -285,7 +300,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const handleClose = () => {
     setSelectedLinodes([]);
-    setInterfacesToAdd([]);
+    setInterfacesToAdd({});
     setLocalError(undefined);
     onClose();
   };
@@ -326,7 +341,7 @@ export const AddLinodeDrawer = (props: Props) => {
           )}
         {isLinodeInterfacesEnabled &&
           linodesWithMultipleInterfaces
-            ?.filter((linode) => selectedLinodes.includes(linode))
+            .filter((linode) => selectedLinodes.includes(linode))
             .map((linode) => {
               const options = linodesWithNonVlanInterfaces[linode.id].interfaces
                 .filter(
@@ -344,14 +359,22 @@ export const AddLinodeDrawer = (props: Props) => {
                   onChange={(e, option) => {
                     setInterfacesToAdd((prev) => {
                       const newInterfacesToAdd = { ...prev };
-                      newInterfacesToAdd[linode.id] = [option.id];
+                      newInterfacesToAdd[linode.id] = [
+                        {
+                          linodeId: linode.id,
+                          linodeLabel: linode.label,
+                          interfaceId: option.id,
+                        },
+                      ];
                       return newInterfacesToAdd;
                     });
                   }}
                   options={options}
                   placeholder="Select Interface"
                   value={options.find((i) =>
-                    interfacesToAdd[linode.id]?.includes(i.id)
+                    interfacesToAdd[linode.id]
+                      ?.map((ifaceInfo) => ifaceInfo.interfaceId)
+                      .includes(i.id)
                   )}
                 />
               );
