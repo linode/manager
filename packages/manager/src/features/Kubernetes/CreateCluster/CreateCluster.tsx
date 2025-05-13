@@ -250,6 +250,7 @@ export const CreateCluster = () => {
     };
 
     let payload: CreateKubeClusterPayload = {
+      apl_enabled: aplEnabled,
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
@@ -273,8 +274,10 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
+    // It does appear that although APL is now supported by the v4, the return payload seems to omit the apl_enabled field.
+    // Therefore we still hit beta for now as a precaution.
     const createClusterFn =
-      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
+      aplEnabled || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
