@@ -245,17 +245,32 @@ export const darkTheme: ThemeOptions = {
         clearIndicator: {
           color: Select.Default.Icon,
         },
+        groupLabel: {
+          marginTop: '0px !important',
+          backgroundColor: Dropdown.Background.Category,
+          padding: '8px 12px !important',
+        },
         paper: {
           boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
           marginTop: 4,
         },
         listbox: {
           backgroundColor: Select.Default.Background,
-          padding: '4px',
+          paddingTop: '4px',
           border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
           color: Select.Default.Icon,
+        },
+        inputRoot: {
+          '& input::placeholder': {
+            color: Select.Hover.Text,
+          },
         },
         noOptions: {
           color: Select.Default.Icon,

@@ -366,8 +366,10 @@ export const lightTheme: ThemeOptions = {
           marginRight: Spacing.S8,
         },
         groupLabel: {
+          marginTop: '0px !important',
+          backgroundColor: Dropdown.Background.Category,
           font: Typography.Label.Bold.L,
-          padding: '8px',
+          padding: '8px 12px !important',
         },
         input: {
           '&.MuiInputBase-input.MuiInput-input': {
@@ -375,6 +377,9 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          '& input::placeholder': {
+            color: Select.Hover.Text,
+          },
           height: 'inherit',
           paddingBottom: 0,
         },
@@ -384,8 +389,13 @@ export const lightTheme: ThemeOptions = {
         },
         listbox: {
           backgroundColor: Select.Default.Background,
-          padding: '4px',
+          paddingTop: '4px',
           border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
           border: `1px solid ${primaryColors.main}`,
