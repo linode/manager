@@ -365,6 +365,30 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                 }) => {
                   return (
                     <React.Fragment>
+                      <React.Fragment>
+                        <BackupsCTA />
+                        {this.props.LandingHeader ? (
+                          this.props.LandingHeader
+                        ) : (
+                          <LandingHeader
+                            buttonDataAttrs={{
+                              tooltipText: getRestrictedResourceText({
+                                action: 'create',
+                                isSingular: false,
+                                resourceType: 'Linodes',
+                              }),
+                            }}
+                            disabledCreateButton={isLinodesGrantReadOnly}
+                            docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
+                            entity="Linode"
+                            onButtonClick={() =>
+                              this.props.history.push('/linodes/create')
+                            }
+                            title="Linodes"
+                          />
+                        )}
+                      </React.Fragment>
+
                       <OrderBy
                         data={(linodesData ?? []).map((linode) => {
                           // Determine the priority of this Linode's status.

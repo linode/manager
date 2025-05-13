@@ -15,17 +15,16 @@ const timestamp = 1704204000000;
 
 describe('getAccessibleTimestamp', () => {
   it('should return the time in a format like 10/14/2023, 9:30 AM', () => {
-    expect(getAccessibleTimestamp(timestamp, 'America/New_York')).toBe(
-      '1/2/2024, 9:00 AM'
-    );
+    const result = getAccessibleTimestamp(timestamp, 'America/New_York');
+    expect(result.replace(/\u202F/g, ' ')).toBe('1/2/2024, 9:00 AM');
   });
 });
 
 describe('tooltipLabelFormatter', () => {
   it('should return the time in a format like October 14, 2023, 9:30 AM', () => {
-    expect(tooltipLabelFormatter(timestamp, 'America/New_York')).toBe(
-      'Jan 2, 2024, 9:00 AM'
-    );
+    const label = tooltipLabelFormatter(timestamp, 'America/New_York');
+    const normalizedLabel = label.replace(/\u202F/g, ' ');
+    expect(normalizedLabel).toBe('Jan 2, 2024, 9:00 AM');
   });
 });
 
