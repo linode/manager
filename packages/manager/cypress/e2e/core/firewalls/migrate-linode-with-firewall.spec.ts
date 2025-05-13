@@ -84,61 +84,63 @@ describe('Migrate Linode With Firewall', () => {
    */
   it('test migrate flow - mocking all data', () => {
     cy.tag('env:multipleRegions');
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: 'us-central',
-    });
-
-    const mockFirewall = firewallFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      status: 'enabled',
-    });
-
-    mockGetFirewalls([mockFirewall]).as('getFirewalls');
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    mockGetRegions(mockRegions).as('getRegions');
-    mockMigrateLinode(mockLinode.id).as('migrateLinode');
-
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
-    cy.wait(['@getLinode', '@getRegions']);
-    cy.findByText(mockDallas.label).should('be.visible');
-
-    ui.dialog
-      .findByTitle(`Migrate Linode ${mockLinode.label} to another region`)
-      .should('be.visible')
-      .within(() => {
-        // Confirm that 'Enter Migration Queue' button is disabled.
-        ui.button
-          .findByTitle('Enter Migration Queue')
-          .should('be.visible')
-          .should('be.disabled');
-
-        // Confirm that user is warned of Migration side effects.
-        cy.findByText('Caution:').should('be.visible');
-        migrationNoticeSubstrings.forEach((noticeSubstring: string) => {
-          cy.contains(noticeSubstring).should('be.visible');
-        });
-
-        // Click the "Accept" check box.
-        cy.findByText('Accept').should('be.visible').click();
-
-        // Select migration region.
-        cy.findByText(`North America: ${mockDallas.label}`).should(
-          'be.visible'
-        );
-        ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockSingapore.label).click();
-
-        ui.button
-          .findByTitle('Enter Migration Queue')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
+    cy.defer(async () => {}).then(() => {
+      const mockLinode = linodeFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+        region: 'us-central',
       });
 
-    cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
+      const mockFirewall = firewallFactory.build({
+        id: randomNumber(),
+        label: randomLabel(),
+        status: 'enabled',
+      });
+
+      mockGetFirewalls([mockFirewall]).as('getFirewalls');
+      mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+      mockGetRegions(mockRegions).as('getRegions');
+      mockMigrateLinode(mockLinode.id).as('migrateLinode');
+
+      cy.visitWithLogin(`/linodes/${mockLinode.id}/migrate`);
+      cy.wait(['@getLinode', '@getRegions']);
+      cy.findByText(mockDallas.label).should('be.visible');
+
+      ui.dialog
+        .findByTitle(`Migrate Linode ${mockLinode.label} to another region`)
+        .should('be.visible')
+        .within(() => {
+          // Confirm that 'Enter Migration Queue' button is disabled.
+          ui.button
+            .findByTitle('Enter Migration Queue')
+            .should('be.visible')
+            .should('be.disabled');
+
+          // Confirm that user is warned of Migration side effects.
+          cy.findByText('Caution:').should('be.visible');
+          migrationNoticeSubstrings.forEach((noticeSubstring: string) => {
+            cy.contains(noticeSubstring).should('be.visible');
+          });
+
+          // Click the "Accept" check box.
+          cy.findByText('Accept').should('be.visible').click();
+
+          // Select migration region.
+          cy.findByText(`North America: ${mockDallas.label}`).should(
+            'be.visible'
+          );
+          ui.regionSelect.find().click();
+          ui.regionSelect.findItemByRegionLabel(mockSingapore.label).click();
+
+          ui.button
+            .findByTitle('Enter Migration Queue')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
+
+      cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
+    });
   });
 
   /*
