@@ -115,14 +115,17 @@ export const KubernetesClusterDetail = () => {
         <Stack spacing={1}>
           <KubeSummaryPanel cluster={cluster} />
           <Box>
-            <LandingHeader
-              docsLabel="Docs"
-              docsLink="https://apl-docs.net/"
-              removeCrumbX={[1, 2, 3]}
-              title="Application Platform for LKE"
-            />
-
-            <APLSummaryPanel cluster={cluster} />
+            {cluster.apl_enabled && (
+              <>
+                <LandingHeader
+                  docsLabel="Docs"
+                  docsLink="https://apl-docs.net/"
+                  removeCrumbX={[1, 2, 3]}
+                  title="Application Platform for LKE"
+                />
+                <APLSummaryPanel cluster={cluster} />
+              </>
+            )}
           </Box>
 
           <NodePoolsDisplay

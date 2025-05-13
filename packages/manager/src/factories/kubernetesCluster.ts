@@ -69,6 +69,7 @@ export const nodePoolBetaFactory =
 
 export const kubernetesClusterFactory =
   Factory.Sync.makeFactory<KubernetesCluster>({
+    apl_enabled: false,
     control_plane: { high_availability: true },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
@@ -92,6 +93,7 @@ export const kubernetesDashboardUrlFactory =
 
 export const kubernetesAPIResponse =
   Factory.Sync.makeFactory<KubernetesCluster>({
+    apl_enabled: false,
     control_plane: { high_availability: true },
     created: '2020-04-08T16:58:21',
     id: Factory.each((id) => id),
