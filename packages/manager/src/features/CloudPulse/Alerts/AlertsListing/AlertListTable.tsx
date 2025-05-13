@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4';
 import { Notice, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
-import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
+import { Grid, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -239,7 +239,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
                 return (
                   <>
-                    <Grid2 sx={{ marginTop: 2 }}>
+                    <Grid sx={{ marginTop: 2 }}>
                       <Table
                         colCount={7}
                         data-qa="alert-table"
@@ -304,7 +304,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           />
                         )}
                       </Table>
-                    </Grid2>
+                    </Grid>
                     {!isGroupedByTag && (
                       <PaginationFooter
                         count={count}

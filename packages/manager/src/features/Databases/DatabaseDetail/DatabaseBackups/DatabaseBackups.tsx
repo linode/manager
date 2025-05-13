@@ -13,7 +13,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import { Grid, GridLegacy } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
@@ -194,7 +194,7 @@ export const DatabaseBackups = (props: Props) => {
             mt: 2,
           }}
         >
-          <Grid item lg={3} md={4} xs={12}>
+          <GridLegacy item lg={3} md={4} xs={12}>
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
               <StyledDateCalendar
@@ -206,8 +206,8 @@ export const DatabaseBackups = (props: Props) => {
                 value={selectedDate}
               />
             </LocalizationProvider>
-          </Grid>
-          <Grid item lg={3} md={4} xs={12}>
+          </GridLegacy>
+          <GridLegacy item lg={3} md={4} xs={12}>
             <Typography variant="h3">Time (UTC)</Typography>
             <FormControl style={{ marginTop: 0 }}>
               {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
@@ -247,9 +247,9 @@ export const DatabaseBackups = (props: Props) => {
                 value={selectedTime}
               />
             </FormControl>
-          </Grid>
+          </GridLegacy>
         </Grid>
-        <Grid item xs={12}>
+        <GridLegacy item xs={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button
               buttonType="primary"
@@ -262,7 +262,7 @@ export const DatabaseBackups = (props: Props) => {
               Restore
             </Button>
           </Box>
-        </Grid>
+        </GridLegacy>
         {database && (
           <DatabaseBackupsDialog
             database={database}

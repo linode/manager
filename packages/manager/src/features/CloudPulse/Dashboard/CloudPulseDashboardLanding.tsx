@@ -1,5 +1,5 @@
 import { Box, Paper } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { Grid, GridLegacy } from '@mui/material';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect } from 'react-router-dom';
@@ -88,7 +88,7 @@ export const CloudPulseDashboardLanding = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
       />
       <Grid container spacing={3} sx={{ width: 'inherit !important' }}>
-        <Grid item xs={12}>
+        <GridLegacy item xs={12}>
           <Paper sx={{ padding: 0 }}>
             <Box display="flex" flexDirection="column">
               <GlobalFilters
@@ -105,7 +105,7 @@ export const CloudPulseDashboardLanding = () => {
               )}
             </Box>
           </Paper>
-        </Grid>
+        </GridLegacy>
         <CloudPulseDashboardRenderer
           dashboard={dashboard}
           filterValue={filterData.id}

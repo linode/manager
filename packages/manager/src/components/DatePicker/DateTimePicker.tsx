@@ -2,7 +2,7 @@ import { ActionsPanel, InputAdornment, TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { Grid, Popover } from '@mui/material';
+import { Grid, GridLegacy, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -226,7 +226,7 @@ export const DateTimePicker = ({
             sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
             {showTime && (
-              <Grid item xs={4}>
+              <GridLegacy item xs={4}>
                 <TimePicker
                   data-qa-time="time-picker"
                   label={timeSelectProps?.label || 'Select Time'}
@@ -270,10 +270,10 @@ export const DateTimePicker = ({
                   }}
                   value={selectedDateTime || null}
                 />
-              </Grid>
+              </GridLegacy>
             )}
             {showTimeZone && (
-              <Grid item xs={7}>
+              <GridLegacy item xs={7}>
                 <TimeZoneSelect
                   disabled={disabledTimeZone}
                   label={timeZoneSelectProps?.label || 'Timezone'}
@@ -281,7 +281,7 @@ export const DateTimePicker = ({
                   onChange={handleTimeZoneChange}
                   value={selectedTimeZone}
                 />
-              </Grid>
+              </GridLegacy>
             )}
           </Grid>
         </Box>

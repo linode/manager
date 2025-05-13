@@ -6,7 +6,7 @@ import {
   Drawer,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid';
+import { Grid, GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
@@ -195,10 +195,10 @@ export const AddNotificationChannelDrawer = (
             {selectedTemplate && selectedTemplate.channel_type === 'email' && (
               <Box paddingTop={2}>
                 <Grid container>
-                  <Grid item md={1} sm={1} xs={2}>
+                  <GridLegacy item md={1} sm={1} xs={2}>
                     <Typography variant="h3">To:</Typography>
-                  </Grid>
-                  <Grid
+                  </GridLegacy>
+                  <GridLegacy
                     item
                     md="auto"
                     sx={{
@@ -208,7 +208,7 @@ export const AddNotificationChannelDrawer = (
                     xs={12}
                   >
                     <RenderChannelDetails template={selectedTemplate} />
-                  </Grid>
+                  </GridLegacy>
                 </Grid>
               </Box>
             )}
