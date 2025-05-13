@@ -186,7 +186,11 @@ export const AddLinodeDrawer = (props: Props) => {
   const handleSubmit = async () => {
     let linodeError: string | undefined = undefined;
     let interfaceError: string | undefined = undefined;
-    const failedLinodes: Linode[] = [];
+    const linodesNeedingInterfaceSelection =
+      selectedLinodesWithMultipleEligibleInterfaces.filter(
+        (linode) => !interfacesToAdd[linode.id]
+      );
+    const failedLinodes: Linode[] = [...linodesNeedingInterfaceSelection];
     const failedInterfaces: Record<number, InterfaceDeviceInfo> = {};
 
     const linodeResults = await Promise.allSettled(
@@ -199,16 +203,25 @@ export const AddLinodeDrawer = (props: Props) => {
         )
     );
 
-    // When a Linode uses Linode Interfaces and it only has one interface, we don't show the
+    // When a Linode uses Linode Interfaces and it only has one eligible interface, we don't show the
     // Interface select for that Linode. Therefore, here, we need to make sure we add the single
     // interface if the linode is selected.
     let interfaceInfos: InterfaceDeviceInfo[] = [];
     for (const { linode, interfaces } of Object.values(
       linodesWithEligibleInterfaces
     )) {
-      if (selectedLinodes.includes(linode) && interfaces.length === 1) {
+      const interfacesWithoutFirewall = interfaces.filter(
+        (iface) =>
+          !allFirewallEntities?.some(
+            (e) => e.type === 'interface' && e.id === iface.id
+          )
+      );
+      if (
+        selectedLinodes.includes(linode) &&
+        interfacesWithoutFirewall.length === 1
+      ) {
         interfaceInfos.push({
-          interfaceId: interfaces[0].id,
+          interfaceId: interfacesWithoutFirewall[0].id,
           linodeId: linode.id,
           linodeLabel: linode.label,
         });
@@ -277,6 +290,11 @@ export const AddLinodeDrawer = (props: Props) => {
         interfaceError = errorReason;
       }
     });
+
+    if (linodesNeedingInterfaceSelection.length > 0) {
+      interfaceError =
+        'You must select an interface to assign to this Firewall.';
+    }
 
     setLocalError(linodeError ?? interfaceError);
     setSelectedLinodes(failedLinodes);
