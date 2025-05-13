@@ -6,7 +6,8 @@ import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 
-import { AddLinodeDrawer } from './AddLinodeDrawer';
+//import { AddLinodeDrawer } from './AddLinodeDrawer';
+import { AddLinodeDrawer } from './AddLinodeDrawerNoUseEffect';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
 import { formattedTypes } from './constants';
 import { FirewallDeviceTable } from './FirewallDeviceTable';
