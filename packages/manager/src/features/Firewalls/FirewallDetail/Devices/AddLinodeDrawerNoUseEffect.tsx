@@ -54,9 +54,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const { data: allLinodes } = useAllLinodesQuery({}, {});
 
-  const linodesUsingLinodeInterfaces = allLinodes?.filter(
-    (l) => l.interface_generation === 'linode'
-  );
+  const linodesUsingLinodeInterfaces =
+    allLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
     () => data?.map((firewall) => firewall.entities).flat(),
@@ -73,7 +72,8 @@ export const AddLinodeDrawer = (props: Props) => {
   );
 
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
-  const linodesWithInterfaces = useQueries({
+  // Only track Linode if Linode has at least one non-vlan interface
+  const linodesWithNonVlanInterfaces = useQueries({
     queries:
       linodesUsingLinodeInterfaces?.map(
         (linode) =>
@@ -87,17 +87,20 @@ export const AddLinodeDrawer = (props: Props) => {
         >
       >((acc, res, index) => {
         if (res.data) {
-          acc[linodesUsingLinodeInterfaces![index].id] = {
-            interfaces: res.data.interfaces,
-            linode: linodesUsingLinodeInterfaces![index],
-          };
+          const nonVlanInterfaces = res.data.interfaces.filter((iface) => !iface.vlan);
+          if (nonVlanInterfaces.length > 0) {
+            acc[linodesUsingLinodeInterfaces[index].id] = {
+              interfaces: nonVlanInterfaces,
+              linode: linodesUsingLinodeInterfaces[index],
+            };
+          }
         }
         return acc;
       }, {});
     },
   });
 
-  const linodesWithMultipleInterfaces = Object.values(linodesWithInterfaces)
+  const linodesWithMultipleInterfaces = Object.values(linodesWithNonVlanInterfaces)
     .filter(({ interfaces }) => interfaces.length > 1)
     .map(({ linode }) => linode);
 
@@ -108,9 +111,9 @@ export const AddLinodeDrawer = (props: Props) => {
     }
     // Exclude a Linode if it uses Linode Interfaces and every interface has a firewall already
     // @todo ignore VLAN?
-    if (linodesWithInterfaces[linode.id]) {
+    if (linodesWithNonVlanInterfaces[linode.id]) {
       if (
-        linodesWithInterfaces[linode.id].interfaces.every((i) =>
+        linodesWithNonVlanInterfaces[linode.id].interfaces.every((i) =>
           allFirewallEntities?.some(
             (e) => e.type === 'interface' && e.id === i.id
           )
@@ -164,7 +167,7 @@ export const AddLinodeDrawer = (props: Props) => {
     // Interface select for that Linode. Therefore, here, we need to make sure we add the single
     // interface if the linode is selected.
     let interfaceIds: number[] = [];
-    for (const { linode, interfaces } of Object.values(linodesWithInterfaces)) {
+    for (const { linode, interfaces } of Object.values(linodesWithNonVlanInterfaces)) {
       if (selectedLinodes.includes(linode) && interfaces.length === 1) {
         interfaceIds.push(interfaces[0].id);
       }
@@ -325,7 +328,7 @@ export const AddLinodeDrawer = (props: Props) => {
           linodesWithMultipleInterfaces
             ?.filter((linode) => selectedLinodes.includes(linode))
             .map((linode) => {
-              const options = linodesWithInterfaces[linode.id].interfaces
+              const options = linodesWithNonVlanInterfaces[linode.id].interfaces
                 .filter(
                   (i) =>
                     !allFirewallEntities?.some(
