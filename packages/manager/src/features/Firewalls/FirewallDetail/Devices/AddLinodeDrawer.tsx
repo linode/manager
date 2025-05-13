@@ -397,8 +397,8 @@ export const AddLinodeDrawer = (props: Props) => {
         {isLinodeInterfacesEnabled &&
           selectedLinodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>
-              {`The following ${linodesWithMultipleInterfaces?.length === 1 ? 'Linode has' : 'Linodes have'} 
-            more than one interface to which a firewall can be applied. Select which interface.`}
+              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'} 
+            multiple interfaces that a firewall can be applied to. Select which interface to apply the firewall to.`}
             </Typography>
           )}
         {isLinodeInterfacesEnabled &&
