@@ -1,5 +1,5 @@
 import { useAllTagsQuery, useLinodesQuery } from '@linode/queries';
-import { Autocomplete, Hidden, Stack, Typography } from '@linode/ui';
+import { Autocomplete, Box, Hidden, Stack, Typography } from '@linode/ui';
 import {
   createLazyRoute,
   useNavigate,
@@ -33,24 +33,7 @@ export const TagsV2 = () => {
   const search = useSearch({
     from: '/tags/groups',
   });
-  const pagination = usePaginationV2({
-    currentRoute: '/tags/groups',
-    preferenceKey: 'tags-v2-table',
-    searchParams: (prev) => ({
-      ...prev,
-      query: search.query,
-    }),
-  });
-  const { handleOrderChange, order, orderBy } = useOrderV2({
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'label',
-      },
-      from: '/tags/groups',
-    },
-    preferenceKey: 'tags-v2-table',
-  });
+
   const selectedTags = search.query?.split(',') ?? [];
 
   return (
@@ -115,42 +98,14 @@ export const TagsV2 = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableSortCell
-                  active={orderBy === 'label'}
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="label"
-                >
-                  Label
-                </TableSortCell>
-                <TableSortCell
-                  active={orderBy === 'status'}
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  label="status"
-                >
-                  Status
-                </TableSortCell>
+                <TableCell>Label</TableCell>
+                <TableCell>Status</TableCell>
                 <Hidden smDown>
-                  <TableSortCell
-                    active={orderBy === 'plan'}
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    label="plan"
-                  >
-                    Plan
-                  </TableSortCell>
+                  <TableCell>Plan</TableCell>
                   <TableCell>Public IP Address</TableCell>
                 </Hidden>
                 <Hidden lgDown>
-                  <TableSortCell
-                    active={orderBy === 'region'}
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    label="region"
-                  >
-                    Region
-                  </TableSortCell>
+                  <TableCell>Region</TableCell>
                 </Hidden>
                 <Hidden lgDown>
                   <TableCell>Last Backup</TableCell>
@@ -169,16 +124,7 @@ export const TagsV2 = () => {
             </TableBody>
           </Table>
         ) : (
-          selectedTags.map((tag) => (
-            <TaggedLinodesTable
-              handleOrderChange={handleOrderChange}
-              key={tag}
-              order={order}
-              orderBy={orderBy}
-              pagination={pagination}
-              tag={tag}
-            />
-          ))
+          selectedTags.map((tag) => <TaggedLinodesTable key={tag} tag={tag} />)
         )}
       </Stack>
     </>
@@ -186,15 +132,35 @@ export const TagsV2 = () => {
 };
 
 interface TaggedLinodesTableProps {
-  handleOrderChange: (orderBy: string, order: 'asc' | 'desc') => void;
-  order: 'asc' | 'desc';
-  orderBy: string;
-  pagination: ReturnType<typeof usePaginationV2>;
   tag: string;
 }
 
 const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
-  const { handleOrderChange, order, orderBy, pagination, tag } = props;
+  const { tag } = props;
+
+  const search = useSearch({
+    from: '/tags/groups',
+  });
+
+  const pagination = usePaginationV2({
+    currentRoute: '/tags/groups',
+    preferenceKey: 'tags-v2-table',
+    queryParamsPrefix: tag,
+    searchParams: (prev) => ({
+      ...prev,
+      query: search.query,
+    }),
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/tags/groups',
+    },
+    preferenceKey: 'tags-v2-table',
+  });
 
   const { data, error, isLoading } = useLinodesQuery(
     {
@@ -209,7 +175,7 @@ const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
   );
 
   return (
-    <>
+    <Box>
       <Typography sx={{ mb: 2 }} variant="h2">
         {tag}
       </Typography>
@@ -298,7 +264,7 @@ const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
         page={pagination.page}
         pageSize={pagination.pageSize}
       />
-    </>
+    </Box>
   );
 };
 

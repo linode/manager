@@ -60,13 +60,13 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   const search: TableSearchParams = useSearch({ strict: false });
   const navigate = useNavigate();
 
-  const searchParamPage = search.page;
-  const searchParamPageSize = search.pageSize;
-
   const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
   const pageSizeKey = queryParamsPrefix
     ? `${queryParamsPrefix}-pageSize`
     : 'pageSize';
+
+  const searchParamPage = search[pageKey];
+  const searchParamPageSize = search[pageSizeKey];
 
   const preferredPageSize = preferenceKey
     ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
