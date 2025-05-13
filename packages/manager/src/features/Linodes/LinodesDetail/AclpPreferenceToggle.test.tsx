@@ -24,7 +24,7 @@ const expectedAclpPreferences: Record<
   metrics: {
     preference: true,
     legacyModeBannerText:
-      'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current Metrics view anytime.',
+      'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current view at any time.',
     betaModeBannertext:
       'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.',
     legacyModeButtonText: 'Try the Metrics (Beta)',

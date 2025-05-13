@@ -41,7 +41,7 @@ const preferenceConfig: Record<
         <span>
           Try the new <strong>Metrics (Beta)</strong> with more options and
           greater flexibility for better data analysis. You can switch back to
-          the current Metrics view anytime.
+          the current view at any time.
         </span>
       ),
   },
