@@ -160,7 +160,9 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const handleSubmit = async () => {
     let linodeError: string | undefined = undefined;
+    let interfaceError: string | undefined = undefined;
     const failedLinodes: Linode[] = [];
+    const failedInterfaces: Record<number, InterfaceDeviceInfo[]> = {};
 
     const linodeResults = await Promise.allSettled(
       selectedLinodes
@@ -225,19 +227,39 @@ export const AddLinodeDrawer = (props: Props) => {
     });
 
     interfaceResults.forEach((result, index) => {
+      const ifaceInfo = interfaceInfos[index];
       if (result.status === 'fulfilled') {
         enqueueSnackbar(
-          `Interface (ID ${id}) from Linode ${'todo'} successfully added.`,
+          `Interface (ID ${ifaceInfo.interfaceId}) from Linode ${ifaceInfo.linodeLabel} successfully added.`,
           {
             variant: 'success',
           }
         );
         return;
-      } else {
+      }
+      failedInterfaces[ifaceInfo.linodeId] = [ifaceInfo];
+      const failedLinode = selectedLinodes.find(
+        (linode) => linode.id === ifaceInfo.linodeId
+      );
+      if (failedLinode) {
+        failedLinodes.push(failedLinode);
+      }
+      const errorReason = getAPIErrorOrDefault(
+        result.reason,
+        `Failed to add Interface (ID ${ifaceInfo.interfaceId}) from Linode ${ifaceInfo.linodeLabel}.`
+      )[0].reason;
+      if (!interfaceError) {
+        interfaceError = errorReason;
       }
     });
 
-    // handleClose();
+    setLocalError(linodeError ?? interfaceError);
+    setSelectedLinodes(failedLinodes);
+    setInterfacesToAdd(failedInterfaces);
+
+    if (!linodeError && !interfaceError) {
+      handleClose();
+    }
   };
 
   const errorNotice = () => {
