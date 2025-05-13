@@ -1,5 +1,5 @@
+import { useMatchRoute, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -23,8 +23,8 @@ const Streams = React.lazy(() =>
 );
 
 export const DataStreamLanding = React.memo(() => {
-  const history = useHistory();
-  const location = useLocation();
+  const navigate = useNavigate();
+  const matchRoute = useMatchRoute();
 
   const landingHeaderProps = {
     breadcrumbProps: {
@@ -45,13 +45,16 @@ export const DataStreamLanding = React.memo(() => {
     },
   ];
 
-  const getDefaultTabIndex = () =>
-    tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    ) || 0;
+  const getDefaultTabIndex = () => {
+    const matchingTabIndex = tabs.findIndex((tab) =>
+      Boolean(matchRoute({ to: tab.routeName }))
+    );
+
+    return matchingTabIndex >= 0 ? matchingTabIndex : 0;
+  };
 
   const handleTabChange = (index: number) =>
-    history.push(tabs[index].routeName);
+    navigate({ to: tabs[index].routeName });
 
   return (
     <>
