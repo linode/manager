@@ -1,4 +1,4 @@
-import { Box, Select } from '@linode/ui';
+import { Box, Select, Stack, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -81,27 +81,30 @@ export const PaginationFooter = (props: Props) => {
           pageSize={pageSize}
         />
       )}
-      {!fixedSize ? (
-        <Box data-qa-pagination-page-size padding={0.5}>
-          <Select
-            hideLabel
-            label="Number of items to show"
-            listItemProps={(value) => {
-              return {
-                dataAttributes: {
-                  'data-qa-pagination-page-size-option': String(value.value),
-                },
-              };
-            }}
-            onChange={(_e, value) => handleSizeChange(Number(value.value))}
-            options={finalOptions}
-            value={{
-              label: defaultPagination?.label ?? '',
-              value: defaultPagination?.value ?? '',
-            }}
-          />
-        </Box>
-      ) : null}
+      <Stack alignItems="center" direction="row" spacing={2}>
+        <Typography>{count.toLocaleString()} Total Results</Typography>
+        {!fixedSize && (
+          <Box data-qa-pagination-page-size padding={0.5}>
+            <Select
+              hideLabel
+              label="Number of items to show"
+              listItemProps={(value) => {
+                return {
+                  dataAttributes: {
+                    'data-qa-pagination-page-size-option': String(value.value),
+                  },
+                };
+              }}
+              onChange={(_e, value) => handleSizeChange(Number(value.value))}
+              options={finalOptions}
+              value={{
+                label: defaultPagination?.label ?? '',
+                value: defaultPagination?.value ?? '',
+              }}
+            />
+          </Box>
+        )}
+      </Stack>
     </Box>
   );
 };

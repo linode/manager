@@ -65,7 +65,9 @@ export const usePaginationV2 = <T extends TableSearchParams>({
     ? `${queryParamsPrefix}-pageSize`
     : 'pageSize';
 
+  // @ts-expect-error can we fix up router typesafety here?
   const searchParamPage = search[pageKey];
+  // @ts-expect-error can we fix up router typesafety here?
   const searchParamPageSize = search[pageSizeKey];
 
   const preferredPageSize = preferenceKey
