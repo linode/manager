@@ -45,19 +45,13 @@ export const DataStreamLanding = React.memo(() => {
     },
   ];
 
-  const getDefaultTabIndex = () => {
-    return (
-      tabs.findIndex((tab) =>
-        Boolean(matchPath(tab.routeName, { path: location.pathname }))
-      ) || 0
-    );
-  };
+  const getDefaultTabIndex = () =>
+    tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    ) || 0;
 
-  const handleTabChange = (index: number) => {
+  const handleTabChange = (index: number) =>
     history.push(tabs[index].routeName);
-  };
-
-  let idx = 0;
 
   return (
     <>
@@ -70,10 +64,10 @@ export const DataStreamLanding = React.memo(() => {
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
-            <SafeTabPanel index={idx}>
+            <SafeTabPanel index={0}>
               <Streams />
             </SafeTabPanel>
-            <SafeTabPanel index={++idx}>
+            <SafeTabPanel index={1}>
               <Destinations />
             </SafeTabPanel>
           </TabPanels>
@@ -82,5 +76,3 @@ export const DataStreamLanding = React.memo(() => {
     </>
   );
 });
-
-export default DataStreamLanding;
