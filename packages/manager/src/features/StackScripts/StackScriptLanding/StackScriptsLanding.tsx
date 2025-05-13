@@ -50,6 +50,7 @@ export const StackScriptsLanding = () => {
           navigate({ to: '/stackscripts/create' });
         }}
         removeCrumbX={1}
+        spacingBottom={4}
         title="StackScripts"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
