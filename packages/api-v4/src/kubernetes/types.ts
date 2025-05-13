@@ -20,6 +20,7 @@ export interface Taint {
 }
 
 export interface KubernetesCluster {
+  apl_enabled: boolean;
   control_plane: ControlPlaneOptions;
   created: string;
   id: number;
