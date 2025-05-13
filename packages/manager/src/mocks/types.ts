@@ -59,16 +59,27 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id:
-    | 'Account'
-    | 'API'
-    | 'Capabilities'
-    | 'Limits'
-    | 'Managed'
-    | 'Profile'
-    | 'Regions';
-  type: 'account' | 'checkbox' | 'profile' | 'select';
+  id: MockPresetExtraGroupId;
+  type: MockPresetExtraGroupType;
 };
+
+export type MockPresetExtraGroupId =
+  | 'Account'
+  | 'API'
+  | 'Capabilities'
+  | 'Limits'
+  | 'Managed'
+  | 'Notifications'
+  | 'Profile'
+  | 'Regions';
+
+export type MockPresetExtraGroupType =
+  | 'account'
+  | 'checkbox'
+  | 'notifications'
+  | 'profile'
+  | 'select';
+
 export type MockPresetExtraId =
   | 'account:custom'
   | 'account:managed-disabled'
@@ -76,6 +87,7 @@ export type MockPresetExtraId =
   | 'api:response-time'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'notifications:custom'
   | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'

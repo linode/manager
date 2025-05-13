@@ -12,6 +12,7 @@ import { SeedOptions } from './components/SeedOptions';
 import {
   getBaselinePreset,
   getCustomAccountData,
+  getCustomNotificationsData,
   getCustomProfileData,
   getExtraPresets,
   getExtraPresetsMap,
@@ -20,6 +21,7 @@ import {
   isMSWEnabled,
   saveBaselinePreset,
   saveCustomAccountData,
+  saveCustomNotificationsData,
   saveCustomProfileData,
   saveExtraPresets,
   saveExtraPresetsMap,
@@ -28,7 +30,7 @@ import {
   saveSeedsCountMap,
 } from './utils';
 
-import type { Account, Profile } from '@linode/api-v4';
+import type { Account, Notification, Profile } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetCrudId,
@@ -62,6 +64,9 @@ export const ServiceWorkerTool = () => {
   const [customProfileData, setCustomProfileData] = React.useState<
     null | Profile | undefined
   >(getCustomProfileData());
+  const [customNotificationsData, setCustomNotificationsData] = React.useState<
+    Notification[] | null | undefined
+  >(getCustomNotificationsData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;
   }>(loadedPresetsMap);
@@ -83,18 +88,26 @@ export const ServiceWorkerTool = () => {
   React.useEffect(() => {
     const currentAccountData = getCustomAccountData();
     const currentProfileData = getCustomProfileData();
+    const currentNotificationsData = getCustomNotificationsData();
     const hasCustomAccountChanges =
       JSON.stringify(currentAccountData) !== JSON.stringify(customAccountData);
     const hasCustomProfileChanges =
       JSON.stringify(currentProfileData) !== JSON.stringify(customProfileData);
+    const hasCustomNotificationsChanges =
+      JSON.stringify(currentNotificationsData) !==
+      JSON.stringify(customNotificationsData);
 
-    if (hasCustomAccountChanges || hasCustomProfileChanges) {
+    if (
+      hasCustomAccountChanges ||
+      hasCustomProfileChanges ||
+      hasCustomNotificationsChanges
+    ) {
       setSaveState((prev) => ({
         ...prev,
         hasUnsavedChanges: true,
       }));
     }
-  }, [customAccountData, customProfileData]);
+  }, [customAccountData, customNotificationsData, customProfileData]);
 
   const globalHandlers = {
     applyChanges: () => {
@@ -111,6 +124,12 @@ export const ServiceWorkerTool = () => {
 
       if (extraPresets.includes('profile:custom') && customProfileData) {
         saveCustomProfileData(customProfileData);
+      }
+      if (
+        extraPresets.includes('notifications:custom') &&
+        customNotificationsData
+      ) {
+        saveCustomNotificationsData(customNotificationsData);
       }
 
       const promises = seeders.map((seederId) => {
@@ -138,6 +157,7 @@ export const ServiceWorkerTool = () => {
       setPresetsCountMap(getExtraPresetsMap());
       setCustomAccountData(getCustomAccountData());
       setCustomProfileData(getCustomProfileData());
+      setCustomNotificationsData(getCustomNotificationsData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -160,6 +180,7 @@ export const ServiceWorkerTool = () => {
       saveExtraPresetsMap({});
       saveCustomAccountData(null);
       saveCustomProfileData(null);
+      saveCustomNotificationsData(null);
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: true,
@@ -370,9 +391,11 @@ export const ServiceWorkerTool = () => {
               <div className="dev-tools__list-box">
                 <ExtraPresetOptions
                   customAccountData={customAccountData}
+                  customNotificationsData={customNotificationsData}
                   customProfileData={customProfileData}
                   handlers={extraPresets}
                   onCustomAccountChange={setCustomAccountData}
+                  onCustomNotificationsChange={setCustomNotificationsData}
                   onCustomProfileChange={setCustomProfileData}
                   onPresetCountChange={presetHandlers.changeCount}
                   onSelectChange={presetHandlers.changeSelect}

@@ -3,6 +3,7 @@ import { defaultBaselineMockPreset, extraMockPresets } from 'src/mocks/presets';
 import {
   LOCAL_STORAGE_ACCOUNT_FORM_DATA_KEY,
   LOCAL_STORAGE_KEY,
+  LOCAL_STORAGE_NOTIFICATIONS_FORM_DATA_KEY,
   LOCAL_STORAGE_PRESET_EXTRAS_KEY,
   LOCAL_STORAGE_PRESET_KEY,
   LOCAL_STORAGE_PRESETS_MAP_KEY,
@@ -11,7 +12,7 @@ import {
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
 } from './constants';
 
-import type { Account, Profile } from '@linode/api-v4';
+import type { Account, Notification, Profile } from '@linode/api-v4';
 import type {
   MockPresetBaselineId,
   MockPresetExtraId,
@@ -185,6 +186,28 @@ export const saveCustomProfileData = (data: null | Profile): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Retrieves the custom notifications form data from local storage.
+ */
+export const getCustomNotificationsData = (): Notification[] | null => {
+  const data = localStorage.getItem(LOCAL_STORAGE_NOTIFICATIONS_FORM_DATA_KEY);
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves the custom notifications form data to local storage.
+ */
+export const saveCustomNotificationsData = (
+  data: Notification[] | null
+): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_NOTIFICATIONS_FORM_DATA_KEY,
       JSON.stringify(data)
     );
   }

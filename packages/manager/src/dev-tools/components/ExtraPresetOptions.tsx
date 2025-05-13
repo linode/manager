@@ -4,17 +4,22 @@ import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { extraMockPresets } from 'src/mocks/presets';
 
 import { ExtraPresetAccount } from './ExtraPresetAccount';
+import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 import { ExtraPresetProfile } from './ExtraPresetProfile';
 
-import type { Account, Profile } from '@linode/api-v4';
+import type { Account, Notification, Profile } from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
+  customNotificationsData?: Notification[] | null;
   customProfileData?: null | Profile;
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
+  onCustomNotificationsChange?: (
+    data: Notification[] | null | undefined
+  ) => void;
   onCustomProfileChange?: (data: null | Profile | undefined) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
@@ -28,9 +33,11 @@ export interface ExtraPresetOptionsProps {
 export const ExtraPresetOptions = ({
   customAccountData,
   customProfileData,
+  customNotificationsData,
   handlers,
   onCustomAccountChange,
   onCustomProfileChange,
+  onCustomNotificationsChange,
   onPresetCountChange,
   onSelectChange,
   onTogglePreset,
@@ -85,6 +92,14 @@ export const ExtraPresetOptions = ({
                 customProfileData={customProfileData}
                 handlers={handlers}
                 onFormChange={onCustomProfileChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'notifications' && (
+              <ExtraPresetNotifications
+                customNotificationsData={customNotificationsData}
+                handlers={handlers}
+                onFormChange={onCustomNotificationsChange}
                 onTogglePreset={onTogglePreset}
               />
             )}

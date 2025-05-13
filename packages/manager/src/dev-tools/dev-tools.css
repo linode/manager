@@ -380,6 +380,35 @@
   }
 }
 
+.dev-tools__modal__rectangle-group {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  padding: 10px;
+
+  .dev-tools__modal__controls {
+    display: flex;
+    flex-direction: row;
+
+    button {
+      white-space: nowrap;
+    }
+
+    > div:first-child {
+      width: calc(100% - 55px);
+    }
+
+    > div:last-child {
+      flex-grow: 1;
+      text-align: right;
+    }
+  }
+
+  form {
+    margin-top: 10px;
+  }
+}
+
 /*
  * Dev tools body has height of `0` when `.dev-tools--open` class is not present.
  */
