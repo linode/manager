@@ -67,8 +67,6 @@ export const usePendo = () => {
   const visitorId = getUniquePendoId(profile?.uid.toString());
 
   React.useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log({ PENDO_API_KEY }, { ADOBE_ANALYTICS_URL });
     if (PENDO_API_KEY && ADOBE_ANALYTICS_URL) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
