@@ -326,12 +326,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <StyledGrid>
         <StyledResizeButton
-          buttonType="primary"
+          data-testid="resize-database-button"
           disabled={shouldSubmitBeDisabled || disabled}
           onClick={() => {
             setIsResizeConfirmationDialogOpen(true);
           }}
           type="submit"
+          variant="primary"
         >
           Resize Database Cluster
         </StyledResizeButton>

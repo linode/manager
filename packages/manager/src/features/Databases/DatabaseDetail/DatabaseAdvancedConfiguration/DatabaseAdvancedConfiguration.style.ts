@@ -34,3 +34,9 @@ export const GroupItems = styled('ul')(({ theme }) => ({
   },
   padding: 0,
 }));
+
+export const StyledButtonWrapper = styled('div')(({ theme }) => ({
+  alignItems: 'center',
+  display: 'flex',
+  height: '100%',
+}));

@@ -1,4 +1,5 @@
-import { Button, Typography } from '@linode/ui';
+import { Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -66,12 +67,13 @@ export const DatabaseSettingsMenuItem = (props: Props) => {
         </Typography>
       </div>
       <Button
-        buttonType="outlined"
         className={classes.sectionButton}
         data-qa-settings-button={buttonText}
+        data-testid={`settings-button-${buttonText}`}
         disabled={disabled}
         onClick={onClick}
         title={buttonText}
+        variant="secondary"
       >
         {buttonText}
       </Button>
