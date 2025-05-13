@@ -38,7 +38,8 @@ export const AssignSingleRole = ({
         {index !== 0 && (
           <Divider
             sx={{
-              marginBottom: theme.tokens.spacing.S12,
+              marginBottom: theme.tokens.spacing.S24,
+              marginTop: theme.tokens.spacing.S20,
             }}
           />
         )}
@@ -61,8 +62,9 @@ export const AssignSingleRole = ({
                 textFieldProps={{ hideLabel: true }}
                 value={value?.role || null}
               />
-              {value?.role && !hideDetails && (
+              {value?.role && (
                 <AssignedPermissionsPanel
+                  hideDetails={hideDetails}
                   mode="assign-role"
                   onChange={(updatedEntities) => {
                     onChange({
@@ -82,7 +84,10 @@ export const AssignSingleRole = ({
         sx={{
           flex: '0 1 auto',
           marginTop:
-            index === 0 ? -theme.tokens.spacing.S4 : theme.tokens.spacing.S16,
+            index === 0
+              ? `-${theme.tokens.spacing.S2}`
+              : theme.tokens.spacing.S40,
+          paddingTop: index === 0 ? undefined : theme.tokens.spacing.S4,
           verticalAlign: 'top',
         }}
       >
