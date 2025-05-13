@@ -57,7 +57,7 @@ export const DataStreamLanding = React.memo(() => {
     <>
       <ProductInformationBanner bannerLocation="DataStream" />
       <DocumentTitleSegment segment="DataStream" />
-      <LandingHeader {...landingHeaderProps} />
+      <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
