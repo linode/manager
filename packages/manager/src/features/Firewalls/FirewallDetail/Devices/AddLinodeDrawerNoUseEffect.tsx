@@ -79,7 +79,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
   // Only track Linode if Linode has at least one non-vlan interface
-  const linodesWithEligibleInterfaces = useQueries({
+  const linodesWithNonVlanInterfaces = useQueries({
     queries:
       linodesUsingLinodeInterfaces?.map(
         (linode) =>
@@ -109,7 +109,7 @@ export const AddLinodeDrawer = (props: Props) => {
   });
 
   const linodesWithMultipleInterfaces = Object.values(
-    linodesWithEligibleInterfaces
+    linodesWithNonVlanInterfaces
   )
     .filter(({ interfaces }) => {
       if (interfaces.length < 2) {
@@ -126,20 +126,25 @@ export const AddLinodeDrawer = (props: Props) => {
     .map(({ linode }) => linode);
 
   const linodeOptions = allLinodes?.filter((linode) => {
-    // Exclude read only Linodes
-    if (readOnlyLinodeIds.includes(linode.id)) {
+    // Exclude read only Linodes or Linodes already assigned to a firewall
+    if (
+      readOnlyLinodeIds.includes(linode.id) ||
+      allFirewallEntities?.some(
+        (entity) => entity.type === 'linode' && entity.id === linode.id
+      )
+    ) {
       return false;
     }
 
     // Exclude a Linode if it uses Linode Interfaces and
     if (linode.interface_generation === 'linode') {
       // the Linode has no eligible interfaces
-      if (!linodesWithEligibleInterfaces[linode.id]) {
+      if (!linodesWithNonVlanInterfaces[linode.id]) {
         return false;
       }
       // or every eligible interface has a firewall already assigned
       const linodeInterfaces =
-        linodesWithEligibleInterfaces[linode.id].interfaces;
+        linodesWithNonVlanInterfaces[linode.id].interfaces;
       if (
         linodeInterfaces.length === 0 ||
         linodeInterfaces.every((i) =>
@@ -152,14 +157,6 @@ export const AddLinodeDrawer = (props: Props) => {
       }
     }
 
-    // exclude linodes
-    if (
-      allFirewallEntities?.some(
-        (entity) => entity.type === 'linode' && entity.id === linode.id
-      )
-    ) {
-      return false;
-    }
     return true;
   });
 
@@ -169,12 +166,12 @@ export const AddLinodeDrawer = (props: Props) => {
     useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
-  const selectedLinodesWithMultipleEligibleInterfaces =
+  const selectedLinodesWithMultipleInterfaces =
     linodesWithMultipleInterfaces.filter((linode) =>
       selectedLinodes.includes(linode)
     );
 
-  // Key is the Linode ID, value is the interfaces to add
+  // Key is the Linode ID, value is the interface to add
   const [interfacesToAdd, setInterfacesToAdd] = React.useState<
     Record<number, InterfaceDeviceInfo>
   >({});
@@ -187,7 +184,7 @@ export const AddLinodeDrawer = (props: Props) => {
     let linodeError: string | undefined = undefined;
     let interfaceError: string | undefined = undefined;
     const linodesNeedingInterfaceSelection =
-      selectedLinodesWithMultipleEligibleInterfaces.filter(
+      selectedLinodesWithMultipleInterfaces.filter(
         (linode) => !interfacesToAdd[linode.id]
       );
     const failedLinodes: Linode[] = [...linodesNeedingInterfaceSelection];
@@ -208,7 +205,7 @@ export const AddLinodeDrawer = (props: Props) => {
     // interface if the linode is selected.
     let interfaceInfos: InterfaceDeviceInfo[] = [];
     for (const { linode, interfaces } of Object.values(
-      linodesWithEligibleInterfaces
+      linodesWithNonVlanInterfaces
     )) {
       const interfacesWithoutFirewall = interfaces.filter(
         (iface) =>
@@ -398,15 +395,15 @@ export const AddLinodeDrawer = (props: Props) => {
           value={selectedLinodes.map((l) => l.id)}
         />
         {isLinodeInterfacesEnabled &&
-          selectedLinodesWithMultipleEligibleInterfaces.length > 0 && (
+          selectedLinodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>
               {`The following ${linodesWithMultipleInterfaces?.length === 1 ? 'Linode has' : 'Linodes have'} 
             more than one interface to which a firewall can be applied. Select which interface.`}
             </Typography>
           )}
         {isLinodeInterfacesEnabled &&
-          selectedLinodesWithMultipleEligibleInterfaces.map((linode) => {
-            const options = linodesWithEligibleInterfaces[linode.id].interfaces
+          selectedLinodesWithMultipleInterfaces.map((linode) => {
+            const options = linodesWithNonVlanInterfaces[linode.id].interfaces
               .filter(
                 (i) =>
                   !allFirewallEntities?.some(
