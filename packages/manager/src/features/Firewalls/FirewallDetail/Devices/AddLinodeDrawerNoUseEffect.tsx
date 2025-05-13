@@ -119,10 +119,13 @@ export const AddLinodeDrawer = (props: Props) => {
     if (readOnlyLinodeIds.includes(linode.id)) {
       return false;
     }
-    // Exclude a Linode if it uses Linode Interfaces and every interface has a firewall already
+    // Exclude a Linode if it uses Linode Interfaces and every interface has a firewall already or Linode has no interfaces
     if (linodesWithNonVlanInterfaces[linode.id]) {
+      const linodeInterfaces =
+        linodesWithNonVlanInterfaces[linode.id].interfaces;
       if (
-        linodesWithNonVlanInterfaces[linode.id].interfaces.every((i) =>
+        linodeInterfaces.length === 0 ||
+        linodeInterfaces.every((i) =>
           allFirewallEntities?.some(
             (e) => e.type === 'interface' && e.id === i.id
           )
