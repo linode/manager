@@ -560,7 +560,7 @@ export interface AccountMaintenance {
   entity: {
     id: number;
     label: string;
-    type: string;
+    type: 'linode' | 'volume';
     url: string;
   };
   reason: string;

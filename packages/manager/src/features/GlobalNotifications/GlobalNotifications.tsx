@@ -6,6 +6,7 @@ import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
+import { PlatformMaintenanceBanner } from 'src/features/GlobalNotifications/PlatformMaintenanceBanner';
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -80,6 +81,7 @@ export const GlobalNotifications = () => {
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
         />
       )}
+      <PlatformMaintenanceBanner />
       {!isEmpty(suppliedMaintenances) && !hasDismissedMaintenances ? (
         <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
       ) : null}
