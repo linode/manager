@@ -111,7 +111,18 @@ export const AddLinodeDrawer = (props: Props) => {
   const linodesWithMultipleInterfaces = Object.values(
     linodesWithEligibleInterfaces
   )
-    .filter(({ interfaces }) => interfaces.length > 1)
+    .filter(({ interfaces }) => {
+      if (interfaces.length < 2) {
+        return false;
+      }
+      const interfacesWithoutFirewall = interfaces.filter(
+        (iface) =>
+          !allFirewallEntities?.some(
+            (e) => e.type === 'interface' && e.id === iface.id
+          )
+      );
+      return interfacesWithoutFirewall.length > 1;
+    })
     .map(({ linode }) => linode);
 
   const linodeOptions = allLinodes?.filter((linode) => {
@@ -158,6 +169,10 @@ export const AddLinodeDrawer = (props: Props) => {
     useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
+  const selectedLinodesWithMultipleEligibleInterfaces =
+    linodesWithMultipleInterfaces.filter((linode) =>
+      selectedLinodes.includes(linode)
+    );
 
   // Key is the Linode ID, value is the interfaces to add
   const [interfacesToAdd, setInterfacesToAdd] = React.useState<
@@ -365,54 +380,50 @@ export const AddLinodeDrawer = (props: Props) => {
           value={selectedLinodes.map((l) => l.id)}
         />
         {isLinodeInterfacesEnabled &&
-          (linodesWithMultipleInterfaces?.length ?? 0) > 0 && (
+          selectedLinodesWithMultipleEligibleInterfaces.length > 0 && (
             <Typography marginTop={3}>
               {`The following ${linodesWithMultipleInterfaces?.length === 1 ? 'Linode has' : 'Linodes have'} 
             more than one interface to which a firewall can be applied. Select which interface.`}
             </Typography>
           )}
         {isLinodeInterfacesEnabled &&
-          linodesWithMultipleInterfaces
-            .filter((linode) => selectedLinodes.includes(linode))
-            .map((linode) => {
-              const options = linodesWithEligibleInterfaces[
-                linode.id
-              ].interfaces
-                .filter(
-                  (i) =>
-                    !allFirewallEntities?.some(
-                      (e) => e.type === 'interface' && e.id === i.id
-                    )
-                )
-                .map((i) => ({
-                  ...i,
-                  label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
-                }));
-              return (
-                <Autocomplete
-                  disableClearable
-                  key={linode.id}
-                  label={`${linode.label} Interface`}
-                  onChange={(e, option) => {
-                    setInterfacesToAdd((prev) => {
-                      const newInterfacesToAdd = { ...prev };
-                      newInterfacesToAdd[linode.id] = {
-                        linodeId: linode.id,
-                        linodeLabel: linode.label,
-                        interfaceId: option.id,
-                      };
-                      return newInterfacesToAdd;
-                    });
-                  }}
-                  options={options}
-                  placeholder="Select Interface"
-                  value={options.find(
-                    (iface) =>
-                      interfacesToAdd[linode.id]?.interfaceId === iface.id
-                  )}
-                />
-              );
-            })}
+          selectedLinodesWithMultipleEligibleInterfaces.map((linode) => {
+            const options = linodesWithEligibleInterfaces[linode.id].interfaces
+              .filter(
+                (i) =>
+                  !allFirewallEntities?.some(
+                    (e) => e.type === 'interface' && e.id === i.id
+                  )
+              )
+              .map((i) => ({
+                ...i,
+                label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
+              }));
+            return (
+              <Autocomplete
+                disableClearable
+                key={linode.id}
+                label={`${linode.label} Interface`}
+                onChange={(e, option) => {
+                  setInterfacesToAdd((prev) => {
+                    const newInterfacesToAdd = { ...prev };
+                    newInterfacesToAdd[linode.id] = {
+                      linodeId: linode.id,
+                      linodeLabel: linode.label,
+                      interfaceId: option.id,
+                    };
+                    return newInterfacesToAdd;
+                  });
+                }}
+                options={options}
+                placeholder="Select Interface"
+                value={options.find(
+                  (iface) =>
+                    interfacesToAdd[linode.id]?.interfaceId === iface.id
+                )}
+              />
+            );
+          })}
         <ActionsPanel
           primaryButtonProps={{
             label: 'Add',
