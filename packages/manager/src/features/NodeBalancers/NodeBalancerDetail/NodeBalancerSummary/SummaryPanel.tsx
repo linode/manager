@@ -57,7 +57,10 @@ export const SummaryPanel = () => {
 
   const flags = useFlags();
 
-  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(Number(id));
+  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(id),
+    flags.nodebalancerVpc
+  );
 
   const { data: vpcDetails } = useVPCQuery(
     Number(vpcConfig?.data[0].vpc_id) || -1,
@@ -229,19 +232,14 @@ export const SummaryPanel = () => {
           <StyledSection>
             <Typography data-qa-ports variant="body1">
               <strong>VPC:</strong>{' '}
-              {vpcConfig?.data.length === 0
-                ? undefined
-                : vpcConfig?.data.map((vpc, i) => (
-                    <React.Fragment key={vpc.id}>
-                      <Link
-                        className="secondaryLink"
-                        to={`/vpcs/${vpc.vpc_id}`}
-                      >
-                        {vpcDetails?.label}
-                      </Link>
-                      {i < vpcConfig.data.length - 1 ? ', ' : ''}
-                    </React.Fragment>
-                  ))}
+              {vpcConfig?.data.map((vpc, i) => (
+                <React.Fragment key={vpc.id}>
+                  <Link className="secondaryLink" to={`/vpcs/${vpc.vpc_id}`}>
+                    {vpcDetails?.label}
+                  </Link>
+                  {i < vpcConfig.data.length - 1 ? ', ' : ''}
+                </React.Fragment>
+              ))}
             </Typography>
           </StyledSection>
           <StyledSection>

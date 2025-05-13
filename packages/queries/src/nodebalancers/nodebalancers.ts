@@ -368,8 +368,11 @@ export const nodebalancerEventHandler = ({
   }
 };
 
-export const useNodeBalancerVPCConfigsBetaQuery = (nodebalancerId: number) =>
+export const useNodeBalancerVPCConfigsBetaQuery = (
+  nodebalancerId: number,
+  enabled = false,
+) =>
   useQuery<ResourcePage<NodebalancerVpcConfig>, APIError[]>({
     ...nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.vpcsBeta,
-    enabled: Boolean(nodebalancerId),
+    enabled,
   });
