@@ -254,9 +254,8 @@ export const useLkeStandardOrEnterpriseVersions = (
 
 export const useKubernetesBetaEndpoint = () => {
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const isUsingBetaEndpoint = isLkeEnterpriseLAFeatureEnabled;
 
   return {
-    isUsingBetaEndpoint,
+    isUsingBetaEndpoint: isLkeEnterpriseLAFeatureEnabled,
   };
 };
