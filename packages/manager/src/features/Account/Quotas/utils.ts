@@ -137,7 +137,7 @@ export const getQuotaIncreaseMessage = ({
   if (!profile) {
     return {
       description: '',
-      neededIn: 'Less than 7 days',
+      neededIn: 'Fewer than 7 days',
       notes: '',
       quantity: '0',
       summary: `Increase ${selectedService.label} Quota`,
@@ -156,7 +156,7 @@ export const getQuotaIncreaseMessage = ({
     }<br>\n**Needed in**: ${
       neededIn
     }<br>\n**${regionAppliedLabel}**: ${regionAppliedValue}`,
-    neededIn: 'Less than 7 days',
+    neededIn: 'Fewer than 7 days',
     notes: '',
     quantity: String(quantity),
     summary: `Increase ${selectedService.label} Quota`,

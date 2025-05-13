@@ -106,7 +106,7 @@ describe('useGetLocationsForQuotaService', () => {
       profile,
       quantity,
       quota,
-      neededIn: 'Less than 7 days',
+      neededIn: 'Fewer than 7 days',
       selectedService: {
         label: 'Object Storage',
         value: 'object-storage',

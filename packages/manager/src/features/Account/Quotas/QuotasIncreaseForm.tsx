@@ -50,7 +50,7 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
     () =>
       getQuotaIncreaseMessage({
         convertedMetrics: convertedResourceMetrics,
-        neededIn: 'Less than 7 days',
+        neededIn: 'Fewer than 7 days',
         profile,
         quantity: convertedResourceMetrics?.limit ?? 0,
         quota,
@@ -127,10 +127,10 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
             control={form.control}
             name="quantity"
             render={({ field, fieldState }) => (
-              <Stack direction="row" gap={2} sx={{ maxWidth: 250 }}>
+              <Stack direction="row" gap={2}>
                 <TextField
                   errorText={fieldState.error?.message}
-                  helperText={`In ${quota.region_applied || quota.s3_endpoint} - current quota: ${convertedResourceMetrics?.limit?.toLocaleString() ?? 'unknown'} ${convertedResourceMetrics?.metric}`}
+                  helperText={`Current quota in ${quota.region_applied || quota.s3_endpoint}: ${convertedResourceMetrics?.limit?.toLocaleString() ?? 'unknown'} ${convertedResourceMetrics?.metric}`}
                   label="New Quota"
                   min={convertedResourceMetrics?.limit}
                   name="quantity"
@@ -160,7 +160,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                       ),
                     },
                   }}
-                  sx={{ width: 300 }}
                   type="number"
                   value={field.value}
                 />
@@ -179,8 +178,8 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                 }}
                 options={[
                   {
-                    label: 'Less than 7 days',
-                    value: 'Less than 7 days',
+                    label: 'Fewer than 7 days',
+                    value: 'Fewer than 7 days',
                   },
                   {
                     label: '7 to 30 days',
