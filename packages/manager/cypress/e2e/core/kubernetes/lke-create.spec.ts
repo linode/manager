@@ -425,15 +425,6 @@ describe('LKE Cluster Creation with APL enabled', () => {
       dedicated8Type,
       nanodeType,
     ];
-    mockGetAccountBeta({
-      description:
-        'Akamai App Platform is a platform that combines developer and operations-centric tools, automation and self-service to streamline the application lifecycle when using Kubernetes. This process will pre-register you for an upcoming beta.',
-      ended: null,
-      enrolled: '2024-11-04T21:39:41',
-      id: 'apl',
-      label: 'Akamai App Platform',
-      started: '2024-10-31T18:00:00',
-    }).as('getAccountBeta');
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
     mockGetClusterPools(mockedLKECluster.id, mockedLKEClusterPools).as(
@@ -450,12 +441,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
 
     cy.visitWithLogin('/kubernetes/create');
 
-    cy.wait([
-      '@getFeatureFlags',
-      '@getAccountBeta',
-      '@getLinodeTypes',
-      '@getLKEClusterTypes',
-    ]);
+    cy.wait(['@getLinodeTypes', '@getLKEClusterTypes']);
 
     // Enter cluster details
     cy.get('[data-qa-textfield-label="Cluster Label"]')
@@ -466,7 +452,6 @@ describe('LKE Cluster Creation with APL enabled', () => {
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
-    cy.findByTestId('apl-beta-chip').should('have.text', 'BETA');
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
     cy.findByTestId('ha-radio-button-yes').should('be.disabled');
     cy.get(
@@ -1482,10 +1467,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
 
       // Confirm the APL section is disabled and unsupported.
       cy.findByTestId('apl-label').should('be.visible');
-      cy.findByTestId('apl-beta-chip').should(
-        'have.text',
-        'BETA - COMING SOON'
-      );
+      cy.findByTestId('apl-beta-chip').should('have.text', 'COMING SOON');
       cy.findByTestId('apl-radio-button-yes').should('be.disabled');
       cy.findByTestId('apl-radio-button-no').within(() => {
         cy.findByRole('radio').should('be.disabled').should('be.checked');
