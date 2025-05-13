@@ -13,7 +13,6 @@ import {
   getNodeTypeProperties,
   getRegionProperties,
   getResourcesProperties,
-  getTagsProperties,
   getTimeDurationProperties,
   shouldDisableFilterByFilterKey,
 } from './FilterBuilder';
@@ -50,33 +49,6 @@ it('test getRegionProperties method', () => {
     expect(handleRegionChange).toBeDefined();
     expect(selectedDashboard).toEqual(mockDashboard);
     expect(label).toEqual(name);
-  }
-});
-
-it('test getTagsProperties', () => {
-  const tagsConfig = linodeConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Tags'
-  );
-
-  expect(tagsConfig).toBeDefined();
-
-  if (tagsConfig) {
-    const { disabled, handleTagsChange, label, region, resourceType } =
-      getTagsProperties(
-        {
-          config: tagsConfig,
-          dashboard: mockDashboard,
-          dependentFilters: { region: 'us-east' },
-          isServiceAnalyticsIntegration: true,
-        },
-        vi.fn()
-      );
-    const { name } = tagsConfig.configuration;
-    expect(handleTagsChange).toBeDefined();
-    expect(disabled).toEqual(false);
-    expect(label).toEqual(name);
-    expect(region).toEqual('us-east');
-    expect(resourceType).toEqual('linode');
   }
 });
 
@@ -169,7 +141,7 @@ it('test getResourceSelectionProperties method with disabled true', () => {
 });
 
 describe('shouldDisableFilterByFilterKey', () => {
-  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  // resources filter has region as mandatory filter, this should reflect in the dependent filters
   it('should enable filter when dependent filter region is provided', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
@@ -200,9 +172,9 @@ describe('shouldDisableFilterByFilterKey', () => {
   it('should disable filter when required dependent filter is undefined in dependent filters but defined in preferences', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
-      { region: 'us-east', tags: undefined },
+      {},
       mockDashboard,
-      { region: 'us-east', tags: ['tag-1'] } // tags are defined in preferences which confirms that this optional filter was selected
+      { region: 'us-east' } // region is still not defined, so the result should be true
     );
     expect(result).toEqual(true);
   });
@@ -277,12 +249,9 @@ it('test buildXfilter method', () => {
   if (resourceSelectionConfig) {
     let result = buildXFilter(resourceSelectionConfig, {
       region: 'us-east',
-      tags: ['test1', 'test2'],
     });
 
-    expect(JSON.stringify(result)).toEqual(
-      '{"+and":[{"region":"us-east"}],"+or":[{"tags":"test1"},{"tags":"test2"}]}'
-    );
+    expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
 
     result = buildXFilter(resourceSelectionConfig, {});
 
