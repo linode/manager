@@ -1,21 +1,17 @@
 import {
   useAccountAgreements,
-  useAllVPCsQuery,
   useMutateAccountAgreements,
   useNodebalancerCreateBetaMutation,
   useNodeBalancerTypesQuery,
   useProfile,
-  useRegionQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
   Accordion,
   ActionsPanel,
-  Autocomplete,
   Box,
   Button,
-  InputAdornment,
   Notice,
   Paper,
   Stack,
@@ -59,16 +55,17 @@ import {
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';
 
 import { EUAgreementCheckbox } from '../Account/Agreements/EUAgreementCheckbox';
-import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 import { NodeBalancerConfigPanel } from './NodeBalancerConfigPanel';
 import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   transformConfigsForRequest,
+  useIsNodebalancerVPCEnabled,
 } from './utils';
+import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError, VPC } from '@linode/api-v4/lib/types';
+import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 
@@ -83,11 +80,7 @@ interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
   tags?: string[];
-  vpcs?: {
-    ipv4_range: string;
-    ipv6_range?: string;
-    subnet_id: number;
-  }[];
+  vpcs?: NodeBalancerVpcPayload[];
 }
 
 const errorResources = {
@@ -114,6 +107,7 @@ const NodeBalancerCreate = () => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
   const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
@@ -129,9 +123,6 @@ const NodeBalancerCreate = () => {
   const [nodeBalancerFields, setNodeBalancerFields] =
     React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
-  const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
-  const [subnetError, setSubnetError] = React.useState<string | undefined>();
-
   const [hasSignedAgreement, setHasSignedAgreement] =
     React.useState<boolean>(false);
 
@@ -143,18 +134,6 @@ const NodeBalancerCreate = () => {
       submitting: boolean;
     }>(defaultDeleteConfigConfirmDialogState);
 
-  const { data: region } = useRegionQuery(nodeBalancerFields?.region ?? '');
-  const regionSupportsVPCs = region?.capabilities.includes('VPCs') ?? false;
-
-  const {
-    data: vpcs,
-    error: vpcError,
-    isLoading: isVPCLoading,
-  } = useAllVPCsQuery({
-    enabled: regionSupportsVPCs,
-    filter: { region: nodeBalancerFields?.region },
-  });
-
   const { mutateAsync: updateAgreements } = useMutateAccountAgreements();
 
   const theme = useTheme<Theme>();
@@ -164,21 +143,12 @@ const NodeBalancerCreate = () => {
     globalGrantType: 'add_nodebalancers',
   });
 
-  React.useEffect(() => {
-    if (error) {
-      const err = error?.find((err) =>
-        err.field?.includes('subnet_id')
-      )?.reason;
-      setSubnetError(err);
-    }
-  }, [error]);
+  const regionSelected = React.useMemo(
+    () => regions?.find((r) => r.id === nodeBalancerFields.region),
+    [nodeBalancerFields, regions]
+  );
 
-  const getVPCSubnetLabelFromId = (subnetId: number): string => {
-    const subnet = selectedVPC?.subnets.find(
-      ({ id, ...rest }) => id === subnetId
-    );
-    return subnet?.label || '';
-  };
+  const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -287,18 +257,6 @@ const NodeBalancerCreate = () => {
     });
   };
 
-  const clearNodeErrors = () => {
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs].map((config) => ({
-        ...config,
-        errors: [],
-        nodes: config.nodes.map((node) => ({ ...node, errors: [] })),
-      }));
-
-      return { ...prev, configs: newConfigs };
-    });
-  };
-
   const setNodeErrors = (errors: APIError[]) => {
     /* Map the objects with this shape
         {
@@ -325,12 +283,28 @@ const NodeBalancerCreate = () => {
     scrollErrorIntoView();
   };
 
+  const clearErrors = () =>
+    setNodeBalancerFields((prev) => {
+      const newConfigs = [...prev.configs].map(({ errors, ...config }) => ({
+        ...config,
+        nodes: config.nodes.map(({ errors, ...node }) => ({
+          ...node,
+        })),
+      }));
+      // sometimes 'errors' key is added from setNodeErrors()
+      if ('errors' in prev) {
+        delete prev['errors'];
+      }
+
+      return { ...prev, configs: newConfigs };
+    });
+
   const onCreate = () => {
     if (selectedVPC && nodeBalancerFields?.vpcs === undefined) {
-      setSubnetError('Subnet is required');
+      error?.push({ field: 'vpc[0].subnet_id', reason: 'Subnet is required' });
       return;
     }
-
+    clearErrors();
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
     if (
@@ -349,9 +323,6 @@ const NodeBalancerCreate = () => {
     nodeBalancerRequestData.configs = transformConfigsForRequest(
       nodeBalancerRequestData.configs
     );
-
-    /* Clear node errors */
-    clearNodeErrors();
 
     if (hasSignedAgreement) {
       updateAgreements({
@@ -465,13 +436,12 @@ const NodeBalancerCreate = () => {
     if (nodeBalancerFields.region === region) {
       return;
     }
-
-    setNodeBalancerFields((prev) => ({
+    // We just changed the region so any selected IP addresses, Subnets and VPCs are likely invalid
+    setNodeBalancerFields(({ vpcs, ...prev }) => ({
       ...prev,
       region,
     }));
-
-    // We just changed the region so any selected IP addresses are likely invalid
+    setSelectedVPC(null);
     resetNodeAddresses();
   };
 
@@ -681,98 +651,23 @@ const NodeBalancerCreate = () => {
           }
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
-        {flags.nodebalancerVpc && (
-          <Paper data-testid="vpc-panel">
-            <Stack spacing={2}>
-              <Typography variant="h2">VPC</Typography>
-              <Stack spacing={1.5}>
-                <Autocomplete
-                  disabled={isRestricted}
-                  errorText={vpcError?.[0].reason}
-                  helperText={
-                    nodeBalancerFields?.region && !regionSupportsVPCs
-                      ? 'VPC is not available in the selected region.'
-                      : undefined
-                  }
-                  label="Assign VPC"
-                  loading={isVPCLoading}
-                  noMarginTop
-                  noOptionsText={
-                    !nodeBalancerFields?.region
-                      ? 'Select a region to see available VPCs.'
-                      : 'There are no VPCs in the selected region.'
-                  }
-                  onChange={(e, vpc) => {
-                    setSelectedVPC(vpc ?? null);
-
-                    if (vpc && vpc.subnets.length === 1) {
-                      // If the user selects a VPC and the VPC only has one subnet,
-                      // preselect that subnet for the user.
-                      subnetChange([vpc.subnets[0].id]);
-                    } else {
-                      // Otherwise, just clear the selected subnet
-                      subnetChange(null);
-                    }
-                  }}
-                  options={vpcs ?? []}
-                  placeholder="None"
-                  textFieldProps={{
-                    tooltipText: NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
-                  }}
-                  value={selectedVPC ?? null}
-                />
-                {selectedVPC && (
-                  <>
-                    <Autocomplete
-                      errorText={subnetError}
-                      getOptionLabel={(subnet) =>
-                        `${subnet.label} (${subnet.ipv4})`
-                      }
-                      label="Subnet"
-                      noMarginTop
-                      onChange={(_, subnet) =>
-                        subnetChange(subnet ? [subnet.id] : null)
-                      }
-                      options={selectedVPC?.subnets ?? []}
-                      placeholder="Select Subnet"
-                      value={
-                        selectedVPC?.subnets.find(
-                          (subnet) =>
-                            subnet.id ===
-                            nodeBalancerFields?.vpcs?.[0].subnet_id
-                        ) ?? null
-                      }
-                    />
-                    {nodeBalancerFields?.vpcs &&
-                      nodeBalancerFields.vpcs.map((vpc, index) => (
-                        <TextField
-                          errorText={hasErrorFor(`vpcs[${index}].ipv4_range`)}
-                          key={`${vpc.subnet_id}`}
-                          label={`NodeBalancer IPv4 CIDR for ${getVPCSubnetLabelFromId(vpc.subnet_id)}`}
-                          noMarginTop
-                          onChange={(e) =>
-                            ipv4Change(e.target.value ?? '', index)
-                          }
-                          // eslint-disable-next-line sonarjs/no-hardcoded-ip
-                          placeholder="10.0.0.24"
-                          required
-                          slotProps={{
-                            input: {
-                              endAdornment: (
-                                <InputAdornment position="end">
-                                  /30
-                                </InputAdornment>
-                              ),
-                            },
-                          }}
-                          value={vpc.ipv4_range}
-                        />
-                      ))}
-                  </>
-                )}
-              </Stack>
-            </Stack>
-          </Paper>
+        {isNodebalancerVPCEnabled && (
+          <VPCPanel
+            disabled={isRestricted}
+            errors={
+              error?.filter(
+                (err) =>
+                  err.field?.includes('subnet_id') ||
+                  err.field?.includes('ipv4_range')
+              ) || []
+            }
+            ipv4Change={ipv4Change}
+            regionSelected={regionSelected || null}
+            subnetChange={subnetChange}
+            subnets={nodeBalancerFields.vpcs}
+            vpcChange={setSelectedVPC}
+            vpcSelected={selectedVPC}
+          />
         )}
       </Stack>
       <Box marginBottom={2} marginTop={2}>
@@ -953,13 +848,13 @@ const getPathAndFieldFromFieldString = (value: string) => {
   if (configMatch && configMatch[1]) {
     path = [...path, 'configs', +configMatch[1]];
     field = field.replace(configRegExp, '');
-  }
 
-  const nodeRegExp = new RegExp(/nodes_(\d+)_/);
-  const nodeMatch = nodeRegExp.exec(value);
-  if (nodeMatch && nodeMatch[1]) {
-    path = [...path, 'nodes', +nodeMatch[1]];
-    field = field.replace(nodeRegExp, '');
+    const nodeRegExp = new RegExp(/nodes_(\d+)_/);
+    const nodeMatch = nodeRegExp.exec(value);
+    if (nodeMatch && nodeMatch[1]) {
+      path = [...path, 'nodes', +nodeMatch[1]];
+      field = field.replace(nodeRegExp, '');
+    }
   }
   return { field, path };
 };

@@ -27,6 +27,7 @@ import {
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
 import { profileQueries } from '../profile';
+import { vpcQueries } from '../vpcs';
 
 import type { EventHandlerData } from '../eventHandlers';
 import type {
@@ -242,6 +243,12 @@ export const useNodebalancerCreateBetaMutation = () => {
         queryClient.invalidateQueries({
           queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
         });
+      }
+      // If a Nodebalancer is created with a VPC, invalidate the related VPC queries
+      // so it reflects the new entity.
+      if (variables.vpcs?.length) {
+        // Invalidating all vpc related queries since we don't have the specific vpc_id
+        queryClient.invalidateQueries({ queryKey: vpcQueries._def });
       }
     },
   });
