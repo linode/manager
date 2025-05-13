@@ -36,7 +36,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
   });
 
   it('Should have a primary button with provided text', () => {
-    const { getByRole } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
@@ -44,13 +44,13 @@ describe('DatabaseSettingsMenuItem Component', () => {
         sectionTitle={sectionTitle}
       />
     );
-    const button = getByRole('button');
+    const button = getByTestId(`settings-button-${buttonText}`);
     expect(button).toHaveTextContent(buttonText);
   });
 
   it('Should have a primary button that calls the provided callback when clicked', () => {
     const onClick = vi.fn();
-    const { getByRole } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettingsMenuItem
         buttonText={buttonText}
         descriptiveText={descriptiveText}
@@ -58,7 +58,7 @@ describe('DatabaseSettingsMenuItem Component', () => {
         sectionTitle={sectionTitle}
       />
     );
-    const button = getByRole('button');
+    const button = getByTestId(`settings-button-${buttonText}`);
     fireEvent.click(button);
     expect(onClick).toHaveBeenCalled();
   });

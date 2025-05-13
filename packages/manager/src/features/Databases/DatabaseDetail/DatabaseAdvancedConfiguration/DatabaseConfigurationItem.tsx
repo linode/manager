@@ -2,11 +2,11 @@ import {
   Autocomplete,
   CloseIcon,
   FormControlLabel,
-  IconButton,
   TextField,
   Toggle,
   Typography,
 } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import React from 'react';
 
 import {
@@ -151,13 +151,13 @@ export const DatabaseConfigurationItem = (props: Props) => {
       </StyledBox>
 
       {configItem?.isNew && configItem && onRemove && (
-        <IconButton
-          disableRipple
+        <Button
           onClick={() => onRemove(configItem?.label)}
           size="large"
+          variant="icon"
         >
           <CloseIcon />
-        </IconButton>
+        </Button>
       )}
     </StyledWrapper>
   );

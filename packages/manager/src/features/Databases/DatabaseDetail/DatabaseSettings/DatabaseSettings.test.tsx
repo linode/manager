@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories/databases';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  mockMatchMedia,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
 import DatabaseSettings from './DatabaseSettings';
@@ -69,21 +73,31 @@ describe('DatabaseSettings Component', () => {
   it.each([
     ['disable', true],
     ['enable', false],
-  ])('should %s buttons when disabled is %s', (_, isDisabled) => {
-    const { getByRole, getByTitle } = renderWithTheme(
+  ])('should %s buttons when disabled is %s', async (_, isDisabled) => {
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettings database={database} disabled={isDisabled} />
     );
-    const button1 = getByTitle('Reset Root Password');
-    const button2 = getByTitle('Save Changes');
-    const button3 = getByRole('button', { name: 'Manage Access' });
+
+    const resetPasswordButtonHost = getByTestId(
+      'settings-button-Reset Root Password'
+    );
+    const resetPasswordButton = await getShadowRootElement(
+      resetPasswordButtonHost,
+      'button'
+    );
+
+    const manageAccessButtonHost = getByTestId('button-access-control');
+    const manageAccessButton = await getShadowRootElement(
+      manageAccessButtonHost,
+      'button'
+    );
 
     if (isDisabled) {
-      expect(button1).toBeDisabled();
-      expect(button2).toBeDisabled();
-      expect(button3).toBeDisabled();
+      expect(resetPasswordButton).toBeDisabled();
+      expect(manageAccessButton).toBeDisabled();
     } else {
-      expect(button1).toBeEnabled();
-      expect(button3).toBeEnabled();
+      expect(resetPasswordButton).toBeEnabled();
+      expect(manageAccessButton).toBeEnabled();
     }
   });
 
@@ -249,66 +263,44 @@ describe('DatabaseSettings Component', () => {
   });
 
   it('should disable suspend when database status is not active', async () => {
-    const flags = {
-      dbaasV2: {
-        beta: false,
-        enabled: true,
-      },
-    };
     const mockNewDatabase = databaseFactory.build({
       platform: 'rdbms-default',
       status: 'resizing',
     });
 
-    const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
-    spy.mockReturnValue({
-      isDatabasesEnabled: true,
-      isDatabasesV2Beta: false,
-      isDatabasesV2Enabled: true,
-      isDatabasesV2GA: true,
-      isUserExistingBeta: false,
-      isUserNewBeta: false,
-    });
-
-    const { getAllByText } = renderWithTheme(
-      <DatabaseSettings database={mockNewDatabase} />,
-      { flags }
+    const { getByTestId } = renderWithTheme(
+      <DatabaseSettings database={mockNewDatabase} />
     );
 
-    const suspendElements = getAllByText(/Suspend Cluster/i);
-    const suspendButton = suspendElements[1].closest('button');
-    expect(suspendButton).toHaveAttribute('aria-disabled', 'true');
+    const suspendClusterButtonHost = getByTestId(
+      'settings-button-Suspend Cluster'
+    );
+    const suspendClusterButton = await getShadowRootElement(
+      suspendClusterButtonHost,
+      'button'
+    );
+
+    expect(suspendClusterButton).toBeDisabled();
   });
 
   it('should enable suspend when database status is active', async () => {
-    const flags = {
-      dbaasV2: {
-        beta: false,
-        enabled: true,
-      },
-    };
     const mockNewDatabase = databaseFactory.build({
       platform: 'rdbms-default',
       status: 'active',
     });
 
-    const spy = vi.spyOn(utils, 'useIsDatabasesEnabled');
-    spy.mockReturnValue({
-      isDatabasesEnabled: true,
-      isDatabasesV2Beta: false,
-      isDatabasesV2Enabled: true,
-      isDatabasesV2GA: true,
-      isUserExistingBeta: false,
-      isUserNewBeta: false,
-    });
-
-    const { getAllByText } = renderWithTheme(
-      <DatabaseSettings database={mockNewDatabase} />,
-      { flags }
+    const { getByTestId } = renderWithTheme(
+      <DatabaseSettings database={mockNewDatabase} />
     );
 
-    const suspendElements = getAllByText(/Suspend Cluster/i);
-    const suspendButton = suspendElements[1].closest('button');
-    expect(suspendButton).toHaveAttribute('aria-disabled', 'false');
+    const suspendClusterButtonHost = getByTestId(
+      'settings-button-Suspend Cluster'
+    );
+    const suspendClusterButton = await getShadowRootElement(
+      suspendClusterButtonHost,
+      'button'
+    );
+
+    expect(suspendClusterButton).toBeEnabled();
   });
 });

@@ -1,7 +1,8 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { Button, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
+import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
+import { Button } from 'akamai-cds-react-components';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -146,6 +147,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         className={classes.showBtn}
         disabled={disableShowBtn}
         onClick={handleClick}
+        variant="link"
       >
         {btnText}
       </Button>
@@ -157,8 +159,9 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
       <Button
         className={classes.caCertBtn}
         disabled={disableDownloadCACertificateBtn}
-        loading={isCACertDownloading}
         onClick={handleDownloadCACertificate}
+        processing={isCACertDownloading}
+        variant="link"
       >
         <DownloadIcon />
         Download CA Certificate
