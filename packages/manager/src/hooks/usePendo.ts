@@ -84,7 +84,7 @@ export const usePendo = () => {
   const PENDO_URL = `https://content.psp.cloud.linode.com/agent/static/${PENDO_API_KEY}/pendo.js`;
 
   React.useEffect(() => {
-    if (PENDO_API_KEY && hasConsentEnabled) {
+    if (PENDO_API_KEY) {
       // Adapted Pendo install script for readability
       // Refer to: https://support.pendo.io/hc/en-us/articles/21362607464987-Components-of-the-install-script#01H6S2EXET8C9FGSHP08XZAE4F
 
