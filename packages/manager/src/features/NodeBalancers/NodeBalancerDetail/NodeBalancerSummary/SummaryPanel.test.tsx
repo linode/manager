@@ -43,6 +43,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 const nodeBalancerDetails = 'NodeBalancer Details';
+const nbVpcConfig = nodeBalancerConfigVPCFactory.build();
 
 describe('SummaryPanel', () => {
   beforeEach(() => {
@@ -57,7 +58,7 @@ describe('SummaryPanel', () => {
     });
     queryMocks.useNodeBalancerVPCConfigsBetaQuery.mockReturnValue({
       data: {
-        data: [nodeBalancerConfigVPCFactory.build()],
+        data: [nbVpcConfig],
       },
     });
     queryMocks.useParams.mockReturnValue({ id: 1 });
@@ -113,9 +114,10 @@ describe('SummaryPanel', () => {
     expect(getByText('IP Addresses')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
 
-    // VPC Deatils Panel
+    // VPC Details Panel
     expect(getByText('VPC')).toBeVisible();
-    expect(getByText('192.168.3.0/30')).toBeVisible();
+    expect(getByText('Subnets:')).toBeVisible();
+    expect(getByText(`${nbVpcConfig.ipv4_range}`)).toBeVisible();
 
     // Tags panel
     expect(getByText('Tags')).toBeVisible();
