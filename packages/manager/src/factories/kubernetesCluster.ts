@@ -3,6 +3,7 @@ import { Factory } from '@linode/utilities';
 import type {
   ControlPlaneACLOptions,
   KubeNodePoolResponse,
+  KubeNodePoolResponseBeta,
   KubernetesCluster,
   KubernetesControlPlaneACLPayload,
   KubernetesDashboardResponse,
@@ -39,6 +40,32 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   ],
   type: 'g6-standard-1',
 });
+
+export const nodePoolBetaFactory =
+  Factory.Sync.makeFactory<KubeNodePoolResponseBeta>({
+    autoscaler: {
+      enabled: false,
+      max: 1,
+      min: 1,
+    },
+    count: 3,
+    disk_encryption: 'enabled',
+    id: Factory.each((id) => id),
+    labels: {},
+    nodes: kubeLinodeFactory.buildList(3),
+    tags: [],
+    taints: [
+      {
+        effect: 'NoExecute',
+        key: 'example.com/my-app',
+        value: 'my-taint',
+      },
+    ],
+    type: 'g6-standard-1',
+    firewall_id: 0,
+    k8s_version: 'v1.31.1+lke4',
+    update_strategy: 'on_recycle',
+  });
 
 export const kubernetesClusterFactory =
   Factory.Sync.makeFactory<KubernetesCluster>({

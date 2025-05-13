@@ -101,6 +101,8 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
+export const textFieldOperators = ['endswith', 'startswith'];
+
 export const evaluationPeriodOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
