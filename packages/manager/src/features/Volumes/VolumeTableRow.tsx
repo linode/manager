@@ -88,6 +88,14 @@ export const VolumeTableRow = React.memo((props: Props) => {
     mostRecentVolumeEvent
   );
 
+  const getVolumeStatus = () => {
+    if (volumeStatus === 'key_rotating') {
+      return 'key rotating';
+    }
+
+    return volumeStatus;
+  };
+
   const isVolumeMigrating = volumeStatus === 'migrating';
 
   const handleUpgrade = () => {
@@ -148,7 +156,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[volumeStatus]} />
-        {volumeStatus} {getEventProgress(mostRecentVolumeEvent)}
+        {getVolumeStatus()} {getEventProgress(mostRecentVolumeEvent)}
       </TableCell>
       {isVolumesLanding && (
         <TableCell data-qa-volume-region data-testid="region" noWrap>

@@ -274,13 +274,14 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
                 handleChange(e, idx)
               }
               placeholder={placeholder}
+              sx={{ marginTop: '8px' }}
               value={thisIP.address}
             />
           </Grid>
           {/** Don't show the button for the first input since it won't do anything, unless this component is
            * used in DBaaS or for Linode VPC interfaces
            */}
-          <Grid size={1}>
+          <Grid size={1} sx={{ marginTop: '10px' }}>
             {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
               <Button
                 className={classes.button}
