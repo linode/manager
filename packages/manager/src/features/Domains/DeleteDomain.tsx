@@ -1,10 +1,10 @@
+import { useDeleteDomainMutation } from '@linode/queries';
 import { Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useDeleteDomainMutation } from 'src/queries/domains';
 
 import type { APIError } from '@linode/api-v4';
 export interface DeleteDomainProps {
