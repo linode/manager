@@ -8,10 +8,12 @@ export const ErrorComponent = ({
   error,
   resetError,
 }: {
-  error: Error;
+  error: unknown;
   eventId: string;
   resetError(): void;
 }) => {
+  const normalizedError = normalizeError(error);
+
   return (
     <Box
       sx={{
@@ -78,7 +80,7 @@ export const ErrorComponent = ({
         <Typography component="div" sx={{ mt: 2 }}>
           <strong>Error details:</strong>{' '}
           <CodeBlock
-            code={`${error.name}: ${error.message}`}
+            code={`${normalizedError.name}: ${normalizedError.message}`}
             language="typescript"
           />
         </Typography>
@@ -103,4 +105,24 @@ export const ErrorComponent = ({
       </Paper>
     </Box>
   );
+};
+
+const normalizeError = (error: unknown): Error => {
+  if (error instanceof Error) {
+    return error;
+  }
+
+  if (typeof error === 'string') {
+    return new Error(error);
+  }
+
+  if (Array.isArray(error) && error.length === 1 && error[0]?.reason) {
+    return new Error(error[0].reason);
+  }
+
+  if (typeof error === 'function' || error === undefined) {
+    return new Error('Unknown error');
+  }
+
+  return new Error(JSON.stringify(error));
 };
