@@ -141,12 +141,6 @@ export const AddLinodeDrawer = (props: Props) => {
     },
   });
 
-  const linodesWithMultipleInterfaces = Object.values(
-    linodesAndEligibleInterfaces
-  )
-    .filter(({ interfaces }) => interfaces.length > 1)
-    .map(({ linode }) => linode);
-
   const linodeOptions = allLinodes?.filter((linode) => {
     // Exclude read only Linodes
     if (readOnlyLinodeIds.includes(linode.id)) {
@@ -171,12 +165,16 @@ export const AddLinodeDrawer = (props: Props) => {
     useAddFirewallDeviceMutation();
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
-  const selectedLinodesWithMultipleInterfaces =
-    linodesWithMultipleInterfaces.filter((linode) =>
-      selectedLinodes.includes(linode)
-    );
+  const selectedLinodesWithMultipleInterfaces = Object.values(
+    linodesAndEligibleInterfaces
+  )
+    .filter(
+      ({ interfaces, linode }) =>
+        interfaces.length > 1 && selectedLinodes.includes(linode)
+    )
+    .map(({ linode }) => linode);
 
-  // Keeps track of interfaces we've selected from Linodes with multiple Linodes
+  // Keeps track of interfaces we've selected from Linodes with multiple interfaces
   // Assumption: each Linode ID here will correspond to some Linode in selectedLinodesWithMultipleInterfaces,
   // but the vice versa may not always be true (eg: selected a Linode with multiple interfaces, but haven't selected an interface for that Linode yet)
   // Key is the Linode ID, value is the interface to add
