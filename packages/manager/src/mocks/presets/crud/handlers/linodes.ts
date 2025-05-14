@@ -275,6 +275,9 @@ export const createLinode = (mockState: MockState) => [
         if (subnetFromDB && vpc) {
           const vpcInterface = linodeInterfaceFactoryVPC.build({
             ...vpcIfacePayload,
+            default_route: {
+              ipv4: true,
+            },
             created: DateTime.now().toISO(),
             updated: DateTime.now().toISO(),
           });
