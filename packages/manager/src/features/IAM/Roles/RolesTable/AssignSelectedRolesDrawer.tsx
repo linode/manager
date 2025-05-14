@@ -49,31 +49,15 @@ export const AssignSelectedRolesDrawer = ({
 
   const { data: existingRoles } = useAccountUserPermissions(username ?? '');
 
-  const form = useForm<AssignNewRoleFormValues>({
-    defaultValues: {
-      roles: [
-        {
-          entities: null,
-          role: null,
-        },
-      ],
-    },
-  });
-  const { control, handleSubmit, reset } = form;
-  const { update } = useFieldArray({
-    control,
-    name: 'roles',
-  });
 
-  // Add the roles that were selected
-  useEffect(() => {
-    selectedRoles.forEach((role, idx) => {
-      update(idx, {
-        entities: null,
-        role: role.name as unknown as RolesType,
-      });
-    });
-  }, [selectedRoles, update]);
+  const values = {
+    roles: selectedRoles.map((r) => ({ role: r.name, entities: null })),
+  };
+
+  const form = useForm<AssignNewRoleFormValues>({
+    defaultValues: values,
+    values,
+  });
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
