@@ -53,12 +53,11 @@ const VPCDetail = () => {
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
 
-  const { data: vpcsIPs } = useVPCsIPsQuery({}, true);
+  // const { data: vpcsIPs } = useVPCsIPsQuery({}, true);
+  // console.log(vpcsIPs);
 
-  console.log(vpcsIPs);
-
-  const { data: vpcIPs } = useVPCIPsQuery(Number(vpcId), {}, true);
-  console.log(vpcIPs);
+  // const { data: vpcIPs } = useVPCIPsQuery(Number(vpcId), {}, true);
+  // console.log(vpcIPs);
 
   const { data: regions } = useRegionsQuery();
 
