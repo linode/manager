@@ -128,7 +128,9 @@ describe('Migrate Linode With Firewall', () => {
           'be.visible'
         );
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockSingapore.label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockSingapore.label, mockRegions)
+          .click();
 
         ui.button
           .findByTitle('Enter Migration Queue')
@@ -145,7 +147,6 @@ describe('Migrate Linode With Firewall', () => {
    */
   it('migrates linode with firewall - real data', () => {
     cy.tag('method:e2e', 'purpose:dcTesting', 'env:multipleRegions');
-
     // Execute the body of the test inside Cypress's command queue to ensure
     // that logic that requires multiple regions only executes after tags are evaluated.
     cy.defer(async () => {}).then(() => {
