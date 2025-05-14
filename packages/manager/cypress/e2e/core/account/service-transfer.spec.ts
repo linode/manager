@@ -538,26 +538,21 @@ describe('Account service transfers', () => {
 
     cy.get('[data-qa-panel="Pending Service Transfers"]').should('not.exist');
 
-    // Test Received Service Transfers panel
-    cy.get('[data-qa-panel="Received Service Transfers"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-qa-panel-summary="Received Service Transfers"]').click();
-        cy.findByTestId('ErrorOutlineIcon').should('be.visible');
-        cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
-          'be.visible'
-        );
-      });
-
-    // Test Sent Service Transfers panel
-    cy.get('[data-qa-panel="Sent Service Transfers"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-qa-panel-summary="Sent Service Transfers"]').click();
-        cy.findByTestId('ErrorOutlineIcon').should('be.visible');
-        cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
-          'be.visible'
-        );
-      });
+    // Confirm that an error message is displayed in both "Received Service Transfers" and "Sent Service Transfers" panels.
+    ['Received Service Transfers', 'Sent Service Transfers'].forEach(
+      (transfer) => {
+        cy.get(`[data-qa-panel="${transfer}"]`)
+          .should('be.visible')
+          .within(() => {
+            cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
+            // Error Icon should shows up.
+            cy.findByTestId('error-state').should('be.visible');
+            // Error message should be visible.
+            cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
+              'be.visible'
+            );
+          });
+      }
+    );
   });
 });
