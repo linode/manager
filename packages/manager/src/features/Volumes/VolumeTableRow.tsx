@@ -149,7 +149,7 @@ export const VolumeTableRow = React.memo((props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[volumeStatus]} />
-        {getFormattedStatus(volumeStatus)}
+        {getFormattedStatus(volumeStatus)}{' '}
         {getEventProgress(mostRecentVolumeEvent)}
       </TableCell>
       {isVolumesLanding && (
