@@ -1,5 +1,6 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Box, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
+import { Button } from 'akamai-cds-react-components';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -9,7 +10,10 @@ import {
   StyledGridContainer,
   StyledLabelTypography,
 } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
-import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
+import {
+  StyledButtonWrapper,
+  StyledConfigValue,
+} from './DatabaseAdvancedConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 import { formatConfigValue } from './utilities';
 
@@ -36,14 +40,15 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
             <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
           </Typography>
         </Grid>
-        <Button
-          buttonType="outlined"
-          onClick={() => setAdvancedConfigurationDrawerOpen(true)}
-          sx={{ height: 1 }}
-          title="Configure"
-        >
-          Configure
-        </Button>
+        <StyledButtonWrapper>
+          <Button
+            onClick={() => setAdvancedConfigurationDrawerOpen(true)}
+            title="Configure"
+            variant="secondary"
+          >
+            Configure
+          </Button>
+        </StyledButtonWrapper>
       </Grid>
 
       {engineConfigs ? (
