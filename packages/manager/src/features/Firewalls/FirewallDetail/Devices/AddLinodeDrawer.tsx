@@ -64,7 +64,17 @@ export const AddLinodeDrawer = (props: Props) => {
     allLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
-    () => data?.map((firewall) => firewall.entities).flat(),
+    () =>
+      data
+        ?.map((firewall) => {
+          return firewall.entities.map((entity) => {
+            return {
+              ...entity,
+              firewallStatus: firewall.status,
+            };
+          });
+        })
+        .flat(),
     [data]
   );
 
