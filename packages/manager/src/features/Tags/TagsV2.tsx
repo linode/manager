@@ -6,6 +6,7 @@ import {
   useSearch,
 } from '@tanstack/react-router';
 import * as React from 'react';
+import { useInView } from 'react-intersection-observer';
 import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -162,6 +163,8 @@ const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
     preferenceKey: 'tags-v2-table',
   });
 
+  const { ref, inView } = useInView();
+
   const { data, error, isLoading } = useLinodesQuery(
     {
       page: pagination.page,
@@ -171,11 +174,12 @@ const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
       ['+order']: order,
       ['+order_by']: orderBy,
       tags: tag,
-    }
+    },
+    inView
   );
 
   return (
-    <Box>
+    <Box ref={ref}>
       <Typography sx={{ mb: 2 }} variant="h2">
         {tag}
       </Typography>
@@ -230,7 +234,7 @@ const TaggedLinodesTable = (props: TaggedLinodesTableProps) => {
         </TableHead>
         <TableBody>
           {isLoading ? (
-            <TableRowLoading columns={8} rows={1} />
+            <TableRowLoading columns={8} rows={25} />
           ) : error ? (
             <TableRowError colSpan={8} message={error[0].reason} />
           ) : data?.data.length === 0 ? (
