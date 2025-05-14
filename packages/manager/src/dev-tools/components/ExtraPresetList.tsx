@@ -154,7 +154,7 @@ export const ExtraPresetList = <T extends object>({
                 </label>
               </FieldWrapper>
               <button onClick={handleAddItem} style={{ marginBottom: 10 }}>
-                + Add New {preset.label}
+                + Add new item
               </button>
             </div>
 
