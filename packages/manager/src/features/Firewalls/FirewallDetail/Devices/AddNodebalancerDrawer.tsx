@@ -18,7 +18,7 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { canBeAssignedToFirewall } from './utils';
+import { canEntityBeAssignedToFirewall } from './utils';
 
 import type { NodeBalancer } from '@linode/api-v4';
 
@@ -173,7 +173,7 @@ export const AddNodebalancerDrawer = (props: Props) => {
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
     return (
       !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      canBeAssignedToFirewall({
+      canEntityBeAssignedToFirewall({
         entityId: nodebalancer.id,
         firewall,
         firewallEntities: assignedNodeBalancers,

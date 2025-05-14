@@ -28,7 +28,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { canBeAssignedToFirewall } from './utils';
+import { canEntityBeAssignedToFirewall } from './utils';
 
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';
 
@@ -108,7 +108,7 @@ export const AddLinodeDrawer = (props: Props) => {
           const eligibleInterfaces = res.data.interfaces.filter(
             (iface) =>
               !iface.vlan &&
-              canBeAssignedToFirewall({
+              canEntityBeAssignedToFirewall({
                 firewall,
                 firewallEntities: allFirewallEntities,
                 entityType: 'interface',
@@ -139,7 +139,7 @@ export const AddLinodeDrawer = (props: Props) => {
     }
 
     // Lastly, confirm if Linode using legacy interfaces can be assigned
-    return canBeAssignedToFirewall({
+    return canEntityBeAssignedToFirewall({
       firewall,
       firewallEntities: allFirewallEntities,
       entityType: 'linode',

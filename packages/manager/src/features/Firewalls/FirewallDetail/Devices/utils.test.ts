@@ -1,6 +1,6 @@
 import { firewallEntityfactory, firewallFactory } from 'src/factories';
 
-import { canBeAssignedToFirewall } from './utils';
+import { canEntityBeAssignedToFirewall } from './utils';
 
 import type { FirewallStatus } from '@linode/api-v4';
 
@@ -23,7 +23,7 @@ describe('canBeAssignedToFirewall', () => {
     });
 
     expect(
-      canBeAssignedToFirewall({
+      canEntityBeAssignedToFirewall({
         firewall,
         entityId: firewall.entities[0].id + 1,
         entityType: 'interface',
@@ -43,7 +43,7 @@ describe('canBeAssignedToFirewall', () => {
     });
 
     expect(
-      canBeAssignedToFirewall({
+      canEntityBeAssignedToFirewall({
         firewall,
         entityId: firewall.entities[0].id,
         entityType: 'linode',
@@ -61,7 +61,7 @@ describe('canBeAssignedToFirewall', () => {
     // all devices in given firewallEntities are disabled
     const firewall = firewallFactory.build();
     expect(
-      canBeAssignedToFirewall({
+      canEntityBeAssignedToFirewall({
         firewall,
         entityId: firewall.entities[0].id + 1,
         entityType: 'interface',
@@ -74,7 +74,7 @@ describe('canBeAssignedToFirewall', () => {
     // at least one device in given firewallEntities is enabled
     const firewall = firewallFactory.build();
     expect(
-      canBeAssignedToFirewall({
+      canEntityBeAssignedToFirewall({
         firewall,
         entityId: firewall.entities[0].id + 1,
         entityType: 'interface',

@@ -12,7 +12,7 @@ interface FirewallEntityWithStatus extends FirewallDeviceEntity {
 // We can assign multiple firewalls to an entity as long as:
 // - the given (disabled) firewall doesn't have the entity
 // - the given (enabled) firewall doesn't have this entity and the entity is not assigned to another already enabled firewall
-export const canBeAssignedToFirewall = (inputs: {
+export const canEntityBeAssignedToFirewall = (inputs: {
   entityId: number;
   entityType: FirewallDeviceEntityType;
   firewall: Firewall | undefined;
