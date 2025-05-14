@@ -67,6 +67,14 @@ describe('VLANSelect', () => {
 
     expect(onChange).toHaveBeenCalledWith(vlan.label);
   });
+
+  it('should show the `value` if one is provided', () => {
+    const { getByDisplayValue } = renderWithTheme(
+      <VLANSelect value="my-vlan-label" />
+    );
+
+    expect(getByDisplayValue('my-vlan-label')).toBeVisible();
+  });
 });
 
 describe('getVLANSelectFilter', () => {

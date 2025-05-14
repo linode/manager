@@ -165,7 +165,7 @@ export const AssignedEntitiesTable = () => {
                 onClick: () => {
                   handleRemoveAssignment(el);
                 },
-                title: 'Remove Assignment',
+                title: 'Remove',
               },
             ];
 
@@ -226,7 +226,7 @@ export const AssignedEntitiesTable = () => {
           label="Select type"
           onChange={(_, selected) => setEntityType(selected ?? null)}
           options={entityTypes}
-          placeholder="All Assigned Entities"
+          placeholder="All Entities"
           textFieldProps={{
             containerProps: { sx: { minWidth: 250 } },
             hideLabel: true,
@@ -252,7 +252,7 @@ export const AssignedEntitiesTable = () => {
               label="entityType"
               sx={{ display: { sm: 'table-cell', xs: 'none' } }}
             >
-              Entity type
+              Entity Type
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'role_name'}
