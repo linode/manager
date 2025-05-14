@@ -428,62 +428,89 @@ export const getFormattedEntityType = (entityType: string): string => {
 };
 
 /**
+ * Partitions an array into two results based on a predicate function.
+ *
+ * @param predicate - A function that takes an element and returns a boolean.
+ * @param array - The array to partition.
+ */
+export const partition = <T>(
+  array: T[],
+  predicate: (value: T) => boolean
+): [T[], T[]] => {
+  const pass: T[] = [];
+  const fail: T[] = [];
+
+  array.forEach((value) => {
+    if (predicate(value)) {
+      pass.push(value);
+    } else {
+      fail.push(value);
+    }
+  });
+
+  return [pass, fail];
+};
+
+/**
  * Gets a list of roles selected from the UI, and merges them into the existing IAM roles that are
  * also passed in.  Returns the merged roles in IAM (back end) format.
  * Note: The UI format used here is role-centric - the user picks a role and associates it with
  * entities, but the backend format is entity-centric - it's a list of entities, each with a list
  * of roles associated with that entity.
  *
- * @param values the selected roles from the UI
+ * @param selectedRoles the selected roles from the UI
  * @param existingRoles the existing IAM roles
  * @returns the merged IAM roles
  */
 export const mergeAssignedRolesIntoExistingRoles = (
-  values: AssignNewRoleFormValues,
+  selectedRoles: AssignNewRoleFormValues,
   existingRoles: IamUserPermissions | undefined
 ): IamUserPermissions => {
-  // Create an intermediary form that is easier to work with
-  const selectedRoles = values.roles.map((r) => ({
-    access: r.role?.access,
-    entities: r.entities || null,
-    role: r.role?.value,
-  }));
-
+  // Set up what is going to be returned
   const selectedPlusExistingRoles: IamUserPermissions = {
     account_access: existingRoles?.account_access || [],
     entity_access: existingRoles?.entity_access || [],
   };
 
-  if (selectedRoles.length) {
-    // Add the selected Account level roles to the existing ones
-    selectedRoles
-      .filter((r) => r.access === 'account_access')
-      .forEach((r) => {
-        selectedPlusExistingRoles.account_access.push(
-          r.role as AccountAccessRole
-        );
-      });
+  // Create an intermediary form of the two types of selected roles that is easier to work with
+  const [selectedAccountAccessRoles, selectedEntityAccessRoles] = partition(
+    selectedRoles.roles,
+    (r) => r.role?.access === 'account_access'
+  );
 
-    // Add the selected Entity level roles to the existing ones
-    selectedRoles
-      .filter((r) => r.access === 'entity_access')
-      .forEach((r) => {
-        r.entities?.forEach((e) => {
-          const existingEntity = selectedPlusExistingRoles.entity_access.find(
-            (ee) => ee.id === e.value
-          );
-          if (existingEntity) {
-            existingEntity.roles.push(r.role as EntityAccessRole);
-          } else {
-            selectedPlusExistingRoles.entity_access.push({
-              id: e.value,
-              roles: [r.role as EntityAccessRole],
-              type: r.role?.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
-            });
-          }
+  // Add the selected Account level roles to the existing ones
+  selectedAccountAccessRoles.forEach((r) => {
+    // Don't push it on if it already exists
+    if (
+      !selectedPlusExistingRoles.account_access.includes(
+        r.role?.value as AccountAccessRole
+      )
+    ) {
+      selectedPlusExistingRoles.account_access.push(
+        r.role?.value as AccountAccessRole
+      );
+    }
+  });
+
+  // Add the selected Entity level roles to the existing ones
+  selectedEntityAccessRoles.forEach((r) => {
+    r.entities?.forEach((e) => {
+      const existingEntity = selectedPlusExistingRoles.entity_access.find(
+        (ee) => ee.id === e.value
+      );
+      if (existingEntity) {
+        // Don't push it on if it already exists
+        if (!existingEntity.roles.includes(r.role?.value as EntityAccessRole)) {
+          existingEntity.roles.push(r.role?.value as EntityAccessRole);
+        }
+      } else {
+        selectedPlusExistingRoles.entity_access.push({
+          id: e.value,
+          roles: [r.role?.value as EntityAccessRole],
+          type: r.role?.value.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
         });
-      });
-  }
-
+      }
+    });
+  });
   return selectedPlusExistingRoles;
 };
