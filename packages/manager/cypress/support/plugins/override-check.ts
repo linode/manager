@@ -13,7 +13,9 @@ export const regionOverrideCheck: CypressPlugin = (_on, config): void => {
   const regions = (config.env['cloudManagerRegions'] || []) as Region[];
 
   if (overrideRegionId) {
-    const foundRegion = regions.find((region) => region.id == overrideRegionId);
+    const foundRegion = regions.find(
+      (region) => region.id === overrideRegionId
+    );
     if (!foundRegion) {
       throw new Error(
         `Unable to find a region by ID '${overrideRegionId}'. Does the test account have access to this region?`
@@ -39,7 +41,7 @@ export const clusterOverrideCheck: CypressPlugin = (_on, config): void => {
 
   if (overrideClusterId) {
     const foundCluster = clusters.find(
-      (cluster) => cluster.id == overrideClusterId
+      (cluster) => cluster.id === overrideClusterId
     );
     if (!foundCluster) {
       throw new Error(

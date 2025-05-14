@@ -18,7 +18,9 @@ import {
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { chooseCluster } from 'support/util/clusters';
 import { randomLabel } from 'support/util/random';
+import { getRegionById } from 'support/util/regions';
 
 import {
   accountFactory,
@@ -74,12 +76,11 @@ describe('object storage end-to-end tests', () => {
    */
   it('can create and delete object storage buckets', () => {
     cy.tag('purpose:syntheticTesting');
-
     const bucketLabel = randomLabel();
-    const bucketRegion = 'US, Atlanta, GA';
-    const bucketCluster = 'us-southeast-1';
-    const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
-
+    const bucketClusterObj = chooseCluster();
+    const bucketCluster = bucketClusterObj.id;
+    const bucketRegion = getRegionById(bucketClusterObj.region).label;
+    const bucketHostname = `${bucketLabel}.${bucketClusterObj.domain}`;
     interceptGetBuckets().as('getBuckets');
     interceptCreateBucket().as('createBucket');
     interceptDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
@@ -155,7 +156,8 @@ describe('object storage end-to-end tests', () => {
    */
   it('can update bucket access', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
+    const bucketClusterObj = chooseCluster();
+    const bucketCluster = bucketClusterObj.id;
     const bucketAccessPage = `/object-storage/buckets/${bucketCluster}/${bucketLabel}/access`;
 
     cy.defer(
