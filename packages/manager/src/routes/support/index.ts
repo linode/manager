@@ -3,6 +3,10 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { SupportTicketsRoute } from './SupportRoute';
 
+interface SupportSearchParams {
+  drawerOpen: boolean;
+}
+
 const supportRoute = createRoute({
   // TODO: TanStackRouter - got to handle the MainContent.tsx `globalErrors.account_unactivated` logic.
   component: SupportTicketsRoute,
@@ -17,13 +21,28 @@ const supportLandingRoute = createRoute({
   import('src/features/Help/HelpLanding').then((m) => m.helpLandingLazyRoute)
 );
 
-const supportTicketsRoute = createRoute({
+const supportTicketsLandingRoute = createRoute({
   getParentRoute: () => supportRoute,
   path: 'tickets',
+  validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
-  import('src/features/Support/SupportTickets/SupportTicketsLanding').then(
-    (m) => m.supportTicketsLandingLazyRoute
-  )
+  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+);
+
+const supportTicketsLandingRouteOpen = createRoute({
+  getParentRoute: () => supportRoute,
+  path: 'tickets/open',
+  validateSearch: (search: SupportSearchParams) => search,
+}).lazy(() =>
+  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+);
+
+const supportTicketsLandingRouteClosed = createRoute({
+  getParentRoute: () => supportRoute,
+  path: 'tickets/closed',
+  validateSearch: (search: SupportSearchParams) => search,
+}).lazy(() =>
+  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketDetailRoute = createRoute({
@@ -33,9 +52,7 @@ const supportTicketDetailRoute = createRoute({
   }),
   path: 'tickets/$ticketId',
 }).lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (m) => m.supportTicketDetailLazyRoute
-  )
+  import('./supportLazyRoutes').then((m) => m.supportTicketDetailLazyRoute)
 );
 
 const supportSearchLandingRoute = createRoute({
@@ -49,6 +66,10 @@ const supportSearchLandingRoute = createRoute({
 
 export const supportRouteTree = supportRoute.addChildren([
   supportLandingRoute,
-  supportTicketsRoute.addChildren([supportTicketDetailRoute]),
+  supportTicketsLandingRoute,
+  supportTicketDetailRoute.addChildren([
+    supportTicketsLandingRouteOpen,
+    supportTicketsLandingRouteClosed,
+  ]),
   supportSearchLandingRoute,
 ]);

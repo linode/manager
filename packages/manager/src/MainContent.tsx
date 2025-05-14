@@ -139,11 +139,6 @@ const SupportTicketDetail = React.lazy(() =>
     })
   )
 );
-const Help = React.lazy(() =>
-  import('./features/Help/index').then((module) => ({
-    default: module.HelpAndSupport,
-  }))
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
@@ -255,7 +250,7 @@ export const MainContent = () => {
               path="/support/tickets/:ticketId"
               strict
             />
-            <Route component={Help} exact path="/support" />
+            {/* <Route component={Help} exact path="/support" /> */}
             <Route component={AccountActivationLanding} />
           </Switch>
         </div>
@@ -371,7 +366,6 @@ export const MainContent = () => {
                                 )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route component={Help} path="/support" />
                                 <Route
                                   component={EventsLanding}
                                   path="/events"

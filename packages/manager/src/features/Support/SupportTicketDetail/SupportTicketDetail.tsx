@@ -6,7 +6,6 @@ import {
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -152,9 +151,3 @@ const StyledStack = styled(Stack, {
   marginLeft: theme.spacing(),
   marginRight: theme.spacing(),
 }));
-
-export const supportTicketDetailLazyRoute = createLazyRoute(
-  '/support/tickets/$ticketId'
-)({
-  component: SupportTicketDetail,
-});
