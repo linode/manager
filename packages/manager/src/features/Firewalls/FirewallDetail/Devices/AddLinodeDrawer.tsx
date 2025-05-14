@@ -78,6 +78,24 @@ export const AddLinodeDrawer = (props: Props) => {
     [data]
   );
 
+  // We can assign multiple firewalls to an entity as long as:
+  // - this (disabled) firewall doesn't have the entity
+  // - this (enabled) firewall doesn't have this entity and the entity is not assigned to another already enabled firewall
+  const canBeAssignedToFirewall = (inputs: {
+    entityId: number;
+    entityType: 'interface' | 'linode';
+  }) => {
+    const { entityId, entityType } = inputs;
+    return firewall?.status !== 'enabled'
+      ? !firewall?.entities.some(
+          (entity) => entity.type === entityType && entity.id === entityId
+        )
+      : !allFirewallEntities?.some(
+          (service) =>
+            service.id === entityId && service.firewallStatus === 'enabled'
+        );
+  };
+
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = React.useMemo(
     () =>
@@ -89,7 +107,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
   // Only track Linode if Linode has at least one non-vlan interface
-  const linodesWithNonVlanInterfaces = useQueries({
+  const linodesAndEligibleInterfaces = useQueries({
     queries:
       linodesUsingLinodeInterfaces?.map(
         (linode) =>
@@ -103,12 +121,17 @@ export const AddLinodeDrawer = (props: Props) => {
         >
       >((acc, res, index) => {
         if (res.data) {
-          const nonVlanInterfaces = res.data.interfaces.filter(
-            (iface) => !iface.vlan
+          const eligibleInterfaces = res.data.interfaces.filter(
+            (iface) =>
+              !iface.vlan &&
+              canBeAssignedToFirewall({
+                entityType: 'interface',
+                entityId: iface.id,
+              })
           );
-          if (nonVlanInterfaces.length > 0) {
+          if (eligibleInterfaces.length > 0) {
             acc[linodesUsingLinodeInterfaces[index].id] = {
-              interfaces: nonVlanInterfaces,
+              interfaces: eligibleInterfaces,
               linode: linodesUsingLinodeInterfaces[index],
             };
           }
@@ -119,55 +142,27 @@ export const AddLinodeDrawer = (props: Props) => {
   });
 
   const linodesWithMultipleInterfaces = Object.values(
-    linodesWithNonVlanInterfaces
+    linodesAndEligibleInterfaces
   )
-    .filter(({ interfaces }) => {
-      if (interfaces.length < 2) {
-        return false;
-      }
-      const interfacesWithoutFirewall = interfaces.filter(
-        (iface) =>
-          !allFirewallEntities?.some(
-            (e) => e.type === 'interface' && e.id === iface.id
-          )
-      );
-      return interfacesWithoutFirewall.length > 1;
-    })
+    .filter(({ interfaces }) => interfaces.length > 1)
     .map(({ linode }) => linode);
 
   const linodeOptions = allLinodes?.filter((linode) => {
-    // Exclude read only Linodes or Linodes already assigned to a firewall
-    if (
-      readOnlyLinodeIds.includes(linode.id) ||
-      allFirewallEntities?.some(
-        (entity) => entity.type === 'linode' && entity.id === linode.id
-      )
-    ) {
+    // Exclude read only Linodes
+    if (readOnlyLinodeIds.includes(linode.id)) {
       return false;
     }
 
-    // Exclude a Linode if it uses Linode Interfaces and
+    // Exclude a Linode if it uses Linode Interfaces and has no eligible interfaces
     if (linode.interface_generation === 'linode') {
-      // the Linode has no eligible interfaces
-      if (!linodesWithNonVlanInterfaces[linode.id]) {
-        return false;
-      }
-      // or every eligible interface has a firewall already assigned
-      const linodeInterfaces =
-        linodesWithNonVlanInterfaces[linode.id].interfaces;
-      if (
-        linodeInterfaces.length === 0 ||
-        linodeInterfaces.every((i) =>
-          allFirewallEntities?.some(
-            (e) => e.type === 'interface' && e.id === i.id
-          )
-        )
-      ) {
-        return false;
-      }
+      return Boolean(linodesAndEligibleInterfaces[linode.id]);
     }
 
-    return true;
+    // Lastly, confirm if Linode using legacy interfaces can be assigned
+    return canBeAssignedToFirewall({
+      entityType: 'linode',
+      entityId: linode.id,
+    });
   });
 
   const theme = useTheme();
@@ -215,20 +210,11 @@ export const AddLinodeDrawer = (props: Props) => {
     // interface if the linode is selected.
     let interfaceInfos: InterfaceDeviceInfo[] = [];
     for (const { linode, interfaces } of Object.values(
-      linodesWithNonVlanInterfaces
+      linodesAndEligibleInterfaces
     )) {
-      const interfacesWithoutFirewall = interfaces.filter(
-        (iface) =>
-          !allFirewallEntities?.some(
-            (e) => e.type === 'interface' && e.id === iface.id
-          )
-      );
-      if (
-        selectedLinodes.includes(linode) &&
-        interfacesWithoutFirewall.length === 1
-      ) {
+      if (selectedLinodes.includes(linode) && interfaces.length === 1) {
         interfaceInfos.push({
-          interfaceId: interfacesWithoutFirewall[0].id,
+          interfaceId: interfaces[0].id,
           linodeId: linode.id,
           linodeLabel: linode.label,
         });
@@ -413,17 +399,12 @@ export const AddLinodeDrawer = (props: Props) => {
           )}
         {isLinodeInterfacesEnabled &&
           selectedLinodesWithMultipleInterfaces.map((linode) => {
-            const options = linodesWithNonVlanInterfaces[linode.id].interfaces
-              .filter(
-                (i) =>
-                  !allFirewallEntities?.some(
-                    (e) => e.type === 'interface' && e.id === i.id
-                  )
-              )
-              .map((i) => ({
-                ...i,
-                label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
-              }));
+            const options = linodesAndEligibleInterfaces[
+              linode.id
+            ].interfaces.map((i) => ({
+              ...i,
+              label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
+            }));
             return (
               <Autocomplete
                 disableClearable
