@@ -256,9 +256,14 @@ export const ItemBox = <T extends object>({
   ) => {
     const { name, value } = e.target;
 
+    const checkboxValue: boolean | undefined =
+      e.target.type === 'checkbox' && 'checked' in e.target
+        ? e.target.checked
+        : undefined;
+
     editItem((prev) => ({
       ...prev,
-      [name]: value || null,
+      [name]: checkboxValue ?? (value || null),
     }));
   };
 
@@ -283,18 +288,21 @@ export const ItemBox = <T extends object>({
             style={{ cursor: isActive ? 'grabbing' : 'grab' }}
           />
           <div>
-            <button onClick={() => setIsCollapsed((prev) => !prev)}>
+            <button
+              onClick={() => setIsCollapsed((prev) => !prev)}
+              style={{ width: 90 }}
+            >
               {isCollapsed ? '► Expand' : '▼ Collapse'}
             </button>
           </div>
-          {isCollapsed && summary}
+          {summary}
         </div>
         <div>
           <button onClick={onDelete}>Delete</button>
         </div>
       </div>
       {!isCollapsed && (
-        <form className="dev-tools__modal-form">
+        <form className="dev-tools__modal-form dev-tools__modal-form__no-max-height">
           {formFields(handleInputChange).map((field, index) => (
             <FieldWrapper key={index}>{field}</FieldWrapper>
           ))}

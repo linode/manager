@@ -351,6 +351,10 @@
   overflow-y: auto;
   padding-right: 24px;
 
+  .dev-tools__modal-form__no-max-height {
+    max-height: initial;
+  }
+
   label {
     display: flex;
     flex-direction: column;
@@ -378,6 +382,10 @@
     font-family: monospace;
     white-space: pre;
   }
+
+  input[type="checkbox"] {
+    align-self: start;
+  }
 }
 
 .dev-tools__modal__rectangle-group {
@@ -387,8 +395,17 @@
   padding: 10px;
 
   .dev-tools__modal__controls {
+    background-color: white;
+    top: 0;
+    position: sticky;
     display: flex;
     flex-direction: row;
+    margin: -11px;
+    margin-bottom: -10px;
+    padding: 10px;
+    border-radius: 2px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-bottom: none;
 
     button {
       white-space: nowrap;

@@ -11,8 +11,10 @@ import { JsonTextArea } from './JsonTextArea';
 
 import type { Notification } from '@linode/api-v4';
 
+const NOTIFICATIONS_PRESET_ID = 'notifications:custom' as const;
+
 const notificationsPreset = extraMockPresets.find(
-  (p) => p.id === 'notifications:custom'
+  (p) => p.id === NOTIFICATIONS_PRESET_ID
 );
 
 interface ExtraPresetNotificationsProps {
@@ -33,7 +35,7 @@ export const ExtraPresetNotifications = ({
 }: ExtraPresetNotificationsProps) => {
   if (!notificationsPreset) return null;
 
-  const isEnabled = handlers.includes('notifications:custom');
+  const isEnabled = handlers.includes(NOTIFICATIONS_PRESET_ID);
 
   return (
     <ExtraPresetList
@@ -105,6 +107,7 @@ const renderNotificationFields = (
       value={notification.label ?? ''}
     />
   </label>,
+
   <label key="message">
     Message
     <input
@@ -114,6 +117,7 @@ const renderNotificationFields = (
       value={notification.message ?? ''}
     />
   </label>,
+
   <label key="body">
     Body
     <input
@@ -123,6 +127,7 @@ const renderNotificationFields = (
       value={notification.body ?? ''}
     />
   </label>,
+
   <JsonTextArea
     height={100}
     key="entity"
@@ -131,6 +136,7 @@ const renderNotificationFields = (
     onChange={onChange}
     value={notification.entity}
   />,
+
   <label key="severity">
     Severity
     <select
@@ -144,6 +150,7 @@ const renderNotificationFields = (
       <option value="critical">Critical</option>
     </select>
   </label>,
+
   <label key="type">
     Type
     <select
@@ -177,6 +184,7 @@ const renderNotificationFields = (
       ))}
     </select>
   </label>,
+
   <label key="until">
     Until
     <input
@@ -186,6 +194,7 @@ const renderNotificationFields = (
       value={notification.until ?? ''}
     />
   </label>,
+
   <label key="when">
     When
     <input
