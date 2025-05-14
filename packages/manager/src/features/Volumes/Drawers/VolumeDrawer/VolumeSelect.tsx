@@ -1,4 +1,4 @@
-import { useInfiniteVolumesQuery } from '@linode/queries';
+import { useInfiniteVolumesQuery, useVolumeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 
@@ -16,10 +16,6 @@ export const VolumeSelect = (props: Props) => {
   const { disabled, error, name, onBlur, onChange, region, value } = props;
 
   const [inputValue, setInputValue] = React.useState<string>('');
-  const [searchedVolume, setSearchedVolume] = React.useState<null | {
-    id: number;
-    label: string;
-  }>(null);
 
   const searchFilter = inputValue
     ? {
@@ -39,16 +35,15 @@ export const VolumeSelect = (props: Props) => {
       '+order_by': 'label',
     });
 
-  const options = data?.pages
-    .flatMap((page) => page.data)
-    .map(({ id, label }) => ({ id, label }));
+  const options = data?.pages.flatMap((page) => page.data);
 
-  if (
-    searchedVolume &&
-    options &&
-    !options.some((item) => item.id === searchedVolume.id)
-  ) {
-    options?.push({ id: searchedVolume.id, label: searchedVolume.label });
+  const { data: volume, isLoading: isLoadingSelected } = useVolumeQuery(
+    value,
+    value > 0
+  );
+
+  if (value && volume && !options?.some((item) => item.id === volume.id)) {
+    options?.push(volume);
   }
 
   const selectedVolume = options?.find((option) => option.id === value) ?? null;
@@ -77,14 +72,9 @@ export const VolumeSelect = (props: Props) => {
           }
         },
       }}
-      loading={isLoading}
+      loading={isLoading || isLoadingSelected}
       onBlur={onBlur}
-      onChange={(_, value, reason) => {
-        if (reason === 'selectOption' && value) {
-          setSearchedVolume(value);
-        } else if (reason === 'clear') {
-          setSearchedVolume(null);
-        }
+      onChange={(_, value) => {
         setInputValue('');
         onChange(value?.id ?? -1);
       }}
