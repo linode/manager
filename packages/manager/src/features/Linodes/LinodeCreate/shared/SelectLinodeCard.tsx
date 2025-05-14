@@ -1,8 +1,8 @@
 import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { Button, Stack } from '@linode/ui';
 import {
-  capitalizeAllWords,
   formatStorageUnits,
+  getFormattedStatus,
   isNotNullOrUndefined,
 } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -75,7 +75,7 @@ export const SelectLinodeCard = ({
             aria-label={`Linode status ${linode?.status ?? iconStatus}`}
             status={iconStatus}
           />
-          {capitalizeAllWords(linode.status.replace('_', ' '))}
+          {getFormattedStatus(linode.status)}
         </Stack>
         {shouldShowPowerButton && (
           <Button buttonType="outlined" onClick={handlePowerOff}>

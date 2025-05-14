@@ -1,6 +1,7 @@
 import { useNotificationsQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Chip, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
@@ -88,14 +89,6 @@ export const VolumeTableRow = React.memo((props: Props) => {
     mostRecentVolumeEvent
   );
 
-  const getVolumeStatus = () => {
-    if (volumeStatus === 'key_rotating') {
-      return 'key rotating';
-    }
-
-    return volumeStatus;
-  };
-
   const isVolumeMigrating = volumeStatus === 'migrating';
 
   const handleUpgrade = () => {
@@ -156,7 +149,8 @@ export const VolumeTableRow = React.memo((props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[volumeStatus]} />
-        {getVolumeStatus()} {getEventProgress(mostRecentVolumeEvent)}
+        {getFormattedStatus(volumeStatus)}
+        {getEventProgress(mostRecentVolumeEvent)}
       </TableCell>
       {isVolumesLanding && (
         <TableCell data-qa-volume-region data-testid="region" noWrap>

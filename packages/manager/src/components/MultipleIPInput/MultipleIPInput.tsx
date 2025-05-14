@@ -1,8 +1,10 @@
 import {
   Button,
   CloseIcon,
+  IconButton,
   InputLabel,
   Notice,
+  Stack,
   TextField,
   TooltipIcon,
   Typography,
@@ -245,55 +247,56 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
         <Typography className={classes.helperText}>{helperText}</Typography>
       )}
       {error && <Notice spacingTop={8} text={error} variant="error" />}
-      {ips.map((thisIP, idx) => (
-        <Grid
-          container
-          data-testid="domain-transfer-input"
-          direction="row"
-          key={`domain-transfer-ip-${idx}`}
-          spacing={2}
-          sx={{
-            justifyContent: 'center',
-            maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
-          }}
-        >
-          <Grid size={11}>
-            <TextField
-              className={classes.input}
-              errorText={thisIP.error}
-              hideLabel
-              InputProps={{
-                'aria-label': `${title} ip-address-${idx}`,
-                disabled,
-                ...props.inputProps,
-              }}
-              // Prevent unique ID errors, since TextField sets the input element's ID to the label
-              label={`domain-transfer-ip-${idx}`}
-              onBlur={(e) => handleBlur(e, idx)}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                handleChange(e, idx)
-              }
-              placeholder={placeholder}
-              sx={{ marginTop: '8px' }}
-              value={thisIP.address}
-            />
+      <Stack spacing={1}>
+        {ips.map((thisIP, idx) => (
+          <Grid
+            container
+            data-testid="domain-transfer-input"
+            direction="row"
+            key={`domain-transfer-ip-${idx}`}
+            spacing={2}
+            sx={{
+              justifyContent: 'center',
+              maxWidth: forVPCIPv4Ranges ? '415px' : undefined,
+            }}
+          >
+            <Grid size={11}>
+              <TextField
+                className={classes.input}
+                errorText={thisIP.error}
+                hideLabel
+                InputProps={{
+                  'aria-label': `${title} ip-address-${idx}`,
+                  disabled,
+                  ...props.inputProps,
+                }}
+                // Prevent unique ID errors, since TextField sets the input element's ID to the label
+                label={`domain-transfer-ip-${idx}`}
+                onBlur={(e) => handleBlur(e, idx)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleChange(e, idx)
+                }
+                placeholder={placeholder}
+                value={thisIP.address}
+              />
+            </Grid>
+            {/** Don't show the button for the first input since it won't do anything, unless this component is
+             * used in DBaaS or for Linode VPC interfaces
+             */}
+            <Grid size={1}>
+              {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
+                <IconButton
+                  className={classes.button}
+                  disabled={disabled}
+                  onClick={() => removeInput(idx)}
+                >
+                  <CloseIcon data-testid={`delete-ip-${idx}`} />
+                </IconButton>
+              )}
+            </Grid>
           </Grid>
-          {/** Don't show the button for the first input since it won't do anything, unless this component is
-           * used in DBaaS or for Linode VPC interfaces
-           */}
-          <Grid size={1} sx={{ marginTop: '10px' }}>
-            {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
-              <Button
-                className={classes.button}
-                disabled={disabled}
-                onClick={() => removeInput(idx)}
-              >
-                <CloseIcon data-testid={`delete-ip-${idx}`} />
-              </Button>
-            )}
-          </Grid>
-        </Grid>
-      ))}
+        ))}
+      </Stack>
       {addIPButton}
     </div>
   );
