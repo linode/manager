@@ -4,8 +4,10 @@ import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import { useFlags } from 'src/hooks/useFlags';
-
+import {
+  evaluationPeriodOptions,
+  pollingIntervalOptions,
+} from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
@@ -32,16 +34,17 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
     control,
     name: 'serviceType',
   });
-  const { aclpAlertingTimeOptions } = useFlags();
   const getPollingIntervalOptions = () => {
-    if (!serviceTypeWatcher || !aclpAlertingTimeOptions) return [];
-    const options = aclpAlertingTimeOptions.pollingIntervalOptions;
+    const options = serviceTypeWatcher
+      ? pollingIntervalOptions[serviceTypeWatcher]
+      : [];
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
 
   const getEvaluationPeriodOptions = () => {
-    if (!serviceTypeWatcher || !aclpAlertingTimeOptions) return [];
-    const options = aclpAlertingTimeOptions.pollingIntervalOptions;
+    const options = serviceTypeWatcher
+      ? evaluationPeriodOptions[serviceTypeWatcher]
+      : [];
     return options.filter((item) => item.value >= maxScrapingInterval);
   };
 
