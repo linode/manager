@@ -68,9 +68,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: vi.fn().mockResolvedValue(undefined),
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
 
     const skeleton = screen.getByTestId('metrics-preference-skeleton');
     expect(skeleton).toBeInTheDocument();
@@ -82,9 +80,7 @@ describe('AclpPreferenceToggle', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
 
     // Check if the banner content and button text is correct in legacy mode
     const typography = screen.getByTestId('metrics-preference-banner-text');
@@ -104,9 +100,7 @@ describe('AclpPreferenceToggle', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
 
     // Check if the banner content and button text is correct in beta mode
     const typography = screen.getByTestId('metrics-preference-banner-text');
@@ -132,9 +126,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
 
     // Click the button to switch from legacy to beta
     const button = screen.getByText(
@@ -159,9 +151,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="metrics" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="metrics" />);
 
     // Click the button to switch from beta to legacy
     const button = screen.getByText(
@@ -186,9 +176,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: vi.fn().mockResolvedValue(undefined),
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
 
     const skeleton = screen.getByTestId('alerts-preference-skeleton');
     expect(skeleton).toBeInTheDocument();
@@ -200,9 +188,7 @@ describe('AclpPreferenceToggle', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
 
     // Check if the banner content and button text is correct in legacy mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
@@ -222,9 +208,7 @@ describe('AclpPreferenceToggle', () => {
       isLoading: false,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
 
     // Check if the banner content and button text is correct in beta mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
@@ -250,9 +234,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
 
     // Click the button to switch from legacy to beta
     const button = screen.getByText(
@@ -277,9 +259,7 @@ describe('AclpPreferenceToggle', () => {
       mutateAsync: mockUpdatePreferences,
     });
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />, {
-      flags: { aclpIntegration: true },
-    });
+    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
 
     // Click the button to switch from beta to legacy
     const button = screen.getByText(
