@@ -1,5 +1,5 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import { Accordion, ActionsPanel, Notice } from '@linode/ui';
+import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -203,8 +203,23 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
-  const renderExpansionActions = () => {
-    return (
+  const generalError = hasErrorFor('none');
+
+  return (
+    <Paper sx={(theme) => ({ pb: theme.spacingFunction(17) })}>
+      <Typography
+        sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+        variant="h2"
+      >
+        Alerts
+      </Typography>
+      {generalError && <Notice variant="error">{generalError}</Notice>}
+      {alertSections.map((p, idx) => (
+        <>
+          <AlertSection key={`alert-${idx}`} {...p} readOnly={isReadOnly} />
+          {idx !== alertSections.length - 1 ? <Divider /> : null}
+        </>
+      ))}
       <StyledActionsPanel
         primaryButtonProps={{
           'data-testid': 'alerts-save',
@@ -214,22 +229,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           onClick: () => formik.handleSubmit(),
         }}
       />
-    );
-  };
-
-  const generalError = hasErrorFor('none');
-
-  return (
-    <Accordion
-      actions={renderExpansionActions}
-      defaultExpanded
-      heading="Alerts"
-    >
-      {generalError && <Notice variant="error">{generalError}</Notice>}
-      {alertSections.map((p, idx) => (
-        <AlertSection key={idx} {...p} readOnly={isReadOnly} />
-      ))}
-    </Accordion>
+    </Paper>
   );
 };
 
