@@ -1,4 +1,4 @@
-import { Autocomplete, Button, CircleProgress, Typography } from '@linode/ui';
+import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import React from 'react';
@@ -25,8 +25,8 @@ import {
   getFacadeRoleDescription,
   getFilteredRoles,
   getFormattedEntityType,
-  getResourceTypes,
   groupAccountEntitiesByType,
+  mapEntityTypesForSelect,
 } from '../utilities';
 import { AssignedRolesActionMenu } from './AssignedRolesActionMenu';
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -43,14 +43,23 @@ import type {
   CombinedEntity,
   DrawerModes,
   EntitiesRole,
-  EntitiesType,
   ExtendedRoleView,
   RoleView,
 } from '../types';
-import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
+import type {
+  AccountAccessRole,
+  EntityAccessRole,
+  EntityTypePermissions,
+} from '@linode/api-v4';
+import type { SelectOption } from '@linode/ui';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
 
 type OrderByKeys = 'name';
+
+const ALL_ROLES_OPTION: SelectOption = {
+  label: 'All Assigned Roles',
+  value: 'all',
+};
 
 export const AssignedRolesTable = () => {
   const { username } = useParams<{ username: string }>();
@@ -118,15 +127,18 @@ export const AssignedRolesTable = () => {
   const { data: assignedRoles, isLoading: assignedRolesLoading } =
     useAccountUserPermissions(username ?? '');
 
-  const { resourceTypes, roles } = React.useMemo(() => {
+  const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !accountPermissions) {
-      return { resourceTypes: [], roles: [] };
+      return { filterableOptions: [], roles: [] };
     }
 
     const userRoles = combineRoles(assignedRoles);
     let roles = mapRolesToPermissions(accountPermissions, userRoles);
 
-    const resourceTypes = getResourceTypes(roles);
+    const filterableOptions = [
+      ALL_ROLES_OPTION,
+      ...mapEntityTypesForSelect(roles, ' Roles'),
+    ];
 
     if (entities) {
       const transformedEntities = groupAccountEntitiesByType(entities.data);
@@ -134,12 +146,14 @@ export const AssignedRolesTable = () => {
       roles = addEntitiesNamesToRoles(roles, transformedEntities);
     }
 
-    return { resourceTypes, roles };
+    return { filterableOptions, roles };
   }, [assignedRoles, accountPermissions, entities]);
 
   const [query, setQuery] = React.useState('');
 
-  const [entityType, setEntityType] = React.useState<EntitiesType | null>(null);
+  const [entityType, setEntityType] = React.useState<null | SelectOption>(
+    ALL_ROLES_OPTION
+  );
 
   const handleViewEntities = (
     roleName: AccountAccessRole | EntityAccessRole
@@ -153,7 +167,7 @@ export const AssignedRolesTable = () => {
 
   const memoizedTableItems: TableItem[] = React.useMemo(() => {
     const filteredRoles = getFilteredRoles({
-      entityType: entityType?.rawValue,
+      entityType: entityType?.value as 'all' | EntityTypePermissions,
       getSearchableFields,
       query,
       roles,
@@ -268,7 +282,7 @@ export const AssignedRolesTable = () => {
         Role
       </TableSortCell>
       <TableCell
-        style={{ width: '65%' }}
+        style={{ width: '75%' }}
         sx={{ display: { sm: 'table-cell', xs: 'none' } }}
       >
         Entities
@@ -296,45 +310,40 @@ export const AssignedRolesTable = () => {
       <Grid
         container
         direction="row"
+        rowSpacing={1}
         sx={{
           alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: theme.tokens.spacing.S12,
         }}
       >
-        <Grid container direction="row">
+        <Grid container direction="row" rowSpacing={1}>
           <DebouncedSearchTextField
             clearable
             containerProps={{
               sx: {
-                marginBottom: { md: 0, xs: 2 },
                 marginRight: { md: 2, xs: 0 },
-                width: { md: '410px', xs: '100%' },
+                width: { md: '416px', xs: '100%' },
+                height: 34,
               },
             }}
             hideLabel
             label="Filter"
             onSearch={setQuery}
             placeholder="Search"
-            sx={{ height: 34 }}
             value={query}
           />
-          <Autocomplete
+          <Select
+            hideLabel
             label="Select type"
             onChange={(_, selected) => setEntityType(selected ?? null)}
-            options={resourceTypes}
+            options={filterableOptions}
             placeholder="All Assigned Roles"
-            textFieldProps={{
-              containerProps: {
-                sx: { minWidth: 250, width: { md: '250px', xs: '100%' } },
-                marginBottom: { md: 0, xs: 2 },
-              },
-              hideLabel: true,
-            }}
+            sx={{ minWidth: 250 }}
             value={entityType}
           />
         </Grid>
-        <Grid>
+        <Grid sx={{ alignSelf: 'flex-start' }}>
           <Button
             buttonType="primary"
             onClick={() => setIsAssignNewRoleDrawerOpen(true)}
