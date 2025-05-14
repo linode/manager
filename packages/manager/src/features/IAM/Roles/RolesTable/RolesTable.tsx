@@ -125,7 +125,10 @@ export const RolesTable = ({ roles }: Props) => {
           container
           direction="row"
           spacing={2}
-          sx={{ justifyContent: 'space-between' }}
+          sx={(theme) => ({
+            justifyContent: 'space-between',
+            marginBottom: theme.tokens.spacing.S12,
+          })}
         >
           <Grid
             container
@@ -212,7 +215,9 @@ export const RolesTable = ({ roles }: Props) => {
           <TableBody>
             {!rows?.length ? (
               <TableRow>
-                <TableCell>No items to display.</TableCell>
+                <TableCell style={{ justifyContent: 'center' }}>
+                  No items to display.
+                </TableCell>
               </TableRow>
             ) : (
               rows.map((roleRow) => (
@@ -225,7 +230,9 @@ export const RolesTable = ({ roles }: Props) => {
                   selectable
                   selected={selectedRows.includes(roleRow)}
                 >
-                  <TableCell style={{ minWidth: '26%' }}>
+                  <TableCell
+                    style={{ minWidth: '26%', wordBreak: 'break-word' }}
+                  >
                     {roleRow.name}
                   </TableCell>
                   <TableCell style={{ minWidth: '14%' }}>
@@ -242,7 +249,12 @@ export const RolesTable = ({ roles }: Props) => {
                       </Typography>
                     )}
                   </TableCell>
-                  <TableCell style={{ minWidth: '10%' }}>
+                  <TableCell
+                    style={{
+                      minWidth: '10%',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
                     <RolesTableActionMenu
                       onClick={() => {
                         assignRoleRow(roleRow);

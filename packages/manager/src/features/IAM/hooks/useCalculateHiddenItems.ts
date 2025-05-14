@@ -1,49 +1,75 @@
-import React from 'react';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import type { PermissionType } from '@linode/api-v4';
 
 /**
  * Custom hook to calculate hidden items
  */
+
+type Props = {
+  containerRef: React.RefObject<HTMLDivElement>;
+  itemRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  setShowAll: (value: boolean) => void;
+  showAll: boolean;
+  visibleIndexes: number[];
+};
+
 export const useCalculateHiddenItems = (
-  items: PermissionType[] | string[],
-  showAll?: boolean
-) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
+  items: PermissionType[] | string[]
+): Props => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [visibleIndexes, setVisibleIndexes] = useState<number[]>([]);
+  const [showAll, setShowAll] = useState(false);
 
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!containerRef.current || items.length === 0) return;
 
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
-
-  const calculateHiddenItems = React.useCallback(() => {
-    if (showAll || !containerRef.current) {
-      setNumHiddenItems(0);
-      return;
-    }
-
-    if (!itemRefs.current) {
-      return;
-    }
-
-    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
-
-    const itemsArray = Array.from(itemRefs.current);
-
-    const firstHiddenIndex = itemsArray.findIndex(
-      (item: HTMLDivElement | HTMLSpanElement) => {
-        if (!item) {
-          return false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (showAll) {
+          setVisibleIndexes(items.map((_, i) => i));
+          return;
         }
-        const rect = item.getBoundingClientRect();
-        return rect.top >= containerBottom;
+        const visible = entries
+          .filter(
+            (entry) => entry.isIntersecting && entry.intersectionRatio >= 1
+          )
+          .map((entry) => Number(entry.target.getAttribute('data-index')));
+
+        setVisibleIndexes(visible);
+      },
+      {
+        root: containerRef.current,
+        threshold: 1.0,
       }
     );
-
-    const numHiddenItems =
-      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
-
-    setNumHiddenItems(numHiddenItems);
+    // observe all items
+    itemRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+    // force re-observe on resize
+    const handleResize = () => {
+      itemRefs.current.forEach((el) => {
+        if (el) {
+          observer.unobserve(el);
+          observer.observe(el);
+        }
+      });
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
   }, [items, showAll]);
 
-  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
+  return {
+    containerRef,
+    itemRefs,
+    showAll,
+    setShowAll,
+    visibleIndexes,
+  };
 };
