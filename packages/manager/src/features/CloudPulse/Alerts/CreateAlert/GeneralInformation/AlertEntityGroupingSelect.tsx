@@ -28,24 +28,18 @@ export const AlertEntityGroupingSelect = (
       render={({ field, fieldState }) => (
         <Autocomplete
           data-testid="entity-grouping"
+          disableClearable
           disabled={disabled}
           errorText={fieldState.error?.message}
           label="Grouping"
           onBlur={field.onBlur}
-          onChange={(
-            _,
-            selected: { label: string; value: AlertDefinitionType },
-            reason
-          ) => {
-            if (selected) {
-              field.onChange(selected.value);
-            }
-            if (reason === 'clear') {
-              field.onChange(null);
+          onChange={(_, { value }) => {
+            if (value) {
+              field.onChange(value);
             }
 
-            setValue('regions', undefined);
-            setValue('entity_ids', undefined);
+            setValue('regions', value === 'region-user' ? [] : undefined);
+            setValue('entity_ids', value === 'user' ? [] : undefined);
           }}
           options={entityGroupingOptions}
           placeholder="Select a grouping"

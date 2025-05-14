@@ -23,7 +23,7 @@ interface AlertRegionsProps {
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType, handleChange, value = [] } = props;
+  const { serviceType, handleChange, value = [], errorText } = props;
   const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
@@ -129,6 +129,10 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value="Show Selected"
         />
       </Box>
+      {errorText && (
+        <AlertListNoticeMessages errorMessage={errorText} variant="error" />
+      )}
+
       <AlertSelectedInfoNotice
         handleSelectionChange={handleSelectAll}
         selectedCount={selectedRegions.length}

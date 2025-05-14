@@ -371,7 +371,6 @@ export const getSchemaWithEntityIdValidation = (
   props: AlertValidationSchemaProps
 ): ObjectSchema<CreateAlertDefinitionForm> => {
   const { aclpAlertServiceTypeConfig, baseSchema, serviceTypeObj } = props;
-
   if (!serviceTypeObj || !aclpAlertServiceTypeConfig?.length) {
     return baseSchema;
   }
@@ -379,7 +378,6 @@ export const getSchemaWithEntityIdValidation = (
   const maxSelectionCount = aclpAlertServiceTypeConfig.find(
     (config) => config && serviceTypeObj === config.serviceType
   )?.maxResourceSelectionCount;
-
   return maxSelectionCount
     ? baseSchema.concat(getEntityIdWithMax(maxSelectionCount))
     : baseSchema;
@@ -393,7 +391,6 @@ const getEntityIdWithMax = (maxSelectionCount: number) => {
   return object({
     entity_ids: array()
       .of(string().defined())
-      .required()
       .max(
         maxSelectionCount,
         `The overall number of entities assigned to an alert can't exceed ${maxSelectionCount}.`
