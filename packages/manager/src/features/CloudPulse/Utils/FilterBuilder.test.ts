@@ -203,7 +203,7 @@ it('test getNodeTypeProperties with disabled true', () => {
 });
 
 describe('shouldDisableFilterByFilterKey', () => {
-  // resources filter has region as mandatory and tags as an optional filter, this should reflect in the dependent filters
+  // resources filter has region as mandatory filter, this should reflect in the dependent filters
   it('should enable filter when dependent filter region is provided', () => {
     const result = shouldDisableFilterByFilterKey(
       'resource_id',
@@ -311,7 +311,6 @@ it('test buildXfilter method', () => {
   if (resourceSelectionConfig) {
     let result = buildXFilter(resourceSelectionConfig, {
       region: 'us-east',
-      tags: ['test1', 'test2'],
     });
 
     expect(JSON.stringify(result)).toEqual('{"+and":[{"region":"us-east"}]}');
