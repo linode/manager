@@ -1,4 +1,3 @@
-import { useMatchRoute, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -6,9 +5,10 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 const Destinations = React.lazy(() =>
   import('./Destinations/Destinations').then((module) => ({
@@ -23,9 +23,6 @@ const Streams = React.lazy(() =>
 );
 
 export const DataStreamLanding = React.memo(() => {
-  const navigate = useNavigate();
-  const matchRoute = useMatchRoute();
-
   const landingHeaderProps = {
     breadcrumbProps: {
       pathname: '/datastream',
@@ -34,27 +31,16 @@ export const DataStreamLanding = React.memo(() => {
     title: 'DataStream',
   };
 
-  const tabs = [
+  const { handleTabChange, tabIndex, tabs } = useTabs([
     {
-      routeName: '/datastream/streams',
+      to: '/datastream/streams',
       title: 'Streams',
     },
     {
-      routeName: '/datastream/destinations',
+      to: '/datastream/destinations',
       title: 'Destinations',
     },
-  ];
-
-  const getDefaultTabIndex = () => {
-    const matchingTabIndex = tabs.findIndex((tab) =>
-      Boolean(matchRoute({ to: tab.routeName }))
-    );
-
-    return matchingTabIndex >= 0 ? matchingTabIndex : 0;
-  };
-
-  const handleTabChange = (index: number) =>
-    navigate({ to: tabs[index].routeName });
+  ]);
 
   return (
     <>
@@ -62,8 +48,8 @@ export const DataStreamLanding = React.memo(() => {
       <DocumentTitleSegment segment="DataStream" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
-      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
