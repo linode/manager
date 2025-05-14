@@ -27,7 +27,6 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { PremiumCPUPlanNotice } from '../../CreateCluster/PremiumCPUPlanNotice';
 import { KubernetesPlansPanel } from '../../KubernetesPlansPanel/KubernetesPlansPanel';
-import { useIsLkeEnterpriseEnabled } from '../../kubeUtils';
 import { hasInvalidNodePoolPrice } from './utils';
 
 import type { KubernetesTier, Region } from '@linode/api-v4';
@@ -87,8 +86,6 @@ export const AddNodePoolDrawer = (props: Props) => {
   } = props;
   const { classes } = useStyles();
   const { data: types } = useAllTypes(open);
-
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const {
     error: errorBeta,
@@ -163,7 +160,7 @@ export const AddNodePoolDrawer = (props: Props) => {
     if (!selectedTypeInfo) {
       return;
     }
-    if (isLkeEnterpriseLAFeatureEnabled && clusterTier === 'enterprise') {
+    if (clusterTier === 'enterprise') {
       return createPoolBeta({
         count: selectedTypeInfo.count,
         type: selectedTypeInfo.planId,
