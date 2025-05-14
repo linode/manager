@@ -5,6 +5,7 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { interceptUploadBucketObjectS3 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { chooseCluster } from 'support/util/clusters';
 import { randomLabel } from 'support/util/random';
 
 import { createObjectStorageBucketFactoryGen1 } from 'src/factories';
@@ -131,8 +132,8 @@ describe('Object Storage Multicluster objects', () => {
    */
   it('can upload, access, and delete objects', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-southeast-1';
-    const bucketRegionId = 'us-southeast';
+    const bucketClusterObj = chooseCluster();
+    const bucketRegionId = bucketClusterObj.region;
     const bucketPage = `/object-storage/buckets/${bucketRegionId}/${bucketLabel}/objects`;
     const bucketFolderName = randomLabel();
 
@@ -147,7 +148,7 @@ describe('Object Storage Multicluster objects', () => {
     ).then(() => {
       interceptUploadBucketObjectS3(
         bucketLabel,
-        bucketCluster,
+        bucketClusterObj.domain,
         bucketFiles[0].name
       ).as('uploadObject');
 
@@ -200,7 +201,7 @@ describe('Object Storage Multicluster objects', () => {
       cy.findByText(emptyFolderMessage).should('be.visible');
       interceptUploadBucketObjectS3(
         bucketLabel,
-        bucketCluster,
+        bucketClusterObj.domain,
         `${bucketFolderName}/${bucketFiles[1].name}`
       ).as('uploadObject');
       uploadFile(bucketFiles[1].path, bucketFiles[1].name);
