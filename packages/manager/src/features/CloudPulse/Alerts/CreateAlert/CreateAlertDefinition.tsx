@@ -57,7 +57,6 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  entity_ids: [],
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
@@ -67,7 +66,6 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   type: 'user',
-  regions: [],
 };
 
 const overrides = [

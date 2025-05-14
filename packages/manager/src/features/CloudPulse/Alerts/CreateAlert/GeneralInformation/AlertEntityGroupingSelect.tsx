@@ -20,7 +20,7 @@ export const AlertEntityGroupingSelect = (
   props: AlertEntityGroupingSelectProps
 ) => {
   const { name, disabled } = props;
-  const { control } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   return (
     <Controller
       control={control}
@@ -30,7 +30,7 @@ export const AlertEntityGroupingSelect = (
           data-testid="entity-grouping"
           disabled={disabled}
           errorText={fieldState.error?.message}
-          label="Entity Grouping"
+          label="Grouping"
           onBlur={field.onBlur}
           onChange={(
             _,
@@ -43,9 +43,12 @@ export const AlertEntityGroupingSelect = (
             if (reason === 'clear') {
               field.onChange(null);
             }
+
+            setValue('regions', undefined);
+            setValue('entity_ids', undefined);
           }}
           options={entityGroupingOptions}
-          placeholder="Select an entity grouping"
+          placeholder="Select a grouping"
           size="medium"
           textFieldProps={{
             labelTooltipText:

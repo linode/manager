@@ -16,16 +16,18 @@ import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
+  errorText?: string;
   handleChange: (regionIds: string[]) => void;
   serviceType: AlertServiceType | null;
+  value?: string[];
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType } = props;
+  const { serviceType, handleChange, value = [] } = props;
   const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
-  const [selectedRegions, setSelectedRegions] = React.useState<string[]>([]);
+  const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
   const [showSelected, setShowSelected] = React.useState<boolean>(false);
 
   const resourceFilterMap: Record<string, Filter> = {
@@ -42,14 +44,27 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     }
   );
 
-  const handleSelectionChange = (regionId: string, isChecked: boolean) => {
-    if (isChecked) {
-      setSelectedRegions((prev) => [...prev, regionId]);
-      return;
-    }
+  const handleSelectionChange = React.useCallback(
+    (regionId: string, isChecked: boolean) => {
+      if (isChecked) {
+        setSelectedRegions((prev) => {
+          const newValue = [...prev, regionId];
 
-    setSelectedRegions((prev) => prev.filter((id) => id !== regionId));
-  };
+          handleChange(newValue);
+          return newValue;
+        });
+        return;
+      }
+
+      setSelectedRegions((prev) => {
+        const newValue = prev.filter((region) => region !== regionId);
+
+        handleChange(newValue);
+        return newValue;
+      });
+    },
+    [handleChange]
+  );
 
   const filteredRegionsWithStatus: AlertRegion[] = React.useMemo(
     () =>
@@ -71,8 +86,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       }
 
       setSelectedRegions(regionIds);
+      handleChange(regionIds);
     },
-    [filteredRegionsWithStatus]
+    [filteredRegionsWithStatus, handleChange]
   );
 
   if (isRegionsLoading || isResourcesLoading) {

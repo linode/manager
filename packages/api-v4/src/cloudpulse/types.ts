@@ -181,6 +181,7 @@ export interface CreateAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteria[];
   };

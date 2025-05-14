@@ -103,9 +103,9 @@ export const dimensionOperatorOptions: Item<
 ];
 
 export const entityGroupingOptions: Item<string, AlertDefinitionType>[] = [
-  { label: 'Entity Level', value: 'user' },
-  { label: 'Account Level', value: 'account-user' },
-  { label: 'Region Level', value: 'region-user' },
+  { label: 'Account', value: 'account-user' },
+  { label: 'Region', value: 'region-user' },
+  { label: 'Entity', value: 'user' },
 ];
 
 export const textFieldOperators = ['endswith', 'startswith'];
