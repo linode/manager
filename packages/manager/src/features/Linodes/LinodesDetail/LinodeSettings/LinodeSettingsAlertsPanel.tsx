@@ -215,10 +215,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       </Typography>
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
-        <>
-          <AlertSection key={`alert-${idx}`} {...p} readOnly={isReadOnly} />
+        <React.Fragment key={`alert-${idx}`}>
+          <AlertSection {...p} readOnly={isReadOnly} />
           {idx !== alertSections.length - 1 ? <Divider /> : null}
-        </>
+        </React.Fragment>
       ))}
       <StyledActionsPanel
         primaryButtonProps={{
