@@ -2,8 +2,8 @@ import { useAccountUsers } from '@linode/queries';
 import { ActionsPanel, Autocomplete, Drawer, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import React, { useEffect, useState } from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
@@ -49,15 +49,18 @@ export const AssignSelectedRolesDrawer = ({
 
   const { data: existingRoles } = useAccountUserPermissions(username ?? '');
 
-
   const values = {
-    roles: selectedRoles.map((r) => ({ role: r.name, entities: null })),
+    roles: selectedRoles.map((r) => ({
+      role: r.name as unknown as RolesType,
+      entities: null,
+    })),
   };
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: values,
     values,
   });
+  const { handleSubmit, reset } = form;
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
@@ -80,7 +83,6 @@ export const AssignSelectedRolesDrawer = ({
 
   return (
     <Drawer onClose={onClose} open={open} title="Assign Selected Roles to User">
-      {' '}
       <FormProvider {...form}>
         <form onSubmit={onSubmit}>
           <Typography sx={{ marginBottom: 2.5 }}>
