@@ -296,7 +296,7 @@ export const mockUploadBucketObject = (
  * Intercepts S3 PUT request to upload bucket object.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param domain - Object storage bucket cluster.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
