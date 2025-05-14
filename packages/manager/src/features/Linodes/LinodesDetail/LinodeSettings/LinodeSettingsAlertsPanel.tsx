@@ -93,7 +93,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('cpu', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'cpu',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'cpu_usage_state',
       state: formik.values.cpu > 0,
       textInputLabel: 'cpu_usage_threshold',
@@ -115,7 +118,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           checked ? (linode?.alerts.io ? linode?.alerts.io : 10000) : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('io', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'io',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'disk_io_state',
       state: formik.values.io > 0,
       textInputLabel: 'disk_io_threshold',
@@ -141,7 +147,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('network_in', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'network_in',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'incoming_traffic_state',
       state: formik.values.network_in > 0,
       textInputLabel: 'incoming_traffic_threshold',
@@ -167,7 +176,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('network_out', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'network_out',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'outbound_traffic_state',
       state: formik.values.network_out > 0,
       textInputLabel: 'outbound_traffic_threshold',
@@ -193,7 +205,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('transfer_quota', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'transfer_quota',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'transfer_quota_state',
       state: formik.values.transfer_quota > 0,
       textInputLabel: 'transfer_quota_threshold',
