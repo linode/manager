@@ -28,6 +28,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
+import { canBeAssignedToFirewall } from './utils';
+
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';
 
 interface Props {
@@ -78,24 +80,6 @@ export const AddLinodeDrawer = (props: Props) => {
     [data]
   );
 
-  // We can assign multiple firewalls to an entity as long as:
-  // - this (disabled) firewall doesn't have the entity
-  // - this (enabled) firewall doesn't have this entity and the entity is not assigned to another already enabled firewall
-  const canBeAssignedToFirewall = (inputs: {
-    entityId: number;
-    entityType: 'interface' | 'linode';
-  }) => {
-    const { entityId, entityType } = inputs;
-    return firewall?.status !== 'enabled'
-      ? !firewall?.entities.some(
-          (entity) => entity.type === entityType && entity.id === entityId
-        )
-      : !allFirewallEntities?.some(
-          (service) =>
-            service.id === entityId && service.firewallStatus === 'enabled'
-        );
-  };
-
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = React.useMemo(
     () =>
@@ -125,6 +109,8 @@ export const AddLinodeDrawer = (props: Props) => {
             (iface) =>
               !iface.vlan &&
               canBeAssignedToFirewall({
+                firewall,
+                firewallEntities: allFirewallEntities,
                 entityType: 'interface',
                 entityId: iface.id,
               })
@@ -154,6 +140,8 @@ export const AddLinodeDrawer = (props: Props) => {
 
     // Lastly, confirm if Linode using legacy interfaces can be assigned
     return canBeAssignedToFirewall({
+      firewall,
+      firewallEntities: allFirewallEntities,
       entityType: 'linode',
       entityId: linode.id,
     });

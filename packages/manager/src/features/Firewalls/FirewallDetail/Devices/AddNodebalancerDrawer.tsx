@@ -18,6 +18,8 @@ import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelec
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
+import { canBeAssignedToFirewall } from './utils';
+
 import type { NodeBalancer } from '@linode/api-v4';
 
 interface Props {
@@ -152,15 +154,31 @@ export const AddNodebalancerDrawer = (props: Props) => {
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
 
-  const assignedNodeBalancers = data
-    ?.map((firewall) => firewall.entities)
-    .flat()
-    ?.filter((service) => service.type === 'nodebalancer');
+  const assignedNodeBalancers = React.useMemo(
+    () =>
+      data
+        ?.map((firewall) => {
+          return firewall.entities.map((entity) => {
+            return {
+              ...entity,
+              firewallStatus: firewall.status,
+            };
+          });
+        })
+        .flat()
+        ?.filter((service) => service.type === 'nodebalancer'),
+    [data]
+  );
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
     return (
       !readOnlyNodebalancerIds.includes(nodebalancer.id) &&
-      !assignedNodeBalancers?.some((service) => service.id === nodebalancer.id)
+      canBeAssignedToFirewall({
+        entityId: nodebalancer.id,
+        firewall,
+        firewallEntities: assignedNodeBalancers,
+        entityType: 'nodebalancer',
+      })
     );
   };
 
