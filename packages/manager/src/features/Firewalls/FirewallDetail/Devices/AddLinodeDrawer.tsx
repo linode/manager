@@ -106,7 +106,7 @@ export const AddLinodeDrawer = (props: Props) => {
   );
 
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
-  // Only track Linode if Linode has at least one non-vlan interface
+  // Only track Linode if Linode has at least one non-vlan interface that can be assigned to a firewall
   const linodesAndEligibleInterfaces = useQueries({
     queries:
       linodesUsingLinodeInterfaces?.map(
