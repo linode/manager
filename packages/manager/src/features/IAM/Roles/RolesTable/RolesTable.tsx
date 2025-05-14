@@ -137,12 +137,17 @@ export const RolesTable = ({ roles }: Props) => {
           >
             <DebouncedSearchTextField
               clearable
+              containerProps={{
+                sx: {
+                  width: { md: '416px', xs: '100%' },
+                  height: 34,
+                },
+              }}
               debounceTime={250}
               hideLabel
               label="Search"
               onSearch={handleTextFilter}
               placeholder="Search"
-              sx={{ width: 320 }}
               value={filterString}
             />
             <Select
