@@ -156,6 +156,11 @@ describe('VPC Subnets table', () => {
   });
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
+    server.use(
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
+      })
+    );
     const { getByRole, queryByTestId } = await renderWithThemeAndRouter(
       <VPCSubnetsTable
         isVPCLKEEnterpriseCluster={true}

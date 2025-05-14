@@ -1,15 +1,15 @@
-import { Autocomplete, Box } from '@linode/ui';
+import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { Grid } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
-import { dimensionOperatorOptions } from '../../constants';
+import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface DimensionFilterFieldProps {
   /**
@@ -67,11 +67,16 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     name: `${name}.dimension_label`,
   });
 
+  const dimensionOperatorWatcher = useWatch({
+    control,
+    name: `${name}.operator`,
+  });
+
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
-      ? dimensionOptions.find(
+      ? (dimensionOptions.find(
           (dim) => dim.dimension_label === dimensionFieldWatcher
-        ) ?? null
+        ) ?? null)
       : null;
 
   const valueOptions = () => {
@@ -83,19 +88,29 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     }
     return [];
   };
-
+  const isTextField = dimensionOperatorWatcher
+    ? textFieldOperators.includes(dimensionOperatorWatcher)
+    : false;
   return (
     <Grid
+      container
+      data-testid={`${name}-id`}
       sx={{
         gap: 2,
       }}
-      container
-      data-testid={`${name}-id`}
     >
       <Grid item md={3} xs={12}>
         <Controller
+          control={control}
+          name={`${name}.dimension_label`}
           render={({ field, fieldState }) => (
             <Autocomplete
+              data-qa-dimension-filter={`${name}-data-field`}
+              data-testid="data-field"
+              disabled={dataFieldDisabled}
+              errorText={fieldState.error?.message}
+              label="Data Field"
+              onBlur={field.onBlur}
               onChange={(
                 _,
                 newValue: { label: string; value: string },
@@ -103,29 +118,29 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               ) => {
                 handleDataFieldChange(newValue, operation);
               }}
+              options={dataFieldOptions}
+              placeholder="Select a Data Field"
               value={
                 dataFieldOptions.find(
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-qa-dimension-filter={`${name}-data-field`}
-              data-testid="data-field"
-              disabled={dataFieldDisabled}
-              errorText={fieldState.error?.message}
-              label="Data Field"
-              onBlur={field.onBlur}
-              options={dataFieldOptions}
-              placeholder="Select a Data Field"
             />
           )}
-          control={control}
-          name={`${name}.dimension_label`}
         />
       </Grid>
       <Grid item md={2} xs={12}>
         <Controller
+          control={control}
+          name={`${name}.operator`}
           render={({ field, fieldState }) => (
             <Autocomplete
+              data-qa-dimension-filter={`${name}-operator`}
+              data-testid="operator"
+              disabled={!dimensionFieldWatcher}
+              errorText={fieldState.error?.message}
+              label="Operator"
+              onBlur={field.onBlur}
               onChange={(
                 _,
                 newValue: { label: string; value: DimensionFilterOperatorType },
@@ -135,60 +150,67 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   operation === 'selectOption' ? newValue.value : null
                 );
               }}
+              options={dimensionOperatorOptions}
+              placeholder="Select an Operator"
               value={
                 dimensionOperatorOptions.find(
                   (option) => option.value === field.value
                 ) ?? null
               }
-              data-qa-dimension-filter={`${name}-operator`}
-              data-testid="operator"
-              disabled={!dimensionFieldWatcher}
-              errorText={fieldState.error?.message}
-              label="Operator"
-              onBlur={field.onBlur}
-              options={dimensionOperatorOptions}
-              placeholder="Select an Operator"
             />
           )}
-          control={control}
-          name={`${name}.operator`}
         />
       </Grid>
       <Grid item md={3} xs={12}>
         <Box display="flex" gap={2}>
           <Controller
-            render={({ field, fieldState }) => (
-              <Autocomplete
-                isOptionEqualToValue={(option, value) =>
-                  option.value === value.value
-                }
-                onChange={(
-                  _,
-                  selected: { label: string; value: string },
-                  operation
-                ) => {
-                  field.onChange(
-                    operation === 'selectOption' ? selected.value : null
-                  );
-                }}
-                value={
-                  valueOptions().find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
-                data-qa-dimension-filter={`${name}-value`}
-                data-testid="value"
-                disabled={!dimensionFieldWatcher}
-                errorText={fieldState.error?.message}
-                label="Value"
-                onBlur={field.onBlur}
-                options={valueOptions()}
-                placeholder="Select a Value"
-                sx={{ flex: 1 }}
-              />
-            )}
             control={control}
             name={`${name}.value`}
+            render={({ field, fieldState }) =>
+              isTextField ? (
+                <TextField
+                  data-qa-dimension-filter={`${name}-value`}
+                  data-testid="value"
+                  disabled={!dimensionFieldWatcher}
+                  errorText={fieldState.error?.message}
+                  label="Value"
+                  onBlur={field.onBlur}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  sx={{ flex: 1, width: '256px' }}
+                  value={field.value ?? ''}
+                />
+              ) : (
+                <Autocomplete
+                  data-qa-dimension-filter={`${name}-value`}
+                  data-testid="value"
+                  disabled={!dimensionFieldWatcher}
+                  errorText={fieldState.error?.message}
+                  isOptionEqualToValue={(option, value) =>
+                    value.value === option.value
+                  }
+                  label="Value"
+                  onBlur={field.onBlur}
+                  onChange={(
+                    _,
+                    selected: { label: string; value: string },
+                    operation
+                  ) => {
+                    field.onChange(
+                      operation === 'selectOption' ? selected.value : null
+                    );
+                  }}
+                  options={valueOptions()}
+                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  sx={{ flex: 1 }}
+                  value={
+                    valueOptions().find(
+                      (option) => option.value === field.value
+                    ) ?? null
+                  }
+                />
+              )
+            }
           />
           <Box alignContent="center" mt={5}>
             <ClearIconButton handleClick={onFilterDelete} />

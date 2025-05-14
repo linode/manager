@@ -7,10 +7,8 @@ import { Avatar } from 'src/components/Avatar/Avatar';
 import { AvatarColorPickerDialog } from './AvatarColorPickerDialog';
 
 export const AvatarForm = () => {
-  const [
-    isColorPickerDialogOpen,
-    setAvatarColorPickerDialogOpen,
-  ] = React.useState(false);
+  const [isColorPickerDialogOpen, setAvatarColorPickerDialogOpen] =
+    React.useState(false);
 
   return (
     <Box

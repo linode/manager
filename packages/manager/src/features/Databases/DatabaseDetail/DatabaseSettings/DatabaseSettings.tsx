@@ -58,24 +58,16 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     : DELETE_CLUSTER_TEXT;
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [
-    isResetRootPasswordDialogOpen,
-    setIsResetRootPasswordDialogOpen,
-  ] = React.useState(false);
-  const [
-    isSuspendClusterDialogOpen,
-    setIsSuspendClusterDialogOpen,
-  ] = React.useState(false);
+  const [isResetRootPasswordDialogOpen, setIsResetRootPasswordDialogOpen] =
+    React.useState(false);
+  const [isSuspendClusterDialogOpen, setIsSuspendClusterDialogOpen] =
+    React.useState(false);
 
-  const [
-    isUpgradeVersionDialogOpen,
-    setIsUpgradeVersionDialogOpen,
-  ] = React.useState(false);
+  const [isUpgradeVersionDialogOpen, setIsUpgradeVersionDialogOpen] =
+    React.useState(false);
 
-  const [
-    isReviewUpdatesDialogOpen,
-    setIsReviewUpdatesDialogOpen,
-  ] = React.useState(false);
+  const [isReviewUpdatesDialogOpen, setIsReviewUpdatesDialogOpen] =
+    React.useState(false);
 
   const onResetRootPassword = () => {
     setIsResetRootPasswordDialogOpen(true);

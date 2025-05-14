@@ -1,10 +1,11 @@
 import {
+  ConfigProfileInterfaceSchema,
   CreateLinodeConfigSchema,
   UpdateConfigInterfaceOrderSchema,
   UpdateConfigInterfaceSchema,
   UpdateLinodeConfigSchema,
-  ConfigProfileInterfaceSchema,
 } from '@linode/validation/lib/linodes.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -13,8 +14,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, ResourcePage as Page, Params } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   Config,
   ConfigInterfaceOrderPayload,
   Interface,
@@ -34,13 +36,13 @@ import {
 export const getLinodeConfigs = (
   linodeId: number,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<Config>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -54,7 +56,7 @@ export const getLinodeConfigs = (
 export const getLinodeConfig = (linodeId: number, configId: number) =>
   Request<Config>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/configs/${configId}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -66,14 +68,14 @@ export const getLinodeConfig = (linodeId: number, configId: number) =>
  */
 export const createLinodeConfig = (
   linodeId: number,
-  data: LinodeConfigCreationData
+  data: LinodeConfigCreationData,
 ) =>
   Request<Config>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/configs`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/configs`,
     ),
     setMethod('POST'),
-    setData(data, CreateLinodeConfigSchema)
+    setData(data, CreateLinodeConfigSchema),
   );
 
 /**
@@ -89,9 +91,9 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/configs/${encodeURIComponent(configId)}`
-    )
+        linodeId,
+      )}/configs/${encodeURIComponent(configId)}`,
+    ),
   );
 
 /**
@@ -106,16 +108,16 @@ export const deleteLinodeConfig = (linodeId: number, configId: number) =>
 export const updateLinodeConfig = (
   linodeId: number,
   configId: number,
-  data: Partial<LinodeConfigCreationData>
+  data: Partial<LinodeConfigCreationData>,
 ) =>
   Request<Config>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/configs/${encodeURIComponent(configId)}`
+        linodeId,
+      )}/configs/${encodeURIComponent(configId)}`,
     ),
     setMethod('PUT'),
-    setData(data, UpdateLinodeConfigSchema)
+    setData(data, UpdateLinodeConfigSchema),
   );
 
 /**
@@ -130,10 +132,10 @@ export const getConfigInterfaces = (linodeId: number, configId: number) =>
   Request<Interface[]>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/configs/${encodeURIComponent(configId)}/interfaces`
+        linodeId,
+      )}/configs/${encodeURIComponent(configId)}/interfaces`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -148,17 +150,17 @@ export const getConfigInterfaces = (linodeId: number, configId: number) =>
 export const getConfigInterface = (
   linodeId: number,
   configId: number,
-  interfaceId: number
+  interfaceId: number,
 ) =>
   Request<Interface>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
+        linodeId,
       )}/configs/${encodeURIComponent(
-        configId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
+        configId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -173,16 +175,16 @@ export const getConfigInterface = (
 export const appendConfigInterface = (
   linodeId: number,
   configId: number,
-  data: InterfacePayload
+  data: InterfacePayload,
 ) =>
   Request<Interface>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/configs/${encodeURIComponent(configId)}/interfaces`
+        linodeId,
+      )}/configs/${encodeURIComponent(configId)}/interfaces`,
     ),
     setMethod('POST'),
-    setData(data, ConfigProfileInterfaceSchema)
+    setData(data, ConfigProfileInterfaceSchema),
   );
 
 /**
@@ -198,18 +200,18 @@ export const updateConfigInterface = (
   linodeId: number,
   configId: number,
   interfaceId: number,
-  data: UpdateConfigInterfacePayload
+  data: UpdateConfigInterfacePayload,
 ) =>
   Request<Interface>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
+        linodeId,
       )}/configs/${encodeURIComponent(
-        configId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
+        configId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
     ),
     setMethod('PUT'),
-    setData(data, UpdateConfigInterfaceSchema)
+    setData(data, UpdateConfigInterfaceSchema),
   );
 
 /**
@@ -223,16 +225,16 @@ export const updateConfigInterface = (
 export const updateLinodeConfigOrder = (
   linodeId: number,
   configId: number,
-  data: ConfigInterfaceOrderPayload
+  data: ConfigInterfaceOrderPayload,
 ) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/configs/${encodeURIComponent(configId)}/interfaces/order`
+        linodeId,
+      )}/configs/${encodeURIComponent(configId)}/interfaces/order`,
     ),
     setMethod('POST'),
-    setData(data, UpdateConfigInterfaceOrderSchema)
+    setData(data, UpdateConfigInterfaceOrderSchema),
   );
 
 /**
@@ -247,15 +249,15 @@ export const updateLinodeConfigOrder = (
 export const deleteLinodeConfigInterface = (
   linodeId: number,
   configId: number,
-  interfaceId: number
+  interfaceId: number,
 ) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
+        linodeId,
       )}/configs/${encodeURIComponent(
-        configId
-      )}/interfaces/${encodeURIComponent(interfaceId)}`
-    )
+        configId,
+      )}/interfaces/${encodeURIComponent(interfaceId)}`,
+    ),
   );

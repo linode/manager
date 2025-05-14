@@ -20,7 +20,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => (
 
 export const renderWithTheme = (
   ui: React.ReactNode,
-  options: Options = {}
+  options: Options = {},
 ): RenderResult => {
   const renderResult = render(wrapWithTheme(ui, options));
   return {

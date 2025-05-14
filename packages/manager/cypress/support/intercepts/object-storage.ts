@@ -17,6 +17,7 @@ import type {
   ObjectStorageCluster,
   ObjectStorageEndpoint,
   ObjectStorageKey,
+  PriceType,
 } from '@linode/api-v4';
 
 /**
@@ -52,6 +53,25 @@ export const mockGetBuckets = (
     'GET',
     apiMatcher('object-storage/buckets/*'),
     sequentialStub([paginateResponse(buckets), paginateResponse([])])
+  );
+};
+
+/**
+ * Intercepts GET requests to fetch object-storage types and mocks response.
+ *
+ * Only returns data for the first request intercepted.
+ *
+ * @param priceTypes - Object storage buckets with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetObjectStorageTypes = (
+  priceTypes: PriceType[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/types*'),
+    paginateResponse(priceTypes)
   );
 };
 
@@ -276,20 +296,17 @@ export const mockUploadBucketObject = (
  * Intercepts S3 PUT request to upload bucket object.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param domain - Object storage bucket cluster.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
  */
 export const interceptUploadBucketObjectS3 = (
   label: string,
-  cluster: string,
+  domain: string,
   filename: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'PUT',
-    `https://${cluster}.linodeobjects.com/${label}/${filename}*`
-  );
+  return cy.intercept('PUT', `https://${domain}/${label}/${filename}*`);
 };
 
 /**

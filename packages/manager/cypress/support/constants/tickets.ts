@@ -1,4 +1,4 @@
-import { TicketSeverity } from '@linode/api-v4';
+import type { TicketSeverity } from '@linode/api-v4';
 
 export const severityLabelMap: Map<TicketSeverity, string> = new Map([
   [1, '1-Major Impact'],

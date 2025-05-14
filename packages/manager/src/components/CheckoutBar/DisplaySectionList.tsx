@@ -1,6 +1,6 @@
+import { Divider } from '@linode/ui';
 import * as React from 'react';
 
-import { Divider } from '@linode/ui';
 import { DisplaySection } from './DisplaySection';
 
 interface DisplaySectionListProps {
@@ -12,7 +12,6 @@ const DisplaySectionList = ({ displaySections }: DisplaySectionListProps) => {
     return null;
   }
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {displaySections.map(({ details, title }, idx) => (
         <React.Fragment key={`fragment-${title}-${idx}`}>

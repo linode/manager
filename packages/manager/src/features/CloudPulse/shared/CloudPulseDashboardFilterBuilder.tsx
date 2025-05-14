@@ -12,7 +12,6 @@ import {
   DASHBOARD_ID,
   NODE_TYPE,
   REGION,
-  RELATIVE_TIME_DURATION,
   RESOURCE_ID,
   RESOURCES,
   TAGS,
@@ -26,9 +25,9 @@ import {
   getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
+import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { CloudPulseServiceTypeFilters } from '../Utils/models';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';
 import type { CloudPulseTags } from './CloudPulseTagsFilter';
 import type { AclpConfig, Dashboard } from '@linode/api-v4';
@@ -322,25 +321,18 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         );
       }
 
-      return filters
-        .filter(
-          (config) =>
-            isServiceAnalyticsIntegration
-              ? config.configuration.neededInServicePage
-              : config.configuration.filterKey !== RELATIVE_TIME_DURATION // time duration is always defined explicitly
-        )
-        .map((filter, index) => (
-          <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
-            {RenderComponent({
-              componentKey:
-                filter.configuration.type !== undefined
-                  ? 'customSelect'
-                  : filter.configuration.filterKey,
-              componentProps: { ...getProps(filter) },
-              key: index + filter.configuration.filterKey,
-            })}
-          </Grid>
-        ));
+      return filters.map((filter, index) => (
+        <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
+          {RenderComponent({
+            componentKey:
+              filter.configuration.type !== undefined
+                ? 'customSelect'
+                : filter.configuration.filterKey,
+            componentProps: { ...getProps(filter) },
+            key: index + filter.configuration.filterKey,
+          })}
+        </Grid>
+      ));
     }, [dashboard, getProps, isServiceAnalyticsIntegration]);
 
     if (
@@ -355,22 +347,23 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       <Grid
         container
         item
-        xs={12}
         sx={{
           m: 3,
           paddingBottom: isServiceAnalyticsIntegration ? 3 : 0,
         }}
+        xs={12}
       >
         <Grid
+          item
+          key="toggleFilter"
           sx={{
             m: 0,
             p: 0,
           }}
-          item
-          key="toggleFilter"
           xs={12}
         >
           <Button
+            onClick={toggleShowFilter}
             startIcon={
               showFilter ? (
                 <KeyboardCaretDownIcon />
@@ -389,7 +382,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 color: theme.color.grey4,
               },
             }}
-            onClick={toggleShowFilter}
           >
             <Typography variant="h3">Filters</Typography>
           </Button>
@@ -398,7 +390,6 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           columnSpacing={theme.spacing(2)}
           container
           item
-          xs={12}
           sx={{
             display: showFilter ? 'flex' : 'none',
             maxHeight: theme.spacing(23),
@@ -406,6 +397,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             pr: { sm: 0, xs: 2 },
             rowGap: theme.spacing(2),
           }}
+          xs={12}
         >
           <RenderFilters />
         </Grid>

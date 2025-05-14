@@ -1,7 +1,7 @@
 import { useSupportTicketsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -63,6 +63,7 @@ export const TicketList = (props: Props) => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={hasSeverityCapability ? 7 : 6}
           responsive={{
             1: { mdDown: true },
             2: { mdDown: true },
@@ -71,7 +72,6 @@ export const TicketList = (props: Props) => {
             5: !hasSeverityCapability ? { mdDown: true } : { mdDown: false },
             6: hasSeverityCapability ? { mdDown: true } : { mdDown: false },
           }}
-          columns={hasSeverityCapability ? 7 : 6}
         />
       );
     }

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { DialogContextProps, defaultContext } from './useDialogContext';
+import { defaultContext } from './useDialogContext';
 
-export const sessionExpirationContext = React.createContext<DialogContextProps>(
-  defaultContext
-);
+import type { DialogContextProps } from './useDialogContext';
+
+export const sessionExpirationContext =
+  React.createContext<DialogContextProps>(defaultContext);

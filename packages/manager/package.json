@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.140.0",
+  "version": "1.141.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -36,7 +36,7 @@
     "@mui/material": "^6.4.5",
     "@mui/utils": "^6.4.3",
     "@mui/x-date-pickers": "^7.27.0",
-    "@paypal/react-paypal-js": "^7.8.3",
+    "@paypal/react-paypal-js": "^8.8.3",
     "@reach/tabs": "^0.18.0",
     "@sentry/react": "^7.119.1",
     "@shikijs/langs": "^3.1.0",
@@ -198,7 +198,7 @@
     "redux-mock-store": "^1.5.3",
     "storybook": "^8.6.7",
     "storybook-dark-mode": "4.0.1",
-    "vite": "^6.3.2",
+    "vite": "^6.3.4",
     "vite-plugin-svgr": "^3.2.0"
   },
   "browserslist": [

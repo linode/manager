@@ -1,7 +1,7 @@
 import { Box, Button } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -10,6 +10,7 @@ import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { ApiAwarenessModal } from './ApiAwarenessModal/ApiAwarenessModal';
 import {
+  getDoesEmployeeNeedToAssignFirewall,
   getLinodeCreatePayload,
   useLinodeCreateQueryParams,
 } from './utilities';
@@ -22,18 +23,25 @@ export const Actions = () => {
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const {
-    formState,
-    getValues,
-    trigger,
-  } = useFormContext<LinodeCreateFormValues>();
+  const { formState, getValues, trigger, control } =
+    useFormContext<LinodeCreateFormValues>();
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
 
-  const disableSubmitButton =
-    isLinodeCreateRestricted || 'firewallOverride' in formState.errors;
+  const [legacyFirewallId, linodeInterfaces, interfaceGeneration] = useWatch({
+    control,
+    name: ['firewall_id', 'linodeInterfaces', 'interface_generation'],
+  });
+
+  const userNeedsToAssignFirewall =
+    'firewallOverride' in formState.errors &&
+    getDoesEmployeeNeedToAssignFirewall(
+      legacyFirewallId,
+      linodeInterfaces,
+      interfaceGeneration
+    );
 
   const onOpenAPIAwareness = async () => {
     sendApiAwarenessClickEvent('Button', 'View Code Snippets');
@@ -57,19 +65,19 @@ export const Actions = () => {
       </Button>
       <Button
         buttonType="primary"
-        disabled={disableSubmitButton}
+        disabled={isLinodeCreateRestricted || userNeedsToAssignFirewall}
         loading={formState.isSubmitting}
         type="submit"
       >
         Create Linode
       </Button>
       <ApiAwarenessModal
+        isOpen={isAPIAwarenessModalOpen}
+        onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(
           structuredClone(getValues()),
           isLinodeInterfacesEnabled
         )}
-        isOpen={isAPIAwarenessModalOpen}
-        onClose={() => setIsAPIAwarenessModalOpen(false)}
       />
     </Box>
   );

@@ -66,9 +66,6 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT
     : PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT;
 
-  const isAssociatedWithLinodeInterface =
-    'address' in ipAddress && ipAddress.interface_id !== null;
-
   const getAriaLabel = (): string => {
     if ('address' in ipAddress) {
       return `Action menu for IP Address ${ipAddress.address}`;
@@ -82,7 +79,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ipAddress &&
     !is116Range &&
     deletableIPTypes.includes(ipType) &&
-    !isAssociatedWithLinodeInterface
+    !isLinodeInterface
       ? {
           disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
           id: 'delete',

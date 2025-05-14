@@ -694,3 +694,32 @@ export const getDefaultInterfaceGenerationFromAccountSetting = (
   }
   return undefined;
 };
+
+/**
+ * getDoesEmployeeNeedToAssignFirewall
+ *
+ * @returns
+ * `true` if an internal Akamai employee should be creating their Linode
+ * with a Firewall given the current network Configuration.
+ *
+ * `false` if the user has satisified the Firewall requirment or
+ * their network configuration does not require a Firewall.
+ */
+export const getDoesEmployeeNeedToAssignFirewall = (
+  legacyFirewallId: LinodeCreateFormValues['firewall_id'],
+  linodeInterfaces: LinodeCreateFormValues['linodeInterfaces'],
+  interfaceGeneration: LinodeCreateFormValues['interface_generation']
+) => {
+  if (interfaceGeneration === 'linode') {
+    // VLAN Linode interfaces do not support Firewalls, so we don't consider them.
+    const interfacesThatMayHaveInternetConnectivity = linodeInterfaces.filter(
+      (i) => i.purpose !== 'vlan'
+    );
+
+    return !interfacesThatMayHaveInternetConnectivity.every(
+      (i) => i.firewall_id
+    );
+  }
+
+  return !legacyFirewallId;
+};

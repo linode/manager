@@ -55,12 +55,8 @@ describe('NodeBalancerSettings', () => {
   });
 
   it('renders the NodeBalancerSettings component', () => {
-    const {
-      getAllByText,
-      getByLabelText,
-      getByTestId,
-      getByText,
-    } = renderWithTheme(<NodeBalancerSettings />);
+    const { getAllByText, getByLabelText, getByTestId, getByText } =
+      renderWithTheme(<NodeBalancerSettings />);
 
     // NodeBalancer Label panel
     expect(getByText('NodeBalancer Label')).toBeVisible();

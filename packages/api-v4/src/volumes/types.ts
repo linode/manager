@@ -1,19 +1,19 @@
-export type VolumeEncryption = 'enabled' | 'disabled';
+export type VolumeEncryption = 'disabled' | 'enabled';
 
 export interface Volume {
+  created: string;
+  encryption?: VolumeEncryption; // @TODO BSE: Remove optionality once BSE is fully rolled out
+  filesystem_path: string;
+  hardware_type: VolumeHardwareType;
   id: number;
   label: string;
-  status: VolumeStatus;
-  size: number;
-  region: string;
   linode_id: null | number;
   linode_label: null | string;
-  created: string;
-  updated: string;
-  filesystem_path: string;
+  region: string;
+  size: number;
+  status: VolumeStatus;
   tags: string[];
-  hardware_type: VolumeHardwareType;
-  encryption?: VolumeEncryption; // @TODO BSE: Remove optionality once BSE is fully rolled out
+  updated: string;
 }
 
 type VolumeHardwareType = 'hdd' | 'nvme';
@@ -27,18 +27,18 @@ export type VolumeStatus =
   | 'resizing';
 
 export interface VolumeRequestPayload {
-  label: string;
-  size?: number;
-  region?: string;
-  linode_id?: number;
   config_id?: number;
-  tags?: string[];
   encryption?: VolumeEncryption;
+  label: string;
+  linode_id?: number;
+  region?: string;
+  size?: number;
+  tags?: string[];
 }
 
 export interface AttachVolumePayload {
-  linode_id: number;
   config_id?: number;
+  linode_id: number;
 }
 export interface CloneVolumePayload {
   label: string;
@@ -49,8 +49,8 @@ export interface ResizeVolumePayload {
 }
 
 export interface VolumesMigrationQueue {
-  volumes: number;
   linodes: number;
+  volumes: number;
 }
 
 export interface MigrateVolumesPayload {

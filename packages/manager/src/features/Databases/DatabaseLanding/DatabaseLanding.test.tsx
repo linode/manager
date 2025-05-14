@@ -12,7 +12,7 @@ import { accountFactory, databaseInstanceFactory } from 'src/factories';
 import DatabaseLanding from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,

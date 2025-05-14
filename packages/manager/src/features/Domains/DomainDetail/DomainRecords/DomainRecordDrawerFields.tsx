@@ -61,15 +61,15 @@ export const NameOrTargetField = ({
 
   return (
     <TextField
-      placeholder={
-        shouldResolve(type, field) ? 'hostname or @ for root' : undefined
-      }
       errorText={errorText}
       helperText={hasAliasToResolve ? resolve(value, domain) : undefined}
       label={label}
       multiline={multiline}
       onBlur={onBlur}
       onChange={onChange}
+      placeholder={
+        shouldResolve(type, field) ? 'hostname or @ for root' : undefined
+      }
       value={value}
     />
   );
@@ -143,15 +143,15 @@ const MSSelect = ({
 
   return (
     <Autocomplete
+      disableClearable
+      label={label}
+      onChange={(_, selected) => onChange(selected.value)}
+      options={MSSelectOptions}
       textFieldProps={{
         dataAttrs: {
           'data-qa-domain-select': label,
         },
       }}
-      disableClearable
-      label={label}
-      onChange={(_, selected) => onChange(selected.value)}
-      options={MSSelectOptions}
       value={defaultOption}
     />
   );
@@ -197,15 +197,15 @@ export const ExpireField = ({
 
   return (
     <Autocomplete
+      disableClearable
+      label="Expire Rate"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={rateOptions}
       textFieldProps={{
         dataAttrs: {
           'data-qa-domain-select': 'Expire Rate',
         },
       }}
-      disableClearable
-      label="Expire Rate"
-      onChange={(_, selected) => onChange(selected.value)}
-      options={rateOptions}
       value={defaultRate}
     />
   );
@@ -232,15 +232,15 @@ export const ProtocolField = ({
 
   return (
     <Autocomplete
+      disableClearable
+      label="Protocol"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={protocolOptions}
       textFieldProps={{
         dataAttrs: {
           'data-qa-domain-select': 'Protocol',
         },
       }}
-      disableClearable
-      label="Protocol"
-      onChange={(_, selected) => onChange(selected.value)}
-      options={protocolOptions}
       value={defaultProtocol}
     />
   );
@@ -265,15 +265,15 @@ export const TagField = ({
 
   return (
     <Autocomplete
+      disableClearable
+      label="Tag"
+      onChange={(_, selected) => onChange(selected.value)}
+      options={tagOptions}
       textFieldProps={{
         dataAttrs: {
           'data-qa-domain-select': 'caa tag',
         },
       }}
-      disableClearable
-      label="Tag"
-      onChange={(_, selected) => onChange(selected.value)}
-      options={tagOptions}
       value={defaultTag}
     />
   );

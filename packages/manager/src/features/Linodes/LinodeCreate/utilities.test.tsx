@@ -9,6 +9,7 @@ import {
 
 import {
   getDefaultInterfaceGenerationFromAccountSetting,
+  getDoesEmployeeNeedToAssignFirewall,
   getInterfacesPayload,
   getIsValidLinodeLabelCharacter,
   getLinodeCreatePayload,
@@ -434,5 +435,123 @@ describe('getDefaultInterfaceGenerationFromAccountSetting', () => {
         'linode_default_but_legacy_config_allowed'
       )
     ).toBe('linode');
+  });
+});
+
+describe('getDoesEmployeeNeedToAssignFirewall', () => {
+  describe('Legacy Interfaces', () => {
+    it('returns true when no firewall is selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(null, [], 'legacy_config')
+      ).toBe(true);
+    });
+    it('returns false when a firewall is selected', () => {
+      expect(getDoesEmployeeNeedToAssignFirewall(5, [], 'legacy_config')).toBe(
+        false
+      );
+    });
+  });
+
+  describe('Linode Interfaces', () => {
+    it('should return true for a public Linode Interface without a firewall selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(
+          null,
+          [
+            {
+              public: {},
+              purpose: 'public',
+              vpc: null,
+              default_route: null,
+              vlan: null,
+            },
+          ],
+          'linode'
+        )
+      ).toBe(true);
+    });
+
+    it('should return false for a public Linode Interface with a firewall selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(
+          null,
+          [
+            {
+              public: {},
+              purpose: 'public',
+              vpc: null,
+              firewall_id: 5,
+              default_route: null,
+              vlan: null,
+            },
+          ],
+          'linode'
+        )
+      ).toBe(false);
+    });
+
+    it('should return true for VPC Linode Interface without a firewall selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(
+          5,
+          [
+            {
+              vpc: { vpc_id: 1, subnet_id: 2 },
+              purpose: 'vpc',
+              public: null,
+              firewall_id: null,
+              default_route: null,
+              vlan: null,
+            },
+          ],
+          'linode'
+        )
+      ).toBe(true);
+    });
+
+    it('should return false when only a VLAN Linode Interface is selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(
+          5,
+          [
+            {
+              vpc: null,
+              purpose: 'vlan',
+              public: null,
+              default_route: null,
+              vlan: { vlan_label: 'my-vlan-1' },
+            },
+          ],
+          'linode'
+        )
+      ).toBe(false);
+    });
+
+    // Currently, the Linode Create flow only allows one Linode interface, but we built it to support
+    // many interfaces if we ever want to allow it.
+    it('should require a firewall when a Public and VLAN Linode Interface are selected', () => {
+      expect(
+        getDoesEmployeeNeedToAssignFirewall(
+          5,
+          [
+            {
+              purpose: 'public',
+              public: {},
+              vpc: null,
+              vlan: null,
+              default_route: null,
+            },
+            {
+              vpc: null,
+              purpose: 'vlan',
+              public: null,
+              default_route: null,
+              vlan: { vlan_label: 'my-vlan-1' },
+            },
+          ],
+          'linode'
+        )
+      ).toBe(true);
+    });
   });
 });

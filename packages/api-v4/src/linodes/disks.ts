@@ -3,6 +3,7 @@ import {
   ResizeLinodeDiskSchema,
   UpdateLinodePasswordSchema,
 } from '@linode/validation/lib/linodes.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -11,8 +12,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Disk, LinodeDiskCreationData } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { Disk, LinodeDiskCreationData } from './types';
 
 /**
  * getLinodeDisks
@@ -24,15 +26,15 @@ import { Disk, LinodeDiskCreationData } from './types';
 export const getLinodeDisks = (
   linodeId: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<Disk>>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/disks`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/disks`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -44,14 +46,14 @@ export const getLinodeDisks = (
  */
 export const createLinodeDisk = (
   linodeId: number,
-  data: LinodeDiskCreationData
+  data: LinodeDiskCreationData,
 ) =>
   Request<Disk>(
     setURL(
-      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/disks`
+      `${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}/disks`,
     ),
     setMethod('POST'),
-    setData(data, CreateLinodeDiskSchema)
+    setData(data, CreateLinodeDiskSchema),
   );
 
 /**
@@ -66,10 +68,10 @@ export const getLinodeDisk = (linodeId: number, diskId: number) =>
   Request<Disk>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -83,16 +85,16 @@ export const getLinodeDisk = (linodeId: number, diskId: number) =>
 export const updateLinodeDisk = (
   linodeId: number,
   diskId: number,
-  data: Pick<LinodeDiskCreationData, 'label'>
+  data: Pick<LinodeDiskCreationData, 'label'>,
 ) =>
   Request<Disk>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}`,
     ),
     setMethod('PUT'),
-    setData(data)
+    setData(data),
   );
 
 /**
@@ -112,16 +114,16 @@ export const updateLinodeDisk = (
 export const resizeLinodeDisk = (
   linodeId: number,
   diskId: number,
-  size: number
+  size: number,
 ) =>
   Request<Disk>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}/resize`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}/resize`,
     ),
     setMethod('POST'),
-    setData({ size }, ResizeLinodeDiskSchema)
+    setData({ size }, ResizeLinodeDiskSchema),
   );
 
 /**
@@ -135,10 +137,10 @@ export const cloneLinodeDisk = (linodeId: number, diskId: number) =>
   Request<Disk>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}/clone`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}/clone`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -153,10 +155,10 @@ export const deleteLinodeDisk = (linodeId: number, diskId: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -171,14 +173,14 @@ export const deleteLinodeDisk = (linodeId: number, diskId: number) =>
 export const changeLinodeDiskPassword = (
   linodeId: number,
   diskId: number,
-  password: string
+  password: string,
 ) =>
   Request<Disk>(
     setURL(
       `${API_ROOT}/linode/instances/${encodeURIComponent(
-        linodeId
-      )}/disks/${encodeURIComponent(diskId)}/password`
+        linodeId,
+      )}/disks/${encodeURIComponent(diskId)}/password`,
     ),
     setMethod('POST'),
-    setData({ password }, UpdateLinodePasswordSchema)
+    setData({ password }, UpdateLinodePasswordSchema),
   );

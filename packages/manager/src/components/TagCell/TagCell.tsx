@@ -1,13 +1,13 @@
 import {
   CircleProgress,
   IconButton,
+  omittedProps,
   StyledPlusIcon,
   StyledTagButton,
-  omittedProps,
 } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Tag } from 'src/components/Tag/Tag';
@@ -92,17 +92,17 @@ export const TagCell = (props: TagCellProps) => {
 
   const AddButton = (props: { panel?: boolean }) => (
     <StyledTagButton
-      tooltipText={`${
-        disabled
-          ? 'You must be an unrestricted User in order to add or modify tags on Linodes.'
-          : ''
-      }`}
       buttonType="outlined"
       disabled={disabled}
       endIcon={<StyledPlusIcon disabled={disabled} />}
       onClick={() => setAddingTag(true)}
       panel={props.panel}
       title="Add a tag"
+      tooltipText={`${
+        disabled
+          ? 'You must be an unrestricted User in order to add or modify tags on Linodes.'
+          : ''
+      }`}
     >
       Add a tag
     </StyledTagButton>
@@ -151,17 +151,17 @@ export const TagCell = (props: TagCellProps) => {
             ) : null}
             {tags.map((thisTag) => (
               <StyledTag
+                colorVariant="lightBlue"
+                disabled={disabled}
+                key={`tag-item-${thisTag}`}
+                label={thisTag}
+                loading={loading}
                 onDelete={
                   disabled
                     ? undefined
                     : () =>
                         handleUpdateTag(tags.filter((tag) => tag !== thisTag))
                 }
-                colorVariant="lightBlue"
-                disabled={disabled}
-                key={`tag-item-${thisTag}`}
-                label={thisTag}
-                loading={loading}
               />
             ))}
           </StyledTagListDiv>

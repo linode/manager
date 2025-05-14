@@ -25,6 +25,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -43,7 +44,6 @@ import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
-import { mockGetProfile } from 'support/intercepts/profile';
 
 // Feature flag setup
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };

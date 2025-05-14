@@ -1,7 +1,7 @@
-export * from './types';
-
-export * from './nodebalancers';
+export * from './nodebalancer-config-nodes';
 
 export * from './nodebalancer-configs';
 
-export * from './nodebalancer-config-nodes';
+export * from './nodebalancers';
+
+export * from './types';
