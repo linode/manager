@@ -149,6 +149,10 @@ export const KubeControlPlaneACLDrawer = (
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
         enabled: acl.enabled,
+        /**
+         * If revision-id is an empty string, we want to remove revision-id from the payload
+         * to let the API know to generate a new one
+         */
         'revision-id':
           acl['revision-id'] === '' ? undefined : acl['revision-id'],
         ...{
