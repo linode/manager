@@ -221,7 +221,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const generalError = hasErrorFor('none');
 
   return (
-    <Paper sx={(theme) => ({ pb: theme.spacingFunction(17) })}>
+    <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
       <Typography
         sx={(theme) => ({ mb: theme.spacingFunction(12) })}
         variant="h2"
