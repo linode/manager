@@ -1,26 +1,20 @@
+import { mapAccountPermissionsToRoles } from '../utilities';
+
 import type { ExtendedRoleView, RoleView } from '../types';
 import type {
   AccountAccessRole,
   AccountEntity,
   EntityAccessRole,
   EntityType,
-  IamAccess,
   IamAccountPermissions,
   IamUserPermissions,
-  Roles,
 } from '@linode/api-v4';
-
-interface AllResources {
-  resource: IamAccess;
-  type: 'account_access' | 'entity_access';
-}
 
 export interface CombinedRoles {
   id: null | number[];
   name: AccountAccessRole | EntityAccessRole;
 }
 
-// TODO - aaleksee - can this method's return value be typed as RoleView instead of simply string[]?
 export const getSearchableFields = (role: ExtendedRoleView): string[] => {
   const entityNames = role.entity_names || [];
   return [
@@ -100,50 +94,24 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
 };
 
 /**
- * Add descriptions, permissions, type to assigned users roles
+ * Add descriptions, permissions, type, entities to assigned users roles
  */
 export const mapRolesToPermissions = (
   accountPermissions: IamAccountPermissions,
   userRoles: CombinedRoles[]
 ): RoleView[] => {
-  const roleMap = new Map<string, RoleView>();
+  const allRoles = mapAccountPermissionsToRoles(accountPermissions);
 
-  // Flatten resources and map roles for quick lookup
-  const allResources: AllResources[] = [
-    ...accountPermissions.account_access.map((resource) => ({
-      resource,
-      type: 'account_access' as const,
-    })),
-    ...accountPermissions.entity_access.map((resource) => ({
-      resource,
-      type: 'entity_access' as const,
-    })),
-  ];
-
-  const roleLookup = new Map<string, AllResources>();
-  allResources.forEach(({ resource, type }) => {
-    resource.roles.forEach((role: Roles) => {
-      roleLookup.set(role.name, { resource, type });
-    });
-  });
-
-  // Map userRoles to permissions
+  const userRolesLookup = new Map<string, null | number[]>();
   userRoles.forEach(({ id, name }) => {
-    const match = roleLookup.get(name);
-    if (match) {
-      const { resource, type } = match;
-      const role = resource.roles.find((role: Roles) => role.name === name)!;
-      roleMap.set(name, {
-        access: type,
-        description: role.description,
-        entity_ids: id,
-        entity_type: resource.type,
-        id: name,
-        name,
-        permissions: role.permissions,
-      });
-    }
+    userRolesLookup.set(name, id);
   });
 
-  return Array.from(roleMap.values());
+  // Filter allRoles to include only the user's roles and add entity_ids
+  return allRoles
+    .filter((role) => userRolesLookup.has(role.name))
+    .map((role) => ({
+      ...role,
+      entity_ids: userRolesLookup.get(role.name) || null,
+    }));
 };

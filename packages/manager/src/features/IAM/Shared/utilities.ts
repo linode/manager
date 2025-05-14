@@ -5,8 +5,8 @@ import { PAID_ENTITY_TYPES } from './constants';
 import type {
   EntitiesOption,
   EntitiesRole,
-  EntitiesType,
   ExtendedRoleView,
+  FilteredRolesOptions,
   RoleView,
 } from './types';
 import type {
@@ -23,13 +23,6 @@ import type {
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
-
-interface FilteredRolesOptions {
-  entityType?: EntityType | EntityTypePermissions;
-  getSearchableFields: (role: EntitiesRole | ExtendedRoleView) => string[];
-  query: string;
-  roles: EntitiesRole[] | RoleView[];
-}
 
 export const getFilteredRoles = (options: FilteredRolesOptions) => {
   const { entityType, getSearchableFields, query, roles } = options;
@@ -62,9 +55,12 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  entityType: EntityType | EntityTypePermissions,
+  entityType: 'all' | EntityType | EntityTypePermissions,
   role: ExtendedRoleView
 ) => {
+  if (entityType === 'all') {
+    return role;
+  }
   return role.entity_type === entityType;
 };
 
@@ -146,25 +142,6 @@ export const getRoleByName = (
   return null;
 };
 
-export const mapEntityTypes = (
-  data: EntitiesRole[] | RoleView[],
-  suffix: string
-): EntitiesType[] => {
-  const entityTypes = Array.from(new Set(data.map((el) => el.entity_type)));
-
-  return entityTypes.map((entity) => ({
-    label: capitalizeAllWords(getFormattedEntityType(entity), '_') + suffix,
-    rawValue: entity,
-    value: capitalizeAllWords(entity, '_') + suffix,
-  }));
-};
-
-export const getResourceTypes = (data: RoleView[]): EntitiesType[] =>
-  mapEntityTypes(data, ' Roles');
-
-// TODO: Refactor to unify this function with `getResourceTypes`, as both share the same core logic.
-// Both dropdowns (in `RolesTable` and `AssignedRolesTable`) are based on EntityType + Roles.
-// it requires a bit of refactoring for RolesTable
 export const mapEntityTypesForSelect = (
   data: EntitiesRole[] | RoleView[],
   suffix: string
@@ -180,10 +157,8 @@ export const mapEntityTypesForSelect = (
 };
 
 /**
- * Add descriptions, permissions, type to roles
+ * Add descriptions, permissions, type to all roles
  */
-// TODO: Refactor to combine the logic of mapAccountPermissionsToRoles (which maps all roles)
-// and mapRolesToPermissions (which maps only assigned user roles) into a reusable utility function.
 export const mapAccountPermissionsToRoles = (
   accountPermissions: IamAccountPermissions
 ): RoleView[] => {
