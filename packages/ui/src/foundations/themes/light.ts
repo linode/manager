@@ -368,8 +368,10 @@ export const lightTheme: ThemeOptions = {
         groupLabel: {
           marginTop: '0px !important',
           backgroundColor: Dropdown.Background.Category,
-          font: Typography.Label.Bold.L,
           padding: '8px 12px !important',
+          fontSize: '0.75rem',
+          lineHeight: '1rem',
+          weight: 700,
         },
         input: {
           '&.MuiInputBase-input.MuiInput-input': {
@@ -378,7 +380,8 @@ export const lightTheme: ThemeOptions = {
         },
         inputRoot: {
           '& input::placeholder': {
-            color: Select.Hover.Text,
+            color: Select.Default.Text,
+            opacity: 1,
           },
           height: 'inherit',
           paddingBottom: 0,
@@ -406,7 +409,7 @@ export const lightTheme: ThemeOptions = {
         },
         option: {
           '&.Mui-focused': {
-            backgroundColor: 'transparent',
+            backgroundColor: `${Dropdown.Background.Hover} !important`,
           },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
@@ -415,6 +418,13 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.9rem',
           padding: '10px !important',
+          '& .fi': {
+            width: '20px',
+            height: '20px',
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
         },
         popper: {
           // To remove the double border of listbox and input
@@ -880,10 +890,11 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: Select.Error.HintText,
           },
-          fontWeight: 400,
+          fontWeight: 600,
           letterSpacing: 'inherit',
           maxWidth: 416,
           textTransform: 'none',
+          marginTop: '4px',
         },
       },
     },
