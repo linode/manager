@@ -105,8 +105,8 @@ export const AddLinodeDrawer = (props: Props) => {
     [grants, isRestrictedUser]
   );
 
+  // Keeps track of Linode and its eliglbe Linode Interfaces: Linode has at least one non-vlan interface that can be assigned to a firewall
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
-  // Only track Linode if Linode has at least one non-vlan interface that can be assigned to a firewall
   const linodesAndEligibleInterfaces = useQueries({
     queries:
       linodesUsingLinodeInterfaces?.map(
@@ -176,8 +176,11 @@ export const AddLinodeDrawer = (props: Props) => {
       selectedLinodes.includes(linode)
     );
 
+  // Keeps track of interfaces we've selected from Linodes with multiple Linodes
+  // Assumption: each Linode ID here will correspond to some Linode in selectedLinodesWithMultipleInterfaces,
+  // but the vice versa may not always be true (eg: selected a Linode with multiple interfaces, but haven't selected an interface for that Linode yet)
   // Key is the Linode ID, value is the interface to add
-  const [interfacesToAdd, setInterfacesToAdd] = React.useState<
+  const [selectedIfacesToAdd, setSelectedIfacesToAdd] = React.useState<
     Record<number, InterfaceDeviceInfo>
   >({});
 
@@ -190,7 +193,7 @@ export const AddLinodeDrawer = (props: Props) => {
     let interfaceError: string | undefined = undefined;
     const linodesNeedingInterfaceSelection =
       selectedLinodesWithMultipleInterfaces.filter(
-        (linode) => !interfacesToAdd[linode.id]
+        (linode) => !selectedIfacesToAdd[linode.id]
       );
     const failedLinodes: Linode[] = [...linodesNeedingInterfaceSelection];
     const failedInterfaces: Record<number, InterfaceDeviceInfo> = {};
@@ -208,7 +211,7 @@ export const AddLinodeDrawer = (props: Props) => {
     // When a Linode uses Linode Interfaces and it only has one eligible interface, we don't show the
     // Interface select for that Linode. Therefore, here, we need to make sure we add the single
     // interface if the linode is selected.
-    let interfaceInfos: InterfaceDeviceInfo[] = [];
+    const interfaceInfos: InterfaceDeviceInfo[] = [];
     for (const { linode, interfaces } of Object.values(
       linodesAndEligibleInterfaces
     )) {
@@ -221,9 +224,10 @@ export const AddLinodeDrawer = (props: Props) => {
       }
     }
 
-    for (const linodeId in interfacesToAdd) {
+    // Otherwise, we add the interfaces we explicitly selected
+    for (const linodeId in selectedIfacesToAdd) {
       if (selectedLinodes.some((l) => l.id === Number(linodeId))) {
-        interfaceInfos = [...interfaceInfos, interfacesToAdd[linodeId]];
+        interfaceInfos.push(selectedIfacesToAdd[linodeId]);
       }
     }
 
@@ -291,7 +295,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
     setLocalError(linodeError ?? interfaceError);
     setSelectedLinodes(failedLinodes);
-    setInterfacesToAdd(failedInterfaces);
+    setSelectedIfacesToAdd(failedInterfaces);
 
     if (!linodeError && !interfaceError) {
       handleClose();
@@ -358,7 +362,7 @@ export const AddLinodeDrawer = (props: Props) => {
 
   const handleClose = () => {
     setSelectedLinodes([]);
-    setInterfacesToAdd({});
+    setSelectedIfacesToAdd({});
     setLocalError(undefined);
     onClose();
   };
@@ -411,7 +415,7 @@ export const AddLinodeDrawer = (props: Props) => {
                 key={linode.id}
                 label={`${linode.label} Interface`}
                 onChange={(e, option) => {
-                  setInterfacesToAdd((prev) => {
+                  setSelectedIfacesToAdd((prev) => {
                     const newInterfacesToAdd = { ...prev };
                     newInterfacesToAdd[linode.id] = {
                       linodeId: linode.id,
@@ -425,7 +429,7 @@ export const AddLinodeDrawer = (props: Props) => {
                 placeholder="Select Interface"
                 value={options.find(
                   (iface) =>
-                    interfacesToAdd[linode.id]?.interfaceId === iface.id
+                    selectedIfacesToAdd[linode.id]?.interfaceId === iface.id
                 )}
               />
             );
