@@ -89,7 +89,7 @@ export const AddLinodeDrawer = (props: Props) => {
     [grants, isRestrictedUser]
   );
 
-  // Keeps track of Linode and its eliglbe Linode Interfaces: Linode has at least one non-vlan interface that can be assigned to a firewall
+  // Keeps track of Linode and its eligible Linode Interfaces if they exist (eligible = a non-vlan interface that can be assigned to a firewall)
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
   const linodesAndEligibleInterfaces = useQueries({
     queries:
@@ -133,7 +133,7 @@ export const AddLinodeDrawer = (props: Props) => {
       return false;
     }
 
-    // Exclude a Linode if it uses Linode Interfaces and has no eligible interfaces
+    // Exclude a Linode if it uses Linode Interfaces but has no eligible interfaces
     if (linode.interface_generation === 'linode') {
       return Boolean(linodesAndEligibleInterfaces[linode.id]);
     }
@@ -195,7 +195,7 @@ export const AddLinodeDrawer = (props: Props) => {
     );
 
     // When a Linode uses Linode Interfaces and it only has one eligible interface, we don't show the
-    // Interface select for that Linode. Therefore, here, we need to make sure we add the single
+    // interface select for that Linode. Therefore, here, we need to make sure we add that single
     // interface if the linode is selected.
     const interfaceInfos: InterfaceDeviceInfo[] = [];
     for (const { linode, interfaces } of Object.values(
@@ -210,7 +210,7 @@ export const AddLinodeDrawer = (props: Props) => {
       }
     }
 
-    // Otherwise, we add the interfaces we explicitly selected
+    // Otherwise, we make sure to add the interfaces we explicitly selected
     for (const linodeId in selectedIfacesToAdd) {
       if (selectedLinodes.some((l) => l.id === Number(linodeId))) {
         interfaceInfos.push(selectedIfacesToAdd[linodeId]);
@@ -275,8 +275,7 @@ export const AddLinodeDrawer = (props: Props) => {
     });
 
     if (linodesNeedingInterfaceSelection.length > 0) {
-      interfaceError =
-        'You must select an interface to assign to this Firewall.';
+      interfaceError = `You must select ${linodesNeedingInterfaceSelection.length > 1 ? 'the interfaces' : 'an interface'} to assign to this Firewall.`;
     }
 
     setLocalError(linodeError ?? interfaceError);
@@ -422,6 +421,7 @@ export const AddLinodeDrawer = (props: Props) => {
           })}
         <ActionsPanel
           primaryButtonProps={{
+            disabled: selectedLinodes.length === 0,
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,
