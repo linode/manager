@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { FormControlLabel, Radio } from '@linode/ui';
 import { capitalize, formatStorageUnits } from '@linode/utilities';
 import React from 'react';
@@ -8,7 +8,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
-import { useImageQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 
 import type { Linode } from '@linode/api-v4';

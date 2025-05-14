@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { Button, Stack } from '@linode/ui';
 import {
   capitalizeAllWords,
@@ -11,7 +11,6 @@ import React from 'react';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useImageQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
