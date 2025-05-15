@@ -255,7 +255,6 @@ export const CreateCluster = () => {
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
-          'revision-id': '',
           ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
             (_ipv4.length > 0 || _ipv6.length > 0) && {
               addresses: {
