@@ -1,3 +1,9 @@
+import {
+  imageQueries,
+  useDeleteImageMutation,
+  useImageQuery,
+  useImagesQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
@@ -44,12 +50,6 @@ import {
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImageQuery,
-  useImagesQuery,
-} from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {

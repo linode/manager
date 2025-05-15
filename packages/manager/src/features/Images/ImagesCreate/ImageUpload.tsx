@@ -4,6 +4,7 @@ import {
   useMutateAccountAgreements,
   useProfile,
   useRegionsQuery,
+  useUploadImageMutation,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import {
@@ -36,7 +37,6 @@ import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useUploadImageMutation } from 'src/queries/images';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import { reportAgreementSigningError } from 'src/utilities/reportAgreementSigningError';

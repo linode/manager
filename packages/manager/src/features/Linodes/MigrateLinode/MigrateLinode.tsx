@@ -1,6 +1,7 @@
 import {
   useAccountAgreements,
   useAllLinodeDisksQuery,
+  useImageQuery,
   useLinodeMigrateMutation,
   useLinodeQuery,
   useMutateAccountAgreements,
@@ -35,7 +36,6 @@ import {
   useEventsPollingActions,
   useInProgressEvents,
 } from 'src/queries/events/events';
-import { useImageQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
