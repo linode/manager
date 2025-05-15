@@ -254,7 +254,7 @@ export const darkTheme: ThemeOptions = {
           weight: 700,
         },
         paper: {
-          boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+          boxShadow: Alias.Elevation.S,
           marginTop: 4,
         },
         listbox: {
@@ -269,6 +269,8 @@ export const darkTheme: ThemeOptions = {
         },
         loading: {
           color: Select.Default.Icon,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         inputRoot: {
           '& input::placeholder': {
@@ -278,6 +280,8 @@ export const darkTheme: ThemeOptions = {
         },
         noOptions: {
           color: Select.Default.Icon,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         option: {
           '&.Mui-focused': {
@@ -288,7 +292,7 @@ export const darkTheme: ThemeOptions = {
             color: Dropdown.Text.Default,
           },
           '& .fi': {
-            width: '20px',
+            width: '28px',
             height: '20px',
             borderRadius: '3px',
             backgroundSize: 'cover',

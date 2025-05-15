@@ -385,9 +385,16 @@ export const lightTheme: ThemeOptions = {
           },
           height: 'inherit',
           paddingBottom: 0,
+          '& .fi': {
+            width: '28px',
+            height: '20px',
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
         },
         paper: {
-          boxShadow: '0px 2px 8px 0px rgba(58, 59, 63, 0.18)',
+          boxShadow: Alias.Elevation.S,
           marginTop: 4,
         },
         listbox: {
@@ -401,11 +408,13 @@ export const lightTheme: ThemeOptions = {
           },
         },
         loading: {
-          border: `1px solid ${primaryColors.main}`,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          border: `1px solid ${primaryColors.main}`,
           borderTop: 0,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         option: {
           '&.Mui-focused': {
@@ -419,7 +428,7 @@ export const lightTheme: ThemeOptions = {
           fontSize: '0.9rem',
           padding: '10px !important',
           '& .fi': {
-            width: '20px',
+            width: '28px',
             height: '20px',
             borderRadius: '3px',
             backgroundSize: 'cover',
