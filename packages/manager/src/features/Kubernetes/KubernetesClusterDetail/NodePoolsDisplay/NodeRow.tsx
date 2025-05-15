@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';

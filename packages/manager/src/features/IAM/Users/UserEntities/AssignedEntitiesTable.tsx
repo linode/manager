@@ -1,5 +1,5 @@
 import { Select, Typography, useTheme } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 
