@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useUpdateImageMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { Stack, Typography } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
@@ -7,7 +8,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import Lock from 'src/assets/icons/lock.svg';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { useUpdateImageMutation } from 'src/queries/images';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
