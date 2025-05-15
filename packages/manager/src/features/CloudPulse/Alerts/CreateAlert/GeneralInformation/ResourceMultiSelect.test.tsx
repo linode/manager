@@ -29,19 +29,17 @@ describe('ResourceMultiSelect component tests', () => {
       isLoading: false,
       status: 'success',
     });
-    const {
-      getByPlaceholderText,
-      getByTestId,
-    } = renderWithThemeAndHookFormContext({
-      component: (
-        <CloudPulseMultiResourceSelect
-          engine="mysql"
-          name="entity_ids"
-          region={undefined}
-          serviceType={null}
-        />
-      ),
-    });
+    const { getByPlaceholderText, getByTestId } =
+      renderWithThemeAndHookFormContext({
+        component: (
+          <CloudPulseMultiResourceSelect
+            engine="mysql"
+            name="entity_ids"
+            region={undefined}
+            serviceType={null}
+          />
+        ),
+      });
     expect(getByTestId('resource-select')).toBeInTheDocument();
     expect(getByPlaceholderText('Select Resources')).toBeInTheDocument();
   });

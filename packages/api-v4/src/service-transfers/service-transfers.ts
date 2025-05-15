@@ -1,4 +1,5 @@
 import { CreateTransferSchema } from '@linode/validation';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,11 +8,12 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type {
   CreateTransferPayload,
   EntityTransfer,
 } from '../entity-transfers/types';
+import type { Filter, ResourcePage as Page, Params } from '../types';
 
 /**
  * getServiceTransfers
@@ -23,7 +25,7 @@ export const getServiceTransfers = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-    setURL(`${API_ROOT}/account/service-transfers`)
+    setURL(`${API_ROOT}/account/service-transfers`),
   );
 
 /**
@@ -36,7 +38,9 @@ export const getServiceTransfers = (params?: Params, filter?: Filter) =>
 export const getServiceTransfer = (token: string) =>
   Request<EntityTransfer>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/account/service-transfers/${encodeURIComponent(token)}`)
+    setURL(
+      `${API_ROOT}/account/service-transfers/${encodeURIComponent(token)}`,
+    ),
   );
 
 /**
@@ -49,7 +53,7 @@ export const createServiceTransfer = (data: CreateTransferPayload) =>
   Request<EntityTransfer>(
     setMethod('POST'),
     setData(data, CreateTransferSchema),
-    setURL(`${API_ROOT}/account/service-transfers`)
+    setURL(`${API_ROOT}/account/service-transfers`),
   );
 
 /**
@@ -62,9 +66,9 @@ export const acceptServiceTransfer = (token: string) =>
     setMethod('POST'),
     setURL(
       `${API_ROOT}/account/service-transfers/${encodeURIComponent(
-        token
-      )}/accept`
-    )
+        token,
+      )}/accept`,
+    ),
   );
 
 /**
@@ -77,5 +81,7 @@ export const acceptServiceTransfer = (token: string) =>
 export const cancelServiceTransfer = (token: string) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/account/service-transfers/${encodeURIComponent(token)}`)
+    setURL(
+      `${API_ROOT}/account/service-transfers/${encodeURIComponent(token)}`,
+    ),
   );

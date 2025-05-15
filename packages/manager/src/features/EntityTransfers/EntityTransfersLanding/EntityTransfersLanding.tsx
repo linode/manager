@@ -126,31 +126,31 @@ export const EntityTransfersLanding = () => {
         <>
           {pendingTransfersResults > 0 ? (
             <TransfersTable
+              error={pendingTransfersError}
+              handlePageChange={paginationPendingTransfers.handlePageChange}
               handlePageSizeChange={
                 paginationPendingTransfers.handlePageSizeChange
               }
-              error={pendingTransfersError}
-              handlePageChange={paginationPendingTransfers.handlePageChange}
               isLoading={pendingTransfersLoading}
               page={paginationPendingTransfers.page}
               pageSize={paginationPendingTransfers.pageSize}
               results={pendingTransfersResults}
-              transferType="pending"
               transfers={pendingTransfers}
+              transferType="pending"
             />
           ) : null}
           <TransfersTable
+            error={receivedTransfersError}
+            handlePageChange={paginationReceivedTransfers.handlePageChange}
             handlePageSizeChange={
               paginationReceivedTransfers.handlePageSizeChange
             }
-            error={receivedTransfersError}
-            handlePageChange={paginationReceivedTransfers.handlePageChange}
             isLoading={receivedTransfersLoading}
             page={paginationReceivedTransfers.page}
             pageSize={paginationReceivedTransfers.pageSize}
             results={receivedTransfersResults}
-            transferType="received"
             transfers={receivedTransfers}
+            transferType="received"
           />
           <TransfersTable
             error={sentTransfersError}
@@ -160,8 +160,8 @@ export const EntityTransfersLanding = () => {
             page={paginationSentTransfers.page}
             pageSize={paginationSentTransfers.pageSize}
             results={sentTransfersResults}
-            transferType="sent"
             transfers={sentTransfers}
+            transferType="sent"
           />
         </>
       )}

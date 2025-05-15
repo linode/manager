@@ -190,6 +190,7 @@ export const CreateImageTab = () => {
             </Typography>
 
             <LinodeSelect
+              disabled={isImageCreateRestricted}
               getOptionDisabled={
                 grants
                   ? (linode) =>
@@ -200,15 +201,14 @@ export const CreateImageTab = () => {
                       )
                   : undefined
               }
+              helperText={linodeSelectHelperText}
+              noMarginTop
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
                 if (linode === null) {
                   resetField('disk_id');
                 }
               }}
-              disabled={isImageCreateRestricted}
-              helperText={linodeSelectHelperText}
-              noMarginTop
               required
               value={selectedLinodeId}
             />
@@ -227,8 +227,11 @@ export const CreateImageTab = () => {
               </Notice>
             )}
             <Controller
+              control={control}
+              name="disk_id"
               render={({ field, fieldState }) => (
                 <Autocomplete
+                  clearOnBlur
                   disabled={
                     isImageCreateRestricted || selectedLinodeId === null
                   }
@@ -240,10 +243,6 @@ export const CreateImageTab = () => {
                       ? 'Select a Linode to see available disks'
                       : undefined
                   }
-                  textFieldProps={{
-                    inputRef: field.ref,
-                  }}
-                  clearOnBlur
                   label="Disk"
                   loading={disksLoading}
                   noMarginTop
@@ -251,11 +250,12 @@ export const CreateImageTab = () => {
                   onChange={(e, disk) => field.onChange(disk?.id ?? null)}
                   options={disks?.filter((d) => d.filesystem !== 'swap') ?? []}
                   placeholder="Select a Disk"
+                  textFieldProps={{
+                    inputRef: field.ref,
+                  }}
                   value={selectedDisk}
                 />
               )}
-              control={control}
-              name="disk_id"
             />
             {isRawDisk && (
               <Notice
@@ -271,33 +271,40 @@ export const CreateImageTab = () => {
           <Stack spacing={2}>
             <Typography variant="h2">Image Details</Typography>
             <Controller
+              control={control}
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value === '' ? undefined : e.target.value
-                    )
-                  }
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
                   noMarginTop
                   onBlur={field.onBlur}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === '' ? undefined : e.target.value
+                    )
+                  }
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="label"
             />
             {flags.metadata && (
               <Controller
+                control={control}
+                name="cloud_init"
                 render={({ field }) => (
                   <Checkbox
+                    checked={field.value ?? false}
+                    disabled={isImageCreateRestricted}
+                    onChange={field.onChange}
+                    sx={{ ml: -1 }}
                     text={
                       <>
                         This image is cloud-init compatible
                         <TooltipIcon
+                          status="help"
                           text={
                             <Typography>
                               Many Linode supported operating systems are
@@ -308,46 +315,36 @@ export const CreateImageTab = () => {
                               </Link>
                             </Typography>
                           }
-                          status="help"
                         />
                       </>
                     }
-                    checked={field.value ?? false}
-                    disabled={isImageCreateRestricted}
-                    onChange={field.onChange}
-                    sx={{ ml: -1 }}
                   />
                 )}
-                control={control}
-                name="cloud_init"
               />
             )}
             <Controller
+              control={control}
+              name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
+                  disabled={isImageCreateRestricted}
+                  noMarginTop
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
                   }
+                  tagError={fieldState.error?.message}
                   value={
                     field.value?.map((tag) => ({ label: tag, value: tag })) ??
                     []
                   }
-                  disabled={isImageCreateRestricted}
-                  noMarginTop
-                  tagError={fieldState.error?.message}
                 />
               )}
-              control={control}
-              name="tags"
             />
             <Controller
+              control={control}
+              name="description"
               render={({ field, fieldState }) => (
                 <TextField
-                  onChange={(e) =>
-                    field.onChange(
-                      e.target.value === '' ? undefined : e.target.value
-                    )
-                  }
                   disabled={isImageCreateRestricted}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
@@ -355,12 +352,15 @@ export const CreateImageTab = () => {
                   multiline
                   noMarginTop
                   onBlur={field.onBlur}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value === '' ? undefined : e.target.value
+                    )
+                  }
                   rows={1}
                   value={field.value ?? ''}
                 />
               )}
-              control={control}
-              name="description"
             />
           </Stack>
         </Paper>

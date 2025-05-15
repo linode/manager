@@ -235,19 +235,19 @@ const DatabaseCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
-      <form onSubmit={handleSubmit} ref={formRef} data-testid="db-create-form">
-        <LandingHeader
-          breadcrumbProps={{
-            crumbOverrides: [
-              {
-                label: 'Database Clusters',
-                position: 1,
-              },
-            ],
-            pathname: location.pathname,
-          }}
-          title="Create"
-        />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Database Clusters',
+              position: 1,
+            },
+          ],
+          pathname: location.pathname,
+        }}
+        title="Create"
+      />
+      <form data-testid="db-create-form" onSubmit={handleSubmit} ref={formRef}>
         {isRestricted && (
           <Notice
             spacingTop={16}
@@ -268,26 +268,26 @@ const DatabaseCreate = () => {
             </Notice>
           )}
           <DatabaseClusterData
+            engines={engines}
+            errors={errors}
             onChange={(field: string, value: any) =>
               setFieldValue(field, value)
             }
-            engines={engines}
-            errors={errors}
             regionsData={regionsData}
             values={values}
           />
           <Divider spacingBottom={12} spacingTop={38} />
           <Grid>
             <StyledPlansPanel
-              onSelect={(selected: string) => {
-                setFieldValue('type', selected);
-              }}
               data-qa-select-plan
               disabled={isRestricted}
               error={errors.type}
               handleTabChange={handleTabChange}
               header="Choose a Plan"
               isCreate
+              onSelect={(selected: string) => {
+                setFieldValue('type', selected);
+              }}
               regionsData={regionsData}
               selectedId={values.type}
               selectedRegionID={values.region}
@@ -297,11 +297,11 @@ const DatabaseCreate = () => {
           <Divider spacingBottom={12} spacingTop={26} />
           <Grid>
             <DatabaseNodeSelector
+              displayTypes={displayTypes}
+              error={errors.cluster_size}
               handleNodeChange={(v: ClusterSize) => {
                 handleNodeChange(v);
               }}
-              displayTypes={displayTypes}
-              error={errors.cluster_size}
               selectedClusterSize={values.cluster_size}
               selectedEngine={selectedEngine}
               selectedPlan={selectedPlan}
@@ -317,7 +317,7 @@ const DatabaseCreate = () => {
             onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
           />
         </Paper>
-        <Paper sx={{ marginTop: 2 }}>
+        <Paper sx={{ marginTop: 3 }}>
           <DatabaseSummarySection
             currentClusterSize={values.cluster_size}
             currentEngine={selectedEngine}

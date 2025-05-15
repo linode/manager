@@ -1,10 +1,4 @@
 import {
-  CPU,
-  InboundOutboundNetwork,
-  LongviewNetwork,
-  Stat,
-} from '../request.types';
-import {
   appendStats,
   formatBitsPerSecond,
   generateNetworkUnits,
@@ -16,6 +10,13 @@ import {
   sumNetwork,
   sumStatsObject,
 } from './utilities';
+
+import type {
+  CPU,
+  InboundOutboundNetwork,
+  LongviewNetwork,
+  Stat,
+} from '../request.types';
 
 const generateStats = (yValues: number[]): Stat[] => {
   return yValues.map((n) => ({ x: 0, y: n }));

@@ -140,13 +140,13 @@ export const WithLongMessage: Story = {
 
       return (
         <Button
+          buttonType="primary"
           onClick={() =>
             enqueueSnackbar(
               'Tax Identification Number could not be verified. Please check your Tax ID for accuracy or contact customer support for assistance.',
               { variant: 'error' }
             )
           }
-          buttonType="primary"
         >
           Toast with Long Message
         </Button>

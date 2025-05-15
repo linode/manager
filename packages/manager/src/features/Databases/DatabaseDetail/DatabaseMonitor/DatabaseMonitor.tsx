@@ -1,6 +1,8 @@
 import * as React from 'react';
+
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
-import { Database } from '@linode/api-v4';
+
+import type { Database } from '@linode/api-v4';
 
 interface Props {
   database: Database;

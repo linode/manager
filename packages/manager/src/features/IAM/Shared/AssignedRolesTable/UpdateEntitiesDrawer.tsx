@@ -4,7 +4,6 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   useAccountUserPermissions,
   useAccountUserPermissionsMutation,
@@ -109,19 +108,14 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Update List of Entities"
-    >
+    <Drawer onClose={handleClose} open={open} title="Update List of Entities">
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Typography sx={{ marginBottom: theme.tokens.spacing.S16 }}>
-            Add or remove entities the role should apply to.
+            Add or remove entities attached to the role.
           </Typography>
 
           {role && (
@@ -148,7 +142,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
                 value={field.value}
               />
             )}
-            rules={{ required: 'Entities are required.' }}
+            rules={{ required: 'Select entities.' }}
           />
 
           <ActionsPanel

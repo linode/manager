@@ -12,7 +12,6 @@ import { useFormik } from 'formik';
 import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -21,18 +20,19 @@ import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';
 
 import { transferHelperText as helperText } from './domainUtils';
 
-import type { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
+import type { APIError, Domain, UpdateDomainPayload } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface EditDomainDrawerProps {
   domain: Domain | undefined;
+  domainError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
-  const { domain, isFetching, onClose, open } = props;
+  const { domain, domainError, isFetching, onClose, open } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -124,7 +124,7 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={domainError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
@@ -200,18 +200,18 @@ export const EditDomainDrawer = (props: EditDomainDrawerProps) => {
           </React.Fragment>
         )}
         <TagsInput
+          disabled={disabled}
           onChange={(tags) =>
             formik.setFieldValue(
               'tags',
               tags.map((tag) => tag.value)
             )
           }
+          tagError={errorMap.tags}
           value={
             formik.values?.tags?.map((tag) => ({ label: tag, value: tag })) ??
             []
           }
-          disabled={disabled}
-          tagError={errorMap.tags}
         />
         <ActionsPanel
           primaryButtonProps={{

@@ -1,3 +1,5 @@
+import type { FieldPath } from 'react-hook-form';
+
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
   AlertSeverityType,
@@ -7,7 +9,6 @@ import type {
   MetricAggregationType,
   MetricOperatorType,
 } from '@linode/api-v4';
-import type { FieldPath } from 'react-hook-form';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 export interface Item<L extends string, T> {
@@ -100,6 +101,8 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
+export const textFieldOperators = ['endswith', 'startswith'];
+
 export const evaluationPeriodOptions = {
   dbaas: [{ label: '5 min', value: 300 }],
   linode: [
@@ -171,13 +174,11 @@ export const alertStatuses: Record<AlertStatusType, string> = {
   'in progress': 'In Progress',
 };
 
-export const alertStatusOptions: Item<
-  string,
-  AlertStatusType
->[] = Object.entries(alertStatuses).map(([key, label]) => ({
-  label,
-  value: key as AlertStatusType,
-}));
+export const alertStatusOptions: Item<string, AlertStatusType>[] =
+  Object.entries(alertStatuses).map(([key, label]) => ({
+    label,
+    value: key as AlertStatusType,
+  }));
 
 export const engineTypeMap: Record<string, string> = {
   mysql: 'MySQL',

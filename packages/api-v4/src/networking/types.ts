@@ -1,29 +1,29 @@
 export interface IPAddress {
   address: string;
-  gateway: string | null;
-  subnet_mask: string;
-  prefix: number;
-  type: string;
-  public: boolean;
-  rdns: string | null;
+  gateway: null | string;
+  interface_id: null | number;
   linode_id: number;
-  interface_id: number | null;
+  prefix: number;
+  public: boolean;
+  rdns: null | string;
   region: string;
-  vpc_nat_1_1?: {
+  subnet_mask: string;
+  type: string;
+  vpc_nat_1_1?: null | {
     address: string;
     subnet_id: number;
     vpc_id: number;
-  } | null;
+  };
 }
 
 export interface IPRangeBaseData {
+  prefix: number;
   range: string;
   region: string;
-  prefix: number;
 }
 
 export interface IPRange extends IPRangeBaseData {
-  route_target: string | null;
+  route_target: null | string;
 }
 export interface IPRangeInformation extends IPRangeBaseData {
   is_bgp: boolean;
@@ -40,14 +40,14 @@ export interface IPAssignment {
   linode_id: number;
 }
 export interface IPAssignmentPayload {
-  region: string;
   assignments: IPAssignment[];
+  region: string;
 }
 
 export type IPv6Prefix = 56 | 64;
 
 export interface CreateIPv6RangePayload {
   linode_id?: number;
-  route_target?: string;
   prefix_length: IPv6Prefix;
+  route_target?: string;
 }
