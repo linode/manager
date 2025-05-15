@@ -27,6 +27,7 @@ export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> =
         type: string().defined().nullable(),
       }).notRequired(),
       linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
+      vpc_id: number(),
     })
   );
 

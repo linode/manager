@@ -43,7 +43,7 @@ export const DEFAULT_UPGRADE_BUTTON_HELPER_TEXT = (
   </>
 );
 
-const LinodeConfigs = () => {
+export const LinodeConfigs = () => {
   const theme = useTheme();
   const location = useLocation();
   const history = useHistory();
@@ -269,5 +269,3 @@ const LinodeConfigs = () => {
     </>
   );
 };
-
-export default LinodeConfigs;

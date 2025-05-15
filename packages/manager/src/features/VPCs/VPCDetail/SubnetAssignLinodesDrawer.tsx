@@ -210,7 +210,6 @@ export const SubnetAssignLinodesDrawer = (
       chosenIP,
       ipRanges,
       subnetId: subnet?.id,
-      vpcId,
       isLinodeInterface,
     });
 

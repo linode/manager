@@ -50,7 +50,7 @@ export const Summary = () => {
       'private_ip',
       'placement_group.id',
       'interfaces.1.label',
-      'interfaces.0.vpc_id',
+      'vpc_id',
       'disk_encryption',
       'stackscript_data.cluster_size',
       'linodeInterfaces',

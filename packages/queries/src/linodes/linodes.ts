@@ -50,7 +50,7 @@ import { firewallQueries } from '../firewalls';
 import { placementGroupQueries } from '../placementGroups';
 import { profileQueries } from '../profile/profile';
 import { vlanQueries } from '../vlans';
-import { vpcQueries } from '../vpcs/vpcs';
+// import { vpcQueries } from '../vpcs/vpcs';
 import {
   getAllLinodeConfigs,
   getAllLinodeDisks,
@@ -350,20 +350,20 @@ export const useCreateLinodeMutation = () => {
           queryClient.invalidateQueries({ queryKey: vlanQueries._def });
         }
 
-        const vpcId = variables.interfaces?.find(
-          (i) => i.purpose === 'vpc',
-        )?.vpc_id;
+        // const vpcId = variables.interfaces?.find(
+        //   (i) => i.purpose === 'vpc',
+        // )?.vpc_id;
 
-        if (vpcId) {
-          // If a Linode is created with a VPC, invalidate the related VPC queries.
-          queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
-          queryClient.invalidateQueries({
-            queryKey: vpcQueries.paginated._def,
-          });
-          queryClient.invalidateQueries({
-            queryKey: vpcQueries.vpc(vpcId).queryKey,
-          });
-        }
+        // if (vpcId) {
+        //   // If a Linode is created with a VPC, invalidate the related VPC queries.
+        //   queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
+        //   queryClient.invalidateQueries({
+        //     queryKey: vpcQueries.paginated._def,
+        //   });
+        //   queryClient.invalidateQueries({
+        //     queryKey: vpcQueries.vpc(vpcId).queryKey,
+        //   });
+        // }
       } else {
         // invalidate firewall queries if a new Linode interface is assigned to a firewall
         if (variables.interfaces?.some((iface) => iface.firewall_id)) {

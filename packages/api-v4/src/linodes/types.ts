@@ -230,7 +230,6 @@ export interface InterfacePayload {
   primary?: boolean;
   purpose: InterfacePurpose;
   subnet_id?: null | number;
-  vpc_id?: null | number;
 }
 
 export interface ConfigInterfaceOrderPayload {
@@ -467,7 +466,7 @@ export interface LinodeConfigCreationData {
     updatedb_disabled: boolean;
   };
   initrd: null | number | string;
-  interfaces?: InterfacePayload[];
+  interfaces?: Interface[];
   kernel?: string;
   label: string;
   memory_limit?: number;

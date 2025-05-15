@@ -171,6 +171,7 @@ export const getLinodeCreatePayload = (
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
+    'vpc_id',
   ]);
 
   if (values.metadata?.user_data) {
@@ -228,7 +229,9 @@ export const getInterfacesPayload = (
   const vlanInterface = interfaces[1];
   const publicInterface = interfaces[2];
 
-  const hasVPC = Boolean(vpcInterface.vpc_id);
+  const hasVPC = Boolean(
+    vpcInterface.purpose === 'vpc' && vpcInterface.subnet_id
+  );
   const hasVLAN = Boolean(vlanInterface.label);
 
   if (hasVPC && hasVLAN && hasPrivateIP) {
@@ -248,7 +251,6 @@ export const getInterfacesPayload = (
   }
 
   if (hasVPC) {
-    delete vpcInterface.vpc_id;
     return [vpcInterface];
   }
 
@@ -315,6 +317,10 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * Form state for the new Linode interface
    */
   linodeInterfaces: LinodeCreateInterface[];
+  /**
+   * The id value of the currently selected VPC (used for purposes where vpc_id was removed from InterfacePayload)
+   */
+  vpc_id?: number;
 }
 
 export interface LinodeCreateFormContext {

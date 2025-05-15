@@ -6,6 +6,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { VPC } from './VPC';
 
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 describe('VPC', () => {
@@ -53,12 +54,13 @@ describe('VPC', () => {
 
   it('renders a subnet select if a VPC is selected', async () => {
     const { getByLabelText } =
-      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <VPC />,
         useFormOptions: {
           defaultValues: {
-            interfaces: [{ vpc_id: 4 }, {}, {}],
+            interfaces: [{}, {}, {}],
             region: 'fake-region',
+            vpc_id: 4,
           },
         },
       });
@@ -68,12 +70,13 @@ describe('VPC', () => {
 
   it('renders VPC IPv4, NAT checkboxes, and IP Ranges inputs when a subnet is selected', async () => {
     const { getByLabelText, getByText } =
-      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <VPC />,
         useFormOptions: {
           defaultValues: {
-            interfaces: [{ subnet_id: 5, vpc_id: 4 }, {}, {}],
+            interfaces: [{ subnet_id: 5 }, {}, {}],
             region: 'fake-region',
+            vpc_id: 4,
           },
         },
       });
@@ -93,16 +96,13 @@ describe('VPC', () => {
 
   it('should check the VPC IPv4 if a "ipv4.vpc" is null/undefined', async () => {
     const { getByLabelText } =
-      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <VPC />,
         useFormOptions: {
           defaultValues: {
-            interfaces: [
-              { ipv4: { vpc: undefined }, subnet_id: 5, vpc_id: 4 },
-              {},
-              {},
-            ],
+            interfaces: [{ ipv4: { vpc: undefined }, subnet_id: 5 }, {}, {}],
             region: 'fake-region',
+            vpc_id: 4,
           },
         },
       });
@@ -116,16 +116,13 @@ describe('VPC', () => {
 
   it('should uncheck the VPC IPv4 if a "ipv4.vpc" is a string value and show the VPC IP TextField', async () => {
     const { getByLabelText } =
-      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
         component: <VPC />,
         useFormOptions: {
           defaultValues: {
-            interfaces: [
-              { ipv4: { vpc: '' }, subnet_id: 5, vpc_id: 4 },
-              {},
-              {},
-            ],
+            interfaces: [{ ipv4: { vpc: '' }, subnet_id: 5 }, {}, {}],
             region: 'fake-region',
+            vpc_id: 4,
           },
         },
       });

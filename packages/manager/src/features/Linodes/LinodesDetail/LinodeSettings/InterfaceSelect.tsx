@@ -16,7 +16,7 @@ import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCP
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type {
-  InterfacePayload,
+  Interface,
   InterfacePurpose,
 } from '@linode/api-v4/lib/linodes/types';
 import type { SelectOption } from '@linode/ui';
@@ -61,8 +61,7 @@ interface VPCState {
 
 // To allow for empty slots, which the API doesn't account for
 export type ExtendedPurpose = 'none' | InterfacePurpose;
-export interface ExtendedInterface
-  extends Partial<Omit<InterfacePayload, 'purpose'>> {
+export interface ExtendedInterface extends Partial<Omit<Interface, 'purpose'>> {
   purpose: ExtendedPurpose;
 }
 

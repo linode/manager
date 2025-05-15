@@ -97,7 +97,6 @@ export const getVPCInterfacePayload = (inputs: {
   ipRanges: ExtendedIP[];
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
-  vpcId: number;
 }): CreateLinodeInterfacePayload | InterfacePayload => {
   const {
     firewallId,
@@ -106,7 +105,6 @@ export const getVPCInterfacePayload = (inputs: {
     subnetId,
     isLinodeInterface,
     autoAssignIPv4,
-    vpcId,
   } = inputs;
   const filteredIPRanges = ipRanges.filter((ipRange) => ipRange.address !== '');
 
@@ -144,7 +142,6 @@ export const getVPCInterfacePayload = (inputs: {
     primary: true,
     purpose: 'vpc',
     subnet_id: subnetId,
-    vpc_id: vpcId,
   };
 };
 

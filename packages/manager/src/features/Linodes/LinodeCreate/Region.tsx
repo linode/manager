@@ -99,12 +99,9 @@ export const Region = React.memo(() => {
     }
 
     // @TODO Linode Interfaces - need to handle case if interface is not legacy
-    if (
-      getIsLegacyInterfaceArray(values.interfaces) &&
-      values.interfaces?.[0].vpc_id
-    ) {
+    if (getIsLegacyInterfaceArray(values.interfaces) && values.vpc_id) {
       // If a VPC is selected, clear it because VPCs are region specific
-      setValue('interfaces.0.vpc_id', null);
+      setValue('vpc_id', undefined);
       setValue('interfaces.0.subnet_id', null);
     }
 
