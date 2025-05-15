@@ -17,7 +17,7 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';

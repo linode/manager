@@ -1,5 +1,5 @@
 import { Button, ErrorState, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
@@ -322,7 +322,13 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       }
 
       return filters.map((filter, index) => (
-        <Grid item key={filter.configuration.filterKey} md={4} sm={6} xs={12}>
+        <GridLegacy
+          item
+          key={filter.configuration.filterKey}
+          md={4}
+          sm={6}
+          xs={12}
+        >
           {RenderComponent({
             componentKey:
               filter.configuration.type !== undefined
@@ -331,7 +337,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             componentProps: { ...getProps(filter) },
             key: index + filter.configuration.filterKey,
           })}
-        </Grid>
+        </GridLegacy>
       ));
     }, [dashboard, getProps, isServiceAnalyticsIntegration]);
 
@@ -344,7 +350,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
     }
 
     return (
-      <Grid
+      <GridLegacy
         container
         item
         sx={{
@@ -353,7 +359,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         }}
         xs={12}
       >
-        <Grid
+        <GridLegacy
           item
           key="toggleFilter"
           sx={{
@@ -385,8 +391,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           >
             <Typography variant="h3">Filters</Typography>
           </Button>
-        </Grid>
-        <Grid
+        </GridLegacy>
+        <GridLegacy
           columnSpacing={theme.spacing(2)}
           container
           item
@@ -400,8 +406,8 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           xs={12}
         >
           <RenderFilters />
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     );
   },
   compareProps

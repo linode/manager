@@ -1,6 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import { Grid2, useMediaQuery } from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -50,7 +50,7 @@ export const ClusterTierPanel = (props: Props) => {
         </StyledDocsLinkContainer>
       </StyledStackWithTabletBreakpoint>
 
-      <Grid2 container marginTop={2} spacing={2}>
+      <Grid container marginTop={2} spacing={2}>
         <SelectionCard
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
@@ -75,7 +75,7 @@ export const ClusterTierPanel = (props: Props) => {
           }
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
-      </Grid2>
+      </Grid>
     </Stack>
   );
 };

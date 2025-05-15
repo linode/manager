@@ -1,4 +1,4 @@
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -45,13 +45,13 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
   const theme = useTheme();
 
   return (
-    <Grid container data-qa-item={label} item xs={12}>
-      <Grid item sm={labelGridColumns} xs={12}>
+    <GridLegacy container data-qa-item={label} item xs={12}>
+      <GridLegacy item sm={labelGridColumns} xs={12}>
         <StyledAlertTypography sx={{ font: theme.font.bold }}>
           {label}:
         </StyledAlertTypography>
-      </Grid>
-      <Grid container item sm={valueGridColumns} xs={12}>
+      </GridLegacy>
+      <GridLegacy container item sm={valueGridColumns} xs={12}>
         {status && (
           <StatusIcon
             marginTop={theme.spacing(0.7)}
@@ -61,7 +61,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
           />
         )}
         <StyledAlertTypography>{value}</StyledAlertTypography>
-      </Grid>
-    </Grid>
+      </GridLegacy>
+    </GridLegacy>
   );
 });
