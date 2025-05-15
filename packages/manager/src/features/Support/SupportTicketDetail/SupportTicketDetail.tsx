@@ -6,9 +6,9 @@ import {
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -29,12 +29,11 @@ export interface AttachmentError {
 }
 
 export const SupportTicketDetail = () => {
-  const history = useHistory<{ attachmentErrors?: AttachmentError[] }>();
   const location = useLocation();
-  const { ticketId } = useParams<{ ticketId: string }>();
+  const { ticketId } = useParams({ from: '/support/tickets/$ticketId' });
   const id = Number(ticketId);
 
-  const attachmentErrors = history.location.state?.attachmentErrors;
+  const attachmentErrors = location.state.attachmentErrors;
 
   const { data: profile } = useProfile();
 

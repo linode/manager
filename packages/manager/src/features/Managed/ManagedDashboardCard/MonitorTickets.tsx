@@ -59,7 +59,12 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
               navigate({
                 search: {
                   dialogOpen: true,
-                  dialogTitle: 'Managed monitor issue',
+                  // dialogTitle: 'Managed monitor issue',
+                },
+                state: {
+                  supportTicketFormFields: {
+                    title: 'Managed monitor issue',
+                  },
                 },
                 to: '/support/tickets/open',
               })

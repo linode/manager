@@ -31,6 +31,7 @@ import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
+import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -86,6 +87,9 @@ declare module '@tanstack/react-router' {
   interface HistoryState {
     attachmentErrors?: AttachmentError[];
     recordError?: string;
+    supportTicketFormFields?: Partial<SupportTicketFormFields> & {
+      title?: string;
+    };
   }
 }
 

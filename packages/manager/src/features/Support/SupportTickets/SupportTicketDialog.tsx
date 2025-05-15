@@ -12,11 +12,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
-import { useSearch } from '@tanstack/react-router';
+import { useLocation as useLocationTanstack } from '@tanstack/react-router';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { useLocation as useLocationRouterDom } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -137,19 +138,18 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const { dialogTitle = '' } = useSearch({
-    strict: false,
-  });
-
-  const location = useLocation<any>();
-  const stateParams = location.state;
+  const locationRouterDom = useLocationRouterDom<any>();
+  const locationTanstack = useLocationTanstack<any>();
+  const stateParams =
+    locationRouterDom.state ?? locationTanstack.state.supportTicketFormFields;
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string =
     prefilledDescription ?? stateParams?.description ?? undefined;
   const _prefilledEntity: EntityForTicketDetails =
     prefilledEntity ?? stateParams?.entity ?? undefined;
-  const _prefilledTitle: string = prefilledTitle ?? dialogTitle ?? undefined;
+  const _prefilledTitle: string =
+    prefilledTitle ?? stateParams?.title ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues =
     stateParams?.formPayloadValues ?? undefined;
   const _prefilledTicketType: TicketType =

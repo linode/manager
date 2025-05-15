@@ -50,6 +50,10 @@ export const SupportTicketsLanding = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Support Tickets" />
       <LandingHeader
+        breadcrumbProps={{
+          labelTitle: 'Tickets',
+          firstAndLastOnly: true,
+        }}
         buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
         createButtonText="Open New Ticket"
         data-qa-breadcrumb

@@ -5,7 +5,6 @@ import { SupportTicketsRoute } from './SupportRoute';
 
 interface SupportSearchParams {
   dialogOpen?: boolean;
-  dialogTitle?: string;
 }
 
 const supportRoute = createRoute({
