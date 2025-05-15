@@ -13,7 +13,7 @@ describe('AlertEntityGroupingSelect', () => {
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
-    expect(screen.getByLabelText('Entity Grouping')).toBeInTheDocument();
+    expect(screen.getByLabelText('Grouping')).toBeInTheDocument();
   });
 
   it('Select option from drop down', async () => {
@@ -22,13 +22,8 @@ describe('AlertEntityGroupingSelect', () => {
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await userEvent.click(
-      screen.getByRole('option', { name: 'Account Level' })
-    );
+    await userEvent.click(screen.getByRole('option', { name: 'Account' }));
 
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      'Account Level'
-    );
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Account');
   });
 });
