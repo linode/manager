@@ -63,11 +63,15 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   });
 
   const isProxyUser = profile?.user_type === 'proxy';
+
   const isRestrictedUser = profile?.restricted ?? false;
+
   const hasAccountAccess =
     !isRestrictedUser || Boolean(grants?.global.account_access);
+
   const hasFullAccountAccess =
     !isRestrictedUser || grants?.global.account_access === 'read_write';
+
   const canSwitchBetweenParentOrProxyAccount =
     (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
     profile?.user_type === 'proxy';
