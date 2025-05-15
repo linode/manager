@@ -67,6 +67,7 @@ const SupportTicketsLanding = () => {
         data-qa-breadcrumb
         onButtonClick={() => setDrawerOpen(true)}
         onButtonKeyPress={handleButtonKeyPress}
+        spacingBottom={4}
         title="Tickets"
       />
       <Tabs

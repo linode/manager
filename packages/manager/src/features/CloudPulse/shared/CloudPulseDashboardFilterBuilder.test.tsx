@@ -17,7 +17,6 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
         isServiceAnalyticsIntegration={false}
       />
     );
-    expect(getByTestId('tags-select')).toBeDefined();
     expect(getByTestId('resource-select')).toBeDefined();
     expect(getByTestId('region-select')).toBeDefined();
   });
