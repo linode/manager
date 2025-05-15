@@ -1,5 +1,5 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
@@ -154,8 +154,8 @@ export const CloudPulseDashboard = (props: DashboardProperties) => {
  */
 const renderErrorState = (errorMessage: string) => {
   return (
-    <Grid item xs>
+    <GridLegacy item xs>
       <ErrorState errorText={errorMessage} />
-    </Grid>
+    </GridLegacy>
   );
 };

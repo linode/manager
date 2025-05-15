@@ -1,6 +1,6 @@
 import { Autocomplete, Box } from '@linode/ui';
 import { TextField, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -129,8 +129,8 @@ export const Metric = (props: MetricCriteriaProps) => {
           {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
         </Box>
 
-        <Grid container spacing={2}>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+        <GridLegacy container spacing={2}>
+          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
             <Controller
               control={control}
               name={`${name}.metric`}
@@ -174,8 +174,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                 />
               )}
             />
-          </Grid>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+          </GridLegacy>
+          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
             <Controller
               control={control}
               name={`${name}.aggregate_function`}
@@ -208,8 +208,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                 />
               )}
             />
-          </Grid>
-          <Grid item lg={3} md={4} sm={6} xs={12}>
+          </GridLegacy>
+          <GridLegacy item lg={3} md={4} sm={6} xs={12}>
             <Controller
               control={control}
               name={`${name}.operator`}
@@ -245,8 +245,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                 />
               )}
             />
-          </Grid>
-          <Grid item lg={3} md={2} sm={6} xs={12}>
+          </GridLegacy>
+          <GridLegacy item lg={3} md={2} sm={6} xs={12}>
             <Box display="flex" gap={1}>
               <Controller
                 control={control}
@@ -294,8 +294,8 @@ export const Metric = (props: MetricCriteriaProps) => {
                 {unit}
               </Typography>
             </Box>
-          </Grid>
-        </Grid>
+          </GridLegacy>
+        </GridLegacy>
       </Box>
       <DimensionFilters
         dataFieldDisabled={metricWatcher === null}

@@ -1,6 +1,6 @@
 import { Button, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {
   sortRows,

@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 

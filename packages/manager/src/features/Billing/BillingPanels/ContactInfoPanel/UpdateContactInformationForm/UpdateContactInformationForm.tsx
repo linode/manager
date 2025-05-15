@@ -14,7 +14,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { allCountries } from 'country-region-data';
 import { useFormik } from 'formik';

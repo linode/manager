@@ -5,7 +5,7 @@ import {
 } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 

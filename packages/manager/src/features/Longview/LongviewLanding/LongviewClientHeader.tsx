@@ -1,7 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import { formatUptime } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { compose } from 'recompose';
 

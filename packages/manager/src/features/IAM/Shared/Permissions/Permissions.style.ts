@@ -1,5 +1,5 @@
 import { Box, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export const sxTooltipIcon = {
@@ -7,7 +7,7 @@ export const sxTooltipIcon = {
   padding: 0,
 };
 
-export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(() => ({
+export const StyledGrid = styled(GridLegacy, { label: 'StyledGrid' })(() => ({
   alignItems: 'center',
   marginBottom: 2,
 }));

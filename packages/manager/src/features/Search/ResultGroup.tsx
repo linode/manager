@@ -1,6 +1,6 @@
 import { Hidden } from '@linode/ui';
 import { capitalize, splitAt } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 

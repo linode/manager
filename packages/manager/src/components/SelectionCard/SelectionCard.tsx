@@ -1,12 +1,12 @@
 import { Tooltip } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CardBase } from './CardBase';
 
 import type { TooltipProps } from '@linode/ui';
-import type { Grid2Props } from '@mui/material/Grid2';
+import type { GridProps } from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface SelectionCardProps {
@@ -33,7 +33,7 @@ export interface SelectionCardProps {
    * Optionally override the grid item's size
    * @default { lg: 4, sm: 6, xl: 3, xs: 12 }
    */
-  gridSize?: Grid2Props['size'];
+  gridSize?: GridProps['size'];
   /**
    * The heading of the card.
    * @example Linode 1GB
