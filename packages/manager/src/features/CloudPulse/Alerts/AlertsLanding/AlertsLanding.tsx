@@ -65,6 +65,7 @@ export const AlertsLanding = React.memo(() => {
         breadcrumbProps={{ pathname: '/alerts' }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/akamai-cloud-pulse"
+        spacingBottom={4}
       />
       <Tabs index={activeTabIndex} onChange={handleChange}>
         <TabLinkList tabs={accessibleTabs} />

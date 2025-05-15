@@ -109,6 +109,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
+  maintenance_policy_id: MaintenancePolicyId;
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -200,12 +201,12 @@ export type GlobalGrantTypes =
   | 'account_access'
   | 'add_buckets'
   | 'add_databases'
-  | 'add_databases'
   | 'add_domains'
   | 'add_firewalls'
   | 'add_images'
   | 'add_kubernetes'
   | 'add_linodes'
+  | 'add_lkes'
   | 'add_longview'
   | 'add_nodebalancers'
   | 'add_stackscripts'
@@ -225,6 +226,7 @@ export type GrantType =
   | 'firewall'
   | 'image'
   | 'linode'
+  | 'lkecluster'
   | 'longview'
   | 'nodebalancer'
   | 'stackscript'
@@ -274,6 +276,8 @@ export interface Agreements {
 export type NotificationType =
   | 'billing_email_bounce'
   | 'maintenance'
+  | 'maintenance_in_progress'
+  | 'maintenance_pending'
   | 'maintenance_scheduled'
   | 'migration_pending'
   | 'migration_scheduled'
@@ -396,6 +400,7 @@ export const EventActionKeys = [
   'linode_migrate',
   'linode_mutate_create',
   'linode_mutate',
+  'linode_poweroff_on',
   'linode_reboot',
   'linode_rebuild',
   'linode_resize_create',
@@ -506,21 +511,29 @@ export type EventStatus =
   | 'scheduled'
   | 'started';
 
+export type EventSource = 'platform' | 'user';
+
 export interface Event {
   action: EventAction;
+  complete_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
   created: string;
+  description?: null | string; // @TODO VM & Host Maintenance: verify new fields
   /*
     NOTE: events before the duration key was added will have a duration of 0
   */
   duration: null | number;
   entity: Entity | null;
   id: number;
+  maintenance_policy_set?: MaintenancePolicyType | null; // @TODO VM & Host Maintenance: verify new fields
   message: null | string;
+  not_before?: null | string; // @TODO VM & Host Maintenance: verify new fields
   percent_complete: null | number;
   rate: null | string;
   read: boolean;
   secondary_entity: Entity | null;
   seen: boolean;
+  source?: EventSource | null; // @TODO VM & Host Maintenance: verify new fields
+  start_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
   status: EventStatus;
   time_remaining: null | string;
   username: null | string;
@@ -557,17 +570,46 @@ export interface SaveCreditCardData {
 }
 
 export interface AccountMaintenance {
+  complete_time: string;
+  description: string;
   entity: {
     id: number;
     label: string;
     type: 'linode' | 'volume';
     url: string;
   };
+  maintenance_policy_set: MaintenancePolicyType;
+  not_before: string;
   reason: string;
-  status: 'completed' | 'pending' | 'started';
+  source: 'platform' | 'user';
+  start_time: string;
+  status:
+    | 'canceled'
+    | 'completed'
+    | 'in-progress'
+    | 'pending'
+    | 'scheduled'
+    | 'started';
   type: 'cold_migration' | 'live_migration' | 'reboot' | 'volume_migration';
   when: string;
 }
+
+export const maintenancePolicies = [
+  { id: 1, type: 'migrate' },
+  { id: 2, type: 'power on/off' },
+] as const;
+
+export type MaintenancePolicyId = (typeof maintenancePolicies)[number]['id'];
+
+export type MaintenancePolicyType =
+  (typeof maintenancePolicies)[number]['type'];
+
+export type MaintenancePolicy = (typeof maintenancePolicies)[number] & {
+  description: string;
+  is_default: boolean;
+  name: string;
+  notification_period_sec: number;
+};
 
 export interface PayPalData {
   email: string;

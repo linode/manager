@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 import { TableCell } from 'src/components/TableCell';
@@ -15,7 +15,6 @@ export const StyledGrid = styled(Grid, { label: 'StyledGrid' })(
       },
     },
     margin: 0,
-    marginTop: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),

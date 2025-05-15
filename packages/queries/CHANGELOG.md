@@ -1,3 +1,9 @@
+## [2025-05-06] - v0.4.0
+
+### Tech Stories:
+
+- Re-export everything from `@tanstack/react-query` ([#12106](https://github.com/linode/manager/pull/12106))
+
 ## [2025-04-22] - v0.3.0
 
 ### Added:

@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { accountQueries, regionQueries } from '@linode/queries';
-import { isNullOrUndefined } from '@linode/utilities';
 import type { FieldErrors, Resolver } from 'react-hook-form';
 
 import { getRegionCountryGroup, isEURegion } from 'src/utilities/formatRegion';
@@ -12,7 +11,10 @@ import {
   CreateLinodeFromStackScriptSchema,
   CreateLinodeSchema,
 } from './schemas';
-import { getInterfacesPayload } from './utilities';
+import {
+  getDoesEmployeeNeedToAssignFirewall,
+  getInterfacesPayload,
+} from './utilities';
 
 import type {
   LinodeCreateFormContext,
@@ -88,13 +90,22 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    const secureVMViolation =
+    // If
+    // - we're dealing with an employee account
+    // - and the employee did not bypass/override the Firewall warning
+    // - and their networking configuration "requires" a firewall
+    if (
       context?.secureVMNoticesEnabled &&
       !values.firewallOverride &&
-      isNullOrUndefined(values.firewall_id);
-
-    if (secureVMViolation) {
+      getDoesEmployeeNeedToAssignFirewall(
+        values.firewall_id,
+        values.linodeInterfaces,
+        values.interface_generation
+      )
+    ) {
       (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+        // This message does not get surfaced, but triggers an error so that FirewallAuthorization.tsx renders
+        message: 'You must select a Firewall or bypass the Firewall policy.',
         type: 'validate',
       };
     }

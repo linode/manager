@@ -10,17 +10,18 @@ import { REBUILD_LINODE_IMAGE_PARAM_NAME } from 'src/features/Linodes/LinodesDet
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
-import type { Image } from '@linode/api-v4';
+import type { APIError, Image } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  imageError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 
 export const RebuildImageDrawer = (props: Props) => {
-  const { image, isFetching, onClose, open } = props;
+  const { image, imageError, isFetching, onClose, open } = props;
 
   const history = useHistory();
   const { permissionedLinodes: availableLinodes } =
@@ -55,6 +56,7 @@ export const RebuildImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={imageError}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

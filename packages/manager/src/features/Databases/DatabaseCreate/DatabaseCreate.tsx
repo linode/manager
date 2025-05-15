@@ -2,7 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -235,19 +235,19 @@ const DatabaseCreate = () => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
+      <LandingHeader
+        breadcrumbProps={{
+          crumbOverrides: [
+            {
+              label: 'Database Clusters',
+              position: 1,
+            },
+          ],
+          pathname: location.pathname,
+        }}
+        title="Create"
+      />
       <form data-testid="db-create-form" onSubmit={handleSubmit} ref={formRef}>
-        <LandingHeader
-          breadcrumbProps={{
-            crumbOverrides: [
-              {
-                label: 'Database Clusters',
-                position: 1,
-              },
-            ],
-            pathname: location.pathname,
-          }}
-          title="Create"
-        />
         {isRestricted && (
           <Notice
             spacingTop={16}
@@ -317,7 +317,7 @@ const DatabaseCreate = () => {
             onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
           />
         </Paper>
-        <Paper sx={{ marginTop: 2 }}>
+        <Paper sx={{ marginTop: 3 }}>
           <DatabaseSummarySection
             currentClusterSize={values.cluster_size}
             currentEngine={selectedEngine}

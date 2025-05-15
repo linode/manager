@@ -1,5 +1,5 @@
 import { Tooltip, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';

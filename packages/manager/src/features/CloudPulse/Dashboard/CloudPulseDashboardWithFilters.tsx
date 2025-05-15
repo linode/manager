@@ -1,5 +1,5 @@
 import { Box, CircleProgress, Divider, ErrorState, Paper } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import { useCloudPulseDashboardByIdQuery } from 'src/queries/cloudpulse/dashboards';
@@ -129,8 +129,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
             padding: 0,
           }}
         >
-          <Grid container>
-            <Grid item xs={12}>
+          <GridLegacy container>
+            <GridLegacy item xs={12}>
               <Box
                 display="flex"
                 flexDirection={{ lg: 'row', xs: 'column' }}
@@ -149,16 +149,16 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   savePreferences
                 />
               </Box>
-            </Grid>
+            </GridLegacy>
 
-            <Grid item xs={12}>
+            <GridLegacy item xs={12}>
               <Divider
                 sx={(theme) => ({
                   borderColor: theme.color.grey5,
                   margin: 0,
                 })}
               />
-            </Grid>
+            </GridLegacy>
 
             {isFilterBuilderNeeded && (
               <CloudPulseDashboardFilterBuilder
@@ -169,7 +169,7 @@ export const CloudPulseDashboardWithFilters = React.memo(
                 resource_ids={[resource]}
               />
             )}
-            <Grid
+            <GridLegacy
               item
               sx={{
                 mb: 3,
@@ -183,8 +183,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
                   serviceType={dashboard.service_type}
                 />
               )}
-            </Grid>
-          </Grid>
+            </GridLegacy>
+          </GridLegacy>
         </Paper>
         {isMandatoryFiltersSelected ? (
           <CloudPulseDashboard
