@@ -3,7 +3,7 @@
     /* Language and Environment */
     "jsx": "react",
     "lib": ["dom", "dom.iterable", "es2020"],
-    "target": "es5",
+    "target": "ESNext",
 
     /* Modules */
     "baseUrl": ".",

@@ -15,6 +15,7 @@ import { storage } from 'src/utilities/storage';
 
 import { PENDING_MAINTENANCE_FILTER } from '../Account/Maintenance/utilities';
 import { regionFilterOptions } from './LinodesLanding/RegionTypeFilter';
+import { LinodesLandingV2 } from './LinodesLandingV2/LinodesLandingV2';
 import { linodesInTransition } from './transitions';
 
 import type { RegionFilter } from 'src/utilities/storage';
@@ -37,6 +38,7 @@ export const LinodesRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
+        <Route component={LinodesLandingV2} exact path="/linodes/new" strict />
         <Route component={LinodesCreate} path="/linodes/create" />
         <Route component={LinodesDetail} path="/linodes/:linodeId" />
         <Route component={LinodesLandingWrapper} exact path="/linodes" strict />
