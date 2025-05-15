@@ -2728,7 +2728,7 @@ describe('LKE ACL updates', () => {
           acl: mockUpdatedACLOptions2,
         });
       mockUpdateControlPlaneACL(mockCluster.id, mockUpdatedControlPlaneACL2).as(
-        'updateControlPlaneACL'
+        'updateControlPlaneACL2'
       );
 
       // confirm data within drawer is updated and edit IPs again
@@ -2755,6 +2755,9 @@ describe('LKE ACL updates', () => {
             mockRevisionId
           );
 
+          // clear Revision ID
+          cy.findByLabelText('Revision ID').clear();
+
           // update IPv6 addresses
           cy.findByDisplayValue('10.0.0.0/24').should('be.visible');
           cy.findByLabelText('IPv6 Addresses or CIDRs ip-address-0')
@@ -2779,7 +2782,7 @@ describe('LKE ACL updates', () => {
             .click();
         });
 
-      cy.wait(['@updateControlPlaneACL']);
+      cy.wait(['@updateControlPlaneACL2']);
 
       // confirm summary panel updates
       cy.contains('Control Plane ACL').should('be.visible');
@@ -2795,6 +2798,11 @@ describe('LKE ACL updates', () => {
         .findByTitle(`Control Plane ACL for ${mockCluster.label}`)
         .should('be.visible')
         .within(() => {
+          // confirm Revision ID was "regenerated" after being cleared instead of displaying an empty string
+          cy.findByLabelText('Revision ID').should(
+            'have.value',
+            mockRevisionId
+          );
           // confirm updated IPv6 addresses display
           cy.findByDisplayValue(
             '8e61:f9e9:8d40:6e0a:cbff:c97a:2692:827e'
