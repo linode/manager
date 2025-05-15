@@ -286,7 +286,9 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
             <Grid size={1}>
               {(idx > 0 || forDatabaseAccessControls || forVPCIPv4Ranges) && (
                 <IconButton
+                  aria-disabled={disabled}
                   className={classes.button}
+                  data-testid="button"
                   disabled={disabled}
                   onClick={() => removeInput(idx)}
                 >
