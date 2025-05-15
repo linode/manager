@@ -6,11 +6,25 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-const regions = regionFactory.buildList(10);
+const regions = regionFactory.buildList(10).map(({ id, label }) => ({
+  id,
+  label,
+  checked: false,
+  count: Math.random(),
+}));
+
+const handleChange = vi.fn();
+const handleSelectAll = vi.fn();
 
 describe('DisplayAlertRegions', () => {
   it('should render the regions table', () => {
-    renderWithTheme(<DisplayAlertRegions regions={regions} />);
+    renderWithTheme(
+      <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
+        handleSelectionChange={handleChange}
+        regions={regions}
+      />
+    );
 
     const table = screen.getByTestId('region-table');
     expect(table).toBeInTheDocument();
@@ -20,7 +34,13 @@ describe('DisplayAlertRegions', () => {
   });
 
   it('should display checkbox and label', () => {
-    renderWithTheme(<DisplayAlertRegions regions={regions} />);
+    renderWithTheme(
+      <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
+        handleSelectionChange={handleChange}
+        regions={regions}
+      />
+    );
 
     const row = screen.getByTestId(`region-row-${regions[0].id}`);
 
