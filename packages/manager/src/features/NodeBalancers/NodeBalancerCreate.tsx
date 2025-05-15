@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
@@ -164,6 +164,7 @@ const NodeBalancerCreate = () => {
 
   const [isVpcSelected, setIsVpcSelected] = React.useState<boolean>(false);
   const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setVPCErrors([]);
@@ -299,7 +300,6 @@ const NodeBalancerCreate = () => {
 
     // Apply the error updater functions with a compose
     setNodeBalancerFields((compose as any)(...setFns));
-    scrollErrorIntoView();
   };
 
   const clearErrors = () => {
@@ -327,6 +327,7 @@ const NodeBalancerCreate = () => {
         reason: 'Subnet is required',
       };
       setVPCErrors((prev) => (prev ? [...prev, subnetError] : [subnetError]));
+      scrollErrorIntoViewV2(formContainerRef);
       return;
     }
     clearErrors();
@@ -399,7 +400,7 @@ const NodeBalancerCreate = () => {
 
         setVPCErrors(vpcErrors);
 
-        scrollErrorIntoView();
+        scrollErrorIntoViewV2(formContainerRef);
       });
   };
 
@@ -602,7 +603,7 @@ const NodeBalancerCreate = () => {
   }
 
   return (
-    <React.Fragment>
+    <div ref={formContainerRef}>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
       <LandingHeader
         breadcrumbProps={{
@@ -876,7 +877,7 @@ const NodeBalancerCreate = () => {
           Are you sure you want to delete this NodeBalancer Configuration?
         </Typography>
       </ConfirmationDialog>
-    </React.Fragment>
+    </div>
   );
 };
 
