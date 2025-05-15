@@ -84,7 +84,7 @@ export const KubernetesClusterDetail = () => {
   };
 
   return (
-    <Box>
+    <>
       <DocumentTitleSegment
         segment={`${cluster?.label} | Kubernetes Cluster`}
       />
@@ -105,46 +105,48 @@ export const KubernetesClusterDetail = () => {
           },
           pathname: location.pathname,
         }}
+        createButtonText="Upgrade to HA"
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         onButtonClick={
           showHighAvailability && !isClusterHighlyAvailable
             ? handleUpgradeToHA
             : undefined
         }
-        createButtonText="Upgrade to HA"
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Kubernetes Cluster Details"
       />
-      <Stack spacing={1}>
-        <KubeSummaryPanel cluster={cluster} />
-        {showAPL && cluster.apl_enabled && (
-          <Box>
-            <LandingHeader
-              docsLabel="Docs"
-              docsLink="https://apl-docs.net/"
-              removeCrumbX={[1, 2, 3]}
-              title="Application Platform for LKE"
-            />
+      <Box>
+        <Stack spacing={1}>
+          <KubeSummaryPanel cluster={cluster} />
+          {showAPL && cluster.apl_enabled && (
+            <Box>
+              <LandingHeader
+                docsLabel="Docs"
+                docsLink="https://apl-docs.net/"
+                removeCrumbX={[1, 2, 3]}
+                title="Application Platform for LKE"
+              />
 
-            <APLSummaryPanel cluster={cluster} />
-          </Box>
-        )}
-        <NodePoolsDisplay
-          clusterCreated={cluster.created}
+              <APLSummaryPanel cluster={cluster} />
+            </Box>
+          )}
+          <NodePoolsDisplay
+            clusterCreated={cluster.created}
+            clusterID={cluster.id}
+            clusterLabel={cluster.label}
+            clusterRegionId={cluster.region}
+            clusterTier={cluster.tier ?? 'standard'}
+            regionsData={regionsData || []}
+          />
+        </Stack>
+        <UpgradeKubernetesClusterToHADialog
           clusterID={cluster.id}
-          clusterLabel={cluster.label}
-          clusterRegionId={cluster.region}
-          clusterTier={cluster.tier ?? 'standard'}
-          regionsData={regionsData || []}
+          onClose={() => setIsUpgradeToHAOpen(false)}
+          open={isUpgradeToHAOpen}
+          regionID={cluster.region}
         />
-      </Stack>
-      <UpgradeKubernetesClusterToHADialog
-        clusterID={cluster.id}
-        onClose={() => setIsUpgradeToHAOpen(false)}
-        open={isUpgradeToHAOpen}
-        regionID={cluster.region}
-      />
-    </Box>
+      </Box>
+    </>
   );
 };
 

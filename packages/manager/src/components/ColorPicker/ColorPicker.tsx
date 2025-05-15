@@ -1,6 +1,5 @@
 import { useTheme } from '@mui/material';
 import React, { useState } from 'react';
-
 import type { CSSProperties } from 'react';
 
 export interface ColorPickerProps {
@@ -39,12 +38,12 @@ export const ColorPicker = (props: ColorPickerProps) => {
         {label}
       </label>
       <input
+        color={color}
+        id="color-picker"
         onChange={(e) => {
           setColor(e.target.value);
           onChange(e.target.value);
         }}
-        color={color}
-        id="color-picker"
         style={inputStyles}
         type="color"
         value={color}

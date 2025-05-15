@@ -1,8 +1,8 @@
 import { Accordion } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -29,8 +29,8 @@ interface Props {
   page: number;
   pageSize: number;
   results: number;
-  transferType: 'pending' | 'received' | 'sent';
   transfers?: EntityTransfer[];
+  transferType: 'pending' | 'received' | 'sent';
 }
 
 export const TransfersTable = React.memo((props: Props) => {
@@ -46,9 +46,8 @@ export const TransfersTable = React.memo((props: Props) => {
     transfers,
   } = props;
 
-  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] = React.useState(
-    false
-  );
+  const [cancelPendingDialogOpen, setCancelPendingDialogOpen] =
+    React.useState(false);
   const [tokenBeingCanceled, setTokenBeingCanceled] = React.useState('');
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [currentToken, setCurrentToken] = React.useState('');
@@ -136,24 +135,24 @@ export const TransfersTable = React.memo((props: Props) => {
             </TableHead>
             <TableBody>
               <TableContentWrapper
+                error={error ?? undefined}
+                length={transfers?.length ?? 0}
+                loading={isLoading}
                 loadingProps={{
                   columns: 3,
                   responsive: {
                     // @TODO do this
                   },
                 }}
-                error={error ?? undefined}
-                length={transfers?.length ?? 0}
-                loading={isLoading}
               >
                 {transfers?.map((transfer, idx) => (
                   <RenderTransferRow
-                    handleCancelPendingTransferClick={
-                      handleCancelPendingTransferClick
-                    }
                     created={transfer.created}
                     entities={transfer.entities}
                     expiry={transfer.expiry}
+                    handleCancelPendingTransferClick={
+                      handleCancelPendingTransferClick
+                    }
                     handleTokenClick={handleTokenClick}
                     key={`${transferType}-${idx}`}
                     status={transfer.status}

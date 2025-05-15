@@ -80,7 +80,7 @@ export const Apache = React.memo((props: Props) => {
   return (
     <Grid container direction="column" spacing={2}>
       <DocumentTitleSegment segment={'Apache'} />
-      <Grid sx={{ boxSizing: 'border-box', margin: '0' }} size={12}>
+      <Grid size={12} sx={{ boxSizing: 'border-box', margin: '0' }}>
         <Box
           alignItems="center"
           display="flex"

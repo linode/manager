@@ -73,10 +73,8 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: databasesError,
     isLoading: databasesLoading,
   } = useAllDatabasesQuery(enabled);
-  const {
-    data: objectStorageBuckets,
-    error: bucketsError,
-  } = useObjectStorageBuckets(enabled);
+  const { data: objectStorageBuckets, error: bucketsError } =
+    useObjectStorageBuckets(enabled);
   const {
     data: privateImages,
     error: imagesError,

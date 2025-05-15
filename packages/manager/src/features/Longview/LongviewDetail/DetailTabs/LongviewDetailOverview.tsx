@@ -65,8 +65,8 @@ export const LongviewDetailOverview = (props: Props) => {
    * event of a network error)
    */
   const _hasError = listeningPortsError || lastUpdatedError;
-  const portsError = Boolean(_hasError)
-    ? _hasError?.[0].reason ?? 'Error retrieving data'
+  const portsError = _hasError
+    ? (_hasError?.[0].reason ?? 'Error retrieving data')
     : undefined;
 
   return (

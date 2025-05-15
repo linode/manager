@@ -49,13 +49,12 @@ export const regionWithDynamicPricingFactory = Factory.Sync.makeFactory<Region>(
     resolvers: resolverFactory.build(),
     site_type: 'core',
     status: 'ok',
-  }
+  },
 );
 
-export const regionAvailabilityFactory = Factory.Sync.makeFactory<RegionAvailability>(
-  {
+export const regionAvailabilityFactory =
+  Factory.Sync.makeFactory<RegionAvailability>({
     available: false,
     plan: 'g6-standard-7',
     region: 'us-east',
-  }
-);
+  });

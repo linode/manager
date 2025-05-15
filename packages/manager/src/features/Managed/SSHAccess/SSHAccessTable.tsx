@@ -1,9 +1,9 @@
 import { useLinodeQuery } from '@linode/queries';
-import { useMatch } from '@tanstack/react-router';
+import { Hidden } from '@linode/ui';
+import { useMatch, useParams } from '@tanstack/react-router';
 import produce from 'immer';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -12,7 +12,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 
@@ -24,17 +23,22 @@ import { SSHAccessTableContent } from './SSHAccessTableContent';
 import type { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 
 export const SSHAccessTable = () => {
+  const params = useParams({
+    strict: false,
+  });
   const match = useMatch({ strict: false });
   const { data: settings, error, isLoading } = useAllLinodeSettingsQuery();
 
   const data = settings || [];
 
-  const { data: selectedLinode, isFetching } = useDialogData({
-    enabled: match.routeId === '/managed/ssh-access/$linodeId/edit',
-    paramKey: 'linodeId',
-    queryHook: useLinodeQuery,
-    redirectToOnNotFound: '/managed/ssh-access',
-  });
+  const {
+    data: selectedLinode,
+    isFetching: isFetchingSelectedLinode,
+    error: selectedLinodeError,
+  } = useLinodeQuery(
+    params.linodeId ?? -1,
+    match.routeId === '/managed/ssh-access/$linodeId/edit'
+  );
 
   const normalizedData: ManagedLinodeSetting[] = produce(data, (draft) => {
     data.forEach((linodeSetting, idx) => {
@@ -157,8 +161,9 @@ export const SSHAccessTable = () => {
         }}
       </Paginate>
       <EditSSHAccessDrawer
-        isFetching={isFetching}
+        isFetching={isFetchingSelectedLinode}
         isOpen={isDeleteDialogOpen}
+        linodeError={selectedLinodeError}
         linodeSetting={normalizedData.find((l) => l.id === selectedLinode?.id)}
       />
     </>

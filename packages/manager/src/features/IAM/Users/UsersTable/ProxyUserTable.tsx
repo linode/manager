@@ -1,10 +1,10 @@
+import { useAccountUsers } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useAccountUsers } from '@linode/queries';
 
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';

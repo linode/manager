@@ -11,7 +11,7 @@ import type { QueryClient } from '@tanstack/react-query';
 // Reference for this pattern: https://tkdodo.eu/blog/react-query-data-transformations#3-using-the-select-option
 export const usePreferences = <TData = ManagerPreferences>(
   select?: (data: ManagerPreferences | undefined) => TData,
-  enabled = true
+  enabled = true,
 ) =>
   useQuery({
     ...profileQueries.preferences,
@@ -32,9 +32,10 @@ export const useMutatePreferences = (replace = false) => {
       if (replace) {
         return updateUserPreferences(data);
       }
-      const existingPreferences = await queryClient.ensureQueryData<ManagerPreferences>(
-        profileQueries.preferences
-      );
+      const existingPreferences =
+        await queryClient.ensureQueryData<ManagerPreferences>(
+          profileQueries.preferences,
+        );
       return updateUserPreferences({ ...existingPreferences, ...data });
     },
     onMutate: (data) => updatePreferenceData(data, replace, queryClient),
@@ -44,13 +45,13 @@ export const useMutatePreferences = (replace = false) => {
 export const updatePreferenceData = (
   newData: Partial<ManagerPreferences>,
   replace: boolean,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
     profileQueries.preferences.queryKey,
     (oldData) => ({
       ...(!replace ? oldData : {}),
       ...newData,
-    })
+    }),
   );
 };

@@ -1,7 +1,9 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { Region, RegionAvailability } from './types';
+import { Region } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { RegionAvailability } from './types';
 
 /**
  * getRegions
@@ -19,7 +21,7 @@ export const getRegions = (params?: Params) =>
   Request<Page<Region>>(
     setURL(`${API_ROOT}/regions`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -33,7 +35,7 @@ export const getRegions = (params?: Params) =>
 export const getRegion = (regionId: string) =>
   Request<Region>(
     setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 export { Region };
@@ -48,7 +50,7 @@ export const getRegionAvailabilities = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/regions/availability`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -61,5 +63,5 @@ export const getRegionAvailabilities = (params?: Params, filter?: Filter) =>
 export const getRegionAvailability = (regionId: string) =>
   Request<RegionAvailability[]>(
     setURL(`${API_ROOT}/regions/${encodeURIComponent(regionId)}/availability`),
-    setMethod('GET')
+    setMethod('GET'),
   );

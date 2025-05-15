@@ -81,13 +81,13 @@ export const LongviewList = React.memo((props: Props) => {
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
       <Paper
+        data-testid="no-client-list"
         sx={{
           alignItems: 'center',
           display: 'flex',
           height: '20em',
           justifyContent: 'center',
         }}
-        data-testid="no-client-list"
       >
         <Typography sx={{ fontSize: '1.1em' }} variant="body1">
           {userCanCreateLongviewClient ? (

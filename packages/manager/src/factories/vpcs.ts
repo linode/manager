@@ -28,6 +28,7 @@ export const vpcIPFactory = Factory.Sync.makeFactory<VPCIP>({
   ipv6_range: null,
   linode_id: Factory.each((i) => i),
   nat_1_1: '192.0.2.97',
+  nodebalancer_id: null,
   prefix: 24,
   region: 'us-east',
   subnet_id: Factory.each((i) => i),

@@ -1,10 +1,11 @@
-import {
+import { Factory } from '@linode/utilities';
+
+import type {
   CreateDomainPayload,
   Domain,
   DomainRecord,
   ZoneFile,
 } from '@linode/api-v4/lib/domains/types';
-import { Factory } from '@linode/utilities';
 
 export const domainFactory = Factory.Sync.makeFactory<Domain>({
   axfr_ips: [],
@@ -44,12 +45,11 @@ export const domainZoneFileFactory = Factory.Sync.makeFactory<ZoneFile>({
   zone_file: ['test line 1', 'test line 2'],
 });
 
-export const createDomainPayloadFactory = Factory.Sync.makeFactory<CreateDomainPayload>(
-  {
+export const createDomainPayloadFactory =
+  Factory.Sync.makeFactory<CreateDomainPayload>({
     domain: Factory.each((id) => `domain-${id}`),
     type: 'master',
     master_ips: [],
     soa_email: 'admin@example.com',
     tags: [],
-  }
-);
+  });

@@ -3,10 +3,10 @@ import {
   Button,
   ChevronDownIcon,
   ChevronUpIcon,
+  omittedProps,
   Stack,
   Tooltip,
   Typography,
-  omittedProps,
 } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
 import { styled, useMediaQuery } from '@mui/material';

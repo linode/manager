@@ -9,6 +9,8 @@
  * });
  */
 export class LocalStorageMock {
+  store: any = {};
+
   clear() {
     this.store = {};
   }
@@ -24,6 +26,4 @@ export class LocalStorageMock {
   setItem(key: string, value: string) {
     this.store[key] = value.toString();
   }
-
-  store: any = {};
 }

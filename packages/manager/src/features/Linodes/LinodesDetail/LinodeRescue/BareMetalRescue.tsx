@@ -1,11 +1,11 @@
 import { rescueMetalLinode } from '@linode/api-v4/lib/linodes/actions';
+import { useLinodeQuery } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { RescueDescription } from './RescueDescription';

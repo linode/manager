@@ -21,16 +21,16 @@ export const H1Header = (props: H1HeaderProps) => {
 
   return (
     <Typography
+      className={className}
+      component={renderAsSecondary ? 'h2' : 'h1'}
+      data-qa-header={dataQaEl ? dataQaEl : ''}
+      ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
       sx={{
         '&:focus': {
           outline: 'none',
         },
         ...sx,
       }}
-      className={className}
-      component={renderAsSecondary ? 'h2' : 'h1'}
-      data-qa-header={dataQaEl ? dataQaEl : ''}
-      ref={renderAsSecondary ? null : h1Header} // If we're rendering as an h2, we want to remove the autofocus functionality
       tabIndex={0}
       variant="h1"
     >

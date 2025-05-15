@@ -1,10 +1,19 @@
+import { array, boolean, number, object, string } from 'yup';
+
 import { validateIP } from './firewalls.schema';
-import { array, number, object, string, boolean } from 'yup';
 
 export const nodePoolSchema = object({
   type: string(),
   count: number(),
 });
+
+export const nodePoolBetaSchema = nodePoolSchema.concat(
+  object({
+    upgrade_strategy: string(),
+    k8_version: string(),
+    firewall_id: number(),
+  }),
+);
 
 export const clusterLabelSchema = string()
   .required('Label is required.')

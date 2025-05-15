@@ -10,8 +10,6 @@ import Grid from '@mui/material/Grid';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
 import { channelTypeOptions } from '../../constants';
 import { getAlertBoxStyles } from '../../Utils/utils';
 import { notificationChannelSchema } from '../schemas';
@@ -101,12 +99,7 @@ export const AddNotificationChannelDrawer = (
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={resetDrawer}
-      open={open}
-      title="Add Notification Channel"
-    >
+    <Drawer onClose={resetDrawer} open={open} title="Add Notification Channel">
       <FormProvider {...formMethods}>
         <form onSubmit={onSubmit}>
           <Box
@@ -118,17 +111,20 @@ export const AddNotificationChannelDrawer = (
             })}
           >
             <Typography
+              gutterBottom
               sx={(theme) => ({
                 color: theme.tokens.alias.Content.Text,
               })}
-              gutterBottom
               variant="h3"
             >
               Channel Settings
             </Typography>
             <Controller
+              control={control}
+              name="channel_type"
               render={({ field, fieldState }) => (
                 <Autocomplete
+                  data-testid="channel-type"
                   disabled={
                     isNotificationChannelsLoading &&
                     !isNotificationChannelsError
@@ -139,6 +135,8 @@ export const AddNotificationChannelDrawer = (
                       ? 'Error in fetching the data.'
                       : '')
                   }
+                  label="Type"
+                  onBlur={field.onBlur}
                   onChange={(
                     _,
                     newValue: { label: string; value: ChannelType },
@@ -151,30 +149,35 @@ export const AddNotificationChannelDrawer = (
                       setValue('label', null);
                     }
                   }}
+                  options={channelTypeOptions}
+                  placeholder="Select a Type"
                   value={
                     channelTypeOptions.find(
                       (option) => option.value === field.value
                     ) ?? null
                   }
-                  data-testid="channel-type"
-                  label="Type"
-                  onBlur={field.onBlur}
-                  options={channelTypeOptions}
-                  placeholder="Select a Type"
                 />
               )}
-              control={control}
-              name="channel_type"
             />
             <Box>
               <Controller
+                control={control}
+                name="label"
                 render={({ field, fieldState }) => (
                   <Autocomplete
+                    data-testid="channel-label"
+                    disabled={!selectedChannelTypeTemplate}
+                    errorText={fieldState.error?.message}
+                    key={channelTypeWatcher}
+                    label="Channel"
+                    onBlur={field.onBlur}
                     onChange={(_, selected: { label: string }, reason) => {
                       field.onChange(
                         reason === 'selectOption' ? selected.label : null
                       );
                     }}
+                    options={selectedChannelTypeTemplate ?? []}
+                    placeholder="Select a Channel"
                     slotProps={{
                       popper: {
                         placement: 'bottom',
@@ -185,18 +188,8 @@ export const AddNotificationChannelDrawer = (
                         (option) => option.label === field.value
                       ) ?? null
                     }
-                    data-testid="channel-label"
-                    disabled={!selectedChannelTypeTemplate}
-                    errorText={fieldState.error?.message}
-                    key={channelTypeWatcher}
-                    label="Channel"
-                    onBlur={field.onBlur}
-                    options={selectedChannelTypeTemplate ?? []}
-                    placeholder="Select a Channel"
                   />
                 )}
-                control={control}
-                name="label"
               />
             </Box>
             {selectedTemplate && selectedTemplate.channel_type === 'email' && (
@@ -206,12 +199,12 @@ export const AddNotificationChannelDrawer = (
                     <Typography variant="h3">To:</Typography>
                   </Grid>
                   <Grid
+                    item
+                    md="auto"
                     sx={{
                       overflow: 'auto',
                       paddingRight: 1,
                     }}
-                    item
-                    md="auto"
                     xs={12}
                   >
                     <RenderChannelDetails template={selectedTemplate} />

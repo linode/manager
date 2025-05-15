@@ -169,13 +169,8 @@ export const useEventsPoller = () => {
       const latestEventTime =
         events && events.length > 0 ? events[0].created : mountTimestamp;
 
-      const {
-        eventsThatAlreadyHappenedAtTheFilterTime,
-        inProgressEvents,
-      } = getExistingEventDataForPollingFilterGenerator(
-        events,
-        latestEventTime
-      );
+      const { eventsThatAlreadyHappenedAtTheFilterTime, inProgressEvents } =
+        getExistingEventDataForPollingFilterGenerator(events, latestEventTime);
 
       const filter = generatePollingFilter(
         latestEventTime,

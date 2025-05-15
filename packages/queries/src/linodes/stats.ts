@@ -35,7 +35,7 @@ export const useLinodeStatsByDate = (
   id: number,
   year: string,
   month: string,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<Stats, APIError[]>({
     ...linodeQueries.linode(id)._ctx.statsByDate(year, month),
@@ -56,7 +56,7 @@ export const useLinodeTransferByDate = (
   id: number,
   year: string,
   month: string,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<NetworkTransfer, APIError[]>({
     ...linodeQueries.linode(id)._ctx.transferByDate(year, month),

@@ -7,7 +7,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import type { Tab as TanstackTab } from 'src/hooks/useTabs';
 
 export interface Tab {
-  chip?: React.JSX.Element | null;
+  chip?: null | React.JSX.Element;
   routeName: string;
   title: string;
 }

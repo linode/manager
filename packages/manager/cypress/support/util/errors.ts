@@ -11,7 +11,7 @@ import type { APIError } from '@linode/api-v4';
  *
  * Can be expressed as a string, or as an actual `APIError` instance.
  */
-export type APIErrorContents = string | APIError;
+export type APIErrorContents = APIError | string;
 
 /**
  * Creates an API error object that describes one or more errors.

@@ -1,17 +1,17 @@
 export interface Domain {
-  id: number;
-  domain: string;
-  soa_email: string;
+  axfr_ips: string[];
   description: string;
+  domain: string;
+  expire_sec: number;
+  group: string;
+  id: number;
+  master_ips: string[];
   refresh_sec: number;
   retry_sec: number;
-  expire_sec: number;
-  ttl_sec: number;
+  soa_email: string;
   status: DomainStatus;
   tags: string[];
-  master_ips: string[];
-  axfr_ips: string[];
-  group: string;
+  ttl_sec: number;
   type: DomainType;
   updated: string;
 }
@@ -45,6 +45,7 @@ export type RecordType =
   | 'TXT';
 
 export interface DomainRecord {
+  created: string;
   id: number;
   name: string;
   port: number;
@@ -55,29 +56,28 @@ export interface DomainRecord {
   target: string;
   ttl_sec: number;
   type: RecordType;
-  weight: number;
-  created: string;
   updated: string;
+  weight: number;
 }
 
 export interface CreateDomainPayload {
   domain: string;
-  type: DomainType;
   master_ips?: string[];
   soa_email?: string;
   tags?: string[];
+  type: DomainType;
 }
 export interface UpdateDomainPayload {
-  domain?: string;
-  soa_email?: string;
+  axfr_ips?: string[];
   description?: string;
+  domain?: string;
+  expire_sec?: number;
+  group?: string;
+  master_ips?: string[];
   refresh_sec?: number;
   retry_sec?: number;
-  expire_sec?: number;
-  ttl_sec?: number;
+  soa_email?: string;
   status?: DomainStatus;
   tags?: string[];
-  master_ips?: string[];
-  axfr_ips?: string[];
-  group?: string;
+  ttl_sec?: number;
 }

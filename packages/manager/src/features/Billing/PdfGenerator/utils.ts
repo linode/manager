@@ -33,7 +33,7 @@ const formatDateForTable = (
   const res = formatDate(date, { timezone });
 
   /** basically, if we have an invalid date, return empty strings */
-  return !!res.match(/invalid/gim)
+  return res.match(/invalid/gim)
     ? ['', '']
     : (res.split(' ') as [string, string]);
 };

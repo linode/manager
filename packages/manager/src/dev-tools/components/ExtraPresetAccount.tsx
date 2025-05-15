@@ -36,9 +36,8 @@ export const ExtraPresetAccount = ({
     ...accountFactory.build(),
     ...customAccountData,
   }));
-  const [isEditingCustomAccount, setIsEditingCustomAccount] = React.useState(
-    false
-  );
+  const [isEditingCustomAccount, setIsEditingCustomAccount] =
+    React.useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -133,11 +132,11 @@ export const ExtraPresetAccount = ({
           title="Edit Custom Account"
         >
           <form
+            className="dev-tools__modal-form"
             onSubmit={(e) => {
               e.preventDefault();
               setIsEditingCustomAccount(false);
             }}
-            className="dev-tools__modal-form"
           >
             <FieldWrapper>
               <label>

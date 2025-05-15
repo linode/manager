@@ -32,10 +32,8 @@ export const AccessKeyRegions = (props: Props) => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
-  const {
-    allRegionsError,
-    availableStorageRegions,
-  } = useObjectStorageRegions();
+  const { allRegionsError, availableStorageRegions } =
+    useObjectStorageRegions();
 
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
@@ -44,19 +42,19 @@ export const AccessKeyRegions = (props: Props) => {
 
   return (
     <RegionMultiSelect
-      forcefullyShownRegionIds={
-        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
-      }
-      placeholder={
-        selectedRegion.length > 0 ? '' : 'Select regions or type to search'
-      }
       currentCapability="Object Storage"
       disabled={disabled}
       errorText={errorText}
+      forcefullyShownRegionIds={
+        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
+      }
       isClearable={false}
       isGeckoLAEnabled={isGeckoLAEnabled}
       label="Regions"
       onChange={onChange}
+      placeholder={
+        selectedRegion.length > 0 ? '' : 'Select regions or type to search'
+      }
       regions={availableStorageRegions ?? []}
       required={required}
       selectedIds={selectedRegion}

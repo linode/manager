@@ -24,9 +24,8 @@ import type {
 } from '@linode/api-v4';
 
 const mockKubernetesVersions = kubernetesVersionFactory.buildList(1);
-const mockKubernetesEnterpriseVersions = kubernetesEnterpriseTierVersionFactory.buildList(
-  1
-);
+const mockKubernetesEnterpriseVersions =
+  kubernetesEnterpriseTierVersionFactory.buildList(1);
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),

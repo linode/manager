@@ -1,7 +1,7 @@
 import { linodeFactory, linodeTypeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { BackupLinodeRow } from './BackupLinodeRow';

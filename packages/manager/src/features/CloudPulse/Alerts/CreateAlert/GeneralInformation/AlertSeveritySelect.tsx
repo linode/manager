@@ -1,12 +1,12 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { alertSeverityOptions } from '../../constants';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertSeverityType } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 export interface CloudPulseAlertSeveritySelectProps {
   /**
    * name used for the component in the form
@@ -22,8 +22,14 @@ export const CloudPulseAlertSeveritySelect = (
 
   return (
     <Controller
+      control={control}
+      name={name}
       render={({ field, fieldState }) => (
         <Autocomplete
+          data-testid="severity"
+          errorText={fieldState.error?.message}
+          label="Severity"
+          onBlur={field.onBlur}
           onChange={(
             _,
             selected: { label: string; value: AlertSeverityType },
@@ -36,6 +42,9 @@ export const CloudPulseAlertSeveritySelect = (
               field.onChange(null);
             }
           }}
+          options={alertSeverityOptions}
+          placeholder="Select a Severity"
+          size="medium"
           textFieldProps={{
             labelTooltipText:
               'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
@@ -47,17 +56,8 @@ export const CloudPulseAlertSeveritySelect = (
                 )
               : null
           }
-          data-testid="severity"
-          errorText={fieldState.error?.message}
-          label="Severity"
-          onBlur={field.onBlur}
-          options={alertSeverityOptions}
-          placeholder="Select a Severity"
-          size="medium"
         />
       )}
-      control={control}
-      name={name}
     />
   );
 };

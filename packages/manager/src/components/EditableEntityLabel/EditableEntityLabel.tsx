@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
-import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
@@ -50,21 +50,21 @@ export const EditableEntityLabel = (props: EditableEntityLabelProps) => {
     <Grid
       container
       direction="row"
-      wrap="nowrap"
       sx={{
         alignItems: 'center',
         justifyContent: 'flex-start',
         margin: 0,
         minHeight: '40px',
       }}
+      wrap="nowrap"
     >
       {!isEditing && iconVariant && (
         <Grid className="py0 px0">
           <EntityIcon
+            status={status}
             style={{
               marginRight: theme.spacing(1),
             }}
-            status={status}
             variant={iconVariant}
           />
         </Grid>

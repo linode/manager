@@ -1,14 +1,15 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { clone } from 'ramda';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-import { EntitiesAsObjectState } from '../types';
 import {
   createLongviewClient,
   deleteLongviewClient,
   getLongviewClients,
   updateLongviewClient,
 } from './longview.actions';
+
+import type { EntitiesAsObjectState } from '../types';
+import type { LongviewClient } from '@linode/api-v4/lib/longview';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
 

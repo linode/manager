@@ -221,7 +221,7 @@ export const updateVPC = (mockState: MockState) => [
 export const deleteVPC = (mockState: MockState) => [
   http.delete(
     '*/v4beta/vpcs/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const vpc = await mswDB.get('vpcs', id);
 
@@ -376,7 +376,7 @@ export const updateSubnet = (mockState: MockState) => [
 export const deleteSubnet = (mockState: MockState) => [
   http.delete(
     '*/v4beta/vpcs/:id/subnets/:subnetId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const vpcId = Number(params.id);
       const subnetId = Number(params.subnetId);
       const vpc = await mswDB.get('vpcs', vpcId);

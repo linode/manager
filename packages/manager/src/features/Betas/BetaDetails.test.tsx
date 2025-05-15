@@ -74,11 +74,10 @@ describe('BetaDetails', () => {
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
 
-    const {
-      queryByText: queryAccountBetaByText,
-    } = await renderWithThemeAndRouter(
-      <BetaDetails beta={accountBeta} dataQA="beta-details" />
-    );
+    const { queryByText: queryAccountBetaByText } =
+      await renderWithThemeAndRouter(
+        <BetaDetails beta={accountBeta} dataQA="beta-details" />
+      );
     const accountBetaSignUpButton = queryAccountBetaByText('Sign Up');
     expect(accountBetaSignUpButton).toBeNull();
 
@@ -105,11 +104,10 @@ describe('BetaDetails', () => {
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
 
-    const {
-      queryByText: queryAccountBetaByText,
-    } = await renderWithThemeAndRouter(
-      <BetaDetails beta={accountBeta} dataQA="beta-details" />
-    );
+    const { queryByText: queryAccountBetaByText } =
+      await renderWithThemeAndRouter(
+        <BetaDetails beta={accountBeta} dataQA="beta-details" />
+      );
     const accountBetaStartDate = queryAccountBetaByText('Start Date:');
     expect(accountBetaStartDate).toBeNull();
 

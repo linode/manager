@@ -1,3 +1,9 @@
+import {
+  linodeQueries,
+  nodebalancerQueries,
+  useDeleteFirewall,
+  useMutateFirewall,
+} from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -5,12 +11,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useDeleteFirewall,
-  useMutateFirewall,
-  linodeQueries,
-  nodebalancerQueries,
-} from '@linode/queries';
 
 import type { Firewall } from '@linode/api-v4';
 

@@ -1,4 +1,5 @@
 import { CreateTransferSchema } from '@linode/validation/lib/transfers.schema';
+
 import { BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -7,8 +8,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { CreateTransferPayload, EntityTransfer } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { CreateTransferPayload, EntityTransfer } from './types';
 
 /**
  * @deprecated
@@ -21,7 +23,7 @@ export const getEntityTransfers = (params?: Params, filter?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filter),
-    setURL(`${BETA_API_ROOT}/account/entity-transfers`)
+    setURL(`${BETA_API_ROOT}/account/entity-transfers`),
   );
 
 /**
@@ -36,8 +38,8 @@ export const getEntityTransfer = (token: string) =>
   Request<EntityTransfer>(
     setMethod('GET'),
     setURL(
-      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`
-    )
+      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`,
+    ),
   );
 
 /**
@@ -51,7 +53,7 @@ export const createEntityTransfer = (data: CreateTransferPayload) =>
   Request<EntityTransfer>(
     setMethod('POST'),
     setData(data, CreateTransferSchema),
-    setURL(`${BETA_API_ROOT}/account/entity-transfers`)
+    setURL(`${BETA_API_ROOT}/account/entity-transfers`),
   );
 
 /**
@@ -65,9 +67,9 @@ export const acceptEntityTransfer = (token: string) =>
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(
-        token
-      )}/accept`
-    )
+        token,
+      )}/accept`,
+    ),
   );
 
 /**
@@ -82,6 +84,6 @@ export const cancelTransfer = (token: string) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
-      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`
-    )
+      `${BETA_API_ROOT}/account/entity-transfers/${encodeURIComponent(token)}`,
+    ),
   );

@@ -2,7 +2,7 @@ import { queryClientFactory } from '@linode/queries';
 import * as React from 'react';
 
 import { accountFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import PrimaryNav from './PrimaryNav';
@@ -43,12 +43,8 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const {
-      findByTestId,
-      getByTestId,
-      queryByTestId,
-      rerender,
-    } = renderWithTheme(<PrimaryNav {...props} />, { queryClient });
+    const { findByTestId, getByTestId, queryByTestId, rerender } =
+      renderWithTheme(<PrimaryNav {...props} />, { queryClient });
     expect(queryByTestId(queryString)).not.toBeInTheDocument();
 
     server.use(

@@ -1,14 +1,14 @@
+import {
+  useAllLinodeConfigsQuery,
+  useDeleteLinodeMutation,
+  vpcQueries,
+} from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeConfigsQuery,
-  useDeleteLinodeMutation,
-  vpcQueries,
-} from '@linode/queries';
 
 import { getVPCsFromLinodeConfigs } from './utils';
 

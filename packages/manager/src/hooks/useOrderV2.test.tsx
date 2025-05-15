@@ -1,7 +1,7 @@
 import { queryClientFactory } from '@linode/queries';
 import { act, renderHook, waitFor } from '@testing-library/react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { useOrderV2 } from './useOrderV2';

@@ -32,17 +32,16 @@ describe('BetaDetails', () => {
     );
     expect(queryBetasList('circle-progress')).toBeFalsy();
 
-    const {
-      queryByTestId: queryLoadingBetasList,
-    } = await renderWithThemeAndRouter(
-      <BetaDetailsList
-        betas={[]}
-        dataQA="betas"
-        errors={null}
-        isLoading
-        title="Available"
-      />
-    );
+    const { queryByTestId: queryLoadingBetasList } =
+      await renderWithThemeAndRouter(
+        <BetaDetailsList
+          betas={[]}
+          dataQA="betas"
+          errors={null}
+          isLoading
+          title="Available"
+        />
+      );
     expect(queryLoadingBetasList('circle-progress')).not.toBeFalsy();
   });
 

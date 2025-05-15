@@ -1,13 +1,14 @@
 import { DateTime } from 'luxon';
 
-import { ExcludedScope } from './CreateAPITokenDrawer';
 import {
-  Permission,
   allScopesAreTheSame,
   hasAccessBeenSelectedForAllScopes,
   isWayInTheFuture,
   scopeStringToPermTuples,
 } from './utils';
+
+import type { ExcludedScope } from './CreateAPITokenDrawer';
+import type { Permission } from './utils';
 
 describe('isWayInTheFuture', () => {
   it('should return true if past 100 years in the future', () => {

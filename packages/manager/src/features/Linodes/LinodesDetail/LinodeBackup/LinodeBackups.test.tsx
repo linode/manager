@@ -1,11 +1,12 @@
-import { LinodeBackupsResponse } from '@linode/api-v4';
 import { backupFactory, linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeBackups } from './LinodeBackups';
+
+import type { LinodeBackupsResponse } from '@linode/api-v4';
 
 // I'm so sorry, but I don't know a better way to mock react-router-dom params.
 vi.mock('react-router-dom', async () => {

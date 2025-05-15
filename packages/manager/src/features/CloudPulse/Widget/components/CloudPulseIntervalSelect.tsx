@@ -116,18 +116,21 @@ export const CloudPulseIntervalSelect = React.memo(
         value: defaultValue.value,
       });
     }
-    const [selectedInterval, setSelectedInterval] = React.useState(
-      defaultValue
-    );
+    const [selectedInterval, setSelectedInterval] =
+      React.useState(defaultValue);
 
     return (
       <CloudPulseTooltip title={'Data aggregation interval'}>
         <Autocomplete
+          autoHighlight
+          disableClearable
           isOptionEqualToValue={(option, value) => {
             return (
               option?.value === value?.value && option?.unit === value?.unit
             );
           }}
+          label="Select an Interval"
+          noMarginTop={true}
           onChange={(e, selectedInterval) => {
             setSelectedInterval(selectedInterval);
             onIntervalChange({
@@ -135,15 +138,11 @@ export const CloudPulseIntervalSelect = React.memo(
               value: selectedInterval?.value,
             });
           }}
+          options={[autoIntervalOption, ...availableIntervalOptions]}
+          sx={getAutocompleteWidgetStyles}
           textFieldProps={{
             hideLabel: true,
           }}
-          autoHighlight
-          disableClearable
-          label="Select an Interval"
-          noMarginTop={true}
-          options={[autoIntervalOption, ...availableIntervalOptions]}
-          sx={getAutocompleteWidgetStyles}
           value={selectedInterval}
         />
       </CloudPulseTooltip>

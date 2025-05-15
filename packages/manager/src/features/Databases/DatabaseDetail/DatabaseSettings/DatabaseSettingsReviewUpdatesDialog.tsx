@@ -18,13 +18,8 @@ interface Props {
 }
 
 export const DatabaseSettingsReviewUpdatesDialog = (props: Props) => {
-  const {
-    databaseEngine,
-    databaseID,
-    databasePendingUpdates,
-    onClose,
-    open,
-  } = props;
+  const { databaseEngine, databaseID, databasePendingUpdates, onClose, open } =
+    props;
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: patchDatabase } = usePatchDatabaseMutation(

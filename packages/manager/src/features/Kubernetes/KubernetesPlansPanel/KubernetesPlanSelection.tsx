@@ -1,11 +1,11 @@
 import { Box, Button, Chip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
-import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -60,7 +60,7 @@ export const KubernetesPlanSelection = (
     planHasLimitedAvailability,
     planIsDisabled512Gb,
     planIsTooSmallForAPL,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCDisabledGroup,
   } = plan;
 
   const rowIsDisabled =
@@ -68,7 +68,7 @@ export const KubernetesPlanSelection = (
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
     planIsTooSmallForAPL ||
-    planIsMTCTTAndUnavailableInSelectedRegion;
+    planBelongsToMTCDisabledGroup;
   const count = getTypeCount(plan.id);
   const price: PriceObject | undefined = getLinodeRegionPrice(
     plan,
@@ -82,7 +82,7 @@ export const KubernetesPlanSelection = (
     // So far, planIsTooSmall only applies to DbaaS plans (resize)
     planIsTooSmall: false,
     planIsTooSmallForAPL,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCDisabledGroup,
     wholePanelIsDisabled,
   });
 
@@ -97,7 +97,7 @@ export const KubernetesPlanSelection = (
       planIsDisabled512Gb ||
       planIsTooSmallForAPL ||
       planHasLimitedAvailability ||
-      planIsMTCTTAndUnavailableInSelectedRegion);
+      planBelongsToMTCDisabledGroup);
 
   // We don't want flat-rate pricing or network information for LKE so we select only the second type element.
   const subHeadings = [

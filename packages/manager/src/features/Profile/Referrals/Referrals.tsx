@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -9,7 +10,6 @@ import Step3 from 'src/assets/referrals/step-3.svg';
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -113,27 +113,27 @@ export const Referrals = () => {
           ) : null}
           {!allowReferral ? (
             <StyledLimitNotice
+              spacingBottom={0}
+              spacingTop={8}
               sx={{
                 '&&': {
                   // '&&' is only needed because Notice is using makeStyles
                   padding: '8px',
                 },
               }}
-              spacingBottom={0}
-              spacingTop={8}
               variant="warning"
             >
               Spend $25 with Linode to activate your personal referral link
             </StyledLimitNotice>
           ) : null}
           <StyledImagesGridContainer
+            container
+            direction="row"
+            justifyContent="space-between"
             sx={{
               padding: 0,
               width: '100%',
             }}
-            container
-            direction="row"
-            justifyContent="space-between"
             wrap="nowrap"
           >
             <StyledImageGrid>

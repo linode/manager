@@ -1,6 +1,7 @@
-import { Params, PriceType, ResourcePage } from 'src/types';
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL } from '../request';
+
+import type { Params, PriceType, ResourcePage } from 'src/types';
 
 /**
  * getObjectStorageTypes
@@ -12,5 +13,5 @@ export const getObjectStorageTypes = (params?: Params) =>
   Request<ResourcePage<PriceType>>(
     setURL(`${API_ROOT}/object-storage/types`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );

@@ -1,5 +1,6 @@
-import { getAPIErrorOrDefault } from './errorUtils';
 import { isNilOrEmpty } from '@linode/utilities';
+
+import { getAPIErrorOrDefault } from './errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { FormikErrors } from 'formik';

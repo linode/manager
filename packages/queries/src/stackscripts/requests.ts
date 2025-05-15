@@ -22,10 +22,10 @@ export const getOneClickApps = (params?: Params) =>
 
 export const getAllOCAsRequest = (passedParams: Params = {}) =>
   getAll<StackScript>((params) =>
-    getOneClickApps({ ...params, ...passedParams })
+    getOneClickApps({ ...params, ...passedParams }),
   )().then((data) => data.data);
 
 export const getAllAccountStackScripts = () =>
   getAll<StackScript>((params) =>
-    getStackScripts(params, { mine: true })
+    getStackScripts(params, { mine: true }),
   )().then((data) => data.data);

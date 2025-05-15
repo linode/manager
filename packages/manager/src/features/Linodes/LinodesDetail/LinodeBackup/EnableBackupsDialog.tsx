@@ -43,16 +43,14 @@ export const EnableBackupsDialog = (props: Props) => {
     Boolean(linode?.type)
   );
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
-  const backupsMonthlyPrice:
-    | PriceObject['monthly']
-    | undefined = getMonthlyBackupsPrice({
-    region: linode?.region,
-    type,
-  });
+  const backupsMonthlyPrice: PriceObject['monthly'] | undefined =
+    getMonthlyBackupsPrice({
+      region: linode?.region,
+      type,
+    });
 
   const hasBackupsMonthlyPriceError =
     !backupsMonthlyPrice && backupsMonthlyPrice !== 0;

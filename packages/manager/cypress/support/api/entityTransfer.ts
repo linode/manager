@@ -1,14 +1,10 @@
-import {
-  EntityTransfer,
-  Linode,
-  cancelTransfer,
-  getEntityTransfers,
-  getLinodes,
-} from '@linode/api-v4';
+import { cancelTransfer, getEntityTransfers, getLinodes } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
 import { isTestLabel } from './common';
+
+import type { EntityTransfer, Linode } from '@linode/api-v4';
 
 /**
  * Cancel all entity transfers whose labels are prefixed "cy-test-".

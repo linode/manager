@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 /**
  * Populates Cypress configuration `env` object with environment variables.

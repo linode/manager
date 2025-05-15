@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-expressions */
 import { Box, CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
 import { VncScreen } from 'react-vnc';
+import type { VncScreenHandle } from 'react-vnc';
 
 import type { LinodeLishData } from '@linode/api-v4/lib/linodes';
 import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { VncScreenHandle } from 'react-vnc';
 
 interface Props extends Omit<LinodeLishData, 'weblish_url'> {
   linode: Linode;
@@ -113,20 +112,20 @@ const Glish = (props: Props) => {
 
   return (
     <VncScreen
+      autoConnect={false}
       loadingUI={
         <Box p={8} position="absolute" top="0" width="100%">
           <CircleProgress />
         </Box>
       }
-      style={{
-        height: 'calc(100vh - 60px)',
-        padding: 8,
-      }}
-      autoConnect={false}
       ref={ref}
       rfbOptions={rfbOptions}
       scaleViewport
       showDotCursor
+      style={{
+        height: 'calc(100vh - 60px)',
+        padding: 8,
+      }}
       url={glish_url}
     />
   );

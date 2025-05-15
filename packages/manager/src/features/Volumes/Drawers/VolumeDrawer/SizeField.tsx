@@ -101,13 +101,13 @@ export const SizeField = (props: Props) => {
   return (
     <>
       <TextField
-        InputProps={{
-          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
-        }}
         className={textFieldStyles}
         data-qa-size
         errorText={error}
         helperText={helperText}
+        InputProps={{
+          endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
+        }}
         label="Size"
         name={name}
         onBlur={onBlur}

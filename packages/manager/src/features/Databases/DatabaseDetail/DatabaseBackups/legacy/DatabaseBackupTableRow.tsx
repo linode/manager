@@ -1,4 +1,3 @@
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -7,6 +6,8 @@ import { TableRow } from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
 
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
+
+import type { DatabaseBackup } from '@linode/api-v4/lib/databases';
 
 interface Props {
   backup: DatabaseBackup;

@@ -1,13 +1,13 @@
+import type { DevicesAsStrings } from './createDevicesFromStrings';
 import type {
   Devices,
   DiskDevice,
   VolumeDevice,
 } from '@linode/api-v4/lib/linodes';
-import type { DevicesAsStrings } from './createDevicesFromStrings';
 
 const rdx = (
   result: DevicesAsStrings,
-  [key, device]: [string, DiskDevice | VolumeDevice | null]
+  [key, device]: [string, DiskDevice | null | VolumeDevice],
 ) => {
   if (device === null) {
     return result;
@@ -28,7 +28,7 @@ const isDisk = (device: DiskDevice | VolumeDevice): device is DiskDevice => {
   return typeof (device as DiskDevice).disk_id === 'number';
 };
 const isVolume = (
-  device: DiskDevice | VolumeDevice
+  device: DiskDevice | VolumeDevice,
 ): device is VolumeDevice => {
   return typeof (device as VolumeDevice).volume_id === 'number';
 };

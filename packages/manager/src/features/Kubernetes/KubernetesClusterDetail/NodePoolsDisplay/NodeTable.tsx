@@ -148,38 +148,38 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableHead>
                   <TableRow>
                     <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '35%',
-                      })}
                       active={orderBy === 'label'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'label'}
-                    >
-                      Linode
-                    </TableSortCell>
-                    <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '25%',
-                      })}
-                      active={orderBy === 'instanceStatus'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'instanceStatus'}
-                    >
-                      Status
-                    </TableSortCell>
-                    <TableSortCell
                       sx={(theme) => ({
                         ...theme.applyTableHeaderStyles,
                         width: '35%',
                       })}
+                    >
+                      Linode
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'instanceStatus'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'instanceStatus'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '25%',
+                      })}
+                    >
+                      Status
+                    </TableSortCell>
+                    <TableSortCell
                       active={orderBy === 'ip'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'ip'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                     >
                       IP Address
                     </TableSortCell>
@@ -192,6 +192,8 @@ export const NodeTable = React.memo((props: Props) => {
                       <TableRow>
                         <TableCell colSpan={4}>
                           <ErrorState
+                            compact
+                            CustomIcon={EmptyStateCloud}
                             errorText={
                               <Box>
                                 <Typography
@@ -207,8 +209,6 @@ export const NodeTable = React.memo((props: Props) => {
                                 </Typography>
                               </Box>
                             }
-                            CustomIcon={EmptyStateCloud}
-                            compact
                           />
                         </TableCell>
                       </TableRow>
@@ -267,10 +267,10 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        encryptionStatus={encryptionStatus}
                         regionSupportsDiskEncryption={
                           regionSupportsDiskEncryption
                         }
-                        encryptionStatus={encryptionStatus}
                         tooltipText={undefined}
                       />
                     </Box>

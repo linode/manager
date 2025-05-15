@@ -1,7 +1,9 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import { Permissions } from 'src/features/IAM/Shared/Permissions/Permissions';
 import { useTheme } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import * as React from 'react';
+
+import { Permissions } from 'src/features/IAM/Shared/Permissions/Permissions';
+
 import type { PermissionType } from '@linode/api-v4';
 
 interface Props {
@@ -23,7 +25,7 @@ export const RolesTableExpandedRow = ({ permissions }: Props) => {
         width: '100%',
       }}
     >
-      <Permissions permissions={permissions}></Permissions>
+      <Permissions permissions={permissions} />
     </Paper>
   );
 };

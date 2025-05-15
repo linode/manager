@@ -13,8 +13,8 @@ import { databaseQueries } from '../databases/databases';
 import { fetchCloudPulseMetrics } from './metrics';
 import {
   getAllAlertsRequest,
-  getAllNotificationChannels,
   getAllertsByServiceTypeRequest,
+  getAllNotificationChannels,
 } from './requests';
 
 import type {
@@ -102,16 +102,16 @@ export const queryFactory = createQueryKeys(key, {
     filters?: Filter
   ) => {
     switch (resourceType) {
+      case 'dbaas':
+        return databaseQueries.databases._ctx.all(params, filters);
       case 'linode':
         return {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
           queryKey: ['linodes', params, filters],
         };
+
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
-
-      case 'dbaas':
-        return databaseQueries.databases._ctx.all(params, filters);
 
       default:
         return volumeQueries.lists._ctx.all(params, filters); // default to volumes

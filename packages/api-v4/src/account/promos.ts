@@ -1,7 +1,9 @@
 import { PromoCodeSchema } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { ActivePromotion } from './types';
+
+import type { ActivePromotion } from './types';
 
 /**
  * addPromotion
@@ -17,5 +19,5 @@ export const addPromotion = (code: string) =>
   Request<ActivePromotion>(
     setURL(`${API_ROOT}/account/promo-codes`),
     setMethod('POST'),
-    setData({ promo_code: code }, PromoCodeSchema)
+    setData({ promo_code: code }, PromoCodeSchema),
   );

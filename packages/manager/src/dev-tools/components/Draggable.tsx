@@ -1,9 +1,8 @@
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import React, { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import ResizeWindow from 'src/assets/icons/ResizeWindow.svg';
-
-import type { ReactNode } from 'react';
 
 interface DraggableProps {
   children?: ReactNode;
@@ -18,7 +17,7 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
     y: window.innerHeight - 400,
   });
   const [size, setSize] = useState({ height: 400, width: 380 });
-  const [rel, setRel] = useState<{ x: number; y: number } | null>(null);
+  const [rel, setRel] = useState<null | { x: number; y: number }>(null);
   const nodeRef = useRef<HTMLDivElement>(null);
   const minWidth = 380;
   const minHeight = 400;
@@ -95,9 +94,11 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
     <div
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          onMouseDown((e as unknown) as React.MouseEvent);
+          onMouseDown(e as unknown as React.MouseEvent);
         }
       }}
+      ref={nodeRef}
+      role="button"
       style={
         draggable
           ? {
@@ -109,8 +110,6 @@ export const Draggable = ({ children, draggable }: DraggableProps) => {
             }
           : {}
       }
-      ref={nodeRef}
-      role="button"
       tabIndex={0}
     >
       {children}

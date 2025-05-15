@@ -211,6 +211,8 @@ export const Details = (props: Props) => {
       )}
 
       <LinodeSelect
+        clearable={false}
+        errorText={linodeError}
         onSelectionChange={(linode) => {
           if (linode !== null) {
             handleSelectLinode(linode.id);
@@ -221,8 +223,6 @@ export const Details = (props: Props) => {
             ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
-        clearable={false}
-        errorText={linodeError}
         placeholder="Destination"
         value={selectedLinodeId}
       />

@@ -58,12 +58,12 @@ export const CustomPopper = (props: PopperProps) => {
   return (
     <Popper
       {...rest}
+      data-qa-autocomplete-popper
+      data-testid="autocomplete-popper"
       modifiers={[
         { enabled: false, name: 'preventOverflow' },
         { enabled: !placement, name: 'flip' },
       ]}
-      data-qa-autocomplete-popper
-      data-testid="autocomplete-popper"
       placement={placement}
       style={updatedStyle}
     />

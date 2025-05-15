@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { pluralize, useInterval } from '@linode/utilities';
 import React, { useEffect } from 'react';
@@ -7,7 +8,6 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { sessionExpirationContext as _sessionExpirationContext } from 'src/context/sessionExpirationContext';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { useAccount } from '@linode/queries';
 import { parseAPIDate } from 'src/utilities/date';
 import { getStorage, setStorage } from 'src/utilities/storage';
 
@@ -171,13 +171,13 @@ export const SessionExpirationDialog = React.memo(
 
     return (
       <ConfirmationDialog
-        onClose={() => {
-          onClose();
-        }}
         actions={actions}
         data-testid="session-expiration-dialog"
         error={createTokenErrorReason}
         maxWidth="xs"
+        onClose={() => {
+          onClose();
+        }}
         open={isOpen}
         title="Your session is about to expire"
       >

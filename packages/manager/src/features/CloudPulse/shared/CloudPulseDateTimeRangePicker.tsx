@@ -1,8 +1,8 @@
+import { useProfile } from '@linode/queries';
 import { DateTime } from 'luxon';
 import React from 'react';
 
 import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
-import { useProfile } from '@linode/queries';
 
 import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
 
@@ -57,12 +57,16 @@ export const CloudPulseDateTimeRangePicker = React.memo(
 
     return (
       <DateTimeRangePicker
+        disabledTimeZone
+        enablePresets
         endDateProps={{
           label: 'End Date',
           placeholder: 'Select End Date',
           showTimeZone: true,
           value: end,
         }}
+        format="yyyy-MM-dd hh:mm a"
+        onChange={handleDateChange}
         presetsProps={{
           defaultValue: defaultSelected?.preset,
         }}
@@ -76,10 +80,6 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         sx={{
           minWidth: '226px',
         }}
-        disabledTimeZone
-        enablePresets
-        format="yyyy-MM-dd hh:mm a"
-        onChange={handleDateChange}
       />
     );
   }

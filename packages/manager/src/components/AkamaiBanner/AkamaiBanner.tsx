@@ -43,7 +43,7 @@ export const AkamaiBanner = React.memo((props: AkamaiBannerProps) => {
       warning={warning}
     >
       <StyledBannerLabel warning={warning}>
-        <Stack alignItems="center" direction="row">
+        <Stack alignItems={warning ? 'start' : 'center'} direction="row">
           <Box sx={{ height: 18, width: 25 }}>
             {warning ? (
               <StyledWarningIcon height={18} />

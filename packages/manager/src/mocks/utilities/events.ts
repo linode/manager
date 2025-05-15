@@ -1,4 +1,5 @@
 import { eventFactory } from 'src/factories';
+
 import { mswDB } from '../indexedDB';
 
 import type { Event } from '@linode/api-v4';

@@ -10,8 +10,8 @@ import { TableRow } from 'src/components/TableRow';
 
 interface Props {
   InnerTable: JSX.Element;
-  OuterTableCells: JSX.Element;
   label: string;
+  OuterTableCells: JSX.Element;
 }
 
 export const CollapsibleRow = (props: Props) => {

@@ -14,6 +14,8 @@ export const Password = (props: Props) => {
 
   return (
     <Controller
+      control={control}
+      name="root_pass"
       render={({ field, fieldState }) => (
         <PasswordInput
           autoComplete="off"
@@ -27,8 +29,6 @@ export const Password = (props: Props) => {
           value={field.value ?? ''}
         />
       )}
-      control={control}
-      name="root_pass"
     />
   );
 };

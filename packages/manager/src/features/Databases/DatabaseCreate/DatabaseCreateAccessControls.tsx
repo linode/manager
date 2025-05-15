@@ -8,6 +8,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import { useState } from 'react';
 import * as React from 'react';
+import type { ChangeEvent } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
@@ -16,7 +17,6 @@ import { ipV6FieldPlaceholder } from 'src/utilities/ipUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
-import type { ChangeEvent } from 'react';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles()((theme: Theme) => ({

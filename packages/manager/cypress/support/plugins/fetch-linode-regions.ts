@@ -1,7 +1,7 @@
 import { getRegions } from '@linode/api-v4';
 
 import type { CypressPlugin } from './plugin';
-import type { ResourcePage, Region } from '@linode/api-v4';
+import type { Region, ResourcePage } from '@linode/api-v4';
 
 // TODO Clean up.
 /**

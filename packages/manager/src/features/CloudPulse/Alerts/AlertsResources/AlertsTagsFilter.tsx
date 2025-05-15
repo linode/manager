@@ -46,6 +46,15 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
 
   return (
     <Autocomplete
+      autoHighlight
+      clearOnBlur
+      isOptionEqualToValue={(option, value) => option.label === value.label}
+      label="Tags"
+      limitTags={1}
+      multiple
+      onChange={handleFilterSelection}
+      options={builtTagOptions}
+      placeholder={selectedTags.length ? '' : 'Select Tags'}
       textFieldProps={{
         InputProps: {
           sx: {
@@ -60,15 +69,6 @@ export const AlertsTagFilter = React.memo((props: AlertsTagFilterProps) => {
         },
         hideLabel: true,
       }}
-      autoHighlight
-      clearOnBlur
-      isOptionEqualToValue={(option, value) => option.label === value.label}
-      label="Tags"
-      limitTags={1}
-      multiple
-      onChange={handleFilterSelection}
-      options={builtTagOptions}
-      placeholder={selectedTags.length ? '' : 'Select Tags'}
       value={selectedTags}
     />
   );

@@ -1,11 +1,8 @@
-import Axios, {
-  AxiosError,
-  AxiosHeaders,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
-import { ValidationError, AnySchema } from 'yup';
-import { APIError, Filter, Params } from './types';
+import Axios, { AxiosHeaders } from 'axios';
+
+import type { APIError, Filter, Params } from './types';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AnySchema, ValidationError } from 'yup';
 
 interface RequestConfig extends AxiosRequestConfig {
   validationErrors?: APIError[];
@@ -13,7 +10,7 @@ interface RequestConfig extends AxiosRequestConfig {
 
 type RequestConfigFn = (config: RequestConfig) => RequestConfig;
 
-type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
+type ConfigField = 'data' | 'headers' | 'method' | 'params' | 'url';
 
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4',
@@ -67,7 +64,7 @@ export const isEmpty = (v: any) =>
 export const setURL = (url: string) => set('url', url);
 
 /** METHOD */
-export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
+export const setMethod = (method: 'DELETE' | 'GET' | 'POST' | 'PUT') =>
   set('method', method);
 
 /** Param */
@@ -85,7 +82,6 @@ export const setHeaders =
  * Validate and set data in the request configuration object.
  */
 export const setData = (
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   data: any,
   /**
    * If a schema is provided, execute its validate method. If the validation fails, the
@@ -230,8 +226,8 @@ const createError = (message: string, response: AxiosResponse) => {
 };
 
 export interface CancellableRequest<T> {
-  request: () => Promise<T>;
   cancel: () => void;
+  request: () => Promise<T>;
 }
 
 export const CancellableRequest = <T>(

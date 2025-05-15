@@ -5,8 +5,8 @@ import { useStyles } from '../NotificationCenter.styles';
 import {
   StyledCaret,
   StyledEmptyMessage,
-  StyledLToggleContainer,
   StyledLoadingContainer,
+  StyledLToggleContainer,
   StyledNotificationCenterItem,
 } from '../NotificationCenter.styles';
 
@@ -64,14 +64,14 @@ export const NotificationCenterNotifications = React.memo(
         {content.length > count ? (
           <StyledLToggleContainer display="flex" justifyContent="flex-end">
             <StyledLinkButton
+              aria-label={`Display all ${content.length} items`}
+              data-testid="showMoreButton"
+              onClick={() => setShowAll(!showAll)}
               sx={(theme) => ({
                 color: 'primary.main',
                 font: theme.font.bold,
                 textDecoration: 'none !important',
               })}
-              aria-label={`Display all ${content.length} items`}
-              data-testid="showMoreButton"
-              onClick={() => setShowAll(!showAll)}
             >
               {showAll ? 'Collapse' : `${content.length - count} more`}
               <StyledCaret

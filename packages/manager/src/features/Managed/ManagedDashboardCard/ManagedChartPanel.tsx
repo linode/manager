@@ -84,15 +84,15 @@ const createTabs = (
                     dataKey: 'CPU %',
                   },
                 ]}
-                xAxis={{
-                  tickFormat: 'hh a',
-                  tickGap: 60,
-                }}
                 ariaLabel="CPU Usage Graph"
                 data={formatData2(data.cpu, 'CPU %')}
                 height={chartHeight}
                 timezone={timezone}
                 unit={'%'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
             </Box>
           </StyledRootDiv>
@@ -117,16 +117,16 @@ const createTabs = (
                     dataKey: 'Network Traffic Out',
                   },
                 ]}
-                xAxis={{
-                  tickFormat: 'hh a',
-                  tickGap: 60,
-                }}
                 ariaLabel="Network Transfer Graph"
                 data={networkTransferData}
                 height={chartHeight}
                 showLegend
                 timezone={timezone}
                 unit={' Kb/s'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
             </Box>
           </StyledRootDiv>
@@ -147,15 +147,15 @@ const createTabs = (
                     dataKey: 'Disk I/O',
                   },
                 ]}
-                xAxis={{
-                  tickFormat: 'hh a',
-                  tickGap: 60,
-                }}
                 ariaLabel="Disk I/O Graph"
                 data={formatData2(data.disk, 'Disk I/O')}
                 height={chartHeight}
                 timezone={timezone}
                 unit={' op/s'}
+                xAxis={{
+                  tickFormat: 'hh a',
+                  tickGap: 60,
+                }}
               />
             </Box>
           </StyledRootDiv>

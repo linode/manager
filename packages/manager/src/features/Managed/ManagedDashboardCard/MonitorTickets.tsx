@@ -55,6 +55,7 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
           </Typography>
         ) : (
           <StyledButton
+            buttonType="primary"
             onClick={() =>
               history.push({
                 pathname: '/support/tickets',
@@ -64,7 +65,6 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
                 },
               })
             }
-            buttonType="primary"
           >
             Open a ticket
           </StyledButton>

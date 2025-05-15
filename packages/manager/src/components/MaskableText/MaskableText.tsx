@@ -83,13 +83,13 @@ export const MaskableText = (props: MaskableTextProps) => {
     >
       {iconPosition === 'start' && isToggleable && (
         <VisibilityTooltip
+          handleClick={() => setIsMasked(!isMasked)}
+          isVisible={!isMasked}
           sx={{
             marginLeft: 0,
             marginRight: '8px',
             ...sxVisibilityTooltip,
           }}
-          handleClick={() => setIsMasked(!isMasked)}
-          isVisible={!isMasked}
         />
       )}
       {isMasked ? (

@@ -1,4 +1,4 @@
-import { IconButton, Typography, omittedProps } from '@linode/ui';
+import { IconButton, omittedProps, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 
 import { TableRow } from 'src/components/TableRow';

@@ -1,11 +1,11 @@
 import { useProfile } from '@linode/queries';
 import { Stack, Tooltip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { convertStorageUnit, pluralize } from '@linode/utilities';
 import React from 'react';
 
 import CloudInitIcon from 'src/assets/icons/cloud-init.svg';
 import UnlockIcon from 'src/assets/icons/unlock.svg';
-import { Hidden } from 'src/components/Hidden';
 import { LinkButton } from 'src/components/LinkButton';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';

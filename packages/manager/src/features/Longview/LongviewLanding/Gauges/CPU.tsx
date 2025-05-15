@@ -1,4 +1,4 @@
-import { Typography, clamp } from '@linode/ui';
+import { clamp, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
@@ -38,12 +38,15 @@ export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
     return (
       <GaugePercent
         {...baseGaugeProps}
+        filledInColor={theme.graphs.blue}
         // The MAX depends on the number of CPU cores. Default to 1 if cores
         innerText={innerText(
           finalUsedCPU || 0,
           loading,
           !!error || !!lastUpdatedError
         )}
+        // doesn't exist or is 0.
+        max={100 * numberOfCores}
         subTitle={
           <>
             <Typography>
@@ -56,9 +59,6 @@ export const CPUGauge = withClientStats<Props>((ownProps) => ownProps.clientID)(
             )}
           </>
         }
-        filledInColor={theme.graphs.blue}
-        // doesn't exist or is 0.
-        max={100 * numberOfCores}
         value={usedCPU}
       />
     );

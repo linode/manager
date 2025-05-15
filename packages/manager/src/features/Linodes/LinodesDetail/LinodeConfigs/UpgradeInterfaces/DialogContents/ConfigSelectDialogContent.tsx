@@ -53,7 +53,8 @@ export const ConfigSelectDialogContent = (
           sx={{ marginTop: 2 }}
           variant="warning"
         >
-          <strong>Important upgrade notice</strong><br />
+          <strong>Important upgrade notice</strong>
+          <br />
           {UPGRADE_INTERFACES_WARNING}
         </Notice>
       )}

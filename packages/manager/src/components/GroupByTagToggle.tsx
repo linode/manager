@@ -27,17 +27,17 @@ export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
         title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
       >
         <IconButton
-          sx={{
-            padding: 0,
-          }}
           aria-describedby={groupByDescriptionId}
           aria-label={`Toggle group by tag`}
           className={isGroupedByTag ? 'MuiIconButton-isActive' : ''}
-          disableRipple
           // See https://github.com/linode/manager/pull/6653 for more details
           disabled={isLargeAccount}
+          disableRipple
           // Group by Tag is not available if you have a large account.
           onClick={toggleGroupByTag}
+          sx={{
+            padding: 0,
+          }}
         >
           <GroupByTag />
         </IconButton>

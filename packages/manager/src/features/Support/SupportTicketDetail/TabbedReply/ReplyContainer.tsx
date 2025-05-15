@@ -162,10 +162,10 @@ export const ReplyContainer = (props: Props) => {
       </Accordion>
       <Grid>
         <AttachFileForm
+          files={files}
           updateFiles={(filesToAttach: FileAttachment[]) =>
             setFiles(filesToAttach)
           }
-          files={files}
         />
         <ReplyActions
           isSubmitting={isSubmitting}

@@ -13,15 +13,15 @@ export const TicketReply = (props: Props) => {
 
   return (
     <TextField
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-        handleChange(e.target.value)
-      }
       data-qa-ticket-description
       errorText={error}
       expand
       hideLabel
       label="Enter your reply"
       multiline
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        handleChange(e.target.value)
+      }
       placeholder={placeholder || 'Enter your reply'}
       rows={1.8}
       value={value}

@@ -5,17 +5,18 @@ import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
-import type { VPC } from '@linode/api-v4';
+import type { APIError, VPC } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
+  vpcError: APIError[] | null;
 }
 
 export const VPCDeleteDialog = (props: Props) => {
-  const { isFetching, onClose, open, vpc } = props;
+  const { isFetching, onClose, open, vpc, vpcError } = props;
   const { enqueueSnackbar } = useSnackbar();
   const {
     error,
@@ -51,6 +52,7 @@ export const VPCDeleteDialog = (props: Props) => {
         name: vpc?.label,
         primaryBtnText: 'Delete',
         type: 'VPC',
+        error: vpcError,
       }}
       errors={error}
       expand
@@ -60,7 +62,7 @@ export const VPCDeleteDialog = (props: Props) => {
       onClick={onDeleteVPC}
       onClose={onClose}
       open={open}
-      title={`Delete VPC ${vpc?.label}`}
+      title={`Delete VPC ${vpc?.label ?? 'Unknown'}`}
     />
   );
 };

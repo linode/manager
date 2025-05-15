@@ -17,7 +17,7 @@ interface ScriptOptions {
  */
 export const loadScript = (
   src: string,
-  options?: ScriptOptions
+  options?: ScriptOptions,
 ): Promise<any> => {
   return new Promise((resolve, reject) => {
     // Allow falsy src value if waiting on other data needed for
@@ -29,7 +29,7 @@ export const loadScript = (
     // Fetch existing script element by src
     // It may have been added by another instance of this hook
     let script = document.querySelector(
-      `script[src='${src}']`
+      `script[src='${src}']`,
     ) as HTMLScriptElement;
     if (!script) {
       // Create script
@@ -79,7 +79,7 @@ export const loadScript = (
  */
 export const useScript = (
   src: string,
-  location?: ScriptLocation
+  location?: ScriptLocation,
 ): ScriptStatus => {
   const [status, setStatus] = useState<ScriptStatus>(src ? 'loading' : 'idle');
 
@@ -103,7 +103,7 @@ export const useScript = (
  */
 export const useLazyScript = (
   src: string,
-  location?: ScriptLocation
+  location?: ScriptLocation,
 ): {
   load: () => void;
   status: ScriptStatus;

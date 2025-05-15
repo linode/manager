@@ -8,6 +8,8 @@ import {
   importZone,
   updateDomain,
 } from '@linode/api-v4';
+import { profileQueries } from '@linode/queries';
+import { getAll } from '@linode/utilities';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -16,10 +18,6 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-
-import { getAll } from '@linode/utilities';
-
-import { profileQueries } from '@linode/queries';
 
 import type {
   APIError,

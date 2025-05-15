@@ -86,12 +86,12 @@ const CheckoutBar = (props: CheckoutBarProps) => {
   return (
     <StyledRoot>
       <Typography
+        data-qa-order-summary
         sx={{
           color: theme.color.headline,
           fontSize: '1.125rem',
           wordBreak: 'break-word',
         }}
-        data-qa-order-summary
         variant="h2"
       >
         {heading}

@@ -12,6 +12,7 @@ import {
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { chooseCluster } from 'support/util/clusters';
 import { randomLabel } from 'support/util/random';
 
 import { accountFactory } from 'src/factories';
@@ -120,9 +121,9 @@ describe('object storage access key end-to-end tests', () => {
    */
   it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
-    const bucketCluster = 'us-east-1';
+    const bucketClusterObj = chooseCluster();
     const bucketRequest = createObjectStorageBucketFactoryLegacy.build({
-      cluster: bucketCluster,
+      cluster: bucketClusterObj.id,
       label: bucketLabel,
       // Default factory sets `cluster` and `region`, but API does not accept `region` yet.
       region: undefined,
@@ -208,7 +209,7 @@ describe('object storage access key end-to-end tests', () => {
             });
         });
 
-        const permissionLabel = `This token has read-only access for ${bucketCluster}-${bucketLabel}`;
+        const permissionLabel = `This token has read-only access for ${bucketClusterObj.id}-${bucketLabel}`;
         cy.findByLabelText(permissionLabel).should('be.visible');
       });
     });

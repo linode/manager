@@ -1,3 +1,3 @@
-export * from './types';
-
 export * from './iam';
+
+export * from './types';

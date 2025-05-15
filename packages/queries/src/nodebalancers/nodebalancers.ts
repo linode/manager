@@ -7,9 +7,9 @@ import {
   getNodeBalancerBeta,
   getNodeBalancerConfigs,
   getNodeBalancerFirewalls,
+  getNodeBalancers,
   getNodeBalancerStats,
   getNodeBalancerTypes,
-  getNodeBalancers,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';

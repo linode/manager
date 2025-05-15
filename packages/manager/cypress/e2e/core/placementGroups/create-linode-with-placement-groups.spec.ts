@@ -53,9 +53,9 @@ describe('Linode create flow with Placement Group', () => {
   it('can create a linode with a newly created Placement Group', () => {
     cy.visitWithLogin('/linodes/create');
     cy.wait('@getRegions');
-    cy.findByText(
-      'Select a Region for your Linode to see existing placement groups.'
-    ).should('be.visible');
+    cy.findByText('Select a Region to see available placement groups.').should(
+      'be.visible'
+    );
 
     // Region without capability
     // Choose region

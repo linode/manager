@@ -8,7 +8,6 @@ import { CancelLanding } from './CancelLanding';
 const realLocation = window.location;
 
 afterAll(() => {
-  // eslint-disable-next-line
   window.location = realLocation;
 });
 
@@ -36,7 +35,7 @@ describe('CancelLanding', () => {
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockAssign = vi.fn();
     delete (window as Partial<Window>).location;
-    // eslint-disable-next-line
+
     window.location = { ...realLocation, assign: mockAssign };
 
     const survey_link = 'https://linode.com';

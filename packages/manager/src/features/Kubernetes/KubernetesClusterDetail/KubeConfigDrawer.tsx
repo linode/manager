@@ -4,7 +4,6 @@ import React from 'react';
 
 import Download from 'src/assets/icons/download.svg';
 import { CodeBlock } from 'src/components/CodeBlock/CodeBlock';
-import { NotFound } from 'src/components/NotFound';
 import { useKubernetesKubeConfigQuery } from 'src/queries/kubernetes';
 
 interface Props {
@@ -24,7 +23,6 @@ export const KubeConfigDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       error={failureReason}
       isFetching={isFetching}
       onClose={closeDrawer}

@@ -30,13 +30,13 @@ export const SwitchAccountSessionDialog = React.memo(
 
     return (
       <ConfirmationDialog
+        actions={actions}
+        data-testid="switch-account-session-dialog"
+        maxWidth="xs"
         onClose={() => {
           sendSwitchAccountSessionExpiryEvent('Close');
           onClose();
         }}
-        actions={actions}
-        data-testid="switch-account-session-dialog"
-        maxWidth="xs"
         open={isOpen}
         title="Session expired"
       >

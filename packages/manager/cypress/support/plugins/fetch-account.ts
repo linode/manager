@@ -1,8 +1,8 @@
-import type { CypressPlugin } from './plugin';
-import { resolve, join } from 'path';
 import { getAccountInfo, getAccountSettings, getProfile } from '@linode/api-v4';
 import { readFileSync } from 'fs';
+import { join, resolve } from 'path';
 
+import type { CypressPlugin } from './plugin';
 import type { Account } from '@linode/api-v4';
 
 /**
@@ -42,8 +42,7 @@ export const fetchAccount: CypressPlugin = async (_on, config) => {
       const cacheData = JSON.parse(cacheJson);
 
       if ('account' in cacheData) {
-        const accountCache = cacheData['account'] as Account;
-        return accountCache;
+        return cacheData['account'] as Account;
       }
     } catch (e) {
       // TODO Error message.
@@ -59,7 +58,7 @@ export const fetchAccount: CypressPlugin = async (_on, config) => {
 
   // Fetch account info, falling back to offline cached data if it is
   // enabled and available.
-  let account: undefined | Account = undefined;
+  let account: Account | undefined = undefined;
   try {
     account = await getAccountInfo();
   } catch (e) {

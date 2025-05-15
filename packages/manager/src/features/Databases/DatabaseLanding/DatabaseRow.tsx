@@ -1,8 +1,9 @@
+import { useProfile, useRegionsQuery } from '@linode/queries';
 import { Chip } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -11,7 +12,6 @@ import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVers
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { useProfile, useRegionsQuery } from '@linode/queries';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 

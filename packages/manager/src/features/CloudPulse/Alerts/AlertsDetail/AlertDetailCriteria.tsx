@@ -42,10 +42,10 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           container
           item
           md={8}
-          xs={12}
           sx={{
             alignItems: 'center',
           }}
+          xs={12}
         >
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}

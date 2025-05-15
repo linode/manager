@@ -2,7 +2,7 @@ import { profileFactory } from '@linode/utilities';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories/accountUsers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,

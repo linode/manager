@@ -89,13 +89,14 @@ describe('EnableBackupsDialog component', () => {
     return {
       ...actual,
       __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
-          return {
-            isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
-          };
-        }
-      ),
+      useIsDiskEncryptionFeatureEnabled:
+        diskEncryptionEnabledMock.useIsDiskEncryptionFeatureEnabled.mockImplementation(
+          () => {
+            return {
+              isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
+            };
+          }
+        ),
     };
   });
 

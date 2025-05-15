@@ -95,7 +95,7 @@ export const AccessSelect = React.memo((props: Props) => {
       const _acl =
         variant === 'object' && acl === 'public-read-write' ? 'custom' : acl;
       const cors_enabled = isUpdateObjectStorageBucketAccessPayload(data)
-        ? data.cors_enabled ?? false
+        ? (data.cors_enabled ?? false)
         : true;
       return { acl: _acl as ACLType, cors_enabled };
     }
@@ -129,8 +129,9 @@ export const AccessSelect = React.memo((props: Props) => {
       ? [{ label: 'Custom', value: 'custom' }, ...aclOptions]
       : aclOptions;
 
-  const aclLabel = _options.find((option) => option.value === selectedACL)
-    ?.label;
+  const aclLabel = _options.find(
+    (option) => option.value === selectedACL
+  )?.label;
   const aclCopy = selectedACL ? copy[variant][selectedACL] : null;
 
   const errorText =
@@ -178,30 +179,30 @@ export const AccessSelect = React.memo((props: Props) => {
       )}
 
       <Controller
+        control={control}
+        name="acl"
         render={({ field }) => (
           <Autocomplete
             {...field}
-            onChange={(_, selected: { label: string; value: ACLType }) => {
-              if (selected) {
-                field.onChange(selected.value);
-              }
-            }}
-            placeholder={
-              bucketAccessIsFetching || objectAccessIsFetching
-                ? 'Loading access...'
-                : 'Select an ACL...'
-            }
             data-testid="acl-select"
             disableClearable
             disabled={bucketAccessIsFetching || objectAccessIsFetching}
             label="Access Control List (ACL)"
             loading={bucketAccessIsFetching || objectAccessIsFetching}
+            onChange={(_, selected: { label: string; value: ACLType }) => {
+              if (selected) {
+                field.onChange(selected.value);
+              }
+            }}
             options={_options}
+            placeholder={
+              bucketAccessIsFetching || objectAccessIsFetching
+                ? 'Loading access...'
+                : 'Select an ACL...'
+            }
             value={_options.find((option) => option.value === field.value)}
           />
         )}
-        control={control}
-        name="acl"
         rules={{ required: 'ACL is required' }}
       />
 
@@ -215,6 +216,8 @@ export const AccessSelect = React.memo((props: Props) => {
 
       {isCorsAvailable && (
         <Controller
+          control={control}
+          name="cors_enabled"
           render={({ field }) => (
             <FormControlLabel
               control={
@@ -228,14 +231,12 @@ export const AccessSelect = React.memo((props: Props) => {
                 bucketAccessIsFetching || objectAccessIsFetching
                   ? 'Loading access...'
                   : field.value
-                  ? 'CORS Enabled'
-                  : 'CORS Disabled'
+                    ? 'CORS Enabled'
+                    : 'CORS Disabled'
               }
               style={{ display: 'block', marginTop: 16 }}
             />
           )}
-          control={control}
-          name="cors_enabled"
         />
       )}
 
@@ -288,12 +289,12 @@ export const AccessSelect = React.memo((props: Props) => {
       <ConfirmationDialog
         actions={() => (
           <ActionsPanel
+            primaryButtonProps={{ label: 'Confirm', onClick: onSubmit }}
             secondaryButtonProps={{
               'data-testid': 'cancel',
               label: 'Cancel',
               onClick: closeDialog,
             }}
-            primaryButtonProps={{ label: 'Confirm', onClick: onSubmit }}
             style={{ padding: 0 }}
           />
         )}

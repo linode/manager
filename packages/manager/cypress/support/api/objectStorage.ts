@@ -1,7 +1,8 @@
 import {
   deleteBucket,
-  getBuckets,
+  getBucketsInRegion,
   getObjectList,
+  getObjectStorageEndpoints,
   getObjectStorageKeys,
   getObjectURL,
   revokeObjectStorageKey,
@@ -13,6 +14,7 @@ import { depaginate } from 'support/util/paginate';
 
 import type {
   ObjectStorageBucket,
+  ObjectStorageEndpoint,
   ObjectStorageKey,
   ObjectStorageObject,
 } from '@linode/api-v4';
@@ -69,12 +71,31 @@ export const deleteAllTestBucketObjects = async (
  */
 export const deleteAllTestBuckets = async () => {
   authenticate();
-  const bucketsPage = (page: number) => getBuckets({ page });
-  const buckets: ObjectStorageBucket[] = (
-    await depaginate<ObjectStorageBucket>(bucketsPage)
-  ).filter((bucket: ObjectStorageBucket) => {
-    return isTestLabel(bucket.label);
-  });
+  const objEndpoints = await depaginate<ObjectStorageEndpoint>((page) =>
+    getObjectStorageEndpoints({ params: { page } })
+  );
+  const buckets = (
+    await Promise.all(
+      objEndpoints.map(async (endpoint) => {
+        try {
+          return depaginate<ObjectStorageBucket>((page) =>
+            getBucketsInRegion(endpoint.region, { page })
+          );
+        } catch (e) {
+          console.error(
+            `Failed to fetch buckets from Object Storage endpoint in '${endpoint.region}'`
+          );
+          if (e && e.message) {
+            console.error(e.message);
+            console.error(e);
+          }
+          return [];
+        }
+      })
+    )
+  )
+    .flat()
+    .filter((bucket) => isTestLabel(bucket.label));
 
   const deleteBucketsPromises = buckets.map(
     async (bucket: ObjectStorageBucket) => {

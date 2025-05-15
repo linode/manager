@@ -1,13 +1,14 @@
 import { API_ROOT } from '../constants';
 import Request, {
+  setData,
   setMethod,
   setParams,
   setURL,
   setXFilter,
-  setData,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { AccountBeta, EnrollInBetaPayload } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { AccountBeta, EnrollInBetaPayload } from './types';
 
 /**
  * getBetas
@@ -19,7 +20,7 @@ export const getAccountBetas = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/betas`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -31,7 +32,7 @@ export const getAccountBetas = (params?: Params, filter?: Filter) =>
 export const getAccountBeta = (betaId: string) =>
   Request<AccountBeta>(
     setURL(`${API_ROOT}/account/betas/${encodeURIComponent(betaId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -45,5 +46,5 @@ export const enrollInBeta = (data: EnrollInBetaPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/betas`),
     setMethod('POST'),
-    setData(data)
+    setData(data),
   );

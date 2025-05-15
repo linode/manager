@@ -29,7 +29,6 @@ import { useLocation } from 'react-router-dom';
 
 import { DescriptionList } from 'src/components/DescriptionList/DescriptionList';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NotFound } from 'src/components/NotFound';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -78,10 +77,8 @@ export const PlacementGroupsCreateDrawer = (
   });
   const { error, mutateAsync } = useCreatePlacementGroup();
   const { enqueueSnackbar } = useSnackbar();
-  const {
-    hasFormBeenSubmitted,
-    setHasFormBeenSubmitted,
-  } = useFormValidateOnChange();
+  const { hasFormBeenSubmitted, setHasFormBeenSubmitted } =
+    useFormValidateOnChange();
 
   const location = useLocation();
   const isFromLinodeCreate = location.pathname.includes('/linodes/create');
@@ -149,8 +146,10 @@ export const PlacementGroupsCreateDrawer = (
     enableReinitialize: true,
     initialValues: {
       label: '',
-      placement_group_policy: 'strict' as PlacementGroup['placement_group_policy'],
-      placement_group_type: 'anti_affinity:local' as PlacementGroup['placement_group_type'],
+      placement_group_policy:
+        'strict' as PlacementGroup['placement_group_policy'],
+      placement_group_type:
+        'anti_affinity:local' as PlacementGroup['placement_group_type'],
       region: selectedRegionId ?? '',
     },
     onSubmit: handleFormSubmit,
@@ -206,18 +205,17 @@ export const PlacementGroupsCreateDrawer = (
         />
       )}
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={handleDrawerClose}
         open={open}
         title="Create Placement Group"
       >
         {disabledPlacementGroupCreateButton && (
           <Notice
+            spacingTop={16}
             text={getRestrictedResourceText({
               action: 'edit',
               resourceType: 'Placement Groups',
             })}
-            spacingTop={16}
             variant="error"
           />
         )}
@@ -251,12 +249,12 @@ export const PlacementGroupsCreateDrawer = (
             )}
             <Divider hidden={!selectedRegionId} />
             <TextField
-              inputProps={{
-                autoFocus: true,
-              }}
               aria-label="Label for the Placement Group"
               disabled={disabledPlacementGroupCreateButton || false}
               errorText={errors.label}
+              inputProps={{
+                autoFocus: true,
+              }}
               label="Label"
               name="label"
               onBlur={handleBlur}
@@ -265,12 +263,12 @@ export const PlacementGroupsCreateDrawer = (
             />
             {!selectedRegionId && (
               <RegionSelect
+                currentCapability="Placement Group"
+                disableClearable
                 disabled={
                   Boolean(selectedRegionId) ||
                   disabledPlacementGroupCreateButton
                 }
-                currentCapability="Placement Group"
-                disableClearable
                 disabledRegions={disabledRegions}
                 helperText={values.region && pgRegionLimitHelperText}
                 isGeckoLAEnabled={isGeckoLAEnabled}

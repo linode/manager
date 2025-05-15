@@ -17,6 +17,7 @@ export const MaintenanceScreen = () => {
         <Logo width={215} />
       </Box>
       <ErrorState
+        CustomIcon={BuildIcon}
         CustomIconStyles={{
           color: theme.palette.text.primary,
         }}
@@ -32,7 +33,6 @@ export const MaintenanceScreen = () => {
             </Typography>
           </Stack>
         }
-        CustomIcon={BuildIcon}
       />
     </Stack>
   );

@@ -7,8 +7,8 @@ import { authenticate } from 'support/api/authentication';
 import {
   mockGetDomain,
   mockGetDomainRecords,
-  mockGetDomainZoneFile,
   mockGetDomains,
+  mockGetDomainZoneFile,
 } from 'support/intercepts/domains';
 import { ui } from 'support/ui';
 import { readDownload } from 'support/util/downloads';

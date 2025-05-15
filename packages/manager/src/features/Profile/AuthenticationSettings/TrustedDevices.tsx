@@ -1,3 +1,4 @@
+import { useTrustedDevicesQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -17,7 +18,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useTrustedDevicesQuery } from '@linode/queries';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 

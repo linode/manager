@@ -78,11 +78,11 @@ export const InterfaceType = () => {
       </RadioGroup>
       {fieldState.error && (
         <FormHelperText
+          id="interface-type-error"
           sx={(theme) => ({
             color: `${theme.palette.error.dark} !important`,
             m: 0,
           })}
-          id="interface-type-error"
         >
           {fieldState.error.message}
         </FormHelperText>

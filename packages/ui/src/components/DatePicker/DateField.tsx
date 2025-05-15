@@ -15,7 +15,7 @@ import type { DateTime } from 'luxon';
 interface DateFieldProps
   extends Omit<MUIDateFieldProps<DateTime>, 'onChange' | 'value'> {
   errorText?: string;
-  format?: 'MM/dd/yyyy' | 'dd-MM-yyyy' | 'yyyy-MM-dd';
+  format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
   inputRef?: React.RefObject<HTMLInputElement>;
   label: string;
   onChange: (date: DateTime | null) => void;
@@ -49,15 +49,16 @@ export const DateField = ({
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box display="flex" flexDirection="column" sx={sx}>
         <InputLabel
+          htmlFor={validInputId}
           sx={{
             marginBottom: 0,
             transform: 'none',
           }}
-          htmlFor={validInputId}
         >
           {label}
         </InputLabel>
         <MUIDateField
+          format={format}
           inputProps={{
             'aria-errormessage': errorText ? errorTextId : undefined,
             'aria-invalid': Boolean(errorText),
@@ -65,6 +66,8 @@ export const DateField = ({
             id: validInputId,
             onClick,
           }}
+          inputRef={inputRef}
+          onChange={handleChange}
           slotProps={{
             textField: {
               InputLabelProps: { shrink: true },
@@ -72,21 +75,18 @@ export const DateField = ({
               helperText: '',
             },
           }}
-          format={format}
-          inputRef={inputRef}
-          onChange={handleChange}
           sx={{ marginTop: 1 }}
           value={value}
           {...rest}
         />
         {errorText && (
           <FormHelperText
+            id={errorTextId}
+            role="alert"
             sx={{
               color: (theme: Theme) => theme.palette.error.dark,
               marginTop: '4px',
             }}
-            id={errorTextId}
-            role="alert"
           >
             {errorText}
           </FormHelperText>

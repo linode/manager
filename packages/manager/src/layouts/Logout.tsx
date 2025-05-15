@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import type { MapDispatchToProps, MapStateToProps } from 'react-redux';
 
 import { CLIENT_ID } from 'src/constants';
 import { clearUserInput } from 'src/store/authentication/authentication.helpers';
 import { handleLogout } from 'src/store/authentication/authentication.requests';
 import { getEnvLocalStorageOverrides } from 'src/utilities/storage';
 
-import type { MapDispatchToProps, MapStateToProps } from 'react-redux';
 import type { AnyAction } from 'redux';
 import type { ThunkDispatch } from 'redux-thunk';
 import type { ApplicationState } from 'src/store';

@@ -26,6 +26,8 @@ export const Image = (props: Props) => {
 
   return (
     <Controller
+      control={control}
+      name="image"
       render={({ field, fieldState }) => (
         <ImageSelect
           disabled={props.disabled}
@@ -39,8 +41,6 @@ export const Image = (props: Props) => {
           variant="all"
         />
       )}
-      control={control}
-      name="image"
     />
   );
 };

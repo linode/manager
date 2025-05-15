@@ -1,4 +1,3 @@
-/* eslint-disable xss/no-mixed-html */
 import { sanitizeHTML } from './sanitizeHTML';
 import { getAllowedHTMLTags, isURLValid } from './sanitizeHTML.utils';
 
@@ -83,24 +82,21 @@ describe('sanitizeHTML', () => {
     expect(
       sanitizeHTML({
         sanitizingTier: 'flexible',
-        text:
-          '<a target="custom" rel="dns-prefetch" href="https://linode.com">click me</a>',
+        text: '<a target="custom" rel="dns-prefetch" href="https://linode.com">click me</a>',
       })
     ).not.toContain('rel=');
     // safe
     expect(
       sanitizeHTML({
         sanitizingTier: 'flexible',
-        text:
-          '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
+        text: '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
       })
     ).not.toContain('rel="dns-prefetch"');
     // safe
     expect(
       sanitizeHTML({
         sanitizingTier: 'flexible',
-        text:
-          '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
+        text: '<a target="_blank" rel="dns-prefetch" href="https://linode.com">click me</a>',
       })
     ).not.toContain('rel="dns-prefetch"');
   });

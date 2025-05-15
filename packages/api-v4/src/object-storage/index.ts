@@ -8,6 +8,6 @@ export * from './objects';
 
 export * from './objectStorageKeys';
 
-export * from './types';
-
 export * from './prices';
+
+export * from './types';

@@ -6,7 +6,7 @@ import {
   notificationFactory,
 } from 'src/factories/notification';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { getAbuseTickets } from 'src/store/selectors/getAbuseTicket';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 

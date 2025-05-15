@@ -13,13 +13,13 @@ import {
 
 interface DomainsEmptyLandingStateProps {
   navigateToCreate: () => void;
-  openImportZoneDrawer: () => void;
+  navigateToImportZone: () => void;
 }
 
 export const DomainsEmptyLandingState = (
   props: DomainsEmptyLandingStateProps
 ) => {
-  const { navigateToCreate, openImportZoneDrawer } = props;
+  const { navigateToCreate, navigateToImportZone } = props;
 
   return (
     <ResourcesSection
@@ -43,7 +43,7 @@ export const DomainsEmptyLandingState = (
               category: linkAnalyticsEvent.category,
               label: 'Import a Zone',
             });
-            openImportZoneDrawer();
+            navigateToImportZone();
           },
         },
       ]}

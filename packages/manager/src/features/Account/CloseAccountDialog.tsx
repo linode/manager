@@ -80,13 +80,6 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
         subType: 'CloseAccount',
         type: 'AccountSetting',
       }}
-      typographyStyleSx={(theme) => ({
-        borderTop: `1px solid ${theme.tokens.alias.Border.Normal}`,
-        marginBottom: theme.tokens.spacing.S8,
-        marginTop: theme.tokens.spacing.S16,
-        paddingTop: theme.tokens.spacing.S16,
-        width: '100%',
-      })}
       expand
       inputRef={inputRef}
       label={`Enter your email address (${profile.email})`}
@@ -96,6 +89,13 @@ const CloseAccountDialog = ({ closeDialog, open }: Props) => {
       open={open}
       reversePrimaryButtonPosition
       title={CANCELLATION_DIALOG_TITLE}
+      typographyStyleSx={(theme) => ({
+        borderTop: `1px solid ${theme.tokens.alias.Border.Normal}`,
+        marginBottom: theme.tokens.spacing.S8,
+        marginTop: theme.tokens.spacing.S16,
+        paddingTop: theme.tokens.spacing.S16,
+        width: '100%',
+      })}
     >
       {errors ? (
         <Notice text={errors ? errors[0].reason : ''} variant="error" />

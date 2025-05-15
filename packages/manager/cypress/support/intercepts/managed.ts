@@ -2,15 +2,6 @@
  * @file Cypress intercepts and mocks for Linode Managed operations.
  */
 
-import {
-  ManagedContact,
-  ManagedCredential,
-  ManagedIssue,
-  ManagedLinodeSetting,
-  ManagedServiceMonitor,
-  ManagedServicePayload,
-  ManagedStats,
-} from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -20,6 +11,16 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
 } from 'src/factories/managed';
+
+import type {
+  ManagedContact,
+  ManagedCredential,
+  ManagedIssue,
+  ManagedLinodeSetting,
+  ManagedServiceMonitor,
+  ManagedServicePayload,
+  ManagedStats,
+} from '@linode/api-v4';
 
 /**
  * Intercepts all requests to Managed endpoints and mocks 403 HTTP errors.

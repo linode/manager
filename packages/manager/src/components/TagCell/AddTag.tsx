@@ -64,6 +64,10 @@ export const AddTag = (props: AddTagProps) => {
 
   return (
     <Autocomplete
+      disableClearable
+      forcePopupIcon
+      label={'Create or Select a Tag'}
+      loading={accountTagsLoading || loading}
       noOptionsText={
         inputValue.length === 0 ? (
           'No tags to choose from. Type to create a new tag.'
@@ -78,9 +82,13 @@ export const AddTag = (props: AddTagProps) => {
       }}
       onChange={(_, value) => {
         if (value) {
-          handleAddTag(typeof value == 'string' ? value : value.label);
+          handleAddTag(typeof value === 'string' ? value : value.label);
         }
       }}
+      onInputChange={(_, value) => setInputValue(value)}
+      openOnFocus
+      options={tagOptions ?? []}
+      placeholder="Create or Select a Tag"
       renderOption={(props, option) => {
         const { key, ...rest } = props;
 
@@ -90,14 +98,6 @@ export const AddTag = (props: AddTagProps) => {
           </li>
         );
       }}
-      disableClearable
-      forcePopupIcon
-      label={'Create or Select a Tag'}
-      loading={accountTagsLoading || loading}
-      onInputChange={(_, value) => setInputValue(value)}
-      openOnFocus
-      options={tagOptions ?? []}
-      placeholder="Create or Select a Tag"
       sx={{ width: '100%' }}
       textFieldProps={{ autoFocus: true, hideLabel: true }}
     />

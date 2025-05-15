@@ -4,14 +4,16 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { omittedProps } from '../../utilities';
+import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { DialogTitle } from '../DialogTitle';
-import { Notice } from '../Notice';
+import { ErrorState } from '../ErrorState';
+import { NotFound } from '../NotFound/NotFound';
 
+import type { APIError } from '../../utilities/error';
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
-
 export interface DialogProps extends _DialogProps {
   /**
    * Additional CSS to be applied to the Dialog.
@@ -24,9 +26,10 @@ export interface DialogProps extends _DialogProps {
    */
   enableCloseOnBackdropClick?: boolean;
   /**
-   * Error that will be shown in the dialog.
+   * Error that will be shown in the dialog, such as an API error for data passed to the dialog (NotFound for instance).
+   * Those are different from errors that are shown in the dialog's content, such as a form submission or validation error.
    */
-  error?: string;
+  error?: APIError[] | null | string;
   /**
    * Let the Dialog take up the entire height of the viewport.
    */
@@ -98,12 +101,16 @@ export const Dialog = React.forwardRef(
     // This is to prevent flashes of content during the drawer's closing transition,
     // and its content becomes potentially undefined
     const lastChildrenRef = React.useRef(children);
+    const lastErrorRef = React.useRef(error);
     const lastTitleRef = React.useRef(title);
     // Update refs when the drawer is open and content is matched
-    if (open && children) {
+    if (open) {
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
+      lastErrorRef.current = error;
     }
+
+    const errorText = getErrorText(lastErrorRef.current);
 
     return (
       <StyledDialog
@@ -155,11 +162,12 @@ export const Dialog = React.forwardRef(
               <Box display="flex" justifyContent="center" my={4}>
                 <CircleProgress size="md" />
               </Box>
+            ) : errorText &&
+              (errorText === 'Not Found' || errorText === 'Not found') ? (
+              <NotFound />
             ) : (
               <>
-                {error && (
-                  <Notice spacingBottom={0} text={error} variant="error" />
-                )}
+                {errorText && <ErrorState errorText={errorText} />}
                 {lastChildrenRef.current}
               </>
             )}
