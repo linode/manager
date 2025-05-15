@@ -17,7 +17,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -81,10 +80,6 @@ export const ObjectStorageLanding = () => {
     userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
 
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
-
   const shouldHideDocsAndCreateButtons =
     !areBucketsLoading && tabIndex === 0 && userHasNoBucketCreated;
 
@@ -133,7 +128,7 @@ export const ObjectStorageLanding = () => {
           }),
         }}
         createButtonText={createButtonText}
-        disabledCreateButton={isBucketCreationRestricted}
+        disabledCreateButton={isRestrictedUser}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         entity="Object Storage"
         onButtonClick={createButtonAction}
