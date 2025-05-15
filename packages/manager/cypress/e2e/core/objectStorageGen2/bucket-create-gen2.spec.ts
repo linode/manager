@@ -763,7 +763,9 @@ describe('Object Storage Gen2 create bucket modal has disabled fields for restri
         restricted: true,
       })
     ).as('getProfile');
-    mockGetProfileGrants(grantsFactory.build()).as('getGrants');
+    mockGetProfileGrants(
+      grantsFactory.build({ global: { add_buckets: false } })
+    ).as('getGrants');
   });
 
   // bucket creation
