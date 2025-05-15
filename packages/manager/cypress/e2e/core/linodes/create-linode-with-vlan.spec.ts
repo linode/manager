@@ -1,12 +1,12 @@
 import { linodeFactory, regionFactory } from '@linode/utilities';
-import { linodeInterfacesLabelText } from 'support/constants/linode-interfaces';
+import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockCreateLinode } from 'support/intercepts/linodes';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { checkLinodeInterfacesElements } from 'support/util/linodes';
+import { assertNewLinodeInterfacesIsAvailable } from 'support/util/linodes';
 import {
   randomIp,
   randomLabel,
@@ -15,7 +15,7 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { VLANFactory } from 'src/factories';
+import { accountSettingsFactory, VLANFactory } from 'src/factories';
 
 describe('Create Linode with VLANs (Legacy)', () => {
   beforeEach(() => {
@@ -59,7 +59,7 @@ describe('Create Linode with VLANs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Open VLAN accordion and select existing VLAN.
     ui.accordionHeading.findByTitle('VLAN').click();
@@ -149,7 +149,7 @@ describe('Create Linode with VLANs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Open VLAN accordion and specify new VLAN.
     ui.accordionHeading.findByTitle('VLAN').click();
@@ -219,7 +219,7 @@ describe('Create Linode with VLANs (Legacy)', () => {
     linodeCreatePage.selectRegionById(nonVlanRegion.id);
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Expand VLAN accordion, confirm VLAN availability notice is displayed and
     // that VLAN fields are disabled while no region is selected.
@@ -254,6 +254,11 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: true },
     });
+    mockGetAccountSettings(
+      accountSettingsFactory.build({
+        interfaces_for_new_linodes: 'legacy_config_default_but_linode_allowed',
+      })
+    );
   });
 
   /*
@@ -292,7 +297,7 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Open VLAN accordion and select existing VLAN.
     cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
@@ -372,13 +377,13 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
-    cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VLAN');
 
     // Open VLAN accordion and select existing VLAN.
     cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
@@ -457,10 +462,10 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VLAN card
-    cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VLAN');
 
     // Open VLAN accordion and specify new VLAN.
     cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
@@ -539,13 +544,13 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VLAN card
-    cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VLAN');
 
     // Open VLAN accordion and specify new VLAN.
     cy.findByLabelText('VLAN').should('be.enabled').type(mockVlan.label);
@@ -607,10 +612,10 @@ describe('Create Linode with VLANs (Linode Interfaces)', () => {
     linodeCreatePage.selectRegionById(nonVlanRegion.id);
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VLAN card
-    cy.get('[data-qa-select-card-heading="VLAN"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VLAN');
 
     // Expand VLAN accordion, confirm VLAN availability notice is displayed and
     // that VLAN fields are disabled while no region is selected.

@@ -3,7 +3,6 @@ import {
   linodeFactory,
   regionFactory,
 } from '@linode/utilities';
-import { linodeInterfacesLabelText } from 'support/constants/linode-interfaces';
 import { mockGetLinodeConfig } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -20,7 +19,7 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { linodeCreatePage, vpcCreateDrawer } from 'support/ui/pages';
-import { checkLinodeInterfacesElements } from 'support/util/linodes';
+import { assertNewLinodeInterfacesIsAvailable } from 'support/util/linodes';
 import {
   randomIp,
   randomLabel,
@@ -109,7 +108,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.findByText('Assign VPC').click();
@@ -240,7 +239,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -359,7 +358,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.selectRegionById(mockRegion.id);
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     cy.findByLabelText('Assign VPC').scrollIntoView();
     cy.findByLabelText('Assign VPC').should('be.visible').should('be.disabled');
@@ -446,10 +445,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -585,13 +584,13 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -726,10 +725,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -911,13 +910,13 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -1045,10 +1044,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.selectRegionById(mockRegion.id);
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card.
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that VPC selection is disabled.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
