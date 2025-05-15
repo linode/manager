@@ -3,14 +3,17 @@ import {
   linodeFactory,
   regionFactory,
 } from '@linode/utilities';
-import { linodeInterfacesLabelText } from 'support/constants/linode-interfaces';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
 import { mockGetLinodeConfig } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
-import { mockGetRegions } from 'support/intercepts/regions';
+import { mockGetRegion, mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPC,
   mockCreateVPCError,
@@ -20,7 +23,7 @@ import {
 } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { linodeCreatePage, vpcCreateDrawer } from 'support/ui/pages';
-import { checkLinodeInterfacesElements } from 'support/util/linodes';
+import { assertNewLinodeInterfacesIsAvailable } from 'support/util/linodes';
 import {
   randomIp,
   randomLabel,
@@ -30,8 +33,16 @@ import {
 } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { linodeConfigFactory, subnetFactory, vpcFactory } from 'src/factories';
+import {
+  accountFactory,
+  accountSettingsFactory,
+  linodeConfigFactory,
+  subnetFactory,
+  vpcFactory,
+} from 'src/factories';
 import { WARNING_ICON_UNRECOMMENDED_CONFIG } from 'src/features/VPCs/constants';
+
+import type { Region } from '@linode/api-v4';
 
 describe('Create Linode with VPCs (Legacy)', () => {
   beforeEach(() => {
@@ -109,7 +120,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.findByText('Assign VPC').click();
@@ -240,7 +251,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -359,7 +370,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     linodeCreatePage.selectRegionById(mockRegion.id);
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     cy.findByLabelText('Assign VPC').scrollIntoView();
     cy.findByLabelText('Assign VPC').should('be.visible').should('be.disabled');
@@ -369,10 +380,29 @@ describe('Create Linode with VPCs (Legacy)', () => {
 });
 
 describe('Create Linode with VPCs (Linode Interfaces)', () => {
+  const linodeRegion: Region = regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    capabilities: ['Linodes', 'Linode Interfaces', 'VPCs'],
+  });
+
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: true },
     });
+    mockGetAccount(
+      accountFactory.build({
+        email: 'sdet@akamai.com',
+        capabilities: ['Linodes', 'Linode Interfaces', 'Vlans'],
+      })
+    );
+    mockGetAccountSettings(
+      accountSettingsFactory.build({
+        interfaces_for_new_linodes: 'legacy_config_default_but_linode_allowed',
+      })
+    );
+    mockGetRegions([linodeRegion]);
+    mockGetRegion(linodeRegion);
   });
 
   /*
@@ -383,8 +413,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
    * - Confirms newly assigned Linode does not have an unrecommended config notice inside VPC
    */
   it('can assign existing VPCs during Linode Create flow (legacy)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       ipv4: `${randomIp()}/0`,
@@ -446,10 +474,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -522,8 +550,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
    * - Confirms newly assigned Linode does not have an unrecommended config notice inside VPC
    */
   it('can assign existing VPCs during Linode Create flow (Linode Inteface)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
     const mockSubnet = subnetFactory.build({
       id: randomNumber(),
       ipv4: `${randomIp()}/0`,
@@ -585,13 +611,13 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {
@@ -663,8 +689,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
    * - Confirms newly assigned Linode does not have an unrecommended config notice inside VPC
    */
   it('can assign new VPCs during Linode Create flow (legacy)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
     const mockErrorMessage = 'An unknown error occurred.';
 
     const mockSubnet = subnetFactory.build({
@@ -726,10 +750,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -848,8 +872,6 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
    * - Confirms newly assigned Linode does not have an unrecommended config notice inside VPC
    */
   it('can assign new VPCs during Linode Create flow (Linode Interface)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['VPCs'] });
-
     const mockErrorMessage = 'An unknown error occurred.';
 
     const mockSubnet = subnetFactory.build({
@@ -911,13 +933,13 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Select VPC card
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     cy.findByText('Create VPC').should('be.visible').click();
 
@@ -1045,10 +1067,10 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     linodeCreatePage.selectRegionById(mockRegion.id);
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Select VPC card.
-    cy.get('[data-qa-select-card-heading="VPC"]').should('be.visible').click();
+    linodeCreatePage.selectInterfaceCard('VPC');
 
     // Confirm that VPC selection is disabled.
     cy.get('[data-qa-autocomplete="VPC"]').within(() => {

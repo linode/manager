@@ -230,7 +230,7 @@ export const fetchLinodeConfigs = async (
  *
  * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
  */
-export const checkLinodeInterfacesElements = (
+export const assertNewLinodeInterfacesIsAvailable = (
   linodeInterfacesEnabled: boolean = true
 ): void => {
   const expectedBehavior = linodeInterfacesEnabled ? 'be.visible' : 'not.exist';
