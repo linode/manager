@@ -403,6 +403,7 @@ export const baseConfig = [
       // for each new features added to the migration router, add its directory here
       'src/features/Betas/**/*',
       'src/features/Domains/**/*',
+      'src/features/DataStream/**/*',
       'src/features/Firewalls/**/*',
       'src/features/Images/**/*',
       'src/features/Longview/**/*',
