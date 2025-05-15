@@ -1,9 +1,4 @@
-import {
-  useRegionsQuery,
-  useVPCIPsQuery,
-  useVPCQuery,
-  useVPCsIPsQuery,
-} from '@linode/queries';
+import { useRegionsQuery, useVPCQuery } from '@linode/queries';
 import {
   Box,
   CircleProgress,
@@ -52,12 +47,6 @@ const VPCDetail = () => {
     isFetching: isFetchingVPC,
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
-
-  // const { data: vpcsIPs } = useVPCsIPsQuery({}, true);
-  // console.log(vpcsIPs);
-
-  // const { data: vpcIPs } = useVPCIPsQuery(Number(vpcId), {}, true);
-  // console.log(vpcIPs);
 
   const { data: regions } = useRegionsQuery();
 
