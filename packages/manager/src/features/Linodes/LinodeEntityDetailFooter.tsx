@@ -1,5 +1,5 @@
 import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

@@ -1,7 +1,7 @@
 import { IconButton } from '@linode/ui';
 import { truncate } from '@linode/utilities';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
