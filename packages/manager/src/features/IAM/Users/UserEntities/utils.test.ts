@@ -1,9 +1,7 @@
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 
-import { getEntityTypes } from './utils';
 import { addEntityNamesToRoles } from './utils';
 
-import type { EntitiesRole } from '../../Shared/types';
 import type { AccountEntity, EntityType } from '@linode/api-v4';
 
 const mockGoupedEntities: Map<
@@ -18,31 +16,6 @@ const mockGoupedEntities: Map<
     ],
   ],
 ]);
-
-describe('getEntityTypes', () => {
-  it('should call mapEntityTypes with the correct arguments', () => {
-    const mockData: EntitiesRole[] = [
-      {
-        access: 'entity_access',
-        entity_id: 1,
-        entity_name: 'test 1',
-        entity_type: 'linode',
-        id: 'linode_contributor-1',
-        role_name: 'linode_contributor',
-      },
-    ];
-
-    const result = getEntityTypes(mockData);
-
-    expect(result).toEqual([
-      {
-        label: 'Linodes',
-        rawValue: 'linode',
-        value: 'Linodes',
-      },
-    ]);
-  });
-});
 
 describe('addEntityNamesToRoles', () => {
   it('should map entity names to roles correctly', () => {
