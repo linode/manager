@@ -1,4 +1,4 @@
-import { useAllVPCsQuery } from '@linode/queries';
+import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
   InputAdornment,
@@ -9,24 +9,20 @@ import {
 } from '@linode/ui';
 import React from 'react';
 
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 
-import type {
-  APIError,
-  NodeBalancerVpcPayload,
-  Region,
-  VPC,
-} from '@linode/api-v4';
+import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 
 export interface Props {
   disabled?: boolean;
-  errors: APIError[];
+  errors?: APIError[];
   ipv4Change: (ipv4Range: string, index: number) => void;
-  regionSelected: null | Region;
+  regionSelected: string;
+  setIsVpcSelected: (vpc: boolean) => void;
   subnetChange: (subnetIds: null | number[]) => void;
   subnets?: NodeBalancerVpcPayload[];
-  vpcChange: (vpc: null | VPC) => void;
-  vpcSelected: null | VPC;
 }
 
 export const VPCPanel = (props: Props) => {
@@ -35,39 +31,47 @@ export const VPCPanel = (props: Props) => {
     errors,
     ipv4Change,
     regionSelected,
-    vpcSelected,
-    vpcChange,
+    setIsVpcSelected,
     subnets,
     subnetChange,
   } = props;
 
-  const regionSupportsVPC =
-    regionSelected?.capabilities.includes('VPCs') || false;
+  const { data: region } = useRegionQuery(regionSelected);
+
+  const regionSupportsVPC = region?.capabilities.includes('VPCs') || false;
 
   const {
     data: vpcs,
-    error: vpcError,
+    error: error,
     isLoading: isVPCLoading,
   } = useAllVPCsQuery({
     enabled: regionSupportsVPC,
-    filter: { region: regionSelected?.id || '' },
+    filter: { region: regionSelected },
   });
 
+  const [VPCSelected, setVPCSelected] = React.useState<null | VPC>(null);
+
+  React.useEffect(() => {
+    setVPCSelected(null);
+  }, [regionSelected]);
+
   const getVPCSubnetLabelFromId = (subnetId: number): string => {
-    const subnet = vpcSelected?.subnets.find(
-      ({ id, ...rest }) => id === subnetId
-    );
+    const subnet = VPCSelected?.subnets.find(({ id }) => id === subnetId);
     return subnet?.label || '';
   };
 
+  const vpcError = error
+    ? getAPIErrorOrDefault(error, 'Unable to load VPCs')[0].reason
+    : undefined;
+
   return (
-    <Paper data-testid="vpc-panel">
+    <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
         <Stack spacing={1.5}>
           <Autocomplete
             disabled={disabled}
-            errorText={vpcError?.[0].reason}
+            errorText={vpcError}
             helperText={
               regionSelected && !regionSupportsVPC
                 ? 'VPC is not available in the selected region.'
@@ -82,7 +86,8 @@ export const VPCPanel = (props: Props) => {
                 : 'There are no VPCs in the selected region.'
             }
             onChange={(e, vpc) => {
-              vpcChange(vpc ?? null);
+              setVPCSelected(vpc ?? null);
+              setIsVpcSelected(Boolean(vpc));
 
               if (vpc && vpc.subnets.length === 1) {
                 // If the user selects a VPC and the VPC only has one subnet,
@@ -98,13 +103,14 @@ export const VPCPanel = (props: Props) => {
             textFieldProps={{
               tooltipText: NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
             }}
-            value={vpcSelected ?? null}
+            value={VPCSelected ?? null}
           />
-          {vpcSelected && (
+          {VPCSelected && (
             <>
               <Autocomplete
                 errorText={
-                  errors.find((err) => err.field?.includes('subnet_id'))?.reason
+                  errors?.find((err) => err.field?.includes('subnet_id'))
+                    ?.reason
                 }
                 getOptionLabel={(subnet) => `${subnet.label} (${subnet.ipv4})`}
                 label="Subnet"
@@ -112,10 +118,10 @@ export const VPCPanel = (props: Props) => {
                 onChange={(_, subnet) =>
                   subnetChange(subnet ? [subnet.id] : null)
                 }
-                options={vpcSelected?.subnets ?? []}
+                options={VPCSelected?.subnets ?? []}
                 placeholder="Select Subnet"
                 value={
-                  vpcSelected?.subnets.find(
+                  VPCSelected?.subnets.find(
                     (subnet) => subnet.id === subnets?.[0].subnet_id
                   ) ?? null
                 }
@@ -124,10 +130,8 @@ export const VPCPanel = (props: Props) => {
                 subnets.map((vpc, index) => (
                   <TextField
                     errorText={
-                      errors.find(
-                        (err) =>
-                          err.field?.includes(`vpcs[${index}].ipv4_range`) ||
-                          err.field?.includes(`nodes[${index}].ipv4_range`)
+                      errors?.find((err) =>
+                        err.field?.includes(`vpcs[${index}].ipv4_range`)
                       )?.reason
                     }
                     key={`${vpc.subnet_id}`}

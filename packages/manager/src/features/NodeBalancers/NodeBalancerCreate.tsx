@@ -66,7 +66,7 @@ import {
 import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
+import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 
@@ -127,6 +127,18 @@ const NodeBalancerCreate = () => {
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
 
+  const error = React.useMemo(
+    () =>
+      isNodebalancerVPCEnabled
+        ? createNodeBalancerBetaError
+        : createNodebalancerError,
+    [
+      isNodebalancerVPCEnabled,
+      createNodebalancerError,
+      createNodeBalancerBetaError,
+    ]
+  );
+
   const [nodeBalancerFields, setNodeBalancerFields] =
     React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
 
@@ -150,12 +162,12 @@ const NodeBalancerCreate = () => {
     globalGrantType: 'add_nodebalancers',
   });
 
-  const regionSelected = React.useMemo(
-    () => regions?.find((r) => r.id === nodeBalancerFields.region),
-    [nodeBalancerFields, regions]
-  );
+  const [isVpcSelected, setIsVpcSelected] = React.useState<boolean>(false);
+  const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
 
-  const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
+  React.useEffect(() => {
+    setVPCErrors([]);
+  }, [isVpcSelected]);
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -290,11 +302,11 @@ const NodeBalancerCreate = () => {
     scrollErrorIntoView();
   };
 
-  const clearErrors = () =>
+  const clearErrors = () => {
     setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs].map(({ errors, ...config }) => ({
+      const newConfigs = [...prev.configs].map(({ errors: _, ...config }) => ({
         ...config,
-        nodes: config.nodes.map(({ errors, ...node }) => ({
+        nodes: config.nodes.map(({ errors: _, ...node }) => ({
           ...node,
         })),
       }));
@@ -305,10 +317,16 @@ const NodeBalancerCreate = () => {
 
       return { ...prev, configs: newConfigs };
     });
+    setVPCErrors([]);
+  };
 
   const onCreate = () => {
-    if (selectedVPC && nodeBalancerFields?.vpcs === undefined) {
-      error?.push({ field: 'vpc[0].subnet_id', reason: 'Subnet is required' });
+    if (isVpcSelected && nodeBalancerFields?.vpcs === undefined) {
+      const subnetError = {
+        field: 'vpc[0].subnet_id',
+        reason: 'Subnet is required',
+      };
+      setVPCErrors((prev) => (prev ? [...prev, subnetError] : [subnetError]));
       return;
     }
     clearErrors();
@@ -358,6 +376,28 @@ const NodeBalancerCreate = () => {
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
         );
+        const vpcErrors = errors
+          .map((err) => {
+            if (!err?.field) return null;
+            if (err?.field.includes('subnet_id')) {
+              return {
+                field: 'vpcs.subnet_id',
+                reason: err.reason,
+              };
+            }
+            if (err?.field.includes('ipv4_range')) {
+              const indexMatch = err.field.match(/\[(\d+)\]/);
+              const index = indexMatch ? Number(indexMatch[1]) : -1;
+              return {
+                field: `vpcs[${index}].ipv4_range`,
+                reason: err.reason,
+              };
+            }
+            return null;
+          })
+          .filter((err) => err !== null);
+
+        setVPCErrors(vpcErrors);
 
         scrollErrorIntoView();
       });
@@ -448,11 +488,11 @@ const NodeBalancerCreate = () => {
       return;
     }
     // We just changed the region so any selected IP addresses, Subnets and VPCs are likely invalid
-    setNodeBalancerFields(({ vpcs, ...prev }) => ({
+    setNodeBalancerFields(({ vpcs: _, ...prev }) => ({
       ...prev,
       region,
     }));
-    setSelectedVPC(null);
+    setIsVpcSelected(false);
     resetNodeAddresses();
   };
 
@@ -505,10 +545,6 @@ const NodeBalancerCreate = () => {
 
   const confirmationConfigError = () =>
     (deleteConfigConfirmDialog.errors || []).map((e) => e.reason).join(',');
-
-  const error = isNodebalancerVPCEnabled
-    ? createNodeBalancerBetaError
-    : createNodebalancerError;
 
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
   const generalError = hasErrorFor('none');
@@ -669,19 +705,12 @@ const NodeBalancerCreate = () => {
         {isNodebalancerVPCEnabled && (
           <VPCPanel
             disabled={isRestricted}
-            errors={
-              error?.filter(
-                (err) =>
-                  err.field?.includes('subnet_id') ||
-                  err.field?.includes('ipv4_range')
-              ) || []
-            }
+            errors={vpcErrors}
             ipv4Change={ipv4Change}
-            regionSelected={regionSelected || null}
+            regionSelected={nodeBalancerFields.region ?? ''}
+            setIsVpcSelected={setIsVpcSelected}
             subnetChange={subnetChange}
             subnets={nodeBalancerFields.vpcs}
-            vpcChange={setSelectedVPC}
-            vpcSelected={selectedVPC}
           />
         )}
       </Stack>
