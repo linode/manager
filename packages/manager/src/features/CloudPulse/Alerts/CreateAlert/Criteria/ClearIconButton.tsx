@@ -12,11 +12,11 @@ export const ClearIconButton = (props: ClearIconButtonProps) => {
   const { handleClick } = props;
   return (
     <IconButton
+      data-testid="clear-icon"
+      onClick={handleClick}
       sx={{
         padding: 0,
       }}
-      data-testid="clear-icon"
-      onClick={handleClick}
     >
       <ClearOutlineOutlined />
     </IconButton>

@@ -1,10 +1,11 @@
-import { UserDefinedField } from '@linode/api-v4';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { UserDefinedFieldInput } from './UserDefinedFieldInput';
+
+import type { UserDefinedField } from '@linode/api-v4';
 
 describe('UserDefinedFieldInput', () => {
   it('should render a TextField for a required UDF', () => {

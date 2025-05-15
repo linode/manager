@@ -113,19 +113,37 @@ export const LinodeSelect = (
 
   return (
     <Autocomplete
+      clearOnBlur={false}
+      data-testid="add-linode-autocomplete"
+      disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disabled={disabled}
+      disablePortal={true}
+      errorText={error?.[0].reason ?? errorText}
+      getOptionDisabled={getOptionDisabled}
+      helperText={helperText}
+      id={id}
+      inputValue={inputValue}
       isOptionEqualToValue={
         checkIsOptionEqualToValue
           ? (option, value) => option.id === value.id
           : undefined
       }
+      label={label ? label : multiple ? 'Linodes' : 'Linode'}
+      loading={isFetching || loading}
+      multiple={multiple}
+      noMarginTop={noMarginTop}
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isFetching)
       }
+      onBlur={onBlur}
       onChange={(_, value) =>
         multiple && Array.isArray(value)
           ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (linodes ?? [])}
       placeholder={
         placeholder
           ? placeholder
@@ -133,6 +151,9 @@ export const LinodeSelect = (
             ? 'Select Linodes'
             : 'Select a Linode'
       }
+      PopperComponent={CustomPopper}
+      slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
+      sx={sx}
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
@@ -140,27 +161,6 @@ export const LinodeSelect = (
             : (linodes?.find(value) ?? null)
           : mapIdsToDevices<Linode>(value, linodes)
       }
-      PopperComponent={CustomPopper}
-      clearOnBlur={false}
-      data-testid="add-linode-autocomplete"
-      disableClearable={!clearable}
-      disableCloseOnSelect={multiple}
-      disablePortal={true}
-      disabled={disabled}
-      errorText={error?.[0].reason ?? errorText}
-      getOptionDisabled={getOptionDisabled}
-      helperText={helperText}
-      id={id}
-      inputValue={inputValue}
-      label={label ? label : multiple ? 'Linodes' : 'Linode'}
-      loading={isFetching || loading}
-      multiple={multiple}
-      noMarginTop={noMarginTop}
-      onBlur={onBlur}
-      onInputChange={(_, value) => setInputValue(value)}
-      options={options || (linodes ?? [])}
-      slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
-      sx={sx}
     />
   );
 };

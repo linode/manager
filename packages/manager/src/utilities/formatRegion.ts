@@ -36,7 +36,7 @@ export const getRegionCountryGroup = (region: Region | undefined) => {
     ];
 
   return continentCode
-    ? CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other'
+    ? (CONTINENT_CODE_TO_CONTINENT[continentCode] ?? 'Other')
     : 'Other';
 };
 

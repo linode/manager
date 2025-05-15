@@ -9,7 +9,7 @@ exports[`TabList component > renders TabList correctly 1`] = `
   >
     <div
       aria-orientation="horizontal"
-      class="css-9s3mv1"
+      class="css-1hu91tb"
       data-reach-tab-list=""
       role="tablist"
     />

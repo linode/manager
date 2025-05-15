@@ -97,17 +97,17 @@ describe('RegionMultiSelect', () => {
   it('should render selected regions correctly', () => {
     renderWithTheme(
       <RegionMultiSelect
+        currentCapability="Block Storage"
+        isGeckoLAEnabled={false}
+        onChange={mockHandleSelection}
+        regions={[regionNewark, regionAtlanta]}
+        selectedIds={[regionNewark.id]}
         SelectedRegionsList={({ onRemove, selectedRegions }) => (
           <SelectedRegionsList
             onRemove={onRemove}
             selectedRegions={selectedRegions}
           />
         )}
-        currentCapability="Block Storage"
-        isGeckoLAEnabled={false}
-        onChange={mockHandleSelection}
-        regions={[regionNewark, regionAtlanta]}
-        selectedIds={[regionNewark.id]}
       />
     );
 

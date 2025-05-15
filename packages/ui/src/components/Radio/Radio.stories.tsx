@@ -1,7 +1,6 @@
-import React from 'react';
-
 // @todo: modularization - Import from 'ui' package once FormControlLabel is migrated.
 import { FormControlLabel } from '@mui/material';
+import React from 'react';
 
 import { Box } from '../Box';
 import { RadioGroup } from '../RadioGroup';

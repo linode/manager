@@ -86,7 +86,7 @@ export const DatabaseBackups = (props: Props) => {
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<DateTime | null>(null);
-  const [selectedTime, setSelectedTime] = React.useState<TimeOption | null>(
+  const [selectedTime, setSelectedTime] = React.useState<null | TimeOption>(
     null
   );
   const [versionOption, setVersionOption] = React.useState<VersionOption>(
@@ -142,8 +142,8 @@ export const DatabaseBackups = (props: Props) => {
         <StyledTypography>
           Databases are automatically backed-up with full daily backups for the
           past 14 days, and binary logs recorded continuously. Full backups are
-          version-specific binary backups, which when combined with binary
-          logs allow for consistent recovery to a specific point in time (PITR).
+          version-specific binary backups, which when combined with binary logs
+          allow for consistent recovery to a specific point in time (PITR).
         </StyledTypography>
         <Divider spacingBottom={25} spacingTop={25} />
         <Typography variant="h2">Restore a Backup</Typography>
@@ -198,11 +198,11 @@ export const DatabaseBackups = (props: Props) => {
             <Typography variant="h3">Date</Typography>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
               <StyledDateCalendar
+                disabled={disabled || versionOption === 'newest'}
+                onChange={handleDateChange}
                 shouldDisableDate={(date) =>
                   isDateOutsideBackup(date, oldestBackup?.startOf('day'))
                 }
-                disabled={disabled || versionOption === 'newest'}
-                onChange={handleDateChange}
                 value={selectedDate}
               />
             </LocalizationProvider>
@@ -212,6 +212,8 @@ export const DatabaseBackups = (props: Props) => {
             <FormControl style={{ marginTop: 0 }}>
               {/* TODO: Replace Time Select to the own custom date-time picker component when it's ready */}
               <Autocomplete
+                autoComplete={false}
+                className={classes.timeAutocomplete}
                 disabled={
                   disabled || !selectedDate || versionOption === 'newest'
                 }
@@ -225,6 +227,10 @@ export const DatabaseBackups = (props: Props) => {
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
+                label=""
+                onChange={(_, newTime) => setSelectedTime(newTime)}
+                options={TIME_OPTIONS}
+                placeholder="Choose a time"
                 renderOption={(props, option) => {
                   const { key, ...rest } = props;
                   return (
@@ -238,12 +244,6 @@ export const DatabaseBackups = (props: Props) => {
                     'data-qa-time-select': true,
                   },
                 }}
-                autoComplete={false}
-                className={classes.timeAutocomplete}
-                label=""
-                onChange={(_, newTime) => setSelectedTime(newTime)}
-                options={TIME_OPTIONS}
-                placeholder="Choose a time"
                 value={selectedTime}
               />
             </FormControl>
@@ -252,11 +252,11 @@ export const DatabaseBackups = (props: Props) => {
         <Grid item xs={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button
+              buttonType="primary"
+              data-qa-settings-button="restore"
               disabled={
                 versionOption === 'dateTime' && (!selectedDate || !selectedTime)
               }
-              buttonType="primary"
-              data-qa-settings-button="restore"
               onClick={onRestoreDatabase}
             >
               Restore

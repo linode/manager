@@ -307,7 +307,7 @@ export const sumRelatedProcessesAcrossAllUsers = (
     return accum;
   }, {} as ProcessStats);
 
-export type NetworkUnit = 'Kb' | 'Mb' | 'b';
+export type NetworkUnit = 'b' | 'Kb' | 'Mb';
 /**
  * converts bytes to either Kb (Kilobits) or Mb (Megabits)
  * depending on if the Kilobit conversion exceeds 1000.

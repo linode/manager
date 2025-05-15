@@ -1,7 +1,7 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -50,12 +50,8 @@ describe('CreateUserDrawer', () => {
       })
     );
 
-    const {
-      findByText,
-      getByLabelText,
-      getByRole,
-      getByTestId,
-    } = renderWithTheme(<CreateUserDrawer {...props} />);
+    const { findByText, getByLabelText, getByRole, getByTestId } =
+      renderWithTheme(<CreateUserDrawer {...props} />);
 
     const dialog = getByRole('dialog');
     expect(dialog).toBeInTheDocument();

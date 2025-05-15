@@ -25,7 +25,7 @@ export interface ProcessesTableProps {
   lastUpdatedError?: APIError[];
   processesData: ExtendedProcess[];
   processesLoading: boolean;
-  selectedProcess: Process | null;
+  selectedProcess: null | Process;
   setSelectedProcess: (process: Process) => void;
 }
 
@@ -134,7 +134,7 @@ export const ProcessesTable = React.memo((props: ProcessesTableProps) => {
 const renderLoadingErrorData = (
   loading: boolean,
   data: ExtendedProcess[],
-  selectedProcess: Process | null,
+  selectedProcess: null | Process,
   setSelectedProcess: (process: Process) => void,
   error?: string
 ) => {
@@ -180,12 +180,12 @@ export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
 
   return (
     <TableRow
-      onKeyUp={(e: any) =>
-        e.key === 'Enter' && setSelectedProcess({ name, user })
-      }
       data-testid="longview-service-row"
       forceIndex
       onClick={() => setSelectedProcess({ name, user })}
+      onKeyUp={(e: any) =>
+        e.key === 'Enter' && setSelectedProcess({ name, user })
+      }
       selected={isSelected}
     >
       <TableCell data-testid={`name-${name}`}>

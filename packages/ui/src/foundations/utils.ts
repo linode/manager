@@ -49,7 +49,7 @@ export const spacingFunction = (...factors: number[]): string => {
   // Find the closest matching token, rounds down.
   const availablePixels = Object.keys(spacingValueMap).map(Number);
   const closestPixel = availablePixels.reduce((prev, curr) =>
-    Math.abs(curr - factor) < Math.abs(prev - factor) ? curr : prev
+    Math.abs(curr - factor) < Math.abs(prev - factor) ? curr : prev,
   );
 
   const token = spacingValueMap[closestPixel];

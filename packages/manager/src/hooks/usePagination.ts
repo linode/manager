@@ -39,7 +39,7 @@ export const usePagination = (
   const searchParamPageSize = searchParams.get(pageSizeKey);
 
   const preferedPageSize = preferenceKey
-    ? pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE
+    ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
     : MIN_PAGE_SIZE;
 
   const page = searchParamPage ? Number(searchParamPage) : initialPage;

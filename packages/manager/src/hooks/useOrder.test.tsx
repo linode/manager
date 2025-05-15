@@ -1,10 +1,12 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
 import { queryClientFactory, usePreferences } from '@linode/queries';
-import { OrderSet } from '@linode/utilities';
+import { act, renderHook, waitFor } from '@testing-library/react';
+
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useOrder } from './useOrder';
+
+import type { OrderSet } from '@linode/utilities';
 
 // Default for Sorting
 const defaultOrder: OrderSet = {

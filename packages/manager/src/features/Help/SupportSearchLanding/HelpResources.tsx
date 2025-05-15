@@ -64,11 +64,11 @@ export const HelpResources = () => {
           </Typography>
         </Grid>
         <Grid
+          container
           sx={{
             display: 'flex',
             justifyContent: 'center',
           }}
-          container
         >
           <Grid
             size={{

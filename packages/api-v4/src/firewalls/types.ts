@@ -1,27 +1,27 @@
-export type FirewallStatus = 'enabled' | 'disabled' | 'deleted';
+export type FirewallStatus = 'deleted' | 'disabled' | 'enabled';
 
-export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP' | 'IPENCAP';
+export type FirewallRuleProtocol = 'ALL' | 'ICMP' | 'IPENCAP' | 'TCP' | 'UDP';
 
-export type FirewallDeviceEntityType = 'linode' | 'nodebalancer' | 'interface';
+export type FirewallDeviceEntityType = 'interface' | 'linode' | 'nodebalancer';
 
 export type FirewallPolicyType = 'ACCEPT' | 'DROP';
 
 export interface Firewall {
-  id: number;
-  status: FirewallStatus;
-  label: string;
-  tags: string[];
-  rules: FirewallRules;
   created: string;
-  updated: string;
   entities: FirewallDeviceEntity[];
+  id: number;
+  label: string;
+  rules: FirewallRules;
+  status: FirewallStatus;
+  tags: string[];
+  updated: string;
 }
 
 export interface FirewallRules {
   fingerprint: string;
   inbound?: FirewallRuleType[] | null;
-  outbound?: FirewallRuleType[] | null;
   inbound_policy: FirewallPolicyType;
+  outbound?: FirewallRuleType[] | null;
   outbound_policy: FirewallPolicyType;
   version: number;
 }
@@ -34,53 +34,53 @@ export type UpdateFirewallRules = Omit<
 export type FirewallTemplateRules = UpdateFirewallRules;
 
 export interface FirewallRuleType {
-  label?: string | null;
-  description?: string | null;
-  protocol: FirewallRuleProtocol;
-  ports?: string;
   action: FirewallPolicyType;
   addresses?: null | {
     ipv4?: null | string[];
     ipv6?: null | string[];
   };
+  description?: null | string;
+  label?: null | string;
+  ports?: string;
+  protocol: FirewallRuleProtocol;
 }
 
 export interface FirewallDeviceEntity {
   id: number;
+  label: null | string;
   type: FirewallDeviceEntityType;
-  label: string | null;
   url: string;
 }
 
 export interface FirewallDevice {
-  id: number;
   created: string;
-  updated: string;
   entity: FirewallDeviceEntity;
+  id: number;
+  updated: string;
 }
 
-export type FirewallTemplateSlug = 'akamai-non-prod' | 'vpc' | 'public';
+export type FirewallTemplateSlug = 'akamai-non-prod' | 'public' | 'vpc';
 
 export interface FirewallTemplate {
-  slug: FirewallTemplateSlug;
   rules: FirewallTemplateRules;
+  slug: FirewallTemplateSlug;
 }
 
 export interface CreateFirewallPayload {
-  label: string;
-  tags?: string[];
-  rules: UpdateFirewallRules;
-  devices?: {
+  devices?: null | {
+    interfaces?: number[];
     linodes?: number[];
     nodebalancers?: number[];
-    interfaces?: number[];
-  } | null;
+  };
+  label: string;
+  rules: UpdateFirewallRules;
+  tags?: string[];
 }
 
 export interface UpdateFirewallPayload {
   label?: string;
-  tags?: string[];
   status?: Omit<FirewallStatus, 'deleted'>;
+  tags?: string[];
 }
 
 export interface FirewallDevicePayload {
@@ -89,10 +89,10 @@ export interface FirewallDevicePayload {
 }
 
 export interface DefaultFirewallIDs {
-  public_interface: number | null;
-  vpc_interface: number | null;
-  linode: number | null;
-  nodebalancer: number | null;
+  linode: null | number;
+  nodebalancer: null | number;
+  public_interface: null | number;
+  vpc_interface: null | number;
 }
 
 export interface FirewallSettings {

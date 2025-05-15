@@ -174,6 +174,7 @@ describe('VPC landing page', () => {
     cy.wait('@getVPCs');
 
     // Delete the first VPC instance
+    mockGetVPCs([mockVPCs[1]]).as('getVPCs');
     cy.findByText(mockVPCs[0].label)
       .should('be.visible')
       .closest('tr')

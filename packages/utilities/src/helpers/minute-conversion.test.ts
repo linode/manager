@@ -28,14 +28,14 @@ describe('Human-Readable Minute Conversion', () => {
   it('should return days, hours, and minutes', () => {
     expect(generateMigrationTimeString(1440)).toBe(`1 day and 0 minutes`);
     expect(generateMigrationTimeString(1500)).toBe(
-      `1 day, 1 hour, and 0 minutes`
+      `1 day, 1 hour, and 0 minutes`,
     );
     expect(generateMigrationTimeString(2800)).toBe(
-      `1 day, 22 hours, and 40 minutes`
+      `1 day, 22 hours, and 40 minutes`,
     );
     expect(generateMigrationTimeString(0)).toBe(`0 minutes`);
     expect(generateMigrationTimeString(2820)).toBe(
-      `1 day, 23 hours, and 0 minutes`
+      `1 day, 23 hours, and 0 minutes`,
     );
     expect(generateMigrationTimeString(2880)).toBe(`2 days and 0 minutes`);
   });

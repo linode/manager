@@ -4,7 +4,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { EntityHeader } from './EntityHeader';
 
-import { HeaderProps } from './EntityHeader';
+import type { HeaderProps } from './EntityHeader';
 
 const mockText = 'Hello world';
 
@@ -15,7 +15,7 @@ const defaultProps: HeaderProps = {
 describe('EntityHeader', () => {
   it('should render title with variant when isSummaryView is True', () => {
     const { getByRole } = renderWithTheme(
-      <EntityHeader variant="h2" isSummaryView {...defaultProps} />
+      <EntityHeader isSummaryView variant="h2" {...defaultProps} />
     );
     const heading = getByRole('heading', { level: 2 });
     expect(heading).toBeInTheDocument();

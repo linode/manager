@@ -16,7 +16,7 @@ export interface BaseQueryParams {
  * // { query: 'false', this: 'that' }
  */
 export const getQueryParamsFromQueryString = <T extends BaseQueryParams>(
-  queryString: string
+  queryString: string,
 ): T => Object.fromEntries(new URLSearchParams(queryString)) as T;
 
 /**
@@ -33,7 +33,7 @@ export const getQueryParamsFromQueryString = <T extends BaseQueryParams>(
 export const getQueryParamFromQueryString = (
   queryString: string,
   paramName: string,
-  defaultValue: string = ''
+  defaultValue: string = '',
 ) => {
   const params = new URLSearchParams(queryString);
   return params.get(paramName) ?? defaultValue;

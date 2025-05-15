@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import { useHistory } from 'react-router-dom';
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount } from '@linode/queries';
 
 export const TaxCollectionBanner = () => {
   const history = useHistory();
@@ -52,13 +52,13 @@ export const TaxCollectionBanner = () => {
 
   const actionButton = bannerHasAction ? (
     <Button
+      buttonType="primary"
+      onClick={() => history.push('/account/billing/edit')}
       sx={(theme) => ({
         marginLeft: theme.spacing(2),
         minWidth: '140px',
         whiteSpace: 'nowrap',
       })}
-      buttonType="primary"
-      onClick={() => history.push('/account/billing/edit')}
     >
       Update Tax ID
     </Button>

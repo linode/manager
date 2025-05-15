@@ -1,16 +1,19 @@
-import { DateTime } from 'luxon';
-import { depaginate } from '../util/paginate';
-import { CypressPlugin } from './plugin';
-
 import {
   deleteFirewall,
   deleteKubernetesCluster,
   deleteLinode,
-  Firewall,
   getFirewalls,
   getKubernetesClusters,
   getLinodes,
   getNodePools,
+} from '@linode/api-v4';
+import { DateTime } from 'luxon';
+
+import { depaginate } from '../util/paginate';
+
+import type { CypressPlugin } from './plugin';
+import type {
+  Firewall,
   KubeNodePoolResponse,
   KubernetesCluster,
   Linode,

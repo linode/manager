@@ -1,3 +1,4 @@
+import type { FirewallOptionItem } from '../../shared';
 import type { ExtendedFirewallRule } from './firewallRuleEditor';
 import type { Category, FirewallRuleError } from './shared';
 import type {
@@ -5,7 +6,6 @@ import type {
   FirewallRuleType,
 } from '@linode/api-v4/lib/firewalls';
 import type { FormikProps } from 'formik';
-import { FirewallOptionItem } from '../../shared';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export type FirewallRuleDrawerMode = 'create' | 'edit';

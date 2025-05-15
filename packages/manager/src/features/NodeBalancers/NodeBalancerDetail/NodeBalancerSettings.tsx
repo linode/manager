@@ -14,7 +14,6 @@ import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
@@ -23,12 +22,8 @@ import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
-  const { id } = useParams({
-    strict: false,
-  });
+  const match = useMatch({ strict: false });
+  const { id } = useParams({ strict: false });
   const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
@@ -58,12 +53,8 @@ export const NodeBalancerSettings = () => {
   const {
     data: selectedNodeBalancer,
     isFetching: isFetchingNodeBalancer,
-  } = useDialogData({
-    enabled: !!id,
-    paramKey: 'id',
-    queryHook: useNodeBalancerQuery,
-    redirectToOnNotFound: '/nodebalancers',
-  });
+    error: nodeBalancerError,
+  } = useNodeBalancerQuery(Number(id), !!id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -112,14 +103,14 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
+          data-qa-connection-throttle
+          disabled={isNodeBalancerReadOnly}
+          errorText={throttleError?.[0].reason}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">/ second</InputAdornment>
             ),
           }}
-          data-qa-connection-throttle
-          disabled={isNodeBalancerReadOnly}
-          errorText={throttleError?.[0].reason}
           label="Connection Throttle"
           onChange={(e) => setConnectionThrottle(Number(e.target.value))}
           placeholder="0"
@@ -131,15 +122,15 @@ export const NodeBalancerSettings = () => {
           to this number per second. 0 to disable.
         </FormHelperText>
         <Button
+          buttonType="primary"
+          data-qa-label-save
+          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
+          loading={isUpdatingThrottle}
           onClick={() =>
             updateNodeBalancerThrottle({
               client_conn_throttle: connectionThrottle,
             })
           }
-          buttonType="primary"
-          data-qa-label-save
-          disabled={connectionThrottle === nodebalancer.client_conn_throttle}
-          loading={isUpdatingThrottle}
           sx={sxButton}
         >
           Save
@@ -147,21 +138,22 @@ export const NodeBalancerSettings = () => {
       </Accordion>
       <Accordion defaultExpanded heading="Delete NodeBalancer">
         <Button
+          buttonType="primary"
+          data-testid="delete-nodebalancer"
+          disabled={isNodeBalancerReadOnly}
           onClick={() =>
             navigate({
               params: { id: String(id) },
               to: '/nodebalancers/$id/settings/delete',
             })
           }
-          buttonType="primary"
-          data-testid="delete-nodebalancer"
-          disabled={isNodeBalancerReadOnly}
         >
           Delete
         </Button>
       </Accordion>
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
+        nodeBalancerError={nodeBalancerError}
         open={match.routeId === '/nodebalancers/$id/settings/delete'}
         selectedNodeBalancer={selectedNodeBalancer}
       />

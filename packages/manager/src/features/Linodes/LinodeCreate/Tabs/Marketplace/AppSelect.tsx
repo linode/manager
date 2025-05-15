@@ -59,15 +59,15 @@ export const AppSelect = (props: Props) => {
             value={query}
           />
           <Autocomplete
-            textFieldProps={{
-              containerProps: { sx: { minWidth: 250 } },
-              hideLabel: true,
-            }}
             disabled={isLoading}
             label="Select category"
             onChange={(e, value) => setCategory(value?.label)}
             options={categoryOptions}
             placeholder="Select category"
+            textFieldProps={{
+              containerProps: { sx: { minWidth: 250 } },
+              hideLabel: true,
+            }}
           />
         </Stack>
         <Box height="500px" sx={{ overflowX: 'hidden', overflowY: 'auto' }}>

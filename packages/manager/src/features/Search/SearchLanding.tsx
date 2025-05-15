@@ -14,14 +14,10 @@ const SearchLanding = () => {
   const location = useLocation();
   const query = getQueryParamFromQueryString(location.search, 'query');
 
-  const {
-    combinedResults,
-    entityErrors,
-    isLoading,
-    searchResultsByEntity,
-  } = useSearch({
-    query,
-  });
+  const { combinedResults, entityErrors, isLoading, searchResultsByEntity } =
+    useSearch({
+      query,
+    });
 
   const errors = getErrorsFromErrorMap(entityErrors);
 

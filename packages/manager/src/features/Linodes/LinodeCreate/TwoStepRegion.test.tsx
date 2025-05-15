@@ -45,12 +45,10 @@ describe('TwoStepRegion', () => {
   });
 
   it('should only display core regions in the Core tab region select', async () => {
-    const {
-      getByPlaceholderText,
-      getByRole,
-    } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion onChange={vi.fn()} />,
-    });
+    const { getByPlaceholderText, getByRole } =
+      renderWithThemeAndHookFormContext({
+        component: <TwoStepRegion onChange={vi.fn()} />,
+      });
 
     const select = getByPlaceholderText('Select a Region');
     await userEvent.click(select);
@@ -63,13 +61,10 @@ describe('TwoStepRegion', () => {
   });
 
   it('should only display distributed regions in the Distributed tab region select', async () => {
-    const {
-      getAllByRole,
-      getByPlaceholderText,
-      getByRole,
-    } = renderWithThemeAndHookFormContext({
-      component: <TwoStepRegion onChange={vi.fn()} />,
-    });
+    const { getAllByRole, getByPlaceholderText, getByRole } =
+      renderWithThemeAndHookFormContext({
+        component: <TwoStepRegion onChange={vi.fn()} />,
+      });
 
     const tabs = getAllByRole('tab');
     await userEvent.click(tabs[1]);

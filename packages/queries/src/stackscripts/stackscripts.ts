@@ -55,7 +55,7 @@ export const useCreateStackScriptMutation = () => {
     onSuccess(stackscript) {
       queryClient.setQueryData(
         stackscriptQueries.stackscript(stackscript.id).queryKey,
-        stackscript
+        stackscript,
       );
       queryClient.invalidateQueries({
         queryKey: stackscriptQueries.infinite._def,
@@ -69,7 +69,7 @@ export const useCreateStackScriptMutation = () => {
 
 export const useStackScriptsInfiniteQuery = (
   filter: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useInfiniteQuery<ResourcePage<StackScript>, APIError[]>({
     ...stackscriptQueries.infinite(filter),
@@ -91,7 +91,7 @@ export const useUpdateStackScriptMutation = (
     StackScript,
     APIError[],
     Partial<StackScriptPayload>
-  >
+  >,
 ) => {
   const queryClient = useQueryClient();
 
@@ -107,7 +107,7 @@ export const useUpdateStackScriptMutation = (
       });
       queryClient.setQueryData<StackScript>(
         stackscriptQueries.stackscript(id).queryKey,
-        stackscript
+        stackscript,
       );
       if (options?.onSuccess) {
         options.onSuccess(stackscript, vars, ctx);
@@ -118,7 +118,7 @@ export const useUpdateStackScriptMutation = (
 
 export const useDeleteStackScriptMutation = (
   id: number,
-  options: UseMutationOptions<{}, APIError[]>
+  options: UseMutationOptions<{}, APIError[]>,
 ) => {
   const queryClient = useQueryClient();
 

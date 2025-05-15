@@ -36,18 +36,17 @@ describe('ImageUploadCLIDialog', () => {
   });
 
   it('should render a CLI command based on form data', () => {
-    const {
-      getByDisplayValue,
-    } = renderWithThemeAndHookFormContext<ImageUploadFormData>({
-      component: <ImageUploadCLIDialog isOpen onClose={vi.fn()} />,
-      useFormOptions: {
-        defaultValues: {
-          description: 'this is my cool image',
-          label: 'my-image',
-          region: 'us-east',
+    const { getByDisplayValue } =
+      renderWithThemeAndHookFormContext<ImageUploadFormData>({
+        component: <ImageUploadCLIDialog isOpen onClose={vi.fn()} />,
+        useFormOptions: {
+          defaultValues: {
+            description: 'this is my cool image',
+            label: 'my-image',
+            region: 'us-east',
+          },
         },
-      },
-    });
+      });
 
     expect(
       getByDisplayValue(

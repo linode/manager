@@ -250,4 +250,16 @@ describe('Alert Listing', () => {
       'Creation of 3 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
     );
   });
+  it('should disable the create button when the alerts are loading', async () => {
+    queryMocks.useAllAlertDefinitionsQuery.mockReturnValue({
+      data: null,
+      isError: false,
+      isLoading: true,
+    });
+
+    renderWithTheme(<AlertListing />);
+
+    const createButton = screen.getByRole('button', { name: 'Create Alert' });
+    expect(createButton).toBeDisabled();
+  });
 });

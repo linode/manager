@@ -5,7 +5,7 @@ import type {
 } from 'src/dev-tools/DesignTokensTool';
 
 export const filterTokenObject = (
-  obj: RecursiveTokenObject | TokenObject | string,
+  obj: RecursiveTokenObject | string | TokenObject,
   searchTerm: string,
   path: string[] = []
 ): RecursiveTokenObject | string => {
@@ -52,7 +52,7 @@ export const filterTokenObject = (
 };
 
 export const countTokens = (
-  obj: RecursiveTokenObject | TokenObject | string
+  obj: RecursiveTokenObject | string | TokenObject
 ): number => {
   if (typeof obj === 'string') {
     return 1;

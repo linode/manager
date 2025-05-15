@@ -59,7 +59,32 @@ async function generateChangeset() {
       type: "input",
       prefix: `📝 Description`,
       name: "description",
-      message: "\nDescribe the change (don't include the PR number):",
+      message: "\nBriefly describe the change (see https://linode.github.io/manager/CONTRIBUTING.html#writing-a-changeset for best practices):",
+      validate: (input) => {
+        const trimmed = input.trim();
+
+        if (trimmed.length < 1) {
+          return "Description must be between 1-150 characters. Please add a description.";
+        }
+
+        if (trimmed.length > 150) {
+          return "Description must be no more than 150 characters. Please summarize your changes.";
+        }
+
+        if (/#[0-9]+/.test(trimmed) || /\bPR\s?#?\d+\b/i.test(trimmed)) {
+          return "Description should not include the PR number (e.g., #123 or PR 456).";
+        }
+
+        if (!/^[A-Z]/.test(trimmed)) {
+          return "Description should start with a capital letter.";
+        }
+
+        if (/[.]$/.test(trimmed)) {
+          return "Description should not end with a period.";
+        }
+
+        return true;
+      },
     },
   ]);
   const { commit } = await inquirer.prompt([

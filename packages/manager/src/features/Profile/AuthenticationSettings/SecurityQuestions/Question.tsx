@@ -61,6 +61,10 @@ export const Question = (props: Props) => {
   }
   return (
     <Autocomplete
+      autoHighlight
+      defaultValue={currentOption}
+      disableClearable
+      label={label}
       onChange={(_, item) => {
         setFieldValue(`security_questions[${index}]`, {
           id: item.value,
@@ -68,10 +72,6 @@ export const Question = (props: Props) => {
           response: '',
         });
       }}
-      autoHighlight
-      defaultValue={currentOption}
-      disableClearable
-      label={label}
       options={options}
       placeholder="Select a question"
       value={options.find((option) => option.value === questionResponse?.id)}

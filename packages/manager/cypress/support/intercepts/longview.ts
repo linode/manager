@@ -1,7 +1,8 @@
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { LongviewClient, ActiveLongviewPlan } from '@linode/api-v4';
+
+import type { ActiveLongviewPlan, LongviewClient } from '@linode/api-v4';
 import type {
   LongviewAction,
   LongviewResponse,

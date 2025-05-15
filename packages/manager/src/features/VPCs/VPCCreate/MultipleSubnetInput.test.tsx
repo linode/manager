@@ -34,13 +34,11 @@ const formOptions = {
 
 describe('MultipleSubnetInput', () => {
   it('should render a subnet node for each of the given subnets', () => {
-    const {
-      getAllByText,
-      getByDisplayValue,
-    } = renderWithThemeAndHookFormContext({
-      component: <MultipleSubnetInput {...props} />,
-      useFormOptions: formOptions,
-    });
+    const { getAllByText, getByDisplayValue } =
+      renderWithThemeAndHookFormContext({
+        component: <MultipleSubnetInput {...props} />,
+        useFormOptions: formOptions,
+      });
 
     expect(getAllByText('Subnet Label')).toHaveLength(3);
     expect(getAllByText('Subnet IP Address Range')).toHaveLength(3);
@@ -87,13 +85,11 @@ describe('MultipleSubnetInput', () => {
   });
 
   it('the first does not have a delete button if in a drawer', () => {
-    const {
-      queryAllByTestId,
-      queryByTestId,
-    } = renderWithThemeAndHookFormContext({
-      component: <MultipleSubnetInput {...props} isDrawer={true} />,
-      useFormOptions: formOptions,
-    });
+    const { queryAllByTestId, queryByTestId } =
+      renderWithThemeAndHookFormContext({
+        component: <MultipleSubnetInput {...props} isDrawer={true} />,
+        useFormOptions: formOptions,
+      });
     expect(queryAllByTestId(/delete-subnet/)).toHaveLength(
       formOptions.defaultValues.subnets.length - 1
     );
@@ -101,13 +97,11 @@ describe('MultipleSubnetInput', () => {
   });
 
   it('should remove an element from the array based on its index when the X is clicked', async () => {
-    const {
-      getByTestId,
-      queryByDisplayValue,
-    } = renderWithThemeAndHookFormContext({
-      component: <MultipleSubnetInput {...props} />,
-      useFormOptions: formOptions,
-    });
+    const { getByTestId, queryByDisplayValue } =
+      renderWithThemeAndHookFormContext({
+        component: <MultipleSubnetInput {...props} />,
+        useFormOptions: formOptions,
+      });
     const closeButton = getByTestId('delete-subnet-1');
     await userEvent.click(closeButton);
     expect(queryByDisplayValue('subnet-1')).toBeNull();

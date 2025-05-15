@@ -1,8 +1,8 @@
+import { useDeleteOAuthClientMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteOAuthClientMutation } from '@linode/queries';
 
 interface Props {
   id: string;

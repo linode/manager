@@ -1,7 +1,7 @@
 import type { APIError, Config, LinodeInterface } from '@linode/api-v4';
 
 export interface UpgradeInterfacesDialogContentProps<
-  State extends UpgradeInterfacesDialogState
+  State extends UpgradeInterfacesDialogState,
 > {
   linodeId: number;
   onClose: () => void;

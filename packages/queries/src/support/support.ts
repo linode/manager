@@ -64,7 +64,7 @@ export const useCreateSupportTicketMutation = () => {
       queryClient.invalidateQueries({ queryKey: supportQueries.tickets._def });
       queryClient.setQueryData<SupportTicket>(
         supportQueries.ticket(ticket.id).queryKey,
-        ticket
+        ticket,
       );
     },
   });

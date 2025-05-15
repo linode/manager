@@ -1,17 +1,17 @@
 export interface LongviewClient {
-  id: number;
+  api_key: string;
+  apps: Apps;
   created: string;
+  id: number;
+  install_code: string;
   label: string;
   updated: string;
-  api_key: string;
-  install_code: string;
-  apps: Apps;
 }
 
 export interface LongviewSubscription {
+  clients_included: number;
   id: string;
   label: string;
-  clients_included: number;
   price: {
     hourly: number;
     monthly: number;
@@ -28,6 +28,6 @@ export type ActiveLongviewPlan = LongviewSubscription | {};
 
 export interface Apps {
   apache: boolean;
-  nginx: boolean;
   mysql: boolean;
+  nginx: boolean;
 }

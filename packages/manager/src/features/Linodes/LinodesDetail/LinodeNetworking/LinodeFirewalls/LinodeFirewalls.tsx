@@ -2,7 +2,6 @@ import { useLinodeFirewallsQuery } from '@linode/queries';
 import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -34,18 +33,12 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const attachedFirewalls = attachedFirewallData?.data;
 
   const [selectedFirewall, setSelectedFirewall] = React.useState<Firewall>();
-  const [
-    deviceToBeRemoved,
-    setDeviceToBeRemoved,
-  ] = React.useState<FirewallDevice>();
-  const [
-    isRemoveDeviceDialogOpen,
-    setIsRemoveDeviceDialogOpen,
-  ] = React.useState<boolean>(false);
-  const [
-    isAddFirewallDrawerOpen,
-    setIsAddFirewalDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [deviceToBeRemoved, setDeviceToBeRemoved] =
+    React.useState<FirewallDevice>();
+  const [isRemoveDeviceDialogOpen, setIsRemoveDeviceDialogOpen] =
+    React.useState<boolean>(false);
+  const [isAddFirewallDrawerOpen, setIsAddFirewalDrawerOpen] =
+    React.useState<boolean>(false);
 
   const handleClickUnassign = (device: FirewallDevice, firewall: Firewall) => {
     setDeviceToBeRemoved(device);
@@ -120,7 +113,6 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         open={isRemoveDeviceDialogOpen}
       />
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={() => setIsAddFirewalDrawerOpen(false)}
         open={isAddFirewallDrawerOpen}
         title="Add Firewall"

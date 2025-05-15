@@ -1,6 +1,6 @@
-import type { mount } from 'cypress/react';
-import { Labelable } from './commands';
+import type { Labelable } from './commands';
 import type { LinodeVisitOptions } from './login.ts';
+import type { mount } from 'cypress/react';
 import type { TestTag } from 'support/util/tag';
 
 declare global {
@@ -10,6 +10,18 @@ declare global {
     }
 
     interface Chainable {
+      /**
+       * Adds tags for the given runnable.
+       *
+       * If tags have already been set (e.g. using a hook), this method will add
+       * the given tags in addition the tags that have already been set.
+       *
+       * Alias for `addTag()` in `support/util/tag.ts`.
+       *
+       * @param tags - Test tags.
+       */
+      addTag(...tags: TestTag[]): void;
+
       /**
        * Custom command to select DOM element by data-cy attribute.
        * @example cy.dataCy('greeting')
@@ -29,14 +41,40 @@ declare global {
       ): Chainable<>;
 
       /**
-       * Custom command to select DOM element by data-cy attribute.
-       * @example cy.dataCy('greeting')
+       * Asserts that a browser page visit (e.g. navigation or reload) has occurred.
+       *
+       * @example
+       * // After initial call to `cy.visit()` or `cy.visitWithLogin()`:
+       * cy.trackPageVisit().as('pageVisit');
+       * // Later in the tests, to assert that navigation has occurred:
+       * cy.expectNewPageVisit('@pageVisit');
+       *
+       * @param alias - Alias to the current page load ID.
+       *
+       * @returns Cypress chainable.
        */
-      visitWithLogin(
-        url: string,
-        linodeOptions?: LinodeVisitOptions,
-        cypressOptions?: Partial<Cypress.VisitOptions>
-      ): Chainable<any>;
+      expectNewPageVisit(alias: string): Chainable<>;
+
+      /**
+       * Mount a React component via `cypress/react`.
+       */
+      mount: typeof mount;
+
+      /**
+       * Internal Cypress command to retrieve test state.
+       *
+       * @param state - Cypress internal state to retrieve.
+       */
+      state(state?: string): any;
+
+      /**
+       * Sets tags for the current runnable.
+       *
+       * Alias for `tag()` in `support/util/tag.ts`.
+       *
+       * @param tags - Tags to set for test or runnable.
+       */
+      tag(...tags: TestTag[]): void;
 
       /**
        * Assigns a random page visit ID to the current page.
@@ -54,52 +92,14 @@ declare global {
       trackPageVisit(): Chainable<number>;
 
       /**
-       * Asserts that a browser page visit (e.g. navigation or reload) has occurred.
-       *
-       * @example
-       * // After initial call to `cy.visit()` or `cy.visitWithLogin()`:
-       * cy.trackPageVisit().as('pageVisit');
-       * // Later in the tests, to assert that navigation has occurred:
-       * cy.expectNewPageVisit('@pageVisit');
-       *
-       * @param alias - Alias to the current page load ID.
-       *
-       * @returns Cypress chainable.
+       * Custom command to select DOM element by data-cy attribute.
+       * @example cy.dataCy('greeting')
        */
-      expectNewPageVisit(alias: string): Chainable<>;
-
-      /**
-       * Sets tags for the current runnable.
-       *
-       * Alias for `tag()` in `support/util/tag.ts`.
-       *
-       * @param tags - Tags to set for test or runnable.
-       */
-      tag(...tags: TestTag[]): void;
-
-      /**
-       * Adds tags for the given runnable.
-       *
-       * If tags have already been set (e.g. using a hook), this method will add
-       * the given tags in addition the tags that have already been set.
-       *
-       * Alias for `addTag()` in `support/util/tag.ts`.
-       *
-       * @param tags - Test tags.
-       */
-      addTag(...tags: TestTag[]): void;
-
-      /**
-       * Internal Cypress command to retrieve test state.
-       *
-       * @param state - Cypress internal state to retrieve.
-       */
-      state(state?: string): any;
-
-      /**
-       * Mount a React component via `cypress/react`.
-       */
-      mount: typeof mount;
+      visitWithLogin(
+        url: string,
+        linodeOptions?: LinodeVisitOptions,
+        cypressOptions?: Partial<Cypress.VisitOptions>
+      ): Chainable<any>;
     }
   }
 }

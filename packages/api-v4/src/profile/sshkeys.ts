@@ -2,6 +2,7 @@ import {
   createSSHKeySchema,
   updateSSHKeySchema,
 } from '@linode/validation/lib/profile.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,8 +11,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { SSHKey } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { SSHKey } from './types';
 
 /**
  * getSSHKeys
@@ -24,7 +26,7 @@ export const getSSHKeys = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/profile/sshkeys`)
+    setURL(`${API_ROOT}/profile/sshkeys`),
   );
 
 /**
@@ -36,7 +38,7 @@ export const getSSHKeys = (params?: Params, filters?: Filter) =>
 export const getSSHKey = (keyId: number) =>
   Request<SSHKey>(
     setMethod('GET'),
-    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`)
+    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`),
   );
 
 /**
@@ -49,7 +51,7 @@ export const createSSHKey = (data: { label: string; ssh_key: string }) =>
   Request<SSHKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}/profile/sshkeys`),
-    setData(data, createSSHKeySchema)
+    setData(data, createSSHKeySchema),
   );
 
 /**
@@ -64,7 +66,7 @@ export const updateSSHKey = (keyId: number, data: { label: string }) =>
   Request<SSHKey>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`),
-    setData(data, updateSSHKeySchema)
+    setData(data, updateSSHKeySchema),
   );
 
 /**
@@ -78,5 +80,5 @@ export const updateSSHKey = (keyId: number, data: { label: string }) =>
 export const deleteSSHKey = (keyId: number) =>
   Request<{}>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`)
+    setURL(`${API_ROOT}/profile/sshkeys/${encodeURIComponent(keyId)}`),
   );

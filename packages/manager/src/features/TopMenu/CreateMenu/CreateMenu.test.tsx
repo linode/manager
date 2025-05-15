@@ -4,7 +4,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { accountFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateMenu } from './CreateMenu';

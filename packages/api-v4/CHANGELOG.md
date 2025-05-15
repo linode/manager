@@ -1,3 +1,12 @@
+## [2025-05-20] - v0.140.0
+
+### Upcoming Features:
+
+- Add Host & VM Maintenance types and queries ([#11990](https://github.com/linode/manager/pull/11990))
+- Add `SubnetAssignedNodeBalancerData` interface, `nodebalancers` property to `Subnet` interface, and `nodebalancer_id` property to `VCPIP` interface ([#12099](https://github.com/linode/manager/pull/12099))
+- CloudPulse: Add payload `DeleteAlertFeature` and request `deleteAlertDefinition` for handling user alert deletion ([#12134](https://github.com/linode/manager/pull/12134))
+- Add `/v4beta` endpoints and types for Node Pool requests ([#12188](https://github.com/linode/manager/pull/12188))
+
 ## [2025-05-06] - v0.139.0
 
 ### Upcoming Features:

@@ -34,12 +34,6 @@ export interface EnhancedAutocompleteProps<
   errorText?: string;
   /** Provides a hint with normal styling to assist users. */
   helperText?: TextFieldProps['helperText'];
-  /** A required label for the Autocomplete to ensure accessibility. */
-  label: string;
-  /** Removes the top margin from the input label, if desired. */
-  noMarginTop?: boolean;
-  /** Element to show when the Autocomplete search yields no results. */
-  noOptionsText?: JSX.Element | string;
   /**
    * Keep the search input enabled on mobile.
    * Because of usability concerns, the search input is read-only on mobile by default. It prevents triggering the device keyboard once the Autocomplete is focused.
@@ -48,6 +42,12 @@ export interface EnhancedAutocompleteProps<
    * @default false
    */
   keepSearchEnabledOnMobile?: boolean;
+  /** A required label for the Autocomplete to ensure accessibility. */
+  label: string;
+  /** Removes the top margin from the input label, if desired. */
+  noMarginTop?: boolean;
+  /** Element to show when the Autocomplete search yields no results. */
+  noOptionsText?: JSX.Element | string;
   placeholder?: string;
   renderInput?: (_params: AutocompleteRenderInputParams) => React.ReactNode;
   /** Label for the "select all" option. */
@@ -118,11 +118,28 @@ export const Autocomplete = <
 
   return (
     <MuiAutocomplete
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      clearOnBlur={clearOnBlur}
+      data-qa-autocomplete={label}
+      defaultValue={defaultValue}
+      disableCloseOnSelect={multiple}
+      disablePortal={disablePortal}
+      limitTags={limitTags}
+      loading={loading}
+      loadingText={loadingText || 'Loading...'}
+      multiple={multiple}
+      noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
+      onBlur={onBlur}
+      onTouchStart={() => {
+        setIsReadonly(true);
+      }}
       options={
         multiple && !disableSelectAll && options.length > 0
           ? optionsWithSelectAll
           : options
       }
+      PopperComponent={CustomPopper}
+      popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       renderInput={
         renderInput
           ? renderInput
@@ -185,23 +202,6 @@ export const Autocomplete = <
           </ListItem>
         );
       }}
-      ChipProps={{ deleteIcon: <CloseIcon /> }}
-      PopperComponent={CustomPopper}
-      clearOnBlur={clearOnBlur}
-      data-qa-autocomplete={label}
-      defaultValue={defaultValue}
-      disableCloseOnSelect={multiple}
-      disablePortal={disablePortal}
-      limitTags={limitTags}
-      loading={loading}
-      loadingText={loadingText || 'Loading...'}
-      multiple={multiple}
-      noOptionsText={noOptionsText || <i>You have no options to choose from</i>}
-      onBlur={onBlur}
-      onTouchStart={() => {
-        setIsReadonly(true);
-      }}
-      popupIcon={<ChevronDownIcon data-testid="KeyboardArrowDownIcon" />}
       value={value}
       {...rest}
       onChange={(e, value, reason, details) => {

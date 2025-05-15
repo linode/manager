@@ -55,7 +55,7 @@ export const convertStringToCamelCasesWithSpaces = (
     .join(' ');
 };
 
-export const createObjectCopy = <T>(object: T): T | null => {
+export const createObjectCopy = <T>(object: T): null | T => {
   if (!object) {
     return null;
   }

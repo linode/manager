@@ -1,11 +1,12 @@
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import {
+
+import type {
   ACLType,
+  CreateObjectStorageObjectURLPayload,
+  GetObjectStorageACLPayload,
   ObjectStorageObjectACL,
   ObjectStorageObjectURL,
-  GetObjectStorageACLPayload,
-  CreateObjectStorageObjectURLPayload,
 } from './types';
 
 /**
@@ -17,17 +18,17 @@ export const getObjectURL = (
   clusterId: string,
   bucketName: string,
   name: string,
-  method: 'GET' | 'PUT' | 'POST' | 'DELETE',
-  options?: CreateObjectStorageObjectURLPayload
+  method: 'DELETE' | 'GET' | 'POST' | 'PUT',
+  options?: CreateObjectStorageObjectURLPayload,
 ) =>
   Request<ObjectStorageObjectURL>(
     setMethod('POST'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/object-url`
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/object-url`,
     ),
-    setData({ name, method, ...options })
+    setData({ name, method, ...options }),
   );
 
 /**
@@ -45,11 +46,11 @@ export const getObjectACL = ({
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
+        clusterId,
       )}/${encodeURIComponent(bucket)}/object-acl?name=${encodeURIComponent(
-        params.name
-      )}`
-    )
+        params.name,
+      )}`,
+    ),
   );
 
 /**
@@ -62,14 +63,14 @@ export const updateObjectACL = (
   clusterId: string,
   bucketName: string,
   name: string,
-  acl: Omit<ACLType, 'custom'>
+  acl: Omit<ACLType, 'custom'>,
 ) =>
   Request<{}>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/object-acl`
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/object-acl`,
     ),
-    setData({ acl, name })
+    setData({ acl, name }),
   );

@@ -125,7 +125,7 @@ export const generateTypes = (
       {
         render: (record: DomainRecord) => {
           const subdomain = record.name;
-          return Boolean(subdomain)
+          return subdomain
             ? `${subdomain}.${props.domain.domain}`
             : props.domain.domain;
         },

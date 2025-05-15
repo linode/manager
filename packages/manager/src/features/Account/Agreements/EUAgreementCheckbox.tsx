@@ -26,17 +26,17 @@ export const EUAgreementCheckbox = (props: Props) => {
 
   return (
     <Box
+      alignItems={centerCheckbox ? 'center' : 'flex-start'}
+      className={className}
+      data-testid="eu-agreement-checkbox"
+      display="flex"
+      flexDirection="row"
       sx={{
         [theme.breakpoints.down('md')]: {
           marginLeft: theme.spacing(1),
           marginRight: theme.spacing(1),
         },
       }}
-      alignItems={centerCheckbox ? 'center' : 'flex-start'}
-      className={className}
-      data-testid="eu-agreement-checkbox"
-      display="flex"
-      flexDirection="row"
     >
       <Checkbox
         checked={checked}

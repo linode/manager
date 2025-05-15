@@ -2,9 +2,9 @@ import {
   Autocomplete,
   Box,
   FormHelperText,
+  omittedProps,
   TextField,
   Typography,
-  omittedProps,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 

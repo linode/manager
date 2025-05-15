@@ -1,8 +1,9 @@
 import {
   CreditCardSchema,
-  PaymentSchema,
   PaymentMethodSchema,
+  PaymentSchema,
 } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -11,15 +12,16 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import {
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type {
   ClientToken,
+  MakePaymentData,
   Payment,
   PaymentMethod,
+  PaymentMethodPayload,
   PaymentResponse,
   SaveCreditCardData,
-  MakePaymentData,
-  PaymentMethodPayload,
 } from './types';
 
 /**
@@ -34,7 +36,7 @@ export const getPayments = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -77,7 +79,7 @@ export const makePayment = (data: MakePaymentData) => {
   return Request<PaymentResponse>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(data, PaymentSchema)
+    setData(data, PaymentSchema),
   );
 };
 
@@ -93,7 +95,7 @@ export const saveCreditCard = (data: SaveCreditCardData) => {
   return Request<{}>(
     setURL(`${API_ROOT}/account/credit-card`),
     setMethod('POST'),
-    setData(data, CreditCardSchema)
+    setData(data, CreditCardSchema),
   );
 };
 
@@ -108,7 +110,7 @@ export const getPaymentMethods = (params?: Params) => {
   return Request<ResourcePage<PaymentMethod>>(
     setURL(`${API_ROOT}/account/payment-methods`),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 };
 
@@ -124,7 +126,7 @@ export const getPaymentMethods = (params?: Params) => {
 export const getPaymentMethod = (id: number) => {
   return Request<PaymentMethod>(
     setURL(`${API_ROOT}/account/payment-method/${encodeURIComponent(id)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };
 
@@ -138,7 +140,7 @@ export const getPaymentMethod = (id: number) => {
 export const getClientToken = () => {
   return Request<ClientToken>(
     setURL(`${API_ROOT}/account/client-token`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };
 
@@ -159,10 +161,10 @@ export const getClientToken = () => {
  *
  */
 export const addPaymentMethod = (data: PaymentMethodPayload) => {
-  return Request<{}>(
+  return Request<Record<string, never>>(
     setURL(`${API_ROOT}/account/payment-methods`),
     setMethod('POST'),
-    setData(data, PaymentMethodSchema)
+    setData(data, PaymentMethodSchema),
   );
 };
 
@@ -177,10 +179,10 @@ export const makeDefaultPaymentMethod = (id: number) => {
   return Request<{}>(
     setURL(
       `${API_ROOT}/account/payment-methods/${encodeURIComponent(
-        id
-      )}/make-default`
+        id,
+      )}/make-default`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 };
 
@@ -194,6 +196,6 @@ export const makeDefaultPaymentMethod = (id: number) => {
 export const deletePaymentMethod = (id: number) => {
   return Request<{}>(
     setURL(`${API_ROOT}/account/payment-methods/${encodeURIComponent(id)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 };

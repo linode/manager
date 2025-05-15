@@ -20,10 +20,8 @@ interface Props {
 export const BucketRegions = (props: Props) => {
   const { disabled, error, onBlur, onChange, required, selectedRegion } = props;
 
-  const {
-    allRegionsError,
-    availableStorageRegions,
-  } = useObjectStorageRegions();
+  const { allRegionsError, availableStorageRegions } =
+    useObjectStorageRegions();
 
   const { isObjectStorageGen2Enabled } = useIsObjectStorageGen2Enabled();
 
@@ -38,13 +36,13 @@ export const BucketRegions = (props: Props) => {
 
   return (
     <RegionSelect
-      forcefullyShownRegionIds={
-        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
-      }
       currentCapability="Object Storage"
       disableClearable
       disabled={disabled}
       errorText={errorText}
+      forcefullyShownRegionIds={
+        isObjectStorageGen2Enabled ? WHITELISTED_REGIONS : undefined
+      }
       isGeckoLAEnabled={isGeckoLAEnabled}
       label="Region"
       onBlur={onBlur}

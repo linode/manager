@@ -9,7 +9,7 @@ export const allocateIPSchema = object().shape({
     .required()
     .matches(
       /^ipv4$/,
-      'Only IPv4 address may be allocated through this endpoint.'
+      'Only IPv4 address may be allocated through this endpoint.',
     ),
   public: boolean().required(),
   linode_id: number().required(),

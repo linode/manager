@@ -6,8 +6,8 @@ import {
   getAppTokens,
   getPersonalAccessTokens,
   getProfile,
-  getSSHKeys,
   getSecurityQuestions,
+  getSSHKeys,
   getTrustedDevices,
   getUserPreferences,
   listGrants,
@@ -37,8 +37,8 @@ import type {
   Profile,
   RequestOptions,
   ResourcePage,
-  SSHKey,
   SendPhoneVerificationCodePayload,
+  SSHKey,
   TrustedDevice,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4';
@@ -110,14 +110,14 @@ export const useMutateProfile = () => {
 
 export const updateProfileData = (
   newData: Partial<Profile>,
-  queryClient: QueryClient
+  queryClient: QueryClient,
 ): void => {
   queryClient.setQueryData<Profile>(
     profileQueries.profile().queryKey,
     (oldData: Profile) => ({
       ...oldData,
       ...newData,
-    })
+    }),
   );
 };
 
@@ -153,7 +153,7 @@ export const useVerifyPhoneVerificationCodeMutation = () =>
 export const useSSHKeysQuery = (
   params?: Params,
   filter?: Filter,
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<ResourcePage<SSHKey>, APIError[]>({
     ...profileQueries.sshKeys(params, filter),

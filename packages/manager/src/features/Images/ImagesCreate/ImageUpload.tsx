@@ -218,6 +218,8 @@ export const ImageUpload = () => {
               />
             )}
             <Controller
+              control={form.control}
+              name="label"
               render={({ field, fieldState }) => (
                 <TextField
                   disabled={
@@ -231,17 +233,20 @@ export const ImageUpload = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={form.control}
-              name="label"
             />
             {flags.metadata && (
               <Box pl={0.25} pt={2}>
                 <Controller
+                  control={form.control}
+                  name="cloud_init"
                   render={({ field }) => (
                     <Checkbox
+                      checked={field.value ?? false}
                       disabled={
                         isImageCreateRestricted || form.formState.isSubmitting
                       }
+                      onChange={field.onChange}
+                      text="This image is cloud-init compatible"
                       toolTipText={
                         <Typography>
                           Only check this box if your Custom Image is compatible
@@ -252,28 +257,21 @@ export const ImageUpload = () => {
                           </Link>
                         </Typography>
                       }
-                      checked={field.value ?? false}
-                      onChange={field.onChange}
-                      text="This image is cloud-init compatible"
                     />
                   )}
-                  control={form.control}
-                  name="cloud_init"
                 />
               </Box>
             )}
             <Controller
+              control={form.control}
+              name="region"
               render={({ field, fieldState }) => (
                 <RegionSelect
+                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
+                  disableClearable
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
-                  textFieldProps={{
-                    inputRef: field.ref,
-                    onBlur: field.onBlur,
-                  }}
-                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
-                  disableClearable
                   errorText={fieldState.error?.message}
                   ignoreAccountAvailability
                   isGeckoLAEnabled={isGeckoLAEnabled}
@@ -281,13 +279,17 @@ export const ImageUpload = () => {
                   onChange={(e, region) => field.onChange(region.id)}
                   regionFilter="core" // Images service will not be supported for Gecko Beta
                   regions={regions ?? []}
+                  textFieldProps={{
+                    inputRef: field.ref,
+                    onBlur: field.onBlur,
+                  }}
                   value={field.value ?? null}
                 />
               )}
-              control={form.control}
-              name="region"
             />
             <Controller
+              control={form.control}
+              name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
                   disabled={
@@ -296,17 +298,17 @@ export const ImageUpload = () => {
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
                   }
+                  tagError={fieldState.error?.message}
                   value={
                     field.value?.map((tag) => ({ label: tag, value: tag })) ??
                     []
                   }
-                  tagError={fieldState.error?.message}
                 />
               )}
-              control={form.control}
-              name="tags"
             />
             <Controller
+              control={form.control}
+              name="description"
               render={({ field, fieldState }) => (
                 <TextField
                   disabled={
@@ -321,8 +323,6 @@ export const ImageUpload = () => {
                   value={field.value ?? ''}
                 />
               )}
-              control={form.control}
-              name="description"
             />
             {showGDPRCheckbox && (
               <EUAgreementCheckbox
@@ -344,8 +344,12 @@ export const ImageUpload = () => {
               />
             )}
             <Controller
+              control={form.control}
+              name="file"
               render={({ field }) => (
                 <ImageUploader
+                  disabled={isImageCreateRestricted}
+                  isUploading={form.formState.isSubmitting}
                   onDropAccepted={(files) => {
                     form.setError('file', {});
                     field.onChange(files[0]);
@@ -368,13 +372,9 @@ export const ImageUpload = () => {
                     form.setError('file', { message });
                     form.resetField('file', { keepError: true });
                   }}
-                  disabled={isImageCreateRestricted}
-                  isUploading={form.formState.isSubmitting}
                   progress={uploadProgress}
                 />
               )}
-              control={form.control}
-              name="file"
             />
           </Paper>
           <Box display="flex" gap={1} justifyContent="flex-end">
@@ -386,11 +386,11 @@ export const ImageUpload = () => {
               Upload Using Command Line
             </Button>
             <Button
+              buttonType="primary"
               disabled={
                 isImageCreateRestricted ||
                 (showGDPRCheckbox && !hasSignedAgreement)
               }
-              buttonType="primary"
               loading={form.formState.isSubmitting}
               type="submit"
             >

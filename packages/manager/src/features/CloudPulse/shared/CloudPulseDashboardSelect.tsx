@@ -60,10 +60,8 @@ export const CloudPulseDashboardSelect = React.memo(
       useCloudPulseDashboardsQuery(serviceTypes),
       serviceTypes
     );
-    const [
-      selectedDashboard,
-      setSelectedDashboard,
-    ] = React.useState<Dashboard>();
+    const [selectedDashboard, setSelectedDashboard] =
+      React.useState<Dashboard>();
 
     const getErrorText = () => {
       if (serviceTypesError) {
@@ -106,10 +104,23 @@ export const CloudPulseDashboardSelect = React.memo(
     }, [dashboardsList]);
     return (
       <Autocomplete
+        autoHighlight
+        clearOnBlur
+        data-testid="cloudpulse-dashboard-select"
+        disabled={isServiceIntegration || !dashboardsList}
+        errorText={dashboardsList?.length ? '' : errorText}
+        fullWidth
+        groupBy={(option: Dashboard) => option.service_type}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        label="Dashboard"
+        loading={dashboardsLoading || serviceTypesLoading}
+        noMarginTop
         onChange={(e, dashboard: Dashboard) => {
           setSelectedDashboard(dashboard);
           handleDashboardChange(dashboard, savePreferences);
         }}
+        options={getSortedDashboardsList(dashboardsList ?? [])}
+        placeholder={placeHolder}
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
@@ -126,19 +137,6 @@ export const CloudPulseDashboardSelect = React.memo(
         textFieldProps={{
           color: 'primary',
         }}
-        autoHighlight
-        clearOnBlur
-        data-testid="cloudpulse-dashboard-select"
-        disabled={isServiceIntegration || !dashboardsList}
-        errorText={Boolean(dashboardsList?.length) ? '' : errorText}
-        fullWidth
-        groupBy={(option: Dashboard) => option.service_type}
-        isOptionEqualToValue={(option, value) => option.id === value.id}
-        label="Dashboard"
-        loading={dashboardsLoading || serviceTypesLoading}
-        noMarginTop
-        options={getSortedDashboardsList(dashboardsList ?? [])}
-        placeholder={placeHolder}
         value={selectedDashboard ?? null} // Undefined is not allowed for uncontrolled component
       />
     );

@@ -1,9 +1,11 @@
-import { VLAN, getVlans } from '@linode/api-v4';
+import { getVlans } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+import { randomLabel } from 'support/util/random';
 
 import { isTestLabel } from './common';
-import { randomLabel } from 'support/util/random';
+
+import type { VLAN } from '@linode/api-v4';
 
 /**
  * Returns a VLAN label to use for a test resource, creating it if one does not already exist.

@@ -26,9 +26,8 @@ export const TaintInput = (props: Props) => {
   });
 
   const [combinedTaint, setCombinedTaint] = useState('');
-  const [selectedEffect, setSelectedEffect] = useState<KubernetesTaintEffect>(
-    'NoExecute'
-  );
+  const [selectedEffect, setSelectedEffect] =
+    useState<KubernetesTaintEffect>('NoExecute');
 
   const handleAddTaint = () => {
     // Separate the combined taint.
@@ -67,6 +66,8 @@ export const TaintInput = (props: Props) => {
   return (
     <>
       <Controller
+        control={control}
+        name="taints.combinedValue"
         render={({ field, fieldState }) => {
           return (
             <TextField
@@ -81,24 +82,22 @@ export const TaintInput = (props: Props) => {
             />
           );
         }}
-        control={control}
-        name="taints.combinedValue"
       />
       <Controller
+        control={control}
+        name="taints.effect"
         render={() => (
           <Autocomplete
-            value={
-              effectOptions.find((option) => option.value === selectedEffect) ??
-              undefined
-            }
             disableClearable
             label="Effect"
             onChange={(e, option) => setSelectedEffect(option.value)}
             options={effectOptions}
+            value={
+              effectOptions.find((option) => option.value === selectedEffect) ??
+              undefined
+            }
           />
         )}
-        control={control}
-        name="taints.effect"
       />
       <Stack flexDirection="row" marginTop={2}>
         <Button buttonType="primary" onClick={handleAddTaint}>

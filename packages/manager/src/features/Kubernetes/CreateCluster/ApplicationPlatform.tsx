@@ -81,20 +81,20 @@ export const ApplicationPlatform = (props: APLProps) => {
       <APLCopy />
       <RadioGroup onChange={(e) => handleChange(e)}>
         <FormControlLabel
+          checked={isAPLChecked}
           control={<Radio data-testid="apl-radio-button-yes" />}
           disabled={isSectionDisabled}
           label="Yes, enable Akamai App Platform."
           name="yes"
           value="yes"
-          checked={isAPLChecked}
         />
         <FormControlLabel
+          checked={isAPLNotChecked}
           control={<Radio data-testid="apl-radio-button-no" />}
           disabled={isSectionDisabled}
           label="No"
           name="no"
           value="no"
-          checked={isAPLNotChecked}
         />
       </RadioGroup>
     </FormControl>

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
 import { getValues } from '../../../request';
-import { AllData, LongviewFieldName } from '../../../request.types';
+
+import type { AllData, LongviewFieldName } from '../../../request.types';
 
 export const useGraphs = (
   requestFields: LongviewFieldName[],

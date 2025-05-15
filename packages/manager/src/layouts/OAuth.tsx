@@ -1,5 +1,7 @@
+import { getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
@@ -12,9 +14,6 @@ import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
-
-import type { RouteComponentProps } from 'react-router-dom';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 
 export type CombinedProps = DispatchProps & RouteComponentProps;
 
@@ -138,9 +137,11 @@ export const OAuthCallbackPage = ({
       return;
     }
 
-    const { code, returnTo, state: nonce } = getQueryParamsFromQueryString(
-      location.search
-    );
+    const {
+      code,
+      returnTo,
+      state: nonce,
+    } = getQueryParamsFromQueryString(location.search);
 
     if (!code || !returnTo || !nonce) {
       clearStorageAndRedirectToLogout();

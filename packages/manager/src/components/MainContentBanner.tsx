@@ -1,10 +1,10 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Box, CloseIcon, Typography } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 export const MainContentBanner = React.memo(() => {
   // Uncomment this to test this banner:

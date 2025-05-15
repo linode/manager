@@ -3,10 +3,10 @@
  */
 
 import { apiMatcher } from 'support/util/intercepts';
-import { makeResponse } from 'support/util/response';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
-import type { SupportTicket, SupportReply } from '@linode/api-v4';
+import type { SupportReply, SupportTicket } from '@linode/api-v4';
 
 /**
  * Intercepts request to open a support ticket and mocks response.

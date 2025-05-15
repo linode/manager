@@ -2,6 +2,7 @@ import {
   CreateUserSchema,
   UpdateUserSchema,
 } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,8 +11,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { Grants, User } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { Grants, User } from './types';
 
 /**
  * getUsers
@@ -24,7 +26,7 @@ export const getUsers = (params?: Params, filters?: Filter) =>
     setURL(`${API_ROOT}/account/users`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -39,7 +41,7 @@ export const getUsers = (params?: Params, filters?: Filter) =>
 export const getUser = (username: string) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${encodeURIComponent(username)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -54,7 +56,7 @@ export const createUser = (data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('POST'),
-    setData(data, CreateUserSchema)
+    setData(data, CreateUserSchema),
   );
 
 /**
@@ -71,7 +73,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${encodeURIComponent(username)}`),
     setMethod('PUT'),
-    setData(data, UpdateUserSchema)
+    setData(data, UpdateUserSchema),
   );
 
 /**
@@ -86,7 +88,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
 export const deleteUser = (username: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/users/${encodeURIComponent(username)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -103,7 +105,7 @@ export const deleteUser = (username: string) =>
 export const getGrants = (username: string) =>
   Request<Grants>(
     setURL(`${API_ROOT}/account/users/${encodeURIComponent(username)}/grants`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -122,5 +124,5 @@ export const updateGrants = (username: string, data: Partial<Grants>) =>
   Request<Grants>(
     setURL(`${API_ROOT}/account/users/${encodeURIComponent(username)}/grants`),
     setMethod('PUT'),
-    setData(data)
+    setData(data),
   );

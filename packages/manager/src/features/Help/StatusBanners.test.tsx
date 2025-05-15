@@ -4,7 +4,9 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { IncidentBanner, IncidentProps, StatusBanners } from './StatusBanners';
+import { IncidentBanner, StatusBanners } from './StatusBanners';
+
+import type { IncidentProps } from './StatusBanners';
 
 const props: IncidentProps = {
   href: 'https://www.example.com/',

@@ -40,7 +40,6 @@ export const MonitorTableContent = (props: MonitorTableContentProps) => {
   }
 
   return (
-    // eslint-disable-next-line
     <>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow

@@ -1,7 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
@@ -51,8 +51,8 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             resourceType: 'VPCs',
           })
         : isVPCLKEEnterpriseCluster
-        ? LKE_ENTERPRISE_VPC_WARNING
-        : undefined,
+          ? LKE_ENTERPRISE_VPC_WARNING
+          : undefined,
     },
     {
       disabled: isVPCReadOnly || isVPCLKEEnterpriseCluster,
@@ -65,8 +65,8 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
             resourceType: 'VPCs',
           })
         : isVPCLKEEnterpriseCluster
-        ? LKE_ENTERPRISE_VPC_WARNING
-        : undefined,
+          ? LKE_ENTERPRISE_VPC_WARNING
+          : undefined,
     },
   ];
 

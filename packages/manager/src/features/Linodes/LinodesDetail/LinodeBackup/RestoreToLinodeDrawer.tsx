@@ -17,7 +17,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -97,7 +96,6 @@ export const RestoreToLinodeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Restore Backup from ${backup?.created}`}
@@ -107,21 +105,21 @@ export const RestoreToLinodeDrawer = (props: Props) => {
           <Notice variant="error">{errorMap.none}</Notice>
         )}
         <Autocomplete
-          onChange={(_, selected) =>
-            formik.setFieldValue('linode_id', selected?.value)
-          }
-          textFieldProps={{
-            dataAttrs: {
-              'data-qa-select-linode': true,
-            },
-          }}
           autoHighlight
           disableClearable
           errorText={linodeError?.[0].reason ?? errorMap.linode_id}
           label="Linode"
           loading={linodesLoading}
+          onChange={(_, selected) =>
+            formik.setFieldValue('linode_id', selected?.value)
+          }
           options={linodeOptions}
           placeholder="Select a Linode"
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-select-linode': true,
+            },
+          }}
           value={selectedLinodeOption}
         />
         <FormControl sx={{ paddingLeft: 0.4 }}>
@@ -145,13 +143,13 @@ export const RestoreToLinodeDrawer = (props: Props) => {
         )}
         {formik.values.overwrite && (
           <Notice
+            spacingBottom={0}
+            spacingTop={12}
             text={`This will delete all disks and configs on ${
               selectedLinodeOption
                 ? `Linode ${selectedLinodeOption.label}`
                 : 'the selcted Linode'
             }`}
-            spacingBottom={0}
-            spacingTop={12}
             variant="warning"
           />
         )}

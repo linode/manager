@@ -1,8 +1,9 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
-import { Action } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onCancelClick: () => void;

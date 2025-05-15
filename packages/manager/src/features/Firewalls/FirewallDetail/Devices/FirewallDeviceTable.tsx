@@ -33,19 +33,16 @@ export interface FirewallDeviceTableProps {
 
 export const FirewallDeviceTable = React.memo(
   (props: FirewallDeviceTableProps) => {
-    const {
-      deviceType,
-      disabled,
-      firewallId,
-      handleRemoveDevice,
-      type,
-    } = props;
+    const { deviceType, disabled, firewallId, handleRemoveDevice, type } =
+      props;
 
     const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-    const { data: allDevices, error, isLoading } = useAllFirewallDevicesQuery(
-      firewallId
-    );
+    const {
+      data: allDevices,
+      error,
+      isLoading,
+    } = useAllFirewallDevicesQuery(firewallId);
     const devices =
       allDevices?.filter((device) =>
         type === 'linode' && isLinodeInterfacesEnabled

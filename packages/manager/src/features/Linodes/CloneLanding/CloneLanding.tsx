@@ -1,4 +1,10 @@
 import { cloneLinode, cloneLinodeDisk } from '@linode/api-v4/lib/linodes';
+import {
+  useAllLinodeConfigsQuery,
+  useAllLinodeDisksQuery,
+  useAllLinodesQuery,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid2';
@@ -19,12 +25,6 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import {
-  useAllLinodeConfigsQuery,
-  useAllLinodeDisksQuery,
-  useAllLinodesQuery,
-  useLinodeQuery,
-} from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { MutationNotification } from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
@@ -271,11 +271,11 @@ export const CloneLanding = () => {
       <LinodesDetailHeader />
       <Paper sx={{ padding: theme.spacing(2) }}>
         <Grid
+          container
           sx={{
             justifyContent: 'space-between',
             marginTop: theme.spacing(1),
           }}
-          container
         >
           <Grid
             size={{
@@ -306,9 +306,9 @@ export const CloneLanding = () => {
                   <SafeTabPanel index={0}>
                     <Box>
                       <Configs
+                        configs={configsInState}
                         // Cast the results of the Immer state to a mutable data structure.
                         configSelection={castDraft(state.configSelection)}
-                        configs={configsInState}
                         handleSelect={toggleConfig}
                       />
                     </Box>
@@ -324,9 +324,9 @@ export const CloneLanding = () => {
                       </Notice>
                       <div>
                         <Disks
+                          disks={disksInState}
                           // Cast the results of the Immer state to a mutable data structure.
                           diskSelection={castDraft(state.diskSelection)}
-                          disks={disksInState}
                           handleSelect={toggleDisk}
                           selectedConfigIds={selectedConfigIds}
                         />
@@ -344,6 +344,17 @@ export const CloneLanding = () => {
             }}
           >
             <Details
+              // If a selected disk is associated with a selected config, we
+              // don't want it to appear in the Details component, since
+              clearAll={clearAll}
+              currentLinodeId={linodeId}
+              errorMap={errorMap}
+              handleCancel={handleCancel}
+              handleClone={handleClone}
+              handleSelectLinode={setSelectedLinodeId}
+              handleToggleConfig={toggleConfig}
+              handleToggleDisk={toggleDisk}
+              isSubmitting={state.isSubmitting}
               selectedConfigs={attachAssociatedDisksToConfigs(
                 selectedConfigs,
                 disks
@@ -360,17 +371,6 @@ export const CloneLanding = () => {
                     0
                 );
               })}
-              // If a selected disk is associated with a selected config, we
-              // don't want it to appear in the Details component, since
-              clearAll={clearAll}
-              currentLinodeId={linodeId}
-              errorMap={errorMap}
-              handleCancel={handleCancel}
-              handleClone={handleClone}
-              handleSelectLinode={setSelectedLinodeId}
-              handleToggleConfig={toggleConfig}
-              handleToggleDisk={toggleDisk}
-              isSubmitting={state.isSubmitting}
               selectedLinodeId={state.selectedLinodeId}
               selectedLinodeRegion={selectedLinodeRegion}
               thisLinodeRegion={linode?.region ?? ''}

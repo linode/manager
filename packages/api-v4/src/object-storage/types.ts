@@ -2,6 +2,10 @@ export type ObjectStorageEndpointTypes = 'E0' | 'E1' | 'E2' | 'E3';
 
 export interface ObjectStorageKeyRegions {
   /**
+   * The type specifying which generation of endpoint this is.
+   */
+  endpoint_type?: ObjectStorageEndpointTypes;
+  /**
    * Region ID (e.g. 'us-east')
    */
   id: string;
@@ -9,10 +13,6 @@ export interface ObjectStorageKeyRegions {
    * The hostname prefix for the region (e.g. 'us-east-1.linodeobjects.com')
    */
   s3_endpoint: string;
-  /**
-   * The type specifying which generation of endpoint this is.
-   */
-  endpoint_type?: ObjectStorageEndpointTypes;
 }
 
 export interface ObjectStorageKey {
@@ -23,7 +23,7 @@ export interface ObjectStorageKey {
   /**
    * Settings that restrict access to specific buckets, each with defined permission levels.
    */
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   /**
    * This Object Storage key's unique ID.
    */
@@ -47,20 +47,20 @@ export interface ObjectStorageKey {
 }
 
 export type ObjectStorageKeyBucketAccessPermissions =
+  | 'none'
   | 'read_only'
-  | 'read_write'
-  | 'none';
+  | 'read_write';
 
 export interface ObjectStorageKeyBucketAccess {
   bucket_name: string;
-  permissions: ObjectStorageKeyBucketAccessPermissions;
   cluster: string;
+  permissions: ObjectStorageKeyBucketAccessPermissions;
   region?: string; // @TODO OBJ Multicluster: Remove optional indicator when API changes get released to prod
 }
 
 export interface CreateObjectStorageKeyPayload {
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   label: string;
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
   regions?: string[];
 }
 
@@ -70,15 +70,15 @@ export interface UpdateObjectStorageKeyPayload {
 }
 
 export interface CreateObjectStorageBucketPayload {
-  acl?: 'private' | 'public-read' | 'authenticated-read' | 'public-read-write';
+  acl?: 'authenticated-read' | 'private' | 'public-read' | 'public-read-write';
   cluster?: string;
   cors_enabled?: boolean;
-  label: string;
-  region?: string;
   /**
    * To explicitly create a bucket on a specific endpoint type.
    */
   endpoint_type?: ObjectStorageEndpointTypes;
+  label: string;
+  region?: string;
   /**
    * Used to create a bucket on a specific already-assigned S3 endpoint.
    */
@@ -99,23 +99,23 @@ export interface DeleteObjectStorageBucketPayload {
 }
 
 export interface ObjectStorageBucket {
-  region?: string;
-  label: string;
-  created: string;
   cluster: string;
-  hostname: string;
-  objects: number;
-  size: number; // Size of bucket in bytes
-  s3_endpoint?: string;
+  created: string;
   endpoint_type?: ObjectStorageEndpointTypes;
+  hostname: string;
+  label: string;
+  objects: number;
+  region?: string;
+  s3_endpoint?: string;
+  size: number; // Size of bucket in bytes
 }
 
 export interface ObjectStorageObject {
-  size: number | null; // Size of object in bytes
-  owner: string | null;
-  etag: string | null;
-  last_modified: string | null; // Date
+  etag: null | string;
+  last_modified: null | string; // Date
   name: string;
+  owner: null | string;
+  size: null | number; // Size of object in bytes
 }
 
 export interface ObjectStorageObjectURL {
@@ -124,65 +124,65 @@ export interface ObjectStorageObjectURL {
 }
 
 export interface ObjectStorageEndpoint {
-  region: string;
   endpoint_type: ObjectStorageEndpointTypes;
-  s3_endpoint: string | null;
+  region: string;
+  s3_endpoint: null | string;
 }
 
 export type ACLType =
+  | 'authenticated-read'
+  | 'custom'
   | 'private'
   | 'public-read'
-  | 'authenticated-read'
-  | 'public-read-write'
-  | 'custom';
+  | 'public-read-write';
 
 // Gen2 endpoints ('E2', 'E3') are not supported and will return null.
 export interface ObjectStorageObjectACL {
   acl: ACLType | null;
-  acl_xml: string | null;
+  acl_xml: null | string;
 }
 
 export interface CreateObjectStorageObjectURLPayload {
-  expires_in?: number;
+  content_disposition?: 'attachment';
   // "Content-Type" is normally an HTTP header, but here it is used in the body
   // of a request to /object-url, to inform the API which kind of file it is
   // we're trying to upload.
   content_type?: string;
-  content_disposition?: 'attachment';
+  expires_in?: number;
 }
 
 // Enum containing IDs for each Cluster
 export type ObjectStorageClusterID =
-  | 'us-east-1'
-  | 'eu-central-1'
   | 'ap-south-1'
+  | 'eu-central-1'
+  | 'us-east-1'
   | 'us-southeast-1';
 
 export interface ObjectStorageCluster {
-  region: string;
-  status: string; // @todo: should be enum
-  id: ObjectStorageClusterID;
   domain: string;
+  id: ObjectStorageClusterID;
+  region: string;
   static_site_domain: string;
+  status: string; // @todo: should be enum
 }
 
 export interface GetObjectStorageObjectListPayload {
-  clusterId: string;
   bucket: string;
+  clusterId: string;
   params?: ObjectStorageObjectListParams;
 }
 
 interface ObjectStorageObjectListParams {
   delimiter?: string;
   marker?: string;
-  prefix?: string;
   page_size?: number;
+  prefix?: string;
 }
 
 export interface ObjectStorageObjectList {
   data: ObjectStorageObject[];
-  next_marker: string | null;
   is_truncated: boolean;
+  next_marker: null | string;
 }
 
 export interface CreateObjectStorageBucketSSLPayload {
@@ -201,8 +201,8 @@ export interface UpdateObjectStorageBucketAccessPayload {
 }
 
 export interface GetObjectStorageACLPayload {
-  clusterId: string;
   bucket: string;
+  clusterId: string;
   params: {
     name: string;
   };
@@ -213,5 +213,5 @@ export interface ObjectStorageBucketAccess {
   acl: ACLType;
   acl_xml: string;
   cors_enabled: boolean | null;
-  cors_xml: string | null;
+  cors_xml: null | string;
 }

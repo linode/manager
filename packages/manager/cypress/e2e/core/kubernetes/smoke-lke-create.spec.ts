@@ -119,7 +119,7 @@ describe('LKE Create Cluster', () => {
 
     const mockGrants = grantsFactory.build({
       global: {
-        add_kubernetes: false,
+        add_lkes: false,
       },
     });
 

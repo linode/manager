@@ -11,7 +11,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import {
   useAccountPermissions,
   useAccountUserPermissions,
@@ -128,18 +127,13 @@ export const ChangeRoleForEntityDrawer = ({
 
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={open}
-      title="Change Role"
-    >
+    <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
         <Notice text={errors.root?.message} variant="error" />
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want to assign to the entity.
+          Select a role you want the entity to be attached to.
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 

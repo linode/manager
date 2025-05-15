@@ -7,7 +7,7 @@
 export const arePropsEqual = <T extends {}>(
   props: (keyof T)[],
   prevProps: T,
-  nextProps: T
+  nextProps: T,
 ): boolean => {
   let areEqual = true;
   props.forEach((prop) => {

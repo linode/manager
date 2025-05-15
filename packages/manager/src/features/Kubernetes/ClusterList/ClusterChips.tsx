@@ -31,10 +31,10 @@ export const ClusterChips = (props: Props) => {
       )}
       {cluster.control_plane.high_availability && (
         <Chip
+          data-testid="ha-chip"
           label={
             location.pathname === '/kubernetes/clusters' ? 'HA' : 'HA CLUSTER'
           }
-          data-testid="ha-chip"
           size="small"
           sx={(theme) => ({ borderColor: theme.color.green })}
           variant="outlined"

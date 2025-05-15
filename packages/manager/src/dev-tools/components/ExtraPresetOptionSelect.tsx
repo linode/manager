@@ -20,6 +20,9 @@ export const ExtraPresetOptionSelect = (
   return (
     <div>
       <select
+        className="dt-select dev-tools__select thin"
+        onChange={(e) => onSelectChange(e, group)}
+        style={{ width: 125 }}
         value={
           handlers.find(
             (h) =>
@@ -27,9 +30,6 @@ export const ExtraPresetOptionSelect = (
                 ?.id
           ) || ''
         }
-        className="dt-select dev-tools__select thin"
-        onChange={(e) => onSelectChange(e, group)}
-        style={{ width: 125 }}
       >
         <option value="">No preset</option>
         {extraMockPresets

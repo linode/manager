@@ -1,15 +1,15 @@
+import {
+  useAllLinodeDisksQuery,
+  useLinodeChangePasswordMutation,
+  useLinodeDiskChangePasswordMutation,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeDiskChangePasswordMutation,
-  useLinodeChangePasswordMutation,
-  useLinodeQuery,
-} from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -120,31 +120,31 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
         {generalError && <Notice text={generalError} variant="error" />}
         {!isBareMetalInstance ? (
           <Select
-            onChange={(_, item) =>
-              setSelectedDiskId(Number(item?.value) || null)
-            }
-            value={
-              diskOptions?.find((item) => item.value === selectedDiskId) ?? null
-            }
             data-qa-select-linode
             disabled={isReadOnly}
             errorText={disksError?.[0].reason}
             label="Disk"
             loading={disksLoading}
+            onChange={(_, item) =>
+              setSelectedDiskId(Number(item?.value) || null)
+            }
             options={diskOptions ?? []}
             placeholder="Select a Disk"
+            value={
+              diskOptions?.find((item) => item.value === selectedDiskId) ?? null
+            }
           />
         ) : null}
         <React.Suspense fallback={<SuspenseLoader />}>
           <PasswordInput
+            autoComplete="new-password"
+            data-qa-password-input
+            disabled={isReadOnly}
             disabledReason={
               isReadOnly
                 ? "You don't have permissions to modify this Linode"
                 : undefined
             }
-            autoComplete="new-password"
-            data-qa-password-input
-            disabled={isReadOnly}
             error={Boolean(passwordError)}
             errorGroup="linode-settings-password"
             errorText={passwordError}

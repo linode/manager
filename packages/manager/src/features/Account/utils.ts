@@ -11,6 +11,7 @@ export type ActionType =
   | 'create'
   | 'delete'
   | 'detach'
+  | 'download'
   | 'edit'
   | 'migrate'
   | 'modify'

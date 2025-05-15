@@ -3,8 +3,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { accountQueries } from './queries';
 
 import type {
-  APIError,
   AccountLogin,
+  APIError,
   Filter,
   Params,
   ResourcePage,

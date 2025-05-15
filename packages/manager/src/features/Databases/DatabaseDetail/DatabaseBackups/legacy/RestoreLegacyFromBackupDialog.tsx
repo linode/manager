@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -5,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useLegacyRestoreFromBackupMutation } from 'src/queries/databases/databases';
-import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -54,14 +54,14 @@ export const RestoreLegacyFromBackupDialog = (props: Props) => {
         subType: 'Cluster',
         type: 'Database',
       }}
-      title={`Restore from Backup ${formatDate(backup.created, {
-        timezone: profile?.timezone,
-      })}`}
       label={'Database Label'}
       loading={isPending}
       onClick={handleRestoreDatabase}
       onClose={onClose}
       open={open}
+      title={`Restore from Backup ${formatDate(backup.created, {
+        timezone: profile?.timezone,
+      })}`}
     >
       {error ? (
         <Notice

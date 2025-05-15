@@ -4,16 +4,16 @@ import { volumeFactory, volumeTypeFactory } from '@src/factories';
 import {
   mockGetLinodeDetails,
   mockGetLinodeDisks,
-  mockGetLinodeVolumes,
   mockGetLinodes,
+  mockGetLinodeVolumes,
 } from 'support/intercepts/linodes';
 import {
   mockCreateVolume,
   mockDetachVolume,
   mockGetVolume,
+  mockGetVolumes,
   mockGetVolumeTypes,
   mockGetVolumeTypesError,
-  mockGetVolumes,
 } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';

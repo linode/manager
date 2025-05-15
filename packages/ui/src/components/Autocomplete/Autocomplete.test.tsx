@@ -22,7 +22,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onChange={handleSelectionChange}
         options={options}
-      />
+      />,
     );
 
     const labelElement = screen.getByLabelText('Test Label');
@@ -35,7 +35,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onChange={handleSelectionChange}
         options={options}
-      />
+      />,
     );
 
     const inputElement = screen.getByRole('combobox');
@@ -59,7 +59,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onChange={handleSelectionChange}
         options={options}
-      />
+      />,
     );
 
     const errorElement = screen.getByText(errorMessage);
@@ -72,7 +72,7 @@ describe('Autocomplete Component', () => {
         label="Test Label"
         onChange={handleSelectionChange}
         options={options}
-      />
+      />,
     );
 
     const errorElement = screen.queryByText('This field is required');
@@ -87,7 +87,7 @@ describe('Autocomplete Component', () => {
           loading
           onChange={handleSelectionChange}
           options={[]}
-        />
+        />,
       );
 
       const inputElement = screen.getByRole('combobox');
@@ -104,7 +104,7 @@ describe('Autocomplete Component', () => {
           label="Test Label"
           onChange={handleSelectionChange}
           options={[]}
-        />
+        />,
       );
 
       const inputElement = screen.getByRole('combobox');
@@ -112,7 +112,7 @@ describe('Autocomplete Component', () => {
       fireEvent.keyDown(inputElement, { key: 'ArrowDown' });
 
       const noOptionsMessage = screen.getByText(
-        'You have no options to choose from'
+        'You have no options to choose from',
       );
       expect(noOptionsMessage).toBeInTheDocument();
     });

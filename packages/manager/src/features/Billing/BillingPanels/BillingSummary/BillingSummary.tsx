@@ -29,9 +29,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { data: notifications } = useNotificationsQuery();
   const { _isRestrictedUser, account } = useAccountManagement();
 
-  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [isPromoDialogOpen, setIsPromoDialogOpen] =
+    React.useState<boolean>(false);
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
@@ -53,9 +52,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { replace } = useHistory();
   const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
-  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [paymentDrawerOpen, setPaymentDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
     PaymentMethod | undefined
@@ -104,20 +102,20 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const accountBalanceText = pastDueBalance
     ? 'Payment Due'
     : balance > 0
-    ? 'Balance'
-    : balance < 0
-    ? 'Credit'
-    : 'You have no balance at this time.';
+      ? 'Balance'
+      : balance < 0
+        ? 'Credit'
+        : 'You have no balance at this time.';
 
   const sxBalance = {
     color:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod)
         ? theme.palette.text.primary
         : balance < 0
-        ? theme.color.green
-        : pastDueBalance
-        ? theme.color.red
-        : '',
+          ? theme.color.green
+          : pastDueBalance
+            ? theme.color.red
+            : '',
   };
 
   // The layout changes if there are promotions.
@@ -128,11 +126,11 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <Button
+          onClick={() => replace(routeForMakePayment)}
           sx={{
             ...theme.applyLinkStyles,
             verticalAlign: 'initial',
           }}
-          onClick={() => replace(routeForMakePayment)}
         >
           {pastDueBalance ? 'Make a payment immediately' : 'Make a payment'}
         </Button>
@@ -154,12 +152,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   return (
     <>
       <Grid
-        sx={{
-          margin: 0,
-        }}
         container
         size={12}
         spacing={2}
+        sx={{
+          margin: 0,
+        }}
       >
         <Grid
           size={{
@@ -199,10 +197,10 @@ export const BillingSummary = (props: BillingSummaryProps) => {
                 }}
               >
                 <Button
+                  onClick={openPromoDialog}
                   sx={{
                     ...theme.applyLinkStyles,
                   }}
-                  onClick={openPromoDialog}
                 >
                   Add a promo code
                 </Button>

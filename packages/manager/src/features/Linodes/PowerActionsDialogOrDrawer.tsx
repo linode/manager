@@ -166,9 +166,6 @@ export const PowerActionsDialog = (props: Props) => {
       )}
       {showConfigSelect && (
         <Autocomplete
-          value={configOptions.find(
-            (option) => option.value === selectedConfigID
-          )}
           autoHighlight
           disablePortal={false}
           errorText={configsError?.[0].reason}
@@ -177,6 +174,9 @@ export const PowerActionsDialog = (props: Props) => {
           loading={configsLoading}
           onChange={(_, option) => setSelectConfigID(option?.value ?? null)}
           options={configOptions}
+          value={configOptions.find(
+            (option) => option.value === selectedConfigID
+          )}
         />
       )}
       {props.action === 'Power Off' && (

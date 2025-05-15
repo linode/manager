@@ -41,13 +41,11 @@ describe('SubnetNode', () => {
   });
 
   it('should not show a subnet mask for an ip without a mask', async () => {
-    const {
-      getByDisplayValue,
-      queryByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <SubnetNode {...props} />,
-      useFormOptions: formOptions,
-    });
+    const { getByDisplayValue, queryByText } =
+      renderWithThemeAndHookFormContext({
+        component: <SubnetNode {...props} />,
+        useFormOptions: formOptions,
+      });
 
     getByDisplayValue('10.0.0.0');
     expect(queryByText('Number of Available IP Addresses:')).toBeNull();

@@ -9,7 +9,12 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
  * @returns The actions based on the type of the alert
  */
 export const getAlertTypeToActionsList = (
-  { handleDetails, handleEdit, handleStatusChange }: ActionHandlers,
+  {
+    handleDelete,
+    handleDetails,
+    handleEdit,
+    handleStatusChange,
+  }: ActionHandlers,
   alertStatus: AlertStatusType
 ): Record<AlertDefinitionType, Action[]> => ({
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
@@ -37,6 +42,13 @@ export const getAlertTypeToActionsList = (
       disabled: alertStatus === 'in progress' || alertStatus === 'failed',
       onClick: handleStatusChange,
       title: getTitleForStatusChange(alertStatus),
+    },
+    {
+      disabled:
+        /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will remove the true. */
+        alertStatus === 'in progress' || alertStatus === 'failed' || true,
+      onClick: handleDelete,
+      title: 'Delete',
     },
   ],
 });

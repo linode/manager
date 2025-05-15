@@ -1,7 +1,8 @@
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { timeout } from 'support/util/backoff';
+
 import type { APIError } from '@linode/api-v4';
 import type { AxiosError } from 'axios';
-import { timeout } from 'support/util/backoff';
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 type LinodeApiV4Error = {
   errors: APIError[];
@@ -77,7 +78,7 @@ const enhanceError = (e: Error) => {
   if (isLinodeApiError(e)) {
     // If `e` is a Linode APIv4 error response, show the status code, error messages,
     // and request URL when applicable.
-    const summary = !!e.response?.status
+    const summary = e.response?.status
       ? `Linode APIv4 request failed with status code ${e.response.status}`
       : `Linode APIv4 request failed`;
 
@@ -98,7 +99,7 @@ const enhanceError = (e: Error) => {
   if (isAxiosError(e)) {
     // If `e` is an Axios error (but not a Linode API error specifically), show the
     // status code, error messages, and request URL when applicable.
-    const summary = !!e.response?.status
+    const summary = e.response?.status
       ? `Request failed with status code ${e.response.status}`
       : `Request failed`;
 

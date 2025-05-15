@@ -14,6 +14,8 @@ export const SSHKeys = (props: Props) => {
 
   return (
     <Controller
+      control={control}
+      name="authorized_users"
       render={({ field }) => (
         <UserSSHKeyPanel
           authorizedUsers={field.value ?? []}
@@ -22,8 +24,6 @@ export const SSHKeys = (props: Props) => {
           setAuthorizedUsers={field.onChange}
         />
       )}
-      control={control}
-      name="authorized_users"
     />
   );
 };

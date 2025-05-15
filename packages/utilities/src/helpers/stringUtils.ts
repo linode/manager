@@ -16,7 +16,7 @@
 export const truncateAndJoinList = (
   strList: string[],
   max = 100,
-  total?: number
+  total?: number,
 ) => {
   const count = strList.length;
   return count > max

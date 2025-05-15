@@ -28,7 +28,7 @@ describe('manually setting VPC Configs to active', () => {
         const linodeInterface = updatedConfigs[0].interfaces[i];
         if (linodeInterface.purpose !== 'vpc') {
           expect(linodeInterface.active).toEqual(
-            oldConfigState.interfaces?.[i].active
+            oldConfigState.interfaces?.[i].active,
           );
         } else {
           expect(linodeInterface.active).toBe(true);

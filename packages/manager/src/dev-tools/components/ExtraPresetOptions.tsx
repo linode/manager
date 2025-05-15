@@ -12,10 +12,10 @@ import type { Account, Profile } from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
-  customProfileData?: Profile | null;
+  customProfileData?: null | Profile;
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
-  onCustomProfileChange?: (data: Profile | null | undefined) => void;
+  onCustomProfileChange?: (data: null | Profile | undefined) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;

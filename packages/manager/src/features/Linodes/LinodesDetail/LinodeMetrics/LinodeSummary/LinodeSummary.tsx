@@ -113,6 +113,8 @@ const LinodeSummary = (props: Props) => {
             dataKey: 'CPU %',
           },
         ]}
+        ariaLabel="CPU Usage Graph"
+        data={timeData}
         legendRows={[
           {
             data: metrics,
@@ -121,15 +123,13 @@ const LinodeSummary = (props: Props) => {
             legendTitle: 'CPU %',
           },
         ]}
+        showLegend
+        timezone={timezone}
+        unit={'%'}
         xAxis={{
           tickFormat: xAxisTickFormat,
           tickGap: 60,
         }}
-        ariaLabel="CPU Usage Graph"
-        data={timeData}
-        showLegend
-        timezone={timezone}
-        unit={'%'}
       />
     );
   };
@@ -161,6 +161,8 @@ const LinodeSummary = (props: Props) => {
             dataKey: 'Swap Rate',
           },
         ]}
+        ariaLabel="Disk I/O Graph"
+        data={timeData}
         legendRows={[
           {
             data: getMetrics(data.io),
@@ -175,15 +177,13 @@ const LinodeSummary = (props: Props) => {
             legendTitle: 'Swap Rate',
           },
         ]}
+        showLegend
+        timezone={timezone}
+        unit={' blocks/s'}
         xAxis={{
           tickFormat: xAxisTickFormat,
           tickGap: 60,
         }}
-        ariaLabel="Disk I/O Graph"
-        data={timeData}
-        showLegend
-        timezone={timezone}
-        unit={' blocks/s'}
       />
     );
   };
@@ -196,6 +196,8 @@ const LinodeSummary = (props: Props) => {
     return (
       <Paper>
         <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <Stack spacing={1}>
               <Typography variant="h2">{STATS_NOT_READY_MESSAGE}</Typography>
@@ -204,8 +206,6 @@ const LinodeSummary = (props: Props) => {
               </Typography>
             </Stack>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       </Paper>
     );
@@ -232,9 +232,6 @@ const LinodeSummary = (props: Props) => {
     <Grid container spacing={2}>
       <Grid size={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Autocomplete
-          textFieldProps={{
-            hideLabel: true,
-          }}
           defaultValue={options[0]}
           disableClearable
           id="chartRange"
@@ -243,6 +240,9 @@ const LinodeSummary = (props: Props) => {
           onChange={(e, value) => handleChartRangeChange(value)}
           options={options}
           sx={{ mt: 1, width: 150 }}
+          textFieldProps={{
+            hideLabel: true,
+          }}
         />
       </Grid>
       <Grid

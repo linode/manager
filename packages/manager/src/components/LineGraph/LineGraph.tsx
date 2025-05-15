@@ -340,7 +340,6 @@ export const LineGraph = (props: LineGraphProps) => {
 
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
 
     // Note on markup and styling: the legend is rendered first for accessibility reasons.
     // Screen readers read from top to bottom, so the legend should be read before the data tables, esp considering their size
@@ -390,6 +389,7 @@ export const LineGraph = (props: LineGraphProps) => {
                         onClick={() => handleLegendClick(idx)}
                       >
                         <StyledButtonElement
+                          hidden={hidden}
                           sx={{
                             background: bgColor,
                             borderColor: bgColor,
@@ -399,7 +399,6 @@ export const LineGraph = (props: LineGraphProps) => {
                             marginRight: theme.spacing(1),
                             width: '18px',
                           }}
-                          hidden={hidden}
                         />
                         <StyledButtonElement hidden={hidden}>
                           {title}

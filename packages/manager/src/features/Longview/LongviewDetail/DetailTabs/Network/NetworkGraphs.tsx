@@ -76,6 +76,7 @@ export const NetworkGraphs = (props: Props) => {
           <GraphCard key={`network-interface-card-${idx}`} title={name}>
             <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
+                ariaLabel="Network Traffic Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.darkGreen,
@@ -90,11 +91,10 @@ export const NetworkGraphs = (props: Props) => {
                     label: 'Outbound',
                   },
                 ]}
+                error={error}
                 formatData={(value: number) =>
                   convertNetworkToUnit(value * 8, maxUnit)
                 }
-                ariaLabel="Network Traffic Graph"
-                error={error}
                 formatTooltip={formatNetworkTooltip}
                 loading={loading}
                 nativeLegend

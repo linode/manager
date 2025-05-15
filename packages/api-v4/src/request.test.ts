@@ -1,6 +1,7 @@
-import { beforeEach, describe, vi, expect, it } from 'vitest';
 import adapter from 'axios-mock-adapter';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { object, string } from 'yup';
+
 import request, {
   baseRequest,
   isEmpty,
@@ -49,7 +50,7 @@ describe('Linode JS SDK', () => {
         await request(setHeaders({ 'Content-Type': contentType }));
         expect(mock.history.get[0].headers).toHaveProperty(
           'Content-Type',
-          contentType
+          contentType,
         );
       });
     });
@@ -60,7 +61,7 @@ describe('Linode JS SDK', () => {
         await request(setXFilter(filter));
         expect(mock.history.get[0].headers).toHaveProperty(
           'X-Filter',
-          JSON.stringify(filter)
+          JSON.stringify(filter),
         );
       });
 
@@ -71,7 +72,7 @@ describe('Linode JS SDK', () => {
         await request(setXFilter(filter));
         expect(mock.history.get[0].headers).toHaveProperty(
           'X-Filter',
-          JSON.stringify(filter)
+          JSON.stringify(filter),
         );
       });
     });
@@ -104,7 +105,7 @@ describe('Linode JS SDK', () => {
           setHeaders({ 'Content-Type': headers }),
           setXFilter(filter),
           setParams(params),
-          setData(data)
+          setData(data),
         );
         const response = mock.history.post[0];
         expect(response).toBeDefined();
@@ -114,7 +115,7 @@ describe('Linode JS SDK', () => {
         expect(response).toHaveProperty('params', params);
         expect(response.headers).toHaveProperty(
           'X-Filter',
-          JSON.stringify(filter)
+          JSON.stringify(filter),
         );
       });
     });

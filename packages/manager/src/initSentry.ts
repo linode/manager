@@ -181,7 +181,7 @@ const maybeAddCustomFingerprint = (event: SentryEvent): SentryEvent => {
    * add the fingerprint to the Sentry error so same events get
    * grouped together in the Sentry dashboard.
    */
-  return !!fingerprint
+  return fingerprint
     ? {
         ...event,
         fingerprint: [fingerprint],

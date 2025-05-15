@@ -49,11 +49,10 @@ export const useCloudPulseMetricsQuery = (
       query.error.length > 0 &&
       query.error[0].reason == 'Token expired'
     ) {
-      const currentJWEtokenCache:
-        | JWEToken
-        | undefined = queryClient.getQueryData(
-        queryFactory.token(serviceType, { entity_ids: [] }).queryKey
-      );
+      const currentJWEtokenCache: JWEToken | undefined =
+        queryClient.getQueryData(
+          queryFactory.token(serviceType, { entity_ids: [] }).queryKey
+        );
       if (currentJWEtokenCache?.token === obj.authToken) {
         queryClient.invalidateQueries(
           {

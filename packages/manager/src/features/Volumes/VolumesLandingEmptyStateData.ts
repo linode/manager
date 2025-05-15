@@ -7,8 +7,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -26,13 +26,11 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Create and Manage Block Storage Volumes',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/manage-block-storage-volumes',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/manage-block-storage-volumes',
     },
     {
       text: 'Configure a Volume on a Compute Instance',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/configure-and-mount-a-volume',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/configure-and-mount-a-volume',
     },
   ],
   moreInfo: {
@@ -56,8 +54,7 @@ export const youtubeLinkData: ResourcesLinkSection = {
     },
     {
       external: true,
-      text:
-        'How to use Block Storage to Increase Space on Your Nextcloud Instance',
+      text: 'How to use Block Storage to Increase Space on Your Nextcloud Instance',
       to: 'https://www.youtube.com/watch?v=Z9jZv_IHO2s',
     },
   ],

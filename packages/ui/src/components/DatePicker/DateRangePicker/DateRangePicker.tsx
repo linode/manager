@@ -1,4 +1,4 @@
-import { Popover, useTheme, useMediaQuery } from '@mui/material';
+import { Popover, useMediaQuery, useTheme } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTime } from 'luxon';
@@ -30,7 +30,7 @@ export interface DateRangePickerProps {
   };
 
   /** Format for displaying the date-time */
-  format?: 'MM/dd/yyyy' | 'dd-MM-yyyy' | 'yyyy-MM-dd';
+  format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
 
   /** Callback when the date-time range changes,
    * this returns start date, end date in ISO formate,
@@ -80,16 +80,16 @@ export const DateRangePicker = ({
   sx,
 }: DateRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
-    startDateProps?.value ?? null
+    startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? null
+    presetsProps?.defaultValue ?? null,
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
-    endDateProps?.value ?? null
+    endDateProps?.value ?? null,
   );
   const [startDateError, setStartDateError] = useState(
-    startDateProps?.errorMessage
+    startDateProps?.errorMessage,
   );
   const [endDateError, setEndDateError] = useState(endDateProps?.errorMessage);
   const [open, setOpen] = useState(false);
@@ -105,7 +105,7 @@ export const DateRangePicker = ({
 
   const handleOpen = (field: 'end' | 'start') => {
     setAnchorEl(
-      startDateInputRef.current?.parentElement || startDateInputRef.current
+      startDateInputRef.current?.parentElement || startDateInputRef.current,
     );
     setOpen(true);
     setFocusedField(field);
@@ -128,11 +128,11 @@ export const DateRangePicker = ({
 
   const validateDates = (
     newStartDate: DateTime | null,
-    newEndDate: DateTime | null
+    newEndDate: DateTime | null,
   ) => {
     if (newStartDate && newEndDate && newStartDate > newEndDate) {
       setStartDateError(
-        'Start date must be earlier than or equal to end date.'
+        'Start date must be earlier than or equal to end date.',
       );
       setEndDateError('End date must be later than or equal to start date.');
     } else {
@@ -168,7 +168,7 @@ export const DateRangePicker = ({
   const handlePresetSelect = (
     selectedStartDate: DateTime | null,
     selectedEndDate: DateTime | null,
-    selectedPresetLabel: null | string
+    selectedPresetLabel: null | string,
   ) => {
     setStartDate(selectedStartDate);
     setEndDate(selectedEndDate);
@@ -184,6 +184,10 @@ export const DateRangePicker = ({
       <Box>
         <Stack direction="row" spacing={2} sx={sx}>
           <DateField
+            errorText={startDateError}
+            format={format}
+            inputRef={startDateInputRef}
+            label={startDateProps?.label ?? 'Start Date'}
             onChange={(date) => {
               setStartDate(date);
 
@@ -193,26 +197,25 @@ export const DateRangePicker = ({
               }
               setFocusedField('end'); // Automatically focus on end date
             }}
-            errorText={startDateError}
-            format={format}
-            inputRef={startDateInputRef}
-            label={startDateProps?.label ?? 'Start Date'}
             onClick={() => handleOpen('start')}
             value={startDate}
           />
           <DateField
-            onChange={(date) => {
-              setEndDate(date);
-            }}
             errorText={endDateError}
             format={format}
             inputRef={endDateInputRef}
             label={endDateProps?.label ?? 'End Date'}
+            onChange={(date) => {
+              setEndDate(date);
+            }}
             onClick={() => handleOpen('end')}
             value={endDate}
           />
         </Stack>
         <Popover
+          anchorEl={anchorEl}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          disableAutoFocus
           onClose={(e: React.SyntheticEvent<HTMLElement>) => {
             const target = e.target as HTMLElement;
 
@@ -228,9 +231,6 @@ export const DateRangePicker = ({
 
             handleClose(); // Close popover only when clicking outside
           }}
-          anchorEl={anchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          disableAutoFocus
           open={open}
           role="dialog"
           sx={{ boxShadow: 3, zIndex: 1300 }}

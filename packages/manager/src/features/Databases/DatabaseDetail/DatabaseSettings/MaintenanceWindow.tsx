@@ -74,18 +74,15 @@ interface Props {
 export const MaintenanceWindow = (props: Props) => {
   const { database, disabled, timezone } = props;
 
-  const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<
-    APIError[]
-  >();
+  const [maintenanceUpdateError, setMaintenanceUpdateError] =
+    React.useState<APIError[]>();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
   // "Save Changes" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
-  const [
-    modifiedWeekSelectionMap,
-    setModifiedWeekSelectionMap,
-  ] = React.useState<SelectOption<number>[]>([]);
+  const [modifiedWeekSelectionMap, setModifiedWeekSelectionMap] =
+    React.useState<SelectOption<number>[]>([]);
 
   const { classes } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -158,23 +155,17 @@ export const MaintenanceWindow = (props: Props) => {
     return null;
   };
 
-  const {
-    errors,
-    handleSubmit,
-    isSubmitting,
-    setFieldValue,
-    touched,
-    values,
-  } = useFormik({
-    initialValues: {
-      day_of_week: database.updates?.day_of_week ?? 1,
-      frequency: database.updates?.frequency ?? 'weekly',
-      hour_of_day: database.updates?.hour_of_day ?? 20,
-      week_of_month: getInitialWeekOfMonth(),
-    },
-    // validationSchema: updateDatabaseSchema,
-    onSubmit: handleSaveMaintenanceWindow,
-  });
+  const { errors, handleSubmit, isSubmitting, setFieldValue, touched, values } =
+    useFormik({
+      initialValues: {
+        day_of_week: database.updates?.day_of_week ?? 1,
+        frequency: database.updates?.frequency ?? 'weekly',
+        hour_of_day: database.updates?.hour_of_day ?? 20,
+        week_of_month: getInitialWeekOfMonth(),
+      },
+      // validationSchema: updateDatabaseSchema,
+      onSubmit: handleSaveMaintenanceWindow,
+    });
 
   const isLegacy = database.platform === 'rdbms-legacy';
 
@@ -207,9 +198,15 @@ export const MaintenanceWindow = (props: Props) => {
           <div>
             <FormControl className={classes.formControlDropdown}>
               <Autocomplete
+                autoHighlight
+                disableClearable
+                disabled={disabled}
+                errorText={touched.day_of_week ? errors.day_of_week : undefined}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
+                label="Day of Week"
+                noMarginTop
                 onChange={(_, day) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', day.value);
@@ -220,6 +217,8 @@ export const MaintenanceWindow = (props: Props) => {
                     setFieldValue('week_of_month', values.week_of_month);
                   }
                 }}
+                options={daySelectionMap}
+                placeholder="Choose a day"
                 renderOption={(props, option) => (
                   <li {...props}>{option.label}</li>
                 )}
@@ -231,29 +230,28 @@ export const MaintenanceWindow = (props: Props) => {
                 value={daySelectionMap.find(
                   (thisOption) => thisOption.value === values.day_of_week
                 )}
-                autoHighlight
-                disableClearable
-                disabled={disabled}
-                errorText={touched.day_of_week ? errors.day_of_week : undefined}
-                label="Day of Week"
-                noMarginTop
-                options={daySelectionMap}
-                placeholder="Choose a day"
               />
             </FormControl>
             <FormControl className={classes.formControlDropdown}>
               <div style={{ alignItems: 'center', display: 'flex' }}>
                 <Autocomplete
+                  autoHighlight
                   defaultValue={hourSelectionMap.find(
                     (option) => option.value === 20
                   )}
+                  disableClearable
+                  disabled={disabled}
                   errorText={
                     touched.hour_of_day ? errors.hour_of_day : undefined
                   }
+                  label="Time"
+                  noMarginTop
                   onChange={(_, hour) => {
                     setFormTouched(true);
                     setFieldValue('hour_of_day', hour?.value);
                   }}
+                  options={hourSelectionMap}
+                  placeholder="Choose a time"
                   renderOption={(props, option) => (
                     <li {...props}>{option.label}</li>
                   )}
@@ -265,15 +263,9 @@ export const MaintenanceWindow = (props: Props) => {
                   value={hourSelectionMap.find(
                     (thisOption) => thisOption.value === values.hour_of_day
                   )}
-                  autoHighlight
-                  disableClearable
-                  disabled={disabled}
-                  label="Time"
-                  noMarginTop
-                  options={hourSelectionMap}
-                  placeholder="Choose a time"
                 />
                 <TooltipIcon
+                  status="help"
                   sxTooltipIcon={{
                     marginTop: '1.75rem',
                     padding: '0px 8px',
@@ -286,13 +278,13 @@ export const MaintenanceWindow = (props: Props) => {
                       your timezone settings.
                     </Typography>
                   }
-                  status="help"
                 />
               </div>
             </FormControl>
           </div>
           {isLegacy && (
             <FormControl
+              disabled={disabled}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFormTouched(true);
                 setFieldValue('frequency', e.target.value);
@@ -314,7 +306,6 @@ export const MaintenanceWindow = (props: Props) => {
                   );
                 }
               }}
-              disabled={disabled}
             >
               <RadioGroup
                 style={{ marginBottom: 0, marginTop: 0 }}
@@ -338,13 +329,20 @@ export const MaintenanceWindow = (props: Props) => {
                 style={{ minWidth: '250px' }}
               >
                 <Autocomplete
+                  autoHighlight
+                  defaultValue={modifiedWeekSelectionMap[0]}
+                  disableClearable
                   errorText={
                     touched.week_of_month ? errors.week_of_month : undefined
                   }
+                  label="Repeats on"
+                  noMarginTop
                   onChange={(_, week) => {
                     setFormTouched(true);
                     setFieldValue('week_of_month', week?.value);
                   }}
+                  options={modifiedWeekSelectionMap}
+                  placeholder="Repeats on"
                   renderOption={(props, option) => (
                     <li {...props}>{option.label}</li>
                   )}
@@ -356,13 +354,6 @@ export const MaintenanceWindow = (props: Props) => {
                   value={modifiedWeekSelectionMap.find(
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
-                  autoHighlight
-                  defaultValue={modifiedWeekSelectionMap[0]}
-                  disableClearable
-                  label="Repeats on"
-                  noMarginTop
-                  options={modifiedWeekSelectionMap}
-                  placeholder="Repeats on"
                 />
               </FormControl>
             ) : null}

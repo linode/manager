@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import {
   CircleProgress,
   Divider,
@@ -12,7 +13,6 @@ import { useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
-import { useProfile } from '@linode/queries';
 
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import { ResetPassword } from './ResetPassword';
@@ -51,8 +51,8 @@ export const AuthenticationSettings = () => {
     const targetRef = focusTel
       ? phoneNumberRef
       : focusSecurityQuestions
-      ? securityQuestionRef
-      : null;
+        ? securityQuestionRef
+        : null;
 
     const isValidTargetRef =
       targetRef &&

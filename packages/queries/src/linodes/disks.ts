@@ -20,7 +20,7 @@ export const useAllLinodeDisksQuery = (id: number, enabled = true) => {
 
 export const useLinodeDiskChangePasswordMutation = (
   linodeId: number,
-  diskId: number
+  diskId: number,
 ) =>
   useMutation<Disk, APIError[], { password: string }>({
     mutationFn: ({ password }) =>
@@ -29,7 +29,7 @@ export const useLinodeDiskChangePasswordMutation = (
 
 export const useLinodeDeleteDiskMutation = (
   linodeId: number,
-  diskId: number
+  diskId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<{}, APIError[]>({
@@ -52,7 +52,7 @@ export const useLinodeDiskCreateMutation = (linodeId: number) => {
 
 export const useLinodeDiskUpdateMutation = (
   linodeId: number,
-  diskId: number
+  diskId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Disk, APIError[], { label: string }>({
@@ -65,7 +65,7 @@ export const useLinodeDiskUpdateMutation = (
 
 export const useLinodeDiskResizeMutation = (
   linodeId: number,
-  diskId: number
+  diskId: number,
 ) => {
   const queryClient = useQueryClient();
   return useMutation<Disk, APIError[], { size: number }>({

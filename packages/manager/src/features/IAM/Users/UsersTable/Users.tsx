@@ -1,3 +1,4 @@
+import { useAccountUsers, useProfile } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
@@ -11,7 +12,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers, useProfile } from '@linode/queries';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -24,9 +24,8 @@ import type { Filter } from '@linode/api-v4';
 const XS_TO_SM_BREAKPOINT = 475;
 
 export const UsersLanding = () => {
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
 
@@ -55,7 +54,12 @@ export const UsersLanding = () => {
   };
 
   // Since this query is disabled for restricted users, use isLoading.
-  const { data: users, error, isFetching, isLoading } = useAccountUsers({
+  const {
+    data: users,
+    error,
+    isFetching,
+    isLoading,
+  } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -123,12 +127,12 @@ export const UsersLanding = () => {
             </Typography>
           ) : (
             <DebouncedSearchTextField
+              clearable
               containerProps={{
                 sx: {
                   width: { md: '320px', xs: '100%' },
                 },
               }}
-              clearable
               debounceTime={250}
               errorText={searchError?.message}
               hideLabel
@@ -140,6 +144,9 @@ export const UsersLanding = () => {
             />
           )}
           <Button
+            buttonType="primary"
+            disabled={isRestrictedUser}
+            onClick={() => setIsCreateDrawerOpen(true)}
             sx={(theme) => ({
               [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
                 marginTop: theme.spacing(1),
@@ -151,9 +158,6 @@ export const UsersLanding = () => {
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }
-            buttonType="primary"
-            disabled={isRestrictedUser}
-            onClick={() => setIsCreateDrawerOpen(true)}
           >
             Add a User
           </Button>

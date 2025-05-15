@@ -4,11 +4,11 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -74,13 +74,11 @@ export const LinodeVolumes = () => {
     filter
   );
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
-  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] = React.useState(
-    false
-  );
+  const [isManageTagsDrawerOpen, setisManageTagsDrawerOpen] =
+    React.useState(false);
   const [selectedVolumeId, setSelectedVolumeId] = React.useState<number>();
   const [isDetailsDrawerOpen, setIsDetailsDrawerOpen] = React.useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
@@ -143,10 +141,10 @@ export const LinodeVolumes = () => {
     if (isLoading) {
       return (
         <TableRowLoading
+          columns={numColumns}
           responsive={{
             3: { xsDown: true },
           }}
-          columns={numColumns}
           rows={1}
         />
       );
@@ -240,7 +238,7 @@ export const LinodeVolumes = () => {
             {isBlockStorageEncryptionFeatureEnabled && (
               <TableCell>Encryption</TableCell>
             )}
-            <TableCell></TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>

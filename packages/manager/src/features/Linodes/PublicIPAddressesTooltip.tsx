@@ -24,15 +24,19 @@ export const PublicIPAddressesTooltip = ({
       status="help"
       sxTooltipIcon={sxTooltipIcon}
       text={
-        <Typography>
-          {isLinodeInterface
-            ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT
-            : PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT}{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance">
-            Learn more
-          </Link>
-          .
-        </Typography>
+        isLinodeInterface ? (
+          <Typography>
+            {PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT}
+          </Typography>
+        ) : (
+          <Typography>
+            {PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT}{' '}
+            <Link to="https://techdocs.akamai.com/cloud-computing/docs/manage-configuration-profiles-on-a-compute-instance">
+              Learn more
+            </Link>
+            .
+          </Typography>
+        )
       }
     />
   );

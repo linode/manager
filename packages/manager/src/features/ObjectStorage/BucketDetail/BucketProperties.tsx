@@ -29,11 +29,11 @@ export const BucketProperties = React.memo((props: Props) => {
 
       <StyledRootContainer>
         <BucketRateLimitTable
+          endpointType={endpoint_type}
           typographyProps={{
             component: 'h3',
             variant: 'h3',
           }}
-          endpointType={endpoint_type}
         />
         {/* TODO: OBJGen2 - This will be handled once we receive API for bucket rates */}
         <StyledActionsPanel

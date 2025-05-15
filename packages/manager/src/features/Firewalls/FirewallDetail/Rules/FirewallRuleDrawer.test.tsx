@@ -1,4 +1,3 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -8,20 +7,22 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { FirewallRuleDrawer } from './FirewallRuleDrawer';
 import {
-  IP_ERROR_MESSAGE,
   classifyIPs,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
+  IP_ERROR_MESSAGE,
   itemsToPortString,
   portStringToItems,
   validateForm,
   validateIPs,
 } from './FirewallRuleDrawer.utils';
-import { ExtendedFirewallRule } from './firewallRuleEditor';
-import { FirewallRuleError, PORT_PRESETS } from './shared';
+import { PORT_PRESETS } from './shared';
 
 import type { FirewallRuleDrawerProps } from './FirewallRuleDrawer.types';
+import type { ExtendedFirewallRule } from './firewallRuleEditor';
+import type { FirewallRuleError } from './shared';
+import type { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
 
 const mockOnClose = vi.fn();
 const mockOnSubmit = vi.fn();

@@ -24,6 +24,8 @@ export const VPCRanges = () => {
           spacing={0.5}
         >
           <Controller
+            control={control}
+            name={`interfaces.0.ip_ranges.${index}`}
             render={({ field, fieldState }) => (
               <TextField
                 errorText={fieldState.error?.message}
@@ -37,8 +39,6 @@ export const VPCRanges = () => {
                 value={field.value}
               />
             )}
-            control={control}
-            name={`interfaces.0.ip_ranges.${index}`}
           />
           <IconButton
             aria-label={`Remove IP Range ${index}`}

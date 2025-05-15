@@ -244,7 +244,7 @@ describe('Managed Contacts tab', () => {
       .findByTitle(`Delete Contact ${contactName}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Contact Name:').should('be.visible').click();
+        cy.findByLabelText('Contact Name').should('be.visible').click();
         cy.focused().type(contactName);
 
         ui.buttonGroup

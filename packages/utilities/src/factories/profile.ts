@@ -2,8 +2,8 @@ import { Factory } from './factoryProxy';
 
 import type {
   Profile,
-  SSHKey,
   SecurityQuestionsData,
+  SSHKey,
   UserPreferences,
 } from '@linode/api-v4/lib/profile';
 

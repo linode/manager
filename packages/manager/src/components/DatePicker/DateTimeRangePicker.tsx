@@ -114,7 +114,8 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
       placeholder: presetsPlaceholder = 'Select a preset',
     } = {},
     startDateProps: {
-      errorMessage: startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
+      errorMessage:
+        startDateErrorMessage = 'Start date/time cannot be after the end date/time.',
       label: startLabel = 'Start Date and Time',
       placeholder: startDatePlaceholder,
       showTimeZone: showStartTimeZone = false,
@@ -131,11 +132,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     endDateTimeValue ?? DateTime.now().set({ second: 0 })
   );
   const [presetValue, setPresetValue] = useState<
+    | undefined
     | {
         label: string;
         value: string;
       }
-    | undefined
   >(
     presetsOptions.find((option) => option.value === presetsDefaultValue) ??
       presetsOptions[0]
@@ -171,11 +172,11 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     let newEndDateTime: DateTime | null = now;
 
     switch (value) {
-      case '30minutes':
-        newStartDateTime = now.minus({ minutes: 30 });
-        break;
       case '1hour':
         newStartDateTime = now.minus({ hours: 1 });
+        break;
+      case '7days':
+        newStartDateTime = now.minus({ days: 7 });
         break;
       case '12hours':
         newStartDateTime = now.minus({ hours: 12 });
@@ -183,15 +184,15 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
       case '24hours':
         newStartDateTime = now.minus({ hours: 24 });
         break;
-      case '7days':
-        newStartDateTime = now.minus({ days: 7 });
-        break;
       case '30days':
         newStartDateTime = now.minus({ days: 30 });
         break;
-      case 'this_month':
-        newEndDateTime = DateTime.now();
-        newStartDateTime = newEndDateTime.startOf('month');
+      case '30minutes':
+        newStartDateTime = now.minus({ minutes: 30 });
+        break;
+      case 'custom_range':
+        newStartDateTime = startDateTime;
+        newEndDateTime = endDateTime;
         break;
       case 'last_month':
         const lastMonth = DateTime.now().minus({ months: 1 });
@@ -199,9 +200,9 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
         newEndDateTime = lastMonth.endOf('month');
         break;
 
-      case 'custom_range':
-        newStartDateTime = startDateTime;
-        newEndDateTime = endDateTime;
+      case 'this_month':
+        newEndDateTime = DateTime.now();
+        newStartDateTime = newEndDateTime.startOf('month');
         break;
       default:
         return;
@@ -257,17 +258,17 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
     <Box display="flex" flexDirection="column" gap={2} sx={sx}>
       {showPresets ? (
         <Autocomplete
-          onChange={(_, selection) => {
-            if (selection) {
-              handlePresetSelection(selection.value as DatePresetType);
-            }
-          }}
           data-qa-preset="preset-select"
           data-testid="preset-select"
           disableClearable
           fullWidth
           label={presetsLabel}
           noMarginTop
+          onChange={(_, selection) => {
+            if (selection) {
+              handlePresetSelection(selection.value as DatePresetType);
+            }
+          }}
           options={presetsOptions}
           placeholder={presetsPlaceholder}
           value={presetValue}
@@ -279,11 +280,6 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
           gap={2}
         >
           <DateTimePicker
-            timeZoneSelectProps={{
-              label: 'Start TimeZone',
-              onChange: (value) => setStartTimeZone(value),
-              value: startTimeZone,
-            }}
             disabledTimeZone={disabledTimeZone}
             errorText={startDateError ?? undefined}
             format={format}
@@ -292,12 +288,14 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             placeholder={startDatePlaceholder}
             showTimeZone={showStartTimeZone}
             timeSelectProps={{ label: 'Start Time' }}
+            timeZoneSelectProps={{
+              label: 'Start TimeZone',
+              onChange: (value) => setStartTimeZone(value),
+              value: startTimeZone,
+            }}
             value={startDateTime}
           />
           <DateTimePicker
-            timeZoneSelectProps={{
-              value: startTimeZone,
-            }}
             disabledTimeZone={disabledTimeZone}
             format={format}
             label={endLabel}
@@ -306,16 +304,19 @@ export const DateTimeRangePicker = (props: DateTimeRangePickerProps) => {
             placeholder={endDatePlaceholder}
             showTimeZone={showEndTimeZone}
             timeSelectProps={{ label: 'End Time' }}
+            timeZoneSelectProps={{
+              value: startTimeZone,
+            }}
             value={endDateTime}
           />
           <Box alignContent={startDateError ? 'center' : 'flex-end'}>
             <StyledActionButton
+              data-qa-buttons="true"
               onClick={() => {
                 setShowPresets(true);
                 setPresetValue(undefined);
                 setStartDateError(null);
               }}
-              data-qa-buttons="true"
               variant="text"
             >
               Presets

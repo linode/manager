@@ -1,8 +1,10 @@
 import { getInvoice, getInvoiceItems } from '@linode/api-v4/lib/account';
+import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
+import { getAll } from '@linode/utilities';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,9 +16,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccount, useRegionsQuery } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAll } from '@linode/utilities';
 
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import { invoiceCreatedAfterDCPricingLaunch } from '../PdfGenerator/utils';
@@ -40,9 +40,8 @@ export const InvoiceDetail = () => {
   );
   const [loading, setLoading] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
-  const [pdfGenerationError, setPDFGenerationError] = React.useState<any>(
-    undefined
-  );
+  const [pdfGenerationError, setPDFGenerationError] =
+    React.useState<any>(undefined);
 
   const flags = useFlags();
 
@@ -133,11 +132,11 @@ export const InvoiceDetail = () => {
           <Grid size={12}>
             <Grid container data-qa-invoice-header spacing={2} sx={sxGrid}>
               <Grid
-                sx={sxGrid}
                 size={{
                   sm: 4,
                   xs: 12,
                 }}
+                sx={sxGrid}
               >
                 <Link
                   accessibleAriaLabel="Back to Billing"
@@ -145,13 +144,13 @@ export const InvoiceDetail = () => {
                   to={`/account/billing`}
                 >
                   <IconButton
-                    sx={{
-                      padding: 0,
-                    }}
                     component="span"
                     disableFocusRipple
                     role="none"
                     size="large"
+                    sx={{
+                      padding: 0,
+                    }}
                     tabIndex={-1}
                   >
                     <KeyboardArrowLeft
@@ -175,10 +174,10 @@ export const InvoiceDetail = () => {
               </Grid>
               <Grid
                 data-qa-printable-invoice
-                sx={{ ...sxGrid, justifyContent: 'flex-end' }}
                 size={{
                   sm: 'grow',
                 }}
+                sx={{ ...sxGrid, justifyContent: 'flex-end' }}
               >
                 {account && invoice && items && (
                   <>
@@ -231,6 +230,7 @@ export const InvoiceDetail = () => {
           <Grid size={12}>
             {invoice && (
               <Box
+                data-qa-invoice-summary
                 sx={{
                   alignItems: 'flex-end',
                   display: 'flex',
@@ -238,7 +238,6 @@ export const InvoiceDetail = () => {
                   gap: theme.spacing(2),
                   padding: theme.spacing(1),
                 }}
-                data-qa-invoice-summary
               >
                 <Typography variant="h2">
                   Subtotal:{' '}

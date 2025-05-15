@@ -9,7 +9,6 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import {
   handleFieldErrors,
@@ -20,17 +19,18 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 import { PricePanel } from './VolumeDrawer/PricePanel';
 import { SizeField } from './VolumeDrawer/SizeField';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const ResizeVolumeDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
 
@@ -95,7 +95,7 @@ export const ResizeVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

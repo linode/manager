@@ -233,14 +233,14 @@ interface ChooseRegionOptions {
   capabilities?: Capabilities[];
 
   /**
-   * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
-   */
-  regions?: Region[];
-
-  /**
    * Array of region IDs to exclude from results, in addition to `disallowedRegionIds` regions.
    */
   exclude?: string[];
+
+  /**
+   * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
+   */
+  regions?: Region[];
 }
 
 /**

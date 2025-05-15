@@ -1,10 +1,10 @@
+import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
 import { Accordion, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
 
 interface Props {
   isReadOnly?: boolean;

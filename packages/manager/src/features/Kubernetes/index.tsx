@@ -36,12 +36,12 @@ export const Kubernetes = () => {
           path={`/kubernetes/clusters/:clusterID/summary`}
         />
         <Route
+          path={`/kubernetes/clusters/:clusterID`}
           render={(props) => (
             <Redirect
               to={`/kubernetes/clusters/${props.match.params.clusterID}/summary`}
             />
           )}
-          path={`/kubernetes/clusters/:clusterID`}
         />
         <Route
           component={KubernetesLanding}

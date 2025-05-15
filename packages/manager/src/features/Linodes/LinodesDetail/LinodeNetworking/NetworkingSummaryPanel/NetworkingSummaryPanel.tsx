@@ -69,10 +69,10 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           />
         </Grid>
         <StyledDnsResolverGrid
+          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
           sx={{
             paddingBottom: 0,
           }}
-          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
         >
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>

@@ -8,7 +8,7 @@ import {
   invoiceItemFactory,
   paymentFactory,
 } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import { MAGIC_DATE_THAT_DC_SPECIFIC_PRICING_WAS_IMPLEMENTED } from 'src/utilities/pricing/constants';
 
@@ -55,13 +55,13 @@ const getExpectedInvoiceAddressText = (account: Account) => {
 
   invoiceTo.push(`${first_name} ${last_name} ${company} ${address_1}`);
 
-  if (Boolean(address_2)) {
+  if (address_2) {
     invoiceTo.push(address_2);
   }
 
   invoiceTo.push(`${city}, ${state}, ${zip} ${country}`);
 
-  if (Boolean(tax_id)) {
+  if (tax_id) {
     invoiceTo.push(`Tax ID: ${tax_id}`);
   }
 

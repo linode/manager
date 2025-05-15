@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client';
-
 import type { Root } from 'react-dom/client';
 
 export const rootInstances = new Map<HTMLElement, Root>();

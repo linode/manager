@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Box, Paper, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
@@ -10,7 +11,6 @@ import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';

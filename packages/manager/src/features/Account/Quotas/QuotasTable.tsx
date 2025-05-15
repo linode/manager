@@ -110,7 +110,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: '25%' }}>Quota Name</TableCell>
-            <TableCell sx={{ width: '20%' }}>Account Quota Value</TableCell>
+            <TableCell sx={{ width: '30%' }}>Account Quota Value</TableCell>
             <TableCell sx={{ width: '35%' }}>Usage</TableCell>
             <TableCell sx={{ width: '10%' }} />
           </TableRow>
@@ -171,10 +171,11 @@ export const QuotasTable = (props: QuotasTableProps) => {
         open={supportModalOpen}
         sx={{
           '& .MuiDialog-paper': {
-            maxWidth: 600,
+            maxWidth: 800,
+            width: '100%',
           },
         }}
-        title={`Increase ${selectedService.label} Quota`}
+        title={`Contact Support: Increase ${selectedService.label} Quota`}
       >
         {selectedQuota && (
           <QuotasIncreaseForm

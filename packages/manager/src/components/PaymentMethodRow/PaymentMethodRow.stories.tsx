@@ -1,4 +1,3 @@
-import { CardType } from '@linode/api-v4';
 import { action } from '@storybook/addon-actions';
 import React from 'react';
 
@@ -6,6 +5,7 @@ import { paymentMethodFactory } from 'src/factories';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
 
+import type { CardType } from '@linode/api-v4';
 import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof PaymentMethodRow>;
@@ -24,14 +24,14 @@ const supportedCreditCards: (CardType | undefined)[] = [
 const CreditCardExamples = () => {
   const paymentMethods = supportedCreditCards.map((creditCard) => (
     <PaymentMethodRow
+      key={creditCard ?? 'undefined-credit-card'}
+      onDelete={onDelete}
       paymentMethod={paymentMethodFactory.build({
         data: {
           card_type: creditCard,
         },
         type: 'credit_card',
       })}
-      key={creditCard ?? 'undefined-credit-card'}
-      onDelete={onDelete}
     />
   ));
 

@@ -3,7 +3,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { useCreateCredentialMutation } from 'src/queries/managed/managed';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
@@ -55,12 +54,7 @@ export const AddCredentialDrawer = (props: CredentialDrawerProps) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title={'Add Credential'}
-    >
+    <Drawer onClose={onClose} open={open} title={'Add Credential'}>
       <Formik
         initialValues={{
           label: '',

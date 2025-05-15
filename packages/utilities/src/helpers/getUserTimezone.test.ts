@@ -1,9 +1,8 @@
+import { DateTime } from 'luxon';
 import { describe, expect, it } from 'vitest';
 
-import { DateTime } from 'luxon';
-
-import { getUserTimezone } from './getUserTimezone';
 import { profileFactory } from '../factories/profile';
+import { getUserTimezone } from './getUserTimezone';
 
 import type { Profile } from '@linode/api-v4/lib/profile';
 

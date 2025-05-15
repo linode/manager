@@ -108,17 +108,35 @@ export const NodeBalancerSelect = (
 
   return (
     <Autocomplete
+      ChipProps={{ deleteIcon: <CloseIcon /> }}
+      clearOnBlur={false}
+      data-testid="add-nodebalancer-autocomplete"
+      disableClearable={!clearable}
+      disableCloseOnSelect={multiple}
+      disabled={disabled}
+      disablePortal={true}
+      errorText={error?.[0].reason ?? errorText}
       getOptionLabel={(nodebalancer: NodeBalancer) =>
         renderOptionLabel ? renderOptionLabel(nodebalancer) : nodebalancer.label
       }
+      helperText={helperText}
+      id={id}
+      inputValue={inputValue}
+      label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
+      loading={isLoading || loading}
+      multiple={multiple}
+      noMarginTop={noMarginTop}
       noOptionsText={
         noOptionsMessage ?? getDefaultNoOptionsMessage(error, isLoading)
       }
+      onBlur={onBlur}
       onChange={(_, value) =>
         multiple && Array.isArray(value)
           ? onSelectionChange(value)
           : !multiple && !Array.isArray(value) && onSelectionChange(value)
       }
+      onInputChange={(_, value) => setInputValue(value)}
+      options={options || (nodebalancers ?? [])}
       placeholder={
         placeholder
           ? placeholder
@@ -126,6 +144,8 @@ export const NodeBalancerSelect = (
             ? 'Select NodeBalancers'
             : 'Select a NodeBalancer'
       }
+      PopperComponent={CustomPopper}
+      popupIcon={<KeyboardArrowDownIcon />}
       renderOption={
         renderOption
           ? (props, option, { selected }) => {
@@ -138,6 +158,7 @@ export const NodeBalancerSelect = (
             }
           : undefined
       }
+      sx={sx}
       value={
         typeof value === 'function'
           ? multiple && Array.isArray(value)
@@ -145,27 +166,6 @@ export const NodeBalancerSelect = (
             : (nodebalancers?.find(value) ?? null)
           : mapIdsToDevices<NodeBalancer>(value, nodebalancers)
       }
-      ChipProps={{ deleteIcon: <CloseIcon /> }}
-      PopperComponent={CustomPopper}
-      clearOnBlur={false}
-      data-testid="add-nodebalancer-autocomplete"
-      disableClearable={!clearable}
-      disableCloseOnSelect={multiple}
-      disablePortal={true}
-      disabled={disabled}
-      errorText={error?.[0].reason ?? errorText}
-      helperText={helperText}
-      id={id}
-      inputValue={inputValue}
-      label={label ? label : multiple ? 'NodeBalancers' : 'NodeBalancer'}
-      loading={isLoading || loading}
-      multiple={multiple}
-      noMarginTop={noMarginTop}
-      onBlur={onBlur}
-      onInputChange={(_, value) => setInputValue(value)}
-      options={options || (nodebalancers ?? [])}
-      popupIcon={<KeyboardArrowDownIcon />}
-      sx={sx}
     />
   );
 };

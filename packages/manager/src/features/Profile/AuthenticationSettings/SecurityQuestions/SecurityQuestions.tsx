@@ -22,10 +22,8 @@ export const SecurityQuestions = ({
   securityQuestionRef?: React.RefObject<HTMLInputElement>;
 }) => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
-  const {
-    isPending: isUpdating,
-    mutateAsync: updateSecurityQuestions,
-  } = useMutateSecurityQuestions();
+  const { isPending: isUpdating, mutateAsync: updateSecurityQuestions } =
+    useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
@@ -133,42 +131,42 @@ export const SecurityQuestions = ({
       </StyledCopy>
       <StyledForm onSubmit={handleSubmit}>
         <QuestionAndAnswerPair
+          edit={questionEditStates[0]}
+          index={0}
+          onEdit={() => onEdit(0)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[1]?.id &&
               option.value !== values.security_questions[2]?.id
             );
           })}
-          edit={questionEditStates[0]}
-          index={0}
-          onEdit={() => onEdit(0)}
           questionResponse={values.security_questions[0]}
           securityQuestionRef={securityQuestionRef}
           {...qaProps}
         />
         <QuestionAndAnswerPair
+          edit={questionEditStates[1]}
+          index={1}
+          onEdit={() => onEdit(1)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[0]?.id &&
               option.value !== values.security_questions[2]?.id
             );
           })}
-          edit={questionEditStates[1]}
-          index={1}
-          onEdit={() => onEdit(1)}
           questionResponse={values.security_questions[1]}
           {...qaProps}
         />
         <QuestionAndAnswerPair
+          edit={questionEditStates[2]}
+          index={2}
+          onEdit={() => onEdit(2)}
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[0]?.id &&
               option.value !== values.security_questions[1]?.id
             );
           })}
-          edit={questionEditStates[2]}
-          index={2}
-          onEdit={() => onEdit(2)}
           questionResponse={values.security_questions[2]}
           {...qaProps}
         />

@@ -1,9 +1,9 @@
 import { DateTime } from 'luxon';
 
 import {
-  STALE_DAYS,
   isExpired,
   isStale,
+  STALE_DAYS,
   updateDismissedNotifications,
 } from './useDismissibleNotifications';
 

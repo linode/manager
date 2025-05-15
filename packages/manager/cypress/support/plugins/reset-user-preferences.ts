@@ -1,5 +1,6 @@
-import { CypressPlugin } from './plugin';
 import { updateUserPreferences } from '@linode/api-v4';
+
+import type { CypressPlugin } from './plugin';
 
 const envVarName = 'CY_TEST_RESET_PREFERENCES';
 

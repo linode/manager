@@ -1,4 +1,4 @@
-import { Paper, Typography, omittedProps } from '@linode/ui';
+import { omittedProps, Paper, Typography } from '@linode/ui';
 import { MenuItem, MenuList, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 

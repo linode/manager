@@ -4,7 +4,9 @@
 
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { skip } from 'support/util/skip';
+
 import { accountSettingsFactory } from 'src/factories/accountSettings';
+
 import type { AccountSettings } from '@linode/api-v4';
 
 // / Account object with Managed enabled for mocking API requests.

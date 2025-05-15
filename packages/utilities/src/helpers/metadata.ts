@@ -14,7 +14,7 @@ export const utoa = (data: string) => {
 
 export const regionSupportsMetadata = (
   regionsData: Region[],
-  region: string
+  region: string,
 ) => {
   return (
     regionsData

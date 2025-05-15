@@ -6,10 +6,10 @@ import Storage from 'src/assets/icons/entityIcons/storage.svg';
 import { refinedSearch } from './refinedSearch';
 
 import type {
-  SearchResults,
-  SearchResultsByEntity,
   SearchableEntityType,
   SearchableItem,
+  SearchResults,
+  SearchResultsByEntity,
 } from './search.interfaces';
 
 export const emptyResults: SearchResultsByEntity = {

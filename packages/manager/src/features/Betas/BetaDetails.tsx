@@ -63,10 +63,10 @@ const BetaDetails = (props: Props) => {
       <Stack direction="column" minHeight={66} minWidth="111px" spacing={2}>
         {enrolled ? null : (
           <Button
+            buttonType="primary"
             onClick={() => {
               navigate({ params: { betaId: id }, to: '/betas/signup/$betaId' });
             }}
-            buttonType="primary"
           >
             Sign Up
           </Button>

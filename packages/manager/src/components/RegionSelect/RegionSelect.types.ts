@@ -1,3 +1,5 @@
+import type React from 'react';
+
 import type {
   AccountAvailability,
   Capabilities,
@@ -5,7 +7,6 @@ import type {
   RegionSite,
 } from '@linode/api-v4';
 import type { DisableItemOption, EnhancedAutocompleteProps } from '@linode/ui';
-import type React from 'react';
 
 export type RegionFilterValue =
   | 'distributed-AF'
@@ -23,7 +24,7 @@ export interface GetRegionLabel {
 }
 
 export interface RegionSelectProps<
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 > extends Omit<
     EnhancedAutocompleteProps<Region, false, DisableClearable>,
     'label' | 'options' | 'value'
@@ -75,10 +76,6 @@ export interface RegionMultiSelectProps
     EnhancedAutocompleteProps<Region, true>,
     'label' | 'onChange' | 'options'
   > {
-  SelectedRegionsList?: React.ComponentType<{
-    onRemove: (region: string) => void;
-    selectedRegions: Region[];
-  }>;
   currentCapability: Capabilities | undefined;
   disabledRegions?: Record<string, DisableItemOption>;
   /**
@@ -102,6 +99,10 @@ export interface RegionMultiSelectProps
   regions: Region[];
   required?: boolean;
   selectedIds: string[];
+  SelectedRegionsList?: React.ComponentType<{
+    onRemove: (region: string) => void;
+    selectedRegions: Region[];
+  }>;
   sortRegionOptions?: (a: Region, b: Region) => number;
   tooltipText?: string;
   width?: number;

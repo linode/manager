@@ -5,16 +5,18 @@ import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
-import type { NodeBalancer } from '@linode/api-v4';
+import type { APIError, NodeBalancer } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
+  nodeBalancerError: APIError[] | null;
   open: boolean;
   selectedNodeBalancer: NodeBalancer | undefined;
 }
 
 export const NodeBalancerDeleteDialog = ({
   isFetching,
+  nodeBalancerError,
   open,
   selectedNodeBalancer,
 }: Props) => {
@@ -40,7 +42,13 @@ export const NodeBalancerDeleteDialog = ({
         name: label,
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
+        error: nodeBalancerError,
       }}
+      errors={error ?? undefined}
+      expand
+      label={'NodeBalancer Label'}
+      loading={isPending || isFetching}
+      onClick={onDelete}
       onClose={
         match.routeId === '/nodebalancers/$id/settings/delete'
           ? () =>
@@ -50,13 +58,8 @@ export const NodeBalancerDeleteDialog = ({
               })
           : () => navigate({ to: '/nodebalancers' })
       }
-      errors={error ?? undefined}
-      expand
-      label={'NodeBalancer Label'}
-      loading={isPending || isFetching}
-      onClick={onDelete}
       open={open}
-      title={`Delete ${label}?`}
+      title={`Delete ${label ?? 'Unknown'}?`}
       typographyStyle={{ marginTop: '20px' }}
     >
       <Notice variant="warning">

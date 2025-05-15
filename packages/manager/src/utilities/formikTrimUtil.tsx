@@ -1,4 +1,4 @@
-import { FormikProps } from 'formik';
+import type { FormikProps } from 'formik';
 
 /**
  * handleFormikBlur

@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { ObjectStorageCluster } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { ObjectStorageCluster } from './types';
 
 /**
  * @deprecated This method returns legacy clusterId values representing regions
@@ -13,5 +14,5 @@ export const getClusters = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/object-storage/clusters`)
+    setURL(`${API_ROOT}/object-storage/clusters`),
   );

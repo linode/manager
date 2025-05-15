@@ -21,15 +21,29 @@ export const PlacementGroupTypeSelect = (props: Props) => {
       defaultValue={placementGroupTypeOptions.find(
         (option) => option.value === 'anti_affinity:local'
       )}
+      disableClearable={true}
+      disabled={disabledPlacementGroupCreateButton}
+      errorText={error}
+      label="Placement Group Type"
       onChange={(_, value) => {
         setFieldValue('placement_group_type', value?.value ?? '');
       }}
+      options={placementGroupTypeOptions}
+      placeholder="Select an Placement Group Type"
       renderOption={(props, option) => {
         const { key, ...rest } = props;
         const isDisabledMenuItem = option.value === 'affinity:local';
 
         return (
           <Tooltip
+            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
+            disableFocusListener={!isDisabledMenuItem}
+            disableHoverListener={!isDisabledMenuItem}
+            disableTouchListener={!isDisabledMenuItem}
+            enterDelay={200}
+            enterNextDelay={200}
+            enterTouchDelay={200}
+            key={key}
             title={
               isDisabledMenuItem ? (
                 <Typography>
@@ -40,14 +54,6 @@ export const PlacementGroupTypeSelect = (props: Props) => {
                 ''
               )
             }
-            data-qa-tooltip={isDisabledMenuItem ? 'antiAffinityHelperText' : ''}
-            disableFocusListener={!isDisabledMenuItem}
-            disableHoverListener={!isDisabledMenuItem}
-            disableTouchListener={!isDisabledMenuItem}
-            enterDelay={200}
-            enterNextDelay={200}
-            enterTouchDelay={200}
-            key={key}
           >
             <ListItem
               {...rest}
@@ -56,14 +62,14 @@ export const PlacementGroupTypeSelect = (props: Props) => {
                   ? `${props.className} Mui-disabled`
                   : props.className
               }
+              component="li"
               onClick={(e) =>
                 isDisabledMenuItem
                   ? e.preventDefault()
                   : props.onClick
-                  ? props.onClick(e)
-                  : null
+                    ? props.onClick(e)
+                    : null
               }
-              component="li"
             >
               {option.label}
             </ListItem>
@@ -81,12 +87,6 @@ export const PlacementGroupTypeSelect = (props: Props) => {
           </Typography>
         ),
       }}
-      disableClearable={true}
-      disabled={disabledPlacementGroupCreateButton}
-      errorText={error}
-      label="Placement Group Type"
-      options={placementGroupTypeOptions}
-      placeholder="Select an Placement Group Type"
     />
   );
 };

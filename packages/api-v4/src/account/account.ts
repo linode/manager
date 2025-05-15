@@ -2,27 +2,29 @@ import {
   updateAccountSchema,
   UpdateAccountSettingsSchema,
 } from '@linode/validation/lib/account.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setHeaders,
   setMethod,
-  setURL,
   setParams,
+  setURL,
   setXFilter,
 } from '../request';
-import {
+
+import type { Token } from '../profile';
+import type { Filter, Params, RequestOptions, ResourcePage } from '../types';
+import type {
   Account,
   AccountAvailability,
   AccountSettings,
+  Agreements,
   CancelAccount,
   CancelAccountPayload,
-  Agreements,
-  RegionalNetworkUtilization,
   ChildAccountPayload,
+  RegionalNetworkUtilization,
 } from './types';
-import type { Filter, ResourcePage, Params, RequestOptions } from '../types';
-import type { Token } from '../profile';
 
 /**
  * getAccountInfo
@@ -44,7 +46,7 @@ export const getAccountInfo = () => {
 export const getNetworkUtilization = () =>
   Request<RegionalNetworkUtilization>(
     setURL(`${API_ROOT}/account/transfer`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -57,7 +59,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
   Request<Account>(
     setURL(`${API_ROOT}/account`),
     setMethod('PUT'),
-    setData(data, updateAccountSchema)
+    setData(data, updateAccountSchema),
   );
 
 /**
@@ -69,7 +71,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
 export const getAccountSettings = () =>
   Request<AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -82,7 +84,7 @@ export const updateAccountSettings = (data: Partial<AccountSettings>) =>
   Request<AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
     setMethod('PUT'),
-    setData(data, UpdateAccountSettingsSchema)
+    setData(data, UpdateAccountSettingsSchema),
   );
 
 /**
@@ -94,7 +96,7 @@ export const cancelAccount = (data: CancelAccountPayload) => {
   return Request<CancelAccount>(
     setURL(`${API_ROOT}/account/cancel`),
     setMethod('POST'),
-    setData(data)
+    setData(data),
   );
 };
 
@@ -107,7 +109,7 @@ export const cancelAccount = (data: CancelAccountPayload) => {
 export const getAccountAgreements = () =>
   Request<Agreements>(
     setURL(`${BETA_API_ROOT}/account/agreements`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -122,7 +124,7 @@ export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
     setURL(`${BETA_API_ROOT}/account/availability`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -135,9 +137,9 @@ export const getAccountAvailabilities = (params?: Params, filter?: Filter) =>
 export const getAccountAvailability = (regionId: string) =>
   Request<AccountAvailability>(
     setURL(
-      `${BETA_API_ROOT}/account/availability/${encodeURIComponent(regionId)}`
+      `${BETA_API_ROOT}/account/availability/${encodeURIComponent(regionId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -149,7 +151,7 @@ export const signAgreement = (data: Partial<Agreements>) => {
   return Request<{}>(
     setURL(`${BETA_API_ROOT}/account/agreements`),
     setMethod('POST'),
-    setData(data)
+    setData(data),
   );
 };
 
@@ -165,7 +167,7 @@ export const getChildAccounts = ({ filter, params, headers }: RequestOptions) =>
     setMethod('GET'),
     setHeaders(headers),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -178,7 +180,7 @@ export const getChildAccount = ({ euuid, headers }: ChildAccountPayload) =>
   Request<Account>(
     setURL(`${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}`),
     setMethod('GET'),
-    setHeaders(headers)
+    setHeaders(headers),
   );
 
 /**
@@ -198,9 +200,9 @@ export const createChildAccountPersonalAccessToken = ({
 }: ChildAccountPayload) =>
   Request<Token>(
     setURL(
-      `${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}/token`
+      `${API_ROOT}/account/child-accounts/${encodeURIComponent(euuid)}/token`,
     ),
     setMethod('POST'),
     setHeaders(headers),
-    setData(euuid)
+    setData(euuid),
   );

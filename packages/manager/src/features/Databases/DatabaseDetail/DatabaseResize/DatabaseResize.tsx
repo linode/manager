@@ -52,10 +52,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
     string | undefined
   >(database.type);
 
-  const [
-    isResizeConfirmationDialogOpen,
-    setIsResizeConfirmationDialogOpen,
-  ] = React.useState(false);
+  const [isResizeConfirmationDialogOpen, setIsResizeConfirmationDialogOpen] =
+    React.useState(false);
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
@@ -179,12 +177,11 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
 
-      const nodePricing = type.engines[
-        selectedEngine
-      ].find((cluster: DatabaseClusterSizeObject) =>
-        selectedTab === 1 && database.cluster_size === 2
-          ? cluster.quantity === 3
-          : cluster.quantity === clusterSize
+      const nodePricing = type.engines[selectedEngine].find(
+        (cluster: DatabaseClusterSizeObject) =>
+          selectedTab === 1 && database.cluster_size === 2
+            ? cluster.quantity === 3
+            : cluster.quantity === clusterSize
       );
 
       const price = nodePricing?.price ?? {
@@ -281,13 +278,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <Paper sx={{ marginTop: 2 }}>
         <StyledPlansPanel
-          disabledTabs={
-            !isNewDatabaseGA && isDisabledSharedTab ? ['shared'] : []
-          }
           currentPlanHeading={currentPlan?.heading}
           data-qa-select-plan
           disabled={disabled}
           disabledSmallerPlans={disabledPlans}
+          disabledTabs={
+            !isNewDatabaseGA && isDisabledSharedTab ? ['shared'] : []
+          }
           handleTabChange={handleTabChange}
           header="Choose a Plan"
           isLegacyDatabase={!isNewDatabaseGA}
@@ -300,17 +297,17 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           <>
             <Divider spacingBottom={20} spacingTop={20} />
             <DatabaseNodeSelector
-              handleNodeChange={(size: ClusterSize) => {
-                handleNodeChange(size);
-              }}
-              selectedPlan={displayTypes?.find(
-                (type) => type.id === selectedPlanId
-              )}
               currentClusterSize={database.cluster_size}
               currentPlan={currentPlan}
               displayTypes={displayTypes}
+              handleNodeChange={(size: ClusterSize) => {
+                handleNodeChange(size);
+              }}
               selectedClusterSize={clusterSize}
               selectedEngine={selectedEngine}
+              selectedPlan={displayTypes?.find(
+                (type) => type.id === selectedPlanId
+              )}
               selectedTab={selectedTab}
             />
           </>
@@ -329,11 +326,11 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <StyledGrid>
         <StyledResizeButton
+          buttonType="primary"
+          disabled={shouldSubmitBeDisabled || disabled}
           onClick={() => {
             setIsResizeConfirmationDialogOpen(true);
           }}
-          buttonType="primary"
-          disabled={shouldSubmitBeDisabled || disabled}
           type="submit"
         >
           Resize Database Cluster

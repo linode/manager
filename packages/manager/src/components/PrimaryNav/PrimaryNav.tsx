@@ -1,3 +1,8 @@
+import {
+  useAccountSettings,
+  useMutatePreferences,
+  usePreferences,
+} from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
@@ -18,11 +23,6 @@ import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import {
-  useAccountSettings,
-  useMutatePreferences,
-  usePreferences,
-} from '@linode/queries';
 
 import PrimaryLink from './PrimaryLink';
 import { StyledAccordion } from './PrimaryNav.styles';
@@ -54,8 +54,8 @@ export type NavEntity =
   | 'Object Storage'
   | 'Placement Groups'
   | 'StackScripts'
-  | 'VPC'
-  | 'Volumes';
+  | 'Volumes'
+  | 'VPC';
 
 export type ProductFamily =
   | 'Compute'
@@ -382,10 +382,18 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
 
   return (
     <Box
+      alignItems="flex-start"
+      display="flex"
+      flexDirection="column"
+      gap={0}
       height={{
         md: `calc(100% - ${PRIMARY_NAV_TOGGLE_HEIGHT}px)`,
         xs: '100%',
       }}
+      id="main-navigation"
+      justifyContent="flex-start"
+      ref={primaryNavRef}
+      role="navigation"
       sx={{
         '&:hover': {
           '.primary-nav-toggle': {
@@ -394,25 +402,17 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           },
         },
       }}
-      alignItems="flex-start"
-      display="flex"
-      flexDirection="column"
-      gap={0}
-      id="main-navigation"
-      justifyContent="flex-start"
-      ref={primaryNavRef}
-      role="navigation"
     >
       <Box
+        display="flex"
+        flexDirection="column"
+        ref={navItemsRef}
         sx={(theme) => ({
           flexGrow: 1,
           overflowX: 'hidden',
           overflowY: 'auto',
           scrollbarColor: `${theme.color.grey4} transparent `,
         })}
-        display="flex"
-        flexDirection="column"
-        ref={navItemsRef}
         width="100%"
       >
         {productFamilyLinkGroups.map((productFamily, idx) => {
@@ -451,6 +451,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
           return (
             <div key={idx} style={{ width: 'inherit' }}>
               <StyledAccordion
+                expanded={!collapsedAccordions.includes(idx)}
                 heading={
                   <>
                     <Box component="span" flexShrink={0}>
@@ -464,7 +465,6 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
                 isActiveProductFamily={
                   activeProductFamily === productFamily.name
                 }
-                expanded={!collapsedAccordions.includes(idx)}
                 isCollapsed={isCollapsed}
                 onChange={() => accordionClicked(idx)}
               >

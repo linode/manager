@@ -5,17 +5,18 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { StackScript } from '@linode/api-v4';
+import type { APIError, StackScript } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   stackscript: StackScript | undefined;
+  stackscriptError: APIError[] | null;
 }
 
 export const StackScriptMakePublicDialog = (props: Props) => {
-  const { isFetching, onClose, open, stackscript } = props;
+  const { isFetching, onClose, open, stackscript, stackscriptError } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { error, isPending, mutate } = useUpdateStackScriptMutation(
@@ -45,6 +46,7 @@ export const StackScriptMakePublicDialog = (props: Props) => {
           </Button>
         </Stack>
       }
+      entityError={stackscriptError}
       error={error?.[0].reason}
       isFetching={isFetching}
       onClose={onClose}

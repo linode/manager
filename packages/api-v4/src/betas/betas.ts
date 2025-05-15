@@ -1,7 +1,8 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import { Beta } from './types';
+
+import type { Filter, Params, ResourcePage } from '../types';
+import type { Beta } from './types';
 
 /**
  * getBetas
@@ -14,7 +15,7 @@ export const getBetas = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/betas`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -28,5 +29,5 @@ export const getBetas = (params?: Params, filter?: Filter) =>
 export const getBeta = (betaId: string) =>
   Request<Beta>(
     setURL(`${API_ROOT}/betas/${encodeURIComponent(betaId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );

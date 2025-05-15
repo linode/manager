@@ -47,9 +47,8 @@ export const CloudPulseTimeRangeSelect = React.memo(
       }
       return options.find((o) => o.label === defaultValue) || options[0];
     }, [defaultValue]);
-    const [selectedTimeRange, setSelectedTimeRange] = React.useState<
-      SelectOption<Labels>
-    >(getDefaultValue());
+    const [selectedTimeRange, setSelectedTimeRange] =
+      React.useState<SelectOption<Labels>>(getDefaultValue());
 
     React.useEffect(() => {
       const item = getDefaultValue();
@@ -80,12 +79,6 @@ export const CloudPulseTimeRangeSelect = React.memo(
     };
     return (
       <Autocomplete
-        onChange={(e, value: SelectOption<Labels>) => {
-          handleChange(value);
-        }}
-        textFieldProps={{
-          hideLabel,
-        }}
         autoHighlight
         data-testid="cloudpulse-time-duration"
         disableClearable
@@ -93,7 +86,13 @@ export const CloudPulseTimeRangeSelect = React.memo(
         isOptionEqualToValue={(option, value) => option.value === value.value}
         label={label || 'Time Range'}
         noMarginTop
+        onChange={(e, value: SelectOption<Labels>) => {
+          handleChange(value);
+        }}
         options={options}
+        textFieldProps={{
+          hideLabel,
+        }}
         value={selectedTimeRange}
       />
     );
@@ -143,14 +142,14 @@ export const generateSelectOptions = (): SelectOption<Labels>[] => {
  */
 export const generateStartTime = (modifier: Labels, nowInSeconds: number) => {
   switch (modifier) {
-    case PAST_30_MINUTES:
-      return nowInSeconds - 30 * 60;
+    case PAST_7_DAYS:
+      return nowInSeconds - 7 * 24 * 60 * 60;
     case PAST_12_HOURS:
       return nowInSeconds - 12 * 60 * 60;
     case PAST_24_HOURS:
       return nowInSeconds - 24 * 60 * 60;
-    case PAST_7_DAYS:
-      return nowInSeconds - 7 * 24 * 60 * 60;
+    case PAST_30_MINUTES:
+      return nowInSeconds - 30 * 60;
     default:
       return nowInSeconds - 30 * 24 * 60 * 60;
   }

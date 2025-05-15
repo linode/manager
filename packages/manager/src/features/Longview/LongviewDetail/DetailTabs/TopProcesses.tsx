@@ -40,27 +40,24 @@ export const TopProcesses = React.memo((props: Props) => {
     topProcessesLoading,
   } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<ExtendedTopProcessStat>({
-    data: extendTopProcesses(topProcessesData),
-    initialRoute: {
-      defaultOrder: {
-        order: 'desc',
-        orderBy: 'cpu',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<ExtendedTopProcessStat>({
+      data: extendTopProcesses(topProcessesData),
+      initialRoute: {
+        defaultOrder: {
+          order: 'desc',
+          orderBy: 'cpu',
+        },
+        from: '/longview/clients/$id/overview',
       },
-      from: '/longview/clients/$id/overview',
-    },
-    preferenceKey: 'top-processes',
-    prefix: 'top-processes',
-  });
+      preferenceKey: 'top-processes',
+      prefix: 'top-processes',
+    });
 
-  const errorMessage = Boolean(topProcessesError || lastUpdatedError)
-    ? 'There was an error getting Top Processes.'
-    : undefined;
+  const errorMessage =
+    topProcessesError || lastUpdatedError
+      ? 'There was an error getting Top Processes.'
+      : undefined;
 
   return (
     <Grid size={{ lg: 4, xs: 12 }}>

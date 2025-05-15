@@ -11,7 +11,7 @@ import { useAuthentication } from 'src/hooks/useAuthentication';
 
 import type { Profile } from '@linode/api-v4';
 
-type Timezone = typeof timezones[number];
+type Timezone = (typeof timezones)[number];
 
 export const getOptionLabel = ({ label, offset }: Timezone) => {
   const minutes = (Math.abs(offset) % 60).toLocaleString(undefined, {
@@ -76,13 +76,10 @@ export const TimezoneForm = () => {
       )}
       <SingleTextFieldFormContainer>
         <Controller
+          control={control}
+          name="timezone"
           render={({ field, fieldState }) => (
             <Autocomplete
-              value={
-                timezoneOptions.find(
-                  (option) => option.value === field.value
-                ) ?? null
-              }
               autoHighlight
               disableClearable={profile?.timezone !== undefined}
               errorText={fieldState.error?.message}
@@ -92,10 +89,13 @@ export const TimezoneForm = () => {
               onChange={(e, option) => field.onChange(option?.value ?? '')}
               options={timezoneOptions}
               placeholder="Choose a Timezone"
+              value={
+                timezoneOptions.find(
+                  (option) => option.value === field.value
+                ) ?? null
+              }
             />
           )}
-          control={control}
-          name="timezone"
         />
         <Button
           buttonType="primary"

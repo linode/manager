@@ -17,12 +17,10 @@ describe('OperatingSystems', () => {
   });
 
   it('renders an image select', () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-    } = renderWithThemeAndHookFormContext({
-      component: <OperatingSystems />,
-    });
+    const { getByLabelText, getByPlaceholderText } =
+      renderWithThemeAndHookFormContext({
+        component: <OperatingSystems />,
+      });
 
     expect(getByLabelText('Linux Distribution')).toBeVisible();
     expect(getByPlaceholderText('Choose a Linux distribution')).toBeVisible();

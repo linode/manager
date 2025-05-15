@@ -1,4 +1,4 @@
-import { Duration } from 'luxon';
+import type { Duration } from 'luxon';
 /**
  * Will format duration (for server tasks) in hours, minutes and seconds
  * We do not handle larger units as this is not really a use case

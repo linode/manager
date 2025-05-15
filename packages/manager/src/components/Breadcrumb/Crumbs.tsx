@@ -1,6 +1,7 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link } from 'react-router-dom';
+import type { LinkProps } from 'react-router-dom';
 
 import {
   StyledDiv,
@@ -11,10 +12,9 @@ import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 
 import type { EditableProps, LabelProps } from './types';
-import type { LinkProps } from 'react-router-dom';
 
 export interface CrumbOverridesProps {
-  label?: string | React.ReactNode;
+  label?: React.ReactNode | string;
   linkTo?: LinkProps['to'];
   noCap?: boolean;
   position: number;
@@ -58,6 +58,7 @@ export const Crumbs = React.memo((props: Props) => {
         return (
           <StyledDiv key={key}>
             <Link
+              data-qa-link
               to={
                 crumbOverrides && override
                   ? override.linkTo
@@ -65,15 +66,14 @@ export const Crumbs = React.memo((props: Props) => {
                     : link
                   : link
               }
-              data-qa-link
             >
               <StyledTypography
+                data-qa-link-text
+                data-testid={'link-text'}
                 sx={{
                   ...(override &&
                     override.noCap && { textTransform: 'initial' }),
                 }}
-                data-qa-link-text
-                data-testid={'link-text'}
               >
                 {crumbOverrides && override
                   ? override.label

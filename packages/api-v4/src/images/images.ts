@@ -4,6 +4,7 @@ import {
   updateImageSchema,
   uploadImageSchema,
 } from '@linode/validation/lib/images.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -12,7 +13,8 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import type { Filter, Params, ResourcePage as Page } from '../types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
 import type {
   CreateImagePayload,
   Image,
@@ -30,7 +32,7 @@ import type {
 export const getImage = (imageId: string) =>
   Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -42,7 +44,7 @@ export const getImages = (params: Params = {}, filters: Filter = {}) =>
     setURL(`${API_ROOT}/images`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   );
 
 /**
@@ -52,7 +54,7 @@ export const createImage = (data: CreateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images`),
     setMethod('POST'),
-    setData(data, createImageSchema)
+    setData(data, createImageSchema),
   );
 };
 
@@ -66,7 +68,7 @@ export const updateImage = (imageId: string, data: UpdateImagePayload) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
     setMethod('PUT'),
-    setData(data, updateImageSchema)
+    setData(data, updateImageSchema),
   );
 };
 
@@ -78,7 +80,7 @@ export const updateImage = (imageId: string, data: UpdateImagePayload) => {
 export const deleteImage = (imageId: string) => {
   return Request<{}>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 };
 
@@ -95,7 +97,7 @@ export const uploadImage = (data: ImageUploadPayload) => {
   return Request<UploadImageResponse>(
     setURL(`${API_ROOT}/images/upload`),
     setMethod('POST'),
-    setData(data, uploadImageSchema)
+    setData(data, uploadImageSchema),
   );
 };
 
@@ -106,11 +108,11 @@ export const uploadImage = (data: ImageUploadPayload) => {
  */
 export const updateImageRegions = (
   imageId: string,
-  data: UpdateImageRegionsPayload
+  data: UpdateImageRegionsPayload,
 ) => {
   return Request<Image>(
     setURL(`${API_ROOT}/images/${encodeURIComponent(imageId)}/regions`),
     setMethod('POST'),
-    setData(data, updateImageRegionsSchema)
+    setData(data, updateImageRegionsSchema),
   );
 };

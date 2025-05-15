@@ -102,14 +102,14 @@ describe('PlacementGroupsAssignLinodesDrawer', () => {
 
     const { getByPlaceholderText, getByRole, getByText } = renderWithTheme(
       <PlacementGroupsAssignLinodesDrawer
+        onClose={vi.fn()}
+        open={true}
+        region={regionFactory.build()}
         selectedPlacementGroup={placementGroupFactory.build({
           label: 'PG-1',
           placement_group_type: 'anti_affinity:local',
           region: 'us-east',
         })}
-        onClose={vi.fn()}
-        open={true}
-        region={regionFactory.build()}
       />
     );
 

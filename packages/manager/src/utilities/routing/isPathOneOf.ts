@@ -1,4 +1,5 @@
-import { RouteProps, matchPath } from 'react-router-dom';
+import type { RouteProps } from 'react-router-dom';
+import { matchPath } from 'react-router-dom';
 
 /**
  *

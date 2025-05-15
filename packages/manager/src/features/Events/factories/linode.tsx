@@ -1,8 +1,8 @@
+import { useLinodeQuery } from '@linode/queries';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useLinodeQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 import { EventLink } from '../EventLink';
@@ -341,6 +341,37 @@ export const linode: PartialEventMap<'linode'> = {
       <>
         A <strong>resize</strong> has been initiated for Linode{' '}
         <EventLink event={e} to="entity" />.
+      </>
+    ),
+  },
+  // @TODO Host & VM Maintenance: copy is not final
+  linode_poweroff_on: {
+    failed: (e) => (
+      <>
+        {e.description ?? 'Maintenance'}{' '}
+        <strong>power-on/power-off failed</strong> for Linode{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+    finished: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" />{' '}
+        <strong>power-on/power-off</strong>{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'} completed.
+      </>
+    ),
+    scheduled: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> has scheduled{' '}
+        <strong>power-on/power-off</strong>{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'}.
+      </>
+    ),
+    started: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is being{' '}
+        <strong>powered-on/powered-off</strong> for{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'}.
       </>
     ),
   },

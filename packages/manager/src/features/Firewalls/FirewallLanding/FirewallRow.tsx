@@ -1,9 +1,9 @@
 import { useAllLinodesQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { Skeleton } from 'src/components/Skeleton';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';

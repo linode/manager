@@ -48,12 +48,10 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
     updateLongviewClient,
   } = props;
 
-  const {
-    authed,
-    lastUpdated,
-    lastUpdatedError,
-  } = useClientLastUpdated(clientAPIKey, (_lastUpdated) =>
-    props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
+  const { authed, lastUpdated, lastUpdatedError } = useClientLastUpdated(
+    clientAPIKey,
+    (_lastUpdated) =>
+      props.getClientStats(clientAPIKey, _lastUpdated).catch((_) => null)
   );
 
   const { data: grants } = useGrants();
@@ -88,12 +86,12 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
 
   return (
     <Paper
+      data-testid={clientID}
       sx={(theme) => {
         return {
           marginBottom: theme.spacing(4),
         };
       }}
-      data-testid={clientID}
     >
       <Grid
         alignItems="flex-start"
@@ -107,11 +105,11 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
       >
         <Grid container size={11}>
           <Grid
+            container
             size={{
               md: 3,
               xs: 12,
             }}
-            container
           >
             <LongviewClientHeader
               clientID={clientID}
@@ -124,14 +122,14 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
             />
           </Grid>
           <Grid
-            size={{
-              md: 9,
-              xs: 12,
-            }}
             alignItems="center"
             container
             direction="row"
             mt={-4}
+            size={{
+              md: 9,
+              xs: 12,
+            }}
             spacing={2}
           >
             <Grid

@@ -1,12 +1,11 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
-import {
-  TableRowLoading,
-  TableRowLoadingProps,
-} from 'src/components/TableRowLoading/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+
+import type { APIError } from '@linode/api-v4/lib/types';
+import type { TableRowLoadingProps } from 'src/components/TableRowLoading/TableRowLoading';
 
 interface TableContentWrapperProps {
   children?: React.ReactNode;

@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 
 export const StyledTypography = styled(Typography, {
   label: 'StyledTypography',

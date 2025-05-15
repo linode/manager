@@ -137,7 +137,7 @@ describe('LongviewPlans', () => {
       timeout: 5000,
     });
 
-    screen.getByText(/don't have permission/gi);
+    screen.getByText(/don't have permission/i);
   });
 
   it('displays a message id the account is managed', async () => {

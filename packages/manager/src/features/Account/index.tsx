@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import type { RouteComponentProps } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';

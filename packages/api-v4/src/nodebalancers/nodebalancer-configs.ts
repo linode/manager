@@ -2,19 +2,21 @@ import {
   createNodeBalancerConfigSchema,
   UpdateNodeBalancerConfigSchema,
 } from '@linode/validation/lib/nodebalancers.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setParams, setURL } from '../request';
-import { ResourcePage as Page, Params } from '../types';
 import {
+  combineConfigNodeAddressAndPort,
+  combineConfigNodeAddressAndPortBeta,
+} from './utils';
+
+import type { ResourcePage as Page, Params } from '../types';
+import type {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
   RebuildNodeBalancerConfig,
   UpdateNodeBalancerConfig,
 } from './types';
-import {
-  combineConfigNodeAddressAndPort,
-  combineConfigNodeAddressAndPortBeta,
-} from './utils';
 
 /**
  * getNodeBalancerConfigs
@@ -25,14 +27,14 @@ import {
  */
 export const getNodeBalancerConfigs = (
   nodeBalancerId: number,
-  params?: Params
+  params?: Params,
 ) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(
-      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`,
     ),
     setMethod('GET'),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -44,15 +46,15 @@ export const getNodeBalancerConfigs = (
  */
 export const getNodeBalancerConfig = (
   nodeBalancerId: number,
-  configId: number
+  configId: number,
 ) =>
   Request<Page<NodeBalancerConfig>>(
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -65,18 +67,18 @@ export const getNodeBalancerConfig = (
  */
 export const createNodeBalancerConfig = (
   nodeBalancerId: number,
-  data: CreateNodeBalancerConfig
+  data: CreateNodeBalancerConfig,
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(
-      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`
+      `${API_ROOT}/nodebalancers/${encodeURIComponent(nodeBalancerId)}/configs`,
     ),
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort
-    )
+      combineConfigNodeAddressAndPort,
+    ),
   );
 
 /**
@@ -91,20 +93,20 @@ export const createNodeBalancerConfig = (
  */
 export const createNodeBalancerConfigBeta = (
   nodeBalancerId: number,
-  data: CreateNodeBalancerConfig
+  data: CreateNodeBalancerConfig,
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs`
+        nodeBalancerId,
+      )}/configs`,
     ),
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPortBeta
-    )
+      combineConfigNodeAddressAndPortBeta,
+    ),
   );
 
 /**
@@ -118,20 +120,20 @@ export const createNodeBalancerConfigBeta = (
 export const rebuildNodeBalancerConfig = (
   nodeBalancerId: number,
   configId: number,
-  data: RebuildNodeBalancerConfig
+  data: RebuildNodeBalancerConfig,
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/rebuild`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/rebuild`,
     ),
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort
-    )
+      combineConfigNodeAddressAndPort,
+    ),
   );
 
 /**
@@ -145,20 +147,20 @@ export const rebuildNodeBalancerConfig = (
 export const rebuildNodeBalancerConfigBeta = (
   nodeBalancerId: number,
   configId: number,
-  data: RebuildNodeBalancerConfig
+  data: RebuildNodeBalancerConfig,
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/rebuild`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/rebuild`,
     ),
     setData(
       data,
       createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPortBeta
-    )
+      combineConfigNodeAddressAndPortBeta,
+    ),
   );
 
 /**
@@ -172,16 +174,16 @@ export const rebuildNodeBalancerConfigBeta = (
 export const updateNodeBalancerConfig = (
   nodeBalancerId: number,
   configId: number,
-  data: UpdateNodeBalancerConfig
+  data: UpdateNodeBalancerConfig,
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}`,
     ),
-    setData(data, UpdateNodeBalancerConfigSchema)
+    setData(data, UpdateNodeBalancerConfigSchema),
   );
 
 /**
@@ -194,13 +196,13 @@ export const updateNodeBalancerConfig = (
  */
 export const deleteNodeBalancerConfig = (
   nodeBalancerId: number,
-  configId: number
+  configId: number,
 ) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}`
-    )
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}`,
+    ),
   );

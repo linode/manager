@@ -27,9 +27,8 @@ export const EditAlertResources = (props: EditAlertProps) => {
   const [selectedResources, setSelectedResources] = React.useState<string[]>(
     []
   );
-  const [showConfirmation, setShowConfirmation] = React.useState<boolean>(
-    false
-  );
+  const [showConfirmation, setShowConfirmation] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     setSelectedResources(
@@ -112,15 +111,19 @@ export const EditAlertResources = (props: EditAlertProps) => {
         />
         <Box alignSelf="flex-end" display="flex" gap={1} m={3} mb={0}>
           <Button
+            data-testid="cancel-save-resources"
             onClick={() => {
               history.push('/alerts/definitions');
             }}
-            data-testid="cancel-save-resources"
             variant="text"
           >
             Cancel
           </Button>
           <Button
+            buttonType="primary"
+            data-qa-buttons="true"
+            data-testid="save-resources"
+            disabled={isSameResourcesSelected}
             onClick={() => {
               window.scrollTo({
                 behavior: 'instant',
@@ -128,10 +131,6 @@ export const EditAlertResources = (props: EditAlertProps) => {
               });
               setShowConfirmation(true);
             }}
-            buttonType="primary"
-            data-qa-buttons="true"
-            data-testid="save-resources"
-            disabled={isSameResourcesSelected}
           >
             Save
           </Button>

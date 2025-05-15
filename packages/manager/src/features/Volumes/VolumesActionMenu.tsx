@@ -123,8 +123,8 @@ export const VolumesActionMenu = (props: Props) => {
           resourceType: 'Volumes',
         })
       : attached
-      ? 'Your volume must be detached before it can be deleted.'
-      : undefined,
+        ? 'Your volume must be detached before it can be deleted.'
+        : undefined,
   });
 
   return (

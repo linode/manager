@@ -1,8 +1,8 @@
+import { useDeleteSSHKeyMutation } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDeleteSSHKeyMutation } from '@linode/queries';
 
 interface Props {
   id: number;

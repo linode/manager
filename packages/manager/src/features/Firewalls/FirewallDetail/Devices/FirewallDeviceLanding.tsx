@@ -95,22 +95,22 @@ export const FirewallDeviceLanding = React.memo(
             A {formattedType} can only be assigned to a single Firewall.
           </StyledTypography>
           <Grid
+            container
+            direction="row"
             sx={{
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
-            container
-            direction="row"
           >
             <Grid sx={{ width: '30%' }}>
               <DebouncedSearchTextField
-                onSearch={(val) => {
-                  filter(val);
-                }}
                 debounceTime={250}
                 expand={true}
                 hideLabel
                 label=""
+                onSearch={(val) => {
+                  filter(val);
+                }}
                 placeholder={`Search ${formattedType}s`}
                 value={searchText}
               />
@@ -128,6 +128,9 @@ export const FirewallDeviceLanding = React.memo(
           </Grid>
         </Grid>
         <FirewallDeviceTable
+          deviceType={type}
+          disabled={disabled}
+          firewallId={firewallId}
           handleRemoveDevice={(device) => {
             setDevice(device);
             navigate({
@@ -138,9 +141,6 @@ export const FirewallDeviceLanding = React.memo(
                   : '/firewalls/$id/nodebalancers/remove',
             });
           }}
-          deviceType={type}
-          disabled={disabled}
-          firewallId={firewallId}
           type={type}
         />
         {type === 'linode' ? (
@@ -157,6 +157,9 @@ export const FirewallDeviceLanding = React.memo(
           />
         )}
         <RemoveDeviceDialog
+          device={device}
+          firewallId={firewallId}
+          firewallLabel={firewallLabel}
           onClose={() =>
             navigate({
               params: { id: String(firewallId) },
@@ -166,9 +169,6 @@ export const FirewallDeviceLanding = React.memo(
                   : '/firewalls/$id/nodebalancers',
             })
           }
-          device={device}
-          firewallId={firewallId}
-          firewallLabel={firewallLabel}
           onService={undefined}
           open={location.pathname.endsWith('remove')}
         />

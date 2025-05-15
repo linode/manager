@@ -3,7 +3,6 @@ import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 
 import type { APIError, Volume } from '@linode/api-v4';
@@ -12,11 +11,12 @@ interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const ManageTagsDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { data: grants } = useGrants();
 
@@ -69,7 +69,7 @@ export const ManageTagsDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
@@ -86,20 +86,20 @@ export const ManageTagsDrawer = (props: Props) => {
         {errors?.root && <Notice text={errors.root.message} variant="error" />}
 
         <Controller
+          control={control}
+          name="tags"
           render={({ field, fieldState }) => (
             <TagsInput
-              onChange={(selected) =>
-                field.onChange(selected.map((item) => item.value))
-              }
               disabled={isReadOnly}
               label="Tags"
               name="tags"
+              onChange={(selected) =>
+                field.onChange(selected.map((item) => item.value))
+              }
               tagError={fieldState.error?.message}
               value={field.value.map((t) => ({ label: t, value: t })) ?? []}
             />
           )}
-          control={control}
-          name="tags"
         />
 
         <ActionsPanel

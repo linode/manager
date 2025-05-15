@@ -1,10 +1,10 @@
 import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -15,7 +15,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -59,12 +58,8 @@ export const NodeBalancersLanding = () => {
   const {
     data: selectedNodeBalancer,
     isFetching: isFetchingNodeBalancer,
-  } = useDialogData({
-    enabled: !!params.id,
-    paramKey: 'id',
-    queryHook: useNodeBalancerQuery,
-    redirectToOnNotFound: '/nodebalancers',
-  });
+    error: selectedNodeBalancerError,
+  } = useNodeBalancerQuery(Number(params.id), !!params.id);
 
   if (error) {
     return (
@@ -151,6 +146,7 @@ export const NodeBalancersLanding = () => {
       <TransferDisplay spacingTop={18} />
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
+        nodeBalancerError={selectedNodeBalancerError}
         open={match.routeId === '/nodebalancers/$id/delete'}
         selectedNodeBalancer={selectedNodeBalancer}
       />

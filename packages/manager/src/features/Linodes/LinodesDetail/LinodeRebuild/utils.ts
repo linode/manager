@@ -2,6 +2,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { stackscriptQueries } from '@linode/queries';
 import { RebuildLinodeSchema } from '@linode/validation';
+import type { FieldError, FieldErrors, Resolver } from 'react-hook-form';
 import { boolean, number, object, string } from 'yup';
 
 import { getIsUDFRequired } from '../../LinodeCreate/Tabs/StackScripts/UserDefinedFields/utilities';
@@ -9,7 +10,6 @@ import { getIsUDFRequired } from '../../LinodeCreate/Tabs/StackScripts/UserDefin
 import type { RebuildRequest, StackScript } from '@linode/api-v4';
 import type { ManagerPreferences } from '@linode/utilities';
 import type { QueryClient } from '@tanstack/react-query';
-import type { FieldError, FieldErrors, Resolver } from 'react-hook-form';
 
 export const REBUILD_OPTIONS = [
   { label: 'Image' },
@@ -19,7 +19,7 @@ export const REBUILD_OPTIONS = [
 
 export const REBUILD_LINODE_IMAGE_PARAM_NAME = 'selectedImageId';
 
-export type LinodeRebuildType = typeof REBUILD_OPTIONS[number]['label'];
+export type LinodeRebuildType = (typeof REBUILD_OPTIONS)[number]['label'];
 
 export interface RebuildLinodeFormValues extends RebuildRequest {
   confirmationText?: string;
@@ -82,8 +82,8 @@ export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
 
       for (const udf of stackscript.user_defined_fields) {
         const stackscriptData = values.stackscript_data as
-          | Record<string, string>
           | null
+          | Record<string, string>
           | undefined;
 
         if (getIsUDFRequired(udf) && !stackscriptData?.[udf.name]) {
@@ -95,9 +95,8 @@ export const resolver: Resolver<RebuildLinodeFormValues, Context> = async (
       }
 
       if (!isEmpty(stackScriptErrors)) {
-        (errors as FieldErrors<RebuildLinodeFormValues>)[
-          'stackscript_data'
-        ] = stackScriptErrors;
+        (errors as FieldErrors<RebuildLinodeFormValues>)['stackscript_data'] =
+          stackScriptErrors;
       }
     }
   }

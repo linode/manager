@@ -94,6 +94,11 @@ export const LinodeDiskActionMenu = (props: Props) => {
       {!matchesSmDown &&
         inlineActions.map((action) => (
           <InlineMenuAction
+            actionText={action.title}
+            disabled={action.disabled}
+            key={action.title}
+            onClick={action.onClick}
+            tooltip={action.tooltip}
             tooltipAnalyticsEvent={
               action.title === 'Resize'
                 ? () =>
@@ -104,11 +109,6 @@ export const LinodeDiskActionMenu = (props: Props) => {
                     })
                 : undefined
             }
-            actionText={action.title}
-            disabled={action.disabled}
-            key={action.title}
-            onClick={action.onClick}
-            tooltip={action.tooltip}
           />
         ))}
       <ActionMenu

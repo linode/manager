@@ -10,7 +10,7 @@ export const createPlacementGroupSchema = object({
   placement_group_type: string().required('Placement Group Type is required.'),
   region: string().required('Region is required.'),
   placement_group_policy: string().required(
-    'Placement Group Policy is required.'
+    'Placement Group Policy is required.',
   ),
 });
 

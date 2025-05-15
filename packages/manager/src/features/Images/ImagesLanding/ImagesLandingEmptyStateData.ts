@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -24,8 +24,7 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Getting Started with Custom Images',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-custom-images',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-custom-images',
     },
     {
       text: 'Capture an Image from a Linode',
@@ -47,14 +46,12 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       external: true,
-      text:
-        'How to use Linode Images | Learn how to Create, Upload, and Deploy Custom Images on Linode',
+      text: 'How to use Linode Images | Learn how to Create, Upload, and Deploy Custom Images on Linode',
       to: 'https://www.youtube.com/watch?v=1nYhLui1urQ',
     },
     {
       external: true,
-      text:
-        'Custom Images on Linode | Create, Upload, and Deploy Custom iso Images to Deploy on Linode',
+      text: 'Custom Images on Linode | Create, Upload, and Deploy Custom iso Images to Deploy on Linode',
       to: 'https://www.youtube.com/watch?v=GdEFNHTCGqA',
     },
     {

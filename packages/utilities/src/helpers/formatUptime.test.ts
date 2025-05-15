@@ -1,6 +1,5 @@
-import { describe, expect, it } from 'vitest';
-
 import { Duration } from 'luxon';
+import { describe, expect, it } from 'vitest';
 
 import { formatUptime } from './formatUptime';
 
@@ -29,15 +28,17 @@ describe('Formatting uptime', () => {
 
   it('should handle all the things', () => {
     expect(
-      formatUptime(60 * 60 * 24 * 9 + 60 * 60 * 19 + 60 * 45 + 45)
+      formatUptime(60 * 60 * 24 * 9 + 60 * 60 * 19 + 60 * 45 + 45),
     ).toMatch('9d 19h 45m');
   });
 
   it('should handle durations longer than a month', () => {
     expect(
       formatUptime(
-        Duration.fromObject({ days: 438, hours: 10, minutes: 15 }).as('seconds')
-      )
+        Duration.fromObject({ days: 438, hours: 10, minutes: 15 }).as(
+          'seconds',
+        ),
+      ),
     ).toMatch('438d 10h 15m');
   });
 
@@ -49,8 +50,8 @@ describe('Formatting uptime', () => {
           hours: 8,
           minutes: 15,
           seconds: 54,
-        }).as('seconds')
-      )
+        }).as('seconds'),
+      ),
     ).toMatch('438d 8h 15m');
   });
 });

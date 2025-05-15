@@ -3,7 +3,6 @@ import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { Token, TokenRequest } from '@linode/api-v4';
@@ -37,12 +36,7 @@ export const EditAPITokenDrawer = (props: Props) => {
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Edit Personal Access Token"
-    >
+    <Drawer onClose={onClose} open={open} title="Edit Personal Access Token">
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}

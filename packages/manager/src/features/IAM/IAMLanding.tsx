@@ -8,6 +8,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+
 import { IAM_DOCS_LINK } from './Shared/constants';
 
 const Users = React.lazy(() =>
@@ -63,7 +64,7 @@ export const IdentityAccessLanding = React.memo(() => {
   return (
     <>
       <DocumentTitleSegment segment="Identity and Access" />
-      <LandingHeader {...landingHeaderProps} />
+      <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
       <Tabs index={getDefaultTabIndex()} onChange={navToURL}>
         <TabLinkList tabs={tabs} />

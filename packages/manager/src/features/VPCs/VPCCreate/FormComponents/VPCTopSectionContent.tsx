@@ -61,6 +61,8 @@ export const VPCTopSectionContent = (props: Props) => {
         .
       </StyledBodyTypography>
       <Controller
+        control={control}
+        name="region"
         render={({ field, fieldState }) => (
           <RegionSelect
             aria-label="Choose a region"
@@ -74,10 +76,10 @@ export const VPCTopSectionContent = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="region"
       />
       <Controller
+        control={control}
+        name="label"
         render={({ field, fieldState }) => (
           <TextField
             aria-label="Enter a label"
@@ -89,10 +91,10 @@ export const VPCTopSectionContent = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="label"
       />
       <Controller
+        control={control}
+        name="description"
         render={({ field, fieldState }) => (
           <TextField
             disabled={disabled}
@@ -106,8 +108,6 @@ export const VPCTopSectionContent = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="description"
       />
     </>
   );

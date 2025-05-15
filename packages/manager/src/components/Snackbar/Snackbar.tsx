@@ -1,17 +1,16 @@
+import {
+  ErrorOutlinedIcon,
+  InfoOutlinedIcon,
+  SuccessOutlinedIcon,
+  TipOutlinedIcon,
+  WarningOutlinedIcon,
+} from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { MaterialDesignContent, closeSnackbar } from 'notistack';
+import { closeSnackbar, MaterialDesignContent } from 'notistack';
 import { SnackbarProvider } from 'notistack';
 import * as React from 'react';
 
 import { CloseSnackbar } from './CloseSnackbar';
-
-import {
-  InfoOutlinedIcon,
-  TipOutlinedIcon,
-  WarningOutlinedIcon,
-  ErrorOutlinedIcon,
-  SuccessOutlinedIcon,
-} from '@linode/ui';
 
 import type { Theme } from '@mui/material/styles';
 import type { SnackbarProviderProps } from 'notistack';
@@ -89,6 +88,12 @@ export const Snackbar = (props: SnackbarProviderProps) => {
         success: <SuccessOutlinedIcon />,
       }}
       {...rest}
+      action={(snackbarId) => (
+        <CloseSnackbar
+          onClick={() => closeSnackbar(snackbarId)}
+          text="Dismiss Notification"
+        />
+      )}
       Components={{
         default: StyledMaterialDesignContent,
         info: StyledMaterialDesignContent,
@@ -97,12 +102,6 @@ export const Snackbar = (props: SnackbarProviderProps) => {
         error: StyledMaterialDesignContent,
         success: StyledMaterialDesignContent,
       }}
-      action={(snackbarId) => (
-        <CloseSnackbar
-          onClick={() => closeSnackbar(snackbarId)}
-          text="Dismiss Notification"
-        />
-      )}
     >
       {children}
     </SnackbarProvider>

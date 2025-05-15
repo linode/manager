@@ -1,3 +1,4 @@
+import { useCreateAccountBetaMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Checkbox,
@@ -6,6 +7,7 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import {
   createLazyRoute,
   useNavigate,
@@ -16,8 +18,6 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
-import { NotFound } from 'src/components/NotFound';
-import { useCreateAccountBetaMutation } from '@linode/queries';
 import { useBetaQuery } from 'src/queries/betas';
 
 export const BetaSignup = () => {

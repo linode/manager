@@ -45,11 +45,11 @@ export const NotificationCenterNotificationMessage = (
   return (
     <>
       <Box
+        data-testid={notification.type}
         sx={{
           alignItem: 'flex-start',
           display: 'flex',
         }}
-        data-testid={notification.type}
       >
         <Box
           sx={{
@@ -68,18 +68,18 @@ export const NotificationCenterNotificationMessage = (
           >
             {severity === 'critical' ? (
               <ErrorIcon
+                data-testid={`${severity}Icon`}
                 sx={{
                   fill: theme.color.red,
                 }}
-                data-testid={`${severity}Icon`}
               />
             ) : null}
             {severity === 'major' ? (
               <WarningIcon
+                data-testid={severity + 'Icon'}
                 sx={{
                   fill: theme.palette.warning.dark,
                 }}
-                data-testid={severity + 'Icon'}
               />
             ) : null}
           </Box>

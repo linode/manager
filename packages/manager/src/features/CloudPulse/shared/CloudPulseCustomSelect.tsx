@@ -193,7 +193,7 @@ export const CloudPulseCustomSelect = React.memo(
       setResource(
         Array.isArray(filteredValue)
           ? [...filteredValue]
-          : filteredValue ?? undefined
+          : (filteredValue ?? undefined)
       );
     };
 
@@ -217,15 +217,23 @@ export const CloudPulseCustomSelect = React.memo(
       staticErrorText.length > 0
         ? staticErrorText
         : isError
-        ? 'Error while loading from API'
-        : '';
+          ? 'Error while loading from API'
+          : '';
 
     return (
       <Autocomplete
+        autoHighlight
+        disabled={isAutoCompleteDisabled}
+        errorText={staticErrorText}
+        isOptionEqualToValue={(option, value) => option.label === value.label}
+        label={label || 'Select a Value'}
+        multiple={isMultiSelect}
+        noMarginTop
+        onChange={handleChange}
         options={
           type === CloudPulseSelectTypes.static
-            ? options ?? []
-            : queriedResources ?? []
+            ? (options ?? [])
+            : (queriedResources ?? [])
         }
         placeholder={
           selectedResource &&
@@ -238,14 +246,6 @@ export const CloudPulseCustomSelect = React.memo(
             placement: 'bottom',
           },
         }}
-        autoHighlight
-        disabled={isAutoCompleteDisabled}
-        errorText={staticErrorText}
-        isOptionEqualToValue={(option, value) => option.label === value.label}
-        label={label || 'Select a Value'}
-        multiple={isMultiSelect}
-        noMarginTop
-        onChange={handleChange}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );

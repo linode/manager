@@ -2,16 +2,18 @@ import {
   addPaymentMethod,
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
-import { APIWarning } from '@linode/api-v4/lib/types';
-import { QueryClient } from '@tanstack/react-query';
-import braintree, { GooglePayment } from 'braintree-web';
-import { VariantType } from 'notistack';
+import { accountQueries } from '@linode/queries';
+import braintree from 'braintree-web';
 
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import type { APIWarning } from '@linode/api-v4/lib/types';
+import type { QueryClient } from '@tanstack/react-query';
+import type { GooglePayment } from 'braintree-web';
+import type { VariantType } from 'notistack';
+import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
   merchantId: GPAY_MERCHANT_ID || '',
@@ -59,14 +61,13 @@ const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
     return Promise.reject(unableToOpenGPayError);
   }
 
-  const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
-    {
+  const paymentDataRequest =
+    await googlePaymentInstance.createPaymentDataRequest({
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
-    }
-  );
+    });
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
@@ -87,9 +88,8 @@ const tokenizePaymentDataRequest = async (transactionInfo: TransactionInfo) => {
 
   const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
 
-  const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
-    paymentData
-  );
+  const { nonce: realNonce } =
+    await googlePaymentInstance.parseResponse(paymentData);
 
   // Use the real nonce (real money) when the Google Merchant ID is provided and
   // the Google Pay environment is set to production.

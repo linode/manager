@@ -197,7 +197,6 @@ export const getInitialIPs = (
 
   const ips: ExtendedIP[] = [...extendedIPv4, ...extendedIPv6];
 
-  // eslint-disable-next-line no-unused-expressions
   ruleToModify.errors?.forEach((thisError) => {
     const { formField, ip } = thisError;
 
@@ -220,7 +219,7 @@ export const getInitialIPs = (
      * first in the list when modifying an existing rule.
      */
     const index =
-      ip.type === 'ipv4' ? ip.idx : addresses?.ipv4?.length ?? 0 + ip.idx;
+      ip.type === 'ipv4' ? ip.idx : (addresses?.ipv4?.length ?? 0 + ip.idx);
 
     ips[index].error = IP_ERROR_MESSAGE;
   });
@@ -322,7 +321,6 @@ export const validateForm = ({
   }
 
   if (!protocol) {
-    // eslint-disable-next-line
     errors.protocol = 'Protocol is required.';
   }
 

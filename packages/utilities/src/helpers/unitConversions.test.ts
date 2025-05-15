@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  ReadableBytesOptions,
   convertBytesToTarget,
   convertMegabytesTo,
   convertStorageUnit,
   readableBytes,
 } from './unitConversions';
+
+import type { ReadableBytesOptions } from './unitConversions';
 
 describe('conversion helper functions', () => {
   describe('readableBytes', () => {
@@ -21,10 +22,10 @@ describe('conversion helper functions', () => {
       expect(readableBytes(-1048576).value).toBe(-1);
 
       expect(
-        readableBytes(-1048576, { handleNegatives: false }).formatted
+        readableBytes(-1048576, { handleNegatives: false }).formatted,
       ).toBe('0 bytes');
       expect(readableBytes(-0.5, { handleNegatives: false }).formatted).toBe(
-        '0 bytes'
+        '0 bytes',
       );
     });
 
@@ -74,37 +75,37 @@ describe('conversion helper functions', () => {
 
     it('respects rounding when given specific units', () => {
       expect(readableBytes(1024 * 9.723, { round: { KB: 3 } }).formatted).toBe(
-        '9.723 KB'
+        '9.723 KB',
       );
       expect(readableBytes(1024 * 9.723, { round: { MB: 3 } }).formatted).toBe(
-        '9.72 KB'
+        '9.72 KB',
       );
       expect(
-        readableBytes(1024 * 1024 * 143.22, { round: { MB: 2 } }).formatted
+        readableBytes(1024 * 1024 * 143.22, { round: { MB: 2 } }).formatted,
       ).toBe('143.22 MB');
     });
 
     it("doesn't return units higher than the specific max unit", () => {
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'MB' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'MB' }).formatted,
       ).toBe('51200 MB');
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'KB' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'KB' }).formatted,
       ).toBe('52428800 KB');
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'bytes' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { maxUnit: 'bytes' }).formatted,
       ).toBe('53687091200 bytes');
     });
 
     it('returns the given unit if specified', () => {
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'MB' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'MB' }).formatted,
       ).toBe('51200 MB');
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'GB' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'GB' }).formatted,
       ).toBe('50 GB');
       expect(
-        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'TB' }).formatted
+        readableBytes(1024 * 1024 * 1024 * 50, { unit: 'TB' }).formatted,
       ).toBe('0.05 TB');
     });
 
@@ -113,7 +114,7 @@ describe('conversion helper functions', () => {
       expect(readableBytes(0.5).formatted).toBe('0.5 bytes');
       expect(readableBytes(-0.5).formatted).toBe('-0.5 bytes');
       expect(readableBytes(0.01, { maxUnit: 'bytes' }).formatted).toBe(
-        '0.01 bytes'
+        '0.01 bytes',
       );
       expect(readableBytes(0.5, { unit: 'MB' }).formatted).toBe('0 MB');
       expect(readableBytes(0.3, { round: 0 }).formatted).toBe('0 bytes');
@@ -148,7 +149,7 @@ describe('conversion helper functions', () => {
       expect(readableBytes(1048576, { unitLabels }).unit).toBe('Megabytes');
       expect(readableBytes(1073741824, { unitLabels }).unit).toBe('Gigabytes');
       expect(readableBytes(1073741824 * 10000, { unitLabels }).unit).toBe(
-        'Terabytes'
+        'Terabytes',
       );
     });
 
@@ -174,10 +175,10 @@ describe('conversion helper functions', () => {
     it('handles base 10 when the option is given', () => {
       expect(readableBytes(1000, { base10: true }).formatted).toBe('1 KB');
       expect(readableBytes(1000 * 1000, { base10: true }).formatted).toBe(
-        '1 MB'
+        '1 MB',
       );
       expect(
-        readableBytes(1000 * 1000 * 1000, { base10: true }).formatted
+        readableBytes(1000 * 1000 * 1000, { base10: true }).formatted,
       ).toBe('1 GB');
     });
   });

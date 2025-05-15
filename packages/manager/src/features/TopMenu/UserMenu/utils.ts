@@ -1,4 +1,4 @@
-import { Profile } from '@linode/api-v4';
+import type { Profile } from '@linode/api-v4';
 
 export interface CompanyNameOrEmailOptions {
   company: string | undefined;

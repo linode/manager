@@ -6,7 +6,6 @@ import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useIsObjectStorageGen2Enabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
@@ -67,7 +66,6 @@ export const ObjectDetailsDrawer = React.memo(
 
     return (
       <Drawer
-        NotFoundComponent={NotFound}
         onClose={onClose}
         open={open}
         title={truncateMiddle(displayName ?? 'Object Detail')}

@@ -23,6 +23,11 @@ describe('LinodeRow', () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
+        alerts={linode.alerts}
+        backups={linode.backups}
+        capabilities={linode.capabilities}
+        created={linode.created}
+        group={linode.group}
         handlers={{
           onOpenDeleteDialog: () => {},
           onOpenMigrateDialog: () => {},
@@ -31,11 +36,6 @@ describe('LinodeRow', () => {
           onOpenRescueDialog: () => {},
           onOpenResizeDialog: () => {},
         }}
-        alerts={linode.alerts}
-        backups={linode.backups}
-        capabilities={linode.capabilities}
-        created={linode.created}
-        group={linode.group}
         hypervisor={linode.hypervisor}
         id={linode.id}
         image={linode.image}

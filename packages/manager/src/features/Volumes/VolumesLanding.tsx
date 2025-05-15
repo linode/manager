@@ -25,7 +25,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -110,12 +109,11 @@ export const VolumesLanding = () => {
   const { isBlockStorageEncryptionFeatureEnabled } =
     useIsBlockStorageEncryptionFeatureEnabled();
 
-  const { data: selectedVolume, isFetching: isFetchingVolume } = useDialogData({
-    enabled: !!params.volumeId,
-    paramKey: 'volumeId',
-    queryHook: useVolumeQuery,
-    redirectToOnNotFound: '/volumes',
-  });
+  const {
+    data: selectedVolume,
+    isFetching: isFetchingVolume,
+    error: selectedVolumeError,
+  } = useVolumeQuery(Number(params.volumeId), !!params.volumeId);
 
   const handleVolumeAction = (action: VolumeAction, volume: Volume) => {
     navigate({
@@ -200,9 +198,11 @@ export const VolumesLanding = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
+        spacingBottom={16}
         title="Volumes"
       />
       <TextField
+        hideLabel
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
@@ -218,13 +218,12 @@ export const VolumesLanding = () => {
               </IconButton>
             </InputAdornment>
           ),
-          sx: { mb: 2 },
+          sx: { mb: 3 },
         }}
+        label="Search"
         onChange={debounce(400, (e) => {
           onSearch(e);
         })}
-        hideLabel
-        label="Search"
         placeholder="Search Volumes"
         value={query ?? ''}
       />
@@ -309,48 +308,56 @@ export const VolumesLanding = () => {
         onClose={navigateToVolumes}
         open={params.action === 'details'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <ManageTagsDrawer
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'manage-tags'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <EditVolumeDrawer
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'edit'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <ResizeVolumeDrawer
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'resize'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <CloneVolumeDrawer
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'clone'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <DetachVolumeDialog
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'detach'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <UpgradeVolumeDialog
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'upgrade'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
       <DeleteVolumeDialog
         isFetching={isFetchingVolume}
         onClose={navigateToVolumes}
         open={params.action === 'delete'}
         volume={selectedVolume}
+        volumeError={selectedVolumeError}
       />
     </>
   );

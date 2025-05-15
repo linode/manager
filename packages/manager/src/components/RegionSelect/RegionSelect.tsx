@@ -31,7 +31,7 @@ import type { DisableItemOption } from '@linode/ui';
  * We do not display the selected check mark for single selects.
  */
 export const RegionSelect = <
-  DisableClearable extends boolean | undefined = undefined
+  DisableClearable extends boolean | undefined = undefined,
 >(
   props: RegionSelectProps<DisableClearable>
 ) => {
@@ -58,10 +58,8 @@ export const RegionSelect = <
     width,
   } = props;
 
-  const {
-    data: accountAvailability,
-    isLoading: accountAvailabilityLoading,
-  } = useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+  const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
+    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -109,9 +107,27 @@ export const RegionSelect = <
   return (
     <StyledAutocompleteContainer sx={{ width }}>
       <Autocomplete<Region, false, DisableClearable>
+        autoHighlight
+        clearOnBlur
+        data-testid="region-select"
+        disableClearable={disableClearable}
+        disabled={disabled}
+        errorText={errorText}
+        filterOptions={filterOptions}
+        getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
         getOptionLabel={(region) =>
           isGeckoLAEnabled ? region.label : `${region.label} (${region.id})`
         }
+        groupBy={(option) => getRegionCountryGroup(option)}
+        helperText={helperText}
+        label={label ?? 'Region'}
+        loading={accountAvailabilityLoading || props.loading}
+        loadingText="Loading regions..."
+        noMarginTop={noMarginTop}
+        noOptionsText={props.noOptionsText ?? 'No results'}
+        onChange={onChange}
+        options={regionOptions}
+        placeholder={placeholder ?? 'Select a Region'}
         renderOption={(props, region) => {
           const { key, ...rest } = props;
 
@@ -153,24 +169,6 @@ export const RegionSelect = <
           },
           tooltipText,
         }}
-        autoHighlight
-        clearOnBlur
-        data-testid="region-select"
-        disableClearable={disableClearable}
-        disabled={disabled}
-        errorText={errorText}
-        filterOptions={filterOptions}
-        getOptionDisabled={(option) => Boolean(disabledRegions[option.id])}
-        groupBy={(option) => getRegionCountryGroup(option)}
-        helperText={helperText}
-        label={label ?? 'Region'}
-        loading={accountAvailabilityLoading || props.loading}
-        loadingText="Loading regions..."
-        noMarginTop={noMarginTop}
-        noOptionsText={props.noOptionsText ?? 'No results'}
-        onChange={onChange}
-        options={regionOptions}
-        placeholder={placeholder ?? 'Select a Region'}
         value={selectedRegion as Region}
       />
     </StyledAutocompleteContainer>

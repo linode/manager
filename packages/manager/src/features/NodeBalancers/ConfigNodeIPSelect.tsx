@@ -1,7 +1,6 @@
+import { useAllLinodesQuery } from '@linode/queries';
 import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
-
-import { useAllLinodesQuery } from '@linode/queries';
 
 import { getPrivateIPOptions } from './ConfigNodeIPSelect.utils';
 
@@ -48,16 +47,26 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     region,
   } = props;
 
-  const { data: linodes, error, isLoading } = useAllLinodesQuery(
-    {},
-    { region },
-    region !== undefined
-  );
+  const {
+    data: linodes,
+    error,
+    isLoading,
+  } = useAllLinodesQuery({}, { region }, region !== undefined);
 
   const options = getPrivateIPOptions(linodes);
 
   return (
     <Autocomplete
+      disabled={disabled}
+      errorText={errorText ?? error?.[0].reason}
+      id={inputId}
+      label="IP Address"
+      loading={isLoading}
+      noMarginTop
+      noOptionsText="No options - please ensure you have at least 1 Linode with a private IP located in the selected region."
+      onChange={(e, value) => handleChange(nodeIndex, value?.label ?? null)}
+      options={options}
+      placeholder="Enter IP Address"
       renderOption={(props, option, { selected }) => {
         const { key, ...rest } = props;
         return (
@@ -72,10 +81,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
             >
               <Stack>
                 <Typography
+                  color="inherit"
                   sx={(theme) => ({
                     font: theme.font.bold,
                   })}
-                  color="inherit"
                 >
                   {option.label}
                 </Typography>
@@ -86,16 +95,6 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
           </li>
         );
       }}
-      disabled={disabled}
-      errorText={errorText ?? error?.[0].reason}
-      id={inputId}
-      label="IP Address"
-      loading={isLoading}
-      noMarginTop
-      noOptionsText="No options - please ensure you have at least 1 Linode with a private IP located in the selected region."
-      onChange={(e, value) => handleChange(nodeIndex, value?.label ?? null)}
-      options={options}
-      placeholder="Enter IP Address"
       value={options.find((o) => o.label === nodeAddress) ?? null}
     />
   );

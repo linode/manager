@@ -12,7 +12,7 @@ export const formatUptime = (uptime: number) => {
       .minus({
         days,
       })
-      .as('hours')
+      .as('hours'),
   );
   const minutes = Math.floor(
     duration
@@ -20,7 +20,7 @@ export const formatUptime = (uptime: number) => {
         days,
         hours,
       })
-      .as('minutes')
+      .as('minutes'),
   );
   const seconds = Math.floor(
     duration
@@ -29,7 +29,7 @@ export const formatUptime = (uptime: number) => {
         hours,
         minutes,
       })
-      .as('seconds')
+      .as('seconds'),
   );
   if (days > 0) {
     return `${days}d ${hours}h ${minutes}m`;

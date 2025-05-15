@@ -1,7 +1,7 @@
 import { linodeFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { wrapWithTableBody, renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 
 import { PlacementGroupsLinodesTableRow } from './PlacementGroupsLinodesTableRow';
 

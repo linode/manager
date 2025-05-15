@@ -28,6 +28,8 @@ export const UserDataHeading = () => {
       <Stack direction="row" spacing={1}>
         <Typography variant="h2">Add User Data</Typography>
         <TooltipIcon
+          status="help"
+          sxTooltipIcon={{ p: 0 }}
           text={
             <>
               User data allows you to provide additional custom data to
@@ -38,8 +40,6 @@ export const UserDataHeading = () => {
               .
             </>
           }
-          status="help"
-          sxTooltipIcon={{ p: 0 }}
         />
       </Stack>
       {warningMessage && (

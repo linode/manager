@@ -1,9 +1,9 @@
 import { StyledLinkButton } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { capitalize, pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { Hidden } from 'src/components/Hidden';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 

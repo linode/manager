@@ -64,10 +64,8 @@ export const DatabaseSettingsUpgradeVersionDialog = (props: Props) => {
     };
   });
 
-  const [
-    selectedVersion,
-    setSelectedVersion,
-  ] = React.useState<VersionOption | null>(null);
+  const [selectedVersion, setSelectedVersion] =
+    React.useState<null | VersionOption>(null);
   const [error, setError] = React.useState('');
   const [loading, setIsLoading] = React.useState(false);
 

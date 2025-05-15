@@ -32,7 +32,7 @@ const imageActions = {
   rebuild: 'rebuild',
 } as const;
 
-export type ImageAction = typeof imageActions[keyof typeof imageActions];
+export type ImageAction = (typeof imageActions)[keyof typeof imageActions];
 
 const imagesRoute = createRoute({
   component: ImagesRoute,

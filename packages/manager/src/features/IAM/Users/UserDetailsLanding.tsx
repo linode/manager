@@ -48,7 +48,7 @@ export const UserDetailsLanding = () => {
     },
     {
       routeName: `/iam/users/${username}/entities`,
-      title: 'Assigned Entities',
+      title: 'Entity Access',
     },
   ];
 
@@ -83,6 +83,7 @@ export const UserDetailsLanding = () => {
         }}
         docsLink={IAM_DOCS_LINK}
         removeCrumbX={4}
+        spacingBottom={4}
         title={username}
       />
       <Tabs index={getDefaultTabIndex()} onChange={navToURL}>

@@ -2,6 +2,7 @@ import {
   createDatabaseSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
+
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,20 +11,21 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CreateDatabasePayload,
   Database,
-  DatabaseInstance,
   DatabaseBackup,
   DatabaseCredentials,
-  DatabaseType,
   DatabaseEngine,
+  DatabaseEngineConfig,
+  DatabaseFork,
+  DatabaseInstance,
+  DatabaseType,
   Engine,
   SSLFields,
   UpdateDatabasePayload,
-  DatabaseFork,
-  DatabaseEngineConfig,
 } from './types';
 
 /**
@@ -37,7 +39,7 @@ export const getDatabases = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -51,7 +53,7 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/types`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -63,7 +65,7 @@ export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
 export const getDatabaseType = (typeSlug: string) =>
   Request<DatabaseType>(
     setURL(`${API_ROOT}/databases/types/${encodeURIComponent(typeSlug)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -77,7 +79,7 @@ export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/databases/engines`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -89,7 +91,7 @@ export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
 export const getDatabaseEngine = (engineSlug: string) =>
   Request<DatabaseEngine>(
     setURL(`${API_ROOT}/databases/engines/${encodeURIComponent(engineSlug)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -100,12 +102,12 @@ export const getDatabaseEngine = (engineSlug: string) =>
  */
 export const createDatabase = (
   engine: Engine = 'mysql',
-  data: CreateDatabasePayload
+  data: CreateDatabasePayload,
 ) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData(data, createDatabaseSchema)
+    setData(data, createDatabaseSchema),
   );
 
 /**
@@ -117,13 +119,13 @@ export const createDatabase = (
 export const getEngineDatabases = (
   engine: Engine,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<Database>>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -136,10 +138,10 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
   Request<Database>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -152,16 +154,16 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
 export const updateDatabase = (
   engine: Engine,
   databaseID: number,
-  data: UpdateDatabasePayload
+  data: UpdateDatabasePayload,
 ) =>
   Request<Database>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
     setMethod('PUT'),
-    setData(data, updateDatabaseSchema)
+    setData(data, updateDatabaseSchema),
   );
 
 /**
@@ -173,10 +175,10 @@ export const patchDatabase = (engine: Engine, databaseID: number) =>
   Request<void>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/patch`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/patch`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -188,10 +190,10 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -204,17 +206,17 @@ export const getDatabaseBackups = (
   engine: Engine,
   databaseID: number,
   params?: Params,
-  filter?: Filter
+  filter?: Filter,
 ) =>
   Request<Page<DatabaseBackup>>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/backups`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/backups`,
     ),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -226,17 +228,17 @@ export const getDatabaseBackups = (
 export const getDatabaseBackup = (
   engine: Engine,
   databaseID: number,
-  backupID: number
+  backupID: number,
 ) =>
   Request<DatabaseBackup>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
+        engine,
       )}/instances/${encodeURIComponent(
-        databaseID
-      )}/backups/${encodeURIComponent(backupID)}`
+        databaseID,
+      )}/backups/${encodeURIComponent(backupID)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -247,17 +249,17 @@ export const getDatabaseBackup = (
 export const legacyRestoreWithBackup = (
   engine: Engine,
   databaseID: number,
-  backupID: number
+  backupID: number,
 ) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
+        engine,
       )}/instances/${encodeURIComponent(
-        databaseID
-      )}/backups/${encodeURIComponent(backupID)}/restore`
+        databaseID,
+      )}/backups/${encodeURIComponent(backupID)}/restore`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -269,7 +271,7 @@ export const restoreWithBackup = (engine: Engine, fork: DatabaseFork) =>
   Request<Database>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/instances`),
     setMethod('POST'),
-    setData({ fork })
+    setData({ fork }),
   );
 
 /**
@@ -282,10 +284,10 @@ export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<DatabaseCredentials>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/credentials`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/credentials`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -297,10 +299,10 @@ export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/credentials/reset`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/credentials/reset`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -312,10 +314,10 @@ export const getSSLFields = (engine: Engine, databaseID: number) =>
   Request<SSLFields>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/ssl`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/ssl`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -327,10 +329,10 @@ export const suspendDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/suspend`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/suspend`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -342,10 +344,10 @@ export const resumeDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/databases/${encodeURIComponent(
-        engine
-      )}/instances/${encodeURIComponent(databaseID)}/resume`
+        engine,
+      )}/instances/${encodeURIComponent(databaseID)}/resume`,
     ),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -357,5 +359,5 @@ export const resumeDatabase = (engine: Engine, databaseID: number) =>
 export const getDatabaseEngineConfig = (engine: Engine) =>
   Request<DatabaseEngineConfig>(
     setURL(`${API_ROOT}/databases/${encodeURIComponent(engine)}/config`),
-    setMethod('GET')
+    setMethod('GET'),
   );

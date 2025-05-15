@@ -11,6 +11,7 @@ import {
 } from '@linode/ui';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
+import type { FieldError } from 'react-hook-form';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
@@ -25,7 +26,6 @@ import {
 } from './utilities';
 
 import type { CreateLinodeRequest, UserDefinedField } from '@linode/api-v4';
-import type { FieldError } from 'react-hook-form';
 
 interface Props {
   userDefinedField: UserDefinedField;
@@ -71,19 +71,19 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
 
     return (
       <Autocomplete
-        onChange={(e, options) => {
-          field.onChange(options.map((option) => option.label).join(','));
-        }}
-        textFieldProps={{
-          required: isRequired,
-        }}
         errorText={error}
         label={userDefinedField.label}
         multiple
         noMarginTop
+        onChange={(e, options) => {
+          field.onChange(options.map((option) => option.label).join(','));
+        }}
         options={options}
         // If options are selected, hide the placeholder
         placeholder={value.length > 0 ? ' ' : undefined}
+        textFieldProps={{
+          required: isRequired,
+        }}
         value={value}
       />
     );
@@ -99,13 +99,13 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     if (options.length > 4) {
       return (
         <Autocomplete
-          textFieldProps={{
-            required: isRequired,
-          }}
           disableClearable
           label={userDefinedField.label}
           onChange={(_, option) => field.onChange(option?.label ?? '')}
           options={options}
+          textFieldProps={{
+            required: isRequired,
+          }}
           value={value}
         />
       );
@@ -138,6 +138,12 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
     const isTokenPassword = userDefinedField.name === 'token_password';
     return (
       <PasswordInput
+        errorText={error}
+        label={userDefinedField.label}
+        noMarginTop
+        onChange={(e) => field.onChange(e.target.value)}
+        placeholder={isTokenPassword ? 'Enter your token' : 'Enter a password.'}
+        required={isRequired}
         tooltipText={
           isTokenPassword ? (
             <>
@@ -147,12 +153,6 @@ export const UserDefinedFieldInput = ({ userDefinedField }: Props) => {
             </>
           ) : undefined
         }
-        errorText={error}
-        label={userDefinedField.label}
-        noMarginTop
-        onChange={(e) => field.onChange(e.target.value)}
-        placeholder={isTokenPassword ? 'Enter your token' : 'Enter a password.'}
-        required={isRequired}
         value={field.value ?? ''}
       />
     );

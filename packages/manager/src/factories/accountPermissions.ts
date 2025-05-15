@@ -60,8 +60,8 @@ const createResourceRoles = (
   type: resourceType,
 });
 
-export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPermissions>(
-  {
+export const accountPermissionsFactory =
+  Factory.Sync.makeFactory<IamAccountPermissions>({
     account_access: [
       {
         roles: [
@@ -720,5 +720,4 @@ export const accountPermissionsFactory = Factory.Sync.makeFactory<IamAccountPerm
         ],
       }) as IamAccess,
     ],
-  }
-);
+  });

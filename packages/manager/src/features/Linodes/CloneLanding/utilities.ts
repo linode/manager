@@ -88,45 +88,6 @@ const cloneLandingReducer = (
   action: CloneLandingAction
 ) => {
   switch (action.type) {
-    case 'toggleConfig':
-      // If the ID isn't in configSelection, return the state unchanged.
-      if (!draft.configSelection[action.id]) {
-        break;
-      }
-
-      const configSelected = draft.configSelection[action.id].isSelected;
-      draft.configSelection[action.id].isSelected = !configSelected;
-
-      // Clear errors on input change.
-      draft.errors = undefined;
-      break;
-
-    case 'toggleDisk':
-      // If the ID isn't in diskSelection, return the state unchanged.
-      if (!draft.diskSelection[action.id]) {
-        break;
-      }
-
-      const diskSelected = draft.diskSelection[action.id].isSelected;
-      draft.diskSelection[action.id].isSelected = !diskSelected;
-
-      // Clear errors on input change.
-      draft.errors = undefined;
-      break;
-
-    case 'setSelectedLinodeId':
-      draft.selectedLinodeId = action.id;
-      draft.errors = undefined;
-      break;
-
-    case 'setSubmitting':
-      draft.isSubmitting = action.value;
-      break;
-
-    case 'setErrors':
-      draft.errors = action.errors;
-      break;
-
     case 'clearAll':
       // Set all `isSelected`s to `false, and set selectedLinodeId to null
       draft.configSelection = Object.keys(draft.configSelection).reduce(
@@ -153,6 +114,19 @@ const cloneLandingReducer = (
       draft.errors = undefined;
       break;
 
+    case 'setErrors':
+      draft.errors = action.errors;
+      break;
+
+    case 'setSelectedLinodeId':
+      draft.selectedLinodeId = action.id;
+      draft.errors = undefined;
+      break;
+
+    case 'setSubmitting':
+      draft.isSubmitting = action.value;
+      break;
+
     // We're going to create new configSelection and diskSelection based on the
     // given configs and disks, and the elements already selected in the current state.
     case 'syncConfigsDisks':
@@ -171,6 +145,32 @@ const cloneLandingReducer = (
 
       draft.configSelection = configSelection;
       draft.diskSelection = diskSelection;
+      break;
+
+    case 'toggleConfig':
+      // If the ID isn't in configSelection, return the state unchanged.
+      if (!draft.configSelection[action.id]) {
+        break;
+      }
+
+      const configSelected = draft.configSelection[action.id].isSelected;
+      draft.configSelection[action.id].isSelected = !configSelected;
+
+      // Clear errors on input change.
+      draft.errors = undefined;
+      break;
+
+    case 'toggleDisk':
+      // If the ID isn't in diskSelection, return the state unchanged.
+      if (!draft.diskSelection[action.id]) {
+        break;
+      }
+
+      const diskSelected = draft.diskSelection[action.id].isSelected;
+      draft.diskSelection[action.id].isSelected = !diskSelected;
+
+      // Clear errors on input change.
+      draft.errors = undefined;
       break;
   }
 };

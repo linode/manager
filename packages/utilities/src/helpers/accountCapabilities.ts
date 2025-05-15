@@ -11,7 +11,7 @@ import type { AccountCapability } from '@linode/api-v4';
 export const isFeatureEnabledV2 = (
   featureName: AccountCapability,
   isFeatureFlagEnabled: boolean,
-  capabilities: AccountCapability[]
+  capabilities: AccountCapability[],
 ) => {
   return isFeatureFlagEnabled && capabilities.includes(featureName);
 };
@@ -34,7 +34,7 @@ export const isFeatureEnabledV2 = (
 export const isFeatureEnabled = (
   featureName: AccountCapability,
   isFeatureFlagEnabled: boolean,
-  capabilities: AccountCapability[]
+  capabilities: AccountCapability[],
 ) => {
   return isFeatureFlagEnabled || capabilities.includes(featureName);
 };

@@ -7,17 +7,17 @@ import { TableHead } from 'src/components/TableHead';
 import { CollapsibleRow } from './CollapsibleRow';
 
 export interface TableItem {
-  InnerTable: JSX.Element;
-  OuterTableCells: JSX.Element;
   id: number | string;
+  InnerTable: JSX.Element;
   label: string;
+  OuterTableCells: JSX.Element;
 }
 
 interface Props {
+  striped?: boolean;
   TableItems: TableItem[];
   TableRowEmpty: JSX.Element;
   TableRowHead: JSX.Element;
-  striped?: boolean;
 }
 
 export const CollapsibleTable = (props: Props) => {
@@ -34,9 +34,9 @@ export const CollapsibleTable = (props: Props) => {
           return (
             <CollapsibleRow
               InnerTable={item.InnerTable}
-              OuterTableCells={item.OuterTableCells}
               key={item.id}
               label={item.label}
+              OuterTableCells={item.OuterTableCells}
             />
           );
         })}

@@ -1,9 +1,10 @@
-import { CypressPlugin } from './plugin';
 import {
-  validateQuery,
   getHumanReadableQueryRules,
   getQueryRules,
+  validateQuery,
 } from '../util/tag';
+
+import type { CypressPlugin } from './plugin';
 
 const envVarName = 'CY_TEST_TAGS';
 export const logTestTagInfo: CypressPlugin = (_on, config) => {

@@ -1,7 +1,7 @@
-import { Interface } from '@linode/api-v4/lib/linodes';
+import { useVPCQuery } from '@linode/queries';
 import React from 'react';
 
-import { useVPCQuery } from '@linode/queries';
+import type { Interface } from '@linode/api-v4/lib/linodes';
 
 interface Props {
   idx: number;
@@ -33,7 +33,7 @@ export const InterfaceListItem = (props: Props) => {
     }
 
     const vpcIpv4 = configInterface.ipv4?.vpc;
-    return `VPC: ${vpc?.label} ${Boolean(vpcIpv4) ? `(${vpcIpv4})` : ''}`;
+    return `VPC: ${vpc?.label} ${vpcIpv4 ? `(${vpcIpv4})` : ''}`;
   };
 
   return (

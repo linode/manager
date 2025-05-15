@@ -10,7 +10,8 @@ import {
   handleStartSession,
 } from './authentication.actions';
 import { clearTokenDataFromLocalStorage } from './authentication.helpers';
-import { State } from './index';
+
+import type { State } from './index';
 
 const {
   expire: expiryInLocalStorage,

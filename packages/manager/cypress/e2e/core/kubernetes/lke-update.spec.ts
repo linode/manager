@@ -9,9 +9,9 @@ import { latestKubernetesVersion } from 'support/constants/lke';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
+  mockGetLinodes,
   mockGetLinodeType,
   mockGetLinodeTypes,
-  mockGetLinodes,
 } from 'support/intercepts/linodes';
 import {
   mockAddNodePool,

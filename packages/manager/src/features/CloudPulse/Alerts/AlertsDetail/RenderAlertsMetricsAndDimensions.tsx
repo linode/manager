@@ -46,6 +46,8 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         <React.Fragment key={`${label}_${index}`}>
           <Grid item xs={12}>
             <DisplayAlertDetailChips // build the metric threshold chip like aggregation|label|metric_operator|threshold|unit
+              label="Metric Threshold"
+              mergeChips
               values={[
                 aggregationTypeMap[aggregationType],
                 label,
@@ -53,14 +55,14 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 String(threshold),
                 unit,
               ]}
-              label="Metric Threshold"
-              mergeChips
             />
           </Grid>
 
           {dimensionFilters && dimensionFilters.length > 0 && (
             <Grid item xs={12}>
               <DisplayAlertDetailChips // build the dimensions associated with metric threshold like label|dimension_operator|value
+                label="Dimension Filter"
+                mergeChips
                 values={dimensionFilters.map(
                   ({
                     label: dimensionLabel,
@@ -72,8 +74,6 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                     capitalize(value),
                   ]
                 )}
-                label="Dimension Filter"
-                mergeChips
               />
             </Grid>
           )}

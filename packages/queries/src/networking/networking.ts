@@ -9,7 +9,7 @@ import {
 import { useMemo } from 'react';
 
 import { linodeQueries } from '../linodes/linodes';
-import { getAllIPv6Ranges, getAllIps } from './requests';
+import { getAllIps, getAllIPv6Ranges } from './requests';
 
 import type {
   APIError,
@@ -44,7 +44,7 @@ export const networkingQueries = createQueryKeys('networking', {
 export const useAllIPsQuery = (
   params?: Params,
   filter?: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<IPAddress[], APIError[]>({
     ...networkingQueries.ips(params, filter),
@@ -55,7 +55,7 @@ export const useAllIPsQuery = (
 export const useAllIPv6RangesQuery = (
   params?: Params,
   filter?: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   return useQuery<IPRange[], APIError[]>({
     ...networkingQueries.ipv6._ctx.ranges(params, filter),
@@ -66,7 +66,7 @@ export const useAllIPv6RangesQuery = (
 export const useAllDetailedIPv6RangesQuery = (
   params?: Params,
   filter?: Filter,
-  enabled: boolean = true
+  enabled: boolean = true,
 ) => {
   const { data: ranges } = useAllIPv6RangesQuery(params, filter, enabled);
 
@@ -84,7 +84,7 @@ export const useAllDetailedIPv6RangesQuery = (
       }
       return detailedRanges;
     },
-    []
+    [],
   );
 
   const stableData = useMemo(() => data, [JSON.stringify(data)]);

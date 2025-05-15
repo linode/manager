@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   renderWithThemeAndRouter,
   wrapWithTableBody,
@@ -39,15 +39,12 @@ const handlers: ActionHandlers = {
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", async () => {
-    const {
-      getByLabelText,
-      getByTestId,
-      getByText,
-    } = await renderWithThemeAndRouter(
-      wrapWithTableBody(
-        <VolumeTableRow handlers={handlers} volume={attachedVolume} />
-      )
-    );
+    const { getByLabelText, getByTestId, getByText } =
+      await renderWithThemeAndRouter(
+        wrapWithTableBody(
+          <VolumeTableRow handlers={handlers} volume={attachedVolume} />
+        )
+      );
 
     // Check row for basic values
     expect(getByText(attachedVolume.label));
@@ -145,20 +142,16 @@ describe('Volume table row', () => {
 
 describe('Volume table row - for linodes detail page', () => {
   it("should show the attached Linode's label if present", async () => {
-    const {
-      getByLabelText,
-      getByText,
-      queryByTestId,
-      queryByText,
-    } = await renderWithThemeAndRouter(
-      wrapWithTableBody(
-        <VolumeTableRow
-          handlers={handlers}
-          isDetailsPageRow
-          volume={attachedVolume}
-        />
-      )
-    );
+    const { getByLabelText, getByText, queryByTestId, queryByText } =
+      await renderWithThemeAndRouter(
+        wrapWithTableBody(
+          <VolumeTableRow
+            handlers={handlers}
+            isDetailsPageRow
+            volume={attachedVolume}
+          />
+        )
+      );
 
     // Check row for basic values
     expect(getByText(attachedVolume.label));

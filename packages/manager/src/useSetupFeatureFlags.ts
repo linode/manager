@@ -1,4 +1,4 @@
-import { useProfile, useAccount } from '@linode/queries';
+import { useAccount, useProfile } from '@linode/queries';
 import { useLDClient } from 'launchdarkly-react-client-sdk';
 import * as React from 'react';
 
@@ -17,9 +17,8 @@ export const useSetupFeatureFlags = () => {
 
   const client = useLDClient();
 
-  const [areFeatureFlagsLoading, setAreFeatureFlagsLoading] = React.useState(
-    true
-  );
+  const [areFeatureFlagsLoading, setAreFeatureFlagsLoading] =
+    React.useState(true);
 
   const userID = profile?.uid;
   const username = profile?.username;
@@ -49,14 +48,14 @@ export const useSetupFeatureFlags = () => {
       const country = accountError
         ? 'Unknown'
         : account?.country === ''
-        ? 'Unknown'
-        : account?.country;
+          ? 'Unknown'
+          : account?.country;
 
       const taxID = accountError
         ? 'Unknown'
         : account?.tax_id === ''
-        ? 'Unknown'
-        : account?.tax_id;
+          ? 'Unknown'
+          : account?.tax_id;
       if (client && country && username && taxID) {
         client
           .identify({

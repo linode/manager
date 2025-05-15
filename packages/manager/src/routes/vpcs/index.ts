@@ -26,9 +26,10 @@ const subnetLinodeAction = {
   unassign: 'unassign',
 } as const;
 
-export type VPCAction = typeof vpcAction[keyof typeof vpcAction];
-export type SubnetAction = typeof subnetAction[keyof typeof subnetAction];
-export type SubnetLinodeAction = typeof subnetLinodeAction[keyof typeof subnetLinodeAction];
+export type VPCAction = (typeof vpcAction)[keyof typeof vpcAction];
+export type SubnetAction = (typeof subnetAction)[keyof typeof subnetAction];
+export type SubnetLinodeAction =
+  (typeof subnetLinodeAction)[keyof typeof subnetLinodeAction];
 
 const vpcsRoute = createRoute({
   component: VPCRoute,

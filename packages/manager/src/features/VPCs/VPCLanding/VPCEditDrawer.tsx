@@ -5,19 +5,18 @@ import { updateVPCSchema } from '@linode/validation';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
-
-import type { UpdateVPCPayload, VPC } from '@linode/api-v4';
+import type { APIError, UpdateVPCPayload, VPC } from '@linode/api-v4';
 
 interface Props {
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
   vpc?: VPC;
+  vpcError: APIError[] | null;
 }
 
 export const VPCEditDrawer = (props: Props) => {
-  const { isFetching, onClose, open, vpc } = props;
+  const { isFetching, onClose, open, vpc, vpcError } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -70,7 +69,7 @@ export const VPCEditDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={vpcError}
       isFetching={isFetching}
       onClose={handleDrawerClose}
       open={open}
@@ -87,6 +86,8 @@ export const VPCEditDrawer = (props: Props) => {
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -98,10 +99,10 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="label"
         />
         <Controller
+          control={control}
+          name="description"
           render={({ field, fieldState }) => (
             <TextField
               disabled={readOnly}
@@ -114,8 +115,6 @@ export const VPCEditDrawer = (props: Props) => {
               value={field.value}
             />
           )}
-          control={control}
-          name="description"
         />
         <ActionsPanel
           primaryButtonProps={{

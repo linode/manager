@@ -1,3 +1,4 @@
+import { useLinodesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
@@ -20,7 +21,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useLinodesQuery } from '@linode/queries';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
@@ -133,20 +133,20 @@ export const LinodeSelectTable = (props: Props) => {
         <Notice text={fieldState.error?.message} variant="error" />
       )}
       <DebouncedSearchTextField
-        onSearch={(value) => {
-          if (preselectedLinodeId) {
-            setPreselectedLinodeId(undefined);
-          }
-          setQuery(value);
-        }}
         clearable
         debounceTime={250}
         errorText={filterError?.message}
         hideLabel
         isSearching={isFetching}
         label="Search"
+        onSearch={(value) => {
+          if (preselectedLinodeId) {
+            setPreselectedLinodeId(undefined);
+          }
+          setQuery(value);
+        }}
         placeholder="Search"
-        value={preselectedLinodeId ? field.value?.label ?? '' : query}
+        value={preselectedLinodeId ? (field.value?.label ?? '') : query}
       />
       <Box>
         {matchesMdUp ? (
@@ -183,6 +183,8 @@ export const LinodeSelectTable = (props: Props) => {
               {data?.results === 0 && <TableRowEmpty colSpan={columns} />}
               {data?.data.map((linode) => (
                 <LinodeSelectTableRow
+                  key={linode.id}
+                  linode={linode}
                   onPowerOff={
                     enablePowerOff
                       ? () => {
@@ -191,8 +193,6 @@ export const LinodeSelectTable = (props: Props) => {
                         }
                       : undefined
                   }
-                  key={linode.id}
-                  linode={linode}
                   onSelect={() => handleSelect(linode)}
                   selected={linode.id === field.value?.id}
                 />

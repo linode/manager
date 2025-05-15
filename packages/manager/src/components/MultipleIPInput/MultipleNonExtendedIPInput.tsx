@@ -1,9 +1,9 @@
 import * as React from 'react';
+import type { FieldError, Merge } from 'react-hook-form';
 
 import { MultipleIPInput } from './MultipleIPInput';
 
 import type { MultipeIPInputProps } from './MultipleIPInput';
-import type { FieldError, Merge } from 'react-hook-form';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 interface Props extends Omit<MultipeIPInputProps, 'ips' | 'onChange'> {
@@ -34,13 +34,13 @@ export const MultipleNonExtendedIPInput = (props: Props) => {
   return (
     <MultipleIPInput
       {...rest}
+      ips={extendedIPs}
       onChange={(ips) => {
         const _ips = ips.map((ip) => {
           return ip.address;
         });
         onNonExtendedIPChange(_ips);
       }}
-      ips={extendedIPs}
     />
   );
 };

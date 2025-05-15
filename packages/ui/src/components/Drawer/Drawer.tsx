@@ -4,22 +4,24 @@ import Grid from '@mui/material/Grid2';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
+import { getErrorText } from '../../utilities/error';
 import { convertForAria } from '../../utilities/stringUtils';
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';
 import { ErrorState } from '../ErrorState';
 import { IconButton } from '../IconButton';
+import { NotFound } from '../NotFound/NotFound';
 import { Typography } from '../Typography';
 
+import type { APIError } from '../../utilities/error';
 import type { DrawerProps as _DrawerProps } from '@mui/material/Drawer';
 
-// simplified APIError interface for use in this file (api-v4 is not a dependency of ui)
-interface APIError {
-  field?: string;
-  reason: string;
-}
-
-interface BaseProps extends _DrawerProps {
+export interface DrawerProps extends _DrawerProps {
+  /**
+   * Error that will be shown in the drawer, such as an API error for data passed to the drawer (NotFound for instance).
+   * Those are different from errors that are shown in the drawer's content, such as a form submission or validation error.
+   * It prevents the drawer from showing broken content.
+   */
   error?: APIError[] | null | string;
   /**
    * Whether the drawer is fetching the entity's data.
@@ -38,14 +40,6 @@ interface BaseProps extends _DrawerProps {
   wide?: boolean;
 }
 
-interface PropsWithNotFound extends BaseProps {
-  NotFoundComponent?: React.ComponentType<
-    React.PropsWithChildren<{ className?: string }>
-  >;
-}
-
-export type DrawerProps = PropsWithNotFound;
-
 /**
  * ## Overview
  * - Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
@@ -60,7 +54,6 @@ export type DrawerProps = PropsWithNotFound;
 export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
   (props: DrawerProps, ref) => {
     const {
-      NotFoundComponent,
       children,
       error,
       isFetching,
@@ -110,26 +103,30 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
     // and its content becomes potentially undefined
     const lastChildrenRef = React.useRef(children);
     const lastTitleRef = React.useRef(title);
+    const lastErrorRef = React.useRef(error);
     // Update refs when the drawer is open and content is matched
-    if (open && children) {
+    if (open) {
       lastChildrenRef.current = children;
       lastTitleRef.current = title;
+      lastErrorRef.current = error;
     }
+
+    const errorText = getErrorText(lastErrorRef.current);
 
     return (
       <_Drawer
+        anchor="right"
         onClose={(_, reason) => {
           if (onClose && reason !== 'backdropClick') {
             onClose({}, 'escapeKeyDown');
           }
         }}
+        open={open}
+        ref={ref}
         sx={{
           ...sxDrawer,
           ...sx,
         }}
-        anchor="right"
-        open={open}
-        ref={ref}
         {...rest}
         aria-labelledby={titleID}
         data-qa-drawer
@@ -137,6 +134,7 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
         role="dialog"
       >
         <Grid
+          container
           sx={(theme) => ({
             '&&': {
               marginBottom: theme.spacing(2),
@@ -145,56 +143,53 @@ export const Drawer = React.forwardRef<HTMLDivElement, DrawerProps>(
             justifyContent: 'space-between',
             position: 'relative',
           })}
-          container
           wrap="nowrap"
         >
           <Grid>
             {isFetching ? null : (
               <Typography
+                data-qa-drawer-title={lastTitleRef.current}
+                data-testid="drawer-title"
+                id={titleID}
                 sx={(theme) => ({
                   marginRight: theme.spacing(2),
                   wordBreak: 'break-word',
                 })}
-                data-qa-drawer-title={title}
-                data-testid="drawer-title"
-                id={titleID}
                 variant="h2"
               >
-                {title}
+                {lastTitleRef.current}
               </Typography>
             )}
           </Grid>
           <Grid>
             <IconButton
-              sx={{
-                position: 'absolute',
-                right: '-12px',
-                top: '-12px',
-              }}
               aria-label="Close drawer"
               color="primary"
               data-qa-close-drawer
               onClick={() => onClose?.({}, 'escapeKeyDown')}
               size="large"
+              sx={{
+                position: 'absolute',
+                right: '-12px',
+                top: '-12px',
+              }}
             >
               <CloseIcon />
             </IconButton>
           </Grid>
         </Grid>
-        {error ? (
-          error === 'Not Found' && NotFoundComponent ? (
-            <NotFoundComponent />
-          ) : (
-            <ErrorState
-              errorText={Array.isArray(error) ? error[0].reason : error}
-            />
-          )
-        ) : isFetching ? (
+        {isFetching ? (
           <Box display="flex" justifyContent="center" mt={12}>
             <CircleProgress size="md" />
           </Box>
+        ) : errorText &&
+          (errorText === 'Not Found' || errorText === 'Not found') ? (
+          <NotFound alignTop />
         ) : (
-          children
+          <>
+            {errorText && <ErrorState errorText={errorText} />}
+            {lastChildrenRef.current}
+          </>
         )}
       </_Drawer>
     );

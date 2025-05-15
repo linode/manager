@@ -1,10 +1,10 @@
+import { useNotificationsQuery } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { useNotificationsQuery } from '@linode/queries';
 
 import { isEUModelContractNotification } from '../NotificationCenter/utils';
 

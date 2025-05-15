@@ -1,6 +1,7 @@
-import { Entity, Notification } from '@linode/api-v4/lib/account';
 import { Factory } from '@linode/utilities';
 import { DateTime } from 'luxon';
+
+import type { Entity, Notification } from '@linode/api-v4/lib/account';
 
 const generateEntity = (
   id: number,
@@ -13,8 +14,7 @@ const generateEntity = (
 });
 
 export const notificationFactory = Factory.Sync.makeFactory<Notification>({
-  body:
-    'This Linode resides on a host that is pending critical maintenance. You should have received a support ticket that details how you will be affected. Please see the aforementioned ticket and [status.linode.com](https://status.linode.com/) for more details.',
+  body: 'This Linode resides on a host that is pending critical maintenance. You should have received a support ticket that details how you will be affected. Please see the aforementioned ticket and [status.linode.com](https://status.linode.com/) for more details.',
   entity: Factory.each((i) => generateEntity(i)),
   label: 'maintenance',
   message: 'This Linode will be affected by critical maintenance!',

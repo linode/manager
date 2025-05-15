@@ -2,6 +2,7 @@ import {
   stackScriptSchema,
   updateStackScriptSchema,
 } from '@linode/validation/lib/stackscripts.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -10,8 +11,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage as Page } from '../types';
-import { StackScript, StackScriptPayload } from './types';
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type { StackScript, StackScriptPayload } from './types';
 
 /**
  * Returns a paginated list of StackScripts.
@@ -22,7 +24,7 @@ export const getStackScripts = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -33,9 +35,9 @@ export const getStackScripts = (params?: Params, filter?: Filter) =>
 export const getStackScript = (stackscriptId: number) =>
   Request<StackScript>(
     setURL(
-      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -56,7 +58,7 @@ export const createStackScript = (payload: StackScriptPayload) =>
   Request<StackScript>(
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('POST'),
-    setData(payload, stackScriptSchema)
+    setData(payload, stackScriptSchema),
   );
 
 /**
@@ -76,14 +78,14 @@ export const createStackScript = (payload: StackScriptPayload) =>
  */
 export const updateStackScript = (
   stackscriptId: number,
-  payload: Partial<StackScriptPayload>
+  payload: Partial<StackScriptPayload>,
 ) =>
   Request<StackScript>(
     setURL(
-      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`,
     ),
     setMethod('PUT'),
-    setData(payload, updateStackScriptSchema)
+    setData(payload, updateStackScriptSchema),
   );
 
 /**
@@ -94,7 +96,7 @@ export const updateStackScript = (
 export const deleteStackScript = (stackscriptId: number) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`
+      `${API_ROOT}/linode/stackscripts/${encodeURIComponent(stackscriptId)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );

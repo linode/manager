@@ -9,8 +9,9 @@ import {
 } from 'src/features/Longview/shared/utilities';
 
 import { convertData } from '../../../shared/formatters';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { GraphProps } from './types';
 
 export const NetworkGraph = React.memo((props: GraphProps) => {
   const {
@@ -52,6 +53,7 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
 
   return (
     <LongviewLineGraph
+      ariaLabel="Network Usage Graph"
       data={[
         {
           backgroundColor: theme.graphs.darkGreen,
@@ -66,7 +68,6 @@ export const NetworkGraph = React.memo((props: GraphProps) => {
           label: 'Outbound',
         },
       ]}
-      ariaLabel="Network Usage Graph"
       error={error}
       formatData={formatNetwork}
       formatTooltip={formatNetworkTooltip}

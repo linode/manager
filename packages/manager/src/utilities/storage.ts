@@ -96,16 +96,16 @@ export const supportTicketStorageDefaults: SupportTicketFormFields = {
 };
 
 export interface Storage {
-  BackupsCtaDismissed: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
   authentication: {
     codeVerifier: AuthGetAndSet;
     expire: AuthGetAndSet;
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
     token: AuthGetAndSet;
+  };
+  BackupsCtaDismissed: {
+    get: () => boolean;
+    set: (v: 'false' | 'true') => void;
   };
   devToolsEnv: {
     get: () => DevToolsEnv | null;

@@ -1,5 +1,5 @@
 import { linodeFactory } from '@linode/utilities';
-import { HttpResponse, http } from 'msw';
+import { http, HttpResponse } from 'msw';
 import React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -9,7 +9,7 @@ import {
   renderWithThemeAndHookFormContext,
 } from 'src/utilities/testHelpers';
 
-import { LinodeSelectTable, getLinodeXFilter } from './LinodeSelectTable';
+import { getLinodeXFilter, LinodeSelectTable } from './LinodeSelectTable';
 
 beforeAll(() => mockMatchMedia());
 

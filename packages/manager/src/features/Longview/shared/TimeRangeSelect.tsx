@@ -1,8 +1,7 @@
 import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Select } from '@linode/ui';
 import * as React from 'react';
-
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 import type { SelectOption, SelectProps } from '@linode/ui';
 
@@ -70,7 +69,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
     // Do the math and send start/end values to the consumer
     // (in most cases the consumer has passed defaultValue={'last 30 minutes'}
     // but the calcs to turn that into start/end numbers live here)
-    if (!!handleStatsChange) {
+    if (handleStatsChange) {
       handleStatsChange(
         Math.round(
           generateStartTime(
@@ -102,7 +101,7 @@ export const TimeRangeSelect = React.memo((props: Props) => {
       })
       .catch(); // swallow the error, it's nbd if the choice isn't saved
 
-    if (!!handleStatsChange) {
+    if (handleStatsChange) {
       handleStatsChange(
         Math.round(
           generateStartTime(item.value, nowInSeconds, new Date().getFullYear())
@@ -182,16 +181,16 @@ export const generateStartTime = (
   currentYear: number
 ) => {
   switch (modifier) {
-    case 'Past 30 Minutes':
-      return nowInSeconds - 30 * 60;
+    case 'Past 7 Days':
+      return nowInSeconds - 7 * 24 * 60 * 60;
     case 'Past 12 Hours':
       return nowInSeconds - 12 * 60 * 60;
     case 'Past 24 Hours':
       return nowInSeconds - 24 * 60 * 60;
-    case 'Past 7 Days':
-      return nowInSeconds - 7 * 24 * 60 * 60;
     case 'Past 30 Days':
       return nowInSeconds - 30 * 24 * 60 * 60;
+    case 'Past 30 Minutes':
+      return nowInSeconds - 30 * 60;
     case 'Past Year':
       return nowInSeconds - 365 * 24 * 60 * 60;
     default:

@@ -67,13 +67,14 @@ const SupportTicketsLanding = () => {
         data-qa-breadcrumb
         onButtonClick={() => setDrawerOpen(true)}
         onButtonKeyPress={handleButtonKeyPress}
+        spacingBottom={4}
         title="Tickets"
       />
       <Tabs
+        index={tabIndex === -1 ? 0 : tabIndex}
         onChange={(index) => {
           history.push(`/support/tickets?type=${tabs[index]}`);
         }}
-        index={tabIndex === -1 ? 0 : tabIndex}
       >
         <TabList>
           <Tab data-qa-tab="Open Tickets">Open Tickets</Tab>

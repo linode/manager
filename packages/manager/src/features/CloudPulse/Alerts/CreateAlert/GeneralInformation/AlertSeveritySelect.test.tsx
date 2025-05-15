@@ -18,7 +18,7 @@ describe('Severity component tests', () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
-    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     expect(await screen.findByRole('option', { name: 'Info' }));
     expect(screen.getByRole('option', { name: 'Low' }));
   });
@@ -26,24 +26,23 @@ describe('Severity component tests', () => {
     renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
-    userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', { name: 'Medium' })
     );
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Medium');
   });
-  it('should render the tooltip text', () => {
+  it('should render the tooltip text', async () => {
     const container = renderWithThemeAndHookFormContext({
       component: <CloudPulseAlertSeveritySelect name="severity" />,
     });
 
     const severityContainer = container.getByTestId('severity');
-    userEvent.click(severityContainer);
+    await userEvent.click(severityContainer);
 
     expect(
       screen.getByRole('button', {
-        name:
-          'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
+        name: 'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
       })
     ).toBeVisible();
   });

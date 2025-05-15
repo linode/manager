@@ -54,6 +54,9 @@ export const CloudPulseDashboardRenderer = React.memo(
 
     return (
       <CloudPulseDashboard
+        additionalFilters={getMetricsCall}
+        dashboardId={dashboard.id}
+        duration={timeDuration}
         manualRefreshTimeStamp={
           filterValue[REFRESH] && typeof filterValue[REFRESH] === 'number'
             ? filterValue[REFRESH]
@@ -69,15 +72,12 @@ export const CloudPulseDashboardRenderer = React.memo(
             ? (filterValue[RESOURCE_ID] as string[])
             : []
         }
+        savePref={true}
         tags={
           filterValue[TAGS] && Array.isArray(filterValue[TAGS])
             ? (filterValue[TAGS] as string[])
             : []
         }
-        additionalFilters={getMetricsCall}
-        dashboardId={dashboard.id}
-        duration={timeDuration}
-        savePref={true}
       />
     );
   }

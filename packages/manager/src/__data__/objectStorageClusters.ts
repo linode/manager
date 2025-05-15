@@ -1,4 +1,4 @@
-import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
 
 export const objectStorageClusters: ObjectStorageCluster[] = [
   {

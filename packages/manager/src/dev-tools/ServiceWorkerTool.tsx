@@ -52,18 +52,15 @@ export const ServiceWorkerTool = () => {
   const loadedSeeders = getSeeders(dbSeeders);
   const loadedSeedsCountMap = getSeedsCountMap();
   const loadedPresetsMap = getExtraPresetsMap();
-  const [
-    baselinePreset,
-    setBaselinePreset,
-  ] = React.useState<MockPresetBaselineId>(loadedBaselinePreset);
-  const [extraPresets, setExtraPresets] = React.useState<string[]>(
-    loadedExtraPresets
-  );
+  const [baselinePreset, setBaselinePreset] =
+    React.useState<MockPresetBaselineId>(loadedBaselinePreset);
+  const [extraPresets, setExtraPresets] =
+    React.useState<string[]>(loadedExtraPresets);
   const [customAccountData, setCustomAccountData] = React.useState<
     Account | null | undefined
   >(getCustomAccountData());
   const [customProfileData, setCustomProfileData] = React.useState<
-    Profile | null | undefined
+    null | Profile | undefined
   >(getCustomProfileData());
   const [presetsCountMap, setPresetsCountMap] = React.useState<{
     [key: string]: number;

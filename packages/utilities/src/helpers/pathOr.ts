@@ -8,7 +8,7 @@
 export const pathOr = <T, O>(
   defaultValue: T,
   path: (number | string)[],
-  object: O
+  object: O,
 ): T => {
   if (object === undefined) {
     return defaultValue;

@@ -333,15 +333,12 @@ export const MainContent = () => {
                       flex: 1,
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
-                      pt: {
-                        md: 1.5,
-                        xs: theme.spacing(2),
-                      },
+                      pb: theme.spacingFunction(32),
+                      pt: theme.spacingFunction(24),
                       px: {
-                        md: theme.spacing(2),
+                        md: theme.spacingFunction(16),
                         xs: 0,
                       },
-                      py: 1.5,
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
@@ -359,62 +356,70 @@ export const MainContent = () => {
                       spacing={0}
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <ErrorBoundaryFallback>
-                            <Switch>
-                              <Route
-                                component={LinodesRoutes}
-                                path="/linodes"
-                              />
-                              <Route
-                                component={Kubernetes}
-                                path="/kubernetes"
-                              />
-                              {isIAMEnabled && (
-                                <Route component={IAM} path="/iam" />
-                              )}
-                              <Route component={Account} path="/account" />
-                              <Route component={Profile} path="/profile" />
-                              <Route component={Help} path="/support" />
-                              <Route component={SearchLanding} path="/search" />
-                              <Route component={EventsLanding} path="/events" />
-                              {isDatabasesEnabled && (
+                        <div className="content-wrapper">
+                          <GlobalNotifications />
+                          <React.Suspense fallback={<SuspenseLoader />}>
+                            <ErrorBoundaryFallback>
+                              <Switch>
                                 <Route
-                                  component={Databases}
-                                  path="/databases"
+                                  component={LinodesRoutes}
+                                  path="/linodes"
                                 />
-                              )}
-                              {isACLPEnabled && (
                                 <Route
-                                  component={CloudPulseMetrics}
-                                  path="/metrics"
+                                  component={Kubernetes}
+                                  path="/kubernetes"
                                 />
-                              )}
-                              {isACLPEnabled && (
+                                {isIAMEnabled && (
+                                  <Route component={IAM} path="/iam" />
+                                )}
+                                <Route component={Account} path="/account" />
+                                <Route component={Profile} path="/profile" />
+                                <Route component={Help} path="/support" />
                                 <Route
-                                  component={CloudPulseAlerts}
-                                  path="/alerts"
+                                  component={SearchLanding}
+                                  path="/search"
                                 />
-                              )}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              {/**
-                               * This is the catch all routes that allows TanStack Router to take over.
-                               * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                               * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                               * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                               */}
-                              <Route path="*">
-                                <RouterProvider
-                                  context={{ queryClient }}
-                                  router={migrationRouter as AnyRouter}
+                                <Route
+                                  component={EventsLanding}
+                                  path="/events"
                                 />
-                              </Route>
-                            </Switch>
-                          </ErrorBoundaryFallback>
-                        </React.Suspense>
+                                {isDatabasesEnabled && (
+                                  <Route
+                                    component={Databases}
+                                    path="/databases"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseMetrics}
+                                    path="/metrics"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseAlerts}
+                                    path="/alerts"
+                                  />
+                                )}
+                                <Redirect exact from="/" to={defaultRoot} />
+                                {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                                <Redirect from="/dashboard" to={defaultRoot} />
+                                {/**
+                                 * This is the catch all routes that allows TanStack Router to take over.
+                                 * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                                 * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                                 * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                                 */}
+                                <Route path="*">
+                                  <RouterProvider
+                                    context={{ queryClient }}
+                                    router={migrationRouter as AnyRouter}
+                                  />
+                                </Route>
+                              </Switch>
+                            </ErrorBoundaryFallback>
+                          </React.Suspense>
+                        </div>
                       </Grid>
                     </Grid>
                   </Box>

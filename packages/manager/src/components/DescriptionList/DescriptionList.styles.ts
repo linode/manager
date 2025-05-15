@@ -1,6 +1,6 @@
-import { Typography, omittedProps } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import { omittedProps, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 
 import type { DescriptionListProps } from './DescriptionList';
 import type { TypographyProps } from '@mui/material';

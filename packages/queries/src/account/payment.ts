@@ -1,12 +1,16 @@
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib/account';
+import { addPaymentMethod, makeDefaultPaymentMethod } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
 import { useGrants } from '../profile';
 import { accountQueries } from './queries';
 
-import type { ClientToken, PaymentMethod } from '@linode/api-v4/lib/account';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type {
+  APIError,
+  ClientToken,
+  PaymentMethod,
+  PaymentMethodPayload,
+} from '@linode/api-v4';
 
 export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();
@@ -45,8 +49,21 @@ export const useMakeDefaultPaymentMethodMutation = (id: number) => {
             }
             return acc;
           }, []);
-        }
+        },
       );
+    },
+  });
+};
+
+export const useAddPaymentMethodMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Record<string, never>, APIError[], PaymentMethodPayload>({
+    mutationFn: addPaymentMethod,
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.paymentMethods.queryKey,
+      });
     },
   });
 };

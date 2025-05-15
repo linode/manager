@@ -21,11 +21,11 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
       }}
     >
       <Chip
+        label={values[0]}
         sx={(theme) => ({
           backgroundColor: theme.color.tagButtonBg,
           color: theme.color.tagButtonText,
         })}
-        label={values[0]}
       />
       {values.length > 1 && (
         <Tooltip
@@ -50,11 +50,11 @@ export const TextWithExtraInfo = ({ values }: TextWithInfoProp) => {
         >
           <Box>
             <Chip
+              label={`+${values.length - 1}`}
               sx={(theme) => ({
                 backgroundColor: theme.color.tagButtonBg,
                 color: theme.color.tagButtonText,
               })}
-              label={`+${values.length - 1}`}
             />
           </Box>
         </Tooltip>

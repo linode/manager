@@ -172,24 +172,26 @@ describe('create NodeBalancer', () => {
    */
   it('shows DC-specific pricing information when creating a NodeBalancer', () => {
     // test fails in environments w/ only one region
-    cy.addTag('env:multipleRegions');
-    const initialRegion = getRegionById('us-west');
-    const linodePayload = {
-      // NodeBalancers require Linodes with private IPs.
-      private_ip: true,
-      region: initialRegion.id,
-    };
-    cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
-      const nodeBal = nodeBalancerFactory.build({
-        ipv4: linode.ipv4[1],
-        label: randomLabel(),
+    cy.tag('env:multipleRegions');
+    cy.defer(async () => {}).then(() => {
+      const initialRegion = getRegionById('us-west');
+      const linodePayload = {
+        // NodeBalancers require Linodes with private IPs.
+        private_ip: true,
         region: initialRegion.id,
+      };
+      cy.defer(() => createTestLinode(linodePayload)).then((linode) => {
+        const nodeBal = nodeBalancerFactory.build({
+          ipv4: linode.ipv4[1],
+          label: randomLabel(),
+          region: initialRegion.id,
+        });
+
+        // catch request
+        interceptCreateNodeBalancer().as('createNodeBalancer');
+
+        createNodeBalancerWithUI(nodeBal, true);
       });
-
-      // catch request
-      interceptCreateNodeBalancer().as('createNodeBalancer');
-
-      createNodeBalancerWithUI(nodeBal, true);
     });
   });
 });

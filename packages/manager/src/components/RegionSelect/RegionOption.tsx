@@ -27,22 +27,22 @@ export const RegionOption = ({
       selected={selected}
     >
       <Stack
+        alignItems="center"
+        direction="row"
+        gap={1}
         sx={(theme) => ({
           '&:hover .public-icon': {
             color: `${theme.tokens.color.Neutrals.White}`,
           },
         })}
-        alignItems="center"
-        direction="row"
-        gap={1}
         width="100%"
       >
         {item.id === 'global' ? (
           <PublicIcon
+            className="public-icon"
             sx={(theme) => ({
               color: `${theme.tokens.alias.Content.Icon.Primary.Active}`,
             })}
-            className="public-icon"
           />
         ) : (
           <Flag country={item.country} />

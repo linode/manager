@@ -51,12 +51,12 @@ export const Encryption = (props: EncryptionProps) => {
         </Notice>
       )}
       <Box
-        sx={{
-          marginLeft: '4px',
-        }}
         alignItems="center"
         display="flex"
         flexDirection="row"
+        sx={{
+          marginLeft: '4px',
+        }}
       >
         <Checkbox
           checked={isEncryptEntityChecked}

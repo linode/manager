@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 export const setupPlugins = async (
   on: Cypress.PluginEvents,

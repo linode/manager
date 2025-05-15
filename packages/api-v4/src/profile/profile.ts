@@ -1,31 +1,33 @@
 import {
+  SecurityQuestionsSchema,
   SendCodeToPhoneNumberSchema,
   VerifyPhoneNumberCodeSchema,
-  SecurityQuestionsSchema,
 } from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
+
 import { API_ROOT } from '../constants';
-import { Grants } from '../account';
 import Request, {
   setData,
+  setHeaders,
   setMethod,
   setParams,
-  setHeaders,
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, Params, ResourcePage } from '../types';
-import {
+
+import type { Grants } from '../account';
+import type { Filter, Params, ResourcePage } from '../types';
+import type { RequestOptions } from '../types';
+import type {
   Profile,
   ProfileLogin,
-  TrustedDevice,
-  UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
   SendPhoneVerificationCodePayload,
+  TrustedDevice,
+  UserPreferences,
   VerifyVerificationCodePayload,
 } from './types';
-import type { RequestOptions } from '../types';
 
 /**
  * getProfile
@@ -37,7 +39,7 @@ export const getProfile = ({ headers }: RequestOptions = {}) => {
   return Request<Profile>(
     setURL(`${API_ROOT}/profile`),
     setMethod('GET'),
-    setHeaders(headers)
+    setHeaders(headers),
   );
 };
 
@@ -53,7 +55,7 @@ export const updateProfile = (data: any) =>
   Request<Profile>(
     setURL(`${API_ROOT}/profile`),
     setMethod('PUT'),
-    setData(data, updateProfileSchema)
+    setData(data, updateProfileSchema),
   );
 
 /**
@@ -93,7 +95,7 @@ export const getTrustedDevices = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/profile/devices`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -104,7 +106,7 @@ export const getTrustedDevices = (params?: Params, filter?: Filter) =>
 export const deleteTrustedDevice = (id: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/profile/devices/${encodeURIComponent(id)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -115,7 +117,7 @@ export const deleteTrustedDevice = (id: number) =>
  */
 export const getUserPreferences = () => {
   return Request<Record<string, any>>(
-    setURL(`${API_ROOT}/profile/preferences`)
+    setURL(`${API_ROOT}/profile/preferences`),
   );
 };
 
@@ -129,7 +131,7 @@ export const updateUserPreferences = (payload: UserPreferences) => {
   return Request<UserPreferences>(
     setURL(`${API_ROOT}/profile/preferences`),
     setData(payload),
-    setMethod('PUT')
+    setMethod('PUT'),
   );
 };
 
@@ -138,7 +140,7 @@ export const getLogins = (params?: Params, filter?: Filter) => {
     setURL(`${API_ROOT}/profile/logins`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 };
 
@@ -150,7 +152,7 @@ export const getLogins = (params?: Params, filter?: Filter) => {
 export const getSecurityQuestions = () => {
   return Request<SecurityQuestionsData>(
     setURL(`${API_ROOT}/profile/security-questions`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 };
 
@@ -163,7 +165,7 @@ export const updateSecurityQuestions = (payload: SecurityQuestionsPayload) => {
   return Request<SecurityQuestionsPayload>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('POST'),
-    setData(payload, SecurityQuestionsSchema)
+    setData(payload, SecurityQuestionsSchema),
   );
 };
 
@@ -175,7 +177,7 @@ export const updateSecurityQuestions = (payload: SecurityQuestionsPayload) => {
 export const smsOptOut = () => {
   return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 };
 
@@ -185,12 +187,12 @@ export const smsOptOut = () => {
  * Sends a one-time password via SMS to be used to verify a phone number.
  */
 export const sendCodeToPhoneNumber = (
-  data: SendPhoneVerificationCodePayload
+  data: SendPhoneVerificationCodePayload,
 ) => {
   return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number`),
     setMethod('POST'),
-    setData(data, SendCodeToPhoneNumberSchema)
+    setData(data, SendCodeToPhoneNumberSchema),
   );
 };
 
@@ -203,6 +205,6 @@ export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number/verify`),
     setMethod('POST'),
-    setData(data, VerifyPhoneNumberCodeSchema)
+    setData(data, VerifyPhoneNumberCodeSchema),
   );
 };

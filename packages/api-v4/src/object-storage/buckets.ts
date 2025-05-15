@@ -3,6 +3,7 @@ import {
   UpdateBucketAccessSchema,
   UploadCertificateSchema,
 } from '@linode/validation/lib/buckets.schema';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -11,23 +12,24 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
+
 import type {
   Filter,
-  Params,
   ResourcePage as Page,
+  Params,
   RequestOptions,
 } from '../types';
 import type {
-  ObjectStorageBucket,
-  ObjectStorageEndpoint,
-  UpdateObjectStorageBucketAccessPayload,
-  ObjectStorageBucketAccess,
   CreateObjectStorageBucketPayload,
   CreateObjectStorageBucketSSLPayload,
-  ObjectStorageBucketSSL,
   DeleteObjectStorageBucketPayload,
   GetObjectStorageObjectListPayload,
+  ObjectStorageBucket,
+  ObjectStorageBucketAccess,
+  ObjectStorageBucketSSL,
+  ObjectStorageEndpoint,
   ObjectStorageObjectList,
+  UpdateObjectStorageBucketAccessPayload,
 } from './types';
 
 /**
@@ -40,9 +42,9 @@ export const getBucket = (clusterId: string, bucketName: string) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}`,
+    ),
   );
 
 /**
@@ -55,7 +57,7 @@ export const getBuckets = (params?: Params, filters?: Filter) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/object-storage/buckets`)
+    setURL(`${API_ROOT}/object-storage/buckets`),
   );
 
 /**
@@ -66,15 +68,15 @@ export const getBuckets = (params?: Params, filters?: Filter) =>
 export const getBucketsInCluster = (
   clusterId: string,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
     setURL(
-      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(clusterId)}`
-    )
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(clusterId)}`,
+    ),
   );
 
 /**
@@ -85,13 +87,15 @@ export const getBucketsInCluster = (
 export const getBucketsInRegion = (
   regionId: string,
   params?: Params,
-  filters?: Filter
+  filters?: Filter,
 ) =>
   Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}/object-storage/buckets/${encodeURIComponent(regionId)}`)
+    setURL(
+      `${API_ROOT}/object-storage/buckets/${encodeURIComponent(regionId)}`,
+    ),
   );
 
 /**
@@ -106,7 +110,7 @@ export const createBucket = (data: CreateObjectStorageBucketPayload) =>
   Request<ObjectStorageBucket>(
     setURL(`${API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
-    setData(data, CreateBucketSchema)
+    setData(data, CreateBucketSchema),
   );
 
 /**
@@ -123,10 +127,10 @@ export const deleteBucket = ({
   Request<ObjectStorageBucket>(
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        cluster
-      )}/${encodeURIComponent(label)}`
+        cluster,
+      )}/${encodeURIComponent(label)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -146,16 +150,16 @@ export const deleteBucketWithRegion = ({
   region,
   label,
 }: {
-  region: string;
   label: string;
+  region: string;
 }) =>
   Request<ObjectStorageBucket>(
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        region
-      )}/${encodeURIComponent(label)}`
+        region,
+      )}/${encodeURIComponent(label)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -171,9 +175,9 @@ export const getObjectList = ({
     setParams(params),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/object-list`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/object-list`,
+    ),
   );
 
 /**
@@ -182,16 +186,16 @@ export const getObjectList = ({
 export const uploadSSLCert = (
   clusterId: string,
   bucketName: string,
-  data: CreateObjectStorageBucketSSLPayload
+  data: CreateObjectStorageBucketSSLPayload,
 ) =>
   Request<ObjectStorageBucketSSL>(
     setMethod('POST'),
     setData(data, UploadCertificateSchema),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/ssl`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/ssl`,
+    ),
   );
 
 /**
@@ -205,9 +209,9 @@ export const getSSLCert = (clusterId: string, bucketName: string) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/ssl`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/ssl`,
+    ),
   );
 
 /**
@@ -222,9 +226,9 @@ export const deleteSSLCert = (clusterId: string, bucketName: string) =>
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/ssl`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/ssl`,
+    ),
   );
 
 /**
@@ -237,9 +241,9 @@ export const getBucketAccess = (clusterId: string, bucketName: string) =>
     setMethod('GET'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/access`
-    )
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/access`,
+    ),
   );
 
 /**
@@ -250,16 +254,16 @@ export const getBucketAccess = (clusterId: string, bucketName: string) =>
 export const updateBucketAccess = (
   clusterId: string,
   bucketName: string,
-  params: UpdateObjectStorageBucketAccessPayload
+  params: UpdateObjectStorageBucketAccessPayload,
 ) =>
   Request<{}>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/object-storage/buckets/${encodeURIComponent(
-        clusterId
-      )}/${encodeURIComponent(bucketName)}/access`
+        clusterId,
+      )}/${encodeURIComponent(bucketName)}/access`,
     ),
-    setData(params, UpdateBucketAccessSchema)
+    setData(params, UpdateBucketAccessSchema),
   );
 
 /**
@@ -272,5 +276,5 @@ export const getObjectStorageEndpoints = ({ filter, params }: RequestOptions) =>
     setMethod('GET'),
     setURL(`${API_ROOT}/object-storage/endpoints`),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );

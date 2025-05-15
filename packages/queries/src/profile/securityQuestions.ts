@@ -38,17 +38,16 @@ export const useMutateSecurityQuestions = () => {
             return undefined;
           }
 
-          const newQuestions: SecurityQuestionsData['security_questions'] = oldData.security_questions.map(
-            (item) => ({
+          const newQuestions: SecurityQuestionsData['security_questions'] =
+            oldData.security_questions.map((item) => ({
               ...item,
               response: null,
-            })
-          );
+            }));
 
           for (let i = 0; i < response.security_questions.length; i++) {
             const index = oldData.security_questions.findIndex(
               (question) =>
-                question.id === response.security_questions[i].question_id
+                question.id === response.security_questions[i].question_id,
             );
 
             newQuestions[index].response =
@@ -58,7 +57,7 @@ export const useMutateSecurityQuestions = () => {
           for (let i = 0; i < response.security_questions.length; i++) {
             const index = newQuestions.findIndex(
               (question) =>
-                question.id === response.security_questions[i].question_id
+                question.id === response.security_questions[i].question_id,
             );
             moveInArray(newQuestions, index, i);
           }
@@ -66,7 +65,7 @@ export const useMutateSecurityQuestions = () => {
           return {
             security_questions: newQuestions,
           };
-        }
+        },
       );
     },
   });

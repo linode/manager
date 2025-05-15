@@ -1,7 +1,7 @@
+import { useAllLinodesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
-import { useAllLinodesQuery } from '@linode/queries';
 import { themes } from 'src/utilities/theme';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
@@ -38,7 +38,11 @@ export const CloudPulseTagsSelect = React.memo(
     } = props;
 
     const regionFilter = region ? (region as string) : undefined;
-    const { data: linodesByRegion, isError, isLoading } = useAllLinodesQuery(
+    const {
+      data: linodesByRegion,
+      isError,
+      isLoading,
+    } = useAllLinodesQuery(
       {},
       { region: regionFilter },
       !disabled && Boolean(region && resourceType)
@@ -87,6 +91,16 @@ export const CloudPulseTagsSelect = React.memo(
 
     return (
       <Autocomplete
+        autoHighlight
+        clearOnBlur
+        data-testid="tags-select"
+        disabled={disabled}
+        errorText={isError ? `Failed to fetch ${label || 'Tags'}.` : ''}
+        label={label || 'Tags'}
+        limitTags={1}
+        loading={isLoading}
+        multiple
+        noMarginTop
         onChange={(e, tagSelections) => {
           setSelectedTags(tagSelections);
 
@@ -101,6 +115,8 @@ export const CloudPulseTagsSelect = React.memo(
         onOpen={() => {
           isAutocompleteOpen.current = true;
         }}
+        options={tags ?? []}
+        placeholder={selectedTags?.length ? '' : placeholder || 'Select Tags'}
         textFieldProps={{
           InputProps: {
             sx: {
@@ -118,18 +134,6 @@ export const CloudPulseTagsSelect = React.memo(
           },
           optional,
         }}
-        autoHighlight
-        clearOnBlur
-        data-testid="tags-select"
-        disabled={disabled}
-        errorText={isError ? `Failed to fetch ${label || 'Tags'}.` : ''}
-        label={label || 'Tags'}
-        limitTags={1}
-        loading={isLoading}
-        multiple
-        noMarginTop
-        options={tags ?? []}
-        placeholder={selectedTags?.length ? '' : placeholder || 'Select Tags'}
         value={selectedTags ?? []}
       />
     );

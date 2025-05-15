@@ -31,11 +31,11 @@ export const TableRowEmpty = (props: TableRowEmptyProps) => {
   return (
     <TableRow data-testid={'table-row-empty'} hover={false} sx={sx}>
       <TableCell
+        colSpan={colSpan}
         sx={{
           height: '40px',
           textAlign: 'center',
         }}
-        colSpan={colSpan}
       >
         {message || 'No items to display.'}
       </TableCell>

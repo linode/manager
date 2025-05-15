@@ -1,7 +1,7 @@
+import { Paper } from '@linode/ui';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Paper } from '@linode/ui';
 
 import { InstallationInstructions } from '../../shared/InstallationInstructions';
 

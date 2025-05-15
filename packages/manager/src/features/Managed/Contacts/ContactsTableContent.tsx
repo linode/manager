@@ -67,7 +67,6 @@ export const ContactsTableContent = memoized(
     }
 
     return (
-      // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {contacts.map((contact: ManagedContact, idx: number) => (
           <ContactsRow contact={contact} key={`managed-contact-row-${idx}`} />

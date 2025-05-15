@@ -4,8 +4,8 @@ import {
   Box,
   Button,
   Notice,
-  Typography,
   omittedProps,
+  Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';

@@ -1,5 +1,4 @@
 import { Factory } from './factoryProxy';
-
 import { generateLinodeStatSeries } from './linodes';
 
 import type {

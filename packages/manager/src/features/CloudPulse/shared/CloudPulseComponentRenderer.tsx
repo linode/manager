@@ -1,4 +1,5 @@
 import React from 'react';
+import type { MemoExoticComponent } from 'react';
 
 import NullComponent from 'src/components/NullComponent';
 
@@ -15,7 +16,6 @@ import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
 import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';
-import type { MemoExoticComponent } from 'react';
 
 export interface CloudPulseComponentRendererProps {
   componentKey: string;

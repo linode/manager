@@ -134,13 +134,13 @@ export const PlanInformation = (props: PlanInformationProps) => {
       ) : null}
       {showLimitedAvailabilityBanner && (
         <Notice
+          dataTestId={limitedAvailabilityBannerTestId}
           sx={(theme: Theme) => ({
             marginBottom: theme.spacing(3),
             marginLeft: 0,
             marginTop: 0,
             padding: `${theme.spacing(0.5)} ${theme.spacing(2)}`,
           })}
-          dataTestId={limitedAvailabilityBannerTestId}
           variant="warning"
         >
           <StyledNoticeTypography>
@@ -161,13 +161,17 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
   let docLink: null | string;
 
   switch (planType) {
+    case 'accelerated':
+      planTypeLabel = 'Accelerated';
+      docLink = ACCELERATED_COMPUTE_INSTANCES_LINK;
+      break;
     case 'dedicated':
       planTypeLabel = 'Dedicated CPU';
       docLink = DEDICATED_COMPUTE_INSTANCES_LINK;
       break;
-    case 'shared':
-      planTypeLabel = 'Shared CPU';
-      docLink = SHARED_COMPUTE_INSTANCES_LINK;
+    case 'gpu':
+      planTypeLabel = 'GPU';
+      docLink = GPU_COMPUTE_INSTANCES_LINK;
       break;
     case 'highmem':
       planTypeLabel = 'High Memory';
@@ -177,13 +181,9 @@ export const ClassDescriptionCopy = (props: ExtendedPlanType) => {
       planTypeLabel = 'Premium CPU';
       docLink = PREMIUM_COMPUTE_INSTANCES_LINK;
       break;
-    case 'gpu':
-      planTypeLabel = 'GPU';
-      docLink = GPU_COMPUTE_INSTANCES_LINK;
-      break;
-    case 'accelerated':
-      planTypeLabel = 'Accelerated';
-      docLink = ACCELERATED_COMPUTE_INSTANCES_LINK;
+    case 'shared':
+      planTypeLabel = 'Shared CPU';
+      docLink = SHARED_COMPUTE_INSTANCES_LINK;
       break;
     default:
       planTypeLabel = null;

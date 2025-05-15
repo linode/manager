@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import type { Notification } from '@linode/api-v4/lib/account';
 
 export const getAbuseTickets = (notifications: Notification[]) => {
   return notifications.filter(

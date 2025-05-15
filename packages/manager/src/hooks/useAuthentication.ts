@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import { ApplicationState } from 'src/store';
+import type { ApplicationState } from 'src/store';
 
 export const useAuthentication = () => {
   return useSelector((state: ApplicationState) => state.authentication);

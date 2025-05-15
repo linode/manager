@@ -2,7 +2,7 @@
  * @file Cypress intercepts and mocks for Cloud Manager account requests.
  */
 
-import { APIErrorContents, makeErrorResponse } from 'support/util/errors';
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
@@ -25,6 +25,7 @@ import type {
   Token,
   User,
 } from '@linode/api-v4';
+import type { APIErrorContents } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account and mocks response.

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { longviewTopProcessesFactory } from 'src/factories/longviewTopProcesses';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
-import { TopProcesses, extendTopProcesses } from './TopProcesses';
+import { extendTopProcesses, TopProcesses } from './TopProcesses';
 
 import type { Props } from './TopProcesses';
 import type { LongviewTopProcesses } from 'src/features/Longview/request.types';

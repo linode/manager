@@ -54,6 +54,8 @@ export const LabelInput = (props: Props) => {
   return (
     <>
       <Controller
+        control={control}
+        name="labels"
         render={({ field, fieldState }) => {
           return (
             <TextField
@@ -67,8 +69,6 @@ export const LabelInput = (props: Props) => {
             />
           );
         }}
-        control={control}
-        name="labels"
       />
       <Stack flexDirection="row" marginTop={2}>
         <Button buttonType="primary" onClick={handleAddLabel}>

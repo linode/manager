@@ -4,8 +4,8 @@ import React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
-  PlanInformation,
   limitedAvailabilityBannerTestId,
+  PlanInformation,
 } from './PlanInformation';
 
 import type { PlanInformationProps } from './PlanInformation';

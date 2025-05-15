@@ -6,17 +6,18 @@ import * as React from 'react';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const DetachVolumeDialog = (props: Props) => {
-  const { isFetching, onClose, open, volume } = props;
+  const { isFetching, onClose, open, volume, volumeError } = props;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -52,6 +53,7 @@ export const DetachVolumeDialog = (props: Props) => {
         name: volume?.label,
         primaryBtnText: 'Detach',
         type: 'Volume',
+        error: volumeError,
       }}
       errors={error}
       expand
@@ -61,7 +63,7 @@ export const DetachVolumeDialog = (props: Props) => {
       onClick={onDetach}
       onClose={onClose}
       open={open}
-      title={`Detach Volume ${volume?.label}?`}
+      title={`Detach Volume ${volume?.label ?? 'Unknown'}?`}
       typographyStyle={{ marginTop: '10px' }}
     >
       {!poweredOff && linode !== undefined && (

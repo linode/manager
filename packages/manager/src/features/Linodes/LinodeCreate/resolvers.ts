@@ -11,7 +11,10 @@ import {
   CreateLinodeFromStackScriptSchema,
   CreateLinodeSchema,
 } from './schemas';
-import { getInterfacesPayload } from './utilities';
+import {
+  getDoesEmployeeNeedToAssignFirewall,
+  getInterfacesPayload,
+} from './utilities';
 
 import type {
   LinodeCreateFormContext,
@@ -87,22 +90,24 @@ export const getLinodeCreateResolver = (
       }
     }
 
-    // If we're dealing with an employee account and they did not bypass
-    // the firewall banner....
-    if (context?.secureVMNoticesEnabled && !values.firewallOverride) {
-      // Get the selected Firewall ID depending on what Interface Generation is selected
-      const firewallId =
-        values.interface_generation === 'linode'
-          ? values.linodeInterfaces[0].firewall_id
-          : values.firewall_id;
-
-      if (!firewallId) {
-        (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
-          // This message does not get surfaced, see FirewallAuthorization.tsx
-          message: 'You must select a Firewall or bypass the Firewall policy.',
-          type: 'validate',
-        };
-      }
+    // If
+    // - we're dealing with an employee account
+    // - and the employee did not bypass/override the Firewall warning
+    // - and their networking configuration "requires" a firewall
+    if (
+      context?.secureVMNoticesEnabled &&
+      !values.firewallOverride &&
+      getDoesEmployeeNeedToAssignFirewall(
+        values.firewall_id,
+        values.linodeInterfaces,
+        values.interface_generation
+      )
+    ) {
+      (errors as FieldErrors<LinodeCreateFormValues>)['firewallOverride'] = {
+        // This message does not get surfaced, but triggers an error so that FirewallAuthorization.tsx renders
+        message: 'You must select a Firewall or bypass the Firewall policy.',
+        type: 'validate',
+      };
     }
 
     if (errors) {

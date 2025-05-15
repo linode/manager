@@ -160,9 +160,9 @@ export const IconSection = React.memo((props: Props) => {
         {packages && (
           <Box>
             <IconTextLink
-              SideIcon={PackageIcon}
               disabled={packages.length === 0}
               onClick={props.openPackageDrawer}
+              SideIcon={PackageIcon}
               text={packagesToUpdate}
               title={packagesToUpdate}
             >

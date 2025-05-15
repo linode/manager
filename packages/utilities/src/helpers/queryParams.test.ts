@@ -30,30 +30,30 @@ describe('Url/query parsing utilities', () => {
   describe('getQueryParam method', () => {
     it('should get the value of a query parameter', () => {
       expect(getQueryParamFromQueryString('?query=false', 'query')).toEqual(
-        'false'
+        'false',
       );
     });
     it('should return the default value if no value is present', () => {
       expect(
-        getQueryParamFromQueryString('?query=', 'notaquery', 'defaultQuery')
+        getQueryParamFromQueryString('?query=', 'notaquery', 'defaultQuery'),
       ).toEqual('defaultQuery');
     });
     it('should handle a blank param value', () => {
       expect(
-        getQueryParamFromQueryString('?query=', 'query', 'defaultQuery')
+        getQueryParamFromQueryString('?query=', 'query', 'defaultQuery'),
       ).toEqual('');
     });
     it('should not care about the initial ?', () => {
       expect(getQueryParamFromQueryString('query=blue', 'query')).toEqual(
-        'blue'
+        'blue',
       );
     });
     it('should return a single query param from a URL string', () => {
       expect(
         getQueryParamFromQueryString(
           'https://example.com/?query=false&this=that',
-          'this'
-        )
+          'this',
+        ),
       ).toBe('that');
     });
     it('should return the default value if no value is present', () => {
@@ -61,8 +61,8 @@ describe('Url/query parsing utilities', () => {
         getQueryParamFromQueryString(
           'https://example.com/?query=',
           'notaquery',
-          'defaultQuery'
-        )
+          'defaultQuery',
+        ),
       ).toEqual('defaultQuery');
     });
   });

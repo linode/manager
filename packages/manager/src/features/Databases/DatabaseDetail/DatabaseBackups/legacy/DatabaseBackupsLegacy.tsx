@@ -25,13 +25,8 @@ interface Props {
 }
 
 export const DatabaseBackupsLegacy = (props: Props) => {
-  const {
-    database,
-    databaseError,
-    disabled,
-    engine,
-    isDatabaseLoading,
-  } = props;
+  const { database, databaseError, disabled, engine, isDatabaseLoading } =
+    props;
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
@@ -78,8 +73,8 @@ export const DatabaseBackupsLegacy = (props: Props) => {
             >
               Date Created
             </TableSortCell>
-            <TableCell></TableCell>
-            <TableCell style={{ width: 100 }}></TableCell>
+            <TableCell />
+            <TableCell style={{ width: 100 }} />
           </TableRow>
         </TableHead>
         <TableBody>

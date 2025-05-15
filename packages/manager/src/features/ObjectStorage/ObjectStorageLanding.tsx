@@ -124,6 +124,7 @@ export const ObjectStorageLanding = () => {
         }`}
       />
       <LandingHeader
+        breadcrumbProps={{ pathname: '/object-storage' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -131,7 +132,6 @@ export const ObjectStorageLanding = () => {
             resourceType: 'Buckets',
           }),
         }}
-        breadcrumbProps={{ pathname: '/object-storage' }}
         createButtonText={createButtonText}
         disabledCreateButton={isBucketCreationRestricted}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
@@ -139,6 +139,7 @@ export const ObjectStorageLanding = () => {
         onButtonClick={createButtonAction}
         removeCrumbX={1}
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+        spacingBottom={4}
         title="Object Storage"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
@@ -165,11 +166,11 @@ export const ObjectStorageLanding = () => {
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <AccessKeyLanding
+                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 closeAccessDrawer={() => {
                   navigate({ to: '/object-storage/access-keys' });
                   openDrawer.close();
                 }}
-                accessDrawerOpen={isCreateAccessKeyOpen || openDrawer.isOpen}
                 isRestrictedUser={_isRestrictedUser}
                 mode={mode}
                 openAccessDrawer={handleOpenAccessDrawer}

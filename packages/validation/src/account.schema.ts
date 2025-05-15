@@ -43,7 +43,7 @@ export const CreditCardSchema = object({
     .max(23, 'Credit card number must be between 13 and 23 characters.'),
   expiry_year: number()
     .test('length', 'Expiration year must be 2 or 4 digits.', (value) =>
-      [2, 4].includes(String(value).length)
+      [2, 4].includes(String(value).length),
     )
     .required('Expiration year is required.')
     .typeError('Expiration year must be a number.')
@@ -63,7 +63,7 @@ export const CreditCardSchema = object({
 export const PaymentMethodSchema = object({
   type: mixed().oneOf(
     ['credit_card', 'payment_method_nonce'],
-    'Type must be credit_card or payment_method_nonce.'
+    'Type must be credit_card or payment_method_nonce.',
   ),
   data: object().when('type', {
     is: 'credit_card',
@@ -74,7 +74,7 @@ export const PaymentMethodSchema = object({
       }),
   }),
   is_default: boolean().required(
-    'You must indicate if this should be your default method of payment.'
+    'You must indicate if this should be your default method of payment.',
   ),
 });
 
@@ -87,7 +87,7 @@ export const CreateUserSchema = object({
     .required('Email address is required.')
     .email('Must be a valid email address.'),
   restricted: boolean().required(
-    'You must indicate if this user should have restricted access.'
+    'You must indicate if this user should have restricted access.',
   ),
 });
 
@@ -104,7 +104,7 @@ const GrantSchema = object({
   permissions: string()
     .oneOf(
       ['read_only', 'read_write'],
-      'Permissions must be null, read_only, or read_write.'
+      'Permissions must be null, read_only, or read_write.',
     )
     .nullable('Permissions must be null, read_only, or read_write.'),
 });

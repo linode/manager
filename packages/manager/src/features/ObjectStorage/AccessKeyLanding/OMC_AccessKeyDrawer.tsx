@@ -16,7 +16,6 @@ import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -60,11 +59,11 @@ export interface AccessKeyDrawerProps {
 // Access key scopes displayed in the drawer can have no permission or "No Access" selected, which are not valid API permissions.
 export interface DisplayedAccessKeyScope
   extends Omit<ObjectStorageKeyBucketAccess, 'permissions'> {
-  permissions: ObjectStorageKeyBucketAccessPermissions | null;
+  permissions: null | ObjectStorageKeyBucketAccessPermissions;
 }
 
 export interface FormState {
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   label: string;
   regions: string[];
 }
@@ -220,7 +219,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={title}
@@ -281,11 +279,13 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
             value={formik.values.label}
           />
           <AccessKeyRegions
+            disabled={isRestrictedUser}
             error={
               formik.touched.regions
                 ? (formik.errors.regions as string)
                 : undefined
             }
+            name="regions"
             onChange={(values) => {
               const bucketsInRegions = buckets?.filter(
                 (bucket) => bucket.region && values.includes(bucket.region)
@@ -296,8 +296,6 @@ export const OMC_AccessKeyDrawer = (props: AccessKeyDrawerProps) => {
               );
               formik.setFieldValue('regions', values);
             }}
-            disabled={isRestrictedUser}
-            name="regions"
             required
             selectedRegion={formik.values.regions}
           />

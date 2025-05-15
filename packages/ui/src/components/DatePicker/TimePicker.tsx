@@ -52,15 +52,17 @@ export const TimePicker = ({
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <Box display="flex" flex="1" flexDirection="column" sx={sx}>
         <InputLabel
+          htmlFor={validInputId}
           sx={{
             marginBottom: 0,
             transform: 'none',
           }}
-          htmlFor={validInputId}
         >
           {label}
         </InputLabel>
         <MuiTimePicker
+          ampm={format === 'hh:mm a'} // Toggle 12-hour or 24-hour format
+          onChange={handleChange}
           slotProps={{
             actionBar: {
               sx: (theme: Theme) => ({
@@ -97,20 +99,18 @@ export const TimePicker = ({
               onClick,
             },
           }}
-          ampm={format === 'hh:mm a'} // Toggle 12-hour or 24-hour format
-          onChange={handleChange}
           sx={{ marginTop: 1 }}
           value={value}
           {...rest}
         />
         {errorText && (
           <FormHelperText
+            id={errorTextId}
+            role="alert"
             sx={{
               color: (theme: Theme) => theme.palette.error.dark,
               marginTop: '4px',
             }}
-            id={errorTextId}
-            role="alert"
           >
             {errorText}
           </FormHelperText>

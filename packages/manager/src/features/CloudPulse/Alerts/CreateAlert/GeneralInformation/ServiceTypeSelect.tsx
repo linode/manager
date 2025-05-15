@@ -1,13 +1,13 @@
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import type { FieldPathByValue } from 'react-hook-form';
 
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertServiceType } from '@linode/api-v4';
-import type { FieldPathByValue } from 'react-hook-form';
 
 interface CloudPulseServiceSelectProps {
   /**
@@ -50,12 +50,20 @@ export const CloudPulseServiceSelect = (
 
   return (
     <Controller
+      control={control}
+      name={name}
       render={({ field, fieldState }) => (
         <Autocomplete
+          data-testid="servicetype-select"
+          disabled={isDisabled}
           errorText={
             fieldState.error?.message ??
             (serviceTypesError ? 'Failed to fetch the service types.' : '')
           }
+          fullWidth
+          label="Service"
+          loading={serviceTypesLoading && !serviceTypesError}
+          onBlur={field.onBlur}
           onChange={(
             _,
             selected: { label: string; value: AlertServiceType },
@@ -71,23 +79,15 @@ export const CloudPulseServiceSelect = (
               handleServiceTypeChange();
             }
           }}
+          options={getServicesList}
+          placeholder="Select a Service"
+          sx={{ marginTop: '5px' }}
           value={
             getServicesList.find((option) => option.value === field.value) ??
             null
           }
-          data-testid="servicetype-select"
-          disabled={isDisabled}
-          fullWidth
-          label="Service"
-          loading={serviceTypesLoading && !serviceTypesError}
-          onBlur={field.onBlur}
-          options={getServicesList}
-          placeholder="Select a Service"
-          sx={{ marginTop: '5px' }}
         />
       )}
-      control={control}
-      name={name}
     />
   );
 };
