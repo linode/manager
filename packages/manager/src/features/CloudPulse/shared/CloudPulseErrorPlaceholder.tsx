@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mui/material';
+import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
 import CloudPulseIcon from 'src/assets/icons/entityIcons/monitor.svg';
@@ -8,7 +8,7 @@ export const CloudPulseErrorPlaceholder = React.memo(
   (props: { errorMessage: string }) => {
     const { errorMessage } = props;
     return (
-      <Grid item xs={12}>
+      <GridLegacy item xs={12}>
         <Paper>
           <Placeholder
             icon={CloudPulseIcon}
@@ -17,7 +17,7 @@ export const CloudPulseErrorPlaceholder = React.memo(
             title=""
           />
         </Paper>
-      </Grid>
+      </GridLegacy>
     );
   }
 );

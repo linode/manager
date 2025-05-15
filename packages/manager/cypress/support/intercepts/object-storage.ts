@@ -296,20 +296,17 @@ export const mockUploadBucketObject = (
  * Intercepts S3 PUT request to upload bucket object.
  *
  * @param label - Object storage bucket label.
- * @param cluster - Object storage bucket cluster.
+ * @param domain - Object storage bucket cluster.
  * @param filename - Object filename.
  *
  * @returns Cypress chainable.
  */
 export const interceptUploadBucketObjectS3 = (
   label: string,
-  cluster: string,
+  domain: string,
   filename: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept(
-    'PUT',
-    `https://${cluster}.linodeobjects.com/${label}/${filename}*`
-  );
+  return cy.intercept('PUT', `https://${domain}/${label}/${filename}*`);
 };
 
 /**

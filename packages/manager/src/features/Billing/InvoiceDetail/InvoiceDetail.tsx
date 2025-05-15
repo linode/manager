@@ -3,7 +3,7 @@ import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, Button, IconButton, Notice, Paper, Typography } from '@linode/ui';
 import { getAll } from '@linode/utilities';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
