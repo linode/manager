@@ -11,7 +11,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { Outlet } from '@tanstack/react-router';
 import React from 'react';
 

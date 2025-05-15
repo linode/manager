@@ -1,7 +1,7 @@
 import { usePreferences } from '@linode/queries';
 import { Button, ErrorState, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 
