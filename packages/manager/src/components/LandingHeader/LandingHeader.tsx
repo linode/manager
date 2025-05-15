@@ -30,6 +30,7 @@ export interface LandingHeaderProps {
   onDocsClick?: () => void;
   removeCrumbX?: number | number[];
   shouldHideDocsAndCreateButtons?: boolean;
+  spacingBottom?: 0 | 4 | 16 | 24;
   title?: JSX.Element | string;
 }
 
@@ -56,6 +57,7 @@ export const LandingHeader = ({
   onDocsClick,
   removeCrumbX,
   shouldHideDocsAndCreateButtons,
+  spacingBottom = 24,
   title,
 }: LandingHeaderProps) => {
   const theme = useTheme();
@@ -75,12 +77,13 @@ export const LandingHeader = ({
     : `${title} Landing`;
 
   return (
-    <Grid
+    <StyledLandingHeaderGrid
       container
       data-qa-entity-header
       sx={{
         alignItems: 'center',
         justifyContent: 'space-between',
+        marginBottom: spacingBottom !== undefined ? `${spacingBottom}px` : 0,
         width: '100%',
       }}
     >
@@ -108,17 +111,17 @@ export const LandingHeader = ({
               flex: '1 1 auto',
 
               marginLeft: customSmMdBetweenBreakpoint
-                ? theme.spacing(2)
+                ? theme.spacingFunction(16)
                 : customXsDownBreakpoint
-                  ? theme.spacing(1)
+                  ? theme.spacingFunction(8)
                   : undefined,
             }}
           >
             {betaFeedbackLink && (
               <span
                 style={{
-                  marginLeft: xsDown ? `${theme.spacing(2)}` : undefined,
-                  marginRight: `${theme.spacing(2)}`,
+                  marginLeft: xsDown ? theme.spacingFunction(16) : undefined,
+                  marginRight: theme.spacingFunction(16),
                 }}
               >
                 <DocsLink
@@ -137,7 +140,7 @@ export const LandingHeader = ({
               />
             ) : null}
             {renderActions && (
-              <Actions>
+              <StyledActions>
                 {extraActions}
                 {onButtonClick ? (
                   <Button
@@ -151,17 +154,23 @@ export const LandingHeader = ({
                     {createButtonText ?? `Create ${entity}`}
                   </Button>
                 ) : null}
-              </Actions>
+              </StyledActions>
             )}
           </Grid>
         </Grid>
       )}
-    </Grid>
+    </StyledLandingHeaderGrid>
   );
 };
 
-const Actions = styled('div')(() => ({
+const StyledActions = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: '24px',
+  gap: theme.spacingFunction(24),
   justifyContent: 'flex-end',
+}));
+
+const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
+  '&:not(:first-of-type)': {
+    marginTop: theme.spacingFunction(24),
+  },
 }));
