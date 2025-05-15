@@ -41,8 +41,8 @@ const StyledPaper = styled(_Paper, {
   shouldForwardProp: (prop) => prop !== 'error',
 })<Props>(({ theme, ...props }) => ({
   borderColor: props.error ? theme.palette.error.dark : undefined,
-  padding: theme.spacing(3),
-  paddingTop: 17,
+  padding: theme.spacingFunction(24),
+  paddingTop: theme.spacingFunction(16),
 }));
 
 const StyledErrorText = styled(FormHelperText)(({ theme }) => ({
