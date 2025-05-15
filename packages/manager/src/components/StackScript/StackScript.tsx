@@ -20,7 +20,6 @@ import { makeStyles } from 'tss-react/mui';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { useAllImagesQuery } from 'src/queries/images';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
 
