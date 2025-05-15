@@ -15,6 +15,7 @@ import { withFeatureFlags } from 'src/containers/flags.container';
 import { withProfile } from 'src/containers/profile.container';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
+import { PlatformMaintenanceBanner } from 'src/features/GlobalNotifications/PlatformMaintenanceBanner';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import {
   sendGroupByTagEnabledEvent,
@@ -302,6 +303,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
+        <PlatformMaintenanceBanner />
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}

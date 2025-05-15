@@ -45,7 +45,9 @@ export const usePlatformMaintenance = (): UsePlatformMaintenanceResult => {
   );
 };
 
-const isPlatformMaintenance = (maintenance: AccountMaintenance): boolean =>
+export const isPlatformMaintenance = (
+  maintenance: AccountMaintenance
+): boolean =>
   maintenance.type === 'reboot' &&
   maintenance.status === 'pending' &&
   maintenance.entity.type === 'linode';
