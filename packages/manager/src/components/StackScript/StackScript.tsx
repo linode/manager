@@ -1,4 +1,4 @@
-import { listToItemsByID } from '@linode/queries';
+import { listToItemsByID, useProfile } from '@linode/queries';
 import {
   Box,
   Button,
@@ -16,7 +16,6 @@ import { makeStyles } from 'tss-react/mui';
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
 import { Link } from 'src/components/Link';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useAllImagesQuery } from 'src/queries/images';
 
 import { CodeBlock } from '../CodeBlock/CodeBlock';
@@ -103,7 +102,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
   } = props;
 
   const { classes } = useStyles();
-  const { profile } = useAccountManagement();
+  const { data: profile } = useProfile();
 
   const theme = useTheme();
   const history = useHistory();
