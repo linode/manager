@@ -6,7 +6,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
-import { Grid2 } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
@@ -106,7 +106,7 @@ export const InterfaceType = ({ index }: Props) => {
         aria-labelledby="network-connection-label"
         sx={{ display: 'block', marginBottom: '0px !important' }}
       >
-        <Grid2 container spacing={2}>
+        <Grid container spacing={2}>
           {interfaceTypes.map((interfaceType) => (
             <SelectionCard
               checked={field.value === interfaceType.purpose}
@@ -132,7 +132,7 @@ export const InterfaceType = ({ index }: Props) => {
               sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
             />
           ))}
-        </Grid2>
+        </Grid>
       </RadioGroup>
     </FormControl>
   );

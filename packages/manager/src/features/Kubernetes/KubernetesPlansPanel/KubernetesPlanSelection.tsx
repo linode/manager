@@ -1,7 +1,7 @@
 import { Box, Button, Chip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 

@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
@@ -37,7 +37,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'tags',
           componentProps: {
@@ -52,7 +52,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'tags',
         })}
-      </Grid>
+      </GridLegacy>
     );
 
     expect(getByPlaceholderText('Select Tags')).toBeDefined();
@@ -76,7 +76,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'region',
           componentProps: {
@@ -91,7 +91,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'region',
         })}
-      </Grid>
+      </GridLegacy>
     );
 
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
@@ -118,7 +118,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item key={'resources'} sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'resource_id',
           componentProps: {
@@ -134,7 +134,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'resource_id',
         })}
-      </Grid>
+      </GridLegacy>
     );
     expect(getByPlaceholderText('Select Resources')).toBeDefined();
   });
@@ -163,7 +163,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'node_type',
           componentProps: {
@@ -179,7 +179,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'node_type',
         })}
-      </Grid>
+      </GridLegacy>
     );
     expect(getByPlaceholderText('Select a Node Type')).toBeDefined();
   });
