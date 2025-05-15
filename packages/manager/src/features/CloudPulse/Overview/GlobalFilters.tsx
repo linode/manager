@@ -1,6 +1,6 @@
 import { Box, Divider } from '@linode/ui';
 import { IconButton } from '@mui/material';
-import { Grid, GridLegacy } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
@@ -89,7 +89,7 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   }, []);
 
   return (
-    <Grid container>
+    <GridLegacy container>
       <GridLegacy item xs={12}>
         <Box
           display="flex"
@@ -154,6 +154,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           preferences={preferences}
         />
       )}
-    </Grid>
+    </GridLegacy>
   );
 });

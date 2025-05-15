@@ -1,5 +1,5 @@
 import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
-import { Grid, GridLegacy, styled } from '@mui/material';
+import { GridLegacy, styled } from '@mui/material';
 import * as React from 'react';
 
 import {
@@ -33,7 +33,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
   const hasUpdates = hasPendingUpdates(databasePendingUpdates);
 
   return (
-    <Grid container data-qa-settings-section="Maintenance">
+    <GridLegacy container data-qa-settings-section="Maintenance">
       <GridLegacy item xs={6}>
         <StyledTypography variant="h3">Maintenance</StyledTypography>
         <BoldTypography>Version</BoldTypography>
@@ -85,7 +85,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           </BoldTypography>
         )}
       </GridLegacy>
-    </Grid>
+    </GridLegacy>
   );
 };
 

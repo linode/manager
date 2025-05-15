@@ -1,5 +1,5 @@
 import { CircleProgress, ErrorState, Stack, Typography } from '@linode/ui';
-import { Divider, Grid, GridLegacy } from '@mui/material';
+import { Divider, GridLegacy } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
@@ -58,7 +58,7 @@ export const AlertDetailNotification = React.memo(
         <Typography marginBottom={2} variant="h2">
           Notification Channels
         </Typography>
-        <Grid
+        <GridLegacy
           container
           spacing={2}
           sx={{
@@ -96,7 +96,7 @@ export const AlertDetailNotification = React.memo(
               </GridLegacy>
             );
           })}
-        </Grid>
+        </GridLegacy>
       </Stack>
     );
   }

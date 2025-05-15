@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import { Grid, GridLegacy, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
@@ -78,7 +78,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
-      <Grid
+      <GridLegacy
         container
         spacing={1}
         sx={{
@@ -97,7 +97,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           values={[convertSecondsToMinutes(evaluationPeriod)]}
         />
         {renderTriggerCriteria} {/** Render the trigger criteria */}
-      </Grid>
+      </GridLegacy>
     </>
   );
 });

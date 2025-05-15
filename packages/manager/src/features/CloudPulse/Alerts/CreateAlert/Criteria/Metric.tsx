@@ -1,6 +1,6 @@
 import { Autocomplete, Box } from '@linode/ui';
 import { TextField, Typography } from '@linode/ui';
-import { Grid, GridLegacy } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -129,7 +129,7 @@ export const Metric = (props: MetricCriteriaProps) => {
           {showDeleteIcon && <ClearIconButton handleClick={onMetricDelete} />}
         </Box>
 
-        <Grid container spacing={2}>
+        <GridLegacy container spacing={2}>
           <GridLegacy item lg={3} md={4} sm={6} xs={12}>
             <Controller
               control={control}
@@ -295,7 +295,7 @@ export const Metric = (props: MetricCriteriaProps) => {
               </Typography>
             </Box>
           </GridLegacy>
-        </Grid>
+        </GridLegacy>
       </Box>
       <DimensionFilters
         dataFieldDisabled={metricWatcher === null}

@@ -2,7 +2,7 @@ import { ActionsPanel, InputAdornment, TextField } from '@linode/ui';
 import { Divider } from '@linode/ui';
 import { Box } from '@linode/ui';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { Grid, GridLegacy, Popover } from '@mui/material';
+import { GridLegacy, Popover } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -220,7 +220,7 @@ export const DateTimePicker = ({
               borderWidth: '0px',
             })}
           />
-          <Grid
+          <GridLegacy
             container
             spacing={2}
             sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -283,7 +283,7 @@ export const DateTimePicker = ({
                 />
               </GridLegacy>
             )}
-          </Grid>
+          </GridLegacy>
         </Box>
         <Divider />
         <Box display="flex" justifyContent="flex-end">

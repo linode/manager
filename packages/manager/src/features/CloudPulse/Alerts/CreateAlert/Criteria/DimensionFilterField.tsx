@@ -1,6 +1,6 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import { Grid, GridLegacy } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -92,7 +92,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     ? textFieldOperators.includes(dimensionOperatorWatcher)
     : false;
   return (
-    <Grid
+    <GridLegacy
       container
       data-testid={`${name}-id`}
       sx={{
@@ -217,6 +217,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           </Box>
         </Box>
       </GridLegacy>
-    </Grid>
+    </GridLegacy>
   );
 };

@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField, Typography } from '@linode/ui';
-import { Grid, GridLegacy } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -57,7 +57,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       })}
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
-      <Grid
+      <GridLegacy
         container
         spacing={2}
         sx={{
@@ -199,7 +199,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             consecutive occurrence(s).
           </Typography>
         </GridLegacy>
-      </Grid>
+      </GridLegacy>
     </Box>
   );
 };

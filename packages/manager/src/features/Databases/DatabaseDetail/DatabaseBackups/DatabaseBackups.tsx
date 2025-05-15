@@ -13,7 +13,7 @@ import {
   Radio,
   RadioGroup,
 } from '@mui/material';
-import { Grid, GridLegacy } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { DateTime } from 'luxon';
@@ -187,7 +187,7 @@ export const DatabaseBackups = (props: Props) => {
             />
           </RadioGroup>
         )}
-        <Grid
+        <GridLegacy
           container
           sx={{
             justifyContent: 'flex-start',
@@ -248,7 +248,7 @@ export const DatabaseBackups = (props: Props) => {
               />
             </FormControl>
           </GridLegacy>
-        </Grid>
+        </GridLegacy>
         <GridLegacy item xs={12}>
           <Box display="flex" justifyContent="flex-end">
             <Button

@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, GridLegacy, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -366,7 +366,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={2}>
+      <GridLegacy container spacing={2}>
         <GridLegacy
           columnSpacing={2}
           container
@@ -477,7 +477,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             serviceType={serviceType}
           />
         </GridLegacy>
-      </Grid>
+      </GridLegacy>
     </Stack>
   );
 });
