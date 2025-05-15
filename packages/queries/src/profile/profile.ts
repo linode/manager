@@ -50,7 +50,22 @@ export const profileQueries = createQueryKeys('profile', {
     queryKey: [params, filter],
   }),
   grants: {
-    queryFn: listGrants,
+    queryFn: async () => {
+      const grants = await listGrants();
+      // `listGrants` claims to return `Grants`, but it will return an empty string
+      // if an unrestricted makes the request.
+      if (typeof grants === 'string') {
+        // If we get a string, I'm just thowing an APIError[] to prevent our React Query cache
+        // from containing the wrong data, which could cause the app to crash.
+        return Promise.reject([
+          {
+            reason:
+              'Got an empty grants response. The user is likely unrestricted.',
+          },
+        ]);
+      }
+      return grants;
+    },
     queryKey: null,
   },
   personalAccessTokens: (params: Params = {}, filter: Filter = {}) => ({
