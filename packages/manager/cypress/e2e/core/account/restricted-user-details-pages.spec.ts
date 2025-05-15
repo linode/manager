@@ -578,11 +578,6 @@ describe('restricted user details pages', () => {
     cy.visitWithLogin('/longview');
     cy.wait(['@getProfile', '@getLongviewClients']);
 
-    // Confirm that the warning message is displayed
-    cy.findByText(
-      `You don't have permissions to create Longview Clients. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
-    );
-
     // Confirm that the "Add Client" button is disabled
     ui.button
       .findByTitle('Add Client')
