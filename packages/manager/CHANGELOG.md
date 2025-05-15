@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Deprecate useDialogData ([#12153](https://github.com/linode/manager/pull/12153))
 - Delete root level `.eslintrc.js` ([#12195](https://github.com/linode/manager/pull/12195))
 - Migrate Hidden Component to `@linode/ui` ([#12128](https://github.com/linode/manager/pull/12128))
+- Lint whole monorepo for perfectionist rules ([#12140](https://github.com/linode/manager/pull/12140))
 
 ### Tests:
 
