@@ -1,7 +1,7 @@
 import { useLinodesQuery } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import { Box, Notice, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';

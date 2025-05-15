@@ -1,7 +1,7 @@
 import { Box, H1Header, InputAdornment, Notice, TextField } from '@linode/ui';
 import { getQueryParamFromQueryString } from '@linode/utilities';
 import Search from '@mui/icons-material/Search';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
