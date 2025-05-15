@@ -1,4 +1,8 @@
-import { listToItemsByID, useProfile } from '@linode/queries';
+import {
+  listToItemsByID,
+  useAllImagesQuery,
+  useProfile,
+} from '@linode/queries';
 import {
   Box,
   Button,

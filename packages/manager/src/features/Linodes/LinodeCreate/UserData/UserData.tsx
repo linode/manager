@@ -1,11 +1,10 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { Accordion, Notice, TextField, Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useImageQuery } from 'src/queries/images';
 
 import { UserDataHeading } from './UserDataHeading';
 
