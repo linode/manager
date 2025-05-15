@@ -1,6 +1,6 @@
 import { useLinodeFirewallsQuery } from '@linode/queries';
 import { Box, Chip, Tooltip, TooltipIcon, useTheme } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 

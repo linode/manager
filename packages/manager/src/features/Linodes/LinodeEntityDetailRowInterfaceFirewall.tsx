@@ -3,8 +3,8 @@ import {
   useLinodeInterfacesQuery,
   useQueries,
 } from '@linode/queries';
-import { useTheme } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -18,7 +18,7 @@ import { getLinodeInterfaceType } from './LinodesDetail/LinodeNetworking/LinodeI
 
 import type { LinodeInterfaceType } from './LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import type { Firewall, KubernetesCluster } from '@linode/api-v4';
-import type { SxProps } from '@linode/ui';
+import type { SxProps } from '@mui/material';
 
 interface Props {
   cluster: KubernetesCluster | undefined;
