@@ -4,7 +4,8 @@ import { rootRoute } from '../root';
 import { SupportTicketsRoute } from './SupportRoute';
 
 interface SupportSearchParams {
-  drawerOpen: boolean;
+  dialogOpen?: boolean;
+  dialogTitle?: string;
 }
 
 const supportRoute = createRoute({

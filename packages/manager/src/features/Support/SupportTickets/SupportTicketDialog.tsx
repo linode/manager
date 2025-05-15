@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { useSearch } from '@tanstack/react-router';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -136,6 +137,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
+  const { dialogTitle = '' } = useSearch({
+    strict: false,
+  });
+
   const location = useLocation<any>();
   const stateParams = location.state;
 
@@ -144,8 +149,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledDescription ?? stateParams?.description ?? undefined;
   const _prefilledEntity: EntityForTicketDetails =
     prefilledEntity ?? stateParams?.entity ?? undefined;
-  const _prefilledTitle: string =
-    prefilledTitle ?? stateParams?.title ?? undefined;
+  const _prefilledTitle: string = prefilledTitle ?? dialogTitle ?? undefined;
   const prefilledFormPayloadValues: FormPayloadValues =
     stateParams?.formPayloadValues ?? undefined;
   const _prefilledTicketType: TicketType =

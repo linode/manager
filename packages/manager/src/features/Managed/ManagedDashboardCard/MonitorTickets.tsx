@@ -1,8 +1,7 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { Link } from 'src/components/Link';
@@ -17,7 +16,7 @@ interface MonitorTicketsProps {
 
 export const MonitorTickets = (props: MonitorTicketsProps) => {
   const { issues } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const openIssues = issues.filter((thisIssue) => !thisIssue.dateClosed);
 
@@ -57,12 +56,12 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
           <StyledButton
             buttonType="primary"
             onClick={() =>
-              history.push({
-                pathname: '/support/tickets',
-                state: {
-                  open: true,
-                  title: 'Managed monitor issue',
+              navigate({
+                search: {
+                  dialogOpen: true,
+                  dialogTitle: 'Managed monitor issue',
                 },
+                to: '/support/tickets/open',
               })
             }
           >

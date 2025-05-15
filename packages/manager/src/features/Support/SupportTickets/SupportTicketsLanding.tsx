@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
@@ -16,14 +17,10 @@ import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail
 
 export const SupportTicketsLanding = () => {
   const navigate = useNavigate();
-  const { drawerOpen } = useSearch({
-    from: '/support/tickets',
-  });
-
   /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
-  // const parsedParams = getQueryParamsFromQueryString<QueryParams>(
-  //   location.search
-  // );
+  const { dialogOpen } = useSearch({
+    strict: false,
+  });
 
   const { tabs, tabIndex, handleTabChange } = useTabs([
     {
@@ -41,11 +38,8 @@ export const SupportTicketsLanding = () => {
     attachmentErrors: AttachmentError[] = []
   ) => {
     navigate({
-      to: '/support/tickets',
+      to: '/support/tickets/$ticketId',
       state: { attachmentErrors },
-      search: {
-        drawerOpen: false,
-      },
       params: {
         ticketId,
       },
@@ -60,29 +54,36 @@ export const SupportTicketsLanding = () => {
         createButtonText="Open New Ticket"
         data-qa-breadcrumb
         onButtonClick={() =>
-          navigate({ to: '/support/tickets', search: { drawerOpen: true } })
+          navigate({
+            to: '/support/tickets',
+            search: { dialogOpen: true },
+          })
         }
-        onButtonKeyPress={handleButtonKeyPress}
         spacingBottom={4}
         title="Tickets"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-        <TabPanels>
-          <SafeTabPanel data-qa-open-tickets-tab index={0}>
-            <TicketList filterStatus="open" />
-          </SafeTabPanel>
-          <SafeTabPanel data-qa-closed-tickets-tab index={1}>
-            <TicketList filterStatus="closed" />
-          </SafeTabPanel>
-        </TabPanels>
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel data-qa-open-tickets-tab index={0}>
+              <TicketList filterStatus="open" />
+            </SafeTabPanel>
+            <SafeTabPanel data-qa-closed-tickets-tab index={1}>
+              <TicketList filterStatus="closed" />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
       <SupportTicketDialog
         onClose={() =>
-          navigate({ to: '/support/tickets', search: { drawerOpen: false } })
+          navigate({
+            to: '/support/tickets',
+            search: { dialogOpen: false },
+          })
         }
         onSuccess={handleAddTicketSuccess}
-        open={drawerOpen}
+        open={Boolean(dialogOpen)}
       />
     </React.Fragment>
   );

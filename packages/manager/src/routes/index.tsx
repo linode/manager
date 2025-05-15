@@ -30,6 +30,8 @@ import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
+
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
     const { accountSettings } = context;
@@ -80,6 +82,10 @@ declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
+  }
+  interface HistoryState {
+    attachmentErrors?: AttachmentError[];
+    recordError?: string;
   }
 }
 

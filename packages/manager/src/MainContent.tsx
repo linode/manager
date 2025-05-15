@@ -13,7 +13,6 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import {
@@ -129,9 +128,9 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
-);
+// const SupportTickets = React.lazy(
+//   () => import('src/features/Support/SupportTickets')
+// );
 const SupportTicketDetail = React.lazy(() =>
   import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
     (module) => ({
@@ -225,38 +224,38 @@ export const MainContent = () => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  if (globalErrors.account_unactivated) {
-    return (
-      <div className={classes.bgStyling}>
-        <div className={classes.activationWrapper}>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Logo className={classes.logo} width={215} />
-          </Box>
-          <Switch>
-            <Route
-              component={SupportTickets}
-              exact
-              path="/support/tickets"
-              strict
-            />
-            <Route
-              component={SupportTicketDetail}
-              exact
-              path="/support/tickets/:ticketId"
-              strict
-            />
-            {/* <Route component={Help} exact path="/support" /> */}
-            <Route component={AccountActivationLanding} />
-          </Switch>
-        </div>
-      </div>
-    );
-  }
+  // if (globalErrors.account_unactivated) {
+  //   return (
+  //     <div className={classes.bgStyling}>
+  //       <div className={classes.activationWrapper}>
+  //         <Box
+  //           style={{
+  //             display: 'flex',
+  //             justifyContent: 'center',
+  //           }}
+  //         >
+  //           <Logo className={classes.logo} width={215} />
+  //         </Box>
+  //         <Switch>
+  //           <Route
+  //             component={SupportTickets}
+  //             exact
+  //             path="/support/tickets"
+  //             strict
+  //           />
+  //           <Route
+  //             component={SupportTicketDetail}
+  //             exact
+  //             path="/support/tickets/:ticketId"
+  //             strict
+  //           />
+  //           {/* <Route component={Help} exact path="/support" /> */}
+  //           <Route component={AccountActivationLanding} />
+  //         </Switch>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // If the API is in maintenance mode, return a Maintenance screen
   if (globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {

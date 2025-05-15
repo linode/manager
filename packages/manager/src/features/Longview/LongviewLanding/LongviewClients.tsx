@@ -1,6 +1,6 @@
 import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { Autocomplete, Typography } from '@linode/ui';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
@@ -30,7 +30,6 @@ import type {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
-import type { LongviewState } from 'src/routes/longview';
 import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import type { MapState } from 'src/store/types';
 
@@ -52,8 +51,6 @@ type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as LongviewState;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();
@@ -127,8 +124,15 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const handleSubmit = () => {
     if (isManaged) {
       navigate({
-        state: (prev) => ({ ...prev, ...locationState }),
-        to: '/support/tickets',
+        state: (prev) => ({
+          ...prev,
+          title: 'Request for additional Longview clients',
+        }),
+        search: {
+          dialogOpen: drawerOpen,
+          dialogTitle: 'Request for additional Longview clients',
+        },
+        to: '/support/tickets/open',
       });
       return;
     }
