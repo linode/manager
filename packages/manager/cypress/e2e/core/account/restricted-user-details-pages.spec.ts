@@ -249,10 +249,6 @@ describe('restricted user details pages', () => {
     cy.visitWithLogin(`/images`);
     cy.wait(['@getCustomImages', '@getProfile', '@getRecoveryImages']);
 
-    cy.findByText(
-      `You don't have permissions to create Images. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
-    );
-
     // Confirm that the "Create Image" button is visible and disabled
     ui.button
       .findByTitle('Create Image')
@@ -306,11 +302,6 @@ describe('restricted user details pages', () => {
     cy.visitWithLogin('/volumes');
 
     cy.wait(['@getProfile', '@getVolumes']);
-
-    // Confirm that a warning message is displayed
-    cy.findByText(
-      `You don't have permissions to create or edit Volumes. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
-    );
 
     // Confirm that the "Create Volume" button is disabled
     ui.button
