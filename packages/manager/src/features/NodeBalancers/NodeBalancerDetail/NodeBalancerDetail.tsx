@@ -38,7 +38,6 @@ export const NodeBalancerDetail = () => {
     data: nodebalancer,
     error,
     isLoading,
-    refetch,
   } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
@@ -101,10 +100,7 @@ export const NodeBalancerDetail = () => {
             editableTextTitle: nodeBalancerLabel,
             errorText: labelError,
             onCancel: cancelUpdate,
-            onEdit: async (label) => {
-              await updateNodeBalancer({ label });
-              refetch();
-            },
+            onEdit: (label) => updateNodeBalancer({ label }),
           },
           pathname: `/nodebalancers/${nodeBalancerLabel}`,
         }}

@@ -24,10 +24,7 @@ export const NodeBalancerSettings = () => {
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const { id } = useParams({ strict: false });
-  const { data: nodebalancer, refetch } = useNodeBalancerQuery(
-    Number(id),
-    Boolean(id)
-  );
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -95,10 +92,7 @@ export const NodeBalancerSettings = () => {
           data-qa-label-save
           disabled={isNodeBalancerReadOnly || label === nodebalancer.label}
           loading={isUpdatingLabel}
-          onClick={async () => {
-            await updateNodeBalancerLabel({ label });
-            refetch();
-          }}
+          onClick={() => updateNodeBalancerLabel({ label })}
           sx={sxButton}
         >
           Save
