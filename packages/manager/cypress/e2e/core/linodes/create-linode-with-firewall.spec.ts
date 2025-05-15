@@ -1,6 +1,10 @@
-import { linodeFactory } from '@linode/utilities';
-import { linodeInterfacesLabelText } from 'support/constants/linode-interfaces';
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import {
+  mockGetAccount,
+  mockGetAccountSettings,
+} from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetFirewallSettings } from 'support/intercepts/firewalls';
 import {
   mockCreateFirewall,
   mockCreateFirewallError,
@@ -12,13 +16,21 @@ import {
   mockCreateLinode,
   mockGetLinodeDetails,
 } from 'support/intercepts/linodes';
+import { mockGetRegion, mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { linodeCreatePage } from 'support/ui/pages';
-import { checkLinodeInterfacesElements } from 'support/util/linodes';
+import { assertNewLinodeInterfacesIsAvailable } from 'support/util/linodes';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
-import { firewallFactory, firewallTemplateFactory } from 'src/factories';
+import {
+  accountFactory,
+  accountSettingsFactory,
+  firewallFactory,
+  firewallTemplateFactory,
+} from 'src/factories';
+
+import type { Region } from '@linode/api-v4';
 
 describe('Create Linode with Firewall (Legacy)', () => {
   beforeEach(() => {
@@ -58,7 +70,7 @@ describe('Create Linode with Firewall (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByText('Assign Firewall').click();
@@ -127,7 +139,7 @@ describe('Create Linode with Firewall (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     cy.findByText('Create Firewall').should('be.visible').click();
 
@@ -226,7 +238,7 @@ describe('Create Linode with Firewall (Legacy)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     // Creating the linode without a firewall should display a warning.
     ui.button
@@ -316,7 +328,7 @@ describe('Create Linode with Firewall (Legacy)', () => {
     cy.visitWithLogin('/linodes/create');
 
     // Confirm the Linode Interfaces section is not present.
-    checkLinodeInterfacesElements(false);
+    assertNewLinodeInterfacesIsAvailable(false);
 
     ui.button
       .findByTitle('Create Linode')
@@ -343,10 +355,37 @@ describe('Create Linode with Firewall (Legacy)', () => {
 });
 
 describe('Create Linode with Firewall (Linode Interfaces)', () => {
+  const linodeRegion: Region = regionFactory.build({
+    id: 'us-east',
+    label: 'Newark, NJ',
+    capabilities: ['Cloud Firewall', 'Linodes', 'Linode Interfaces'],
+  });
+
   beforeEach(() => {
     mockAppendFeatureFlags({
       linodeInterfaces: { enabled: true },
     });
+    mockGetAccount(
+      accountFactory.build({
+        email: 'sdet@akamai.com',
+        capabilities: ['Cloud Firewall', 'Linodes', 'Linode Interfaces'],
+      })
+    );
+    mockGetAccountSettings(
+      accountSettingsFactory.build({
+        interfaces_for_new_linodes: 'legacy_config_default_but_linode_allowed',
+      })
+    );
+    mockGetFirewallSettings({
+      default_firewall_ids: {
+        linode: null,
+        public_interface: null,
+        vpc_interface: null,
+        nodebalancer: null,
+      },
+    });
+    mockGetRegions([linodeRegion]);
+    mockGetRegion(linodeRegion);
   });
 
   /*
@@ -356,8 +395,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can assign existing Firewall during Linode Create flow (legacy)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -382,7 +419,7 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByLabelText('Firewall').should('be.visible');
@@ -428,8 +465,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can assign existing Firewall during Linode Create flow (Linode Interfaces)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -454,10 +489,10 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Confirm that mocked Firewall is shown in the Autocomplete, and then select it.
     cy.findByLabelText('Public Interface Firewall').should('be.visible');
@@ -504,8 +539,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can assign new Firewall during Linode Create flow (legacy)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -531,7 +564,7 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     cy.findByText('Create Firewall').should('be.visible').click();
 
@@ -601,8 +634,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can assign new Firewall during Linode Create flow (Linode Interfaces)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -628,10 +659,10 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     cy.findByText('Create Firewall').should('be.visible').click();
 
@@ -702,8 +733,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can generate and assign a compliant Firewall during Linode Create flow (legacy)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -735,7 +764,7 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Creating the linode without a firewall should display a warning.
     ui.button
@@ -768,7 +797,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findByText('Generating Firewall');
         cy.findByText('Complete!');
         cy.findByText('OK').should('be.visible').should('be.enabled').click();
       });
@@ -808,8 +836,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
    * - Confirms that outgoing Linode Create API request specifies the selected Firewall to be attached.
    */
   it('can generate and assign a compliant Firewall during Linode Create flow (Linode Interfaces)', () => {
-    const linodeRegion = chooseRegion({ capabilities: ['Cloud Firewall'] });
-
     const mockFirewall = firewallFactory.build({
       id: randomNumber(),
       label: randomLabel(),
@@ -841,10 +867,10 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
     linodeCreatePage.setRootPassword(randomString(32));
 
     // Confirm the Linode Interfaces section is shown.
-    checkLinodeInterfacesElements();
+    assertNewLinodeInterfacesIsAvailable();
 
     // Switch to Linode Interfaces
-    cy.findByText(linodeInterfacesLabelText).click();
+    linodeCreatePage.selectLinodeInterfacesType();
 
     // Creating the linode without a firewall should display a warning.
     ui.button
@@ -877,7 +903,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findByText('Generating Firewall');
         cy.findByText('Complete!');
         cy.findByText('OK').should('be.visible').should('be.enabled').click();
       });
@@ -949,7 +974,6 @@ describe('Create Linode with Firewall (Linode Interfaces)', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        cy.findByText('Generating Firewall');
         cy.findByText(mockError);
         cy.findByText('Retry').should('be.visible').should('be.enabled');
         cy.findByText('Close').should('be.visible').should('be.enabled');

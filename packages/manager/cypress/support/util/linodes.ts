@@ -5,11 +5,6 @@ import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
 import {
   dryRunButtonText,
-  promptDialogDescription1,
-  promptDialogDescription2,
-  promptDialogUpgradeDetails,
-  promptDialogUpgradeWhatHappensTitle,
-  upgradeInterfacesButtonText,
   legacyInterfacesDescriptionText1,
   legacyInterfacesDescriptionText2,
   legacyInterfacesLabelText,
@@ -19,6 +14,11 @@ import {
   networkConnectionDescriptionText,
   networkConnectionSectionText,
   networkInterfaceTypeSectionText,
+  promptDialogDescription1,
+  promptDialogDescription2,
+  promptDialogUpgradeDetails,
+  promptDialogUpgradeWhatHappensTitle,
+  upgradeInterfacesButtonText,
 } from 'support/constants/linode-interfaces';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { ui } from 'support/ui';
@@ -324,7 +324,7 @@ export const assertUpgradeSummary = (
  *
  * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
  */
-export const checkLinodeInterfacesElements = (
+export const assertNewLinodeInterfacesIsAvailable = (
   linodeInterfacesEnabled: boolean = true
 ): void => {
   const expectedBehavior = linodeInterfacesEnabled ? 'be.visible' : 'not.exist';
