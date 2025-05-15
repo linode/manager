@@ -65,9 +65,10 @@ export const VolumesLanding = () => {
       query: search.query,
     }),
   });
-  const isRestricted = useRestrictedGlobalGrantCheck({
+  const isVolumeCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
+
   const { query } = search;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -180,7 +181,7 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
-        disabledCreateButton={isRestricted}
+        disabledCreateButton={isVolumeCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}
