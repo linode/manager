@@ -106,7 +106,6 @@ interface NodeBalancerConfigWithNodes extends NodeBalancerConfig {
   nodes: NodeBalancerConfigNode[];
 }
 
-
 const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
   const statuses = nodes.reduce(
     (acc, node) => {
@@ -254,11 +253,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       return;
     }
 
-    return createNodeBalancerConfigNode(
-      Number(nodeBalancerId),
-      config.id,
-      nodeData
-    )
+    return createNodeBalancerConfigNode(nodeBalancerId, config.id, nodeData)
       .then((responseNode) =>
         this.handleNodeSuccess(responseNode, configIdx, nodeIdx)
       )
@@ -309,11 +304,12 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
     }
 
     // actually delete a real config
-    deleteNodeBalancerConfig(Number(nodeBalancerId), config.id)
+    deleteNodeBalancerConfig(nodeBalancerId, config.id)
       .then((_) => {
         this.props.queryClient.invalidateQueries({
-          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
-            ._ctx.configurations.queryKey,
+          queryKey:
+            nodebalancerQueries.nodebalancer(nodeBalancerId)._ctx.configurations
+              .queryKey,
         });
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -342,7 +338,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
   };
 
   deleteNode = (configIdx: number, nodeIdx: number) => {
-    const nodeBalancerId  = this.props.nodeBalancerId;
+    const nodeBalancerId = this.props.nodeBalancerId;
 
     if (!nodeBalancerId) {
       return;
@@ -362,11 +358,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       return;
     }
 
-    return deleteNodeBalancerConfigNode(
-      Number(nodeBalancerId),
-      config.id,
-      node.id
-    )
+    return deleteNodeBalancerConfigNode(nodeBalancerId, config.id, node.id)
       .then(() => {
         this.setState(
           over(lensPath(['configs', configIdx!, 'nodes']), (nodes) =>
@@ -456,8 +448,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
     return Boolean(
       grants?.nodebalancer?.some(
         (grant) =>
-          grant.id === Number(nodeBalancerId) &&
-          grant.permissions === 'read_only'
+          grant.id === nodeBalancerId && grant.permissions === 'read_only'
       )
     );
   };
@@ -765,11 +756,12 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       return;
     }
 
-    createNodeBalancerConfig(Number(nodeBalancerId), configPayload)
+    createNodeBalancerConfig(nodeBalancerId, configPayload)
       .then((nodeBalancerConfig) => {
         this.props.queryClient.invalidateQueries({
-          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
-            ._ctx.configurations.queryKey,
+          queryKey:
+            nodebalancerQueries.nodebalancer(nodeBalancerId)._ctx.configurations
+              .queryKey,
         });
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -870,14 +862,15 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
     }
 
     const nodeBalUpdate = updateNodeBalancerConfig(
-      Number(nodeBalancerId),
+      nodeBalancerId,
       config.id,
       configPayload
     )
       .then((nodeBalancerConfig) => {
         this.props.queryClient.invalidateQueries({
-          queryKey: nodebalancerQueries.nodebalancer(Number(nodeBalancerId))
-            ._ctx.configurations.queryKey,
+          queryKey:
+            nodebalancerQueries.nodebalancer(nodeBalancerId)._ctx.configurations
+              .queryKey,
         });
         // update config data
         const newConfigs = clone(this.state.configs);
@@ -1043,7 +1036,7 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
     }
 
     return updateNodeBalancerConfigNode(
-      Number(nodeBalancerId),
+      nodeBalancerId,
       config.id,
       node.id,
       nodeData

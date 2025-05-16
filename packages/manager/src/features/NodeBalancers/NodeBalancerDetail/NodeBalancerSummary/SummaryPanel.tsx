@@ -32,17 +32,13 @@ export const SummaryPanel = () => {
     true,
     isLkeEnterpriseLAFeatureEnabled
   );
-  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
+  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
-    Number(id)
-  );
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
-    Number(id)
-  );
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
