@@ -1,7 +1,7 @@
 import { useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
+import { Outlet, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -135,6 +135,7 @@ export const NodeBalancersLanding = () => {
         pageSize={pagination.pageSize}
       />
       <TransferDisplay spacingTop={18} />
+      <Outlet />
     </>
   );
 };

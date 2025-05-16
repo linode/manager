@@ -1,15 +1,16 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
 import NodeBalancerCreate from 'src/features/NodeBalancers/NodeBalancerCreate';
-import { NodeBalancerDeleteDialog } from 'src/features/NodeBalancers/NodeBalancerDeleteDialog';
 import { NodeBalancerAddFirewallDrawer } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerAddFirewallDrawer';
 import {
   NodeBalancerConfigurationWrapper,
   NodeBalancerDetail,
 } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail';
 import { NodeBalancerSettings } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings';
+import { NodeBalancerSettingsDeleteDialog } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettingsDeleteDialog';
 import { NodeBalancerSummary } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSummary/NodeBalancerSummary';
 import { NodeBalancerUnassignFirewallDialog } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerUnassignFirewallDialog';
+import { NodeBalancerLandingDeleteDialog } from 'src/features/NodeBalancers/NodeBalancerLandingDeleteDialog';
 import { NodeBalancersLanding } from 'src/features/NodeBalancers/NodeBalancersLanding/NodeBalancersLanding';
 
 export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
@@ -43,7 +44,13 @@ export const nodeBalancerSettingsLazyRoute = createLazyRoute(
 export const nodeBalancerSettingsDeleteLazyRoute = createLazyRoute(
   '/nodebalancers/$id/settings/delete'
 )({
-  component: NodeBalancerDeleteDialog,
+  component: NodeBalancerSettingsDeleteDialog,
+});
+
+export const nodeBalancerLandingDeleteLazyRoute = createLazyRoute(
+  '/nodebalancers/$id/delete'
+)({
+  component: NodeBalancerLandingDeleteDialog,
 });
 
 export const nodeBalancerSettingsAddFirewallLazyRoute = createLazyRoute(
