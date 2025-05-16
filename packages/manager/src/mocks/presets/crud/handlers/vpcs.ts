@@ -111,10 +111,6 @@ export const createVPC = (mockState: MockState) => [
         updated: DateTime.now().toISO(),
       });
 
-      const vpcIp = vpcIPFactory.build({
-        vpc_id: vpc.id,
-      });
-
       const createSubnetPromises = [];
       const vpcSubnets: Subnet[] = [];
 
@@ -137,6 +133,10 @@ export const createVPC = (mockState: MockState) => [
         { ...vpc, subnets: vpcSubnets },
         mockState
       );
+
+      const vpcIp = vpcIPFactory.build({
+        vpc_id: createdVPC.id,
+      });
 
       // add entry for VPC IP
       mswDB.add('vpcsIps', vpcIp, mockState);
