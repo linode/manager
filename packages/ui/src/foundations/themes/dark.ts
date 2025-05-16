@@ -245,20 +245,80 @@ export const darkTheme: ThemeOptions = {
         clearIndicator: {
           color: Select.Default.Icon,
         },
+        groupLabel: {
+          marginTop: '0px !important',
+          backgroundColor: Dropdown.Background.Category,
+          padding: '8px 12px !important',
+          fontSize: '0.75rem',
+          lineHeight: '1rem',
+          weight: 700,
+        },
+        paper: {
+          boxShadow: Alias.Elevation.S,
+          marginTop: 4,
+        },
         listbox: {
-          backgroundColor: customDarkModeOptions.bg.white,
-          border: `1px solid ${primaryColors.main}`,
+          backgroundColor: Select.Default.Background,
+          paddingTop: '4px',
+          border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
+        },
+        inputRoot: {
+          '& input::placeholder': {
+            color: Select.Default.Text,
+            opacity: 1,
+          },
         },
         noOptions: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         option: {
+          '&.Mui-focused': {
+            backgroundColor: `${Dropdown.Background.Hover} !important`,
+          },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
             color: Dropdown.Text.Default,
+          },
+          '& .fi': {
+            width: '28px',
+            height: '20px',
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
+        },
+        popper: {
+          '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"]': {
+              '.MuiAutocomplete-listbox': {
+                borderTop: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+              },
+            },
+            '&[data-popper-placement="top"]': {
+              '.MuiAutocomplete-listbox': {
+                borderBottom: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+              },
+            },
           },
         },
         popupIndicator: {
@@ -266,7 +326,7 @@ export const darkTheme: ThemeOptions = {
         },
         tag: {
           '.MuiChip-deleteIcon': {
-            color: Content.Text.Primary.Default,
+            color: Select.Default.Icon,
             width: 'auto',
             height: 'auto',
           },
@@ -544,8 +604,10 @@ export const darkTheme: ThemeOptions = {
           '&[class*="error"]': {
             color: Select.Error.HintText,
           },
+          fontWeight: 600,
           color: Color.Neutrals[40],
           lineHeight: 1.25,
+          marginTop: '4px',
         },
       },
     },
