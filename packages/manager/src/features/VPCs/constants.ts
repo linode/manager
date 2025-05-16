@@ -14,6 +14,9 @@ export const WARNING_ICON_UNRECOMMENDED_CONFIG =
 export const REGION_CAVEAT_HELPER_TEXT =
   'A Linode may be assigned only to a VPC in the same region.';
 
+export const NODEBALANCER_REGION_CAVEAT_HELPER_TEXT =
+  'A NodeBalancer may be assigned only to a VPC in the same region.';
+
 export const REGIONAL_LINODE_MESSAGE =
   "Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.";
 

@@ -22,7 +22,7 @@ import type {
   CreateNodeBalancerPayload,
   NodeBalancer,
   NodeBalancerStats,
-  NodebalancerVpcConfig,
+  NodeBalancerVpcConfig,
 } from './types';
 
 /**
@@ -193,7 +193,7 @@ export const getNodeBalancerVPCConfigsBeta = (
   params?: Params,
   filter?: Filter,
 ) =>
-  Request<Page<NodebalancerVpcConfig>>(
+  Request<Page<NodeBalancerVpcConfig>>(
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
         nodeBalancerId,
@@ -214,7 +214,7 @@ export const getNodeBalancerVPCConfigBeta = (
   nodeBalancerId: number,
   nbVpcConfigId: number,
 ) =>
-  Request<NodebalancerVpcConfig>(
+  Request<NodeBalancerVpcConfig>(
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
         nodeBalancerId,
