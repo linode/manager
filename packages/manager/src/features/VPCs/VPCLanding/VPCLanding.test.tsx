@@ -41,7 +41,7 @@ describe('VPC Landing Table', () => {
     getAllByText('Region');
     getAllByText('VPC ID');
     getAllByText('Subnets');
-    getAllByText('Linodes');
+    getAllByText('Resources');
   });
 
   it('should render vpc landing with empty state', async () => {

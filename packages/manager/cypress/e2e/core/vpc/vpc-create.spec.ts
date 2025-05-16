@@ -21,7 +21,7 @@ import {
 } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
 
-import { getUniqueLinodesFromSubnets } from 'src/features/VPCs/utils';
+import { getUniqueResourcesFromSubnets } from 'src/features/VPCs/utils';
 
 import type { Subnet, VPC } from '@linode/api-v4';
 
@@ -72,7 +72,7 @@ describe('VPC create flow', () => {
     const ipValidationErrorMessage1 = 'A subnet must have an IPv4 range.';
     const ipValidationErrorMessage2 = 'The IPv4 range must be in CIDR format.';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
-    const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets(mockSubnets);
+    const totalSubnetUniqueLinodes = getUniqueResourcesFromSubnets(mockSubnets);
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
@@ -232,7 +232,9 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
-        cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
+        cy.contains(`Resources ${totalSubnetUniqueLinodes}`).should(
+          'be.visible'
+        );
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
         cy.contains(`Region ${mockVPCRegion.label}`).should('be.visible');
       });
@@ -270,7 +272,7 @@ describe('VPC create flow', () => {
       subnets: [],
     });
 
-    const totalSubnetUniqueLinodes = getUniqueLinodesFromSubnets([]);
+    const totalSubnetUniqueLinodes = getUniqueResourcesFromSubnets([]);
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
@@ -320,7 +322,9 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
-        cy.contains(`Linodes ${totalSubnetUniqueLinodes}`).should('be.visible');
+        cy.contains(`Resources ${totalSubnetUniqueLinodes}`).should(
+          'be.visible'
+        );
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
         cy.contains(`Region ${mockVPCRegion.label}`).should('be.visible');
       });

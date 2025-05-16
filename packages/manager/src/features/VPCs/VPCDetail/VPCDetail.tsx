@@ -20,7 +20,7 @@ import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
 import {
   getIsVPCLKEEnterpriseCluster,
-  getUniqueLinodesFromSubnets,
+  getUniqueResourcesFromSubnets,
 } from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
 import { VPCEditDrawer } from '../VPCLanding/VPCEditDrawer';
@@ -92,7 +92,7 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numLinodes = getUniqueLinodesFromSubnets(vpc.subnets);
+  const numLinodes = getUniqueResourcesFromSubnets(vpc.subnets);
 
   const summaryData = [
     [

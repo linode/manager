@@ -11,7 +11,7 @@ import type {
 } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
+export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
   const nodeBalancer: number[] = [];
   for (const subnet of subnets) {
