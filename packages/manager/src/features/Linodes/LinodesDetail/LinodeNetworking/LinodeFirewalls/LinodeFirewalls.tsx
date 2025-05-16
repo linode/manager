@@ -123,6 +123,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         title="Add Firewall"
       >
         <AddFirewallForm
+          attachedFirewalls={attachedFirewalls ?? []}
           entityId={linodeID}
           entityType="linode"
           onCancel={() => setIsAddFirewalDrawerOpen(false)}

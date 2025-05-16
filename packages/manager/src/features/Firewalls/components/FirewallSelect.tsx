@@ -28,9 +28,14 @@ interface Props<DisableClearable extends boolean>
   label?: string;
   /**
    * Optionally pass your own array of Firewalls.
-   * All Firewall will show if this is omitted.
+   * All Firewalls will show if this is omitted.
    */
   options?: Firewall[];
+  /**
+   * Determine which firewalls should be available as options.
+   * If the options prop is used, this is filter ignored.
+   */
+  optionsFilter?: (firewall: Firewall) => boolean;
   /**
    * The ID of the selected Firewall
    */
@@ -47,9 +52,20 @@ interface Props<DisableClearable extends boolean>
 export const FirewallSelect = <DisableClearable extends boolean>(
   props: Props<DisableClearable>
 ) => {
-  const { errorText, hideDefaultChips, loading, value, ...rest } = props;
+  const {
+    errorText,
+    hideDefaultChips,
+    loading,
+    value,
+    options,
+    optionsFilter,
+    ...rest
+  } = props;
 
-  const { data: firewalls, error, isLoading } = useAllFirewallsQuery();
+  const { data: firewalls, error, isLoading } = useAllFirewallsQuery(!options);
+
+  const firewallOptions =
+    options || (optionsFilter ? firewalls?.filter(optionsFilter) : firewalls);
 
   const { defaultNumEntities, isDefault, tooltipText } =
     useDefaultFirewallChipInformation(value, hideDefaultChips);
@@ -65,7 +81,7 @@ export const FirewallSelect = <DisableClearable extends boolean>(
       label="Firewall"
       loading={isLoading || loading}
       noMarginTop
-      options={firewalls ?? []}
+      options={firewallOptions ?? []}
       placeholder="None"
       renderOption={({ key, ...props }, option, state) => (
         <FirewallSelectOption

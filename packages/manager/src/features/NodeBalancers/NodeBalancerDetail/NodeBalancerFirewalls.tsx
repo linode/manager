@@ -173,6 +173,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
         title="Add Firewall"
       >
         <AddFirewallForm
+          attachedFirewalls={attachedFirewalls ?? []}
           entityId={nodeBalancerId}
           entityType="nodebalancer"
           onCancel={() =>

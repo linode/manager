@@ -11,7 +11,7 @@ import { Link } from 'src/components/Link';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { formattedTypes } from 'src/features/Firewalls/FirewallDetail/Devices/constants';
 
-import type { FirewallDeviceEntityType } from '@linode/api-v4';
+import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
 interface Values {
   firewallId: number;
@@ -22,13 +22,14 @@ const schema = object({
 });
 
 interface Props {
+  attachedFirewalls: Firewall[];
   entityId: number;
   entityType: FirewallDeviceEntityType;
   onCancel: () => void;
 }
 
 export const AddFirewallForm = (props: Props) => {
-  const { entityId, entityType, onCancel } = props;
+  const { attachedFirewalls, entityId, entityType, onCancel } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const entityLabel = formattedTypes[entityType] ?? entityType;
@@ -51,6 +52,10 @@ export const AddFirewallForm = (props: Props) => {
     }
   };
 
+  const optionsFilter = (firewall: Firewall) => {
+    return !attachedFirewalls?.some((fw) => fw.id === firewall.id);
+  };
+
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <Stack spacing={2}>
@@ -66,6 +71,7 @@ export const AddFirewallForm = (props: Props) => {
               errorText={fieldState.error?.message}
               label="Firewall"
               onChange={(e, value) => field.onChange(value?.id)}
+              optionsFilter={optionsFilter}
               placeholder="Select a Firewall"
               textFieldProps={{
                 inputRef: field.ref,
