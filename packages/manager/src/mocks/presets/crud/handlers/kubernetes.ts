@@ -230,7 +230,7 @@ export const createKubernetesCluster = (mockState: MockState) => [
           mswDB.add(
             'kubernetesNodePools',
             {
-              ...nodePoolFactory.build({
+              ...nodePoolBetaFactory.build({
                 ...poolData,
                 nodes: kubeLinodeFactory.buildList(poolData.count),
               }),
@@ -548,11 +548,73 @@ export const getKubernetesNodePools = () => [
       return makeResponse(nodePool);
     }
   ),
+
+  http.get(
+    '*/v4beta/lke/clusters/:id/pools/:poolId',
+    async ({
+      params,
+    }): Promise<
+      StrictResponse<APIErrorResponse | MockKubeNodePoolResponse[]>
+    > => {
+      const clusterId = Number(params.id);
+      const poolId = Number(params?.poolId);
+      const clusters = await mswDB.getAll('kubernetesClusters');
+      const nodePools = (await mswDB.getAll(
+        'kubernetesNodePools'
+      )) as MockKubeNodePoolResponse[];
+
+      if (!clusters || !nodePools) {
+        return makeNotFoundResponse();
+      }
+
+      const clusterNodePools = nodePools.filter(
+        (pool) => pool.clusterId === clusterId
+      );
+      const nodePool = clusterNodePools.filter((pool) => pool.id === poolId);
+
+      return makeResponse(nodePool);
+    }
+  ),
 ];
 
 export const updateKubernetesNodePools = (mockState: MockState) => [
   http.put(
     '*/v4/lke/clusters/:id/pools/:poolId',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | KubeNodePoolResponse>> => {
+      const poolId = Number(params.poolId);
+      const nodePools = await mswDB.getAll('kubernetesNodePools');
+
+      if (!nodePools) {
+        return makeNotFoundResponse();
+      }
+
+      const existingPool = nodePools.find((pool) => pool.id === poolId);
+
+      if (!existingPool) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      const nodeCount = payload?.count ?? existingPool.count;
+
+      const updatedPool = {
+        ...existingPool,
+        ...payload,
+        nodes: kubeLinodeFactory.buildList(nodeCount),
+        updated: DateTime.now().toISO(),
+      };
+
+      await mswDB.update('kubernetesNodePools', poolId, updatedPool, mockState);
+
+      return makeResponse(updatedPool);
+    }
+  ),
+
+  http.put(
+    '*/v4beta/lke/clusters/:id/pools/:poolId',
     async ({
       params,
       request,

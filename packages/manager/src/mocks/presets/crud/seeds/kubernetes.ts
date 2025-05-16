@@ -1,5 +1,9 @@
 import { getSeedsCountMap } from 'src/dev-tools/utils';
-import { kubernetesClusterFactory, nodePoolFactory } from 'src/factories';
+import {
+  kubernetesClusterFactory,
+  nodePoolBetaFactory,
+  nodePoolFactory,
+} from 'src/factories';
 import { mswDB } from 'src/mocks/indexedDB';
 import { seedWithUniqueIds } from 'src/mocks/presets/crud/seeds/utils';
 
@@ -26,7 +30,9 @@ export const kubernetesSeeder: MockSeeder = {
       dbEntities: await mswDB.getAll('kubernetesNodePools'),
       seedEntities: kubernetesClusterSeeds.map((cluster) => {
         const nodePool: MockKubeNodePoolResponse = {
-          ...nodePoolFactory.build(),
+          ...(cluster.tier === 'enterprise'
+            ? nodePoolBetaFactory.build()
+            : nodePoolFactory.build()),
           clusterId: cluster?.id ?? -1,
         };
         return nodePool;
