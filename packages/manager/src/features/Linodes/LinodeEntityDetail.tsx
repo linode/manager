@@ -1,4 +1,8 @@
-import { useLinodeVolumesQuery, useRegionsQuery } from '@linode/queries';
+import {
+  useAllImagesQuery,
+  useLinodeVolumesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
@@ -10,7 +14,6 @@ import { notificationCenterContext as _notificationContext } from 'src/features/
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
