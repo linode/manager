@@ -145,6 +145,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     return (
       <Button
         className={classes.showBtn}
+        data-testid="show-hide-credentials"
         disabled={disableShowBtn}
         onClick={handleClick}
         variant="link"
@@ -158,6 +159,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     <>
       <Button
         className={classes.caCertBtn}
+        data-testid="download-ca-certificate"
         disabled={disableDownloadCACertificateBtn}
         onClick={handleDownloadCACertificate}
         processing={isCACertDownloading}
