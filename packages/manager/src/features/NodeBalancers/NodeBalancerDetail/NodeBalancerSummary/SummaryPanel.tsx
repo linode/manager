@@ -38,13 +38,11 @@ export const SummaryPanel = () => {
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
     Number(id)
   );
-  const linkText = attachedFirewallData?.data[0]?.label;
-  const linkID = attachedFirewallData?.data[0]?.id;
+  const firewalls = attachedFirewallData?.data ?? [];
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
     Number(id)
   );
-  const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -161,20 +159,24 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {displayFirewallLink && (
+      {firewalls.length > 0 && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
-            Firewall
+            {firewalls.length > 1 ? 'Firewalls' : 'Firewall'}
           </StyledTitle>
-          <Typography data-qa-firewall variant="body1">
-            <Link
-              accessibleAriaLabel={`Firewall ${linkText}`}
-              className="secondaryLink"
-              to={`/firewalls/${linkID}`}
-            >
-              {linkText}
-            </Link>
-          </Typography>
+          {firewalls.map((firewall) => {
+            return (
+              <Typography data-qa-firewall key={firewall.id} variant="body1">
+                <Link
+                  accessibleAriaLabel={`Firewall ${firewall.label}`}
+                  className="secondaryLink"
+                  to={`/firewalls/${firewall.id}`}
+                >
+                  {firewall.label}
+                </Link>
+              </Typography>
+            );
+          })}
         </StyledSummarySection>
       )}
       <StyledSummarySection>
