@@ -22,6 +22,7 @@ import type {
   SupportTicket,
   Volume,
   VPC,
+  VPCIP,
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
 
@@ -151,6 +152,7 @@ export interface MockState {
   supportTickets: SupportTicket[];
   volumes: Volume[];
   vpcs: VPC[];
+  vpcsIps: VPCIP[];
 }
 
 export interface MockSeeder extends Omit<MockPresetCrud, 'handlers'> {

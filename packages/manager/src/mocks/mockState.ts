@@ -45,6 +45,7 @@ export const emptyStore: MockState = {
   supportTickets: [],
   volumes: [],
   vpcs: [],
+  vpcsIps: [],
 };
 
 /**
