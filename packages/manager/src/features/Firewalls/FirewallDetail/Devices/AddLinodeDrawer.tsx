@@ -155,12 +155,10 @@ export const AddLinodeDrawer = (props: Props) => {
   const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>([]);
   const selectedLinodesWithMultipleInterfaces = Object.values(
     linodesAndEligibleInterfaces
-  )
-    .filter(
-      ({ interfaces, linode }) =>
-        interfaces.length > 1 && selectedLinodes.includes(linode)
-    )
-    .map(({ linode }) => linode);
+  ).filter(
+    ({ interfaces, linode }) =>
+      interfaces.length > 1 && selectedLinodes.includes(linode)
+  );
 
   // Keeps track of interfaces we've selected from Linodes with multiple interfaces
   // Assumption: each Linode ID here will correspond to some Linode in selectedLinodesWithMultipleInterfaces,
@@ -178,9 +176,9 @@ export const AddLinodeDrawer = (props: Props) => {
     let linodeError: string | undefined = undefined;
     let interfaceError: string | undefined = undefined;
     const linodesNeedingInterfaceSelection =
-      selectedLinodesWithMultipleInterfaces.filter(
-        (linode) => !selectedIfacesToAdd[linode.id]
-      );
+      selectedLinodesWithMultipleInterfaces
+        .filter((data) => !selectedIfacesToAdd[data.linode.id])
+        .map((data) => data.linode);
     const failedLinodes: Linode[] = [...linodesNeedingInterfaceSelection];
     const failedInterfaces: Record<number, InterfaceDeviceInfo> = {};
 
@@ -387,10 +385,9 @@ export const AddLinodeDrawer = (props: Props) => {
             </Typography>
           )}
         {isLinodeInterfacesEnabled &&
-          selectedLinodesWithMultipleInterfaces.map((linode) => {
-            const options = linodesAndEligibleInterfaces[
-              linode.id
-            ].interfaces.map((i) => ({
+          selectedLinodesWithMultipleInterfaces.map((linodeAndInterfaces) => {
+            const { linode, interfaces } = linodeAndInterfaces;
+            const options = interfaces.map((i) => ({
               ...i,
               label: `${getLinodeInterfaceType(i)} Interface (ID: ${i.id})`,
             }));
