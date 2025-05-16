@@ -3,6 +3,17 @@ import { createLinodeRequestFactory } from '@linode/utilities';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
+import {
+  legacyInterfacesDescriptionText1,
+  legacyInterfacesDescriptionText2,
+  legacyInterfacesLabelText,
+  linodeInterfacesDescriptionText1,
+  linodeInterfacesDescriptionText2,
+  linodeInterfacesLabelText,
+  networkConnectionDescriptionText,
+  networkConnectionSectionText,
+  networkInterfaceTypeSectionText,
+} from 'support/constants/linode-interfaces';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
@@ -212,4 +223,24 @@ export const fetchLinodeConfigs = async (
   return depaginate((page) =>
     getLinodeConfigs(linodeId, { page, page_size: pageSize })
   );
+};
+
+/**
+ * Check the elements of Linode Interfaces.
+ *
+ * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
+ */
+export const assertNewLinodeInterfacesIsAvailable = (
+  linodeInterfacesEnabled: boolean = true
+): void => {
+  const expectedBehavior = linodeInterfacesEnabled ? 'be.visible' : 'not.exist';
+  cy.findByText(networkInterfaceTypeSectionText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(legacyInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(networkConnectionSectionText).should(expectedBehavior);
+  cy.findByText(networkConnectionDescriptionText).should(expectedBehavior);
 };
