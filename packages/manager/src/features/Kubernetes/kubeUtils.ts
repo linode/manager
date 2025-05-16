@@ -182,7 +182,13 @@ export const getLatestVersion = (
     return sortByVersion(a.value, b.value, 'asc');
   });
 
+  // eslint-disable-next-line no-console
+  console.log({ sortedVersions });
+
   const latestVersion = sortedVersions.pop();
+
+  // eslint-disable-next-line no-console
+  console.log({ latestVersion });
 
   if (!latestVersion) {
     // Return a default fallback object

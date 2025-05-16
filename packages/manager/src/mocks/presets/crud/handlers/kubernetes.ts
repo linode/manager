@@ -396,13 +396,27 @@ export const getKubernetesVersions = () => [
   ),
 
   http.get(
-    '*/v4beta/lke/tiers/standard/versions',
+    '*/v4beta/lke/tiers/enterprise/versions',
     ({
       request,
     }): StrictResponse<
       APIErrorResponse | APIPaginatedResponse<KubernetesTieredVersion>
     > => {
-      const versions = kubernetesStandardTierVersionFactory.buildList(3);
+      const kubeVersion1 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.8+lke1',
+      });
+      const kubeVersion2 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.6+lke2',
+      });
+      const kubeVersion3 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.6+lke3',
+      });
+      const kubeVersion4 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.1+lke4',
+      });
+
+      const versions = [kubeVersion1, kubeVersion4, kubeVersion3, kubeVersion2];
+
       return makePaginatedResponse({
         data: versions,
         request,
@@ -411,13 +425,13 @@ export const getKubernetesVersions = () => [
   ),
 
   http.get(
-    '*/v4beta/lke/tiers/enterprise/versions',
+    '*/v4beta/lke/tiers/standard/versions',
     ({
       request,
     }): StrictResponse<
       APIErrorResponse | APIPaginatedResponse<KubernetesTieredVersion>
     > => {
-      const versions = kubernetesEnterpriseTierVersionFactory.buildList(3);
+      const versions = kubernetesStandardTierVersionFactory.buildList(3);
       return makePaginatedResponse({
         data: versions,
         request,

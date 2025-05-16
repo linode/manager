@@ -156,12 +156,13 @@ describe('helper functions', () => {
 
     it('should return the correct latest version from a list of enterprise versions', () => {
       const enterpriseVersions = [
-        { label: '1.31.1+lke1', value: '1.31.1+lke1' },
-        { label: '1.31.1+lke2', value: '1.31.1+lke2' },
-        { label: '1.32.1+lke1', value: '1.32.1+lke1' },
+        { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
+        { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
+        { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
+        { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
       ];
       const result = getLatestVersion(enterpriseVersions);
-      expect(result).toEqual({ label: '1.32.1+lke1', value: '1.32.1+lke1' });
+      expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
     });
 
     it('should handle latest version minor version correctly', () => {
@@ -207,14 +208,15 @@ describe('helper functions', () => {
 
   it('should get the next version when given a current enterprise version', () => {
     const versions: KubernetesTieredVersion[] = [
-      { id: '1.31.1+lke1', tier: 'enterprise' },
-      { id: '1.31.1+lke2', tier: 'enterprise' },
-      { id: '1.32.1+lke1', tier: 'enterprise' },
+      { id: 'v1.31.1+lke4', tier: 'enterprise' },
+      { id: 'v1.31.6+lke2', tier: 'enterprise' },
+      { id: 'v1.31.6+lke3', tier: 'enterprise' },
+      { id: 'v1.31.8+lke1', tier: 'enterprise' },
     ];
-    const currentVersion = '1.31.1+lke2';
+    const currentVersion = 'v1.31.6+lke2';
 
     const result = getNextVersion(currentVersion, versions);
-    expect(result).toEqual('1.32.1+lke1');
+    expect(result).toEqual('v1.31.6+lke3');
   });
 
   it('should get the next version when given an obsolete current version', () => {
