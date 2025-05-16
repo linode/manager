@@ -48,14 +48,15 @@ export const AssignSingleSelectedRole = ({
                 onChange={(updatedEntities) => {
                   onChange({
                     ...value,
-                    entities: updatedEntities
+                    entities: updatedEntities,
                   });
                 }}
                 role={role}
                 showName={true}
                 value={[]}
               />
-            )}
+            )
+          }
         />
       </Box>
     </Box>

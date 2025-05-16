@@ -2,7 +2,11 @@ import { fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import { databaseFactory } from 'src/factories';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  mockMatchMedia,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import AccessControls from './AccessControls';
 
@@ -36,12 +40,13 @@ describe('Access Controls', () => {
     ['enable', false],
   ])(
     'should %s "Manage Access" button when disabled is %s',
-    (_, isDisabled) => {
+    async (_, isDisabled) => {
       const database = databaseFactory.build();
-      const { getByRole } = renderWithTheme(
+      const { getByTestId } = renderWithTheme(
         <AccessControls database={database} disabled={isDisabled} />
       );
-      const button = getByRole('button', { name: 'Manage Access' });
+      const buttonHost = getByTestId('button-access-control');
+      const button = await getShadowRootElement(buttonHost, 'button');
 
       if (isDisabled) {
         expect(button).toBeDisabled();

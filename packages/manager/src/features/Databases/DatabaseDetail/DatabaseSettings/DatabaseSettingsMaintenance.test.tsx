@@ -2,11 +2,12 @@ import React from 'react';
 
 import { databaseFactory } from 'src/factories';
 import { DatabaseSettingsMaintenance } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsMaintenance';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  getShadowRootElement,
+  renderWithTheme,
+} from 'src/utilities/testHelpers';
 
 import type { Engine } from '@linode/api-v4';
-
-const UPGRADE_VERSION = 'Upgrade Version';
 
 const queryMocks = vi.hoisted(() => ({
   useDatabaseEnginesQuery: vi.fn().mockReturnValue({
@@ -58,7 +59,7 @@ describe('Database Settings Maintenance', () => {
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { findByRole } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -68,9 +69,12 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = await findByRole('button', { name: UPGRADE_VERSION });
+    const buttonHost = queryByTestId('upgrade');
+    const shadowButton = buttonHost
+      ? await getShadowRootElement(buttonHost, 'button')
+      : null;
 
-    expect(button).toBeDisabled();
+    expect(shadowButton).toBeDisabled();
   });
 
   it('should disable upgrade version modal button when there are upgrades available, but there are still updates available', async () => {
@@ -91,7 +95,7 @@ describe('Database Settings Maintenance', () => {
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { findByRole } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -101,9 +105,12 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = await findByRole('button', { name: UPGRADE_VERSION });
+    const buttonHost = queryByTestId('upgrade');
+    const shadowButton = buttonHost
+      ? await getShadowRootElement(buttonHost, 'button')
+      : null;
 
-    expect(button).toBeDisabled();
+    expect(shadowButton).toBeDisabled();
   });
 
   it('should enable upgrade version modal button when there are upgrades available, and there are no pending updates', async () => {
@@ -118,7 +125,7 @@ describe('Database Settings Maintenance', () => {
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { findByRole } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -128,9 +135,12 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = await findByRole('button', { name: UPGRADE_VERSION });
+    const buttonHost = queryByTestId('upgrade');
+    const shadowButton = buttonHost
+      ? await getShadowRootElement(buttonHost, 'button')
+      : null;
 
-    expect(button).toBeEnabled();
+    expect(shadowButton).toBeEnabled();
   });
 
   it('should show review text and modal button when there are updates ', async () => {
@@ -149,7 +159,7 @@ describe('Database Settings Maintenance', () => {
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { queryByRole } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -159,7 +169,7 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = queryByRole('button', { name: 'Click to review' });
+    const button = queryByTestId('review');
 
     expect(button).toBeInTheDocument();
   });
@@ -174,7 +184,7 @@ describe('Database Settings Maintenance', () => {
     const onReviewUpdates = vi.fn();
     const onUpgradeVersion = vi.fn();
 
-    const { queryByRole } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       <DatabaseSettingsMaintenance
         databaseEngine={database.engine}
         databasePendingUpdates={database.updates.pending}
@@ -184,7 +194,7 @@ describe('Database Settings Maintenance', () => {
       />
     );
 
-    const button = queryByRole('button', { name: 'Click to review' });
+    const button = queryByTestId('review');
 
     expect(button).not.toBeInTheDocument();
   });
