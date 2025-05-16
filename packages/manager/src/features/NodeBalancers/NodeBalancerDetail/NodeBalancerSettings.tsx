@@ -10,21 +10,25 @@ import {
   TextField,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import {
+  createLazyRoute,
+  Outlet,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const { id } = useParams({ strict: false });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+
+  const { id } = useParams({ from: '/nodebalancers/$id/settings' });
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -36,25 +40,19 @@ export const NodeBalancerSettings = () => {
     error: labelError,
     isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
 
   const {
     error: throttleError,
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
   const [connectionThrottle, setConnectionThrottle] = React.useState(
     nodebalancer?.client_conn_throttle
   );
-
-  const {
-    data: selectedNodeBalancer,
-    isFetching: isFetchingNodeBalancer,
-    error: nodeBalancerError,
-  } = useNodeBalancerQuery(Number(id), !!id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -99,7 +97,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
+        <NodeBalancerFirewalls nodeBalancerId={id} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
@@ -143,7 +141,7 @@ export const NodeBalancerSettings = () => {
           disabled={isNodeBalancerReadOnly}
           onClick={() =>
             navigate({
-              params: { id: String(id) },
+              params: { id },
               to: '/nodebalancers/$id/settings/delete',
             })
           }
@@ -151,12 +149,13 @@ export const NodeBalancerSettings = () => {
           Delete
         </Button>
       </Accordion>
-      <NodeBalancerDeleteDialog
-        isFetching={isFetchingNodeBalancer}
-        nodeBalancerError={nodeBalancerError}
-        open={match.routeId === '/nodebalancers/$id/settings/delete'}
-        selectedNodeBalancer={selectedNodeBalancer}
-      />
+      <Outlet />
     </div>
   );
 };
+
+export const nodeBalancerSettingsLazyRoute = createLazyRoute(
+  '/nodebalancers/$id/settings'
+)({
+  component: NodeBalancerSettings,
+});

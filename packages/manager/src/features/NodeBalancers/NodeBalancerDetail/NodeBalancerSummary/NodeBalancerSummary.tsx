@@ -1,18 +1,16 @@
 import { useNodeBalancerQuery } from '@linode/queries';
 import Grid from '@mui/material/Grid';
-import { useParams } from '@tanstack/react-router';
-import * as React from 'react';
+import { createLazyRoute, useParams } from '@tanstack/react-router';
+import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';
 
-export const NodeBalancerSummary = () => {
-  const { id } = useParams({
-    from: '/nodebalancers/$id/summary',
-  });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+const NodeBalancerSummary = () => {
+  const { id } = useParams({ from: '/nodebalancers/$id' });
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   return (
     <div>
@@ -28,3 +26,9 @@ export const NodeBalancerSummary = () => {
     </div>
   );
 };
+
+export const nodeBalancerSummaryLazyRoute = createLazyRoute(
+  '/nodebalancers/$id/summary'
+)({
+  component: NodeBalancerSummary,
+});

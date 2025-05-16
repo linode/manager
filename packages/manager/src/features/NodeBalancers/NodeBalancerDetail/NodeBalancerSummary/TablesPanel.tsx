@@ -29,10 +29,8 @@ export const TablesPanel = () => {
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile?.timezone);
-  const { id } = useParams({
-    from: '/nodebalancers/$id/summary',
-  });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { id } = useParams({ from: '/nodebalancers/$id' });
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const {
     data: stats,

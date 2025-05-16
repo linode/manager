@@ -12,10 +12,9 @@ import {
 
 import { NodeBalancerFirewallsActionMenu } from './NodeBalancerFirewallsActionMenu';
 
-import type { Firewall, FirewallDevice } from '@linode/api-v4';
+import type { Firewall } from '@linode/api-v4';
 
 interface Props {
-  devices: FirewallDevice[] | undefined;
   firewall: Firewall;
   nodeBalancerId: number;
   onClickUnassign: () => void;

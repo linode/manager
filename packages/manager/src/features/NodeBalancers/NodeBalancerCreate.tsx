@@ -21,7 +21,7 @@ import {
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from '@tanstack/react-router';
+import { createLazyRoute, useNavigate } from '@tanstack/react-router';
 import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
 
@@ -98,7 +98,7 @@ const defaultFieldsStates = {
   configs: [createNewNodeBalancerConfig(true)],
 };
 
-const NodeBalancerCreate = () => {
+export const NodeBalancerCreate = () => {
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
@@ -303,7 +303,7 @@ const NodeBalancerCreate = () => {
     createNodeBalancer(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         navigate({
-          params: { id: String(nodeBalancer.id) },
+          params: { id: nodeBalancer.id },
           to: '/nodebalancers/$id/summary',
         });
         // Analytics Event
@@ -810,4 +810,8 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
   }, []);
 };
 
-export default NodeBalancerCreate;
+export const nodeBalancerCreateLazyRoute = createLazyRoute(
+  '/nodebalancers/create'
+)({
+  component: NodeBalancerCreate,
+});
