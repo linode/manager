@@ -104,6 +104,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
+          data-testid="region-search"
           fullWidth
           hideLabel
           label="Search for a Region"
@@ -115,7 +116,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value={searchText}
         />
         <Checkbox
-          data-testid="show_selected_only"
+          data-testid="show-selected-only"
           onChange={(_event, checked: boolean) => setShowSelected(checked)}
           sx={(theme) => ({
             svg: {

@@ -1,5 +1,6 @@
 import { regionFactory } from '@linode/utilities';
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -48,5 +49,20 @@ describe('DisplayAlertRegions', () => {
 
     expect(rowChildren.getByRole('checkbox')).toBeInTheDocument();
     expect(rowChildren.getByText(regions[0].label)).toBeInTheDocument();
+  });
+
+  it('should select checkbox when clicked', async () => {
+    renderWithTheme(
+      <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
+        handleSelectionChange={handleChange}
+        regions={regions}
+      />
+    );
+    const row = screen.getByTestId(`region-row-${regions[0].id}`);
+    const checkbox = within(row).getByRole('checkbox');
+    await userEvent.click(checkbox);
+
+    expect(handleChange).toHaveBeenCalledWith(regions[0].id, true);
   });
 });

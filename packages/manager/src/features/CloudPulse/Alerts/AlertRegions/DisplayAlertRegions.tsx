@@ -63,6 +63,7 @@ export const DisplayAlertRegions = React.memo(
                     <Box>
                       <Checkbox
                         checked={!isSomeSelected && isAllSelected}
+                        data-testid="select-all-checkbox"
                         indeterminate={isSomeSelected && !isAllSelected}
                         onChange={(_, checked) =>
                           handleSelectAll(
