@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -26,6 +26,7 @@ const mockEntities = [
   accountEntityFactory.build({
     id: 7,
     type: 'linode',
+    label: 'linode',
   }),
   accountEntityFactory.build({
     id: 1,
@@ -102,6 +103,34 @@ describe('Entities', () => {
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeVisible();
     expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
+    const link = screen.getByRole('link', { name: /Create an Image Entity/i });
+    expect(link).toBeVisible();
+  });
+
+  it('renders correct data when it is an entity access', () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
+
+    renderWithTheme(
+      <Entities
+        access="entity_access"
+        mode="assign-role"
+        onChange={mockOnChange}
+        type="vpc"
+        value={mockValue}
+      />
+    );
+
+    expect(screen.getByText('Entities')).toBeVisible();
+
+    // Verify comboboxes exist
+    const autocomplete = screen.getAllByRole('combobox');
+    expect(autocomplete).toHaveLength(1);
+    expect(autocomplete[0]).toBeVisible();
+    expect(autocomplete[0]).toHaveAttribute('placeholder', 'None');
+    const link = screen.getByRole('link', { name: /Create a VPC Entity/i });
+    expect(link).toBeVisible();
   });
 
   it('renders correct options in Autocomplete dropdown when it is an entity access', async () => {
@@ -126,7 +155,11 @@ describe('Entities', () => {
     expect(screen.getByText('firewall-1')).toBeVisible();
   });
 
-  it('updates selected options when Autocomplete value changes when it is an entity access', () => {
+  it('updates selected options when Autocomplete value changes when it is an entity access', async () => {
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
+
     renderWithTheme(
       <Entities
         access="entity_access"
@@ -138,9 +171,8 @@ describe('Entities', () => {
     );
 
     const autocomplete = screen.getAllByRole('combobox')[0];
-    fireEvent.change(autocomplete, { target: { value: 'linode7' } });
-    fireEvent.keyDown(autocomplete, { key: 'Enter' });
-    expect(screen.getByText('test-1')).toBeVisible();
+    await userEvent.click(autocomplete);
+    expect(screen.getByText('linode')).toBeVisible();
   });
 
   it('renders Autocomplete as readonly when mode is "change-role"', () => {
