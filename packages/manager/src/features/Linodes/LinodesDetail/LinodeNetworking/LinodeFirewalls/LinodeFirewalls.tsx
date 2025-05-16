@@ -86,14 +86,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         </Typography>
         <Button
           buttonType="primary"
-          disabled={
-            attachedFirewallData &&
-            attachedFirewallData.data.some(
-              (firewall) => firewall.status === 'enabled'
-            )
-          }
           onClick={() => setIsAddFirewalDrawerOpen(true)}
-          tooltipText="Linodes can only have one enabled Firewall assigned."
         >
           Add Firewall
         </Button>

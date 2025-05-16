@@ -38,10 +38,7 @@ export const SummaryPanel = () => {
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
     Number(id)
   );
-  const firewallToDisplay = // display either the enabled firewall or, if none are enabled, the first firewall
-    attachedFirewallData?.data.find(
-      (firewall) => firewall.status === 'enabled'
-    ) ?? attachedFirewallData?.data[0];
+  const firewalls = attachedFirewallData?.data ?? [];
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
     Number(id)
@@ -162,20 +159,24 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {firewallToDisplay && (
+      {firewalls.length > 0 && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
-            Firewall
+            {firewalls.length > 1 ? 'Firewalls' : 'Firewall'}
           </StyledTitle>
-          <Typography data-qa-firewall variant="body1">
-            <Link
-              accessibleAriaLabel={`Firewall ${firewallToDisplay.label}`}
-              className="secondaryLink"
-              to={`/firewalls/${firewallToDisplay.id}`}
-            >
-              {firewallToDisplay.label}
-            </Link>
-          </Typography>
+          {firewalls.map((firewall) => {
+            return (
+              <Typography data-qa-firewall key={firewall.id} variant="body1">
+                <Link
+                  accessibleAriaLabel={`Firewall ${firewall.label}`}
+                  className="secondaryLink"
+                  to={`/firewalls/${firewall.id}`}
+                >
+                  {firewall.label}
+                </Link>
+              </Typography>
+            );
+          })}
         </StyledSummarySection>
       )}
       <StyledSummarySection>
