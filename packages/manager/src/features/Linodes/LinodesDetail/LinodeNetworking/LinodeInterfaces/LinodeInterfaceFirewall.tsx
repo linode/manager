@@ -1,7 +1,9 @@
 import { useLinodeInterfaceFirewallsQuery } from '@linode/queries';
+import { Stack } from '@linode/ui';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
+import { ShowMore } from 'src/components/ShowMore/ShowMore';
 import { Skeleton } from 'src/components/Skeleton';
 
 interface Props {
@@ -27,7 +29,34 @@ export const LinodeInterfaceFirewall = ({ interfaceId, linodeId }: Props) => {
     return 'None';
   }
 
-  const firewall = data.data[0];
+  // display the enabled firewall if it exists, otherwise display the first firewall
+  const displayedFirewall =
+    data.data.find((firewall) => firewall.status === 'enabled') ?? data.data[0];
 
-  return <Link to={`/firewalls/${firewall.id}`}>{firewall.label}</Link>;
+  const firewalls = data.data.filter(
+    (firewall) => firewall.id !== displayedFirewall.id
+  );
+
+  return (
+    <Stack alignItems={'center'} direction="row" spacing={1.5}>
+      <Link to={`/firewalls/${displayedFirewall.id}`}>
+        {displayedFirewall.label}
+      </Link>
+      {firewalls.length > 0 && (
+        <ShowMore
+          ariaItemType="Interface Firewalls"
+          items={firewalls}
+          render={(firewalls) => (
+            <Stack>
+              {firewalls.map((firewall) => (
+                <Link key={firewall.id} to={`/firewalls/${firewall.id}`}>
+                  {firewall.label}
+                </Link>
+              ))}
+            </Stack>
+          )}
+        />
+      )}
+    </Stack>
+  );
 };
