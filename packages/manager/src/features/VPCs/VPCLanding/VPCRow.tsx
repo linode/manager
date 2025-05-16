@@ -10,7 +10,10 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import { getIsVPCLKEEnterpriseCluster } from '../utils';
+import {
+  getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
+} from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -26,10 +29,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numLinodes = subnets.reduce(
-    (acc, subnet) => acc + subnet.linodes.length,
-    0
-  );
+  const numLinodes = getUniqueLinodesFromSubnets(vpc.subnets);
 
   const isVPCReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
