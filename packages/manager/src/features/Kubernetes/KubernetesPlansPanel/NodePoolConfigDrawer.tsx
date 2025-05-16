@@ -1,12 +1,8 @@
-import {
-  ActionsPanel,
-  Autocomplete,
-  Drawer,
-  Notice,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+
+import { NodePoolsUpdateStrategySelect } from '../NodePoolsUpdateStrategySelect';
 
 import type { NodePoolUpdateStrategy } from '@linode/api-v4';
 
@@ -19,11 +15,6 @@ export interface Props {
 interface VersionUpdateFormFields {
   update_strategy: NodePoolUpdateStrategy;
 }
-
-const updateStrategyOptions = [
-  { label: 'on_recycle', value: 'On Recycle Updates' },
-  { label: 'rolling_update', value: 'Rolling Updates' },
-];
 
 export const NodePoolConfigDrawer = (props: Props) => {
   const { onClose, open } = props;
@@ -76,20 +67,16 @@ export const NodePoolConfigDrawer = (props: Props) => {
             marginBottom={(theme) => theme.spacing(3)}
             marginTop={(theme) => theme.spacing()}
           >
-            Choose how you would like your node pools to update. TODO: something
+            Choose how you would like your node pool to update. TODO: something
             about how this related to cluster versioning.
           </Typography>
           <Controller
             control={control}
             name="update_strategy"
             render={({ field }) => (
-              <Autocomplete
-                label="Version Update Strategy"
-                onChange={(e, updateStrategy) =>
-                  field.onChange(updateStrategy ?? null)
-                }
-                options={updateStrategyOptions}
-                placeholder="Select an update strategy"
+              <NodePoolsUpdateStrategySelect
+                onChange={field.onChange}
+                value={field.value}
               />
             )}
           />
