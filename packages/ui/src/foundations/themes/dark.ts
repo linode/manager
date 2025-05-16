@@ -299,6 +299,28 @@ export const darkTheme: ThemeOptions = {
             boxShadow: 'none',
           },
         },
+        popper: {
+          '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"]': {
+              '.MuiAutocomplete-listbox': {
+                borderTop: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+              },
+            },
+            '&[data-popper-placement="top"]': {
+              '.MuiAutocomplete-listbox': {
+                borderBottom: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+              },
+            },
+          },
+        },
         popupIndicator: {
           color: Select.Default.Icon,
         },

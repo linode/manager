@@ -441,11 +441,19 @@ export const lightTheme: ThemeOptions = {
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
+                padding: 0,
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
               },
             },
           },
