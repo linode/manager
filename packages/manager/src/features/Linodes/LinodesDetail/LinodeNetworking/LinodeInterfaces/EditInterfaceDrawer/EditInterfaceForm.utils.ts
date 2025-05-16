@@ -53,6 +53,8 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
           ._ctx.interfaces._ctx.interface(interfaceId)._ctx.firewalls
       );
 
+      // todo connie: think about what we want to do here
+      // >> assign multiple firewalls at once? assign one firewall at a time but replace the enabled one only?
       // For now, assume the first Firewall is the Interface's firewall.
       // (we are not supporting multiple firewalls per interface right now)
       const currentFirewall = interfaceFirewalls.data[0] as
