@@ -11,16 +11,22 @@ import type {
 } from '@linode/api-v4';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-export const getUniqueLinodesFromSubnets = (subnets: Subnet[]) => {
+export const getUniqueResourcesFromSubnets = (subnets: Subnet[]) => {
   const linodes: number[] = [];
+  const nodeBalancer: number[] = [];
   for (const subnet of subnets) {
     subnet.linodes.forEach((linodeInfo) => {
       if (!linodes.includes(linodeInfo.id)) {
         linodes.push(linodeInfo.id);
       }
     });
+    subnet.nodebalancers.forEach((nodeBalancerInfo) => {
+      if (!nodeBalancer.includes(nodeBalancerInfo.id)) {
+        nodeBalancer.push(nodeBalancerInfo.id);
+      }
+    });
   }
-  return linodes.length;
+  return linodes.length + nodeBalancer.length;
 };
 
 // Linode Interfaces: show unrecommended notice if (active) VPC interface has an IPv4 nat_1_1 address but isn't the default IPv4 route
