@@ -124,5 +124,9 @@ const normalizeError = (error: unknown): Error => {
     return new Error('Unknown error');
   }
 
-  return new Error(JSON.stringify(error));
+  try {
+    return new Error(JSON.stringify(error));
+  } catch {
+    return new Error('Unserializable error');
+  }
 };
