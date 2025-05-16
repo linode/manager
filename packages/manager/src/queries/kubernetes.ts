@@ -496,6 +496,17 @@ export const useRecycleClusterMutation = (clusterId: number) => {
   });
 };
 
+export const useKubernetesNodePoolBetaQuery = (
+  clusterId: number,
+  poolId: number,
+  options?: { enabled?: boolean; refetchInterval?: number }
+) => {
+  return useQuery<KubeNodePoolResponseBeta, APIError[]>({
+    ...kubernetesQueries.cluster(clusterId)._ctx.pools._ctx.pool(poolId),
+    ...options,
+  });
+};
+
 export const useAllKubernetesNodePoolQuery = (
   clusterId: number,
   options?: { enabled?: boolean; refetchInterval?: number }
