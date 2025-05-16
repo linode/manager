@@ -30,6 +30,10 @@ interface Props {
 
 export const AddFirewallForm = (props: Props) => {
   const { attachedFirewalls, entityId, entityType, onCancel } = props;
+  const hasEnabledFirewall = attachedFirewalls?.some(
+    (firewall) => firewall.status === 'enabled'
+  );
+
   const { enqueueSnackbar } = useSnackbar();
 
   const entityLabel = formattedTypes[entityType] ?? entityType;
@@ -53,7 +57,10 @@ export const AddFirewallForm = (props: Props) => {
   };
 
   const optionsFilter = (firewall: Firewall) => {
-    return !attachedFirewalls?.some((fw) => fw.id === firewall.id);
+    return (
+      !(hasEnabledFirewall && firewall.status === 'enabled') &&
+      !attachedFirewalls?.some((fw) => fw.id === firewall.id)
+    );
   };
 
   return (
