@@ -1,4 +1,4 @@
-import { captureException, configureScope, withScope } from '@sentry/react';
+import { captureException, getCurrentScope, withScope } from '@sentry/react';
 
 import { SENTRY_URL } from 'src/constants';
 import { initSentry } from 'src/initSentry';
@@ -58,10 +58,8 @@ export const configureErrorReportingUser = (
   userId: string,
   username: string
 ) => {
-  configureScope((scope) => {
-    scope.setUser({
-      user_id: userId,
-      username,
-    });
+  getCurrentScope().setUser({
+    user_id: userId,
+    username,
   });
 };
