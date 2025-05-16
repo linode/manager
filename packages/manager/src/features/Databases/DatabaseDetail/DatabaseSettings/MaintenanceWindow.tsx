@@ -361,6 +361,7 @@ export const MaintenanceWindow = (props: Props) => {
         </div>
         <Button
           className={classes.sectionButton}
+          data-testid="save-changes-button"
           disabled={!formTouched || isSubmitting || disabled}
           processing={isSubmitting}
           title="Save Changes"
