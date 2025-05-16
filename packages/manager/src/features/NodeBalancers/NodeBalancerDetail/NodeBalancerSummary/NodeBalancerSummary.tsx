@@ -9,10 +9,8 @@ import { SummaryPanel } from './SummaryPanel';
 import { TablesPanel } from './TablesPanel';
 
 export const NodeBalancerSummary = () => {
-  const { id } = useParams({
-    from: '/nodebalancers/$id/summary',
-  });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { id } = useParams({ from: '/nodebalancers/$id' });
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   return (
     <div>

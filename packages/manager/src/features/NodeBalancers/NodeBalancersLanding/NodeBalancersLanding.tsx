@@ -1,7 +1,7 @@
-import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
+import { useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -19,7 +19,6 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
@@ -27,8 +26,6 @@ const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const params = useParams({ strict: false });
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
@@ -54,12 +51,6 @@ export const NodeBalancersLanding = () => {
     },
     filter
   );
-
-  const {
-    data: selectedNodeBalancer,
-    isFetching: isFetchingNodeBalancer,
-    error: selectedNodeBalancerError,
-  } = useNodeBalancerQuery(Number(params.id), !!params.id);
 
   if (error) {
     return (
@@ -144,12 +135,6 @@ export const NodeBalancersLanding = () => {
         pageSize={pagination.pageSize}
       />
       <TransferDisplay spacingTop={18} />
-      <NodeBalancerDeleteDialog
-        isFetching={isFetchingNodeBalancer}
-        nodeBalancerError={selectedNodeBalancerError}
-        open={match.routeId === '/nodebalancers/$id/delete'}
-        selectedNodeBalancer={selectedNodeBalancer}
-      />
     </>
   );
 };

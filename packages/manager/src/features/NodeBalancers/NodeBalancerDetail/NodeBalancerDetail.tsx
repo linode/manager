@@ -2,10 +2,12 @@ import {
   useGrants,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
+  useQuery,
+  useQueryClient,
 } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { useMatch, useParams } from '@tanstack/react-router';
-import * as React from 'react';
+import { Outlet, useParams } from '@tanstack/react-router';
+import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -18,43 +20,25 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import NodeBalancerConfigurations from './NodeBalancerConfigurations';
-import { NodeBalancerSettings } from './NodeBalancerSettings';
-import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
+import { NodeBalancerConfigurations } from './NodeBalancerConfigurations';
+import { getConfigsWithNodes } from './requests';
 
-import type { NodeBalancerConfigurationsBaseProps } from './NodeBalancerConfigurations';
+import type { ConfigsWithNodes } from './requests';
+import type { APIError } from '@linode/api-v4';
 
 export const NodeBalancerDetail = () => {
-  const { id } = useParams({
-    strict: false,
-  });
-  const [label, setLabel] = React.useState<string>();
-  const { data: grants } = useGrants();
+  const { id } = useParams({ from: '/nodebalancers/$id' });
 
   const { error: updateError, mutateAsync: updateNodeBalancer } =
-    useNodebalancerUpdateMutation(Number(id));
+    useNodebalancerUpdateMutation(id);
 
-  const {
-    data: nodebalancer,
-    error,
-    isLoading,
-  } = useNodeBalancerQuery(Number(id), Boolean(id));
+  const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
-
-  React.useEffect(() => {
-    if (label !== nodebalancer?.label) {
-      setLabel(nodebalancer?.label);
-    }
-  }, [nodebalancer]);
-
-  const cancelUpdate = () => {
-    setLabel(nodebalancer?.label);
-  };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -88,8 +72,6 @@ export const NodeBalancerDetail = () => {
   const errorMap = getErrorMap(['label'], updateError);
   const labelError = errorMap.label;
 
-  const nodeBalancerLabel = label !== undefined ? label : nodebalancer?.label;
-
   return (
     <React.Fragment>
       <LandingHeader
@@ -97,17 +79,17 @@ export const NodeBalancerDetail = () => {
           crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           firstAndLastOnly: true,
           onEditHandlers: {
-            editableTextTitle: nodeBalancerLabel,
+            editableTextTitle: nodebalancer.label,
             errorText: labelError,
-            onCancel: cancelUpdate,
+            onCancel: () => '',
             onEdit: (label) => updateNodeBalancer({ label }),
           },
-          pathname: `/nodebalancers/${nodeBalancerLabel}`,
+          pathname: `/nodebalancers/${nodebalancer.label}`,
         }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         spacingBottom={4}
-        title={nodeBalancerLabel}
+        title={nodebalancer.label}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {isNodeBalancerReadOnly && (
@@ -123,17 +105,13 @@ export const NodeBalancerDetail = () => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <NodeBalancerSummary />
+              <Outlet />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <NodeBalancerConfigurationWrapper
-                grants={grants}
-                nodeBalancerLabel={nodebalancer.label}
-                nodeBalancerRegion={nodebalancer.region}
-              />
+              <Outlet />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
-              <NodeBalancerSettings />
+              <Outlet />
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
@@ -142,33 +120,41 @@ export const NodeBalancerDetail = () => {
   );
 };
 
-const NodeBalancerConfigurationWrapper = (
-  props: NodeBalancerConfigurationsBaseProps
-) => {
-  const { configId, id: nodeBalancerId } = useParams({
-    strict: false,
-  });
-  const match = useMatch({
-    strict: false,
+export const NodeBalancerConfigurationWrapper = () => {
+  const queryClient = useQueryClient();
+
+  const { id: nodeBalancerId } = useParams({
+    from: '/nodebalancers/$id/configurations',
   });
 
-  if (
-    (match.routeId === '/nodebalancers/$id/configurations' &&
-      !nodeBalancerId) ||
-    (!configId &&
-      match.routeId === '/nodebalancers/$id/configurations/$configId')
-  ) {
-    return null;
+  const { configId } = useParams({ strict: false });
+
+  const { data: grants } = useGrants();
+  const { data: nodeBalancer } = useNodeBalancerQuery(nodeBalancerId);
+
+  const { data, isPending, error } = useQuery<ConfigsWithNodes, APIError[]>({
+    queryKey: ['nodebalancers', nodeBalancerId, 'configs-with-nodes'],
+    queryFn: () => getConfigsWithNodes(nodeBalancerId),
+    gcTime: 0,
+  });
+
+  if (isPending) {
+    return <CircleProgress />;
   }
 
-  const matchProps = {
-    params: {
-      configId,
-      id: nodeBalancerId,
-    },
-  };
+  if (error) {
+    return <ErrorState errorText={error[0].reason} />;
+  }
 
-  return <NodeBalancerConfigurations {...props} {...matchProps} />;
+  return (
+    <NodeBalancerConfigurations
+      configId={configId}
+      configs={data}
+      grants={grants}
+      nodeBalancerId={nodeBalancerId}
+      nodeBalancerLabel={nodeBalancer?.label ?? ''}
+      nodeBalancerRegion={nodeBalancer?.region ?? ''}
+      queryClient={queryClient}
+    />
+  );
 };
-
-export default NodeBalancerDetail;

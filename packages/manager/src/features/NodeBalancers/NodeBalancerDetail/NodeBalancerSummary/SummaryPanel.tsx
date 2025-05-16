@@ -25,12 +25,11 @@ export const SummaryPanel = () => {
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const { id } = useParams({
-    from: '/nodebalancers/$id/summary',
-  });
+  const { id } = useParams({ from: '/nodebalancers/$id' });
+
   const { data: nodebalancer } = useNodeBalancerQuery(
-    Number(id),
-    Boolean(id),
+    id,
+    true,
     isLkeEnterpriseLAFeatureEnabled
   );
   const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));

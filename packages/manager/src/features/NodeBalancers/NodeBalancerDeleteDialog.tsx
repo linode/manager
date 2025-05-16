@@ -1,34 +1,27 @@
-import { useNodebalancerDeleteMutation } from '@linode/queries';
+import {
+  useNodebalancerDeleteMutation,
+  useNodeBalancerQuery,
+} from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 
-import type { APIError, NodeBalancer } from '@linode/api-v4';
+export const NodeBalancerDeleteDialog = () => {
+  const { id } = useParams({ from: '/nodebalancers/$id/settings/delete' });
 
-interface Props {
-  isFetching: boolean;
-  nodeBalancerError: APIError[] | null;
-  open: boolean;
-  selectedNodeBalancer: NodeBalancer | undefined;
-}
+  const {
+    data: nodebalancer,
+    error: entityError,
+    isLoading,
+  } = useNodeBalancerQuery(id);
 
-export const NodeBalancerDeleteDialog = ({
-  isFetching,
-  nodeBalancerError,
-  open,
-  selectedNodeBalancer,
-}: Props) => {
   const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
-  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
-    selectedNodeBalancer?.id ?? -1
-  );
 
-  const label = selectedNodeBalancer?.label;
+  const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(id);
+
+  const label = nodebalancer?.label;
 
   const onDelete = async () => {
     await mutateAsync();
@@ -42,23 +35,15 @@ export const NodeBalancerDeleteDialog = ({
         name: label,
         primaryBtnText: 'Delete',
         type: 'NodeBalancer',
-        error: nodeBalancerError,
+        error: entityError,
       }}
       errors={error ?? undefined}
       expand
       label={'NodeBalancer Label'}
-      loading={isPending || isFetching}
+      loading={isPending || isLoading}
       onClick={onDelete}
-      onClose={
-        match.routeId === '/nodebalancers/$id/settings/delete'
-          ? () =>
-              navigate({
-                params: { id: String(selectedNodeBalancer?.id) },
-                to: '/nodebalancers/$id/settings',
-              })
-          : () => navigate({ to: '/nodebalancers' })
-      }
-      open={open}
+      onClose={() => navigate({ to: '..' })}
+      open
       title={`Delete ${label ?? 'Unknown'}?`}
       typographyStyle={{ marginTop: '20px' }}
     >

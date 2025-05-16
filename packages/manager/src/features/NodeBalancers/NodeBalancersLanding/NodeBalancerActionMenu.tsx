@@ -34,7 +34,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
       onClick: () => {
         navigate({
           params: {
-            id: String(nodeBalancerId),
+            id: nodeBalancerId,
           },
           to: `/nodebalancers/$id/configurations`,
         });
@@ -45,7 +45,7 @@ export const NodeBalancerActionMenu = (props: Props) => {
       onClick: () => {
         navigate({
           params: {
-            id: String(nodeBalancerId),
+            id: nodeBalancerId,
           },
           to: `/nodebalancers/$id/settings`,
         });
