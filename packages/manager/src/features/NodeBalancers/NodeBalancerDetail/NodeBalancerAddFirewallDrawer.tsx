@@ -1,10 +1,10 @@
 import { Drawer } from '@linode/ui';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { createLazyRoute, useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { AddFirewallForm } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeFirewalls/AddFirewallForm';
 
-export const NodeBalancerAddFirewallDrawer = () => {
+const NodeBalancerAddFirewallDrawer = () => {
   const { id } = useParams({
     from: '/nodebalancers/$id/settings/add-firewall',
   });
@@ -24,3 +24,9 @@ export const NodeBalancerAddFirewallDrawer = () => {
     </Drawer>
   );
 };
+
+export const nodeBalancerSettingsAddFirewallLazyRoute = createLazyRoute(
+  '/nodebalancers/$id/settings/add-firewall'
+)({
+  component: NodeBalancerAddFirewallDrawer,
+});

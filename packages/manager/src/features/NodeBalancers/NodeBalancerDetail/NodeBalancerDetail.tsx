@@ -1,12 +1,9 @@
 import {
-  useGrants,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
-  useQuery,
-  useQueryClient,
 } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { Outlet, useParams } from '@tanstack/react-router';
+import { createLazyRoute, Outlet, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -20,13 +17,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import { NodeBalancerConfigurations } from './NodeBalancerConfigurations';
-import { getConfigsWithNodes } from './requests';
-
-import type { ConfigsWithNodes } from './requests';
-import type { APIError } from '@linode/api-v4';
-
-export const NodeBalancerDetail = () => {
+const NodeBalancerDetail = () => {
   const { id } = useParams({ from: '/nodebalancers/$id' });
 
   const { error: updateError, mutateAsync: updateNodeBalancer } =
@@ -37,7 +28,7 @@ export const NodeBalancerDetail = () => {
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
     grantType: 'nodebalancer',
-    id: nodebalancer?.id,
+    id,
   });
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
@@ -120,41 +111,8 @@ export const NodeBalancerDetail = () => {
   );
 };
 
-export const NodeBalancerConfigurationWrapper = () => {
-  const queryClient = useQueryClient();
-
-  const { id: nodeBalancerId } = useParams({
-    from: '/nodebalancers/$id/configurations',
-  });
-
-  const { configId } = useParams({ strict: false });
-
-  const { data: grants } = useGrants();
-  const { data: nodeBalancer } = useNodeBalancerQuery(nodeBalancerId);
-
-  const { data, isPending, error } = useQuery<ConfigsWithNodes, APIError[]>({
-    queryKey: ['nodebalancers', nodeBalancerId, 'configs-with-nodes'],
-    queryFn: () => getConfigsWithNodes(nodeBalancerId),
-    gcTime: 0,
-  });
-
-  if (isPending) {
-    return <CircleProgress />;
-  }
-
-  if (error) {
-    return <ErrorState errorText={error[0].reason} />;
-  }
-
-  return (
-    <NodeBalancerConfigurations
-      configId={configId}
-      configs={data}
-      grants={grants}
-      nodeBalancerId={nodeBalancerId}
-      nodeBalancerLabel={nodeBalancer?.label ?? ''}
-      nodeBalancerRegion={nodeBalancer?.region ?? ''}
-      queryClient={queryClient}
-    />
-  );
-};
+export const nodeBalancerDetailLazyRoute = createLazyRoute(
+  '/nodebalancers/$id'
+)({
+  component: NodeBalancerDetail,
+});

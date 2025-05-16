@@ -21,7 +21,7 @@ import {
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from '@tanstack/react-router';
+import { createLazyRoute, useNavigate } from '@tanstack/react-router';
 import { append, clone, compose, defaultTo, lensPath, over } from 'ramda';
 import * as React from 'react';
 
@@ -97,6 +97,7 @@ const defaultDeleteConfigConfirmDialogState = {
 const defaultFieldsStates = {
   configs: [createNewNodeBalancerConfig(true)],
 };
+
 
 const NodeBalancerCreate = () => {
   const flags = useFlags();
@@ -810,4 +811,8 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
   }, []);
 };
 
-export default NodeBalancerCreate;
+export const nodeBalancerCreateLazyRoute = createLazyRoute(
+  '/nodebalancers/create'
+)({
+  component: NodeBalancerCreate,
+});

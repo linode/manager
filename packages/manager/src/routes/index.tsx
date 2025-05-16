@@ -19,7 +19,7 @@ import { linodesRouteTree } from './linodes';
 import { longviewRouteTree } from './longview';
 import { managedRouteTree } from './managed';
 import { cloudPulseMetricsRouteTree } from './metrics';
-import { nodeBalancersRouteTree } from './nodeBalancers';
+import { nodeBalancersRouteTree } from './nodeBalancers/tree';
 import { objectStorageRouteTree } from './objectStorage';
 import { placementGroupsRouteTree } from './placementGroups';
 import { profileRouteTree } from './profile';

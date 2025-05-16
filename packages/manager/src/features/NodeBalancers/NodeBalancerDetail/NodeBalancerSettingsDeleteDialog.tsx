@@ -1,9 +1,13 @@
-import { useNavigate, useParams } from '@tanstack/react-router';
+import {
+  createLazyRoute,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import React from 'react';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
 
-export const NodeBalancerSettingsDeleteDialog = () => {
+const NodeBalancerSettingsDeleteDialog = () => {
   const navigate = useNavigate();
   const { id } = useParams({ from: '/nodebalancers/$id/settings/delete' });
 
@@ -17,3 +21,9 @@ export const NodeBalancerSettingsDeleteDialog = () => {
     />
   );
 };
+
+export const nodeBalancerDetailSettingsDeleteRoute = createLazyRoute(
+  '/nodebalancers/$id/settings/delete'
+)({
+  component: NodeBalancerSettingsDeleteDialog,
+});

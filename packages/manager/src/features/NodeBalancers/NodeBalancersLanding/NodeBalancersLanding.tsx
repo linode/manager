@@ -1,7 +1,7 @@
 import { useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { Outlet, useNavigate } from '@tanstack/react-router';
+import { createLazyRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -24,7 +24,7 @@ import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
 const preferenceKey = 'nodebalancers';
 
-export const NodeBalancersLanding = () => {
+const NodeBalancersLanding = () => {
   const navigate = useNavigate();
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
@@ -140,4 +140,6 @@ export const NodeBalancersLanding = () => {
   );
 };
 
-export default NodeBalancersLanding;
+export const nodeBalancersLandingLazyRoute = createLazyRoute('/nodebalancers')({
+  component: NodeBalancersLanding,
+});
