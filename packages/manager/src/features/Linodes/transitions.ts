@@ -1,4 +1,4 @@
-import { capitalizeAllWords } from '@linode/utilities';
+import { getFormattedStatus } from '@linode/utilities';
 
 import {
   isEventRelevantToLinode,
@@ -73,7 +73,7 @@ export const transitionText = (
     return transitionActionMap[recentEvent.action];
   }
 
-  return capitalizeAllWords(status.replace('_', ' '));
+  return getFormattedStatus(status);
 };
 
 // Given a list of Events, returns a set of all Linode IDs that are involved in an in-progress event.
