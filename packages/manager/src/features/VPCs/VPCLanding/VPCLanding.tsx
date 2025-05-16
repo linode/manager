@@ -168,7 +168,7 @@ const VPCLanding = () => {
             </Hidden>
             <TableCell>Subnets</TableCell>
             <Hidden mdDown>
-              <TableCell>Linodes</TableCell>
+              <TableCell>Resources</TableCell>
             </Hidden>
             <TableCell />
           </TableRow>

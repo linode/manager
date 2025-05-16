@@ -101,7 +101,7 @@ const VPCDetail = () => {
         value: vpc.subnets.length,
       },
       {
-        label: 'Linodes',
+        label: 'Resources',
         value: numLinodes,
       },
     ],
