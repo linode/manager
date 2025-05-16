@@ -1,13 +1,14 @@
 import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
-import { imageFactory, typeFactory } from 'src/factories';
+import { accountFactory, imageFactory, typeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { Summary } from './Summary';
 
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 describe('Linode Create Summary', () => {
@@ -278,5 +279,113 @@ describe('Linode Create Summary', () => {
     });
 
     await findByText('Encrypted');
+  });
+
+  describe('Legacy Interfaces', () => {
+    it('should render "VPC Assigned" if a VPC is selected', () => {
+      const { getByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: { interfaces: [{ vpc_id: 1, subnet_id: 2 }] },
+          },
+          options: { flags: { linodeInterfaces: { enabled: false } } },
+        });
+
+      expect(getByText('VPC Assigned')).toBeVisible();
+    });
+
+    it('should render "VLAN Attached" if a VLAN is selected', () => {
+      const { getByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            // VLAN interface is always stored at index 1 for legacy interfaces
+            defaultValues: { interfaces: [{}, { label: 'my-vlan-label' }] },
+          },
+          options: { flags: { linodeInterfaces: { enabled: false } } },
+        });
+
+      expect(getByText('VLAN Attached')).toBeVisible();
+    });
+
+    it('should render "Firewall Assigned" if a Firewall is selected', () => {
+      const { getByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: { firewall_id: 5 },
+          },
+          options: { flags: { linodeInterfaces: { enabled: false } } },
+        });
+
+      expect(getByText('Firewall Assigned')).toBeVisible();
+    });
+  });
+
+  describe('Linode Interfaces', () => {
+    // Account capability must be present for Linode Interfaces
+    beforeEach(() => {
+      const account = accountFactory.build({
+        capabilities: ['Linodes', 'Linode Interfaces'],
+      });
+
+      server.use(
+        http.get('*/v4/account', () => {
+          return HttpResponse.json(account);
+        })
+      );
+    });
+
+    it('should render "VPC Assigned" if a VPC is selected', async () => {
+      const { findByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: {
+              linodeInterfaces: [{ purpose: 'vpc', vpc: { subnet_id: 2 } }],
+            },
+          },
+          options: { flags: { linodeInterfaces: { enabled: true } } },
+        });
+
+      const text = await findByText('VPC Assigned');
+      expect(text).toBeVisible();
+    });
+
+    it('should render "VLAN Attached" if a VLAN is selected', async () => {
+      const { findByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: {
+              linodeInterfaces: [
+                { purpose: 'vlan', vlan: { vlan_label: 'my-test-vlan-1' } },
+              ],
+            },
+          },
+          options: { flags: { linodeInterfaces: { enabled: true } } },
+        });
+
+      const text = await findByText('VLAN Attached');
+      expect(text).toBeVisible();
+    });
+
+    it('should render "Firewall Assigned" if a Firewall is selected', async () => {
+      const { findByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: {
+              linodeInterfaces: [{ firewall_id: 5 }],
+              interface_generation: 'linode',
+            },
+          },
+          options: { flags: { linodeInterfaces: { enabled: true } } },
+        });
+
+      const text = await findByText('Firewall Assigned');
+      expect(text).toBeVisible();
+    });
   });
 });

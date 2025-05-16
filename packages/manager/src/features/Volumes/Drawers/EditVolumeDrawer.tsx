@@ -18,17 +18,18 @@ import {
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const EditVolumeDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { data: grants } = useGrants();
 
@@ -83,6 +84,7 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
