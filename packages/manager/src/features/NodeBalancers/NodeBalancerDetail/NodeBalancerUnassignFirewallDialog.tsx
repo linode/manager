@@ -1,14 +1,13 @@
 import { useAllFirewallDevicesQuery, useFirewallQuery } from '@linode/queries';
-import { createLazyRoute, useNavigate, useParams } from '@tanstack/react-router';
+import { createLazyRoute, useNavigate } from '@tanstack/react-router';
 import React from 'react';
 
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
 
 const NodeBalancerUnassignFirewallDialog = () => {
   const navigate = useNavigate();
-  const { id, firewallId } = useParams({
-    from: '/nodebalancers/$id/settings/unassign-firewall/$firewallId',
-  });
+  const { id, firewallId } =
+    nodeBalancerSettingsUnassignFirewallLazyRoute.useParams();
 
   const {
     data: firewall,
