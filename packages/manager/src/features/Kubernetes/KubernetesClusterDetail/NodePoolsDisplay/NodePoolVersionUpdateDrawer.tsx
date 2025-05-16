@@ -1,11 +1,5 @@
-import {
-  ActionsPanel,
-  Autocomplete,
-  Drawer,
-  Notice,
-  Typography,
-} from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -17,6 +11,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { getNextVersion } from '../../kubeUtils';
+import { NodePoolsUpdateStrategySelect } from './NodePoolsUpdateStrategySelect';
 
 import type {
   KubeNodePoolResponseBeta,
@@ -33,11 +28,6 @@ export interface Props {
 interface VersionUpdateFormFields {
   update_strategy: NodePoolUpdateStrategy;
 }
-
-const updateStrategyOptions = [
-  { label: 'On Recycle Updates', value: 'on_recycle' },
-  { label: 'Rolling Updates', value: 'rolling_update' },
-];
 
 export const NodePoolVersionUpdateDrawer = (props: Props) => {
   const { clusterId, nodePool, onClose, open } = props;
@@ -119,18 +109,9 @@ export const NodePoolVersionUpdateDrawer = (props: Props) => {
             control={control}
             name="update_strategy"
             render={({ field }) => (
-              <Autocomplete
-                label="Version Update Strategy"
-                onChange={(e, updateStrategy) =>
-                  field.onChange(updateStrategy?.value)
-                }
-                options={updateStrategyOptions}
-                placeholder="Select an Update Strategy"
-                value={
-                  updateStrategyOptions.find(
-                    (option) => option.value === field.value
-                  ) ?? null
-                }
+              <NodePoolsUpdateStrategySelect
+                onChange={field.onChange}
+                value={field.value}
               />
             )}
           />
