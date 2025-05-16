@@ -16,6 +16,8 @@ interface LinodeSelectProps {
   clearable?: boolean;
   /** Disable editing the input value. */
   disabled?: boolean;
+  /* New prop for linode Ids and reasons for disable */
+  disabledLinodesMap?: Record<number, string>;
   /** Hint displayed with error styling. */
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
@@ -93,6 +95,7 @@ export const LinodeSelect = (
     placeholder,
     sx,
     value,
+    disabledLinodesMap,
   } = props;
 
   const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
@@ -120,7 +123,13 @@ export const LinodeSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={error?.[0].reason ?? errorText}
-      getOptionDisabled={getOptionDisabled}
+      // getOptionDisabled={getOptionDisabled}
+      getOptionDisabled={(linode) => {
+        if (disabledLinodesMap?.[linode.id]) {
+          return true;
+        }
+        return getOptionDisabled?.(linode) ?? false;
+      }}
       helperText={helperText}
       id={id}
       inputValue={inputValue}
@@ -152,6 +161,18 @@ export const LinodeSelect = (
             : 'Select a Linode'
       }
       PopperComponent={CustomPopper}
+      renderOption={(props, linode) => {
+        const isDisabled = disabledLinodesMap?.[linode.id];
+
+        return (
+          <li {...props}>
+            <div>
+              {linode.label}
+              {isDisabled && disabledLinodesMap?.[linode.id]}
+            </div>
+          </li>
+        );
+      }}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}
       sx={sx}
       value={

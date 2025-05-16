@@ -191,6 +191,10 @@ export const CreateImageTab = () => {
 
             <LinodeSelect
               disabled={isImageCreateRestricted}
+              disabledLinodesMap={{
+                1122: 'Linode is shut down',
+                9900: 'Linode is attached to vpc',
+              }}
               getOptionDisabled={
                 grants
                   ? (linode) =>
@@ -212,6 +216,7 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
+
             {selectedLinode && !linodeRegionSupportsImageStorage && (
               <Notice variant="warning">
                 This Linode’s region doesn’t support local image storage. This
