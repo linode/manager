@@ -1,6 +1,6 @@
 import { ActionsPanel, Drawer, Notice, Select, TextField } from '@linode/ui';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { useMatch } from '@tanstack/react-router';
 import { Formik } from 'formik';

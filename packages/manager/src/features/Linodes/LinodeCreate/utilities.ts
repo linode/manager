@@ -1,6 +1,7 @@
 import {
   accountQueries,
   firewallQueries,
+  imageQueries,
   linodeQueries,
   stackscriptQueries,
 } from '@linode/queries';
@@ -15,7 +16,6 @@ import { useCallback } from 'react';
 import type { FieldErrors } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
-import { imageQueries } from 'src/queries/images';
 import { sendCreateLinodeEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormErrorEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';

@@ -1,5 +1,5 @@
 import { Button } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -170,7 +170,7 @@ const StyledActions = styled('div')(({ theme }) => ({
 }));
 
 const StyledLandingHeaderGrid = styled(Grid)(({ theme }) => ({
-  '&:not(:first-child)': {
+  '&:not(:first-of-type)': {
     marginTop: theme.spacingFunction(24),
   },
 }));

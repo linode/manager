@@ -1,10 +1,9 @@
-import { useLinodeQuery, useRegionQuery } from '@linode/queries';
+import { useImageQuery, useLinodeQuery, useRegionQuery } from '@linode/queries';
 import { Accordion, Checkbox, Notice, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useImageQuery } from 'src/queries/images';
 
 import type { RebuildLinodeFormValues } from './utils';
 

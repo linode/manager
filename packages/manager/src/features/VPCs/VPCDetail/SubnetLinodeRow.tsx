@@ -1,7 +1,7 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -204,7 +204,7 @@ export const SubnetLinodeRow = (props: Props) => {
             />
           </>
         ) : (
-          capitalizeAllWords(linode.status.replace('_', ' '))
+          getFormattedStatus(linode.status)
         )}
       </TableCell>
       <Hidden smDown>

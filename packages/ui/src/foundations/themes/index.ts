@@ -78,7 +78,7 @@ type ComponentTypes = MergeTypes<ComponentTypesDark, ComponentTypesLight>;
  * This allows us to add custom fields to the theme.
  * Avoid doing this unless you have a good reason.
  */
-declare module '@mui/material/styles/createTheme' {
+declare module '@mui/material/styles' {
   export interface Theme {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;

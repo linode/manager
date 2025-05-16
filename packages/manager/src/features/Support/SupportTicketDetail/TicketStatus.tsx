@@ -2,7 +2,7 @@ import { useProfile } from '@linode/queries';
 import { Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 

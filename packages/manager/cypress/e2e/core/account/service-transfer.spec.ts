@@ -546,7 +546,7 @@ describe('Account service transfers', () => {
           .within(() => {
             cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
             // Error Icon should shows up.
-            cy.findByTestId('ErrorOutlineIcon').should('be.visible');
+            cy.findByTestId('error-state').should('be.visible');
             // Error message should be visible.
             cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
               'be.visible'

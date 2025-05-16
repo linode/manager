@@ -1,5 +1,5 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import { Accordion, ActionsPanel, Notice } from '@linode/ui';
+import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -93,7 +93,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('cpu', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'cpu',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'cpu_usage_state',
       state: formik.values.cpu > 0,
       textInputLabel: 'cpu_usage_threshold',
@@ -115,7 +118,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           checked ? (linode?.alerts.io ? linode?.alerts.io : 10000) : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('io', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'io',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'disk_io_state',
       state: formik.values.io > 0,
       textInputLabel: 'disk_io_threshold',
@@ -141,7 +147,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('network_in', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'network_in',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'incoming_traffic_state',
       state: formik.values.network_in > 0,
       textInputLabel: 'incoming_traffic_threshold',
@@ -167,7 +176,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('network_out', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'network_out',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'outbound_traffic_state',
       state: formik.values.network_out > 0,
       textInputLabel: 'outbound_traffic_threshold',
@@ -193,7 +205,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             : 0
         ),
       onValueChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        formik.setFieldValue('transfer_quota', e.target.valueAsNumber),
+        formik.setFieldValue(
+          'transfer_quota',
+          !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
+        ),
       radioInputLabel: 'transfer_quota_state',
       state: formik.values.transfer_quota > 0,
       textInputLabel: 'transfer_quota_threshold',
@@ -203,8 +218,23 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
-  const renderExpansionActions = () => {
-    return (
+  const generalError = hasErrorFor('none');
+
+  return (
+    <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
+      <Typography
+        sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+        variant="h2"
+      >
+        Alerts
+      </Typography>
+      {generalError && <Notice variant="error">{generalError}</Notice>}
+      {alertSections.map((p, idx) => (
+        <React.Fragment key={`alert-${idx}`}>
+          <AlertSection {...p} readOnly={isReadOnly} />
+          {idx !== alertSections.length - 1 ? <Divider /> : null}
+        </React.Fragment>
+      ))}
       <StyledActionsPanel
         primaryButtonProps={{
           'data-testid': 'alerts-save',
@@ -214,22 +244,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           onClick: () => formik.handleSubmit(),
         }}
       />
-    );
-  };
-
-  const generalError = hasErrorFor('none');
-
-  return (
-    <Accordion
-      actions={renderExpansionActions}
-      defaultExpanded
-      heading="Alerts"
-    >
-      {generalError && <Notice variant="error">{generalError}</Notice>}
-      {alertSections.map((p, idx) => (
-        <AlertSection key={idx} {...p} readOnly={isReadOnly} />
-      ))}
-    </Accordion>
+    </Paper>
   );
 };
 

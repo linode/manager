@@ -128,7 +128,9 @@ describe('Migrate Linode With Firewall', () => {
           'be.visible'
         );
         ui.regionSelect.find().click();
-        ui.regionSelect.findItemByRegionLabel(mockSingapore.label).click();
+        ui.regionSelect
+          .findItemByRegionLabel(mockSingapore.label, mockRegions)
+          .click();
 
         ui.button
           .findByTitle('Enter Migration Queue')
@@ -143,9 +145,8 @@ describe('Migrate Linode With Firewall', () => {
   /*
    * - Uses real API data to create a Firewall, attach a Linode to it, then migrate the Linode.
    */
-  it.skip('migrates linode with firewall - real data', () => {
+  it('migrates linode with firewall - real data', () => {
     cy.tag('method:e2e', 'purpose:dcTesting', 'env:multipleRegions');
-
     // Execute the body of the test inside Cypress's command queue to ensure
     // that logic that requires multiple regions only executes after tags are evaluated.
     cy.defer(async () => {}).then(() => {
@@ -188,8 +189,8 @@ describe('Migrate Linode With Firewall', () => {
               .should('be.visible')
               .click();
 
-            // Click on the Select again to dismiss the autocomplete popper.
-            cy.findByLabelText('Linodes').should('be.visible').click();
+            // Dismiss the autocomplete popper.
+            cy.focused().type('{esc}');
 
             ui.buttonGroup
               .findButtonByTitle('Create Firewall')

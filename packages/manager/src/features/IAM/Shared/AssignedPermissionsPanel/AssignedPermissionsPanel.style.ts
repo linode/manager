@@ -9,8 +9,11 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
 }));
 
-export const StyledTitle = styled(Typography)(({ theme }) => ({
+export const StyledTitle = styled(Typography)<{
+  showName?: boolean | undefined;
+}>(({ theme, showName }) => ({
   font: theme.tokens.alias.Typography.Label.Bold.S,
+  marginBottom: showName ? theme.tokens.spacing.S12 : undefined,
 }));
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({

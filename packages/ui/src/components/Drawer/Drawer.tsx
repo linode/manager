@@ -1,6 +1,6 @@
 import { CloseIcon } from '@linode/ui';
 import _Drawer from '@mui/material/Drawer';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 

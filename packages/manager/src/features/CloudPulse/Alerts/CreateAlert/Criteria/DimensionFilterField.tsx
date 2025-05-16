@@ -1,6 +1,6 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -92,14 +92,14 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     ? textFieldOperators.includes(dimensionOperatorWatcher)
     : false;
   return (
-    <Grid
+    <GridLegacy
       container
       data-testid={`${name}-id`}
       sx={{
         gap: 2,
       }}
     >
-      <Grid item md={3} xs={12}>
+      <GridLegacy item md={3} xs={12}>
         <Controller
           control={control}
           name={`${name}.dimension_label`}
@@ -128,8 +128,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             />
           )}
         />
-      </Grid>
-      <Grid item md={2} xs={12}>
+      </GridLegacy>
+      <GridLegacy item md={2} xs={12}>
         <Controller
           control={control}
           name={`${name}.operator`}
@@ -160,8 +160,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             />
           )}
         />
-      </Grid>
-      <Grid item md={3} xs={12}>
+      </GridLegacy>
+      <GridLegacy item md={3} xs={12}>
         <Box display="flex" gap={2}>
           <Controller
             control={control}
@@ -216,7 +216,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             <ClearIconButton handleClick={onFilterDelete} />
           </Box>
         </Box>
-      </Grid>
-    </Grid>
+      </GridLegacy>
+    </GridLegacy>
   );
 };

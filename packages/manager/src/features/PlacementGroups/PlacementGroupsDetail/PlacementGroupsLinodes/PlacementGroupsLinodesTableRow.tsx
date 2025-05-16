@@ -1,5 +1,5 @@
 import { usePlacementGroupQuery } from '@linode/queries';
-import { capitalizeAllWords } from '@linode/utilities';
+import { getFormattedStatus } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -97,7 +97,7 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         ) : (
           <>
             <StatusIcon status={iconStatus} />
-            {capitalizeAllWords(status.replace('_', ' '))}
+            {getFormattedStatus(status)}
           </>
         )}
       </TableCell>

@@ -1,5 +1,5 @@
 import { Box, Divider, Notice, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';

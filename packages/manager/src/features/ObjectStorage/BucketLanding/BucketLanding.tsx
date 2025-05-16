@@ -1,7 +1,7 @@
 import { useProfile, useRegionsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Typography } from '@linode/ui';
 import { readableBytes, useOpenClose } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 

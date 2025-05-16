@@ -1,4 +1,7 @@
-import { useRegionsQuery } from '@linode/queries';
+import {
+  useRegionsQuery,
+  useUpdateImageRegionsMutation,
+} from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -9,7 +12,6 @@ import type { Resolver } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useUpdateImageRegionsMutation } from 'src/queries/images';
 
 import { ImageRegionRow } from './ImageRegionRow';
 

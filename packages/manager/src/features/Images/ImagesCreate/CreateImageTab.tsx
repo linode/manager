@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
+  useCreateImageMutation,
   useGrants,
   useLinodeQuery,
   useRegionsQuery,
@@ -30,7 +31,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useCreateImageMutation } from 'src/queries/images';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 

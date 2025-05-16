@@ -7,9 +7,8 @@ import { createTestLinode } from 'support/util/linodes';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 authenticate();
-// Firewall GET API request performance issues need to be addressed in order to unskip this test
-// See M3-9619
-describe.skip('create firewall', () => {
+
+describe('create firewall', () => {
   before(() => {
     cleanUp(['lke-clusters', 'linodes', 'firewalls']);
   });
@@ -101,7 +100,7 @@ describe.skip('create firewall', () => {
             .should('be.visible')
             .click();
 
-          cy.findByLabelText('Linodes').should('be.visible').click();
+          cy.focused().type('{esc}');
 
           ui.buttonGroup
             .findButtonByTitle('Create Firewall')

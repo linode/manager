@@ -1,8 +1,8 @@
 import { Typography } from '@linode/ui';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
-export const StyledGridContainer = styled(Grid2, {
+export const StyledGridContainer = styled(Grid, {
   label: 'StyledGridContainer',
 })(({ theme }) => ({
   '&>*:nth-of-type(even)': {
@@ -35,7 +35,7 @@ export const StyledLabelTypography = styled(Typography, {
   padding: `${theme.spacing(0.5)} 15px`,
 }));
 
-export const StyledValueGrid = styled(Grid2, {
+export const StyledValueGrid = styled(Grid, {
   label: 'StyledValueGrid',
 })(({ theme }) => ({
   alignItems: 'center',
@@ -43,5 +43,3 @@ export const StyledValueGrid = styled(Grid2, {
   display: 'flex',
   padding: `0 ${theme.spacing()}`,
 }));
-
-// theme.spacing() 8

@@ -1,7 +1,7 @@
 import { Typography } from '@linode/ui';
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 

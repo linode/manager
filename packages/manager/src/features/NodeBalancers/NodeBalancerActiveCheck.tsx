@@ -11,7 +11,7 @@ import {
   CHECK_INTERVAL,
   CHECK_TIMEOUT,
 } from '@linode/validation';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';

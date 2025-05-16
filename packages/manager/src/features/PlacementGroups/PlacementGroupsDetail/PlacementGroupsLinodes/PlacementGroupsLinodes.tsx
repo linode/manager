@@ -1,6 +1,6 @@
 import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
 import { Button, ErrorState, Stack } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
