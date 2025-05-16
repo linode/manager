@@ -12,7 +12,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import {
   getIsVPCLKEEnterpriseCluster,
-  getUniqueLinodesFromSubnets,
+  getUniqueResourcesFromSubnets,
 } from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
@@ -29,7 +29,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numLinodes = getUniqueLinodesFromSubnets(vpc.subnets);
+  const numLinodes = getUniqueResourcesFromSubnets(vpc.subnets);
 
   const isVPCReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',

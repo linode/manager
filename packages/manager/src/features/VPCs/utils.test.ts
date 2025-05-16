@@ -13,7 +13,7 @@ import {
 import {
   getLinodeInterfacePrimaryIPv4,
   getLinodeInterfaceRanges,
-  getUniqueLinodesFromSubnets,
+  getUniqueResourcesFromSubnets,
   getVPCInterfacePayload,
   hasUnrecommendedConfiguration,
   hasUnrecommendedConfigurationLinodeInterface,
@@ -26,8 +26,8 @@ const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
 const subnetLinodeInfoId1 = subnetAssignedLinodeDataFactory.build({ id: 1 });
 const subnetLinodeInfoId3 = subnetAssignedLinodeDataFactory.build({ id: 3 });
 
-describe('getUniqueLinodesFromSubnets', () => {
-  it(`returns the number of unique linodes within a VPC's subnets`, () => {
+describe('getUniqueResourcesFromSubnets', () => {
+  it(`returns the number of unique linodes and nodeBalancers within a VPC's subnets`, () => {
     const subnets0 = [subnetFactory.build({ linodes: [] })];
     const subnets1 = [subnetFactory.build({ linodes: subnetLinodeInfoList1 })];
     const subnets2 = [
@@ -55,11 +55,11 @@ describe('getUniqueLinodesFromSubnets', () => {
       }),
     ];
 
-    expect(getUniqueLinodesFromSubnets(subnets0)).toBe(0);
-    expect(getUniqueLinodesFromSubnets(subnets1)).toBe(4);
-    expect(getUniqueLinodesFromSubnets(subnets2)).toBe(2);
+    expect(getUniqueResourcesFromSubnets(subnets0)).toBe(0);
+    expect(getUniqueResourcesFromSubnets(subnets1)).toBe(4);
+    expect(getUniqueResourcesFromSubnets(subnets2)).toBe(2);
     // updated factory for generating linode ids, so unique linodes will be different
-    expect(getUniqueLinodesFromSubnets(subnets3)).toBe(8);
+    expect(getUniqueResourcesFromSubnets(subnets3)).toBe(8);
   });
 });
 
