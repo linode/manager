@@ -1,5 +1,6 @@
 import { useInfiniteVolumesQuery, useVolumeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 
 interface Props {
@@ -17,11 +18,13 @@ export const VolumeSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
-  const searchFilter = inputValue
+  const debouncedInputValue = useDebouncedValue(inputValue);
+
+  const searchFilter = debouncedInputValue
     ? {
         '+or': [
-          { label: { '+contains': inputValue } },
-          { tags: { '+contains': inputValue } },
+          { label: { '+contains': debouncedInputValue } },
+          { tags: { '+contains': debouncedInputValue } },
         ],
       }
     : {};
