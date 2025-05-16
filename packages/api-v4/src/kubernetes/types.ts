@@ -20,7 +20,7 @@ export interface Taint {
 }
 
 export interface KubernetesCluster {
-  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
+  apl_enabled: boolean;
   control_plane: ControlPlaneOptions;
   created: string;
   id: number;
@@ -29,7 +29,7 @@ export interface KubernetesCluster {
   region: string;
   status: string; // @todo enum this
   tags: string[];
-  /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality, in line with the apl_enabled approach.
+  /** Marked as 'optional' in this existing interface to prevent duplicated code for beta functionality.
    * @todo LKE-E - Make this field required once LKE-E is in GA. tier defaults to 'standard' in the API.
    */
   tier?: KubernetesTier;
@@ -131,7 +131,7 @@ export interface ControlPlaneOptions {
 }
 
 export interface CreateKubeClusterPayload {
-  apl_enabled?: boolean; // this is not the ideal solution, but a necessary compromise to prevent a lot of duplicated code.
+  apl_enabled: boolean;
   control_plane?: ControlPlaneOptions;
   k8s_version?: string; // Will be caught by Yup if undefined
   label?: string; // Label will be assigned by the API if not provided

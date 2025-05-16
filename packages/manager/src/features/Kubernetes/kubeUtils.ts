@@ -1,9 +1,5 @@
-import { useAccount, useAccountBetaQuery } from '@linode/queries';
-import {
-  getBetaStatus,
-  isFeatureEnabledV2,
-  sortByVersion,
-} from '@linode/utilities';
+import { useAccount } from '@linode/queries';
+import { isFeatureEnabledV2, sortByVersion } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -120,20 +116,6 @@ export const getKubeHighAvailability = (
     isClusterHighlyAvailable,
     showHighAvailability,
   };
-};
-
-export const useAPLAvailability = () => {
-  const flags = useFlags();
-
-  // Only fetch the account beta if the APL flag is enabled
-  const { data: beta, isLoading } = useAccountBetaQuery(
-    'apl',
-    Boolean(flags.apl)
-  );
-
-  const showAPL = beta !== undefined && getBetaStatus(beta) === 'active';
-
-  return { isLoading: flags.apl && isLoading, showAPL };
 };
 
 export const getKubeControlPlaneACL = (
@@ -271,12 +253,9 @@ export const useLkeStandardOrEnterpriseVersions = (
 };
 
 export const useKubernetesBetaEndpoint = () => {
-  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
 
   return {
-    isAPLAvailabilityLoading,
-    isUsingBetaEndpoint,
+    isUsingBetaEndpoint: isLkeEnterpriseLAFeatureEnabled,
   };
 };

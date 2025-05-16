@@ -33,7 +33,6 @@ import {
   getKubeControlPlaneACL,
   getKubeHighAvailability,
   getLatestVersion,
-  useAPLAvailability,
   useIsLkeEnterpriseEnabled,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
@@ -104,13 +103,12 @@ export const CreateCluster = () => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
+  const [aplEnabled, setAplEnabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
-  const { showAPL } = useAPLAvailability();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
@@ -131,7 +129,7 @@ export const CreateCluster = () => {
   } = useKubernetesTypesQuery(selectedTier === 'enterprise');
 
   // LKE-E does not support APL at this time.
-  const isAPLSupported = showAPL && selectedTier === 'standard';
+  const isAPLSupported = selectedTier === 'standard';
 
   const handleClusterTierSelection = (tier: KubernetesTier) => {
     setSelectedTier(tier);
@@ -252,6 +250,7 @@ export const CreateCluster = () => {
     };
 
     let payload: CreateKubeClusterPayload = {
+      apl_enabled: aplEnabled,
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
@@ -271,16 +270,14 @@ export const CreateCluster = () => {
       region: selectedRegion?.id,
     };
 
-    if (isAPLSupported) {
-      payload = { ...payload, apl_enabled };
-    }
-
     if (isLkeEnterpriseLAFeatureEnabled) {
       payload = { ...payload, tier: selectedTier };
     }
 
+    // It does appear that although APL is now supported by the v4, the return payload seems to omit the apl_enabled field.
+    // Therefore we still hit beta for now as a precaution.
     const createClusterFn =
-      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
+      aplEnabled || isLkeEnterpriseLAFeatureEnabled
         ? createKubernetesClusterBeta
         : createKubernetesCluster;
 
@@ -491,24 +488,22 @@ export const CreateCluster = () => {
                 />
               </StyledDocsLinkContainer>
             </StyledStackWithTabletBreakpoint>
-            {showAPL && (
-              <>
-                <Divider sx={{ marginTop: 4 }} />
-                <StyledStackWithTabletBreakpoint>
-                  <Stack>
-                    <ApplicationPlatform
-                      isSectionDisabled={!isAPLSupported}
-                      setAPL={setApl_enabled}
-                      setHighAvailability={setHighAvailability}
-                    />
-                  </Stack>
-                </StyledStackWithTabletBreakpoint>
-              </>
-            )}
+
+            <Divider sx={{ marginTop: 4 }} />
+            <StyledStackWithTabletBreakpoint>
+              <Stack>
+                <ApplicationPlatform
+                  isSectionDisabled={!isAPLSupported}
+                  setAPL={setAplEnabled}
+                  setHighAvailability={setHighAvailability}
+                />
+              </Stack>
+            </StyledStackWithTabletBreakpoint>
+
             <Divider
               sx={{
                 marginBottom: selectedTier === 'enterprise' ? 3 : 1,
-                marginTop: showAPL ? 1 : 4,
+                marginTop: 1,
               }}
             />
             {showHighAvailability && selectedTier !== 'enterprise' && (
@@ -519,7 +514,7 @@ export const CreateCluster = () => {
                       ? UNKNOWN_PRICE
                       : highAvailabilityPrice
                   }
-                  isAPLEnabled={apl_enabled}
+                  isAPLEnabled={aplEnabled}
                   isErrorKubernetesTypes={isErrorKubernetesTypes}
                   isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                   selectedRegionId={selectedRegion?.id}
@@ -568,7 +563,7 @@ export const CreateCluster = () => {
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
               hasSelectedRegion={hasSelectedRegion}
-              isAPLEnabled={apl_enabled}
+              isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               regionsData={regionsData}
