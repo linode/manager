@@ -9,12 +9,14 @@ import {
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
+  mapEntityTypesForSelect,
   mergeAssignedRolesIntoExistingRoles,
+  partition,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { ExtendedRoleView } from './types';
+import type { EntitiesRole, ExtendedRoleView, RoleView } from './types';
 import type { AssignNewRoleFormValues } from './utilities';
 import type { EntityAccess } from '@linode/api-v4';
 
@@ -80,6 +82,15 @@ const mockAssignRolesFormValues: AssignNewRoleFormValues = {
         entity_type: 'account',
         label: 'account_viewer',
         value: 'account_viewer',
+      },
+    },
+    {
+      entities: null,
+      role: {
+        access: 'account_access',
+        entity_type: 'account',
+        label: 'account_linode_admin',
+        value: 'account_linode_admin',
       },
     },
     {
@@ -705,6 +716,24 @@ describe('getFacadeRoleDescription', () => {
   });
 });
 
+describe('partition', () => {
+  it('should partition given array into two based on predicate passed in', () => {
+    expect(partition([0, 4, 1, 6, 8, 9, 2, 3], (n) => n % 2 === 0)).toEqual([
+      [0, 4, 6, 8, 2],
+      [1, 9, 3],
+    ]);
+
+    expect(partition([0, 4, 1, 6, 8, 9, 2, 3], (n) => n > 9)).toEqual([
+      [],
+      [0, 4, 1, 6, 8, 9, 2, 3],
+    ]);
+
+    expect(
+      partition(['aaa', 'abc', 'and'], (s) => s.indexOf('a') >= 0)
+    ).toEqual([['aaa', 'abc', 'and'], []]);
+  });
+});
+
 describe('mergeAssignedRolesIntoExistingRoles', () => {
   it('should merge new role form selections into existing roles', () => {
     expect(
@@ -725,7 +754,7 @@ describe('mergeAssignedRolesIntoExistingRoles', () => {
     expect(
       mergeAssignedRolesIntoExistingRoles(mockAssignRolesFormValues, undefined)
     ).toEqual({
-      account_access: ['account_viewer'],
+      account_access: ['account_viewer', 'account_linode_admin'],
       entity_access: [
         {
           id: 12365433,
@@ -739,5 +768,52 @@ describe('mergeAssignedRolesIntoExistingRoles', () => {
         },
       ],
     });
+  });
+});
+
+describe('mapEntityTypesForSelect', () => {
+  it('should map entity types to select options with the correct label and value', () => {
+    const mockData: EntitiesRole[] = [
+      {
+        access: 'entity_access',
+        entity_id: 1,
+        entity_name: 'test 1',
+        entity_type: 'linode',
+        id: 'linode_contributor-1',
+        role_name: 'linode_contributor',
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockData, 's');
+
+    expect(result).toEqual([
+      {
+        label: 'Linodes',
+        value: 'linode',
+      },
+    ]);
+  });
+
+  it('should map roles to select options with the correct label and value', () => {
+    const mockRole: RoleView[] = [
+      {
+        access: 'account_access',
+        description: 'Account volume admin',
+        entity_ids: [1],
+        entity_type: 'volume',
+        id: 'account_volume_admin',
+        name: 'account_volume_admin',
+        permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockRole, ' Roles');
+
+    expect(result).toEqual([
+      {
+        label: 'Volume Roles',
+        value: 'volume',
+      },
+    ]);
   });
 });

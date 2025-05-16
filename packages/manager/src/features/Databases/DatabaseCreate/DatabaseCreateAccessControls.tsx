@@ -5,7 +5,7 @@ import {
   RadioGroup,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useState } from 'react';
 import * as React from 'react';
 import type { ChangeEvent } from 'react';

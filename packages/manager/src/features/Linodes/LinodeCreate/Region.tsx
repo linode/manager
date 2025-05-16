@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
@@ -14,7 +14,6 @@ import { isDistributedRegionSupported } from 'src/components/RegionSelect/Region
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useImageQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 import {
   sendLinodeCreateFormInputEvent,
