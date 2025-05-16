@@ -1,7 +1,7 @@
 import { getTickets } from '@linode/api-v4/lib/support';
+import { useAccount } from '@linode/queries';
 import { isFeatureEnabled } from '@linode/utilities';
 
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
@@ -65,7 +65,7 @@ export const getTicketsPage = (
 
 export const useTicketSeverityCapability = () => {
   const flags = useFlags();
-  const { account } = useAccountManagement();
+  const { data: account } = useAccount();
 
   return isFeatureEnabled(
     'Support Ticket Severity',

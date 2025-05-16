@@ -3,7 +3,6 @@ import {
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
 import { useAccountSettings } from '@linode/queries';
-import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -118,17 +117,6 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   return (
     <>
-      {isLongviewCreationRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Longview Clients',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({

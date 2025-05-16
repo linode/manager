@@ -1,12 +1,11 @@
 import { Stack } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
+
+import { useIsObjMultiClusterEnabled } from '../../hooks/useIsObjectStorageGen2Enabled';
 
 import type { OpenAccessDrawer } from '../types';
 import type { ObjectStorageKey } from '@linode/api-v4';
@@ -29,14 +28,7 @@ export const AccessKeyActionMenu = (props: Props) => {
     openRevokeDialog,
   } = props;
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const isSmallViewport = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.down('md')

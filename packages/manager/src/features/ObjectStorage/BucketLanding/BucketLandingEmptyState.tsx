@@ -1,9 +1,9 @@
+import { useProfile } from '@linode/queries';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -16,9 +16,8 @@ import { StyledBucketIcon } from './StylesBucketIcon';
 
 export const BucketLandingEmptyState = () => {
   const navigate = useNavigate();
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
+  const { data: profile } = useProfile();
+  const isBucketCreationRestricted = profile?.restricted;
 
   return (
     <ResourcesSection

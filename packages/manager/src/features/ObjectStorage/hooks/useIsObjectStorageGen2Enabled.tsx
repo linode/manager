@@ -23,3 +23,16 @@ export const useIsObjectStorageGen2Enabled = (): {
 
   return { isObjectStorageGen2Enabled };
 };
+
+export const useIsObjMultiClusterEnabled = () => {
+  const flags = useFlags();
+  const { data: account } = useAccount();
+
+  const isObjMultiClusterEnabled = isFeatureEnabledV2(
+    'Object Storage Access Key Regions',
+    Boolean(flags.objMultiCluster),
+    account?.capabilities ?? []
+  );
+
+  return { isObjMultiClusterEnabled };
+};

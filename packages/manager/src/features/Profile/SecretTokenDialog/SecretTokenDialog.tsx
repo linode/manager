@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { ActionsPanel, Box, Notice } from '@linode/ui';
-import { getRegionsByRegionId, isFeatureEnabledV2 } from '@linode/utilities';
+import { getRegionsByRegionId } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -8,8 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { CopyableTextField } from 'src/components/CopyableTextField/CopyableTextField';
 import { CopyAllHostnames } from 'src/features/ObjectStorage/AccessKeyLanding/CopyAllHostnames';
 import { HostNamesList } from 'src/features/ObjectStorage/AccessKeyLanding/HostNamesList';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
+import { useIsObjMultiClusterEnabled } from 'src/features/ObjectStorage/hooks/useIsObjectStorageGen2Enabled';
 
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
@@ -40,14 +39,7 @@ export const SecretTokenDialog = (props: Props) => {
   const { data: regionsData } = useRegionsQuery();
   const regionsLookup = regionsData && getRegionsByRegionId(regionsData);
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const modalConfirmationButtonText = objectStorageKey
     ? 'I Have Saved My Secret Key'

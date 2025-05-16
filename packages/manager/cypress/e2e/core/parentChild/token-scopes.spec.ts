@@ -1,4 +1,4 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountFactory, appTokenFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
@@ -12,6 +12,7 @@ import {
   mockGetAppTokens,
   mockGetPersonalAccessTokens,
   mockGetProfile,
+  mockGetProfileGrants,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber, randomString } from 'support/util/random';
@@ -24,6 +25,8 @@ const mockParentProfile = profileFactory.build({
   user_type: 'parent',
   username: randomLabel(),
 });
+
+const mockGrants = grantsFactory.build();
 
 const mockParentUser = accountUserFactory.build({
   user_type: 'parent',
@@ -55,6 +58,7 @@ describe('Token scopes', () => {
     mockGetAccount(mockParentAccount);
     mockGetChildAccounts([mockChildAccount]);
     mockGetProfile({ ...mockParentProfile, restricted: true });
+    mockGetProfileGrants(mockGrants);
     mockGetUser(mockParentUser);
 
     mockGetPersonalAccessTokens([]).as('getTokens');

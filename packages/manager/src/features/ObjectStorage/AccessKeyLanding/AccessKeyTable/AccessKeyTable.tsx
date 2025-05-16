@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import { Hidden } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import React, { useState } from 'react';
@@ -7,7 +8,6 @@ import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { HostNamesDrawer } from '../HostNamesDrawer';
@@ -44,7 +44,7 @@ export const AccessKeyTable = (props: AccessKeyTableProps) => {
   const [hostNames, setHostNames] = useState<ObjectStorageKeyRegions[]>([]);
 
   const flags = useFlags();
-  const { account } = useAccountManagement();
+  const { data: account } = useAccount();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(
     'Object Storage Access Key Regions',

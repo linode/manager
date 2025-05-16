@@ -1,11 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import {
-  getRegionsByRegionId,
-  isFeatureEnabledV2,
-  readableBytes,
-} from '@linode/utilities';
+import { getRegionsByRegionId, readableBytes } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -13,10 +9,9 @@ import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { BucketActionMenu } from './BucketActionMenu';
 import {
   StyledBucketObjectsCell,
@@ -47,14 +42,7 @@ export const BucketTableRow = (props: BucketTableRowProps) => {
 
   const { data: regions } = useRegionsQuery();
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const { data: clusters } = useObjectStorageClusters(
     !isObjMultiClusterEnabled

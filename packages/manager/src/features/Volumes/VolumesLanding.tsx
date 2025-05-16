@@ -5,7 +5,6 @@ import {
   ErrorState,
   IconButton,
   InputAdornment,
-  Notice,
   TextField,
 } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -24,7 +23,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -67,12 +65,11 @@ export const VolumesLanding = () => {
       query: search.query,
     }),
   });
-  const isRestricted = useRestrictedGlobalGrantCheck({
+  const isVolumeCreationRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
   });
-  const { query } = search;
 
-  const { _isRestrictedUser } = useAccountManagement();
+  const { query } = search;
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
     initialRoute: {
@@ -172,16 +169,6 @@ export const VolumesLanding = () => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
-      {_isRestrictedUser && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: ['create', 'edit'],
-            resourceType: 'Volumes',
-            isSingular: false,
-          })}
-          variant="warning"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Volumes',
@@ -194,7 +181,7 @@ export const VolumesLanding = () => {
             resourceType: 'Volumes',
           }),
         }}
-        disabledCreateButton={isRestricted}
+        disabledCreateButton={isVolumeCreationRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/block-storage"
         entity="Volume"
         onButtonClick={() => navigate({ to: '/volumes/create' })}

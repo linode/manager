@@ -1,7 +1,10 @@
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import { getProfile } from 'support/api/account';
 import { mockUpdateUsername } from 'support/intercepts/account';
-import { interceptGetProfile } from 'support/intercepts/profile';
+import {
+  interceptGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
@@ -96,6 +99,9 @@ describe('Display Settings', () => {
       username: 'restricted-proxy-user',
     });
 
+    const mockGrants = grantsFactory.build();
+    mockGetProfileGrants(mockGrants);
+
     verifyUsernameAndEmail(
       mockRestrictedProxyProfile,
       RESTRICTED_FIELD_TOOLTIP,
@@ -122,6 +128,9 @@ describe('Display Settings', () => {
       user_type: 'default',
       username: 'regular-restricted-user',
     });
+
+    const mockGrants = grantsFactory.build();
+    mockGetProfileGrants(mockGrants);
 
     verifyUsernameAndEmail(
       mockRegularRestrictedProfile,
