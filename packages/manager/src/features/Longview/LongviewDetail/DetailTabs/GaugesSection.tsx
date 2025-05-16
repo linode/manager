@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { CPUGauge } from '../../LongviewLanding/Gauges/CPU';

@@ -1,4 +1,5 @@
 import {
+  useAllImagesQuery,
   useLinodeFirewallsQuery,
   useLinodeVolumesQuery,
   useRegionsQuery,
@@ -14,7 +15,6 @@ import { notificationCenterContext as _notificationContext } from 'src/features/
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';

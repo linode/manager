@@ -1,4 +1,4 @@
-import { createFirewall, createLinode } from '@linode/api-v4';
+import { createFirewall } from '@linode/api-v4';
 import { createLinodeRequestFactory } from '@linode/utilities';
 import { authenticate } from 'support/api/authentication';
 import {
@@ -7,6 +7,7 @@ import {
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
+import { createTestLinode } from 'support/util/linodes';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -149,7 +150,7 @@ const addLinodesToFirewall = (firewall: Firewall, linode: Linode) => {
         .should('be.visible')
         .click();
 
-      cy.findByLabelText('Linodes').should('be.visible').click();
+      cy.focused().type('{esc}');
 
       ui.button.findByTitle('Add').should('be.visible').click();
     });
@@ -160,8 +161,7 @@ const createLinodeAndFirewall = async (
   firewallRequestPayload: CreateFirewallPayload
 ) => {
   return Promise.all([
-    // eslint-disable-next-line @linode/cloud-manager/no-createLinode
-    createLinode(linodeRequestPayload),
+    createTestLinode(linodeRequestPayload, { securityMethod: 'powered_off' }),
     createFirewall(firewallRequestPayload),
   ]);
 };
@@ -169,7 +169,7 @@ const createLinodeAndFirewall = async (
 authenticate();
 // Firewall GET API request performance issues need to be addressed in order to unskip this test
 // See M3-9619
-describe.skip('update firewall', () => {
+describe('update firewall', () => {
   before(() => {
     cleanUp('firewalls');
   });
