@@ -301,12 +301,6 @@ export const CreateCluster = () => {
 
     createClusterFn(payload)
       .then((cluster) => {
-        // If we were to support surfacing and setting k8_version and upgrade_strategy per node pool during initial cluster creation...
-        // Set the upgrade strategy and the k8_version for each node pool here with a chained request?
-        // If the cluster creation is successful:
-        // - Store the user's node pool selections (how to show this in the UI TBD) in a mapping (how? we don't have node pool IDs yet, so just by index?)
-        // - Use the clusterId returned in the response to make a request to v4beta/cluster/:clusterId/pools to get the poolIds
-        // - Make a PUT for each v4beta/cluster/clusterId/pools/poolId to update the k8_version and upgrade_strategy to whatever the user set
         push(`/kubernetes/clusters/${cluster.id}`);
         if (hasAgreed) {
           updateAccountAgreements({
