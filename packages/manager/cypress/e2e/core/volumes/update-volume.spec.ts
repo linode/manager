@@ -45,7 +45,7 @@ describe('volume update flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('active').should('be.visible');
+            cy.findByText('Active').should('be.visible');
           });
         ui.actionMenu
           .findByTitle(`Action menu for Volume ${volume.label}`)
@@ -106,7 +106,7 @@ describe('volume update flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('active').should('be.visible');
+            cy.findByText('Active').should('be.visible');
           });
 
         ui.actionMenu

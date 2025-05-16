@@ -1,6 +1,6 @@
 import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { FormControlLabel, Radio } from '@linode/ui';
-import { capitalize, formatStorageUnits } from '@linode/utilities';
+import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -46,7 +46,7 @@ export const LinodeSelectTableRow = (props: Props) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={getLinodeIconStatus(linode.status)} />
-        {capitalize(linode.status.replace('_', ' '))}
+        {getFormattedStatus(linode.status)}
       </TableCell>
       <TableCell>{image?.label ?? linode.image}</TableCell>
       <TableCell>

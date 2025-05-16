@@ -68,7 +68,7 @@ describe('volume resize flow', () => {
           .should('be.visible')
           .closest('tr')
           .within(() => {
-            cy.findByText('active').should('be.visible');
+            cy.findByText('Active').should('be.visible');
             cy.findByText(`${oldSize} GB`).should('be.visible');
             cy.findByLabelText(
               `Action menu for Volume ${volume.label}`

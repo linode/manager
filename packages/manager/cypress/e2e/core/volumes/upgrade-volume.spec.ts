@@ -78,7 +78,7 @@ describe('volume upgrade/migration', () => {
 
       cy.wait('@getEvents');
 
-      cy.findByText(`migrating (${percentage}%)`).should('be.visible');
+      cy.findByText(`Migrating (${percentage}%)`).should('be.visible');
     }
 
     const mockFinishedMigrationEvent = eventFactory.build({
@@ -94,7 +94,7 @@ describe('volume upgrade/migration', () => {
 
     mockGetEvents([]);
 
-    cy.findByText('active').should('be.visible');
+    cy.findByText('Active').should('be.visible');
 
     ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
@@ -173,7 +173,7 @@ describe('volume upgrade/migration', () => {
 
       cy.wait('@getEvents');
 
-      cy.findByText(`migrating (${percentage}%)`).should('be.visible');
+      cy.findByText(`Migrating (${percentage}%)`).should('be.visible');
     }
 
     const mockFinishedMigrationEvent = eventFactory.build({
@@ -189,7 +189,7 @@ describe('volume upgrade/migration', () => {
 
     mockGetEvents([]);
 
-    cy.findByText('active').should('be.visible');
+    cy.findByText('Active').should('be.visible');
 
     ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
@@ -264,7 +264,7 @@ describe('volume upgrade/migration', () => {
 
       cy.wait('@getEvents');
 
-      cy.findByText(`migrating (${percentage}%)`).should('be.visible');
+      cy.findByText(`Migrating (${percentage}%)`).should('be.visible');
     }
 
     const mockFinishedMigrationEvent = eventFactory.build({
@@ -280,7 +280,7 @@ describe('volume upgrade/migration', () => {
 
     mockGetEvents([]);
 
-    cy.findByText('active').should('be.visible');
+    cy.findByText('Active').should('be.visible');
 
     ui.toast.assertMessage(`Volume ${volume.label} has been migrated to NVMe.`);
   });
