@@ -1,3 +1,4 @@
+import { quotaQueries, useQuotasQuery } from '@linode/queries';
 import { Dialog, ErrorState } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
@@ -12,8 +13,6 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
-import { quotaQueries } from 'src/queries/quotas/quotas';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';

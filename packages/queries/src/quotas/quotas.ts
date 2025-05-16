@@ -48,7 +48,7 @@ export const useQuotasQuery = (
   service: QuotaType,
   params: Params = {},
   filter: Filter,
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<ResourcePage<Quota>, APIError[]>({
     ...quotaQueries.service(service)._ctx.paginated(params, filter),
@@ -60,7 +60,7 @@ export const useAllQuotasQuery = (
   service: QuotaType,
   params: Params = {},
   filter: Filter,
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<Quota[], APIError[]>({
     ...quotaQueries.service(service)._ctx.all(params, filter),
@@ -70,7 +70,7 @@ export const useAllQuotasQuery = (
 export const useQuotaUsageQuery = (
   service: QuotaType,
   id: number,
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<QuotaUsage, APIError[]>({
     ...quotaQueries.service(service)._ctx.usage(id),
