@@ -18,6 +18,7 @@ import type { Filter, ResourcePage as Page, Params, PriceType } from '../types';
 import type {
   AttachVolumePayload,
   CloneVolumePayload,
+  GroupedVolumes,
   ResizeVolumePayload,
   Volume,
   VolumeRequestPayload,
@@ -45,6 +46,20 @@ export const getVolume = (volumeId: number) =>
 export const getVolumes = (params?: Params, filters?: Filter) =>
   Request<Page<Volume>>(
     setURL(`${API_ROOT}/volumes`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+  );
+
+/**
+ * getVolumes grouped by tags
+ *
+ * Returns a paginated list of GroupedVolumes on your account.
+ *
+ */
+export const getVolumesGroupedByTags = (params?: Params, filters?: Filter) =>
+  Request<Page<GroupedVolumes>>(
+    setURL(`${API_ROOT}/volumes/group-by-tags`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),

@@ -16,6 +16,12 @@ export interface Volume {
   updated: string;
 }
 
+export interface GroupedVolumes {
+  group: string;
+  item_count: number;
+  items: Volume[];
+}
+
 type VolumeHardwareType = 'hdd' | 'nvme';
 
 export type VolumeStatus =
