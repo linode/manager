@@ -38,13 +38,14 @@ export const SummaryPanel = () => {
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
     Number(id)
   );
-  const linkText = attachedFirewallData?.data[0]?.label;
-  const linkID = attachedFirewallData?.data[0]?.id;
+  const firewallToDisplay = // display either the enabled firewall or, if none are enabled, the first firewall
+    attachedFirewallData?.data.find(
+      (firewall) => firewall.status === 'enabled'
+    ) ?? attachedFirewallData?.data[0];
   const region = regions?.find((r) => r.id === nodebalancer?.region);
   const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
     Number(id)
   );
-  const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -161,18 +162,18 @@ export const SummaryPanel = () => {
           </StyledSection>
         </StyledSummarySection>
       </StyledSummarySectionWrapper>
-      {displayFirewallLink && (
+      {firewallToDisplay && (
         <StyledSummarySection>
           <StyledTitle data-qa-title variant="h3">
             Firewall
           </StyledTitle>
           <Typography data-qa-firewall variant="body1">
             <Link
-              accessibleAriaLabel={`Firewall ${linkText}`}
+              accessibleAriaLabel={`Firewall ${firewallToDisplay.label}`}
               className="secondaryLink"
-              to={`/firewalls/${linkID}`}
+              to={`/firewalls/${firewallToDisplay.id}`}
             >
-              {linkText}
+              {firewallToDisplay.label}
             </Link>
           </Typography>
         </StyledSummarySection>
