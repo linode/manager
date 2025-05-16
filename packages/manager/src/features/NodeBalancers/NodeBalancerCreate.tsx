@@ -98,8 +98,7 @@ const defaultFieldsStates = {
   configs: [createNewNodeBalancerConfig(true)],
 };
 
-
-const NodeBalancerCreate = () => {
+export const NodeBalancerCreate = () => {
   const flags = useFlags();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,

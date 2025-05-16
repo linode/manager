@@ -10,7 +10,12 @@ import {
   TextField,
 } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { createLazyRoute, Outlet, useNavigate, useParams } from '@tanstack/react-router';
+import {
+  createLazyRoute,
+  Outlet,
+  useNavigate,
+  useParams,
+} from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -18,7 +23,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 
-const NodeBalancerSettings = () => {
+export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 

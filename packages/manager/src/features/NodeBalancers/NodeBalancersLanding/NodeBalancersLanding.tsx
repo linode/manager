@@ -24,7 +24,7 @@ import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
 const preferenceKey = 'nodebalancers';
 
-const NodeBalancersLanding = () => {
+export const NodeBalancersLanding = () => {
   const navigate = useNavigate();
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
