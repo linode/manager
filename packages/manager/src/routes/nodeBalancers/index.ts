@@ -134,3 +134,20 @@ export const nodeBalancerDeleteRoute = createRoute({
     (m) => m.nodeBalancerLandingDeleteLazyRoute
   )
 );
+
+export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
+  nodeBalancersIndexRoute.addChildren([nodeBalancerDeleteRoute]),
+  nodeBalancersCreateRoute,
+  nodeBalancerDetailRoute.addChildren([
+    nodeBalancerDetailRootRoute,
+    nodeBalancerDetailSummaryRoute,
+    nodeBalancerDetailConfigurationsRoute.addChildren([
+      nodeBalancerDetailConfigurationRoute,
+    ]),
+    nodeBalancerDetailSettingsRoute.addChildren([
+      nodeBalancerDetailSettingsDeleteRoute,
+      nodeBalancerDetailSettingsAddFirewallRoute,
+      nodeBalancerDetailSettingsUnassignFirewallRoute,
+    ]),
+  ]),
+]);

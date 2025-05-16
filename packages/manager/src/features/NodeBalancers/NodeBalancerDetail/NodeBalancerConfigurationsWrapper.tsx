@@ -25,7 +25,7 @@ const NodeBalancerConfigurationsWrapper = () => {
   const { data, isPending, error } = useQuery<ConfigsWithNodes, APIError[]>({
     queryKey: ['nodebalancers', nodeBalancerId, 'configs-with-nodes'],
     queryFn: () => getConfigsWithNodes(nodeBalancerId),
-    gcTime: 0,
+    gcTime: 0, // Don't ever cache this query. When we rewrite NodeBalancerConfigurations we will change this.
   });
 
   if (isPending) {
