@@ -112,14 +112,19 @@ export const NodeBalancerFirewalls = (props: Props) => {
         </Typography>
         <Button
           buttonType="primary"
-          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
+          disabled={
+            attachedFirewallData &&
+            attachedFirewallData.data.some(
+              (firewall) => firewall.status === 'enabled'
+            )
+          }
           onClick={() =>
             navigate({
               params: { id: String(nodeBalancerId) },
               to: '/nodebalancers/$id/settings/add-firewall',
             })
           }
-          tooltipText="NodeBalanacers can only have one Firewall assigned."
+          tooltipText="NodeBalanacers can only have one enabled Firewall assigned."
         >
           Add Firewall
         </Button>
