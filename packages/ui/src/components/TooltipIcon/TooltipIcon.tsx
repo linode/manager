@@ -123,9 +123,9 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       strokeWidth: 0,
     },
     '&:hover': {
-      color: theme.palette.primary.main,
-      fill: theme.palette.primary.main,
-      stroke: theme.palette.primary.main,
+      color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+      stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
     },
     height: labelTooltipIconSize === 'small' ? 16 : 20,
     width: labelTooltipIconSize === 'small' ? 16 : 20,

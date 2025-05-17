@@ -190,9 +190,9 @@ export const TextField = (props: TextFieldProps) => {
       stroke: theme.tokens.component.Label.Icon,
       strokeWidth: 0,
       ':hover': {
-        color: theme.palette.primary.main,
-        fill: theme.palette.primary.main,
-        stroke: theme.palette.primary.main,
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+        fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+        stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
       },
     },
   };
