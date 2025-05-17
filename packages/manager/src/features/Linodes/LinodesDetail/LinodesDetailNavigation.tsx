@@ -27,8 +27,10 @@ const LinodeNetworking = React.lazy(() =>
   }))
 );
 const LinodeStorage = React.lazy(() => import('./LinodeStorage/LinodeStorage'));
-const LinodeConfigurations = React.lazy(
-  () => import('./LinodeConfigs/LinodeConfigs')
+const LinodeConfigurations = React.lazy(() =>
+  import('./LinodeConfigs/LinodeConfigs').then((module) => ({
+    default: module.LinodeConfigs,
+  }))
 );
 const LinodeBackup = React.lazy(() => import('./LinodeBackup/LinodeBackups'));
 const LinodeActivity = React.lazy(

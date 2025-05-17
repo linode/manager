@@ -4,7 +4,7 @@ import React from 'react';
 import 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import LinodeConfigs from './LinodeConfigs';
+import { LinodeConfigs } from './LinodeConfigs';
 
 const queryMocks = vi.hoisted(() => ({
   useFlags: vi.fn().mockReturnValue({}),

@@ -188,7 +188,7 @@ describe('getInterfacesPayload', () => {
             // Confirms VPC interface passed in is returned as expected - VPC interfaces should be marked as primary if they exist
             primary: true,
             purpose: 'vpc',
-            vpc_id: 5,
+            subnet_id: 5,
           },
           {
             ipam_address: '',
@@ -209,7 +209,7 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
+        subnet_id: 5,
       },
     ]);
   });
@@ -223,7 +223,7 @@ describe('getInterfacesPayload', () => {
             label: '',
             primary: true,
             purpose: 'vpc',
-            vpc_id: 5,
+            subnet_id: 5,
           },
           {
             ipam_address: '',
@@ -244,7 +244,7 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
+        subnet_id: 5,
       },
       {
         ipam_address: '',
@@ -263,7 +263,7 @@ describe('getInterfacesPayload', () => {
             label: '',
             primary: true,
             purpose: 'vpc',
-            vpc_id: 5,
+            subnet_id: 5,
           },
           {
             ipam_address: '',
@@ -284,7 +284,7 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
+        subnet_id: 5,
       },
       {
         ipam_address: '',
@@ -303,7 +303,7 @@ describe('getInterfacesPayload', () => {
             label: '',
             primary: true,
             purpose: 'vpc',
-            vpc_id: 5,
+            subnet_id: 5,
           },
           {
             ipam_address: '',
@@ -324,7 +324,7 @@ describe('getInterfacesPayload', () => {
         label: '',
         primary: true,
         purpose: 'vpc',
-        vpc_id: 5,
+        subnet_id: 5,
       },
       {
         ipam_address: '',

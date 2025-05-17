@@ -287,7 +287,7 @@ describe('Linode Create Summary', () => {
         renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
           component: <Summary />,
           useFormOptions: {
-            defaultValues: { interfaces: [{ vpc_id: 1, subnet_id: 2 }] },
+            defaultValues: { interfaces: [{ subnet_id: 2 }], vpc_id: 1 },
           },
           options: { flags: { linodeInterfaces: { enabled: false } } },
         });
