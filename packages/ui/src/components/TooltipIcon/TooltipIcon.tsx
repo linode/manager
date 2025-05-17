@@ -41,6 +41,11 @@ export interface TooltipIconProps
    */
   icon?: JSX.Element;
   /**
+   * Size of the tooltip icon
+   * @default small
+   */
+  labelTooltipIconSize?: 'large' | 'small';
+  /**
    * Enables a leaveDelay of 3000ms
    * @default false
    */
@@ -100,6 +105,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     tooltipAnalyticsEvent,
     tooltipPosition,
     width,
+    labelTooltipIconSize,
   } = props;
 
   const handleOpenTooltip = () => {
@@ -112,18 +118,17 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const sxRootStyle = {
     '&&': {
-      fill: theme.tokens.color.Neutrals[50],
-      stroke: theme.tokens.color.Neutrals[50],
+      fill: theme.tokens.component.Label.InfoIcon,
+      stroke: theme.tokens.component.Label.InfoIcon,
       strokeWidth: 0,
     },
     '&:hover': {
-      color: theme.palette.primary.main,
-      fill: theme.palette.primary.main,
-      stroke: theme.palette.primary.main,
+      color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+      stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
     },
-    color: theme.tokens.color.Neutrals[50],
-    height: 20,
-    width: 20,
+    height: labelTooltipIconSize === 'small' ? 16 : 20,
+    width: labelTooltipIconSize === 'small' ? 16 : 20,
   };
 
   switch (status) {
