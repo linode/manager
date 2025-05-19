@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { PermissionType } from '@linode/api-v4';
 
@@ -11,46 +11,43 @@ export const useCalculateHiddenItems = (
   const [visibleIndexes, setVisibleIndexes] = useState<number[]>([]);
   const [showAll, setShowAll] = useState(false);
 
-  const calculate = () => {
+  const calculate = useCallback(() => {
     if (!containerRef.current) return;
 
     const tops = new Map<number, number[]>();
-    let atLeastOneVisible = false;
+    let hasVisible = false;
 
     itemRefs.current.forEach((el, index) => {
       if (!el || el.offsetHeight === 0) return;
       const top = el.offsetTop;
-
-      atLeastOneVisible = true;
+      hasVisible = true;
 
       if (!tops.has(top)) tops.set(top, []);
       tops.get(top)!.push(index);
     });
 
-    if (!atLeastOneVisible) {
-      setTimeout(calculate, 50);
+    if (!hasVisible) {
+      requestAnimationFrame(calculate);
       return;
     }
 
     const sortedTopGroups = Array.from(tops.values()).slice(0, maxRows);
     const visible = sortedTopGroups.flat();
     setVisibleIndexes(showAll ? items.map((_, i) => i) : visible);
-  };
+  }, [items, showAll]);
 
   useEffect(() => {
-    const delayedCalc = () => {
-      setTimeout(() => {
-        requestAnimationFrame(calculate);
-      }, 0);
+    requestAnimationFrame(calculate);
+
+    const onResize = () => {
+      requestAnimationFrame(calculate);
     };
 
-    delayedCalc();
-    window.addEventListener('resize', delayedCalc);
-
+    window.addEventListener('resize', onResize);
     return () => {
-      window.removeEventListener('resize', delayedCalc);
+      window.removeEventListener('resize', onResize);
     };
-  }, [items, showAll]);
+  }, [calculate]);
 
   return {
     containerRef,
