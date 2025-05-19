@@ -11,7 +11,7 @@ import type {
   ResourcePage,
   ServiceTypesList,
 } from '@linode/api-v4';
-import type { Params } from '@sentry/react/types/types';
+import type { Params } from '@linode/api-v4';
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
