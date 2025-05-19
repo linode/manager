@@ -12,7 +12,7 @@ export const StyledPermissionItem = styled(Typography, {
   label: 'StyledPermissionItem',
 })(({ theme }) => ({
   borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
-  display: 'inline-block',
+  display: 'inline-flex',
   padding: `0px ${theme.tokens.spacing.S6} ${theme.tokens.spacing.S2}`,
 }));
 
@@ -29,9 +29,9 @@ export const StyledClampedContent = styled('div', {
   '& p:last-child': {
     borderRight: 0,
   },
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: showAll ? 'unset' : 2,
-  display: '-webkit-box',
+  display: 'flex',
+  flexWrap: 'wrap',
+  maxHeight: showAll ? 'none' : '2.9rem',
   overflow: 'hidden',
 }));
 

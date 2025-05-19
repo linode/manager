@@ -21,7 +21,8 @@ export const AssignedEntities = ({
   const theme = useTheme();
 
   const { containerRef, itemRefs, visibleIndexes } = useCalculateHiddenItems(
-    role.entity_names!
+    role.entity_names!,
+    1
   );
 
   const hiddenCount = role.entity_names!.length - visibleIndexes.length;
@@ -75,9 +76,9 @@ export const AssignedEntities = ({
       <div
         ref={containerRef}
         style={{
-          WebkitBoxOrient: 'vertical',
-          WebkitLineClamp: 1,
-          display: '-webkit-box',
+          display: 'flex',
+          flexWrap: 'wrap',
+          maxHeight: '1.6rem',
           overflow: 'hidden',
         }}
       >
