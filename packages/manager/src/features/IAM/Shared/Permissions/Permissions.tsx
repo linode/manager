@@ -1,6 +1,6 @@
 import { LinkButton, TooltipIcon, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import { Grid } from '@mui/material';
 import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';

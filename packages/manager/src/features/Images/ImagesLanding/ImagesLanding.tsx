@@ -1,3 +1,9 @@
+import {
+  imageQueries,
+  useDeleteImageMutation,
+  useImageQuery,
+  useImagesQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
@@ -36,7 +42,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -45,12 +50,6 @@ import {
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImageQuery,
-  useImagesQuery,
-} from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -261,14 +260,11 @@ export const ImagesLanding = () => {
     }
   );
 
-  const { data: selectedImage, isFetching: isFetchingSelectedImage } =
-    useDialogData({
-      enabled: !!selectedImageId,
-      paramKey: 'imageId',
-      queryHook: useImageQuery,
-      redirectToOnNotFound: '/images',
-    });
-
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+    error: selectedImageError,
+  } = useImageQuery(selectedImageId, !!selectedImageId);
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
   const { events } = useEventsInfiniteQuery();
@@ -346,7 +342,6 @@ export const ImagesLanding = () => {
          * is ensuring the image is removed from the list, to prevent the user
          * from taking any action on the Image.
          */
-        // this.props.onDelete();
         enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info',
         });
@@ -426,17 +421,6 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
-      {isCreateImageRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -455,10 +439,11 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
       <TextField
-        containerProps={{ mb: 2 }}
+        containerProps={{ mb: 3 }}
         errorText={searchParseError?.message}
         hideLabel
         InputProps={{
@@ -655,21 +640,24 @@ export const ImagesLanding = () => {
       </Paper>
       <EditImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'rebuild'}
       />
       <Drawer
+        error={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}
-        title={`Manage Replicas for ${selectedImage?.label}`}
+        title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
       >
         <ManageImageReplicasForm
           image={selectedImage}
@@ -693,6 +681,7 @@ export const ImagesLanding = () => {
             }}
           />
         }
+        entityError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'delete'}

@@ -1,6 +1,6 @@
 import { Box, LinkButton, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { GenerateFirewallDialog } from 'src/components/GenerateFirewallDialog/GenerateFirewallDialog';
@@ -15,12 +15,10 @@ import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEven
 
 import { useLinodeCreateQueryParams } from './utilities';
 
-import type { LinodeCreateFormValues } from './utilities';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const Firewall = () => {
-  const { clearErrors } = useFormContext<LinodeCreateFormValues>();
   const { field, fieldState } = useController<
     CreateLinodeRequest,
     'firewall_id'
@@ -40,13 +38,6 @@ export const Firewall = () => {
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
   });
-
-  const onChange = (firewallId: number | undefined) => {
-    if (firewallId !== undefined) {
-      clearErrors('firewallOverride');
-    }
-    field.onChange(firewallId);
-  };
 
   const firewallFormEventOptions: LinodeCreateFormEventOptions = {
     createType: params.type ?? 'OS',
@@ -98,7 +89,7 @@ export const Firewall = () => {
             label="Assign Firewall"
             onBlur={field.onBlur}
             onChange={(e, firewall) => {
-              onChange(firewall?.id);
+              field.onChange(firewall?.id);
               if (!firewall?.id) {
                 sendLinodeCreateFormInputEvent({
                   ...firewallFormEventOptions,
@@ -140,11 +131,13 @@ export const Firewall = () => {
         onFirewallCreated={(firewall) => field.onChange(firewall.id)}
         open={isDrawerOpen}
       />
-      <GenerateFirewallDialog
-        onClose={() => setIsGenerateDialogOpen(false)}
-        onFirewallGenerated={(firewall) => onChange(firewall.id)}
-        open={isGenerateDialogOpen}
-      />
+      {secureVMNoticesEnabled && (
+        <GenerateFirewallDialog
+          onClose={() => setIsGenerateDialogOpen(false)}
+          onFirewallGenerated={(firewall) => field.onChange(firewall.id)}
+          open={isGenerateDialogOpen}
+        />
+      )}
     </Paper>
   );
 };

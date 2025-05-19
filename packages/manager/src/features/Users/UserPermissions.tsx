@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
@@ -97,6 +97,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'stackscript',
     'image',
     'volume',
+    'lkecluster',
     'nodebalancer',
     'domain',
     'longview',
@@ -113,6 +114,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_images',
     'add_linodes',
     'add_longview',
+    'add_lkes',
     'add_nodebalancers',
     'add_stackscripts',
     'add_volumes',
@@ -506,6 +508,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_firewalls: 'Can add Firewalls to this account',
       add_images: 'Can create frozen Images under this account ($)',
       add_linodes: 'Can add Linodes to this account ($)',
+      add_lkes: 'Can add Kubernetes Clusters to this account ($)',
       add_longview: 'Can add Longview clients to this account',
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_stackscripts: 'Can create StackScripts under this account',

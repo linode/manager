@@ -1,28 +1,38 @@
 import { Checkbox, FormControlLabel } from '@linode/ui';
-import { isNotNullOrUndefined } from '@linode/utilities';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 
 import { AkamaiBanner } from 'src/components/AkamaiBanner/AkamaiBanner';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { LinodeCreateFormValues } from './utilities';
+import {
+  getDoesEmployeeNeedToAssignFirewall,
+  type LinodeCreateFormValues,
+} from './utilities';
 
 export const FirewallAuthorization = () => {
   const flags = useFlags();
-  const { control, watch } = useFormContext<LinodeCreateFormValues>();
+
+  const { control } = useFormContext<LinodeCreateFormValues>();
+
   const { field, fieldState } = useController({
     control,
     name: 'firewallOverride',
   });
 
-  const watchFirewall = watch('firewall_id');
+  const [legacyFirewallId, linodeInterfaces, interfaceGeneration] = useWatch({
+    control,
+    name: ['firewall_id', 'linodeInterfaces', 'interface_generation'],
+  });
 
-  if (
-    isNotNullOrUndefined(watchFirewall) ||
-    !(fieldState.isDirty || fieldState.error)
-  ) {
-    return;
+  const userNeedsToAssignFirewall = getDoesEmployeeNeedToAssignFirewall(
+    legacyFirewallId,
+    linodeInterfaces,
+    interfaceGeneration
+  );
+
+  if (!userNeedsToAssignFirewall || !(fieldState.isDirty || fieldState.error)) {
+    return null;
   }
 
   return (

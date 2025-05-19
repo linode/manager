@@ -1,10 +1,9 @@
-import { Button } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { Button, Notice, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
+import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { DeletionDialog } from 'src/components/DeletionDialog/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -14,7 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useDialogData } from 'src/hooks/useDialogData';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import {
   useAllManagedContactsQuery,
@@ -37,6 +36,9 @@ export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
 export const MonitorTable = () => {
+  const params = useParams({
+    strict: false,
+  });
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
   const { enqueueSnackbar } = useSnackbar();
@@ -48,26 +50,24 @@ export const MonitorTable = () => {
   const { data: credentials } = useAllManagedCredentialsQuery();
   const { data: contacts } = useAllManagedContactsQuery();
 
-  const [deleteError, setDeleteError] = React.useState<string | undefined>();
-  const { mutateAsync: deleteServiceMonitor } = useDeleteMonitorMutation();
+  const {
+    mutateAsync: deleteServiceMonitor,
+    isPending: isDeleting,
+    error: deleteError,
+  } = useDeleteMonitorMutation();
 
-  const { data: issues } = useDialogData({
-    enabled: match.routeId === '/managed/monitors/$monitorId/issues',
-    paramKey: 'monitorId',
-    queryHook: useAllManagedIssuesQuery,
-    redirectToOnNotFound: '/managed/monitors',
-  });
-
-  const { data: selectedMonitor, isFetching: isFetchingSelectedMonitor } =
-    useDialogData({
-      enabled:
-        match.routeId === '/managed/monitors/$monitorId/edit' ||
-        match.routeId === '/managed/monitors/$monitorId/issues' ||
-        match.routeId === '/managed/monitors/$monitorId/delete',
-      paramKey: 'monitorId',
-      queryHook: useGetMonitorQuery,
-      redirectToOnNotFound: '/managed/monitors',
-    });
+  const { data: issues, isFetching: isFetchingIssues } =
+    useAllManagedIssuesQuery();
+  const {
+    data: selectedMonitor,
+    isFetching: isFetchingSelectedMonitor,
+    error: selectedMonitorError,
+  } = useGetMonitorQuery(
+    params.monitorId ?? -1,
+    match.routeId === '/managed/monitors/$monitorId/edit' ||
+      match.routeId === '/managed/monitors/$monitorId/issues' ||
+      match.routeId === '/managed/monitors/$monitorId/delete'
+  );
 
   const groups = React.useMemo(() => {
     if (!contacts) {
@@ -88,16 +88,12 @@ export const MonitorTable = () => {
       return;
     }
 
-    deleteServiceMonitor({ id: selectedMonitor.id })
-      .then((_) => {
-        enqueueSnackbar('Successfully deleted Service Monitor', {
-          variant: 'success',
-        });
-        navigate({ to: '/managed/monitors' });
-      })
-      .catch((err) => {
-        setDeleteError(err[0].reason || 'Error deleting this Service Monitor.');
+    deleteServiceMonitor({ id: selectedMonitor.id }).then((_) => {
+      enqueueSnackbar('Successfully deleted Service Monitor', {
+        variant: 'success',
       });
+      navigate({ to: '/managed/monitors' });
+    });
   };
 
   const {
@@ -217,30 +213,43 @@ export const MonitorTable = () => {
           </>
         )}
       </Paginate>
-      <DeletionDialog
-        entity="monitor"
-        error={deleteError}
-        label={selectedMonitor?.label || ''}
-        loading={isFetchingSelectedMonitor}
-        onClose={() => {
-          setDeleteError(undefined);
-          navigate({ to: '/managed/monitors' });
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          error: selectedMonitorError,
+          name: selectedMonitor?.label || 'Unknown',
+          primaryBtnText: 'Delete Monitor',
+          type: 'Managed Service Monitor',
         }}
-        onDelete={handleDelete}
+        errors={deleteError}
+        isFetching={isFetchingSelectedMonitor}
+        label="Monitor Name"
+        loading={isDeleting}
+        onClick={handleDelete}
+        onClose={() => navigate({ to: '/managed/monitors' })}
         open={isDeleteDialogOpen}
-      />
+        title={`Delete Monitor ${selectedMonitor?.label || 'Unknown'}?`}
+      >
+        <Notice variant="warning">
+          <Typography>
+            Warning: Deleting this monitor is permanent and can’t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
       <MonitorDrawer
         credentials={credentials || []}
         groups={groups}
         isFetching={isFetchingSelectedMonitor}
         monitor={selectedMonitor}
+        monitorError={selectedMonitorError}
         open={isMonitorDrawerOpen}
       />
       <HistoryDrawer
-        isFetching={isFetchingSelectedMonitor}
+        isFetching={isFetchingSelectedMonitor || isFetchingIssues}
         issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(selectedMonitor?.id ?? -1)
         )}
+        monitorError={selectedMonitorError}
         monitorLabel={selectedMonitor?.label}
         onClose={() => navigate({ to: '/managed/monitors' })}
         open={isHistoryDrawerOpen}

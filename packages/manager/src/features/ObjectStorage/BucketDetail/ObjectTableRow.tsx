@@ -1,6 +1,6 @@
 import { Box, Hidden, LinkButton, Typography } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import ObjectIcon from 'src/assets/icons/objectStorage/object.svg';

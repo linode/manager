@@ -1,7 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, LinkButton } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

@@ -47,6 +47,7 @@ const VPCDetail = () => {
     isFetching: isFetchingVPC,
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
+
   const { data: regions } = useRegionsQuery();
 
   const handleEditVPC = (vpc: VPC) => {
@@ -216,12 +217,14 @@ const VPCDetail = () => {
         onClose={onCloseVPCDrawer}
         open={params.action === 'delete'}
         vpc={vpc}
+        vpcError={error}
       />
       <VPCEditDrawer
         isFetching={isFetchingVPC}
         onClose={onCloseVPCDrawer}
         open={params.action === 'edit'}
         vpc={vpc}
+        vpcError={error}
       />
       {isVPCLKEEnterpriseCluster && (
         <Notice

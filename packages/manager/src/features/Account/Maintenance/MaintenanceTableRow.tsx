@@ -1,7 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Tooltip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize, truncate } from '@linode/utilities';
+import { capitalize, getFormattedStatus, truncate } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -17,14 +17,20 @@ import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   completed: 'Completed',
-  pending: 'Scheduled',
+  pending: 'Pending',
   started: 'In Progress',
+  canceled: 'Canceled',
+  'in-progress': 'In Progress',
+  scheduled: 'Scheduled',
 };
 
 const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   completed: 'inactive',
   pending: 'active',
   started: 'other',
+  canceled: 'inactive',
+  'in-progress': 'other',
+  scheduled: 'active',
 };
 
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
@@ -64,7 +70,7 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell noWrap>{capitalize(type.replace('_', ' '))}</TableCell>
+        <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
       <TableCell statusCell>
         <StatusIcon status={statusIconMap[status] ?? 'other'} />

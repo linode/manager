@@ -1,5 +1,5 @@
 import { LinkButton, TooltipIcon, Typography } from '@linode/ui';
-import { Grid, styled } from '@mui/material';
+import { GridLegacy, styled } from '@mui/material';
 import * as React from 'react';
 
 import {
@@ -33,8 +33,8 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
   const hasUpdates = hasPendingUpdates(databasePendingUpdates);
 
   return (
-    <Grid container data-qa-settings-section="Maintenance">
-      <Grid item xs={6}>
+    <GridLegacy container data-qa-settings-section="Maintenance">
+      <GridLegacy item xs={6}>
         <StyledTypography variant="h3">Maintenance</StyledTypography>
         <BoldTypography>Version</BoldTypography>
         <StyledTypography>{engineVersion}</StyledTypography>
@@ -60,7 +60,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
             }
           />
         )}
-      </Grid>
+      </GridLegacy>
       {/*
         TODO Uncomment and provide value when the EOL is returned by the API.
         Currently, it is not supported, however they are working on returning it since it has value to the end user
@@ -68,7 +68,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
           <StyledTypography variant="h3">End of life</StyledTypography>
         </Grid>
       */}
-      <Grid item xs={6}>
+      <GridLegacy item xs={6}>
         <StyledTypography variant="h3">Maintenance updates</StyledTypography>
         {hasUpdates ? (
           <BoldTypography>
@@ -84,8 +84,8 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
             maintenance window.{' '}
           </BoldTypography>
         )}
-      </Grid>
-    </Grid>
+      </GridLegacy>
+    </GridLegacy>
   );
 };
 

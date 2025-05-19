@@ -1,6 +1,7 @@
 import {
   useAccountAgreements,
   useAllLinodeDisksQuery,
+  useImageQuery,
   useLinodeMigrateMutation,
   useLinodeQuery,
   useMutateAccountAgreements,
@@ -28,13 +29,13 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { MBpsInterDC } from 'src/constants';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { isEventRelevantToLinode } from 'src/queries/events/event.helpers';
 import {
   useEventsPollingActions,
   useInProgressEvents,
 } from 'src/queries/events/events';
-import { useImageQuery } from 'src/queries/images';
 import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
@@ -226,6 +227,8 @@ export const MigrateLinode = React.memo((props: Props) => {
     addUsedDiskSpace(disks ?? []) / MBpsInterDC / 60
   );
 
+  const isMTCLinode = Boolean(type && isMTCPlan(type));
+
   return (
     <Dialog
       fullHeight
@@ -267,6 +270,7 @@ export const MigrateLinode = React.memo((props: Props) => {
         currentRegion={region}
         handlePlacementGroupChange={setPlacementGroupSelection}
         handleSelectRegion={handleSelectRegion}
+        isMTCLinode={isMTCLinode}
         linodeType={linode.type}
         selectedRegion={selectedRegion}
       />

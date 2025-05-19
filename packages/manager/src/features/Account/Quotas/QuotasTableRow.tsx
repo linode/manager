@@ -98,6 +98,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
               top: -2,
             }}
             text={quota.description}
+            tooltipPosition="right"
           />
         </Box>
       </TableCell>

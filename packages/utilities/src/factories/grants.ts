@@ -32,15 +32,15 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
   ],
   global: {
     account_access: 'read_write',
-    add_buckets: true,
     add_databases: true,
     add_domains: true,
     add_firewalls: true,
     add_images: true,
-    add_kubernetes: true,
     add_linodes: true,
+    add_lkes: true,
     add_longview: true,
     add_nodebalancers: true,
+    add_kubernetes: true,
     add_stackscripts: true,
     add_volumes: true,
     add_vpcs: true,
@@ -56,6 +56,13 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     },
   ],
   linode: [
+    {
+      id: 123,
+      label: 'example-entity',
+      permissions: 'read_only',
+    },
+  ],
+  lkecluster: [
     {
       id: 123,
       label: 'example-entity',

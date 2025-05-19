@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useUpdateImageMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, TextField } from '@linode/ui';
 import { Stack, Typography } from '@linode/ui';
 import { updateImageSchema } from '@linode/validation';
@@ -7,7 +8,6 @@ import { Controller, useForm } from 'react-hook-form';
 
 import Lock from 'src/assets/icons/lock.svg';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { useUpdateImageMutation } from 'src/queries/images';
 
 import { useImageAndLinodeGrantCheck } from '../utils';
 
@@ -15,12 +15,13 @@ import type { APIError, Image, UpdateImagePayload } from '@linode/api-v4';
 
 interface Props {
   image: Image | undefined;
+  imageError: APIError[] | null;
   isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
 export const EditImageDrawer = (props: Props) => {
-  const { image, isFetching, onClose, open } = props;
+  const { image, imageError, isFetching, onClose, open } = props;
 
   const { canCreateImage } = useImageAndLinodeGrantCheck();
 
@@ -77,6 +78,7 @@ export const EditImageDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={imageError}
       isFetching={isFetching}
       onClose={handleClose}
       open={open}

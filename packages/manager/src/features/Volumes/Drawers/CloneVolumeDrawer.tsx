@@ -27,19 +27,20 @@ import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants
 
 import { PricePanel } from './VolumeDrawer/PricePanel';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
   volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 const initialValues = { label: '' };
 
 export const CloneVolumeDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
 
@@ -96,6 +97,7 @@ export const CloneVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
