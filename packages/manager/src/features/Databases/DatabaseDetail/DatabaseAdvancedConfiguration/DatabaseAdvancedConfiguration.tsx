@@ -42,6 +42,7 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
         </Grid>
         <StyledButtonWrapper>
           <Button
+            data-testid="configure-database"
             onClick={() => setAdvancedConfigurationDrawerOpen(true)}
             title="Configure"
             variant="secondary"
