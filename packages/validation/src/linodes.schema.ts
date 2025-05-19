@@ -762,8 +762,8 @@ export const ModifyLinodeInterfaceSchema = object({
 
 export const CreateLinodeSchema = object({
   alerts: object({
-    system: array().of(number()).notRequired(),
-    user: array().of(number()).notRequired(),
+    system: array().of(number()).defined(),
+    user: array().of(number()).defined(),
   }).notRequired(),
   type: string().ensure().required('Plan is required.'),
   region: string().ensure().required('Region is required.'),
