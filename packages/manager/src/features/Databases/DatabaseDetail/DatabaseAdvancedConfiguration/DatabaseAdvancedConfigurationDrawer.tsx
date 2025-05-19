@@ -203,6 +203,7 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           <Grid size={2}>
             <StyledAddButtonWrapper>
               <Button
+                data-testid="add-config"
                 disabled={!selectedConfig}
                 onClick={() => handleAddConfiguration(selectedConfig)}
                 title="Add"

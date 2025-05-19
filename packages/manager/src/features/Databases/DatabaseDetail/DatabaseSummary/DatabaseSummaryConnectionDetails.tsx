@@ -169,7 +169,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         Download CA Certificate
       </Button>
       {disableDownloadCACertificateBtn && (
-        <span className="tooltipIcon">
+        <span className={classes.tooltipIcon}>
           <TooltipIcon
             status="help"
             sxTooltipIcon={sxTooltipIcon}
