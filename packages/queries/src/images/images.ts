@@ -34,10 +34,10 @@ import type { UseQueryOptions } from '@tanstack/react-query';
 
 export const getAllImages = (
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) =>
   getAll<Image>((params, filter) =>
-    getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+    getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter }),
   )().then((data) => data.data);
 
 export const imageQueries = createQueryKeys('images', {
@@ -63,7 +63,7 @@ export const imageQueries = createQueryKeys('images', {
 export const useImagesQuery = (
   params: Params,
   filters: Filter,
-  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>
+  options?: Partial<UseQueryOptions<ResourcePage<Image>, APIError[]>>,
 ) =>
   useQuery<ResourcePage<Image>, APIError[]>({
     ...imageQueries.paginated(params, filters),
@@ -102,7 +102,7 @@ export const useCreateImageMutation = () => {
       });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
-        image
+        image,
       );
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries({
@@ -127,7 +127,7 @@ export const useUpdateImageMutation = () => {
       });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
-        image
+        image,
       );
     },
   });
@@ -151,7 +151,7 @@ export const useDeleteImageMutation = () => {
 export const useAllImagesQuery = (
   params: Params = {},
   filters: Filter = {},
-  enabled = true
+  enabled = true,
 ) =>
   useQuery<Image[], APIError[]>({
     ...imageQueries.all(params, filters),
@@ -171,7 +171,7 @@ export const useUploadImageMutation = () => {
       });
       queryClient.setQueryData<Image>(
         imageQueries.image(data.image.id).queryKey,
-        data.image
+        data.image,
       );
     },
   });
@@ -190,7 +190,7 @@ export const useUpdateImageRegionsMutation = (imageId: string) => {
       });
       queryClient.setQueryData<Image>(
         imageQueries.image(image.id).queryKey,
-        image
+        image,
       );
     },
   });

@@ -1,7 +1,7 @@
 // This component was built assuming an unmodified MUI <Table />
 import { Typography as FontTypography } from '@linode/design-language-system';
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 
