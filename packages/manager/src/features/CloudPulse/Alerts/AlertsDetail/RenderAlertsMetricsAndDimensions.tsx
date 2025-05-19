@@ -1,6 +1,6 @@
 import { Divider } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import NullComponent from 'src/components/NullComponent';
@@ -44,7 +44,7 @@ export const RenderAlertMetricsAndDimensions = React.memo(
         index
       ) => (
         <React.Fragment key={`${label}_${index}`}>
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <DisplayAlertDetailChips // build the metric threshold chip like aggregation|label|metric_operator|threshold|unit
               label="Metric Threshold"
               mergeChips
@@ -56,10 +56,10 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                 unit,
               ]}
             />
-          </Grid>
+          </GridLegacy>
 
           {dimensionFilters && dimensionFilters.length > 0 && (
-            <Grid item xs={12}>
+            <GridLegacy item xs={12}>
               <DisplayAlertDetailChips // build the dimensions associated with metric threshold like label|dimension_operator|value
                 label="Dimension Filter"
                 mergeChips
@@ -75,11 +75,11 @@ export const RenderAlertMetricsAndDimensions = React.memo(
                   ]
                 )}
               />
-            </Grid>
+            </GridLegacy>
           )}
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <Divider />
-          </Grid>
+          </GridLegacy>
         </React.Fragment>
       )
     );
