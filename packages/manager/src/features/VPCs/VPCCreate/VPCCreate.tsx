@@ -47,7 +47,7 @@ const VPCCreate = () => {
       />
       {userCannotAddVPC && CannotCreateVPCNotice}
       <Grid>
-        <form data-testid="frmVpcCreate" onSubmit={handleSubmit(onCreateVPC)}>
+        <form data-testid="formVpcCreate" onSubmit={handleSubmit(onCreateVPC)}>
           {errors.root?.message && (
             <Notice text={errors.root.message} variant="error" />
           )}

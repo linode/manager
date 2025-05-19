@@ -378,7 +378,7 @@ describe('restricted user cannot create vpc', () => {
     cy.findByText(
       "You don't have permissions to create a new VPC. Please contact an account administrator for details."
     );
-    cy.get('[data-testid="frmVpcCreate"]').within(() => {
+    cy.get('[data-testid="formVpcCreate"]').within(() => {
       ui.buttonGroup
         .findButtonByTitle('Create VPC')
         .should('be.visible')
