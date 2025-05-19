@@ -112,7 +112,7 @@ describe('restricted user does not have permission to create plan', () => {
       .should('be.disabled')
       .trigger('mouseover');
     ui.tooltip.findByText(
-      `You don't have permissions to create Longview Clients. Please contact your account administrator to request the necessary permissions.`
+      "You don't have permissions to create Longview Clients. Please contact your account administrator to request the necessary permissions."
     );
 
     // Confirms that a landing page empty state message is displayed
