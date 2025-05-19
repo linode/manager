@@ -44,6 +44,13 @@ export function getEventMessage(
 
   const message = eventMessages[event?.action]?.[event.status];
 
+  if (!message && import.meta.env.DEV) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `⚠️ No event message factory found for event "${event.action}" with status "${event.status}"`
+    );
+  }
+
   return message ? message(event as Event) : null;
 }
 
