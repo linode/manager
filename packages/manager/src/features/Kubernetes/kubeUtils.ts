@@ -172,7 +172,7 @@ export const getKubeControlPlaneACL = (
  * getLatestVersion([
  *   { label: 'Version 1.1', value: '1.1' },
  *   { label: 'Version 2.0', value: '2.0' }
- * ], 'standard');
+ * ]);
  * // Output: { label: '2.0', value: '2.0' }
  */
 export const getLatestVersion = (
