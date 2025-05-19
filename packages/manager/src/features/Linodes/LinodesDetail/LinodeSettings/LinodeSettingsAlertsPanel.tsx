@@ -39,15 +39,25 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const isBareMetalInstance = type?.class === 'metal';
 
+  const initialValues = isCreateFlow
+    ? {
+        cpu: 90,
+        io: 10000,
+        network_in: 10,
+        network_out: 10,
+        transfer_quota: 80,
+      }
+    : {
+        cpu: linode?.alerts.cpu ?? 0,
+        io: linode?.alerts.io ?? 0,
+        network_in: linode?.alerts.network_in ?? 0,
+        network_out: linode?.alerts.network_out ?? 0,
+        transfer_quota: linode?.alerts.transfer_quota ?? 0,
+      };
+
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
-    initialValues: {
-      cpu: linode?.alerts.cpu ?? 0,
-      io: linode?.alerts.io ?? 0,
-      network_in: linode?.alerts.network_in ?? 0,
-      network_out: linode?.alerts.network_out ?? 0,
-      transfer_quota: linode?.alerts.transfer_quota ?? 0,
-    },
+    initialValues,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
