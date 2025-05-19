@@ -109,7 +109,7 @@ export const useOrderV2 = <T>({
         };
 
     navigate<RegisteredRouter, string, string>({
-      search: (prev) => ({
+      search: (prev: Record<string, string>) => ({
         ...prev,
         ...searchParams,
         ...urlData,
