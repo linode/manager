@@ -30,14 +30,15 @@ import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+// import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const { control, formState, setValue } =
-    useFormContext<CreateLinodeRequest>();
+    useFormContext<LinodeCreateFormValues>();
 
   const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
     useWatch({

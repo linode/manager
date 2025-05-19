@@ -4,6 +4,7 @@ import {
   useCreateLinodeMutation,
   useMutateAccountAgreements,
   useProfile,
+  vpcQueries,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
@@ -139,6 +140,15 @@ export const LinodeCreate = () => {
       enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
         variant: 'success',
       });
+
+      // If a Linode is created with a VPC, invalidate the related VPC queries.
+      if (values.interfaces[0].vpc_id) {
+        queryClient.invalidateQueries({ queryKey: vpcQueries.all._def });
+        queryClient.invalidateQueries({ queryKey: vpcQueries.paginated._def });
+        queryClient.invalidateQueries({
+          queryKey: vpcQueries.vpc(values.interfaces[0].vpc_id).queryKey,
+        });
+      }
 
       captureLinodeCreateAnalyticsEvent({
         queryClient,

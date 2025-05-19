@@ -27,7 +27,10 @@ import {
 } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
-import type { LinodeCreateInterface } from './Networking/utilities';
+import type {
+  FormInterfacePayload,
+  LinodeCreateInterface,
+} from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type {
   AccountSettings,
@@ -217,7 +220,7 @@ export const getLinodeCreatePayload = (
  * @returns a transformed interfaces array in the correct order and with the expected values for the API
  */
 export const getInterfacesPayload = (
-  interfaces: InterfacePayload[] | undefined,
+  interfaces: FormInterfacePayload[] | undefined,
   hasPrivateIP: LinodeCreateFormValues['backups_enabled']
 ): InterfacePayload[] | undefined => {
   if (!interfaces) {
@@ -300,7 +303,10 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * `ipv4` and `ipv6` fields are only accepted for VPC interfaces and the omit type avoids
    * `CreateLinodeSchema` type errors (see https://github.com/linode/manager/pull/11942#discussion_r2043029481)
    */
-  interfaces: InterfacePayload[] | Omit<InterfacePayload, 'ipv4' | 'ipv6'>[];
+  // interfaces: InterfacePayload[] | Omit<InterfacePayload, 'ipv4' | 'ipv6'>[];
+  interfaces:
+    | FormInterfacePayload[]
+    | Omit<FormInterfacePayload, 'ipv4' | 'ipv6'>[];
   /**
    * The currently selected Linode (used for the Backups and Clone tabs)
    */

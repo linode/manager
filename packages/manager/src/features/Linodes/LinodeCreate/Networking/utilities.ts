@@ -24,6 +24,10 @@ export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
   vpc: null | VPC;
 }
 
+export interface FormInterfacePayload extends InterfacePayload {
+  vpc_id?: null | number;
+}
+
 /**
  * Because the new Linode Create Networking UI only allows one interface to be configured,
  * we will use a single `CreateLinodeInterfacePayload` to hold all of our state. Then, we will use
@@ -78,7 +82,7 @@ export const getLinodeInterfacePayload = (
  */
 export const getLegacyInterfaceFromLinodeInterface = (
   linodeInterface: LinodeCreateInterface
-): InterfacePayload => {
+): FormInterfacePayload => {
   const purpose = linodeInterface.purpose;
 
   if (purpose === 'vlan') {
@@ -110,7 +114,7 @@ export const getLegacyInterfaceFromLinodeInterface = (
       },
       purpose,
       subnet_id: linodeInterface.vpc?.subnet_id,
-      vpc_id: linodeInterface.vpc?.vpc_id,
+      // vpc_id: linodeInterface.vpc?.vpc_id,
     };
   }
 

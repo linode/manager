@@ -1,10 +1,11 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
+import type { FormInterfacePayload } from '../Linodes/LinodeCreate/Networking/utilities';
 import type {
   APIError,
   Config,
   CreateLinodeInterfacePayload,
-  InterfacePayload,
+  // InterfacePayload,
   LinodeInterface,
   Subnet,
   VPC,
@@ -98,7 +99,7 @@ export const getVPCInterfacePayload = (inputs: {
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
   vpcId: number;
-}): CreateLinodeInterfacePayload | InterfacePayload => {
+}): CreateLinodeInterfacePayload | FormInterfacePayload => {
   const {
     firewallId,
     chosenIP,

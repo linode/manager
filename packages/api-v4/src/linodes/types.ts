@@ -230,7 +230,7 @@ export interface InterfacePayload {
   primary?: boolean;
   purpose: InterfacePurpose;
   subnet_id?: null | number;
-  vpc_id?: null | number;
+  // vpc_id?: null | number;
 }
 
 export interface ConfigInterfaceOrderPayload {
@@ -268,6 +268,7 @@ export interface DefaultRoute {
   ipv6?: boolean;
 }
 
+// #######################################################################
 export type CreateLinodeInterfacePayload = InferType<
   typeof CreateLinodeInterfaceSchema
 >;
@@ -275,6 +276,7 @@ export type CreateLinodeInterfacePayload = InferType<
 export type ModifyLinodeInterfacePayload = InferType<
   typeof ModifyLinodeInterfaceSchema
 >;
+// #######################################################################
 
 // GET related types
 
@@ -467,7 +469,8 @@ export interface LinodeConfigCreationData {
     updatedb_disabled: boolean;
   };
   initrd: null | number | string;
-  interfaces?: InterfacePayload[];
+  // interfaces?: InterfacePayload[];
+  interfaces?: Omit<Interface, 'active' | 'id'>[];
   kernel?: string;
   label: string;
   memory_limit?: number;
