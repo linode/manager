@@ -1,7 +1,6 @@
 {
-  "extends": ["@linode/tsconfig/react-package", "@linode/tsconfig/non-strict"],
+  "extends": ["@linode/tsconfig/react-package", "@linode/tsconfig/non-strict", "@linode/tsconfig/local-only"],
   "compilerOptions": {
-    "noEmit": true, // We don't need type declorations emitted because we treat @linode/shared as a local-only package right now
     "types": ["@testing-library/jest-dom"]
   },
   "include": ["src"]

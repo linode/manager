@@ -6,6 +6,7 @@
   "exports": {
     "./package":  "./tsconfig.package.json",
     "./react-package": "./tsconfig.react-package.json",
-    "./non-strict": "./tsconfig.non-strict.json"
+    "./non-strict": "./tsconfig.non-strict.json",
+    "./local-only": "./tsconfig.local-only.json"
   }
 }

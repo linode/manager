@@ -1,7 +1,4 @@
 {
-  "extends": ["@linode/tsconfig/react-package", "@linode/tsconfig/non-strict"],
-  "compilerOptions": {
-    "noEmit": true, // We don't need type declorations emitted because we treat @linode/queries as a local-only package right now
-  },
+  "extends": ["@linode/tsconfig/react-package", "@linode/tsconfig/non-strict", "@linode/tsconfig/local-only"],
   "include": ["src"]
 }
