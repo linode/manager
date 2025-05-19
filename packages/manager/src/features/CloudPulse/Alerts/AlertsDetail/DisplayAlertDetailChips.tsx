@@ -1,4 +1,4 @@
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import { getAlertChipBorderRadius } from '../Utils/utils';
@@ -49,18 +49,18 @@ export const DisplayAlertDetailChips = React.memo(
       : [];
     const theme = useTheme();
     return (
-      <Grid container data-qa-item={label} item spacing={1}>
+      <GridLegacy container data-qa-item={label} item spacing={1}>
         {chipValues.map((value, index) => (
           <React.Fragment key={`${label}_${index}`}>
-            <Grid item md={labelGridColumns} xs={12}>
+            <GridLegacy item md={labelGridColumns} xs={12}>
               {index === 0 && (
                 <StyledAlertTypography sx={{ font: theme.font.bold }}>
                   {label}:
                 </StyledAlertTypography>
               )}
-            </Grid>
-            <Grid item md={valueGridColumns} xs={12}>
-              <Grid
+            </GridLegacy>
+            <GridLegacy item md={valueGridColumns} xs={12}>
+              <GridLegacy
                 container
                 sx={{
                   flexWrap: mergeChips ? 'nowrap' : 'wrap',
@@ -68,7 +68,7 @@ export const DisplayAlertDetailChips = React.memo(
                 }}
               >
                 {value.map((label, index) => (
-                  <Grid
+                  <GridLegacy
                     item
                     key={index}
                     sx={{
@@ -86,13 +86,13 @@ export const DisplayAlertDetailChips = React.memo(
                       label={label}
                       variant="outlined"
                     />
-                  </Grid>
+                  </GridLegacy>
                 ))}
-              </Grid>
-            </Grid>
+              </GridLegacy>
+            </GridLegacy>
           </React.Fragment>
         ))}
-      </Grid>
+      </GridLegacy>
     );
   }
 );
