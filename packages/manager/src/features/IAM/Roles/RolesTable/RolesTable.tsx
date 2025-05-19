@@ -201,12 +201,7 @@ export const RolesTable = ({ roles }: Props) => {
               >
                 Role Type
               </TableHeaderCell>
-              <TableHeaderCell
-                sort={(event) => handleSort(event, 'description')}
-                sortable
-                sorted={sort?.column === 'description' ? sort.order : undefined}
-                style={{ minWidth: '38%' }}
-              >
+              <TableHeaderCell style={{ minWidth: '38%' }}>
                 Description
               </TableHeaderCell>
               <TableHeaderCell style={{ minWidth: '10%' }} />
