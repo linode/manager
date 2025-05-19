@@ -421,17 +421,6 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
-      {isCreateImageRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
