@@ -1,11 +1,18 @@
-import { profileFactory, regionFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  profileFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetAccessKeys,
   mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -206,6 +213,7 @@ describe('Object Storage Gen2 create access key modal has disabled fields for re
         restricted: true,
       })
     ).as('getProfile');
+    mockGetProfileGrants(grantsFactory.build());
   });
 
   // access keys creation
