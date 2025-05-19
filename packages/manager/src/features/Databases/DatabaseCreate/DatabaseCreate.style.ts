@@ -1,7 +1,9 @@
-import { Box, Button, TextField, Typography } from '@linode/ui';
+import { Box, Button, Typography } from '@linode/ui';
 import { Grid, styled } from '@mui/material';
 
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
+
+import { TextFieldWrapper } from '../TextFieldWrapper';
 
 export const StyledLabelTooltip = styled(Box, {
   label: 'StyledLabelTooltip',
@@ -14,7 +16,7 @@ export const StyledLabelTooltip = styled(Box, {
   },
 }));
 
-export const StyledTextField = styled(TextField, {
+export const StyledTextField = styled(TextFieldWrapper, {
   label: 'StyledTextField',
 })(({ theme }) => ({
   '& .MuiTooltip-tooltip': {
