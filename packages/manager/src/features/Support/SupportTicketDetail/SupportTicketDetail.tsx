@@ -32,20 +32,24 @@ export interface AttachmentError {
 export const SupportTicketDetail = () => {
   const location = useLocation();
   const { ticketId } = useParams({ from: '/support/tickets/$ticketId' });
-  const id = Number(ticketId);
 
   const locationState = location.state as SupportState;
 
   const { data: profile } = useProfile();
 
-  const { data: ticket, error, isLoading, refetch } = useSupportTicketQuery(id);
+  const {
+    data: ticket,
+    error,
+    isLoading,
+    refetch,
+  } = useSupportTicketQuery(ticketId);
   const {
     data: repliesData,
     error: repliesError,
     fetchNextPage,
     hasNextPage,
     isLoading: repliesLoading,
-  } = useInfiniteSupportTicketRepliesQuery(id);
+  } = useInfiniteSupportTicketRepliesQuery(ticketId);
 
   const replies = repliesData?.pages.flatMap((page) => page.data);
 

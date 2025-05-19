@@ -7,6 +7,22 @@ import { AccountActivationLanding } from './AccountActivationLanding';
 
 const openSupportTicket = 'Open a Support Ticket';
 
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn().mockReturnValue({
+    state: {
+      supportTicketFormFields: {},
+    },
+  }),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+  };
+});
+
 describe('AccountActivationLanding', () => {
   it('renders the AccountActivationLanding component', () => {
     const { getByText, queryByText } = renderWithTheme(
