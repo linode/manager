@@ -221,7 +221,7 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
-      {flags.isNodebalancerVPCEnabled && vpcConfig?.data.length && (
+      {flags.isNodebalancerVPCEnabled && Boolean(vpcConfig?.data.length) && (
         <StyledSummarySection>
           <StyledTitle
             data-qa-title
