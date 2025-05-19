@@ -2,6 +2,7 @@ import { useAccount, useAccountBetaQuery } from '@linode/queries';
 import {
   getBetaStatus,
   isFeatureEnabledV2,
+  sortByTieredVersion,
   sortByVersion,
 } from '@linode/utilities';
 
@@ -164,6 +165,7 @@ export const getKubeControlPlaneACL = (
  *
  * @param {{label: string, value: string}[]} versions - An array of objects with `label` and `value`
  *                                                      properties where `value` is a version string.
+ * @param tier Either standard or enterprise, to determine how to sort versions.
  * @returns {{label: string, value: string}} Returns the object with the highest version number.
  *                                           If the array is empty, returns an default fallback object.
  *
@@ -172,14 +174,17 @@ export const getKubeControlPlaneACL = (
  * getLatestVersion([
  *   { label: 'Version 1.1', value: '1.1' },
  *   { label: 'Version 2.0', value: '2.0' }
- * ]);
+ * ], 'standard');
  * // Output: { label: '2.0', value: '2.0' }
  */
 export const getLatestVersion = (
-  versions: { label: string; value: string }[]
+  versions: { label: string; value: string }[],
+  tier: string
 ): { label: string; value: string } => {
   const sortedVersions = versions.sort((a, b) => {
-    return sortByVersion(a.value, b.value, 'asc');
+    return tier === 'enterprise'
+      ? sortByTieredVersion(a.value, b.value, 'asc')
+      : sortByVersion(a.value, b.value, 'asc');
   });
 
   // eslint-disable-next-line no-console

@@ -415,7 +415,7 @@ export const getKubernetesVersions = () => [
         id: 'v1.31.1+lke4',
       });
 
-      const versions = [kubeVersion1, kubeVersion4, kubeVersion3, kubeVersion2];
+      const versions = [kubeVersion1, kubeVersion3, kubeVersion2, kubeVersion4];
 
       return makePaginatedResponse({
         data: versions,

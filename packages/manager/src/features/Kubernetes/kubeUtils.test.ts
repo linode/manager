@@ -150,7 +150,7 @@ describe('helper functions', () => {
         { label: '1.10', value: '1.10' },
         { label: '2.00', value: '2.00' },
       ];
-      const result = getLatestVersion(versions);
+      const result = getLatestVersion(versions, 'standard');
       expect(result).toEqual({ label: '2.00', value: '2.00' });
     });
 
@@ -161,7 +161,7 @@ describe('helper functions', () => {
         { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
         { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
       ];
-      const result = getLatestVersion(enterpriseVersions);
+      const result = getLatestVersion(enterpriseVersions, 'enterprise');
       expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
     });
 
@@ -171,7 +171,7 @@ describe('helper functions', () => {
         { label: '1.23', value: '1.23' },
         { label: '1.30', value: '1.30' },
       ];
-      const result = getLatestVersion(versions);
+      const result = getLatestVersion(versions, 'standard');
       expect(result).toEqual({ label: '1.30', value: '1.30' });
     });
 
@@ -182,12 +182,17 @@ describe('helper functions', () => {
         { label: '1.30', value: '1.50.1' },
         { label: '1.30', value: '1.50' },
       ];
-      const result = getLatestVersion(versions);
+      const result = getLatestVersion(versions, 'standard');
       expect(result).toEqual({ label: '1.50.1', value: '1.50.1' });
     });
 
-    it('should return default fallback value when called with empty versions', () => {
-      const result = getLatestVersion([]);
+    it('should return default fallback value when called with empty standard versions', () => {
+      const result = getLatestVersion([], 'standard');
+      expect(result).toEqual({ label: '', value: '' });
+    });
+
+    it('should return default fallback value when called with empty enterprise versions', () => {
+      const result = getLatestVersion([], 'enterprise');
       expect(result).toEqual({ label: '', value: '' });
     });
   });
