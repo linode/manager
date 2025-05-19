@@ -1,6 +1,8 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { withRouter } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
 import type { RouteComponentProps } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 

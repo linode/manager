@@ -4,6 +4,7 @@ import Search from '@mui/icons-material/Search';
 import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
