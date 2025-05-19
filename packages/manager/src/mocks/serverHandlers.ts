@@ -1401,6 +1401,7 @@ export const handlers = [
       'active',
       'creating',
       'migrating',
+      'key_rotating',
       'offline',
       'resizing',
     ];
