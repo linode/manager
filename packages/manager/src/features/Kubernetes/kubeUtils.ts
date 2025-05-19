@@ -3,7 +3,6 @@ import {
   getBetaStatus,
   isFeatureEnabledV2,
   sortByTieredVersion,
-  sortByVersion,
 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -165,7 +164,6 @@ export const getKubeControlPlaneACL = (
  *
  * @param {{label: string, value: string}[]} versions - An array of objects with `label` and `value`
  *                                                      properties where `value` is a version string.
- * @param tier Either standard or enterprise, to determine how to sort versions.
  * @returns {{label: string, value: string}} Returns the object with the highest version number.
  *                                           If the array is empty, returns an default fallback object.
  *
@@ -178,22 +176,13 @@ export const getKubeControlPlaneACL = (
  * // Output: { label: '2.0', value: '2.0' }
  */
 export const getLatestVersion = (
-  versions: { label: string; value: string }[],
-  tier: string
+  versions: { label: string; value: string }[]
 ): { label: string; value: string } => {
   const sortedVersions = versions.sort((a, b) => {
-    return tier === 'enterprise'
-      ? sortByTieredVersion(a.value, b.value, 'asc')
-      : sortByVersion(a.value, b.value, 'asc');
+    return sortByTieredVersion(a.value, b.value, 'asc');
   });
 
-  // eslint-disable-next-line no-console
-  console.log({ sortedVersions });
-
   const latestVersion = sortedVersions.pop();
-
-  // eslint-disable-next-line no-console
-  console.log({ latestVersion });
 
   if (!latestVersion) {
     // Return a default fallback object

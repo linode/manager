@@ -218,11 +218,9 @@ export const CreateCluster = () => {
     { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
   ];
 
-  // console.log({versionData}, {versions}, {_versions})
-
   React.useEffect(() => {
     if (_versions.length > 0) {
-      setVersion(getLatestVersion(_versions, selectedTier).value);
+      setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
 

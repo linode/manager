@@ -90,32 +90,52 @@ export const sortByVersion = (
   return order === 'asc' ? result : -result;
 };
 
-// TODO: need to test this with standard tiered version endpoints
 /**
- * For Beta rollout, LKE-E clusters are using the new v4beta tiered version endpoint and standard clusters are using the existing v4 version endpoint.
- * Once LKE-E hits GA, we should transition to only using the v4 tiered version endpoints for enterprise *and* standard (https://techdocs.akamai.com/linode-api/reference/get-lke-tiers-versions).
- * At that point, we can just call sortByTieredVersion in kubeDetails.
- * @param {string} a - The first version string to compare. Supports formatting for LKE-E versions.
- * @param {string} b - The second version string to compare. Supports formatting for LKE-E versions.
+ * Compares two semantic version strings based on the specified order, including with special handling of LKE-Enterprise tier versions.
+ *
+ * This function splits each version string into its constituent parts (major, minor, patch),
+ * compares them numerically, and returns a positive number, zero, or a negative number
+ * based on the specified sorting order. If components are missing in either version,
+ * they are treated as zero.
+ *
+ * @param {string} a - The first version string to compare.
+ * @param {string} b - The second version string to compare.
  * @param {SortOrder} order - The order to sort by, can be 'asc' for ascending or 'desc' for descending.
  * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
  *                   zero if they are equal, and a negative number if `b` is greater than `a`.
+ * * @example
+ * // returns a positive number
+ * sortByVersion('1.2.3', '1.2.2', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.2+lke2', 'asc');
+ *
+ * @example
+ * // returns zero
+ * sortByVersion('1.2.3', '1.2.3', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.3+lke1', 'asc');
+ *
+ * @example
+ * // returns a negative number
+ * sortByVersion('1.2.3', '1.2.4', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.4+lke1', 'asc');
  */
 export const sortByTieredVersion = (
   a: string,
   b: string,
   order: SortOrder,
 ): number => {
-  // Remove the 'v' prefix and split the core version (X.X.X) from the enterprise release version (+lkeX).
-  const aCleanVersion = a.replace('v', '');
-  const bCleanVersion = b.replace('v', '');
-  const [aCoreVersion, aEnterpriseVersion] = aCleanVersion.split('+');
-  const [bCoreVersion, bEnterpriseVersion] = bCleanVersion.split('+');
+  // For LKE-E versions, remove the 'v' prefix and split the core version (X.X.X) from the enterprise release version (+lkeX).
+  const aStrippedVersion = a.replace('v', '');
+  const bStrippedVersion = b.replace('v', '');
+  const [aCoreVersion, aEnterpriseVersion] = aStrippedVersion.split('+');
+  const [bCoreVersion, bEnterpriseVersion] = bStrippedVersion.split('+');
 
   const aParts = aCoreVersion.split('.');
   const bParts = bCoreVersion.split('.');
-  const aEnterpriseVersionNum = Number(aEnterpriseVersion.replace(/\D+/g, ''));
-  const bEnterpriseVersionNum = Number(bEnterpriseVersion.replace(/\D+/g, ''));
+  // For LKE-E versions, extract the number from the +lke suffix.
+  const aEnterpriseVersionNum =
+    Number(aEnterpriseVersion?.replace(/\D+/g, '')) || 0;
+  const bEnterpriseVersionNum =
+    Number(bEnterpriseVersion?.replace(/\D+/g, '')) || 0;
 
   const result = (() => {
     for (let i = 0; i < Math.max(aParts.length, bParts.length); i += 1) {
