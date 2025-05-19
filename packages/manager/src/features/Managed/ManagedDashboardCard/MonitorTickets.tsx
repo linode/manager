@@ -61,11 +61,12 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
                   dialogOpen: true,
                   // dialogTitle: 'Managed monitor issue',
                 },
-                state: {
+                state: (prev) => ({
+                  ...prev,
                   supportTicketFormFields: {
                     title: 'Managed monitor issue',
                   },
-                },
+                }),
                 to: '/support/tickets/open',
               })
             }

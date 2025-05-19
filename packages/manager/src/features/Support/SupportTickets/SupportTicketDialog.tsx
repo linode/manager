@@ -50,6 +50,7 @@ import type {
   TicketSeverity,
 } from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
+import type { SupportState } from 'src/routes/support';
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -139,9 +140,10 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   } = props;
 
   const locationRouterDom = useLocationRouterDom<any>();
-  const locationTanstack = useLocationTanstack<any>();
+  const locationTanstack = useLocationTanstack();
+  const locationTanstackState = locationTanstack.state as SupportState;
   const stateParams =
-    locationRouterDom.state ?? locationTanstack.state.supportTicketFormFields;
+    locationRouterDom.state ?? locationTanstackState.supportTicketFormFields;
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string =
@@ -199,12 +201,6 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    if (!open) {
-      resetDrawer();
-    }
-  }, [open]);
-
   /**
    * Store 'general' support ticket data in local storage if it exists.
    * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
@@ -223,45 +219,52 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     debouncedSave(form.getValues());
   }, [summary, description, entityId, entityType, selectedSeverity]);
 
+  const resetTicket = (clearValues: boolean = false) => {
+    form.reset({
+      ...form.formState.defaultValues,
+      description: clearValues
+        ? ''
+        : (_prefilledDescription ?? valuesFromStorage.description),
+      entityId: clearValues
+        ? ''
+        : _prefilledEntity?.id
+          ? String(_prefilledEntity.id)
+          : valuesFromStorage.entityId,
+      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
+      entityType: clearValues
+        ? 'general'
+        : (_prefilledEntity?.type ?? valuesFromStorage.entityType),
+      selectedSeverity: clearValues
+        ? undefined
+        : valuesFromStorage.selectedSeverity,
+      summary: clearValues
+        ? ''
+        : (newPrefilledTitle ?? valuesFromStorage.summary),
+      ticketType: clearValues ? 'general' : (_prefilledTicketType ?? 'general'),
+    });
+  };
+
   /**
    * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
    * or reset to the default values (from localStorage) otherwise.
    */
-  const resetTicket = (clearValues: boolean = false) => {
-    form.reset({
-      ...form.formState.defaultValues,
-      description: clearValues ? '' : valuesFromStorage.description,
-      entityId: clearValues ? '' : valuesFromStorage.entityId,
-      entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
-      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
-      selectedSeverity: clearValues
-        ? undefined
-        : valuesFromStorage.selectedSeverity,
-      summary: clearValues ? '' : valuesFromStorage.summary,
-      ticketType: 'general',
-    });
-  };
-
   const resetDrawer = (clearValues: boolean = false) => {
     resetTicket(clearValues);
     setFiles([]);
-
     if (clearValues) {
-      saveFormData(supportTicketStorageDefaults);
+      storage.supportTicket.set(supportTicketStorageDefaults);
     }
   };
 
   const handleClose = () => {
-    if (ticketType !== 'general') {
-      window.setTimeout(() => resetDrawer(true), 500);
-    }
     props.onClose();
     sendSupportTicketExitEvent('Close');
   };
 
   const handleCancel = () => {
+    resetDrawer(true);
     props.onClose();
-    window.setTimeout(() => resetDrawer(true), 500);
+    resetTicket(false);
     sendSupportTicketExitEvent('Cancel');
   };
 

@@ -128,23 +128,10 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-// const SupportTickets = React.lazy(
-//   () => import('src/features/Support/SupportTickets')
-// );
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (module) => ({
-      default: module.SupportTicketDetail,
-    })
-  )
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
   }))
-);
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
 
@@ -217,6 +204,13 @@ export const MainContent = () => {
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
 
+  migrationRouter.update({
+    context: {
+      globalErrors,
+      queryClient,
+    },
+  });
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -224,38 +218,17 @@ export const MainContent = () => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  // if (globalErrors.account_unactivated) {
-  //   return (
-  //     <div className={classes.bgStyling}>
-  //       <div className={classes.activationWrapper}>
-  //         <Box
-  //           style={{
-  //             display: 'flex',
-  //             justifyContent: 'center',
-  //           }}
-  //         >
-  //           <Logo className={classes.logo} width={215} />
-  //         </Box>
-  //         <Switch>
-  //           <Route
-  //             component={SupportTickets}
-  //             exact
-  //             path="/support/tickets"
-  //             strict
-  //           />
-  //           <Route
-  //             component={SupportTicketDetail}
-  //             exact
-  //             path="/support/tickets/:ticketId"
-  //             strict
-  //           />
-  //           {/* <Route component={Help} exact path="/support" /> */}
-  //           <Route component={AccountActivationLanding} />
-  //         </Switch>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (globalErrors.account_unactivated) {
+    return (
+      <>
+        <Redirect to="/account-activation" />
+        <RouterProvider
+          context={{ queryClient }}
+          router={migrationRouter as AnyRouter}
+        />
+      </>
+    );
+  }
 
   // If the API is in maintenance mode, return a Maintenance screen
   if (globalErrors.api_maintenance_mode || ENABLE_MAINTENANCE_MODE) {

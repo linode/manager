@@ -22,6 +22,7 @@ import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import { TicketStatus } from './TicketStatus';
 
 import type { SupportReply } from '@linode/api-v4/lib/support';
+import type { SupportState } from 'src/routes/support';
 
 export interface AttachmentError {
   error: string;
@@ -33,7 +34,7 @@ export const SupportTicketDetail = () => {
   const { ticketId } = useParams({ from: '/support/tickets/$ticketId' });
   const id = Number(ticketId);
 
-  const attachmentErrors = location.state.attachmentErrors;
+  const locationState = location.state as SupportState;
 
   const { data: profile } = useProfile();
 
@@ -93,15 +94,17 @@ export const SupportTicketDetail = () => {
       <StyledStack spacing={2}>
         <TicketStatus {...ticket} />
         {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
-        {attachmentErrors !== undefined &&
-          !isEmpty(attachmentErrors) &&
-          attachmentErrors?.map((error, idx: number) => (
-            <AttachmentError
-              fileName={error.file}
-              key={idx}
-              reason={error.error}
-            />
-          ))}
+        {locationState?.attachmentErrors !== undefined &&
+          !isEmpty(locationState?.attachmentErrors) &&
+          locationState?.attachmentErrors?.map(
+            (error: AttachmentError, idx: number) => (
+              <AttachmentError
+                fileName={error.file}
+                key={idx}
+                reason={error.error}
+              />
+            )
+          )}
         <Grid container spacing={2}>
           <Grid size={12} style={{ padding: 0 }}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}

@@ -102,11 +102,12 @@ export const LongviewLanding = (props: LongviewProps) => {
   const handleSubmit = () => {
     if (isManaged) {
       navigate({
-        state: {
+        state: (prev) => ({
+          ...prev,
           supportTicketFormFields: {
             title: 'Request for additional Longview clients',
           },
-        },
+        }),
         to: '/support/tickets/open',
       });
       return;

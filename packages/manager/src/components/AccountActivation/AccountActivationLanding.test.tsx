@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import AccountActivationLanding from './AccountActivationLanding';
+import { AccountActivationLanding } from './AccountActivationLanding';
 
 const openSupportTicket = 'Open a Support Ticket';
 

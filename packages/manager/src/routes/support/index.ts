@@ -3,8 +3,16 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { SupportTicketsRoute } from './SupportRoute';
 
+import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
+import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
+
 interface SupportSearchParams {
   dialogOpen?: boolean;
+}
+
+export interface SupportState {
+  attachmentErrors?: AttachmentError[];
+  supportTicketFormFields?: SupportTicketFormFields;
 }
 
 const supportRoute = createRoute({
@@ -64,6 +72,13 @@ const supportSearchLandingRoute = createRoute({
   )
 );
 
+export const accountActivationLandingRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'account-activation',
+}).lazy(() =>
+  import('./supportLazyRoutes').then((m) => m.accountActivationLandingLazyRoute)
+);
+
 export const supportRouteTree = supportRoute.addChildren([
   supportLandingRoute,
   supportTicketsLandingRoute,
@@ -72,4 +87,5 @@ export const supportRouteTree = supportRoute.addChildren([
     supportTicketsLandingRouteClosed,
   ]),
   supportSearchLandingRoute,
+  accountActivationLandingRoute,
 ]);

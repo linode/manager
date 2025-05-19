@@ -39,7 +39,10 @@ export const SupportTicketsLanding = () => {
   ) => {
     navigate({
       to: '/support/tickets/$ticketId',
-      state: { attachmentErrors },
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
       params: {
         ticketId,
       },

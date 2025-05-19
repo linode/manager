@@ -50,7 +50,10 @@ export const HelpResources = () => {
   ) => {
     navigate({
       to: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
     setDrawerOpen(false);
   };

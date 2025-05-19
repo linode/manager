@@ -30,9 +30,6 @@ import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
 
-import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
-import type { SupportTicketFormFields } from 'src/features/Support/SupportTickets/SupportTicketDialog';
-
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
     const { accountSettings } = context;
@@ -83,13 +80,6 @@ declare module '@tanstack/react-router' {
   interface Register {
     // This infers the type of our router and registers it across the entire project
     router: typeof router;
-  }
-  interface HistoryState {
-    attachmentErrors?: AttachmentError[];
-    recordError?: string;
-    supportTicketFormFields?: Partial<SupportTicketFormFields> & {
-      title?: string;
-    };
   }
 }
 
