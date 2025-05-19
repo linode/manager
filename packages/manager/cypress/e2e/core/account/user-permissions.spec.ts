@@ -279,7 +279,6 @@ describe('User permission management', () => {
       ...mockUserGrants,
       global: {
         account_access: 'read_only',
-        add_buckets: true,
         add_databases: true,
         add_domains: true,
         add_firewalls: true,
