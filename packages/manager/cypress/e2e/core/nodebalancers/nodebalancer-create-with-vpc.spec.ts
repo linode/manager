@@ -86,7 +86,8 @@ describe('Create a NodeBalancer with VPCs', () => {
     cy.focused().type(mockNodeBalancer.label);
 
     // this will create the NB in newark, where the default Linode was created
-    ui.regionSelect.find().click().clear().type(`${region.label}{enter}`);
+    ui.regionSelect.find().click();
+    ui.regionSelect.findItemByRegionLabel(region.label).click();
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
     cy.findByText('Assign VPC').click();
