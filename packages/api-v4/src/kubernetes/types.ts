@@ -78,7 +78,6 @@ export interface UpdateNodePoolData {
   tags: string[];
   taints: Taint[];
 }
-
 export interface UpdateNodePoolDataBeta extends UpdateNodePoolData {
   firewall_id?: number;
   k8s_version?: string;
