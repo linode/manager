@@ -6,7 +6,7 @@ import type {
   NodeBalancerConfig,
   NodeBalancerConfigNode,
   NodeBalancerStats,
-} from '@linode/api-v4/lib/nodebalancers/types';
+} from '@linode/api-v4';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   client_conn_throttle: 0,
@@ -24,6 +24,8 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
     total: 0,
   },
   updated: '2019-12-13T00:00:00',
+  lke_cluster: null,
+  type: 'common',
 });
 
 export const nodeBalancerConfigFactory =

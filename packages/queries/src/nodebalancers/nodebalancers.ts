@@ -3,18 +3,9 @@ import {
   createNodeBalancerConfig,
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
-  getNodeBalancer,
-  getNodeBalancerBeta,
-  getNodeBalancerConfigs,
-  getNodeBalancerFirewalls,
-  getNodeBalancers,
-  getNodeBalancerStats,
-  getNodeBalancerTypes,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
-import { getAll } from '@linode/utilities';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -26,6 +17,7 @@ import {
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
 import { profileQueries } from '../profile';
+import { nodebalancerQueries } from './keys';
 
 import type { EventHandlerData } from '../eventHandlers';
 import type {
@@ -42,72 +34,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4';
 
-const getAllNodeBalancerTypes = () =>
-  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
-    (results) => results.data,
-  );
-
-export const getAllNodeBalancerConfigs = (id: number) =>
-  getAll<NodeBalancerConfig>((params) =>
-    getNodeBalancerConfigs(id, params),
-  )().then((data) => data.data);
-
-export const getAllNodeBalancers = () =>
-  getAll<NodeBalancer>((params) => getNodeBalancers(params))().then(
-    (data) => data.data,
-  );
-
-export const nodebalancerQueries = createQueryKeys('nodebalancers', {
-  nodebalancer: (id: number) => ({
-    contextQueries: {
-      configurations: {
-        queryFn: () => getAllNodeBalancerConfigs(id),
-        queryKey: null,
-      },
-      firewalls: {
-        queryFn: () => getNodeBalancerFirewalls(id),
-        queryKey: null,
-      },
-      nodebalancer: (isUsingBetaEndpoint: boolean = false) => ({
-        queryFn: () =>
-          isUsingBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
-        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
-      }),
-      stats: {
-        queryFn: () => getNodeBalancerStats(id),
-        queryKey: null,
-      },
-    },
-    queryFn: () => getNodeBalancer(id),
-    queryKey: [id],
-  }),
-  nodebalancers: {
-    contextQueries: {
-      all: {
-        queryFn: getAllNodeBalancers,
-        queryKey: null,
-      },
-      infinite: (filter: Filter = {}) => ({
-        queryFn: ({ pageParam }) =>
-          getNodeBalancers(
-            { page: pageParam as number, page_size: 25 },
-            filter,
-          ),
-        queryKey: [filter],
-      }),
-      paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getNodeBalancers(params, filter),
-        queryKey: [params, filter],
-      }),
-    },
-    queryKey: null,
-  },
-  types: {
-    queryFn: getAllNodeBalancerTypes,
-    queryKey: null,
-  },
-});
-
 export const useNodeBalancerStatsQuery = (id: number) => {
   return useQuery<NodeBalancerStats, APIError[]>({
     ...nodebalancerQueries.nodebalancer(id)._ctx.stats,
@@ -122,15 +48,9 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (
-  id: number,
-  enabled = true,
-  isUsingBetaEndpoint = false,
-) => {
+export const useNodeBalancerQuery = (id: number, enabled = true) => {
   return useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries
-      .nodebalancer(id)
-      ._ctx.nodebalancer(isUsingBetaEndpoint),
+    ...nodebalancerQueries.nodebalancer(id),
     enabled,
   });
 };

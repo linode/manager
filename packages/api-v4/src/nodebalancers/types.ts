@@ -42,11 +42,11 @@ export interface NodeBalancer {
    * If the NB is associated with a cluster (active or deleted), return its info
    * If the NB is not associated with a cluster, return null
    */
-  lke_cluster?: LKEClusterInfo | null;
+  lke_cluster: LKEClusterInfo | null;
   region: string;
   tags: string[];
   transfer: BalancerTransfer;
-  type?: NodeBalancerType;
+  type: NodeBalancerType;
   updated: string;
 }
 
