@@ -14,22 +14,23 @@ import { AlertSection } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
+  isCreateFlow?: boolean;
   isReadOnly?: boolean;
-  linodeId: number;
+  linodeId?: number;
 }
 
 export const LinodeSettingsAlertsPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { isCreateFlow, isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(linodeId ?? -1);
 
   const {
     error,
     isPending,
     mutateAsync: updateLinode,
-  } = useLinodeUpdateMutation(linodeId);
+  } = useLinodeUpdateMutation(linodeId ?? -1);
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -234,19 +235,21 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
         <React.Fragment key={`alert-${idx}`}>
-          <AlertSection {...p} readOnly={isReadOnly} />
+          <AlertSection {...p} readOnly={isReadOnly || isCreateFlow} />
           {idx !== alertSections.length - 1 ? <Divider /> : null}
         </React.Fragment>
       ))}
-      <StyledActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'alerts-save',
-          disabled: isReadOnly || !formik.dirty,
-          label: 'Save',
-          loading: isPending,
-          onClick: () => formik.handleSubmit(),
-        }}
-      />
+      {!isCreateFlow && (
+        <StyledActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'alerts-save',
+            disabled: isReadOnly || !formik.dirty,
+            label: 'Save',
+            loading: isPending,
+            onClick: () => formik.handleSubmit(),
+          }}
+        />
+      )}
     </Paper>
   );
 };

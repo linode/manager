@@ -3,6 +3,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
   useMutateAccountAgreements,
+  usePreferences,
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
@@ -23,6 +24,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import {
@@ -36,6 +38,7 @@ import {
 
 import { Actions } from './Actions';
 import { Addons } from './Addons/Addons';
+import Alerts from './Alerts/Alerts';
 import { Details } from './Details/Details';
 import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
@@ -78,6 +81,12 @@ export const LinodeCreate = () => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
+
+  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpAlertsBeta
+  );
+
+  const flags = useFlags();
 
   const queryClient = useQueryClient();
 
@@ -123,7 +132,11 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
+    const payload = getLinodeCreatePayload(values, {
+      isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+      isAclpIntegration: flags.aclpIntegration,
+      isAclpAlertsPreferenceBeta,
+    });
 
     try {
       const linode =
@@ -262,6 +275,7 @@ export const LinodeCreate = () => {
           )}
           <UserData />
           {isLinodeInterfacesEnabled && <Networking />}
+          <Alerts />
           <Addons />
           <EUAgreement />
           <Summary />

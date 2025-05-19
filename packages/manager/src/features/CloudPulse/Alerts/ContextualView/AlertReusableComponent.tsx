@@ -20,6 +20,7 @@ import {
   convertAlertsToTypeSet,
   filterAlertsByStatusAndType,
 } from '../Utils/utils';
+import { AlertInfoActionTableCreateFlow } from './AlertInfoActionTableCreateFlow';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type { AlertDefinitionType } from '@linode/api-v4';
@@ -118,14 +119,23 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             />
           </Box>
 
-          <AlertInformationActionTable
-            alerts={filteredAlerts}
-            columns={AlertContextualViewTableHeaderMap}
-            entityId={entityId}
-            entityName={entityName}
-            error={error}
-            orderByColumn="Alert Name"
-          />
+          {entityId ? (
+            <AlertInformationActionTable
+              alerts={filteredAlerts}
+              columns={AlertContextualViewTableHeaderMap}
+              entityId={entityId}
+              entityName={entityName}
+              error={error}
+              orderByColumn="Alert Name"
+            />
+          ) : (
+            <AlertInfoActionTableCreateFlow
+              alerts={filteredAlerts}
+              columns={AlertContextualViewTableHeaderMap}
+              error={error}
+              orderByColumn="Alert Name"
+            />
+          )}
         </Stack>
       </Stack>
     </Paper>

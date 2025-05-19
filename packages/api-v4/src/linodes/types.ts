@@ -9,6 +9,7 @@ import type {
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
 import type { MaintenancePolicyId } from 'src/account';
+import type { Alert } from 'src/cloudpulse';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -160,6 +161,11 @@ export interface LinodeIPsResponseIPV6 {
   global: IPRange[];
   link_local: IPAddress;
   slaac: IPAddress;
+}
+
+export interface LinodeAclpAlertsPayload {
+  system: Alert['id'][];
+  user: Alert['id'][];
 }
 
 export type LinodeStatus =
@@ -537,6 +543,10 @@ export interface CreateLinodePlacementGroupPayload {
 }
 
 export interface CreateLinodeRequest {
+  /**
+   * Beta Aclp alerts
+   */
+  alerts?: LinodeAclpAlertsPayload | null;
   /**
    * A list of public SSH keys that will be automatically appended to the root user’s
    * `~/.ssh/authorized_keys`file when deploying from an Image.
