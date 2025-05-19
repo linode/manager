@@ -63,6 +63,7 @@ export const nodeBalancerConfigNodeFactory =
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
+    vpc_config_id: null,
   });
 
 export const nodeBalancerStatsFactory =
