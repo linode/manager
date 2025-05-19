@@ -30,7 +30,6 @@ import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
-// import type { CreateLinodeRequest } from '@linode/api-v4';
 import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 

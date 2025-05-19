@@ -5,7 +5,6 @@ import type {
   APIError,
   Config,
   CreateLinodeInterfacePayload,
-  // InterfacePayload,
   LinodeInterface,
   Subnet,
   VPC,
