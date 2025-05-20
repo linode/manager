@@ -4,7 +4,7 @@ import {
   useProfile,
 } from '@linode/queries';
 import { Button, CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -51,7 +51,7 @@ export const BillingDetail = () => {
   }
 
   return (
-    <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+    <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
       <DocumentTitleSegment segment={`Account & Billing`} />
       <Grid
         columnSpacing={2}

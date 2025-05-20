@@ -886,7 +886,7 @@ export const lightTheme: ThemeOptions = {
           '&.Mui-focused': {
             color: Color.Neutrals[70],
           },
-          color: Component.Label.Text,
+          color: Color.Neutrals[70],
           font: Typography.Body.Bold,
           marginBottom: 8,
         },
@@ -958,6 +958,7 @@ export const lightTheme: ThemeOptions = {
             color: TextField.Placeholder.Text,
             font: Typography.Label.Regular.Placeholder,
             fontStyle: 'italic',
+            opacity: 1,
           },
           '&:disabled, &.Mui-disabled': {
             cursor: 'not-allowed',
@@ -1285,7 +1286,6 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           fontSize: 20,
-          color: Component.Label.InfoIcon,
         },
       },
     },
