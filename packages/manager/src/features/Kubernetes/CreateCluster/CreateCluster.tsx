@@ -594,7 +594,13 @@ export const CreateCluster = () => {
         >
           <KubeCheckoutBar
             createCluster={createCluster}
-            enterprisePrice={lkeEnterpriseType?.price.monthly ?? undefined}
+            enterprisePrice={
+              isLkeEnterpriseLAFeatureEnabled &&
+              selectedTier === 'enterprise' &&
+              lkeEnterpriseType?.price.monthly
+                ? lkeEnterpriseType?.price.monthly
+                : undefined
+            }
             hasAgreed={hasAgreed}
             highAvailability={highAvailability}
             highAvailabilityPrice={
