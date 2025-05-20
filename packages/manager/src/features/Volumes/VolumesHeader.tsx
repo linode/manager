@@ -2,7 +2,6 @@ import {
   CircleProgress,
   IconButton,
   InputAdornment,
-  Notice,
   TextField,
 } from '@linode/ui';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,7 +12,6 @@ import { debounce } from 'throttle-debounce';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 interface Params {
@@ -23,8 +21,6 @@ interface Params {
 
 export const VolumesHeader = ({ isFetching, searchQueryKey }: Params) => {
   const navigate = useNavigate();
-
-  const { _isRestrictedUser } = useAccountManagement();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_volumes',
@@ -54,16 +50,6 @@ export const VolumesHeader = ({ isFetching, searchQueryKey }: Params) => {
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
-      {_isRestrictedUser && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: ['create', 'edit'],
-            resourceType: 'Volumes',
-            isSingular: false,
-          })}
-          variant="warning"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Volumes',

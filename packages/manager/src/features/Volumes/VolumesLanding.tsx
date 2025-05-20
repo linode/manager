@@ -9,7 +9,7 @@ import { CircleProgress, ErrorState } from '@linode/ui';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import {
@@ -100,7 +100,8 @@ export const VolumesLanding = () => {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    filter,
+    groupedByTags
   );
 
   const {
@@ -151,6 +152,7 @@ export const VolumesLanding = () => {
         isFetching={groupedByTags ? groupedIsFetching : isFetching}
         searchQueryKey={query}
       />
+      <DocumentTitleSegment segment="Volumes" />
 
       <VolumesTable
         groupedByTags={!!groupedByTags}
@@ -162,14 +164,14 @@ export const VolumesLanding = () => {
         volumes={groupedByTags ? groupedVolumes : volumes}
       />
 
-      <PaginationFooter
+      {/* <PaginationFooter
         count={volumes?.results ?? 0}
         eventCategory="Volumes Table"
         handlePageChange={pagination.handlePageChange}
         handleSizeChange={pagination.handlePageSizeChange}
         page={pagination.page}
         pageSize={pagination.pageSize}
-      />
+      /> */}
 
       <AttachVolumeDrawer
         isFetching={isFetchingVolume}

@@ -96,10 +96,11 @@ export const useVolumesQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useGroupedVolumesQuery = (params: Params, filter: Filter) =>
+export const useGroupedVolumesQuery = (params: Params, filter: Filter, enabled?: boolean) =>
   useQuery<ResourcePage<GroupedVolumes>, APIError[]>({
     ...volumeQueries.lists._ctx.groupByTags(params, filter),
     placeholderData: keepPreviousData,
+    enabled,
   });
 
 export const useVolumeTypesQuery = () =>
