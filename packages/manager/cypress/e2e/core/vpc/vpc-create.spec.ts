@@ -1,9 +1,14 @@
+import { linodeFactory, regionFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
+import { subnetFactory, vpcFactory } from '@src/factories';
+import { mockGetUser } from 'support/intercepts/account';
 /**
  * @file Integration tests for VPC create flow.
  */
-
-import { linodeFactory, regionFactory } from '@linode/utilities';
-import { subnetFactory, vpcFactory } from '@src/factories';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import {
   mockCreateVPC,
@@ -20,8 +25,9 @@ import {
   randomString,
 } from 'support/util/random';
 import { extendRegion } from 'support/util/regions';
-
+import { accountUserFactory } from 'src/factories';
 import { getUniqueResourcesFromSubnets } from 'src/features/VPCs/utils';
+
 
 import type { Subnet, VPC } from '@linode/api-v4';
 
@@ -330,5 +336,61 @@ describe('VPC create flow', () => {
       });
 
     cy.findByText('No Subnets are assigned.').should('be.visible');
+  });
+});
+
+describe('restricted user cannot create vpc', () => {
+  beforeEach(() => {
+    const mockProfile = profileFactory.build({
+      restricted: true,
+      username: randomLabel(),
+    });
+
+    const mockUser = accountUserFactory.build({
+      restricted: true,
+      user_type: 'default',
+      username: mockProfile.username,
+    });
+
+    const mockGrants = grantsFactory.build({
+      global: {
+        add_vpcs: false,
+      },
+    });
+
+    mockGetProfile(mockProfile);
+    mockGetProfileGrants(mockGrants);
+    mockGetUser(mockUser);
+  });
+
+  /*
+   * - Verifies that restricted user cannot create vpc on landing page
+   */
+  it('create vpc is disabled on landing page', () => {
+    cy.visitWithLogin('/vpcs');
+    ui.button
+      .findByTitle('Create VPC')
+      .should('be.visible')
+      .should('be.disabled');
+  });
+
+  /*
+   * - Verifies that restricted user cannot create vpc in Create page
+   */
+  it('create vpc create page is disabled', () => {
+    cy.visitWithLogin('/vpcs/create');
+    cy.findByText(
+      "You don't have permissions to create a new VPC. Please contact an account administrator for details."
+    );
+    cy.get('[data-testid="formVpcCreate"]').within(() => {
+      ui.buttonGroup
+        .findButtonByTitle('Create VPC')
+        .should('be.visible')
+        .should('be.disabled');
+      // all form inputs are disabled
+      cy.get('input').each((input) => {
+        cy.wrap(input).should('be.disabled');
+      });
+    });
   });
 });

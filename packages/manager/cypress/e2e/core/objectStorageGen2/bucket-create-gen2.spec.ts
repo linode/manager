@@ -1,4 +1,8 @@
-import { profileFactory, regionFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  profileFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -9,7 +13,10 @@ import {
   mockGetBuckets,
   mockGetObjectStorageEndpoints,
 } from 'support/intercepts/object-storage';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { checkRateLimitsTable } from 'support/util/object-storage-gen2';
@@ -756,12 +763,13 @@ describe('Object Storage Gen2 create bucket modal has disabled fields for restri
         restricted: true,
       })
     ).as('getProfile');
+    mockGetProfileGrants(grantsFactory.build()).as('getGrants');
   });
 
   // bucket creation
   it('create bucket form', () => {
     cy.visitWithLogin('/object-storage/buckets/create');
-    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile']);
+    cy.wait(['@getFeatureFlags', '@getAccount', '@getProfile', '@getGrants']);
 
     // error message
     ui.drawer

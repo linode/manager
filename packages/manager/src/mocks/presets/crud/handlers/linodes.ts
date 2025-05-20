@@ -231,10 +231,15 @@ const addFirewallDevice = async (inputs: {
 export const createLinode = (mockState: MockState) => [
   http.post('*/v4/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
+    const payloadCopy = { ...payload };
+
+    // Ensure linode object does not have `interfaces` property
+    delete payloadCopy['interfaces'];
+
     const linode = linodeFactory.build({
       created: DateTime.now().toISO(),
       status: 'provisioning',
-      ...payload,
+      ...payloadCopy,
     });
 
     if (!linode.label) {
@@ -275,6 +280,9 @@ export const createLinode = (mockState: MockState) => [
         if (subnetFromDB && vpc) {
           const vpcInterface = linodeInterfaceFactoryVPC.build({
             ...vpcIfacePayload,
+            default_route: {
+              ipv4: true,
+            },
             created: DateTime.now().toISO(),
             updated: DateTime.now().toISO(),
           });

@@ -1,20 +1,12 @@
 import {
   createNodeBalancer,
+  createNodeBalancerBeta,
   createNodeBalancerConfig,
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
-  getNodeBalancer,
-  getNodeBalancerBeta,
-  getNodeBalancerConfigs,
-  getNodeBalancerFirewalls,
-  getNodeBalancers,
-  getNodeBalancerStats,
-  getNodeBalancerTypes,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
-import { getAll } from '@linode/utilities';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -26,6 +18,8 @@ import {
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
 import { profileQueries } from '../profile';
+import { vpcQueries } from '../vpcs';
+import { nodebalancerQueries } from './keys';
 
 import type { EventHandlerData } from '../eventHandlers';
 import type {
@@ -42,72 +36,6 @@ import type {
   ResourcePage,
 } from '@linode/api-v4';
 
-const getAllNodeBalancerTypes = () =>
-  getAll<PriceType>((params) => getNodeBalancerTypes(params))().then(
-    (results) => results.data,
-  );
-
-export const getAllNodeBalancerConfigs = (id: number) =>
-  getAll<NodeBalancerConfig>((params) =>
-    getNodeBalancerConfigs(id, params),
-  )().then((data) => data.data);
-
-export const getAllNodeBalancers = () =>
-  getAll<NodeBalancer>((params) => getNodeBalancers(params))().then(
-    (data) => data.data,
-  );
-
-export const nodebalancerQueries = createQueryKeys('nodebalancers', {
-  nodebalancer: (id: number) => ({
-    contextQueries: {
-      configurations: {
-        queryFn: () => getAllNodeBalancerConfigs(id),
-        queryKey: null,
-      },
-      firewalls: {
-        queryFn: () => getNodeBalancerFirewalls(id),
-        queryKey: null,
-      },
-      nodebalancer: (isUsingBetaEndpoint: boolean = false) => ({
-        queryFn: () =>
-          isUsingBetaEndpoint ? getNodeBalancerBeta(id) : getNodeBalancer(id),
-        queryKey: [isUsingBetaEndpoint ? 'v4beta' : 'v4'],
-      }),
-      stats: {
-        queryFn: () => getNodeBalancerStats(id),
-        queryKey: null,
-      },
-    },
-    queryFn: () => getNodeBalancer(id),
-    queryKey: [id],
-  }),
-  nodebalancers: {
-    contextQueries: {
-      all: {
-        queryFn: getAllNodeBalancers,
-        queryKey: null,
-      },
-      infinite: (filter: Filter = {}) => ({
-        queryFn: ({ pageParam }) =>
-          getNodeBalancers(
-            { page: pageParam as number, page_size: 25 },
-            filter,
-          ),
-        queryKey: [filter],
-      }),
-      paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getNodeBalancers(params, filter),
-        queryKey: [params, filter],
-      }),
-    },
-    queryKey: null,
-  },
-  types: {
-    queryFn: getAllNodeBalancerTypes,
-    queryKey: null,
-  },
-});
-
 export const useNodeBalancerStatsQuery = (id: number) => {
   return useQuery<NodeBalancerStats, APIError[]>({
     ...nodebalancerQueries.nodebalancer(id)._ctx.stats,
@@ -122,15 +50,9 @@ export const useNodeBalancersQuery = (params: Params, filter: Filter) =>
     placeholderData: keepPreviousData,
   });
 
-export const useNodeBalancerQuery = (
-  id: number,
-  enabled = true,
-  isUsingBetaEndpoint = false,
-) => {
+export const useNodeBalancerQuery = (id: number, enabled = true) => {
   return useQuery<NodeBalancer, APIError[]>({
-    ...nodebalancerQueries
-      .nodebalancer(id)
-      ._ctx.nodebalancer(isUsingBetaEndpoint),
+    ...nodebalancerQueries.nodebalancer(id),
     enabled,
   });
 };
@@ -201,6 +123,52 @@ export const useNodebalancerCreateMutation = () => {
         queryClient.invalidateQueries({
           queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
         });
+      }
+    },
+  });
+};
+
+/**
+ * duplicated function of useNodebalancerCreateMutation
+ */
+
+export const useNodebalancerCreateBetaMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
+    mutationFn: createNodeBalancerBeta,
+    onSuccess(nodebalancer, variables) {
+      // Invalidate paginated stores
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancers.queryKey,
+      });
+      // Prime the cache for this specific NodeBalancer
+      queryClient.setQueryData<NodeBalancer>(
+        nodebalancerQueries.nodebalancer(nodebalancer.id).queryKey,
+        nodebalancer,
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+
+      // If a NodeBalancer is assigned to a firewall upon creation, make sure we invalidate that firewall
+      // so it reflects the new entity.
+      if (variables.firewall_id) {
+        // Invalidate the paginated list of firewalls because GET /v4/networking/firewalls returns all firewall entities
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewalls.queryKey,
+        });
+
+        // Invalidate the affected firewall
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+        });
+      }
+      // If a Nodebalancer is created with a VPC, invalidate the related VPC queries
+      // so it reflects the new entity.
+      if (variables.vpcs?.length) {
+        // Invalidating all vpc related queries since we don't have the specific vpc_id
+        queryClient.invalidateQueries({ queryKey: vpcQueries._def });
       }
     },
   });
