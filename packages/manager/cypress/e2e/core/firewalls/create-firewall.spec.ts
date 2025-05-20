@@ -160,7 +160,7 @@ describe('restricted user cannot create firewall', () => {
   /*
    * - Verifies that restricted user cannot create firewall on landing page
    */
-  it('confirms the create button is disabled on the FirewallLanding page', () => {
+  it('confirms the create button is disabled on the Firewall Landing page', () => {
     cy.visitWithLogin('/firewalls');
     ui.button
       .findByTitle('Create Firewall')
@@ -171,7 +171,7 @@ describe('restricted user cannot create firewall', () => {
   /*
    * - Verifies that restricted user cannot create firewall in drawer
    */
-  it('confirms the Create Firewall is disabled', () => {
+  it('confirms the Create Firewall button is disabled in create drawer', () => {
     cy.visitWithLogin('/firewalls/create');
 
     ui.drawer
