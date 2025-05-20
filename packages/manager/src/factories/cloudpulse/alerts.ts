@@ -1,4 +1,4 @@
-import { Factory, pickRandom, regionFactory } from '@linode/utilities';
+import { Factory, regionFactory } from '@linode/utilities';
 
 import type {
   Alert,
