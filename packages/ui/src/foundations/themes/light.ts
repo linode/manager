@@ -1000,6 +1000,7 @@ export const lightTheme: ThemeOptions = {
             color: TextField.Placeholder.Text,
             font: Typography.Label.Regular.Placeholder,
             fontStyle: 'italic',
+            opacity: 1,
           },
           '&:disabled, &.Mui-disabled': {
             cursor: 'not-allowed',
