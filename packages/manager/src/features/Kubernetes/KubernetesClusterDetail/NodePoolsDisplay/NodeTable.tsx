@@ -110,9 +110,9 @@ export const NodeTable = React.memo((props: Props) => {
       })
     : null;
 
-  // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
+  // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
-  const isEnterpriseClusterWithin10MinsOfCreation = () => {
+  const isEnterpriseClusterWithin20MinsOfCreation = () => {
     if (clusterTier !== 'enterprise') {
       return false;
     }
@@ -188,7 +188,7 @@ export const NodeTable = React.memo((props: Props) => {
                 </TableHead>
                 <TableBody>
                   {rowData.length === 0 &&
-                    isEnterpriseClusterWithin10MinsOfCreation() && (
+                    isEnterpriseClusterWithin20MinsOfCreation() && (
                       <TableRow>
                         <TableCell colSpan={4}>
                           <ErrorState
@@ -205,7 +205,7 @@ export const NodeTable = React.memo((props: Props) => {
                                   provisioning is complete.
                                 </Typography>
                                 <Typography>
-                                  Provisioning can take up to 10 minutes.
+                                  Provisioning can take up to ~20 minutes.
                                 </Typography>
                               </Box>
                             }
@@ -214,7 +214,7 @@ export const NodeTable = React.memo((props: Props) => {
                       </TableRow>
                     )}
                   {(rowData.length > 0 ||
-                    !isEnterpriseClusterWithin10MinsOfCreation()) && (
+                    !isEnterpriseClusterWithin20MinsOfCreation()) && (
                     <TableContentWrapper
                       length={paginatedAndOrderedData.length}
                       loading={isLoading}
