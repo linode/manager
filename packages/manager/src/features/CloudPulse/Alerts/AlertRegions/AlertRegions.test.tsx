@@ -67,16 +67,18 @@ const component = (
 describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
     renderWithTheme(component, { flags });
+    const text = screen.getByText(
+      'All resources associated with selected regions will be included in this alert definition.'
+    );
 
-    expect(
-      screen.getByText(
-        'All resources associated with selected regions will be included in this alert definition.'
-      )
-    ).toBeInTheDocument();
+    const regionSearch = screen.getByTestId('region-search');
+    const showSelectedOnly = screen.getByTestId('show-selected-only');
+    const noticeInfo = screen.getByTestId('notice-info');
+    expect(text).toBeInTheDocument();
 
-    expect(screen.getByTestId('region-search')).toBeInTheDocument();
-    expect(screen.getByTestId('show-selected-only')).toBeInTheDocument();
-    expect(screen.getByTestId('notice-info')).toBeInTheDocument();
+    expect(regionSearch).toBeInTheDocument();
+    expect(showSelectedOnly).toBeInTheDocument();
+    expect(noticeInfo).toBeInTheDocument();
   });
 
   it('should select all regions when the select all checkbox is checked', async () => {
