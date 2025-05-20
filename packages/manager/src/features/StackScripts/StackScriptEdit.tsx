@@ -12,6 +12,7 @@ import {
   Paper,
   Stack,
 } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import { arrayToList } from '@linode/utilities';
 import { stackScriptSchema } from '@linode/validation';
 import { useNavigate, useParams } from '@tanstack/react-router';
@@ -22,7 +23,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
 
 import { getRestrictedResourceText } from '../Account/utils';
 import { StackScriptForm } from './StackScriptForm/StackScriptForm';
@@ -39,9 +39,11 @@ export const StackScriptEdit = () => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const { data: stackscript, error, isLoading } = useStackScriptQuery(
-    Number(id)
-  );
+  const {
+    data: stackscript,
+    error,
+    isLoading,
+  } = useStackScriptQuery(Number(id));
   const { mutateAsync: updateStackScript } = useUpdateStackScriptMutation(
     Number(id)
   );
@@ -115,12 +117,12 @@ export const StackScriptEdit = () => {
           <Paper>
             {!hasPermissionToEdit && (
               <Notice
+                spacingBottom={12}
                 text={getRestrictedResourceText({
                   action: 'edit',
                   isSingular: true,
                   resourceType: 'StackScripts',
                 })}
-                spacingBottom={12}
                 variant="error"
               />
             )}
@@ -170,11 +172,11 @@ export const StackScriptEdit = () => {
               Cancel
             </Button>
             <Button
+              buttonType="primary"
               onClick={() => {
                 form.reset();
                 setIsResetConfirmationOpen(false);
               }}
-              buttonType="primary"
             >
               Reset
             </Button>

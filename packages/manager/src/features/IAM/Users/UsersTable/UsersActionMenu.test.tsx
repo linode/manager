@@ -1,5 +1,6 @@
 import { profileFactory } from '@linode/utilities';
-import { fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -36,12 +37,12 @@ vi.mock('react-router-dom', async () => {
 const mockOnDelete = vi.fn();
 
 describe('UsersActionMenu', () => {
-  it('should render proxy user actions correctly', () => {
+  it('should render proxy user actions correctly', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    const { getByRole, getByText, queryByText } = renderWithTheme(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={true}
         onDelete={mockOnDelete}
@@ -50,29 +51,29 @@ describe('UsersActionMenu', () => {
     );
 
     // Check if "Manage Access" action is present
-    const actionBtn = getByRole('button');
-    expect(actionBtn).toBeInTheDocument();
-    fireEvent.click(actionBtn);
+    const actionBtn = screen.getByRole('button');
+    expect(actionBtn).toBeVisible();
+    await userEvent.click(actionBtn);
 
-    const manageAccessButton = getByText('Manage Access');
-    expect(manageAccessButton).toBeInTheDocument();
+    const manageAccessButton = screen.getByText('Manage Access');
+    expect(manageAccessButton).toBeVisible();
 
     // Check if only the proxy user action is rendered
-    expect(queryByText('View User Details')).not.toBeInTheDocument();
-    expect(queryByText('View Assigned Roles')).not.toBeInTheDocument();
-    expect(queryByText('Delete User')).not.toBeInTheDocument();
+    expect(screen.queryByText('View User Details')).not.toBeInTheDocument();
+    expect(screen.queryByText('View Assigned Roles')).not.toBeInTheDocument();
+    expect(screen.queryByText('Delete User')).not.toBeInTheDocument();
 
     // Click "Manage Access" and verify history.push is called with the correct URL
-    fireEvent.click(manageAccessButton);
+    await userEvent.click(manageAccessButton);
     expect(mockHistory.push).toHaveBeenCalledWith('/iam/users/test_user/roles');
   });
 
-  it('should render non-proxy user actions correctly', () => {
+  it('should render non-proxy user actions correctly', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    const { getByRole, getByText } = renderWithTheme(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}
@@ -80,43 +81,43 @@ describe('UsersActionMenu', () => {
       />
     );
 
-    const actionBtn = getByRole('button');
+    const actionBtn = screen.getByRole('button');
     expect(actionBtn).toBeInTheDocument();
-    fireEvent.click(actionBtn);
+    await userEvent.click(actionBtn);
 
     // Check if "View User Details" action is present
-    const viewDetailsButton = getByText('View User Details');
+    const viewDetailsButton = screen.getByText('View User Details');
     expect(viewDetailsButton).toBeInTheDocument();
 
     // Click "View User Details" and verify history.push is called with the correct URL
-    fireEvent.click(viewDetailsButton);
+    await userEvent.click(viewDetailsButton);
     expect(mockHistory.push).toHaveBeenCalledWith(
       '/iam/users/test_user/details'
     );
 
     // Check if "View Assigned Roles" action is present
-    const viewRolesButton = getByText('View Assigned Roles');
+    const viewRolesButton = screen.getByText('View Assigned Roles');
     expect(viewRolesButton).toBeInTheDocument();
 
     // Click "View Assigned Roles" and verify history.push is called with the correct URL
-    fireEvent.click(viewRolesButton);
+    await userEvent.click(viewRolesButton);
     expect(mockHistory.push).toHaveBeenCalledWith('/iam/users/test_user/roles');
 
     // Check if "Delete User" action is present
-    const deleteUserButton = getByText('Delete User');
+    const deleteUserButton = screen.getByText('Delete User');
     expect(deleteUserButton).toBeInTheDocument();
 
     // Click "Delete User" and verify onDelete is called with the correct username
-    fireEvent.click(deleteUserButton);
+    await userEvent.click(deleteUserButton);
     expect(mockOnDelete).toHaveBeenCalledWith('test_user');
   });
 
-  it("should disable 'Delete User' action for the currently active user", () => {
+  it("should disable 'Delete User' action for the currently active user", async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({ username: 'current_user' }),
     });
 
-    const { getByRole, getByTestId } = renderWithTheme(
+    renderWithTheme(
       <UsersActionMenu
         isProxyUser={false}
         onDelete={mockOnDelete}
@@ -124,17 +125,17 @@ describe('UsersActionMenu', () => {
       />
     );
 
-    const actionBtn = getByRole('button');
+    const actionBtn = screen.getByRole('button');
     expect(actionBtn).toBeInTheDocument();
-    fireEvent.click(actionBtn);
+    await userEvent.click(actionBtn);
 
     // Check if "Delete User" action is present but disabled
-    const deleteUserButton = getByTestId('Delete User');
+    const deleteUserButton = screen.getByTestId('Delete User');
     expect(deleteUserButton).toBeInTheDocument();
     expect(deleteUserButton).toHaveAttribute('aria-disabled', 'true');
 
     // Check for tooltip text
-    const tooltip = getByRole('button', {
+    const tooltip = screen.getByRole('button', {
       name: "You can't delete the currently active user.",
     });
     expect(tooltip).toBeInTheDocument();

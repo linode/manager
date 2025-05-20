@@ -1,30 +1,34 @@
-/* eslint-disable no-console */
 import { defineConfig } from 'cypress';
+import cypressOnFix from 'cypress-on-fix';
+
 import { setupPlugins } from './cypress/support/plugins';
+import { configureApi } from './cypress/support/plugins/configure-api';
 import { configureBrowser } from './cypress/support/plugins/configure-browser';
 import { configureFileWatching } from './cypress/support/plugins/configure-file-watching';
-import {
-  enableJunitE2eReport,
-  enableJunitComponentReport,
-} from './cypress/support/plugins/junit-report';
+import { configureMultiReporters } from './cypress/support/plugins/configure-multi-reporters';
 import { discardPassedTestRecordings } from './cypress/support/plugins/discard-passed-test-recordings';
+import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
+import { fetchAccount } from './cypress/support/plugins/fetch-account';
+import { fetchLinodeClusters } from './cypress/support/plugins/fetch-linode-clusters';
+import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
+import { generateTestWeights } from './cypress/support/plugins/generate-weights';
+import { enableHtmlReport } from './cypress/support/plugins/html-report';
+import {
+  enableJunitComponentReport,
+  enableJunitE2eReport,
+} from './cypress/support/plugins/junit-report';
 import { loadEnvironmentConfig } from './cypress/support/plugins/load-env-config';
 import { nodeVersionCheck } from './cypress/support/plugins/node-version-check';
-import { regionOverrideCheck } from './cypress/support/plugins/region-override-check';
-import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
-import { configureApi } from './cypress/support/plugins/configure-api';
-import { fetchAccount } from './cypress/support/plugins/fetch-account';
-import { fetchLinodeRegions } from './cypress/support/plugins/fetch-linode-regions';
-import { splitCypressRun } from './cypress/support/plugins/split-run';
-import { generateTestWeights } from './cypress/support/plugins/generate-weights';
-import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
-import cypressViteConfig from './cypress/vite.config';
-import { featureFlagOverrides } from './cypress/support/plugins/feature-flag-override';
+import {
+  clusterOverrideCheck,
+  regionOverrideCheck,
+} from './cypress/support/plugins/override-check';
 import { postRunCleanup } from './cypress/support/plugins/post-run-cleanup';
 import { resetUserPreferences } from './cypress/support/plugins/reset-user-preferences';
-import { enableHtmlReport } from './cypress/support/plugins/html-report';
-import { configureMultiReporters } from './cypress/support/plugins/configure-multi-reporters';
-import cypressOnFix from 'cypress-on-fix';
+import { splitCypressRun } from './cypress/support/plugins/split-run';
+import { logTestTagInfo } from './cypress/support/plugins/test-tagging-info';
+import { vitePreprocess } from './cypress/support/plugins/vite-preprocessor';
+import cypressViteConfig from './cypress/vite.config';
 /**
  * Exports a Cypress configuration object.
  *
@@ -97,8 +101,10 @@ export default defineConfig({
         discardPassedTestRecordings,
         fetchAccount,
         fetchLinodeRegions,
+        fetchLinodeClusters,
         resetUserPreferences,
         regionOverrideCheck,
+        clusterOverrideCheck,
         featureFlagOverrides,
         logTestTagInfo,
         splitCypressRun,

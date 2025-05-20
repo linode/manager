@@ -253,7 +253,7 @@ describe('Managed Monitors tab', () => {
       .findByTitle(`Delete Monitor ${monitorLabel}?`)
       .should('be.visible')
       .within(() => {
-        cy.findByLabelText('Monitor Name:').should('be.visible').click();
+        cy.findByLabelText('Monitor Name').should('be.visible').click();
         cy.focused().type(monitorLabel);
 
         ui.buttonGroup

@@ -1,4 +1,4 @@
-import { Box, Typography, omittedProps } from '@linode/ui';
+import { Box, omittedProps, Typography } from '@linode/ui';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { styled } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';

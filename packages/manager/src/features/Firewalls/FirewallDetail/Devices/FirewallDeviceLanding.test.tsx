@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { firewallDeviceFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   renderWithTheme,
   renderWithThemeAndRouter,
