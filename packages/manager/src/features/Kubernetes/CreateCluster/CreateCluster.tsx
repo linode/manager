@@ -596,6 +596,7 @@ export const CreateCluster = () => {
             createCluster={createCluster}
             enterprisePrice={
               isLkeEnterpriseLAFeatureEnabled &&
+              selectedTier === 'enterprise' &&
               lkeEnterpriseType?.price.monthly
                 ? lkeEnterpriseType?.price.monthly
                 : undefined
