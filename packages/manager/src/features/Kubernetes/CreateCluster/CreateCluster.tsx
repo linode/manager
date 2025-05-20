@@ -211,15 +211,8 @@ export const CreateCluster = () => {
     value: thisVersion.id,
   }));
 
-  const _versions = [
-    { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
-    { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
-    { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
-    { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
-  ];
-
   React.useEffect(() => {
-    if (_versions.length > 0) {
+    if (versions.length > 0) {
       setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
