@@ -65,8 +65,9 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
-  type: 'user',
   entity_ids: [],
+  group: 'per-entity',
+  type: 'user',
 };
 
 const overrides = [
@@ -116,7 +117,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-  const entityGroupingWatcher = useWatch({ control, name: 'type' });
+  const entityGroupingWatcher = useWatch({ control, name: 'group' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -214,14 +215,14 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <AlertEntityGroupingSelect name="type" />
-            {entityGroupingWatcher === 'user' && (
+            <AlertEntityGroupingSelect name="group" />
+            {entityGroupingWatcher === 'per-entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
-            {entityGroupingWatcher === 'region-user' && (
+            {entityGroupingWatcher === 'per-region' && (
               <CloudPulseModifyAlertRegions name="regions" />
             )}
-            {entityGroupingWatcher === 'account-user' && (
+            {entityGroupingWatcher === 'per-account' && (
               <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
                 <Typography variant="h2">2. Entities</Typography>
                 <Box

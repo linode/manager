@@ -6,7 +6,7 @@ import {
 } from '@linode/validation';
 import { array, mixed, number, object, string } from 'yup';
 
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionGroup, AlertDefinitionType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -86,6 +86,10 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
     regions: array().of(string().defined()),
+    group: mixed<AlertDefinitionGroup>()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
   })
 );
 

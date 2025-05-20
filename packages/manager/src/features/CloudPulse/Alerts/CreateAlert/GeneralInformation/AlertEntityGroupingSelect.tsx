@@ -9,11 +9,14 @@ import {
 import { entityGroupingOptions } from '../../constants';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionGroup } from '@linode/api-v4';
 
 interface AlertEntityGroupingSelectProps {
   disabled?: boolean;
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertDefinitionType | null>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    AlertDefinitionGroup | null
+  >;
 }
 
 export const AlertEntityGroupingSelect = (
@@ -38,8 +41,8 @@ export const AlertEntityGroupingSelect = (
               field.onChange(value);
             }
 
-            setValue('regions', value === 'region-user' ? [] : undefined);
-            setValue('entity_ids', value === 'user' ? [] : undefined);
+            setValue('regions', value === 'per-region' ? [] : undefined);
+            setValue('entity_ids', value === 'per-entity' ? [] : undefined);
           }}
           options={entityGroupingOptions}
           placeholder="Select a grouping"

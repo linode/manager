@@ -179,8 +179,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <AlertEntityGroupingSelect disabled name="type" />
-          <CloudPulseModifyAlertResources name="entity_ids" />
+          <AlertEntityGroupingSelect disabled name="group" />
+          {<CloudPulseModifyAlertResources name="entity_ids" />}
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

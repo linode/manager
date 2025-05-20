@@ -1,4 +1,5 @@
 import type {
+  AlertDefinitionGroup,
   AlertDefinitionType,
   AlertServiceType,
   AlertSeverityType,
@@ -18,6 +19,7 @@ export interface CreateAlertDefinitionForm
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
   entity_ids?: string[];
+  group: AlertDefinitionGroup | null;
   regions?: string[];
   rule_criteria: {
     rules: MetricCriteriaForm[];
