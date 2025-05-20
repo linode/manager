@@ -66,6 +66,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   type: 'user',
+  entity_ids: [],
 };
 
 const overrides = [
