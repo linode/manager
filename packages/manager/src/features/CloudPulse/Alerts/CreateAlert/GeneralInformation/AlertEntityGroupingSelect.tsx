@@ -47,10 +47,6 @@ export const AlertEntityGroupingSelect = (
           options={entityGroupingOptions}
           placeholder="Select a grouping"
           size="medium"
-          textFieldProps={{
-            labelTooltipText:
-              'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
-          }}
           value={
             field.value !== null
               ? entityGroupingOptions.find(({ value }) => value === field.value)

@@ -223,20 +223,7 @@ export const CreateAlertDefinition = () => {
               <CloudPulseModifyAlertRegions name="regions" />
             )}
             {entityGroupingWatcher === 'per-account' && (
-              <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
-                <Typography variant="h2">2. Entities</Typography>
-                <Box
-                  sx={(theme) => ({
-                    ...getAlertBoxStyles(theme),
-                    overflow: 'auto',
-                  })}
-                >
-                  <AlertListNoticeMessages
-                    errorMessage="All entities associated with current account will be included in this alert definition"
-                    variant="warning"
-                  />
-                </Box>
-              </Box>
+              <AccountGroupingNotice />
             )}
             <MetricCriteriaField
               name="rule_criteria.rules"
@@ -266,5 +253,24 @@ export const CreateAlertDefinition = () => {
         </FormProvider>
       </Paper>
     </React.Fragment>
+  );
+};
+
+export const AccountGroupingNotice = () => {
+  return (
+    <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
+      <Typography variant="h2">2. Entities</Typography>
+      <Box
+        sx={(theme) => ({
+          ...getAlertBoxStyles(theme),
+          overflow: 'auto',
+        })}
+      >
+        <AlertListNoticeMessages
+          errorMessage="All entities associated with current account will be included in this alert definition"
+          variant="warning"
+        />
+      </Box>
+    </Box>
   );
 };

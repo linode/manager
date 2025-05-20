@@ -331,6 +331,7 @@ export const convertAlertDefinitionValues = (
     trigger_conditions: triggerConditions,
     type,
     group,
+    regions,
   }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
@@ -353,6 +354,7 @@ export const convertAlertDefinitionValues = (
     trigger_conditions: triggerConditions,
     type,
     group,
+    regions,
   };
 };
 

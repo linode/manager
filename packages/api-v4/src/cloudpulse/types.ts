@@ -232,6 +232,7 @@ export interface Alert {
   has_more_resources: boolean;
   id: number;
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
