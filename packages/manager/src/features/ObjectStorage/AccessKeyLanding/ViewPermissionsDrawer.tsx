@@ -1,10 +1,7 @@
 import { Drawer, Typography } from '@linode/ui';
-import { isFeatureEnabledV2 } from '@linode/utilities';
 import * as React from 'react';
 
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
-
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { AccessTable } from './AccessTable';
 import { BucketPermissionsTable } from './BucketPermissionsTable';
 
@@ -19,14 +16,7 @@ export interface Props {
 export const ViewPermissionsDrawer = (props: Props) => {
   const { objectStorageKey, onClose, open } = props;
 
-  const flags = useFlags();
-  const { account } = useAccountManagement();
-
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   return (
     <Drawer
