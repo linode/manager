@@ -30,12 +30,11 @@ export const filterFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
-  const type = formValues.type;
   const regions = formValues.regions;
   return {
     ...values,
-    entity_ids: type === 'user' ? entityIds : undefined,
-    regions: type === 'region-user' ? regions : undefined,
+    entity_ids: entityIds,
+    regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),

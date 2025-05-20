@@ -157,6 +157,25 @@ interface FilterRegionProps {
   serviceType: AlertServiceType | null;
 }
 
+interface SupportedRegionsProps {
+  /**
+   * The resource type map flag
+   */
+  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: AlertServiceType | null;
+}
+
 /**
  * @param serviceType Service type for which the label needs to be displayed
  * @param serviceTypeList List of available service types in Cloud Pulse
@@ -487,6 +506,47 @@ export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
     selectedRegions,
     serviceType,
   } = props;
+
+  const supportedRegionsFromResources = getSupportedRegions({
+    aclpResourceTypeMap,
+    regions,
+    resources,
+    serviceType,
+  });
+
+  // map region to its resources count
+  const regionToResourceCount =
+    resources?.reduce(
+      (previous, { region }) => {
+        if (!region) return previous;
+        return {
+          ...previous,
+          [region]: (previous[region] ?? 0) + 1,
+        };
+      },
+      {} as { [region: string]: number }
+    ) ?? {};
+
+  return supportedRegionsFromResources.map(({ label, id }) => {
+    const data = { label, id };
+
+    if (selectedRegions.includes(id)) {
+      return {
+        ...data,
+        checked: true,
+        count: regionToResourceCount[id] ?? 0,
+      };
+    }
+    return {
+      ...data,
+      checked: false,
+      count: regionToResourceCount[id] ?? 0,
+    };
+  });
+};
+
+export const getSupportedRegions = (props: SupportedRegionsProps): Region[] => {
+  const { aclpResourceTypeMap, serviceType, regions, resources } = props;
   const resourceTypeFlag = aclpResourceTypeMap?.find(
     (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
   );
@@ -505,36 +565,9 @@ export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
       ) ?? [];
   }
 
-  const regionToResourceCount: { [region: string]: number } =
-    resources?.reduce(
-      (previous, { region }) => {
-        if (!region) return previous;
-        return {
-          ...previous,
-          [region]: (previous[region] ?? 0) + 1,
-        };
-      },
-      {} as { [region: string]: number }
-    ) ?? {};
-
-  const supportedRegionsFromResources =
+  return (
     supportedRegions?.filter(({ id }) =>
       resources?.some(({ region }) => region === id)
-    ) ?? [];
-  return supportedRegionsFromResources.map(({ label, id }) => {
-    const data = { label, id };
-
-    if (selectedRegions.includes(id)) {
-      return {
-        ...data,
-        checked: true,
-        count: regionToResourceCount[id] ?? 0,
-      };
-    }
-    return {
-      ...data,
-      checked: false,
-      count: regionToResourceCount[id] ?? 0,
-    };
-  });
+    ) ?? []
+  );
 };

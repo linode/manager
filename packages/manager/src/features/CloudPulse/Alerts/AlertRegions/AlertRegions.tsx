@@ -94,6 +94,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
+  const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
+    ({ label }) => label.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Stack gap={2}>
@@ -150,9 +153,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           selectedRegions.length > 0 &&
           selectedRegions.length !== filteredRegionsWithStatus.length
         }
-        regions={filteredRegionsWithStatus.filter(({ label }) =>
-          label.toLowerCase().includes(searchText.toLowerCase())
-        )}
+        regions={filteredRegionsBySearchText}
         showSelected={showSelected}
       />
     </Stack>
