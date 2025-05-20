@@ -55,6 +55,16 @@ describe('sortByTieredVersion', () => {
     expect(result).toBeGreaterThan(0);
   });
 
+  it('should identify the later enterprise tier major version as greater', () => {
+    const result = sortByTieredVersion('v2.0.0+lke1', 'v1.0.0+lke2', 'asc');
+    expect(result).toBeGreaterThan(0);
+  });
+
+  it('should identify the later enterprise tier minor version as greater', () => {
+    const result = sortByTieredVersion('v1.2.0+lke1', 'v1.1.0+lke2', 'asc');
+    expect(result).toBeGreaterThan(0);
+  });
+
   it('should identify the later enterprise tier patch version as greater', () => {
     const result = sortByTieredVersion('v1.1.2+lke1', 'v1.1.1+lke1', 'asc');
     expect(result).toBeGreaterThan(0);

@@ -144,7 +144,7 @@ describe('helper functions', () => {
   });
 
   describe('getLatestVersion', () => {
-    it('should return the correct latest version from a list of versions', () => {
+    it('should return the correct latest version from a list of versions in asc order', () => {
       const versions = [
         { label: '1.00', value: '1.00' },
         { label: '1.10', value: '1.10' },
@@ -154,12 +154,33 @@ describe('helper functions', () => {
       expect(result).toEqual({ label: '2.00', value: '2.00' });
     });
 
-    it('should return the correct latest version from a list of enterprise versions', () => {
+    it('should return the correct latest version from a list of versions in desc order', () => {
+      const versions = [
+        { label: '2.00', value: '2.00' },
+        { label: '1.10', value: '1.10' },
+        { label: '1.00', value: '1.00' },
+      ];
+      const result = getLatestVersion(versions);
+      expect(result).toEqual({ label: '2.00', value: '2.00' });
+    });
+
+    it('should return the correct latest version from a list of enterprise versions in asc order', () => {
       const enterpriseVersions = [
         { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
         { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
         { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
         { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
+      ];
+      const result = getLatestVersion(enterpriseVersions);
+      expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
+    });
+
+    it('should return the correct latest version from a list of enterprise versions in desc order', () => {
+      const enterpriseVersions = [
+        { label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' },
+        { label: 'v1.31.6+lke3', value: 'v1.31.6+lke3' },
+        { label: 'v1.31.6+lke2', value: 'v1.31.6+lke2' },
+        { label: 'v1.31.1+lke4', value: 'v1.31.1+lke4' },
       ];
       const result = getLatestVersion(enterpriseVersions);
       expect(result).toEqual({ label: 'v1.31.8+lke1', value: 'v1.31.8+lke1' });
