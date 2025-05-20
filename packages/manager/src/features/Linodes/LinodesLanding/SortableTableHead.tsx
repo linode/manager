@@ -140,6 +140,7 @@ export const SortableTableHead = <T,>(props: SortableTableHeadProps<T>) => {
           >
             Last Backup
           </TableSortCell>
+          <TableCell>Tags</TableCell>
         </Hidden>
         <TableCell sx={{ padding: '0 !important' }}>
           <Box
