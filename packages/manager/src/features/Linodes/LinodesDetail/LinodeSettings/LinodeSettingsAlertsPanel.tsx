@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -20,6 +21,7 @@ interface Props {
 export const LinodeSettingsAlertsPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
 
   const { data: linode } = useLinodeQuery(linodeId);
 
@@ -219,6 +221,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
+  const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
 
   return (
     <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
@@ -226,7 +229,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         sx={(theme) => ({ mb: theme.spacingFunction(12) })}
         variant="h2"
       >
-        Alerts
+        {alertsHeading}
       </Typography>
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
