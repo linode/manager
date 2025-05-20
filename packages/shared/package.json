@@ -21,7 +21,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "precommit": "lint-staged"
   },
   "lint-staged": {
