@@ -295,6 +295,9 @@ describe('LKE Cluster Creation', () => {
           // We're taking a naive approach here by confirming that at least one
           // instance of the pool appears in the checkout bar.
           cy.findAllByText(`${planName} Plan`).first().should('be.visible');
+
+          // Confirm LKE-E line item is NOT shown
+          cy.findByText('LKE Enterprise').should('not.exist');
         });
       // Expected information on the LKE cluster summary page.
       monthPrice = getTotalClusterPrice({
