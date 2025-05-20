@@ -268,6 +268,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     sendSupportTicketExitEvent('Cancel');
   };
 
+  React.useEffect(() => {
+    if (!open) {
+      resetDrawer();
+    }
+  }, [open]);
+
   const updateFiles = (newFiles: FileAttachment[]) => {
     setFiles(newFiles);
   };
