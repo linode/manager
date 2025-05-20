@@ -24,7 +24,10 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
-  const { data: linode } = useLinodeQuery(linodeId ?? -1);
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   const {
     error,
