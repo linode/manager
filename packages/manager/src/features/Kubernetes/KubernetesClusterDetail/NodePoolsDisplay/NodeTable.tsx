@@ -121,7 +121,7 @@ export const NodeTable = React.memo((props: Props) => {
 
     const interval = Interval.fromDateTimes(
       createdTime,
-      createdTime.plus({ minutes: 10 })
+      createdTime.plus({ minutes: 20 })
     );
 
     const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
