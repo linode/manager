@@ -19,7 +19,8 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
   it('can navigate to the Quotas page via the User Menu', () => {
     cy.visitWithLogin('/');
     cy.wait('@getFeatureFlags');
-    cy.get('[data-testid="nav-group-profile"]').should('be.visible').click();
+    // Open user menu
+    ui.userMenuButton.find().click();
     ui.userMenu.find().within(() => {
       cy.get('[data-testid="menu-item-Quotas"]').should('be.visible').click();
       cy.url().should('endWith', '/quotas');
@@ -57,7 +58,8 @@ describe('Quotas inaccessible when limitsEvolution feature flag disabled', () =>
   it('cannot navigate to the Quotas tab via the Users & Grants link in the User Menu', () => {
     cy.visitWithLogin('/');
     cy.wait('@getFeatureFlags');
-    cy.get('[data-testid="nav-group-profile"]').should('be.visible').click();
+    // Open user menu
+    ui.userMenuButton.find().click();
     ui.userMenu.find().within(() => {
       cy.get('[data-testid="menu-item-Quotas"]').should('not.exist');
       cy.get('[data-testid="menu-item-Users & Grants"]')
@@ -71,7 +73,7 @@ describe('Quotas inaccessible when limitsEvolution feature flag disabled', () =>
   it('cannot navigate to the Quotas tab via the Billing link in the User Menu', () => {
     cy.visitWithLogin('/');
     cy.wait('@getFeatureFlags');
-    cy.get('[data-testid="nav-group-profile"]').should('be.visible').click();
+    ui.userMenuButton.find().click();
     ui.userMenu.find().within(() => {
       cy.get('[data-testid="menu-item-Quotas"]').should('not.exist');
       cy.get('[data-testid="menu-item-Billing & Contact Information"]')
