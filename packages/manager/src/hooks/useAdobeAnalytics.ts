@@ -29,6 +29,11 @@ export const useAdobeAnalytics = () => {
               'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
             );
           }
+
+          // Fire the first page view for the landing page
+          window._satellite.track('page view', {
+            url: window.location.pathname,
+          });
         })
         .catch(() => {
           // Do nothing; a user may have analytics script requests blocked.
