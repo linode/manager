@@ -3,6 +3,7 @@ export * from './base';
 export * from './domains';
 export * from './eventHandlers';
 export * from './firewalls';
+export * from './images';
 export * from './linodes';
 export * from './networking';
 export * from './nodebalancers';

@@ -1,6 +1,7 @@
 import {
   useDomainsInfiniteQuery,
   useFirewallsInfiniteQuery,
+  useImagesInfiniteQuery,
   useInfiniteLinodesQuery,
   useInfiniteNodebalancersQuery,
   useInfiniteVolumesQuery,
@@ -10,7 +11,6 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import { useDebouncedValue } from '@linode/utilities';
 
 import { useDatabasesInfiniteQuery } from 'src/queries/databases/databases';
-import { useImagesInfiniteQuery } from 'src/queries/images';
 import { useKubernetesClustersInfiniteQuery } from 'src/queries/kubernetes';
 import {
   databaseToSearchableItem,

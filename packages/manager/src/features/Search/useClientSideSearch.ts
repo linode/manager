@@ -2,6 +2,7 @@ import {
   useAllAccountStackScriptsQuery,
   useAllDomainsQuery,
   useAllFirewallsQuery,
+  useAllImagesQuery,
   useAllLinodesQuery,
   useAllNodeBalancersQuery,
   useAllVolumesQuery,
@@ -9,7 +10,6 @@ import {
 
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
