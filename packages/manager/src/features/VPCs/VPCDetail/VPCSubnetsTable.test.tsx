@@ -156,7 +156,7 @@ describe('VPC Subnets table', () => {
   });
 
   it('should display no nodeBalancers text if there are no nodeBalancers associated with the subnet', async () => {
-    const subnet = subnetFactory.build();
+    const subnet = subnetFactory.build({ nodebalancers: [] });
 
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {

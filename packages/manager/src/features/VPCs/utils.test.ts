@@ -28,7 +28,7 @@ const subnetLinodeInfoId3 = subnetAssignedLinodeDataFactory.build({ id: 3 });
 
 describe('getUniqueResourcesFromSubnets', () => {
   it(`returns the number of unique linodes and nodeBalancers within a VPC's subnets`, () => {
-    const subnets0 = [subnetFactory.build({ linodes: [] })];
+    const subnets0 = [subnetFactory.build({ linodes: [], nodebalancers: [] })];
     const subnets1 = [subnetFactory.build({ linodes: subnetLinodeInfoList1 })];
     const subnets2 = [
       subnetFactory.build({
@@ -56,10 +56,10 @@ describe('getUniqueResourcesFromSubnets', () => {
     ];
 
     expect(getUniqueResourcesFromSubnets(subnets0)).toBe(0);
-    expect(getUniqueResourcesFromSubnets(subnets1)).toBe(4);
-    expect(getUniqueResourcesFromSubnets(subnets2)).toBe(2);
+    expect(getUniqueResourcesFromSubnets(subnets1)).toBe(7);
+    expect(getUniqueResourcesFromSubnets(subnets2)).toBe(5);
     // updated factory for generating linode ids, so unique linodes will be different
-    expect(getUniqueResourcesFromSubnets(subnets3)).toBe(8);
+    expect(getUniqueResourcesFromSubnets(subnets3)).toBe(20);
   });
 });
 
