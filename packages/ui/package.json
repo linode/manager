@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/preview-api": "^8.6.7",
     "@storybook/react": "^8.6.7",
