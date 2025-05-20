@@ -3,6 +3,7 @@ import { ui } from 'support/ui';
 
 describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
   beforeEach(() => {
+    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
     mockAppendFeatureFlags({
       limitsEvolution: {
         enabled: true,
