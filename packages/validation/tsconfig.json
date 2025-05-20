@@ -1,5 +1,5 @@
 {
-  "extends": ["@linode/tsconfig/package"],
+  "extends": ["@linode/tsconfig/package", "@linode/tsconfig/emit-types"],
   "compilerOptions": {
     "outDir": "./lib",
     "baseUrl": ".",

@@ -2,7 +2,6 @@
   "extends": [
     "@linode/tsconfig/package",
     "@linode/tsconfig/react",
-    "@linode/tsconfig/local-only"
   ],
   "include": ["src"],
 }

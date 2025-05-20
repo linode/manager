@@ -7,6 +7,6 @@
     "./package":  "./tsconfig.package.json",
     "./react": "./tsconfig.react.json",
     "./non-strict": "./tsconfig.non-strict.json",
-    "./local-only": "./tsconfig.local-only.json"
+    "./emit-types": "./tsconfig.emit-types.json"
   }
 }

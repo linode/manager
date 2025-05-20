@@ -1,4 +1,4 @@
 {
-  "extends": ["@linode/tsconfig/package", "@linode/tsconfig/local-only"],
+  "extends": ["@linode/tsconfig/package"],
   "include": ["src"]
 }

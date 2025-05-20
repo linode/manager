@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "declarationMap": true,
+    "declaration": true,
+    "emitDeclarationOnly": true
+  }
+}
