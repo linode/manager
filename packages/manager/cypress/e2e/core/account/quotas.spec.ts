@@ -14,7 +14,9 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     cy.visitWithLogin('/account/quotas');
     cy.wait('@getFeatureFlags');
     cy.url().should('endWith', '/quotas');
-    cy.findByText('Object Storage').should('be.visible');
+    cy.contains(
+      'View your Object Storage quotas by applying the endpoint filter below'
+    ).should('be.visible');
   });
 
   it('can navigate to the Quotas page via the User Menu', () => {
