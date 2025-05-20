@@ -21,7 +21,7 @@ export const notificationFactory = Factory.Sync.makeFactory<Notification>({
   severity: 'critical',
   type: 'maintenance',
   until: null,
-  when: DateTime.local().plus({ days: 7 }).toISODate(),
+  when: DateTime.local().plus({ days: 7 }).toISO({ includeOffset: false }),
 });
 
 export const abuseTicketNotificationFactory = notificationFactory.extend({
