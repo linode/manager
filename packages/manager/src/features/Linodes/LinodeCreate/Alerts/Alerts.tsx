@@ -18,11 +18,7 @@ export const Alerts = () => {
     <Box>
       {flags.aclpIntegration && <AclpPreferenceToggle type="alerts" />}
       {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
-        <AlertReusableComponent
-          entityId={''}
-          entityName={''}
-          serviceType="linode"
-        />
+        <AlertReusableComponent serviceType="linode" />
       ) : (
         <LinodeSettingsAlertsPanel isCreateFlow />
       )}

@@ -29,12 +29,12 @@ interface AlertReusableComponentProps {
   /**
    * Id for the selected entity
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
    */
-  entityName: string;
+  entityName?: string;
 
   /**
    * Service type of selected entity
@@ -119,7 +119,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             />
           </Box>
 
-          {entityId ? (
+          {entityId && entityName ? (
             <AlertInformationActionTable
               alerts={filteredAlerts}
               columns={AlertContextualViewTableHeaderMap}
