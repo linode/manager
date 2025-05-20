@@ -1,4 +1,4 @@
-import { useAllFirewallsQuery, useGrants } from '@linode/queries';
+import { useAllFirewallsQuery, useGrants, useProfile } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
@@ -15,7 +15,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -51,19 +50,24 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
     open,
     userCannotAddFirewall,
   } = props;
+
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+
   const { control } = useFormContext<CreateFirewallFormValues>();
-  const { data } = useAllFirewallsQuery(open);
-  const { _isRestrictedUser } = useAccountManagement();
+
   const { data: grants } = useGrants();
+  const { data: firewalls } = useAllFirewallsQuery(open);
+  const { data: profile } = useProfile();
+
+  const isRestrictedUser = profile?.restricted;
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
-  const readOnlyLinodeIds = _isRestrictedUser
+  const readOnlyLinodeIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
   // If a user is restricted, they can not add a read-only NodeBalancer to a firewall.
-  const readOnlyNodebalancerIds = _isRestrictedUser
+  const readOnlyNodebalancerIds = isRestrictedUser
     ? getEntityIdsByPermission(grants, 'nodebalancer', 'read_only')
     : [];
 
@@ -72,7 +76,9 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       ? READ_ONLY_DEVICES_HIDDEN_MESSAGE
       : undefined;
 
-  const assignedServices = data?.map((firewall) => firewall.entities).flat();
+  const assignedServices = firewalls
+    ?.map((firewall) => firewall.entities)
+    .flat();
 
   const assignedLinodes = assignedServices?.filter(
     (service) => service.type === 'linode'
