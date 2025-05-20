@@ -79,7 +79,7 @@ export const SubnetNodeBalancerRow = ({
   }
 
   return (
-    <TableRow key={nodeBalancerId}>
+    <TableRow>
       <TableCell>
         <Link
           className="secondaryLink"
@@ -96,7 +96,7 @@ export const SubnetNodeBalancerRow = ({
         {`${up} up, ${down} down`}
       </TableCell>
       <TableCell>{ipv4}</TableCell>
-      <TableCell>
+      <TableCell colSpan={2}>
         <Link
           accessibleAriaLabel={`Firewall ${firewallLabel}`}
           className="secondaryLink"
