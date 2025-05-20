@@ -108,8 +108,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     polling_interval_seconds: 600,
     trigger_occurrences: 3,
   },
-  type: pickRandom(['user', 'system']),
+  type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'system',
-  group: pickRandom(['per-account', 'per-region', 'per-entity']),
+  group: 'per-entity',
 });
