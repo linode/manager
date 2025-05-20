@@ -9,7 +9,7 @@ import { AlertEntityGroupingSelect } from './AlertEntityGroupingSelect';
 describe('AlertEntityGroupingSelect', () => {
   it('should render the component', () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="type" />,
+      component: <AlertEntityGroupingSelect name="group" />,
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe('AlertEntityGroupingSelect', () => {
 
   it('Select option from drop down', async () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="type" />,
+      component: <AlertEntityGroupingSelect name="group" />,
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));

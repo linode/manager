@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import { Factory, pickRandom } from '@linode/utilities';
 
 import type {
   Alert,
@@ -107,7 +107,8 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
     polling_interval_seconds: 600,
     trigger_occurrences: 3,
   },
-  type: 'system',
+  type: pickRandom(['user', 'system']),
   updated: new Date().toISOString(),
   updated_by: 'system',
+  group: pickRandom(['per-account', 'per-region', 'per-entity']),
 });
