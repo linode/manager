@@ -59,7 +59,6 @@ export const MonitorTickets = (props: MonitorTicketsProps) => {
               navigate({
                 search: {
                   dialogOpen: true,
-                  // dialogTitle: 'Managed monitor issue',
                 },
                 state: (prev) => ({
                   ...prev,
