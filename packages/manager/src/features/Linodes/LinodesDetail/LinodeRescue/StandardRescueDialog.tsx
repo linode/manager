@@ -9,13 +9,13 @@ import {
 import {
   ActionsPanel,
   Button,
+  clamp,
   Dialog,
   ErrorState,
   Notice,
   Paper,
-  clamp,
 } from '@linode/ui';
-import { usePrevious, createDevicesFromStrings } from '@linode/utilities';
+import { createDevicesFromStrings, usePrevious } from '@linode/utilities';
 import { styled, useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -52,7 +52,7 @@ export const getDefaultDeviceMapAndCounter = (
 ): [DeviceMap, number] => {
   const defaultDisks = disks.map((thisDisk) => thisDisk._id);
   const counter = defaultDisks.reduce(
-    (c, thisDisk) => (!!thisDisk ? c + 1 : c),
+    (c, thisDisk) => (thisDisk ? c + 1 : c),
     0
   );
   /**
@@ -142,9 +142,8 @@ export const StandardRescueDialog = (props: Props) => {
   const prevDeviceMap = usePrevious(deviceMap);
 
   const [counter, setCounter] = React.useState<number>(initialCounter);
-  const [rescueDevices, setRescueDevices] = React.useState<DevicesAsStrings>(
-    deviceMap
-  );
+  const [rescueDevices, setRescueDevices] =
+    React.useState<DevicesAsStrings>(deviceMap);
 
   const { checkForNewEvents } = useEventsPollingActions();
 
@@ -204,13 +203,13 @@ export const StandardRescueDialog = (props: Props) => {
 
   return (
     <Dialog
+      fullHeight
+      fullWidth
+      maxWidth="md"
       onClose={() => {
         setAPIError('');
         onClose();
       }}
-      fullHeight
-      fullWidth
-      maxWidth="md"
       open={open}
       title={`Rescue Linode ${linodeLabel ?? ''}`}
     >
@@ -229,12 +228,12 @@ export const StandardRescueDialog = (props: Props) => {
             {isReadOnly && <LinodePermissionsError />}
             {linodeId ? <RescueDescription linodeId={linodeId} /> : null}
             <DeviceSelection
-              getSelected={(slot) =>
-                rescueDevices?.[slot as keyof DevicesAsStrings] ?? ''
-              }
               counter={counter}
               devices={devices}
               disabled={disabled}
+              getSelected={(slot) =>
+                rescueDevices?.[slot as keyof DevicesAsStrings] ?? ''
+              }
               onChange={onChange}
               rescue
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}

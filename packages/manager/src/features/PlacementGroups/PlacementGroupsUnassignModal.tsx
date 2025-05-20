@@ -8,6 +8,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import type {
+  APIError,
   Linode,
   UnassignLinodesFromPlacementGroupPayload,
 } from '@linode/api-v4';
@@ -17,10 +18,17 @@ interface Props {
   onClose: () => void;
   open: boolean;
   selectedLinode: Linode | undefined;
+  selectedLinodeError: APIError[] | null;
 }
 
 export const PlacementGroupsUnassignModal = (props: Props) => {
-  const { isFetching, onClose, open, selectedLinode: linode } = props;
+  const {
+    isFetching,
+    onClose,
+    open,
+    selectedLinode: linode,
+    selectedLinodeError,
+  } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const { id: placementGroupId, linodeId } = useParams({
@@ -75,11 +83,12 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   return (
     <ConfirmationDialog
       actions={actions}
+      entityError={selectedLinodeError}
       error={error?.[0]?.reason}
       isFetching={isFetching}
       onClose={onClose}
       open={open}
-      title={linode?.label ? `Unassign ${linode.label}` : 'Unassign'}
+      title={`Unassign ${linode?.label ?? 'Unknown'}`}
     >
       {!linode && (
         <Notice

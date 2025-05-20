@@ -8,16 +8,16 @@ export const getStackScriptUrl = (
   let type;
   let subtype;
   switch (username) {
-    case 'linode':
-      // This is a Marketplace App
-      type = 'One-Click';
-      subtype = 'One-Click%20Apps';
-      break;
     case currentUser:
       // My StackScripts
       // @todo: handle account stackscripts
       type = 'StackScripts';
       subtype = 'Account';
+      break;
+    case 'linode':
+      // This is a Marketplace App
+      type = 'One-Click';
+      subtype = 'One-Click%20Apps';
       break;
     default:
       // Community StackScripts

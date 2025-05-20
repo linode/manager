@@ -1,4 +1,4 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 export const objectStorageKey1: ObjectStorageKey = {
   access_key: '123ABC',

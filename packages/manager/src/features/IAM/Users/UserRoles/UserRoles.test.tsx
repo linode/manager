@@ -1,4 +1,5 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -49,11 +50,11 @@ describe('UserRoles', () => {
       }),
     });
 
-    const { getByText } = renderWithTheme(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
-    expect(getByText('Assigned Roles')).toBeInTheDocument();
+    expect(screen.getByText('Assigned Roles')).toBeVisible();
 
-    expect(getByText(NO_ASSIGNED_ROLES_TEXT)).toBeInTheDocument();
+    expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
   });
 
   it('should display table if no entity access roles are assigned to user', async () => {
@@ -72,12 +73,14 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByText } = renderWithTheme(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
-    expect(getByText('Assigned Roles')).toBeInTheDocument();
+    expect(
+      screen.getByText('View and manage roles assigned to the user.')
+    ).toBeVisible();
 
-    expect(getByText(/All Entities/i)).toBeInTheDocument();
-    expect(getByText('account_admin')).toBeInTheDocument();
+    expect(screen.getByText(/All Entities/i)).toBeVisible();
+    expect(screen.getByText('account_admin')).toBeVisible();
   });
 
   it('should display table if no account access roles are assigned to user', async () => {
@@ -102,11 +105,9 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByText } = renderWithTheme(<UserRoles />);
+    renderWithTheme(<UserRoles />);
 
-    expect(getByText('Assigned Roles')).toBeInTheDocument();
-
-    expect(getByText('firewall_admin')).toBeInTheDocument();
+    expect(screen.getByText('firewall_admin')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
@@ -122,32 +123,16 @@ describe('UserRoles', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(
-      <UserRoles />
-    );
+    renderWithTheme(<UserRoles />);
 
-    expect(getByText('account_linode_admin')).toBeInTheDocument();
-    expect(getAllByText('All Linodes')[0]).toBeInTheDocument();
+    expect(screen.getByText('account_linode_admin')).toBeVisible();
+    expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
 
-    const actionMenuButton = getAllByLabelText('action menu')[0];
-    expect(actionMenuButton).toBeInTheDocument();
+    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    expect(actionMenuButton).toBeVisible();
 
-    fireEvent.click(actionMenuButton);
-    expect(getByText('Change Role')).toBeInTheDocument();
-    expect(getByText('Unassign Role')).toBeInTheDocument();
-  });
-
-  it('should open drawer when button is clicked', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
-    });
-
-    const { getByRole, getByText } = renderWithTheme(<UserRoles />);
-
-    const btn = getByText('Assign New Role');
-    fireEvent.click(btn);
-    const drawer = getByRole('dialog');
-
-    await waitFor(() => expect(drawer).toBeInTheDocument());
+    await userEvent.click(actionMenuButton);
+    expect(screen.getByText('Change Role')).toBeVisible();
+    expect(screen.getByText('Unassign Role')).toBeVisible();
   });
 });

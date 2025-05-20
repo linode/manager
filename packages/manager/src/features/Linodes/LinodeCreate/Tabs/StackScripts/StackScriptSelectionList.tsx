@@ -161,6 +161,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   return (
     <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
       <TextField
+        hideLabel
         InputProps={{
           endAdornment: query && (
             <InputAdornment position="end">
@@ -178,7 +179,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             </InputAdornment>
           ),
         }}
-        hideLabel
         label="Search"
         onChange={debounce(400, (e) => setQuery(e.target.value))}
         placeholder="Search StackScripts"
@@ -205,6 +205,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         <TableBody>
           {stackscripts?.map((stackscript) => (
             <StackScriptSelectionRow
+              isSelected={field.value === stackscript.id}
+              key={stackscript.id}
+              onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
               onSelect={async () => {
                 setValue('image', null);
                 setValue(
@@ -224,9 +227,6 @@ export const StackScriptSelectionList = ({ type }: Props) => {
                   );
                 }
               }}
-              isSelected={field.value === stackscript.id}
-              key={stackscript.id}
-              onOpenDetails={() => setSelectedStackScriptId(stackscript.id)}
               stackscript={stackscript}
             />
           ))}

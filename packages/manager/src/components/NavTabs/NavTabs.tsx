@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, matchPath, useHistory, useLocation } from 'react-router-dom';
+import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';

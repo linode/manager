@@ -18,13 +18,13 @@ describe('Create a Domain', () => {
   it('Creates first Domain', () => {
     cy.tag('method:e2e');
     // Mock Domains to modify incoming response.
-    const mockDomains = new Array(2).fill(null).map(
-      (_item: null, index: number): Domain => {
+    const mockDomains = new Array(2)
+      .fill(null)
+      .map((_item: null, index: number): Domain => {
         return domainFactory.build({
           domain: `Domain ${index}`,
         });
-      }
-    );
+      });
     mockGetDomains(mockDomains).as('getDomains');
     // intercept create Domain request
     interceptCreateDomain().as('createDomain');

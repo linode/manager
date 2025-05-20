@@ -12,9 +12,8 @@ const publicInterface = linodeConfigInterfaceFactory.build({
   ipam_address: null,
   purpose: 'public',
 });
-const [vlanInterface1, vlanInterface2] = linodeConfigInterfaceFactory.buildList(
-  2
-);
+const [vlanInterface1, vlanInterface2] =
+  linodeConfigInterfaceFactory.buildList(2);
 
 const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build();
 

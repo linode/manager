@@ -1,6 +1,5 @@
-import { describe, expect, it } from 'vitest';
-
 import { DateTime } from 'luxon';
+import { describe, expect, it } from 'vitest';
 
 import { isToday } from './isToday';
 
@@ -9,8 +8,8 @@ describe('isToday helper utility', () => {
     expect(
       isToday(
         DateTime.local().valueOf() / 1000,
-        DateTime.local().plus({ hours: 5 }).valueOf() / 1000
-      )
+        DateTime.local().plus({ hours: 5 }).valueOf() / 1000,
+      ),
     ).toBe(true);
   });
 
@@ -18,8 +17,8 @@ describe('isToday helper utility', () => {
     expect(
       isToday(
         DateTime.local().valueOf() / 1000,
-        DateTime.local().valueOf() / 1000
-      )
+        DateTime.local().valueOf() / 1000,
+      ),
     ).toBe(true);
   });
 
@@ -27,14 +26,14 @@ describe('isToday helper utility', () => {
     expect(
       isToday(
         DateTime.local().valueOf() / 1000,
-        DateTime.local().plus({ hours: 25 }).valueOf() / 1000
-      )
+        DateTime.local().plus({ hours: 25 }).valueOf() / 1000,
+      ),
     ).toBe(false);
     expect(
       isToday(
         DateTime.local().valueOf() / 1000,
-        DateTime.local().plus({ months: 1 }).valueOf() / 1000
-      )
+        DateTime.local().plus({ months: 1 }).valueOf() / 1000,
+      ),
     ).toBe(false);
   });
 });

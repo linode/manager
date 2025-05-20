@@ -1,6 +1,4 @@
-import { mapEntityTypes } from '../../Shared/utilities';
-
-import type { EntitiesRole, EntitiesType } from '../../Shared/types';
+import type { EntitiesRole } from '../../Shared/types';
 import type {
   AccountEntity,
   EntityAccess,
@@ -8,9 +6,6 @@ import type {
   EntityType,
   IamUserPermissions,
 } from '@linode/api-v4';
-
-export const getEntityTypes = (data: EntitiesRole[]): EntitiesType[] =>
-  mapEntityTypes(data, 's');
 
 export const addEntityNamesToRoles = (
   assignedRoles: IamUserPermissions,

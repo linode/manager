@@ -2,7 +2,7 @@ import { regionFactory } from '@linode/utilities';
 import React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { PlacementGroupPanel } from './PlacementGroupPanel';
@@ -11,19 +11,16 @@ import type { CreateLinodeRequest } from '@linode/api-v4';
 
 describe('PlacementGroupPanel', () => {
   it('Should render a notice if no region is selected', () => {
-    const {
-      getByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <PlacementGroupPanel />,
-      useFormOptions: {
-        defaultValues: {},
-      },
-    });
+    const { getByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <PlacementGroupPanel />,
+        useFormOptions: {
+          defaultValues: {},
+        },
+      });
 
     expect(
-      getByText(
-        'Select a Region for your Linode to see existing placement groups.'
-      )
+      getByText('Select a Region to see available placement groups.')
     ).toBeVisible();
   });
 
@@ -36,14 +33,13 @@ describe('PlacementGroupPanel', () => {
       })
     );
 
-    const {
-      findByText,
-    } = renderWithThemeAndHookFormContext<CreateLinodeRequest>({
-      component: <PlacementGroupPanel />,
-      useFormOptions: {
-        defaultValues: { region: region.id },
-      },
-    });
+    const { findByText } =
+      renderWithThemeAndHookFormContext<CreateLinodeRequest>({
+        component: <PlacementGroupPanel />,
+        useFormOptions: {
+          defaultValues: { region: region.id },
+        },
+      });
 
     const placementGroupSelect = await findByText(
       `Placement Groups in US, ${region.label} (${region.id})`

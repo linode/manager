@@ -19,8 +19,10 @@ const placementGroupLinodeAction = {
   unassign: 'unassign',
 } as const;
 
-export type PlacementGroupAction = typeof placementGroupAction[keyof typeof placementGroupAction];
-export type PlacementGroupLinodesAction = typeof placementGroupLinodeAction[keyof typeof placementGroupLinodeAction];
+export type PlacementGroupAction =
+  (typeof placementGroupAction)[keyof typeof placementGroupAction];
+export type PlacementGroupLinodesAction =
+  (typeof placementGroupLinodeAction)[keyof typeof placementGroupLinodeAction];
 
 export const placementGroupsRoute = createRoute({
   component: PlacementGroupsRoute,

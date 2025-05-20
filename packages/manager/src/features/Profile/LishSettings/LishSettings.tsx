@@ -118,11 +118,10 @@ export const LishSettings = () => {
       });
   };
 
-  const onPublicKeyChange = (idx: number) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setAuthorizedKeys(set(lensPath([idx]), e.target.value));
-  };
+  const onPublicKeyChange =
+    (idx: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setAuthorizedKeys(set(lensPath([idx]), e.target.value));
+    };
 
   const onPublicKeyRemove = (idx: number) => () => {
     setAuthorizedKeys(remove(idx, 1, authorizedKeys));
@@ -146,10 +145,17 @@ export const LishSettings = () => {
           <>
             <FormControl sx={{ display: 'flex' }}>
               <Autocomplete
+                defaultValue={defaultMode}
+                disableClearable
+                errorText={authMethodError}
+                getOptionDisabled={(option) => option.disabled === true}
+                id="mode-select"
+                label="Authentication Mode"
                 onChange={(
                   _,
                   item: LishAuthOption<Profile['lish_auth_method']>
                 ) => setLishAuthMethod(item.value)}
+                options={modeOptions}
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-mode-select': true,
@@ -159,29 +165,22 @@ export const LishSettings = () => {
                 value={modeOptions.find(
                   (option) => option.value === lishAuthMethod
                 )}
-                defaultValue={defaultMode}
-                disableClearable
-                errorText={authMethodError}
-                getOptionDisabled={(option) => option.disabled === true}
-                id="mode-select"
-                label="Authentication Mode"
-                options={modeOptions}
               />
             </FormControl>
             {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
               <Box key={idx} sx={{ margin: `${theme.spacing(1)} 0` }}>
                 <TextField
-                  sx={{
-                    [theme.breakpoints.up('md')]: {
-                      minWidth: 415,
-                    },
-                  }}
                   data-qa-public-key
                   key={idx}
                   label="SSH Public Key"
                   multiline
                   onChange={onPublicKeyChange(idx)}
                   rows={1.75}
+                  sx={{
+                    [theme.breakpoints.up('md')]: {
+                      minWidth: 415,
+                    },
+                  }}
                   value={authorizedKeys[idx] || ''}
                 />
                 {(idx === 0 && typeof authorizedKeys[0] !== 'undefined') ||

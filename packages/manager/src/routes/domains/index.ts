@@ -18,7 +18,7 @@ const domainAction = {
   edit: 'edit',
 } as const;
 
-export type DomainAction = typeof domainAction[keyof typeof domainAction];
+export type DomainAction = (typeof domainAction)[keyof typeof domainAction];
 
 const domainsRoute = createRoute({
   component: DomainsRoute,

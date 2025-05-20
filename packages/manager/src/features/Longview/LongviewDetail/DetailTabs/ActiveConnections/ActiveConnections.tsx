@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import Paginate from 'src/components/Paginate';
@@ -59,23 +59,19 @@ export const ActiveConnections = (props: TableProps) => {
 export const ConnectionsTable = (props: TableProps) => {
   const { connections, connectionsError, connectionsLoading } = props;
 
-  const {
-    handleOrderChange,
-    order,
-    orderBy,
-    sortedData,
-  } = useOrderV2<LongviewPort>({
-    data: connections,
-    initialRoute: {
-      defaultOrder: {
-        order: 'asc',
-        orderBy: 'process',
+  const { handleOrderChange, order, orderBy, sortedData } =
+    useOrderV2<LongviewPort>({
+      data: connections,
+      initialRoute: {
+        defaultOrder: {
+          order: 'asc',
+          orderBy: 'process',
+        },
+        from: '/longview/clients/$id/overview',
       },
-      from: '/longview/clients/$id/overview',
-    },
-    preferenceKey: 'active-connections',
-    prefix: 'active-connections',
-  });
+      preferenceKey: 'active-connections',
+      prefix: 'active-connections',
+    });
 
   return (
     <Paginate data={sortedData ?? []} pageSize={25}>

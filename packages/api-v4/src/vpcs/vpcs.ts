@@ -4,6 +4,7 @@ import {
   modifySubnetSchema,
   updateVPCSchema,
 } from '@linode/validation/lib/vpcs.schema';
+
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -12,8 +13,9 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Filter, ResourcePage as Page, Params } from '../types';
-import {
+
+import type { Filter, ResourcePage as Page, Params } from '../types';
+import type {
   CreateSubnetPayload,
   CreateVPCPayload,
   ModifySubnetPayload,
@@ -35,7 +37,7 @@ export const getVPCs = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/vpcs`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -47,7 +49,7 @@ export const getVPCs = (params?: Params, filter?: Filter) =>
 export const getVPC = (vpcID: number) =>
   Request<VPC>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -60,7 +62,7 @@ export const createVPC = (data: CreateVPCPayload) =>
   Request<VPC>(
     setURL(`${API_ROOT}/vpcs`),
     setMethod('POST'),
-    setData(data, createVPCSchema)
+    setData(data, createVPCSchema),
   );
 
 /**
@@ -73,7 +75,7 @@ export const updateVPC = (vpcID: number, data: UpdateVPCPayload) =>
   Request<VPC>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}`),
     setMethod('PUT'),
-    setData(data, updateVPCSchema)
+    setData(data, updateVPCSchema),
   );
 
 /**
@@ -85,7 +87,7 @@ export const updateVPC = (vpcID: number, data: UpdateVPCPayload) =>
 export const deleteVPC = (vpcID: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 // Subnet methods
@@ -100,7 +102,7 @@ export const getSubnets = (vpcID: number, params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -113,10 +115,10 @@ export const getSubnet = (vpcID: number, subnetID: number) =>
   Request<Subnet>(
     setURL(
       `${API_ROOT}/vpcs/${encodeURIComponent(
-        vpcID
-      )}/subnets/${encodeURIComponent(subnetID)}`
+        vpcID,
+      )}/subnets/${encodeURIComponent(subnetID)}`,
     ),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -129,7 +131,7 @@ export const createSubnet = (vpcID: number, data: CreateSubnetPayload) =>
   Request<Subnet>(
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/subnets`),
     setMethod('POST'),
-    setData(data, createSubnetSchemaIPv4)
+    setData(data, createSubnetSchemaIPv4),
   );
 
 /**
@@ -141,16 +143,16 @@ export const createSubnet = (vpcID: number, data: CreateSubnetPayload) =>
 export const modifySubnet = (
   vpcID: number,
   subnetID: number,
-  data: ModifySubnetPayload
+  data: ModifySubnetPayload,
 ) =>
   Request<Subnet>(
     setURL(
       `${API_ROOT}/vpcs/${encodeURIComponent(
-        vpcID
-      )}/subnets/${encodeURIComponent(subnetID)}`
+        vpcID,
+      )}/subnets/${encodeURIComponent(subnetID)}`,
     ),
     setMethod('PUT'),
-    setData(data, modifySubnetSchema)
+    setData(data, modifySubnetSchema),
   );
 
 /**
@@ -163,10 +165,10 @@ export const deleteSubnet = (vpcID: number, subnetID: number) =>
   Request<{}>(
     setURL(
       `${API_ROOT}/vpcs/${encodeURIComponent(
-        vpcID
-      )}/subnets/${encodeURIComponent(subnetID)}`
+        vpcID,
+      )}/subnets/${encodeURIComponent(subnetID)}`,
     ),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );
 
 /**
@@ -179,7 +181,7 @@ export const getVPCsIPs = (params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/vpcs/ips`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );
 
 /**
@@ -192,5 +194,5 @@ export const getVPCIPs = (vpcID: number, params?: Params, filter?: Filter) =>
     setURL(`${API_ROOT}/vpcs/${encodeURIComponent(vpcID)}/ips`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   );

@@ -56,8 +56,8 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
     database.cluster_size === 1
       ? 'Primary (1 Node)'
       : database.cluster_size > 2
-      ? `Primary (+${database.cluster_size - 1} Nodes)`
-      : `Primary (+${database.cluster_size - 1} Node)`;
+        ? `Primary (+${database.cluster_size - 1} Nodes)`
+        : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: '4px',

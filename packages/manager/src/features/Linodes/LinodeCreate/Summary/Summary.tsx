@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -6,20 +7,21 @@ import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
+import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 
 import { getLinodePrice } from './utilities';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
 
 export const Summary = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const { control } = useFormContext<CreateLinodeRequest>();
+  const { control } = useFormContext<LinodeCreateFormValues>();
 
   const [
     label,
@@ -34,6 +36,8 @@ export const Summary = () => {
     vpcId,
     diskEncryption,
     clusterSize,
+    linodeInterfaces,
+    interfaceGeneration,
   ] = useWatch({
     control,
     name: [
@@ -49,6 +53,8 @@ export const Summary = () => {
       'interfaces.0.vpc_id',
       'disk_encryption',
       'stackscript_data.cluster_size',
+      'linodeInterfaces',
+      'interface_generation',
     ],
   });
 
@@ -63,6 +69,19 @@ export const Summary = () => {
   );
 
   const price = getLinodePrice({ clusterSize, regionId, type });
+
+  const hasVPC = isLinodeInterfacesEnabled
+    ? linodeInterfaces?.some((i) => i.purpose === 'vpc' && i.vpc?.subnet_id)
+    : vpcId;
+
+  const hasVLAN = isLinodeInterfacesEnabled
+    ? linodeInterfaces?.some((i) => i.purpose === 'vlan' && i.vlan?.vlan_label)
+    : vlanLabel;
+
+  const hasFirewall =
+    interfaceGeneration === 'linode'
+      ? linodeInterfaces.some((i) => i.firewall_id)
+      : firewallId;
 
   const summaryItems = [
     {
@@ -95,7 +114,7 @@ export const Summary = () => {
       item: {
         title: 'VLAN Attached',
       },
-      show: Boolean(vlanLabel),
+      show: hasVLAN,
     },
     {
       item: {
@@ -113,13 +132,13 @@ export const Summary = () => {
       item: {
         title: 'VPC Assigned',
       },
-      show: Boolean(vpcId),
+      show: hasVPC,
     },
     {
       item: {
         title: 'Firewall Assigned',
       },
-      show: Boolean(firewallId),
+      show: hasFirewall,
     },
     {
       item: {
@@ -139,6 +158,7 @@ export const Summary = () => {
           <Typography>Please configure your Linode.</Typography>
         ) : (
           <Stack
+            direction={isSmallScreen ? 'column' : 'row'}
             divider={
               isSmallScreen ? undefined : (
                 <Divider
@@ -148,7 +168,6 @@ export const Summary = () => {
                 />
               )
             }
-            direction={isSmallScreen ? 'column' : 'row'}
             flexWrap="wrap"
             gap={1.5}
           >

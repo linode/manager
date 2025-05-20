@@ -13,6 +13,7 @@ export const HideShowText = (props: TextFieldProps) => {
   return (
     <TextField
       {...props}
+      autoComplete="off"
       dataAttrs={{
         'data-qa-hide': hidden,
       }}
@@ -29,7 +30,6 @@ export const HideShowText = (props: TextFieldProps) => {
           ),
         },
       }}
-      autoComplete="off"
       type={hidden ? 'password' : 'text'}
     />
   );

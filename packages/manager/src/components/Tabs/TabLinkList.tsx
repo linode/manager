@@ -5,7 +5,7 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 
 export interface Tab {
-  chip?: React.JSX.Element | null;
+  chip?: null | React.JSX.Element;
   routeName: string;
   title: string;
 }

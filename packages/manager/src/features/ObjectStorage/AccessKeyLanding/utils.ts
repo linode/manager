@@ -4,8 +4,8 @@ import type { DisplayedAccessKeyScope, FormState } from './OMC_AccessKeyDrawer';
 import type { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 
 type UpdatePayload =
-  | { label: FormState['label'] }
   | { label: FormState['label']; regions: FormState['regions'] }
+  | { label: FormState['label'] }
   | { regions: FormState['regions'] }
   | {};
 

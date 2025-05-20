@@ -13,7 +13,7 @@ interface Props {
   isLoading: boolean;
   numCols: number;
   onDelete: (username: string) => void;
-  users: User[] | undefined;
+  users: undefined | User[];
 }
 
 export const UsersLandingTableBody = (props: Props) => {

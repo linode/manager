@@ -9,5 +9,5 @@ export const replaceNewlinesWithLineBreaks = (text: string) =>
         {text}
         <br />
       </React.Fragment>
-    )
+    ),
   );

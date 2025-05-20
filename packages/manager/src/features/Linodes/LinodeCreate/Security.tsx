@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Divider, Paper, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -14,7 +15,6 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Skeleton } from 'src/components/Skeleton';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from '@linode/queries';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
@@ -27,9 +27,8 @@ const PasswordInput = React.lazy(() =>
 export const Security = () => {
   const { control } = useFormContext<CreateLinodeRequest>();
 
-  const {
-    isDiskEncryptionFeatureEnabled,
-  } = useIsDiskEncryptionFeatureEnabled();
+  const { isDiskEncryptionFeatureEnabled } =
+    useIsDiskEncryptionFeatureEnabled();
 
   const { data: regions } = useRegionsQuery();
   const regionId = useWatch({ control, name: 'region' });
@@ -63,6 +62,8 @@ export const Security = () => {
         }
       >
         <Controller
+          control={control}
+          name="root_pass"
           render={({ field, fieldState }) => (
             <PasswordInput
               autoComplete="off"
@@ -78,12 +79,12 @@ export const Security = () => {
               value={field.value ?? ''}
             />
           )}
-          control={control}
-          name="root_pass"
         />
       </React.Suspense>
       <Divider spacingBottom={20} spacingTop={24} />
       <Controller
+        control={control}
+        name="authorized_users"
         render={({ field }) => (
           <UserSSHKeyPanel
             authorizedUsers={field.value ?? []}
@@ -91,13 +92,13 @@ export const Security = () => {
             setAuthorizedUsers={field.onChange}
           />
         )}
-        control={control}
-        name="authorized_users"
       />
       {isDiskEncryptionFeatureEnabled && (
         <>
           <Divider spacingBottom={20} spacingTop={24} />
           <Controller
+            control={control}
+            name="disk_encryption"
             render={({ field, fieldState }) => (
               <Encryption
                 descriptionCopy={
@@ -105,23 +106,21 @@ export const Security = () => {
                     ? DISK_ENCRYPTION_DISTRIBUTED_DESCRIPTION
                     : DISK_ENCRYPTION_GENERAL_DESCRIPTION
                 }
+                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
                 disabledReason={
                   isDistributedRegion
                     ? DISK_ENCRYPTION_DEFAULT_DISTRIBUTED_INSTANCES
                     : DISK_ENCRYPTION_UNAVAILABLE_IN_REGION_COPY
                 }
+                error={fieldState.error?.message}
                 isEncryptEntityChecked={
                   isDistributedRegion || field.value === 'enabled'
                 }
                 onChange={(checked) =>
                   field.onChange(checked ? 'enabled' : 'disabled')
                 }
-                disabled={isDistributedRegion || !regionSupportsDiskEncryption}
-                error={fieldState.error?.message}
               />
             )}
-            control={control}
-            name="disk_encryption"
           />
         </>
       )}

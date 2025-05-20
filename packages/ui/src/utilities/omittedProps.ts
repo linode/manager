@@ -10,9 +10,10 @@
  *      shouldForwardProp: omittedProps(['compactX', 'compactY']),
  *    })<Props>(({ theme, ...props }) => ({ ... }));
  */
-export const omittedProps = <Props>(props: Array<keyof Props>) => (
-  prop: keyof Props
-): boolean => !props.includes(prop);
+export const omittedProps =
+  <Props>(props: Array<keyof Props>) =>
+  (prop: keyof Props): boolean =>
+    !props.includes(prop);
 
 /**
    * Helper to filter out props we spread into a component.
@@ -26,11 +27,11 @@ export const omittedProps = <Props>(props: Array<keyof Props>) => (
  */
 export const omitProps = <
   Props extends NonNullable<unknown>,
-  Keys extends keyof Props & string
+  Keys extends keyof Props & string,
 >(
   props: Props,
-  toRemove: Keys[] & string[]
+  toRemove: Keys[] & string[],
 ) =>
   Object.fromEntries(
-    Object.entries(props).filter(([key]) => !toRemove.includes(key))
+    Object.entries(props).filter(([key]) => !toRemove.includes(key)),
   ) as Omit<Props, Keys>;

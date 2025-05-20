@@ -1,6 +1,6 @@
 import { Button, TextField, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { styled } from '@mui/material/styles';
 
 // sm = 600, md = 960, lg = 1280
 

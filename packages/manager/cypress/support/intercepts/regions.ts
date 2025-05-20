@@ -2,16 +2,16 @@
  * @file Cypress intercept and mock utilities for Linode regions.
  */
 
-import { Region, RegionAvailability } from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import {
-  isExtendedRegion,
   getRegionFromExtendedRegion,
+  isExtendedRegion,
 } from 'support/util/regions';
 import { makeResponse } from 'support/util/response';
 
+import type { Region, RegionAvailability } from '@linode/api-v4';
 import type { ExtendedRegion } from 'support/util/regions';
 
 /**
@@ -29,7 +29,7 @@ export const mockGetRegions = (
   regions: ExtendedRegion[] | Region[]
 ): Cypress.Chainable<null> => {
   const mockResponseRegions = regions.map(
-    (region: Region | ExtendedRegion): Region => {
+    (region: ExtendedRegion | Region): Region => {
       if (isExtendedRegion(region)) {
         return getRegionFromExtendedRegion(region);
       }

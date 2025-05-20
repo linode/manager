@@ -4,8 +4,8 @@ import { Factory } from './factoryProxy';
 
 import type { LinodeInterface, LinodeInterfaceSettings } from '@linode/api-v4';
 
-export const linodeInterfaceSettingsFactory = Factory.Sync.makeFactory<LinodeInterfaceSettings>(
-  {
+export const linodeInterfaceSettingsFactory =
+  Factory.Sync.makeFactory<LinodeInterfaceSettings>({
     network_helper: false,
     default_route: {
       ipv4_interface_id: 1,
@@ -13,11 +13,10 @@ export const linodeInterfaceSettingsFactory = Factory.Sync.makeFactory<LinodeInt
       ipv6_interface_id: 1,
       ipv6_eligible_interface_ids: [],
     },
-  }
-);
+  });
 
-export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterface>(
-  {
+export const linodeInterfaceFactoryVlan =
+  Factory.Sync.makeFactory<LinodeInterface>({
     created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
@@ -32,11 +31,10 @@ export const linodeInterfaceFactoryVlan = Factory.Sync.makeFactory<LinodeInterfa
       vlan_label: 'vlan-interface',
     },
     vpc: null,
-  }
-);
+  });
 
-export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterface>(
-  {
+export const linodeInterfaceFactoryVPC =
+  Factory.Sync.makeFactory<LinodeInterface>({
     created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
@@ -64,11 +62,10 @@ export const linodeInterfaceFactoryVPC = Factory.Sync.makeFactory<LinodeInterfac
       subnet_id: 1,
       vpc_id: 1,
     },
-  }
-);
+  });
 
-export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInterface>(
-  {
+export const linodeInterfaceFactoryPublic =
+  Factory.Sync.makeFactory<LinodeInterface>({
     created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
@@ -95,5 +92,4 @@ export const linodeInterfaceFactoryPublic = Factory.Sync.makeFactory<LinodeInter
     version: 1,
     vlan: null,
     vpc: null,
-  }
-);
+  });

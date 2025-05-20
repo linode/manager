@@ -1,4 +1,4 @@
-import type { PlacementGroup, Region } from '@linode/api-v4';
+import type { APIError, PlacementGroup, Region } from '@linode/api-v4';
 
 export interface PlacementGroupsDrawerPropsBase {
   onClose: () => void;
@@ -21,6 +21,7 @@ export interface PlacementGroupsEditDrawerProps {
   open: PlacementGroupsDrawerPropsBase['open'];
   region: Region | undefined;
   selectedPlacementGroup: PlacementGroup | undefined;
+  selectedPlacementGroupError: APIError[] | null;
 }
 
 export interface PlacementGroupsAssignLinodesDrawerProps {

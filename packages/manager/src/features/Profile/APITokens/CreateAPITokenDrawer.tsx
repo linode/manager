@@ -16,7 +16,6 @@ import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
@@ -220,12 +219,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const allPermissions = form.values.scopes;
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Add Personal Access Token"
-    >
+    <Drawer onClose={onClose} open={open} title="Add Personal Access Token">
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       <TextField
         errorText={errorMap.label}

@@ -21,10 +21,9 @@ export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   updated: '2019-01-01',
 });
 
-export const volumeRequestPayloadFactory = Factory.Sync.makeFactory<VolumeRequestPayload>(
-  {
+export const volumeRequestPayloadFactory =
+  Factory.Sync.makeFactory<VolumeRequestPayload>({
     label: Factory.each((id) => `volume-${id}`),
     region: 'us-east',
     size: 20,
-  }
-);
+  });

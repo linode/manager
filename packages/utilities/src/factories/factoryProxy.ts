@@ -15,7 +15,7 @@ const factoryProxyHandler = {
   get(
     target: typeof Factory,
     prop: keyof typeof Factory,
-    receiver: typeof Factory
+    receiver: typeof Factory,
   ) {
     if (prop === 'each') {
       return (fn: (index: number) => number | string) => {

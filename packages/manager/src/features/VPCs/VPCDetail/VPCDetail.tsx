@@ -216,12 +216,14 @@ const VPCDetail = () => {
         onClose={onCloseVPCDrawer}
         open={params.action === 'delete'}
         vpc={vpc}
+        vpcError={error}
       />
       <VPCEditDrawer
         isFetching={isFetchingVPC}
         onClose={onCloseVPCDrawer}
         open={params.action === 'edit'}
         vpc={vpc}
+        vpcError={error}
       />
       {isVPCLKEEnterpriseCluster && (
         <Notice

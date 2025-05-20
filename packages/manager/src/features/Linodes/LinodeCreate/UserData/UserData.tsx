@@ -1,3 +1,4 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Accordion, Notice, TextField, Typography } from '@linode/ui';
 import React, { useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -5,7 +6,6 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 
 import { UserDataHeading } from './UserDataHeading';
 
@@ -39,10 +39,10 @@ export const UserData = () => {
     );
   };
 
-  const region = useMemo(() => regions?.find((r) => r.id === regionId), [
-    regions,
-    regionId,
-  ]);
+  const region = useMemo(
+    () => regions?.find((r) => r.id === regionId),
+    [regions, regionId]
+  );
 
   const isLinodeCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -75,8 +75,16 @@ export const UserData = () => {
         </Notice>
       )}
       <Controller
+        control={control}
+        name="metadata.user_data"
         render={({ field, fieldState }) => (
           <TextField
+            disabled={isLinodeCreateRestricted}
+            errorText={fieldState.error?.message}
+            expand
+            label="User Data"
+            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
+            multiline
             onBlur={(e) => {
               field.onBlur();
               checkFormat({
@@ -91,18 +99,10 @@ export const UserData = () => {
                 userData: e.target.value,
               });
             }}
-            disabled={isLinodeCreateRestricted}
-            errorText={fieldState.error?.message}
-            expand
-            label="User Data"
-            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
-            multiline
             rows={1}
             value={field.value ?? ''}
           />
         )}
-        control={control}
-        name="metadata.user_data"
       />
     </Accordion>
   );

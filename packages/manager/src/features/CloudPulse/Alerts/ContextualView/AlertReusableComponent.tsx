@@ -102,19 +102,19 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
               value={searchText}
             />
             <Autocomplete
-              onChange={(_, selectedValue) => {
-                setSelectedType(selectedValue?.label);
-              }}
-              textFieldProps={{
-                hideLabel: true,
-              }}
               autoHighlight
               data-testid="alert-type-select"
               label="Select Type"
               noMarginTop
+              onChange={(_, selectedValue) => {
+                setSelectedType(selectedValue?.label);
+              }}
               options={types}
               placeholder="Select Alert Type"
               sx={{ width: '250px' }}
+              textFieldProps={{
+                hideLabel: true,
+              }}
             />
           </Box>
 

@@ -3,8 +3,8 @@ import { Factory } from '@linode/utilities';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 
-export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMaintenance>(
-  {
+export const accountMaintenanceFactory =
+  Factory.Sync.makeFactory<AccountMaintenance>({
     entity: Factory.each((id) =>
       pickRandom([
         {
@@ -21,6 +21,9 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
         },
       ])
     ),
+    maintenance_policy_set: Factory.each(() =>
+      pickRandom(['migrate', 'power on/off'])
+    ),
     reason: Factory.each(() =>
       pickRandom([
         `This maintenance will allow us to update the BIOS on the host’s motherboard.`,
@@ -34,10 +37,16 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
         `We must replace faulty RAM in your Linode's host.`,
       ])
     ),
+    description: Factory.each(() =>
+      pickRandom(['Emergency Maintenance', 'Scheduled Maintenance'])
+    ),
+    source: Factory.each(() => pickRandom(['user', 'platform'])),
     status: Factory.each(() => pickRandom(['pending', 'started'])),
     type: Factory.each(() =>
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
     when: Factory.each(() => randomDate().toISOString()),
-  }
-);
+    not_before: Factory.each(() => randomDate().toISOString()),
+    start_time: Factory.each(() => randomDate().toISOString()),
+    complete_time: Factory.each(() => randomDate().toISOString()),
+  });

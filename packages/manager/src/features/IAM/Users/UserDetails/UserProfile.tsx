@@ -1,10 +1,9 @@
 import { useAccountUser } from '@linode/queries';
-import { CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { CircleProgress, ErrorState, NotFound, Stack } from '@linode/ui';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { NotFound } from 'src/components/NotFound';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { DeleteUserPanel } from './DeleteUserPanel';

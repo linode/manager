@@ -1,5 +1,6 @@
-import { User } from '@linode/api-v4';
 import { Factory } from '@linode/utilities';
+
+import type { User } from '@linode/api-v4';
 
 export const accountUserFactory = Factory.Sync.makeFactory<User>({
   email: 'support@linode.com',

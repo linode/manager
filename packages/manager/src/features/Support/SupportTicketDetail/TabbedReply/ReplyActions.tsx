@@ -32,12 +32,12 @@ export const ReplyActions = (props: Props) => {
     <>
       {closable && <CloseTicketLink ticketId={ticketId} />}
       <ActionsPanel
+        className={classes.actions}
         primaryButtonProps={{
           label: 'Add Update',
           loading: isSubmitting,
           onClick: handleSubmitForm,
         }}
-        className={classes.actions}
       />
     </>
   );

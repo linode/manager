@@ -52,14 +52,14 @@ export const StrengthIndicator = (props: Props) => {
 
   return (
     <Grid
+      className={classes.root}
+      container
+      data-qa-strength={strength}
       sx={{
         alignItems: 'center',
         paddingLeft: 0,
         paddingRight: 0,
       }}
-      className={classes.root}
-      container
-      data-qa-strength={strength}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map((idx) => (
         <Grid className={classes.blockOuter} key={idx} size={3}>
@@ -108,9 +108,9 @@ const scaledStrength = (strength: number) => {
 
 export const convertStrengthScore = (strength: StrengthValues) => {
   switch (strength) {
-    case null:
     case 0:
     case 1:
+    case null:
       return ' Weak';
     case 2:
     case 3:

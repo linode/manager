@@ -6,8 +6,9 @@ import {
   PAYMENT_MIN,
   PAYMENT_SOFT_MAX,
 } from 'src/constants';
-import { TaxDetail } from 'src/featureFlags';
 import { parseAPIDate } from 'src/utilities/date';
+
+import type { TaxDetail } from 'src/featureFlags';
 
 export const cleanCVV = (input: string): string => {
   // All characters except numbers
@@ -43,9 +44,10 @@ export const getShouldUseAkamaiBilling = (date: string) => {
   return invoiceDate > akamaiDate;
 };
 
-export function getPaymentLimits(
-  balance: number | undefined
-): { max: number; min: number } {
+export function getPaymentLimits(balance: number | undefined): {
+  max: number;
+  min: number;
+} {
   if (balance === undefined) {
     return { max: PAYMENT_HARD_MAX, min: PAYMENT_MIN };
   }

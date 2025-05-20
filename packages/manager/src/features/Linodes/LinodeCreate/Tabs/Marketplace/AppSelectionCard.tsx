@@ -73,9 +73,6 @@ export const AppSelectionCard = (props: Props) => {
 
   return (
     <SelectionCard
-      sxCardBaseIcon={{
-        minWidth: 50,
-      }}
       checked={checked}
       heading={displayLabel}
       headingDecoration={headingDecoration}
@@ -83,6 +80,9 @@ export const AppSelectionCard = (props: Props) => {
       renderIcon={renderIcon}
       renderVariant={renderVariant}
       subheadings={['']}
+      sxCardBaseIcon={{
+        minWidth: 50,
+      }}
     />
   );
 };

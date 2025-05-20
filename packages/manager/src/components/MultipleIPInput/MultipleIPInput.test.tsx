@@ -2,6 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
 import { MultipleIPInput } from './MultipleIPInput';
 
 const baseProps = {

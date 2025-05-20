@@ -1,3 +1,4 @@
+import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -5,7 +6,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useMutateProfile, useProfile } from '@linode/queries';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
 
@@ -59,6 +59,8 @@ export const EmailForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <SingleTextFieldFormContainer>
         <Controller
+          control={control}
+          name="email"
           render={({ field, fieldState }) => (
             <TextField
               containerProps={{
@@ -78,8 +80,6 @@ export const EmailForm = () => {
               value={field.value}
             />
           )}
-          control={control}
-          name="email"
         />
         <Button
           buttonType="primary"

@@ -42,6 +42,7 @@ export const StackScriptImages = () => {
     <Paper>
       <Typography variant="h2">Select an Image</Typography>
       <Controller<CreateLinodeRequest, 'image'>
+        name="image"
         render={({ field, fieldState }) => (
           <ImageSelect
             disabled={!hasStackScriptSelected}
@@ -55,7 +56,6 @@ export const StackScriptImages = () => {
             variant={imageSelectVariant}
           />
         )}
-        name="image"
       />
     </Paper>
   );

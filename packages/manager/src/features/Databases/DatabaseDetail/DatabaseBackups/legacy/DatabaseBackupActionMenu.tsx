@@ -1,8 +1,9 @@
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+
+import type { DatabaseBackup } from '@linode/api-v4/lib/databases';
 
 const useStyles = makeStyles()(() => ({
   inlineActions: {

@@ -1,3 +1,4 @@
+import { useLinodeBackupSnapshotMutation } from '@linode/queries';
 import {
   Box,
   Button,
@@ -12,7 +13,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useLinodeBackupSnapshotMutation } from '@linode/queries';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { CaptureSnapshotConfirmationDialog } from './CaptureSnapshotConfirmationDialog';

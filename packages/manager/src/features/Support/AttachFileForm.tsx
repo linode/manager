@@ -60,14 +60,14 @@ export const AttachFileForm = (props: Props) => {
         type="file"
       />
       <Button
+        buttonType="secondary"
+        compactX
+        onClick={clickAttachButton}
         sx={(theme) => ({
           display: 'flex',
           justifyContent: 'flex-start',
           marginTop: theme.spacing(1),
         })}
-        buttonType="secondary"
-        compactX
-        onClick={clickAttachButton}
       >
         <AttachFile />
         Attach a file

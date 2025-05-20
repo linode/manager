@@ -1,12 +1,12 @@
+import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
-import { useProfile } from '@linode/queries';
 
 import { Hively, shouldRenderHively } from './Hively';
 import { TicketDetailText } from './TicketDetailText';

@@ -1,4 +1,3 @@
-/* eslint-disable cypress/no-unnecessary-waiting */
 import { apiMatcher } from 'support/util/intercepts';
 
 import type { Method } from 'axios';

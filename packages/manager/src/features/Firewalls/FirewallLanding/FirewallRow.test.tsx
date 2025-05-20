@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { firewalls } from 'src/__data__/firewalls';
+import { accountFactory } from 'src/factories';
 import {
   firewallDeviceFactory,
   firewallFactory,
@@ -19,7 +20,6 @@ import {
   getDeviceLinks,
   getRuleString,
 } from './FirewallRow';
-import { accountFactory } from 'src/factories';
 
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),

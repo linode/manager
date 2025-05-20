@@ -21,7 +21,7 @@ vi.mock('../Utils/AlertResourceUtils', () => ({
 const mockHandleDetails = vi.fn();
 const mockHandleEdit = vi.fn();
 const mockHandleStatusChange = vi.fn();
-
+const mockHandleDelete = vi.fn();
 const mockServices: Item<string, AlertServiceType>[] = [
   { label: 'Linode', value: 'linode' },
   { label: 'Databases', value: 'dbaas' },
@@ -43,6 +43,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={mockAlerts}
+        handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
         handleStatusChange={mockHandleStatusChange}
@@ -65,6 +66,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={alerts}
+        handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
         handleStatusChange={mockHandleStatusChange}
@@ -87,6 +89,7 @@ describe('GroupedAlertsTable', () => {
     renderWithTheme(
       <GroupedAlertsTable
         groupedAlerts={alerts}
+        handleDelete={mockHandleDelete}
         handleDetails={mockHandleDetails}
         handleEdit={mockHandleEdit}
         handleStatusChange={mockHandleStatusChange}

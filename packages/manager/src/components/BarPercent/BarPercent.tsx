@@ -64,19 +64,19 @@ export const BarPercent = React.memo((props: BarPercentProps) => {
   return (
     <StyledDiv className={className}>
       <StyledLinearProgress
-        variant={
-          isFetchingValue
-            ? 'indeterminate'
-            : valueBuffer
-            ? 'buffer'
-            : 'determinate'
-        }
         customColors={customColors}
         narrow={narrow}
         rounded={rounded}
         sx={sx}
         value={getPercentage(value, max)}
         valueBuffer={valueBuffer}
+        variant={
+          isFetchingValue
+            ? 'indeterminate'
+            : valueBuffer
+              ? 'buffer'
+              : 'determinate'
+        }
       />
     </StyledDiv>
   );
@@ -100,8 +100,8 @@ const StyledLinearProgress = styled(LinearProgress, {
     backgroundColor: props.customColors
       ? getCustomColor(props.customColors, props.value ?? 0)
       : props.valueBuffer
-      ? theme.tokens.color.Green[70]
-      : theme.tokens.color.Green[60],
+        ? theme.tokens.color.Green[70]
+        : theme.tokens.color.Green[60],
   },
   '& .MuiLinearProgress-dashed': {
     display: 'none',

@@ -258,12 +258,11 @@ describe('getExistingEventDataForPollingFilterGenerator', () => {
       status: 'finished',
     });
 
-    const {
-      eventsThatAlreadyHappenedAtTheFilterTime,
-    } = getExistingEventDataForPollingFilterGenerator(
-      [eventWithDifferentTimestamp, eventWithSameTimestamp],
-      timestamp
-    );
+    const { eventsThatAlreadyHappenedAtTheFilterTime } =
+      getExistingEventDataForPollingFilterGenerator(
+        [eventWithDifferentTimestamp, eventWithSameTimestamp],
+        timestamp
+      );
 
     expect(eventsThatAlreadyHappenedAtTheFilterTime).toHaveLength(1);
     expect(eventsThatAlreadyHappenedAtTheFilterTime[0]).toBe(
@@ -281,13 +280,11 @@ describe('getExistingEventDataForPollingFilterGenerator', () => {
       status: 'started',
     });
 
-    const {
-      eventsThatAlreadyHappenedAtTheFilterTime,
-      inProgressEvents,
-    } = getExistingEventDataForPollingFilterGenerator(
-      [eventWithSameTimestamp],
-      timestamp
-    );
+    const { eventsThatAlreadyHappenedAtTheFilterTime, inProgressEvents } =
+      getExistingEventDataForPollingFilterGenerator(
+        [eventWithSameTimestamp],
+        timestamp
+      );
 
     expect(eventsThatAlreadyHappenedAtTheFilterTime).toHaveLength(0);
     expect(inProgressEvents).toHaveLength(1);

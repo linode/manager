@@ -69,9 +69,8 @@ type CombinedProps = Props & Omit<Partial<RegionSelectProps>, 'onChange'>;
 export const TwoStepRegion = (props: CombinedProps) => {
   const { disabled, disabledRegions, errorText, onChange, value } = props;
 
-  const [regionFilter, setRegionFilter] = React.useState<RegionFilterValue>(
-    'distributed'
-  );
+  const [regionFilter, setRegionFilter] =
+    React.useState<RegionFilterValue>('distributed');
 
   const { data: regions } = useRegionsQuery();
   const { params } = useLinodeCreateQueryParams();
@@ -86,6 +85,8 @@ export const TwoStepRegion = (props: CombinedProps) => {
       <Box display="flex" justifyContent="space-between" mb={1}>
         <Typography variant="h2">Region</Typography>
         <DocsLink
+          href="https://www.linode.com/pricing"
+          label={DOCS_LINK_LABEL_DC_PRICING}
           onClick={() =>
             sendLinodeCreateFormInputEvent({
               createType: params.type ?? 'OS',
@@ -94,8 +95,6 @@ export const TwoStepRegion = (props: CombinedProps) => {
               label: DOCS_LINK_LABEL_DC_PRICING,
             })
           }
-          href="https://www.linode.com/pricing"
-          label={DOCS_LINK_LABEL_DC_PRICING}
         />
       </Box>
       <Tabs>
@@ -132,14 +131,14 @@ export const TwoStepRegion = (props: CombinedProps) => {
               </Typography>
             </Box>
             <Autocomplete
+              defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
+              disableClearable
+              label="Geographical Area"
               onChange={(_, selectedOption) => {
                 if (selectedOption?.value) {
                   setRegionFilter(selectedOption.value);
                 }
               }}
-              defaultValue={GEOGRAPHICAL_AREA_OPTIONS[0]}
-              disableClearable
-              label="Geographical Area"
               options={GEOGRAPHICAL_AREA_OPTIONS}
             />
             <RegionSelect

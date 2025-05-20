@@ -142,13 +142,13 @@ export const LinodeRebuildForm = (props: Props) => {
             </strong>
           </Typography>
           <Stack
+            divider={<Divider />}
+            spacing={2}
             sx={{
               'hr + hr': {
                 display: 'none',
               },
             }}
-            divider={<Divider />}
-            spacing={2}
           >
             <RebuildFromSelect
               disabled={isLinodeReadOnly}

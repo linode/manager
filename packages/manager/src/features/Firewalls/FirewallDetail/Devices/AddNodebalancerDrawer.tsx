@@ -12,7 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { SupportLink } from 'src/components/SupportLink';
 import { FIREWALL_LIMITS_CONSIDERATIONS_LINK } from 'src/constants';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
@@ -178,7 +177,6 @@ export const AddNodebalancerDrawer = (props: Props) => {
         setLocalError(undefined);
         onClose();
       }}
-      NotFoundComponent={NotFound}
       open={open}
       title={`Add Nodebalancer to Firewall: ${firewall?.label}`}
     >
@@ -195,12 +193,12 @@ export const AddNodebalancerDrawer = (props: Props) => {
       >
         {localError ? errorNotice() : null}
         <NodeBalancerSelect
-          onSelectionChange={(nodebalancers) =>
-            setSelectedNodebalancers(nodebalancers)
-          }
           disabled={isLoading}
           helperText={helperText}
           multiple
+          onSelectionChange={(nodebalancers) =>
+            setSelectedNodebalancers(nodebalancers)
+          }
           optionsFilter={nodebalancerOptionsFilter}
           value={selectedNodebalancers.map((nodebalancer) => nodebalancer.id)}
         />

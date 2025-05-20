@@ -19,9 +19,9 @@ import {
   interceptEnableLinodeBackups,
   interceptGetLinode,
   mockEnableLinodeBackups,
+  mockGetLinodes,
   mockGetLinodeType,
   mockGetLinodeTypes,
-  mockGetLinodes,
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';

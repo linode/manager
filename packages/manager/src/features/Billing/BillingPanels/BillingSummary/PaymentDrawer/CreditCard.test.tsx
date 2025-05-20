@@ -1,10 +1,11 @@
-import { CreditCardData } from '@linode/api-v4';
 import { Settings } from 'luxon';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import CreditCard from './CreditCard';
+
+import type { CreditCardData } from '@linode/api-v4';
 
 it('Displays credit card type and last four digits', () => {
   const creditCardData: CreditCardData = {

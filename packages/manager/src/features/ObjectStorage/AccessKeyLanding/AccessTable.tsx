@@ -45,7 +45,7 @@ export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
 };
 
 interface TableProps {
-  bucket_access: ObjectStorageKeyBucketAccess[] | null;
+  bucket_access: null | ObjectStorageKeyBucketAccess[];
   checked: boolean;
   mode: MODE;
   updateScopes: (newScopes: ObjectStorageKeyBucketAccess[]) => void;
@@ -105,13 +105,13 @@ export const AccessTable = React.memo((props: TableProps) => {
             </TableCell>
             <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select none for all',
-                }}
                 checked={allScopesEqual(SCOPES.none)}
                 data-qa-perm-none-radio
                 data-testid="set-all-none"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select none for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes(SCOPES.none)}
                 value="none"
@@ -119,13 +119,13 @@ export const AccessTable = React.memo((props: TableProps) => {
             </TableCell>
             <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read-only for all',
-                }}
                 checked={allScopesEqual('read_only')}
                 data-qa-perm-read-radio
                 data-testid="set-all-read"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select read-only for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes('read_only')}
                 value="read-only"
@@ -133,13 +133,13 @@ export const AccessTable = React.memo((props: TableProps) => {
             </TableCell>
             <TableCell padding="checkbox">
               <Radio
-                inputProps={{
-                  'aria-label': 'Select read/write for all',
-                }}
                 checked={allScopesEqual(SCOPES.write)}
                 data-qa-perm-rw-radio
                 data-testid="set-all-write"
                 disabled={disabled}
+                inputProps={{
+                  'aria-label': 'Select read/write for all',
+                }}
                 name="Select All"
                 onChange={() => updateAllScopes(SCOPES.write)}
                 value="read-write"
@@ -164,14 +164,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledBucketCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.none}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.none,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.none}
-                  disabled={disabled}
                   scope="none"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}
@@ -179,14 +179,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledRadioCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.read}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.read,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.read}
-                  disabled={disabled}
                   scope="read-only"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}
@@ -194,14 +194,14 @@ export const AccessTable = React.memo((props: TableProps) => {
               </StyledRadioCell>
               <StyledRadioCell padding="checkbox">
                 <AccessCell
+                  active={thisScope.permissions === SCOPES.write}
+                  disabled={disabled}
                   onChange={() =>
                     updateSingleScope({
                       ...thisScope,
                       permissions: SCOPES.write,
                     })
                   }
-                  active={thisScope.permissions === SCOPES.write}
-                  disabled={disabled}
                   scope="read-write"
                   scopeDisplay={scopeName}
                   viewOnly={mode === 'viewing'}

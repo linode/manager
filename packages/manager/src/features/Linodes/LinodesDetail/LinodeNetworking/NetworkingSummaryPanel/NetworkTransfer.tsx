@@ -1,13 +1,13 @@
-import { Typography } from '@linode/ui';
-import { readableBytes } from '@linode/utilities';
-import { useTheme } from '@mui/material/styles';
-import * as React from 'react';
-
 import {
   useAccountNetworkTransfer,
   useLinodeTransfer,
   useRegionsQuery,
 } from '@linode/queries';
+import { Typography } from '@linode/ui';
+import { readableBytes } from '@linode/utilities';
+import { useTheme } from '@mui/material/styles';
+import * as React from 'react';
+
 import { useTypeQuery } from 'src/queries/types';
 import {
   getDynamicDCNetworkTransferData,

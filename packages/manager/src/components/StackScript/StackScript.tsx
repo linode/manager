@@ -171,11 +171,11 @@ export const StackScript = React.memo((props: StackScriptProps) => {
         />
         {userCanModify ? (
           <Button
+            buttonType="secondary"
+            className={classes.editBtn}
             onClick={() => {
               history.push(`/stackscripts/${stackscriptId}/edit`);
             }}
-            buttonType="secondary"
-            className={classes.editBtn}
           >
             Edit
           </Button>
@@ -255,11 +255,11 @@ export const StackScript = React.memo((props: StackScriptProps) => {
               >
                 <Typography variant="h3">Deprecated Images</Typography>
                 <TooltipIcon
+                  status="help"
                   sxTooltipIcon={{
                     marginLeft: theme.spacing(),
                     padding: 0,
                   }}
-                  status="help"
                   text="You must update your StackScript to use a compatible Image to deploy it"
                   tooltipPosition="bottom"
                 />

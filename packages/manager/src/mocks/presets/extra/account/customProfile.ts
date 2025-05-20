@@ -6,9 +6,9 @@ import { makeResponse } from 'src/mocks/utilities/response';
 import type { Profile } from '@linode/api-v4';
 import type { MockPresetExtra } from 'src/mocks/types';
 
-let customProfileData: Profile | null = null;
+let customProfileData: null | Profile = null;
 
-export const setCustomProfileData = (data: Profile | null) => {
+export const setCustomProfileData = (data: null | Profile) => {
   customProfileData = data;
 };
 

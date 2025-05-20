@@ -1,4 +1,4 @@
-import { FirewallDevice } from '@linode/api-v4/lib/firewalls';
+import type { FirewallDevice } from '@linode/api-v4/lib/firewalls';
 
 export const device: FirewallDevice = {
   created: '2020-01-01',

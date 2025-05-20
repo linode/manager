@@ -1,4 +1,4 @@
-import { getUserPermissions, getAccountPermissions } from '@linode/api-v4';
+import { getAccountPermissions, getUserPermissions } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 export const iamQueries = createQueryKeys('iam', {

@@ -27,16 +27,18 @@ export const StackScriptForm = (props: Props) => {
   return (
     <Stack spacing={2}>
       <Controller
+        control={control}
+        name="label"
         render={({ field, fieldState }) => (
           <TextField
+            data-qa-stackscript-label
+            disabled={disabled}
+            errorText={fieldState.error?.message}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="end">{username} /</InputAdornment>
               ),
             }}
-            data-qa-stackscript-label
-            disabled={disabled}
-            errorText={fieldState.error?.message}
             inputRef={field.ref}
             label="StackScript Label"
             noMarginTop
@@ -48,11 +50,11 @@ export const StackScriptForm = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="label"
       />
 
       <Controller
+        control={control}
+        name="description"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-stackscript-description
@@ -69,13 +71,20 @@ export const StackScriptForm = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="description"
       />
 
       <Controller
+        control={control}
+        name="images"
         render={({ field, fieldState }) => (
           <ImageSelect
+            anyAllOption
+            data-qa-stackscript-target-select
+            disabled={disabled}
+            errorText={fieldState.error?.message}
+            label="Target Images"
+            multiple
+            noMarginTop
             onChange={(images) => {
               const imageIds = images.map((i) => i.id);
               if (imageIds.includes('any/all')) {
@@ -84,30 +93,29 @@ export const StackScriptForm = (props: Props) => {
                 field.onChange(imageIds);
               }
             }}
+            placeholder="Select image(s)"
             textFieldProps={{
               required: true,
               tooltipText:
                 'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.',
             }}
-            anyAllOption
-            data-qa-stackscript-target-select
-            disabled={disabled}
-            errorText={fieldState.error?.message}
-            label="Target Images"
-            multiple
-            noMarginTop
-            placeholder="Select image(s)"
             value={field.value}
             variant="public"
           />
         )}
-        control={control}
-        name="images"
       />
 
       <Controller
+        control={control}
+        name="script"
         render={({ field, fieldState }) => (
           <TextField
+            data-qa-stackscript-script
+            disabled={disabled}
+            errorText={fieldState.error?.message}
+            expand
+            inputRef={field.ref}
+            label="Script"
             labelTooltipText={
               <Stack spacing={1}>
                 <Typography>
@@ -122,12 +130,6 @@ export const StackScriptForm = (props: Props) => {
                 </List>
               </Stack>
             }
-            data-qa-stackscript-script
-            disabled={disabled}
-            errorText={fieldState.error?.message}
-            expand
-            inputRef={field.ref}
-            label="Script"
             multiline
             noMarginTop
             onBlur={field.onBlur}
@@ -139,11 +141,11 @@ export const StackScriptForm = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="script"
       />
 
       <Controller
+        control={control}
+        name="rev_note"
         render={({ field, fieldState }) => (
           <TextField
             data-qa-stackscript-revision
@@ -159,8 +161,6 @@ export const StackScriptForm = (props: Props) => {
             value={field.value}
           />
         )}
-        control={control}
-        name="rev_note"
       />
     </Stack>
   );

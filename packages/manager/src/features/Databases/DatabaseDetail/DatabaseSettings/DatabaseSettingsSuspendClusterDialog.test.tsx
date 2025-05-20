@@ -1,14 +1,14 @@
 import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  DatabaseSettingsSuspendClusterDialog,
-  SuspendDialogProps,
-} from './DatabaseSettingsSuspendClusterDialog';
-import { Engine } from '@linode/api-v4';
-import userEvent from '@testing-library/user-event';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { DatabaseSettingsSuspendClusterDialog } from './DatabaseSettingsSuspendClusterDialog';
+
+import type { SuspendDialogProps } from './DatabaseSettingsSuspendClusterDialog';
+import type { Engine } from '@linode/api-v4';
 
 const mockEngine: Engine = 'mysql';
 const mockLabel = 'database-1';

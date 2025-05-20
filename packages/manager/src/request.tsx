@@ -15,7 +15,7 @@ import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
 ) => {
-  if (!!response.headers['x-maintenance-mode']) {
+  if (response.headers['x-maintenance-mode']) {
     Promise.reject(response);
   }
 

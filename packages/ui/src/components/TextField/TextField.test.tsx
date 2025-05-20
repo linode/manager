@@ -14,7 +14,7 @@ describe('TextField', () => {
 
   it('Renders a TextField with the given label and initial value', () => {
     const { getByDisplayValue, getByText } = renderWithTheme(
-      <TextField {...props} />
+      <TextField {...props} />,
     );
     expect(getByText('Username')).toBeInTheDocument();
     expect(getByDisplayValue('jane-doe')).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('TextField', () => {
 
   it('Trims leading and trailing whitespace from a TextField with a trimmed prop', async () => {
     const { getByDisplayValue, getByLabelText } = renderWithTheme(
-      <TextField trimmed {...props} />
+      <TextField trimmed {...props} />,
     );
 
     const input = getByLabelText('Username');
@@ -33,13 +33,13 @@ describe('TextField', () => {
     expect(
       getByDisplayValue('test', {
         normalizer: getDefaultNormalizer({ trim: false }), // Prevent default trim by DOM Testing Library
-      })
+      }),
     ).toBeInTheDocument();
   });
 
   it('Does not trim leading and trailing whitespace from a TextField without "trimmed" prop', async () => {
     const { getByDisplayValue, getByLabelText } = renderWithTheme(
-      <TextField {...props} />
+      <TextField {...props} />,
     );
 
     const input = getByLabelText('Username');
@@ -50,13 +50,13 @@ describe('TextField', () => {
     expect(
       getByDisplayValue(' test ', {
         normalizer: getDefaultNormalizer({ trim: false }),
-      })
+      }),
     ).toBeInTheDocument();
   });
 
   it('Renders an error message on error', async () => {
     const { getByText } = renderWithTheme(
-      <TextField error errorText="There was an error" {...props} />
+      <TextField error errorText="There was an error" {...props} />,
     );
     expect(getByText(/There was an error/i)).toBeInTheDocument();
   });
@@ -70,7 +70,7 @@ describe('TextField', () => {
         label={'Money'}
         type={'number'}
         value={'100'}
-      />
+      />,
     );
 
     expect(getByText('Money')).toBeInTheDocument();
@@ -82,7 +82,13 @@ describe('TextField', () => {
 
   it('accepts a min and max value for a type of number and clamps the value within the range', () => {
     const { getByTestId } = renderWithTheme(
-      <TextField label={'Money'} max={10} min={2} type={'number'} value={'5'} />
+      <TextField
+        label={'Money'}
+        max={10}
+        min={2}
+        type={'number'}
+        value={'5'}
+      />,
     );
     const input = getByTestId('textfield-input');
     expect(input?.getAttribute('value')).toBe('5');
@@ -94,7 +100,7 @@ describe('TextField', () => {
 
   it('renders a helper text with an input id', () => {
     const { getByText } = renderWithTheme(
-      <TextField helperText="Helper text" inputId="input-id" label="" />
+      <TextField helperText="Helper text" inputId="input-id" label="" />,
     );
 
     expect(getByText('Helper text')).toBeInTheDocument();
@@ -104,7 +110,7 @@ describe('TextField', () => {
 
   it('renders a helper text with a label', () => {
     const { getByText } = renderWithTheme(
-      <TextField helperText="Helper text" label="Label" />
+      <TextField helperText="Helper text" label="Label" />,
     );
 
     const helperText = getByText('Helper text');
@@ -115,7 +121,7 @@ describe('TextField', () => {
 
   it('renders a helper text with a fallback id', () => {
     const { getByText } = renderWithTheme(
-      <TextField helperText="Helper text" label="" />
+      <TextField helperText="Helper text" label="" />,
     );
 
     const helperText = getByText('Helper text');

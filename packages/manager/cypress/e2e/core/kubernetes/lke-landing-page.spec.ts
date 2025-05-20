@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { mockGetAccount } from 'support/intercepts/account';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
@@ -10,6 +11,7 @@ import {
   mockRecycleAllNodes,
   mockUpdateCluster,
 } from 'support/intercepts/lke';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { readDownload } from 'support/util/downloads';
 import { getRegionById } from 'support/util/regions';
@@ -22,6 +24,11 @@ import {
 
 import type { KubernetesCluster } from '@linode/api-v4';
 
+const mockRegion = regionFactory.build({
+  id: 'us-central',
+  label: 'Dallas, TX',
+  capabilities: ['Linodes', 'Disk Encryption'],
+});
 describe('LKE landing page', () => {
   it('does not display a Disk Encryption info banner if the LDE feature is disabled', () => {
     // Mock feature flag -- @TODO LDE: Remove feature flag once LDE is fully rolled out
@@ -60,14 +67,17 @@ describe('LKE landing page', () => {
     const mockAccount = accountFactory.build({
       capabilities: ['Linodes', 'Disk Encryption'],
     });
-    const mockClusters = kubernetesClusterFactory.buildList(3);
+    const mockClusters = kubernetesClusterFactory.buildList(3, {
+      region: mockRegion.id,
+    });
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetClusters(mockClusters).as('getClusters');
+    mockGetRegions([mockRegion]).as('getRegions');
 
     // Intercept request
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait(['@getClusters', '@getAccount']);
+    cy.wait(['@getClusters', '@getAccount', '@getRegions']);
 
     // Check if banner is visible
     cy.contains('Disk encryption is now standard on Linodes.').should(
@@ -79,24 +89,27 @@ describe('LKE landing page', () => {
    * - Confirms that LKE clusters are listed on landing page.
    */
   it('lists LKE clusters', () => {
-    const mockClusters = kubernetesClusterFactory.buildList(10);
+    const mockClusters = kubernetesClusterFactory.buildList(10, {
+      region: mockRegion.id,
+    });
     mockGetClusters(mockClusters).as('getClusters');
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       mockGetClusterPools(cluster.id, nodePoolFactory.buildList(3));
     });
 
+    mockGetRegions([mockRegion]).as('getRegions');
     cy.visitWithLogin('/kubernetes/clusters');
-    cy.wait('@getClusters');
+    cy.wait(['@getClusters', '@getRegions']);
 
     mockClusters.forEach((cluster: KubernetesCluster) => {
       cy.findByText(cluster.label)
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText(getRegionById(cluster.region).label).should(
-            'be.visible'
-          );
+          cy.findByText(
+            getRegionById(cluster.region, [mockRegion]).label
+          ).should('be.visible');
           cy.findByText(cluster.k8s_version).should('be.visible');
 
           ui.button

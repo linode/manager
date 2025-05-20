@@ -4,8 +4,9 @@ import * as React from 'react';
 import { LongviewLineGraph } from 'src/components/LongviewLineGraph/LongviewLineGraph';
 
 import { convertData } from '../../../shared/formatters';
-import { GraphProps } from './types';
 import { useGraphs } from './useGraphs';
+
+import type { GraphProps } from './types';
 
 export const LoadGraph = (props: GraphProps) => {
   const {
@@ -35,6 +36,7 @@ export const LoadGraph = (props: GraphProps) => {
 
   return (
     <LongviewLineGraph
+      ariaLabel="Load Graph"
       data={[
         {
           backgroundColor: theme.graphs.load,
@@ -43,7 +45,6 @@ export const LoadGraph = (props: GraphProps) => {
           label: 'Load',
         },
       ]}
-      ariaLabel="Load Graph"
       error={error}
       loading={loading}
       nativeLegend

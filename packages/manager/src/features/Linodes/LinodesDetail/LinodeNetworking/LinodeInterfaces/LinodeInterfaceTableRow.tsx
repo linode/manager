@@ -1,3 +1,4 @@
+import { Hidden } from '@linode/ui';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -28,22 +29,30 @@ export const LinodeInterfaceTableRow = (props: Props) => {
     <TableRow>
       <TableCell>{type}</TableCell>
       <TableCell>{id}</TableCell>
-      <TableCell>
-        <MaskableText isToggleable text={mac_address} />
-      </TableCell>
+      <Hidden smDown>
+        <TableCell>
+          <MaskableText isToggleable text={mac_address} />
+        </TableCell>
+      </Hidden>
       <TableCell>
         <LinodeInterfaceIPs linodeInterface={props} />
       </TableCell>
-      <TableCell>{version}</TableCell>
+      <Hidden lgDown>
+        <TableCell>{version}</TableCell>
+      </Hidden>
       <TableCell>
         <LinodeInterfaceFirewall interfaceId={id} linodeId={linodeId} />
       </TableCell>
-      <TableCell>
-        <DateTimeDisplay value={updated} />
-      </TableCell>
-      <TableCell>
-        <DateTimeDisplay value={created} />
-      </TableCell>
+      <Hidden lgDown>
+        <TableCell>
+          <DateTimeDisplay value={updated} />
+        </TableCell>
+      </Hidden>
+      <Hidden mdDown>
+        <TableCell>
+          <DateTimeDisplay value={created} />
+        </TableCell>
+      </Hidden>
       <TableCell actionCell>
         <LinodeInterfaceActionMenu handlers={handlers} id={id} type={type} />
       </TableCell>

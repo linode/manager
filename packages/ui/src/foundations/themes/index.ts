@@ -43,8 +43,7 @@ type Fonts = {
 };
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
-  Omit<B, keyof A> &
-  { [K in keyof A & keyof B]: A[K] | B[K] };
+  Omit<B, keyof A> & { [K in keyof A & keyof B]: A[K] | B[K] };
 
 type LightModeColors = typeof color;
 type DarkModeColors = typeof customDarkModeOptions.color;

@@ -1,10 +1,10 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Chip, FormControlLabel, Radio } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
-import { Hidden } from 'src/components/Hidden';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -59,7 +59,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCDisabledGroup,
     planIsSmallerThanUsage,
     planIsTooSmall,
   } = plan;
@@ -89,14 +89,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
     planHasLimitedAvailability ||
-    planIsMTCTTAndUnavailableInSelectedRegion ||
+    planBelongsToMTCDisabledGroup ||
     wholePanelIsDisabled;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planIsMTCTTAndUnavailableInSelectedRegion,
+    planBelongsToMTCDisabledGroup,
     planIsSmallerThanUsage,
     planIsTooSmall,
     wholePanelIsDisabled,
@@ -114,7 +114,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planHasLimitedAvailability ||
       planIsTooSmall ||
       planIsSmallerThanUsage ||
-      planIsMTCTTAndUnavailableInSelectedRegion);
+      planBelongsToMTCDisabledGroup);
 
   const isDistributedPlan =
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');

@@ -1,7 +1,7 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Linode } from '@linode/api-v4/lib/linodes';
-
 import { domains, linodes } from 'src/__data__';
+
+import type { Domain } from '@linode/api-v4/lib/domains';
+import type { Linode } from '@linode/api-v4/lib/linodes';
 
 export default {
   domains: {

@@ -1,8 +1,8 @@
 export const isNullOrUndefined = (
-  value: unknown
+  value: unknown,
 ): value is null | undefined => {
   return value === null || value === undefined;
 };
 
-export const isNotNullOrUndefined = <T>(el: T | null | undefined): el is T =>
+export const isNotNullOrUndefined = <T>(el: null | T | undefined): el is T =>
   !isNullOrUndefined(el);

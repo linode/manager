@@ -1,10 +1,10 @@
+import { usePreferences } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import { FormLabel } from '@mui/material';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
-import { usePreferences } from '@linode/queries';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ActionButtonsProps } from '@linode/ui';
@@ -18,21 +18,27 @@ interface EntityInfo {
     | 'detachment'
     | 'resizing'
     | 'restoration';
+  error?: APIError[] | null | string | undefined;
   name?: string | undefined;
   primaryBtnText: string;
   subType?: 'CloseAccount' | 'Cluster' | 'ObjectStorage';
   type:
     | 'AccountSetting'
+    | 'Alert'
     | 'Bucket'
     | 'Database'
+    | 'Domain'
     | 'Kubernetes'
     | 'Linode'
     | 'Load Balancer'
+    | 'Managed Contact'
+    | 'Managed Credential'
+    | 'Managed Service Monitor'
     | 'NodeBalancer'
     | 'Placement Group'
     | 'Subnet'
-    | 'VPC'
-    | 'Volume';
+    | 'Volume'
+    | 'VPC';
 }
 
 interface TypeToConfirmDialogProps {
@@ -222,6 +228,7 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
           style={{ padding: 0 }}
         />
       }
+      entityError={entity.error}
       error={errors ? errors[0].reason : undefined}
       isFetching={isFetching}
       onClose={onClose}
@@ -231,12 +238,6 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
       {children}
       <TypeToConfirm
         {...getTypeToConfirmProps()}
-        onChange={(input) => {
-          setConfirmationValues({
-            ...confirmationValues,
-            confirmText: input,
-          });
-        }}
         data-testid={'dialog-confirm-text-input'}
         disabled={disableTypeToConfirmInput}
         expand={expand}
@@ -244,6 +245,12 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
         inputProps={inputProps}
         isCloseAccount={isCloseAccount}
         label={label}
+        onChange={(input) => {
+          setConfirmationValues({
+            ...confirmationValues,
+            confirmText: input,
+          });
+        }}
         textFieldStyle={textFieldStyle}
         typographyStyle={typographyStyle}
         typographyStyleSx={typographyStyleSx}

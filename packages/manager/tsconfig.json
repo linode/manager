@@ -41,8 +41,5 @@
     /* Optimizations */
     "incremental": true
   },
-  "include": [
-    "src",
-    "package.json",
-  ]
+  "include": ["src", "package.json"]
 }

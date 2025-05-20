@@ -73,8 +73,8 @@ export const longviewCPUFactory = Factory.Sync.makeFactory<LongviewCPU>({
   },
 });
 
-export const longviewSysInfoFactory = Factory.Sync.makeFactory<LongviewSystemInfo>(
-  {
+export const longviewSysInfoFactory =
+  Factory.Sync.makeFactory<LongviewSystemInfo>({
     SysInfo: {
       arch: 'x86_64',
       client: '1.1.5',
@@ -90,21 +90,18 @@ export const longviewSysInfoFactory = Factory.Sync.makeFactory<LongviewSystemInf
       },
       type: 'kvm',
     },
-  }
-);
+  });
 
-export const InboundOutboundNetworkFactory = Factory.Sync.makeFactory<InboundOutboundNetwork>(
-  {
+export const InboundOutboundNetworkFactory =
+  Factory.Sync.makeFactory<InboundOutboundNetwork>({
     rx_bytes: [mockStats[10]],
     tx_bytes: [mockStats[11]],
-  }
-);
+  });
 
-export const LongviewNetworkInterfaceFactory = Factory.Sync.makeFactory<LongviewNetworkInterface>(
-  {
+export const LongviewNetworkInterfaceFactory =
+  Factory.Sync.makeFactory<LongviewNetworkInterface>({
     eth0: InboundOutboundNetworkFactory.build(),
-  }
-);
+  });
 
 export const longviewNetworkFactory = Factory.Sync.makeFactory<LongviewNetwork>(
   {

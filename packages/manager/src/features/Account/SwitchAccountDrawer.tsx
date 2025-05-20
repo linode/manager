@@ -2,7 +2,6 @@ import { Drawer, Notice, StyledLinkButton, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
-import { NotFound } from 'src/components/NotFound';
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
@@ -19,7 +18,7 @@ import type { State as AuthState } from 'src/store/authentication';
 interface Props {
   onClose: () => void;
   open: boolean;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 interface HandleSwitchToChildAccountProps {
@@ -27,7 +26,7 @@ interface HandleSwitchToChildAccountProps {
   euuid: string;
   event: React.MouseEvent<HTMLElement>;
   onClose: (e: React.SyntheticEvent<HTMLElement>) => void;
-  userType: UserType | undefined;
+  userType: undefined | UserType;
 }
 
 export const SwitchAccountDrawer = (props: Props) => {
@@ -124,12 +123,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   }, [onClose, revokeToken, validateParentToken, updateCurrentToken]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Switch Account"
-    >
+    <Drawer onClose={onClose} open={open} title="Switch Account">
       {createTokenErrorReason && (
         <Notice text={createTokenErrorReason} variant="error" />
       )}
@@ -146,12 +140,12 @@ export const SwitchAccountDrawer = (props: Props) => {
           <>
             {' or '}
             <StyledLinkButton
+              aria-label="parent-account-link"
+              disabled={isSubmitting}
               onClick={() => {
                 sendSwitchToParentAccountEvent();
                 handleSwitchToParentAccount();
               }}
-              aria-label="parent-account-link"
-              disabled={isSubmitting}
             >
               switch back to your account
             </StyledLinkButton>

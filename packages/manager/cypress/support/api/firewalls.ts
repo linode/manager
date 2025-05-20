@@ -1,15 +1,11 @@
-import {
-  Firewall,
-  deleteFirewall,
-  getFirewalls,
-  createFirewall,
-  FirewallRules,
-} from '@linode/api-v4';
+import { createFirewall, deleteFirewall, getFirewalls } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 import { randomLabel } from 'support/util/random';
 
 import { isTestLabel } from './common';
+
+import type { Firewall, FirewallRules } from '@linode/api-v4';
 
 /**
  * Determines if Firewall rules are sufficiently locked down to use for a test resource.

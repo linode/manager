@@ -222,7 +222,7 @@ export const importDomain = (mockState: MockState) => [
 export const deleteDomains = (mockState: MockState) => [
   http.delete(
     '*/v4/domains/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const domain = await mswDB.get('domains', id);
 

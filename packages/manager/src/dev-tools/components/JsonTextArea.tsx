@@ -66,13 +66,13 @@ export const JsonTextArea = ({
     <label>
       {label || name}
       <textarea
+        name={name}
+        onChange={handleChange}
         style={{
           fontFamily: 'monospace',
           minHeight: height ? `${height}px` : undefined,
           whiteSpace: 'pre',
         }}
-        name={name}
-        onChange={handleChange}
         value={rawText}
       />
     </label>

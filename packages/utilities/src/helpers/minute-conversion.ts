@@ -18,7 +18,7 @@ import { pluralize } from './pluralize';
 export const convertMinutesTo = (
   minutes: number,
   conversion: 'days' | 'hours',
-  includeRemainder: boolean = false
+  includeRemainder: boolean = false,
 ): string => {
   if (conversion === 'hours') {
     return includeRemainder
@@ -45,27 +45,27 @@ export const generateMigrationTimeString = (migrationTimeInMins: number) => {
     const daysAndMinutes = convertMinutesTo(
       migrationTimeInMins,
       'days',
-      true
+      true,
     ).split(',');
 
     if (+daysAndMinutes[1] >= 60) {
       const [hours, minutes] = convertMinutesTo(
         +daysAndMinutes[1],
         'hours',
-        true
+        true,
       ).split(',');
 
       return `${pluralize('day', 'days', +daysAndMinutes[0])}, ${pluralize(
         'hour',
         'hours',
-        +hours
+        +hours,
       )}, and ${pluralize('minute', 'minutes', +minutes)}`;
     }
 
     return `${pluralize('day', 'days', +daysAndMinutes[0])} and ${pluralize(
       'minute',
       'minutes',
-      +daysAndMinutes[1]
+      +daysAndMinutes[1],
     )}`;
   }
 
@@ -74,13 +74,13 @@ export const generateMigrationTimeString = (migrationTimeInMins: number) => {
     const hoursAndMinutes = convertMinutesTo(
       migrationTimeInMins,
       'hours',
-      true
+      true,
     ).split(',');
 
     return `${pluralize('hour', 'hours', +hoursAndMinutes[0])} and ${pluralize(
       'minute',
       'minutes',
-      +hoursAndMinutes[1]
+      +hoursAndMinutes[1],
     )}`;
   }
 
@@ -101,7 +101,7 @@ export const formatEventSeconds = (seconds: null | number) => {
       : `${pluralize('hour', 'hours', hours)}, ${pluralize(
           'minute',
           'minutes',
-          minutes
+          minutes,
         )}`;
   }
 
@@ -114,7 +114,7 @@ export const formatEventSeconds = (seconds: null | number) => {
       : `${pluralize('minute', 'minutes', minutes)}, ${pluralize(
           'second',
           'seconds',
-          secs
+          secs,
         )}`;
   }
 

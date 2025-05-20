@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -23,23 +23,19 @@ export const gettingStartedGuides: ResourcesLinkSection = {
     },
     {
       text: 'Using the Linode CLI with Object Storage',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/using-the-linode-cli-with-object-storage',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/using-the-linode-cli-with-object-storage',
     },
     {
       text: 'Use Object Storage with s3cmd',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/using-s3cmd-with-object-storage',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/using-s3cmd-with-object-storage',
     },
     {
       text: 'Use Object Storage with s4cmd',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/using-s4cmd-with-object-storage',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/using-s4cmd-with-object-storage',
     },
     {
       text: 'Use Object Storage with Cyberduck',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/using-cyberduck-with-object-storage',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/using-cyberduck-with-object-storage',
     },
   ],
   moreInfo: {

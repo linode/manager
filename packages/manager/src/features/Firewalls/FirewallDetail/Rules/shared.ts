@@ -1,5 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
+
+import type { APIError } from '@linode/api-v4/lib/types';
 export type Category = 'inbound' | 'outbound';
 
 export interface FirewallRuleError {

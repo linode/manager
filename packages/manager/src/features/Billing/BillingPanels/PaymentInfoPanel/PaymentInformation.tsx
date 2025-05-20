@@ -1,4 +1,5 @@
 import { deletePaymentMethod } from '@linode/api-v4/lib/account';
+import { accountQueries } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -10,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { PaymentMethods } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
 import { ADD_PAYMENT_METHOD } from 'src/features/Billing/constants';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { accountQueries } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -18,7 +18,7 @@ import {
   BillingBox,
   BillingPaper,
 } from '../../BillingDetail';
-import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
+import { AddPaymentMethodDrawer } from './AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
 import type { Profile } from '@linode/api-v4';
 import type { PaymentMethod } from '@linode/api-v4/lib/account';
@@ -36,15 +36,12 @@ const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [deleteDialogOpen, setDeleteDialogOpen] =
+    React.useState<boolean>(false);
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
-  const [
-    deletePaymentMethodSelection,
-    setDeletePaymentMethodSelection,
-  ] = React.useState<PaymentMethod | undefined>();
+  const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
+    React.useState<PaymentMethod | undefined>();
   const { replace } = useHistory();
   const queryClient = useQueryClient();
   const drawerLink = '/account/billing/add-payment-method';
@@ -111,17 +108,17 @@ const PaymentInformation = (props: Props) => {
           <Typography variant="h3">Payment Methods</Typography>
           {!isAkamaiCustomer ? (
             <BillingActionButton
+              data-testid="payment-info-add-payment-method"
+              disabled={isReadOnly}
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+              onClick={() => replace(drawerLink)}
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
                 isChildUser,
                 resourceType: 'Account',
               })}
-              data-testid="payment-info-add-payment-method"
-              disableFocusRipple
-              disableRipple
-              disableTouchRipple
-              disabled={isReadOnly}
-              onClick={() => replace(drawerLink)}
             >
               {ADD_PAYMENT_METHOD}
             </BillingActionButton>

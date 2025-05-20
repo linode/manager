@@ -20,7 +20,7 @@ const defaultProps: DialogTitleProps = {
 describe('DialogTitle', () => {
   it('should render title, subtitle and id', () => {
     const { getByRole, getByText } = renderWithTheme(
-      <DialogTitle {...defaultProps} />
+      <DialogTitle {...defaultProps} />,
     );
     expect(getByText(mockTitle)).toBeVisible();
     expect(getByText(mockSubtitle)).toBeVisible();
@@ -30,7 +30,7 @@ describe('DialogTitle', () => {
 
   it('should not render title when isFetching is true', () => {
     const { queryByText } = renderWithTheme(
-      <DialogTitle isFetching {...defaultProps} />
+      <DialogTitle isFetching {...defaultProps} />,
     );
     expect(queryByText(mockTitle)).not.toBeInTheDocument();
   });
@@ -41,7 +41,7 @@ describe('DialogTitle', () => {
       <DialogTitle
         onClose={onCloseMock({}, 'escapeKeyDown')}
         {...defaultProps}
-      />
+      />,
     );
     const closeButton = getByRole('button', {
       name: 'Close',

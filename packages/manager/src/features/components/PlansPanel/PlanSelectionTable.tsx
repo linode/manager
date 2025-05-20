@@ -17,8 +17,8 @@ import type { TooltipIconStatus } from '@linode/ui';
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
-  planType?: LinodeTypeClass;
   plans?: PlanWithAvailability[];
+  planType?: LinodeTypeClass;
   renderPlanSelection: (
     filterOptions?: PlanSelectionFilterOptionsTable | undefined
   ) => React.JSX.Element[];
@@ -83,6 +83,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
   ) => {
     return (
       <TooltipIcon
+        status={status}
         sxTooltipIcon={{
           height: 12,
           marginTop: '-2px',
@@ -90,7 +91,6 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
           px: 0,
           py: 0,
         }}
-        status={status}
         text={text}
         width={width}
       />

@@ -11,7 +11,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { ErrorMessage } from 'src/components/ErrorMessage';
-import { NotFound } from 'src/components/NotFound';
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
@@ -141,7 +140,6 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={onClose}
       open={open}
       title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}

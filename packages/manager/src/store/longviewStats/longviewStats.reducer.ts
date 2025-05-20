@@ -1,12 +1,12 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
-import {
+import { requestClientStats } from './longviewStats.actions';
+
+import type { RelationalDataSet } from '../types';
+import type {
   LongviewNotification,
   LongviewResponse,
 } from 'src/features/Longview/request.types';
-
-import { RelationalDataSet } from '../types';
-import { requestClientStats } from './longviewStats.actions';
 
 export type State = RelationalDataSet<
   LongviewResponse['DATA'],

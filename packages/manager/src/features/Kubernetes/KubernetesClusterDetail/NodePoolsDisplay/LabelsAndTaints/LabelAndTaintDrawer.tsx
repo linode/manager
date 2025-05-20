@@ -11,7 +11,6 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
@@ -48,18 +47,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
     nodePool?.id ?? -1
   );
 
-  const {
-    control,
-    formState,
-    setValue,
-    watch,
-    ...form
-  } = useForm<LabelsAndTaintsFormFields>({
-    defaultValues: {
-      labels: undefined,
-      taints: undefined,
-    },
-  });
+  const { control, formState, setValue, watch, ...form } =
+    useForm<LabelsAndTaintsFormFields>({
+      defaultValues: {
+        labels: undefined,
+        taints: undefined,
+      },
+    });
 
   React.useEffect(() => {
     if (!nodePool) {
@@ -121,7 +115,6 @@ export const LabelAndTaintDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Labels and Taints: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
@@ -166,13 +159,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
           </Typography>
           <LabelTable />
           <Button
+            buttonType="outlined"
+            disabled={shouldShowLabelForm}
             onClick={() => {
               {
                 setShouldShowLabelForm(true);
               }
             }}
-            buttonType="outlined"
-            disabled={shouldShowLabelForm}
           >
             Add Label
           </Button>
@@ -200,13 +193,13 @@ export const LabelAndTaintDrawer = (props: Props) => {
           </Typography>
           <TaintTable />
           <Button
+            buttonType="outlined"
+            disabled={shouldShowTaintForm}
             onClick={() => {
               {
                 setShouldShowTaintForm(true);
               }
             }}
-            buttonType="outlined"
-            disabled={shouldShowTaintForm}
           >
             Add Taint
           </Button>

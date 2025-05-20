@@ -1,13 +1,15 @@
 import { nodeBalancerConfigNodeSchema } from '@linode/validation/lib/nodebalancers.schema';
+
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { ResourcePage as Page } from '../types';
-import {
+import { mergeAddressAndPort } from './utils';
+
+import type { ResourcePage as Page } from '../types';
+import type {
   CreateNodeBalancerConfigNode,
   NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode,
 } from './types';
-import { mergeAddressAndPort } from './utils';
 
 /**
  * getNodeBalancerConfigNodes
@@ -20,15 +22,15 @@ import { mergeAddressAndPort } from './utils';
  */
 export const getNodeBalancerConfigNodes = (
   nodeBalancerId: number,
-  configId: number
+  configId: number,
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/nodes`
-    )
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/nodes`,
+    ),
   );
 
 /**
@@ -42,15 +44,15 @@ export const getNodeBalancerConfigNodes = (
  */
 export const getNodeBalancerConfigNodesBeta = (
   nodeBalancerId: number,
-  configId: number
+  configId: number,
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/nodes`
-    )
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/nodes`,
+    ),
   );
 
 /**
@@ -65,17 +67,17 @@ export const getNodeBalancerConfigNodesBeta = (
 export const getNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number
+  nodeId: number,
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
+        nodeBalancerId,
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
-        nodeId
-      )}`
-    )
+        nodeId,
+      )}`,
+    ),
   );
 /**
  * getNodeBalancerConfigNodeBeta
@@ -91,17 +93,17 @@ export const getNodeBalancerConfigNode = (
 export const getNodeBalancerConfigNodeBeta = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number
+  nodeId: number,
 ) =>
   Request<Page<NodeBalancerConfigNode>>(
     setMethod('GET'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
+        nodeBalancerId,
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
-        nodeId
-      )}`
-    )
+        nodeId,
+      )}`,
+    ),
   );
 /**
  * createNodeBalancerConfigNode
@@ -130,16 +132,16 @@ export const getNodeBalancerConfigNodeBeta = (
 export const createNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  data: CreateNodeBalancerConfigNode
+  data: CreateNodeBalancerConfigNode,
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('POST'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/nodes`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/nodes`,
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort),
   );
 
 /**
@@ -157,16 +159,16 @@ export const createNodeBalancerConfigNode = (
 export const createNodeBalancerConfigNodeBeta = (
   nodeBalancerId: number,
   configId: number,
-  data: CreateNodeBalancerConfigNode
+  data: CreateNodeBalancerConfigNode,
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
-      )}/configs/${encodeURIComponent(configId)}/nodes`
+        nodeBalancerId,
+      )}/configs/${encodeURIComponent(configId)}/nodes`,
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort),
   );
 
 /**
@@ -196,18 +198,18 @@ export const updateNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
   nodeId: number,
-  data: UpdateNodeBalancerConfigNode
+  data: UpdateNodeBalancerConfigNode,
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('PUT'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
+        nodeBalancerId,
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
-        nodeId
-      )}`
+        nodeId,
+      )}`,
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort),
   );
 
 /**
@@ -225,18 +227,18 @@ export const updateNodeBalancerConfigNodeBeta = (
   nodeBalancerId: number,
   configId: number,
   nodeId: number,
-  data: UpdateNodeBalancerConfigNode
+  data: UpdateNodeBalancerConfigNode,
 ) =>
   Request<NodeBalancerConfigNode>(
     setMethod('PUT'),
     setURL(
       `${BETA_API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
+        nodeBalancerId,
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
-        nodeId
-      )}`
+        nodeId,
+      )}`,
     ),
-    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort)
+    setData(data, nodeBalancerConfigNodeSchema, mergeAddressAndPort),
   );
 /**
  * deleteNodeBalancerConfigNode
@@ -250,15 +252,15 @@ export const updateNodeBalancerConfigNodeBeta = (
 export const deleteNodeBalancerConfigNode = (
   nodeBalancerId: number,
   configId: number,
-  nodeId: number
+  nodeId: number,
 ) =>
   Request<{}>(
     setMethod('DELETE'),
     setURL(
       `${API_ROOT}/nodebalancers/${encodeURIComponent(
-        nodeBalancerId
+        nodeBalancerId,
       )}/configs/${encodeURIComponent(configId)}/nodes/${encodeURIComponent(
-        nodeId
-      )}`
-    )
+        nodeId,
+      )}`,
+    ),
   );

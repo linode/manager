@@ -1,9 +1,9 @@
 import { useVPCQuery, useVPCsQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -19,7 +19,6 @@ import {
   VPC_LANDING_TABLE_PREFERENCE_KEY,
 } from 'src/features/VPCs/constants';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -54,7 +53,11 @@ const VPCLanding = () => {
     ['+order_by']: orderBy,
   };
 
-  const { data: vpcs, error, isLoading } = useVPCsQuery(
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useVPCsQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -91,12 +94,11 @@ const VPCLanding = () => {
     globalGrantType: 'add_vpcs',
   });
 
-  const { data: selectedVPC, isFetching: isFetchingVPC } = useDialogData({
-    enabled: !!params.vpcId,
-    paramKey: 'vpcId',
-    queryHook: useVPCQuery,
-    redirectToOnNotFound: '/vpcs',
-  });
+  const {
+    data: selectedVPC,
+    isFetching: isFetchingVPC,
+    error: selectedVPCError,
+  } = useVPCQuery(params.vpcId ?? -1, !!params.vpcId);
 
   if (error) {
     return (
@@ -119,6 +121,7 @@ const VPCLanding = () => {
   return (
     <>
       <LandingHeader
+        breadcrumbProps={{ pathname: '/vpcs' }}
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
             action: 'create',
@@ -126,7 +129,6 @@ const VPCLanding = () => {
             resourceType: 'VPCs',
           }),
         }}
-        breadcrumbProps={{ pathname: '/vpcs' }}
         createButtonText="Create VPC"
         disabledCreateButton={isVPCCreationRestricted}
         docsLink={VPC_DOCS_LINK}
@@ -195,12 +197,14 @@ const VPCLanding = () => {
         onClose={onCloseVPCDrawer}
         open={params.action === 'delete'}
         vpc={selectedVPC}
+        vpcError={selectedVPCError}
       />
       <VPCEditDrawer
         isFetching={isFetchingVPC}
         onClose={onCloseVPCDrawer}
         open={params.action === 'edit'}
         vpc={selectedVPC}
+        vpcError={selectedVPCError}
       />
     </>
   );

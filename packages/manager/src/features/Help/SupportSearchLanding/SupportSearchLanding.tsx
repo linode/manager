@@ -70,18 +70,22 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
         }}
       >
         <H1Header
+          data-qa-support-search-landing-title
+          dataQaEl={queryString}
           title={
             queryString.length > 1
               ? `Search results for "${queryString}"`
               : 'Search'
           }
-          data-qa-support-search-landing-title
-          dataQaEl={queryString}
         />
       </Box>
       <Box>
         {searchError && <Notice variant="error">{searchError}</Notice>}
         <TextField
+          className={classes.searchBoxInner}
+          data-qa-search-landing-input
+          disabled={!searchEnabled}
+          hideLabel
           InputProps={{
             className: classes.searchBar,
             startAdornment: (
@@ -90,10 +94,6 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
               </InputAdornment>
             ),
           }}
-          className={classes.searchBoxInner}
-          data-qa-search-landing-input
-          disabled={!Boolean(searchEnabled)}
-          hideLabel
           label="Search Linode documentation and community questions"
           onChange={onInputChange}
           placeholder="Search Linode documentation and community questions"

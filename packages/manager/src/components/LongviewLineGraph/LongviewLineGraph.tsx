@@ -43,10 +43,10 @@ export const LongviewLineGraph = React.memo((props: LongViewLineGraphProps) => {
   const message = error // Error state is separate, don't want to put text on top of it
     ? undefined
     : loading // Loading takes precedence over empty data
-    ? 'Loading data...'
-    : isDataEmpty(props.data)
-    ? 'No data to display'
-    : undefined;
+      ? 'Loading data...'
+      : isDataEmpty(props.data)
+        ? 'No data to display'
+        : undefined;
 
   return (
     <React.Fragment>

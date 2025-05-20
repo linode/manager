@@ -1,10 +1,8 @@
 import { DateTime } from 'luxon';
 
-import {
-  Labels,
-  generateSelectOptions,
-  generateStartTime,
-} from './TimeRangeSelect';
+import { generateSelectOptions, generateStartTime } from './TimeRangeSelect';
+
+import type { Labels } from './TimeRangeSelect';
 
 describe('Utility Functions', () => {
   it('should return limited options if not longview pro', () => {

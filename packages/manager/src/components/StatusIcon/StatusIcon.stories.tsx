@@ -1,7 +1,8 @@
-import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
 import { StatusIcon } from './StatusIcon';
+
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof StatusIcon> = {
   component: StatusIcon,

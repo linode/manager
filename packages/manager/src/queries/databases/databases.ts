@@ -14,6 +14,7 @@ import {
   suspendDatabase,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
+import { profileQueries, queryPresets } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -23,11 +24,10 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { queryPresets, profileQueries } from '@linode/queries';
 import {
   getAllDatabaseEngines,
-  getAllDatabaseTypes,
   getAllDatabases,
+  getAllDatabaseTypes,
 } from './requests';
 
 import type {

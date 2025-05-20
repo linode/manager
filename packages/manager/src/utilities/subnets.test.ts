@@ -1,6 +1,6 @@
 import {
-  DEFAULT_SUBNET_IPV4_VALUE,
   calculateAvailableIPv4sRFC1918,
+  DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,
 } from './subnets';
 

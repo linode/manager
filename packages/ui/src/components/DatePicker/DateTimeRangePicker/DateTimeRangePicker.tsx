@@ -1,4 +1,4 @@
-import { Popover, useTheme, useMediaQuery } from '@mui/material';
+import { Popover, useMediaQuery, useTheme } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTime } from 'luxon';
@@ -33,10 +33,10 @@ export interface DateTimeRangePickerProps {
 
   /** Format for displaying the date-time */
   format?:
-    | 'MM/dd/yyyy HH:mm'
-    | 'MM/dd/yyyy hh:mm a'
     | 'dd-MM-yyyy HH:mm'
     | 'dd-MM-yyyy hh:mm a'
+    | 'MM/dd/yyyy HH:mm'
+    | 'MM/dd/yyyy hh:mm a'
     | 'yyyy-MM-dd HH:mm'
     | 'yyyy-MM-dd hh:mm a';
 
@@ -87,16 +87,16 @@ export const DateTimeRangePicker = ({
   sx,
 }: DateTimeRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
-    startDateProps?.value ?? null
+    startDateProps?.value ?? null,
   );
   const [selectedPreset, setSelectedPreset] = useState<null | string>(
-    presetsProps?.defaultValue ?? null
+    presetsProps?.defaultValue ?? null,
   );
   const [endDate, setEndDate] = useState<DateTime | null>(
-    endDateProps?.value ?? null
+    endDateProps?.value ?? null,
   );
   const [startDateError, setStartDateError] = useState(
-    startDateProps?.errorMessage
+    startDateProps?.errorMessage,
   );
   const [endDateError, setEndDateError] = useState(endDateProps?.errorMessage);
   const [open, setOpen] = useState(false);
@@ -113,7 +113,7 @@ export const DateTimeRangePicker = ({
 
   const handleOpen = (field: 'end' | 'start') => {
     setAnchorEl(
-      startDateInputRef.current?.parentElement || startDateInputRef.current
+      startDateInputRef.current?.parentElement || startDateInputRef.current,
     );
     setOpen(true);
     setFocusedField(field);
@@ -141,20 +141,20 @@ export const DateTimeRangePicker = ({
     setTimeZone(newTimeZone);
 
     setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
     );
     setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null
+      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
     );
   };
 
   const validateDates = (
     newStartDate: DateTime | null,
-    newEndDate: DateTime | null
+    newEndDate: DateTime | null,
   ) => {
     if (newStartDate && newEndDate && newStartDate > newEndDate) {
       setStartDateError(
-        'Start date must be earlier than or equal to end date.'
+        'Start date must be earlier than or equal to end date.',
       );
       setEndDateError('End date must be later than or equal to start date.');
     } else {
@@ -190,7 +190,7 @@ export const DateTimeRangePicker = ({
   const handlePresetSelect = (
     selectedStartDate: DateTime | null,
     selectedEndDate: DateTime | null,
-    selectedPresetLabel: null | string
+    selectedPresetLabel: null | string,
   ) => {
     setStartDate(selectedStartDate);
     setEndDate(selectedEndDate);
@@ -206,6 +206,10 @@ export const DateTimeRangePicker = ({
       <Box>
         <Stack direction="row" spacing={2} sx={sx}>
           <DateTimeField
+            errorText={startDateError}
+            format={format}
+            inputRef={startDateInputRef}
+            label={startDateProps?.label ?? 'Start Date'}
             onChange={(date) => {
               setStartDate(date);
 
@@ -215,21 +219,17 @@ export const DateTimeRangePicker = ({
               }
               setFocusedField('end'); // Automatically focus on end date
             }}
-            errorText={startDateError}
-            format={format}
-            inputRef={startDateInputRef}
-            label={startDateProps?.label ?? 'Start Date'}
             onClick={() => handleOpen('start')}
             value={startDate}
           />
           <DateTimeField
-            onChange={(date) => {
-              setEndDate(date);
-            }}
             errorText={endDateError}
             format={format}
             inputRef={endDateInputRef}
             label={endDateProps?.label ?? 'End Date'}
+            onChange={(date) => {
+              setEndDate(date);
+            }}
             onClick={() => handleOpen('end')}
             value={endDate}
           />
@@ -270,14 +270,14 @@ export const DateTimeRangePicker = ({
                   startDate={startDate}
                 />
                 <Calendar
-                  setMonth={(date) =>
-                    setCurrentMonth(date.minus({ months: 1 }))
-                  }
                   direction="right"
                   endDate={endDate}
                   focusedField={focusedField}
                   month={currentMonth.plus({ months: 1 })}
                   onDateClick={handleDateSelection}
+                  setMonth={(date) =>
+                    setCurrentMonth(date.minus({ months: 1 }))
+                  }
                   startDate={startDate}
                 />
               </Box>
@@ -288,6 +288,7 @@ export const DateTimeRangePicker = ({
                 paddingBottom={2}
               >
                 <TimePicker
+                  label="Start Time"
                   onChange={(newTime) => {
                     if (newTime) {
                       setStartDate(
@@ -295,14 +296,14 @@ export const DateTimeRangePicker = ({
                           prev?.set({
                             hour: newTime.hour,
                             minute: newTime.minute,
-                          }) ?? newTime
+                          }) ?? newTime,
                       );
                     }
                   }}
-                  label="Start Time"
                   value={startDate}
                 />
                 <TimePicker
+                  label="End Time"
                   onChange={(newTime) => {
                     if (newTime) {
                       setEndDate(
@@ -310,11 +311,10 @@ export const DateTimeRangePicker = ({
                           prev?.set({
                             hour: newTime.hour,
                             minute: newTime.minute,
-                          }) ?? newTime
+                          }) ?? newTime,
                       );
                     }
                   }}
-                  label="End Time"
                   value={endDate}
                 />
                 <TimeZoneSelect

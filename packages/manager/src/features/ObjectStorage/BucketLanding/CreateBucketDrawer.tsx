@@ -12,7 +12,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { NotFound } from 'src/components/NotFound';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
@@ -70,12 +69,10 @@ export const CreateBucketDrawer = (props: Props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: accountSettings } = useAccountSettings();
-  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] = React.useState(
-    false
-  );
-  const [hasSignedAgreement, setHasSignedAgreement] = React.useState<boolean>(
-    false
-  );
+  const [isEnableObjDialogOpen, setIsEnableObjDialogOpen] =
+    React.useState(false);
+  const [hasSignedAgreement, setHasSignedAgreement] =
+    React.useState<boolean>(false);
 
   const {
     control,
@@ -147,12 +144,7 @@ export const CreateBucketDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -165,6 +157,8 @@ export const CreateBucketDrawer = (props: Props) => {
           <Notice text={errors.root?.message} variant="error" />
         )}
         <Controller
+          control={control}
+          name="label"
           render={({ field, fieldState }) => (
             <TextField
               {...field}
@@ -176,11 +170,11 @@ export const CreateBucketDrawer = (props: Props) => {
               required
             />
           )}
-          control={control}
-          name="label"
           rules={{ required: 'Bucket name is required' }}
         />
         <Controller
+          control={control}
+          name="cluster"
           render={({ field, fieldState }) => (
             <ClusterSelect
               {...field}
@@ -192,8 +186,6 @@ export const CreateBucketDrawer = (props: Props) => {
               selectedCluster={field.value ?? undefined}
             />
           )}
-          control={control}
-          name="cluster"
           rules={{ required: 'Cluster is required' }}
         />
         {clusterRegion?.id && <OveragePricing regionId={clusterRegion.id} />}

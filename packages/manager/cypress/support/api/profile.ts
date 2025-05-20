@@ -1,14 +1,14 @@
 import {
-  OAuthClient,
   deleteOAuthClient,
-  getOAuthClients,
-  SSHKey,
   deleteSSHKey,
+  getOAuthClients,
   getSSHKeys,
 } from '@linode/api-v4';
 import { isTestLabel } from 'support/api/common';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
+
+import type { OAuthClient, SSHKey } from '@linode/api-v4';
 
 /**
  * Deletes all oauth apps which are prefixed with the test entity prefix.

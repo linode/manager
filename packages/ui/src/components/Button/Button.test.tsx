@@ -22,7 +22,7 @@ describe('Button', () => {
     const { getByTestId } = renderWithTheme(
       <Button disabled tooltipText="Test">
         Test
-      </Button>
+      </Button>,
     );
 
     const helpIcon = getByTestId('HelpOutlineIcon');
@@ -46,7 +46,7 @@ describe('Button', () => {
     const { getByTestId } = renderWithTheme(
       <Button disabled tooltipText="Test tooltip">
         Test
-      </Button>
+      </Button>,
     );
 
     const button = getByTestId('button');

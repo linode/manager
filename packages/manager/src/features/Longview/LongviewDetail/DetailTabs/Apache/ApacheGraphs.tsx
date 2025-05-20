@@ -90,6 +90,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
       <Grid container direction="column" spacing={0}>
         <Grid size={{ xs: 12 }}>
           <LongviewLineGraph
+            ariaLabel="Requests Per Second Graph"
             data={[
               {
                 backgroundColor: theme.graphs.requests,
@@ -98,7 +99,6 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 label: 'Requests',
               },
             ]}
-            ariaLabel="Requests Per Second Graph"
             subtitle="requests/s"
             title="Requests"
             {...graphProps}
@@ -108,6 +108,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
           <Grid container direction="row">
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Throughput Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.lightGreen,
@@ -124,7 +125,6 @@ export const ApacheGraphs = React.memo((props: Props) => {
                 formatData={(value: number) =>
                   roundTo(convertNetworkToUnit(value * 8, networkUnit))
                 }
-                ariaLabel="Throughput Graph"
                 formatTooltip={formatNetworkTooltip}
                 subtitle={`${networkUnit}/s`}
                 title="Throughput"
@@ -134,6 +134,7 @@ export const ApacheGraphs = React.memo((props: Props) => {
             </StyledSmallGraphGrid>
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Workers Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.workers.waiting,
@@ -196,7 +197,6 @@ export const ApacheGraphs = React.memo((props: Props) => {
                     label: 'Cleanup',
                   },
                 ]}
-                ariaLabel="Workers Graph"
                 title="Workers"
                 {...graphProps}
               />

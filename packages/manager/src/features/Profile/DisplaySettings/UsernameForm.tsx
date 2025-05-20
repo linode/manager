@@ -1,10 +1,10 @@
+import { useProfile, useUpdateUserMutation } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
-import { useUpdateUserMutation, useProfile } from '@linode/queries';
 
 import { SingleTextFieldFormContainer } from './TimezoneForm';
 
@@ -34,8 +34,8 @@ export const UsernameForm = () => {
   const tooltipForDisabledUsernameField = profile?.restricted
     ? 'Restricted users cannot update their username. Please contact an account administrator.'
     : profile?.user_type === 'proxy'
-    ? RESTRICTED_FIELD_TOOLTIP
-    : undefined;
+      ? RESTRICTED_FIELD_TOOLTIP
+      : undefined;
 
   const onSubmit = async (values: Values) => {
     try {
@@ -53,6 +53,8 @@ export const UsernameForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <SingleTextFieldFormContainer>
         <Controller
+          control={control}
+          name="username"
           render={({ field, fieldState }) => (
             <TextField
               containerProps={{
@@ -70,8 +72,6 @@ export const UsernameForm = () => {
               value={field.value}
             />
           )}
-          control={control}
-          name="username"
         />
         <Button
           buttonType="primary"

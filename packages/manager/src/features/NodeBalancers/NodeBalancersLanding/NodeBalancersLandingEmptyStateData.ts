@@ -5,8 +5,8 @@ import {
 
 import type {
   ResourcesHeaders,
-  ResourcesLinkSection,
   ResourcesLinks,
+  ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
 export const headers: ResourcesHeaders = {
@@ -20,18 +20,15 @@ export const gettingStartedGuides: ResourcesLinkSection = {
   links: [
     {
       text: 'Getting Started with NodeBalancers',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers',
     },
     {
       text: 'Create a NodeBalancer',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/create-a-nodebalancer',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/create-a-nodebalancer',
     },
     {
       text: 'Configuration Options for NodeBalancers',
-      to:
-        'https://techdocs.akamai.com/cloud-computing/docs/configuration-options-for-nodebalancers',
+      to: 'https://techdocs.akamai.com/cloud-computing/docs/configuration-options-for-nodebalancers',
     },
   ],
   moreInfo: {
@@ -45,14 +42,12 @@ export const youtubeLinkData: ResourcesLinkSection = {
   links: [
     {
       external: true,
-      text:
-        'Getting Started With NodeBalancers | How To Prepare For High Server Traffic',
+      text: 'Getting Started With NodeBalancers | How To Prepare For High Server Traffic',
       to: 'https://www.youtube.com/watch?v=JlXgl_rtM_s',
     },
     {
       external: true,
-      text:
-        'Linode NodeBalancers Explained | Manage Scale with Transparent Load Distribution',
+      text: 'Linode NodeBalancers Explained | Manage Scale with Transparent Load Distribution',
       to: 'https://www.youtube.com/watch?v=U6xxgydIG9w',
     },
     {

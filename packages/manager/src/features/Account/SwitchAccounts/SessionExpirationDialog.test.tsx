@@ -28,7 +28,6 @@ const mockHistory = {
 const realLocation = window.location;
 
 afterAll(() => {
-  // eslint-disable-next-line
   window.location = realLocation;
 });
 
@@ -73,7 +72,7 @@ describe('SessionExpirationDialog', () => {
     // See this blog post: https://remarkablemark.org/blog/2018/11/17/mock-window-location/
     const mockReload = vi.fn();
     delete (window as Partial<Window>).location;
-    // eslint-disable-next-line
+
     window.location = { ...realLocation, reload: mockReload };
 
     const { getByText } = renderWithTheme(

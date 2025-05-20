@@ -77,7 +77,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
 
     // Check for the actual linode labels from the mock data
     expect(
@@ -107,7 +107,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', { name: SELECT_ALL })
     );
@@ -139,7 +139,7 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
     await userEvent.click(
       await screen.findByRole('option', { name: SELECT_ALL })
     );
@@ -174,11 +174,11 @@ describe('CloudPulseResourcesSelect component tests', () => {
       />
     );
 
-    userEvent.click(await screen.findByRole('button', { name: 'Open' }));
-    userEvent.click(
+    await userEvent.click(await screen.findByRole('button', { name: 'Open' }));
+    await userEvent.click(
       await screen.findByRole('option', { name: mockLinodes[0].label })
     );
-    userEvent.click(
+    await userEvent.click(
       await screen.findByRole('option', { name: mockLinodes[1].label })
     );
 

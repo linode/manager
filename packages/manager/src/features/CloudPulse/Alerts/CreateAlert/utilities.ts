@@ -120,12 +120,12 @@ export const convertToSeconds = (secondsList: string[]) => {
     const unit = second.slice(-1)[0];
     const number = parseInt(second.slice(0, -1), 10);
     switch (unit) {
-      case 's':
-        return number;
-      case 'm':
-        return number * 60;
       case 'h':
         return number * 3600;
+      case 'm':
+        return number * 60;
+      case 's':
+        return number;
       default:
         return number * 0;
     }

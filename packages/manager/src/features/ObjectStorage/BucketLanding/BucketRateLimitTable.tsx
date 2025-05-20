@@ -96,12 +96,12 @@ export const BucketRateLimitTable = ({
               {tableHeaders.map((header, index) => {
                 return (
                   <TableCell
+                    key={`${index}-${header}`}
                     sx={{
                       '&&:last-child': {
                         paddingRight: 2,
                       },
                     }}
-                    key={`${index}-${header}`}
                   >
                     {header}
                   </TableCell>
@@ -128,12 +128,12 @@ export const BucketRateLimitTable = ({
                 {row.values.map((value, index) => {
                   return (
                     <TableCell
+                      key={`${index}-${value}`}
                       sx={{
                         '&&:last-child': {
                           paddingRight: 2,
                         },
                       }}
-                      key={`${index}-${value}`}
                     >
                       {value}
                     </TableCell>

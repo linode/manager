@@ -1,8 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
+
 import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { useIsDatabasesEnabled } from '../utilities';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
-import { IsDatabasesEnabled, useIsDatabasesEnabled } from '../utilities';
+
+import type { IsDatabasesEnabled } from '../utilities';
 
 vi.mock('src/features/Databases/utilities');
 

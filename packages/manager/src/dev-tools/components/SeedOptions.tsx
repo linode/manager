@@ -40,6 +40,9 @@ export const SeedOptions = ({
                 </label>
                 {dbSeeder.canUpdateCount && (
                   <input
+                    aria-label={`Value for ${dbSeeder.label}`}
+                    disabled={disabled || !seeders.includes(dbSeeder.id)}
+                    min={0}
                     onBlur={(e) => {
                       const value = e.target.value;
                       if (value === '') {
@@ -60,9 +63,6 @@ export const SeedOptions = ({
                         e.target.value = '';
                       }
                     }}
-                    aria-label={`Value for ${dbSeeder.label}`}
-                    disabled={disabled || !seeders.includes(dbSeeder.id)}
-                    min={0}
                     style={{ marginLeft: 8, width: 60 }}
                     type="number"
                     value={seedsCountMap[dbSeeder.id] || '0'}

@@ -26,10 +26,8 @@ export const ControlledExample: Story = {
   },
   render: (args) => {
     const ControlledDateTimePicker = () => {
-      const [
-        selectedDateTime,
-        setSelectedDateTime,
-      ] = React.useState<DateTime | null>(args.value || null);
+      const [selectedDateTime, setSelectedDateTime] =
+        React.useState<DateTime | null>(args.value || null);
 
       const handleChange = (newDateTime: DateTime | null) => {
         setSelectedDateTime(newDateTime);

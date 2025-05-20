@@ -77,10 +77,10 @@ export const DatabaseSettingsSuspendClusterDialog = (
 
   return (
     <ConfirmationDialog
+      actions={actions}
       error={
         error ? getAPIErrorOrDefault(error, defaultError)[0].reason : undefined
       }
-      actions={actions}
       maxWidth="sm"
       onClose={onClose}
       open={open}

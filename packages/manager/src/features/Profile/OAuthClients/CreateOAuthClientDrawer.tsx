@@ -11,7 +11,6 @@ import {
 import { useFormik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { OAuthClientRequest } from '@linode/api-v4';
@@ -56,12 +55,7 @@ export const CreateOAuthClientDrawer = ({
   const hasErrorFor = getAPIErrorFor(errorResources, error ?? undefined);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={onClose}
-      open={open}
-      title="Create OAuth App"
-    >
+    <Drawer onClose={onClose} open={open} title="Create OAuth App">
       {hasErrorFor('none') && (
         <Notice text={hasErrorFor('none')} variant="error" />
       )}

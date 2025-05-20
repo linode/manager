@@ -4,8 +4,8 @@ import type {
   Firewall,
   FirewallDevice,
   FirewallDeviceEntityType,
-  FirewallRuleType,
   FirewallRules,
+  FirewallRuleType,
   FirewallSettings,
   FirewallTemplate,
   FirewallTemplateRules,
@@ -32,14 +32,13 @@ export const firewallRulesFactory = Factory.Sync.makeFactory<FirewallRules>({
   version: 1,
 });
 
-export const firewallTemplateRulesFactory = Factory.Sync.makeFactory<FirewallTemplateRules>(
-  {
+export const firewallTemplateRulesFactory =
+  Factory.Sync.makeFactory<FirewallTemplateRules>({
     inbound: firewallRuleFactory.buildList(1),
     inbound_policy: 'DROP',
     outbound: firewallRuleFactory.buildList(1),
     outbound_policy: 'ACCEPT',
-  }
-);
+  });
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   created: '2020-01-01 00:00:00',
@@ -71,20 +70,18 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   updated: '2020-01-01',
 });
 
-export const firewallTemplateFactory = Factory.Sync.makeFactory<FirewallTemplate>(
-  {
+export const firewallTemplateFactory =
+  Factory.Sync.makeFactory<FirewallTemplate>({
     rules: firewallTemplateRulesFactory.build(),
     slug: 'akamai-non-prod',
-  }
-);
+  });
 
-export const firewallSettingsFactory = Factory.Sync.makeFactory<FirewallSettings>(
-  {
+export const firewallSettingsFactory =
+  Factory.Sync.makeFactory<FirewallSettings>({
     default_firewall_ids: {
       linode: 1,
       nodebalancer: 1,
       public_interface: 1,
       vpc_interface: 1,
     },
-  }
-);
+  });

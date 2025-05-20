@@ -1,6 +1,6 @@
 import { actionCreatorFactory } from 'typescript-fsa';
 
-import { State } from './types';
+import type { State } from './types';
 
 export const actionCreator = actionCreatorFactory('@@manager/globalErrors');
 

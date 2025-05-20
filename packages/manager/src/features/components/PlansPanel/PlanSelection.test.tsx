@@ -132,7 +132,7 @@ describe('PlanSelection (table, desktop)', () => {
             ...mockPlan,
             class: 'dedicated',
             id: 'g6-dedicated-edge-2',
-            // eslint-disable-next-line camelcase
+
             network_out: 4000,
           }}
           selectedRegionId={'us-den-1'}

@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountSettingsFactory } from 'src/factories';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { InterfaceGeneration } from './InterfaceGeneration';
@@ -19,13 +19,10 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <InterfaceGeneration />,
-    });
+    const { findByText, getAllByRole, getByText } =
+      renderWithThemeAndHookFormContext({
+        component: <InterfaceGeneration />,
+      });
 
     const button = getByText('Network Interface Type');
 
@@ -55,13 +52,10 @@ describe('InterfaceGeneration', () => {
       })
     );
 
-    const {
-      findByText,
-      getAllByRole,
-      getByText,
-    } = renderWithThemeAndHookFormContext({
-      component: <InterfaceGeneration />,
-    });
+    const { findByText, getAllByRole, getByText } =
+      renderWithThemeAndHookFormContext({
+        component: <InterfaceGeneration />,
+      });
 
     const button = getByText('Network Interface Type');
 
