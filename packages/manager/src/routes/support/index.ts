@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { SupportTicketsRoute } from './SupportRoute';
@@ -16,7 +16,6 @@ export interface SupportState {
 }
 
 const supportRoute = createRoute({
-  // TODO: TanStackRouter - got to handle the MainContent.tsx `globalErrors.account_unactivated` logic.
   component: SupportTicketsRoute,
   getParentRoute: () => rootRoute,
   path: 'support',
@@ -73,6 +72,12 @@ const supportSearchLandingRoute = createRoute({
 );
 
 export const accountActivationLandingRoute = createRoute({
+  beforeLoad: async ({ context }) => {
+    if (!context.globalErrors?.account_unactivated) {
+      throw redirect({ to: '/' });
+    }
+    return true;
+  },
   getParentRoute: () => rootRoute,
   path: 'account-activation',
 }).lazy(() =>

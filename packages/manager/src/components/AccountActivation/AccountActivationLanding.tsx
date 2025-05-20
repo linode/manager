@@ -41,7 +41,7 @@ export const AccountActivationLanding = () => {
         errorText={
           <React.Fragment>
             <Typography
-              sx={(theme) => ({ marginBottom: theme.spacing(2) })}
+              sx={(theme) => ({ marginBottom: theme.spacingFunction(16) })}
               variant="h2"
             >
               Your account is currently being reviewed.
