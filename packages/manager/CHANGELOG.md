@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Incorrect LKE cluster pricing
+- Incorrect LKE cluster pricing ([#12253](https://github.com/linode/manager/pull/12253))
 
 ## [2025-05-20] - v1.142.0
 
