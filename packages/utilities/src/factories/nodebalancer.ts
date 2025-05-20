@@ -6,8 +6,8 @@ import type {
   NodeBalancerConfig,
   NodeBalancerConfigNode,
   NodeBalancerStats,
-  NodebalancerVpcConfig,
-} from '@linode/api-v4/lib/nodebalancers/types';
+  NodeBalancerVpcConfig,
+} from '@linode/api-v4';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   client_conn_throttle: 0,
@@ -25,6 +25,8 @@ export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
     total: 0,
   },
   updated: '2019-12-13T00:00:00',
+  lke_cluster: null,
+  type: 'common',
 });
 
 export const nodeBalancerConfigFactory =
@@ -62,10 +64,11 @@ export const nodeBalancerConfigNodeFactory =
     nodebalancer_id: Factory.each((id) => id),
     status: 'DOWN',
     weight: 100,
+    vpc_config_id: null,
   });
 
 export const nodeBalancerConfigVPCFactory =
-  Factory.Sync.makeFactory<NodebalancerVpcConfig>({
+  Factory.Sync.makeFactory<NodeBalancerVpcConfig>({
     id: Factory.each((i) => i),
     ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
     ipv6_range: null,
