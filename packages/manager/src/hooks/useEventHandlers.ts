@@ -1,5 +1,4 @@
 import {
-  domainEventsHandler,
   firewallEventsHandler,
   imageEventsHandler,
   nodebalancerEventHandler,
@@ -12,6 +11,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 
 import { databaseEventsHandler } from 'src/queries/databases/events';
+import { domainEventsHandler } from 'src/queries/domains';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
 import { supportTicketEventHandler } from 'src/queries/support';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
