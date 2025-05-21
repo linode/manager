@@ -1,5 +1,6 @@
 export * from './account';
 export * from './base';
+export * from './domains';
 export * from './eventHandlers';
 export * from './firewalls';
 export * from './images';
