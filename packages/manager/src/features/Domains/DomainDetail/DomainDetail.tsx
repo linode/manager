@@ -1,4 +1,9 @@
 import {
+  useDomainQuery,
+  useDomainRecordsQuery,
+  useUpdateDomainMutation,
+} from '@linode/queries';
+import {
   CircleProgress,
   ErrorState,
   Notice,
@@ -14,11 +19,6 @@ import * as React from 'react';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import {
-  useDomainQuery,
-  useDomainRecordsQuery,
-  useUpdateDomainMutation,
-} from 'src/queries/domains';
 
 import { DeleteDomain } from '../DeleteDomain';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';

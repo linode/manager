@@ -1,13 +1,15 @@
-import { useAllLinodesQuery } from '@linode/queries';
-import { useAllFirewallsQuery } from '@linode/queries';
-import { useAllVolumesQuery } from '@linode/queries';
-import { useAllNodeBalancersQuery } from '@linode/queries';
-import { useAllAccountStackScriptsQuery } from '@linode/queries';
-import { useAllImagesQuery } from '@linode/queries';
+import {
+  useAllAccountStackScriptsQuery,
+  useAllDomainsQuery,
+  useAllFirewallsQuery,
+  useAllImagesQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVolumesQuery,
+} from '@linode/queries';
 
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
