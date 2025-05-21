@@ -16,11 +16,6 @@ interface ImportMetaEnv {
   REACT_APP_CLIENT_ID?: string;
   REACT_APP_DISABLE_EVENT_THROTTLE?: boolean;
   REACT_APP_DISABLE_NEW_RELIC?: boolean;
-  /**
-   * An comma seperated list of region IDs.
-   * Used to prevent images from bring replicated to some regions.
-   */
-  REACT_APP_DISALLOWED_IMAGE_REGIONS?: string;
   REACT_APP_ENABLE_DEV_TOOLS?: boolean;
   REACT_APP_ENABLE_MAINTENANCE_MODE?: string;
   REACT_APP_FORCE_SEARCH_TYPE?: 'api' | 'client';

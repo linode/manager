@@ -11,6 +11,7 @@ import type { Resolver } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { ImageRegionRow } from './ImageRegionRow';
@@ -22,7 +23,6 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
-import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 
 interface Props {
   image: Image | undefined;
@@ -91,7 +91,6 @@ export const ManageImageReplicasForm = (props: Props) => {
    */
   const regionsEligibleForReplication = regions?.filter(
     (r) =>
-      r.site_type === 'core' &&
       r.capabilities.includes('Object Storage') &&
       !DISALLOWED_IMAGE_REGIONS.includes(r.id)
   );
