@@ -10,6 +10,7 @@ import {
 import { extendType } from 'src/utilities/extendType';
 
 import {
+  compareByKubernetesVersion,
   getLatestVersion,
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
@@ -69,6 +70,106 @@ afterEach(() => {
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
     type: 'not-a-real-type',
+  });
+
+  describe('compareByKubernetesVersion', () => {
+    it('should identify the later standard tier major version as greater', () => {
+      const result = compareByKubernetesVersion('2.0.0', '1.0.0', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier minor version as greater', () => {
+      const result = compareByKubernetesVersion('1.2.0', '1.1.0', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier patch version as greater', () => {
+      const result = compareByKubernetesVersion('1.1.2', '1.1.1', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier major version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v2.0.0+lke1',
+        'v1.0.0+lke2',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier minor version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.2.0+lke1',
+        'v1.1.0+lke2',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later enterprise tier patch version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.1.2+lke1',
+        'v1.1.1+lke1',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the enterprise tier patch version with the later enterprise release version as greater', () => {
+      const result = compareByKubernetesVersion(
+        'v1.1.1+lke2',
+        'v1.1.1+lke1',
+        'asc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should identify the later standard tier minor version with differing number of digits', () => {
+      const result = compareByKubernetesVersion('1.30', '1.3', 'asc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return negative when the first version is earlier in ascending order with standard tier versions', () => {
+      const result = compareByKubernetesVersion('1.0.0', '2.0.0', 'asc');
+      expect(result).toBeLessThan(0);
+    });
+
+    it('should return positive when the first version is earlier in descending order with standard tier versions', () => {
+      const result = compareByKubernetesVersion('1.0.0', '2.0.0', 'desc');
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return negative when the first version is earlier in ascending order with enterprise tier versions', () => {
+      const result = compareByKubernetesVersion(
+        'v1.0.0+lke1',
+        'v2.0.0+lke1',
+        'asc'
+      );
+      expect(result).toBeLessThan(0);
+    });
+
+    it('should return positive when the first version is earlier in descending order with enterprise tier versions', () => {
+      const result = compareByKubernetesVersion(
+        'v1.0.0+lke1',
+        'v2.0.0+lke1',
+        'desc'
+      );
+      expect(result).toBeGreaterThan(0);
+    });
+
+    it('should return zero when standard tier versions are equal', () => {
+      const result = compareByKubernetesVersion('1.2.3', '1.2.3', 'asc');
+      expect(result).toEqual(0);
+    });
+
+    it('should return zero when enterprise tier versions are equal', () => {
+      const result = compareByKubernetesVersion(
+        'v1.2.3+lke1',
+        'v1.2.3+lke1',
+        'asc'
+      );
+      expect(result).toEqual(0);
+    });
   });
 
   describe('Get total cluster memory/CPUs', () => {
