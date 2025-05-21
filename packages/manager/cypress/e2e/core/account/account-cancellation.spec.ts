@@ -2,7 +2,7 @@
  * @file Integration tests for Cloud Manager account cancellation flows.
  */
 
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   cancellationDataLossWarning,
   cancellationDialogTitle,
@@ -14,7 +14,10 @@ import {
   mockGetAccount,
 } from 'support/intercepts/account';
 import { mockWebpageUrl } from 'support/intercepts/general';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import {
   randomDomainName,
@@ -170,14 +173,16 @@ describe('Account cancellation', () => {
       email: 'mock-user@linode.com',
       restricted: true,
     });
+    const mockGrants = grantsFactory.build();
 
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
+    mockGetProfileGrants(mockGrants).as('getGrants');
     mockCancelAccountError('Unauthorized', 403).as('cancelAccount');
 
     // Navigate to Account Settings page, click "Close Account" button.
     cy.visitWithLogin('/account/settings');
-    cy.wait(['@getAccount', '@getProfile']);
+    cy.wait(['@getAccount', '@getProfile', '@getGrants']);
 
     cy.findByTestId('close-account')
       .should('be.visible')
