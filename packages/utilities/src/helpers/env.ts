@@ -10,3 +10,13 @@ export function getBooleanEnv(value: boolean | string | undefined) {
   }
   return false;
 }
+
+/**
+ * Helps you parse an environment variable that is a comma seperated string
+ */
+export function getArrayFromCommaSeperatedList(value: unknown): string[] {
+  if (!value || typeof value !== 'string') {
+    return [];
+  }
+  return value.split(',');
+}

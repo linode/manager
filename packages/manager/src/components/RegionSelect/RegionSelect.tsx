@@ -43,7 +43,6 @@ export const RegionSelect = <
     errorText,
     forcefullyShownRegionIds,
     helperText,
-    ignoreAccountAvailability,
     isGeckoLAEnabled,
     label,
     noMarginTop,
@@ -59,7 +58,7 @@ export const RegionSelect = <
   } = props;
 
   const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
-    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+    useAllAccountAvailabilitiesQuery(!!currentCapability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -79,7 +78,6 @@ export const RegionSelect = <
       acc[region.id] = disabledRegionsFromProps[region.id];
     }
     if (
-      !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
         accountAvailabilityData: accountAvailability,
         currentCapability,

@@ -1,7 +1,7 @@
 // whether or not this is a Vite production build
 // This does not necessarily mean Cloud is running in a production environment.
 
-import { getBooleanEnv } from '@linode/utilities';
+import { getArrayFromCommaSeperatedList, getBooleanEnv } from '@linode/utilities';
 
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
@@ -331,3 +331,11 @@ export const LD_DX_TOOLS_METRICS_KEYS = {
     'A/B Test: Step 2 : DX Tools SDK Python resources links',
   SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
 };
+
+/**
+ * An array of region IDs.
+ * Used to prevent images from being replicated to some regions.
+ */
+export const DISALLOWED_IMAGE_REGIONS = getArrayFromCommaSeperatedList(
+  import.meta.env.REACT_APP_DISALLOWED_IMAGE_REGIONS
+);

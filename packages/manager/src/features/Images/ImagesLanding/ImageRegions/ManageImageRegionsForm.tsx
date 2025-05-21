@@ -22,6 +22,7 @@ import type {
   UpdateImageRegionsPayload,
 } from '@linode/api-v4';
 import type { DisableItemOption } from '@linode/ui';
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 
 interface Props {
   image: Image | undefined;
@@ -85,6 +86,16 @@ export const ManageImageReplicasForm = (props: Props) => {
 
   const values = watch();
 
+  /**
+   * Most regions that support Object Storage also support image replication
+   */
+  const regionsEligibleForReplication = regions?.filter(
+    (r) =>
+      r.site_type === 'core' &&
+      r.capabilities.includes('Object Storage') &&
+      !DISALLOWED_IMAGE_REGIONS.includes(r.id)
+  );
+
   const disabledRegions: Record<string, DisableItemOption> = {};
 
   const availableRegions = image?.regions.filter(
@@ -133,10 +144,9 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Typography>
       </Notice>
       <RegionMultiSelect
-        currentCapability="Object Storage" // Images use Object Storage as the storage backend
+        currentCapability={undefined} // Image's don't have a region capability yet
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
-        ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         isGeckoLAEnabled={isGeckoLAEnabled}
         label="Add Regions"
         onChange={(regionIds) =>
@@ -146,7 +156,7 @@ export const ManageImageReplicasForm = (props: Props) => {
           })
         }
         placeholder="Select regions or type to search"
-        regions={regions?.filter((r) => r.site_type === 'core') ?? []}
+        regions={regionsEligibleForReplication ?? []}
         renderTags={() => null}
         selectedIds={values.regions}
       />

@@ -34,6 +34,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
+import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -166,6 +167,12 @@ export const ImageUpload = () => {
     globalGrantType: 'add_images',
   });
 
+  const regionsEligibleForUpload = regions?.filter(
+    (region) =>
+      region.capabilities.includes('Object Storage') &&
+      !DISALLOWED_IMAGE_REGIONS.includes(region.id)
+  );
+
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
   // necessary; the user will be able to navigate to other components and we
@@ -267,18 +274,16 @@ export const ImageUpload = () => {
               name="region"
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
+                  currentCapability={undefined} // Images don't have a region capability yet
                   disableClearable
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
                   errorText={fieldState.error?.message}
-                  ignoreAccountAvailability
                   isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
-                  regionFilter="core" // Images service will not be supported for Gecko Beta
-                  regions={regions ?? []}
+                  regions={regionsEligibleForUpload ?? []}
                   textFieldProps={{
                     inputRef: field.ref,
                     onBlur: field.onBlur,
