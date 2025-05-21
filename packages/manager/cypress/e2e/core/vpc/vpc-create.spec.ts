@@ -252,7 +252,9 @@ describe('VPC create flow', () => {
         .within(() => {
           cy.findByText(mockSubnet.id).should('be.visible');
           cy.findByText(mockSubnet.ipv4!).should('be.visible');
-          cy.findByText(mockSubnet.linodes.length).should('be.visible');
+          cy.findByText(
+            mockSubnet.linodes.length + mockSubnet.nodebalancers.length
+          ).should('be.visible');
         });
     });
   });

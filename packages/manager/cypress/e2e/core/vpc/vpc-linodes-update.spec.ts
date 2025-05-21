@@ -55,6 +55,7 @@ describe('VPC assign/unassign flows', () => {
       id: randomNumber(2),
       label: randomLabel(),
       linodes: [],
+      nodebalancers: [],
     });
 
     const mockVPC = vpcFactory.build({
