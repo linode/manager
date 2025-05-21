@@ -49,27 +49,28 @@ describe('DateTimeRangePicker Component', () => {
   });
 
   it('should call onChange when start date is changed', async () => {
-    vi.setSystemTime(vi.getRealSystemTime());
+    const fixedNow = DateTime.fromISO('2025-05-10T00:00:00.000Z');
+    vi.setSystemTime(fixedNow.toJSDate());
 
     renderWithTheme(<DateTimeRangePicker onChange={onChangeMock} />);
-    const now = DateTime.now().set({ second: 0 });
+    // const now = DateTime.now().set({ second: 0 });
     // Open start date picker
     await userEvent.click(screen.getByLabelText('Start Date and Time'));
 
     await userEvent.click(screen.getByRole('gridcell', { name: '10' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
-    const expectedStartTime = now
+    const expectedStartTime = fixedNow
       .set({
         day: 10,
-        month: now.month,
-        year: now.year,
+        month: fixedNow.month,
+        year: fixedNow.year,
       })
       .minus({ minutes: 30 })
       .toISO();
 
     // Check if the onChange function is called with the expected  value
     expect(onChangeMock).toHaveBeenCalledWith({
-      end: now.toISO(),
+      end: fixedNow.toISO(),
       preset: 'custom_range',
       start: expectedStartTime,
       timeZone: null,
