@@ -2,15 +2,10 @@ import {
   cloneDomain,
   createDomain,
   deleteDomain,
-  getDomain,
-  getDomainRecords,
-  getDomains,
   importZone,
   updateDomain,
 } from '@linode/api-v4';
 import { profileQueries } from '@linode/queries';
-import { getAll } from '@linode/utilities';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -32,45 +27,6 @@ import type {
   UpdateDomainPayload,
 } from '@linode/api-v4';
 import type { EventHandlerData } from '@linode/queries';
-
-export const getAllDomains = () =>
-  getAll<Domain>((params) => getDomains(params))().then((data) => data.data);
-
-const getAllDomainRecords = (domainId: number) =>
-  getAll<DomainRecord>((params) => getDomainRecords(domainId, params))().then(
-    ({ data }) => data,
-  );
-
-const domainQueries = createQueryKeys('domains', {
-  domain: (id: number) => ({
-    contextQueries: {
-      records: {
-        queryFn: () => getAllDomainRecords(id),
-        queryKey: null,
-      },
-    },
-    queryFn: () => getDomain(id),
-    queryKey: [id],
-  }),
-  domains: {
-    contextQueries: {
-      all: {
-        queryFn: getAllDomains,
-        queryKey: null,
-      },
-      infinite: (filter: Filter) => ({
-        queryFn: ({ pageParam }) =>
-          getDomains({ page: pageParam as number }, filter),
-        queryKey: [filter],
-      }),
-      paginated: (params: Params = {}, filter: Filter = {}) => ({
-        queryFn: () => getDomains(params, filter),
-        queryKey: [params, filter],
-      }),
-    },
-    queryKey: null,
-  },
-});
 
 export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>({
