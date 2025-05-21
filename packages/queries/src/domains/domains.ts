@@ -14,6 +14,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { domainQueries } from './requests';
+
 import type {
   APIError,
   CloneDomainPayload,
