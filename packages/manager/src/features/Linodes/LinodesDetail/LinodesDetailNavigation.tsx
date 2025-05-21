@@ -1,6 +1,6 @@
 import { useLinodeQuery, usePreferences } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import {
   matchPath,
@@ -46,9 +46,10 @@ const LinodesDetailNavigation = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
   const flags = useFlags();
-  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpMetricsBeta
-  );
+  const { data: aclpPreferences } = usePreferences((preferences) => ({
+    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
+    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
+  }));
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -61,7 +62,8 @@ const LinodesDetailNavigation = () => {
   const tabs = [
     {
       chip:
-        flags.aclpIntegration && isAclpMetricsPreferenceBeta ? (
+        flags.aclpIntegration &&
+        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
       routeName: `${url}/metrics`,
@@ -91,6 +93,10 @@ const LinodesDetailNavigation = () => {
       title: 'Activity Feed',
     },
     {
+      chip:
+        flags.aclpIntegration && aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+          <BetaChip />
+        ) : null,
       routeName: `${url}/alerts`,
       title: 'Alerts',
     },
@@ -157,7 +163,7 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeMetrics linodeCreated={linode?.created} />
+                <LinodeMetrics linodeCreated={linode?.created} linodeId={id} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />

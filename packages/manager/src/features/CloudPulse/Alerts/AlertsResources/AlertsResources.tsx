@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -364,8 +364,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={2}>
-        <Grid
+      <GridLegacy container spacing={2}>
+        <GridLegacy
           columnSpacing={2}
           container
           item
@@ -375,7 +375,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           }}
           xs={12}
         >
-          <Grid item md={3} xs={12}>
+          <GridLegacy item md={3} xs={12}>
             <DebouncedSearchTextField
               clearable
               hideLabel
@@ -387,10 +387,10 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               }}
               value={searchText || ''}
             />
-          </Grid>
+          </GridLegacy>
           {/* Dynamically render service type based filters */}
           {filtersToRender.map(({ component, filterKey }, index) => (
-            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
+            <GridLegacy item key={`${index}_${filterKey}`} md={4} xs={12}>
               <AlertResourcesFilterRenderer
                 component={component}
                 componentProps={getAlertResourceFilterProps({
@@ -407,11 +407,11 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                   ),
                 })}
               />
-            </Grid>
+            </GridLegacy>
           ))}
-        </Grid>
+        </GridLegacy>
         {isSelectionsNeeded && (
-          <Grid item md={4} xs={12}>
+          <GridLegacy item md={4} xs={12}>
             <Checkbox
               data-testid="show_selected_only"
               disabled={!(selectedResources.length || selectedOnly)}
@@ -427,42 +427,41 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               text="Show Selected Only"
               value="Show Selected"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {errorText?.length && (
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <AlertListNoticeMessages
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
               style={noticeStyles}
               variant="error"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {maxSelectionCount !== undefined && (
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <AlertListNoticeMessages
               errorMessage={`You can select up to ${maxSelectionCount} entities.`}
               style={noticeStyles}
               variant="warning"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
           resources.length > 0 && (
-            <Grid item xs={12}>
+            <GridLegacy item xs={12}>
               <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
                 selectedCount={selectedResources.length}
                 totalCount={resources?.length ?? 0}
               />
-            </Grid>
+            </GridLegacy>
           )}
-
-        <Grid item xs={12}>
+        <GridLegacy item xs={12}>
           <DisplayAlertResources
             filteredResources={filteredResources}
             handleSelection={handleSelection}
@@ -475,8 +474,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     </Stack>
   );
 });

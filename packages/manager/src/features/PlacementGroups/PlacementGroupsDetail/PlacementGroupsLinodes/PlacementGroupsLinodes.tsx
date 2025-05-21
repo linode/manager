@@ -1,6 +1,6 @@
 import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
 import { Button, ErrorState, Stack } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -137,7 +137,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
   };
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={3}>
       <Grid
         container
         sx={{
@@ -151,7 +151,6 @@ export const PlacementGroupsLinodes = (props: Props) => {
           }}
           sx={{
             flexGrow: 1,
-            mb: 1,
           }}
         >
           <DebouncedSearchTextField

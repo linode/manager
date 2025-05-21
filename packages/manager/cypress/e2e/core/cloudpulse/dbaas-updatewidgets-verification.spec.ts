@@ -5,7 +5,7 @@
 /**
  * @file Integration Tests for CloudPulse Custom and Preset Verification
  */
-import { regionFactory } from '@linode/utilities';
+import { profileFactory, regionFactory } from '@linode/utilities';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -18,7 +18,10 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetUserPreferences,
+} from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
@@ -79,6 +82,9 @@ const metricDefinitions = {
     })
   ),
 };
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 
 const mockAccount = accountFactory.build();
 
@@ -99,6 +105,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
     mockGetCloudPulseDashboards(serviceType, [dashboard]);
     mockGetCloudPulseServices([serviceType]);

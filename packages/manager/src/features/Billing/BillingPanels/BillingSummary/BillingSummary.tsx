@@ -1,12 +1,16 @@
-import { useGrants, useNotificationsQuery } from '@linode/queries';
+import {
+  useAccount,
+  useGrants,
+  useNotificationsQuery,
+  useProfile,
+} from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -26,8 +30,12 @@ interface BillingSummaryProps {
 
 export const BillingSummary = (props: BillingSummaryProps) => {
   const theme = useTheme();
+
   const { data: notifications } = useNotificationsQuery();
-  const { _isRestrictedUser, account } = useAccountManagement();
+  const { data: account } = useAccount();
+  const { data: profile } = useProfile();
+
+  const isRestrictedUser = profile?.restricted;
 
   const [isPromoDialogOpen, setIsPromoDialogOpen] =
     React.useState<boolean>(false);
@@ -140,7 +148,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const showAddPromoLink =
     balance <= 0 &&
-    !_isRestrictedUser &&
+    !isRestrictedUser &&
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 

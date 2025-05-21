@@ -106,7 +106,7 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'Etc/GMT',
+  timezone: 'GMT',
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -132,9 +132,10 @@ const getDateRangeInGMT = (
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
   const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute })
-    : now.set({ hour, minute });
-  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
+    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
+    : now.set({ hour, minute }).setZone('GMT');
+  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
+
   return {
     actualDate,
     day: targetDate.day,

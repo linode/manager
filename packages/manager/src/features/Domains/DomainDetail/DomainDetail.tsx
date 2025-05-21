@@ -3,9 +3,10 @@ import {
   ErrorState,
   Notice,
   Paper,
+  Stack,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -123,7 +124,7 @@ export const DomainDetail = () => {
       {locationState?.recordError && (
         <StyledNotice text={locationState.recordError} variant="error" />
       )}
-      <StyledRootGrid container>
+      <Stack spacing={3}>
         <StyledMainGrid size={{ xs: 12 }}>
           <DomainRecords
             domain={domain}
@@ -153,7 +154,7 @@ export const DomainDetail = () => {
             />
           </StyledDiv>
         </StyledTagSectionGrid>
-      </StyledRootGrid>
+      </Stack>
     </>
   );
 };
@@ -175,14 +176,6 @@ const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
   marginBottom: `0 !important`,
   marginTop: `${theme.spacing(3)} !important`,
 }));
-
-const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
-  ({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    marginLeft: 0,
-    marginRight: 0,
-  })
-);
 
 const StyledMainGrid = styled(Grid, { label: 'StyledMainGrid' })(
   ({ theme }) => ({

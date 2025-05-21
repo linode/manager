@@ -1,7 +1,7 @@
 import { uploadAttachment } from '@linode/api-v4';
 import { useSupportTicketReplyMutation } from '@linode/queries';
 import { Accordion, Notice } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';

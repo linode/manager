@@ -1,3 +1,9 @@
+import {
+  imageQueries,
+  useDeleteImageMutation,
+  useImageQuery,
+  useImagesQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
@@ -44,12 +50,6 @@ import {
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImageQuery,
-  useImagesQuery,
-} from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -421,17 +421,6 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
-      {isCreateImageRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -450,10 +439,11 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
       <TextField
-        containerProps={{ mb: 2 }}
+        containerProps={{ mb: 3 }}
         errorText={searchParseError?.message}
         hideLabel
         InputProps={{

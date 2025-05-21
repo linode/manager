@@ -2,7 +2,11 @@
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
 
-import { linodeFactory, regionFactory } from '@linode/utilities';
+import {
+  linodeFactory,
+  profileFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -15,6 +19,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 
@@ -99,6 +104,9 @@ const mockAlerts = alertFactory.build({
   trigger_conditions: triggerConditionFactory.build(),
   updated: new Date().toISOString(),
 });
+const mockProfile = profileFactory.build({
+  timezone: 'gmt',
+});
 
 /**
  * Fills metric details in the form.
@@ -159,6 +167,7 @@ describe('Create Alert', () => {
   it('should successfully create a new alert', () => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
+    mockGetProfile(mockProfile);
     mockGetCloudPulseServices([serviceType]);
     mockGetRegions([mockRegion]);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
@@ -406,8 +415,11 @@ describe('Create Alert', () => {
           cy.findByText('Linode').should('be.visible');
           cy.findByText(created_by).should('be.visible');
           cy.findByText(
-            formatDate(updated, { format: 'MMM dd, yyyy, h:mm a' })
-          );
+            formatDate(updated, {
+              format: 'MMM dd, yyyy, h:mm a',
+              timezone: 'GMT',
+            })
+          ).should('be.visible');
         });
     });
   });

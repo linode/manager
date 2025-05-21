@@ -20,23 +20,21 @@ describe('Trigger Conditions', () => {
   const user = userEvent.setup();
 
   it('should render all the components and names', () => {
-    const container = renderWithThemeAndHookFormContext({
+    renderWithThemeAndHookFormContext({
       component: (
         <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
       ),
     });
-    expect(container.getByLabelText('Evaluation Period')).toBeInTheDocument();
-    expect(container.getByLabelText('Polling Interval')).toBeInTheDocument();
+    expect(screen.getByLabelText('Evaluation Period')).toBeVisible();
+    expect(screen.getByLabelText('Polling Interval')).toBeVisible();
     expect(
-      container.getByText('Trigger alert when all criteria are met for')
-    ).toBeInTheDocument();
-    expect(
-      container.getByText('consecutive occurrence(s).')
-    ).toBeInTheDocument();
+      screen.getByText('Trigger alert when all criteria are met for')
+    ).toBeVisible();
+    expect(screen.getByText('consecutive occurrence(s).')).toBeVisible();
   });
 
   it('should render the tooltips for the Autocomplete components', () => {
-    const container = renderWithThemeAndHookFormContext({
+    renderWithThemeAndHookFormContext({
       component: (
         <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
       ),
@@ -47,7 +45,7 @@ describe('Trigger Conditions', () => {
       },
     });
 
-    const evaluationPeriodContainer = container.getByTestId(
+    const evaluationPeriodContainer = screen.getByTestId(
       EvaluationPeriodTestId
     );
     const evaluationPeriodToolTip = within(evaluationPeriodContainer).getByRole(
@@ -56,9 +54,7 @@ describe('Trigger Conditions', () => {
         name: 'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
       }
     );
-    const pollingIntervalContainer = container.getByTestId(
-      PollingIntervalTestId
-    );
+    const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
     const pollingIntervalToolTip = within(pollingIntervalContainer).getByRole(
       'button',
       {
@@ -70,21 +66,17 @@ describe('Trigger Conditions', () => {
   });
 
   it('should render the Evaluation Period component with options happy path and select an option', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: (
-          <TriggerConditions
-            maxScrapingInterval={0}
-            name="trigger_conditions"
-          />
-        ),
-        useFormOptions: {
-          defaultValues: {
-            serviceType: 'linode',
-          },
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          serviceType: 'linode',
         },
-      });
-    const evaluationPeriodContainer = container.getByTestId(
+      },
+    });
+    const evaluationPeriodContainer = screen.getByTestId(
       EvaluationPeriodTestId
     );
     const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
@@ -95,18 +87,18 @@ describe('Trigger Conditions', () => {
     user.click(evaluationPeriodInput);
 
     expect(
-      await container.findByRole('option', {
+      await screen.findByRole('option', {
         name: evaluationPeriodOptions.linode[1].label,
       })
-    ).toBeInTheDocument();
+    ).toBeVisible();
     expect(
-      await container.findByRole('option', {
+      await screen.findByRole('option', {
         name: evaluationPeriodOptions.linode[2].label,
       })
-    );
+    ).toBeVisible();
 
     await user.click(
-      container.getByRole('option', {
+      screen.getByRole('option', {
         name: evaluationPeriodOptions.linode[0].label,
       })
     );
@@ -117,23 +109,17 @@ describe('Trigger Conditions', () => {
   });
 
   it('should render the Polling Interval component with options happy path and select an option', async () => {
-    const container =
-      renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-        component: (
-          <TriggerConditions
-            maxScrapingInterval={0}
-            name="trigger_conditions"
-          />
-        ),
-        useFormOptions: {
-          defaultValues: {
-            serviceType: 'linode',
-          },
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          serviceType: 'linode',
         },
-      });
-    const pollingIntervalContainer = container.getByTestId(
-      PollingIntervalTestId
-    );
+      },
+    });
+    const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
     const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
       'button',
       { name: 'Open' }
@@ -142,19 +128,19 @@ describe('Trigger Conditions', () => {
     user.click(pollingIntervalInput);
 
     expect(
-      await container.findByRole('option', {
+      await screen.findByRole('option', {
         name: pollingIntervalOptions.linode[1].label,
       })
-    ).toBeInTheDocument();
+    ).toBeVisible();
 
     expect(
-      await container.findByRole('option', {
+      await screen.findByRole('option', {
         name: pollingIntervalOptions.linode[2].label,
       })
-    );
+    ).toBeVisible();
 
     await user.click(
-      container.getByRole('option', {
+      screen.getByRole('option', {
         name: pollingIntervalOptions.linode[0].label,
       })
     );
@@ -164,7 +150,7 @@ describe('Trigger Conditions', () => {
   });
 
   it('should be able to show the options that are greater than or equal to max scraping Interval', () => {
-    const container = renderWithThemeAndHookFormContext({
+    renderWithThemeAndHookFormContext({
       component: (
         <TriggerConditions
           maxScrapingInterval={120}
@@ -177,7 +163,7 @@ describe('Trigger Conditions', () => {
         },
       },
     });
-    const evaluationPeriodContainer = container.getByTestId(
+    const evaluationPeriodContainer = screen.getByTestId(
       EvaluationPeriodTestId
     );
     const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
@@ -191,9 +177,7 @@ describe('Trigger Conditions', () => {
       screen.queryByText(evaluationPeriodOptions.linode[0].label)
     ).not.toBeInTheDocument();
 
-    const pollingIntervalContainer = container.getByTestId(
-      PollingIntervalTestId
-    );
+    const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
     const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
       'button',
       { name: 'Open' }

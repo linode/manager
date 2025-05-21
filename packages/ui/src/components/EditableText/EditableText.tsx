@@ -102,7 +102,9 @@ const useStyles = makeStyles<void, 'breadcrumbText' | 'editIcon' | 'icon'>()(
     breadcrumbText: {
       color: theme.tokens.component.Breadcrumb.Normal.Text.Default,
       fontSize: '1rem !important',
+      paddingBottom: 0,
       paddingLeft: 0,
+      paddingTop: 0,
     },
   }),
 );
