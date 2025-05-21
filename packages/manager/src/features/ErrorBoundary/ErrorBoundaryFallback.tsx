@@ -4,10 +4,15 @@ import * as React from 'react';
 
 import { ErrorComponent } from './ErrorComponent';
 
-export const ErrorBoundaryFallback: React.FC<{
+interface ErrorBoundaryFallbackProps {
   children?: React.ReactNode;
   useTanStackRouterBoundary?: boolean;
-}> = ({ children, useTanStackRouterBoundary = false }) => (
+}
+
+export const ErrorBoundaryFallback = ({
+  children,
+  useTanStackRouterBoundary = false,
+}: ErrorBoundaryFallbackProps) => (
   <ErrorBoundary fallback={ErrorComponent}>
     {useTanStackRouterBoundary ? (
       <CatchBoundary getResetKey={() => 'error-boundary-fallback'}>

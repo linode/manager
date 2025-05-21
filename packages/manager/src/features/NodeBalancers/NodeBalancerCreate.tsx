@@ -1,6 +1,7 @@
 import {
   useAccountAgreements,
   useMutateAccountAgreements,
+  useNodebalancerCreateBetaMutation,
   useNodebalancerCreateMutation,
   useNodeBalancerTypesQuery,
   useProfile,
@@ -18,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
-import { scrollErrorIntoView } from '@linode/utilities';
+import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
@@ -60,10 +61,12 @@ import {
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   transformConfigsForRequest,
+  useIsNodebalancerVPCEnabled,
 } from './utils';
+import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 
@@ -78,6 +81,7 @@ interface NodeBalancerFieldsState {
   label?: string;
   region?: string;
   tags?: string[];
+  vpcs?: NodeBalancerVpcPayload[];
 }
 
 const errorResources = {
@@ -104,6 +108,7 @@ const NodeBalancerCreate = () => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
   const navigate = useNavigate();
   const { data: agreements } = useAccountAgreements();
   const { data: profile } = useProfile();
@@ -111,10 +116,28 @@ const NodeBalancerCreate = () => {
   const { data: types } = useNodeBalancerTypesQuery();
 
   const {
-    error,
-    isPending,
+    error: createNodeBalancerBetaError,
+    isPending: createNodeBalancerBetaIsPending,
+    mutateAsync: createNodeBalancerBeta,
+  } = useNodebalancerCreateBetaMutation();
+
+  const {
+    error: createNodebalancerError,
+    isPending: createNodeBalancerIsPending,
     mutateAsync: createNodeBalancer,
   } = useNodebalancerCreateMutation();
+
+  const error = React.useMemo(
+    () =>
+      isNodebalancerVPCEnabled
+        ? createNodeBalancerBetaError
+        : createNodebalancerError,
+    [
+      isNodebalancerVPCEnabled,
+      createNodebalancerError,
+      createNodeBalancerBetaError,
+    ]
+  );
 
   const [nodeBalancerFields, setNodeBalancerFields] =
     React.useState<NodeBalancerFieldsState>(defaultFieldsStates);
@@ -138,6 +161,14 @@ const NodeBalancerCreate = () => {
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
   });
+
+  const [isVpcSelected, setIsVpcSelected] = React.useState<boolean>(false);
+  const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
+  const formContainerRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    setVPCErrors([]);
+  }, [isVpcSelected]);
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -246,18 +277,6 @@ const NodeBalancerCreate = () => {
     });
   };
 
-  const clearNodeErrors = () => {
-    setNodeBalancerFields((prev) => {
-      const newConfigs = [...prev.configs].map((config) => ({
-        ...config,
-        errors: [],
-        nodes: config.nodes.map((node) => ({ ...node, errors: [] })),
-      }));
-
-      return { ...prev, configs: newConfigs };
-    });
-  };
-
   const setNodeErrors = (errors: APIError[]) => {
     /* Map the objects with this shape
         {
@@ -281,18 +300,55 @@ const NodeBalancerCreate = () => {
 
     // Apply the error updater functions with a compose
     setNodeBalancerFields((compose as any)(...setFns));
-    scrollErrorIntoView();
+  };
+
+  const clearErrors = () => {
+    setNodeBalancerFields((prev) => {
+      const newConfigs = [...prev.configs].map(({ errors: _, ...config }) => ({
+        ...config,
+        nodes: config.nodes.map(({ errors: _, ...node }) => ({
+          ...node,
+        })),
+      }));
+      // sometimes 'errors' key is added from setNodeErrors()
+      if ('errors' in prev) {
+        delete prev['errors'];
+      }
+
+      return { ...prev, configs: newConfigs };
+    });
+    setVPCErrors([]);
   };
 
   const onCreate = () => {
+    if (isVpcSelected && nodeBalancerFields?.vpcs === undefined) {
+      const subnetError = {
+        field: 'vpc[0].subnet_id',
+        reason: 'Subnet is required',
+      };
+      setVPCErrors((prev) => (prev ? [...prev, subnetError] : [subnetError]));
+      scrollErrorIntoViewV2(formContainerRef);
+      return;
+    }
+    clearErrors();
     /* transform node data for the requests */
     const nodeBalancerRequestData = clone(nodeBalancerFields);
+    if (
+      nodeBalancerRequestData?.vpcs &&
+      nodeBalancerRequestData.vpcs.length > 0
+    ) {
+      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map(
+        (vpc) => ({
+          ...vpc,
+          ipv4_range: vpc.ipv4_range.endsWith('/30')
+            ? vpc.ipv4_range
+            : `${vpc.ipv4_range}/30`,
+        })
+      );
+    }
     nodeBalancerRequestData.configs = transformConfigsForRequest(
       nodeBalancerRequestData.configs
     );
-
-    /* Clear node errors */
-    clearNodeErrors();
 
     if (hasSignedAgreement) {
       updateAgreements({
@@ -300,7 +356,11 @@ const NodeBalancerCreate = () => {
       }).catch(reportAgreementSigningError);
     }
 
-    createNodeBalancer(nodeBalancerRequestData)
+    const createNodeBalancerFn = isNodebalancerVPCEnabled
+      ? createNodeBalancerBeta
+      : createNodeBalancer;
+
+    createNodeBalancerFn(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         navigate({
           params: { id: String(nodeBalancer.id) },
@@ -317,8 +377,30 @@ const NodeBalancerCreate = () => {
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') }),
           }))
         );
+        const vpcErrors = errors
+          .map((err) => {
+            if (!err?.field) return null;
+            if (err?.field.includes('subnet_id')) {
+              return {
+                field: 'vpcs.subnet_id',
+                reason: err.reason,
+              };
+            }
+            if (err?.field.includes('ipv4_range')) {
+              const indexMatch = err.field.match(/\[(\d+)\]/);
+              const index = indexMatch ? Number(indexMatch[1]) : -1;
+              return {
+                field: `vpcs[${index}].ipv4_range`,
+                reason: err.reason,
+              };
+            }
+            return null;
+          })
+          .filter((err) => err !== null);
 
-        scrollErrorIntoView();
+        setVPCErrors(vpcErrors);
+
+        scrollErrorIntoViewV2(formContainerRef);
       });
   };
 
@@ -406,14 +488,57 @@ const NodeBalancerCreate = () => {
     if (nodeBalancerFields.region === region) {
       return;
     }
-
-    setNodeBalancerFields((prev) => ({
+    // We just changed the region so any selected IP addresses, Subnets and VPCs are likely invalid
+    setNodeBalancerFields(({ vpcs: _, ...prev }) => ({
       ...prev,
       region,
     }));
-
-    // We just changed the region so any selected IP addresses are likely invalid
+    setIsVpcSelected(false);
     resetNodeAddresses();
+  };
+
+  const subnetChange = (subnetIds: null | number[]) => {
+    if (
+      nodeBalancerFields?.vpcs?.every((vpc) =>
+        subnetIds?.some((id) => id === vpc.subnet_id)
+      )
+    ) {
+      return;
+    }
+    if (subnetIds === null) {
+      setNodeBalancerFields((prev) => {
+        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
+        const { vpcs: _, ...rest } = prev;
+        return { ...rest };
+      });
+    } else {
+      const vpcs = subnetIds.map((id) => ({ subnet_id: id, ipv4_range: '' }));
+      setNodeBalancerFields((prev) => ({
+        ...prev,
+        vpcs,
+      }));
+    }
+  };
+
+  const ipv4Change = (ipv4Range: string, index: number) => {
+    if (nodeBalancerFields?.vpcs?.[index].ipv4_range === ipv4Range) {
+      return;
+    }
+    if (ipv4Range === '') {
+      setNodeBalancerFields((prev) => {
+        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
+        const { vpcs: _, ...rest } = prev;
+        return { ...rest };
+      });
+    }
+    const vpcs = nodeBalancerFields?.vpcs;
+    if (vpcs) {
+      vpcs[index].ipv4_range = ipv4Range;
+      setNodeBalancerFields((prev) => ({
+        ...prev,
+        vpcs,
+      }));
+    }
   };
 
   const onCloseConfirmation = () =>
@@ -448,6 +573,10 @@ const NodeBalancerCreate = () => {
     summaryItems.push({ title: regionLabel });
   }
 
+  if (nodeBalancerFields.vpcs?.length) {
+    summaryItems.push({ title: 'VPC Assigned' });
+  }
+
   if (nodeBalancerFields.firewall_id) {
     summaryItems.push({ title: 'Firewall Assigned' });
   }
@@ -474,7 +603,7 @@ const NodeBalancerCreate = () => {
   }
 
   return (
-    <React.Fragment>
+    <div ref={formContainerRef}>
       <DocumentTitleSegment segment="Create a NodeBalancer" />
       <LandingHeader
         breadcrumbProps={{
@@ -574,6 +703,17 @@ const NodeBalancerCreate = () => {
           }
           selectedFirewallId={nodeBalancerFields.firewall_id ?? -1}
         />
+        {isNodebalancerVPCEnabled && (
+          <VPCPanel
+            disabled={isRestricted}
+            errors={vpcErrors}
+            ipv4Change={ipv4Change}
+            regionSelected={nodeBalancerFields.region ?? ''}
+            setIsVpcSelected={setIsVpcSelected}
+            subnetChange={subnetChange}
+            subnets={nodeBalancerFields.vpcs}
+          />
+        )}
       </Stack>
       <Box marginBottom={2} marginTop={2}>
         {nodeBalancerFields.configs.map((nodeBalancerConfig, idx) => {
@@ -700,7 +840,9 @@ const NodeBalancerCreate = () => {
             isRestricted ||
             isInvalidPrice
           }
-          loading={isPending}
+          loading={
+            createNodeBalancerIsPending || createNodeBalancerBetaIsPending
+          }
           onClick={onCreate}
           sx={{
             flexShrink: 0,
@@ -735,7 +877,7 @@ const NodeBalancerCreate = () => {
           Are you sure you want to delete this NodeBalancer Configuration?
         </Typography>
       </ConfirmationDialog>
-    </React.Fragment>
+    </div>
   );
 };
 
@@ -753,13 +895,13 @@ const getPathAndFieldFromFieldString = (value: string) => {
   if (configMatch && configMatch[1]) {
     path = [...path, 'configs', +configMatch[1]];
     field = field.replace(configRegExp, '');
-  }
 
-  const nodeRegExp = new RegExp(/nodes_(\d+)_/);
-  const nodeMatch = nodeRegExp.exec(value);
-  if (nodeMatch && nodeMatch[1]) {
-    path = [...path, 'nodes', +nodeMatch[1]];
-    field = field.replace(nodeRegExp, '');
+    const nodeRegExp = new RegExp(/nodes_(\d+)_/);
+    const nodeMatch = nodeRegExp.exec(value);
+    if (nodeMatch && nodeMatch[1]) {
+      path = [...path, 'nodes', +nodeMatch[1]];
+      field = field.replace(nodeRegExp, '');
+    }
   }
   return { field, path };
 };

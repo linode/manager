@@ -22,6 +22,7 @@ import type {
   SupportTicket,
   Volume,
   VPC,
+  VPCIP,
 } from '@linode/api-v4';
 import type { HttpHandler } from 'msw';
 
@@ -59,23 +60,41 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id:
-    | 'Account'
-    | 'API'
-    | 'Capabilities'
-    | 'Limits'
-    | 'Managed'
-    | 'Profile'
-    | 'Regions';
-  type: 'account' | 'checkbox' | 'profile' | 'select';
+  id: MockPresetExtraGroupId;
+  type: MockPresetExtraGroupType;
 };
+
+export type MockPresetExtraGroupId =
+  | 'Account'
+  | 'API'
+  | 'Capabilities'
+  | 'Events'
+  | 'Limits'
+  | 'Maintenance'
+  | 'Managed'
+  | 'Notifications'
+  | 'Profile'
+  | 'Regions';
+
+export type MockPresetExtraGroupType =
+  | 'account'
+  | 'checkbox'
+  | 'events'
+  | 'maintenance'
+  | 'notifications'
+  | 'profile'
+  | 'select';
+
 export type MockPresetExtraId =
   | 'account:custom'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
   | 'api:response-time'
+  | 'events:custom'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'maintenance:custom'
+  | 'notifications:custom'
   | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
@@ -151,6 +170,7 @@ export interface MockState {
   supportTickets: SupportTicket[];
   volumes: Volume[];
   vpcs: VPC[];
+  vpcsIps: VPCIP[];
 }
 
 export interface MockSeeder extends Omit<MockPresetCrud, 'handlers'> {

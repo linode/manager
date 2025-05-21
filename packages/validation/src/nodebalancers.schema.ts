@@ -398,10 +398,15 @@ export const NodeBalancerSchema = object({
       ids.forEach(
         (id, index) => ids.indexOf(id) !== index && duplicates.push(index),
       );
-      const idStrings = ids.map((id: number) => `vpcs[${id}].subnet_id`);
+      if (duplicates.length === 0) {
+        return true;
+      }
+      const idStrings = duplicates.map(
+        (idx: number) => `vpcs[${idx}].subnet_id`,
+      );
       throw this.createError({
         path: idStrings.join('|'),
-        message: 'Subnet ID must be unique',
+        message: 'Subnet IDs must be unique',
       });
     }),
 });

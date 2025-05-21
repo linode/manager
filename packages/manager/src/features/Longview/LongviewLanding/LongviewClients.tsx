@@ -3,7 +3,6 @@ import { Autocomplete, Typography } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -289,11 +288,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<LongviewClientsCombinedProps, Props>(
-  React.memo,
-  connected,
-  withLongviewClients()
-)(LongviewClients);
+export default React.memo(connected(withLongviewClients()(LongviewClients)));
 
 /**
  * Helper function for sortClientsBy,
