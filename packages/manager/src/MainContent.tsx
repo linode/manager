@@ -135,13 +135,13 @@ const EventsLanding = React.lazy(() =>
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const CloudPulseMetrics = React.lazy(() =>
-  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
-    (module) => ({
-      default: module.CloudPulseDashboardLanding,
-    })
-  )
-);
+// const CloudPulseMetrics = React.lazy(() =>
+//   import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
+//     (module) => ({
+//       default: module.CloudPulseDashboardLanding,
+//     })
+//   )
+// );
 
 const CloudPulseAlerts = React.lazy(() =>
   import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
@@ -348,12 +348,12 @@ export const MainContent = () => {
                                     path="/databases"
                                   />
                                 )}
-                                {isACLPEnabled && (
+                                {/* {isACLPEnabled && (
                                   <Route
                                     component={CloudPulseMetrics}
                                     path="/metrics"
                                   />
-                                )}
+                                )} */}
                                 {isACLPEnabled && (
                                   <Route
                                     component={CloudPulseAlerts}
