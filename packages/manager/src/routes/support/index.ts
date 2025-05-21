@@ -86,8 +86,8 @@ export const accountActivationLandingRoute = createRoute({
 
 export const supportRouteTree = supportRoute.addChildren([
   supportLandingRoute,
-  supportTicketsLandingRoute,
-  supportTicketDetailRoute.addChildren([
+  supportTicketsLandingRoute.addChildren([
+    supportTicketDetailRoute,
     supportTicketsLandingRouteOpen,
     supportTicketsLandingRouteClosed,
   ]),

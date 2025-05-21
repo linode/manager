@@ -82,11 +82,7 @@ export const SupportTicketDetail = () => {
           crumbOverrides: [
             {
               linkTo: {
-                pathname: `/support/tickets`,
-                // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
-                search: `type=${
-                  ticket.status === 'closed' ? 'closed' : 'open'
-                }`,
+                pathname: `/support/tickets/${ticket.status}`,
               },
               position: 2,
             },
