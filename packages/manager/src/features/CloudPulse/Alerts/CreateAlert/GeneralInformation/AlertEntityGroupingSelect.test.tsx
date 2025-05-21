@@ -9,26 +9,21 @@ import { AlertEntityGroupingSelect } from './AlertEntityGroupingSelect';
 describe('AlertEntityGroupingSelect', () => {
   it('should render the component', () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="type" />,
+      component: <AlertEntityGroupingSelect name="group" />,
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
-    expect(screen.getByLabelText('Entity Grouping')).toBeInTheDocument();
+    expect(screen.getByLabelText('Grouping')).toBeInTheDocument();
   });
 
   it('Select option from drop down', async () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="type" />,
+      component: <AlertEntityGroupingSelect name="group" />,
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
-    await userEvent.click(
-      screen.getByRole('option', { name: 'Account Level' })
-    );
+    await userEvent.click(screen.getByRole('option', { name: 'Account' }));
 
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'value',
-      'Account Level'
-    );
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Account');
   });
 });

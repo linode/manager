@@ -2,7 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
-  AlertDefinitionType,
+  AlertDefinitionGroup,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -102,10 +102,10 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
-export const entityGroupingOptions: Item<string, AlertDefinitionType>[] = [
-  { label: 'Entity Level', value: 'user' },
-  { label: 'Account Level', value: 'account-user' },
-  { label: 'Region Level', value: 'region-user' },
+export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
+  { label: 'Account', value: 'per-account' },
+  { label: 'Region', value: 'per-region' },
+  { label: 'Entity', value: 'per-entity' },
 ];
 
 export const textFieldOperators = ['endswith', 'startswith'];
@@ -209,3 +209,5 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
+
+export type SelectDeselectAll = 'Deselect All' | 'Select All';

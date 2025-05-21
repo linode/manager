@@ -10,15 +10,36 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { Region } from '@linode/api-v4';
+import type { SelectDeselectAll } from '../constants';
+
+export interface AlertRegion {
+  checked: boolean;
+  count: number;
+  id: string;
+  label: string;
+}
 
 interface DisplayAlertRegionProps {
-  regions?: Region[];
+  handleSelectAll: (action: SelectDeselectAll) => void;
+  handleSelectionChange: (regionId: string, isChecked: boolean) => void;
+  isAllSelected?: boolean;
+
+  isSomeSelected?: boolean;
+  regions?: AlertRegion[];
+  showSelected?: boolean;
 }
 
 export const DisplayAlertRegions = React.memo(
   (props: DisplayAlertRegionProps) => {
-    const { regions } = props;
+    const {
+      regions,
+      handleSelectionChange,
+      isSomeSelected,
+      isAllSelected,
+      showSelected,
+      handleSelectAll,
+    } = props;
+
     return (
       <Paginate data={regions ?? []}>
         {({
@@ -40,7 +61,16 @@ export const DisplayAlertRegions = React.memo(
                 <TableRow>
                   <TableCell>
                     <Box>
-                      <Checkbox />
+                      <Checkbox
+                        checked={!isSomeSelected && isAllSelected}
+                        data-testid="select-all-checkbox"
+                        indeterminate={isSomeSelected && !isAllSelected}
+                        onChange={(_, checked) =>
+                          handleSelectAll(
+                            checked ? 'Select All' : 'Deselect All'
+                          )
+                        }
+                      />
                     </Box>
                   </TableCell>
                   <TableSortCell
@@ -53,6 +83,16 @@ export const DisplayAlertRegions = React.memo(
                   >
                     Region
                   </TableSortCell>
+                  <TableSortCell
+                    active={true}
+                    data-qa-header="associated-entities"
+                    data-qa-sorting="associated-header"
+                    direction="asc"
+                    handleClick={() => {}}
+                    label="Associated Entities"
+                  >
+                    Associated Entities
+                  </TableSortCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -60,17 +100,25 @@ export const DisplayAlertRegions = React.memo(
                   length={regions?.length ?? 0}
                   loading={false}
                 >
-                  {paginatedData?.map(({ label, id }) => {
-                    return (
-                      <TableRow data-testid={`region-row-${id}`} key={id}>
-                        <TableCell>
-                          <Checkbox />
-                        </TableCell>
+                  {paginatedData
+                    ?.filter(({ checked }) => (showSelected ? checked : true))
+                    .map(({ label, id, checked, count }) => {
+                      return (
+                        <TableRow data-testid={`region-row-${id}`} key={id}>
+                          <TableCell>
+                            <Checkbox
+                              checked={checked}
+                              onChange={(_, status) =>
+                                handleSelectionChange(id, status)
+                              }
+                            />
+                          </TableCell>
 
-                        <TableCell>{label}</TableCell>
-                      </TableRow>
-                    );
-                  })}
+                          <TableCell>{label}</TableCell>
+                          <TableCell>{count}</TableCell>
+                        </TableRow>
+                      );
+                    })}
                 </TableContentWrapper>
               </TableBody>
             </Table>

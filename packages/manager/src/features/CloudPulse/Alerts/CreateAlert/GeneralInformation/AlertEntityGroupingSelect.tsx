@@ -9,18 +9,21 @@ import {
 import { entityGroupingOptions } from '../../constants';
 
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionGroup } from '@linode/api-v4';
 
 interface AlertEntityGroupingSelectProps {
   disabled?: boolean;
-  name: FieldPathByValue<CreateAlertDefinitionForm, AlertDefinitionType | null>;
+  name: FieldPathByValue<
+    CreateAlertDefinitionForm,
+    AlertDefinitionGroup | null
+  >;
 }
 
 export const AlertEntityGroupingSelect = (
   props: AlertEntityGroupingSelectProps
 ) => {
   const { name, disabled } = props;
-  const { control } = useFormContext<CreateAlertDefinitionForm>();
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   return (
     <Controller
       control={control}
@@ -28,29 +31,22 @@ export const AlertEntityGroupingSelect = (
       render={({ field, fieldState }) => (
         <Autocomplete
           data-testid="entity-grouping"
+          disableClearable
           disabled={disabled}
           errorText={fieldState.error?.message}
-          label="Entity Grouping"
+          label="Grouping"
           onBlur={field.onBlur}
-          onChange={(
-            _,
-            selected: { label: string; value: AlertDefinitionType },
-            reason
-          ) => {
-            if (selected) {
-              field.onChange(selected.value);
+          onChange={(_, { value }) => {
+            if (value) {
+              field.onChange(value);
             }
-            if (reason === 'clear') {
-              field.onChange(null);
-            }
+
+            setValue('regions', value === 'per-region' ? [] : undefined);
+            setValue('entity_ids', value === 'per-entity' ? [] : undefined);
           }}
           options={entityGroupingOptions}
-          placeholder="Select an entity grouping"
+          placeholder="Select a grouping"
           size="medium"
-          textFieldProps={{
-            labelTooltipText:
-              'Define a severity level associated with the alert to help you prioritize and manage alerts in the Recent activity tab.',
-          }}
           value={
             field.value !== null
               ? entityGroupingOptions.find(({ value }) => value === field.value)

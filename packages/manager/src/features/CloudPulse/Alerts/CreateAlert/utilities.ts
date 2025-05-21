@@ -30,9 +30,11 @@ export const filterFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
+  const regions = formValues.regions;
   return {
     ...values,
     entity_ids: entityIds,
+    regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
@@ -61,15 +63,18 @@ export const filterEditFormValues = (
   const entityIds = formValues.entity_ids;
   const rules = formValues.rule_criteria.rules;
   const triggerConditions = formValues.trigger_conditions;
+  const regions = formValues.regions;
   return {
     ...values,
     alertId,
     entity_ids: entityIds,
+    regions,
     rule_criteria: { rules: filterMetricCriteriaFormValues(rules) },
     serviceType,
     severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
     type: formValues.type,
+    group: formValues.group,
   };
 };
 

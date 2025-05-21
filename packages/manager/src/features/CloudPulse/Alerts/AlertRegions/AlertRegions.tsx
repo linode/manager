@@ -7,21 +7,28 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
+import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
+import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { AlertServiceType, Filter, Region } from '@linode/api-v4';
-import type { CloudPulseResourceTypeMapFlag } from 'src/featureFlags';
+import type { SelectDeselectAll } from '../constants';
+import type { AlertRegion } from './DisplayAlertRegions';
+import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
-  handleChange?: (regionIds: string[]) => void;
+  errorText?: string;
+  handleChange: (regionIds: string[]) => void;
   serviceType: AlertServiceType | null;
+  value?: string[];
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType } = props;
-  const flags = useFlags();
+  const { serviceType, handleChange, value = [], errorText } = props;
+  const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
+  const [selectedRegions, setSelectedRegions] = React.useState<string[]>(value);
+  const [showSelected, setShowSelected] = React.useState<boolean>(false);
 
   const resourceFilterMap: Record<string, Filter> = {
     dbaas: {
@@ -37,34 +44,59 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     }
   );
 
-  const supportedRegions = React.useMemo<Region[] | undefined>(() => {
-    const resourceTypeFlag = flags.aclpResourceTypeMap?.find(
-      (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
-    );
+  const handleSelectionChange = React.useCallback(
+    (regionId: string, isChecked: boolean) => {
+      if (isChecked) {
+        setSelectedRegions((prev) => {
+          const newValue = [...prev, regionId];
 
-    if (
-      resourceTypeFlag?.supportedRegionIds === null ||
-      resourceTypeFlag?.supportedRegionIds === undefined
-    ) {
-      return regions;
-    }
+          handleChange(newValue);
+          return newValue;
+        });
+        return;
+      }
 
-    const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
-      .split(',')
-      .map((regionId: string) => regionId.trim());
+      setSelectedRegions((prev) => {
+        const newValue = prev.filter((region) => region !== regionId);
 
-    return regions?.filter(({ id }) => supportedRegionsIdList.includes(id));
-  }, [flags.aclpResourceTypeMap, regions, serviceType]);
+        handleChange(newValue);
+        return newValue;
+      });
+    },
+    [handleChange]
+  );
 
-  const supportedRegionsFromResources = supportedRegions?.filter(
-    ({ id, label }) =>
-      resources?.some(({ region }) => region === id) &&
-      (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
+  const filteredRegionsWithStatus: AlertRegion[] = React.useMemo(
+    () =>
+      getFilteredRegions({
+        serviceType,
+        selectedRegions,
+        resources,
+        regions,
+        aclpResourceTypeMap,
+      }),
+    [aclpResourceTypeMap, regions, resources, selectedRegions, serviceType]
+  );
+
+  const handleSelectAll = React.useCallback(
+    (action: SelectDeselectAll) => {
+      let regionIds: string[] = [];
+      if (action === 'Select All') {
+        regionIds = filteredRegionsWithStatus?.map((region) => region.id) ?? [];
+      }
+
+      setSelectedRegions(regionIds);
+      handleChange(regionIds);
+    },
+    [filteredRegionsWithStatus, handleChange]
   );
 
   if (isRegionsLoading || isResourcesLoading) {
     return <CircleProgress />;
   }
+  const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
+    ({ label }) => label.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <Stack gap={2}>
@@ -75,6 +107,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
+          data-testid="region-search"
           fullWidth
           hideLabel
           label="Search for a Region"
@@ -86,7 +119,8 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value={searchText}
         />
         <Checkbox
-          data-testid="show_selected_only"
+          data-testid="show-selected-only"
+          onChange={(_event, checked: boolean) => setShowSelected(checked)}
           sx={(theme) => ({
             svg: {
               backgroundColor: theme.tokens.color.Neutrals.White,
@@ -99,8 +133,29 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           value="Show Selected"
         />
       </Box>
+      {errorText && (
+        <AlertListNoticeMessages errorMessage={errorText} variant="error" />
+      )}
 
-      <DisplayAlertRegions regions={supportedRegionsFromResources} />
+      <AlertSelectedInfoNotice
+        handleSelectionChange={handleSelectAll}
+        selectedCount={selectedRegions.length}
+        totalCount={filteredRegionsWithStatus.length}
+      />
+      <DisplayAlertRegions
+        handleSelectAll={handleSelectAll}
+        handleSelectionChange={handleSelectionChange}
+        isAllSelected={
+          filteredRegionsWithStatus.length > 0 &&
+          selectedRegions.length === filteredRegionsWithStatus.length
+        }
+        isSomeSelected={
+          selectedRegions.length > 0 &&
+          selectedRegions.length !== filteredRegionsWithStatus.length
+        }
+        regions={filteredRegionsBySearchText}
+        showSelected={showSelected}
+      />
     </Stack>
   );
 });

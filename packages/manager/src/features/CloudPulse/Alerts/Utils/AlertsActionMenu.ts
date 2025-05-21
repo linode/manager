@@ -20,30 +20,6 @@ export const getAlertTypeToActionsList = (
 ): Record<AlertDefinitionType, Action[]> => {
   // for now there is system and user alert types, in future more alert types can be added and action items will differ according to alert types
 
-  const actionsList = [
-    {
-      onClick: handleDetails,
-      title: 'Show Details',
-    },
-    {
-      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
-      onClick: handleEdit,
-      title: 'Edit',
-    },
-    {
-      disabled: alertStatus === 'in progress' || alertStatus === 'failed',
-      onClick: handleStatusChange,
-      title: getTitleForStatusChange(alertStatus),
-    },
-    {
-      disabled:
-        /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will remove the true. */
-        alertStatus === 'in progress' || alertStatus === 'failed' || true,
-      onClick: handleDelete,
-      title: 'Delete',
-    },
-  ];
-
   return {
     system: [
       {
@@ -55,9 +31,29 @@ export const getAlertTypeToActionsList = (
         title: 'Edit',
       },
     ],
-    user: actionsList,
-    'account-user': actionsList,
-    'region-user': actionsList,
+    user: [
+      {
+        onClick: handleDetails,
+        title: 'Show Details',
+      },
+      {
+        disabled: alertStatus === 'in progress' || alertStatus === 'failed',
+        onClick: handleEdit,
+        title: 'Edit',
+      },
+      {
+        disabled: alertStatus === 'in progress' || alertStatus === 'failed',
+        onClick: handleStatusChange,
+        title: getTitleForStatusChange(alertStatus),
+      },
+      {
+        disabled:
+          /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will remove the true. */
+          alertStatus === 'in progress' || alertStatus === 'failed' || true,
+        onClick: handleDelete,
+        title: 'Delete',
+      },
+    ],
   };
 };
 

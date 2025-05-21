@@ -59,6 +59,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
       entity_ids: selectedResources,
       serviceType,
       type: alertDetails.type,
+      group: alertDetails.group,
     })
       .then(() => {
         setShowConfirmation(false);

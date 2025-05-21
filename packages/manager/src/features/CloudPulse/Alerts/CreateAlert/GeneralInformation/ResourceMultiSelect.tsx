@@ -17,7 +17,7 @@ interface CloudPulseResourceSelectProps {
   /**
    * name used for the component to set in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, string[] | undefined>;
   /**
    * region selected by the user
    */
@@ -93,7 +93,7 @@ export const CloudPulseMultiResourceSelect = (
           value={
             field.value
               ? getResourcesList.filter((resource) =>
-                  field.value.includes(resource.value)
+                  field?.value?.includes(resource.value)
                 )
               : []
           }
