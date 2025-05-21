@@ -235,4 +235,130 @@ describe('Dimension filter field component', () => {
       valueLabel
     );
   });
+  it('should allow multiple value selection for "in" operator and store as comma-separated string', async () => {
+    const mockOnFilterDelete = vi.fn();
+
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <DimensionFilterField
+          dataFieldDisabled={false}
+          dimensionOptions={mockData[0].dimensions}
+          name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
+          onFilterDelete={mockOnFilterDelete}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData[0]],
+          },
+          serviceType: 'linode',
+        },
+      },
+    });
+
+    const dataFieldContainer = screen.getByTestId(dataFieldId);
+    const dataFieldInput = within(dataFieldContainer).getByRole('button', {
+      name: 'Open',
+    });
+    await user.click(dataFieldInput);
+
+    await user.click(
+      await screen.findByRole('option', {
+        name: dimensionFieldMockData[1].label,
+      })
+    );
+
+    const operatorContainer = screen.getByTestId('operator');
+    const operatorInput = within(operatorContainer).getByRole('button', {
+      name: 'Open',
+    });
+    await user.click(operatorInput);
+
+    const inOperatorLabel = dimensionOperatorOptions.find(
+      (op) => op.value === 'in'
+    )?.label;
+
+    await user.click(
+      await screen.findByRole('option', {
+        name: inOperatorLabel,
+      })
+    );
+
+    const valueContainer = screen.getByTestId('value');
+    const valueInput = within(valueContainer).getByRole('button', {
+      name: 'Open',
+    });
+    await user.click(valueInput);
+
+    const userLabel = capitalize('user');
+    const idleLabel = capitalize('idle');
+
+    await user.click(
+      await screen.findByRole('option', {
+        name: userLabel,
+      })
+    );
+    await user.click(
+      await screen.findByRole('option', {
+        name: idleLabel,
+      })
+    );
+
+    expect(within(valueContainer).getByText(userLabel)).toBeInTheDocument();
+    expect(within(valueContainer).getByText(idleLabel)).toBeInTheDocument();
+  });
+  it('should render a TextField for the Value input when the selected dimension has no values (for all operators)', async () => {
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <DimensionFilterField
+          dataFieldDisabled={false}
+          dimensionOptions={mockData[0].dimensions}
+          name={`rule_criteria.rules.${0}.dimension_filters.${0}`}
+          onFilterDelete={vi.fn()}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          rule_criteria: {
+            rules: [mockData[0]],
+          },
+          serviceType: 'linode',
+        },
+      },
+    });
+
+    const dataFieldContainer = screen.getByTestId('data-field');
+    const dataFieldInput = within(dataFieldContainer).getByRole('button', {
+      name: 'Open',
+    });
+
+    await user.click(dataFieldInput);
+    await user.click(
+      await screen.findByRole('option', {
+        name: dimensionFieldMockData[0].label, // "CPU name"
+      })
+    );
+
+    const operatorContainer = screen.getByTestId('operator');
+    const operatorInput = within(operatorContainer).getByRole('button', {
+      name: 'Open',
+    });
+
+    await user.click(operatorInput);
+    await user.click(
+      screen.getByRole('option', {
+        name: 'Equal',
+      })
+    );
+
+    const valueContainer = screen.getByTestId('value');
+
+    expect(within(valueContainer).getByRole('textbox')).toBeInTheDocument();
+
+    await user.click(operatorInput);
+    await user.click(screen.getByRole('option', { name: 'In' }));
+
+    expect(within(valueContainer).getByRole('textbox')).toBeInTheDocument();
+  });
 });

@@ -72,6 +72,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     name: `${name}.operator`,
   });
 
+  const dimensionValueWatcher = useWatch({ control, name: `${name}.value` });
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -88,9 +89,18 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     }
     return [];
   };
-  const isTextField = dimensionOperatorWatcher
-    ? textFieldOperators.includes(dimensionOperatorWatcher)
-    : false;
+  const isValueMultiple =
+    valueOptions().length > 0 && dimensionOperatorWatcher
+      ? dimensionOperatorWatcher === 'in'
+      : false;
+
+  const isTextField =
+    valueOptions().length < 1 ||
+    (dimensionOperatorWatcher
+      ? textFieldOperators.includes(dimensionOperatorWatcher)
+      : false);
+
+  const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
   return (
     <GridLegacy
       container
@@ -176,7 +186,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   label="Value"
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  placeholder={
+                    dimensionOperatorWatcher === 'in'
+                      ? 'Enter Value(s) (e.g.,  abc, xyz)'
+                      : 'Enter a Value'
+                  }
                   sx={{ flex: 1, width: '256px' }}
                   value={field.value ?? ''}
                 />
@@ -190,23 +204,44 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     value.value === option.value
                   }
                   label="Value"
+                  limitTags={1}
+                  multiple={isValueMultiple}
                   onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    selected: { label: string; value: string },
-                    operation
-                  ) => {
-                    field.onChange(
-                      operation === 'selectOption' ? selected.value : null
-                    );
+                  onChange={(_, selected, operation) => {
+                    if (isValueMultiple) {
+                      const selectedValues = Array.isArray(selected)
+                        ? selected.map((item) => item.value).join(',')
+                        : '';
+                      field.onChange(
+                        operation === 'selectOption' ? selectedValues : ''
+                      );
+                    } else {
+                      field.onChange(
+                        operation === 'selectOption' && selected
+                          ? (selected as { label: string; value: string }).value
+                          : ''
+                      );
+                    }
                   }}
                   options={valueOptions()}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  placeholder={
+                    dimensionValueWatcher &&
+                    (!Array.isArray(dimensionValueWatcher) ||
+                      dimensionValueWatcher.length)
+                      ? ''
+                      : valuePlaceholder
+                  }
                   sx={{ flex: 1 }}
                   value={
-                    valueOptions().find(
-                      (option) => option.value === field.value
-                    ) ?? null
+                    isValueMultiple
+                      ? valueOptions().filter((option) =>
+                          typeof field.value === 'string'
+                            ? field.value.split(',').includes(option.value)
+                            : false
+                        )
+                      : (valueOptions().find(
+                          (option) => option.value === field.value
+                        ) ?? null)
                   }
                 />
               )
