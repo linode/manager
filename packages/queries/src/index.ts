@@ -9,6 +9,7 @@ export * from './networking';
 export * from './nodebalancers';
 export * from './placementGroups';
 export * from './profile';
+export * from './quotas';
 export * from './regions';
 export * from './stackscripts';
 export * from './support';
