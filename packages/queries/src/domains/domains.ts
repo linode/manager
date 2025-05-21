@@ -14,7 +14,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { domainQueries } from './requests';
+import { domainQueries } from './keys';
 
 import type {
   APIError,
