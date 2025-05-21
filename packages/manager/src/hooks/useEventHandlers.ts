@@ -18,6 +18,7 @@ import { volumeEventsHandler } from 'src/queries/volumes/events';
 
 import {
   diskEventHandler,
+  interfaceEventHandler,
   linodeEventsHandler,
 } from '../queries/linodes/events';
 
@@ -91,6 +92,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('tax_id'),
     handler: taxIdEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('interface'),
+    handler: interfaceEventHandler,
   },
 ];
 
