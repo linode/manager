@@ -1,7 +1,7 @@
 import { getDomain, getDomains } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { getAllDomainRecords, getAllDomains } from './domains';
+import { getAllDomainRecords, getAllDomains } from './requests';
 
 import type { Filter, Params } from '@linode/api-v4';
 
