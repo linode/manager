@@ -1,7 +1,4 @@
-import {
-  useRegionsQuery,
-  useUpdateImageRegionsMutation,
-} from '@linode/queries';
+import { useUpdateImageRegionsMutation } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -11,9 +8,9 @@ import type { Resolver } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
-import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { useRegionsThatSupportImages } from '../../utils';
 import { ImageRegionRow } from './ImageRegionRow';
 
 import type {
@@ -45,7 +42,7 @@ export const ManageImageReplicasForm = (props: Props) => {
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
 
   const { enqueueSnackbar } = useSnackbar();
-  const { data: regions } = useRegionsQuery();
+  const { regions } = useRegionsThatSupportImages();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
 
   const {
@@ -85,15 +82,6 @@ export const ManageImageReplicasForm = (props: Props) => {
   };
 
   const values = watch();
-
-  /**
-   * Most regions that support Object Storage also support image replication
-   */
-  const regionsEligibleForReplication = regions?.filter(
-    (r) =>
-      r.capabilities.includes('Object Storage') &&
-      !DISALLOWED_IMAGE_REGIONS.includes(r.id)
-  );
 
   const disabledRegions: Record<string, DisableItemOption> = {};
 
@@ -155,7 +143,7 @@ export const ManageImageReplicasForm = (props: Props) => {
           })
         }
         placeholder="Select regions or type to search"
-        regions={regionsEligibleForReplication ?? []}
+        regions={regions}
         renderTags={() => null}
         selectedIds={values.regions}
       />

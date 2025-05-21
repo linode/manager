@@ -3,7 +3,6 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
   useProfile,
-  useRegionsQuery,
   useUploadImageMutation,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
@@ -34,7 +33,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { ImageUploader } from 'src/components/Uploaders/ImageUploader/ImageUploader';
 import { MAX_FILE_SIZE_IN_BYTES } from 'src/components/Uploaders/reducer';
-import { DISALLOWED_IMAGE_REGIONS } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
 import { usePendingUpload } from 'src/hooks/usePendingUpload';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -45,6 +43,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
 import { uploadImageFile } from '../requests';
+import { useRegionsThatSupportImages } from '../utils';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
@@ -74,7 +73,7 @@ export const ImageUpload = () => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const { data: regions } = useRegionsQuery();
+  const { regions } = useRegionsThatSupportImages();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -166,12 +165,6 @@ export const ImageUpload = () => {
   const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
-
-  const regionsEligibleForUpload = regions?.filter(
-    (region) =>
-      region.capabilities.includes('Object Storage') &&
-      !DISALLOWED_IMAGE_REGIONS.includes(region.id)
-  );
 
   // Called after a user confirms they want to navigate to another part of
   // Cloud during a pending upload. When we have refresh tokens this won't be
@@ -283,7 +276,7 @@ export const ImageUpload = () => {
                   isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
-                  regions={regionsEligibleForUpload ?? []}
+                  regions={regions}
                   textFieldProps={{
                     inputRef: field.ref,
                     onBlur: field.onBlur,
