@@ -27,7 +27,7 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 describe('BillingSummary', () => {
   it('displays appropriate helper text and value when there is no balance', () => {
     renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
     );
@@ -37,7 +37,7 @@ describe('BillingSummary', () => {
 
   it('displays a credit when there is a negative balance', () => {
     renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary
           balance={-10}
           balanceUninvoiced={5}
@@ -51,7 +51,7 @@ describe('BillingSummary', () => {
 
   it('displays the balance when there is a positive balance that is not yet past due', () => {
     renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary
           balance={10}
           balanceUninvoiced={5}
@@ -65,14 +65,14 @@ describe('BillingSummary', () => {
 
   it('does not display the promotions section unless there are promos', async () => {
     const { rerender } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
     );
     expect(screen.queryByText('Promotions')).not.toBeInTheDocument();
     rerender(
       wrapWithTheme(
-        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <BillingSummary
             balance={0}
             balanceUninvoiced={5}
@@ -87,7 +87,7 @@ describe('BillingSummary', () => {
 
   it('renders promo summary, expiry, and credit remaining', () => {
     renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary
           balance={0}
           balanceUninvoiced={5}
@@ -127,7 +127,7 @@ describe('BillingSummary', () => {
 
   it('displays accrued charges', () => {
     renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
     );
@@ -136,7 +136,7 @@ describe('BillingSummary', () => {
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', async () => {
     const { getByTestId, getByText } = renderWithTheme(
-      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+      <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
     );

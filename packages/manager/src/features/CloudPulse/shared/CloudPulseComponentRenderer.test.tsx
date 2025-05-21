@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 
 import { dashboardFactory } from 'src/factories';
@@ -12,6 +12,7 @@ import {
   getResourcesProperties,
   getTagsProperties,
 } from '../Utils/FilterBuilder';
+import { CloudPulseAvailableViews } from '../Utils/models';
 
 describe('ComponentRenderer component tests', () => {
   it('it should render provided tag filter in props', () => {
@@ -25,7 +26,7 @@ describe('ComponentRenderer component tests', () => {
         isMultiSelect: true,
         isOptional: true,
         name: 'Tags',
-        neededInServicePage: false,
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Tags',
         priority: 4,
       },
@@ -36,7 +37,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'tags',
           componentProps: {
@@ -51,7 +52,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'tags',
         })}
-      </Grid>
+      </GridLegacy>
     );
 
     expect(getByPlaceholderText('Select Tags')).toBeDefined();
@@ -65,8 +66,8 @@ describe('ComponentRenderer component tests', () => {
         isFilterable: false,
         isMetricsFilter: false,
         name: 'Region',
-        neededInServicePage: false,
         priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
       },
       name: 'Region',
     };
@@ -75,7 +76,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'region',
           componentProps: {
@@ -90,7 +91,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'region',
         })}
-      </Grid>
+      </GridLegacy>
     );
 
     expect(getByPlaceholderText('Select a Region')).toBeDefined();
@@ -106,7 +107,7 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: true,
         isMultiSelect: true,
         name: 'Resources',
-        neededInServicePage: false,
+        neededInViews: [CloudPulseAvailableViews.central],
         placeholder: 'Select Resources',
         priority: 2,
       },
@@ -117,7 +118,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item key={'resources'} sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item key={'resources'} sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'resource_id',
           componentProps: {
@@ -133,7 +134,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'resource_id',
         })}
-      </Grid>
+      </GridLegacy>
     );
     expect(getByPlaceholderText('Select Resources')).toBeDefined();
   });
@@ -148,7 +149,10 @@ describe('ComponentRenderer component tests', () => {
         isMetricsFilter: false,
         isMultiSelect: false,
         name: 'Node Type',
-        neededInServicePage: true,
+        neededInViews: [
+          CloudPulseAvailableViews.service,
+          CloudPulseAvailableViews.central,
+        ],
         placeholder: 'Select a Node Type',
         priority: 5,
       },
@@ -159,7 +163,7 @@ describe('ComponentRenderer component tests', () => {
     });
 
     const { getByPlaceholderText } = renderWithTheme(
-      <Grid item sx={{ marginLeft: 2 }} xs>
+      <GridLegacy item sx={{ marginLeft: 2 }} xs>
         {RenderComponent({
           componentKey: 'node_type',
           componentProps: {
@@ -175,7 +179,7 @@ describe('ComponentRenderer component tests', () => {
           },
           key: 'node_type',
         })}
-      </Grid>
+      </GridLegacy>
     );
     expect(getByPlaceholderText('Select a Node Type')).toBeDefined();
   });

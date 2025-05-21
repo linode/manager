@@ -17,7 +17,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
 
   if (props.zoomIn) {
     return (
-      <CloudPulseTooltip placement="bottom-end" title="Minimize">
+      <CloudPulseTooltip
+        key="minimize-tooltip"
+        placement="bottom-end"
+        title="Minimize"
+      >
         <IconButton
           aria-label="Zoom Out"
           color="inherit"
@@ -34,7 +38,11 @@ export const ZoomIcon = React.memo((props: ZoomIconProperties) => {
   }
 
   return (
-    <CloudPulseTooltip placement="bottom-end" title="Maximize">
+    <CloudPulseTooltip
+      key="maximize-tooltip"
+      placement="bottom-end"
+      title="Maximize"
+    >
       <IconButton
         aria-label="Zoom In"
         color="inherit"

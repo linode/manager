@@ -1,5 +1,5 @@
 import { Autocomplete, Box, TextField, Typography } from '@linode/ui';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -15,6 +15,7 @@ import type {
   CreateAlertDefinitionPayload,
   TriggerCondition,
 } from '@linode/api-v4';
+
 interface TriggerConditionProps {
   /**
    * maximum scraping interval value for a metric to filter the evaluation period and polling interval options
@@ -52,19 +53,19 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       sx={(theme) => ({
         ...getAlertBoxStyles(theme),
         borderRadius: 1,
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacingFunction(2),
         p: 2,
       })}
     >
       <Typography variant="h3"> Trigger Conditions</Typography>
-      <Grid
+      <GridLegacy
         container
         spacing={2}
         sx={{
           alignItems: 'flex-start',
         }}
       >
-        <Grid item md={3} sm={6} xs={12}>
+        <GridLegacy item md={3} sm={6} xs={12}>
           <Controller
             control={control}
             name={`${name}.evaluation_period_seconds`}
@@ -98,8 +99,8 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
               />
             )}
           />
-        </Grid>
-        <Grid item md={3} sm={6} xs={12}>
+        </GridLegacy>
+        <GridLegacy item md={3} sm={6} xs={12}>
           <Controller
             control={control}
             name={`${name}.polling_interval_seconds`}
@@ -133,8 +134,8 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
               />
             )}
           />
-        </Grid>
-        <Grid
+        </GridLegacy>
+        <GridLegacy
           alignItems="start"
           display="flex"
           flexDirection={{ sm: 'row', xs: 'column' }}
@@ -198,8 +199,8 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           >
             consecutive occurrence(s).
           </Typography>
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     </Box>
   );
 };

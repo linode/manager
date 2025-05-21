@@ -207,6 +207,7 @@ export const DatabaseDetail = () => {
           pathname: location.pathname,
         }}
         disabledBreadcrumbEditButton={isDatabasesGrantReadOnly}
+        spacingBottom={4}
         title={database.label}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>

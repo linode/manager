@@ -1,5 +1,6 @@
+import { useAccountSettings, useProfile } from '@linode/queries';
 import { StyledLinkButton, Typography } from '@linode/ui';
-import { isFeatureEnabledV2, useOpenClose } from '@linode/utilities';
+import { useOpenClose } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
@@ -15,9 +16,7 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useTabs } from 'src/hooks/useTabs';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
@@ -25,6 +24,7 @@ import { getRestrictedResourceText } from '../Account/utils';
 import { CreateBucketDrawer } from './BucketLanding/CreateBucketDrawer';
 import { OMC_BucketLanding } from './BucketLanding/OMC_BucketLanding';
 import { OMC_CreateBucketDrawer } from './BucketLanding/OMC_CreateBucketDrawer';
+import { useIsObjMultiClusterEnabled } from './hooks/useIsObjectStorageGen2Enabled';
 
 import type { MODE } from './AccessKeyLanding/types';
 
@@ -40,19 +40,18 @@ const AccessKeyLanding = React.lazy(() =>
 );
 
 export const ObjectStorageLanding = () => {
+  const flags = useFlags();
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
+
   const [mode, setMode] = React.useState<MODE>('creating');
 
-  const { _isRestrictedUser, account, accountSettings } =
-    useAccountManagement();
-  const flags = useFlags();
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { data: profile } = useProfile();
+  const { data: accountSettings } = useAccountSettings();
+
+  const isRestrictedUser = profile?.restricted ?? false;
 
   const {
     data: objectStorageBucketsResponse,
@@ -81,10 +80,6 @@ export const ObjectStorageLanding = () => {
     userHasNoBucketCreated &&
     accountSettings?.object_storage === 'active';
 
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
-
   const shouldHideDocsAndCreateButtons =
     !areBucketsLoading && tabIndex === 0 && userHasNoBucketCreated;
 
@@ -104,6 +99,7 @@ export const ObjectStorageLanding = () => {
   const createButtonAction = () => {
     if (isAccessKeysTab) {
       navigate({ to: '/object-storage/access-keys/create' });
+      handleOpenAccessDrawer('creating');
     } else {
       navigate({ to: '/object-storage/buckets/create' });
     }
@@ -132,12 +128,13 @@ export const ObjectStorageLanding = () => {
           }),
         }}
         createButtonText={createButtonText}
-        disabledCreateButton={isBucketCreationRestricted}
+        disabledCreateButton={isRestrictedUser}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         entity="Object Storage"
         onButtonClick={createButtonAction}
         removeCrumbX={1}
         shouldHideDocsAndCreateButtons={shouldHideDocsAndCreateButtons}
+        spacingBottom={4}
         title="Object Storage"
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
@@ -169,7 +166,7 @@ export const ObjectStorageLanding = () => {
                   navigate({ to: '/object-storage/access-keys' });
                   openDrawer.close();
                 }}
-                isRestrictedUser={_isRestrictedUser}
+                isRestrictedUser={isRestrictedUser}
                 mode={mode}
                 openAccessDrawer={handleOpenAccessDrawer}
               />
