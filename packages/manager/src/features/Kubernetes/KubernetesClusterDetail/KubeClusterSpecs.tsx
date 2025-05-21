@@ -88,7 +88,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const highAvailabilityPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
-  const enterprisePrice = lkeEnterpriseType?.price.monthly ?? undefined;
+  const enterprisePrice =
+    cluster.tier === 'enterprise' && lkeEnterpriseType?.price.monthly
+      ? lkeEnterpriseType?.price.monthly
+      : undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
