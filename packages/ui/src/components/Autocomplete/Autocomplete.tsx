@@ -175,7 +175,6 @@ export const Autocomplete = <
                       <>
                         {/* TODO: Remove backwards compatibility once migration is complete */}
                         {textFieldProps?.InputProps?.endAdornment}
-                        {/* @ts-expect-error - This is a legitimate property on slotProps.input */}
                         {textFieldProps?.slotProps?.input?.endAdornment}
                         {loading && (
                           <InputAdornment position="end">
