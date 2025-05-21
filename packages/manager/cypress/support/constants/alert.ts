@@ -14,6 +14,7 @@ export const dimensionOperatorTypeMap: Record<
   eq: 'equals',
   neq: 'not equals',
   startswith: 'starts with',
+  in: 'in',
 };
 
 export const metricOperatorTypeMap: Record<MetricOperatorType, string> = {
