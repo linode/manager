@@ -549,7 +549,12 @@ export const getFilteredRegions = (props: FilterRegionProps): AlertRegion[] => {
   });
 };
 
-export const getSupportedRegions = (props: SupportedRegionsProps): Region[] => {
+/**
+ *
+ * @param props The props required to get the supported regions
+ * @returns The filtered regions based on the supported and resources
+ */
+export const getSupportedRegions = (props: SupportedRegionsProps) => {
   const { aclpResourceTypeMap, serviceType, regions, resources } = props;
   const resourceTypeFlag = aclpResourceTypeMap?.find(
     (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
