@@ -1,15 +1,10 @@
-import { Hidden } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -18,8 +13,6 @@ interface Props {
 
 export const NodeBalancerActionMenu = (props: Props) => {
   const navigate = useNavigate();
-  const theme = useTheme<Theme>();
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const { nodeBalancerId } = props;
 
@@ -73,25 +66,9 @@ export const NodeBalancerActionMenu = (props: Props) => {
   ];
 
   return (
-    <>
-      {!matchesMdDown &&
-        actions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <Hidden lgUp>
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
-        />
-      </Hidden>
-    </>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+    />
   );
 };
