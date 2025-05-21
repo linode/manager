@@ -1,4 +1,4 @@
-import { Factory } from '@linode/utilities';
+import { Factory, regionFactory } from '@linode/utilities';
 
 import type {
   Alert,
@@ -91,6 +91,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created_by: 'system',
   description: 'Test description',
   entity_ids: ['1', '2', '3', '48', '50', '51'],
+  regions: regionFactory.buildList(3).map(({ id }) => id),
   has_more_resources: true,
   id: Factory.each((i) => i),
   label: Factory.each((id) => `Alert-${id}`),
@@ -110,4 +111,5 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'system',
+  group: 'per-entity',
 });

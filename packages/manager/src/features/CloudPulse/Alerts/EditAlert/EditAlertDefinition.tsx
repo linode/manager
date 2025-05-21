@@ -17,11 +17,14 @@ import {
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
+import { AccountGroupingNotice } from '../CreateAlert/CreateAlertDefinition';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { AlertEntityGroupingSelect } from '../CreateAlert/GeneralInformation/AlertEntityGroupingSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertRegions } from '../CreateAlert/Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
@@ -81,7 +84,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { mutateAsync: editAlert } = useEditAlertDefinition();
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
-
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -179,7 +181,14 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources name="entity_ids" />
+          <AlertEntityGroupingSelect disabled name="group" />
+          {alertDetails.group === 'per-entity' && (
+            <CloudPulseModifyAlertResources name="entity_ids" />
+          )}
+          {alertDetails.group === 'per-region' && (
+            <CloudPulseModifyAlertRegions name="regions" />
+          )}
+          {alertDetails.group === 'per-account' && <AccountGroupingNotice />}
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

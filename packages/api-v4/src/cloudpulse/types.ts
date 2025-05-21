@@ -9,6 +9,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
+export type AlertDefinitionGroup = 'per-account' | 'per-entity' | 'per-region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -177,6 +178,7 @@ export interface CreateAlertDefinitionPayload {
   description?: string;
   entity_ids?: string[];
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: MetricCriteria[];
   };
@@ -226,9 +228,11 @@ export interface Alert {
   created_by: string;
   description: string;
   entity_ids: string[];
+  group: AlertDefinitionGroup;
   has_more_resources: boolean;
   id: number;
   label: string;
+  regions?: string[];
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
@@ -315,7 +319,9 @@ export interface EditAlertDefinitionPayload {
   channel_ids?: number[];
   description?: string;
   entity_ids?: string[];
+  group: AlertDefinitionGroup | null;
   label?: string;
+  regions?: string[];
   rule_criteria?: {
     rules: MetricCriteria[];
   };
@@ -329,6 +335,7 @@ export interface EditAlertPayloadWithService
   extends EditAlertDefinitionPayload {
   alertId: number;
   serviceType: string;
+  type: AlertDefinitionType | null;
 }
 
 export type AlertStatusUpdateType = 'Disable' | 'Enable';

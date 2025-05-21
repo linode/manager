@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Box, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -18,15 +18,19 @@ import {
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
+  getAlertBoxStyles,
   getSchemaWithEntityIdValidation,
   handleMultipleError,
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
+import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroupingSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertRegions } from './Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
@@ -53,7 +57,6 @@ const criteriaInitialValues: MetricCriteriaForm = {
 };
 const initialValues: CreateAlertDefinitionForm = {
   channel_ids: [],
-  entity_ids: [],
   label: '',
   rule_criteria: {
     rules: [criteriaInitialValues],
@@ -62,6 +65,9 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
+  entity_ids: [],
+  group: 'per-entity',
+  type: 'user',
 };
 
 const overrides = [
@@ -111,7 +117,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-
+  const entityGroupingWatcher = useWatch({ control, name: 'group' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -138,7 +144,6 @@ export const CreateAlertDefinition = () => {
       }
     }
   });
-
   const previousSubmitCount = React.useRef<number>(0);
   React.useEffect(() => {
     if (!isEmpty(errors) && submitCount > previousSubmitCount.current) {
@@ -210,7 +215,16 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <CloudPulseModifyAlertResources name="entity_ids" />
+            <AlertEntityGroupingSelect name="group" />
+            {entityGroupingWatcher === 'per-entity' && (
+              <CloudPulseModifyAlertResources name="entity_ids" />
+            )}
+            {entityGroupingWatcher === 'per-region' && (
+              <CloudPulseModifyAlertRegions name="regions" />
+            )}
+            {entityGroupingWatcher === 'per-account' && (
+              <AccountGroupingNotice />
+            )}
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
@@ -239,5 +253,24 @@ export const CreateAlertDefinition = () => {
         </FormProvider>
       </Paper>
     </React.Fragment>
+  );
+};
+
+export const AccountGroupingNotice = () => {
+  return (
+    <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
+      <Typography variant="h2">2. Entities</Typography>
+      <Box
+        sx={(theme) => ({
+          ...getAlertBoxStyles(theme),
+          overflow: 'auto',
+        })}
+      >
+        <AlertListNoticeMessages
+          errorMessage="All entities associated with current account will be included in this alert definition"
+          variant="warning"
+        />
+      </Box>
+    </Box>
   );
 };

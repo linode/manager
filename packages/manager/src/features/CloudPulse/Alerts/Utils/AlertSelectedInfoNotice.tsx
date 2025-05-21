@@ -4,46 +4,46 @@ import React from 'react';
 
 import { AlertMaxSelectionText } from './AlertMaxSelectionText';
 
-import type { SelectDeselectAll } from './AlertsResources';
+import type { SelectDeselectAll } from '../constants';
 
-interface AlertResourceNoticeProps {
+interface AlertSelectedInforNoticeProps {
   /**
    * Callback to handle selection changes (select all or deselect all).
    */
   handleSelectionChange: (action: SelectDeselectAll) => void;
 
   /**
-   * The maximum number of resources that can be selected based on service type.
+   * The maximum number of elements that can be selected.
    */
   maxSelectionCount?: number;
 
   /**
-   * The number of currently selected resources.
+   * The number of currently selected elements.
    */
-  selectedResources: number;
+  selectedCount: number;
 
   /**
-   * The total number of available resources.
+   * The total number of available elements.
    */
-  totalResources: number;
+  totalCount: number;
 }
 
-export const AlertsResourcesNotice = React.memo(
-  (props: AlertResourceNoticeProps) => {
+export const AlertSelectedInfoNotice = React.memo(
+  (props: AlertSelectedInforNoticeProps) => {
     const {
       handleSelectionChange,
       maxSelectionCount,
-      selectedResources,
-      totalResources,
+      selectedCount,
+      totalCount,
     } = props;
     const isSelectAll =
       maxSelectionCount !== undefined
-        ? selectedResources === 0
-        : selectedResources < totalResources;
+        ? selectedCount === 0
+        : selectedCount < totalCount;
     const buttonText = isSelectAll ? 'Select All' : 'Deselect All';
     const isButtonDisabled =
       isSelectAll && maxSelectionCount !== undefined
-        ? totalResources > maxSelectionCount
+        ? totalCount > maxSelectionCount
         : false;
 
     return (
@@ -54,7 +54,7 @@ export const AlertsResourcesNotice = React.memo(
             fontFamily: theme.tokens.alias.Typography.Body.Bold,
           })}
         >
-          {selectedResources} of {totalResources} entities are selected.
+          {selectedCount} of {totalCount} entities are selected.
         </Typography>
         <Tooltip
           placement="right-start"
