@@ -47,7 +47,7 @@ export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {
  *
  * @param {string} a - The first version string to compare.
  * @param {string} b - The second version string to compare.
- * @param {SortOrder} order - The order to sort by, can be 'asc' for ascending or 'desc' for descending.
+ * @param {SortOrder} order - The intended sort direction of the output; 'asc' means lower versions come first, 'desc' means higher versions come first.
  * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
  *                   zero if they are equal, and a negative number if `b` is greater than `a`.
  *
@@ -100,7 +100,7 @@ export const sortByVersion = (
  *
  * @param {string} a - The first version string to compare.
  * @param {string} b - The second version string to compare.
- * @param {SortOrder} order - The order to sort by, can be 'asc' for ascending or 'desc' for descending.
+ * @param {SortOrder} order - The intended sort direction of the output; 'asc' means lower versions come first, 'desc' means higher versions come first.
  * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
  *                   zero if they are equal, and a negative number if `b` is greater than `a`.
  * * @example
