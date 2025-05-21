@@ -3,7 +3,16 @@ import { createLinodeRequestFactory } from '@linode/utilities';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
+import {
+  dryRunButtonText,
+  promptDialogDescription1,
+  promptDialogDescription2,
+  promptDialogUpgradeDetails,
+  promptDialogUpgradeWhatHappensTitle,
+  upgradeInterfacesButtonText,
+} from 'support/constants/linode-interfaces';
 import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
+import { ui } from 'support/ui';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
@@ -16,6 +25,7 @@ import type {
   CreateLinodeRequest,
   InterfacePayload,
   Linode,
+  LinodeInterface,
 } from '@linode/api-v4';
 
 /**
@@ -213,3 +223,69 @@ export const fetchLinodeConfigs = async (
     getLinodeConfigs(linodeId, { page, page_size: pageSize })
   );
 };
+
+/**
+ * Check the content of prompt dialog
+ */
+export const assertPromptDialogContent = (() => {
+  ui.dialog
+    .findByTitle('Upgrade to Linode Interfaces')
+    .should('be.visible')
+    .within(() => {
+      cy.findByText(promptDialogDescription1, {exact: false}).should('be.visible');
+      cy.findByText(promptDialogDescription2, {exact: false}).should('be.visible');
+      cy.findByText(promptDialogUpgradeWhatHappensTitle, {exact: false}).should('be.visible');
+      promptDialogUpgradeDetails.forEach(item => {
+        cy.findByText(item).should('be.visible');
+      });
+
+      ui.button
+        .findByTitle(dryRunButtonText)
+        .should('be.visible')
+        .should('be.enabled');
+      ui.button
+        .findByTitle(upgradeInterfacesButtonText)
+        .should('be.visible')
+        .should('be.enabled');
+    });
+});
+
+/**
+ * Check the upgrade summary
+ * 
+ * @param linodeInterface - Linode interface to check.
+ * @param isDryRun - Boolean to indicate if the upgrade performs dry run.
+ * 
+ */
+export const assertUpgradeSummay = ((linodeInterface: LinodeInterface, isDryRun: boolean = false) => {
+
+  if (isDryRun) {
+    // Confirm that dry run status is successful
+    cy.findByText('Dry run successful').should('be.visible');
+    cy.findByText('No issues were found. You can proceed with upgrading to Linode Interfaces.').should('be.visible');
+
+    // Confirm that dry run summary details display.
+    cy.findByText('Dry Run Summary').should('be.visible');
+    cy.findByText('Interface Meta Info').should('be.visible');
+    cy.findByText(`MAC Address: ${linodeInterface.mac_address}`).should('be.visible');
+    cy.findByText(`Created: ${linodeInterface.created}`).should('be.visible');
+    cy.findByText(`Updated: ${linodeInterface.updated}`).should('be.visible');
+    cy.findByText(`Version: ${linodeInterface.version}`).should('be.visible');
+    cy.findByText('Public Interface dry run successful.').should('be.visible');
+  } else {
+    // Confirm that upgrade status is successful
+    cy.findByText('Upgrade successful').should('be.visible');
+    cy.findByText('Your Linode now uses Linode Interfaces. Existing interfaces were migrated, firewalls reassigned, and changes are visible', {exact: false}).should('be.visible');
+
+    // Confirm that upgrade summary details display.
+    cy.findByText('Upgrade Summary').should('be.visible');
+    cy.findByText(`Interface Meta Info: Interface #${linodeInterface.id}`).should('be.visible');
+    cy.findByText(`ID: ${linodeInterface.id}`).should('be.visible');
+    cy.findByText(`MAC Address: ${linodeInterface.mac_address}`).should('be.visible');
+    cy.findByText(`Created: ${linodeInterface.created}`).should('be.visible');
+    cy.findByText(`Updated: ${linodeInterface.updated}`).should('be.visible');
+    cy.findByText(`Version: ${linodeInterface.version}`).should('be.visible');
+    cy.findByText('Public Interface successfully upgraded.').should('be.visible');
+  }
+
+});

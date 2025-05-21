@@ -17,6 +17,7 @@ import type {
   LinodeInterfaces,
   LinodeIPsResponse,
   LinodeType,
+  UpgradeInterfaceData,
   Volume,
 } from '@linode/api-v4';
 
@@ -698,6 +699,45 @@ export const mockCreateLinodeInterfaceError = (
   return cy.intercept(
     'POST',
     apiMatcher(`linode/instances/${linodeId}/interfaces`),
+    makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts POST request to create a Linode Interface.
+ *
+ * @param linodeId - the Linodes ID to add the interface to.
+ * @param linodeInterface - a mock upgrade linode interface object.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpgradeNewLinodeInterface = (
+  linodeId: number,
+  linodeInterface: UpgradeInterfaceData
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/upgrade-interfaces`),
+    makeResponse(linodeInterface)
+  );
+};
+
+/**
+ * Intercepts POST request to create a Linode Interface and mocks an error response.
+ *
+ * @param errorMessage - Error message to be included in the mocked HTTP response.
+ * @param statusCode - HTTP status code for mocked error response. Default is `400`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpgradeNewLinodeInterfaceError = (
+  linodeId: number,
+  errorMessage: string,
+  statusCode: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`linode/instances/${linodeId}/upgrade-interfaces`),
     makeErrorResponse(errorMessage, statusCode)
   );
 };

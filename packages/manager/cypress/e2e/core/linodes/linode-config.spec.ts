@@ -3,7 +3,9 @@ import {
   linodeConfigInterfaceFactory,
   linodeConfigInterfaceFactoryWithVPC,
   linodeFactory,
+  linodeInterfaceFactoryPublic,
   regionFactory,
+  upgradeLinodeInterfaceFactory,
 } from '@linode/utilities';
 import {
   accountFactory,
@@ -15,6 +17,12 @@ import {
 } from '@src/factories';
 import { authenticate } from 'support/api/authentication';
 import { dcPricingMockLinodeTypes } from 'support/constants/dc-specific-pricing';
+import {
+  dryRunButtonText,
+  upgradeInterfacesButtonText,
+  upgradeTooltipText1,
+  upgradeTooltipText2,
+} from 'support/constants/linode-interfaces';
 import { LINODE_CLONE_TIMEOUT } from 'support/constants/linodes';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
@@ -36,13 +44,20 @@ import {
   mockGetLinodeKernel,
   mockGetLinodeKernels,
   mockGetLinodeVolumes,
+  mockUpgradeNewLinodeInterface,
+  mockUpgradeNewLinodeInterfaceError,
 } from 'support/intercepts/linodes';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
-import { createTestLinode, fetchLinodeConfigs } from 'support/util/linodes';
+import {
+  assertPromptDialogContent,
+  assertUpgradeSummay,
+  createTestLinode,
+  fetchLinodeConfigs,
+} from 'support/util/linodes';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
 
@@ -498,101 +513,6 @@ describe('Linode Config management', () => {
     const mockVLANs: VLAN[] = VLANFactory.buildList(2);
 
     /*
-     * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
-     * - Confirms absence on edit and add config dialog.
-     */
-    it('Does not show interfaces section when managing configs using new Linode interfaces', () => {
-      // TODO M3-9775: Remove mock when `linodeInterfaces` feature flag is removed.
-      mockAppendFeatureFlags({
-        linodeInterfaces: {
-          enabled: true,
-        },
-      });
-
-      // TODO Remove account mock when 'Linode Interfaces' capability is generally available.
-      mockGetAccount(
-        accountFactory.build({
-          capabilities: ['Linodes', 'Linode Interfaces'],
-        })
-      );
-
-      const mockLinode = linodeFactory.build({
-        id: randomNumber(1000, 99999),
-        label: randomLabel(),
-        region: chooseRegion().id,
-        interface_generation: 'linode',
-      });
-
-      const mockConfig = configFactory.build({
-        label: randomLabel(),
-        id: randomNumber(1000, 99999),
-        interfaces: null,
-      });
-
-      mockGetLinodeDetails(mockLinode.id, mockLinode);
-      mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
-      mockGetLinodeConfig(mockLinode.id, mockConfig);
-
-      cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
-
-      cy.findByLabelText('List of Configurations')
-        .should('be.visible')
-        .within(() => {
-          ui.button
-            .findByTitle('Edit')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      // Confirm absence of the interfaces section when editing an existing config.
-      ui.dialog
-        .findByTitle('Edit Configuration')
-        .should('be.visible')
-        .within(() => {
-          // Scroll "Networking" section into view, and confirm that Interfaces
-          // options are absent and informational text is shown instead.
-          cy.findByText('Networking').scrollIntoView();
-          cy.contains(
-            "Go to Network to view your Linode's Network interfaces."
-          ).should('be.visible');
-          cy.findByText('Primary Interface (Default Route)').should(
-            'not.exist'
-          );
-          cy.findByText('eth0').should('not.exist');
-          cy.findByText('eth1').should('not.exist');
-          cy.findByText('eth2').should('not.exist');
-
-          ui.button.findByTitle('Cancel').click();
-        });
-
-      // Confirm asbence of the interfaces section when adding a new config.
-      ui.button
-        .findByTitle('Add Configuration')
-        .should('be.visible')
-        .should('be.enabled')
-        .click();
-
-      ui.dialog
-        .findByTitle('Add Configuration')
-        .should('be.visible')
-        .within(() => {
-          // Scroll "Networking" section into view, and confirm that Interfaces
-          // options are absent and informational text is shown instead.
-          cy.findByText('Networking').scrollIntoView();
-          cy.contains(
-            "Go to Network to view your Linode's Network interfaces."
-          ).should('be.visible');
-          cy.findByText('Primary Interface (Default Route)').should(
-            'not.exist'
-          );
-          cy.findByText('eth0').should('not.exist');
-          cy.findByText('eth1').should('not.exist');
-          cy.findByText('eth2').should('not.exist');
-        });
-    });
-
-    /*
      * - Tests Linode config create and VPC interface assignment UI flows using mock API data.
      * - Confirms that VPC can be assigned as eth0, eth1, and eth2.
      * - Confirms public internet access/NAT helper text appears when VPC is set as eth0.
@@ -938,6 +858,273 @@ describe('Linode Config management', () => {
       });
 
       cy.findByText('REBOOT NEEDED').should('be.visible');
+    });
+
+    describe('Upgrade new Linode Interfaces flow', () => {
+      beforeEach(() => {
+        // TODO M3-9775: Remove mock when `linodeInterfaces` feature flag is removed.
+        mockAppendFeatureFlags({
+          linodeInterfaces: {
+            enabled: true,
+          },
+        });
+
+        // TODO Remove account mock when 'Linode Interfaces' capability is generally available.
+        mockGetAccount(
+          accountFactory.build({
+            capabilities: ['Linodes', 'Linode Interfaces'],
+          })
+        );
+      });
+
+      /*
+       * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
+       * - Confirms absence on edit and add config dialog.
+       */
+      it('Does not show interfaces section when managing configs using new Linode interfaces', () => {
+        const mockLinode = linodeFactory.build({
+          id: randomNumber(1000, 99999),
+          label: randomLabel(),
+          region: chooseRegion().id,
+          interface_generation: 'linode',
+        });
+
+        const mockConfig = configFactory.build({
+          label: randomLabel(),
+          id: randomNumber(1000, 99999),
+          interfaces: null,
+        });
+
+        mockGetLinodeDetails(mockLinode.id, mockLinode);
+        mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
+        mockGetLinodeConfig(mockLinode.id, mockConfig);
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+
+        cy.findByLabelText('List of Configurations')
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle('Edit')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        // Confirm absence of the interfaces section when editing an existing config.
+        ui.dialog
+          .findByTitle('Edit Configuration')
+          .should('be.visible')
+          .within(() => {
+            // Scroll "Networking" section into view, and confirm that Interfaces
+            // options are absent and informational text is shown instead.
+            cy.findByText('Networking').scrollIntoView();
+            cy.contains(
+              "Go to Network to view your Linode's Network interfaces."
+            ).should('be.visible');
+            cy.findByText('Primary Interface (Default Route)').should(
+              'not.exist'
+            );
+            cy.findByText('eth0').should('not.exist');
+            cy.findByText('eth1').should('not.exist');
+            cy.findByText('eth2').should('not.exist');
+
+            ui.button.findByTitle('Cancel').click();
+          });
+
+        // Confirm asbence of the interfaces section when adding a new config.
+        ui.button
+          .findByTitle('Add Configuration')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        ui.dialog
+          .findByTitle('Add Configuration')
+          .should('be.visible')
+          .within(() => {
+            // Scroll "Networking" section into view, and confirm that Interfaces
+            // options are absent and informational text is shown instead.
+            cy.findByText('Networking').scrollIntoView();
+            cy.contains(
+              "Go to Network to view your Linode's Network interfaces."
+            ).should('be.visible');
+            cy.findByText('Primary Interface (Default Route)').should(
+              'not.exist'
+            );
+            cy.findByText('eth0').should('not.exist');
+            cy.findByText('eth1').should('not.exist');
+            cy.findByText('eth2').should('not.exist');
+          });
+      });
+
+      /*
+       * - Confirm button appears in Details footer for linodes with legacy interfaces.
+       * - Confirm clicking 'Upgrade Interfaces' button flow.
+       */
+      it('Upgrades from legacy configuration interfaces to new Linode interfaces (Public)', () => {
+        const mockLinode = linodeFactory.build({
+          id: randomNumber(1000, 99999),
+          label: randomLabel(),
+          region: chooseRegion().id,
+        });
+
+        const mockConfig = configFactory.build({
+          label: randomLabel(),
+          id: randomNumber(1000, 99999),
+          interfaces: null,
+        });
+
+        const mockPublicInterface = linodeInterfaceFactoryPublic.build({
+          id: randomNumber(1000, 99999),
+        });
+
+        const mockUpgradeLinodeInterface = upgradeLinodeInterfaceFactory.build({
+          config_id: mockConfig.id,
+          dry_run: true,
+          interfaces: [mockPublicInterface],
+        });
+
+        mockGetLinodeDetails(mockLinode.id, mockLinode);
+        mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
+        mockGetLinodeConfig(mockLinode.id, mockConfig);
+        mockUpgradeNewLinodeInterface(
+          mockLinode.id,
+          mockUpgradeLinodeInterface
+        );
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+
+        // Confirm the tooltip shows up
+        ui.button
+          .findByTitle(upgradeInterfacesButtonText)
+          .should('be.visible')
+          .should('be.enabled')
+          .trigger('mouseover');
+        cy.findByText(upgradeTooltipText1, { exact: false }).should(
+          'be.visible'
+        );
+        cy.findByText(upgradeTooltipText2, { exact: false }).should(
+          'be.visible'
+        );
+
+        // Confirm the "Upgrade Interfaces" button appears and works as expected.
+        ui.button
+          .findByTitle(upgradeInterfacesButtonText)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        // Assert the prompt dialog content.
+        assertPromptDialogContent();
+
+        // Check "Dry Run" flow
+        ui.dialog
+          .findByTitle('Upgrade to Linode Interfaces')
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle(dryRunButtonText)
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            assertUpgradeSummay(mockPublicInterface, true);
+
+            ui.button
+              .findByTitle('Continue to Upgrade')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            assertUpgradeSummay(mockPublicInterface, false);
+
+            ui.button.findByTitle('Close').should('be.visible').click();
+          });
+
+        // Check "Upgrade Interfaces" flow
+        ui.button
+          .findByTitle(upgradeInterfacesButtonText)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        ui.dialog
+          .findByTitle('Upgrade to Linode Interfaces')
+          .should('be.visible')
+          .within(() => {
+            ui.button
+              .findByTitle(upgradeInterfacesButtonText)
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            assertUpgradeSummay(mockPublicInterface, false);
+
+            ui.button.findByTitle('Close').should('be.visible').click();
+          });
+      });
+
+      /*
+       * - Confirm upgrade error flow.
+       * - Confirm the error message shows up.
+       */
+      it('Displays error message when having upgrade issue', () => {
+        const mockLinode = linodeFactory.build({
+          id: randomNumber(1000, 99999),
+          label: randomLabel(),
+          region: chooseRegion().id,
+        });
+
+        const mockConfig = configFactory.build({
+          label: randomLabel(),
+          id: randomNumber(1000, 99999),
+          interfaces: null,
+        });
+
+        const mockErrorMessage = 'Custom Error';
+
+        mockGetLinodeDetails(mockLinode.id, mockLinode);
+        mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
+        mockGetLinodeConfig(mockLinode.id, mockConfig);
+        mockUpgradeNewLinodeInterfaceError(
+          mockLinode.id,
+          mockErrorMessage,
+          500
+        ).as('upgradeError');
+
+        cy.visitWithLogin(`/linodes/${mockLinode.id}/configurations`);
+
+        // Confirm the "Upgrade Interfaces" button appears.
+        ui.button
+          .findByTitle(upgradeInterfacesButtonText)
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+
+        ui.dialog
+          .findByTitle('Upgrade to Linode Interfaces')
+          .should('be.visible')
+          .within(() => {
+            // Check error flow
+            ui.button
+              .findByTitle(dryRunButtonText)
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+
+            cy.wait('@upgradeError');
+            cy.findByText(mockErrorMessage).should('be.visible');
+
+            // Confirm "Return to Overview" button back to the dialog.
+            ui.button
+              .findByTitle('Return to Overview')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+
+        assertPromptDialogContent();
+      });
     });
   });
 });
