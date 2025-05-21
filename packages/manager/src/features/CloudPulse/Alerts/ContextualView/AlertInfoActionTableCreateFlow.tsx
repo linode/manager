@@ -1,7 +1,6 @@
 import { Box } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
 import React from 'react';
-import { useController, useFormContext } from 'react-hook-form';
 
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -16,7 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { Alert, APIError, LinodeAclpAlertsPayload } from '@linode/api-v4';
-import type { LinodeCreateFormValues } from 'src/features/Linodes/LinodeCreate/utilities';
 
 export interface AlertInfoActionTableCreateFlowProps {
   /**
@@ -30,9 +28,23 @@ export interface AlertInfoActionTableCreateFlowProps {
   columns: TableColumnHeader[];
 
   /**
+   * A mapping of enabled alert IDs grouped by alert type.
+   * Used to determine the toggle status (on/off) for each alert row.
+   * Only use in create flow.
+   */
+  enabledAlerts: LinodeAclpAlertsPayload;
+
+  /**
    * Error received from API
    */
   error?: APIError[] | null;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param alert object for which toggle button is click.
+   */
+  onToggleAlert: (alert: Alert) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -55,50 +67,18 @@ export interface TableColumnHeader {
 export const AlertInfoActionTableCreateFlow = (
   props: AlertInfoActionTableCreateFlowProps
 ) => {
-  const { alerts, columns, error, orderByColumn } = props;
+  const {
+    alerts,
+    columns,
+    enabledAlerts,
+    error,
+    onToggleAlert,
+    orderByColumn,
+  } = props;
 
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
     : undefined;
-
-  const generateInitialAlertsPayload = (alerts: Alert[]) => {
-    const initialPayload: LinodeAclpAlertsPayload = { system: [], user: [] };
-    alerts.forEach((alert) => {
-      if (alert.type === 'system') {
-        initialPayload.system.push(alert.id);
-      } else if (alert.type === 'user') {
-        initialPayload.user.push(alert.id);
-      }
-    });
-    return initialPayload;
-  };
-
-  const initialPayload = generateInitialAlertsPayload(alerts);
-
-  const { control } = useFormContext<LinodeCreateFormValues>();
-  const { field } = useController({
-    control,
-    name: 'alerts',
-    defaultValue: initialPayload,
-  });
-
-  const handleToggleCreateFlow = (alert: Alert) => {
-    const alerts = field.value;
-    const currentAlertIds = alerts?.[alert.type] || [];
-    const updatedAlerts = { ...alerts };
-
-    if (currentAlertIds?.includes(alert.id)) {
-      // Disable the alert (remove from the list)
-      updatedAlerts[alert.type] = currentAlertIds.filter(
-        (id) => id !== alert.id
-      );
-    } else {
-      // Enable the alert (add to the list)
-      updatedAlerts[alert.type] = [...currentAlertIds, alert.id];
-    }
-
-    field.onChange(updatedAlerts);
-  };
 
   return (
     <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
@@ -148,9 +128,9 @@ export const AlertInfoActionTableCreateFlow = (
                     {paginatedAndOrderedAlerts?.map((alert) => (
                       <AlertInformationActionRow
                         alert={alert}
-                        handleToggle={handleToggleCreateFlow}
+                        handleToggle={onToggleAlert}
                         key={alert.id}
-                        status={field.value?.[alert.type].includes(alert.id)}
+                        status={enabledAlerts?.[alert.type].includes(alert.id)}
                       />
                     ))}
                   </TableBody>
