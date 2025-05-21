@@ -2,7 +2,6 @@ import { useGrants } from '@linode/queries';
 import { Paper } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import withLongviewClients from 'src/containers/longview.container';
 import withClientStats from 'src/containers/longview.stats.container';
@@ -19,7 +18,6 @@ import { LongviewClientHeader } from './LongviewClientHeader';
 import { LongviewClientInstructions } from './LongviewClientInstructions';
 
 import type { ActionHandlers } from './LongviewActionMenu';
-import type { Grant } from '@linode/api-v4';
 import type { DispatchProps } from 'src/containers/longview.container';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
@@ -31,11 +29,7 @@ interface Props extends ActionHandlers {
   openPackageDrawer: () => void;
 }
 
-interface LongviewClientRowProps
-  extends Props,
-    LVDataProps,
-    DispatchProps,
-    GrantProps {}
+interface LongviewClientRowProps extends Props, LVDataProps, DispatchProps {}
 
 const LongviewClientRow = (props: LongviewClientRowProps) => {
   const {
@@ -58,9 +52,7 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
 
   const longviewPermissions = grants?.longview || [];
 
-  const thisPermission = (longviewPermissions as Grant[]).find(
-    (r) => r.id === clientID
-  );
+  const thisPermission = longviewPermissions.find((r) => r.id === clientID);
 
   const userCanModifyClient = thisPermission
     ? thisPermission.permissions === 'read_write'
@@ -213,13 +205,8 @@ const LongviewClientRow = (props: LongviewClientRowProps) => {
   );
 };
 
-interface GrantProps {
-  userCanModifyClient: boolean;
-}
-
-export default compose<LongviewClientRowProps, Props>(
-  React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID),
-  /** We only need the update action here, easier than prop drilling through 4 components */
-  withLongviewClients(() => ({}))
-)(LongviewClientRow);
+export default React.memo(
+  withClientStats<Props>((ownProps) => ownProps.clientID)(
+    withLongviewClients(() => ({}))(LongviewClientRow)
+  )
+);
