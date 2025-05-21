@@ -82,23 +82,25 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
           <RegionIndicator region={region} />
         </TableCell>
       </Hidden>
-      <Hidden lgDown>
-        <TableCell data-qa-vpc>
-          {isVPCConfigLoading || isVPCDetailsLoading ? <Skeleton /> : null}
-          {vpcConfig?.data?.length === 0 && 'None'}
-          {vpcConfig?.data.map(({ vpc_id: vpcId }, i) => (
-            <React.Fragment key={vpcId}>
-              <Link
-                accessibleAriaLabel={`NodeBalancer Port ${vpcId}`}
-                to={`/vpcs/${vpcId}`}
-              >
-                {vpcDetails?.label}
-              </Link>
-              {i < vpcConfig.data.length - 1 ? ', ' : ''}
-            </React.Fragment>
-          ))}
-        </TableCell>
-      </Hidden>
+      {isNodebalancerVPCEnabled && (
+        <Hidden lgDown>
+          <TableCell data-qa-vpc>
+            {isVPCConfigLoading || isVPCDetailsLoading ? <Skeleton /> : null}
+            {vpcConfig?.data?.length === 0 && 'None'}
+            {vpcConfig?.data.map(({ vpc_id: vpcId }, i) => (
+              <React.Fragment key={vpcId}>
+                <Link
+                  accessibleAriaLabel={`NodeBalancer Port ${vpcId}`}
+                  to={`/vpcs/${vpcId}`}
+                >
+                  {vpcDetails?.label}
+                </Link>
+                {i < vpcConfig.data.length - 1 ? ', ' : ''}
+              </React.Fragment>
+            ))}
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
         <NodeBalancerActionMenu nodeBalancerId={id} />
       </TableCell>
