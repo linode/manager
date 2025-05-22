@@ -62,3 +62,20 @@ export const buttonGroup = {
       .closest('button');
   },
 };
+
+export const cdsButton = {
+  /**
+   * Finds a cds button within shadow DOM by its title and returns the Cypress chainable.
+   *
+   * @param cdsButtonTitle - Title of cds button to find
+   *
+   * @returns Cypress chainable.
+   */
+  findButtonByTitle: (cdsButtonTitle: string): Cypress.Chainable => {
+    return cy
+      .findAllByText(cdsButtonTitle)
+      .closest('cds-button')
+      .shadow()
+      .find('button');
+  },
+};
