@@ -20,6 +20,7 @@ import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
 import { AlertRegions } from '../AlertRegions/AlertRegions';
 import { AlertResources } from '../AlertsResources/AlertsResources';
+import { ACCOUNT_GROUP_WARNING_MESSAGE } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
@@ -174,7 +175,7 @@ export const AlertDetail = () => {
                     <Stack gap={2}>
                       <Typography variant="h2">Account</Typography>
                       <AlertListNoticeMessages
-                        errorMessage="All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included. "
+                        errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
                         title="Account"
                         variant="info"
                       />

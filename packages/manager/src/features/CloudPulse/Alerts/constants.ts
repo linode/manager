@@ -216,4 +216,7 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
 
+export const ACCOUNT_GROUP_WARNING_MESSAGE =
+  'All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included.';
+
 export type SelectDeselectAll = 'Deselect All' | 'Select All';

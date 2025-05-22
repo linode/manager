@@ -13,6 +13,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
+  ACCOUNT_GROUP_WARNING_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
@@ -267,7 +268,7 @@ export const AccountGroupingNotice = () => {
         })}
       >
         <AlertListNoticeMessages
-          errorMessage="All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included."
+          errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
           variant="warning"
         />
       </Box>
