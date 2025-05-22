@@ -2,6 +2,7 @@ import { Button, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   sortRows,
   Table,
@@ -27,7 +28,6 @@ import {
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
-
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
   value: 'all',
@@ -38,50 +38,19 @@ interface Props {
 }
 
 export const RolesTable = ({ roles }: Props) => {
-  const [rows, setRows] = useState(roles);
-
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
-
-  // Get just the list of entity types from this list of roles, to be used in the selection filter
-  const filterableOptions = React.useMemo(() => {
-    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
-  }, [roles]);
-
   const [filterableEntityType, setFilterableEntityType] =
-    useState<null | SelectOption>(ALL_ROLES_OPTION);
-
+    useState<SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
   >(undefined);
-
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
-  const areAllSelected = React.useMemo(() => {
-    return (
-      !!rows?.length &&
-      !!selectedRows?.length &&
-      rows?.length === selectedRows?.length
-    );
-  }, [rows, selectedRows]);
-
-  const handleSort = (event: CustomEvent, column: string) => {
-    setSort({ column, order: event.detail as Order });
-    const visibleRows = sortRows(rows, event.detail as Order, column);
-    setRows(visibleRows);
-  };
-
-  const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
-    if (row === 'all') {
-      setSelectedRows(areAllSelected ? [] : rows);
-    } else if (selectedRows.includes(row)) {
-      setSelectedRows(selectedRows.filter((r) => r !== row));
-    } else {
-      setSelectedRows([...selectedRows, row]);
-    }
-  };
-
+  // Filtering
   const getFilteredRows = (
     text: string,
     entityTypeVal = ALL_ROLES_OPTION.value
@@ -96,16 +65,58 @@ export const RolesTable = ({ roles }: Props) => {
     );
   };
 
+  const filteredRows = React.useMemo(
+    () => getFilteredRows(filterString, filterableEntityType?.value),
+    [roles, filterString, filterableEntityType]
+  );
+
+  React.useEffect(() => {
+    setPage(1);
+  }, [filterString, filterableEntityType, pageSize]);
+
+  // Get just the list of entity types from this list of roles, to be used in the selection filter
+  const filterableOptions = React.useMemo(() => {
+    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
+  }, [roles]);
+
+  const sortedRows = React.useMemo(() => {
+    if (!sort) return filteredRows;
+    return sortRows(filteredRows, sort.order, sort.column);
+  }, [filteredRows, sort]);
+
+  const paginatedRows = React.useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return sortedRows.slice(start, start + pageSize);
+  }, [sortedRows, page, pageSize]);
+
+  const areAllSelected = React.useMemo(() => {
+    return (
+      !!paginatedRows?.length &&
+      !!selectedRows?.length &&
+      paginatedRows?.length === selectedRows?.length
+    );
+  }, [paginatedRows, selectedRows]);
+
+  const handleSort = (event: CustomEvent, column: string) => {
+    setSort({ column, order: event.detail as Order });
+  };
+
+  const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
+    if (row === 'all') {
+      setSelectedRows(areAllSelected ? [] : paginatedRows);
+    } else if (selectedRows.includes(row)) {
+      setSelectedRows(selectedRows.filter((r) => r !== row));
+    } else {
+      setSelectedRows([...selectedRows, row]);
+    }
+  };
+
   const handleTextFilter = (fs: string) => {
     setFilterString(fs);
-    const filteredRows = getFilteredRows(fs, filterableEntityType?.value);
-    setRows(filteredRows);
   };
 
   const handleChangeEntityTypeFilter = (_: never, entityType: SelectOption) => {
     setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
-    const filteredRows = getFilteredRows(filterString, entityType?.value);
-    setRows(filteredRows);
   };
 
   const assignRoleRow = (row: RoleView) => {
@@ -118,6 +129,15 @@ export const RolesTable = ({ roles }: Props) => {
     setIsDrawerOpen(true);
   };
 
+  const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+    setPage(Number(event.detail));
+  };
+
+  const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
+    const newSize = event.detail.pageSize;
+    setPageSize(newSize);
+    setPage(1);
+  };
   return (
     <>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -210,12 +230,12 @@ export const RolesTable = ({ roles }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {!rows?.length ? (
+            {!paginatedRows?.length ? (
               <TableRow>
                 <TableCell>No items to display.</TableCell>
               </TableRow>
             ) : (
-              rows.map((roleRow) => (
+              paginatedRows.map((roleRow) => (
                 <TableRow
                   expandable
                   hoverable
@@ -260,6 +280,15 @@ export const RolesTable = ({ roles }: Props) => {
             )}
           </TableBody>
         </Table>
+        <Pagination
+          count={filteredRows.length}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+          page={page}
+          pageSize={pageSize}
+          pageSizes={[25, 50, 75, 100]}
+          style={{ borderTop: 0 }}
+        />
       </Paper>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}
