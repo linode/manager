@@ -10,12 +10,15 @@ import { TableRow } from 'src/components/TableRow';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndicator';
 
+import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
+import { NodeBalancerVPC } from './NodeBalancerVPC';
 
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
 export const NodeBalancerTableRow = (props: NodeBalancer) => {
   const { id, ipv4, label, region, transfer } = props;
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
 
@@ -68,6 +71,13 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
           <RegionIndicator region={region} />
         </TableCell>
       </Hidden>
+      {isNodebalancerVPCEnabled && (
+        <Hidden lgDown>
+          <TableCell data-qa-vpc>
+            <NodeBalancerVPC nodeBalancerId={id} />
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell actionCell>
         <NodeBalancerActionMenu nodeBalancerId={id} />
       </TableCell>
