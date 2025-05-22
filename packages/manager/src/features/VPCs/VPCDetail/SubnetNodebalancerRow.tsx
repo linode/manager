@@ -89,10 +89,7 @@ export const SubnetNodeBalancerRow = ({
         </Link>
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon
-          aria-label={`Nodebalancer status active`}
-          status={'active'}
-        />
+        <StatusIcon aria-label="Nodebalancer status active" status="active" />
         {`${up} up, ${down} down`}
       </TableCell>
       <TableCell>{ipv4}</TableCell>

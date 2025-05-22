@@ -29,7 +29,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
   const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numLinodes = getUniqueResourcesFromSubnets(vpc.subnets);
+  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
 
   const isVPCReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -83,7 +83,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
       </Hidden>
       <TableCell>{subnets.length}</TableCell>
       <Hidden mdDown>
-        <TableCell>{numLinodes}</TableCell>
+        <TableCell>{numResources}</TableCell>
       </Hidden>
       <TableCell actionCell>
         {actions.map((action) => (

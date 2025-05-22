@@ -78,7 +78,8 @@ describe('VPC create flow', () => {
     const ipValidationErrorMessage1 = 'A subnet must have an IPv4 range.';
     const ipValidationErrorMessage2 = 'The IPv4 range must be in CIDR format.';
     const vpcCreationErrorMessage = 'An unknown error has occurred.';
-    const totalSubnetUniqueLinodes = getUniqueResourcesFromSubnets(mockSubnets);
+    const totalSubnetUniqueResources =
+      getUniqueResourcesFromSubnets(mockSubnets);
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
@@ -238,7 +239,7 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
-        cy.contains(`Resources ${totalSubnetUniqueLinodes}`).should(
+        cy.contains(`Resources ${totalSubnetUniqueResources}`).should(
           'be.visible'
         );
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');
@@ -280,7 +281,7 @@ describe('VPC create flow', () => {
       subnets: [],
     });
 
-    const totalSubnetUniqueLinodes = getUniqueResourcesFromSubnets([]);
+    const totalSubnetUniqueResources = getUniqueResourcesFromSubnets([]);
 
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
@@ -330,7 +331,7 @@ describe('VPC create flow', () => {
       .should('be.visible')
       .within(() => {
         cy.contains(`Subnets ${mockVpc.subnets.length}`).should('be.visible');
-        cy.contains(`Resources ${totalSubnetUniqueLinodes}`).should(
+        cy.contains(`Resources ${totalSubnetUniqueResources}`).should(
           'be.visible'
         );
         cy.contains(`VPC ID ${mockVpc.id}`).should('be.visible');

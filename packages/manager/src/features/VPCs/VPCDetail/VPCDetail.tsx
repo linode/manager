@@ -93,7 +93,7 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numLinodes = getUniqueResourcesFromSubnets(vpc.subnets);
+  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
 
   const summaryData = [
     [
@@ -103,7 +103,7 @@ const VPCDetail = () => {
       },
       {
         label: 'Resources',
-        value: numLinodes,
+        value: numResources,
       },
     ],
     [
