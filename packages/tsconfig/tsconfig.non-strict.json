@@ -1,6 +1,8 @@
 {
-  // We should work towards making all of our packages use strct: true
-  // The current blocker is reated to type inference with our React Query query key factory.
+  /**
+   * We should work towards making all of our packages use strct: true
+   * The current blocker is reated to type inference with our React Query query key factory.
+   */
   "compilerOptions": {
     "strict": false,
     "allowUnreachableCode": false,
