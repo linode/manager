@@ -11,9 +11,7 @@ import {
   isMSWEnabled,
 } from './utils';
 
-import type { QueryClient } from '@tanstack/react-query';
 import type { MockPresetExtra, MockSeeder, MockState } from 'src/mocks/types';
-import type { ApplicationStore } from 'src/store';
 
 export let mockState: MockState;
 
@@ -23,12 +21,7 @@ export let mockState: MockState;
  *
  * @param store Redux store to control
  */
-export async function loadDevTools(
-  store: ApplicationStore,
-  client: QueryClient
-) {
-  const devTools = await import('./DevTools');
-
+export async function loadDevTools() {
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');
     const mswPresetId = getBaselinePreset() ?? defaultBaselineMockPreset.id;
@@ -162,6 +155,4 @@ export async function loadDevTools(
     const worker = mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
-
-  devTools.install(store, client);
 }
