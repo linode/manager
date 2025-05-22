@@ -68,7 +68,7 @@ describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
     renderWithTheme(component, { flags });
     const text = screen.getByText(
-      'All resources associated with selected regions will be included in this alert definition.'
+      'All entities associated with selected regions will be included in this alert definition.'
     );
 
     const regionSearch = screen.getByTestId('region-search');
