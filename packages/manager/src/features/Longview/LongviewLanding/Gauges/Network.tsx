@@ -1,7 +1,6 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientStats from 'src/containers/longview.stats.container';
@@ -102,10 +101,9 @@ const Network = (props: NetworkProps) => {
   );
 };
 
-export const NetworkGauge = compose<NetworkProps, Props>(
-  React.memo,
-  withClientStats<Props>((ownProps) => ownProps.clientID)
-)(Network);
+export const NetworkGauge = React.memo(
+  withClientStats<Props>((ownProps) => ownProps.clientID)(Network)
+);
 
 /*
   What's returned from Network is a bit of an unknown, but assuming that

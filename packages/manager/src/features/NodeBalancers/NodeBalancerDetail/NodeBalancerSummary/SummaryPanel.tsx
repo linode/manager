@@ -3,7 +3,9 @@ import {
   useNodeBalancerQuery,
   useNodeBalancersFirewallsQuery,
   useNodebalancerUpdateMutation,
+  useNodeBalancerVPCConfigsBetaQuery,
   useRegionsQuery,
+  useVPCQuery,
 } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
@@ -13,26 +15,20 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { TagCell } from 'src/components/TagCell/TagCell';
-import {
-  useIsLkeEnterpriseEnabled,
-  useKubernetesBetaEndpoint,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { IPAddress } from 'src/features/Linodes/LinodesLanding/IPAddress';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
+import { useIsNodebalancerVPCEnabled } from '../../utils';
+
 export const SummaryPanel = () => {
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-  const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const { id } = useParams({
     from: '/nodebalancers/$id/summary',
   });
-  const { data: nodebalancer } = useNodeBalancerQuery(
-    Number(id),
-    Boolean(id),
-    isLkeEnterpriseLAFeatureEnabled
-  );
+  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
   const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
   const { data: regions } = useRegionsQuery();
   const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
@@ -50,6 +46,31 @@ export const SummaryPanel = () => {
     grantLevel: 'read_only',
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
+  });
+
+  const flags = useIsNodebalancerVPCEnabled();
+
+  const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(id),
+    flags.isNodebalancerVPCEnabled
+  );
+
+  const { data: vpcDetails } = useVPCQuery(
+    Number(vpcConfig?.data[0]?.vpc_id) || -1,
+    Boolean(vpcConfig?.data[0]?.vpc_id)
+  );
+
+  const nbVPCConfigs = vpcConfig?.data ?? [];
+  const subnets = vpcDetails?.subnets ?? [];
+
+  const mergedSubnets = nbVPCConfigs.map((config) => {
+    const subnet = subnets.find((s) => s.id === config.subnet_id);
+
+    return {
+      id: config.subnet_id,
+      label: subnet?.label ?? `Subnet ${config.subnet_id}`,
+      ipv4Range: config.ipv4_range,
+    };
   });
 
   // If we can't get the cluster (status === 'error'), we can assume it's been deleted
@@ -192,6 +213,49 @@ export const SummaryPanel = () => {
           </StyledIPGrouping>
         </StyledSection>
       </StyledSummarySection>
+      {flags.isNodebalancerVPCEnabled && Boolean(vpcConfig?.data.length) && (
+        <StyledSummarySection>
+          <StyledTitle
+            data-qa-title
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
+            variant="h3"
+          >
+            VPC
+          </StyledTitle>
+          <StyledSection>
+            <Typography data-qa-ports variant="body1">
+              <strong>VPC:</strong>{' '}
+              {vpcConfig?.data.map((vpc, i) => (
+                <React.Fragment key={vpc.id}>
+                  <Link className="secondaryLink" to={`/vpcs/${vpc.vpc_id}`}>
+                    {vpcDetails?.label}
+                  </Link>
+                  {i < vpcConfig.data.length - 1 ? ', ' : ''}
+                </React.Fragment>
+              ))}
+            </Typography>
+          </StyledSection>
+          <StyledSection>
+            <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+              <strong>Subnets:</strong>
+            </Typography>
+
+            {mergedSubnets.map((subnet) => (
+              <React.Fragment key={subnet.id}>
+                <Typography
+                  style={{ wordBreak: 'break-word', marginTop: '8px' }}
+                  variant="body1"
+                >
+                  {`${subnet.label}:`}
+                </Typography>
+                <Typography style={{ wordBreak: 'break-word' }} variant="body1">
+                  {subnet.ipv4Range}
+                </Typography>
+              </React.Fragment>
+            ))}
+          </StyledSection>
+        </StyledSummarySection>
+      )}
       <StyledSummarySection>
         <StyledTitle data-qa-title variant="h3">
           Tags
