@@ -385,8 +385,8 @@ describe('restricted user details pages', () => {
           ui.tabList.findTabByTitle('Resize').click();
 
           // Confirm that "Resize Database Cluster" button is disabled
-          ui.button
-            .findByTitle('Resize Database Cluster')
+          ui.cdsButton
+            .findButtonByTitle('Resize Database Cluster')
             .should('be.visible')
             .should('be.disabled');
 
@@ -394,7 +394,8 @@ describe('restricted user details pages', () => {
           ui.tabList.findTabByTitle('Settings').click();
 
           // Confirm that "Manage Access" button is disabled
-          cy.get('[data-testid="button-access-control"]')
+          ui.cdsButton
+            .findButtonByTitle('Manage Access')
             .should('be.visible')
             .should('be.disabled');
 
@@ -405,20 +406,20 @@ describe('restricted user details pages', () => {
             .should('be.disabled');
 
           // Confirm that "Reset Root Password" button is disabled
-          ui.button
-            .findByTitle('Reset Root Password')
+          ui.cdsButton
+            .findButtonByTitle('Reset Root Password')
             .should('be.visible')
             .should('be.disabled');
 
           // Confirm that "Delete Cluster" button is disabled
-          ui.button
-            .findByTitle('Delete Cluster')
+          ui.cdsButton
+            .findButtonByTitle('Delete Cluster')
             .should('be.visible')
             .should('be.disabled');
 
           // Confirm that "Save Changes" button is disabled
-          ui.button
-            .findByTitle('Save Changes')
+          ui.cdsButton
+            .findButtonByTitle('Save Changes')
             .should('be.visible')
             .should('be.disabled');
         });
