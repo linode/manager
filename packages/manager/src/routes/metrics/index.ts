@@ -13,7 +13,7 @@ const cloudPulseMetricsLandingRoute = createRoute({
   getParentRoute: () => cloudPulseMetricsRoute,
   path: '/',
 }).lazy(() =>
-  import('./cloudPulseMetricsLazyRoutes').then(
+  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
     (m) => m.cloudPulseMetricsLandingLazyRoute
   )
 );

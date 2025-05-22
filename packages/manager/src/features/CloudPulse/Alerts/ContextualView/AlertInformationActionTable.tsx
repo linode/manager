@@ -3,7 +3,6 @@ import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
-// eslint-disable-next-line no-restricted-imports
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';

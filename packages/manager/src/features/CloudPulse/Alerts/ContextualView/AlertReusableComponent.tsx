@@ -9,7 +9,6 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
-// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import InfoIcon from 'src/assets/icons/info.svg';

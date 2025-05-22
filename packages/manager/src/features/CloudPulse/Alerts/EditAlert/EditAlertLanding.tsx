@@ -1,6 +1,6 @@
 import { Box, CircleProgress, ErrorState } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -10,6 +10,7 @@ import { StyledPlaceholder } from '../AlertsDetail/AlertDetail';
 import { EditAlertDefinition } from './EditAlertDefinition';
 import { EditAlertResources } from './EditAlertResources';
 
+import type { AlertRouteParams } from '../AlertsDetail/AlertDetail';
 import type { AlertServiceType } from '@linode/api-v4';
 import type { CrumbOverridesProps } from 'src/components/Breadcrumb/Crumbs';
 
@@ -27,9 +28,7 @@ const overrides = [
 ];
 
 export const EditAlertLanding = () => {
-  const { alertId, serviceType } = useParams({
-    from: '/alerts/definitions/edit/$serviceType/$alertId',
-  });
+  const { alertId, serviceType } = useParams<AlertRouteParams>();
   const {
     data: alertDetails,
     isError,

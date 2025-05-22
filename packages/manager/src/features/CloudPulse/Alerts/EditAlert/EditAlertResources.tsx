@@ -1,8 +1,8 @@
 import { Box, Button } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
@@ -16,7 +16,8 @@ import type { EditAlertProps } from './EditAlertDefinition';
 
 export const EditAlertResources = (props: EditAlertProps) => {
   const theme = useTheme();
-  const navigate = useNavigate();
+
+  const history = useHistory();
 
   const definitionLanding = '/alerts/definitions';
 
@@ -61,7 +62,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
       .then(() => {
         setShowConfirmation(false);
         // on success land on the alert definition list page and show a success snackbar
-        navigate({ to: definitionLanding });
+        history.push(definitionLanding);
         showSnackbar('Alert entities successfully updated.', 'success');
       })
       .catch(() => {
@@ -112,7 +113,7 @@ export const EditAlertResources = (props: EditAlertProps) => {
           <Button
             data-testid="cancel-save-resources"
             onClick={() => {
-              navigate({ to: definitionLanding });
+              history.push('/alerts/definitions');
             }}
             variant="text"
           >

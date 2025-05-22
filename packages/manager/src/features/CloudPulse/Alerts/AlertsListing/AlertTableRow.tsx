@@ -1,6 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -33,6 +34,7 @@ interface Props {
 export const AlertTableRow = (props: Props) => {
   const { alert, handlers, services } = props;
   const { data: profile } = useProfile();
+  const location = useLocation();
   const {
     created_by,
     id,
@@ -47,10 +49,7 @@ export const AlertTableRow = (props: Props) => {
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
-        <Link
-          data-qa-alert-link
-          to={`/alerts/definitions/detail/${service_type}/${id}`}
-        >
+        <Link to={`${location.pathname}/detail/${service_type}/${id}`}>
           {label}
         </Link>
       </TableCell>

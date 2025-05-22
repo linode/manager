@@ -6,8 +6,8 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
-import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -45,7 +45,8 @@ interface AlertsLimitErrorMessageProps {
 }
 
 export const AlertListing = () => {
-  const navigate = useNavigate();
+  const { url } = useRouteMatch();
+  const history = useHistory();
   const { data: alerts, error, isLoading } = useAllAlertDefinitionsQuery();
   const {
     data: serviceOptions,
@@ -164,7 +165,7 @@ export const AlertListing = () => {
           {
             children: 'Create Alerts',
             onClick: () => {
-              navigate({ to: '/alerts/definitions/create' });
+              history.push(`${url}/create`);
             },
           },
         ]}
@@ -267,7 +268,7 @@ export const AlertListing = () => {
           data-qa-buttons="true"
           disabled={isLoading || isAlertLimitReached || isMetricLimitReached}
           onClick={() => {
-            navigate({ to: '/alerts/definitions/create' });
+            history.push(`${url}/create`);
           }}
           ref={topRef}
           sx={{
