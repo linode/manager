@@ -259,7 +259,7 @@ export const CreateAlertDefinition = () => {
 export const AccountGroupingNotice = () => {
   return (
     <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
-      <Typography variant="h2">2. Entities</Typography>
+      <Typography variant="h2">2. Account</Typography>
       <Box
         sx={(theme) => ({
           ...getAlertBoxStyles(theme),
@@ -267,7 +267,7 @@ export const AccountGroupingNotice = () => {
         })}
       >
         <AlertListNoticeMessages
-          errorMessage="All entities associated with current account will be included in this alert definition"
+          errorMessage="All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included."
           variant="warning"
         />
       </Box>
