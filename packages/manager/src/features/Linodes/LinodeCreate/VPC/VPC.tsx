@@ -30,25 +30,24 @@ import { VPCAvailabilityNotice } from '../Networking/VPCAvailabilityNotice';
 import { useLinodeCreateQueryParams } from '../utilities';
 import { VPCRanges } from './VPCRanges';
 
-import type { CreateLinodeRequest } from '@linode/api-v4';
+import type { LinodeCreateFormValues } from '../utilities';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
 
 export const VPC = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = useState(false);
 
   const { control, formState, setValue } =
-    useFormContext<CreateLinodeRequest>();
+    useFormContext<LinodeCreateFormValues>();
 
-  const [regionId, selectedVPCId, selectedSubnetId, linodeVPCIPAddress] =
-    useWatch({
-      control,
-      name: [
-        'region',
-        'interfaces.0.vpc_id',
-        'interfaces.0.subnet_id',
-        'interfaces.0.ipv4.vpc',
-      ],
-    });
+  const [regionId, vpcId, selectedSubnetId, linodeVPCIPAddress] = useWatch({
+    control,
+    name: [
+      'region',
+      'vpc_id',
+      'interfaces.0.subnet_id',
+      'interfaces.0.ipv4.vpc',
+    ],
+  });
 
   const { data: region } = useRegionQuery(regionId);
 
@@ -63,7 +62,7 @@ export const VPC = () => {
     filter: { region: regionId },
   });
 
-  const selectedVPC = vpcs?.find((vpc) => vpc.id === selectedVPCId);
+  const selectedVPC = vpcs?.find((vpc) => vpc.id === vpcId);
 
   const copy =
     vpcs?.length === 0
@@ -101,7 +100,7 @@ export const VPC = () => {
         <Stack spacing={1.5}>
           <Controller
             control={control}
-            name="interfaces.0.vpc_id"
+            name="vpc_id"
             render={({ field, fieldState }) => (
               <Autocomplete
                 disabled={!regionSupportsVPCs}
@@ -171,7 +170,7 @@ export const VPC = () => {
               </LinkButton>
             </Box>
           )}
-          {selectedVPCId && (
+          {vpcId && (
             <>
               <Controller
                 control={control}
@@ -290,7 +289,7 @@ export const VPC = () => {
       <VPCCreateDrawer
         onClose={() => setIsCreateDrawerOpen(false)}
         onSuccess={(vpc) => {
-          setValue('interfaces.0.vpc_id', vpc.id);
+          setValue('vpc_id', vpc.id);
 
           if (vpc.subnets.length === 1) {
             // If the user creates a VPC with just one subnet,
