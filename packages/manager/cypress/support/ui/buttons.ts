@@ -73,7 +73,7 @@ export const cdsButton = {
    */
   findButtonByTitle: (cdsButtonTitle: string): Cypress.Chainable => {
     return cy
-      .findAllByText(cdsButtonTitle)
+      .findByText(cdsButtonTitle)
       .closest('cds-button')
       .shadow()
       .find('button');

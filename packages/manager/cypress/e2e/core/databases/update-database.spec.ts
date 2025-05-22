@@ -93,7 +93,9 @@ const removeAllowedIp = (allowedIp: string) => {
  * @param existingIps - The number of existing IPs. Optional, default is `0`.
  */
 const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
-  ui.cdsButton.findButtonByTitle('Manage Access').click();
+  cy.get('[data-testid="button-access-control"]').within(() => {
+    ui.cdsButton.findButtonByTitle('Manage Access').click();
+  });
 
   ui.drawer
     .findByTitle('Manage Access')
@@ -181,13 +183,9 @@ const modifyMaintenanceWindow = (label: string, windowValue: string) => {
 
   ui.autocomplete.findByLabel(label).should('be.visible').type(windowValue);
   cy.contains(windowValue).should('be.visible').click();
-  cy.get('[data-testid="save-changes-button"]')
-    .shadow()
-    .find('button')
-    .first()
-    .then((btn) => {
-      btn[0].click(); // Native DOM click
-    });
+  ui.cdsButton.findButtonByTitle('Save Changes').then((btn) => {
+    btn[0].click(); // Native DOM click
+  });
 };
 
 describe('Update database clusters', () => {
