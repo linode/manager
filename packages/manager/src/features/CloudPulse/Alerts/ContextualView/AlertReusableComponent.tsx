@@ -20,20 +20,39 @@ import {
   convertAlertsToTypeSet,
   filterAlertsByStatusAndType,
 } from '../Utils/utils';
+import { AlertInfoActionTableCreateFlow } from './AlertInfoActionTableCreateFlow';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type {
+  Alert,
+  AlertDefinitionType,
+  LinodeAclpAlertsPayload,
+} from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
   /**
+   * A mapping of enabled alert IDs grouped by alert type.
+   * Used to determine the toggle status (on/off) for each alert row.
+   * Only use in create flow.
+   */
+  enabledAlerts?: LinodeAclpAlertsPayload | null;
+
+  /**
    * Id for the selected entity
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
    */
-  entityName: string;
+  entityName?: string;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param alert object for which toggle button is click.
+   */
+  onToggleAlert?: (alert: Alert) => void;
 
   /**
    * Service type of selected entity
@@ -42,7 +61,8 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, serviceType } = props;
+  const { enabledAlerts, entityId, entityName, onToggleAlert, serviceType } =
+    props;
   const {
     data: alerts,
     error,
@@ -69,6 +89,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   if (isLoading) {
     return <CircleProgress />;
   }
+
   return (
     <Paper>
       <Stack gap={3}>
@@ -118,14 +139,29 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             />
           </Box>
 
-          <AlertInformationActionTable
-            alerts={filteredAlerts}
-            columns={AlertContextualViewTableHeaderMap}
-            entityId={entityId}
-            entityName={entityName}
-            error={error}
-            orderByColumn="Alert Name"
-          />
+          {/*  Edit Flow */}
+          {entityId && entityName && (
+            <AlertInformationActionTable
+              alerts={filteredAlerts}
+              columns={AlertContextualViewTableHeaderMap}
+              entityId={entityId}
+              entityName={entityName}
+              error={error}
+              orderByColumn="Alert Name"
+            />
+          )}
+
+          {/* Create Flow */}
+          {enabledAlerts && onToggleAlert && (
+            <AlertInfoActionTableCreateFlow
+              alerts={filteredAlerts}
+              columns={AlertContextualViewTableHeaderMap}
+              enabledAlerts={enabledAlerts}
+              error={error}
+              onToggleAlert={onToggleAlert}
+              orderByColumn="Alert Name"
+            />
+          )}
         </Stack>
       </Stack>
     </Paper>
