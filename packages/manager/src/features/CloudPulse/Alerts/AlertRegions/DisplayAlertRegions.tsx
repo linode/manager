@@ -10,7 +10,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { SelectDeselectAll } from '../constants';
+import type { AlertFormMode, SelectDeselectAll } from '../constants';
 
 export interface AlertRegion {
   /**
@@ -50,6 +50,10 @@ interface DisplayAlertRegionProps {
    */
   isSomeSelected?: boolean;
   /**
+   * Flag to indicate the mode of the form
+   */
+  mode?: AlertFormMode;
+  /**
    * List of regions to be displayed.
    */
   regions?: AlertRegion[];
@@ -57,10 +61,6 @@ interface DisplayAlertRegionProps {
    * To indicate whether to show only selected regions or not.
    */
   showSelected?: boolean;
-  /**
-   * Flag to indicate if the component is in view-only mode.
-   */
-  viewOnly?: boolean;
 }
 
 export const DisplayAlertRegions = React.memo(
@@ -72,7 +72,7 @@ export const DisplayAlertRegions = React.memo(
       isAllSelected,
       showSelected,
       handleSelectAll,
-      viewOnly,
+      mode,
     } = props;
 
     return (
@@ -94,7 +94,7 @@ export const DisplayAlertRegions = React.memo(
             >
               <TableHead>
                 <TableRow>
-                  {!viewOnly && (
+                  {mode !== 'view' && (
                     <TableCell>
                       <Box>
                         <Checkbox
@@ -142,7 +142,7 @@ export const DisplayAlertRegions = React.memo(
                     .map(({ label, id, checked, count }) => {
                       return (
                         <TableRow data-testid={`region-row-${id}`} key={id}>
-                          {!viewOnly && (
+                          {mode !== 'view' && (
                             <TableCell>
                               <Checkbox
                                 checked={checked}

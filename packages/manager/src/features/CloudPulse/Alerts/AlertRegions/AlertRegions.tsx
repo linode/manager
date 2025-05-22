@@ -12,7 +12,7 @@ import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { SelectDeselectAll } from '../constants';
+import type { AlertFormMode, SelectDeselectAll } from '../constants';
 import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
@@ -26,6 +26,10 @@ interface AlertRegionsProps {
    */
   handleChange?: (regionIds: string[]) => void;
   /**
+   * Flag to indicate if the component is in view-only mode.
+   */
+  mode?: AlertFormMode;
+  /**
    * The service type for which the regions are being selected.
    */
   serviceType: AlertServiceType | null;
@@ -33,14 +37,10 @@ interface AlertRegionsProps {
    * The selected regions.
    */
   value?: string[];
-  /**
-   * Flag to indicate if the component is in view-only mode.
-   */
-  viewOnly?: boolean;
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType, handleChange, value = [], errorText, viewOnly } = props;
+  const { serviceType, handleChange, value = [], errorText, mode } = props;
   const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
@@ -119,13 +119,13 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
     ({ label, checked }) =>
       label.toLowerCase().includes(searchText.toLowerCase()) &&
-      ((viewOnly && checked) || !viewOnly)
+      ((mode && checked) || !mode)
   );
 
   return (
     <Stack gap={2}>
-      {viewOnly && <Typography variant="h2">Regions</Typography>}
-      {!viewOnly && (
+      {mode === 'view' && <Typography variant="h2">Regions</Typography>}
+      {mode !== 'view' && (
         <AlertListNoticeMessages
           errorMessage="All entities associated with selected regions will be included in this alert definition."
           variant="warning"
@@ -145,7 +145,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           }}
           value={searchText}
         />
-        {!viewOnly && (
+        {mode !== 'view' && (
           <Checkbox
             data-testid="show-selected-only"
             onChange={(_event, checked: boolean) => setShowSelected(checked)}
@@ -166,7 +166,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
         <AlertListNoticeMessages errorMessage={errorText} variant="error" />
       )}
 
-      {!viewOnly && (
+      {mode !== 'view' && (
         <AlertSelectedInfoNotice
           handleSelectionChange={handleSelectAll}
           property="regions"
@@ -185,9 +185,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           selectedRegions.length > 0 &&
           selectedRegions.length !== filteredRegionsWithStatus.length
         }
+        mode={mode}
         regions={filteredRegionsBySearchText}
         showSelected={showSelected}
-        viewOnly={viewOnly}
       />
     </Stack>
   );

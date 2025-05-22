@@ -195,9 +195,9 @@ export const AlertDetail = () => {
                 case 'per-region':
                   return (
                     <AlertRegions
+                      mode="view"
                       serviceType={alertServiceType}
                       value={regions}
-                      viewOnly
                     />
                   );
               }

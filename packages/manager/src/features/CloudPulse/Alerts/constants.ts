@@ -220,3 +220,5 @@ export const ACCOUNT_GROUP_WARNING_MESSAGE =
   'All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included.';
 
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
+
+export type AlertFormMode = 'create' | 'edit' | 'view';
