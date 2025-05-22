@@ -75,25 +75,24 @@ export const NodeBalancerActionMenu = (props: Props) => {
     },
   ];
 
-  return (
-    <>
-      {!matchesMdDown &&
-        !isNodebalancerVPCEnabled &&
-        actions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        actionsList={actions}
-        ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
-      />
-    </>
+  const isInlineMenuEnabled = !matchesMdDown && !isNodebalancerVPCEnabled;
+
+  return isInlineMenuEnabled ? (
+    actions.map((action) => {
+      return (
+        <InlineMenuAction
+          actionText={action.title}
+          disabled={action.disabled}
+          key={action.title}
+          onClick={action.onClick}
+          tooltip={action.tooltip}
+        />
+      );
+    })
+  ) : (
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
+    />
   );
 };
