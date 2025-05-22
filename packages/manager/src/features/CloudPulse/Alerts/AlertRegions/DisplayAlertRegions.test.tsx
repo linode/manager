@@ -48,7 +48,9 @@ describe('DisplayAlertRegions', () => {
     const rowChildren = within(row);
 
     expect(rowChildren.getByRole('checkbox')).toBeInTheDocument();
-    expect(rowChildren.getByText(regions[0].label)).toBeInTheDocument();
+    expect(
+      rowChildren.getByText(`${regions[0].label} (${regions[0].id})`)
+    ).toBeInTheDocument();
   });
 
   it('should select checkbox when clicked', async () => {

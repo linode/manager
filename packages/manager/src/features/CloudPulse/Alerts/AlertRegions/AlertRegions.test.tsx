@@ -93,7 +93,7 @@ describe('Alert Regions', () => {
 
     const notice = screen.getByTestId('selection_notice');
 
-    expect(notice.textContent).toBe('1 of 1 entities are selected.');
+    expect(notice.textContent).toBe('1 of 1 regions are selected.');
   });
 
   it('should show only header on click of show selected only', async () => {

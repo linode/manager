@@ -13,7 +13,7 @@ describe('AlertEntityGroupingSelect', () => {
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
-    expect(screen.getByLabelText('Grouping')).toBeInTheDocument();
+    expect(screen.getByLabelText('Scope')).toBeInTheDocument();
   });
 
   it('Select option from drop down', async () => {

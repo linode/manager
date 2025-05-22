@@ -40,7 +40,7 @@ export const AlertSelectedInfoNotice = React.memo(
       maxSelectionCount,
       selectedCount,
       totalCount,
-      property = 'enities',
+      property = 'entities',
     } = props;
     const isSelectAll =
       maxSelectionCount !== undefined
