@@ -1,4 +1,4 @@
-import { useGrants, useProfile } from '@linode/queries';
+import { useCloneDomainMutation, useGrants, useProfile } from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -11,8 +11,6 @@ import {
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import React from 'react';
-
-import { useCloneDomainMutation } from 'src/queries/domains';
 
 import type { APIError, Domain } from '@linode/api-v4';
 

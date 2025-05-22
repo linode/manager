@@ -1,23 +1,19 @@
 import { Box, Typography } from '@linode/ui';
-import { GridLegacy } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-export const sxTooltipIcon = {
-  marginLeft: 1,
-  padding: 0,
-};
-
-export const StyledGrid = styled(GridLegacy, { label: 'StyledGrid' })(() => ({
-  alignItems: 'center',
-  marginBottom: 2,
-}));
+export const StyledTitle = styled(Typography, { label: 'StyledTitle' })(
+  ({ theme }) => ({
+    font: theme.tokens.alias.Typography.Label.Bold.S,
+    marginBottom: theme.tokens.spacing.S4,
+  })
+);
 
 export const StyledPermissionItem = styled(Typography, {
   label: 'StyledPermissionItem',
 })(({ theme }) => ({
   borderRight: `1px solid ${theme.tokens.alias.Border.Normal}`,
   display: 'inline-block',
-  padding: `0px ${theme.spacing(0.75)} ${theme.spacing(0.25)}`,
+  padding: `0px ${theme.tokens.spacing.S6} ${theme.tokens.spacing.S2}`,
 }));
 
 export const StyledContainer = styled('div', {
