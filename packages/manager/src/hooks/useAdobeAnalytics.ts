@@ -16,7 +16,7 @@ export const useAdobeAnalytics = () => {
     if (ADOBE_ANALYTICS_URL) {
       loadScript(ADOBE_ANALYTICS_URL, { location: 'head' })
         .then((data) => {
-          // Log an error; if the promise resolved and the _satellite object should be present in the DOM.
+          // Log a Sentry error if the Launch script isn't ready or the _satellite object isn't present in the DOM.
           if (data.status !== 'ready' || !window._satellite) {
             reportException(
               'Adobe Analytics error: Not all Adobe Launch scripts and extensions were loaded correctly; analytics cannot be sent.'
