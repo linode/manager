@@ -93,7 +93,7 @@ const removeAllowedIp = (allowedIp: string) => {
  * @param existingIps - The number of existing IPs. Optional, default is `0`.
  */
 const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
-  cy.findByTestId('button-access-control').click();
+  ui.cdsButton.findButtonByTitle('Manage Access').click();
 
   ui.drawer
     .findByTitle('Manage Access')
@@ -126,8 +126,8 @@ const manageAccessControl = (allowedIps: string[], existingIps: number = 0) => {
  * made on the result of the root password reset attempt.
  */
 const resetRootPassword = () => {
-  ui.button
-    .findByAttribute('data-qa-settings-button', 'Reset Root Password')
+  ui.cdsButton
+    .findButtonByTitle('Reset Root Password')
     .should('be.visible')
     .click();
 
@@ -159,7 +159,7 @@ const upgradeEngineVersion = (engine: string, version: string) => {
       cy.findByText('Maintenance');
       cy.findByText('Version');
       cy.findByText(`${dbEngine} v${version}`);
-      ui.button.findByTitle('Upgrade Version').should('be.visible');
+      ui.cdsButton.findButtonByTitle('Upgrade Version').should('be.visible');
     });
 };
 
@@ -174,11 +174,20 @@ const upgradeEngineVersion = (engine: string, version: string) => {
  */
 const modifyMaintenanceWindow = (label: string, windowValue: string) => {
   cy.findByText('Set a Weekly Maintenance Window');
-  cy.findByTitle('Save Changes').should('be.visible').should('be.disabled');
+  ui.cdsButton
+    .findButtonByTitle('Save Changes')
+    .should('be.visible')
+    .should('be.disabled');
 
   ui.autocomplete.findByLabel(label).should('be.visible').type(windowValue);
   cy.contains(windowValue).should('be.visible').click();
-  ui.button.findByTitle('Save Changes').should('be.visible').click();
+  cy.get('[data-testid="save-changes-button"]')
+    .shadow()
+    .find('button')
+    .first()
+    .then((btn) => {
+      btn[0].click(); // Native DOM click
+    });
 };
 
 describe('Update database clusters', () => {
@@ -233,18 +242,14 @@ describe('Update database clusters', () => {
 
           cy.findByText('Connection Details');
           // "Show" button should be enabled to reveal password when DB is active.
-          ui.button
-            .findByTitle('Show')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
+          ui.cdsButton.findButtonByTitle('Show').should('be.enabled').click();
 
           cy.wait('@getCredentials');
           cy.findByText(`${initialPassword}`);
 
           // "Hide" button should be enabled to hide password when password is revealed.
-          ui.button
-            .findByTitle('Hide')
+          ui.cdsButton
+            .findButtonByTitle('Hide')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -368,8 +373,8 @@ describe('Update database clusters', () => {
           cy.findByText(hostnameRegex).should('be.visible');
 
           // DBaaS passwords cannot be revealed until database/cluster has provisioned.
-          ui.button
-            .findByTitle('Show')
+          ui.cdsButton
+            .findButtonByTitle('Show')
             .should('be.visible')
             .should('be.disabled');
 

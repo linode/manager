@@ -10,7 +10,6 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
-import { styled } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
@@ -58,10 +57,6 @@ interface Props {
 interface FormValues {
   configs: ConfigurationOption[];
 }
-const StyledAddButtonWrapper = styled('div')(({ theme }) => ({
-  minWidth: 'auto',
-  width: '70px',
-}));
 
 export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
   const { database, onClose, open } = props;
@@ -201,17 +196,16 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
             />
           </Grid>
           <Grid size={2}>
-            <StyledAddButtonWrapper>
-              <Button
-                data-testid="add-config"
-                disabled={!selectedConfig}
-                onClick={() => handleAddConfiguration(selectedConfig)}
-                title="Add"
-                variant="primary"
-              >
-                Add
-              </Button>
-            </StyledAddButtonWrapper>
+            <Button
+              data-testid="add-config"
+              disabled={!selectedConfig}
+              onClick={() => handleAddConfiguration(selectedConfig)}
+              style={{ minWidth: 'auto', width: '70px' }}
+              title="Add"
+              variant="primary"
+            >
+              Add
+            </Button>
           </Grid>
         </Grid>
         <Divider spacingBottom={20} spacingTop={24} />

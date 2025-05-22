@@ -10,10 +10,7 @@ import {
   StyledGridContainer,
   StyledLabelTypography,
 } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
-import {
-  StyledButtonWrapper,
-  StyledConfigValue,
-} from './DatabaseAdvancedConfiguration.style';
+import { StyledConfigValue } from './DatabaseAdvancedConfiguration.style';
 import { DatabaseAdvancedConfigurationDrawer } from './DatabaseAdvancedConfigurationDrawer';
 import { formatConfigValue } from './utilities';
 
@@ -40,16 +37,14 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
             <Link to={ADVANCED_CONFIG_LEARN_MORE_LINK}>Learn more.</Link>
           </Typography>
         </Grid>
-        <StyledButtonWrapper>
-          <Button
-            data-testid="configure-database"
-            onClick={() => setAdvancedConfigurationDrawerOpen(true)}
-            title="Configure"
-            variant="secondary"
-          >
-            Configure
-          </Button>
-        </StyledButtonWrapper>
+        <Button
+          data-testid="configure-database"
+          onClick={() => setAdvancedConfigurationDrawerOpen(true)}
+          title="Configure"
+          variant="secondary"
+        >
+          Configure
+        </Button>
       </Grid>
 
       {engineConfigs ? (

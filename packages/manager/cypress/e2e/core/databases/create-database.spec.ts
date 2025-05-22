@@ -194,7 +194,13 @@ describe('create a database cluster, mocked data', () => {
         cy.findAllByTestId('currentSummary').should('be.visible');
 
         // Create database, confirm redirect, and that new instance is listed.
-        cy.findByText('Create Database Cluster').should('be.visible').click();
+        cy.get('[data-testid="create-database-cluster"]')
+          .shadow()
+          .find('button')
+          .first()
+          .then((btn) => {
+            btn[0].click(); // Native DOM click
+          });
         cy.wait('@createDatabase');
 
         // TODO Update assertions upon completion of M3-7030.
@@ -327,11 +333,10 @@ describe('restricted user cannot create database', () => {
     // table present for restricted user but its inputs will be disabled
     cy.get('table[aria-label="List of Linode Plans"]').should('exist');
     // Assert that Create Database button is visible and disabled
-    ui.button
-      .findByTitle('Create Database Cluster')
+    ui.cdsButton
+      .findButtonByTitle('Create Database Cluster')
       .should('be.visible')
-      .and('be.disabled')
-      .trigger('mouseover');
+      .should('be.disabled');
 
     // Info message is visible
     cy.findByText(
