@@ -53,6 +53,7 @@ export const EditVolumeDrawer = (props: Props) => {
     resetForm,
     status: error,
     values,
+    isValid,
   } = useFormik({
     enableReinitialize: true,
     initialValues: { label: volume?.label ?? '', tags: volume?.tags ?? [] },
@@ -129,7 +130,7 @@ export const EditVolumeDrawer = (props: Props) => {
 
         <ActionsPanel
           primaryButtonProps={{
-            disabled: isReadOnly || !dirty,
+            disabled: isReadOnly || !isValid || !dirty,
             label: 'Save Changes',
             loading: isSubmitting,
             type: 'submit',

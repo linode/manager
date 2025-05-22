@@ -79,6 +79,66 @@ describe('volume update flow', () => {
     );
   });
 
+  it('does not update volume with an invalid label', () => {
+    const volumeRequest = volumeRequestPayloadFactory.build({
+      label: randomLabel(),
+      region: chooseRegion().id,
+    });
+
+    cy.defer(() => createActiveVolume(volumeRequest), 'creating volume').then(
+      (volume: Volume) => {
+        cy.visitWithLogin('/volumes', {
+          localStorageOverrides: {
+            PAGE_SIZE: 100,
+          },
+        });
+
+        // Confirm that volume is listed on landing page, click "Edit" to open drawer.
+        cy.findByText(volume.label)
+          .should('be.visible')
+          .closest('tr')
+          .within(() => {
+            cy.findByText('Active').should('be.visible');
+          });
+        ui.actionMenu
+          .findByTitle(`Action menu for Volume ${volume.label}`)
+          .should('be.visible')
+          .click();
+        cy.get('[data-testid="Edit"]').click();
+
+        function testLabel(label: null | string, message: string) {
+          // Enter new label, click "Save Changes".
+          cy.get('[data-qa-drawer="true"]').within(() => {
+            cy.findByText('Edit Volume').should('be.visible');
+            cy.contains('Label').should('be.visible').click();
+            cy.focused().clear();
+            if (label) {
+              cy.focused().type(label);
+            }
+
+            cy.findByText('Save Changes').should('be.disabled');
+            cy.findByText(message).should('be.visible');
+          });
+        }
+
+        // Test Label Validation
+        testLabel('1label', 'Must begin with a letter');
+
+        testLabel(
+          'label!@#$',
+          'Must only use ascii letters, numbers, underscores, and dashes'
+        );
+
+        testLabel(
+          'label.',
+          'Must only use ascii letters, numbers, underscores, and dashes'
+        );
+
+        testLabel(null, 'Label is required.');
+      }
+    );
+  });
+
   /*
    * - Confirms that volume tags can be changed from the Volumes landing page.
    */

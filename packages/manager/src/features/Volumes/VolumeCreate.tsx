@@ -189,6 +189,7 @@ export const VolumeCreate = () => {
     status: error,
     touched,
     values,
+    isValid,
   } = useFormik({
     initialValues,
     onSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting }) => {
@@ -279,6 +280,7 @@ export const VolumeCreate = () => {
 
   const disabled = Boolean(
     doesNotHavePermission ||
+      !isValid ||
       (showGDPRCheckbox && !hasSignedAgreement) ||
       isInvalidPrice
   );

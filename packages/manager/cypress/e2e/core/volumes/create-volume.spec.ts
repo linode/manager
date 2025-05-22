@@ -223,6 +223,39 @@ describe('volume create flow', () => {
     );
   });
 
+  it('does not allow creation of a volume with invalid label', () => {
+    cy.tag('purpose:syntheticTesting', 'method:e2e', 'purpose:dcTesting');
+
+    cy.visitWithLogin('/volumes/create', {
+      localStorageOverrides: pageSizeOverride,
+    });
+
+    function testLabel(label: null | string, message: string) {
+      cy.contains('Label').click();
+      cy.focused().clear();
+      if (label) {
+        cy.focused().type(label);
+      }
+      cy.findByText('Create Volume').should('be.disabled').click();
+      cy.findByText(message).should('be.visible');
+    }
+
+    // Test Label Validation
+    testLabel('1label', 'Must begin with a letter');
+
+    testLabel(
+      'label!@#$',
+      'Must only use ascii letters, numbers, underscores, and dashes'
+    );
+
+    testLabel(
+      'label.',
+      'Must only use ascii letters, numbers, underscores, and dashes'
+    );
+
+    testLabel(null, 'Label is required.');
+  });
+
   it('does not allow creation of a volume for restricted users from volume create page', () => {
     // Mock setup for user profile, account user, and user grants with restricted permissions,
     // simulating a default user without the ability to add Linodes.
