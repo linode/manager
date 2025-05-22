@@ -127,7 +127,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       {viewOnly && <Typography variant="h2">Regions</Typography>}
       {!viewOnly && (
         <AlertListNoticeMessages
-          errorMessage="All resources associated with selected regions will be included in this alert definition."
+          errorMessage="All entities associated with selected regions will be included in this alert definition."
           variant="warning"
         />
       )}

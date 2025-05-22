@@ -26,7 +26,7 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
-import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroupingSelect';
+import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
@@ -215,7 +215,7 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <AlertEntityGroupingSelect name="group" />
+            <AlertEntityScopeSelect name="group" />
             {entityGroupingWatcher === 'per-entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
