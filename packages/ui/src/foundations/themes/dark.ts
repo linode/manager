@@ -271,6 +271,7 @@ export const darkTheme: ThemeOptions = {
         },
         inputRoot: {
           '& input::placeholder': {
+            padding: `0 ${Spacing.S8}`,
             color: Select.Default.Text,
             opacity: 1,
           },
