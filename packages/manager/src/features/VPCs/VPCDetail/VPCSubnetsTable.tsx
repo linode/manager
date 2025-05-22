@@ -293,7 +293,9 @@ export const VPCSubnetsTable = (props: Props) => {
       </Hidden>
       <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
       <Hidden smDown>
-        <TableCell sx={{ width: '10%' }}>Resources</TableCell>
+        <TableCell
+          sx={{ width: '10%' }}
+        >{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -309,7 +311,7 @@ export const VPCSubnetsTable = (props: Props) => {
           <TableCell>{subnet.ipv4}</TableCell>
           <Hidden smDown>
             <TableCell>
-              {subnet.linodes.length + subnet.nodebalancers.length}
+              {`${flags.isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>

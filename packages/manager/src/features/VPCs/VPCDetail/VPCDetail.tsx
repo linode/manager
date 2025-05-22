@@ -16,10 +16,12 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
+import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { VPC_DOCS_LINK, VPC_LABEL } from 'src/features/VPCs/constants';
 
 import {
   getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
 import { VPCDeleteDialog } from '../VPCLanding/VPCDeleteDialog';
@@ -47,6 +49,8 @@ const VPCDetail = () => {
     isFetching: isFetchingVPC,
     isLoading,
   } = useVPCQuery(Number(vpcId) || -1, Boolean(vpcId));
+
+  const flags = useIsNodebalancerVPCEnabled();
 
   const { data: regions } = useRegionsQuery();
 
@@ -93,7 +97,9 @@ const VPCDetail = () => {
   const regionLabel =
     regions?.find((r) => r.id === vpc.region)?.label ?? vpc.region;
 
-  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
+  const numResources = flags.isNodebalancerVPCEnabled
+    ? getUniqueResourcesFromSubnets(vpc.subnets)
+    : getUniqueLinodesFromSubnets(vpc.subnets);
 
   const summaryData = [
     [
@@ -102,7 +108,7 @@ const VPCDetail = () => {
         value: vpc.subnets.length,
       },
       {
-        label: 'Resources',
+        label: flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes',
         value: numResources,
       },
     ],

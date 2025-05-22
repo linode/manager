@@ -12,6 +12,7 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
 import {
   getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
   getUniqueResourcesFromSubnets,
 } from '../utils';
 
@@ -21,15 +22,23 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
+  isNodebalancerVPCEnabled: boolean;
   vpc: VPC;
 }
 
-export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
+export const VPCRow = ({
+  handleDeleteVPC,
+  handleEditVPC,
+  isNodebalancerVPCEnabled,
+  vpc,
+}: Props) => {
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numResources = getUniqueResourcesFromSubnets(vpc.subnets);
+  const numResources = isNodebalancerVPCEnabled
+    ? getUniqueResourcesFromSubnets(vpc.subnets)
+    : getUniqueLinodesFromSubnets(vpc.subnets);
 
   const isVPCReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',

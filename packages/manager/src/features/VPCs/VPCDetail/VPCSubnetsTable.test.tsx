@@ -78,8 +78,8 @@ describe('VPC Subnets table', () => {
     getByText('Subnet IP Range');
     getByText(subnet.ipv4!);
 
-    getByText('Resources');
-    getByText(subnet.linodes.length + subnet.nodebalancers.length);
+    getByText('Linodes');
+    getByText(subnet.linodes.length);
 
     const actionMenuButton = getAllByRole('button')[4];
     await userEvent.click(actionMenuButton);

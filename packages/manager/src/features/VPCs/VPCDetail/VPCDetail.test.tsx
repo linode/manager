@@ -42,7 +42,7 @@ describe('VPC Detail Summary section', () => {
     });
   });
 
-  it('should display number of subnets and resources, region, id, creation and update dates', async () => {
+  it('should display number of subnets and linodes, region, id, creation and update dates', async () => {
     const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
     server.use(
       http.get('*/vpcs/:vpcId', () => {
@@ -60,7 +60,7 @@ describe('VPC Detail Summary section', () => {
     }
 
     getAllByText('Subnets');
-    getAllByText('Resources');
+    getAllByText('Linodes');
     getAllByText('0');
 
     getAllByText('Region');

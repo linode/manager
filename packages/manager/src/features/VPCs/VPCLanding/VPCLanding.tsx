@@ -13,6 +13,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import {
   VPC_CREATE_ROUTE,
   VPC_LANDING_ROUTE,
@@ -100,6 +101,8 @@ const VPCLanding = () => {
     error: selectedVPCError,
   } = useVPCQuery(params.vpcId ?? -1, !!params.vpcId);
 
+  const flags = useIsNodebalancerVPCEnabled();
+
   if (error) {
     return (
       <ErrorState
@@ -168,7 +171,7 @@ const VPCLanding = () => {
             </Hidden>
             <TableCell>Subnets</TableCell>
             <Hidden mdDown>
-              <TableCell>Resources</TableCell>
+              <TableCell>{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
             </Hidden>
             <TableCell />
           </TableRow>
@@ -178,6 +181,7 @@ const VPCLanding = () => {
             <VPCRow
               handleDeleteVPC={() => handleDeleteVPC(vpc)}
               handleEditVPC={() => handleEditVPC(vpc)}
+              isNodebalancerVPCEnabled={flags.isNodebalancerVPCEnabled}
               key={vpc.id}
               vpc={vpc}
             />
