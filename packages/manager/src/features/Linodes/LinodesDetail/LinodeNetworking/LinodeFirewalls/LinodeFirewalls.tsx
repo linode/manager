@@ -86,9 +86,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         </Typography>
         <Button
           buttonType="primary"
-          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
           onClick={() => setIsAddFirewalDrawerOpen(true)}
-          tooltipText="Linodes can only have one Firewall assigned."
         >
           Add Firewall
         </Button>
@@ -118,6 +116,7 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         title="Add Firewall"
       >
         <AddFirewallForm
+          attachedFirewalls={attachedFirewalls ?? []}
           entityId={linodeID}
           entityType="linode"
           onCancel={() => setIsAddFirewalDrawerOpen(false)}
