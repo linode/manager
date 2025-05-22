@@ -12,6 +12,11 @@ import { TableRow } from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
+import {
+  maintenanceDateColumnMap,
+  type MaintenanceTableType,
+} from './MaintenanceTable';
+
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
@@ -33,8 +38,16 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   scheduled: 'active',
 };
 
-export const MaintenanceTableRow = (props: AccountMaintenance) => {
-  const { entity, reason, status, type, when } = props;
+interface MaintenanceTableRowProps {
+  maintenance: AccountMaintenance;
+  tableType: MaintenanceTableType;
+}
+
+export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
+  const {
+    maintenance: { entity, reason, status, type, when },
+    tableType,
+  } = props;
 
   const { data: profile } = useProfile();
 
@@ -59,23 +72,28 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
           {entity.label}
         </Link>
       </TableCell>
+      {(tableType === 'scheduled' || tableType === 'completed') && (
+        <Hidden mdDown>
+          <TableCell data-testid="relative-date">
+            {parseAPIDate(when).toRelative()}
+          </TableCell>
+        </Hidden>
+      )}
       <TableCell noWrap>
-        {formatDate(when, {
+        {formatDate(props.maintenance[maintenanceDateColumnMap[tableType][0]], {
           timezone: profile?.timezone,
         })}
       </TableCell>
-      <Hidden mdDown>
-        <TableCell data-testid="relative-date">
-          {parseAPIDate(when).toRelative()}
-        </TableCell>
-      </Hidden>
+
       <Hidden smDown>
         <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
-      <TableCell statusCell>
-        <StatusIcon status={statusIconMap[status] ?? 'other'} />
-        {statusTextMap[status] ?? capitalize(status)}
-      </TableCell>
+      {(tableType === 'scheduled' || tableType === 'completed') && (
+        <TableCell statusCell>
+          <StatusIcon status={statusIconMap[status] ?? 'other'} />
+          {statusTextMap[status] ?? capitalize(status)}
+        </TableCell>
+      )}
       <Hidden lgDown>
         <TableCell>
           {isTruncated ? (

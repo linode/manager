@@ -23,7 +23,11 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
-import { PENDING_MAINTENANCE_FILTER } from './utilities';
+import {
+  COMPLETED_MAINTENANCE_FILTER,
+  IN_PROGRESS_MAINTENANCE_FILTER,
+  SCHEDULED_MAINTENANCE_FILTER,
+} from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -34,6 +38,9 @@ const headersForCSVDownload = [
   { key: 'entity.type', label: 'Entity Type' },
   { key: 'entity.id', label: 'Entity ID' },
   { key: 'when', label: 'Date' },
+  { key: 'not_before', label: 'Not Before' },
+  { key: 'start_time', label: 'Start Date' },
+  { key: 'complete_time', label: 'End Date' },
   { key: 'type', label: 'Type' },
   { key: 'status', label: 'Status' },
   { key: 'reason', label: 'Reason' },
@@ -45,8 +52,19 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
+export type MaintenanceTableType = 'completed' | 'in progress' | 'scheduled';
+
+export const maintenanceDateColumnMap: Record<
+  Props['type'],
+  ['complete_time' | 'start_time', string]
+> = {
+  completed: ['complete_time', 'End Date'],
+  'in progress': ['start_time', 'Start Date'],
+  scheduled: ['start_time', 'Start Date'],
+};
+
 interface Props {
-  type: 'completed' | 'pending';
+  type: MaintenanceTableType;
 }
 
 export const MaintenanceTable = ({ type }: Props) => {
@@ -68,8 +86,9 @@ export const MaintenanceTable = ({ type }: Props) => {
    * We use a different API filter depending on the table's `type`
    */
   const filters: Record<Props['type'], Filter> = {
-    completed: { status: 'completed' },
-    pending: PENDING_MAINTENANCE_FILTER,
+    completed: COMPLETED_MAINTENANCE_FILTER,
+    'in progress': IN_PROGRESS_MAINTENANCE_FILTER,
+    scheduled: SCHEDULED_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {
@@ -117,7 +136,11 @@ export const MaintenanceTable = ({ type }: Props) => {
 
     if (data) {
       return data.data.map((item: AccountMaintenance) => (
-        <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
+        <MaintenanceTableRow
+          key={`${item.entity.id}-${item.type}`}
+          maintenance={item}
+          tableType={type}
+        />
       ));
     }
 
@@ -164,26 +187,28 @@ export const MaintenanceTable = ({ type }: Props) => {
           <TableRow>
             <TableCell className={classes.cell}>Entity</TableCell>
             <TableCell className={classes.cell}>Label</TableCell>
+            {(type === 'scheduled' || type === 'completed') && (
+              <Hidden mdDown>
+                <TableSortCell
+                  active={orderBy === 'when'}
+                  className={classes.cell}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="when"
+                >
+                  When
+                </TableSortCell>
+              </Hidden>
+            )}
             <TableSortCell
-              active={orderBy === 'when'}
+              active={orderBy === maintenanceDateColumnMap[type][0]}
               className={classes.cell}
               direction={order}
               handleClick={handleOrderChange}
-              label="when"
+              label={maintenanceDateColumnMap[type][0]}
             >
-              Date
+              {maintenanceDateColumnMap[type][1]}
             </TableSortCell>
-            <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'when'}
-                className={classes.cell}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="when"
-              >
-                When
-              </TableSortCell>
-            </Hidden>
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
@@ -195,15 +220,17 @@ export const MaintenanceTable = ({ type }: Props) => {
                 Type
               </TableSortCell>
             </Hidden>
-            <TableSortCell
-              active={orderBy === 'status'}
-              className={classes.cell}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
+            {(type === 'scheduled' || type === 'completed') && (
+              <TableSortCell
+                active={orderBy === 'status'}
+                className={classes.cell}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="status"
+              >
+                Status
+              </TableSortCell>
+            )}
             <Hidden lgDown>
               <TableCell style={{ width: '40%' }}>Reason</TableCell>
             </Hidden>

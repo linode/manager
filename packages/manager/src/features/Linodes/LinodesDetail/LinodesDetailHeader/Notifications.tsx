@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
-import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { SCHEDULED_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 
 import { MigrationNotification } from './MigrationNotification';
 
@@ -28,7 +28,7 @@ const Notifications = () => {
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    PENDING_MAINTENANCE_FILTER
+    SCHEDULED_MAINTENANCE_FILTER
   );
 
   const maintenanceForThisLinode = accountMaintenanceData?.find(
