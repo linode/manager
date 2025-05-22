@@ -11,6 +11,7 @@ const DIRNAME = new URL('.', import.meta.url).pathname;
 export default defineConfig({
   build: {
     outDir: 'build',
+    sourcemap: true
   },
   envPrefix: 'REACT_APP_',
   plugins: [react(), svgr({ exportAsDefault: true }), urlCanParsePolyfill()],

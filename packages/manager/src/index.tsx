@@ -16,9 +16,10 @@ import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import NullComponent from './components/NullComponent';
-import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
+import { ENABLE_DEV_TOOLS } from './constants';
 import './index.css';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
+import { createRoot } from 'react-dom/client';
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -89,15 +90,13 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (shouldLoadDevTools) {
-    await loadDevTools(store, queryClient);
+  if (ENABLE_DEV_TOOLS) {
+    const devTools = await import('./dev-tools/load');
+    await devTools.loadDevTools(store, queryClient);
   }
 
   const container = document.getElementById('root');
-  if (container) {
-    const root = getRoot(container);
-    root.render(<Main />);
-  }
+  createRoot(container!).render(<Main />);
 }
 
 loadApp();

@@ -123,7 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { MTC } from 'src/features/components/PlansPanel/constants';
+// import { MTC } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -2366,23 +2366,23 @@ export const handlers = [
         region: selectedRegion,
       }),
       // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
-      ...(MTC['availability_regions'].includes(
-        selectedRegion as (typeof MTC)['availability_regions'][number]
-      )
-        ? [
-            regionAvailabilityFactory.build({
-              available: true,
-              plan: 'g8-premium-128-ht',
-              region: selectedRegion,
-            }),
-          ]
-        : [
-            regionAvailabilityFactory.build({
-              available: false,
-              plan: 'g8-premium-128-ht',
-              region: selectedRegion,
-            }),
-          ]),
+      // ...(MTC['availability_regions'].includes(
+      //   selectedRegion as (typeof MTC)['availability_regions'][number]
+      // )
+      //   ? [
+      //       regionAvailabilityFactory.build({
+      //         available: true,
+      //         plan: 'g8-premium-128-ht',
+      //         region: selectedRegion,
+      //       }),
+      //     ]
+      //   : [
+      //       regionAvailabilityFactory.build({
+      //         available: false,
+      //         plan: 'g8-premium-128-ht',
+      //         region: selectedRegion,
+      //       }),
+      //     ]),
     ]);
   }),
 
