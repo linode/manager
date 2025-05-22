@@ -5,6 +5,7 @@ import {
 
 import {
   PENDING_MAINTENANCE_FILTER,
+  PLATFORM_MAINTENANCE_REASON_MATCH,
   PLATFORM_MAINTENANCE_TYPE,
 } from 'src/features/Account/Maintenance/utilities';
 
@@ -49,8 +50,10 @@ export const isPlatformMaintenance = (
   maintenance: AccountMaintenance
 ): boolean =>
   maintenance.type === 'reboot' &&
-  maintenance.status === 'pending' &&
-  maintenance.entity.type === 'linode';
+  maintenance.entity.type === 'linode' &&
+  PLATFORM_MAINTENANCE_REASON_MATCH.some((match) =>
+    maintenance.reason.includes(match)
+  );
 
 const getPlatformMaintenanceResult = (
   accountHasPlatformMaintenance: boolean,

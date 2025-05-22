@@ -254,11 +254,6 @@ const notificationTemplates = {
     }),
   'Platform Maintenance Scheduled': () =>
     notificationFactory.build({
-      entity: {
-        id: 1,
-        label: 'linode-label',
-        type: 'linode',
-      },
       label:
         'One or more of your Linodes has a scheduled reboot for a critical platform security update.',
       message:

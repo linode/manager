@@ -1,6 +1,5 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
-import { DateTime } from 'luxon';
 import React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -9,7 +8,7 @@ import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 import { Link } from '../../components/Link';
 import { PowerActionsDialog } from '../Linodes/PowerActionsDialogOrDrawer';
 
-import type { Linode } from '@linode/api-v4';
+import type { AccountMaintenance, Linode } from '@linode/api-v4';
 
 /**
  * This banner will be used in the event of VM platform maintenance,
@@ -61,47 +60,57 @@ export const LinodePlatformMaintenanceBanner = (props: {
     return null;
 
   const earliestMaintenance = platformMaintenanceByLinode[linodeId].reduce(
-    (earliest, current) =>
-      DateTime.fromISO(current.start_time) <
-      DateTime.fromISO(earliest.start_time)
-        ? current
-        : earliest
+    (earliest, current) => {
+      const currentMaintenanceStartTime = getMaintenanceStartTime(current);
+      const earliestMaintenanceStartTime = getMaintenanceStartTime(earliest);
+
+      if (currentMaintenanceStartTime && earliestMaintenanceStartTime) {
+        return currentMaintenanceStartTime < earliestMaintenanceStartTime
+          ? current
+          : earliest;
+      }
+
+      return earliest;
+    },
+    platformMaintenanceByLinode[linodeId][0]
   );
+
+  const startTime = getMaintenanceStartTime(earliestMaintenance);
 
   return (
     <>
       <Notice forceImportantIconVerticalCenter variant="warning">
-        <Stack
-          alignItems="center"
-          direction="row"
-          // justifyContent="space-between"
-        >
+        <Stack alignItems="center" direction="row">
           <Box flex={1}>
             <Typography>
               Linode{' '}
               <Link to={`/linodes/${linodeId}`}>
                 {linode?.label ?? linodeId}
               </Link>{' '}
-              needs to be rebooted for critical platform maintenance. A reboot
-              is scheduled for{' '}
-              <strong>
-                <DateTimeDisplay
-                  format="MM/dd/yyyy"
-                  sx={(theme) => ({
-                    fontWeight: theme.tokens.font.FontWeight.Bold,
-                  })}
-                  value={earliestMaintenance.start_time}
-                />{' '}
-                at{' '}
-                <DateTimeDisplay
-                  format="HH:mm"
-                  sx={(theme) => ({
-                    fontWeight: theme.tokens.font.FontWeight.Bold,
-                  })}
-                  value={earliestMaintenance.start_time}
-                />
-                .
-              </strong>
+              needs to be rebooted for critical platform maintenance.{' '}
+              {startTime && (
+                <>
+                  A reboot is scheduled for{' '}
+                  <strong>
+                    <DateTimeDisplay
+                      format="MM/dd/yyyy"
+                      sx={(theme) => ({
+                        fontWeight: theme.tokens.font.FontWeight.Bold,
+                      })}
+                      value={startTime}
+                    />{' '}
+                    at{' '}
+                    <DateTimeDisplay
+                      format="HH:mm"
+                      sx={(theme) => ({
+                        fontWeight: theme.tokens.font.FontWeight.Bold,
+                      })}
+                      value={startTime}
+                    />
+                  </strong>
+                  .
+                </>
+              )}
             </Typography>
           </Box>
           <Button
@@ -127,3 +136,8 @@ export const LinodePlatformMaintenanceBanner = (props: {
     </>
   );
 };
+
+// The 'start_time' field might not be available, so fallback to 'when'
+const getMaintenanceStartTime = (
+  maintenance: AccountMaintenance
+): null | string | undefined => maintenance.start_time ?? maintenance.when;
