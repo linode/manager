@@ -8,6 +8,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
+import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 
@@ -90,17 +91,50 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     return [];
   };
   const isValueMultiple =
-    valueOptions().length > 0 && dimensionOperatorWatcher
-      ? dimensionOperatorWatcher === 'in'
-      : false;
+    valueOptions().length > 0 && dimensionOperatorWatcher === 'in';
 
   const isTextField =
-    valueOptions().length < 1 ||
+    !valueOptions().length ||
     (dimensionOperatorWatcher
       ? textFieldOperators.includes(dimensionOperatorWatcher)
       : false);
 
   const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
+
+  const resolveSelectedValues = (
+    options: Item<string, string>[],
+    value: null | string,
+    isMultiple: boolean
+  ): Item<string, string> | Item<string, string>[] | null => {
+    if (!value) return isMultiple ? [] : null;
+
+    if (isMultiple) {
+      return options.filter((option) =>
+        value.split(',').includes(option.value)
+      );
+    }
+
+    return options.find((option) => option.value === value) ?? null;
+  };
+
+  const handleValueChange = (
+    selected: Item<string, string> | Item<string, string>[] | null,
+    operation: string,
+    isMultiple: boolean
+  ): string => {
+    if (operation !== 'selectOption') return '';
+
+    if (isMultiple && Array.isArray(selected)) {
+      return selected.map((item) => item.value).join(',');
+    }
+
+    if (!isMultiple && selected && !Array.isArray(selected)) {
+      return selected.value;
+    }
+
+    return '';
+  };
+
   return (
     <GridLegacy
       container
@@ -188,7 +222,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   onChange={(event) => field.onChange(event.target.value)}
                   placeholder={
                     dimensionOperatorWatcher === 'in'
-                      ? 'Enter Value(s) (e.g.,  abc, xyz)'
+                      ? 'Enter Value(s) (e.g., abc, xyz)'
                       : 'Enter a Value'
                   }
                   sx={{ flex: 1, width: '256px' }}
@@ -208,20 +242,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   multiple={isValueMultiple}
                   onBlur={field.onBlur}
                   onChange={(_, selected, operation) => {
-                    if (isValueMultiple) {
-                      const selectedValues = Array.isArray(selected)
-                        ? selected.map((item) => item.value).join(',')
-                        : '';
-                      field.onChange(
-                        operation === 'selectOption' ? selectedValues : ''
-                      );
-                    } else {
-                      field.onChange(
-                        operation === 'selectOption' && selected
-                          ? (selected as { label: string; value: string }).value
-                          : ''
-                      );
-                    }
+                    field.onChange(
+                      handleValueChange(selected, operation, isValueMultiple)
+                    );
                   }}
                   options={valueOptions()}
                   placeholder={
@@ -232,17 +255,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                       : valuePlaceholder
                   }
                   sx={{ flex: 1 }}
-                  value={
+                  value={resolveSelectedValues(
+                    valueOptions(),
+                    field.value,
                     isValueMultiple
-                      ? valueOptions().filter((option) =>
-                          typeof field.value === 'string'
-                            ? field.value.split(',').includes(option.value)
-                            : false
-                        )
-                      : (valueOptions().find(
-                          (option) => option.value === field.value
-                        ) ?? null)
-                  }
+                  )}
                 />
               )
             }
