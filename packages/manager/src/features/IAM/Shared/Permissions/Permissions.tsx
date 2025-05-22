@@ -1,4 +1,5 @@
 import { StyledLinkButton, Typography } from '@linode/ui';
+import { debounce } from '@mui/material';
 import { Grid } from '@mui/material';
 import * as React from 'react';
 
@@ -19,10 +20,29 @@ type Props = {
 };
 
 export const Permissions = ({ permissions }: Props) => {
-  const { containerRef, itemRefs, visibleIndexes, showAll, setShowAll } =
-    useCalculateHiddenItems(permissions);
+  const [showAll, setShowAll] = React.useState(false);
 
-  const numHiddenItems = permissions.length - visibleIndexes.length;
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(permissions, showAll);
+
+  const handleResize = React.useMemo(
+    () => debounce(() => calculateHiddenItems(), 100),
+    [calculateHiddenItems]
+  );
+
+  React.useEffect(() => {
+    // Ensure calculateHiddenItems runs after layout stabilization on initial render
+    const rafId = requestAnimationFrame(() => calculateHiddenItems());
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [calculateHiddenItems, handleResize]);
+
+  // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
     <Grid container data-testid="parent" direction="column">
       <StyledTitle>Permissions</StyledTitle>
@@ -38,9 +58,7 @@ export const Permissions = ({ permissions }: Props) => {
               <StyledPermissionItem
                 data-testid="permission"
                 key={permission}
-                ref={(el) =>
-                  (itemRefs.current[index] = el as HTMLDivElement | null)
-                }
+                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
               >
                 {permission}
               </StyledPermissionItem>
@@ -53,7 +71,7 @@ export const Permissions = ({ permissions }: Props) => {
                 onClick={() => setShowAll(!showAll)}
                 type="button"
               >
-                {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
+                {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
               </StyledLinkButton>
             </StyledBox>
           )}

@@ -1,59 +1,49 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 
 import type { PermissionType } from '@linode/api-v4';
 
+/**
+ * Custom hook to calculate hidden items
+ */
 export const useCalculateHiddenItems = (
   items: PermissionType[] | string[],
-  maxRows = 2
+  showAll?: boolean
 ) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [visibleIndexes, setVisibleIndexes] = useState<number[]>([]);
-  const [showAll, setShowAll] = useState(false);
+  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
 
-  const calculate = useCallback(() => {
-    if (!containerRef.current) return;
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
 
-    const tops = new Map<number, number[]>();
-    let hasVisible = false;
+  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
 
-    itemRefs.current.forEach((el, index) => {
-      if (!el || el.offsetHeight === 0) return;
-      const top = el.offsetTop;
-      hasVisible = true;
-
-      if (!tops.has(top)) tops.set(top, []);
-      tops.get(top)!.push(index);
-    });
-
-    if (!hasVisible) {
-      requestAnimationFrame(calculate);
+  const calculateHiddenItems = React.useCallback(() => {
+    if (showAll || !containerRef.current) {
+      setNumHiddenItems(0);
       return;
     }
 
-    const sortedTopGroups = Array.from(tops.values()).slice(0, maxRows);
-    const visible = sortedTopGroups.flat();
-    setVisibleIndexes(showAll ? items.map((_, i) => i) : visible);
+    if (!itemRefs.current) {
+      return;
+    }
+
+    const containerBottom = containerRef.current.getBoundingClientRect().bottom;
+
+    const itemsArray = Array.from(itemRefs.current);
+
+    const firstHiddenIndex = itemsArray.findIndex(
+      (item: HTMLDivElement | HTMLSpanElement) => {
+        if (!item) {
+          return false;
+        }
+        const rect = item.getBoundingClientRect();
+        return rect.top >= containerBottom;
+      }
+    );
+
+    const numHiddenItems =
+      firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
+
+    setNumHiddenItems(numHiddenItems);
   }, [items, showAll]);
 
-  useEffect(() => {
-    requestAnimationFrame(calculate);
-
-    const onResize = () => {
-      requestAnimationFrame(calculate);
-    };
-
-    window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [calculate]);
-
-  return {
-    containerRef,
-    itemRefs,
-    visibleIndexes,
-    showAll,
-    setShowAll,
-  };
+  return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
 };

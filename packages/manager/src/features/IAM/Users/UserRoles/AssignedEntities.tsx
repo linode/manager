@@ -1,5 +1,5 @@
 import { Box, Button, Chip, CloseIcon, Tooltip } from '@linode/ui';
-import { useTheme } from '@mui/material';
+import { debounce, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
@@ -20,12 +20,26 @@ export const AssignedEntities = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { containerRef, itemRefs, visibleIndexes } = useCalculateHiddenItems(
-    role.entity_names!,
-    1
+  const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
+    useCalculateHiddenItems(role.entity_names!);
+
+  const handleResize = React.useMemo(
+    () => debounce(() => calculateHiddenItems(), 100),
+    [calculateHiddenItems]
   );
 
-  const hiddenCount = role.entity_names!.length - visibleIndexes.length;
+  React.useEffect(() => {
+    // Ensure calculateHiddenItems runs after layout stabilization on initial render
+    const rafId = requestAnimationFrame(() => calculateHiddenItems());
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [calculateHiddenItems, handleResize]);
+
   const combinedEntities: CombinedEntity[] = React.useMemo(
     () =>
       role.entity_names!.map((name, index) => ({
@@ -76,15 +90,15 @@ export const AssignedEntities = ({
       <div
         ref={containerRef}
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          maxHeight: '1.6rem',
+          WebkitBoxOrient: 'vertical',
+          WebkitLineClamp: 1,
+          display: '-webkit-box',
           overflow: 'hidden',
         }}
       >
         {items}
       </div>
-      {hiddenCount > 0 && (
+      {numHiddenItems > 0 && (
         <Box
           sx={{
             alignItems: 'center',
@@ -108,7 +122,7 @@ export const AssignedEntities = ({
                 padding: 0,
               }}
             >
-              +{hiddenCount}
+              +{numHiddenItems}
             </Button>
           </Tooltip>
         </Box>
