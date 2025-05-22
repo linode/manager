@@ -1,4 +1,5 @@
 {
+  "//": "This tsconfig is our base config for packages.",
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",

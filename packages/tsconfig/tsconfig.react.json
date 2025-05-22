@@ -1,4 +1,5 @@
 {
+  "//": "This tsconfig should be used when a package needs React / JSX.",
   "compilerOptions": {
     "jsx": "react"
   }
