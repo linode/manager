@@ -17,10 +17,25 @@ import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
+  /**
+   * Error message to be displayed when there is an error.
+   */
   errorText?: string;
+  /**
+   * Function to handle changes in the selected regions.
+   */
   handleChange?: (regionIds: string[]) => void;
+  /**
+   * The service type for which the regions are being selected.
+   */
   serviceType: AlertServiceType | null;
+  /**
+   * The selected regions.
+   */
   value?: string[];
+  /**
+   * Flag to indicate if the component is in view-only mode.
+   */
   viewOnly?: boolean;
 }
 

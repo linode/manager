@@ -13,20 +13,53 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import type { SelectDeselectAll } from '../constants';
 
 export interface AlertRegion {
+  /**
+   * Indicates if the region is selected.
+   * This is used to determine if the region should be checked in the UI.
+   */
   checked: boolean;
+  /**
+   * The number of associated entities in the region.
+   */
   count: number;
+  /**
+   * Id of the region
+   */
   id: string;
+  /**
+   * Label of the region.
+   */
   label: string;
 }
 
 interface DisplayAlertRegionProps {
+  /**
+   * Function to handle the selection of all regions.
+   */
   handleSelectAll: (action: SelectDeselectAll) => void;
+  /**
+   * Function to handle the change in selection of a region.
+   */
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
-
+  /**
+   * Indicates if all regions are selected.
+   */
   isAllSelected?: boolean;
+  /**
+   * Indicates if some regions are selected.
+   */
   isSomeSelected?: boolean;
+  /**
+   * List of regions to be displayed.
+   */
   regions?: AlertRegion[];
+  /**
+   * To indicate whether to show only selected regions or not.
+   */
   showSelected?: boolean;
+  /**
+   * Flag to indicate if the component is in view-only mode.
+   */
   viewOnly?: boolean;
 }
 
