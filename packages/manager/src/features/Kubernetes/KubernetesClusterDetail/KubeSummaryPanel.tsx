@@ -55,7 +55,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   const { data: dashboard, error: dashboardError } =
-    useKubernetesDashboardQuery(cluster.id);
+    useKubernetesDashboardQuery(cluster.id, cluster.tier !== 'enterprise');
 
   const {
     error: resetKubeConfigError,
