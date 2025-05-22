@@ -3,8 +3,10 @@ import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
 import { mapIdsToDevices } from '@linode/utilities';
 import React from 'react';
 
+import { LinodeOption } from './LinodeOption';
+
 import type { APIError, Filter, Linode } from '@linode/api-v4';
-import type { SxProps, Theme } from '@linode/ui';
+import type { DisableItemOption, SxProps, Theme } from '@linode/ui';
 
 interface LinodeSelectProps {
   /** Determine whether isOptionEqualToValue prop should be defined for Autocomplete
@@ -14,10 +16,10 @@ interface LinodeSelectProps {
   checkIsOptionEqualToValue?: boolean;
   /** Whether to display the clear icon. Defaults to `true`. */
   clearable?: boolean;
-  /** Disable editing the input value. */
+  /** Disable the component. */
   disabled?: boolean;
-  /* New prop for linode Ids and reasons for disable */
-  disabledLinodesMap?: Record<number, string>;
+  /* New prop for Linode Ids and reasons for disable */
+  disabledLinodeOptions?: Record<string, DisableItemOption>;
   /** Hint displayed with error styling. */
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
@@ -95,7 +97,7 @@ export const LinodeSelect = (
     placeholder,
     sx,
     value,
-    disabledLinodesMap,
+    disabledLinodeOptions,
   } = props;
 
   const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
@@ -114,6 +116,11 @@ export const LinodeSelect = (
     }
   }, [value]);
 
+  // const disabledLinodesssMap = [
+  //   { id: 11221, reason: 'Linode is shut down' },
+  //   { id: 99001, reason: 'Linode is attached to vpc' },
+  // ];
+
   return (
     <Autocomplete
       clearOnBlur={false}
@@ -123,13 +130,20 @@ export const LinodeSelect = (
       disabled={disabled}
       disablePortal={true}
       errorText={error?.[0].reason ?? errorText}
-      // getOptionDisabled={getOptionDisabled}
+      getOptionDisabled={getOptionDisabled}
+      // getOptionDisabled={(linode) => Boolean(disabledLinodesssMap?.[linode.id])}
+      // getOptionDisabled={(linode) => Boolean(disabledLinodesssMap?.[11221])}
+
+      /*
       getOptionDisabled={(linode) => {
         if (disabledLinodesMap?.[linode.id]) {
           return true;
         }
         return getOptionDisabled?.(linode) ?? false;
+        getOptionDisabled?.(linode) ?? !!disabledLinodesssMap?.[linode.id];
       }}
+        */
+
       helperText={helperText}
       id={id}
       inputValue={inputValue}
@@ -162,15 +176,20 @@ export const LinodeSelect = (
       }
       PopperComponent={CustomPopper}
       renderOption={(props, linode) => {
-        const isDisabled = disabledLinodesMap?.[linode.id];
+        // const isDisabled = disabledLinodesssMap?.[linode.id];
+        // const isDisabled = !!disabledLinodesssMap?.[linode.id];
+        // const reason = disabledLinodesssMap?.[linode.id];
+        // const isDisabled = getOptionDisabled?.(linode);
+        const { key, ...rest } = props;
 
         return (
-          <li {...props}>
-            <div>
-              {linode.label}
-              {isDisabled && disabledLinodesMap?.[linode.id]}
-            </div>
-          </li>
+          <LinodeOption
+            disabledOptions={disabledLinodeOptions?.[linode.id]}
+            item={linode}
+            key={`${linode.id}-${key}`}
+            props={rest}
+            selected={false}
+          />
         );
       }}
       slotProps={{ chip: { deleteIcon: <CloseIcon /> } }}

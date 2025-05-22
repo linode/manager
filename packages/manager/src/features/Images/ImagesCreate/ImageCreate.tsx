@@ -40,6 +40,7 @@ export const ImageCreate = () => {
             <SafeTabPanel index={0}>
               <CreateImageTab />
             </SafeTabPanel>
+
             <SafeTabPanel index={1}>
               <ImageUpload />
             </SafeTabPanel>

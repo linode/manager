@@ -378,6 +378,8 @@ export const AddLinodeDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
+
+        {/* ******************************************************************************************************* */}
         <LinodeSelect
           disabled={isLoading}
           helperText={helperText}
@@ -389,6 +391,8 @@ export const AddLinodeDrawer = (props: Props) => {
             ...Array.from(interfacesToAddMap.keys()),
           ]}
         />
+        {/* ******************************************************************************************************* */}
+
         {isLinodeInterfacesEnabled &&
           linodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>

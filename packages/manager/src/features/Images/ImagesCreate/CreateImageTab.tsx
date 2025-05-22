@@ -1,6 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   useAllLinodeDisksQuery,
+  useAllLinodesQuery,
   useCreateImageMutation,
   useGrants,
   useLinodeQuery,
@@ -31,6 +32,11 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
+
+import {
+  getDisabledLinodes,
+  // useImageAndLinodeGrantCheck
+} from '../utils';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 
@@ -72,6 +78,22 @@ export const CreateImageTab = () => {
   const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
+  // console.log('isImageCreateRestricted:: ', isImageCreateRestricted);
+
+  const { data: linodes, error, isFetching } = useAllLinodesQuery();
+  // console.log('linodes FROM useAllLinodesQuery():: ', linodes);
+
+  const listOfDisabledLinodes = getDisabledLinodes(
+    { linodes: linodes ?? [] },
+    grants
+  );
+
+  // const { permissionedLinodes: availableLinodes } =
+  //   useImageAndLinodeGrantCheck();
+
+  // const getAllLinodeOptions = () => {};
+
+  // const getLAvailableinodeOptions = () => {};
 
   const onSubmit = handleSubmit(async (values) => {
     try {
@@ -113,6 +135,7 @@ export const CreateImageTab = () => {
   } = useAllLinodeDisksQuery(selectedLinodeId ?? -1, selectedLinodeId !== null);
 
   const selectedDiskId = watch('disk_id');
+
   const selectedDisk =
     disks?.find((disk) => disk.id === selectedDiskId) ?? null;
 
@@ -189,12 +212,11 @@ export const CreateImageTab = () => {
               .
             </Typography>
 
+            {/* ******************************************************************************************************* */}
             <LinodeSelect
               disabled={isImageCreateRestricted}
-              disabledLinodesMap={{
-                1122: 'Linode is shut down',
-                9900: 'Linode is attached to vpc',
-              }}
+              disabledLinodeOptions={listOfDisabledLinodes}
+              errorText={error?.[0].reason}
               getOptionDisabled={
                 grants
                   ? (linode) =>
@@ -206,6 +228,7 @@ export const CreateImageTab = () => {
                   : undefined
               }
               helperText={linodeSelectHelperText}
+              loading={isFetching}
               noMarginTop
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
@@ -216,6 +239,7 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
+            {/* ******************************************************************************************************* */}
 
             {selectedLinode && !linodeRegionSupportsImageStorage && (
               <Notice variant="warning">
