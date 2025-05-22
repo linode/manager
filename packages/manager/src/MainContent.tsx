@@ -144,9 +144,6 @@ const Help = React.lazy(() =>
     default: module.HelpAndSupport,
   }))
 );
-const SearchLanding = React.lazy(
-  () => import('src/features/Search/SearchLanding')
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
@@ -375,10 +372,6 @@ export const MainContent = () => {
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
                                 <Route component={Help} path="/support" />
-                                <Route
-                                  component={SearchLanding}
-                                  path="/search"
-                                />
                                 <Route
                                   component={EventsLanding}
                                   path="/events"
