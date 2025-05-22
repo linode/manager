@@ -93,18 +93,13 @@ async function loadApp() {
     const devTools = await import('./dev-tools/load');
     await devTools.loadDevTools();
 
-    const devToolsRoot =
-      document.getElementById('dev-tools-root') ||
-      (() => {
-        const newRoot = document.createElement('div');
-        newRoot.id = 'dev-tools-root';
-        document.body.appendChild(newRoot);
-        return newRoot;
-      })();
-
-    const root = createRoot(devToolsRoot);
-
     const { DevTools } = await import('./dev-tools/DevTools');
+
+    const devToolsRootContainer = document.createElement('div');
+    devToolsRootContainer.id = 'dev-tools-root';
+    document.body.appendChild(devToolsRootContainer);
+
+    const root = createRoot(devToolsRootContainer);
 
     root.render(<DevTools queryClient={queryClient} store={store} />);
   }
