@@ -919,16 +919,16 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$disabled': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
             opacity: 0.5,
           },
           '&$error': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
           },
           '&.Mui-focused': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
           },
-          color: Color.Neutrals[70],
+          color: Component.Label.Text,
           font: Typography.Body.Bold,
           marginBottom: 8,
         },

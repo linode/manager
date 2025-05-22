@@ -615,15 +615,15 @@ export const darkTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$disabled': {
-            color: Color.Neutrals[40],
+            color: Component.Label.Text,
           },
           '&$error': {
-            color: Color.Neutrals[40],
+            color: Component.Label.Text,
           },
           '&.Mui-focused': {
-            color: Color.Neutrals[40],
+            color: Component.Label.Text,
           },
-          color: Color.Neutrals[40],
+          color: Component.Label.Text,
         },
       },
     },
