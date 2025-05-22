@@ -22,11 +22,12 @@ export interface AlertRegion {
 interface DisplayAlertRegionProps {
   handleSelectAll: (action: SelectDeselectAll) => void;
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
-  isAllSelected?: boolean;
 
+  isAllSelected?: boolean;
   isSomeSelected?: boolean;
   regions?: AlertRegion[];
   showSelected?: boolean;
+  viewOnly?: boolean;
 }
 
 export const DisplayAlertRegions = React.memo(
@@ -38,6 +39,7 @@ export const DisplayAlertRegions = React.memo(
       isAllSelected,
       showSelected,
       handleSelectAll,
+      viewOnly,
     } = props;
 
     return (
@@ -59,20 +61,22 @@ export const DisplayAlertRegions = React.memo(
             >
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Box>
-                      <Checkbox
-                        checked={!isSomeSelected && isAllSelected}
-                        data-testid="select-all-checkbox"
-                        indeterminate={isSomeSelected && !isAllSelected}
-                        onChange={(_, checked) =>
-                          handleSelectAll(
-                            checked ? 'Select All' : 'Deselect All'
-                          )
-                        }
-                      />
-                    </Box>
-                  </TableCell>
+                  {!viewOnly && (
+                    <TableCell>
+                      <Box>
+                        <Checkbox
+                          checked={!isSomeSelected && isAllSelected}
+                          data-testid="select-all-checkbox"
+                          indeterminate={isSomeSelected && !isAllSelected}
+                          onChange={(_, checked) =>
+                            handleSelectAll(
+                              checked ? 'Select All' : 'Deselect All'
+                            )
+                          }
+                        />
+                      </Box>
+                    </TableCell>
+                  )}
                   <TableSortCell
                     active={true}
                     data-qa-header="Region"
@@ -105,16 +109,20 @@ export const DisplayAlertRegions = React.memo(
                     .map(({ label, id, checked, count }) => {
                       return (
                         <TableRow data-testid={`region-row-${id}`} key={id}>
-                          <TableCell>
-                            <Checkbox
-                              checked={checked}
-                              onChange={(_, status) =>
-                                handleSelectionChange(id, status)
-                              }
-                            />
-                          </TableCell>
+                          {!viewOnly && (
+                            <TableCell>
+                              <Checkbox
+                                checked={checked}
+                                onChange={(_, status) =>
+                                  handleSelectionChange(id, status)
+                                }
+                              />
+                            </TableCell>
+                          )}
 
-                          <TableCell>{label}</TableCell>
+                          <TableCell>
+                            {label} ({id})
+                          </TableCell>
                           <TableCell>{count}</TableCell>
                         </TableRow>
                       );

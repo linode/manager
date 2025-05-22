@@ -108,6 +108,12 @@ export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
   { label: 'Entity', value: 'per-entity' },
 ];
 
+export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
+  'per-account': 'Account',
+  'per-region': 'Region',
+  'per-entity': 'Entity',
+};
+
 export const textFieldOperators = ['endswith', 'startswith'];
 
 export const evaluationPeriodOptions = {

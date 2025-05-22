@@ -34,7 +34,7 @@ export const AlertEntityGroupingSelect = (
           disableClearable
           disabled={disabled}
           errorText={fieldState.error?.message}
-          label="Grouping"
+          label="Scope"
           onBlur={field.onBlur}
           onChange={(_, { value }) => {
             if (value) {

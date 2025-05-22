@@ -18,6 +18,11 @@ interface AlertSelectedInforNoticeProps {
   maxSelectionCount?: number;
 
   /**
+   * The property that is selected. Ex: regions, entities etc
+   */
+  property?: string;
+
+  /**
    * The number of currently selected elements.
    */
   selectedCount: number;
@@ -35,6 +40,7 @@ export const AlertSelectedInfoNotice = React.memo(
       maxSelectionCount,
       selectedCount,
       totalCount,
+      property = 'enities',
     } = props;
     const isSelectAll =
       maxSelectionCount !== undefined
@@ -54,7 +60,7 @@ export const AlertSelectedInfoNotice = React.memo(
             fontFamily: theme.tokens.alias.Typography.Body.Bold,
           })}
         >
-          {selectedCount} of {totalCount} entities are selected.
+          {selectedCount} of {totalCount} {property} are selected.
         </Typography>
         <Tooltip
           placement="right-start"

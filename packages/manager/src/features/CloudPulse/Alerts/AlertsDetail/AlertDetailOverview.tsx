@@ -7,7 +7,11 @@ import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { convertStringToCamelCasesWithSpaces } from '../../Utils/utils';
-import { alertStatusToIconStatusMap, severityMap } from '../constants';
+import {
+  alertStatusToIconStatusMap,
+  entityGroupMap,
+  severityMap,
+} from '../constants';
 import { getServiceTypeLabel } from '../Utils/utils';
 import { AlertDetailRow } from './AlertDetailRow';
 
@@ -33,6 +37,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     type,
     updated,
     updated_by: updatedBy,
+    group,
   } = alertDetails;
 
   const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
@@ -85,6 +90,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           })}
         />
         <AlertDetailRow label="Last Modified By" value={updatedBy} />
+        <AlertDetailRow label="Scope" value={entityGroupMap[group]} />
       </Grid>
     </>
   );
