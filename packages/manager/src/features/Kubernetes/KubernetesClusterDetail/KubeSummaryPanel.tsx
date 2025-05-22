@@ -54,6 +54,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
+  // Access to the Kubernetes Dashboard is not supported for LKE-E clusters.
   const { data: dashboard, error: dashboardError } =
     useKubernetesDashboardQuery(cluster.id, cluster.tier !== 'enterprise');
 
