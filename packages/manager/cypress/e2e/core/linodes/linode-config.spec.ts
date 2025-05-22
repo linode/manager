@@ -47,6 +47,7 @@ import {
   mockUpgradeNewLinodeInterface,
   mockUpgradeNewLinodeInterfaceError,
 } from 'support/intercepts/linodes';
+import { mockGetRegion, mockGetRegions } from 'support/intercepts/regions';
 import { mockGetVLANs } from 'support/intercepts/vlans';
 import { mockGetVPC, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
@@ -481,7 +482,7 @@ describe('Linode Config management', () => {
 
   describe('Mocked', () => {
     const region: Region = regionFactory.build({
-      capabilities: ['Linodes'],
+      capabilities: ['Linodes', 'Linode Interfaces'],
       country: 'us',
       id: 'us-southeast',
     });
@@ -875,6 +876,14 @@ describe('Linode Config management', () => {
             capabilities: ['Linodes', 'Linode Interfaces'],
           })
         );
+
+        const mockRegion: Region = regionFactory.build({
+          id: 'us-east',
+          label: 'Newark, NJ',
+          capabilities: ['Linodes', 'Linode Interfaces'],
+        });
+        mockGetRegions([mockRegion]);
+        mockGetRegion(mockRegion);
       });
 
       /*
@@ -885,7 +894,7 @@ describe('Linode Config management', () => {
         const mockLinode = linodeFactory.build({
           id: randomNumber(1000, 99999),
           label: randomLabel(),
-          region: chooseRegion().id,
+          region: 'us-east',
           interface_generation: 'linode',
         });
 
@@ -966,7 +975,7 @@ describe('Linode Config management', () => {
         const mockLinode = linodeFactory.build({
           id: randomNumber(1000, 99999),
           label: randomLabel(),
-          region: chooseRegion().id,
+          region: 'us-east',
         });
 
         const mockConfig = configFactory.build({
@@ -1072,7 +1081,7 @@ describe('Linode Config management', () => {
         const mockLinode = linodeFactory.build({
           id: randomNumber(1000, 99999),
           label: randomLabel(),
-          region: chooseRegion().id,
+          region: 'us-east',
         });
 
         const mockConfig = configFactory.build({

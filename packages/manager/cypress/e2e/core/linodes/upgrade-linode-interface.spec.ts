@@ -27,7 +27,7 @@ import {
 } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
-import { 
+import {
   assertPromptDialogContent,
   assertUpgradeSummay,
 } from 'support/util/linodes';
@@ -55,10 +55,10 @@ describe('upgrade to new Linode Interface flow', () => {
     );
   });
 
- /*
-  * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
-  * - Confirms absence on edit and add config dialog.
-  */
+  /*
+   * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
+   * - Confirms absence on edit and add config dialog.
+   */
   it('does not show interfaces section when upgrading to Linodes with new interfaces', () => {
     const mockLinode = linodeFactory.build({
       id: randomNumber(1000, 99999),
@@ -87,9 +87,7 @@ describe('upgrade to new Linode Interface flow', () => {
     cy.findByText('Configuration Profile').should('not.exist');
     cy.findByText('UPGRADE').should('not.exist');
 
-    cy.get('[data-testid="Configurations"]')
-      .should('be.visible')
-      .click();
+    cy.get('[data-testid="Configurations"]').should('be.visible').click();
 
     cy.findByLabelText('List of Configurations')
       .should('be.visible')
@@ -112,9 +110,7 @@ describe('upgrade to new Linode Interface flow', () => {
         cy.contains(
           "Go to Network to view your Linode's Network interfaces."
         ).should('be.visible');
-        cy.findByText('Primary Interface (Default Route)').should(
-          'not.exist'
-        );
+        cy.findByText('Primary Interface (Default Route)').should('not.exist');
         cy.findByText('eth0').should('not.exist');
         cy.findByText('eth1').should('not.exist');
         cy.findByText('eth2').should('not.exist');
@@ -139,19 +135,17 @@ describe('upgrade to new Linode Interface flow', () => {
         cy.contains(
           "Go to Network to view your Linode's Network interfaces."
         ).should('be.visible');
-        cy.findByText('Primary Interface (Default Route)').should(
-          'not.exist'
-        );
+        cy.findByText('Primary Interface (Default Route)').should('not.exist');
         cy.findByText('eth0').should('not.exist');
         cy.findByText('eth1').should('not.exist');
         cy.findByText('eth2').should('not.exist');
       });
   });
-  
- /*
-  * - Confirm button appears in Details footer for linodes with legacy interfaces.
-  * - Confirm clicking 'UPGRADE' button flow.
-  */
+
+  /*
+   * - Confirm button appears in Details footer for linodes with legacy interfaces.
+   * - Confirm clicking 'UPGRADE' button flow.
+   */
   it('upgrades from a single legacy configuration to new Linode interfaces (Public) from details page', () => {
     const mockLinode = linodeFactory.build({
       id: randomNumber(1000, 99999),
@@ -164,7 +158,7 @@ describe('upgrade to new Linode Interface flow', () => {
       id: randomNumber(1000, 99999),
       interfaces: null,
     });
-    
+
     const mockPublicInterface = linodeInterfaceFactoryPublic.build({
       id: randomNumber(1000, 99999),
     });
@@ -172,9 +166,7 @@ describe('upgrade to new Linode Interface flow', () => {
     const mockUpgradeLinodeInterface = upgradeLinodeInterfaceFactory.build({
       config_id: mockConfig.id,
       dry_run: true,
-      interfaces: [
-        mockPublicInterface,
-      ],
+      interfaces: [mockPublicInterface],
     });
 
     mockGetLinodeDetails(mockLinode.id, mockLinode);
@@ -189,7 +181,7 @@ describe('upgrade to new Linode Interface flow', () => {
 
     // "UPGRADE" button appears and works as expected.
     cy.findByText('Configuration Profile').should('be.visible');
-    cy.findByText('UPGRADE').should('be.visible').click();
+    cy.findByText('UPGRADE').should('be.visible').click({ force: true });
 
     // Assert the prompt dialog content.
     assertPromptDialogContent();
@@ -215,14 +207,11 @@ describe('upgrade to new Linode Interface flow', () => {
 
         assertUpgradeSummay(mockPublicInterface, false);
 
-        ui.button
-          .findByTitle('Close')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Close').should('be.visible').click();
       });
 
     // Check "Upgrade Interfaces" flow
-    cy.findByText('UPGRADE').should('be.visible').click();
+    cy.findByText('UPGRADE').should('be.visible').click({ force: true });
     ui.dialog
       .findByTitle('Upgrade to Linode Interfaces')
       .should('be.visible')
@@ -235,16 +224,13 @@ describe('upgrade to new Linode Interface flow', () => {
 
         assertUpgradeSummay(mockPublicInterface, false);
 
-        ui.button
-          .findByTitle('Close')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Close').should('be.visible').click();
       });
   });
 
- /*
-  * - Confirm Linode with multiple configurations can be upgraded to new Linode Interfaces.
-  */
+  /*
+   * - Confirm Linode with multiple configurations can be upgraded to new Linode Interfaces.
+   */
   it('upgrades from multiple legacy configurations to new Linode interfaces from details page', () => {
     const mockLinode = linodeFactory.build({
       id: randomNumber(1000, 99999),
@@ -257,7 +243,7 @@ describe('upgrade to new Linode Interface flow', () => {
       id: randomNumber(1000, 99999),
       interfaces: null,
     });
-    
+
     const mockConfig2 = configFactory.build({
       label: randomLabel(),
       id: randomNumber(1000, 99999),
@@ -271,9 +257,7 @@ describe('upgrade to new Linode Interface flow', () => {
     const mockUpgradeLinodeInterface = upgradeLinodeInterfaceFactory.build({
       config_id: mockConfig1.id,
       dry_run: true,
-      interfaces: [
-        mockPublicInterface,
-      ],
+      interfaces: [mockPublicInterface],
     });
 
     mockGetLinodeDetails(mockLinode.id, mockLinode);
@@ -288,9 +272,7 @@ describe('upgrade to new Linode Interface flow', () => {
 
     // "UPGRADE" button appears and works as expected.
     cy.findByText('Configuration Profile').should('be.visible');
-    cy.findByText('UPGRADE')
-      .should('be.visible')
-      .click();
+    cy.findByText('UPGRADE').should('be.visible').click({ force: true });
 
     // Assert the prompt dialog content.
     assertPromptDialogContent();
@@ -320,7 +302,9 @@ describe('upgrade to new Linode Interface flow', () => {
           .click();
 
         // Confirm config select text for multiple configurations
-        cy.findByText(configSelectSharedText, {exact: false}).should('be.visible');
+        cy.findByText(configSelectSharedText, { exact: false }).should(
+          'be.visible'
+        );
 
         cy.findAllByText(dryRunButtonText)
           .last()
@@ -338,16 +322,11 @@ describe('upgrade to new Linode Interface flow', () => {
 
         assertUpgradeSummay(mockPublicInterface, false);
 
-        ui.button
-          .findByTitle('Close')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Close').should('be.visible').click();
       });
 
     // Check "Upgrade Interfaces" flow
-    cy.findByText('UPGRADE')
-      .should('be.visible')
-      .click();
+    cy.findByText('UPGRADE').should('be.visible').click({ force: true });
     ui.dialog
       .findByTitle('Upgrade to Linode Interfaces')
       .should('be.visible')
@@ -384,18 +363,15 @@ describe('upgrade to new Linode Interface flow', () => {
 
         assertUpgradeSummay(mockPublicInterface, false);
 
-        ui.button
-          .findByTitle('Close')
-          .should('be.visible')
-          .click();
+        ui.button.findByTitle('Close').should('be.visible').click();
       });
   });
 
- /*
-  * - Confirm upgrade error flow.
-  * - Confirm "Return to Overview" works.
-  * - Confirm the error message shows up.
-  */
+  /*
+   * - Confirm upgrade error flow.
+   * - Confirm "Return to Overview" works.
+   * - Confirm the error message shows up.
+   */
   it('Displays error message when having upgrade issue', () => {
     const mockLinode = linodeFactory.build({
       id: randomNumber(1000, 99999),
@@ -414,7 +390,9 @@ describe('upgrade to new Linode Interface flow', () => {
     mockGetLinodeDetails(mockLinode.id, mockLinode);
     mockGetLinodeConfigs(mockLinode.id, [mockConfig]);
     mockGetLinodeConfig(mockLinode.id, mockConfig);
-    mockUpgradeNewLinodeInterfaceError(mockLinode.id, mockErrorMessage, 500).as('upgradeError');
+    mockUpgradeNewLinodeInterfaceError(mockLinode.id, mockErrorMessage, 500).as(
+      'upgradeError'
+    );
 
     cy.visitWithLogin(`/linodes/${mockLinode.id}`);
     cy.contains('RUNNING', { timeout: LINODE_CREATE_TIMEOUT }).should(
@@ -423,7 +401,7 @@ describe('upgrade to new Linode Interface flow', () => {
 
     // "UPGRADE" button appears and works as expected.
     cy.findByText('Configuration Profile').should('be.visible');
-    cy.findByText('UPGRADE').should('be.visible').click();;
+    cy.findByText('UPGRADE').should('be.visible').click({ force: true });
 
     ui.dialog
       .findByTitle('Upgrade to Linode Interfaces')
@@ -435,7 +413,7 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.visible')
           .should('be.enabled')
           .click();
-        
+
         // Confirm the error message shows up.
         cy.wait('@upgradeError');
         cy.findByText(mockErrorMessage).should('be.visible');
@@ -451,5 +429,4 @@ describe('upgrade to new Linode Interface flow', () => {
 
     assertPromptDialogContent();
   });
-
 });
