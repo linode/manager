@@ -7,9 +7,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+import { LinodePlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/LinodePlatformMaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
-import { LinodePlatformMaintenanceBanner } from 'src/features/GlobalNotifications/PlatformMaintenanceBanner';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { MigrationNotification } from './MigrationNotification';

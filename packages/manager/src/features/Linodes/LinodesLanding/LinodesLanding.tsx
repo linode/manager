@@ -8,6 +8,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
+import { PlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
@@ -15,7 +16,6 @@ import { withFeatureFlags } from 'src/containers/flags.container';
 import { withProfile } from 'src/containers/profile.container';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { BackupsCTA } from 'src/features/Backups/BackupsCTA';
-import { PlatformMaintenanceBanner } from 'src/features/GlobalNotifications/PlatformMaintenanceBanner';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import {
   sendGroupByTagEnabledEvent,
