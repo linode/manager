@@ -194,10 +194,8 @@ describe('create a database cluster, mocked data', () => {
         cy.findAllByTestId('currentSummary').should('be.visible');
 
         // Create database, confirm redirect, and that new instance is listed.
-        cy.get('[data-testid="create-database-cluster"]')
-          .shadow()
-          .find('button')
-          .first()
+        ui.cdsButton
+          .findButtonByTitle('Create Database Cluster')
           .then((btn) => {
             btn[0].click(); // Native DOM click
           });
