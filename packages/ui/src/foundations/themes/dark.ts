@@ -249,9 +249,6 @@ export const darkTheme: ThemeOptions = {
           marginTop: '0px !important',
           backgroundColor: Dropdown.Background.Category,
           padding: '8px 12px !important',
-          fontSize: '0.75rem',
-          lineHeight: '1rem',
-          weight: 700,
         },
         paper: {
           boxShadow: Alias.Elevation.S,
@@ -305,18 +302,40 @@ export const darkTheme: ThemeOptions = {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
                 padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
               },
               '.MuiAutocomplete-option': {
                 height: '32px',
+                svg: {
+                  height: '20px',
+                  width: '20px',
+                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
                 padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
               },
               '.MuiAutocomplete-option': {
                 height: '32px',
+                svg: {
+                  height: '20px',
+                  width: '20px',
+                },
               },
             },
           },
@@ -604,7 +623,7 @@ export const darkTheme: ThemeOptions = {
           '&[class*="error"]': {
             color: Select.Error.HintText,
           },
-          fontWeight: 600,
+          fontWeight: Font.FontWeight.Semibold,
           color: Color.Neutrals[40],
           lineHeight: 1.25,
           marginTop: '4px',
