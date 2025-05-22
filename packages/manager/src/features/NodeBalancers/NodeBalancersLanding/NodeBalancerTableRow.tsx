@@ -1,8 +1,4 @@
-import {
-  useAllNodeBalancerConfigsQuery,
-  useNodeBalancerVPCConfigsBetaQuery,
-  useVPCQuery,
-} from '@linode/queries';
+import { useAllNodeBalancerConfigsQuery } from '@linode/queries';
 import { Hidden } from '@linode/ui';
 import { convertMegabytesTo } from '@linode/utilities';
 import * as React from 'react';
@@ -16,6 +12,7 @@ import { RegionIndicator } from 'src/features/Linodes/LinodesLanding/RegionIndic
 
 import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerActionMenu } from './NodeBalancerActionMenu';
+import { NodeBalancerVPC } from './NodeBalancerVPC';
 
 import type { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 
@@ -24,14 +21,6 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const { data: configs } = useAllNodeBalancerConfigsQuery(id);
-
-  const { data: vpcConfig, isLoading: isVPCConfigLoading } =
-    useNodeBalancerVPCConfigsBetaQuery(id, isNodebalancerVPCEnabled);
-
-  const { data: vpcDetails, isLoading: isVPCDetailsLoading } = useVPCQuery(
-    Number(vpcConfig?.data[0]?.vpc_id) || -1,
-    Boolean(vpcConfig?.data[0]?.vpc_id)
-  );
 
   const nodesUp =
     configs?.reduce((result, config) => config.nodes_status.up + result, 0) ??
@@ -85,19 +74,7 @@ export const NodeBalancerTableRow = (props: NodeBalancer) => {
       {isNodebalancerVPCEnabled && (
         <Hidden lgDown>
           <TableCell data-qa-vpc>
-            {isVPCConfigLoading || isVPCDetailsLoading ? <Skeleton /> : null}
-            {vpcConfig?.data?.length === 0 && 'None'}
-            {vpcConfig?.data.map(({ vpc_id: vpcId }, i) => (
-              <React.Fragment key={vpcId}>
-                <Link
-                  accessibleAriaLabel={`NodeBalancer Port ${vpcId}`}
-                  to={`/vpcs/${vpcId}`}
-                >
-                  {vpcDetails?.label}
-                </Link>
-                {i < vpcConfig.data.length - 1 ? ', ' : ''}
-              </React.Fragment>
-            ))}
+            <NodeBalancerVPC nodeBalancerId={id} />
           </TableCell>
         </Hidden>
       )}
