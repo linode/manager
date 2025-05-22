@@ -1,5 +1,7 @@
 import { setupWorker } from 'msw/browser';
 
+import { handlers } from './serverHandlers';
+
 import type { HttpHandler } from 'msw';
 
 export const worker = (
@@ -8,3 +10,5 @@ export const worker = (
 ) => {
   return setupWorker(...extraHandlers, ...baseHandlers);
 };
+
+export const storybookWorker = setupWorker(...handlers);
