@@ -16,7 +16,7 @@ export const dimensionFiltersSchema = object({
     .nullable()
     .test('nonNull', fieldErrorMessage, (value) => value !== null),
   operator: string()
-    .oneOf(['eq', 'neq', 'startswith', 'endswith'])
+    .oneOf(['eq', 'neq', 'startswith', 'endswith', 'in'])
     .required(fieldErrorMessage)
     .nullable()
     .test('nonNull', fieldErrorMessage, (value) => value !== null),

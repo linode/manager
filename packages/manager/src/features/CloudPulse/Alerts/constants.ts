@@ -89,16 +89,20 @@ export const dimensionOperatorOptions: Item<
     value: 'eq',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'Not Equal',
     value: 'neq',
   },
   {
     label: 'Starts with',
     value: 'startswith',
+  },
+  {
+    label: 'Ends with',
+    value: 'endswith',
+  },
+  {
+    label: 'In',
+    value: 'in',
   },
 ];
 
@@ -171,9 +175,11 @@ export const dimensionOperatorTypeMap: Record<
 > = {
   endswith: 'ends with',
   eq: 'equals',
+  in: 'in',
   neq: 'not equals',
   startswith: 'starts with',
 };
+
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',

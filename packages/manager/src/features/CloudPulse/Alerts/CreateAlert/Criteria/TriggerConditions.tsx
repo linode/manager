@@ -53,7 +53,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       sx={(theme) => ({
         ...getAlertBoxStyles(theme),
         borderRadius: 1,
-        marginTop: theme.spacingFunction(2),
+        marginTop: theme.spacingFunction(16),
         p: 2,
       })}
     >

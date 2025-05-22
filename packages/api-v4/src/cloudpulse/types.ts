@@ -6,6 +6,7 @@ export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
   | 'eq'
+  | 'in'
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
