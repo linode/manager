@@ -10,7 +10,11 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { LKE_ENTERPRISE_VPC_WARNING } from 'src/features/Kubernetes/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
-import { getIsVPCLKEEnterpriseCluster } from '../utils';
+import {
+  getIsVPCLKEEnterpriseCluster,
+  getUniqueLinodesFromSubnets,
+  getUniqueResourcesFromSubnets,
+} from '../utils';
 
 import type { VPC } from '@linode/api-v4/lib/vpcs/types';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -18,18 +22,23 @@ import type { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   handleDeleteVPC: () => void;
   handleEditVPC: () => void;
+  isNodebalancerVPCEnabled: boolean;
   vpc: VPC;
 }
 
-export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
+export const VPCRow = ({
+  handleDeleteVPC,
+  handleEditVPC,
+  isNodebalancerVPCEnabled,
+  vpc,
+}: Props) => {
   const { id, label, subnets } = vpc;
   const { data: regions } = useRegionsQuery();
 
   const regionLabel = regions?.find((r) => r.id === vpc.region)?.label ?? '';
-  const numLinodes = subnets.reduce(
-    (acc, subnet) => acc + subnet.linodes.length,
-    0
-  );
+  const numResources = isNodebalancerVPCEnabled
+    ? getUniqueResourcesFromSubnets(vpc.subnets)
+    : getUniqueLinodesFromSubnets(vpc.subnets);
 
   const isVPCReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -83,7 +92,7 @@ export const VPCRow = ({ handleDeleteVPC, handleEditVPC, vpc }: Props) => {
       </Hidden>
       <TableCell>{subnets.length}</TableCell>
       <Hidden mdDown>
-        <TableCell>{numLinodes}</TableCell>
+        <TableCell>{numResources}</TableCell>
       </Hidden>
       <TableCell actionCell>
         {actions.map((action) => (

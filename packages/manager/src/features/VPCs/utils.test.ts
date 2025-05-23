@@ -7,6 +7,7 @@ import {
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
 import {
   subnetAssignedLinodeDataFactory,
+  subnetAssignedNodebalancerDataFactory,
   subnetFactory,
 } from 'src/factories/subnets';
 
@@ -14,6 +15,7 @@ import {
   getLinodeInterfacePrimaryIPv4,
   getLinodeInterfaceRanges,
   getUniqueLinodesFromSubnets,
+  getUniqueResourcesFromSubnets,
   getVPCInterfacePayload,
   hasUnrecommendedConfiguration,
   hasUnrecommendedConfigurationLinodeInterface,
@@ -25,6 +27,76 @@ import type { APIError } from '@linode/api-v4';
 const subnetLinodeInfoList1 = subnetAssignedLinodeDataFactory.buildList(4);
 const subnetLinodeInfoId1 = subnetAssignedLinodeDataFactory.build({ id: 1 });
 const subnetLinodeInfoId3 = subnetAssignedLinodeDataFactory.build({ id: 3 });
+
+const subnetNodeBalancerInfoList1 =
+  subnetAssignedNodebalancerDataFactory.buildList(4);
+const subnetNodeBalancerInfoId1 = subnetAssignedNodebalancerDataFactory.build({
+  id: 1,
+});
+const subnetNodeBalancerInfoId3 = subnetAssignedNodebalancerDataFactory.build({
+  id: 3,
+});
+
+describe('getUniqueResourcesFromSubnets', () => {
+  it(`returns the number of unique linodes and nodeBalancers within a VPC's subnets`, () => {
+    const subnets0 = [subnetFactory.build({ linodes: [], nodebalancers: [] })];
+    const subnets1 = [
+      subnetFactory.build({
+        linodes: subnetLinodeInfoList1,
+        nodebalancers: subnetNodeBalancerInfoList1,
+      }),
+    ];
+    const subnets2 = [
+      subnetFactory.build({
+        linodes: [
+          subnetLinodeInfoId1,
+          subnetLinodeInfoId1,
+          subnetLinodeInfoId3,
+          subnetLinodeInfoId3,
+        ],
+        nodebalancers: [
+          subnetNodeBalancerInfoId1,
+          subnetNodeBalancerInfoId1,
+          subnetNodeBalancerInfoId3,
+          subnetNodeBalancerInfoId3,
+        ],
+      }),
+    ];
+    const subnets3 = [
+      subnetFactory.build({
+        linodes: subnetLinodeInfoList1,
+        nodebalancers: subnetNodeBalancerInfoList1,
+      }),
+      subnetFactory.build({ linodes: [], nodebalancers: [] }),
+      subnetFactory.build({
+        linodes: [subnetLinodeInfoId3],
+        nodebalancers: [subnetNodeBalancerInfoId3],
+      }),
+      subnetFactory.build({
+        linodes: [
+          subnetAssignedLinodeDataFactory.build({ id: 6 }),
+          subnetAssignedLinodeDataFactory.build({ id: 7 }),
+          subnetAssignedLinodeDataFactory.build({ id: 8 }),
+          subnetAssignedLinodeDataFactory.build({ id: 9 }),
+          subnetLinodeInfoId1,
+        ],
+        nodebalancers: [
+          subnetAssignedNodebalancerDataFactory.build({ id: 6 }),
+          subnetAssignedNodebalancerDataFactory.build({ id: 7 }),
+          subnetAssignedNodebalancerDataFactory.build({ id: 8 }),
+          subnetAssignedNodebalancerDataFactory.build({ id: 9 }),
+          subnetNodeBalancerInfoId1,
+        ],
+      }),
+    ];
+
+    expect(getUniqueResourcesFromSubnets(subnets0)).toBe(0);
+    expect(getUniqueResourcesFromSubnets(subnets1)).toBe(8);
+    expect(getUniqueResourcesFromSubnets(subnets2)).toBe(4);
+    // updated factory for generating linode ids, so unique linodes will be different
+    expect(getUniqueResourcesFromSubnets(subnets3)).toBe(16);
+  });
+});
 
 describe('getUniqueLinodesFromSubnets', () => {
   it(`returns the number of unique linodes within a VPC's subnets`, () => {

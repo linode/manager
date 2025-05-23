@@ -26,6 +26,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
+import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
@@ -37,6 +38,10 @@ import { SubnetCreateDrawer } from './SubnetCreateDrawer';
 import { SubnetDeleteDialog } from './SubnetDeleteDialog';
 import { SubnetEditDrawer } from './SubnetEditDrawer';
 import { SubnetLinodeRow, SubnetLinodeTableRowHead } from './SubnetLinodeRow';
+import {
+  SubnetNodeBalancerRow,
+  SubnetNodebalancerTableRowHead,
+} from './SubnetNodebalancerRow';
 import { SubnetUnassignLinodesDrawer } from './SubnetUnassignLinodesDrawer';
 
 import type { Linode } from '@linode/api-v4/lib/linodes/types';
@@ -80,6 +85,8 @@ export const VPCSubnetsTable = (props: Props) => {
     from: VPC_DETAILS_ROUTE,
   });
   const { query } = search;
+
+  const flags = useIsNodebalancerVPCEnabled();
 
   const pagination = usePaginationV2({
     currentRoute: VPC_DETAILS_ROUTE,
@@ -271,7 +278,7 @@ export const VPCSubnetsTable = (props: Props) => {
           width: '24%',
         })}
       >
-        Subnet Label
+        Subnet
       </TableSortCell>
       <Hidden smDown>
         <TableSortCell
@@ -286,7 +293,9 @@ export const VPCSubnetsTable = (props: Props) => {
       </Hidden>
       <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
       <Hidden smDown>
-        <TableCell sx={{ width: '10%' }}>Linodes</TableCell>
+        <TableCell
+          sx={{ width: '10%' }}
+        >{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -301,7 +310,9 @@ export const VPCSubnetsTable = (props: Props) => {
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
           <Hidden smDown>
-            <TableCell>{subnet.linodes.length}</TableCell>
+            <TableCell>
+              {`${flags.isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+            </TableCell>
           </Hidden>
           <TableCell actionCell>
             <SubnetActionMenu
@@ -319,34 +330,59 @@ export const VPCSubnetsTable = (props: Props) => {
       );
 
       const InnerTable = (
-        <Table aria-label="Linode" size="small" striped={false}>
-          <TableHead
-            style={{
-              color: theme.tokens.color.Neutrals.White,
-              fontSize: '.875rem',
-            }}
-          >
-            {SubnetLinodeTableRowHead}
-          </TableHead>
-          <TableBody>
-            {subnet.linodes.length > 0 ? (
-              subnet.linodes.map((linodeInfo) => (
-                <SubnetLinodeRow
-                  handlePowerActionsLinode={handlePowerActionsLinode}
-                  handleUnassignLinode={handleSubnetUnassignLinode}
-                  isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
-                  key={linodeInfo.id}
-                  linodeId={linodeInfo.id}
-                  subnet={subnet}
-                  subnetId={subnet.id}
-                  subnetInterfaces={linodeInfo.interfaces}
-                />
-              ))
-            ) : (
-              <TableRowEmpty colSpan={6} message={'No Linodes'} />
-            )}
-          </TableBody>
-        </Table>
+        <>
+          <Table aria-label="Linode" size="small" striped={false}>
+            <TableHead
+              style={{
+                color: theme.tokens.color.Neutrals.White,
+              }}
+            >
+              {SubnetLinodeTableRowHead}
+            </TableHead>
+            <TableBody>
+              {subnet.linodes.length > 0 ? (
+                subnet.linodes.map((linodeInfo) => (
+                  <SubnetLinodeRow
+                    handlePowerActionsLinode={handlePowerActionsLinode}
+                    handleUnassignLinode={handleSubnetUnassignLinode}
+                    isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
+                    key={linodeInfo.id}
+                    linodeId={linodeInfo.id}
+                    subnet={subnet}
+                    subnetId={subnet.id}
+                    subnetInterfaces={linodeInfo.interfaces}
+                  />
+                ))
+              ) : (
+                <TableRowEmpty colSpan={6} message="No Linodes" />
+              )}
+            </TableBody>
+          </Table>
+          {flags.isNodebalancerVPCEnabled && (
+            <Table aria-label="NodeBalancers" size="small" striped={false}>
+              <TableHead
+                style={{
+                  color: theme.tokens.color.Neutrals.White,
+                }}
+              >
+                {SubnetNodebalancerTableRowHead}
+              </TableHead>
+              <TableBody>
+                {subnet.nodebalancers?.length > 0 ? (
+                  subnet.nodebalancers.map((nb) => (
+                    <SubnetNodeBalancerRow
+                      ipv4={nb.ipv4_range}
+                      key={nb.id}
+                      nodeBalancerId={nb.id}
+                    />
+                  ))
+                ) : (
+                  <TableRowEmpty colSpan={6} message="No NodeBalancers" />
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </>
       );
 
       return {
@@ -398,7 +434,7 @@ export const VPCSubnetsTable = (props: Props) => {
       <CollapsibleTable
         TableItems={getTableItems()}
         TableRowEmpty={
-          <TableRowEmpty colSpan={5} message={'No Subnets are assigned.'} />
+          <TableRowEmpty colSpan={5} message="No Subnets are assigned." />
         }
         TableRowHead={SubnetTableRowHead}
       />

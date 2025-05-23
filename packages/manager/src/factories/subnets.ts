@@ -3,6 +3,7 @@ import { Factory } from '@linode/utilities';
 import type {
   Subnet,
   SubnetAssignedLinodeData,
+  SubnetAssignedNodeBalancerData,
 } from '@linode/api-v4/lib/vpcs/types';
 
 // NOTE: Changing to fixed array length for the interfaces and linodes fields of the
@@ -20,6 +21,12 @@ export const subnetAssignedLinodeDataFactory =
     ),
   });
 
+export const subnetAssignedNodebalancerDataFactory =
+  Factory.Sync.makeFactory<SubnetAssignedNodeBalancerData>({
+    id: Factory.each((i) => i),
+    ipv4_range: Factory.each((i) => `192.168.${i}.0/30`),
+  });
+
 export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
   created: '2023-07-12T16:08:53',
   id: Factory.each((i) => i),
@@ -32,6 +39,12 @@ export const subnetFactory = Factory.Sync.makeFactory<Subnet>({
       })
     )
   ),
-  nodebalancers: [],
+  nodebalancers: Factory.each((i) =>
+    Array.from({ length: 3 }, (_, arrIdx) =>
+      subnetAssignedNodebalancerDataFactory.build({
+        id: i * 10 + arrIdx,
+      })
+    )
+  ),
   updated: '2023-07-12T16:08:53',
 });
