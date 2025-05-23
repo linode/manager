@@ -17,8 +17,8 @@ const Destinations = React.lazy(() =>
 );
 
 const Streams = React.lazy(() =>
-  import('./Streams/Streams').then((module) => ({
-    default: module.Streams,
+  import('./Streams/StreamsLanding').then((module) => ({
+    default: module.StreamsLanding,
   }))
 );
 
