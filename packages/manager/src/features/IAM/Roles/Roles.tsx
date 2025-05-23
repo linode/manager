@@ -1,4 +1,4 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { CircleProgress, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
@@ -22,6 +22,7 @@ export const RolesLanding = () => {
 
   return (
     <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+      <Typography variant="h2">Roles</Typography>
       <RolesTable roles={roles} />
     </Paper>
   );
