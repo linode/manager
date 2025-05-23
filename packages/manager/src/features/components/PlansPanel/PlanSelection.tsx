@@ -153,6 +153,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                     }
                     id={plan.id}
                     onChange={() => onSelect(plan.id)}
+                    size="small"
                   />
                 }
                 label={plan.heading}
