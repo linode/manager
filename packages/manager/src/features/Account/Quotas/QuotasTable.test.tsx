@@ -19,8 +19,8 @@ const queryMocks = vi.hoisted(() => ({
   useQuotasQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/quotas/quotas', () => {
-  const actual = vi.importActual('src/queries/quotas/quotas');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     quotaQueries: queryMocks.quotaQueries,
