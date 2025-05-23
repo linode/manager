@@ -37,28 +37,38 @@ const supportTicketsLandingRoute = createRoute({
   import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
 );
 
+const supportTicketsNewRoute = createRoute({
+  beforeLoad: async () => {
+    throw redirect({ to: '/support/tickets', search: { dialogOpen: true } });
+  },
+  getParentRoute: () => supportTicketsLandingRoute,
+  path: 'new',
+}).lazy(() =>
+  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+);
+
 const supportTicketsLandingRouteOpen = createRoute({
-  getParentRoute: () => supportRoute,
-  path: 'tickets/open',
+  getParentRoute: () => supportTicketsLandingRoute,
+  path: 'open',
   validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
   import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketsLandingRouteClosed = createRoute({
-  getParentRoute: () => supportRoute,
-  path: 'tickets/closed',
+  getParentRoute: () => supportTicketsLandingRoute,
+  path: 'closed',
   validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
   import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketDetailRoute = createRoute({
-  getParentRoute: () => supportRoute,
+  getParentRoute: () => supportTicketsLandingRoute,
   parseParams: (params) => ({
     ticketId: Number(params.ticketId),
   }),
-  path: 'tickets/$ticketId',
+  path: '$ticketId',
 }).lazy(() =>
   import('./supportLazyRoutes').then((m) => m.supportTicketDetailLazyRoute)
 );
@@ -86,6 +96,7 @@ export const supportRouteTree = supportRoute.addChildren([
   supportLandingRoute,
   supportTicketsLandingRoute.addChildren([
     supportTicketDetailRoute,
+    supportTicketsNewRoute,
     supportTicketsLandingRouteOpen,
     supportTicketsLandingRouteClosed,
   ]),

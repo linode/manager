@@ -201,6 +201,12 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const [submitting, setSubmitting] = React.useState<boolean>(false);
 
+  React.useEffect(() => {
+    if (!open) {
+      resetDialog();
+    }
+  }, [open]);
+
   /**
    * Store 'general' support ticket data in local storage if it exists.
    * Specific fields from other ticket types (e.g. smtp) will not be saved since the general form will render via 'Open New Ticket'.
@@ -219,60 +225,47 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     debouncedSave(form.getValues());
   }, [summary, description, entityId, entityType, selectedSeverity]);
 
+  /**
+   * Clear the dialog completely if clearValues is passed (when canceling out of the dialog or successfully submitting)
+   * or reset to the default values (from localStorage) otherwise.
+   */
   const resetTicket = (clearValues: boolean = false) => {
     form.reset({
       ...form.formState.defaultValues,
-      description: clearValues
-        ? ''
-        : (_prefilledDescription ?? valuesFromStorage.description),
-      entityId: clearValues
-        ? ''
-        : _prefilledEntity?.id
-          ? String(_prefilledEntity.id)
-          : valuesFromStorage.entityId,
+      description: clearValues ? '' : valuesFromStorage.description,
+      entityId: clearValues ? '' : valuesFromStorage.entityId,
       entityInputValue: clearValues ? '' : valuesFromStorage.entityInputValue,
-      entityType: clearValues
-        ? 'general'
-        : (_prefilledEntity?.type ?? valuesFromStorage.entityType),
+      entityType: clearValues ? 'general' : valuesFromStorage.entityType,
       selectedSeverity: clearValues
         ? undefined
         : valuesFromStorage.selectedSeverity,
-      summary: clearValues
-        ? ''
-        : (newPrefilledTitle ?? valuesFromStorage.summary),
-      ticketType: clearValues ? 'general' : (_prefilledTicketType ?? 'general'),
+      summary: clearValues ? '' : valuesFromStorage.summary,
+      ticketType: 'general',
     });
   };
 
-  /**
-   * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
-   * or reset to the default values (from localStorage) otherwise.
-   */
-  const resetDrawer = (clearValues: boolean = false) => {
+  const resetDialog = (clearValues: boolean = false) => {
     resetTicket(clearValues);
     setFiles([]);
+
     if (clearValues) {
-      storage.supportTicket.set(supportTicketStorageDefaults);
+      saveFormData(supportTicketStorageDefaults);
     }
   };
 
   const handleClose = () => {
+    if (ticketType !== 'general') {
+      window.setTimeout(() => resetDialog(true), 500);
+    }
     props.onClose();
     sendSupportTicketExitEvent('Close');
   };
 
   const handleCancel = () => {
-    resetDrawer(true);
     props.onClose();
-    resetTicket(false);
+    window.setTimeout(() => resetDialog(true), 500);
     sendSupportTicketExitEvent('Cancel');
   };
-
-  React.useEffect(() => {
-    if (!open) {
-      resetDrawer();
-    }
-  }, [open]);
 
   const updateFiles = (newFiles: FileAttachment[]) => {
     setFiles(newFiles);
@@ -391,7 +384,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
           setSubmitting(false);
           if (!props.keepOpenOnSuccess) {
-            window.setTimeout(() => resetDrawer(true), 500);
+            window.setTimeout(() => resetDialog(true), 500);
             props.onClose();
           }
           /* Errors will be an array of errors, or empty if all attachments succeeded. */
