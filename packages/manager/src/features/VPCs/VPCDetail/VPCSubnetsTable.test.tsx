@@ -90,6 +90,66 @@ describe('VPC Subnets table', () => {
     getByText('Delete');
   });
 
+  it('should display filter input, subnet label, id, ip range, number of resources, and action menu', async () => {
+    const subnet = subnetFactory.build({
+      linodes: [
+        subnetAssignedLinodeDataFactory.build({ id: 1 }),
+        subnetAssignedLinodeDataFactory.build({ id: 2 }),
+        subnetAssignedLinodeDataFactory.build({ id: 3 }),
+      ],
+    });
+    server.use(
+      http.get('*/vpcs/:vpcId/subnets', () => {
+        return HttpResponse.json(makeResourcePage([subnet]));
+      }),
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
+      })
+    );
+
+    const {
+      getAllByRole,
+      getAllByText,
+      getByPlaceholderText,
+      getByText,
+      queryByTestId,
+    } = await renderWithThemeAndRouter(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={1}
+        vpcRegion=""
+      />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    getByPlaceholderText('Filter Subnets by label or id');
+    getByText('Subnet Label');
+    getByText(subnet.label);
+    getByText('Subnet ID');
+    getAllByText(subnet.id);
+
+    getByText('Subnet IP Range');
+    getByText(subnet.ipv4!);
+
+    getByText('Resources');
+    getByText(subnet.linodes.length + subnet.nodebalancers.length);
+
+    const actionMenuButton = getAllByRole('button')[4];
+    await userEvent.click(actionMenuButton);
+
+    getByText('Assign Linodes');
+    getByText('Unassign Linodes');
+    getByText('Edit');
+    getByText('Delete');
+  });
+
   it('should display no linodes text if there are no linodes associated with the subnet', async () => {
     const subnet = subnetFactory.build({ linodes: [] });
     server.use(
