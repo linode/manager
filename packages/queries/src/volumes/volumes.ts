@@ -7,6 +7,7 @@ import {
   getLinodeVolumes,
   getVolume,
   getVolumes,
+  getVolumesGroupedByTags,
   migrateVolumes,
   resizeVolume,
   updateVolume,
@@ -30,6 +31,7 @@ import type {
   AttachVolumePayload,
   CloneVolumePayload,
   Filter,
+  GroupedVolumes,
   Params,
   PriceType,
   ResizeVolumePayload,
@@ -64,6 +66,10 @@ export const volumeQueries = createQueryKeys('volumes', {
         queryFn: () => getVolumes(params, filter),
         queryKey: [params, filter],
       }),
+      groupByTags: (params: Params = {}, filter: Filter = {}) => ({
+        queryFn: () => getVolumesGroupedByTags(params, filter),
+        queryKey: [params, filter],
+      }),
     },
     queryKey: null,
   },
@@ -88,6 +94,13 @@ export const useVolumesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>({
     ...volumeQueries.lists._ctx.paginated(params, filter),
     placeholderData: keepPreviousData,
+  });
+
+export const useGroupedVolumesQuery = (params: Params, filter: Filter, enabled?: boolean) =>
+  useQuery<ResourcePage<GroupedVolumes>, APIError[]>({
+    ...volumeQueries.lists._ctx.groupByTags(params, filter),
+    placeholderData: keepPreviousData,
+    enabled,
   });
 
 export const useVolumeTypesQuery = () =>
