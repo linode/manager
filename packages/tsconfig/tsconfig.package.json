@@ -1,5 +1,5 @@
 {
-  "//": "This tsconfig is our base config for packages.",
+  /** This tsconfig is our base config for packages */
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "strict": true,
     "noUnusedLocals": true,
-    "incremental": true
+    "incremental": true,
+    "noEmit": true
   },
   "include": [
     "src"

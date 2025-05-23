@@ -1,8 +1,13 @@
 {
-  "//": "This tsconfig makes tsc emit type declaration files.",
-  "//": "Currently, only api-v4 and validation emit types. All other packages don't have a build step.",
-  "//": "Note: When using this config, specify outDir in the comsuming tsconfig",
+  /**
+   * This tsconfig makes tsc emit type declaration files.
+   * 
+   * Currently, only api-v4 and validation emit types. All other packages don't have a build step.
+   * 
+   * Note: When using this config, specify outDir in the comsuming tsconfig
+   */
   "compilerOptions": {
+    "noEmit": false,
     "declarationMap": true,
     "declaration": true,
     "emitDeclarationOnly": true
