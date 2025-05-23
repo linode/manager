@@ -14,9 +14,8 @@ const MaintenanceLanding = () => {
       <DocumentTitleSegment segment="Maintenance" />
       {flags.vmHostMaintenance?.enabled ? (
         <>
-          {' '}
           <MaintenanceTable type="in progress" />
-          <MaintenanceTable type="scheduled" />{' '}
+          <MaintenanceTable type="scheduled" />
         </>
       ) : (
         <MaintenanceTable type="pending" />
