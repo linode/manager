@@ -295,6 +295,9 @@ describe('LKE Cluster Creation', () => {
           // We're taking a naive approach here by confirming that at least one
           // instance of the pool appears in the checkout bar.
           cy.findAllByText(`${planName} Plan`).first().should('be.visible');
+
+          // Confirm LKE-E line item is NOT shown
+          cy.findByText('LKE Enterprise').should('not.exist');
         });
       // Expected information on the LKE cluster summary page.
       monthPrice = getTotalClusterPrice({
@@ -955,7 +958,7 @@ describe('LKE Cluster Creation with ACL', () => {
      * - Confirms at least one IP must be provided for ACL unless acknowledgement is checked
      * - Confirms the cluster details page shows ACL is enabled
      */
-    it('creates an LKE cluster with ACL enabled by default and handles IP address validation', () => {
+    it('creates an LKE-E cluster with ACL enabled by default and handles IP address validation', () => {
       const clusterLabel = randomLabel();
       const mockedEnterpriseCluster = kubernetesClusterFactory.build({
         k8s_version: latestEnterpriseTierKubernetesVersion.id,
@@ -1009,7 +1012,6 @@ describe('LKE Cluster Creation with ACL', () => {
         mockedEnterpriseCluster.id,
         mockedEnterpriseClusterPools
       ).as('getClusterPools');
-      mockGetDashboardUrl(mockedEnterpriseCluster.id).as('getDashboardUrl');
       mockGetApiEndpoints(mockedEnterpriseCluster.id).as('getApiEndpoints');
 
       cy.visitWithLogin('/kubernetes/clusters');
@@ -1149,7 +1151,6 @@ describe('LKE Cluster Creation with ACL', () => {
         '@createCluster',
         '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
-        '@getDashboardUrl',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
@@ -1406,7 +1407,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         mockedEnterpriseCluster.id,
         mockedEnterpriseClusterPools
       ).as('getClusterPools');
-      mockGetDashboardUrl(mockedEnterpriseCluster.id).as('getDashboardUrl');
       mockGetApiEndpoints(mockedEnterpriseCluster.id).as('getApiEndpoints');
 
       cy.visitWithLogin('/kubernetes/clusters');
@@ -1591,7 +1591,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         '@createCluster',
         '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
-        '@getDashboardUrl',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
