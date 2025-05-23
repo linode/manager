@@ -38,15 +38,17 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       className={`${className} copy removeDisabledStyles`}
       data-qa-copy-tooltip
       disabled
-      InputProps={{
-        endAdornment: hideIcons ? undefined : (
-          <StyledIconBox>
-            {showDownloadIcon && (
-              <DownloadTooltip fileName={fileName} text={`${value}`} />
-            )}
-            <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
-          </StyledIconBox>
-        ),
+      slotProps={{
+        input: {
+          endAdornment: hideIcons ? undefined : (
+            <StyledIconBox>
+              {showDownloadIcon && (
+                <DownloadTooltip fileName={fileName} text={`${value}`} />
+              )}
+              <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
+            </StyledIconBox>
+          ),
+        },
       }}
     />
   );

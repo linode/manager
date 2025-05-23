@@ -13,6 +13,7 @@ import { getClampedValue, useFieldIds } from './TextField.utils';
 
 import type { BoxProps } from '../Box';
 import type { TooltipProps } from '../Tooltip';
+import type { SxProps, Theme } from '@mui/material/styles';
 import type { StandardTextFieldProps } from '@mui/material/TextField';
 import type { SlotComponentProps } from '@mui/utils';
 
@@ -124,6 +125,19 @@ interface InputToolTipProps {
   tooltipWidth?: number;
 }
 
+interface InputSlotProps {
+  className?: string;
+  disableUnderline?: boolean;
+  endAdornment?: React.ReactNode;
+  sx?: SxProps<Theme>;
+}
+
+interface TextFieldSlotProps {
+  htmlInput?: Record<string, any>;
+  input?: InputSlotProps;
+  select?: Record<string, any>;
+}
+
 interface TextFieldPropsOverrides
   extends Omit<StandardTextFieldProps, 'label' | 'select'> {
   // We override this prop to make it required
@@ -133,7 +147,9 @@ interface TextFieldPropsOverrides
 export type TextFieldProps = BaseProps &
   TextFieldPropsOverrides &
   LabelToolTipProps &
-  InputToolTipProps;
+  InputToolTipProps & {
+    slotProps?: TextFieldSlotProps;
+  };
 
 export const TextField = (props: TextFieldProps) => {
   const {
@@ -381,30 +397,34 @@ export const TextField = (props: TextFieldProps) => {
           onBlur={handleBlur}
           onChange={handleChange}
           slotProps={{
+            ...slotProps,
             htmlInput: {
+              ...inputProps, // TODO: Remove backwards compatibility once migration is complete
+              ...slotProps?.htmlInput,
               'aria-describedby': helperText ? helperTextId : undefined,
               'aria-errormessage': errorText ? errorTextId : undefined,
               'aria-invalid': !!error || !!errorText,
               'data-testid': 'textfield-input',
               id: validInputId,
-              ...inputProps, // Included for backward compatibility until migration is complete
-              ...slotProps?.htmlInput,
             },
             input: {
-              className,
+              ...(InputProps as SlotComponentProps<React.ElementType, {}, {}>), // TODO: Remove backwards compatibility once migration is complete
+              ...slotProps?.input, // When using TextField directly
+              className: `${className} ${slotProps?.input?.className}`, // This will override Autocomplete classNames if we don't pass in slotProps here
               disableUnderline: true,
-              endAdornment: loading && (
+              endAdornment: loading ? (
                 <InputAdornment position="end">
                   <CircleProgress noPadding size="xs" />
                 </InputAdornment>
+              ) : (
+                // TODO: InputProps?.endAdornment should be removed once migration is complete
+                slotProps?.input?.endAdornment || InputProps?.endAdornment
               ),
               sx: {
                 ...(expand && {
                   maxWidth: '100%',
                 }),
               },
-              ...(InputProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
-              ...slotProps?.input,
             },
             select: {
               IconComponent: KeyboardArrowDown,
@@ -415,10 +435,9 @@ export const TextField = (props: TextFieldProps) => {
                 transformOrigin: { horizontal: 'left', vertical: 'top' },
               },
               disableUnderline: true,
-              ...(SelectProps as SlotComponentProps<React.ElementType, {}, {}>), // Included for backward compatibility until migration is complete
+              ...(SelectProps as SlotComponentProps<React.ElementType, {}, {}>), // TODO: Remove backwards compatibility once migration is complete
               ...slotProps?.select,
             },
-            ...slotProps,
           }}
           sx={{
             marginTop: 0,

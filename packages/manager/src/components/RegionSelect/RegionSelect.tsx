@@ -148,25 +148,34 @@ export const RegionSelect = <
           },
         })}
         textFieldProps={{
-          ...props.textFieldProps,
-          InputProps: {
-            endAdornment:
-              isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
-            required,
-            startAdornment:
-              selectedRegion &&
-              (selectedRegion.id === 'global' ? (
-                <PublicIcon
-                  sx={{
-                    height: '24px',
-                    mr: 1,
-                    width: '24px',
-                  }}
-                />
-              ) : (
-                <Flag country={selectedRegion?.country} mr={1} />
-              )),
+          slotProps: {
+            input: {
+              endAdornment:
+                isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
+              required,
+              startAdornment:
+                selectedRegion &&
+                (selectedRegion.id === 'global' ? (
+                  <PublicIcon
+                    sx={{
+                      height: '24px',
+                      mr: 1,
+                      width: '24px',
+                    }}
+                  />
+                ) : (
+                  <Flag
+                    country={selectedRegion?.country}
+                    mr={1}
+                    sx={{
+                      '&&': { width: '24px' },
+                      boxShadow: 'none',
+                    }}
+                  />
+                )),
+            },
           },
+          required,
           tooltipText,
         }}
         value={selectedRegion as Region}
