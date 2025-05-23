@@ -67,6 +67,7 @@ export const ImageSelect = (props: Props) => {
     selectIfOnlyOneOption,
     siteType,
     variant,
+    sx,
     ...rest
   } = props;
 
@@ -157,7 +158,7 @@ export const ImageSelect = (props: Props) => {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <Autocomplete
         clearOnBlur
         disableSelectAll
@@ -188,6 +189,12 @@ export const ImageSelect = (props: Props) => {
             />
           );
         }}
+        sx={(theme) => ({
+          ...sx,
+          [theme.breakpoints.up('sm')]: {
+            width: '416px',
+          },
+        })}
         textFieldProps={{
           InputProps: {
             startAdornment:
