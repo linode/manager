@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.142.0",
+  "version": "1.142.1",
   "private": true,
   "type": "module",
   "bugs": {
@@ -112,7 +112,7 @@
     "cy:component": "cypress open --component",
     "cy:component:run": "cypress run --component --headless -b chrome",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
-    "typecheck": "tsc --noEmit && tsc -p cypress --noEmit",
+    "typecheck": "tsc && tsc -p cypress",
     "coverage": "vitest run --coverage && open coverage/index.html",
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },

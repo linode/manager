@@ -104,6 +104,16 @@ interface BaseProps {
 type Value = null | number | string | undefined;
 
 interface LabelToolTipProps {
+  /**
+   * Position of the tooltip icon
+   * @default right
+   */
+  labelTooltipIconPosition?: 'left' | 'right';
+  /**
+   * Size of the tooltip icon
+   * @default small
+   */
+  labelTooltipIconSize?: 'large' | 'small';
   labelTooltipText?: JSX.Element | string;
 }
 
@@ -163,6 +173,8 @@ export const TextField = (props: TextFieldProps) => {
     inputProps,
     label,
     labelTooltipText,
+    labelTooltipIconPosition = 'right',
+    labelTooltipIconSize = 'small',
     loading,
     max,
     min,
@@ -185,6 +197,26 @@ export const TextField = (props: TextFieldProps) => {
 
   const [_value, setValue] = React.useState<Value>(value ?? '');
   const theme = useTheme();
+
+  const sxTooltipIconLeft = {
+    marginRight: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(2)}`,
+    '&& svg': {
+      fill: theme.tokens.component.Label.Icon,
+      stroke: theme.tokens.component.Label.Icon,
+      strokeWidth: 0,
+      ':hover': {
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+        fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+        stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
+      },
+    },
+  };
+
+  const sxTooltipIconRight = {
+    marginLeft: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)}`,
+  };
 
   const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
     useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
@@ -270,9 +302,7 @@ export const TextField = (props: TextFieldProps) => {
   return (
     <Box
       {...containerProps}
-      className={`${errorText ? errorScrollClassName : ''} ${
-        containerProps?.className || ''
-      }`}
+      className={`${errorText ? errorScrollClassName : ''} ${containerProps?.className || ''}`}
       sx={{
         ...(Boolean(tooltipText) && {
           alignItems: 'flex-end',
@@ -292,12 +322,25 @@ export const TextField = (props: TextFieldProps) => {
           ...(!noMarginTop && { marginTop: theme.spacing(2) }),
         }}
       >
+        {labelTooltipText && labelTooltipIconPosition === 'left' && (
+          <TooltipIcon
+            labelTooltipIconSize={labelTooltipIconSize}
+            status="help"
+            sxTooltipIcon={sxTooltipIconLeft}
+            text={labelTooltipText}
+            width={tooltipWidth}
+          />
+        )}
         <InputLabel
           data-qa-textfield-label={label}
           htmlFor={validInputId}
           sx={{
             marginBottom: 0,
             transform: 'none',
+            fontSize:
+              labelTooltipIconSize === 'large'
+                ? theme.tokens.font.FontSize.S
+                : theme.tokens.font.FontSize.Xs,
           }}
           {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
         >
@@ -309,13 +352,11 @@ export const TextField = (props: TextFieldProps) => {
             </Box>
           )}
         </InputLabel>
-        {labelTooltipText && (
+        {labelTooltipText && labelTooltipIconPosition === 'right' && (
           <TooltipIcon
+            labelTooltipIconSize={labelTooltipIconSize}
             status="help"
-            sxTooltipIcon={{
-              marginLeft: `${theme.spacing(0.5)}`,
-              padding: `${theme.spacing(0.5)}`,
-            }}
+            sxTooltipIcon={sxTooltipIconRight}
             text={labelTooltipText}
             width={tooltipWidth}
           />
