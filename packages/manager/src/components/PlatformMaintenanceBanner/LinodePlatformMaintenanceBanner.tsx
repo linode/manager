@@ -49,7 +49,7 @@ export const LinodePlatformMaintenanceBanner = (props: {
   return (
     <>
       <Notice forceImportantIconVerticalCenter variant="warning">
-        <Stack alignItems="center" direction="row">
+        <Stack alignItems="center" direction="row" gap={1}>
           <Box flex={1}>
             <Typography>
               Linode{' '}
