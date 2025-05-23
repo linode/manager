@@ -52,7 +52,7 @@ export const ImageRegionRow = (props: Props) => {
               aria-label={`Remove ${region}`}
               disabled={disableRemoveButton}
               onClick={onRemove}
-              sx={{ p: 0.5 }}
+              sx={{ p: 0.75 }}
             >
               <CloseIcon />
             </IconButton>

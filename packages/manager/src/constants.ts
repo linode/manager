@@ -330,3 +330,14 @@ export const LD_DX_TOOLS_METRICS_KEYS = {
     'A/B Test: Step 2 : DX Tools SDK Python resources links',
   SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
 };
+
+/**
+ * An array of region IDs.
+ * Used to prevent images from being replicated & uploaded to some regions.
+ */
+export const DISALLOWED_IMAGE_REGIONS = [
+  'gb-lon',
+  'au-mel',
+  'sg-sin-2',
+  'jp-tyo-3',
+];
