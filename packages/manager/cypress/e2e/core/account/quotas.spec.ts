@@ -221,7 +221,9 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
   });
 });
 
-xdescribe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
+// TODO: add test for handling response to api error, shd show special msg
+
+describe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       limitsEvolution: {
