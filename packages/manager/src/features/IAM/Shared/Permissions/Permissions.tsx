@@ -19,7 +19,7 @@ type Props = {
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+export const Permissions = React.memo(({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
@@ -31,16 +31,11 @@ export const Permissions = ({ permissions }: Props) => {
   );
 
   React.useEffect(() => {
-    // Ensure calculateHiddenItems runs after layout stabilization on initial render
-    const rafId = requestAnimationFrame(() => calculateHiddenItems());
-
     window.addEventListener('resize', handleResize);
-
     return () => {
-      cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [calculateHiddenItems, handleResize]);
+  }, [handleResize]);
 
   // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
@@ -79,4 +74,4 @@ export const Permissions = ({ permissions }: Props) => {
       )}
     </Grid>
   );
-};
+});

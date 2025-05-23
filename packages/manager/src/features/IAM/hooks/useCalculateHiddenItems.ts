@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import type { PermissionType } from '@linode/api-v4';
 
@@ -9,19 +9,19 @@ export const useCalculateHiddenItems = (
   items: PermissionType[] | string[],
   showAll?: boolean
 ) => {
-  const [numHiddenItems, setNumHiddenItems] = React.useState<number>(0);
-
-  const containerRef = React.useRef<HTMLDivElement | null>(null);
-
-  const itemRefs = React.useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
+  // eslint-disable-next-line no-console
+  console.count('useCalculateHiddenItems');
+  const [numHiddenItems, setNumHiddenItems] = useState<number>(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
 
   const calculateHiddenItems = React.useCallback(() => {
-    if (showAll || !containerRef.current) {
+    if (showAll) {
       setNumHiddenItems(0);
       return;
     }
 
-    if (!itemRefs.current) {
+    if (!containerRef.current || !itemRefs.current) {
       return;
     }
 
@@ -43,7 +43,25 @@ export const useCalculateHiddenItems = (
       firstHiddenIndex !== -1 ? itemsArray.length - firstHiddenIndex : 0;
 
     setNumHiddenItems(numHiddenItems);
-  }, [items, showAll]);
+  }, [showAll]);
+
+  useEffect(() => {
+    let rafId: number;
+
+    const run = () => {
+      const container = containerRef.current;
+      if (!container || container.offsetHeight === 0) {
+        rafId = requestAnimationFrame(run);
+        return;
+      }
+
+      calculateHiddenItems();
+    };
+
+    rafId = requestAnimationFrame(run);
+
+    return () => cancelAnimationFrame(rafId);
+  }, [items, calculateHiddenItems]);
 
   return { calculateHiddenItems, containerRef, itemRefs, numHiddenItems };
 };
