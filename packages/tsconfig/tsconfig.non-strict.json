@@ -1,0 +1,14 @@
+{
+   "//": "This tsconfig disables strict mode but enables some nice strict-like options.",
+   "//": "Note: We want to work towards making all of our packages use strict: true",
+   "//": "The current blocker is reated to type inference with our React Query query key factory.",
+  "compilerOptions": {
+    "strict": false,
+    "allowUnreachableCode": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+  }
+}

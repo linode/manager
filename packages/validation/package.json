@@ -41,6 +41,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "concurrently": "^9.0.1",
     "tsup": "^8.4.0"
   },
