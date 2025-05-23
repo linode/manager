@@ -1,14 +1,20 @@
 import { useProfile } from '@linode/queries';
-import { Tooltip } from '@linode/ui';
+import { Stack, Tooltip, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize, getFormattedStatus, truncate } from '@linode/utilities';
 import * as React from 'react';
 
+import { BarPercent } from 'src/components/BarPercent';
 import { Link } from 'src/components/Link';
 import { Markdown } from 'src/components/Markdown/Markdown';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import {
+  formatProgressEvent,
+  getEventMessage,
+} from 'src/features/Events/utils';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -51,6 +57,18 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const { data: profile } = useProfile();
 
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent =
+    tableType === 'in progress'
+      ? events?.find(
+          (event) =>
+            event.entity?.type === entity.type && event.entity.id === entity.id
+        )
+      : undefined;
+
+  const eventProgress = recentEvent && formatProgressEvent(recentEvent);
+
   const truncatedReason = truncate(reason, 93);
 
   const isTruncated = reason !== truncatedReason;
@@ -69,7 +87,24 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
               : `/${entity.type}s`
           }
         >
-          {entity.label}
+          {recentEvent ? (
+            <Stack direction="column" gap={1}>
+              {getEventMessage(recentEvent)}
+              {eventProgress?.showProgress && (
+                <BarPercent
+                  max={100}
+                  narrow
+                  rounded
+                  value={recentEvent.percent_complete ?? 0}
+                />
+              )}
+              <Typography sx={{ fontSize: '0.8rem' }}>
+                {eventProgress?.progressEventDate}
+              </Typography>
+            </Stack>
+          ) : (
+            entity.label
+          )}
         </Link>
       </TableCell>
       {(tableType === 'scheduled' || tableType === 'completed') && (

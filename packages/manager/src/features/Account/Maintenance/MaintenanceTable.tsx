@@ -186,7 +186,12 @@ export const MaintenanceTable = ({ type }: Props) => {
         <TableHead>
           <TableRow>
             <TableCell className={classes.cell}>Entity</TableCell>
-            <TableCell className={classes.cell}>Label</TableCell>
+            <TableCell
+              className={classes.cell}
+              style={type === 'in progress' ? { width: '30%' } : {}}
+            >
+              Label
+            </TableCell>
             {(type === 'scheduled' || type === 'completed') && (
               <Hidden mdDown>
                 <TableSortCell
