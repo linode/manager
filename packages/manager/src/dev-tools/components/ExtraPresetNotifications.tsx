@@ -252,4 +252,13 @@ const notificationTemplates = {
       until: '2021-10-16T04:00:00',
       when: '2021-09-30T04:00:00',
     }),
+  'Platform Maintenance Scheduled': () =>
+    notificationFactory.build({
+      label:
+        'One or more of your Linodes has a scheduled reboot for a critical platform security update.',
+      message:
+        'One or more of your Linodes has a scheduled reboot for a critical platform security update.',
+      severity: 'major',
+      type: 'security_reboot_maintenance_scheduled',
+    }),
 } as const;

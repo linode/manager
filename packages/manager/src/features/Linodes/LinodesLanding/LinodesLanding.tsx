@@ -8,6 +8,7 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
+import { PlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
@@ -302,6 +303,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
+        <PlatformMaintenanceBanner />
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
