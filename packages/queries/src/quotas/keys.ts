@@ -20,7 +20,7 @@ export const quotaQueries = createQueryKeys('quotas', {
         queryFn: () => getQuota(type, id),
         queryKey: [id],
       }),
-      usage: (id: number) => ({
+      usage: (id: string) => ({
         queryFn: () => getQuotaUsage(type, id),
         queryKey: [id],
       }),
