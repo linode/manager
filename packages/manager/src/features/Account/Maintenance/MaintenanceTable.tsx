@@ -48,7 +48,7 @@ const headersForCSVDownload = [
 
 const useStyles = makeStyles()(() => ({
   cell: {
-    width: '12%',
+    width: '10%',
   },
 }));
 
@@ -185,7 +185,9 @@ export const MaintenanceTable = ({ type }: Props) => {
       <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.cell}>Entity</TableCell>
+            <TableCell className={classes.cell} style={{ width: '5%' }}>
+              Entity
+            </TableCell>
             <TableCell
               className={classes.cell}
               style={type === 'in progress' ? { width: '30%' } : {}}

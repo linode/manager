@@ -1,5 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Stack, Tooltip, Typography } from '@linode/ui';
+import { Stack, Tooltip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize, getFormattedStatus, truncate } from '@linode/utilities';
 import * as React from 'react';
@@ -79,33 +79,31 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
         {entity.type}
       </TableCell>
       <TableCell>
-        <Link
-          tabIndex={0}
-          to={
-            entity.type === 'linode'
-              ? `/${entity.type}s/${entity.id}`
-              : `/${entity.type}s`
-          }
-        >
-          {recentEvent ? (
-            <Stack direction="column" gap={1}>
-              {getEventMessage(recentEvent)}
-              {eventProgress?.showProgress && (
-                <BarPercent
-                  max={100}
-                  narrow
-                  rounded
-                  value={recentEvent.percent_complete ?? 0}
-                />
-              )}
-              <Typography sx={{ fontSize: '0.8rem' }}>
-                {eventProgress?.progressEventDate}
-              </Typography>
-            </Stack>
-          ) : (
-            entity.label
-          )}
-        </Link>
+        {recentEvent ? (
+          <Stack direction="column" gap={1} marginY={1}>
+            {getEventMessage(recentEvent)}
+            {eventProgress?.showProgress && (
+              <BarPercent
+                max={100}
+                narrow
+                rounded
+                sx={(theme) => ({ backgroundColor: theme.color.grey3 })}
+                value={recentEvent.percent_complete ?? 0}
+              />
+            )}
+          </Stack>
+        ) : (
+          <Link
+            tabIndex={0}
+            to={
+              entity.type === 'linode'
+                ? `/${entity.type}s/${entity.id}`
+                : `/${entity.type}s`
+            }
+          >
+            {entity.label}
+          </Link>
+        )}
       </TableCell>
       {(tableType === 'scheduled' || tableType === 'completed') && (
         <Hidden mdDown>
