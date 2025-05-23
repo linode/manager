@@ -1,0 +1,16 @@
+{
+  "//": "This tsconfig is our base config for packages.",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "esModuleInterop": true,
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "incremental": true
+  },
+  "include": [
+    "src"
+  ]
+}
