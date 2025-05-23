@@ -64,11 +64,11 @@ const supportTicketsLandingRouteClosed = createRoute({
 );
 
 const supportTicketDetailRoute = createRoute({
-  getParentRoute: () => supportTicketsLandingRoute,
+  getParentRoute: () => supportRoute,
   parseParams: (params) => ({
     ticketId: Number(params.ticketId),
   }),
-  path: '$ticketId',
+  path: 'tickets/$ticketId',
 }).lazy(() =>
   import('./supportLazyRoutes').then((m) => m.supportTicketDetailLazyRoute)
 );
@@ -95,10 +95,10 @@ export const accountActivationLandingRoute = createRoute({
 export const supportRouteTree = supportRoute.addChildren([
   supportLandingRoute,
   supportTicketsLandingRoute.addChildren([
-    supportTicketDetailRoute,
     supportTicketsNewRoute,
     supportTicketsLandingRouteOpen,
     supportTicketsLandingRouteClosed,
+    supportTicketDetailRoute,
   ]),
   supportSearchLandingRoute,
   accountActivationLandingRoute,
