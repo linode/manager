@@ -33,7 +33,7 @@ export const getEvent = (eventId: number) =>
 /**
  * markEventSeen
  *
- * Set the "seen" property of an event to true
+ * Marks all events up to and including the referenced event-id as "seen"
  *
  * @param eventId { number } ID of the event to designate as seen
  */
@@ -50,6 +50,10 @@ export const markEventSeen = (eventId: number) =>
  *
  * @param eventId { number } ID of the event to designate as read
  *
+ * @deprecated As of `5/20/2025`, this endpoint is deprecated. It will be sunset on `6/17/2025`.
+ *
+ * To avoid any disruptions, update any API calls using markEventRead to markEventSeen.
+ * Please note that the seen endpoint functions differently and will mark all events up to and including the referenced event-id as "seen" rather than individual events.
  */
 export const markEventRead = (eventId: number) =>
   Request<{}>(
