@@ -614,13 +614,25 @@ export const mockGetObjectStorageQuotas = (
   endpoint: string,
   quotas: Quota[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', apiMatcher(`object-storage/quotas*`), (req) => {
+  return cy.intercept('GET', apiMatcher('object-storage/quotas*'), (req) => {
     if (req.headers['x-filter'].includes(`{"s3_endpoint":"${endpoint}"}`)) {
       req.reply(paginateResponse(quotas));
     } else {
       req.continue();
     }
   });
+};
+
+export const mockGetObjectStorageQuotaError = (
+  errorMessage: string,
+  status: number = 500
+): Cypress.Chainable<null> => {
+  console.log('mockGetObjectStorageQuotaError');
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/quotas*'),
+    makeErrorResponse(errorMessage, status)
+  );
 };
 
 /**

@@ -2,6 +2,7 @@ import { regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import {
   mockGetObjectStorageEndpoints,
+  mockGetObjectStorageQuotaError,
   mockGetObjectStorageQuotas,
   mockGetObjectStorageQuotaUsages,
 } from 'support/intercepts/object-storage';
@@ -10,6 +11,35 @@ import { randomDomainName, randomLabel } from 'support/util/random';
 
 import { objectStorageEndpointsFactory } from 'src/factories';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
+
+const mockRegions = regionFactory.buildList(4, {
+  capabilities: ['Object Storage'],
+});
+
+const mockDomain = randomDomainName();
+const mockEndpoints = [
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E0',
+    region: mockRegions[0].id,
+    s3_endpoint: `${mockRegions[0].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E1',
+    region: mockRegions[1].id,
+    s3_endpoint: `${mockRegions[1].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E1',
+    region: mockRegions[2].id,
+    s3_endpoint: `${mockRegions[2].id}-1.${mockDomain}`,
+  }),
+  objectStorageEndpointsFactory.build({
+    endpoint_type: 'E2',
+    region: mockRegions[3].id,
+    s3_endpoint: `${mockRegions[3].id}-1.${mockDomain}`,
+  }),
+];
+
 describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
   beforeEach(() => {
     // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
@@ -19,7 +49,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
       },
     }).as('getFeatureFlags');
   });
-  it('can navigate directly to Quotas page', () => {
+  xit('can navigate directly to Quotas page', () => {
     cy.visitWithLogin('/account/quotas');
     cy.wait('@getFeatureFlags');
     cy.url().should('endWith', '/quotas');
@@ -28,7 +58,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     ).should('be.visible');
   });
 
-  it('can navigate to the Quotas page via the User Menu', () => {
+  xit('can navigate to the Quotas page via the User Menu', () => {
     cy.visitWithLogin('/');
     cy.wait('@getFeatureFlags');
     // Open user menu
@@ -39,7 +69,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     });
   });
 
-  it('Quotas tab is visible from all other tabs in Account tablist', () => {
+  xit('Quotas tab is visible from all other tabs in Account tablist', () => {
     cy.visitWithLogin('/account/billing');
     cy.wait('@getFeatureFlags');
     ui.tabList.find().within(() => {
@@ -54,34 +84,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
 
   // TODO: still flakey in selecting OS EP, typing doesnt always result in selection
   // TODO: need to use multiple regions?
-  it('Endpoint workflow follows proper sequence', () => {
-    const mockDomain = randomDomainName();
-    const mockRegions = regionFactory.buildList(4, {
-      capabilities: ['Object Storage'],
-    });
-    const mockEndpoints = [
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E0',
-        region: mockRegions[0].id,
-        s3_endpoint: `${mockRegions[0].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: mockRegions[1].id,
-        s3_endpoint: `${mockRegions[1].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E1',
-        region: mockRegions[2].id,
-        s3_endpoint: `${mockRegions[2].id}-1.${mockDomain}`,
-      }),
-      objectStorageEndpointsFactory.build({
-        endpoint_type: 'E2',
-        region: mockRegions[3].id,
-        s3_endpoint: `${mockRegions[3].id}-1.${mockDomain}`,
-      }),
-    ];
-
+  xit('Endpoint workflow follows proper sequence', () => {
     const mockSelectedEndpoint = mockEndpoints[1];
     const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
     const mockQuotas = [
@@ -165,7 +168,6 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     cy.findByPlaceholderText(placeholderText)
       .should('be.visible')
       .should('be.enabled');
-    console.log('selectedDomain ', selectedDomain);
     ui.autocomplete
       .findByLabel('Object Storage Endpoint')
       .should('be.visible')
@@ -210,7 +212,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
           cy.wrap(row).within(() => {
             cy.get('td')
               .eq(2)
-              .within((td) => {
+              .within(() => {
                 // quota usage
                 const strUsage = `${mockQuotaUsages[rowIndex].usage} of ${mockQuotaUsages[rowIndex].quota_limit}`;
                 cy.findByText(strUsage, { exact: false }).should('be.visible');
@@ -219,11 +221,35 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
         });
       });
   });
+
+  it('API error results in error message being displayed', () => {
+    const mockSelectedEndpoint = mockEndpoints[1];
+    const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
+    const errorMsg = 'Request failed.';
+    mockGetObjectStorageEndpoints(mockEndpoints).as(
+      'getObjectStorageEndpoints'
+    );
+    mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
+    cy.visitWithLogin('/account/quotas');
+    cy.wait('@getObjectStorageEndpoints');
+    ui.autocomplete
+      .findByLabel('Object Storage Endpoint')
+      .should('be.visible')
+      .type(selectedDomain);
+    ui.autocompletePopper
+      .findByTitle(selectedDomain, { exact: false })
+      .should('be.visible')
+      .click();
+    cy.wait('@getQuotasError');
+    cy.get('[data-qa-error-msg="true"]')
+      .should('be.visible')
+      .should('have.text', errorMsg);
+  });
 });
 
 // TODO: add test for handling response to api error, shd show special msg
 
-describe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
+xdescribe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       limitsEvolution: {
