@@ -76,7 +76,6 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
-export const NUM_ADOBE_SCRIPTS = 3;
 
 /** Pendo */
 export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
