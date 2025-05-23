@@ -32,7 +32,7 @@ const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
   value: 'all',
 };
-
+const DEFAULT_PAGE_SIZE = 10;
 interface Props {
   roles?: RoleView[];
 }
@@ -48,7 +48,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(25);
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
   // Filtering
   const getFilteredRows = (
@@ -286,7 +286,6 @@ export const RolesTable = ({ roles = [] }: Props) => {
           onPageSizeChange={handlePageSizeChange}
           page={page}
           pageSize={pageSize}
-          pageSizes={[25, 50, 75, 100]}
           style={{ borderTop: 0 }}
         />
       </Paper>
