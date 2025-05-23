@@ -1,4 +1,4 @@
-import { shouldLoadDevTools } from 'src/dev-tools/load';
+import { ENABLE_DEV_TOOLS } from 'src/constants';
 
 import type { RegionSite } from '@linode/api-v4';
 import type { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
@@ -244,7 +244,7 @@ export const {
 export const getEnvLocalStorageOverrides = () => {
   // This is broken into two logical branches so that local storage is accessed
   // ONLY if the dev tools are enabled and it's a development build.
-  if (shouldLoadDevTools && import.meta.env.DEV) {
+  if (ENABLE_DEV_TOOLS && import.meta.env.DEV) {
     const localStorageOverrides = storage.devToolsEnv.get();
     if (localStorageOverrides) {
       return localStorageOverrides;

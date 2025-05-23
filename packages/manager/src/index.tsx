@@ -1,29 +1,24 @@
 import { queryClientFactory } from '@linode/queries';
-import { getRoot } from '@linode/utilities';
 import CssBaseline from '@mui/material/CssBaseline';
 import { QueryClientProvider } from '@tanstack/react-query';
-import * as React from 'react';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import { Provider as ReduxStoreProvider } from 'react-redux';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
-import { SplashScreen } from 'src/components/SplashScreen';
 import 'src/exceptionReporting';
+import { SplashScreen } from 'src/components/SplashScreen';
 import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import NullComponent from './components/NullComponent';
-import { loadDevTools, shouldLoadDevTools } from './dev-tools/load';
 import './index.css';
+import { ENABLE_DEV_TOOLS } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-
-const queryClient = queryClientFactory('longLived');
-const store = storeFactory();
-
-setupInterceptors(store);
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 
@@ -37,6 +32,11 @@ const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+
+const queryClient = queryClientFactory('longLived');
+const store = storeFactory();
+
+setupInterceptors(store);
 
 const Main = () => {
   if (!navigator.cookieEnabled) {
@@ -89,15 +89,23 @@ const Main = () => {
 };
 
 async function loadApp() {
-  if (shouldLoadDevTools) {
-    await loadDevTools(store, queryClient);
+  if (ENABLE_DEV_TOOLS) {
+    const devTools = await import('./dev-tools/load');
+    await devTools.loadDevTools();
+
+    const { DevTools } = await import('./dev-tools/DevTools');
+
+    const devToolsRootContainer = document.createElement('div');
+    devToolsRootContainer.id = 'dev-tools-root';
+    document.body.appendChild(devToolsRootContainer);
+
+    const root = createRoot(devToolsRootContainer);
+
+    root.render(<DevTools queryClient={queryClient} store={store} />);
   }
 
   const container = document.getElementById('root');
-  if (container) {
-    const root = getRoot(container);
-    root.render(<Main />);
-  }
+  createRoot(container!).render(<Main />);
 }
 
 loadApp();
