@@ -394,10 +394,12 @@ describe('restricted user details pages', () => {
           ui.tabList.findTabByTitle('Settings').click();
 
           // Confirm that "Manage Access" button is disabled
-          ui.cdsButton
-            .findButtonByTitle('Manage Access')
-            .should('be.visible')
-            .should('be.disabled');
+          cy.get('[data-testid="button-access-control"]').within(() => {
+            ui.cdsButton
+              .findButtonByTitle('Manage Access')
+              .should('be.visible')
+              .should('be.disabled');
+          });
 
           // Confirm that "Remove" button is disabled
           ui.button
