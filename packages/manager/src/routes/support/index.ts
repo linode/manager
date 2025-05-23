@@ -1,6 +1,7 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
+import { SupportSearchLandingWrapper } from './supportLazyRoutes';
 import { SupportTicketsRoute } from './SupportRoute';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
@@ -63,13 +64,10 @@ const supportTicketDetailRoute = createRoute({
 );
 
 const supportSearchLandingRoute = createRoute({
+  component: SupportSearchLandingWrapper,
   getParentRoute: () => supportRoute,
   path: 'search',
-}).lazy(() =>
-  import('src/features/Help/SupportSearchLanding/SupportSearchLanding').then(
-    (m) => m.supportSearchLandingLazyRoute
-  )
-);
+});
 
 export const accountActivationLandingRoute = createRoute({
   beforeLoad: async ({ context }) => {

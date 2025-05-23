@@ -1,9 +1,6 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { withRouter } from 'react-router-dom';
-// eslint-disable-next-line no-restricted-imports
-import type { RouteComponentProps } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import Search from 'src/assets/icons/search.svg';
@@ -19,16 +16,15 @@ interface SelectedItem {
   label: string;
   value: string;
 }
-interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
 /**
  * For Algolia search to work locally, ensure you have valid values set for
  * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
  */
-const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
+const AlgoliaSearchBar = (props: AlgoliaProps) => {
   const [inputValue, setInputValue] = React.useState('');
-  const { history, searchAlgolia, searchEnabled, searchError, searchResults } =
-    props;
+  const { searchAlgolia, searchEnabled, searchError, searchResults } = props;
+  const navigate = useNavigate();
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -52,12 +48,6 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     [searchAlgolia]
   );
 
-  const getLinkTarget = (inputValue: string) => {
-    return inputValue
-      ? `/support/search/?query=${inputValue}`
-      : '/support/search/';
-  };
-
   const handleSelect = (selected: ConvertedItems | null | SelectedItem) => {
     if (!selected || !inputValue) {
       return;
@@ -70,8 +60,10 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       window.open(href, '_blank', 'noopener');
     } else {
       // If no href, we redirect to the search landing page.
-      const link = getLinkTarget(inputValue);
-      history.push(link);
+      navigate({
+        to: '/support/search',
+        search: { query: inputValue || undefined },
+      });
     }
   };
   return (
@@ -130,5 +122,5 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
 };
 
 export default withSearch({ highlight: false, hitsPerPage: 10 })(
-  withRouter(AlgoliaSearchBar)
+  AlgoliaSearchBar
 );
