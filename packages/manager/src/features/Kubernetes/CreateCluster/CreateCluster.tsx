@@ -281,9 +281,6 @@ export const CreateCluster = () => {
       payload = { ...payload, tier: selectedTier };
     }
 
-    // Use beta endpoint if either:
-    // 1. LKE Enterprise is enabled
-    // 2. APL is supported but not in GA
     const createClusterFn = isUsingBetaEndpoint
       ? createKubernetesClusterBeta
       : createKubernetesCluster;
