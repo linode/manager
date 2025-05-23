@@ -14,14 +14,13 @@ import {
   formatProgressEvent,
   getEventMessage,
 } from 'src/features/Events/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import {
-  maintenanceDateColumnMap,
-  type MaintenanceTableType,
-} from './MaintenanceTable';
+import { type MaintenanceTableType } from './MaintenanceTable';
+import { maintenanceDateColumnMap } from './utilities';
 
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
@@ -59,6 +58,8 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const { data: events } = useInProgressEvents();
 
+  const flags = useFlags();
+
   const recentEvent =
     tableType === 'in progress'
       ? events?.find(
@@ -79,7 +80,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
         {entity.type}
       </TableCell>
       <TableCell>
-        {recentEvent ? (
+        {flags.vmHostMaintenance && recentEvent ? (
           <Stack direction="column" gap={1} marginY={1}>
             {getEventMessage(recentEvent)}
             {eventProgress?.showProgress && (
@@ -105,23 +106,49 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
           </Link>
         )}
       </TableCell>
-      {(tableType === 'scheduled' || tableType === 'completed') && (
-        <Hidden mdDown>
-          <TableCell data-testid="relative-date">
-            {parseAPIDate(when).toRelative()}
+
+      {flags.vmHostMaintenance?.enabled && (
+        <>
+          {(tableType === 'scheduled' || tableType === 'completed') && (
+            <Hidden mdDown>
+              <TableCell data-testid="relative-date">
+                {parseAPIDate(when).toRelative()}
+              </TableCell>
+            </Hidden>
+          )}
+          <TableCell noWrap>
+            {formatDate(
+              props.maintenance[maintenanceDateColumnMap[tableType][0]],
+              {
+                timezone: profile?.timezone,
+              }
+            )}
           </TableCell>
-        </Hidden>
+        </>
       )}
-      <TableCell noWrap>
-        {formatDate(props.maintenance[maintenanceDateColumnMap[tableType][0]], {
-          timezone: profile?.timezone,
-        })}
-      </TableCell>
+
+      {!flags.vmHostMaintenance?.enabled && (
+        <>
+          {' '}
+          <TableCell noWrap>
+            {formatDate(when, {
+              timezone: profile?.timezone,
+            })}
+          </TableCell>
+          <Hidden mdDown>
+            <TableCell data-testid="relative-date">
+              {parseAPIDate(when).toRelative()}
+            </TableCell>
+          </Hidden>
+        </>
+      )}
 
       <Hidden smDown>
         <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
-      {(tableType === 'scheduled' || tableType === 'completed') && (
+      {(!flags.vmHostMaintenance?.enabled ||
+        tableType === 'scheduled' ||
+        tableType === 'completed') && (
         <TableCell statusCell>
           <StatusIcon status={statusIconMap[status] ?? 'other'} />
           {statusTextMap[status] ?? capitalize(status)}

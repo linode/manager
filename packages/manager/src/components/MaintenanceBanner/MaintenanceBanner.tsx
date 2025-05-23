@@ -3,7 +3,7 @@ import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { SCHEDULED_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 
@@ -21,7 +21,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
 
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    SCHEDULED_MAINTENANCE_FILTER
+    PENDING_MAINTENANCE_FILTER
   );
 
   const {

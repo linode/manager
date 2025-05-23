@@ -6,7 +6,7 @@ import { useFormattedDate } from '@linode/utilities';
 import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
-import { SCHEDULED_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 
 export const LinodesLandingCSVDownload = () => {
   const csvRef = React.useRef<any>();
@@ -20,7 +20,7 @@ export const LinodesLandingCSVDownload = () => {
 
   const { data: accountMaintenance } = useAllAccountMaintenanceQuery(
     {},
-    SCHEDULED_MAINTENANCE_FILTER
+    PENDING_MAINTENANCE_FILTER
   );
 
   const downloadCSV = async () => {

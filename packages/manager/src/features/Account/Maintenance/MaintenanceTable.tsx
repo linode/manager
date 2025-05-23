@@ -19,6 +19,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 
@@ -26,6 +27,8 @@ import { MaintenanceTableRow } from './MaintenanceTableRow';
 import {
   COMPLETED_MAINTENANCE_FILTER,
   IN_PROGRESS_MAINTENANCE_FILTER,
+  maintenanceDateColumnMap,
+  PENDING_MAINTENANCE_FILTER,
   SCHEDULED_MAINTENANCE_FILTER,
 } from './utilities';
 
@@ -52,16 +55,11 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-export type MaintenanceTableType = 'completed' | 'in progress' | 'scheduled';
-
-export const maintenanceDateColumnMap: Record<
-  Props['type'],
-  ['complete_time' | 'start_time', string]
-> = {
-  completed: ['complete_time', 'End Date'],
-  'in progress': ['start_time', 'Start Date'],
-  scheduled: ['start_time', 'Start Date'],
-};
+export type MaintenanceTableType =
+  | 'completed'
+  | 'in progress'
+  | 'pending' // TODO VM & Host Maintenance: Remove pending type after GA
+  | 'scheduled';
 
 interface Props {
   type: MaintenanceTableType;
@@ -72,6 +70,7 @@ export const MaintenanceTable = ({ type }: Props) => {
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
   const formattedDate = useFormattedDate();
+  const flags = useFlags();
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -89,6 +88,7 @@ export const MaintenanceTable = ({ type }: Props) => {
     completed: COMPLETED_MAINTENANCE_FILTER,
     'in progress': IN_PROGRESS_MAINTENANCE_FILTER,
     scheduled: SCHEDULED_MAINTENANCE_FILTER,
+    pending: PENDING_MAINTENANCE_FILTER,
   };
 
   const filter: Filter = {
@@ -185,17 +185,52 @@ export const MaintenanceTable = ({ type }: Props) => {
       <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.cell} style={{ width: '5%' }}>
-              Entity
-            </TableCell>
-            <TableCell
-              className={classes.cell}
-              style={type === 'in progress' ? { width: '30%' } : {}}
-            >
-              Label
-            </TableCell>
-            {(type === 'scheduled' || type === 'completed') && (
-              <Hidden mdDown>
+            {flags.vmHostMaintenance?.enabled && (
+              <>
+                <TableCell className={classes.cell} style={{ width: '5%' }}>
+                  Entity
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  style={
+                    flags.vmHostMaintenance?.enabled && type === 'in progress'
+                      ? { width: '30%' }
+                      : {}
+                  }
+                >
+                  Label
+                </TableCell>
+                {(!flags.vmHostMaintenance?.enabled ||
+                  type === 'scheduled' ||
+                  type === 'completed') && (
+                  <Hidden mdDown>
+                    <TableSortCell
+                      active={orderBy === 'when'}
+                      className={classes.cell}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="when"
+                    >
+                      When
+                    </TableSortCell>
+                  </Hidden>
+                )}
+                <TableSortCell
+                  active={orderBy === maintenanceDateColumnMap[type][0]}
+                  className={classes.cell}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={maintenanceDateColumnMap[type][0]}
+                >
+                  {maintenanceDateColumnMap[type][1]}
+                </TableSortCell>
+              </>
+            )}
+
+            {!flags.vmHostMaintenance?.enabled && (
+              <>
+                <TableCell className={classes.cell}>Entity</TableCell>
+                <TableCell className={classes.cell}>Label</TableCell>
                 <TableSortCell
                   active={orderBy === 'when'}
                   className={classes.cell}
@@ -203,19 +238,22 @@ export const MaintenanceTable = ({ type }: Props) => {
                   handleClick={handleOrderChange}
                   label="when"
                 >
-                  When
+                  Date
                 </TableSortCell>
-              </Hidden>
+                <Hidden mdDown>
+                  <TableSortCell
+                    active={orderBy === 'when'}
+                    className={classes.cell}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="when"
+                  >
+                    When
+                  </TableSortCell>
+                </Hidden>
+              </>
             )}
-            <TableSortCell
-              active={orderBy === maintenanceDateColumnMap[type][0]}
-              className={classes.cell}
-              direction={order}
-              handleClick={handleOrderChange}
-              label={maintenanceDateColumnMap[type][0]}
-            >
-              {maintenanceDateColumnMap[type][1]}
-            </TableSortCell>
+
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
@@ -227,7 +265,9 @@ export const MaintenanceTable = ({ type }: Props) => {
                 Type
               </TableSortCell>
             </Hidden>
-            {(type === 'scheduled' || type === 'completed') && (
+            {(!flags.vmHostMaintenance?.enabled ||
+              type === 'scheduled' ||
+              type === 'completed') && (
               <TableSortCell
                 active={orderBy === 'status'}
                 className={classes.cell}
