@@ -9,7 +9,9 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
 }));
 
-export const StyledTitle = styled(Typography)<{
+export const StyledTitle = styled(Typography, {
+  shouldForwardProp: (prop) => prop !== 'showName',
+})<{
   showName?: boolean | undefined;
 }>(({ theme, showName }) => ({
   font: theme.tokens.alias.Typography.Label.Bold.S,
