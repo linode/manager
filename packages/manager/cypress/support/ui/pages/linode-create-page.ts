@@ -125,4 +125,29 @@ export const linodeCreatePage = {
 
     cy.get('@rootPasswordField').type(linodePassword, { log: false });
   },
+
+  /**
+   * Select the Linode Interfaces Type.
+   */
+  selectLinodeInterfacesType: () => {
+    cy.findByText('Linode Interfaces').click();
+  },
+
+  /**
+   * Select the Legacy Interfaces Type.
+   */
+  selectLegacyConfigInterfacesType: () => {
+    cy.findByText('Configuration Profile Interfaces (Legacy)').click();
+  },
+
+  /**
+   * Select the interfaces' card.
+   *
+   * @param title - Interfaces' card title to select.
+   */
+  selectInterfaceCard: (title: string) => {
+    cy.get(`[data-qa-select-card-heading="${title}"]`)
+      .should('be.visible')
+      .click();
+  },
 };
