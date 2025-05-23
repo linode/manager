@@ -50,7 +50,7 @@ export const SubnetNodeBalancerRow = ({
   if (nodebalancerLoading || !nodebalancer) {
     return (
       <TableRow hover={hover}>
-        <TableCell colSpan={6} style={{ justifyItems: 'center' }}>
+        <TableCell colSpan={6} style={{ textAlign: 'center' }}>
           <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
@@ -68,7 +68,7 @@ export const SubnetNodeBalancerRow = ({
             />
             <Typography>
               There was an error loading{' '}
-              <Link to={`/nodebalancers/${nodebalancer?.id}/summary`}>
+              <Link to={`/nodebalancers/${nodeBalancerId}/summary`}>
                 Nodebalancer {nodeBalancerId}
               </Link>
             </Typography>

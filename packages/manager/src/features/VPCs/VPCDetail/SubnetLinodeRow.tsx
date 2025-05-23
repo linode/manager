@@ -114,7 +114,7 @@ export const SubnetLinodeRow = (props: Props) => {
   if (linodeLoading || !linode) {
     return (
       <TableRow hover={hover}>
-        <TableCell colSpan={6}>
+        <TableCell colSpan={6} style={{ textAlign: 'center' }}>
           <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
@@ -124,7 +124,7 @@ export const SubnetLinodeRow = (props: Props) => {
   if (linodeError) {
     return (
       <TableRow data-testid="subnet-linode-row-error" hover={hover}>
-        <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
+        <TableCell colSpan={5} style={{ justifyItems: 'center' }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon

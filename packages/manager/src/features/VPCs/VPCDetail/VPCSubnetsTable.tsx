@@ -335,7 +335,6 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableHead
               style={{
                 color: theme.tokens.color.Neutrals.White,
-                fontSize: '.875rem',
               }}
             >
               {SubnetLinodeTableRowHead}
@@ -364,7 +363,6 @@ export const VPCSubnetsTable = (props: Props) => {
               <TableHead
                 style={{
                   color: theme.tokens.color.Neutrals.White,
-                  fontSize: '.875rem',
                 }}
               >
                 {SubnetNodebalancerTableRowHead}
