@@ -2,7 +2,11 @@
 
 import { Factory } from './factoryProxy';
 
-import type { LinodeInterface, LinodeInterfaceSettings } from '@linode/api-v4';
+import type {
+  LinodeInterface,
+  LinodeInterfaceSettings,
+  UpgradeInterfaceData
+} from '@linode/api-v4';
 
 export const linodeInterfaceSettingsFactory =
   Factory.Sync.makeFactory<LinodeInterfaceSettings>({
@@ -14,6 +18,13 @@ export const linodeInterfaceSettingsFactory =
       ipv6_eligible_interface_ids: [],
     },
   });
+
+export const upgradeLinodeInterfaceFactory = 
+ Factory.Sync.makeFactory<UpgradeInterfaceData>({
+    config_id: Factory.each((i) => i),
+    dry_run: true,
+    interfaces: [],
+});
 
 export const linodeInterfaceFactoryVlan =
   Factory.Sync.makeFactory<LinodeInterface>({
