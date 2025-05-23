@@ -40,13 +40,13 @@ export const AssignedPermissionsPanel = ({
   return (
     <StyledPaper sx={{ ...sx }}>
       {hideDetails && showName && (
-        <>
-          <StyledTitle showName={showName}>{role.name}</StyledTitle>
-        </>
+        <StyledTitle showName={showName}>{role.name}</StyledTitle>
       )}
       {!hideDetails && (
         <>
-          <StyledTitle>{showName && role.name ? role.name : 'Description'}</StyledTitle>
+          <StyledTitle>
+            {showName && role.name ? role.name : 'Description'}
+          </StyledTitle>
           <StyledDescription>
             {role.permissions.length ? (
               role.description

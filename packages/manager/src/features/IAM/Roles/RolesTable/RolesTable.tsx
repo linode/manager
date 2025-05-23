@@ -263,6 +263,7 @@ export const RolesTable = ({ roles }: Props) => {
       </Paper>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}
+        onSuccess={() => setSelectedRows([])}
         open={isDrawerOpen}
         selectedRoles={selectedRows}
       />
