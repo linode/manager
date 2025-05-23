@@ -366,8 +366,9 @@ export const lightTheme: ThemeOptions = {
           marginRight: Spacing.S8,
         },
         groupLabel: {
-          font: Typography.Label.Bold.L,
-          padding: '8px',
+          marginTop: '0px !important',
+          backgroundColor: Dropdown.Background.Category,
+          padding: '8px 12px !important',
         },
         input: {
           '&.MuiInputBase-input.MuiInput-input': {
@@ -375,24 +376,47 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          '& input::placeholder': {
+            padding: `0 ${Spacing.S8}`,
+            color: Select.Default.Text,
+            opacity: 1,
+          },
           height: 'inherit',
           paddingBottom: 0,
+          '& .fi': {
+            width: '28px',
+            height: '20px',
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
+        },
+        paper: {
+          boxShadow: Alias.Elevation.S,
+          marginTop: 4,
         },
         listbox: {
-          backgroundColor: bg.white,
-          border: `1px solid ${primaryColors.main}`,
-          padding: '4px',
+          backgroundColor: Select.Default.Background,
+          paddingTop: '4px',
+          border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
-          border: `1px solid ${primaryColors.main}`,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          border: `1px solid ${primaryColors.main}`,
           borderTop: 0,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         option: {
           '&.Mui-focused': {
-            backgroundColor: 'transparent',
+            backgroundColor: `${Dropdown.Background.Hover} !important`,
           },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
@@ -401,6 +425,13 @@ export const lightTheme: ThemeOptions = {
           },
           fontSize: '0.9rem',
           padding: '10px !important',
+          '& .fi': {
+            width: '28px',
+            height: '20px',
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
         },
         popper: {
           // To remove the double border of listbox and input
@@ -408,11 +439,41 @@ export const lightTheme: ThemeOptions = {
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
+                padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+                svg: {
+                  height: '20px',
+                  width: '20px',
+                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
+                padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
+              },
+              '.MuiAutocomplete-option': {
+                height: '32px',
+                svg: {
+                  height: '20px',
+                  width: '20px',
+                },
               },
             },
           },
@@ -866,10 +927,11 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: Select.Error.HintText,
           },
-          fontWeight: 400,
+          fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
           textTransform: 'none',
+          marginTop: '4px',
         },
       },
     },
@@ -1243,7 +1305,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         icon: {
-          color: `${Color.Neutrals[50]} !important`,
+          color: `${Select.Disabled.Icon} !important`,
           height: 28,
           marginRight: 4,
           marginTop: -2,

@@ -66,7 +66,9 @@ export const DatabaseEngineSelect = (props: Props) => {
                 justifyContent: 'flex-start',
               }}
             >
-              <Grid className="py0">{option.flag}</Grid>
+              <Grid className="py0" height="20px" width="20px">
+                {option.flag}
+              </Grid>
               <Grid>{option.label}</Grid>
             </Grid>
           </li>
@@ -75,7 +77,11 @@ export const DatabaseEngineSelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: (
-            <Box sx={{ pr: 1, pt: 0.7 }}>{selectedEngine?.flag}</Box>
+            <Box
+              sx={{ pr: 1, pt: 0.7, svg: { height: '20px', width: '20px' } }}
+            >
+              {selectedEngine?.flag}
+            </Box>
           ),
         },
       }}
