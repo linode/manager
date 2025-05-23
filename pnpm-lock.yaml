@@ -210,8 +210,8 @@ importers:
         specifier: ^5.5.0
         version: 5.5.0
       akamai-cds-react-components:
-        specifier: 0.0.1-alpha.6
-        version: 0.0.1-alpha.6(@linode/design-language-system@4.0.0)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 0.0.1-alpha.9
+        version: 0.0.1-alpha.9(@linode/design-language-system@4.0.0)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       algoliasearch:
         specifier: ^4.14.3
         version: 4.24.0
@@ -2925,14 +2925,14 @@ packages:
   ajv@6.12.6:
     resolution: {integrity: sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==}
 
-  akamai-cds-react-components@0.0.1-alpha.6:
-    resolution: {integrity: sha512-dmhw1YF8ZKIw/xS7n/Fq6mFV9bG7TmRS85uVHAl+W1Qc4oXFmXGIKwZhXFN1Ue7fePTrU1pz8v3GNTwtv0sWUg==}
+  akamai-cds-react-components@0.0.1-alpha.9:
+    resolution: {integrity: sha512-/VKUETyY8C/xq8EEc+jyK4SBzq8fKLW8bCBSh9ns1jwU3hF6e5XTn54xMjN343HuUkZMqHcdqFY8l3m3t3mzcg==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
 
-  akamai-cds-web-components@0.0.1-alpha.6:
-    resolution: {integrity: sha512-yc0NNkX8kzV+U8dK+CSbKz5QswkNfcX9GHqDSlRzly83aRGASGQYIRsxEquteobzcZkErflKfh/6iW5Rv4HHOg==}
+  akamai-cds-web-components@0.0.1-alpha.9:
+    resolution: {integrity: sha512-8ctqz7Bn7HOdIEaaDoRuhYiZwovWJriakgwY0Cy/oTwmGDtp9aOv8KSQT+9THwEBUyjV16FXNHyIpnMY459Yeg==}
     peerDependencies:
       '@linode/design-language-system': ^4.0.0
 
@@ -9002,17 +9002,17 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
-  akamai-cds-react-components@0.0.1-alpha.6(@linode/design-language-system@4.0.0)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  akamai-cds-react-components@0.0.1-alpha.9(@linode/design-language-system@4.0.0)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@lit/react': 1.0.7(@types/react@18.3.12)
-      akamai-cds-web-components: 0.0.1-alpha.6(@linode/design-language-system@4.0.0)
+      akamai-cds-web-components: 0.0.1-alpha.9(@linode/design-language-system@4.0.0)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
     transitivePeerDependencies:
       - '@linode/design-language-system'
       - '@types/react'
 
-  akamai-cds-web-components@0.0.1-alpha.6(@linode/design-language-system@4.0.0):
+  akamai-cds-web-components@0.0.1-alpha.9(@linode/design-language-system@4.0.0):
     dependencies:
       '@linode/design-language-system': 4.0.0
       lit: 3.3.0

@@ -6,6 +6,7 @@ import * as React from 'react';
 import {
   assertOrder,
   baseStore,
+  getShadowRootElement,
   mockMatchMedia,
   renderWithTheme,
   renderWithThemeAndFormik,
@@ -178,6 +179,72 @@ describe('testHelpers', () => {
       expect(() =>
         assertOrder(container, '[data-testid]', ['Third', 'Second', 'First'])
       ).toThrow();
+    });
+  });
+
+  describe('getShadowRootElement', () => {
+    let host: HTMLElement;
+
+    beforeEach(() => {
+      host = document.createElement('div');
+      document.body.appendChild(host);
+    });
+
+    afterEach(() => {
+      document.body.removeChild(host);
+    });
+
+    it('should resolve with null if the Shadow DOM is not attached', async () => {
+      const result = await getShadowRootElement<HTMLButtonElement>(
+        host,
+        'button'
+      );
+      expect(result).toBeNull();
+    });
+
+    it('should resolve with the element if it already exists in the Shadow DOM', async () => {
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      const button = document.createElement('button');
+      button.textContent = 'Click Me';
+      shadowRoot.appendChild(button);
+
+      const result = await getShadowRootElement<HTMLButtonElement>(
+        host,
+        'button'
+      );
+      expect(result).toBe(button);
+      expect(result?.textContent).toBe('Click Me');
+    });
+
+    it('should resolve with the element when it is added to the Shadow DOM later', async () => {
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+
+      setTimeout(() => {
+        const button = document.createElement('button');
+        button.textContent = 'Click Me';
+        shadowRoot.appendChild(button);
+      }, 100);
+
+      const result = await getShadowRootElement<HTMLButtonElement>(
+        host,
+        'button'
+      );
+      expect(result).not.toBeNull();
+      expect(result?.textContent).toBe('Click Me');
+    });
+
+    it('should disconnect the MutationObserver after resolving', async () => {
+      const shadowRoot = host.attachShadow({ mode: 'open' });
+      const observerSpy = vi.spyOn(MutationObserver.prototype, 'disconnect');
+
+      setTimeout(() => {
+        const button = document.createElement('button');
+        shadowRoot.appendChild(button);
+      }, 100);
+
+      await getShadowRootElement<HTMLButtonElement>(host, 'button');
+      expect(observerSpy).toHaveBeenCalled();
+      observerSpy.mockRestore();
     });
   });
 });
