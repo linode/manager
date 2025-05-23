@@ -278,7 +278,7 @@ export const VPCSubnetsTable = (props: Props) => {
           width: '24%',
         })}
       >
-        Subnet Label
+        Subnet
       </TableSortCell>
       <Hidden smDown>
         <TableSortCell

@@ -130,7 +130,7 @@ describe('VPC Subnets table', () => {
     }
 
     getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet Label');
+    getByText('Subnet');
     getByText(subnet.label);
     getByText('Subnet ID');
     getAllByText(subnet.id);
