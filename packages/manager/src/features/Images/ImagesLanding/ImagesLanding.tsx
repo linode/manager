@@ -113,9 +113,12 @@ export const ImagesLanding = () => {
   const history = useHistory();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  // CHECK FOR RESTRICTED GLOBAL GRANTS
   const isCreateImageRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_images',
   });
+
   const queryClient = useQueryClient();
   const [dialogState, setDialogState] =
     React.useState<ImageDialogState>(defaultDialogState);

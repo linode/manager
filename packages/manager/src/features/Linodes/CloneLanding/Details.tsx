@@ -210,6 +210,7 @@ export const Details = (props: Props) => {
         <Typography>Estimated time: {estimatedCloneTime}</Typography>
       )}
 
+      {/* ******************************************************************************************************* */}
       <LinodeSelect
         clearable={false}
         errorText={linodeError}
@@ -226,6 +227,7 @@ export const Details = (props: Props) => {
         placeholder="Destination"
         value={selectedLinodeId}
       />
+      {/* ******************************************************************************************************* */}
 
       {linodeError && (
         <StyledTypography variant="body1">
