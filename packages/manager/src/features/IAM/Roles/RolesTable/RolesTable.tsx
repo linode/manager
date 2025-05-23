@@ -34,14 +34,14 @@ const ALL_ROLES_OPTION: SelectOption = {
 };
 
 interface Props {
-  roles: RoleView[];
+  roles?: RoleView[];
 }
 
-export const RolesTable = ({ roles }: Props) => {
+export const RolesTable = ({ roles = [] }: Props) => {
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
   const [filterableEntityType, setFilterableEntityType] =
-    useState<SelectOption>(ALL_ROLES_OPTION);
+    useState<null | SelectOption>(ALL_ROLES_OPTION);
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
   >(undefined);
