@@ -102,6 +102,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
   return (
     <>
       <Table
+        data-testid="table-endpoint-quotas"
         sx={(theme) => ({
           marginTop: theme.spacingFunction(16),
           minWidth: theme.breakpoints.values.sm,
