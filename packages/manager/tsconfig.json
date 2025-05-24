@@ -9,7 +9,9 @@
     "baseUrl": ".",
     "moduleResolution": "bundler",
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "@linode/api-v4": ["../api-v4"],
+      "@linode/validation": ["../validation"]
     },
     "resolveJsonModule": true,
     "rootDir": ".",
@@ -40,5 +42,5 @@
     /* Optimizations */
     "incremental": true
   },
-  "include": ["src", "package.json"]
+  "include": ["src", "package.json"],
 }

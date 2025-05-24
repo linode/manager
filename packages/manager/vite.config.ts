@@ -17,6 +17,8 @@ export default defineConfig({
   resolve: {
     alias: {
       src: `${DIRNAME}/src`,
+      '@linode/api-v4*': `${DIRNAME}/../api-v4/src/index.ts`,
+      '@linode/validation*': `${DIRNAME}/../validation/src/index.ts`,
     },
   },
   server: {
