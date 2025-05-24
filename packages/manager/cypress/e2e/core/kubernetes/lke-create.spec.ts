@@ -426,9 +426,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       nanodeType,
     ];
     mockAppendFeatureFlags({
-      apl: {
-        enabled: true,
-      },
+      apl: true,
+      aplGeneralAvailability: false,
     }).as('getFeatureFlags');
     mockGetAccountBeta({
       description:

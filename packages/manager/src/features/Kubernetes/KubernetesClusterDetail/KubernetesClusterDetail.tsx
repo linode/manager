@@ -6,11 +6,11 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import {
-  getKubeHighAvailability,
   useAPLAvailability,
+  useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -29,7 +29,6 @@ export const KubernetesClusterDetail = () => {
   const id = Number(clusterID);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
-
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const {

@@ -116,6 +116,7 @@ export interface Flags {
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
+  aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseAdvancedConfig: boolean;
