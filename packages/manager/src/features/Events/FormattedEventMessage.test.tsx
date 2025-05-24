@@ -39,7 +39,7 @@ describe('FormattedEventMessage', () => {
     expect(getByText('contact Support')).toBeInTheDocument();
     expect(container.querySelector('a')).toHaveAttribute(
       'href',
-      '/support/tickets'
+      '/support/tickets/open?dialogOpen=true'
     );
   });
 });
