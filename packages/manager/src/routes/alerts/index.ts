@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { CloudPulseAlertsRoute } from './CloudPulseAlertsRoute';
@@ -9,15 +9,59 @@ const cloudPulseAlertsRoute = createRoute({
   path: 'alerts',
 });
 
-const cloudPulseAlertsLandingRoute = createRoute({
+const cloudPulseAlertsIndexRoute = createRoute({
   getParentRoute: () => cloudPulseAlertsRoute,
   path: '/',
+  beforeLoad: () => {
+    throw redirect({ to: '/alerts/definitions' });
+  },
 }).lazy(() =>
-  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
+  import('./cloudPulseAlertsLazyRoutes').then(
     (m) => m.cloudPulseAlertsLandingLazyRoute
   )
 );
 
+const cloudPulseAlertsDefinitionsRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions',
+}).lazy(() =>
+  import('./cloudPulseAlertsLazyRoutes').then(
+    (m) => m.cloudPulseAlertsLandingLazyRoute
+  )
+);
+
+const cloudPulseAlertsCreateRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions/create',
+}).lazy(() =>
+  import('./cloudPulseAlertsLazyRoutes').then(
+    (m) => m.cloudPulseAlertsCreateLazyRoute
+  )
+);
+
+const cloudPulseAlertsDefinitionsDetailRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions/detail/$serviceType/$alertId',
+}).lazy(() =>
+  import('./cloudPulseAlertsLazyRoutes').then(
+    (m) => m.cloudPulseAlertsDefinitionsDetailLazyRoute
+  )
+);
+
+const cloudPulseAlertsDefinitionsEditRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions/edit/$serviceType/$alertId',
+}).lazy(() =>
+  import('./cloudPulseAlertsLazyRoutes').then(
+    (m) => m.cloudPulseAlertsDefinitionsEditLazyRoute
+  )
+);
+
 export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
-  cloudPulseAlertsLandingRoute,
+  cloudPulseAlertsIndexRoute,
+  cloudPulseAlertsDefinitionsRoute.addChildren([
+    cloudPulseAlertsCreateRoute,
+    cloudPulseAlertsDefinitionsDetailRoute,
+    cloudPulseAlertsDefinitionsEditRoute,
+  ]),
 ]);
