@@ -189,12 +189,6 @@ export const ImageSelect = (props: Props) => {
             />
           );
         }}
-        sx={(theme) => ({
-          ...sx,
-          [theme.breakpoints.up('sm')]: {
-            width: '416px',
-          },
-        })}
         textFieldProps={{
           InputProps: {
             startAdornment:
