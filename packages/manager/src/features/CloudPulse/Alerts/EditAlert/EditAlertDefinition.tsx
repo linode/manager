@@ -188,7 +188,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           {alertDetails.group === 'per-region' && (
             <CloudPulseModifyAlertRegions name="regions" />
           )}
-          {alertDetails.group === 'per-account' && <AccountGroupingNotice />}
+          {alertDetails.group === 'per-account' && (
+            <AccountGroupingNotice mode="view" />
+          )}
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

@@ -36,6 +36,7 @@ import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAler
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
+import type { AlertFormMode } from '../constants';
 import type {
   CreateAlertDefinitionForm,
   MetricCriteriaForm,
@@ -257,7 +258,8 @@ export const CreateAlertDefinition = () => {
   );
 };
 
-export const AccountGroupingNotice = () => {
+export const AccountGroupingNotice = (props: { mode?: AlertFormMode }) => {
+  const { mode } = props;
   return (
     <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
       <Typography variant="h2">2. Account</Typography>
@@ -269,7 +271,7 @@ export const AccountGroupingNotice = () => {
       >
         <AlertListNoticeMessages
           errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
-          variant="warning"
+          variant={mode === 'view' ? 'info' : 'warning'}
         />
       </Box>
     </Box>

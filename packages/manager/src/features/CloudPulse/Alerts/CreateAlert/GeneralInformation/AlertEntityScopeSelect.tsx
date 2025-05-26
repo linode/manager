@@ -6,7 +6,10 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import { entityGroupingOptions } from '../../constants';
+import {
+  ALERT_SCOPE_TOOLTIP_TEXT,
+  entityGroupingOptions,
+} from '../../constants';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertDefinitionGroup } from '@linode/api-v4';
@@ -44,8 +47,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
           placeholder="Select a scope"
           size="medium"
           textFieldProps={{
-            labelTooltipText:
-              'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.',
+            labelTooltipText: ALERT_SCOPE_TOOLTIP_TEXT,
           }}
           value={
             field.value !== null

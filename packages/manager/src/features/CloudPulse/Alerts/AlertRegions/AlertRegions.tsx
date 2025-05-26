@@ -7,12 +7,16 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import {
+  type AlertFormMode,
+  REGION_GROUP_WARNING_MESSAGE,
+  type SelectDeselectAll,
+} from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { AlertFormMode, SelectDeselectAll } from '../constants';
 import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
@@ -125,12 +129,11 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
   return (
     <Stack gap={2}>
       {mode === 'view' && <Typography variant="h2">Regions</Typography>}
-      {mode !== 'view' && (
-        <AlertListNoticeMessages
-          errorMessage="All entities associated with selected regions will be included in this alert definition."
-          variant="warning"
-        />
-      )}
+
+      <AlertListNoticeMessages
+        errorMessage={REGION_GROUP_WARNING_MESSAGE}
+        variant={mode === 'view' ? 'info' : 'warning'}
+      />
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
