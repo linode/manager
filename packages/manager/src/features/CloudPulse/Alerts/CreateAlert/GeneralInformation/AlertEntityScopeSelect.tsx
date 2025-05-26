@@ -45,6 +45,10 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
           options={entityGroupingOptions}
           placeholder="Select a scope"
           size="medium"
+          textFieldProps={{
+            labelTooltipText:
+              'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.',
+          }}
           value={
             field.value !== null
               ? entityGroupingOptions.find(({ value }) => value === field.value)
