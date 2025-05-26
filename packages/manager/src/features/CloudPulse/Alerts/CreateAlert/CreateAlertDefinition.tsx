@@ -67,7 +67,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
-  group: 'per-entity',
+  group: 'per-account',
   type: 'user',
 };
 
