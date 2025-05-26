@@ -13,10 +13,7 @@ interface Props {
 
 export const NodeBalancerVPC = ({ nodeBalancerId }: Props) => {
   const { data: vpcConfig, isLoading: isVPCConfigLoading } =
-    useNodeBalancerVPCConfigsBetaQuery(
-      nodeBalancerId,
-      nodeBalancerId !== undefined
-    );
+    useNodeBalancerVPCConfigsBetaQuery(nodeBalancerId, Boolean(nodeBalancerId));
 
   const { data: vpcDetails, isLoading: isVPCDetailsLoading } = useVPCQuery(
     Number(vpcConfig?.data[0]?.vpc_id),
