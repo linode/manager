@@ -82,7 +82,7 @@ export const MaintenanceBanner = React.memo((props: Props) => {
       }
       <Typography lineHeight="20px">
         For more information, please see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link to="/support/tickets/open">open support tickets.</Link>
       </Typography>
     </Notice>
   );
@@ -105,8 +105,8 @@ const generateIntroText = (
         <React.Fragment>
           This Linode&rsquo;s physical host is currently undergoing maintenance.{' '}
           {maintenanceActionTextMap[type]} Please refer to
-          <Link to="/support/tickets"> your Support tickets </Link> for more
-          information.
+          <Link to="/support/tickets/open"> your Support tickets </Link> for
+          more information.
         </React.Fragment>
       );
     }

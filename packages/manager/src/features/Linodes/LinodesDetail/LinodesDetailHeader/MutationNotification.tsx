@@ -12,8 +12,8 @@ import { MBpsIntraDC } from 'src/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { useTypeQuery } from 'src/queries/types';
 
-import { addUsedDiskSpace } from '../LinodeStorage/LinodeDisks';
 import { MutateDrawer } from '../MutateDrawer/MutateDrawer';
+import { addUsedDiskSpace } from '../utilities';
 
 interface Props {
   linodeId: number;

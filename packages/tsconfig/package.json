@@ -1,0 +1,12 @@
+{
+  "name": "@linode/tsconfig",
+  "version": "0.0.0",
+  "description": "Shared TypeScript configuration for Linode projects",
+  "keywords": ["TypeScript", "tsconfig", "tsc", "Linode", "Akamai"],
+  "exports": {
+    "./package":  "./tsconfig.package.json",
+    "./react": "./tsconfig.react.json",
+    "./non-strict": "./tsconfig.non-strict.json",
+    "./emit-types": "./tsconfig.emit-types.json"
+  }
+}
