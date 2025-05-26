@@ -55,6 +55,9 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^5.2.0
         version: 5.2.0(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-react-refresh:
+        specifier: 0.4.20
+        version: 0.4.20(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-sonarjs:
         specifier: ^3.0.2
         version: 3.0.2(eslint@9.23.0(jiti@2.4.2))
@@ -98,6 +101,9 @@ importers:
         specifier: ^1.4.0
         version: 1.5.0
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       axios-mock-adapter:
         specifier: ^1.22.0
         version: 1.22.0(axios@1.8.3)
@@ -592,6 +598,9 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0
@@ -619,6 +628,10 @@ importers:
       vite:
         specifier: ^6.3.4
         version: 6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1)
+    devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
 
   packages/shared:
     dependencies:
@@ -641,6 +654,9 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@storybook/addon-actions':
         specifier: ^8.6.7
         version: 8.6.9(storybook@8.6.9(prettier@3.5.3))
@@ -668,6 +684,8 @@ importers:
       vite-plugin-svgr:
         specifier: ^3.2.0
         version: 3.3.0(rollup@4.40.1)(typescript@5.7.3)(vite@6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
+
+  packages/tsconfig: {}
 
   packages/ui:
     dependencies:
@@ -705,6 +723,9 @@ importers:
         specifier: ^4.8.2
         version: 4.9.13(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@mui/material@7.1.0(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.5(@emotion/react@11.13.5(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@storybook/addon-actions':
         specifier: ^8.6.7
         version: 8.6.9(storybook@8.6.9(prettier@3.5.3))
@@ -757,6 +778,9 @@ importers:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0
@@ -794,6 +818,9 @@ importers:
         specifier: ^1.4.0
         version: 1.5.0
     devDependencies:
+      '@linode/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       concurrently:
         specifier: ^9.0.1
         version: 9.1.0
@@ -3876,6 +3903,11 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
+
+  eslint-plugin-react-refresh@0.4.20:
+    resolution: {integrity: sha512-XpbHQ2q5gUF8BGOX4dHe+71qoirYMhApEPZ7sfhF/dNnOF1UXnCMGZf79SFTBO7Bz5YEIT4TMieSlJBWhP9WBA==}
+    peerDependencies:
+      eslint: '>=8.40'
 
   eslint-plugin-react@7.37.4:
     resolution: {integrity: sha512-BGP0jRmfYyvOyvMoRX/uoUeW+GqNj9y16bPQzqAHf3AYII/tDs+jMN0dBVkl88/OZwNGwrVFxE7riHsXVfy/LQ==}
@@ -10162,6 +10194,10 @@ snapshots:
       eslint-config-prettier: 10.1.1(eslint@9.23.0(jiti@2.4.2))
 
   eslint-plugin-react-hooks@5.2.0(eslint@9.23.0(jiti@2.4.2)):
+    dependencies:
+      eslint: 9.23.0(jiti@2.4.2)
+
+  eslint-plugin-react-refresh@0.4.20(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       eslint: 9.23.0(jiti@2.4.2)
 
