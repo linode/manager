@@ -36,7 +36,6 @@ import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAler
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
-import type { AlertFormMode } from '../constants';
 import type {
   CreateAlertDefinitionForm,
   MetricCriteriaForm,
@@ -119,7 +118,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-  const entityGroupingWatcher = useWatch({ control, name: 'group' });
+  const scopeWatcher = useWatch({ control, name: 'group' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -218,15 +217,13 @@ export const CreateAlertDefinition = () => {
             />
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect name="group" />
-            {entityGroupingWatcher === 'per-entity' && (
+            {scopeWatcher === 'per-entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
-            {entityGroupingWatcher === 'per-region' && (
+            {scopeWatcher === 'per-region' && (
               <CloudPulseModifyAlertRegions name="regions" />
             )}
-            {entityGroupingWatcher === 'per-account' && (
-              <AccountGroupingNotice />
-            )}
+            {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
@@ -258,8 +255,7 @@ export const CreateAlertDefinition = () => {
   );
 };
 
-export const AccountGroupingNotice = (props: { mode?: AlertFormMode }) => {
-  const { mode } = props;
+export const AccountGroupingNotice = () => {
   return (
     <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
       <Typography variant="h2">2. Account</Typography>
@@ -271,7 +267,7 @@ export const AccountGroupingNotice = (props: { mode?: AlertFormMode }) => {
       >
         <AlertListNoticeMessages
           errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
-          variant={mode === 'view' ? 'info' : 'warning'}
+          variant="warning"
         />
       </Box>
     </Box>
