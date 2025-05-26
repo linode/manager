@@ -11,7 +11,7 @@ import { entityGroupingOptions } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertDefinitionGroup } from '@linode/api-v4';
 
-interface AlertEntityGroupingSelectProps {
+interface AlertEntityScopeSelectProps {
   disabled?: boolean;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
@@ -19,9 +19,7 @@ interface AlertEntityGroupingSelectProps {
   >;
 }
 
-export const AlertEntityGroupingSelect = (
-  props: AlertEntityGroupingSelectProps
-) => {
+export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
   const { name, disabled } = props;
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   return (
@@ -34,7 +32,7 @@ export const AlertEntityGroupingSelect = (
           disableClearable
           disabled={disabled}
           errorText={fieldState.error?.message}
-          label="Grouping"
+          label="Scope"
           onBlur={field.onBlur}
           onChange={(_, { value }) => {
             if (value) {
@@ -45,8 +43,12 @@ export const AlertEntityGroupingSelect = (
             setValue('entity_ids', value === 'per-entity' ? [] : undefined);
           }}
           options={entityGroupingOptions}
-          placeholder="Select a grouping"
+          placeholder="Select a scope"
           size="medium"
+          textFieldProps={{
+            labelTooltipText:
+              'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.',
+          }}
           value={
             field.value !== null
               ? entityGroupingOptions.find(({ value }) => value === field.value)

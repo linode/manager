@@ -20,7 +20,7 @@ import {
 import { AccountGroupingNotice } from '../CreateAlert/CreateAlertDefinition';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
-import { AlertEntityGroupingSelect } from '../CreateAlert/GeneralInformation/AlertEntityGroupingSelect';
+import { AlertEntityScopeSelect } from '../CreateAlert/GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
@@ -181,7 +181,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <AlertEntityGroupingSelect disabled name="group" />
+          <AlertEntityScopeSelect disabled name="group" />
           {alertDetails.group === 'per-entity' && (
             <CloudPulseModifyAlertResources name="entity_ids" />
           )}

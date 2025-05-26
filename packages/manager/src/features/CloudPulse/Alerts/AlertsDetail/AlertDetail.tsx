@@ -18,7 +18,10 @@ import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
 import { useAlertDefinitionQuery } from 'src/queries/cloudpulse/alerts';
 
+import { AlertRegions } from '../AlertRegions/AlertRegions';
 import { AlertResources } from '../AlertsResources/AlertsResources';
+import { ACCOUNT_GROUP_WARNING_MESSAGE } from '../constants';
+import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import { getAlertBoxStyles } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 import { AlertDetailNotification } from './AlertDetailNotification';
@@ -107,6 +110,8 @@ export const AlertDetail = () => {
     type,
     status,
     label,
+    regions,
+    group,
   } = alertDetails;
 
   return (
@@ -163,12 +168,40 @@ export const AlertDetail = () => {
               overflow: 'auto',
             }}
           >
-            <AlertResources
-              alertClass={alertClass}
-              alertResourceIds={entityIds}
-              alertType={type}
-              serviceType={alertServiceType}
-            />
+            {(() => {
+              switch (group) {
+                case 'per-account':
+                  return (
+                    <Stack gap={2}>
+                      <Typography variant="h2">Account</Typography>
+                      <AlertListNoticeMessages
+                        errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
+                        title="Account"
+                        variant="info"
+                      />
+                    </Stack>
+                  );
+
+                case 'per-entity':
+                  return (
+                    <AlertResources
+                      alertClass={alertClass}
+                      alertResourceIds={entityIds}
+                      alertType={type}
+                      serviceType={alertServiceType}
+                    />
+                  );
+
+                case 'per-region':
+                  return (
+                    <AlertRegions
+                      mode="view"
+                      serviceType={alertServiceType}
+                      value={regions}
+                    />
+                  );
+              }
+            })()}
           </Box>
           <Box
             data-qa-section="Notification Channels"

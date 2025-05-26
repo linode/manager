@@ -4,21 +4,21 @@ import React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import { AlertEntityGroupingSelect } from './AlertEntityGroupingSelect';
+import { AlertEntityScopeSelect } from './AlertEntityScopeSelect';
 
 describe('AlertEntityGroupingSelect', () => {
   it('should render the component', () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="group" />,
+      component: <AlertEntityScopeSelect name="group" />,
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
-    expect(screen.getByLabelText('Grouping')).toBeInTheDocument();
+    expect(screen.getByLabelText('Scope')).toBeInTheDocument();
   });
 
   it('Select option from drop down', async () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityGroupingSelect name="group" />,
+      component: <AlertEntityScopeSelect name="group" />,
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));

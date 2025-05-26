@@ -13,6 +13,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
+  ACCOUNT_GROUP_WARNING_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
@@ -26,7 +27,7 @@ import {
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
-import { AlertEntityGroupingSelect } from './GeneralInformation/AlertEntityGroupingSelect';
+import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
@@ -215,7 +216,7 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <AlertEntityGroupingSelect name="group" />
+            <AlertEntityScopeSelect name="group" />
             {entityGroupingWatcher === 'per-entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
@@ -259,7 +260,7 @@ export const CreateAlertDefinition = () => {
 export const AccountGroupingNotice = () => {
   return (
     <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
-      <Typography variant="h2">2. Entities</Typography>
+      <Typography variant="h2">2. Account</Typography>
       <Box
         sx={(theme) => ({
           ...getAlertBoxStyles(theme),
@@ -267,7 +268,7 @@ export const AccountGroupingNotice = () => {
         })}
       >
         <AlertListNoticeMessages
-          errorMessage="All entities associated with current account will be included in this alert definition"
+          errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
           variant="warning"
         />
       </Box>

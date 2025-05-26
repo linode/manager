@@ -68,7 +68,7 @@ describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
     renderWithTheme(component, { flags });
     const text = screen.getByText(
-      'All resources associated with selected regions will be included in this alert definition.'
+      'All entities associated with selected regions will be included in this alert definition.'
     );
 
     const regionSearch = screen.getByTestId('region-search');
@@ -93,7 +93,7 @@ describe('Alert Regions', () => {
 
     const notice = screen.getByTestId('selection_notice');
 
-    expect(notice.textContent).toBe('1 of 1 entities are selected.');
+    expect(notice.textContent).toBe('1 of 1 regions are selected.');
   });
 
   it('should show only header on click of show selected only', async () => {

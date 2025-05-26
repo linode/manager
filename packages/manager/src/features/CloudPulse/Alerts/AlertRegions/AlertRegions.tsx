@@ -1,5 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Box, Checkbox, CircleProgress, Stack } from '@linode/ui';
+import { Typography } from '@linode/ui';
 import React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -11,19 +12,35 @@ import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { getFilteredRegions } from '../Utils/utils';
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-import type { SelectDeselectAll } from '../constants';
+import type { AlertFormMode, SelectDeselectAll } from '../constants';
 import type { AlertRegion } from './DisplayAlertRegions';
 import type { AlertServiceType, Filter } from '@linode/api-v4';
 
 interface AlertRegionsProps {
+  /**
+   * Error message to be displayed when there is an error.
+   */
   errorText?: string;
-  handleChange: (regionIds: string[]) => void;
+  /**
+   * Function to handle changes in the selected regions.
+   */
+  handleChange?: (regionIds: string[]) => void;
+  /**
+   * Flag to indicate if the component is in view-only mode.
+   */
+  mode?: AlertFormMode;
+  /**
+   * The service type for which the regions are being selected.
+   */
   serviceType: AlertServiceType | null;
+  /**
+   * The selected regions.
+   */
   value?: string[];
 }
 
 export const AlertRegions = React.memo((props: AlertRegionsProps) => {
-  const { serviceType, handleChange, value = [], errorText } = props;
+  const { serviceType, handleChange, value = [], errorText, mode } = props;
   const { aclpResourceTypeMap } = useFlags();
   const [searchText, setSearchText] = React.useState<string>('');
   const { data: regions, isLoading: isRegionsLoading } = useRegionsQuery();
@@ -49,8 +66,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       if (isChecked) {
         setSelectedRegions((prev) => {
           const newValue = [...prev, regionId];
-
-          handleChange(newValue);
+          if (handleChange) {
+            handleChange(newValue);
+          }
           return newValue;
         });
         return;
@@ -59,7 +77,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       setSelectedRegions((prev) => {
         const newValue = prev.filter((region) => region !== regionId);
 
-        handleChange(newValue);
+        if (handleChange) {
+          handleChange(newValue);
+        }
         return newValue;
       });
     },
@@ -86,7 +106,9 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       }
 
       setSelectedRegions(regionIds);
-      handleChange(regionIds);
+      if (handleChange) {
+        handleChange(regionIds);
+      }
     },
     [filteredRegionsWithStatus, handleChange]
   );
@@ -95,15 +117,20 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
     return <CircleProgress />;
   }
   const filteredRegionsBySearchText = filteredRegionsWithStatus.filter(
-    ({ label }) => label.toLowerCase().includes(searchText.toLowerCase())
+    ({ label, checked }) =>
+      label.toLowerCase().includes(searchText.toLowerCase()) &&
+      ((mode && checked) || !mode)
   );
 
   return (
     <Stack gap={2}>
-      <AlertListNoticeMessages
-        errorMessage="All resources associated with selected regions will be included in this alert definition."
-        variant="warning"
-      />
+      {mode === 'view' && <Typography variant="h2">Regions</Typography>}
+      {mode !== 'view' && (
+        <AlertListNoticeMessages
+          errorMessage="All entities associated with selected regions will be included in this alert definition."
+          variant="warning"
+        />
+      )}
 
       <Box display="flex" gap={2}>
         <DebouncedSearchTextField
@@ -118,30 +145,35 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           }}
           value={searchText}
         />
-        <Checkbox
-          data-testid="show-selected-only"
-          onChange={(_event, checked: boolean) => setShowSelected(checked)}
-          sx={(theme) => ({
-            svg: {
-              backgroundColor: theme.tokens.color.Neutrals.White,
-            },
-          })}
-          sxFormLabel={{
-            marginLeft: -1,
-          }}
-          text="Show Selected Only"
-          value="Show Selected"
-        />
+        {mode !== 'view' && (
+          <Checkbox
+            data-testid="show-selected-only"
+            onChange={(_event, checked: boolean) => setShowSelected(checked)}
+            sx={(theme) => ({
+              svg: {
+                backgroundColor: theme.tokens.color.Neutrals.White,
+              },
+            })}
+            sxFormLabel={{
+              marginLeft: -1,
+            }}
+            text="Show Selected Only"
+            value="Show Selected"
+          />
+        )}
       </Box>
       {errorText && (
         <AlertListNoticeMessages errorMessage={errorText} variant="error" />
       )}
 
-      <AlertSelectedInfoNotice
-        handleSelectionChange={handleSelectAll}
-        selectedCount={selectedRegions.length}
-        totalCount={filteredRegionsWithStatus.length}
-      />
+      {mode !== 'view' && (
+        <AlertSelectedInfoNotice
+          handleSelectionChange={handleSelectAll}
+          property="regions"
+          selectedCount={selectedRegions.length}
+          totalCount={filteredRegionsWithStatus.length}
+        />
+      )}
       <DisplayAlertRegions
         handleSelectAll={handleSelectAll}
         handleSelectionChange={handleSelectionChange}
@@ -153,6 +185,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
           selectedRegions.length > 0 &&
           selectedRegions.length !== filteredRegionsWithStatus.length
         }
+        mode={mode}
         regions={filteredRegionsBySearchText}
         showSelected={showSelected}
       />

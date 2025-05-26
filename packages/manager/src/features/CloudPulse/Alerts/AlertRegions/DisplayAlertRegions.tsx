@@ -10,22 +10,56 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 
-import type { SelectDeselectAll } from '../constants';
+import type { AlertFormMode, SelectDeselectAll } from '../constants';
 
 export interface AlertRegion {
+  /**
+   * Indicates if the region is selected.
+   * This is used to determine if the region should be checked in the UI.
+   */
   checked: boolean;
+  /**
+   * The number of associated entities in the region.
+   */
   count: number;
+  /**
+   * Id of the region
+   */
   id: string;
+  /**
+   * Label of the region.
+   */
   label: string;
 }
 
 interface DisplayAlertRegionProps {
+  /**
+   * Function to handle the selection of all regions.
+   */
   handleSelectAll: (action: SelectDeselectAll) => void;
+  /**
+   * Function to handle the change in selection of a region.
+   */
   handleSelectionChange: (regionId: string, isChecked: boolean) => void;
+  /**
+   * Indicates if all regions are selected.
+   */
   isAllSelected?: boolean;
-
+  /**
+   * Indicates if some regions are selected.
+   */
   isSomeSelected?: boolean;
+  /**
+   * Flag to indicate the mode of the form
+   */
+  mode?: AlertFormMode;
+  /**
+   * List of regions to be displayed.
+   */
   regions?: AlertRegion[];
+  /**
+   * To indicate whether to show only selected regions or not.
+   */
   showSelected?: boolean;
 }
 
@@ -38,6 +72,7 @@ export const DisplayAlertRegions = React.memo(
       isAllSelected,
       showSelected,
       handleSelectAll,
+      mode,
     } = props;
 
     return (
@@ -59,20 +94,22 @@ export const DisplayAlertRegions = React.memo(
             >
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <Box>
-                      <Checkbox
-                        checked={!isSomeSelected && isAllSelected}
-                        data-testid="select-all-checkbox"
-                        indeterminate={isSomeSelected && !isAllSelected}
-                        onChange={(_, checked) =>
-                          handleSelectAll(
-                            checked ? 'Select All' : 'Deselect All'
-                          )
-                        }
-                      />
-                    </Box>
-                  </TableCell>
+                  {mode !== 'view' && (
+                    <TableCell>
+                      <Box>
+                        <Checkbox
+                          checked={!isSomeSelected && isAllSelected}
+                          data-testid="select-all-checkbox"
+                          indeterminate={isSomeSelected && !isAllSelected}
+                          onChange={(_, checked) =>
+                            handleSelectAll(
+                              checked ? 'Select All' : 'Deselect All'
+                            )
+                          }
+                        />
+                      </Box>
+                    </TableCell>
+                  )}
                   <TableSortCell
                     active={true}
                     data-qa-header="Region"
@@ -105,16 +142,20 @@ export const DisplayAlertRegions = React.memo(
                     .map(({ label, id, checked, count }) => {
                       return (
                         <TableRow data-testid={`region-row-${id}`} key={id}>
-                          <TableCell>
-                            <Checkbox
-                              checked={checked}
-                              onChange={(_, status) =>
-                                handleSelectionChange(id, status)
-                              }
-                            />
-                          </TableCell>
+                          {mode !== 'view' && (
+                            <TableCell>
+                              <Checkbox
+                                checked={checked}
+                                onChange={(_, status) =>
+                                  handleSelectionChange(id, status)
+                                }
+                              />
+                            </TableCell>
+                          )}
 
-                          <TableCell>{label}</TableCell>
+                          <TableCell>
+                            {label} ({id})
+                          </TableCell>
                           <TableCell>{count}</TableCell>
                         </TableRow>
                       );
