@@ -12,7 +12,6 @@ import type { CreateAlertDefinitionForm } from '../types';
 import type { AlertDefinitionGroup } from '@linode/api-v4';
 
 interface AlertEntityScopeSelectProps {
-  disabled?: boolean;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
     AlertDefinitionGroup | null
@@ -20,7 +19,7 @@ interface AlertEntityScopeSelectProps {
 }
 
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
-  const { name, disabled } = props;
+  const { name } = props;
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
   return (
     <Controller
@@ -30,7 +29,6 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
         <Autocomplete
           data-testid="entity-grouping"
           disableClearable
-          disabled={disabled}
           errorText={fieldState.error?.message}
           label="Scope"
           onBlur={field.onBlur}

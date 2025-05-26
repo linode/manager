@@ -181,7 +181,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <AlertEntityScopeSelect disabled name="group" />
+          <AlertEntityScopeSelect name="group" />
           {alertDetails.group === 'per-entity' && (
             <CloudPulseModifyAlertResources name="entity_ids" />
           )}
