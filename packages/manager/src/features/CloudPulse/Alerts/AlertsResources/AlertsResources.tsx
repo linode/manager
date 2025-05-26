@@ -456,6 +456,7 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               <AlertSelectedInfoNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
+                property="entities"
                 selectedCount={selectedResources.length}
                 totalCount={resources?.length ?? 0}
               />

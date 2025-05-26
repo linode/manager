@@ -20,7 +20,7 @@ interface AlertSelectedInforNoticeProps {
   /**
    * The property that is selected. Ex: regions, entities etc
    */
-  property?: string;
+  property: string;
 
   /**
    * The number of currently selected elements.
@@ -40,7 +40,7 @@ export const AlertSelectedInfoNotice = React.memo(
       maxSelectionCount,
       selectedCount,
       totalCount,
-      property = 'entities',
+      property,
     } = props;
     const isSelectAll =
       maxSelectionCount !== undefined
