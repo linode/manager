@@ -70,7 +70,7 @@ describe('VPC Subnets table', () => {
     }
 
     getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet Label');
+    getByText('Subnet');
     getByText(subnet.label);
     getByText('Subnet ID');
     getAllByText(subnet.id);
@@ -209,7 +209,7 @@ describe('VPC Subnets table', () => {
     const expandTableButton = getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
 
-    getByText('Linode Label');
+    getByText('Linode');
     getByText('Status');
     getByText('VPC IPv4');
     getByText('Firewalls');
