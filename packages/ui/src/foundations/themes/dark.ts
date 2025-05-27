@@ -248,15 +248,22 @@ export const darkTheme: ThemeOptions = {
         groupLabel: {
           marginTop: '0px !important',
           backgroundColor: Dropdown.Background.Category,
-          padding: '8px 12px !important',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
         },
         paper: {
           boxShadow: Alias.Elevation.S,
-          marginTop: 4,
+          marginTop: Spacing.S4,
+          paddingTop: Spacing.S4,
+          paddingBottom: Spacing.S4,
+          // Override padding when noOptions is present
+          '&:has(.MuiAutocomplete-noOptions)': {
+            paddingTop: Spacing.S0,
+            paddingBottom: Spacing.S0,
+          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
-          paddingTop: '4px',
+          paddingTop: Spacing.S4,
           border: 'none',
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -266,12 +273,12 @@ export const darkTheme: ThemeOptions = {
         },
         loading: {
           color: Select.Default.Icon,
-          border: '0px !important',
+          border: `${Spacing.S4} !important`,
           boxShadow: Alias.Elevation.S,
         },
         inputRoot: {
+          paddingLeft: Spacing.S12,
           '& input::placeholder': {
-            padding: `0 ${Spacing.S8}`,
             color: Select.Default.Text,
             opacity: 1,
           },
@@ -280,6 +287,9 @@ export const darkTheme: ThemeOptions = {
           color: Select.Default.Icon,
           border: '0px !important',
           boxShadow: Alias.Elevation.S,
+          height: Spacing.S32,
+          display: 'flex',
+          alignItems: 'center',
         },
         option: {
           '&.Mui-focused': {
@@ -290,8 +300,8 @@ export const darkTheme: ThemeOptions = {
             color: Dropdown.Text.Default,
           },
           '& .fi': {
-            width: '28px',
-            height: '20px',
+            width: Spacing.S28,
+            height: Spacing.S20,
             borderRadius: '3px',
             backgroundSize: 'cover',
             boxShadow: 'none',
@@ -312,10 +322,10 @@ export const darkTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: '32px',
+                height: Spacing.S32,
                 svg: {
-                  height: '20px',
-                  width: '20px',
+                  height: Spacing.S20,
+                  width: Spacing.S20,
                 },
               },
             },
@@ -332,10 +342,10 @@ export const darkTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: '32px',
+                height: Spacing.S32,
                 svg: {
-                  height: '20px',
-                  width: '20px',
+                  height: Spacing.S20,
+                  width: Spacing.S20,
                 },
               },
             },
