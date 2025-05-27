@@ -156,6 +156,13 @@ describe('getLinodeIdFromInterfaceDevice', () => {
       label: null,
       type: 'interface' as FirewallDeviceEntityType,
       url: '/v4/linode/instances/123/interfaces/123',
+      parentEntity: {
+        id: 123,
+        label: 'linode',
+        type: 'linode' as FirewallDeviceEntityType,
+        url: '/v4/linode/instances/123',
+        parentEntity: null,
+      },
     };
 
     expect(getLinodeIdFromInterfaceDevice(entity)).toEqual(123);

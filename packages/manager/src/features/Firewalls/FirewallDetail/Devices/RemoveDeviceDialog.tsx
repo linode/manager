@@ -85,6 +85,9 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       });
     }
 
+    if (deviceType === 'interface') {
+    }
+
     onClose();
   };
 
