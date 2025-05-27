@@ -8,24 +8,13 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
+  renderWithTheme,
   renderWithThemeAndRouter,
+  wrapWithRouter,
 } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
-
-const queryMocks = vi.hoisted(() => ({
-  useParams: vi.fn().mockReturnValue({ action: undefined, imageId: undefined }),
-  useSearch: vi.fn().mockReturnValue({ query: undefined }),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useParams: queryMocks.useParams,
-    useSearch: queryMocks.useSearch,
-  };
-});
+import { migrationRouteTree } from 'src/routes';
 
 const mockHistory = {
   push: vi.fn(),
@@ -58,8 +47,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
-      <ImagesLanding />
+    const { getAllByText, queryByTestId } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images'})
     );
 
     const loadingElement = queryByTestId(loadingTestId);
@@ -94,8 +83,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <ImagesLanding />
+    const { getByText, queryByTestId } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
     const loadingElement = queryByTestId(loadingTestId);
@@ -119,8 +108,8 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <ImagesLanding />
+    const { getByText, queryByTestId } =  renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -137,18 +126,13 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <ImagesLanding />
+    const { findByText } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
+    const emptyStateMessage = await findByText('Store custom Linux images', { exact: false });
 
-    expect(
-      getByText((text) => text.includes('Store custom Linux images'))
-    ).toBeInTheDocument();
+    expect(emptyStateMessage).toBeVisible();
   });
 
   it('should allow opening the Edit Image drawer', async () => {
@@ -158,40 +142,29 @@ describe('Images Landing Table', () => {
         { region: 'us-southeast', status: 'pending' },
       ],
     });
+
     server.use(
-      http.get('*/images', () => {
+      http.get('*/images', ({ request }) => {
+        if (request.headers.get('x-filter')?.includes('automatic')) {
+          return HttpResponse.json(makeResourcePage([]));
+        } 
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
     const {
-      getAllByLabelText,
-      getByTestId,
+      findByLabelText,
+      findByText,
       getByText,
-      queryByTestId,
-      rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
-
-    const actionMenu = getAllByLabelText(
+    const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
-    )[0];
+    );
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Edit'));
 
-    queryMocks.useParams.mockReturnValue({ action: 'edit' });
-
-    rerender(<ImagesLanding />);
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    getByText('Edit Image');
+    await findByText('Edit Image');
   });
 
   it('should allow opening the Restore Image drawer', async () => {
@@ -202,40 +175,27 @@ describe('Images Landing Table', () => {
       ],
     });
     server.use(
-      http.get('*/images', () => {
+      http.get('*/images', ({ request }) => {
+        if (request.headers.get('x-filter')?.includes('automatic')) {
+          return HttpResponse.json(makeResourcePage([]));
+        } 
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
     const {
-      getAllByLabelText,
-      getByTestId,
       getByText,
-      queryByTestId,
-      rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+      findByLabelText
+    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
-
-    const actionMenu = getAllByLabelText(
+    const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
-    )[0];
+    );
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Rebuild an Existing Linode'));
 
-    queryMocks.useParams.mockReturnValue({ action: 'rebuild' });
-
-    rerender(<ImagesLanding />);
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
     await waitFor(() => {
-      getByText('Rebuild an Existing Linode from an Image');
+      expect(getByText('Rebuild an Existing Linode from an Image')).toBeVisible();
     });
   });
 
@@ -253,7 +213,7 @@ describe('Images Landing Table', () => {
     );
 
     const { getAllByLabelText, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+       renderWithTheme(wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' }));
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -280,37 +240,24 @@ describe('Images Landing Table', () => {
       ],
     });
     server.use(
-      http.get('*/images', () => {
+      http.get('*/images', ({ request }) => {
+        if (request.headers.get('x-filter')?.includes('automatic')) {
+          return HttpResponse.json(makeResourcePage([]));
+        } 
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
     const {
-      getAllByLabelText,
-      getByTestId,
       getByText,
-      queryByTestId,
-      rerender,
-    } = await renderWithThemeAndRouter(<ImagesLanding />);
+      findByLabelText,
+    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
-
-    const actionMenu = getAllByLabelText(
+    const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
-    )[0];
+    );
     await userEvent.click(actionMenu);
     await userEvent.click(getByText('Delete'));
-
-    queryMocks.useParams.mockReturnValue({ action: 'delete' });
-
-    rerender(<ImagesLanding />);
-
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     await waitFor(() => {
       getByText('Are you sure you want to delete this Image?');
@@ -318,12 +265,8 @@ describe('Images Landing Table', () => {
   });
 
   it('disables the create button if the user does not have permission to create images', async () => {
-    const images = imageFactory.buildList(3, {
-      regions: [
-        { region: 'us-east', status: 'available' },
-        { region: 'us-southeast', status: 'pending' },
-      ],
-    });
+    const images = imageFactory.buildList(3);
+
     server.use(
       http.get('*/v4/profile', () => {
         const profile = profileFactory.build({ restricted: true });
@@ -338,16 +281,11 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
-      <ImagesLanding />
+    const { findByText } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
-
-    const createImageButton = getByText('Create Image').closest('button');
+    const createImageButton = (await findByText('Create Image')).closest('button');
 
     expect(createImageButton).toBeDisabled();
     expect(createImageButton).toHaveAttribute(
@@ -386,22 +324,20 @@ describe('Images Landing Table', () => {
         });
         return HttpResponse.json(grants);
       }),
-      http.get('*/v4/images', () => {
+      http.get('*/v4/images', ({ request }) => {
+        if (request.headers.get('x-filter')?.includes('automatic')) {
+          return HttpResponse.json(makeResourcePage([]));
+        }
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
-    const { findAllByLabelText, getAllByLabelText, queryByTestId } =
-      await renderWithThemeAndRouter(<ImagesLanding />);
+    const { findAllByLabelText, findByLabelText } =
+      renderWithTheme(wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' }));
 
-    const loadingElement = queryByTestId(loadingTestId);
-    if (loadingElement) {
-      await waitForElementToBeRemoved(loadingElement);
-    }
-
-    const actionMenu = getAllByLabelText(
+    const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
-    )[0];
+    );
 
     await userEvent.click(actionMenu);
 
