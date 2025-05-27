@@ -13,7 +13,7 @@ import mediaQuery from 'css-mediaquery';
 import { Formik } from 'formik';
 import { LDProvider } from 'launchdarkly-react-client-sdk';
 import { SnackbarProvider } from 'notistack';
-import * as React from 'react';
+import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
@@ -24,7 +24,6 @@ import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { setupInterceptors } from 'src/request';
-import { migrationRouteTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import { mergeDeepRight } from './mergeDeepRight';
@@ -217,8 +216,7 @@ export const renderWithThemeAndRouter = async (
       history: createMemoryHistory({
         initialEntries: [initialRoute || '/'],
       }),
-      routeTree:
-        passedTree ?? rootRoute.addChildren([indexRoute]) ?? migrationRouteTree,
+      routeTree: passedTree ?? rootRoute.addChildren([indexRoute]),
     });
 
   const utils: RenderResult = render(

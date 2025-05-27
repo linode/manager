@@ -105,7 +105,7 @@ export const NodeBalancerSettings = () => {
         </Button>
       </Accordion>
       <Accordion defaultExpanded heading="Firewalls">
-        <NodeBalancerFirewalls nodeBalancerId={Number(id)} />
+        <NodeBalancerFirewalls nodeBalancerId={id} />
       </Accordion>
       <Accordion defaultExpanded heading="Client Connection Throttle">
         <TextField
