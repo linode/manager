@@ -1,3 +1,4 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle id="radio-outer" cx="10" cy="10" r="9.5" fill="#fffff" stroke="currentColor"/>
+<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="10" cy="10" r="9" fill="transparent"/>
+  <circle cx="10" cy="10" r="8" fill="inherit" stroke="currentColor" strokeWidth="0.1"/>
 </svg>

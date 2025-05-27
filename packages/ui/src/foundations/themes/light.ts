@@ -1191,51 +1191,33 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '&:active': {
-            color: theme.tokens.component.RadioButton.Active.Active.Border,
-          },
-          '&.Mui-checked': {
-            color: theme.tokens.component.RadioButton.Active.Default.Border,
-            '&:active': {
-              color: theme.tokens.component.RadioButton.Active.Active.Border,
-            },
-          },
-          '& .defaultFill': {
-            fill: theme.color.white,
-            transition: theme.transitions.create(['fill']),
-          },
           '& svg circle': {
-            fill: Color.Neutrals.White,
+            fill: theme.tokens.component.RadioButton.Inactive.Default
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Default.Border,
           },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              fill: Color.Neutrals[5],
-            },
-            '&:not(.Mui-checked) svg circle': {
-              fill: Color.Neutrals[20],
-            },
-            '&:not(.Mui-checked)': {
-              color:
-                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
-            },
-            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
-            pointerEvents: 'none',
+          '&.Mui-checked svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Default.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Default.Border,
           },
-          '&.MuiRadio-sizeSmall': {
-            '.MuiSvgIcon-fontSizeSmall': {
-              fontSize: '16px',
-            },
+          '&.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Disabled
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Disabled.Border,
           },
-          '&:hover': {
-            '& .defaultFill': {
-              fill: theme.color.white,
-            },
-            color: theme.tokens.component.RadioButton.Active.Hover.Border,
+          '&.Mui-checked.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Disabled.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Disabled.Border,
+          },
+          '&:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Hover.Border,
+          },
+          '&.Mui-checked:hover:not(.Mui-disabled) svg circle': {
             fill: theme.tokens.component.RadioButton.Active.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Hover.Border,
           },
-          color: theme.tokens.alias.Action.Neutral,
           padding: '10px 10px',
-          transition: theme.transitions.create(['color']),
         }),
       },
     },

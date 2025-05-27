@@ -773,25 +773,6 @@ export const darkTheme: ThemeOptions = {
           },
           color: primaryColors.main,
         },
-        root: ({ theme }) => ({
-          '& .defaultFill': {
-            '& circle': {
-              color: Color.Neutrals[40],
-            },
-            color: Color.Neutrals[80],
-            fill: Color.Neutrals[80],
-          },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              color: Color.Neutrals[40],
-              opacity: 0.15,
-            },
-          },
-          '&:hover': {
-            color: theme.palette.primary.main,
-          },
-          padding: '10px 10px',
-        }),
       },
     },
     MuiSelect: {
