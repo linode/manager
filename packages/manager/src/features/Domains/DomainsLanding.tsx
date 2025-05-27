@@ -1,4 +1,11 @@
-import { useLinodesQuery, useProfile } from '@linode/queries';
+import {
+  useDeleteDomainMutation,
+  useDomainQuery,
+  useDomainsQuery,
+  useLinodesQuery,
+  useProfile,
+  useUpdateDomainMutation,
+} from '@linode/queries';
 import {
   Button,
   CircleProgress,
@@ -29,12 +36,6 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import {
-  useDeleteDomainMutation,
-  useDomainQuery,
-  useDomainsQuery,
-  useUpdateDomainMutation,
-} from 'src/queries/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { CloneDomainDrawer } from './CloneDomainDrawer';

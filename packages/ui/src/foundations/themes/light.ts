@@ -877,16 +877,16 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&$disabled': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
             opacity: 0.5,
           },
           '&$error': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
           },
           '&.Mui-focused': {
-            color: Color.Neutrals[70],
+            color: Component.Label.Text,
           },
-          color: Color.Neutrals[70],
+          color: Component.Label.Text,
           font: Typography.Body.Bold,
           marginBottom: 8,
         },
@@ -958,6 +958,7 @@ export const lightTheme: ThemeOptions = {
             color: TextField.Placeholder.Text,
             font: Typography.Label.Regular.Placeholder,
             fontStyle: 'italic',
+            opacity: 1,
           },
           '&:disabled, &.Mui-disabled': {
             cursor: 'not-allowed',

@@ -1,15 +1,7 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "skipLibCheck": true,
-    "noEmit": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true
-  },
+  "extends": [
+    "@linode/tsconfig/package",
+    "@linode/tsconfig/react"
+  ],
   "include": ["src"]
 }

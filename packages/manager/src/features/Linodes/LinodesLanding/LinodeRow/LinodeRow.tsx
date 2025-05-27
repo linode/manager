@@ -72,7 +72,7 @@ export const LinodeRow = (props: Props) => {
       <>
         This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link to="/support/tickets/open">open support tickets.</Link>
       </>
     );
   };
