@@ -6,7 +6,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 
 import { alertFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { EditAlertResources } from './EditAlertResources';
 
@@ -33,11 +33,14 @@ const saveResources = 'save-resources';
 const editConfirmation = 'edit-confirmation';
 const cancelEdit = 'cancel-save-resources';
 
+const navigate = vi.fn();
+
 // Mock Queries
 const queryMocks = vi.hoisted(() => ({
   useEditAlertDefinition: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
+  useNavigate: vi.fn(() => navigate),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -49,10 +52,19 @@ vi.mock('src/queries/cloudpulse/resources', () => ({
   ...vi.importActual('src/queries/cloudpulse/resources'),
   useResourcesQuery: queryMocks.useResourcesQuery,
 }));
+
 vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 beforeAll(() => {
   // Mock window.scrollTo to prevent the "Not implemented" error
@@ -79,10 +91,11 @@ beforeEach(() => {
 });
 
 describe('EditAlertResources component tests', () => {
-  it('Edit alert resources happy path', () => {
-    const { getByPlaceholderText, getByTestId } = renderWithTheme(
-      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
-    );
+  it('Edit alert resources happy path', async () => {
+    const { getByPlaceholderText, getByTestId } =
+      await renderWithThemeAndRouter(
+        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
+      );
 
     expect(
       getByPlaceholderText('Search for a Region or Entity')
@@ -94,16 +107,17 @@ describe('EditAlertResources component tests', () => {
   it('Edit alert resources successful edit', async () => {
     const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
 
-    const push = vi.fn();
-    const history = createMemoryHistory(); // Create a memory history for testing
-    history.push = push;
-    history.push('/alerts/definitions/edit/linode/1');
-
-    const { getByTestId, getByText } = renderWithTheme(
-      <Router history={history}>
-        <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
-      </Router>
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
     );
+
+    navigate({
+      to: '/alerts/definitions/edit/$serviceType/$alertId',
+      params: {
+        serviceType: 'linode',
+        alertId: '1',
+      },
+    });
 
     expect(getByTestId(saveResources)).toBeInTheDocument();
 
@@ -121,7 +135,9 @@ describe('EditAlertResources component tests', () => {
 
     expect(mutateAsyncSpy).toHaveBeenCalledTimes(1); // check if edit is called
 
-    expect(push).toHaveBeenLastCalledWith('/alerts/definitions'); // after confirmation history updates to list page
+    expect(navigate).toHaveBeenLastCalledWith({
+      to: '/alerts/definitions',
+    }); // after confirmation history updates to list page
 
     await waitFor(() => {
       expect(
@@ -132,10 +148,9 @@ describe('EditAlertResources component tests', () => {
     // click on cancel
     await userEvent.click(getByTestId(cancelEdit));
 
-    expect(push).toHaveBeenLastCalledWith(
-      // after cancel click history updates to list page
-      '/alerts/definitions'
-    );
+    expect(navigate).toHaveBeenLastCalledWith({
+      to: '/alerts/definitions',
+    }); // after cancel click history updates to list page
   });
 
   it('Edit alert entities error case', async () => {
@@ -151,7 +166,7 @@ describe('EditAlertResources component tests', () => {
     history.push = push;
     history.push('/alerts/definitions/edit/linode/1');
 
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <Router history={history}>
         <EditAlertResources alertDetails={alertDetails} serviceType="linode" />
       </Router>
