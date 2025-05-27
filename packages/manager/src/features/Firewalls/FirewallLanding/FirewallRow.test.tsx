@@ -110,8 +110,6 @@ describe('FirewallRow', () => {
       const device = firewallDeviceFactory.build();
       const links = getDeviceLinks({
         entities: [device.entity],
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { getByText } = renderWithTheme(links);
       expect(getByText(device.entity.label ?? ''));
@@ -121,8 +119,6 @@ describe('FirewallRow', () => {
       const devices = firewallDeviceFactory.buildList(3);
       const links = getDeviceLinks({
         entities: devices.map((device) => device.entity),
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
@@ -132,8 +128,6 @@ describe('FirewallRow', () => {
       const devices = firewallDeviceFactory.buildList(13);
       const links = getDeviceLinks({
         entities: devices.map((device) => device.entity),
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { getByText, queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);

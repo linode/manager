@@ -1,11 +1,9 @@
-import { useAllLinodesQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
-import { Skeleton } from 'src/components/Skeleton';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
@@ -13,16 +11,10 @@ import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallC
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { DefaultFirewallChip } from '../components/DefaultFirewallChip';
-import { getLinodeIdFromInterfaceDevice } from '../shared';
 import { FirewallActionMenu } from './FirewallActionMenu';
 
 import type { ActionHandlers } from './FirewallActionMenu';
-import type {
-  Filter,
-  Firewall,
-  FirewallDeviceEntity,
-  Linode,
-} from '@linode/api-v4';
+import type { Firewall, FirewallDeviceEntity } from '@linode/api-v4';
 
 export interface FirewallRowProps extends Firewall, ActionHandlers {}
 
@@ -33,25 +25,6 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
 
   const { defaultNumEntities, isDefault, tooltipText } =
     useDefaultFirewallChipInformation(id);
-
-  const neededLinodeIdsForInterfaceDevices = entities
-    .slice(0, 3) // only take the first three entities since we only show those entity links
-    .filter((entity) => entity.type === 'interface')
-    .map((entity) => {
-      return { id: getLinodeIdFromInterfaceDevice(entity) };
-    });
-
-  const filterForInterfaceDeviceLinodes: Filter = {
-    ['+or']: neededLinodeIdsForInterfaceDevices,
-  };
-
-  // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
-  // so that we can add a label to the devices for sorting and display purposes
-  const { data: linodesWithInterfaceDevices, isLoading } = useAllLinodesQuery(
-    {},
-    filterForInterfaceDeviceLinodes,
-    isLinodeInterfacesEnabled && neededLinodeIdsForInterfaceDevices.length > 0
-  );
 
   const count = getCountOfRules(rules);
 
@@ -87,8 +60,6 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
           {getDevicesCellString({
             entities,
             isLinodeInterfacesEnabled,
-            isLoading,
-            linodesWithInterfaceDevices,
           })}
         </TableCell>
       </Hidden>
@@ -139,16 +110,9 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
 interface DeviceLinkInputs {
   entities: FirewallDeviceEntity[];
   isLinodeInterfacesEnabled: boolean;
-  isLoading: boolean;
-  linodesWithInterfaceDevices: Linode[] | undefined;
 }
 const getDevicesCellString = (inputs: DeviceLinkInputs) => {
-  const {
-    entities,
-    isLinodeInterfacesEnabled,
-    isLoading,
-    linodesWithInterfaceDevices,
-  } = inputs;
+  const { entities, isLinodeInterfacesEnabled } = inputs;
   const filteredEntities = isLinodeInterfacesEnabled
     ? entities
     : entities.filter((entity) => entity.type !== 'interface');
@@ -159,39 +123,26 @@ const getDevicesCellString = (inputs: DeviceLinkInputs) => {
 
   return getDeviceLinks({
     entities: filteredEntities,
-    isLoading,
-    linodesWithInterfaceDevices,
   });
 };
 
 export const getDeviceLinks = (
   inputs: Omit<DeviceLinkInputs, 'isLinodeInterfacesEnabled'>
 ) => {
-  const { entities, isLoading, linodesWithInterfaceDevices } = inputs;
+  const { entities } = inputs;
   const firstThree = entities.slice(0, 3);
-
-  if (isLoading) {
-    return <Skeleton />;
-  }
 
   return (
     <>
       {firstThree.map((entity, idx) => {
-        // TODO @Linode Interfaces - switch to parent entity when endpoints are updated
-        const isInterfaceDevice = entity.type === 'interface';
-        let entityLabel = entity.label;
-        let entityLink = `/${entity.type}s/${entity.id}/${
-          entity.type === 'linode' ? 'networking' : 'summary'
-        }`;
-
-        if (isInterfaceDevice) {
-          const parentEntityId = getLinodeIdFromInterfaceDevice(entity);
-          entityLabel =
-            linodesWithInterfaceDevices?.find(
-              (linode) => linode.id === parentEntityId
-            )?.label ?? entity.label;
-          entityLink = `/linodes/${parentEntityId}/networking/interfaces/${entity.id}`;
-        }
+        const { parent_entity, type, label, id } = entity;
+        const isInterfaceDevice = type === 'interface';
+        const entityLabel =
+          isInterfaceDevice && parent_entity ? parent_entity.label : label;
+        const entityLink =
+          isInterfaceDevice && parent_entity
+            ? `/linodes/${parent_entity.id}/networking/interfaces/${id}`
+            : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
 
         return (
           <React.Fragment key={entity.url}>
