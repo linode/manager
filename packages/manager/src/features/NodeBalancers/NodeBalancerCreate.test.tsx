@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import NodeBalancerCreate from './NodeBalancerCreate';
+import { NodeBalancerCreate } from './NodeBalancerCreate';
 
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
