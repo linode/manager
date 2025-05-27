@@ -5,7 +5,7 @@ import { Factory } from './factoryProxy';
 import type {
   LinodeInterface,
   LinodeInterfaceSettings,
-  UpgradeInterfaceData
+  UpgradeInterfaceData,
 } from '@linode/api-v4';
 
 export const linodeInterfaceSettingsFactory =
@@ -19,12 +19,12 @@ export const linodeInterfaceSettingsFactory =
     },
   });
 
-export const upgradeLinodeInterfaceFactory = 
- Factory.Sync.makeFactory<UpgradeInterfaceData>({
+export const upgradeLinodeInterfaceFactory =
+  Factory.Sync.makeFactory<UpgradeInterfaceData>({
     config_id: Factory.each((i) => i),
     dry_run: true,
     interfaces: [],
-});
+  });
 
 export const linodeInterfaceFactoryVlan =
   Factory.Sync.makeFactory<LinodeInterface>({
