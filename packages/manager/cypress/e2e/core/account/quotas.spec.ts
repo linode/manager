@@ -82,13 +82,11 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     cy.url().should('endWith', '/quotas');
   });
 
-  // TODO: need to use multiple regions?
   it('Endpoint workflow follows proper sequence', () => {
     const mockSelectedEndpoint = mockEndpoints[1];
     const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
     const mockQuotas = [
       quotaFactory.build({
-        // @ts-expect-error type in packages/api-v4/src/quotas/types.ts is number but usage in QuotasTable.tsx is string
         quota_id: `obj-bytes-${selectedDomain}`,
         description: randomLabel(50),
         endpoint_type: mockSelectedEndpoint.endpoint_type,
@@ -98,7 +96,6 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
         s3_endpoint: selectedDomain,
       }),
       quotaFactory.build({
-        // @ts-expect-error type in packages/api-v4/src/quotas/types.ts is number but usage in QuotasTable.tsx is string
         quota_id: `obj-buckets-${selectedDomain}`,
         description: randomLabel(50),
         endpoint_type: mockSelectedEndpoint.endpoint_type,
@@ -108,7 +105,6 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
         s3_endpoint: selectedDomain,
       }),
       quotaFactory.build({
-        // @ts-expect-error type in packages/api-v4/src/quotas/types.ts is number but usage in QuotasTable.tsx is string
         quota_id: `obj-objects-${selectedDomain}`,
         description: randomLabel(50),
         endpoint_type: mockSelectedEndpoint.endpoint_type,
@@ -246,7 +242,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
   });
 });
 
-xdescribe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
+describe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       limitsEvolution: {
