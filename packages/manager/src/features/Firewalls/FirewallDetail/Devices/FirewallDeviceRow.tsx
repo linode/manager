@@ -5,6 +5,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
+import { getDeviceLinkAndLabel } from '../../FirewallLanding/FirewallRow';
 import { FirewallDeviceActionMenu } from './FirewallDeviceActionMenu';
 
 import type { FirewallDeviceActionMenuProps } from './FirewallDeviceActionMenu';
@@ -15,22 +16,19 @@ interface FirewallDeviceRowProps extends FirewallDeviceActionMenuProps {
 
 export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   const { device, isLinodeRelatedDevice } = props;
-  const { id, label, type, parent_entity } = device.entity;
+  const { id, type } = device.entity;
 
   const isInterfaceDevice = type === 'interface';
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 
-  const link =
-    isInterfaceDevice && parent_entity
-      ? `/linodes/${parent_entity.id}/networking/interfaces/${id}`
-      : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
+  const { entityLabel, entityLink } = getDeviceLinkAndLabel(device.entity);
 
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
-        <Link tabIndex={0} to={link}>
-          {isInterfaceDevice && parent_entity ? parent_entity.label : label}
+        <Link tabIndex={0} to={entityLink}>
+          {entityLabel}
         </Link>
       </TableCell>
       {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (

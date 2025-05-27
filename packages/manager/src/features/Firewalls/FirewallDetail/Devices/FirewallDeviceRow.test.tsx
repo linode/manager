@@ -58,6 +58,33 @@ describe('FirewallDeviceRow', () => {
     expect(getByText('Remove')).toBeVisible();
   });
 
+  it('shows the Linode label for an interface device', () => {
+    const device = firewallDeviceFactory.build({
+      entity: {
+        id: 10,
+        label: null,
+        type: 'interface' as FirewallDeviceEntityType,
+        url: '/linodes/11/interfaces/10',
+        parent_entity: {
+          id: 11,
+          label: 'test-linode-label',
+          type: 'linode' as FirewallDeviceEntityType,
+          url: '/linodes/11',
+          parent_entity: null,
+        },
+      },
+    });
+
+    const { getByText } = renderWithTheme(
+      <FirewallDeviceRow {...props} device={device} />,
+      {
+        flags: { linodeInterfaces: { enabled: false } },
+      }
+    );
+
+    expect(getByText('test-linode-label')).toBeVisible();
+  });
+
   it('does not show the network interface type for nodebalancer devices', () => {
     const nodeBalancerEntity = firewallDeviceFactory.build({
       entity: {

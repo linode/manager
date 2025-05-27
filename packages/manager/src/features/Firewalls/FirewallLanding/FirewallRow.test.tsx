@@ -21,6 +21,8 @@ import {
   getRuleString,
 } from './FirewallRow';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
@@ -113,6 +115,30 @@ describe('FirewallRow', () => {
       });
       const { getByText } = renderWithTheme(links);
       expect(getByText(device.entity.label ?? ''));
+    });
+
+    it('should show the Linode label for a link for an interface device', () => {
+      const device = firewallDeviceFactory.build({
+        entity: {
+          id: 10,
+          label: null,
+          type: 'interface' as FirewallDeviceEntityType,
+          url: '/linodes/11/interfaces/10',
+          parent_entity: {
+            id: 11,
+            label: 'test-linode-label',
+            type: 'linode' as FirewallDeviceEntityType,
+            url: '/linodes/11',
+            parent_entity: null,
+          },
+        },
+      });
+
+      const links = getDeviceLinks({
+        entities: [device.entity],
+      });
+      const { getByText } = renderWithTheme(links);
+      expect(getByText('test-linode-label')).toBeVisible();
     });
 
     it('should render up to three comma-separated links', () => {

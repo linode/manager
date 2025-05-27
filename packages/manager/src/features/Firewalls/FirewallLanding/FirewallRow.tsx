@@ -135,14 +135,7 @@ export const getDeviceLinks = (
   return (
     <>
       {firstThree.map((entity, idx) => {
-        const { parent_entity, type, label, id } = entity;
-        const isInterfaceDevice = type === 'interface';
-        const entityLabel =
-          isInterfaceDevice && parent_entity ? parent_entity.label : label;
-        const entityLink =
-          isInterfaceDevice && parent_entity
-            ? `/linodes/${parent_entity.id}/networking/interfaces/${id}`
-            : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
+        const { entityLabel, entityLink } = getDeviceLinkAndLabel(entity);
 
         return (
           <React.Fragment key={entity.url}>
@@ -160,4 +153,18 @@ export const getDeviceLinks = (
       {entities.length > 3 && <span>, plus {entities.length - 3} more.</span>}
     </>
   );
+};
+
+export const getDeviceLinkAndLabel = (entity: FirewallDeviceEntity) => {
+  const { id, label, parent_entity, type } = entity;
+  const isInterfaceDevice = type === 'interface';
+
+  const entityLabel =
+    isInterfaceDevice && parent_entity ? parent_entity.label : label;
+  const entityLink =
+    isInterfaceDevice && parent_entity
+      ? `/linodes/${parent_entity.id}/networking/interfaces/${id}`
+      : `/${type}s/${id}/${type === 'linode' ? 'networking' : 'summary'}`;
+
+  return { entityLabel, entityLink };
 };
