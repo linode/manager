@@ -1,5 +1,5 @@
 import { Button } from '@linode/ui';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Formik } from 'formik';
 import * as React from 'react';
 
@@ -64,13 +64,14 @@ describe('testHelpers', () => {
   describe('renderWithThemeAndRouter', () => {
     it('should render the component with theme and router', async () => {
       const TestComponent = () => <div>Test</div>;
-      const { getByText, router } = await renderWithThemeAndRouter(
+      const { getByText, queryByText, router } = await renderWithThemeAndRouter(
         <TestComponent />
       );
 
+      expect(getByText('Test')).toBeVisible();
       expect(router.state.location.pathname).toBe('/');
 
-      await waitFor(() => {
+      act(() => {
         router.navigate({
           params: { betaId: 'beta' },
           to: '/betas/signup/$betaId',
@@ -78,7 +79,10 @@ describe('testHelpers', () => {
       });
 
       expect(router.state.location.pathname).toBe('/betas/signup/beta');
-      expect(getByText('Test')).toBeInTheDocument();
+
+      await waitFor(() => {
+        expect(queryByText('Test')).not.toBeInTheDocument();
+      })
     });
   });
 
