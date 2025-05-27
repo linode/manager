@@ -67,7 +67,6 @@ export const ImageSelect = (props: Props) => {
     selectIfOnlyOneOption,
     siteType,
     variant,
-    sx,
     ...rest
   } = props;
 
