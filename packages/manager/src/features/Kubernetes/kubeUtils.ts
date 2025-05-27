@@ -187,16 +187,30 @@ export const getKubeHighAvailability = (
 
 export const useAPLAvailability = () => {
   const flags = useFlags();
+  const isAPLEnabled = Boolean(flags.apl);
+  const isAPLGeneralAvailability = Boolean(flags.aplGeneralAvailability);
 
-  // Only fetch the account beta if the APL flag is enabled
+  // Only fetch the account beta if:
+  // 1. the APL flag is enabled
+  // 2. we're not in GA
   const { data: beta, isLoading } = useAccountBetaQuery(
     'apl',
-    Boolean(flags.apl)
+    isAPLEnabled && !isAPLGeneralAvailability
   );
 
-  const showAPL = beta !== undefined && getBetaStatus(beta) === 'active';
+  // In order to show the APL panel, we either:
+  // 1. Confirm the user is in the beta group (and the APL flag is enabled)
+  // or
+  // 2. Are in GA (which supersedes the beta group check and the APL flag)
+  const showAPL =
+    (beta !== undefined && getBetaStatus(beta) === 'active') ||
+    isAPLGeneralAvailability;
 
-  return { isLoading: flags.apl && isLoading, showAPL };
+  return {
+    isLoading: isAPLEnabled && isLoading,
+    showAPL,
+    isAPLGeneralAvailability,
+  };
 };
 
 export const getKubeControlPlaneACL = (
@@ -334,9 +348,17 @@ export const useLkeStandardOrEnterpriseVersions = (
 };
 
 export const useKubernetesBetaEndpoint = () => {
-  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+  const {
+    isLoading: isAPLAvailabilityLoading,
+    showAPL,
+    isAPLGeneralAvailability,
+  } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
+  // Use beta endpoint if either:
+  // 1. LKE Enterprise is enabled
+  // 2. APL is supported but not in GA
+  const isUsingBetaEndpoint =
+    (showAPL && !isAPLGeneralAvailability) || isLkeEnterpriseLAFeatureEnabled;
 
   return {
     isAPLAvailabilityLoading,
