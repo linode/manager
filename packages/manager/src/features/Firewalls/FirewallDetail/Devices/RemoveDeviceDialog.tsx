@@ -85,7 +85,13 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       });
     }
 
-    if (deviceType === 'interface') {
+    if (deviceType === 'interface' && device.entity.parent_entity) {
+      queryClient.invalidateQueries({
+        queryKey: linodeQueries
+          .linode(device.entity.parent_entity.id)
+          ._ctx.interfaces._ctx.interface(device.entity.id)._ctx.firewalls
+          .queryKey,
+      });
     }
 
     onClose();

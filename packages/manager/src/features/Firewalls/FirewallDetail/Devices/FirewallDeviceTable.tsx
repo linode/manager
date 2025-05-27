@@ -1,7 +1,4 @@
-import {
-  useAllFirewallDevicesQuery,
-  useAllLinodesQuery,
-} from '@linode/queries';
+import { useAllFirewallDevicesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -17,7 +14,6 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { getLinodeIdFromInterfaceDevice } from '../../shared';
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
@@ -50,39 +46,6 @@ export const FirewallDeviceTable = React.memo(
           : device.entity.type === type
       ) || [];
 
-    const linodeInterfaceDevices =
-      type === 'linode'
-        ? allDevices?.filter((device) => device.entity.type === 'interface')
-        : [];
-
-    // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
-    // so that we can add a label to the devices for sorting and display purposes
-    const { data: linodesWithInterfaces } = useAllLinodesQuery(
-      {},
-      {},
-      isLinodeInterfacesEnabled &&
-        linodeInterfaceDevices &&
-        linodeInterfaceDevices.length > 0
-    );
-
-    const updatedDevices = devices.map((device) => {
-      if (device.entity.type === 'interface') {
-        const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
-        const associatedLinode = linodesWithInterfaces?.find(
-          (linode) => linode.id === linodeId
-        );
-        return {
-          ...device,
-          entity: {
-            ...device.entity,
-            label: associatedLinode?.label ?? null,
-          },
-        };
-      } else {
-        return device;
-      }
-    });
-
     const isLinodeRelatedDevice = type === 'linode';
 
     const _error = error
@@ -100,7 +63,7 @@ export const FirewallDeviceTable = React.memo(
       orderBy,
       sortedData: sortedDevices,
     } = useOrderV2({
-      data: updatedDevices,
+      data: devices,
       initialRoute: {
         defaultOrder: {
           order: 'asc',

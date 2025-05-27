@@ -156,12 +156,12 @@ describe('getLinodeIdFromInterfaceDevice', () => {
       label: null,
       type: 'interface' as FirewallDeviceEntityType,
       url: '/v4/linode/instances/123/interfaces/123',
-      parentEntity: {
+      parent_entity: {
         id: 123,
         label: 'linode',
         type: 'linode' as FirewallDeviceEntityType,
         url: '/v4/linode/instances/123',
-        parentEntity: null,
+        parent_entity: null,
       },
     };
 
