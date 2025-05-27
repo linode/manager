@@ -363,7 +363,7 @@ const NodeBalancerCreate = () => {
     createNodeBalancerFn(nodeBalancerRequestData)
       .then((nodeBalancer) => {
         navigate({
-          params: { id: String(nodeBalancer.id) },
+          params: { id: nodeBalancer.id },
           to: '/nodebalancers/$id/summary',
         });
         // Analytics Event

@@ -31,9 +31,6 @@ export const NodeBalancerFirewalls = (props: Props) => {
   const { nodeBalancerId } = props;
   const params = useParams({ strict: false });
   const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
-  });
   const {
     data: attachedFirewallData,
     error,
@@ -42,9 +39,17 @@ export const NodeBalancerFirewalls = (props: Props) => {
 
   const attachedFirewalls = attachedFirewallData?.data;
 
-  const isUnassignFirewallRoute =
-    match.routeId ===
-    '/nodebalancers/$id/settings/unassign-firewall/$firewallId';
+  const unassignMatch = useMatch({
+    from: '/nodebalancers/$id/settings/unassign-firewall/$firewallId',
+    shouldThrow: false,
+  });
+
+  const assignMatch = useMatch({
+    from: '/nodebalancers/$id/settings/add-firewall',
+    shouldThrow: false,
+  });
+
+  const isUnassignFirewallRoute = unassignMatch !== undefined;
 
   const {
     data: selectedFirewall,
@@ -66,8 +71,8 @@ export const NodeBalancerFirewalls = (props: Props) => {
   const handleClickUnassign = (firewall: Firewall) => {
     navigate({
       params: {
-        firewallId: String(firewall.id),
-        id: String(nodeBalancerId),
+        firewallId: firewall.id,
+        id: nodeBalancerId,
       },
       to: '/nodebalancers/$id/settings/unassign-firewall/$firewallId',
     });
@@ -115,7 +120,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
           disabled={attachedFirewallData && attachedFirewallData.results >= 1}
           onClick={() =>
             navigate({
-              params: { id: String(nodeBalancerId) },
+              params: { id: nodeBalancerId },
               to: '/nodebalancers/$id/settings/add-firewall',
             })
           }
@@ -147,24 +152,21 @@ export const NodeBalancerFirewalls = (props: Props) => {
         isFetching={isFetchingDevices || isFetchingSelectedFirewall}
         onClose={() =>
           navigate({
-            params: { id: String(nodeBalancerId) },
+            params: { id: nodeBalancerId },
             to: '/nodebalancers/$id/settings',
           })
         }
         onService
-        open={
-          match.routeId ===
-          '/nodebalancers/$id/settings/unassign-firewall/$firewallId'
-        }
+        open={isUnassignFirewallRoute}
       />
       <Drawer
         onClose={() =>
           navigate({
-            params: { id: String(nodeBalancerId) },
+            params: { id: nodeBalancerId },
             to: '/nodebalancers/$id/settings',
           })
         }
-        open={match.routeId === '/nodebalancers/$id/settings/add-firewall'}
+        open={assignMatch !== undefined}
         title="Add Firewall"
       >
         <AddFirewallForm
@@ -172,7 +174,7 @@ export const NodeBalancerFirewalls = (props: Props) => {
           entityType="nodebalancer"
           onCancel={() =>
             navigate({
-              params: { id: String(nodeBalancerId) },
+              params: { id: nodeBalancerId },
               to: '/nodebalancers/$id/settings',
             })
           }

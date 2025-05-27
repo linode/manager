@@ -22,9 +22,15 @@ import { NodeBalancerFirewalls } from './NodeBalancerFirewalls';
 export const NodeBalancerSettings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const { id } = useParams({ strict: false });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
+
+  const deleteMatch = useMatch({
+    from: '/nodebalancers/$id/settings/delete',
+    shouldThrow: false,
+  });
+  const isDeleteOpen = deleteMatch !== undefined;
+
+  const { id } = useParams({ from: '/nodebalancers/$id/settings' });
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -36,13 +42,13 @@ export const NodeBalancerSettings = () => {
     error: labelError,
     isPending: isUpdatingLabel,
     mutateAsync: updateNodeBalancerLabel,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
 
   const {
     error: throttleError,
     isPending: isUpdatingThrottle,
     mutateAsync: updateNodeBalancerThrottle,
-  } = useNodebalancerUpdateMutation(Number(id));
+  } = useNodebalancerUpdateMutation(id);
 
   const [label, setLabel] = React.useState(nodebalancer?.label);
 
@@ -54,7 +60,7 @@ export const NodeBalancerSettings = () => {
     data: selectedNodeBalancer,
     isFetching: isFetchingNodeBalancer,
     error: nodeBalancerError,
-  } = useNodeBalancerQuery(Number(id), !!id);
+  } = useNodeBalancerQuery(id);
 
   React.useEffect(() => {
     if (label !== nodebalancer?.label) {
@@ -143,7 +149,7 @@ export const NodeBalancerSettings = () => {
           disabled={isNodeBalancerReadOnly}
           onClick={() =>
             navigate({
-              params: { id: String(id) },
+              params: { id },
               to: '/nodebalancers/$id/settings/delete',
             })
           }
@@ -154,7 +160,7 @@ export const NodeBalancerSettings = () => {
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
         nodeBalancerError={nodeBalancerError}
-        open={match.routeId === '/nodebalancers/$id/settings/delete'}
+        open={isDeleteOpen}
         selectedNodeBalancer={selectedNodeBalancer}
       />
     </div>

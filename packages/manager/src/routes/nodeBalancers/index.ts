@@ -1,4 +1,4 @@
-import { createRoute, redirect } from '@tanstack/react-router';
+import { createRoute } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { NodeBalancersRoute } from './NodeBalancersRoute';
@@ -26,68 +26,86 @@ const nodeBalancersCreateRoute = createRoute({
 );
 
 const nodeBalancerDetailRoute = createRoute({
-  beforeLoad: async ({ params }) => {
-    throw redirect({
-      params: {
-        id: params.id,
-      },
-      to: '/nodebalancers/$id/summary',
-    });
-  },
   getParentRoute: () => nodeBalancersRoute,
   path: '$id',
+  params: {
+    parse: (params) => ({
+      id: Number(params.id),
+    }),
+  },
 }).lazy(() =>
   import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+);
+
+const nodeBalancerDetailRootRoute = createRoute({
+  getParentRoute: () => nodeBalancerDetailRoute,
+  path: '/',
+}).lazy(() =>
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodeBalancerSummaryLazyRoute
+  )
 );
 
 const nodeBalancerDetailSummaryRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/summary',
+  getParentRoute: () => nodeBalancerDetailRoute,
+  path: 'summary',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodeBalancerSummaryLazyRoute
+  )
 );
 
 const nodeBalancerDetailConfigurationsRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/configurations',
+  getParentRoute: () => nodeBalancerDetailRoute,
+  path: 'configurations',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodeBalancerConfigurationsLazyRoute
+  )
 );
 
 const nodeBalancerDetailConfigurationRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/configurations/$configId',
+  getParentRoute: () => nodeBalancerDetailConfigurationsRoute,
+  path: '$configId',
+  params: {
+    parse: ({ configId }) => {
+      return { configId: Number(configId) };
+    },
+  },
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodeBalancerConfigurationsLazyRoute
+  )
 );
 
 const nodeBalancerDetailSettingsRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/settings',
+  getParentRoute: () => nodeBalancerDetailRoute,
+  path: 'settings',
 }).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
+  import('./nodeBalancersLazyRoutes').then(
+    (m) => m.nodebalancerSettingsLazyRoute
+  )
 );
 
 const nodeBalancerDetailSettingsDeleteRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/settings/delete',
-}).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
-);
+  getParentRoute: () => nodeBalancerDetailSettingsRoute,
+  path: '/delete',
+});
 
 const nodeBalancerDetailSettingsAddFirewallRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/settings/add-firewall',
-}).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
-);
+  getParentRoute: () => nodeBalancerDetailSettingsRoute,
+  path: '/add-firewall',
+});
 
 const nodeBalancerDetailSettingsUnassignFirewallRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/settings/unassign-firewall/$firewallId',
-}).lazy(() =>
-  import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
-);
+  getParentRoute: () => nodeBalancerDetailSettingsRoute,
+  path: '/unassign-firewall/$firewallId',
+  params: {
+    parse: ({ firewallId }) => {
+      return { firewallId: Number(firewallId) };
+    },
+  },
+});
 
 const nodeBalancerDeleteRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
@@ -99,9 +117,10 @@ const nodeBalancerDeleteRoute = createRoute({
 );
 
 export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
-  nodeBalancersIndexRoute,
+  nodeBalancersIndexRoute.addChildren([nodeBalancerDeleteRoute]),
   nodeBalancersCreateRoute,
   nodeBalancerDetailRoute.addChildren([
+    nodeBalancerDetailRootRoute,
     nodeBalancerDetailSummaryRoute,
     nodeBalancerDetailConfigurationsRoute.addChildren([
       nodeBalancerDetailConfigurationRoute,
@@ -112,5 +131,4 @@ export const nodeBalancersRouteTree = nodeBalancersRoute.addChildren([
       nodeBalancerDetailSettingsUnassignFirewallRoute,
     ]),
   ]),
-  nodeBalancerDeleteRoute,
 ]);

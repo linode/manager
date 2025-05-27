@@ -26,20 +26,16 @@ export const SummaryPanel = () => {
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const { id } = useParams({
-    from: '/nodebalancers/$id/summary',
+    from: '/nodebalancers/$id',
   });
-  const { data: nodebalancer } = useNodeBalancerQuery(Number(id), Boolean(id));
-  const { data: configs } = useAllNodeBalancerConfigsQuery(Number(id));
+  const { data: nodebalancer } = useNodeBalancerQuery(id);
+  const { data: configs } = useAllNodeBalancerConfigsQuery(id);
   const { data: regions } = useRegionsQuery();
-  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(
-    Number(id)
-  );
+  const { data: attachedFirewallData } = useNodeBalancersFirewallsQuery(id);
   const linkText = attachedFirewallData?.data[0]?.label;
   const linkID = attachedFirewallData?.data[0]?.id;
   const region = regions?.find((r) => r.id === nodebalancer?.region);
-  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(
-    Number(id)
-  );
+  const { mutateAsync: updateNodeBalancer } = useNodebalancerUpdateMutation(id);
   const displayFirewallLink = !!attachedFirewallData?.data?.length;
 
   const isNodeBalancerReadOnly = useIsResourceRestricted({
@@ -51,7 +47,7 @@ export const SummaryPanel = () => {
   const flags = useIsNodebalancerVPCEnabled();
 
   const { data: vpcConfig } = useNodeBalancerVPCConfigsBetaQuery(
-    Number(id),
+    id,
     flags.isNodebalancerVPCEnabled
   );
 

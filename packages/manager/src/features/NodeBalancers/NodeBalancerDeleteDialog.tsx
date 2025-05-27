@@ -20,10 +20,14 @@ export const NodeBalancerDeleteDialog = ({
   open,
   selectedNodeBalancer,
 }: Props) => {
-  const navigate = useNavigate();
-  const match = useMatch({
-    strict: false,
+  const deleteMatch = useMatch({
+    from: '/nodebalancers/$id/settings/delete',
+    shouldThrow: false,
   });
+  const isOnDetailsPage = deleteMatch !== undefined;
+
+  const navigate = useNavigate();
+
   const { error, isPending, mutateAsync } = useNodebalancerDeleteMutation(
     selectedNodeBalancer?.id ?? -1
   );
@@ -50,10 +54,10 @@ export const NodeBalancerDeleteDialog = ({
       loading={isPending || isFetching}
       onClick={onDelete}
       onClose={
-        match.routeId === '/nodebalancers/$id/settings/delete'
+        isOnDetailsPage
           ? () =>
               navigate({
-                params: { id: String(selectedNodeBalancer?.id) },
+                params: { id: selectedNodeBalancer!.id },
                 to: '/nodebalancers/$id/settings',
               })
           : () => navigate({ to: '/nodebalancers' })
