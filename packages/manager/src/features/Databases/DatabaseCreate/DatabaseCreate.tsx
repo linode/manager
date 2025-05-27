@@ -382,7 +382,7 @@ const DatabaseCreate = () => {
             currentClusterSize={values.cluster_size}
             currentEngine={selectedEngine}
             currentPlan={selectedPlan}
-            isCreate
+            mode="create"
             selectedVPC={selectedVPC}
           />
         </Paper>
