@@ -3,7 +3,7 @@ import { vi } from 'vitest';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { wrapWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { wrapWithRouter, wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { usePaginationV2 } from './usePaginationV2';
 
@@ -58,7 +58,7 @@ describe('usePaginationV2', () => {
 
   it('should initialize with default values', async () => {
     const { result } = renderHook(() => usePaginationV2(defaultProps), {
-      wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+      wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
     });
 
     await waitFor(() => {
@@ -79,7 +79,7 @@ describe('usePaginationV2', () => {
           preferenceKey: 'non-existent-key',
         }),
       {
-        wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+        wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
       }
     );
 
@@ -90,7 +90,7 @@ describe('usePaginationV2', () => {
 
   it('should handle page changes', async () => {
     const { result } = renderHook(() => usePaginationV2(defaultProps), {
-      wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+      wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
     });
 
     act(() => {
@@ -120,7 +120,7 @@ describe('usePaginationV2', () => {
 
   it('should handle page size changes', async () => {
     const { result } = renderHook(() => usePaginationV2(defaultProps), {
-      wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+      wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
     });
 
     act(() => {
@@ -168,7 +168,7 @@ describe('usePaginationV2', () => {
           searchParams: customSearchParams,
         }),
       {
-        wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+        wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
       }
     );
 
@@ -201,7 +201,7 @@ describe('usePaginationV2', () => {
           preferenceKey: '',
         }),
       {
-        wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+        wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
       }
     );
 
@@ -222,7 +222,7 @@ describe('usePaginationV2', () => {
           queryParamsPrefix: 'test-prefix',
         }),
       {
-        wrapper: (ui) => wrapWithThemeAndRouter(ui.children),
+        wrapper: (ui) => wrapWithTheme(wrapWithRouter(ui.children)),
       }
     );
 

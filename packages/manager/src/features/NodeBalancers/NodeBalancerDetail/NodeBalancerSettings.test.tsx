@@ -9,10 +9,7 @@ import * as React from 'react';
 import { firewallFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  wrapWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithRouter } from 'src/utilities/testHelpers';
 
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 
@@ -39,7 +36,7 @@ describe('NodeBalancerSettings', () => {
       getByText,
       findByDisplayValue,
     } = renderWithTheme(
-      wrapWithThemeAndRouter(<NodeBalancerSettings />, {
+      wrapWithRouter(<NodeBalancerSettings />, {
         initialRoute: '/nodebalancers/$id/settings',
       })
     );
@@ -103,7 +100,7 @@ describe('NodeBalancerSettings', () => {
     );
 
     const { getByLabelText, getByTestId } = renderWithTheme(
-      wrapWithThemeAndRouter(<NodeBalancerSettings />, {
+      wrapWithRouter(<NodeBalancerSettings />, {
         initialRoute: '/nodebalancers/$id/settings',
       })
     );
@@ -112,6 +109,6 @@ describe('NodeBalancerSettings', () => {
       expect(getByLabelText('Label')).toBeDisabled();
       expect(getByLabelText(connectionThrottle)).toBeDisabled();
       expect(getByTestId('delete-nodebalancer')).toBeDisabled();
-    }) 
+    });
   });
 });

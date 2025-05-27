@@ -130,8 +130,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   );
 };
 
-interface OptionsWithRouter
-  extends Omit<Options, 'MemoryRouter' | 'routePath'> {
+interface WithTanStackRouterOptions {
   initialRoute?: string;
   router?: AnyRouter;
   routeTree?: AnyRootRoute;
@@ -168,15 +167,14 @@ interface OptionsWithRouter
  * // and test the UI
  * getByText('Some text');
  */
-export const wrapWithThemeAndRouter = (
+export const wrapWithRouter = (
   ui: React.ReactNode,
-  options: OptionsWithRouter = {}
+  options: WithTanStackRouterOptions = {}
 ) => {
   const {
     initialRoute = '/',
     router: passedRouter,
     routeTree: passedRouteTree,
-    ...opts
   } = options;
 
   const rootRoute = createRootRoute({});
@@ -194,22 +192,37 @@ export const wrapWithThemeAndRouter = (
       routeTree: passedRouteTree ?? rootRoute.addChildren([indexRoute]),
     });
 
-  return wrapWithTheme(<RouterProvider router={router} />, opts);
+  return <RouterProvider router={router} />;
 };
 
 export const renderWithThemeAndRouter = async (
   ui: React.ReactNode,
-  options: OptionsWithRouter = {}
+  options: Options & WithTanStackRouterOptions = {}
 ): Promise<RenderResult & { router: AnyRouter }> => {
-  const router = createRouter({
-    history: createMemoryHistory({
-      initialEntries: [options.initialRoute || '/'],
-    }),
-    routeTree: options.routeTree || migrationRouteTree,
+  const {
+    initialRoute = '/',
+    router: passedRouter,
+    routeTree: passedTree,
+    ...opts
+  } = options;
+  const rootRoute = createRootRoute({});
+  const indexRoute = createRoute({
+    component: () => ui,
+    getParentRoute: () => rootRoute,
+    path: initialRoute ?? '/',
   });
+  const router =
+    passedRouter ??
+    createRouter({
+      history: createMemoryHistory({
+        initialEntries: [initialRoute || '/'],
+      }),
+      routeTree:
+        passedTree ?? rootRoute.addChildren([indexRoute]) ?? migrationRouteTree,
+    });
 
   const utils: RenderResult = render(
-    wrapWithThemeAndRouter(ui, { ...options, router })
+    wrapWithTheme(wrapWithRouter(ui, { ...options, router }), opts)
   );
 
   // Wait for the router to be ready
@@ -218,7 +231,9 @@ export const renderWithThemeAndRouter = async (
   return {
     ...utils,
     rerender: (ui) =>
-      utils.rerender(wrapWithThemeAndRouter(ui, { ...options, router })),
+      utils.rerender(
+        wrapWithTheme(wrapWithRouter(ui, { ...options, router }), opts)
+      ),
     router,
   };
 };

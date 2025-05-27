@@ -7,7 +7,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
-  wrapWithThemeAndRouter,
+  wrapWithRouter,
 } from 'src/utilities/testHelpers';
 
 import { NodeBalancersLanding } from './NodeBalancersLanding';
@@ -27,7 +27,7 @@ describe('NodeBalancersLanding', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      wrapWithThemeAndRouter(<NodeBalancersLanding />)
+      wrapWithRouter(<NodeBalancersLanding />)
     );
 
     // expect loading state and wait for it to disappear
@@ -52,7 +52,7 @@ describe('NodeBalancersLanding', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      wrapWithThemeAndRouter(<NodeBalancersLanding />)
+      wrapWithRouter(<NodeBalancersLanding />)
     );
 
     // expect loading state and wait for it to disappear

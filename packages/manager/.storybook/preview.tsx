@@ -9,10 +9,7 @@ import {
   Controls,
   Stories,
 } from '@storybook/blocks';
-import {
-  wrapWithTheme,
-  wrapWithThemeAndRouter,
-} from '../src/utilities/testHelpers';
+import { wrapWithTheme, wrapWithRouter } from '../src/utilities/testHelpers';
 import { useDarkMode } from 'storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs';
 import { themes } from '@storybook/theming';
@@ -48,7 +45,7 @@ const preview: Preview = {
     (Story, context) => {
       const isDark = useDarkMode();
       return context.parameters.tanStackRouter
-        ? wrapWithThemeAndRouter(<Story />, {
+        ? wrapWithTheme(wrapWithRouter(<Story />), {
             theme: isDark ? 'dark' : 'light',
           })
         : wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
