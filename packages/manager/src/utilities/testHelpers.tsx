@@ -17,7 +17,7 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { FieldValues, UseFormProps } from 'react-hook-form';
 import { Provider } from 'react-redux';
-import { BrowserRouter, MemoryRouter, Route } from 'react-router-dom';
+import { MemoryRouter, Route } from 'react-router-dom';
 import type { MemoryRouterProps } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
@@ -173,14 +173,11 @@ export const wrapWithThemeAndRouter = (
   options: OptionsWithRouter = {}
 ) => {
   const {
-    customStore,
     initialRoute = '/',
-    queryClient: passedQueryClient,
+    router: passedRouter,
+    routeTree: passedRouteTree,
+    ...opts
   } = options;
-  const queryClient = passedQueryClient ?? queryClientFactory();
-  const storeToPass = customStore ? baseStore(customStore) : storeFactory();
-
-  setupInterceptors(configureStore<ApplicationState>([thunk])(defaultState));
 
   const rootRoute = createRootRoute({});
   const indexRoute = createRoute({
@@ -188,34 +185,16 @@ export const wrapWithThemeAndRouter = (
     getParentRoute: () => rootRoute,
     path: initialRoute,
   });
-  const router: AnyRouter = createRouter({
-    history: createMemoryHistory({
-      initialEntries: [initialRoute],
-    }),
-    routeTree: rootRoute.addChildren([indexRoute]),
-  });
+  const router: AnyRouter =
+    passedRouter ??
+    createRouter({
+      history: createMemoryHistory({
+        initialEntries: [initialRoute],
+      }),
+      routeTree: passedRouteTree ?? rootRoute.addChildren([indexRoute]),
+    });
 
-  return (
-    <Provider store={storeToPass}>
-      <QueryClientProvider client={passedQueryClient || queryClient}>
-        <LinodeThemeWrapper theme={options.theme}>
-          <LDProvider
-            clientSideID={''}
-            deferInitialization
-            flags={options.flags ?? {}}
-            options={{ bootstrap: options.flags }}
-          >
-            <CssBaseline enableColorScheme />
-            <SnackbarProvider>
-              <BrowserRouter>
-                <RouterProvider router={router} />
-              </BrowserRouter>
-            </SnackbarProvider>
-          </LDProvider>
-        </LinodeThemeWrapper>
-      </QueryClientProvider>
-    </Provider>
-  );
+  return wrapWithTheme(<RouterProvider router={router} />, opts);
 };
 
 export const renderWithThemeAndRouter = async (
