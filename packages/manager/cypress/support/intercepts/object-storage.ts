@@ -107,7 +107,6 @@ export const mockGetBucketsForRegionError = (
   errorMessage: string = 'An unknown error occurred.',
   statusCode: number = 500
 ): Cypress.Chainable<null> => {
-  console.log('mockGetBucketsForRegionError', regionId);
   return cy.intercept(
     'GET',
     apiMatcher(`object-storage/buckets/${regionId}*`),
@@ -627,7 +626,6 @@ export const mockGetObjectStorageQuotaError = (
   errorMessage: string,
   status: number = 500
 ): Cypress.Chainable<null> => {
-  console.log('mockGetObjectStorageQuotaError');
   return cy.intercept(
     'GET',
     apiMatcher('object-storage/quotas*'),
