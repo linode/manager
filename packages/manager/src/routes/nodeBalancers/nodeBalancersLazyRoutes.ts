@@ -1,6 +1,6 @@
 import { createLazyRoute } from '@tanstack/react-router';
 
-import NodeBalancerCreate from 'src/features/NodeBalancers/NodeBalancerCreate';
+import { NodeBalancerCreate } from 'src/features/NodeBalancers/NodeBalancerCreate';
 import { NodeBalancerConfigurationsWrapper } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerConfigurationWrapper';
 import { NodeBalancerDetail } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerDetail';
 import { NodeBalancerSettings } from 'src/features/NodeBalancers/NodeBalancerDetail/NodeBalancerSettings';
