@@ -6,6 +6,7 @@ import * as React from 'react';
 import { imageFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { migrationRouteTree } from 'src/routes';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -14,7 +15,6 @@ import {
 } from 'src/utilities/testHelpers';
 
 import ImagesLanding from './ImagesLanding';
-import { migrationRouteTree } from 'src/routes';
 
 const mockHistory = {
   push: vi.fn(),
