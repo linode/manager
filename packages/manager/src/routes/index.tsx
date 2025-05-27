@@ -100,7 +100,9 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
+  searchRouteTree,
   stackScriptsRouteTree,
+  supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
 ]);

@@ -21,7 +21,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "coverage": "vitest run --coverage && open coverage/index.html",
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
@@ -39,6 +38,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
