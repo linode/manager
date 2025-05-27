@@ -157,7 +157,7 @@ export const ImageSelect = (props: Props) => {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <Autocomplete
         clearOnBlur
         disableSelectAll
