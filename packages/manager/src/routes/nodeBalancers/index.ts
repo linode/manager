@@ -110,6 +110,11 @@ const nodeBalancerDetailSettingsUnassignFirewallRoute = createRoute({
 const nodeBalancerDeleteRoute = createRoute({
   getParentRoute: () => nodeBalancersRoute,
   path: '$id/delete',
+  params: {
+    parse: ({ id }) => {
+      return { id: Number(id) };
+    },
+  },
 }).lazy(() =>
   import('./nodeBalancersLazyRoutes').then(
     (m) => m.nodeBalancersLandingLazyRoute

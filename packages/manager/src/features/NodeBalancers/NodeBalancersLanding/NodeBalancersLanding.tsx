@@ -1,7 +1,7 @@
 import { useNodeBalancerQuery, useNodeBalancersQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -27,8 +27,11 @@ const preferenceKey = 'nodebalancers';
 
 export const NodeBalancersLanding = () => {
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const params = useParams({ strict: false });
+  const deleteMatch = useMatch({
+    from: '/nodebalancers/$id/delete',
+    shouldThrow: false,
+  });
+
   const pagination = usePagination(1, preferenceKey);
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_nodebalancers',
@@ -59,7 +62,10 @@ export const NodeBalancersLanding = () => {
     data: selectedNodeBalancer,
     isFetching: isFetchingNodeBalancer,
     error: selectedNodeBalancerError,
-  } = useNodeBalancerQuery(Number(params.id), !!params.id);
+  } = useNodeBalancerQuery(
+    deleteMatch?.params.id ?? 0,
+    deleteMatch !== undefined
+  );
 
   if (error) {
     return (
@@ -147,11 +153,9 @@ export const NodeBalancersLanding = () => {
       <NodeBalancerDeleteDialog
         isFetching={isFetchingNodeBalancer}
         nodeBalancerError={selectedNodeBalancerError}
-        open={match.routeId === '/nodebalancers/$id/delete'}
+        open={deleteMatch !== undefined}
         selectedNodeBalancer={selectedNodeBalancer}
       />
     </>
   );
 };
-
-export default NodeBalancersLanding;
