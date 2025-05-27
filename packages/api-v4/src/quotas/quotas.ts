@@ -45,9 +45,9 @@ export const getQuotas = (
  * Returns the usage for a single quota within a particular service specified by `type`.
  *
  * @param type { QuotaType } retrieve a quota within this service type.
- * @param id { number } the quota ID to look up.
+ * @param id { string } the quota ID to look up.
  */
-export const getQuotaUsage = (type: QuotaType, id: number) =>
+export const getQuotaUsage = (type: QuotaType, id: string) =>
   Request<QuotaUsage>(
     setURL(`${BETA_API_ROOT}/${type}/quotas/${id}/usage`),
     setMethod('GET'),
