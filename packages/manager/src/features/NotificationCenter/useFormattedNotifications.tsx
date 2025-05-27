@@ -193,7 +193,7 @@ const interceptNotification = (
         </Link>{' '}
         resides on a host that is pending critical maintenance. You should have
         received a{' '}
-        <Link onClick={onClose} to={'/support/tickets?type=open'}>
+        <Link onClick={onClose} to={'/support/tickets/open'}>
           support ticket
         </Link>{' '}
         that details how you will be affected. Please see the aforementioned
