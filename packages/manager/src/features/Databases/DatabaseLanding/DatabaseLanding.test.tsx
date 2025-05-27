@@ -9,7 +9,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { accountFactory, databaseInstanceFactory } from 'src/factories';
-import DatabaseLanding from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
+import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';

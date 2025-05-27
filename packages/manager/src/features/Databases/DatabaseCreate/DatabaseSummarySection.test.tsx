@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { databaseFactory, databaseTypeFactory } from 'src/factories';
-import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
+import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';

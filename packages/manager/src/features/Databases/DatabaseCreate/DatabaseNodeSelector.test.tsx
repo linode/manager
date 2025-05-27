@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
-import DatabaseCreate from './DatabaseCreate';
+import { DatabaseCreate } from './DatabaseCreate';
 
 const loadingTestId = 'circle-progress';
 
