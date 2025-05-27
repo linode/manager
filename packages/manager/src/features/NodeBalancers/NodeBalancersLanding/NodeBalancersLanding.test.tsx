@@ -4,29 +4,16 @@ import * as React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithTheme,
+  wrapWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { NodeBalancersLanding } from './NodeBalancersLanding';
 
-const queryMocks = vi.hoisted(() => ({
-  useMatch: vi.fn().mockReturnValue({}),
-  useNavigate: vi.fn(() => vi.fn()),
-  useParams: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useMatch: queryMocks.useMatch,
-    useNavigate: queryMocks.useNavigate,
-    useParams: queryMocks.useParams,
-  };
-});
-
 beforeAll(() => {
   mockMatchMedia();
-  queryMocks.useParams.mockReturnValue({ id: 1 });
 });
 
 const loadingTestId = 'circle-progress';
@@ -40,7 +27,7 @@ describe('NodeBalancersLanding', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <NodeBalancersLanding />
+      wrapWithThemeAndRouter(<NodeBalancersLanding />)
     );
 
     // expect loading state and wait for it to disappear
@@ -65,7 +52,7 @@ describe('NodeBalancersLanding', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(
-      <NodeBalancersLanding />
+      wrapWithThemeAndRouter(<NodeBalancersLanding />)
     );
 
     // expect loading state and wait for it to disappear

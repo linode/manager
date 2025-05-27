@@ -2,33 +2,20 @@ import {
   nodeBalancerConfigFactory,
   nodeBalancerConfigNodeFactory,
 } from '@linode/utilities';
-import { QueryClient } from '@tanstack/react-query';
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  wrapWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
-import { NodeBalancerConfigurations } from './NodeBalancerConfigurations';
-
-const props = {
-  grants: undefined,
-  configId: undefined,
-  configs: [],
-  nodeBalancerLabel: 'nb-1',
-  nodeBalancerRegion: 'us-east',
-  nodeBalancerId: 1,
-  queryClient: new QueryClient(),
-  params: {
-    nodeBalancerId: '1',
-  },
-};
+import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationWrapper';
 
 const loadingTestId = 'circle-progress';
-const memoryRouter = { initialEntries: ['nodebalancers/1/configurations'] };
-const routePath = 'nodebalancers/:nodeBalancerId/configurations';
 
 const nodeBalancerConfig = nodeBalancerConfigFactory.build({
   id: 1,
@@ -36,10 +23,6 @@ const nodeBalancerConfig = nodeBalancerConfigFactory.build({
 });
 
 describe('NodeBalancerConfigurations', () => {
-  beforeEach(() => {
-    server.resetHandlers();
-  });
-
   it('renders the NodeBalancerConfigurations component with one configuration', async () => {
     server.use(
       http.get(`*/nodebalancers/:id/configs`, () => {
@@ -53,11 +36,9 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />,
-      {
-        MemoryRouter: memoryRouter,
-        routePath,
-      }
+      wrapWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+        initialRoute: '/nodebalancers/$id/configurations',
+      })
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -110,11 +91,9 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />,
-      {
-        MemoryRouter: memoryRouter,
-        routePath,
-      }
+      wrapWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+        initialRoute: '/nodebalancers/$id/configurations',
+      })
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -138,11 +117,9 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByTestId, getByText, queryByLabelText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />,
-      {
-        MemoryRouter: memoryRouter,
-        routePath,
-      }
+      wrapWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+        initialRoute: '/nodebalancers/$id/configurations',
+      })
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -173,11 +150,9 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <NodeBalancerConfigurations {...props} />,
-      {
-        MemoryRouter: memoryRouter,
-        routePath,
-      }
+      wrapWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+        initialRoute: '/nodebalancers/$id/configurations',
+      })
     );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();

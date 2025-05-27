@@ -1,62 +1,50 @@
-import { nodeBalancerFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  nodeBalancerFactory,
+  profileFactory,
+} from '@linode/utilities';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { firewallFactory } from 'src/factories';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
+import {
+  renderWithTheme,
+  wrapWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { NodeBalancerSettings } from './NodeBalancerSettings';
-
-// Set up various mocks for tests
-vi.mock('src/hooks/useIsResourceRestricted');
-
-const queryMocks = vi.hoisted(() => ({
-  useMatch: vi.fn(() => ({})),
-  useNavigate: vi.fn(() => vi.fn()),
-  useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
-  useParams: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
-    useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
-  };
-});
-
-vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual('@tanstack/react-router');
-  return {
-    ...actual,
-    useMatch: queryMocks.useMatch,
-    useNavigate: queryMocks.useNavigate,
-    useParams: queryMocks.useParams,
-  };
-});
 
 const connectionThrottle = 'Connection Throttle';
 
 describe('NodeBalancerSettings', () => {
-  beforeEach(() => {
-    queryMocks.useNodeBalancerQuery.mockReturnValue({
-      data: nodeBalancerFactory.build(),
-    });
-    queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
-      data: { data: [firewallFactory.build({ label: 'mock-firewall-1' })] },
-    });
-    queryMocks.useParams.mockReturnValue({ id: 1 });
-  });
+  it('renders the NodeBalancerSettings component', async () => {
+    const firewall = firewallFactory.build({ label: 'mock-firewall-1' });
+    const nodebalancer = nodeBalancerFactory.build();
 
-  afterEach(() => {
-    vi.resetAllMocks();
-  });
+    server.use(
+      http.get('*/v4/nodebalancers/:id', () => {
+        return HttpResponse.json(nodebalancer);
+      }),
+      http.get('*/v4/nodebalancers/:id/firewalls', () => {
+        return HttpResponse.json(makeResourcePage([firewall]));
+      })
+    );
 
-  it('renders the NodeBalancerSettings component', () => {
-    const { getAllByText, getByLabelText, getByTestId, getByText } =
-      renderWithTheme(<NodeBalancerSettings />);
+    const {
+      getAllByText,
+      getByLabelText,
+      getByTestId,
+      getByText,
+      findByDisplayValue,
+    } = renderWithTheme(
+      wrapWithThemeAndRouter(<NodeBalancerSettings />, {
+        initialRoute: '/nodebalancers/$id/settings',
+      })
+    );
+
+    await findByDisplayValue(nodebalancer.label);
 
     // NodeBalancer Label panel
     expect(getByText('NodeBalancer Label')).toBeVisible();
@@ -89,14 +77,41 @@ describe('NodeBalancerSettings', () => {
     expect(getByTestId('delete-nodebalancer')).not.toBeDisabled();
   });
 
-  it('disables inputs and buttons if the Node Balancer is read only', () => {
-    vi.mocked(useIsResourceRestricted).mockReturnValue(true);
-    const { getByLabelText, getByTestId } = renderWithTheme(
-      <NodeBalancerSettings />
+  it('disables inputs and buttons if the NodeBalancer is read only', async () => {
+    const nodebalancer = nodeBalancerFactory.build();
+    const profile = profileFactory.build({ restricted: true });
+    const grants = grantsFactory.build({
+      nodebalancer: [
+        {
+          id: nodebalancer.id,
+          label: nodebalancer.label,
+          permissions: 'read_only',
+        },
+      ],
+    });
+
+    server.use(
+      http.get('*/v4/nodebalancers/:id', () => {
+        return HttpResponse.json(nodebalancer);
+      }),
+      http.get('*/v4/profile', () => {
+        return HttpResponse.json(profile);
+      }),
+      http.get('*/v4/profile/grants', () => {
+        return HttpResponse.json(grants);
+      })
     );
 
-    expect(getByLabelText('Label')).toBeDisabled();
-    expect(getByLabelText(connectionThrottle)).toBeDisabled();
-    expect(getByTestId('delete-nodebalancer')).toBeDisabled();
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      wrapWithThemeAndRouter(<NodeBalancerSettings />, {
+        initialRoute: '/nodebalancers/$id/settings',
+      })
+    );
+
+    await waitFor(() => {
+      expect(getByLabelText('Label')).toBeDisabled();
+      expect(getByLabelText(connectionThrottle)).toBeDisabled();
+      expect(getByTestId('delete-nodebalancer')).toBeDisabled();
+    }) 
   });
 });
