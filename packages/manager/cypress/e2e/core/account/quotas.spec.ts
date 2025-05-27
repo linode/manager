@@ -49,7 +49,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
       },
     }).as('getFeatureFlags');
   });
-  xit('can navigate directly to Quotas page', () => {
+  it('can navigate directly to Quotas page', () => {
     cy.visitWithLogin('/account/quotas');
     cy.wait('@getFeatureFlags');
     cy.url().should('endWith', '/quotas');
@@ -58,7 +58,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     ).should('be.visible');
   });
 
-  xit('can navigate to the Quotas page via the User Menu', () => {
+  it('can navigate to the Quotas page via the User Menu', () => {
     cy.visitWithLogin('/');
     cy.wait('@getFeatureFlags');
     // Open user menu
@@ -69,7 +69,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     });
   });
 
-  xit('Quotas tab is visible from all other tabs in Account tablist', () => {
+  it('Quotas tab is visible from all other tabs in Account tablist', () => {
     cy.visitWithLogin('/account/billing');
     cy.wait('@getFeatureFlags');
     ui.tabList.find().within(() => {
@@ -82,9 +82,8 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
     cy.url().should('endWith', '/quotas');
   });
 
-  // TODO: still flakey in selecting OS EP, typing doesnt always result in selection
   // TODO: need to use multiple regions?
-  xit('Endpoint workflow follows proper sequence', () => {
+  it('Endpoint workflow follows proper sequence', () => {
     const mockSelectedEndpoint = mockEndpoints[1];
     const selectedDomain = mockSelectedEndpoint.s3_endpoint || '';
     const mockQuotas = [
@@ -246,8 +245,6 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
       .should('have.text', errorMsg);
   });
 });
-
-// TODO: add test for handling response to api error, shd show special msg
 
 xdescribe('Quotas inaccessible when limitsEvolution feature flag disabled', () => {
   beforeEach(() => {
