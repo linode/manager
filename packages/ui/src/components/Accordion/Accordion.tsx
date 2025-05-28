@@ -67,6 +67,10 @@ export interface AccordionProps extends _AccordionProps {
    */
   headingProps?: TypographyProps;
   /**
+   * SubHeading text that shows as a description under the heading
+   */
+  subHeading?: React.ReactNode | string;
+  /**
    * Success text that shows as a `<Notice />` at the top of the Accordion's body
    */
   success?: string;
@@ -107,6 +111,7 @@ export const Accordion = (props: AccordionProps) => {
     headingNumberCount,
     headingProps,
     success,
+    subHeading,
     summaryProps,
     warning,
     ...accordionProps
@@ -134,13 +139,22 @@ export const Accordion = (props: AccordionProps) => {
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
-        <Typography {...headingProps} data-qa-panel-subheading variant="h3">
-          {heading}
-          {headingChip}
-        </Typography>
-        {headingNumberCount && headingNumberCount > 0 ? (
-          <span className={classes.itemCount}>{headingNumberCount}</span>
-        ) : null}
+        <div
+          style={{ display: 'flex', flexDirection: 'column', rowGap: '6px' }}
+        >
+          <Typography {...headingProps} data-qa-panel-subheading variant="h3">
+            {heading}
+            {headingChip}
+          </Typography>
+          {subHeading ? (
+            <Typography data-qa-panel-subheading variant="body1">
+              {subHeading}
+            </Typography>
+          ) : undefined}
+          {headingNumberCount && headingNumberCount > 0 ? (
+            <span className={classes.itemCount}>{headingNumberCount}</span>
+          ) : null}
+        </div>
       </AccordionSummary>
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>
