@@ -146,8 +146,8 @@ export const VPCPanel = (props: Props) => {
                     display="flex"
                     flexDirection="row"
                     sx={(theme) => ({
-                      marginLeft: '2px',
-                      paddingTop: theme.spacing(),
+                      marginLeft: theme.spacingFunction(2),
+                      paddingTop: theme.spacingFunction(8),
                     })}
                   >
                     <FormControlLabel
