@@ -39,6 +39,9 @@ export const useStyles = makeStyles()((theme: Theme) => ({
     minWidth: 'auto',
     padding: 0,
   },
+  tooltipIcon: {
+    alignContent: 'center',
+  },
   connectionDetailsCtn: {
     '& p': {
       lineHeight: '1.5rem',

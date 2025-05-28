@@ -393,10 +393,11 @@ const DatabaseCreate = () => {
             provision.
           </StyledTypography>
           <StyledCreateBtn
-            buttonType="primary"
+            data-testid="create-database-cluster"
             disabled={isRestricted}
-            loading={isSubmitting}
+            processing={isSubmitting}
             type="submit"
+            variant="primary"
           >
             Create Database Cluster
           </StyledCreateBtn>

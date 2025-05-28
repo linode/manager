@@ -46,7 +46,9 @@ export const AssignedPermissionsPanel = ({
       )}
       {!hideDetails && (
         <>
-          <StyledTitle>{showName && role.name ? role.name : 'Description'}</StyledTitle>
+          <StyledTitle>
+            {showName && role.name ? role.name : 'Description'}
+          </StyledTitle>
           <StyledDescription>
             {role.permissions.length ? (
               role.description
