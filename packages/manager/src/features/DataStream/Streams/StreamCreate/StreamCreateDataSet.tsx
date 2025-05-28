@@ -20,13 +20,15 @@ export const StreamCreateDataSet = () => {
 
   const getControlledToggle = (
     control: Control<CreateStreamForm>,
-    id: EventType
+    id: EventType,
+    name: string
   ) => (
     <Controller
       control={control}
       name={id}
       render={({ field }) => (
         <Toggle
+          aria-label={`Toggle ${name} event type`}
           checked={field.value}
           onChange={(_, checked) => field.onChange(checked)}
         />
@@ -40,7 +42,7 @@ export const StreamCreateDataSet = () => {
       OuterTableCells: (
         <>
           <TableCell>{description}</TableCell>
-          <TableCell>{getControlledToggle(control, id)}</TableCell>
+          <TableCell>{getControlledToggle(control, id, name)}</TableCell>
         </>
       ),
       id,

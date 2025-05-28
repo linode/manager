@@ -28,6 +28,7 @@ export const StreamCreateGeneralInfo = () => {
         name="label"
         render={({ field }) => (
           <TextField
+            aria-required
             className={classes.input}
             label="Name"
             onChange={(value) => {
