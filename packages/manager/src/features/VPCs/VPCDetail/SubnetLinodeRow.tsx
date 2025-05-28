@@ -124,7 +124,7 @@ export const SubnetLinodeRow = (props: Props) => {
   if (linodeError || !linode) {
     return (
       <TableRow data-testid="subnet-linode-row-error" hover={hover}>
-        <TableCell colSpan={5} style={{ justifyItems: 'center' }}>
+        <TableCell colSpan={6} style={{ justifyItems: 'center' }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon
