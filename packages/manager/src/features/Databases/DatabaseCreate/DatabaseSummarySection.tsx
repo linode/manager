@@ -1,6 +1,8 @@
 import { Box, Typography } from '@linode/ui';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
+
 import { StyledPlanSummarySpan } from '../DatabaseDetail/DatabaseResize/DatabaseResize.style';
 import { useIsDatabasesEnabled } from '../utilities';
 import { StyledSpan } from './DatabaseCreate.style';
@@ -11,6 +13,7 @@ import type {
   DatabaseClusterSizeObject,
   DatabasePriceObject,
   Engine,
+  VPC,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
@@ -19,8 +22,8 @@ interface Props {
   currentClusterSize: ClusterSize;
   currentEngine: Engine;
   currentPlan: PlanSelectionWithDatabaseType | undefined;
-  isResize?: boolean;
   label?: string;
+  mode: 'create' | 'resize';
   platform?: string;
   resizeData?: {
     basePrice: string;
@@ -28,6 +31,7 @@ interface Props {
     plan: string;
     price: string;
   };
+  selectedVPC?: null | VPC;
 }
 
 export const DatabaseSummarySection = (props: Props) => {
@@ -35,12 +39,19 @@ export const DatabaseSummarySection = (props: Props) => {
     currentClusterSize,
     currentEngine,
     currentPlan,
-    isResize,
+    selectedVPC,
     label,
+    mode,
     platform,
     resizeData,
   } = props;
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const flags = useFlags();
+  const isVPCEnabled = flags.databaseVpc;
+  const isResize = mode === 'resize';
+  const isCreate = mode === 'create';
+  const isVPCSelected = Boolean(selectedVPC);
+  const displayVPC = isCreate && isVPCEnabled;
 
   const currentPrice = currentPlan?.engines[currentEngine].find(
     (cluster: DatabaseClusterSizeObject) =>
@@ -66,11 +77,32 @@ export const DatabaseSummarySection = (props: Props) => {
       ) : (
         <span>{currentPlanPrice}</span>
       )}
-      <Typography component="span">
-        {currentClusterSize} Node
-        {getSuffix(isNewDatabase, currentClusterSize)}
-      </Typography>
-      {currentNodePrice}
+      {displayVPC ? (
+        <>
+          <StyledPlanSummarySpan>
+            {currentClusterSize} Node
+            {getSuffix(isNewDatabase, currentClusterSize)}
+          </StyledPlanSummarySpan>
+          <StyledSpan
+            style={{ borderRight: !isVPCSelected ? 'none' : undefined }}
+          >
+            {currentNodePrice}
+          </StyledSpan>
+          {isVPCSelected && (
+            <StyledPlanSummarySpan>
+              {selectedVPC?.label} VPC
+            </StyledPlanSummarySpan>
+          )}
+        </>
+      ) : (
+        <>
+          <Typography component="span">
+            {currentClusterSize} Node
+            {getSuffix(isNewDatabase, currentClusterSize)}
+          </Typography>
+          {currentNodePrice}
+        </>
+      )}
     </Box>
   ) : (
     'Please specify your cluster configuration'
