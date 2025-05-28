@@ -122,6 +122,19 @@ const renderMaintenanceFields = (
     />
   </label>,
 
+  <label key="description">
+    Description
+    <select
+      className="dt-select"
+      name="description"
+      onChange={onChange}
+      value={maintenance.description}
+    >
+      <option value="scheduled">Scheduled</option>
+      <option value="emergency">Emergency</option>
+    </select>
+  </label>,
+
   <label key="status">
     Status
     <select
@@ -155,6 +168,36 @@ const renderMaintenanceFields = (
       onChange={onChange}
       type="datetime-local"
       value={maintenance.when ?? ''}
+    />
+  </label>,
+
+  <label key="start_time">
+    Start Time
+    <input
+      name="start_time"
+      onChange={onChange}
+      type="datetime-local"
+      value={maintenance.start_time ?? ''}
+    />
+  </label>,
+
+  <label key="complete_time">
+    Complete Time
+    <input
+      name="complete_time"
+      onChange={onChange}
+      type="datetime-local"
+      value={maintenance.complete_time ?? ''}
+    />
+  </label>,
+
+  <label key="not_before">
+    Not Before
+    <input
+      name="not_before"
+      onChange={onChange}
+      type="datetime-local"
+      value={maintenance.not_before ?? ''}
     />
   </label>,
 ];
