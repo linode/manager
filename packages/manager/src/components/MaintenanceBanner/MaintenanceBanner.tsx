@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 import { formatDate } from 'src/utilities/formatDate';
 import { isPast } from 'src/utilities/isPast';
 
@@ -19,9 +20,14 @@ interface Props {
 export const MaintenanceBanner = React.memo((props: Props) => {
   const { maintenanceEnd, maintenanceStart, type } = props;
 
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+  const { data: rawAccountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     PENDING_MAINTENANCE_FILTER
+  );
+
+  // Filter out platform maintenance, since that is handled separately
+  const accountMaintenanceData = rawAccountMaintenanceData?.filter(
+    (maintenance) => !isPlatformMaintenance(maintenance)
   );
 
   const {
