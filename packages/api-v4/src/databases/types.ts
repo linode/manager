@@ -145,7 +145,7 @@ export interface CreateDatabasePayload {
   encrypted?: boolean;
   engine?: Engine;
   label: string;
-  private_network?: null | PrivateNetwork;
+  private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Remove optional (?) post VPC release, since it will always be in create payload
   region: string;
   /** @Deprecated used by rdbms-legacy only */
   replication_type?: MySQLReplicationType | PostgresReplicationType;

@@ -137,6 +137,7 @@ const DatabaseCreate = () => {
       private_network: privateNetwork,
     };
 
+    // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
     if (!isVPCEnabled) {
       delete createPayload.private_network;
     }
