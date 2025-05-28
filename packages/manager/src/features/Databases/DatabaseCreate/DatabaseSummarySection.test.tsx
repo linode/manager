@@ -2,7 +2,11 @@ import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { databaseFactory, databaseTypeFactory } from 'src/factories';
+import {
+  databaseFactory,
+  databaseTypeFactory,
+  vpcFactory,
+} from 'src/factories';
 import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -19,9 +23,10 @@ describe('database summary section', () => {
       beta: false,
       enabled: true,
     },
+    databaseVpc: true,
   };
 
-  it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
+  it('should render the correct number of node radio buttons, associated costs, vpc label and summary', async () => {
     const standardTypes = databaseTypeFactory.buildList(7, {
       class: 'standard',
     });
@@ -40,10 +45,15 @@ describe('database summary section', () => {
         return HttpResponse.json(
           makeResourcePage([...mockDedicatedTypes, ...standardTypes])
         );
+      }),
+      http.get('*/vpcs', () => {
+        return HttpResponse.json(
+          makeResourcePage([vpcFactory.build({ label: 'VPC 1' })])
+        );
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />, {
+    const { getByTestId, findByText } = renderWithTheme(<DatabaseCreate />, {
       MemoryRouter: { initialEntries: ['/databases/create'] },
       flags,
     });
@@ -53,6 +63,26 @@ describe('database summary section', () => {
     );
     await userEvent.click(selectedPlan);
 
+    // Simulate Region Selection
+    const regionSelect = getByTestId('region-select').querySelector(
+      'input'
+    ) as HTMLInputElement;
+
+    // Open the autocomplete dropdown
+    await userEvent.click(regionSelect);
+
+    const regionOption = await findByText('US, Newark, NJ (us-east)');
+    await userEvent.click(regionOption);
+
+    // Simulate VPC Selection
+    const vpcSelector = getByTestId('database-vpc-selector').querySelector(
+      'input'
+    ) as HTMLInputElement;
+    await userEvent.click(vpcSelector);
+    const newVPC = await findByText('VPC 1');
+    await userEvent.click(newVPC);
+
+    // Check summary contents (ie. plan, nodes, VPC)
     const summary = getByTestId('currentSummary');
     const selectedPlanText = 'Dedicated 4 GB $60/month';
     expect(summary).toHaveTextContent(selectedPlanText);
