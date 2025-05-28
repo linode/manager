@@ -37,7 +37,6 @@ import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
 import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
-// import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -187,8 +186,6 @@ export const MainContent = () => {
 
   const { data: profile } = useProfile();
   const username = profile?.username || '';
-
-  // const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';

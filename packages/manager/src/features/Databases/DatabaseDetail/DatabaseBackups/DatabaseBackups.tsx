@@ -16,9 +16,9 @@ import {
 import { GridLegacy } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { useParams } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import {
   StyledDateCalendar,
@@ -34,8 +34,6 @@ import { useDatabaseQuery } from 'src/queries/databases/databases';
 
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';
-
-import type { Engine } from '@linode/api-v4/lib/databases';
 
 interface Props {
   disabled?: boolean;
@@ -78,10 +76,9 @@ export type VersionOption = 'dateTime' | 'newest';
 export const DatabaseBackups = (props: Props) => {
   const { classes } = useStyles();
   const { disabled } = props;
-  const { databaseId, engine } = useParams<{
-    databaseId: string;
-    engine: Engine;
-  }>();
+  const { databaseId, engine } = useParams({
+    from: '/databases/$engine/$databaseId/backups',
+  });
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);

@@ -69,7 +69,7 @@ export const DatabaseDetail = () => {
   const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
   const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
 
-  const { tabs, tabIndex, handleTabChange } = useTabs([
+  const { tabs, tabIndex, handleTabChange, getTabIndex } = useTabs([
     {
       to: `/databases/$engine/$databaseId/summary`,
       title: 'Summary',
@@ -77,7 +77,7 @@ export const DatabaseDetail = () => {
     {
       to: `/databases/$engine/$databaseId/metrics`,
       title: 'Metrics',
-      disabled: !isMonitorEnabled,
+      hide: !isMonitorEnabled,
       chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
     },
     {
@@ -87,7 +87,7 @@ export const DatabaseDetail = () => {
     {
       to: `/databases/$engine/$databaseId/resize`,
       title: 'Resize',
-      disabled: !flags.databaseResize,
+      hide: !flags.databaseResize,
     },
     {
       to: `/databases/$engine/$databaseId/settings`,
@@ -97,7 +97,7 @@ export const DatabaseDetail = () => {
     {
       to: `/databases/$engine/$databaseId/configs`,
       title: 'Advanced Configuration',
-      disabled: !isAdvancedConfigEnabled,
+      hide: !isAdvancedConfigEnabled,
     },
   ]);
 
@@ -118,32 +118,6 @@ export const DatabaseDetail = () => {
   if (!database) {
     return null;
   }
-
-  const resizeIndex = isMonitorEnabled ? 3 : 2;
-  const backupsIndex = isMonitorEnabled ? 2 : 1;
-  const settingsIndex = isMonitorEnabled ? 4 : 3;
-
-  // if (isMonitorEnabled) {
-  //   tabs.splice(1, 0, {
-  //     chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
-  //     routeName: `/databases/${engine}/${id}/metrics`,
-  //     title: 'Metrics',
-  //   });
-  // }
-
-  // if (flags.databaseResize) {
-  //   tabs.splice(resizeIndex, 0, {
-  //     to: `/databases/$engine/$databaseId/resize`,
-  //     title: 'Resize',
-  //   });
-  // }
-
-  // if (isAdvancedConfigEnabled) {
-  //   tabs.splice(5, 0, {
-  //     to: `/databases/$engine/$databaseId/configs`,
-  //     title: 'Advanced Configuration',
-  //   });
-  // }
 
   const handleSubmitLabelChange = (newLabel: string) => {
     // @TODO Update this to only send the label when the API supports it
@@ -205,36 +179,48 @@ export const DatabaseDetail = () => {
         )}
 
         <TabPanels>
-          <SafeTabPanel index={0}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/summary')}
+          >
             <DatabaseSummary
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
           {isMonitorEnabled ? (
-            <SafeTabPanel index={1}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/metrics')}
+            >
               <DatabaseMonitor database={database} />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={backupsIndex}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/backups')}
+          >
             <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
           </SafeTabPanel>
           {flags.databaseResize ? (
-            <SafeTabPanel index={resizeIndex}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/resize')}
+            >
               <DatabaseResize
                 database={database}
                 disabled={isDatabasesGrantReadOnly}
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={settingsIndex}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/settings')}
+          >
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
           {isAdvancedConfigEnabled && (
-            <SafeTabPanel index={tabs.length - 1}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/configs')}
+            >
               <DatabaseAdvancedConfiguration database={database} />
             </SafeTabPanel>
           )}
