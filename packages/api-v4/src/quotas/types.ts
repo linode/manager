@@ -20,7 +20,7 @@ export interface Quota {
   /**
    * A unique identifier for the quota.
    */
-  quota_id: number;
+  quota_id: string;
 
   /**
    * The account-wide limit for this service, measured in units

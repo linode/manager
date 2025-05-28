@@ -106,7 +106,7 @@ describe('SMTPRestrictionText component', () => {
 
     expect(getByText('open a support ticket')).toHaveAttribute(
       'href',
-      '/support/tickets'
+      '/support/tickets/open?dialogOpen=true'
     );
   });
 });

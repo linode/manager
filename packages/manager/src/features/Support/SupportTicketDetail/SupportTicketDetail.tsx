@@ -6,10 +6,9 @@ import {
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Waypoint } from 'react-waypoint';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -23,6 +22,7 @@ import { ReplyContainer } from './TabbedReply/ReplyContainer';
 import { TicketStatus } from './TicketStatus';
 
 import type { SupportReply } from '@linode/api-v4/lib/support';
+import type { SupportState } from 'src/routes/support';
 
 export interface AttachmentError {
   error: string;
@@ -30,23 +30,26 @@ export interface AttachmentError {
 }
 
 export const SupportTicketDetail = () => {
-  const history = useHistory<{ attachmentErrors?: AttachmentError[] }>();
   const location = useLocation();
-  const { ticketId } = useParams<{ ticketId: string }>();
-  const id = Number(ticketId);
+  const { ticketId } = useParams({ from: '/support/tickets/$ticketId' });
 
-  const attachmentErrors = history.location.state?.attachmentErrors;
+  const locationState = location.state as SupportState;
 
   const { data: profile } = useProfile();
 
-  const { data: ticket, error, isLoading, refetch } = useSupportTicketQuery(id);
+  const {
+    data: ticket,
+    error,
+    isLoading,
+    refetch,
+  } = useSupportTicketQuery(ticketId);
   const {
     data: repliesData,
     error: repliesError,
     fetchNextPage,
     hasNextPage,
     isLoading: repliesLoading,
-  } = useInfiniteSupportTicketRepliesQuery(id);
+  } = useInfiniteSupportTicketRepliesQuery(ticketId);
 
   const replies = repliesData?.pages.flatMap((page) => page.data);
 
@@ -79,11 +82,7 @@ export const SupportTicketDetail = () => {
           crumbOverrides: [
             {
               linkTo: {
-                pathname: `/support/tickets`,
-                // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
-                search: `type=${
-                  ticket.status === 'closed' ? 'closed' : 'open'
-                }`,
+                pathname: `/support/tickets/${ticket.status}`,
               },
               position: 2,
             },
@@ -95,15 +94,17 @@ export const SupportTicketDetail = () => {
       <StyledStack spacing={2}>
         <TicketStatus {...ticket} />
         {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
-        {attachmentErrors !== undefined &&
-          !isEmpty(attachmentErrors) &&
-          attachmentErrors?.map((error, idx: number) => (
-            <AttachmentError
-              fileName={error.file}
-              key={idx}
-              reason={error.error}
-            />
-          ))}
+        {locationState?.attachmentErrors !== undefined &&
+          !isEmpty(locationState?.attachmentErrors) &&
+          locationState?.attachmentErrors?.map(
+            (error: AttachmentError, idx: number) => (
+              <AttachmentError
+                fileName={error.file}
+                key={idx}
+                reason={error.error}
+              />
+            )
+          )}
         <Grid container spacing={2}>
           <Grid size={12} style={{ padding: 0 }}>
             {/* If the ticket isn't blank, display it, followed by replies (if any). */}
@@ -152,9 +153,3 @@ const StyledStack = styled(Stack, {
   marginLeft: theme.spacing(),
   marginRight: theme.spacing(),
 }));
-
-export const supportTicketDetailLazyRoute = createLazyRoute(
-  '/support/tickets/$ticketId'
-)({
-  component: SupportTicketDetail,
-});

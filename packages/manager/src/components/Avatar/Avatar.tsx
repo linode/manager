@@ -8,7 +8,7 @@ import AkamaiWave from 'src/assets/logo/akamai-wave.svg';
 
 import type { SxProps, Theme } from '@mui/material';
 
-export const DEFAULT_AVATAR_SIZE = 28;
+const DEFAULT_AVATAR_SIZE = 28;
 
 export interface AvatarProps {
   /**
