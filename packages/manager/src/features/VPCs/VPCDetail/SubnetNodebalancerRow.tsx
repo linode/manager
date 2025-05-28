@@ -47,7 +47,7 @@ export const SubnetNodeBalancerRow = ({
     return acc + config.nodes_status.up;
   }, 0); // add the uptime for each config together
 
-  if (nodebalancerLoading || !nodebalancer) {
+  if (nodebalancerLoading) {
     return (
       <TableRow hover={hover}>
         <TableCell colSpan={6} style={{ textAlign: 'center' }}>
@@ -57,7 +57,7 @@ export const SubnetNodeBalancerRow = ({
     );
   }
 
-  if (nodebalancerError) {
+  if (nodebalancerError || !nodebalancer) {
     return (
       <TableRow data-testid="subnet-nodebalancer-row-error" hover={hover}>
         <TableCell colSpan={6} style={{ justifyItems: 'center' }}>

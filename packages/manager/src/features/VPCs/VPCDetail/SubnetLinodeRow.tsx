@@ -111,7 +111,7 @@ export const SubnetLinodeRow = (props: Props) => {
       )
     : _hasUnrecommendedConfiguration(config, subnetId);
 
-  if (linodeLoading || !linode) {
+  if (linodeLoading) {
     return (
       <TableRow hover={hover}>
         <TableCell colSpan={6} style={{ textAlign: 'center' }}>
@@ -121,7 +121,7 @@ export const SubnetLinodeRow = (props: Props) => {
     );
   }
 
-  if (linodeError) {
+  if (linodeError || !linode) {
     return (
       <TableRow data-testid="subnet-linode-row-error" hover={hover}>
         <TableCell colSpan={5} style={{ justifyItems: 'center' }}>
