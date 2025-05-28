@@ -48,7 +48,7 @@ describe('Images Landing Table', () => {
     );
 
     const { getAllByText, queryByTestId } = renderWithTheme(
-      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images'})
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
     const loadingElement = queryByTestId(loadingTestId);
@@ -108,7 +108,7 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getByText, queryByTestId } =  renderWithTheme(
+    const { getByText, queryByTestId } = renderWithTheme(
       wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
     const loadingElement = queryByTestId(loadingTestId);
@@ -130,7 +130,9 @@ describe('Images Landing Table', () => {
       wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
-    const emptyStateMessage = await findByText('Store custom Linux images', { exact: false });
+    const emptyStateMessage = await findByText('Store custom Linux images', {
+      exact: false,
+    });
 
     expect(emptyStateMessage).toBeVisible();
   });
@@ -147,16 +149,16 @@ describe('Images Landing Table', () => {
       http.get('*/images', ({ request }) => {
         if (request.headers.get('x-filter')?.includes('automatic')) {
           return HttpResponse.json(makeResourcePage([]));
-        } 
+        }
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
-    const {
-      findByLabelText,
-      findByText,
-      getByText,
-    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
+    const { findByLabelText, findByText, getByText } =
+      await renderWithThemeAndRouter(<ImagesLanding />, {
+        initialRoute: '/images',
+        routeTree: migrationRouteTree,
+      });
 
     const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
@@ -178,15 +180,15 @@ describe('Images Landing Table', () => {
       http.get('*/images', ({ request }) => {
         if (request.headers.get('x-filter')?.includes('automatic')) {
           return HttpResponse.json(makeResourcePage([]));
-        } 
+        }
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
-    const {
-      getByText,
-      findByLabelText
-    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
+    const { getByText, findByLabelText } = await renderWithThemeAndRouter(
+      <ImagesLanding />,
+      { initialRoute: '/images', routeTree: migrationRouteTree }
+    );
 
     const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
@@ -195,7 +197,9 @@ describe('Images Landing Table', () => {
     await userEvent.click(getByText('Rebuild an Existing Linode'));
 
     await waitFor(() => {
-      expect(getByText('Rebuild an Existing Linode from an Image')).toBeVisible();
+      expect(
+        getByText('Rebuild an Existing Linode from an Image')
+      ).toBeVisible();
     });
   });
 
@@ -212,8 +216,9 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { getAllByLabelText, getByText, queryByTestId } =
-       renderWithTheme(wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' }));
+    const { getAllByLabelText, getByText, queryByTestId } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
+    );
 
     const loadingElement = queryByTestId(loadingTestId);
     if (loadingElement) {
@@ -243,15 +248,15 @@ describe('Images Landing Table', () => {
       http.get('*/images', ({ request }) => {
         if (request.headers.get('x-filter')?.includes('automatic')) {
           return HttpResponse.json(makeResourcePage([]));
-        } 
+        }
         return HttpResponse.json(makeResourcePage(images));
       })
     );
 
-    const {
-      getByText,
-      findByLabelText,
-    } = await renderWithThemeAndRouter(<ImagesLanding />, { initialRoute: '/images', routeTree: migrationRouteTree });
+    const { getByText, findByLabelText } = await renderWithThemeAndRouter(
+      <ImagesLanding />,
+      { initialRoute: '/images', routeTree: migrationRouteTree }
+    );
 
     const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
@@ -285,7 +290,9 @@ describe('Images Landing Table', () => {
       wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
     );
 
-    const createImageButton = (await findByText('Create Image')).closest('button');
+    const createImageButton = (await findByText('Create Image')).closest(
+      'button'
+    );
 
     expect(createImageButton).toBeDisabled();
     expect(createImageButton).toHaveAttribute(
@@ -332,8 +339,9 @@ describe('Images Landing Table', () => {
       })
     );
 
-    const { findAllByLabelText, findByLabelText } =
-      renderWithTheme(wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' }));
+    const { findAllByLabelText, findByLabelText } = renderWithTheme(
+      wrapWithRouter(<ImagesLanding />, { initialRoute: '/images' })
+    );
 
     const actionMenu = await findByLabelText(
       `Action menu for Image ${images[0].label}`
