@@ -1,8 +1,12 @@
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { databaseFactory, databaseTypeFactory } from 'src/factories';
+import {
+  databaseFactory,
+  databaseTypeFactory,
+  vpcFactory,
+} from 'src/factories';
 import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -22,9 +26,10 @@ describe('database summary section', () => {
       beta: false,
       enabled: true,
     },
+    databaseVpc: true,
   };
 
-  it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
+  it('should render the correct number of node radio buttons, associated costs, vpc label and summary', async () => {
     const standardTypes = databaseTypeFactory.buildList(7, {
       class: 'standard',
     });
@@ -43,27 +48,46 @@ describe('database summary section', () => {
         return HttpResponse.json(
           makeResourcePage([...mockDedicatedTypes, ...standardTypes])
         );
+      }),
+      http.get('*/vpcs', () => {
+        return HttpResponse.json(
+          makeResourcePage([vpcFactory.build({ label: 'VPC 1' })])
+        );
       })
     );
 
-    const { getByTestId, getByText, getByLabelText } =
+    const { getByTestId, findAllByText, findByText } =
       await renderWithThemeAndRouter(<DatabaseCreate />, {
         flags,
       });
-
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const regionSelect = getByLabelText('Region');
+    // Simulate Region Selection
+    const regionSelect = getByTestId('region-select').querySelector(
+      'input'
+    ) as HTMLInputElement;
+
+    // Open the autocomplete dropdown
     await userEvent.click(regionSelect);
-    await userEvent.click(getByText('US, Newark, NJ (us-east)'));
 
-    const selectedPlan = await waitFor(
-      () => document.getElementById('g6-dedicated-2') as HTMLInputElement
-    );
-    await userEvent.click(selectedPlan);
+    const regionOption = await findByText('US, Newark, NJ (us-east)');
+    await userEvent.click(regionOption);
 
+    const selectedPlan = await findAllByText('Linode 2 GB');
+    await userEvent.click(selectedPlan[0]);
+
+    // Simulate VPC Selection
+    const vpcSelector = getByTestId('database-vpc-selector').querySelector(
+      'input'
+    ) as HTMLInputElement;
+    await userEvent.click(vpcSelector);
+    const newVPC = await findByText('VPC 1');
+    await userEvent.click(newVPC);
+
+    // Check summary contents (ie. plan, nodes, VPC)
     const summary = getByTestId('currentSummary');
-    const selectedPlanText = 'Dedicated 4 GB $60/month';
+    const selectedPlanText =
+      'Linode 2 GB $60/month3 Nodes - HA $140/monthVPC 1 VPC';
     expect(summary).toHaveTextContent(selectedPlanText);
     const selectedNodesText = '3 Nodes - HA $140/month';
     expect(summary).toHaveTextContent(selectedNodesText);
@@ -76,14 +100,12 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-
     const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
       }
     );
-
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -108,7 +130,6 @@ describe('database summary section', () => {
         flags,
       }
     );
-
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

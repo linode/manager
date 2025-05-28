@@ -1,7 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
-import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
+import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -23,6 +23,7 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseLogo } from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import {
   useCreateDatabaseMutation,
@@ -34,11 +35,14 @@ import { validateIPs } from 'src/utilities/ipUtils';
 
 import { ACCESS_CONTROLS_IP_VALIDATION_ERROR_TEXT } from '../constants';
 import { DatabaseCreateAccessControls } from './DatabaseCreateAccessControls';
+import { DatabaseCreateNetworkingConfiguration } from './DatabaseCreateNetworkingConfiguration';
 
+import type { AccessProps } from './DatabaseCreateAccessControls';
 import type {
   ClusterSize,
   CreateDatabasePayload,
   Engine,
+  VPC,
 } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { PlanSelectionWithDatabaseType } from 'src/features/components/PlansPanel/types';
@@ -70,12 +74,17 @@ export const DatabaseCreate = () => {
     platform: 'rdbms-default',
   });
 
+  const flags = useFlags();
+  const isVPCEnabled = flags.databaseVpc;
+
   const formRef = React.useRef<HTMLFormElement>(null);
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const [selectedVPC, setSelectedVPC] = React.useState<null | VPC>(null);
+  const isVPCSelected = Boolean(selectedVPC);
 
   const handleIPBlur = (ips: ExtendedIP[]) => {
     const ipsWithMasks = enforceIPMasks(ips);
@@ -117,11 +126,20 @@ export const DatabaseCreate = () => {
       }
       return accum;
     }, []);
+    const hasVpc =
+      values.private_network.vpc_id && values.private_network.subnet_id;
+    const privateNetwork = hasVpc ? values.private_network : null;
 
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: _allow_list,
+      private_network: privateNetwork,
     };
+
+    // TODO (UIE-8831): Remove post VPC release, since it will always be in create payload
+    if (!isVPCEnabled) {
+      delete createPayload.private_network;
+    }
     try {
       const response = await createDatabase(createPayload);
       navigate({
@@ -156,12 +174,18 @@ export const DatabaseCreate = () => {
     label: '',
     region: '',
     type: '',
+    private_network: {
+      vpc_id: null,
+      subnet_id: null,
+      public_access: false,
+    },
   };
 
   const {
     errors,
     handleSubmit,
     isSubmitting,
+    resetForm,
     setFieldError,
     setFieldValue,
     setSubmitting,
@@ -174,7 +198,7 @@ export const DatabaseCreate = () => {
       scrollErrorIntoViewV2(formRef);
     },
     validateOnChange: false,
-    validationSchema: createDatabaseSchema,
+    validationSchema: getDynamicDatabaseSchema(isVPCSelected),
   });
 
   React.useEffect(() => {
@@ -220,6 +244,15 @@ export const DatabaseCreate = () => {
     return displayTypes?.find((type) => type.id === values.type);
   }, [displayTypes, values.type]);
 
+  const accessControlsConfiguration: AccessProps = {
+    disabled: isRestricted,
+    errors: ipErrorsFromAPI,
+    ips: values.allow_list,
+    onBlur: handleIPBlur,
+    onChange: (ips: ExtendedIP[]) => setFieldValue('allow_list', ips),
+    variant: isVPCEnabled ? 'networking' : 'standard',
+  };
+
   const handleTabChange = (index: number) => {
     setSelectedTab(index);
     setFieldValue('type', undefined);
@@ -237,6 +270,24 @@ export const DatabaseCreate = () => {
   const handleNodeChange = (size: ClusterSize | undefined) => {
     setFieldValue('cluster_size', size);
   };
+
+  const handleNetworkingConfigurationChange = (vpc: null | VPC) => {
+    setSelectedVPC(vpc);
+  };
+
+  const handleResetForm = (partialValues?: Partial<DatabaseCreateValues>) => {
+    if (partialValues) {
+      resetForm({
+        values: {
+          ...values,
+          ...partialValues,
+        },
+      });
+    } else {
+      resetForm();
+    }
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
@@ -314,19 +365,31 @@ export const DatabaseCreate = () => {
             />
           </Grid>
           <Divider spacingBottom={12} spacingTop={26} />
-          <DatabaseCreateAccessControls
-            disabled={isRestricted}
-            errors={ipErrorsFromAPI}
-            ips={values.allow_list}
-            onBlur={handleIPBlur}
-            onChange={(ips: ExtendedIP[]) => setFieldValue('allow_list', ips)}
-          />
+          {isVPCEnabled ? (
+            <DatabaseCreateNetworkingConfiguration
+              accessControlsConfiguration={accessControlsConfiguration}
+              errors={errors}
+              onChange={(field: string, value: boolean | null | number) =>
+                setFieldValue(field, value)
+              }
+              onNetworkingConfigurationChange={
+                handleNetworkingConfigurationChange
+              }
+              privateNetworkValues={values.private_network}
+              resetFormFields={handleResetForm}
+              selectedRegionId={values.region}
+            />
+          ) : (
+            <DatabaseCreateAccessControls {...accessControlsConfiguration} />
+          )}
         </Paper>
         <Paper sx={{ marginTop: 3 }}>
           <DatabaseSummarySection
             currentClusterSize={values.cluster_size}
             currentEngine={selectedEngine}
             currentPlan={selectedPlan}
+            mode="create"
+            selectedVPC={selectedVPC}
           />
         </Paper>
         <StyledBtnCtn>
