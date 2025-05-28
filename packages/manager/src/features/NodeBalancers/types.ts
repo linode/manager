@@ -34,6 +34,7 @@ export interface NodeBalancerConfigNodeFields
    * @note `port` is an "extended" field. The API includes it in the `address`
    */
   port?: number;
+  subnet_id?: number;
 }
 
 export interface NodeBalancerConfigPanelProps {
@@ -55,6 +56,8 @@ export interface NodeBalancerConfigPanelProps {
   healthCheckType: 'connection' | 'http' | 'http_body' | 'none';
 
   nodeBalancerRegion?: string;
+  nodeBalancerSubnetId?: number;
+  nodeBalancerVpcId?: null | number;
   nodeMessage?: string;
 
   nodes: NodeBalancerConfigNodeFields[];
@@ -72,7 +75,11 @@ export interface NodeBalancerConfigPanelProps {
   onHealthCheckTimeoutChange: (v: number | string) => void;
 
   onHealthCheckTypeChange: (v: string) => void;
-  onNodeAddressChange: (nodeIdx: number, value: string) => void;
+  onNodeAddressChange: (
+    nodeIdx: number,
+    value: string,
+    subnetId?: number
+  ) => void;
 
   onNodeLabelChange: (nodeIdx: number, value: string) => void;
   onNodeModeChange?: (nodeIdx: number, value: string) => void;

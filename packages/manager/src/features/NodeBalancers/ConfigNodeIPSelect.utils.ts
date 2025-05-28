@@ -1,8 +1,8 @@
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
-import type { Linode } from '@linode/api-v4';
+import type { Linode, LinodeIPsResponse, Subnet } from '@linode/api-v4';
 
-interface PrivateIPOption {
+export interface PrivateIPOption {
   /**
    * A private IPv4 address
    */
@@ -11,6 +11,29 @@ interface PrivateIPOption {
    * The Linode associated with the private IPv4 address
    */
   linode: Linode;
+}
+
+export interface VPCIPOption {
+  /**
+   * A VPC IPv4 address
+   */
+  label: string;
+  /**
+   * The ID for the Linode associated with the VPC IPv4 address
+   */
+  linodeId: number;
+  /**
+   * The label for the Linode
+   */
+  linodeLabel: string;
+  /**
+   * The ID for the Subnet associated with the VPC IPv4 address
+   */
+  subnetId: number;
+  /**
+   * The label for the Subnet
+   */
+  subnetLabel: string;
 }
 
 /**
@@ -32,5 +55,47 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
     }
   }
 
+  return options;
+};
+
+export const getVPCIPOptions = (
+  vpcIPs: LinodeIPsResponse[] | undefined,
+  linodes: Linode[] | undefined,
+  subnet?: Subnet
+) => {
+  if (!vpcIPs || !subnet) {
+    return [];
+  }
+
+  const options: VPCIPOption[] = [];
+
+  const linodeLabelMap = (linodes ?? []).reduce(
+    (acc: Record<number, string>, linode) => {
+      acc[linode.id] = linode.label;
+      return acc;
+    },
+    {}
+  );
+
+  vpcIPs.forEach(({ ipv4 }) => {
+    if (ipv4.vpc) {
+      const vpcData = ipv4.vpc
+        ?.filter((vpc) => vpc.subnet_id === subnet.id)
+        .map((vpc) => {
+          const linodeLabel = linodeLabelMap[vpc.linode_id];
+
+          return {
+            label: vpc.address,
+            linodeLabel,
+            linodeId: vpc.linode_id,
+            subnetLabel: subnet.label,
+            subnetId: vpc.subnet_id,
+          };
+        });
+      if (vpcData) {
+        options.push(...vpcData);
+      }
+    }
+  });
   return options;
 };

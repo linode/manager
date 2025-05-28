@@ -66,7 +66,7 @@ import {
 import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
+import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 import type { Tag } from 'src/components/TagsInput/TagsInput';
 
@@ -162,13 +162,13 @@ const NodeBalancerCreate = () => {
     globalGrantType: 'add_nodebalancers',
   });
 
-  const [isVpcSelected, setIsVpcSelected] = React.useState<boolean>(false);
+  const [vpcSelected, setVPCSelected] = React.useState<null | VPC>(null);
   const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setVPCErrors([]);
-  }, [isVpcSelected]);
+  }, [vpcSelected]);
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -229,9 +229,13 @@ const NodeBalancerCreate = () => {
   const onNodeAddressChange = (
     configIdx: number,
     nodeIdx: number,
-    value: string
+    value: string,
+    subnetId?: number
   ) => {
     setNodeValue(configIdx, nodeIdx, 'address', value);
+    if (subnetId) {
+      setNodeValue(configIdx, nodeIdx, 'subnet_id', subnetId);
+    }
   };
 
   const onNodePortChange = (
@@ -321,7 +325,7 @@ const NodeBalancerCreate = () => {
   };
 
   const onCreate = () => {
-    if (isVpcSelected && nodeBalancerFields?.vpcs === undefined) {
+    if (vpcSelected && nodeBalancerFields?.vpcs === undefined) {
       const subnetError = {
         field: 'vpc[0].subnet_id',
         reason: 'Subnet is required',
@@ -382,7 +386,7 @@ const NodeBalancerCreate = () => {
         const vpcErrors = errors
           .map((err) => {
             if (!err?.field) return null;
-            if (err?.field.includes('subnet_id')) {
+            if (err?.field.includes('vpcs[0].subnet_id')) {
               return {
                 field: 'vpcs.subnet_id',
                 reason: err.reason,
@@ -495,7 +499,7 @@ const NodeBalancerCreate = () => {
       ...prev,
       region,
     }));
-    setIsVpcSelected(false);
+    setVPCSelected(null);
     resetNodeAddresses();
   };
 
@@ -515,10 +519,11 @@ const NodeBalancerCreate = () => {
       });
     } else {
       const vpcs = subnetIds.map((id) => ({ subnet_id: id }));
-      setNodeBalancerFields((prev) => ({
-        ...prev,
-        vpcs,
-      }));
+      // setNodeBalancerFields((prev) => ({
+      //   ...prev,
+      //   vpcs,
+      // }));
+      setNodeBalancerFields((prev) => ({ ...prev, vpcs: vpcs }));
     }
   };
 
@@ -720,9 +725,10 @@ const NodeBalancerCreate = () => {
             errors={vpcErrors}
             ipv4Change={ipv4Change}
             regionSelected={nodeBalancerFields.region ?? ''}
-            setIsVpcSelected={setIsVpcSelected}
+            setVpcSelected={setVPCSelected}
             subnetChange={subnetChange}
             subnets={nodeBalancerFields.vpcs}
+            vpcSelected={vpcSelected}
           />
         )}
       </Stack>
@@ -763,6 +769,8 @@ const NodeBalancerCreate = () => {
                 }
                 healthCheckType={nodeBalancerFields.configs[idx].check!}
                 nodeBalancerRegion={nodeBalancerFields.region}
+                nodeBalancerSubnetId={nodeBalancerFields?.vpcs?.[0].subnet_id}
+                nodeBalancerVpcId={vpcSelected?.id}
                 nodes={nodeBalancerFields.configs[idx].nodes}
                 onAlgorithmChange={onChange('algorithm')}
                 onCheckBodyChange={onChange('check_body')}
@@ -776,8 +784,8 @@ const NodeBalancerCreate = () => {
                   onChange('check')(value);
                   afterHealthCheckTypeUpdate(idx);
                 }}
-                onNodeAddressChange={(nodeIndex, value) =>
-                  onNodeAddressChange(idx, nodeIndex, value)
+                onNodeAddressChange={(nodeIndex, value, subnetId) =>
+                  onNodeAddressChange(idx, nodeIndex, value, subnetId)
                 }
                 onNodeLabelChange={(nodeIndex, value) =>
                   onNodeLabelChange(idx, nodeIndex, value)

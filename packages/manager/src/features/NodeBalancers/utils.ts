@@ -64,6 +64,7 @@ export const getNodeForRequest = (
    */
   mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
+  subnet_id: node?.subnet_id,
   weight: +node.weight!,
 });
 
@@ -73,12 +74,16 @@ export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
 });
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
-  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
+  const match =
+    // eslint-disable-next-line sonarjs/regex-complexity
+    /^(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
+      node.address
+    );
   if (match) {
     return {
       ...node,
       address: match![1],
-      port: match![2],
+      port: match![3],
     };
   }
   return node;

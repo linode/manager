@@ -28,9 +28,10 @@ export interface Props {
   errors?: APIError[];
   ipv4Change: (ipv4Range: null | string, index: number) => void;
   regionSelected: string;
-  setIsVpcSelected: (vpc: boolean) => void;
+  setVpcSelected: (vpc: null | VPC) => void;
   subnetChange: (subnetIds: null | number[]) => void;
   subnets?: NodeBalancerVpcPayload[];
+  vpcSelected: null | VPC;
 }
 
 export const VPCPanel = (props: Props) => {
@@ -39,9 +40,10 @@ export const VPCPanel = (props: Props) => {
     errors,
     ipv4Change,
     regionSelected,
-    setIsVpcSelected,
+    setVpcSelected,
     subnets,
     subnetChange,
+    vpcSelected,
   } = props;
 
   const theme = useTheme();
@@ -62,14 +64,9 @@ export const VPCPanel = (props: Props) => {
 
   const [autoAssignIPv4WithinVPC, toggleAutoAssignIPv4Range] =
     React.useState<boolean>(true);
-  const [VPCSelected, setVPCSelected] = React.useState<null | VPC>(null);
-
-  React.useEffect(() => {
-    setVPCSelected(null);
-  }, [regionSelected]);
 
   const getVPCSubnetLabelFromId = (subnetId: number): string => {
-    const subnet = VPCSelected?.subnets.find(({ id }) => id === subnetId);
+    const subnet = vpcSelected?.subnets.find(({ id }) => id === subnetId);
     return subnet?.label || '';
   };
 
@@ -99,8 +96,7 @@ export const VPCPanel = (props: Props) => {
                 : 'There are no VPCs in the selected region.'
             }
             onChange={(e, vpc) => {
-              setVPCSelected(vpc ?? null);
-              setIsVpcSelected(Boolean(vpc));
+              setVpcSelected(vpc ?? null);
 
               if (vpc && vpc.subnets.length === 1) {
                 // If the user selects a VPC and the VPC only has one subnet,
@@ -116,9 +112,9 @@ export const VPCPanel = (props: Props) => {
             textFieldProps={{
               tooltipText: NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
             }}
-            value={VPCSelected ?? null}
+            value={vpcSelected ?? null}
           />
-          {VPCSelected && (
+          {vpcSelected && (
             <>
               <Autocomplete
                 errorText={
@@ -131,10 +127,10 @@ export const VPCPanel = (props: Props) => {
                 onChange={(_, subnet) =>
                   subnetChange(subnet ? [subnet.id] : null)
                 }
-                options={VPCSelected?.subnets ?? []}
+                options={vpcSelected?.subnets ?? []}
                 placeholder="Select Subnet"
                 value={
-                  VPCSelected?.subnets.find(
+                  vpcSelected?.subnets.find(
                     (subnet) => subnet.id === subnets?.[0].subnet_id
                   ) ?? null
                 }

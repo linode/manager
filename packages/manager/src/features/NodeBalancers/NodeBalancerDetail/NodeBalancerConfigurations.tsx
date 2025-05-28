@@ -3,7 +3,7 @@ import {
   createNodeBalancerConfigNode,
   deleteNodeBalancerConfig,
   deleteNodeBalancerConfigNode,
-  getNodeBalancerConfigNodes,
+  getNodeBalancerConfigNodesBeta,
   getNodeBalancerConfigs,
   updateNodeBalancerConfig,
   updateNodeBalancerConfigNode,
@@ -130,7 +130,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
     return Promise.all(
       configs.data.map((config) => {
-        return getNodeBalancerConfigNodes(nodeBalancerId, config.id).then(
+        return getNodeBalancerConfigNodesBeta(nodeBalancerId, config.id).then(
           ({ data: nodes }) => {
             return {
               ...config,
@@ -522,8 +522,13 @@ class NodeBalancerConfigurations extends React.Component<
   };
 
   onNodeAddressChange =
-    (configIdx: number) => (nodeIdx: number, value: string) =>
+    (configIdx: number) =>
+    (nodeIdx: number, value: string, subnetId?: number) => {
       this.setNodeValue(configIdx, nodeIdx, 'address', value);
+      if (subnetId) {
+        this.setNodeValue(configIdx, nodeIdx, 'subnet_id', subnetId);
+      }
+    };
 
   onNodeLabelChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value);
@@ -700,6 +705,8 @@ class NodeBalancerConfigurations extends React.Component<
             healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
             healthCheckType={view(L.healthCheckTypeLens, this.state)}
             nodeBalancerRegion={this.props.nodeBalancerRegion}
+            // nodeBalancerVpcId={107061}
+            // nodeBalancerSubnetId={103500}
             nodeMessage={panelNodeMessages[idx]}
             nodes={config.nodes}
             onAlgorithmChange={this.updateState(L.algorithmLens)}
