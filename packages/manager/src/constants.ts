@@ -7,9 +7,10 @@ import { getBooleanEnv } from '@linode/utilities';
 export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
-);
+export const ENABLE_DEV_TOOLS =
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS === undefined
+    ? import.meta.env.DEV
+    : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
 
 // allow us to explicity enable maintenance mode
 export const ENABLE_MAINTENANCE_MODE =
