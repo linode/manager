@@ -163,6 +163,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           <TableCell
             className={rowIsDisabled ? 'hasTooltip' : ''}
             data-qa-plan-name
+            sx={{ paddingLeft: 0.5 }}
           >
             {plan.heading} &nbsp;
             {showDisabledTooltip && (
