@@ -1,8 +1,8 @@
+import { useUpdateDomainMutation } from '@linode/queries';
 import { ActionsPanel } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import type { APIError, Domain } from '@linode/api-v4';
