@@ -13,31 +13,30 @@ import React from 'react';
 
 import { BLOCK_STORAGE_ENCRYPTION_SETTING_IMMUTABLE_COPY } from 'src/components/Encryption/constants';
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import { NotFound } from 'src/components/NotFound';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
 
-import type { Volume } from '@linode/api-v4';
+import type { APIError, Volume } from '@linode/api-v4';
 
 interface Props {
   isFetching?: boolean;
   onClose: () => void;
   open: boolean;
-  volume: Volume | undefined;
+  volume: undefined | Volume;
+  volumeError?: APIError[] | null;
 }
 
 export const EditVolumeDrawer = (props: Props) => {
-  const { isFetching, onClose: _onClose, open, volume } = props;
+  const { isFetching, onClose: _onClose, open, volume, volumeError } = props;
 
   const { data: grants } = useGrants();
 
   const { mutateAsync: updateVolume } = useUpdateVolumeMutation();
 
-  const {
-    isBlockStorageEncryptionFeatureEnabled,
-  } = useIsBlockStorageEncryptionFeatureEnabled();
+  const { isBlockStorageEncryptionFeatureEnabled } =
+    useIsBlockStorageEncryptionFeatureEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -85,7 +84,7 @@ export const EditVolumeDrawer = (props: Props) => {
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
+      error={volumeError}
       isFetching={isFetching}
       onClose={onClose}
       open={open}

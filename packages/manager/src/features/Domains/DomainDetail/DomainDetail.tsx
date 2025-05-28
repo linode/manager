@@ -1,23 +1,24 @@
 import {
+  useDomainQuery,
+  useDomainRecordsQuery,
+  useUpdateDomainMutation,
+} from '@linode/queries';
+import {
   CircleProgress,
   ErrorState,
   Notice,
   Paper,
+  Stack,
   Typography,
 } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { TagCell } from 'src/components/TagCell/TagCell';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import {
-  useDomainQuery,
-  useDomainRecordsQuery,
-  useUpdateDomainMutation,
-} from 'src/queries/domains';
 
 import { DeleteDomain } from '../DeleteDomain';
 import { DownloadDNSZoneFileButton } from '../DownloadDNSZoneFileButton';
@@ -31,10 +32,11 @@ export const DomainDetail = () => {
   const domainId = params.domainId;
   const location = useLocation();
   const locationState = location.state as DomainState;
-  const { data: domain, error, isLoading } = useDomainQuery(
-    domainId,
-    !!domainId
-  );
+  const {
+    data: domain,
+    error,
+    isLoading,
+  } = useDomainQuery(domainId, !!domainId);
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
   const {
     data: records,
@@ -109,20 +111,20 @@ export const DomainDetail = () => {
           },
           pathname: location.pathname,
         }}
+        docsLabel="Docs"
+        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         extraActions={
           <DownloadDNSZoneFileButton
             domainId={domain.id}
             domainLabel={domain.domain}
           />
         }
-        docsLabel="Docs"
-        docsLink="https://techdocs.akamai.com/cloud-computing/docs/dns-manager"
         title="Domain Details"
       />
       {locationState?.recordError && (
         <StyledNotice text={locationState.recordError} variant="error" />
       )}
-      <StyledRootGrid container>
+      <Stack spacing={3}>
         <StyledMainGrid size={{ xs: 12 }}>
           <DomainRecords
             domain={domain}
@@ -145,13 +147,14 @@ export const DomainDetail = () => {
           </StyledPaper>
           <StyledDiv>
             <DeleteDomain
+              domainError={error}
               domainId={domain.id}
               domainLabel={domain.domain}
               onSuccess={() => navigate({ to: '/domains' })}
             />
           </StyledDiv>
         </StyledTagSectionGrid>
-      </StyledRootGrid>
+      </Stack>
     </>
   );
 };
@@ -173,14 +176,6 @@ const StyledNotice = styled(Notice, { label: 'StyledNotice' })(({ theme }) => ({
   marginBottom: `0 !important`,
   marginTop: `${theme.spacing(3)} !important`,
 }));
-
-const StyledRootGrid = styled(Grid, { label: 'StyledRootGrid' })(
-  ({ theme }) => ({
-    marginBottom: theme.spacing(3),
-    marginLeft: 0,
-    marginRight: 0,
-  })
-);
 
 const StyledMainGrid = styled(Grid, { label: 'StyledMainGrid' })(
   ({ theme }) => ({

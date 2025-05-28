@@ -1,9 +1,9 @@
 import { Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Hidden } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -206,6 +206,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       filterOptions={{
                         header: table.header,
                       }}
+                      key={`plan-filter-${idx}`}
+                      plans={plans}
                       renderPlanSelection={() =>
                         renderPlanSelection({
                           header: table.header,
@@ -215,8 +217,6 @@ export const PlanContainer = (props: PlanContainerProps) => {
                       shouldDisplayNoRegionSelectedMessage={
                         shouldDisplayNoRegionSelectedMessage
                       }
-                      key={`plan-filter-${idx}`}
-                      plans={plans}
                       showNetwork={showNetwork}
                       showTransfer={showTransfer}
                     />
@@ -225,13 +225,13 @@ export const PlanContainer = (props: PlanContainerProps) => {
               })
             ) : (
               <PlanSelectionTable
+                key={planType}
+                plans={plans}
+                planType={planType}
+                renderPlanSelection={renderPlanSelection}
                 shouldDisplayNoRegionSelectedMessage={
                   shouldDisplayNoRegionSelectedMessage
                 }
-                key={planType}
-                planType={planType}
-                plans={plans}
-                renderPlanSelection={renderPlanSelection}
                 showNetwork={showNetwork}
                 showTransfer={showTransfer}
                 showUsableStorage={isDatabaseCreateFlow || isDatabaseResizeFlow}

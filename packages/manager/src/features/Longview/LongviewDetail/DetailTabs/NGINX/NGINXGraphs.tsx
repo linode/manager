@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -54,6 +54,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
       <Grid container direction="column" spacing={0}>
         <Grid size={{ xs: 12 }}>
           <LongviewLineGraph
+            ariaLabel="Requests Per Second Graph"
             data={[
               {
                 backgroundColor: theme.graphs.requests,
@@ -62,7 +63,6 @@ export const NGINXGraphs = React.memo((props: Props) => {
                 label: 'Requests',
               },
             ]}
-            ariaLabel="Requests Per Second Graph"
             subtitle="requests/s"
             title="Requests"
             unit=" requests/s"
@@ -73,6 +73,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
           <Grid container direction="row" spacing={2}>
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Connections Per Second Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.connections.accepted,
@@ -87,7 +88,6 @@ export const NGINXGraphs = React.memo((props: Props) => {
                     label: 'Handled',
                   },
                 ]}
-                ariaLabel="Connections Per Second Graph"
                 subtitle="connections/s"
                 title="Connections"
                 unit=" connections/s"
@@ -96,6 +96,7 @@ export const NGINXGraphs = React.memo((props: Props) => {
             </StyledSmallGraphGrid>
             <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
               <LongviewLineGraph
+                ariaLabel="Workers Graph"
                 data={[
                   {
                     backgroundColor: theme.graphs.workers.waiting,
@@ -116,7 +117,6 @@ export const NGINXGraphs = React.memo((props: Props) => {
                     label: 'Writing',
                   },
                 ]}
-                ariaLabel="Workers Graph"
                 title="Workers"
                 {...graphProps}
               />

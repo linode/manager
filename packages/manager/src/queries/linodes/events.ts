@@ -36,17 +36,12 @@ export const linodeEventsHandler = ({
   }
 
   switch (event.action) {
-    case 'linode_migrate':
-    case 'linode_migrate_datacenter':
-    case 'linode_migrate_datacenter_create':
-    case 'linode_mutate':
-    case 'linode_mutate_create':
-    case 'linode_resize':
-    case 'linode_resize_create':
-    case 'linode_resize_warm_create':
-    case 'linode_reboot':
-    case 'linode_update':
+    case 'linode_addip':
+    case 'linode_deleteip':
       invalidateQueries(linodeQueries.linodes);
+      invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
+      });
       invalidateQueries({
         exact: true,
         queryKey: linodeQueries.linode(linodeId).queryKey,
@@ -64,30 +59,48 @@ export const linodeEventsHandler = ({
         queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
       });
       return;
-    case 'linode_snapshot':
-      invalidateQueries(linodeQueries.linodes);
-      invalidateQueries({
-        exact: true,
-        queryKey: linodeQueries.linode(linodeId).queryKey,
-      });
-      invalidateQueries(linodeQueries.linode(linodeId)._ctx.backups);
-      return;
-    case 'linode_addip':
-    case 'linode_deleteip':
-      invalidateQueries(linodeQueries.linodes);
-      invalidateQueries({
-        queryKey: linodeQueries.linode(linodeId)._ctx.ips.queryKey,
-      });
-      invalidateQueries({
-        exact: true,
-        queryKey: linodeQueries.linode(linodeId).queryKey,
-      });
-      return;
-    case 'linode_create':
     case 'linode_clone':
+    case 'linode_create':
       invalidateQueries({
         queryKey: linodeQueries.linode(linodeId)._ctx.disks.queryKey,
       });
+      invalidateQueries(linodeQueries.linodes);
+      invalidateQueries({
+        exact: true,
+        queryKey: linodeQueries.linode(linodeId).queryKey,
+      });
+      return;
+    case 'linode_config_create':
+    case 'linode_config_delete':
+    case 'linode_config_update':
+      invalidateQueries({
+        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
+      });
+      return;
+    case 'linode_delete':
+      queryClient.removeQueries({
+        queryKey: linodeQueries.linode(linodeId).queryKey,
+      });
+      invalidateQueries({
+        queryKey: linodeQueries.linodes.queryKey,
+      });
+      // A Linode made have been on a Firewall's device list, but now that it is deleted,
+      // it will no longer be listed as a device on that firewall. Here, we invalidate outdated firewall data.
+      invalidateQueries({ queryKey: firewallQueries._def });
+      // A Linode may have been attached to a Volume, but deleted. We need to refetch volumes data so that
+      // the Volumes table does not show a Volume attached to a non-existant Linode.
+      invalidateQueries({ queryKey: volumeQueries.lists.queryKey });
+      return;
+    case 'linode_migrate':
+    case 'linode_migrate_datacenter':
+    case 'linode_migrate_datacenter_create':
+    case 'linode_mutate':
+    case 'linode_mutate_create':
+    case 'linode_reboot':
+    case 'linode_resize':
+    case 'linode_resize_create':
+    case 'linode_resize_warm_create':
+    case 'linode_update':
       invalidateQueries(linodeQueries.linodes);
       invalidateQueries({
         exact: true,
@@ -107,26 +120,13 @@ export const linodeEventsHandler = ({
         queryKey: linodeQueries.linode(linodeId).queryKey,
       });
       return;
-    case 'linode_delete':
-      queryClient.removeQueries({
+    case 'linode_snapshot':
+      invalidateQueries(linodeQueries.linodes);
+      invalidateQueries({
+        exact: true,
         queryKey: linodeQueries.linode(linodeId).queryKey,
       });
-      invalidateQueries({
-        queryKey: linodeQueries.linodes.queryKey,
-      });
-      // A Linode made have been on a Firewall's device list, but now that it is deleted,
-      // it will no longer be listed as a device on that firewall. Here, we invalidate outdated firewall data.
-      invalidateQueries({ queryKey: firewallQueries._def });
-      // A Linode may have been attached to a Volume, but deleted. We need to refetch volumes data so that
-      // the Volumes table does not show a Volume attached to a non-existant Linode.
-      invalidateQueries({ queryKey: volumeQueries.lists.queryKey });
-      return;
-    case 'linode_config_create':
-    case 'linode_config_delete':
-    case 'linode_config_update':
-      invalidateQueries({
-        queryKey: linodeQueries.linode(linodeId)._ctx.configs.queryKey,
-      });
+      invalidateQueries(linodeQueries.linode(linodeId)._ctx.backups);
       return;
   }
 };
@@ -150,6 +150,20 @@ export const diskEventHandler = ({
   invalidateQueries({
     queryKey: linodeQueries.linode(linodeId)._ctx.disks.queryKey,
   });
+};
+
+export const interfaceEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
+  // For Interface events, the `entity` is the Interface and the `secondary_entity` is the Linode.
+
+  if (event.secondary_entity) {
+    invalidateQueries({
+      queryKey: linodeQueries.linode(event.secondary_entity.id)._ctx.interfaces
+        .queryKey,
+    });
+  }
 };
 
 /**

@@ -1,7 +1,7 @@
 import { deleteDomainRecord as _deleteDomainRecord } from '@linode/api-v4/lib/domains';
-import { ActionsPanel, Typography } from '@linode/ui';
+import { ActionsPanel, Stack, Typography } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -232,11 +232,10 @@ export const DomainRecords = (props: Props) => {
     openForEditTXTRecord: (fields) => openForEditing('TXT', fields),
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const types = React.useMemo(() => generateTypes(props, handlers), [
-    domain,
-    domainRecords,
-  ]);
+  const types = React.useMemo(
+    () => generateTypes(props, handlers),
+    [domain, domainRecords]
+  );
 
   React.useEffect(() => {
     setState((prevState) => ({
@@ -248,76 +247,82 @@ export const DomainRecords = (props: Props) => {
   return (
     <>
       <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
-      {state.types.map((type, eachTypeIdx) => {
-        const ref: React.RefObject<HTMLDivElement> = React.createRef();
+      <Stack spacing={3}>
+        {state.types.map((type, eachTypeIdx) => {
+          const ref: React.RefObject<HTMLDivElement> = React.createRef();
 
-        return (
-          <div key={eachTypeIdx}>
-            <StyledGrid
-              alignItems="center"
-              container
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                <Typography
-                  aria-level={2}
-                  className="m0"
-                  data-qa-domain-record={type.title}
-                  role="heading"
-                  variant="h2"
-                >
-                  {type.title}
-                </Typography>
-              </Grid>
-              {type.link && (
-                <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                  {' '}
-                  <StyledDiv>{type.link()}</StyledDiv>{' '}
-                </Grid>
-              )}
-            </StyledGrid>
-            <OrderBy data={type.data} order={type.order} orderBy={type.orderBy}>
-              {({ data: orderedData }) => {
-                return (
-                  <Paginate
-                    data={orderedData}
-                    pageSize={storage.infinitePageSize.get()}
-                    pageSizeSetter={storage.infinitePageSize.set}
-                    scrollToRef={ref}
+          return (
+            <div key={eachTypeIdx}>
+              <StyledGrid
+                alignItems="center"
+                container
+                justifyContent="space-between"
+                spacing={2}
+              >
+                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                  <Typography
+                    aria-level={2}
+                    className="m0"
+                    data-qa-domain-record={type.title}
+                    role="heading"
+                    variant="h2"
                   >
-                    {({
-                      count,
-                      data: paginatedData,
-                      handlePageChange,
-                      handlePageSizeChange,
-                      page,
-                      pageSize,
-                    }) => (
-                      <DomainRecordTable
-                        count={count}
-                        handlePageChange={handlePageChange}
-                        handlePageSizeChange={handlePageSizeChange}
-                        page={page}
-                        pageSize={pageSize}
-                        paginatedData={paginatedData}
-                        type={type}
-                      />
-                    )}
-                  </Paginate>
-                );
-              }}
-            </OrderBy>
-          </div>
-        );
-      })}
+                    {type.title}
+                  </Typography>
+                </Grid>
+                {type.link && (
+                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                    {' '}
+                    <StyledDiv>{type.link()}</StyledDiv>{' '}
+                  </Grid>
+                )}
+              </StyledGrid>
+              <OrderBy
+                data={type.data}
+                order={type.order}
+                orderBy={type.orderBy}
+              >
+                {({ data: orderedData }) => {
+                  return (
+                    <Paginate
+                      data={orderedData}
+                      pageSize={storage.infinitePageSize.get()}
+                      pageSizeSetter={storage.infinitePageSize.set}
+                      scrollToRef={ref}
+                    >
+                      {({
+                        count,
+                        data: paginatedData,
+                        handlePageChange,
+                        handlePageSizeChange,
+                        page,
+                        pageSize,
+                      }) => (
+                        <DomainRecordTable
+                          count={count}
+                          handlePageChange={handlePageChange}
+                          handlePageSizeChange={handlePageSizeChange}
+                          page={page}
+                          pageSize={pageSize}
+                          paginatedData={paginatedData}
+                          type={type}
+                        />
+                      )}
+                    </Paginate>
+                  );
+                }}
+              </OrderBy>
+            </div>
+          );
+        })}
+      </Stack>
       <ConfirmationDialog
+        actions={renderDialogActions}
         error={
           state.confirmDialog.errors
             ? getErrorStringOrDefault(state.confirmDialog.errors)
             : undefined
         }
-        actions={renderDialogActions}
         onClose={handleCloseDialog}
         open={state.confirmDialog.open}
         ref={confirmDialogRef}

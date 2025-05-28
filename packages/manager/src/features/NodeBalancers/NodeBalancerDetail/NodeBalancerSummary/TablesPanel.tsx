@@ -53,6 +53,8 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -67,8 +69,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -103,6 +103,9 @@ export const TablesPanel = () => {
               dataKey: 'Connections',
             },
           ]}
+          ariaLabel="Connections Graph"
+          data={timeData}
+          height={412}
           legendRows={[
             {
               data: metrics,
@@ -117,16 +120,13 @@ export const TablesPanel = () => {
             right: 0,
             top: 0,
           }}
+          showLegend
+          timezone={timezone}
+          unit={' CXN/s'}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
           }}
-          ariaLabel="Connections Graph"
-          data={timeData}
-          height={412}
-          showLegend
-          timezone={timezone}
-          unit={' CXN/s'}
         />
       </Box>
     );
@@ -150,6 +150,8 @@ export const TablesPanel = () => {
     if (statsNotReadyError) {
       return (
         <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ height: 64, width: 64 }}
           errorText={
             <>
               <div>
@@ -164,8 +166,6 @@ export const TablesPanel = () => {
               </div>
             </>
           }
-          CustomIcon={PendingIcon}
-          CustomIconStyles={{ height: 64, width: 64 }}
         />
       );
     }
@@ -191,6 +191,9 @@ export const TablesPanel = () => {
               dataKey: 'Traffic Out',
             },
           ]}
+          ariaLabel="Network Traffic Graph"
+          data={timeData}
+          height={412}
           legendRows={[
             {
               data: getMetrics(trafficIn),
@@ -211,16 +214,13 @@ export const TablesPanel = () => {
             right: 0,
             top: 0,
           }}
+          showLegend
+          timezone={timezone}
+          unit={' bits/s'}
           xAxis={{
             tickFormat: 'hh a',
             tickGap: 60,
           }}
-          ariaLabel="Network Traffic Graph"
-          data={timeData}
-          height={412}
-          showLegend
-          timezone={timezone}
-          unit={' bits/s'}
         />
       </Box>
     );

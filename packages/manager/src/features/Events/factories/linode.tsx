@@ -1,14 +1,10 @@
-import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useLinodeQuery } from '@linode/queries';
-import { useTypeQuery } from 'src/queries/types';
 
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
-import type { Event } from '@linode/api-v4';
 
 export const linode: PartialEventMap<'linode'> = {
   linode_addip: {
@@ -344,6 +340,37 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
+  // @TODO Host & VM Maintenance: copy is not final
+  linode_poweroff_on: {
+    failed: (e) => (
+      <>
+        {e.description ?? 'Maintenance'}{' '}
+        <strong>power-on/power-off failed</strong> for Linode{' '}
+        <EventLink event={e} to="entity" />.
+      </>
+    ),
+    finished: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" />{' '}
+        <strong>power-on/power-off</strong>{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'} completed.
+      </>
+    ),
+    scheduled: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> has scheduled{' '}
+        <strong>power-on/power-off</strong>{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'}.
+      </>
+    ),
+    started: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is being{' '}
+        <strong>powered-on/powered-off</strong> for{' '}
+        {e.description?.toLowerCase() ?? 'maintenance'}.
+      </>
+    ),
+  },
   linode_reboot: {
     failed: (e) => (
       <>
@@ -457,7 +484,12 @@ export const linode: PartialEventMap<'linode'> = {
         <strong>resizing</strong>.
       </>
     ),
-    started: (e) => <LinodeResizeStartedMessage event={e} />,
+    started: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is <strong>resizing</strong>{' '}
+        to the selected plan.
+      </>
+    ),
   },
   linode_resize_create: {
     notification: (e) => (
@@ -539,27 +571,4 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
-};
-
-const LinodeResizeStartedMessage = ({ event }: { event: Event }) => {
-  const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
-  const type = useTypeQuery(linode?.type ?? '');
-
-  return (
-    <>
-      Linode <EventLink event={event} to="entity" /> is{' '}
-      <strong>resizing</strong>
-      {type && (
-        <>
-          {' '}
-          to the{' '}
-          {type.data?.label && (
-            <strong>{formatStorageUnits(type.data.label)}</strong>
-          )}{' '}
-          Plan
-        </>
-      )}
-      .
-    </>
-  );
 };

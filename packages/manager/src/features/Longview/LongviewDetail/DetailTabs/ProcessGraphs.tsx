@@ -1,5 +1,5 @@
 import { convertBytesToTarget, readableBytes } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -29,9 +29,10 @@ export const ProcessGraphs = React.memo((props: Props) => {
   const theme = useTheme();
 
   const _convertData = React.useCallback(convertData, [data, start, end]);
-  const _data = React.useMemo(() => sumRelatedProcessesAcrossAllUsers(data), [
-    data,
-  ]);
+  const _data = React.useMemo(
+    () => sumRelatedProcessesAcrossAllUsers(data),
+    [data]
+  );
 
   /**
    * These field names say kbytes, but Classic reports them
@@ -65,6 +66,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
         <Grid container direction="row" spacing={2}>
           <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
             <LongviewLineGraph
+              ariaLabel="CPU Usage Graph"
               data={[
                 {
                   backgroundColor: theme.graphs.cpu.percent,
@@ -73,7 +75,6 @@ export const ProcessGraphs = React.memo((props: Props) => {
                   label: 'CPU',
                 },
               ]}
-              ariaLabel="CPU Usage Graph"
               subtitle={'%'}
               title="CPU"
               unit="%"
@@ -82,6 +83,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
           </StyledSmallGraphGrid>
           <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
             <LongviewLineGraph
+              ariaLabel="RAM Usage Graph"
               data={[
                 {
                   backgroundColor: theme.graphs.ram,
@@ -93,7 +95,6 @@ export const ProcessGraphs = React.memo((props: Props) => {
               formatData={(value: number) =>
                 convertBytesToTarget(memoryUnit, value)
               }
-              ariaLabel="RAM Usage Graph"
               formatTooltip={(value: number) => readableBytes(value).formatted}
               subtitle={memoryUnit}
               title="RAM"
@@ -106,6 +107,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
         <Grid container direction="row" spacing={2}>
           <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
             <LongviewLineGraph
+              ariaLabel="Disk I/O Graph"
               data={[
                 {
                   backgroundColor: theme.graphs.diskIO.read,
@@ -123,7 +125,6 @@ export const ProcessGraphs = React.memo((props: Props) => {
               formatData={(value: number) =>
                 convertBytesToTarget(diskUnit, value)
               }
-              ariaLabel="Disk I/O Graph"
               formatTooltip={(value: number) => readableBytes(value).formatted}
               subtitle={`${diskUnit}/s`}
               title="Disk I/O"
@@ -133,6 +134,7 @@ export const ProcessGraphs = React.memo((props: Props) => {
           </StyledSmallGraphGrid>
           <StyledSmallGraphGrid size={{ sm: 6, xs: 12 }}>
             <LongviewLineGraph
+              ariaLabel="Process Count Graph"
               data={[
                 {
                   backgroundColor: theme.graphs.processCount,
@@ -141,7 +143,6 @@ export const ProcessGraphs = React.memo((props: Props) => {
                   label: 'Count',
                 },
               ]}
-              ariaLabel="Process Count Graph"
               suggestedMax={maxProcessCount}
               title="Process Count"
               {...graphProps}

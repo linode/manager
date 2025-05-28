@@ -3,9 +3,8 @@ import {
   getLongviewSubscriptions,
 } from '@linode/api-v4/lib/longview';
 import { useAccountSettings } from '@linode/queries';
-import { Notice } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -29,15 +28,12 @@ import type {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
-import type { LongviewState } from 'src/routes/longview';
 
 const LongviewClients = React.lazy(() => import('./LongviewClients'));
 const LongviewPlans = React.lazy(() => import('./LongviewPlans'));
 
 export const LongviewLanding = (props: LongviewProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as LongviewState;
   const { enqueueSnackbar } = useSnackbar();
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(
     () => getActiveLongviewPlan().then((response) => response),
@@ -106,8 +102,13 @@ export const LongviewLanding = (props: LongviewProps) => {
   const handleSubmit = () => {
     if (isManaged) {
       navigate({
-        state: (prev) => ({ ...prev, ...locationState }),
-        to: '/support/tickets',
+        state: (prev) => ({
+          ...prev,
+          supportTicketFormFields: {
+            title: 'Request for additional Longview clients',
+          },
+        }),
+        to: '/support/tickets/open',
       });
       return;
     }
@@ -118,17 +119,6 @@ export const LongviewLanding = (props: LongviewProps) => {
 
   return (
     <>
-      {isLongviewCreationRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Longview Clients',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         buttonDataAttrs={{
           tooltipText: getRestrictedResourceText({
@@ -144,6 +134,7 @@ export const LongviewLanding = (props: LongviewProps) => {
         loading={newClientLoading}
         onButtonClick={handleAddClient}
         removeCrumbX={1}
+        spacingBottom={4}
         title="Longview"
       />
       <StyledTabs index={tabIndex} onChange={handleTabChange}>

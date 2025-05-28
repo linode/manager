@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
@@ -67,13 +67,13 @@ export const EnvironmentToggleTool = () => {
         }}
       >
         <DevToolSelect
+          defaultValue={currentEnvLabel}
           onChange={(e) => {
             const selectedIndex = options.findIndex(
               (o) => o.label === e.target.value
             );
             setSelectedOption(Math.max(selectedIndex, 0));
           }}
-          defaultValue={currentEnvLabel}
           style={{ marginRight: 8, maxWidth: '100%' }}
         >
           <option disabled value="">
@@ -89,6 +89,8 @@ export const EnvironmentToggleTool = () => {
           })}
         </DevToolSelect>
         <button
+          className="dev-tools-button green"
+          disabled={selectedOptionLabel === currentEnvLabel}
           onClick={() => {
             const selected = options[selectedOption];
             if (selected) {
@@ -96,8 +98,6 @@ export const EnvironmentToggleTool = () => {
               window.location.reload();
             }
           }}
-          className="dev-tools-button green"
-          disabled={selectedOptionLabel === currentEnvLabel}
         >
           Refresh
         </button>

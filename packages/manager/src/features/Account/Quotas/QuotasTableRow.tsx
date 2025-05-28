@@ -10,7 +10,7 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsAkamaiAccount } from 'src/hooks/useIsAkamaiAccount';
 
-import { getQuotaError } from './utils';
+import { convertResourceMetric, getQuotaError, pluralizeMetric } from './utils';
 
 import type { Quota, QuotaUsage } from '@linode/api-v4';
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -25,6 +25,10 @@ interface QuotasTableRowProps {
   index: number;
   quota: QuotaWithUsage;
   quotaUsageQueries: UseQueryResult<QuotaUsage, Error>[];
+  setConvertedResourceMetrics: (resourceMetric: {
+    limit: number;
+    metric: string;
+  }) => void;
   setSelectedQuota: (quota: Quota) => void;
   setSupportModalOpen: (open: boolean) => void;
 }
@@ -39,6 +43,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     quotaUsageQueries,
     setSelectedQuota,
     setSupportModalOpen,
+    setConvertedResourceMetrics,
   } = props;
   const theme = useTheme();
   const flags = useFlags();
@@ -51,13 +56,27 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
     (flags.limitsEvolution?.requestForIncreaseDisabledForInternalAccountsOnly &&
       isAkamaiAccount);
 
+  const { convertedUsage, convertedLimit, convertedResourceMetric } =
+    convertResourceMetric({
+      initialResourceMetric: pluralizeMetric(
+        quota.quota_limit,
+        quota.resource_metric
+      ),
+      initialUsage: quota.usage?.usage ?? 0,
+      initialLimit: quota.quota_limit,
+    });
+
   const requestIncreaseAction: Action = {
     disabled: isRequestForQuotaButtonDisabled,
     onClick: () => {
       setSelectedQuota(quota);
       setSupportModalOpen(true);
+      setConvertedResourceMetrics({
+        limit: Number(convertedLimit),
+        metric: convertedResourceMetric,
+      });
     },
-    title: 'Request an Increase',
+    title: 'Request Increase',
   };
 
   return (
@@ -72,17 +91,21 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
             {quota.quota_name}
           </Typography>
           <TooltipIcon
+            placement="top"
+            status="help"
             sxTooltipIcon={{
               position: 'relative',
               top: -2,
             }}
-            placement="top"
-            status="help"
             text={quota.description}
+            tooltipPosition="right"
           />
         </Box>
       </TableCell>
-      <TableCell>{quota.quota_limit}</TableCell>
+      <TableCell>
+        {convertedLimit?.toLocaleString() ?? 'unknown'}{' '}
+        {convertedResourceMetric}
+      </TableCell>
       <TableCell>
         <Box sx={{ maxWidth: '80%' }}>
           {quotaUsageQueries[index]?.isLoading ? (
@@ -122,12 +145,12 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
                 max={quota.quota_limit}
                 rounded
                 sx={{ mb: 1, mt: 2, padding: '3px' }}
-                value={quota.usage?.used ?? 0}
+                value={quota.usage?.usage ?? 0}
               />
-              <Typography sx={{ mb: 1 }}>
-                {`${quota.usage?.used} of ${quota.quota_limit} ${
-                  quota.resource_metric
-                }${quota.quota_limit > 1 ? 's' : ''} used`}
+              <Typography sx={{ mb: 1, mt: -0.5 }}>
+                {`${convertedUsage?.toLocaleString() ?? 'unknown'} of ${
+                  convertedLimit?.toLocaleString() ?? 'unknown'
+                } ${convertedResourceMetric} used`}
               </Typography>
             </>
           ) : (

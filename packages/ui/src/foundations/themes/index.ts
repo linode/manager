@@ -43,8 +43,7 @@ type Fonts = {
 };
 
 type MergeTypes<A, B> = Omit<A, keyof B> &
-  Omit<B, keyof A> &
-  { [K in keyof A & keyof B]: A[K] | B[K] };
+  Omit<B, keyof A> & { [K in keyof A & keyof B]: A[K] | B[K] };
 
 type LightModeColors = typeof color;
 type DarkModeColors = typeof customDarkModeOptions.color;
@@ -79,7 +78,7 @@ type ComponentTypes = MergeTypes<ComponentTypesDark, ComponentTypesLight>;
  * This allows us to add custom fields to the theme.
  * Avoid doing this unless you have a good reason.
  */
-declare module '@mui/material/styles/createTheme' {
+declare module '@mui/material/styles' {
   export interface Theme {
     addCircleHoverEffect?: any;
     animateCircleIcon?: any;

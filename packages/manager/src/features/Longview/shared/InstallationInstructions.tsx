@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -45,6 +45,8 @@ export const InstallationInstructions = React.memo((props: Props) => {
             }}
           >
             <MaskableText
+              iconPosition="start"
+              isToggleable
               sxVisibilityTooltip={{
                 '& svg': {
                   height: 'auto',
@@ -52,8 +54,6 @@ export const InstallationInstructions = React.memo((props: Props) => {
                 },
                 marginRight: '24px',
               }}
-              iconPosition="start"
-              isToggleable
               text={command}
             >
               <pre>

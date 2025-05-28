@@ -1,6 +1,6 @@
 import { Paper } from '@linode/ui';
 import { isToday as _isToday } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -82,13 +82,13 @@ export const OverviewGraphs = (props: Props) => {
           }}
         >
           <Grid
+            container
+            direction="row"
+            spacing={4}
             sx={{
               alignItems: 'center',
               justifyContent: 'space-between',
             }}
-            container
-            direction="row"
-            spacing={4}
           >
             <Grid
               size={{

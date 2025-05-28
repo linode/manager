@@ -3,12 +3,11 @@ import { createLinodeRequestFactory } from '@linode/utilities';
 import { findOrCreateDependencyFirewall } from 'support/api/firewalls';
 import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
+import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 import { SimpleBackoffMethod } from 'support/util/backoff';
 import { pollLinodeDiskStatuses, pollLinodeStatus } from 'support/util/polling';
 import { randomLabel, randomString } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
-
-import { LINODE_CREATE_TIMEOUT } from 'support/constants/linodes';
 
 import { depaginate } from './paginate';
 
@@ -122,6 +121,7 @@ export const createTestLinode = async (
   const resolvedCreatePayload = {
     ...createLinodeRequestFactory.build({
       interface_generation: 'legacy_config',
+      firewall_id: null,
       booted: false,
       image: 'linode/ubuntu24.04',
       label: randomLabel(),

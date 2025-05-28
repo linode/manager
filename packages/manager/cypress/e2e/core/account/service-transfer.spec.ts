@@ -498,14 +498,14 @@ describe('Account service transfers', () => {
    */
   it('can not initiate a service transfer by managed users', () => {
     // Mock Linodes to initiate a service transfer.
-    const mockLinodes = new Array(5).fill(null).map(
-      (item: null, index: number): Linode => {
+    const mockLinodes = new Array(5)
+      .fill(null)
+      .map((item: null, index: number): Linode => {
         return linodeFactory.build({
           label: `Linode ${index}`,
           region: chooseRegion().id,
         });
-      }
-    );
+      });
 
     mockGetLinodes(mockLinodes).as('getLinodes');
     const errorMessage = 'You cannot initiate transfers with Managed enabled.';
@@ -546,7 +546,7 @@ describe('Account service transfers', () => {
           .within(() => {
             cy.get(`[data-qa-panel-summary="${transfer}"]`).click();
             // Error Icon should shows up.
-            cy.findByTestId('ErrorOutlineIcon').should('be.visible');
+            cy.findByTestId('error-state').should('be.visible');
             // Error message should be visible.
             cy.findByText(serviceTransferErrorMessage, { exact: false }).should(
               'be.visible'

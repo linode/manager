@@ -18,10 +18,8 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
@@ -225,15 +223,10 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
     };
   };
 
-  const filteredEndpointOptions:
-    | EndpointOption[]
-    | undefined = filteredEndpoints?.map(createEndpointOption);
+  const filteredEndpointOptions: EndpointOption[] | undefined =
+    filteredEndpoints?.map(createEndpointOption);
 
   const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
-
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
 
   const selectedEndpointOption = React.useMemo(() => {
     const currentEndpointType = watch('endpoint_type');
@@ -289,12 +282,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
   }, [watchRegion]);
 
   return (
-    <Drawer
-      NotFoundComponent={NotFound}
-      onClose={handleClose}
-      open={isOpen}
-      title="Create Bucket"
-    >
+    <Drawer onClose={handleClose} open={isOpen} title="Create Bucket">
       <form onSubmit={handleBucketFormSubmit}>
         {isRestrictedUser && (
           <Notice
@@ -307,6 +295,8 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           <Notice text={errors.root?.message} variant="error" />
         )}
         <Controller
+          control={control}
+          name="label"
           render={({ field }) => (
             <TextField
               data-qa-cluster-label
@@ -320,34 +310,41 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
               value={field.value ?? ''}
             />
           )}
-          control={control}
-          name="label"
         />
         <Controller
+          control={control}
+          name="region"
           render={({ field }) => (
             <BucketRegions
-              onChange={(value) => {
-                field.onChange(value);
-              }}
               disabled={isRestrictedUser}
               error={errors.region?.message}
               onBlur={field.onBlur}
+              onChange={(value) => {
+                field.onChange(value);
+              }}
               required
               selectedRegion={field.value}
             />
           )}
-          control={control}
-          name="region"
         />
         {selectedRegion?.id && <OveragePricing regionId={selectedRegion.id} />}
         {Boolean(storageEndpoints) && selectedRegion && (
           <>
             <Controller
+              control={control}
+              name="endpoint_type"
               render={({ field }) => (
                 <Autocomplete
+                  disableClearable={hasSingleEndpointType}
+                  errorText={errors.endpoint_type?.message}
+                  label="Object Storage Endpoint Type"
+                  loading={isStorageEndpointsLoading}
+                  onBlur={field.onBlur}
                   onChange={(_, endpointOption) =>
                     updateEndpointType(endpointOption)
                   }
+                  options={filteredEndpointOptions ?? []}
+                  placeholder="Object Storage Endpoint Type"
                   textFieldProps={{
                     containerProps: {
                       sx: {
@@ -368,39 +365,30 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
                     ),
                     helperTextPosition: 'top',
                   }}
-                  disableClearable={hasSingleEndpointType}
-                  errorText={errors.endpoint_type?.message}
-                  label="Object Storage Endpoint Type"
-                  loading={isStorageEndpointsLoading}
-                  onBlur={field.onBlur}
-                  options={filteredEndpointOptions ?? []}
-                  placeholder="Object Storage Endpoint Type"
                   value={selectedEndpointOption}
                 />
               )}
-              control={control}
-              name="endpoint_type"
             />
             {Boolean(storageEndpoints) && selectedEndpointOption && (
               <BucketRateLimitTable
+                endpointType={selectedEndpointOption?.endpoint_type}
                 typographyProps={{
                   marginTop: 1,
                   variant: 'inherit',
                 }}
-                endpointType={selectedEndpointOption?.endpoint_type}
               />
             )}
           </>
         )}
         {showGDPRCheckbox ? (
           <StyledEUAgreementCheckbox
+            checked={state.hasSignedAgreement}
             onChange={(e) =>
               setState((prev) => ({
                 ...prev,
                 hasSignedAgreement: e.target.checked,
               }))
             }
-            checked={state.hasSignedAgreement}
           />
         ) : null}
         <ActionsPanel
@@ -409,7 +397,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             disabled:
               (showGDPRCheckbox && !state.hasSignedAgreement) ||
               isErrorTypes ||
-              isBucketCreationRestricted,
+              isRestrictedUser,
             label: 'Create Bucket',
             loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:
@@ -421,13 +409,13 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
           secondaryButtonProps={{ label: 'Cancel', onClick: handleClose }}
         />
         <EnableObjectStorageModal
+          handleSubmit={handleSubmit(onSubmit)}
           onClose={() =>
             setState((prev) => ({
               ...prev,
               isEnableObjDialogOpen: false,
             }))
           }
-          handleSubmit={handleSubmit(onSubmit)}
           open={state.isEnableObjDialogOpen}
           regionId={selectedRegion?.id}
         />

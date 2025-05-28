@@ -6,14 +6,13 @@ import {
 } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import {
@@ -129,31 +128,10 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
-);
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (module) => ({
-      default: module.SupportTicketDetail,
-    })
-  )
-);
-const Help = React.lazy(() =>
-  import('./features/Help/index').then((module) => ({
-    default: module.HelpAndSupport,
-  }))
-);
-const SearchLanding = React.lazy(
-  () => import('src/features/Search/SearchLanding')
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
   }))
-);
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
 
@@ -226,6 +204,13 @@ export const MainContent = () => {
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
 
+  migrationRouter.update({
+    context: {
+      globalErrors,
+      queryClient,
+    },
+  });
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -235,34 +220,13 @@ export const MainContent = () => {
    */
   if (globalErrors.account_unactivated) {
     return (
-      <div className={classes.bgStyling}>
-        <div className={classes.activationWrapper}>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Logo className={classes.logo} width={215} />
-          </Box>
-          <Switch>
-            <Route
-              component={SupportTickets}
-              exact
-              path="/support/tickets"
-              strict
-            />
-            <Route
-              component={SupportTicketDetail}
-              exact
-              path="/support/tickets/:ticketId"
-              strict
-            />
-            <Route component={Help} exact path="/support" />
-            <Route component={AccountActivationLanding} />
-          </Switch>
-        </div>
-      </div>
+      <>
+        <Redirect to="/account-activation" />
+        <RouterProvider
+          context={{ queryClient }}
+          router={migrationRouter as AnyRouter}
+        />
+      </>
     );
   }
 
@@ -333,15 +297,12 @@ export const MainContent = () => {
                       flex: 1,
                       margin: '0 auto',
                       maxWidth: `${theme.breakpoints.values.lg}px !important`,
-                      pt: {
-                        md: 1.5,
-                        xs: theme.spacing(2),
-                      },
+                      pb: theme.spacingFunction(32),
+                      pt: theme.spacingFunction(24),
                       px: {
-                        md: theme.spacing(2),
+                        md: theme.spacingFunction(16),
                         xs: 0,
                       },
-                      py: 1.5,
                       transition: theme.transitions.create('opacity'),
                       width: isNarrowViewport
                         ? '100%'
@@ -359,62 +320,65 @@ export const MainContent = () => {
                       spacing={0}
                     >
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
-                        <GlobalNotifications />
-                        <React.Suspense fallback={<SuspenseLoader />}>
-                          <ErrorBoundaryFallback>
-                            <Switch>
-                              <Route
-                                component={LinodesRoutes}
-                                path="/linodes"
-                              />
-                              <Route
-                                component={Kubernetes}
-                                path="/kubernetes"
-                              />
-                              {isIAMEnabled && (
-                                <Route component={IAM} path="/iam" />
-                              )}
-                              <Route component={Account} path="/account" />
-                              <Route component={Profile} path="/profile" />
-                              <Route component={Help} path="/support" />
-                              <Route component={SearchLanding} path="/search" />
-                              <Route component={EventsLanding} path="/events" />
-                              {isDatabasesEnabled && (
+                        <div className="content-wrapper">
+                          <GlobalNotifications />
+                          <React.Suspense fallback={<SuspenseLoader />}>
+                            <ErrorBoundaryFallback>
+                              <Switch>
                                 <Route
-                                  component={Databases}
-                                  path="/databases"
+                                  component={LinodesRoutes}
+                                  path="/linodes"
                                 />
-                              )}
-                              {isACLPEnabled && (
                                 <Route
-                                  component={CloudPulseMetrics}
-                                  path="/metrics"
+                                  component={Kubernetes}
+                                  path="/kubernetes"
                                 />
-                              )}
-                              {isACLPEnabled && (
+                                {isIAMEnabled && (
+                                  <Route component={IAM} path="/iam" />
+                                )}
+                                <Route component={Account} path="/account" />
+                                <Route component={Profile} path="/profile" />
                                 <Route
-                                  component={CloudPulseAlerts}
-                                  path="/alerts"
+                                  component={EventsLanding}
+                                  path="/events"
                                 />
-                              )}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              {/**
-                               * This is the catch all routes that allows TanStack Router to take over.
-                               * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
-                               * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
-                               * This is a temporary solution until we are ready to fully migrate to TanStack Router.
-                               */}
-                              <Route path="*">
-                                <RouterProvider
-                                  context={{ queryClient }}
-                                  router={migrationRouter as AnyRouter}
-                                />
-                              </Route>
-                            </Switch>
-                          </ErrorBoundaryFallback>
-                        </React.Suspense>
+                                {isDatabasesEnabled && (
+                                  <Route
+                                    component={Databases}
+                                    path="/databases"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseMetrics}
+                                    path="/metrics"
+                                  />
+                                )}
+                                {isACLPEnabled && (
+                                  <Route
+                                    component={CloudPulseAlerts}
+                                    path="/alerts"
+                                  />
+                                )}
+                                <Redirect exact from="/" to={defaultRoot} />
+                                {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                                <Redirect from="/dashboard" to={defaultRoot} />
+                                {/**
+                                 * This is the catch all routes that allows TanStack Router to take over.
+                                 * When a route is not found here, it will be handled by the migration router, which in turns handles the NotFound component.
+                                 * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
+                                 * This is a temporary solution until we are ready to fully migrate to TanStack Router.
+                                 */}
+                                <Route path="*">
+                                  <RouterProvider
+                                    context={{ queryClient }}
+                                    router={migrationRouter as AnyRouter}
+                                  />
+                                </Route>
+                              </Switch>
+                            </ErrorBoundaryFallback>
+                          </React.Suspense>
+                        </div>
                       </Grid>
                     </Grid>
                   </Box>

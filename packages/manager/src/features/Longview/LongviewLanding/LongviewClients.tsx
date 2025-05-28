@@ -1,14 +1,13 @@
+import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { Autocomplete, Typography } from '@linode/ui';
-import { useLocation, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
 import withLongviewClients from 'src/containers/longview.container';
-import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 
 import { LongviewPackageDrawer } from '../LongviewPackageDrawer';
 import { sumUsedMemory } from '../shared/utilities';
@@ -31,7 +30,6 @@ import type {
   LongviewSubscription,
 } from '@linode/api-v4/lib/longview/types';
 import type { Props as LongviewProps } from 'src/containers/longview.container';
-import type { LongviewState } from 'src/routes/longview';
 import type { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import type { MapState } from 'src/store/types';
 
@@ -53,8 +51,6 @@ type SortKey = 'cpu' | 'load' | 'name' | 'network' | 'ram' | 'storage' | 'swap';
 export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const { getLongviewClients } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const locationState = location.state as LongviewState;
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: accountSettings } = useAccountSettings();
@@ -112,10 +108,8 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
    * available LV clients)
    */
 
-  const [
-    subscriptionDialogOpen,
-    setSubscriptionDialogOpen,
-  ] = React.useState<boolean>(false);
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] =
+    React.useState<boolean>(false);
 
   React.useEffect(() => {
     getLongviewClients();
@@ -130,8 +124,16 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
   const handleSubmit = () => {
     if (isManaged) {
       navigate({
-        state: (prev) => ({ ...prev, ...locationState }),
-        to: '/support/tickets',
+        state: (prev) => ({
+          ...prev,
+          supportTicketFormFields: {
+            title: 'Request for additional Longview clients',
+          },
+        }),
+        search: {
+          dialogOpen: drawerOpen,
+        },
+        to: '/support/tickets/open',
       });
       return;
     }
@@ -207,20 +209,20 @@ export const LongviewClients = (props: LongviewClientsCombinedProps) => {
         <StyledSortSelectGrid>
           <Typography sx={{ minWidth: '65px' }}>Sort by: </Typography>
           <Autocomplete
+            disableClearable
+            fullWidth
+            label="Sort by"
             onChange={(_, value) => {
               handleSortKeyChange(value);
             }}
+            options={sortOptions}
+            size="small"
             textFieldProps={{
               hideLabel: true,
             }}
             value={sortOptions.find(
               (thisOption) => thisOption.value === sortKey
             )}
-            disableClearable
-            fullWidth
-            label="Sort by"
-            options={sortOptions}
-            size="small"
           />
         </StyledSortSelectGrid>
       </StyledHeadingGrid>
@@ -291,11 +293,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, _ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default compose<LongviewClientsCombinedProps, Props>(
-  React.memo,
-  connected,
-  withLongviewClients()
-)(LongviewClients);
+export default React.memo(connected(withLongviewClients()(LongviewClients)));
 
 /**
  * Helper function for sortClientsBy,
@@ -331,33 +329,21 @@ export const sortClientsBy = (
   clientData: StatsState
 ) => {
   switch (sortKey) {
-    case 'name':
-      return clients.sort((a, b) => {
-        return sortFunc(a.label, b.label, 'asc');
-      });
     case 'cpu':
       return clients.sort((a, b) => {
         const aCPU = getFinalUsedCPU(clientData?.[a.id]?.data ?? {});
         const bCPU = getFinalUsedCPU(clientData?.[b.id]?.data ?? {});
         return sortFunc(aCPU, bCPU);
       });
-    case 'ram':
-      return clients.sort((a, b) => {
-        const aRam = sumUsedMemory(clientData?.[a.id]?.data ?? {});
-        const bRam = sumUsedMemory(clientData?.[b.id]?.data ?? {});
-        return sortFunc(aRam, bRam);
-      });
-    case 'swap':
-      return clients.sort((a, b) => {
-        const aSwap = clientData?.[a.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
-        const bSwap = clientData?.[b.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
-        return sortFunc(aSwap, bSwap);
-      });
     case 'load':
       return clients.sort((a, b) => {
         const aLoad = clientData?.[a.id]?.data?.Load?.[0]?.y ?? 0;
         const bLoad = clientData?.[b.id]?.data?.Load?.[0]?.y ?? 0;
         return sortFunc(aLoad, bLoad);
+      });
+    case 'name':
+      return clients.sort((a, b) => {
+        return sortFunc(a.label, b.label, 'asc');
       });
     case 'network':
       return clients.sort((a, b) => {
@@ -369,11 +355,23 @@ export const sortClientsBy = (
         );
         return sortFunc(aNet, bNet);
       });
+    case 'ram':
+      return clients.sort((a, b) => {
+        const aRam = sumUsedMemory(clientData?.[a.id]?.data ?? {});
+        const bRam = sumUsedMemory(clientData?.[b.id]?.data ?? {});
+        return sortFunc(aRam, bRam);
+      });
     case 'storage':
       return clients.sort((a, b) => {
         const aStorage = getUsedStorage(clientData?.[a.id]?.data ?? {});
         const bStorage = getUsedStorage(clientData?.[b.id]?.data ?? {});
         return sortFunc(aStorage, bStorage);
+      });
+    case 'swap':
+      return clients.sort((a, b) => {
+        const aSwap = clientData?.[a.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
+        const bSwap = clientData?.[b.id]?.data?.Memory?.swap?.used?.[0]?.y ?? 0;
+        return sortFunc(aSwap, bSwap);
       });
     default:
       return clients;

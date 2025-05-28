@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { accountFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseCreate from './DatabaseCreate';
@@ -43,6 +43,17 @@ describe('Database Create', () => {
     getAllByTestId('database-nodes');
     getAllByTestId('domain-transfer-input');
     getAllByText('Create Database Cluster');
+  });
+
+  it('should render VPC content when feature flag is present', async () => {
+    const { getAllByTestId, getAllByText } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        flags: { databaseVpc: true },
+      }
+    );
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
+    getAllByText('Configure Networking');
   });
 
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {

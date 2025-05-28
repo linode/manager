@@ -1,7 +1,7 @@
 import { useAccount, useClientToken } from '@linode/queries';
 import { CircleProgress, Tooltip } from '@linode/ui';
 import { useScript } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -83,9 +83,8 @@ export const GooglePayButton = (props: Props) => {
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, error: clientTokenError, isLoading } = useClientToken();
   const queryClient = useQueryClient();
-  const [initializationError, setInitializationError] = React.useState<boolean>(
-    false
-  );
+  const [initializationError, setInitializationError] =
+    React.useState<boolean>(false);
   const { data: account } = useAccount();
 
   const {
@@ -145,12 +144,12 @@ export const GooglePayButton = (props: Props) => {
   if (isLoading) {
     return (
       <Grid
+        className={classes.loading}
+        container
         sx={{
           alignContent: 'center',
           justifyContent: 'center',
         }}
-        className={classes.loading}
-        container
       >
         <CircleProgress size="sm" />
       </Grid>
@@ -183,5 +182,3 @@ export const GooglePayButton = (props: Props) => {
     </div>
   );
 };
-
-export default GooglePayButton;

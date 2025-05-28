@@ -1,8 +1,8 @@
+import { useProfile } from '@linode/queries';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { useProfile } from '@linode/queries';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -44,7 +44,7 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
       onClick: () => {
         history.push(`/iam/users/${username}/entities`);
       },
-      title: 'View Assigned Entities',
+      title: 'View Entity Access',
     },
     {
       disabled: username === profileUsername,

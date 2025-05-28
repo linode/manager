@@ -80,12 +80,8 @@ describe('PlacementGroupsCreateDrawer', () => {
   });
 
   it('should call the mutation when the form is submitted', async () => {
-    const {
-      getByLabelText,
-      getByPlaceholderText,
-      getByRole,
-      getByText,
-    } = renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
+    const { getByLabelText, getByPlaceholderText, getByRole, getByText } =
+      renderWithTheme(<PlacementGroupsCreateDrawer {...commonProps} />);
 
     fireEvent.change(getByLabelText('Label'), {
       target: { value: 'my-label' },

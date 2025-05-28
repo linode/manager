@@ -1,6 +1,6 @@
 import { Notice } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 
 export const StyledNotice = styled(Notice, {
   label: 'StyledNotice',

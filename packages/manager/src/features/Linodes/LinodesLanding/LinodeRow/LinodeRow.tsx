@@ -1,10 +1,10 @@
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
-import { capitalizeAllWords, formatStorageUnits } from '@linode/utilities';
+import { Hidden } from '@linode/ui';
+import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 
 import Flag from 'src/assets/icons/flag.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
-import { Hidden } from 'src/components/Hidden';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
@@ -72,7 +72,7 @@ export const LinodeRow = (props: Props) => {
       <>
         This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link to="/support/tickets/open">open support tickets.</Link>
       </>
     );
   };
@@ -107,7 +107,7 @@ export const LinodeRow = (props: Props) => {
         maintenance={Boolean(maintenance)}
         statusCell
       >
-        {!Boolean(maintenance) ? (
+        {!maintenance ? (
           loading ? (
             <>
               <StatusIcon status={iconStatus} />
@@ -122,7 +122,7 @@ export const LinodeRow = (props: Props) => {
           ) : (
             <>
               <StatusIcon status={iconStatus} />
-              {capitalizeAllWords(status.replace('_', ' '))}
+              {getFormattedStatus(status)}
             </>
           )
         ) : (

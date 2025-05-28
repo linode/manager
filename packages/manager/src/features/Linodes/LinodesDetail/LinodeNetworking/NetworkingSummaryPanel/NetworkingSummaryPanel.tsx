@@ -1,7 +1,7 @@
 import { useLinodeQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Paper } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -69,10 +69,10 @@ export const LinodeNetworkingSummaryPanel = React.memo((props: Props) => {
           />
         </Grid>
         <StyledDnsResolverGrid
+          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
           sx={{
             paddingBottom: 0,
           }}
-          size={{ md: 3.5, sm: hideNetworkTransfer ? 12 : 6, xs: 12 }}
         >
           <DNSResolvers region={linode.region} />
         </StyledDnsResolverGrid>

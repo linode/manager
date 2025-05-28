@@ -28,7 +28,6 @@ import * as React from 'react';
 
 import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { RemovableSelectionsListTable } from 'src/components/RemovableSelectionsList/RemovableSelectionsListTable';
 import { FirewallSelect } from 'src/features/Firewalls/components/FirewallSelect';
 import { getDefaultFirewallForInterfacePurpose } from 'src/features/Linodes/LinodeCreate/Networking/utilities';
@@ -72,6 +71,7 @@ interface SubnetAssignLinodesDrawerProps {
   onClose: () => void;
   open: boolean;
   subnet?: Subnet;
+  subnetError?: APIError[] | null;
   vpcId: number;
   vpcRegion: string;
 }
@@ -90,7 +90,8 @@ interface LinodeAndInterfaceData extends Linode {
 export const SubnetAssignLinodesDrawer = (
   props: SubnetAssignLinodesDrawerProps
 ) => {
-  const { isFetching, onClose, open, subnet, vpcId, vpcRegion } = props;
+  const { isFetching, onClose, open, subnet, subnetError, vpcId, vpcRegion } =
+    props;
   const {
     invalidateQueries,
     setUnassignLinodesErrors,
@@ -468,12 +469,12 @@ export const SubnetAssignLinodesDrawer = (
 
   return (
     <Drawer
+      error={subnetError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={handleOnClose}
       open={open}
-      title={`Assign Linodes to subnet: ${subnet?.label} (${
-        subnet?.ipv4 ?? subnet?.ipv6
+      title={`Assign Linodes to subnet: ${subnet?.label ?? 'Unknown'} (${
+        subnet?.ipv4 ?? subnet?.ipv6 ?? 'Unknown'
       })`}
     >
       {userCannotAssignLinodes && (

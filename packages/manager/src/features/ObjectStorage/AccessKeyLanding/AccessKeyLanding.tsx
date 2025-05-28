@@ -4,14 +4,12 @@ import {
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
 import { useAccountSettings } from '@linode/queries';
-import { isFeatureEnabledV2, useErrors, useOpenClose } from '@linode/utilities';
+import { useErrors, useOpenClose } from '@linode/utilities';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { usePagination } from 'src/hooks/usePagination';
 import { useObjectStorageAccessKeys } from 'src/queries/object-storage/queries';
 import {
@@ -21,6 +19,7 @@ import {
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 import { AccessKeyDrawer } from './AccessKeyDrawer';
 import { AccessKeyTable } from './AccessKeyTable/AccessKeyTable';
 import { OMC_AccessKeyDrawer } from './OMC_AccessKeyDrawer';
@@ -66,15 +65,15 @@ export const AccessKeyLanding = (props: Props) => {
 
   // Key to display in Confirmation Modal upon creation
   const [keyToDisplay, setKeyToDisplay] =
-    React.useState<ObjectStorageKey | null>(null);
+    React.useState<null | ObjectStorageKey>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+  const [keyToEdit, setKeyToEdit] = React.useState<null | ObjectStorageKey>(
     null
   );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+  const [keyToRevoke, setKeyToRevoke] = React.useState<null | ObjectStorageKey>(
     null
   );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
@@ -82,14 +81,8 @@ export const AccessKeyLanding = (props: Props) => {
 
   const displayKeysDialog = useOpenClose();
   const revokeKeysDialog = useOpenClose();
-  const flags = useFlags();
-  const { account } = useAccountManagement();
 
-  const isObjMultiClusterEnabled = isFeatureEnabledV2(
-    'Object Storage Access Key Regions',
-    Boolean(flags.objMultiCluster),
-    account?.capabilities ?? []
-  );
+  const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
   const handleCreateKey = (
     values: CreateObjectStorageKeyPayload,
@@ -242,7 +235,7 @@ export const AccessKeyLanding = (props: Props) => {
 
   const openDrawer: OpenAccessDrawer = (
     mode: MODE,
-    objectStorageKey: ObjectStorageKey | null = null
+    objectStorageKey: null | ObjectStorageKey = null
   ) => {
     setKeyToEdit(objectStorageKey);
     if (mode !== 'creating') {

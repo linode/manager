@@ -1,7 +1,7 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import Community from 'src/assets/icons/community.svg';
@@ -34,7 +34,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const HelpResources = () => {
   const { classes } = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const openTicketDrawer = () => {
     setDrawerOpen(true);
@@ -48,9 +48,12 @@ export const HelpResources = () => {
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+    navigate({
+      to: `/support/tickets/${ticketId}`,
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
     setDrawerOpen(false);
   };
@@ -64,11 +67,11 @@ export const HelpResources = () => {
           </Typography>
         </Grid>
         <Grid
+          container
           sx={{
             display: 'flex',
             justifyContent: 'center',
           }}
-          container
         >
           <Grid
             size={{

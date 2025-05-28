@@ -1,5 +1,5 @@
 import { Box, Divider, Notice, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';
@@ -71,26 +71,26 @@ export const TPAProviders = (props: Props) => {
 
             return (
               <SelectionCard
+                data-testid={`Button-${thisProvider.displayName}`}
+                disabled={isProviderEnabled}
                 gridSize={{
                   md: 4,
                   sm: 6,
                   xs: 12,
                 }}
+                heading={thisProvider.displayName}
+                key={thisProvider.displayName}
+                onClick={() => handleProviderChange(thisProvider.name)}
+                renderIcon={() => <ProviderIcon height={32} width={32} />}
                 renderVariant={
                   isProviderEnabled ? () => <EnabledIcon /> : undefined
                 }
+                subheadings={isProviderEnabled ? ['Enabled'] : []}
                 tooltip={
                   isProviderEnabled
                     ? `${thisProvider.displayName} is your current authentication provider.`
                     : undefined
                 }
-                data-testid={`Button-${thisProvider.displayName}`}
-                disabled={isProviderEnabled}
-                heading={thisProvider.displayName}
-                key={thisProvider.displayName}
-                onClick={() => handleProviderChange(thisProvider.name)}
-                renderIcon={() => <ProviderIcon height={32} width={32} />}
-                subheadings={isProviderEnabled ? ['Enabled'] : []}
                 tooltipPlacement="bottom"
               />
             );

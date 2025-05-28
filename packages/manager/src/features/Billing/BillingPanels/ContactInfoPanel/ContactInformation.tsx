@@ -1,5 +1,6 @@
+import { useNotificationsQuery, usePreferences } from '@linode/queries';
 import { Box, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useState } from 'react';
@@ -10,7 +11,6 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { EDIT_BILLING_CONTACT } from 'src/features/Billing/constants';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useNotificationsQuery, usePreferences } from '@linode/queries';
 
 import {
   BillingActionButton,
@@ -64,10 +64,8 @@ export const ContactInformation = React.memo((props: Props) => {
     focusEmail?: boolean;
   }>();
 
-  const [
-    editContactDrawerOpen,
-    setEditContactDrawerOpen,
-  ] = React.useState<boolean>(false);
+  const [editContactDrawerOpen, setEditContactDrawerOpen] =
+    React.useState<boolean>(false);
 
   const { data: notifications } = useNotificationsQuery();
 
@@ -164,6 +162,11 @@ export const ContactInformation = React.memo((props: Props) => {
           <Box display="flex" marginLeft="auto">
             {!isContactInfoMasked && (
               <BillingActionButton
+                data-testid="edit-contact-info"
+                disabled={isReadOnly}
+                disableFocusRipple
+                disableRipple
+                disableTouchRipple
                 onClick={() => {
                   history.push('/account/billing/edit');
                   handleEditDrawerOpen();
@@ -173,21 +176,16 @@ export const ContactInformation = React.memo((props: Props) => {
                   isChildUser,
                   resourceType: 'Account',
                 })}
-                data-testid="edit-contact-info"
-                disableFocusRipple
-                disableRipple
-                disableTouchRipple
-                disabled={isReadOnly}
               >
                 {EDIT_BILLING_CONTACT}
               </BillingActionButton>
             )}
             {maskSensitiveDataPreference && (
               <BillingActionButton
+                disabled={isReadOnly}
                 disableFocusRipple
                 disableRipple
                 disableTouchRipple
-                disabled={isReadOnly}
                 onClick={() => setIsContactInfoMasked(!isContactInfoMasked)}
                 sx={{ marginLeft: !isContactInfoMasked ? 2 : 0 }}
               >
@@ -281,12 +279,12 @@ export const ContactInformation = React.memo((props: Props) => {
         )}
       </BillingPaper>
       <BillingContactDrawer
+        focusEmail={focusEmail}
         onClose={() => {
           history.replace('/account/billing', { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
         }}
-        focusEmail={focusEmail}
         open={editContactDrawerOpen}
       />
     </Grid>

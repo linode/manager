@@ -1,13 +1,15 @@
-import { useAllLinodesQuery } from '@linode/queries';
-import { useAllFirewallsQuery } from '@linode/queries';
-import { useAllVolumesQuery } from '@linode/queries';
-import { useAllNodeBalancersQuery } from '@linode/queries';
-import { useAllAccountStackScriptsQuery } from '@linode/queries';
+import {
+  useAllAccountStackScriptsQuery,
+  useAllDomainsQuery,
+  useAllFirewallsQuery,
+  useAllImagesQuery,
+  useAllLinodesQuery,
+  useAllNodeBalancersQuery,
+  useAllVolumesQuery,
+} from '@linode/queries';
 
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { useAllDatabasesQuery } from 'src/queries/databases/databases';
-import { useAllDomainsQuery } from 'src/queries/domains';
-import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 import {
@@ -73,10 +75,8 @@ export const useClientSideSearch = ({ enabled, query }: Props) => {
     error: databasesError,
     isLoading: databasesLoading,
   } = useAllDatabasesQuery(enabled);
-  const {
-    data: objectStorageBuckets,
-    error: bucketsError,
-  } = useObjectStorageBuckets(enabled);
+  const { data: objectStorageBuckets, error: bucketsError } =
+    useObjectStorageBuckets(enabled);
   const {
     data: privateImages,
     error: imagesError,

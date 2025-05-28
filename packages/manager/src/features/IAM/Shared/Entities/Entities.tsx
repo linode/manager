@@ -55,10 +55,9 @@ export const Entities = ({
         <FormLabel>
           <Typography
             sx={{
-              marginTop: theme.tokens.spacing.S12,
               marginBottom: theme.tokens.spacing.S4,
+              font: theme.tokens.alias.Typography.Label.Bold.S,
             }}
-            variant="inherit"
           >
             Entities
           </Typography>
@@ -97,6 +96,7 @@ export const Entities = ({
             error={!!errorText}
             errorText={errorText}
             label="Entities"
+            noMarginTop
             placeholder={getPlaceholder(
               type,
               value.length,
@@ -104,14 +104,20 @@ export const Entities = ({
             )}
           />
         )}
-        sx={{ marginTop: theme.tokens.spacing.S12 }}
+        sx={{
+          marginTop: 0,
+          '& .MuiInputLabel-root': {
+            color: theme.tokens.alias.Content.Text.Primary.Default,
+          },
+        }}
         value={value || []}
       />
       {!memoizedEntities.length && (
-        <Notice spacingTop={8} variant="warning">
+        <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
-              Create a {getFormattedEntityType(type)} Entity
+              Create {type === 'image' ? `an` : `a`}{' '}
+              {getFormattedEntityType(type)} Entity{' '}
             </Link>{' '}
             first or choose a different role to continue assignment.
           </Typography>

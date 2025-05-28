@@ -29,10 +29,10 @@ export const useStyles = makeStyles()((theme) => ({
     display: 'flex',
     alignItems: 'center',
     '& + .notice': {
-      marginTop: `${theme.spacingFunction(8)} !important`,
+      marginTop: `${theme.spacingFunction(16)} !important`,
     },
     borderRadius: 1,
-    padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(12)}`,
+    padding: `10px ${theme.spacingFunction(12)}`,
     '& .MuiTypography-root': {
       width: '100%',
     },
@@ -42,6 +42,15 @@ export const useStyles = makeStyles()((theme) => ({
       position: 'relative',
       top: 1,
       margin: 0,
+    },
+    '& ul': {
+      paddingLeft: 20,
+      margin: 0,
+      listStyleType: 'disc',
+      '& li': {
+        display: 'list-item',
+        padding: 0,
+      },
     },
     maxWidth: '100%',
     position: 'relative',

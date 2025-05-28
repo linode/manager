@@ -7,7 +7,7 @@ import {
   TAGS,
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes } from './models';
+import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
@@ -458,16 +458,19 @@ export const getMetricsCallCustomFilters = (
 export const constructAdditionalRequestFilters = (
   additionalFilters: CloudPulseMetricsAdditionalFilters[]
 ): Filters[] => {
-  const filters: Filters[] = additionalFilters.filter(Boolean).map((filter) => {
-    return {
-      dimension_label: filter.filterKey,
-      operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
-      value: Array.isArray(filter.filterValue)
-        ? Array.of(filter.filterValue).join(',')
-        : String(filter.filterValue),
-    };
-  });
-
+  const filters: Filters[] = [];
+  for (const filter of additionalFilters) {
+    if (filter) {
+      // push to the filters
+      filters.push({
+        dimension_label: filter.filterKey,
+        operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
+        value: Array.isArray(filter.filterValue)
+          ? filter.filterValue.join(',')
+          : String(filter.filterValue),
+      });
+    }
+  }
   return filters;
 };
 
@@ -574,7 +577,11 @@ export const getFilters = (
 ): CloudPulseServiceTypeFilters[] | undefined => {
   return FILTER_CONFIG.get(dashboard.service_type)?.filters.filter((config) =>
     isServiceAnalyticsIntegration
-      ? config.configuration.neededInServicePage
-      : config.configuration.filterKey !== RELATIVE_TIME_DURATION
+      ? config.configuration.neededInViews.includes(
+          CloudPulseAvailableViews.service
+        )
+      : config.configuration.neededInViews.includes(
+          CloudPulseAvailableViews.central
+        )
   );
 };

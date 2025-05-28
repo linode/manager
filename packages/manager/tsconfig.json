@@ -23,7 +23,6 @@
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
 
     /* Type Checking */
     "allowUnreachableCode": false,
@@ -41,8 +40,5 @@
     /* Optimizations */
     "incremental": true
   },
-  "include": [
-    "src",
-    "package.json",
-  ]
+  "include": ["src", "package.json"]
 }

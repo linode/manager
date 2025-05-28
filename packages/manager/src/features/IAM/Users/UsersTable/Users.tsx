@@ -1,5 +1,6 @@
+import { useAccountUsers, useProfile } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Button, Paper, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -11,7 +12,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useAccountUsers, useProfile } from '@linode/queries';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -21,12 +21,9 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
 
-const XS_TO_SM_BREAKPOINT = 475;
-
 export const UsersLanding = () => {
-  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
+    React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
 
@@ -55,7 +52,12 @@ export const UsersLanding = () => {
   };
 
   // Since this query is disabled for restricted users, use isLoading.
-  const { data: users, error, isFetching, isLoading } = useAccountUsers({
+  const {
+    data: users,
+    error,
+    isFetching,
+    isLoading,
+  } = useAccountUsers({
     filters: usersFilter,
     params: {
       page: pagination.page,
@@ -97,24 +99,18 @@ export const UsersLanding = () => {
           order={order}
         />
       )}
-      <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-        <Box
-          sx={(theme) => ({
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: theme.spacing(2),
-            [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-              alignItems: 'flex-start',
-              flexDirection: 'column',
-            },
-          })}
+      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+        <Stack
+          direction={isSmDown ? 'column' : 'row'}
+          justifyContent="space-between"
+          marginBottom={2}
+          spacing={2}
         >
           {isProxyUser ? (
             <Typography
               sx={(theme) => ({
                 [theme.breakpoints.down('md')]: {
-                  marginLeft: theme.spacing(1),
+                  marginLeft: theme.tokens.spacing.S8,
                 },
               })}
               variant="h3"
@@ -123,12 +119,12 @@ export const UsersLanding = () => {
             </Typography>
           ) : (
             <DebouncedSearchTextField
+              clearable
               containerProps={{
                 sx: {
-                  width: { md: '320px', xs: '100%' },
+                  width: '320px',
                 },
               }}
-              clearable
               debounceTime={250}
               errorText={searchError?.message}
               hideLabel
@@ -140,24 +136,21 @@ export const UsersLanding = () => {
             />
           )}
           <Button
-            sx={(theme) => ({
-              [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-                marginTop: theme.spacing(1),
-                width: '100%',
-              },
-            })}
+            buttonType="primary"
+            disabled={isRestrictedUser}
+            onClick={() => setIsCreateDrawerOpen(true)}
+            sx={{
+              maxWidth: '120px',
+            }}
             tooltipText={
               isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }
-            buttonType="primary"
-            disabled={isRestrictedUser}
-            onClick={() => setIsCreateDrawerOpen(true)}
           >
             Add a User
           </Button>
-        </Box>
+        </Stack>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
           <UsersLandingTableHead order={order} />
           <TableBody>

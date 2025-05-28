@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 import * as React from 'react';
 
 import { BarPercent } from 'src/components/BarPercent';

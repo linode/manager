@@ -1,5 +1,5 @@
 import { Autocomplete, Box } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { getEngineOptions } from 'src/features/Databases/DatabaseCreate/utilities';
@@ -33,6 +33,10 @@ export const DatabaseEngineSelect = (props: Props) => {
 
   return (
     <Autocomplete
+      autoHighlight
+      disableClearable
+      disabled={isRestricted}
+      errorText={errorText}
       groupBy={(option) => {
         if (option.engine.match(/mysql/i)) {
           return 'MySQL';
@@ -42,21 +46,25 @@ export const DatabaseEngineSelect = (props: Props) => {
         }
         return 'Other';
       }}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
+      label="Database Engine"
       onChange={(_, selected) => {
         onChange('engine', selected.value);
       }}
+      options={engineOptions ?? []}
+      placeholder="Select a Database Engine"
       renderOption={(props, option) => {
         const { key, ...rest } = props;
         return (
           <li {...rest} data-testid="db-engine-option" key={key}>
             <Grid
+              container
+              direction="row"
+              spacing={2}
               sx={{
                 alignItems: 'center',
                 justifyContent: 'flex-start',
               }}
-              container
-              direction="row"
-              spacing={2}
             >
               <Grid className="py0">{option.flag}</Grid>
               <Grid>{option.label}</Grid>
@@ -71,14 +79,6 @@ export const DatabaseEngineSelect = (props: Props) => {
           ),
         },
       }}
-      autoHighlight
-      disableClearable
-      disabled={isRestricted}
-      errorText={errorText}
-      isOptionEqualToValue={(option, value) => option.value === value.value}
-      label="Database Engine"
-      options={engineOptions ?? []}
-      placeholder="Select a Database Engine"
       value={selectedEngine}
     />
   );

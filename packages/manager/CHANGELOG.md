@@ -4,6 +4,189 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-05-20] - v1.142.1
+
+### Fixed:
+
+- Incorrect LKE cluster pricing ([#12253](https://github.com/linode/manager/pull/12253))
+
+## [2025-05-20] - v1.142.0
+
+### Changed:
+
+- Update styles to match CDS for Entity Header & Action Panel ([#11857](https://github.com/linode/manager/pull/11857))
+- Move Linode create flow PG warning to helper text ([#12145](https://github.com/linode/manager/pull/12145))
+- Quotas UI updates for GA ([#12197](https://github.com/linode/manager/pull/12197))
+
+### Fixed:
+
+- PayPal button styles when using dark mode ([#12136](https://github.com/linode/manager/pull/12136))
+- Add text to toast notification to inform user of IPv6 rDNS update delays in Cloud Manager UI ([#12147](https://github.com/linode/manager/pull/12147))
+- Incorrect icon in Firewall warning banner to use outlined icon ([#12159](https://github.com/linode/manager/pull/12159))
+- Redirect /object-storage to /object-storage/buckets ([#12165](https://github.com/linode/manager/pull/12165))
+- Issue preventing Internal Akamai Employees from creating Linodes using VLAN interfaces ([#12166](https://github.com/linode/manager/pull/12166))
+- StackScripts Landing description truncation ([#12194](https://github.com/linode/manager/pull/12194))
+- Console warnings related to first-child pseudo class in LandingHeader component ([#12200](https://github.com/linode/manager/pull/12200))
+- CloudPulse-Metrics: Refine tooltip behavior for zoom button interactions at `Zoomer.tsx` ([#12206](https://github.com/linode/manager/pull/12206))
+
+### Removed:
+
+- DeletionDialog Component ([#12153](https://github.com/linode/manager/pull/12153))
+
+### Tech Stories:
+
+- Update @paypal/react-paypal-js to ^8.8.3 ([#12102](https://github.com/linode/manager/pull/12102))
+- Deprecate useDialogData ([#12153](https://github.com/linode/manager/pull/12153))
+- Delete root level `.eslintrc.js` ([#12195](https://github.com/linode/manager/pull/12195))
+- Migrate Hidden Component to `@linode/ui` ([#12128](https://github.com/linode/manager/pull/12128))
+- Lint whole monorepo for perfectionist rules ([#12140](https://github.com/linode/manager/pull/12140))
+
+### Tests:
+
+- Add Cypress integration tests for restricted user details page ([#12086](https://github.com/linode/manager/pull/12086))
+- Fix DBaaS Cypress test region mocks so tests pass in DevCloud ([#12127](https://github.com/linode/manager/pull/12127))
+- Fix for object enrollment tests in devcloud ([#12135](https://github.com/linode/manager/pull/12135))
+- Fix for LKE landing page Cypress test ([#12142](https://github.com/linode/manager/pull/12142))
+- Fix for Image Search test ([#12149](https://github.com/linode/manager/pull/12149))
+- Add test spec for Adobe Launch analytics integration ([#12158](https://github.com/linode/manager/pull/12158))
+- Improve stability of Object Storage bucket clean up during Cypress tests ([#12164](https://github.com/linode/manager/pull/12164))
+- Fix for Object Storage create integration test ([#12169](https://github.com/linode/manager/pull/12169))
+- Fix Linode Rebuild test failures stemming from Alpine 3.18 Image deprecation ([#12172](https://github.com/linode/manager/pull/12172))
+- Use chooseCluster() in object-storage e2e test ([#12185](https://github.com/linode/manager/pull/12185))
+- Fix for misc test failures ([#12198](https://github.com/linode/manager/pull/12198))
+
+### Upcoming Features:
+
+- LKE for Restricted users ([#11956](https://github.com/linode/manager/pull/11956))
+- Types and queries for Host & VM Maintenance ([#11990](https://github.com/linode/manager/pull/11990))
+- Restrict Migration Region options to MTC availability regions only ([#12105](https://github.com/linode/manager/pull/12105))
+- Disable CloudPulse create alert button when list api is still loading ([#12133](https://github.com/linode/manager/pull/12133))
+- Add Delete functionality for the user alert in alerting page with ConfirmationDialog box, deleteHandler ([#12134](https://github.com/linode/manager/pull/12134))
+- Add support for VPC IPv6 feature flag ([#12151](https://github.com/linode/manager/pull/12151))
+- Improve Network Interface table for small screen sizes by hiding columns ([#12157](https://github.com/linode/manager/pull/12157))
+- Hide Delete IP button in Linode IP table for Linode Interfaces even if IP isn't associated with an interface ([#12157](https://github.com/linode/manager/pull/12157))
+- Hide `Learn more` link in `PublicIPAddressesTooltip` for Linode Interfaces ([#12157](https://github.com/linode/manager/pull/12157))
+- Support Linode Interfaces in the Linode Create Summary ([#12160](https://github.com/linode/manager/pull/12160))
+- IAM RBAC: update texts, update the sorting logic in the AssignedRolesTable ([#12167](https://github.com/linode/manager/pull/12167))
+- CloudPulse-Metrics: Upgrade filter configs at `filterConfig.ts` to have view based control of filters ([#12174](https://github.com/linode/manager/pull/12174))
+- Add `InputValueField` component, Add logic to switch between text field and autocomplete in `DimensionFilterField` component for CloudPulse Alert ([#12175](https://github.com/linode/manager/pull/12175))
+- Add reusable `AclpPreferenceToggle` to support both Alerts and Metrics preferences and Alerts notification banner with a legacy-beta toggle option ([#12180](https://github.com/linode/manager/pull/12180))
+- IAM RBAC: Fix styling issue for the Assigned Roles Table ([#12183](https://github.com/linode/manager/pull/12183))
+- IAM RBAC: Fix styling issues in the Assigned Permissions Panel and Assigned Entities Table, update 'Hide details' logic and text update ([#12184](https://github.com/linode/manager/pull/12184))
+- Fix incorrect endpoint use when adding a new LKE-E cluster node pool by using `/v4beta` endpoint ([#12188](https://github.com/linode/manager/pull/12188))
+- CloudPulse: Remove `tags filter` from linode filter config and rename resources to `Linode Label(s)` in CloudPulse dashboards ([#12192](https://github.com/linode/manager/pull/12192))
+- Add beta ACLP contextual metrics to the Metrics tab on the Linode details page ([#12193](https://github.com/linode/manager/pull/12193))
+- Disable action menu and MTC plans on Linode resize ([#12111](https://github.com/linode/manager/pull/12111))
+- Remove `g8-premium-64-ht` MTC plan check per updated design doc ([#12168](https://github.com/linode/manager/pull/12168))
+- IAM RBAC: Add drawer for assigning selected roles to a user ([#12182](https://github.com/linode/manager/pull/12182))
+
+## [2025-05-09] - v1.141.1
+
+### Fixed:
+
+- State issue with Object Storage access key drawer
+
+## [2025-05-06] - v1.141.0
+
+### Added:
+
+- Premium plan recommendation notice for LKE ([#12041](https://github.com/linode/manager/pull/12041))
+- Last Modified By and Created columns to CloudPulse Alert tables ([#12091](https://github.com/linode/manager/pull/12091))
+- Dedicated `Alerts` tab on Linode details page ([#12013](https://github.com/linode/manager/pull/12013))
+
+### Changed:
+
+- Application Error Boundaries ([#12024](https://github.com/linode/manager/pull/12024))
+- Bring UI parity between Account Settings and Profile Settings section ([#12097](https://github.com/linode/manager/pull/12097))
+- Notice paper and list spacing ([#12098](https://github.com/linode/manager/pull/12098))
+- Deprecate DeletionDialog ([#12118](https://github.com/linode/manager/pull/12118))
+- Checkbox sizing per Akamai Design System ([#12020](https://github.com/linode/manager/pull/12020))
+
+### Fixed:
+
+- Missing warning message for restricted users on Volumes page ([#12037](https://github.com/linode/manager/pull/12037))
+- Enhanced Number Input component only displaying the first digit and update max nodes to 500 for LKE-E Add Node Pool table and Resize drawer ([#12046](https://github.com/linode/manager/pull/12046))
+- Hover state for the CloseIcon button and replaced imports ([#12072](https://github.com/linode/manager/pull/12072))
+- Revert Object Storage Size Conversions from Base10 to Base2 ([#12075](https://github.com/linode/manager/pull/12075))
+- Broken loading state on Linode Transfer table ([#12080](https://github.com/linode/manager/pull/12080))
+- Firewall Landing table column widths shifting due to lengthy service entity labels ([#12097](https://github.com/linode/manager/pull/12097))
+- Broken Payment Method Default Chip in the Make a Payment Drawer ([#12101](https://github.com/linode/manager/pull/12101))
+- OBJ bucket nested breadcrumb navigation ([#12112](https://github.com/linode/manager/pull/12112))
+- DBaaS: Incorrect restart-related label on Save button, missing error message for Autocomplete ([#12116](https://github.com/linode/manager/pull/12116))
+- Missing `PublicIPAddressesTooltip` for VPC-only Linodes without an explicitly marked primary VPC interface ([#12122](https://github.com/linode/manager/pull/12122))
+- Fix incorrect card sizing at 1920px+ in LKE Tier panel ([#12076](https://github.com/linode/manager/pull/12076))
+- Bugs in Linode Create, Landing & Detail Pages ([#12028](https://github.com/linode/manager/pull/12028))
+- Bug displaying the incorrect cluster version number in upgrade completion dialog on LKE cluster details page ([#12139](https://github.com/linode/manager/pull/12139))
+- Persisting ACL IP validation error on clear ([#12144](https://github.com/linode/manager/pull/12144))
+
+### Tech Stories:
+
+- Tanstack routing for Managed feature ([#11994](https://github.com/linode/manager/pull/11994))
+- Apply small-size checkboxes to table components and remove hardcoded checkbox sizes from `SelectableTableRow` and `TransferTable` ([#12020](https://github.com/linode/manager/pull/12020))
+- Replace `Autocomplete`s with `Select` ([#12060](https://github.com/linode/manager/pull/12060))
+- Add Kubernetes CRUD support to Mock Service Worker 2.0 ([#12073](https://github.com/linode/manager/pull/12073))
+- Update Vite to 6.3.x ([#12074](https://github.com/linode/manager/pull/12074))
+- Update Vitest to 3.1.x ([#12074](https://github.com/linode/manager/pull/12074))
+- Update @babel/runtime to latest minor version ([#12074](https://github.com/linode/manager/pull/12074))
+- Update @babel/helpers to latest minor version ([#12074](https://github.com/linode/manager/pull/12074))
+- Remove unused @types/uuid package ([#12074](https://github.com/linode/manager/pull/12074))
+- Remove unused jiti package ([#12074](https://github.com/linode/manager/pull/12074))
+- Remove unneeded package resolutions: cookie and nanoid ([#12089](https://github.com/linode/manager/pull/12089))
+- Restrict Cypress imports to Cypress directory only ([#12100](https://github.com/linode/manager/pull/12100))
+- Change `DismissibleBanner` to `display: flex` ([#12120](https://github.com/linode/manager/pull/12120))
+
+### Tests:
+
+- Allow Linode migration tests to pass in non-prod environments ([#12029](https://github.com/linode/manager/pull/12029))
+- Correct alignment between Recovery Images Table Header and data column ([#12043](https://github.com/linode/manager/pull/12043))
+- Test grouping of alerts by tags in alerts listing page at CloudPulse ([#12051](https://github.com/linode/manager/pull/12051))
+- Add Cypress integration tests for account network settings ([#12056](https://github.com/linode/manager/pull/12056))
+- Fix Cypress Linode rebuild test against DevCloud ([#12066](https://github.com/linode/manager/pull/12066))
+- Fix for OBJ Gen 2 access key test failure ([#12081](https://github.com/linode/manager/pull/12081))
+- Add Cypress test for Linode interfaces config dialog changes ([#12083](https://github.com/linode/manager/pull/12083))
+- Fix for OBJ multicluster delete test app crash in DevCloud ([#12085](https://github.com/linode/manager/pull/12085))
+- Fix for nodebalancer creation test ([#12088](https://github.com/linode/manager/pull/12088))
+- Fix for Linode Create Placement Group test in DevCloud ([#12095](https://github.com/linode/manager/pull/12095))
+- Add Cypress tests for Alert Listing and Alert Show Details ([#12109](https://github.com/linode/manager/pull/12109))
+- Add tests for adding Linode and Interface devices to a firewall ([#12117](https://github.com/linode/manager/pull/12117))
+- Fix test failure in `access-keys-multicluster.spec.ts` ([#12130](https://github.com/linode/manager/pull/12130))
+
+### Upcoming Features:
+
+- Add support for Linode Interfaces in Firewalls AddLinodeDrawer ([#12035](https://github.com/linode/manager/pull/12035))
+- Prevent assigning of Linodes using new interfaces in Firewall Create flow and add information notice ([#12035](https://github.com/linode/manager/pull/12035))
+- Edit VPC Interface Drawer UI for Linode Interfaces ([#12039](https://github.com/linode/manager/pull/12039))
+- Add unit tests in `GroupedAlertsTable.test.ts` and `UserPreference.test.ts` and fix preferences for alerts grouping at CloudPulse ([#12042](https://github.com/linode/manager/pull/12042))
+- IAM RBAC: Add logic for getting a description for the facade roles ([#12053](https://github.com/linode/manager/pull/12053))
+- IAM RBAC: Fix bugs in the Entities component and the loading state for tabs ([#12062](https://github.com/linode/manager/pull/12062))
+- CloudPulse: Update metrics API request payload and legend row titles as part of api upgrade from v1beta to v2beta ([#12063](https://github.com/linode/manager/pull/12063))
+- Disable ACL IP address fields if user selects to provide IPs later ([#12067](https://github.com/linode/manager/pull/12067))
+- Add label field to CreateFirewallDrawer form when using firewall templates ([#12069](https://github.com/linode/manager/pull/12069))
+- CloudPulse: Show regions based on available resources and dependent filters in dashboards `GlobalFilter` section ([#12078](https://github.com/linode/manager/pull/12078))
+- Pass widget filters configuration from dashboards in metrics call in cloudpulse dashboards ([#12079](https://github.com/linode/manager/pull/12079))
+- Update Linode Create CodeSnippets tool to account for Linode Interfaces ([#12082](https://github.com/linode/manager/pull/12082))
+- Allow Firewall Assignment/Unassignment in the Edit Linode Interface Drawer ([#12090](https://github.com/linode/manager/pull/12090))
+- IAM RBAC: Fix the sorting in the AssignedRolesTable and AssignedEntitiesTable ([#12092](https://github.com/linode/manager/pull/12092))
+- IAM RBAC: Add a 'Not Found' state for tabs if the user doesn't exist ([#12094](https://github.com/linode/manager/pull/12094))
+- CloudPulse: Restrict the user from creating more alerts once the limit has been reached
+  ([#12096](https://github.com/linode/manager/pull/12096))
+- CloudPulse: Add notice for failed alerts in `AlertListing` and `AlertDetail` ([#12104](https://github.com/linode/manager/pull/12104))
+- CloudPulse: Update widget factory in `dashboards.ts` and mocks in `serverHandler.ts` ([#12110](https://github.com/linode/manager/pull/12110))
+- Add Metrics notification banner with legacy-beta preference toggle option ([#12115](https://github.com/linode/manager/pull/12115))
+- Hide Firewall Select for VLAN Interfaces for Linode Interfaces ([#12119](https://github.com/linode/manager/pull/12119))
+- Prevent preemptive closing of `UpgradeInterfaces` dialog upon successful upgrade ([#12122](https://github.com/linode/manager/pull/12122))
+- Update `PublicIPAddressesTooltip` copy for Linode Interfaces and remove `NetworkInterfaceType` beta chip ([#12122](https://github.com/linode/manager/pull/12122))
+- Refine UX and copy updates for Linode Interfaces on the Linode create flow ([#12129](https://github.com/linode/manager/pull/12129))
+- Update Linode Interface copies for Linode Details, Firewalls, and Account Settings ([#12131](https://github.com/linode/manager/pull/12131))
+- CloudPulse: Make legend title dynamic based on number of unique metric names in `CloudPulseWidgetUtils.ts` ([#12132](https://github.com/linode/manager/pull/12132))
+- Add feature flag for `mtctt2025` ([#11988](https://github.com/linode/manager/pull/11988))
+- Add non-dismissible option support to Dismissible Banner ([#12115](https://github.com/linode/manager/pull/12115))
+- Add mocks and update `PlansPanel` to support `mtc-tt-2025` plans in selected regions (#12050)
+- IAM RBAC: Implement method to merge user-selected roles into existing roles ([#12125](https://github.com/linode/manager/pull/12125))
+- Support Akamai Employee Banners on the Linode Create flow when using Linode Interfaces ([#12143](https://github.com/linode/manager/pull/12143))
+- Add navigation to Linode Network tab after successfully upgrading interfaces ([#12146](https://github.com/linode/manager/pull/12146))
+- Fix "Error retrieving Firewalls" message in Subnet Linode Row after upgrading interfaces ([#12146](https://github.com/linode/manager/pull/12146))
+
 ## [2025-04-22] - v1.140.0
 
 ### Added:

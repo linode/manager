@@ -1,5 +1,6 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
 import { Factory } from '@linode/utilities';
+
+import type { Token } from '@linode/api-v4/lib/profile/types';
 
 export const appTokenFactory = Factory.Sync.makeFactory<Token>({
   created: '2020-01-01T12:00:00',
@@ -16,9 +17,9 @@ export interface Access {
   Databases: number;
   Domains: number;
   Events: number;
-  IPs: number;
   // 'Firewalls': number,
   Images: number;
+  IPs: number;
   Linodes: number;
   // 'Kubernetes': number,
   Longview: number;

@@ -1,5 +1,5 @@
 import { useLinodeUpdateMutation, useProfile } from '@linode/queries';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -67,15 +67,15 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   return (
     <Grid
+      container
+      direction="row"
+      spacing={2}
       sx={{
         alignItems: 'center',
         flex: 1,
         justifyContent: 'space-between',
         paddingY: 0,
       }}
-      container
-      direction="row"
-      spacing={2}
     >
       <Grid
         size={{
@@ -148,11 +148,11 @@ export const LinodeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
+          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
+          entityLabel={linodeLabel}
           sx={{
             width: '100%',
           }}
-          disabled={isLinodesGrantReadOnly || isReadOnlyAccountAccess}
-          entityLabel={linodeLabel}
           tags={linodeTags}
           updateTags={updateTags}
           view="inline"

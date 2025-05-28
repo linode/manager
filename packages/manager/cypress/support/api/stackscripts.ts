@@ -1,13 +1,10 @@
-import {
-  Filter,
-  StackScript,
-  deleteStackScript,
-  getStackScripts,
-} from '@linode/api-v4';
+import { deleteStackScript, getStackScripts } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
 import { depaginate } from 'support/util/paginate';
 
 import { isTestLabel } from './common';
+
+import type { Filter, StackScript } from '@linode/api-v4';
 
 // Retrieve only private StackScripts with "cy-test-" in label.
 const userStackScriptFilter: Filter = {

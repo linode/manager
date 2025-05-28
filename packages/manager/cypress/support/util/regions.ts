@@ -228,19 +228,24 @@ export const getRegionByLabel = (label: string, searchRegions?: Region[]) => {
 interface ChooseRegionOptions {
   /**
    * If specified, the region returned will support the defined capabilities
-   * @example 'Managed Databases'
+   * @example ['Managed Databases']
    */
   capabilities?: Capabilities[];
-
-  /**
-   * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
-   */
-  regions?: Region[];
 
   /**
    * Array of region IDs to exclude from results, in addition to `disallowedRegionIds` regions.
    */
   exclude?: string[];
+
+  /**
+   * Whether or not to include distributed regions in potential output.
+   */
+  includeDistributed?: boolean;
+
+  /**
+   * Regions from which to choose. If unspecified, Regions exposed by the API will be used.
+   */
+  regions?: Region[];
 }
 
 /**
@@ -323,7 +328,17 @@ const resolveSearchRegions = (
   const capableRegions = regionsWithCapabilities(
     options?.regions ?? regions,
     requiredCapabilities
-  ).filter((region: Region) => !allDisallowedRegionIds.includes(region.id));
+  ).filter((region: Region) => {
+    const isDisallowed = !allDisallowedRegionIds.includes(region.id);
+    const isDistributed = region.site_type === 'distributed';
+
+    // Exclude distributed regions in output if `options.distributed` is not true.
+    if (isDistributed && options?.includeDistributed !== true) {
+      return false;
+    }
+
+    return isDisallowed;
+  });
 
   if (!capableRegions.length) {
     throw new Error(

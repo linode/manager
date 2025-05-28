@@ -1,12 +1,16 @@
-import { useGrants, useNotificationsQuery } from '@linode/queries';
+import {
+  useAccount,
+  useGrants,
+  useNotificationsQuery,
+  useProfile,
+} from '@linode/queries';
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { isWithinDays } from 'src/utilities/date';
 
 import { BillingPaper } from '../../BillingDetail';
@@ -26,12 +30,15 @@ interface BillingSummaryProps {
 
 export const BillingSummary = (props: BillingSummaryProps) => {
   const theme = useTheme();
-  const { data: notifications } = useNotificationsQuery();
-  const { _isRestrictedUser, account } = useAccountManagement();
 
-  const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const { data: notifications } = useNotificationsQuery();
+  const { data: account } = useAccount();
+  const { data: profile } = useProfile();
+
+  const isRestrictedUser = profile?.restricted;
+
+  const [isPromoDialogOpen, setIsPromoDialogOpen] =
+    React.useState<boolean>(false);
 
   const { data: grants } = useGrants();
   const accountAccessGrant = grants?.global?.account_access;
@@ -53,9 +60,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { replace } = useHistory();
   const location = useLocation<{ paymentMethod: PaymentMethod }>();
 
-  const [paymentDrawerOpen, setPaymentDrawerOpen] = React.useState<boolean>(
-    false
-  );
+  const [paymentDrawerOpen, setPaymentDrawerOpen] =
+    React.useState<boolean>(false);
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = React.useState<
     PaymentMethod | undefined
@@ -104,20 +110,20 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const accountBalanceText = pastDueBalance
     ? 'Payment Due'
     : balance > 0
-    ? 'Balance'
-    : balance < 0
-    ? 'Credit'
-    : 'You have no balance at this time.';
+      ? 'Balance'
+      : balance < 0
+        ? 'Credit'
+        : 'You have no balance at this time.';
 
   const sxBalance = {
     color:
       balance === 0 || (balance > 0 && !isBalanceOutsideGracePeriod)
         ? theme.palette.text.primary
         : balance < 0
-        ? theme.color.green
-        : pastDueBalance
-        ? theme.color.red
-        : '',
+          ? theme.color.green
+          : pastDueBalance
+            ? theme.color.red
+            : '',
   };
 
   // The layout changes if there are promotions.
@@ -128,11 +134,11 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <Button
+          onClick={() => replace(routeForMakePayment)}
           sx={{
             ...theme.applyLinkStyles,
             verticalAlign: 'initial',
           }}
-          onClick={() => replace(routeForMakePayment)}
         >
           {pastDueBalance ? 'Make a payment immediately' : 'Make a payment'}
         </Button>
@@ -142,7 +148,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const showAddPromoLink =
     balance <= 0 &&
-    !_isRestrictedUser &&
+    !isRestrictedUser &&
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 
@@ -154,12 +160,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   return (
     <>
       <Grid
-        sx={{
-          margin: 0,
-        }}
         container
         size={12}
         spacing={2}
+        sx={{
+          margin: 0,
+        }}
       >
         <Grid
           size={{
@@ -199,10 +205,10 @@ export const BillingSummary = (props: BillingSummaryProps) => {
                 }}
               >
                 <Button
+                  onClick={openPromoDialog}
                   sx={{
                     ...theme.applyLinkStyles,
                   }}
-                  onClick={openPromoDialog}
                 >
                   Add a promo code
                 </Button>

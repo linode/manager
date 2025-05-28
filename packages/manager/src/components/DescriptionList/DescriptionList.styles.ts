@@ -1,13 +1,13 @@
-import { Typography, omittedProps } from '@linode/ui';
+import { omittedProps, Typography } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Grid from '@mui/material/Grid2';
 
 import type { DescriptionListProps } from './DescriptionList';
 import type { TypographyProps } from '@mui/material';
-import type { Grid2Props } from '@mui/material/Grid2';
+import type { GridProps } from '@mui/material/Grid';
 
 interface StyledDLProps extends Omit<DescriptionListProps, 'items'> {
-  component: Grid2Props['component'];
+  component: GridProps['component'];
   gridColumns?: number;
   isStacked: boolean;
 }

@@ -7,6 +7,7 @@ import {
   mockGetFirewallSettings,
 } from 'support/intercepts/firewalls';
 import { ui } from 'support/ui';
+import { cleanUp } from 'support/util/cleanup';
 import { randomLabel } from 'support/util/random';
 
 import { accountFactory, firewallFactory } from 'src/factories';
@@ -15,13 +16,11 @@ import { DEFAULT_FIREWALL_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLa
 import type { Firewall } from '@linode/api-v4';
 
 authenticate();
-// Firewall GET API request performance issues need to be addressed in order to unskip this test
-// See M3-9619
 describe('delete firewall', () => {
-  // TODO Restore clean-up when `deletes a firewall` test is unskipped.
-  // before(() => {
-  //   cleanUp('firewalls');
-  // });
+  before(() => {
+    cleanUp('firewalls');
+  });
+
   beforeEach(() => {
     cy.tag('method:e2e');
   });
@@ -32,7 +31,7 @@ describe('delete firewall', () => {
    * - Confirms that firewall is still in landing page list after canceled operation.
    * - Confirms that firewall is removed from landing page list after confirmed operation.
    */
-  it.skip('deletes a firewall', () => {
+  it('deletes a firewall', () => {
     const firewallRequest = firewallFactory.build({
       label: randomLabel(),
     });

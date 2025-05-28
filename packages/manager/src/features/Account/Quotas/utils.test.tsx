@@ -6,8 +6,10 @@ import * as React from 'react';
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
 
 import {
+  convertResourceMetric,
   getQuotaError,
   getQuotaIncreaseMessage,
+  pluralizeMetric,
   useGetLocationsForQuotaService,
 } from './utils';
 
@@ -49,9 +51,7 @@ describe('useGetLocationsForQuotaService', () => {
       }
     );
 
-    expect(result.current.s3Endpoints).toEqual([
-      { label: 'Global (Account level)', value: 'global' },
-    ]);
+    expect(result.current.s3Endpoints).toEqual([]);
   });
 
   it('should filter out endpoints with null s3_endpoint values', () => {
@@ -76,7 +76,6 @@ describe('useGetLocationsForQuotaService', () => {
     );
 
     expect(result.current.s3Endpoints).toEqual([
-      { label: 'Global (Account level)', value: 'global' },
       { label: 'endpoint1 (Standard E0)', value: 'endpoint1' },
     ]);
   });
@@ -107,6 +106,15 @@ describe('useGetLocationsForQuotaService', () => {
       profile,
       quantity,
       quota,
+      neededIn: 'Fewer than 7 days',
+      selectedService: {
+        label: 'Object Storage',
+        value: 'object-storage',
+      },
+      convertedMetrics: {
+        limit: quota.quota_limit,
+        metric: quota.resource_metric,
+      },
     });
 
     expect(defaultValues.description).toEqual(
@@ -114,9 +122,60 @@ describe('useGetLocationsForQuotaService', () => {
         profile.email
       }<br>\n**Quota Name**: ${
         quota.quota_name
-      }<br>\n**New Quantity Requested**: ${quantity} ${quota.resource_metric}${
+      }<br>\n**Current Quota**: ${quota.quota_limit} ${
+        quota.resource_metric
+      }<br>\n**New Quota Requested**: ${quantity} ${quota.resource_metric}${
         quantity > 1 ? 's' : ''
-      }<br>\n**Region**: ${quota.region_applied}`
+      }<br>\n**Needed in**: ${defaultValues.neededIn}<br>\n**Region**: ${quota.region_applied}`
     );
+  });
+});
+
+describe('convertResourceMetric', () => {
+  it('should convert the resource metric to a human readable format', () => {
+    const resourceMetric = 'byte';
+    const usage = 1e6;
+    const limit = 1e8;
+
+    const result = convertResourceMetric({
+      initialResourceMetric: resourceMetric,
+      initialUsage: usage,
+      initialLimit: limit,
+    });
+
+    expect(result).toEqual({
+      convertedLimit: 95.4,
+      convertedResourceMetric: 'MB',
+      convertedUsage: 0.95,
+    });
+  });
+});
+
+describe('pluralizeMetric', () => {
+  it('should not pluralize if the value is 1', () => {
+    const value = 1;
+    const unit = 'CPU';
+
+    const result = pluralizeMetric(value, unit);
+
+    expect(result).toEqual('CPU');
+  });
+
+  it('should not pluralize the resource metric if the unit is byte', () => {
+    const value = 100;
+    const unit = 'byte';
+
+    const result = pluralizeMetric(value, unit);
+
+    expect(result).toEqual('byte');
+  });
+
+  it('should pluralize the resource metric if the unit is not byte', () => {
+    const value = 100;
+    const unit = 'CPU';
+
+    const result = pluralizeMetric(value, unit);
+
+    expect(result).toEqual('CPUs');
   });
 });

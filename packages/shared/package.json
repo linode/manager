@@ -1,6 +1,6 @@
 {
   "name": "@linode/shared",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Linode shared feature component library",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -21,7 +21,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "precommit": "lint-staged"
   },
   "lint-staged": {
@@ -39,6 +38,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/react": "^8.6.7",
     "@testing-library/dom": "^10.1.0",

@@ -1,27 +1,22 @@
 import { CircleProgress, Notice, Stack, Typography } from '@linode/ui';
-import { getQueryParamFromQueryString } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { ResultGroup } from './ResultGroup';
-import { useSearch } from './useSearch';
+import { useSearch as useCMSearch } from './useSearch';
 import { getErrorsFromErrorMap, searchableEntityDisplayNameMap } from './utils';
 
 import type { SearchResultsByEntity } from './search.interfaces';
 
-const SearchLanding = () => {
-  const location = useLocation();
-  const query = getQueryParamFromQueryString(location.search, 'query');
-
-  const {
-    combinedResults,
-    entityErrors,
-    isLoading,
-    searchResultsByEntity,
-  } = useSearch({
-    query,
+export const SearchLanding = () => {
+  const { query } = useSearch({
+    from: '/search',
   });
+
+  const { combinedResults, entityErrors, isLoading, searchResultsByEntity } =
+    useCMSearch({
+      query,
+    });
 
   const errors = getErrorsFromErrorMap(entityErrors);
 
@@ -66,9 +61,3 @@ const SearchLanding = () => {
     </Stack>
   );
 };
-
-export const searchLandingLazyRoute = createLazyRoute('/search')({
-  component: SearchLanding,
-});
-
-export default SearchLanding;

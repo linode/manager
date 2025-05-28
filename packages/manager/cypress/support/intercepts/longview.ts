@@ -1,7 +1,9 @@
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
-import { LongviewClient, ActiveLongviewPlan } from '@linode/api-v4';
+
+import type { ActiveLongviewPlan, LongviewClient } from '@linode/api-v4';
 import type {
   LongviewAction,
   LongviewResponse,
@@ -98,6 +100,14 @@ export const mockGetLongviewPlan = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher('longview/plan'), makeResponse(plan));
 };
+
+export const mockUnauthorizedLongviewPlanRequest =
+  (): Cypress.Chainable<null> => {
+    return cy.intercept(
+      apiMatcher('longview/plan'),
+      makeErrorResponse('Unauthorized', 403)
+    );
+  };
 
 export const mockUpdateLongviewPlan = (
   newPlan: ActiveLongviewPlan

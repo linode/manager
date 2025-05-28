@@ -4,7 +4,7 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -19,11 +19,11 @@ export const PassiveCheck = (props: NodeBalancerConfigPanelProps) => {
 
   return (
     <Grid
-      sx={{ padding: 1 }}
       size={{
         md: 6,
         xs: 12,
       }}
+      sx={{ padding: 1 }}
     >
       <Grid container spacing={2}>
         <Grid size={12}>

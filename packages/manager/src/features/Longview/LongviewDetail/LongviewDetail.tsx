@@ -1,9 +1,9 @@
+import { useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice, Paper } from '@linode/ui';
+import { NotFound } from '@linode/ui';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NotFound } from 'src/components/NotFound';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
@@ -13,7 +13,6 @@ import withClientStats from 'src/containers/longview.stats.container';
 import { get } from 'src/features/Longview/request';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { useTabs } from 'src/hooks/useTabs';
-import { useProfile } from '@linode/queries';
 
 import { useClientLastUpdated } from '../shared/useClientLastUpdated';
 import { Apache } from './DetailTabs/Apache/Apache';
@@ -182,6 +181,7 @@ export const LongviewDetail = (props: CombinedProps) => {
         }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-longview"
+        spacingBottom={4}
         title={client.label}
       />
       {notifications.map((thisNotification, idx) => (
@@ -293,39 +293,38 @@ export const LongviewDetail = (props: CombinedProps) => {
   );
 };
 
-type LongviewDetailParams = {
-  id: string;
-};
+interface LongviewDetailParams {
+  id: number;
+}
 
-const EnhancedLongviewDetail = compose<CombinedProps, {}>(
-  React.memo,
-
+const EnhancedLongviewDetail = React.memo(
   withClientStats<{ match: { params: LongviewDetailParams } }>((ownProps) => {
-    return +(ownProps?.match?.params?.id ?? '');
-  }),
-  withLongviewClients<Props, { match: { params: LongviewDetailParams } }>(
-    (
-      own,
-      {
-        longviewClientsData,
-        longviewClientsError,
-        longviewClientsLastUpdated,
-        longviewClientsLoading,
-      }
-    ) => {
-      // This is explicitly typed, otherwise `client` would be typed as
-      // `LongviewClient`, even though there's a chance it could be undefined.
-      const client: LongviewClient | undefined =
-        longviewClientsData[own?.match.params.id ?? ''];
+    return ownProps.match.params.id;
+  })(
+    withLongviewClients<Props, { match: { params: LongviewDetailParams } }>(
+      (
+        own,
+        {
+          longviewClientsData,
+          longviewClientsError,
+          longviewClientsLastUpdated,
+          longviewClientsLoading,
+        }
+      ) => {
+        // This is explicitly typed, otherwise `client` would be typed as
+        // `LongviewClient`, even though there's a chance it could be undefined.
+        const client: LongviewClient | undefined =
+          longviewClientsData[own?.match.params.id ?? ''];
 
-      return {
-        client,
-        longviewClientsError,
-        longviewClientsLastUpdated,
-        longviewClientsLoading,
-      };
-    }
+        return {
+          client,
+          longviewClientsError,
+          longviewClientsLastUpdated,
+          longviewClientsLoading,
+        };
+      }
+    )(LongviewDetail)
   )
-)(LongviewDetail);
+);
 
 export default EnhancedLongviewDetail;

@@ -4,7 +4,7 @@ import type { Quota, QuotaUsage } from '@linode/api-v4/lib/quotas/types';
 
 export const quotaFactory = Factory.Sync.makeFactory<Quota>({
   description: 'Maximimum number of vCPUs allowed',
-  quota_id: Factory.each((id) => id),
+  quota_id: Factory.each((id) => id.toString()),
   quota_limit: 50,
   quota_name: 'Linode Dedicated vCPUs',
   region_applied: 'us-east',
@@ -13,5 +13,5 @@ export const quotaFactory = Factory.Sync.makeFactory<Quota>({
 
 export const quotaUsageFactory = Factory.Sync.makeFactory<QuotaUsage>({
   quota_limit: 50,
-  used: 25,
+  usage: 25,
 });

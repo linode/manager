@@ -1,4 +1,4 @@
-import { CypressPlugin } from './plugin';
+import type { CypressPlugin } from './plugin';
 
 // The name of the environment variable to read when checking report configuration.
 const envVarName = 'CY_TEST_JUNIT_REPORT';
@@ -27,7 +27,7 @@ const getCommonJunitConfig = (
   testSuite: string,
   config: Cypress.PluginConfigOptions
 ) => {
-  if (!!config.env[envVarName]) {
+  if (config.env[envVarName]) {
     if (!config.reporterOptions) {
       config.reporterOptions = {};
     }

@@ -119,6 +119,7 @@ const entityLabelsFromGrants = (grants: Grants) => {
     ...grants.image,
     ...grants.linode,
     ...grants.longview,
+    ...grants.lkecluster,
     ...grants.nodebalancer,
     ...grants.stackscript,
     ...grants.volume,
@@ -144,7 +145,7 @@ const assertAllGlobalPermissions = (enabled: boolean) => {
  * @param billingAccess - Billing access to select.
  */
 const selectBillingAccess = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -158,7 +159,7 @@ const selectBillingAccess = (
  * @param billingAccess - Selected billing access to assert.
  */
 const assertBillingAccessSelected = (
-  billingAccess: 'None' | 'Read Only' | 'Read-Write'
+  billingAccess: 'None' | 'Read-Write' | 'Read Only'
 ) => {
   cy.get(`[data-qa-select-card-heading="${billingAccess}"]`)
     .closest('[data-qa-selection-card]')
@@ -278,15 +279,15 @@ describe('User permission management', () => {
       ...mockUserGrants,
       global: {
         account_access: 'read_only',
-        add_buckets: true,
         add_databases: true,
         add_domains: true,
         add_firewalls: true,
         add_images: true,
-        add_kubernetes: true,
         add_linodes: true,
+        add_lkes: true,
         add_longview: true,
         add_nodebalancers: true,
+        add_kubernetes: true,
         add_stackscripts: true,
         add_volumes: true,
         add_vpcs: true,

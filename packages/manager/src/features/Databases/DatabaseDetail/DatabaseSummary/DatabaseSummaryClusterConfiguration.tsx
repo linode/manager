@@ -1,7 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
 import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
@@ -56,8 +56,8 @@ export const DatabaseSummaryClusterConfiguration = (props: Props) => {
     database.cluster_size === 1
       ? 'Primary (1 Node)'
       : database.cluster_size > 2
-      ? `Primary (+${database.cluster_size - 1} Nodes)`
-      : `Primary (+${database.cluster_size - 1} Node)`;
+        ? `Primary (+${database.cluster_size - 1} Nodes)`
+        : `Primary (+${database.cluster_size - 1} Node)`;
 
   const sxTooltipIcon = {
     marginLeft: '4px',

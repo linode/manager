@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import { convertSecondsToMinutes } from '../Utils/utils';
@@ -30,22 +30,22 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
   const renderTriggerCriteria = React.useMemo(
     () => (
       <>
-        <Grid item sm={4} xs={12}>
+        <GridLegacy item sm={4} xs={12}>
           <StyledAlertTypography
             data-qa-item="Trigger Alert When"
             sx={{ font: theme.font.bold }}
           >
             Trigger Alert When:
           </StyledAlertTypography>
-        </Grid>
-        <Grid
+        </GridLegacy>
+        <GridLegacy
           container
           item
           md={8}
-          xs={12}
           sx={{
             alignItems: 'center',
           }}
+          xs={12}
         >
           <StyledAlertChip
             borderRadius={theme.spacing(0.3)}
@@ -68,7 +68,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           <StyledAlertTypography data-qa-item="consecutive occurrences">
             consecutive occurrences.
           </StyledAlertTypography>
-        </Grid>
+        </GridLegacy>
       </>
     ),
     [theme, triggerOccurrences]
@@ -78,7 +78,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
       <Typography marginBottom={2} variant="h2">
         Criteria
       </Typography>
-      <Grid
+      <GridLegacy
         container
         spacing={1}
         sx={{
@@ -97,7 +97,7 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
           values={[convertSecondsToMinutes(evaluationPeriod)]}
         />
         {renderTriggerCriteria} {/** Render the trigger criteria */}
-      </Grid>
+      </GridLegacy>
     </>
   );
 });

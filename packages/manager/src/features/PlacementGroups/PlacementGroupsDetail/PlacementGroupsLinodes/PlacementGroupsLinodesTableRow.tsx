@@ -1,4 +1,5 @@
-import { capitalizeAllWords } from '@linode/utilities';
+import { usePlacementGroupQuery } from '@linode/queries';
+import { getFormattedStatus } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -22,7 +23,6 @@ import {
 } from 'src/features/PlacementGroups/constants';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { usePlacementGroupQuery } from '@linode/queries';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -97,12 +97,15 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
         ) : (
           <>
             <StatusIcon status={iconStatus} />
-            {capitalizeAllWords(status.replace('_', ' '))}
+            {getFormattedStatus(status)}
           </>
         )}
       </TableCell>
       <TableCell actionCell>
         <InlineMenuAction
+          actionText="Unassign"
+          disabled={isLinodeReadOnly || isLinodeMigrating}
+          onClick={() => handleUnassignLinodeModal(linode)}
           tooltip={
             isLinodeMigrating
               ? getMigrationType() === 'inbound'
@@ -110,9 +113,6 @@ export const PlacementGroupsLinodesTableRow = React.memo((props: Props) => {
                 : PLACEMENT_GROUP_MIGRATION_OUTBOUND_MESSAGE
               : undefined
           }
-          actionText="Unassign"
-          disabled={isLinodeReadOnly || isLinodeMigrating}
-          onClick={() => handleUnassignLinodeModal(linode)}
         />
       </TableCell>
     </TableRow>

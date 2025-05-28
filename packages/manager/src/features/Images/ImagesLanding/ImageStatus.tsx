@@ -1,5 +1,5 @@
 import { Stack, TooltipIcon } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { capitalizeAllWords, getFormattedStatus } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -45,8 +45,9 @@ export const ImageStatus = (props: Props) => {
     );
   }
 
-  const imageRegionStatus = image.regions.find((r) => r.status !== 'available')
-    ?.status;
+  const imageRegionStatus = image.regions.find(
+    (r) => r.status !== 'available'
+  )?.status;
 
   if (imageRegionStatus) {
     // If we have any non-available region statuses, expose the first one as the Image's status to the user
@@ -64,7 +65,7 @@ export const ImageStatus = (props: Props) => {
   return (
     <Stack direction="row">
       <StatusIcon status={imageStatusIconMap[image.status]} />
-      {capitalizeAllWords(image.status.replace('_', ' '))}
+      {getFormattedStatus(image.status)}
       {showEventProgress && ` (${event.percent_complete}%)`}
     </Stack>
   );

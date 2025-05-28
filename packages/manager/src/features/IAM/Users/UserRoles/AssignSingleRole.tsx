@@ -30,7 +30,10 @@ export const AssignSingleRole = ({
 }: Props) => {
   const theme = useTheme();
 
-  const { control } = useFormContext<AssignNewRoleFormValues>();
+  const { control, watch, setValue } =
+    useFormContext<AssignNewRoleFormValues>();
+  const role = watch(`roles.${index}.role`);
+  const roles = watch('roles');
 
   return (
     <Box display="flex">
@@ -38,55 +41,84 @@ export const AssignSingleRole = ({
         {index !== 0 && (
           <Divider
             sx={{
-              marginBottom: theme.tokens.spacing.S12,
+              marginBottom: theme.tokens.spacing.S24,
+              marginTop: theme.tokens.spacing.S20,
             }}
           />
         )}
 
         <Controller
           control={control}
-          name={`roles.${index}`}
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Autocomplete
-                label="Assign New Roles"
-                onChange={(event, newValue) => {
-                  onChange({
-                    ...value,
-                    role: newValue,
-                  });
-                }}
-                options={options}
-                placeholder="Select a Role"
-                textFieldProps={{ hideLabel: true }}
-                value={value?.role || null}
-              />
-              {value?.role && !hideDetails && (
-                <AssignedPermissionsPanel
-                  mode="assign-role"
-                  onChange={(updatedEntities) => {
-                    onChange({
-                      ...value,
-                      entities: updatedEntities,
-                    });
-                  }}
-                  role={getRoleByName(permissions, value.role?.value)!}
-                  value={value.entities || []}
-                />
-              )}
-            </>
+          name={`roles.${index}.role`}
+          render={({ field: { onChange, value }, fieldState }) => (
+            <Autocomplete
+              errorText={fieldState.error?.message}
+              label="Assign New Roles"
+              onChange={(event, newValue) => {
+                onChange(newValue);
+                setValue(`roles.${index}.entities`, null);
+              }}
+              options={options}
+              placeholder="Select a Role"
+              textFieldProps={{ hideLabel: true }}
+              value={value || null}
+            />
           )}
+          rules={{
+            validate: (value) => {
+              if (!value) {
+                return roles.length === 1
+                  ? 'Select a role.'
+                  : 'Select a role or remove this entry.';
+              }
+              return true;
+            },
+          }}
         />
+
+        {role && (
+          <Controller
+            control={control}
+            name={`roles.${index}.entities`}
+            render={({ field: { onChange, value }, fieldState }) => (
+              <AssignedPermissionsPanel
+                errorText={fieldState.error?.message}
+                hideDetails={hideDetails}
+                mode="assign-role"
+                onChange={(updatedEntities) => {
+                  onChange(updatedEntities);
+                }}
+                role={getRoleByName(permissions, role?.value)!}
+                value={value || []}
+              />
+            )}
+            rules={{
+              validate: (value) => {
+                if (role.access === 'account_access') return true;
+                if (
+                  role.access === 'entity_access' &&
+                  (!value || value.length === 0)
+                ) {
+                  return 'Select entities.';
+                }
+                return true;
+              },
+            }}
+          />
+        )}
       </Box>
       <Box
         sx={{
           flex: '0 1 auto',
           marginTop:
-            index === 0 ? -theme.tokens.spacing.S4 : theme.tokens.spacing.S16,
+            index === 0
+              ? `-${theme.tokens.spacing.S2}`
+              : theme.tokens.spacing.S40,
+          paddingTop: index === 0 ? undefined : theme.tokens.spacing.S4,
           verticalAlign: 'top',
         }}
       >
-        <Button disabled={index === 0} onClick={() => onRemove(index)}>
+        <Button disabled={roles.length === 1} onClick={() => onRemove(index)}>
           <DeleteIcon />
         </Button>
       </Box>

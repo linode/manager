@@ -1,17 +1,16 @@
+import { useImageQuery, useRegionsQuery } from '@linode/queries';
 import { Button, Stack } from '@linode/ui';
 import {
-  capitalizeAllWords,
   formatStorageUnits,
+  getFormattedStatus,
   isNotNullOrUndefined,
 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useImageQuery } from 'src/queries/images';
-import { useRegionsQuery } from '@linode/queries';
 import { useTypeQuery } from 'src/queries/types';
 
 import { getLinodeIconStatus } from '../../LinodesLanding/utils';
@@ -65,10 +64,10 @@ export const SelectLinodeCard = ({
 
   const renderVariant = () => (
     <Grid
+      size={12}
       sx={{
         paddingTop: 0,
       }}
-      size={12}
     >
       <Stack direction="row" justifyContent="space-between" marginBottom={1}>
         <Stack alignItems="center" direction="row" height={34}>
@@ -76,7 +75,7 @@ export const SelectLinodeCard = ({
             aria-label={`Linode status ${linode?.status ?? iconStatus}`}
             status={iconStatus}
           />
-          {capitalizeAllWords(linode.status.replace('_', ' '))}
+          {getFormattedStatus(linode.status)}
         </Stack>
         {shouldShowPowerButton && (
           <Button buttonType="outlined" onClick={handlePowerOff}>
@@ -89,15 +88,15 @@ export const SelectLinodeCard = ({
 
   return (
     <SelectionCard
-      subheadings={[
-        [type, image, region].filter(isNotNullOrUndefined).join(', '),
-      ]}
       checked={selected}
       disabled={isLinodesGrantReadOnly || disabled}
       heading={linode.label}
       key={`selection-card-${linode.id}`}
       onClick={handleSelection}
       renderVariant={renderVariant}
+      subheadings={[
+        [type, image, region].filter(isNotNullOrUndefined).join(', '),
+      ]}
     />
   );
 };

@@ -1,8 +1,8 @@
 import { Notice, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Hidden } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
-import { Hidden } from 'src/components/Hidden';
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
 
@@ -163,6 +163,8 @@ export const KubernetesPlanContainer = (
                 return (
                   filteredPlans.length > 0 && (
                     <KubernetesPlanSelectionTable
+                      filterOptions={table}
+                      key={`k8-plan-filter-${idx}`}
                       renderPlanSelection={() =>
                         renderPlanSelection({
                           header: table.header,
@@ -172,19 +174,17 @@ export const KubernetesPlanContainer = (
                       shouldDisplayNoRegionSelectedMessage={
                         shouldDisplayNoRegionSelectedMessage
                       }
-                      filterOptions={table}
-                      key={`k8-plan-filter-${idx}`}
                     />
                   )
                 );
               })
             ) : (
               <KubernetesPlanSelectionTable
+                key={planType}
+                renderPlanSelection={renderPlanSelection}
                 shouldDisplayNoRegionSelectedMessage={
                   shouldDisplayNoRegionSelectedMessage
                 }
-                key={planType}
-                renderPlanSelection={renderPlanSelection}
               />
             )
           )}

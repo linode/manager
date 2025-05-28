@@ -1,10 +1,10 @@
+import { useProfile } from '@linode/queries';
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { keyframes, styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
-import { useProfile } from '@linode/queries';
 
 import type { RenderLinodesProps } from './DisplayLinodes';
 

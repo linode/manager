@@ -1,3 +1,4 @@
+import { useAllImagesQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -10,7 +11,6 @@ import { DateTime } from 'luxon';
 import React, { useMemo } from 'react';
 
 import { imageFactory } from 'src/factories/images';
-import { useAllImagesQuery } from 'src/queries/images';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { OSIcon } from '../OSIcon';
@@ -70,10 +70,11 @@ export const ImageSelect = (props: Props) => {
     ...rest
   } = props;
 
-  const { data: images, error, isLoading } = useAllImagesQuery(
-    {},
-    getAPIFilterForImageSelect(variant)
-  );
+  const {
+    data: images,
+    error,
+    isLoading,
+  } = useAllImagesQuery({}, getAPIFilterForImageSelect(variant));
 
   const disabledImages = getDisabledImages({
     images: images ?? [],
@@ -156,8 +157,10 @@ export const ImageSelect = (props: Props) => {
   }
 
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <Autocomplete
+        clearOnBlur
+        disableSelectAll
         groupBy={(option) => {
           if (option.id === 'any/all') {
             return '';
@@ -168,6 +171,10 @@ export const ImageSelect = (props: Props) => {
 
           return option.vendor ?? '';
         }}
+        label={label || 'Images'}
+        loading={isLoading}
+        options={sortedOptions}
+        placeholder={placeholder || 'Choose an image'}
         renderOption={(props, option, state) => {
           const { key, ...rest } = props;
 
@@ -197,25 +204,19 @@ export const ImageSelect = (props: Props) => {
               ) : null,
           },
         }}
-        clearOnBlur
-        disableSelectAll
-        label={label || 'Images'}
-        loading={isLoading}
-        options={sortedOptions}
-        placeholder={placeholder || 'Choose an image'}
         {...rest}
         disableClearable={
           rest.disableClearable ??
           (selectIfOnlyOneOption && options.length === 1 && !multiple)
         }
+        errorText={rest.errorText ?? error?.[0].reason}
+        getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
+        multiple={multiple}
         onChange={(_, value) =>
           multiple && Array.isArray(value)
             ? onChange(value)
             : !multiple && !Array.isArray(value) && onChange(value)
         }
-        errorText={rest.errorText ?? error?.[0].reason}
-        getOptionDisabled={(option) => Boolean(disabledImages[option.id])}
-        multiple={multiple}
         value={value}
       />
 

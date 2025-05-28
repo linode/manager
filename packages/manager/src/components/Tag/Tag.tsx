@@ -1,6 +1,7 @@
 import { CloseIcon } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { StyledChip, StyledDeleteButton } from './Tag.styles';
@@ -67,6 +68,11 @@ export const Tag = (props: TagProps) => {
   return (
     <StyledChip
       {...props}
+      aria-label={`Search for Tag '${label}'`}
+      className={className}
+      clickable
+      component={component}
+      data-qa-tag={label}
       deleteIcon={
         chipProps.onDelete ? (
           <StyledDeleteButton
@@ -78,11 +84,6 @@ export const Tag = (props: TagProps) => {
           </StyledDeleteButton>
         ) : undefined
       }
-      aria-label={`Search for Tag '${label}'`}
-      className={className}
-      clickable
-      component={component}
-      data-qa-tag={label}
       label={_label}
       onClick={handleClick}
       role="button"

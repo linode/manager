@@ -1,5 +1,5 @@
 import { Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import {
@@ -19,13 +19,8 @@ interface DashboardCardProps {
 }
 
 const DashboardCard = (props: DashboardCardProps) => {
-  const {
-    alignHeader,
-    alignItems,
-    headerAction,
-    noHeaderActionStyles,
-    title,
-  } = props;
+  const { alignHeader, alignItems, headerAction, noHeaderActionStyles, title } =
+    props;
 
   const ConditionalTypography = !noHeaderActionStyles
     ? StyledTypography

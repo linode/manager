@@ -1,6 +1,6 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Checkbox, CircleProgress, Stack, Typography } from '@linode/ui';
-import { Grid, useTheme } from '@mui/material';
+import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alertsresources.svg';
@@ -323,13 +323,13 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           </Typography>
         )}
         <StyledPlaceholder
+          icon={EntityIcon}
+          subtitle="Once you assign the entities, they will show up here."
           sx={{
             h2: {
               fontSize: '16px',
             },
           }}
-          icon={EntityIcon}
-          subtitle="Once you assign the entities, they will show up here."
           title="No entities associated with this alert definition."
         />
       </Stack>
@@ -366,34 +366,35 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
           alert for.
         </Typography>
       )}
-      <Grid container spacing={2}>
-        <Grid
-          sx={{
-            alignItems: 'center',
-          }}
+      <GridLegacy container spacing={2}>
+        <GridLegacy
           columnSpacing={2}
           container
           item
           rowSpacing={3}
+          sx={{
+            alignItems: 'center',
+          }}
           xs={12}
         >
-          <Grid item md={3} xs={12}>
+          <GridLegacy item md={3} xs={12}>
             <DebouncedSearchTextField
-              sx={{
-                maxHeight: '34px',
-              }}
               clearable
               hideLabel
               label="Search for a Region or Entity"
               onSearch={handleSearchTextChange}
               placeholder="Search for a Region or Entity"
+              sx={{
+                maxHeight: '34px',
+              }}
               value={searchText || ''}
             />
-          </Grid>
+          </GridLegacy>
           {/* Dynamically render service type based filters */}
           {filtersToRender.map(({ component, filterKey }, index) => (
-            <Grid item key={`${index}_${filterKey}`} md={4} xs={12}>
+            <GridLegacy item key={`${index}_${filterKey}`} md={4} xs={12}>
               <AlertResourcesFilterRenderer
+                component={component}
                 componentProps={getAlertResourceFilterProps({
                   filterKey,
                   handleFilterChange,
@@ -407,14 +408,16 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
                     )
                   ),
                 })}
-                component={component}
               />
-            </Grid>
+            </GridLegacy>
           ))}
-        </Grid>
+        </GridLegacy>
         {isSelectionsNeeded && (
-          <Grid item md={4} xs={12}>
+          <GridLegacy item md={4} xs={12}>
             <Checkbox
+              data-testid="show_selected_only"
+              disabled={!(selectedResources.length || selectedOnly)}
+              onClick={() => setSelectedOnly(!selectedOnly)}
               sx={(theme) => ({
                 svg: {
                   backgroundColor: theme.tokens.color.Neutrals.White,
@@ -423,61 +426,58 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
               sxFormLabel={{
                 marginLeft: -1,
               }}
-              data-testid="show_selected_only"
-              disabled={!(selectedResources.length || selectedOnly)}
-              onClick={() => setSelectedOnly(!selectedOnly)}
               text="Show Selected Only"
               value="Show Selected"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {errorText?.length && (
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <AlertListNoticeMessages
               errorMessage={errorText}
               separator={MULTILINE_ERROR_SEPARATOR}
               style={noticeStyles}
               variant="error"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {maxSelectionCount !== undefined && (
-          <Grid item xs={12}>
+          <GridLegacy item xs={12}>
             <AlertListNoticeMessages
               errorMessage={`You can select up to ${maxSelectionCount} entities.`}
               style={noticeStyles}
               variant="warning"
             />
-          </Grid>
+          </GridLegacy>
         )}
         {isSelectionsNeeded &&
           !isDataLoadingError &&
           resources &&
           resources.length > 0 && (
-            <Grid item xs={12}>
+            <GridLegacy item xs={12}>
               <AlertsResourcesNotice
                 handleSelectionChange={handleAllSelection}
                 maxSelectionCount={maxSelectionCount}
                 selectedResources={selectedResources.length}
                 totalResources={resources?.length ?? 0}
               />
-            </Grid>
+            </GridLegacy>
           )}
-        <Grid item xs={12}>
+        <GridLegacy item xs={12}>
           <DisplayAlertResources
-            scrollToElement={() =>
-              scrollToElement(titleRef.current ?? scrollElement ?? null)
-            }
             filteredResources={filteredResources}
             handleSelection={handleSelection}
             isDataLoadingError={isDataLoadingError}
             isSelectionsNeeded={isSelectionsNeeded}
             maxSelectionCount={maxSelectionCount}
+            scrollToElement={() =>
+              scrollToElement(titleRef.current ?? scrollElement ?? null)
+            }
             selectionsRemaining={selectionsRemaining}
             serviceType={serviceType}
           />
-        </Grid>
-      </Grid>
+        </GridLegacy>
+      </GridLegacy>
     </Stack>
   );
 });

@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -33,7 +33,7 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
-const mockRole: ExtendedRoleMap = {
+const mockAccountAccessRole: ExtendedRoleView = {
   access: 'account_access',
   description:
     'Access to perform any supported action on all resources in the account',
@@ -44,10 +44,21 @@ const mockRole: ExtendedRoleMap = {
   permissions: ['create_linode', 'update_linode', 'update_firewall'],
 };
 
+const mockEntityAccessRole: ExtendedRoleView = {
+  access: 'entity_access',
+  description: 'Access to update a linode instance',
+  entity_ids: [1],
+  entity_names: ['Linode 1'],
+  entity_type: 'linode',
+  id: 'linode_contributor',
+  name: 'linode_contributor',
+  permissions: ['update_linode', 'view_linode'],
+};
+
 const props = {
   onClose: vi.fn(),
   open: true,
-  role: mockRole,
+  role: mockAccountAccessRole,
 };
 
 const mockUpdateUserRole = vi.fn();
@@ -63,12 +74,32 @@ vi.mock('@linode/api-v4', async () => {
 
 describe('ChangeRoleDrawer', () => {
   it('should render', async () => {
-    const { getByText } = renderWithTheme(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     // Verify title renders
-    getByText('Change Role');
+    expect(screen.getByText('Change Role')).toBeVisible();
+  });
+
+  it('renders the correct text for account_access roles', () => {
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+
+    // Check that the correct text is displayed for account_access
+    expect(screen.getByText('Select a role you want to assign.')).toBeVisible();
+  });
+
+  it('renders the correct text for entity_access roles', () => {
+    renderWithTheme(
+      <ChangeRoleDrawer
+        {...props}
+        mode="change-role"
+        role={mockEntityAccessRole}
+      />
+    );
+
+    // Check that the correct text is displayed for account_access
+    expect(
+      screen.getByText('Select a role you want the entities to be attached to.')
+    ).toBeVisible();
   });
 
   it('should allow changing role', async () => {
@@ -93,21 +124,15 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(
-      <ChangeRoleDrawer {...props} mode="change-role" />
-    );
+    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
 
     const autocomplete = screen.getByRole('combobox');
 
-    act(() => {
-      // Open the dropdown
-      fireEvent.click(autocomplete);
+    // Open the dropdown
+    await userEvent.click(autocomplete);
 
-      // Type to filter options
-      fireEvent.change(autocomplete, {
-        target: { value: 'account_viewer' },
-      });
-    });
+    // Type to filter options
+    await userEvent.type(autocomplete, 'account_viewer');
 
     // Wait for and select the "account_viewer Read" option
     const newRole = await screen.findByText('account_viewer');
@@ -117,7 +142,7 @@ describe('ChangeRoleDrawer', () => {
       expect(autocomplete).toHaveValue('account_viewer');
     });
 
-    await userEvent.click(getByText('Save Change'));
+    await userEvent.click(screen.getByText('Save Change'));
 
     await waitFor(() => {
       expect(mockUpdateUserRole).toHaveBeenCalledWith({

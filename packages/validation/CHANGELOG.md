@@ -1,3 +1,24 @@
+## [2025-05-20] - v0.66.0
+
+### Upcoming Features:
+
+- Add new LKE-E schema for nodePoolBetaSchema ([#12188](https://github.com/linode/manager/pull/12188))
+
+## [2025-05-06] - v0.65.0
+
+### Added:
+
+- DBaaS: Validation for `mysql.group_concat_max_len` and `default_time_zone` ([#12116](https://github.com/linode/manager/pull/12116))
+- DBaaS: Custom validation for `net_buffer_length` ([#12126](https://github.com/linode/manager/pull/12126))
+
+### Changed:
+
+- Update validation schemas for the changes in POST endpoints in /v4/nodebalancers (& /v4beta/nodebalancers) for NB-VPC Integration ([#11910](https://github.com/linode/manager/pull/11910))
+
+### Upcoming Features:
+
+- Update ipv4ConfigInterface, ipv6ConfigInterface, ConfigProfileInterfaceSchema, and CreateVPCInterfaceSchema ([#11942](https://github.com/linode/manager/pull/11942))
+
 ## [2025-04-22] - v0.64.0
 
 ### Added:

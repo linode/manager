@@ -9,12 +9,32 @@ import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 import sonarjs from 'eslint-plugin-sonarjs';
 import testingLibrary from 'eslint-plugin-testing-library';
 import xss from 'eslint-plugin-xss';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+
+// Shared import restrictions between different rule contexts
+const restrictedImportPaths = [
+  '@mui/core',
+  '@mui/system',
+  '@mui/icons-material',
+  {
+    name: '@mui/material',
+    importNames: ['Typography'],
+    message:
+      'Please use Typography component from @linode/ui instead of @mui/material',
+  },
+  {
+    name: 'react-router-dom',
+    importNames: ['Link'],
+    message:
+      'Please use the Link component from src/components/Link instead of react-router-dom',
+  },
+];
 
 export const baseConfig = [
   // 1. Ignores
@@ -79,21 +99,15 @@ export const baseConfig = [
       'no-new-wrappers': 'error',
       'no-restricted-imports': [
         'error',
-        'rxjs',
-        '@mui/core',
-        '@mui/system',
-        '@mui/icons-material',
         {
-          importNames: ['Typography'],
-          message:
-            'Please use Typography component from @linode/ui instead of @mui/material',
-          name: '@mui/material',
-        },
-        {
-          importNames: ['Link'],
-          message:
-            'Please use the Link component from src/components/Link instead of react-router-dom',
-          name: 'react-router-dom',
+          paths: restrictedImportPaths,
+          patterns: [
+            {
+              group: ['**/cypress/**'],
+              message:
+                'Cypress modules should only be imported in Cypress testing directories',
+            },
+          ],
         },
       ],
       'no-restricted-syntax': [
@@ -115,12 +129,19 @@ export const baseConfig = [
       'spaced-comment': 'warn',
     },
   },
+  {
+    files: ['**/cypress.config.ts'],
+    rules: {
+      'no-restricted-imports': 'off',
+    },
+  },
 
-  // 5. React and React Hooks
+  // 5. React, React Hooks, and React Refresh
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
       react,
+      'react-refresh': reactRefresh,
     },
     rules: {
       'react-hooks/exhaustive-deps': 'warn',
@@ -132,6 +153,7 @@ export const baseConfig = [
       'react/no-unescaped-entities': 'warn',
       'react/prop-types': 'off',
       'react/self-closing-comp': 'warn',
+      'react-refresh/only-export-components': 'warn', // @todo make this error once we fix all occurrences
     },
   },
 
@@ -239,13 +261,13 @@ export const baseConfig = [
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
-      'perfectionist/sort-array-includes': 'warn',
-      'perfectionist/sort-classes': 'warn',
-      'perfectionist/sort-enums': 'warn',
-      'perfectionist/sort-exports': 'warn',
+      'perfectionist/sort-array-includes': 'error',
+      'perfectionist/sort-classes': 'error',
+      'perfectionist/sort-enums': 'error',
+      'perfectionist/sort-exports': 'error',
       'perfectionist/sort-heritage-clauses': 'off',
       'perfectionist/sort-imports': [
-        'warn',
+        'error',
         {
           customGroups: {
             type: {
@@ -274,17 +296,17 @@ export const baseConfig = [
           newlinesBetween: 'always',
         },
       ],
-      'perfectionist/sort-interfaces': 'warn',
+      'perfectionist/sort-interfaces': 'error',
       'perfectionist/sort-intersection-types': 'off',
-      'perfectionist/sort-jsx-props': 'warn',
+      'perfectionist/sort-jsx-props': 'error',
       'perfectionist/sort-modules': 'off',
-      'perfectionist/sort-named-exports': 'warn',
-      'perfectionist/sort-named-imports': 'warn',
-      'perfectionist/sort-object-types': 'warn',
+      'perfectionist/sort-named-exports': 'error',
+      'perfectionist/sort-named-imports': 'error',
+      'perfectionist/sort-object-types': 'error',
       'perfectionist/sort-objects': 'off',
       'perfectionist/sort-sets': 'off',
-      'perfectionist/sort-switch-case': 'warn',
-      'perfectionist/sort-union-types': 'warn',
+      'perfectionist/sort-switch-case': 'error',
+      'perfectionist/sort-union-types': 'error',
     },
   },
 
@@ -366,6 +388,14 @@ export const baseConfig = [
       'sonarjs/no-hardcoded-ip': 'off',
       '@linode/cloud-manager/no-createLinode': 'error',
       '@typescript-eslint/no-unused-expressions': 'off',
+      // Maintain standard import restrictions but allow Cypress imports
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: restrictedImportPaths,
+          // Intentionally omit patterns to allow Cypress imports here
+        },
+      ],
     },
   },
 
@@ -375,14 +405,20 @@ export const baseConfig = [
       // for each new features added to the migration router, add its directory here
       'src/features/Betas/**/*',
       'src/features/Domains/**/*',
+      'src/features/DataStream/**/*',
       'src/features/Firewalls/**/*',
+      'src/features/Help/**/*',
       'src/features/Images/**/*',
       'src/features/Longview/**/*',
       'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',
+      'src/features/Search/**/*',
+      'src/features/TopMenu/SearchBar/**/*',
+      'src/components/Tag/**/*',
       'src/features/StackScripts/**/*',
+      'src/features/Support/**/*',
       'src/features/Volumes/**/*',
       'src/features/VPCs/**/*',
     ],

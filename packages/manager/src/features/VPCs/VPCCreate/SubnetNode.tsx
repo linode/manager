@@ -1,12 +1,12 @@
 import { Button, CloseIcon, TextField } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import {
-  RESERVED_IP_NUMBER,
   calculateAvailableIPv4sRFC1918,
+  RESERVED_IP_NUMBER,
 } from 'src/utilities/subnets';
 
 import type { CreateVPCPayload } from '@linode/api-v4';
@@ -46,6 +46,8 @@ export const SubnetNode = (props: Props) => {
           sx={{ ...(!showRemoveButton && { width: '100%' }), flexGrow: 1 }}
         >
           <Controller
+            control={control}
+            name={`subnets.${idx}.label`}
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter a subnet label"
@@ -59,10 +61,10 @@ export const SubnetNode = (props: Props) => {
                 value={field.value}
               />
             )}
-            control={control}
-            name={`subnets.${idx}.label`}
           />
           <Controller
+            control={control}
+            name={`subnets.${idx}.ipv4`}
             render={({ field, fieldState }) => (
               <TextField
                 aria-label="Enter an IPv4"
@@ -76,8 +78,6 @@ export const SubnetNode = (props: Props) => {
                 value={field.value}
               />
             )}
-            control={control}
-            name={`subnets.${idx}.ipv4`}
           />
         </Grid>
         {showRemoveButton && (

@@ -9,11 +9,15 @@ import {
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
+  mapEntityTypesForSelect,
+  mergeAssignedRolesIntoExistingRoles,
+  partition,
   toEntityAccess,
   updateUserRoles,
 } from './utilities';
 
-import type { ExtendedRoleMap } from './types';
+import type { EntitiesRole, ExtendedRoleView, RoleView } from './types';
+import type { AssignNewRoleFormValues } from './utilities';
 import type { EntityAccess } from '@linode/api-v4';
 
 const accountAccess = 'account_access';
@@ -68,6 +72,73 @@ const userPermissions = userPermissionsFactory.build({
     },
   ],
 });
+
+const mockAssignRolesFormValues: AssignNewRoleFormValues = {
+  roles: [
+    {
+      entities: null,
+      role: {
+        access: 'account_access',
+        entity_type: 'account',
+        label: 'account_viewer',
+        value: 'account_viewer',
+      },
+    },
+    {
+      entities: null,
+      role: {
+        access: 'account_access',
+        entity_type: 'account',
+        label: 'account_linode_admin',
+        value: 'account_linode_admin',
+      },
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'firewall',
+        label: 'firewall_viewer',
+        value: 'firewall_viewer',
+      },
+      entities: [
+        {
+          label: 'firewall-1',
+          value: 12365433,
+        },
+      ],
+    },
+    {
+      role: {
+        access: 'entity_access',
+        entity_type: 'linode',
+        label: 'linode_viewer',
+        value: 'linode_viewer',
+      },
+      entities: [
+        {
+          label: 'linode-12345678',
+          value: 12345678,
+        },
+      ],
+    },
+  ],
+};
+
+const mockMergedRoles = {
+  account_access: ['account_linode_admin', 'linode_creator', 'account_viewer'],
+  entity_access: [
+    {
+      id: 12345678,
+      roles: ['linode_contributor', 'linode_viewer'],
+      type: 'linode',
+    },
+    {
+      id: 12365433,
+      roles: ['firewall_viewer'],
+      type: 'firewall',
+    },
+  ],
+};
 
 describe('getAllRoles', () => {
   it('should return a list of roles for each access type', () => {
@@ -575,7 +646,7 @@ describe('getFormattedEntityType', () => {
 
 describe('getFacadeRoleDescription', () => {
   it('returns description for account_access with non-paid entity types', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'account_access',
       description: 'stackscript creator',
       entity_ids: null,
@@ -592,7 +663,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for account_access with paid entity types', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'account_access',
       description: 'linode creator',
       entity_ids: null,
@@ -609,7 +680,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for entity_access with admin role', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'entity_access',
       description: 'stackscript admin',
       entity_ids: [1],
@@ -627,7 +698,7 @@ describe('getFacadeRoleDescription', () => {
   });
 
   it('returns description for entity_access with viewer role', () => {
-    const role: ExtendedRoleMap = {
+    const role: ExtendedRoleView = {
       access: 'entity_access',
       description: 'stackscript viewer',
       entity_ids: [1],
@@ -642,5 +713,107 @@ describe('getFacadeRoleDescription', () => {
     expect(result).toBe(
       `This role grants the same access as the legacy Read-Only special permission for the StackScripts attached to this role.`
     );
+  });
+});
+
+describe('partition', () => {
+  it('should partition given array into two based on predicate passed in', () => {
+    expect(partition([0, 4, 1, 6, 8, 9, 2, 3], (n) => n % 2 === 0)).toEqual([
+      [0, 4, 6, 8, 2],
+      [1, 9, 3],
+    ]);
+
+    expect(partition([0, 4, 1, 6, 8, 9, 2, 3], (n) => n > 9)).toEqual([
+      [],
+      [0, 4, 1, 6, 8, 9, 2, 3],
+    ]);
+
+    expect(
+      partition(['aaa', 'abc', 'and'], (s) => s.indexOf('a') >= 0)
+    ).toEqual([['aaa', 'abc', 'and'], []]);
+  });
+});
+
+describe('mergeAssignedRolesIntoExistingRoles', () => {
+  it('should merge new role form selections into existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(
+        mockAssignRolesFormValues,
+        userPermissions
+      )
+    ).toEqual(mockMergedRoles);
+  });
+
+  it('should just return the existing roles if no selected form values passed in', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles({ roles: [] }, userPermissions)
+    ).toEqual(userPermissions);
+  });
+
+  it('should transform new role form selections into proper format even with no existing roles', () => {
+    expect(
+      mergeAssignedRolesIntoExistingRoles(mockAssignRolesFormValues, undefined)
+    ).toEqual({
+      account_access: ['account_viewer', 'account_linode_admin'],
+      entity_access: [
+        {
+          id: 12365433,
+          roles: ['firewall_viewer'],
+          type: 'firewall',
+        },
+        {
+          id: 12345678,
+          roles: ['linode_viewer'],
+          type: 'linode',
+        },
+      ],
+    });
+  });
+});
+
+describe('mapEntityTypesForSelect', () => {
+  it('should map entity types to select options with the correct label and value', () => {
+    const mockData: EntitiesRole[] = [
+      {
+        access: 'entity_access',
+        entity_id: 1,
+        entity_name: 'test 1',
+        entity_type: 'linode',
+        id: 'linode_contributor-1',
+        role_name: 'linode_contributor',
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockData, 's');
+
+    expect(result).toEqual([
+      {
+        label: 'Linodes',
+        value: 'linode',
+      },
+    ]);
+  });
+
+  it('should map roles to select options with the correct label and value', () => {
+    const mockRole: RoleView[] = [
+      {
+        access: 'account_access',
+        description: 'Account volume admin',
+        entity_ids: [1],
+        entity_type: 'volume',
+        id: 'account_volume_admin',
+        name: 'account_volume_admin',
+        permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+      },
+    ];
+
+    const result = mapEntityTypesForSelect(mockRole, ' Roles');
+
+    expect(result).toEqual([
+      {
+        label: 'Volume Roles',
+        value: 'volume',
+      },
+    ]);
   });
 });

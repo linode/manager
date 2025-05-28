@@ -22,7 +22,9 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
   { flag: 'aclpIntegration', label: 'ACLP Integration' },
+  { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
+  { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
@@ -30,7 +32,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeDiskEncryption', label: 'Linode Disk Encryption (LDE)' },
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
-  { flag: 'mtctt2025', label: 'MTC TT 2025' },
+  { flag: 'mtc2025', label: 'MTC 2025' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
@@ -40,6 +42,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
+  { flag: 'databaseVpc', label: 'Database VPC' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
   {
@@ -50,6 +53,7 @@ const options: { flag: keyof Flags; label: string }[] = [
     flag: 'vmHostMaintenance',
     label: 'VM Host Maintenance Policy',
   },
+  { flag: 'vpcIpv6', label: 'VPC IPv6' },
 ];
 
 interface RenderFlagItemProps {

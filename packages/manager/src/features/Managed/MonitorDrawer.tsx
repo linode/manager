@@ -8,12 +8,11 @@ import {
   TextField,
 } from '@linode/ui';
 import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
 import { Formik } from 'formik';
 import * as React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import {
   useCreateMonitorMutation,
   useUpdateMonitorMutation,
@@ -40,6 +39,7 @@ export interface MonitorDrawerProps {
   groups: string[];
   isFetching?: boolean;
   monitor?: ManagedServiceMonitor;
+  monitorError: APIError[] | null;
   open: boolean;
   successMsg?: string;
 }
@@ -105,7 +105,8 @@ const emptyInitialValues = {
 } as ManagedServicePayload;
 
 export const MonitorDrawer = (props: MonitorDrawerProps) => {
-  const { credentials, groups, isFetching, monitor, open } = props;
+  const { credentials, groups, isFetching, monitor, monitorError, open } =
+    props;
   const { monitorId } = useParams({ strict: false });
   const navigate = useNavigate();
   const match = useMatch({ strict: false });
@@ -175,8 +176,8 @@ export const MonitorDrawer = (props: MonitorDrawerProps) => {
 
   return (
     <Drawer
+      error={monitorError}
       isFetching={isFetching}
-      NotFoundComponent={NotFound}
       onClose={() => navigate({ to: '/managed/monitors' })}
       open={open}
       title={isEditing ? 'Edit Monitor' : 'Add Monitor'}

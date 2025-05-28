@@ -103,6 +103,16 @@ interface BaseProps {
 type Value = null | number | string | undefined;
 
 interface LabelToolTipProps {
+  /**
+   * Position of the tooltip icon
+   * @default right
+   */
+  labelTooltipIconPosition?: 'left' | 'right';
+  /**
+   * Size of the tooltip icon
+   * @default small
+   */
+  labelTooltipIconSize?: 'large' | 'small';
   labelTooltipText?: JSX.Element | string;
 }
 
@@ -147,6 +157,8 @@ export const TextField = (props: TextFieldProps) => {
     inputProps,
     label,
     labelTooltipText,
+    labelTooltipIconPosition = 'right',
+    labelTooltipIconSize = 'small',
     loading,
     max,
     min,
@@ -170,12 +182,28 @@ export const TextField = (props: TextFieldProps) => {
   const [_value, setValue] = React.useState<Value>(value ?? '');
   const theme = useTheme();
 
-  const {
-    errorScrollClassName,
-    errorTextId,
-    helperTextId,
-    validInputId,
-  } = useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
+  const sxTooltipIconLeft = {
+    marginRight: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(4)} ${theme.spacingFunction(2)}`,
+    '&& svg': {
+      fill: theme.tokens.component.Label.Icon,
+      stroke: theme.tokens.component.Label.Icon,
+      strokeWidth: 0,
+      ':hover': {
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+        fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+        stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
+      },
+    },
+  };
+
+  const sxTooltipIconRight = {
+    marginLeft: `${theme.spacingFunction(4)}`,
+    padding: `${theme.spacingFunction(4)}`,
+  };
+
+  const { errorScrollClassName, errorTextId, helperTextId, validInputId } =
+    useFieldIds({ errorGroup, hasError: Boolean(errorText), inputId, label });
 
   const isControlled = value !== undefined;
 
@@ -186,7 +214,7 @@ export const TextField = (props: TextFieldProps) => {
   }, [value, isControlled]);
 
   const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (trimmed) {
       const trimmedValue = e.target.value.trim();
@@ -246,21 +274,19 @@ export const TextField = (props: TextFieldProps) => {
         }
       }
     },
-    [min, max, type, onChange]
+    [min, max, type, onChange],
   );
 
   const labelSuffixText = required
     ? '(required)'
     : optional
-    ? '(optional)'
-    : null;
+      ? '(optional)'
+      : null;
 
   return (
     <Box
       {...containerProps}
-      className={`${errorText ? errorScrollClassName : ''} ${
-        containerProps?.className || ''
-      }`}
+      className={`${errorText ? errorScrollClassName : ''} ${containerProps?.className || ''}`}
       sx={{
         ...(Boolean(tooltipText) && {
           alignItems: 'flex-end',
@@ -271,22 +297,35 @@ export const TextField = (props: TextFieldProps) => {
       }}
     >
       <Box
-        sx={{
-          marginBottom: theme.spacing(1),
-          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
-        }}
         alignItems={'center'}
         className={hideLabel ? 'visually-hidden' : ''}
         data-testid="inputLabelWrapper"
         display="flex"
+        sx={{
+          marginBottom: theme.spacing(1),
+          ...(!noMarginTop && { marginTop: theme.spacing(2) }),
+        }}
       >
+        {labelTooltipText && labelTooltipIconPosition === 'left' && (
+          <TooltipIcon
+            labelTooltipIconSize={labelTooltipIconSize}
+            status="help"
+            sxTooltipIcon={sxTooltipIconLeft}
+            text={labelTooltipText}
+            width={tooltipWidth}
+          />
+        )}
         <InputLabel
+          data-qa-textfield-label={label}
+          htmlFor={validInputId}
           sx={{
             marginBottom: 0,
             transform: 'none',
+            fontSize:
+              labelTooltipIconSize === 'large'
+                ? theme.tokens.font.FontSize.S
+                : theme.tokens.font.FontSize.Xs,
           }}
-          data-qa-textfield-label={label}
-          htmlFor={validInputId}
           {...InputLabelProps} // We should change this name so that it's not conflicting with the deprecated prop
         >
           {label}
@@ -297,13 +336,11 @@ export const TextField = (props: TextFieldProps) => {
             </Box>
           )}
         </InputLabel>
-        {labelTooltipText && (
+        {labelTooltipText && labelTooltipIconPosition === 'right' && (
           <TooltipIcon
-            sxTooltipIcon={{
-              marginLeft: `${theme.spacing(0.5)}`,
-              padding: `${theme.spacing(0.5)}`,
-            }}
+            labelTooltipIconSize={labelTooltipIconSize}
             status="help"
+            sxTooltipIcon={sxTooltipIconRight}
             text={labelTooltipText}
             width={tooltipWidth}
           />
@@ -312,11 +349,11 @@ export const TextField = (props: TextFieldProps) => {
 
       {helperText && helperTextPosition === 'top' && (
         <FormHelperText
+          data-qa-textfield-helper-text
+          id={helperTextId}
           sx={{
             marginTop: 0,
           }}
-          data-qa-textfield-helper-text
-          id={helperTextId}
         >
           {helperText}
         </FormHelperText>
@@ -332,6 +369,17 @@ export const TextField = (props: TextFieldProps) => {
         <_TextField
           {...textFieldProps}
           {...dataAttrs}
+          className={className}
+          error={!!error || !!errorText}
+          fullWidth
+          helperText={''}
+          /**
+           * Set _helperText_ and _label_ to no value because we want to
+           * have the ability to put the helper text under the label at the top.
+           */
+          label={''}
+          onBlur={handleBlur}
+          onChange={handleChange}
           slotProps={{
             htmlInput: {
               'aria-describedby': helperText ? helperTextId : undefined,
@@ -379,17 +427,6 @@ export const TextField = (props: TextFieldProps) => {
             }),
             ...props.sx,
           }}
-          className={className}
-          error={!!error || !!errorText}
-          fullWidth
-          helperText={''}
-          /**
-           * Set _helperText_ and _label_ to no value because we want to
-           * have the ability to put the helper text under the label at the top.
-           */
-          label={''}
-          onBlur={handleBlur}
-          onChange={handleChange}
           type={type}
           /*
            * Let us explicitly pass an empty string to the input
@@ -402,15 +439,15 @@ export const TextField = (props: TextFieldProps) => {
         </_TextField>
         {tooltipText && (
           <TooltipIcon
+            classes={{ popper: tooltipClasses }}
+            onMouseEnter={tooltipOnMouseEnter}
+            status="help"
             sxTooltipIcon={{
               height: '34px',
               margin: '0px 0px 0px 4px',
               padding: '17px',
               width: '34px',
             }}
-            classes={{ popper: tooltipClasses }}
-            onMouseEnter={tooltipOnMouseEnter}
-            status="help"
             text={tooltipText}
             tooltipPosition={tooltipPosition}
             width={tooltipWidth}
@@ -419,6 +456,8 @@ export const TextField = (props: TextFieldProps) => {
       </Box>
       {errorText && (
         <FormHelperText
+          data-qa-textfield-error-text={label}
+          role="alert"
           sx={{
             ...((editable || hasAbsoluteError) && {
               position: 'absolute',
@@ -434,8 +473,6 @@ export const TextField = (props: TextFieldProps) => {
             top: 42,
             width: '100%',
           }}
-          data-qa-textfield-error-text={label}
-          role="alert"
         >
           {errorText}
         </FormHelperText>

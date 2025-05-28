@@ -1,4 +1,8 @@
-import { useGrants, useProfile } from '@linode/queries';
+import {
+  useCreateDomainMutation,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
@@ -13,7 +17,7 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -24,7 +28,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { useCreateDomainMutation } from 'src/queries/domains';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -123,7 +126,7 @@ export const CreateDomain = () => {
   const isCreatingSecondaryDomain = values.type === 'slave';
 
   const redirect = (id: null | number, state?: DomainState) => {
-    const returnPath = !!id ? `/domains/${id}` : '/domains';
+    const returnPath = id ? `/domains/${id}` : '/domains';
     navigate({
       params: { domainId: Number(id) },
       state: (prev) => ({ ...prev, ...state }),
@@ -281,7 +284,7 @@ export const CreateDomain = () => {
   };
 
   return (
-    <Grid container>
+    <>
       <DocumentTitleSegment segment="Create a Domain" />
       <LandingHeader
         docsLabel="Docs"
@@ -328,12 +331,12 @@ export const CreateDomain = () => {
               />
             </StyledRadioGroup>
             <TextField
-              errorText={
-                formik.touched.domain ? formik.errors.domain : undefined
-              }
               data-qa-domain-name
               data-testid="domain-name-input"
               disabled={disabled}
+              errorText={
+                formik.touched.domain ? formik.errors.domain : undefined
+              }
               label="Domain"
               onBlur={() => formik.setFieldTouched('domain')}
               onChange={formik.handleChange}
@@ -342,12 +345,12 @@ export const CreateDomain = () => {
             />
             {isCreatingPrimaryDomain && (
               <TextField
-                errorText={
-                  formik.touched.soa_email ? formik.errors.soa_email : undefined
-                }
                 data-qa-soa-email
                 data-testid="soa-email-input"
                 disabled={disabled}
+                errorText={
+                  formik.touched.soa_email ? formik.errors.soa_email : undefined
+                }
                 label="SOA Email Address"
                 name={'soa_email'}
                 onBlur={(e) => handleFormikBlur(e, formik)}
@@ -373,14 +376,14 @@ export const CreateDomain = () => {
             {isCreatingPrimaryDomain && (
               <React.Fragment>
                 <Autocomplete
-                  value={defaultRecords.find(
-                    (dr) => dr.value === defaultRecordsSetting.value
-                  )}
                   disableClearable
                   disabled={disabled}
                   label="Insert Default Records"
                   onChange={(_, selected) => setDefaultRecordsSetting(selected)}
                   options={defaultRecords}
+                  value={defaultRecords.find(
+                    (dr) => dr.value === defaultRecordsSetting.value
+                  )}
                 />
                 <StyledFormHelperText>
                   If specified, we can automatically create some domain records
@@ -393,11 +396,11 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'linode' && (
                 <React.Fragment>
                   <LinodeSelect
+                    disabled={disabled}
+                    errorText={errorMap.defaultLinode}
                     onSelectionChange={(value) =>
                       setSelectedDefaultLinode(value ?? undefined)
                     }
-                    disabled={disabled}
-                    errorText={errorMap.defaultLinode}
                     value={selectedDefaultLinode?.id ?? null}
                   />
                   {!errorMap.defaultLinode && (
@@ -413,11 +416,11 @@ export const CreateDomain = () => {
               defaultRecordsSetting.value === 'nodebalancer' && (
                 <React.Fragment>
                   <NodeBalancerSelect
+                    disabled={disabled}
+                    errorText={errorMap.defaultNodeBalancer}
                     onSelectionChange={(value) =>
                       setSelectedDefaultNodeBalancer(value ?? undefined)
                     }
-                    disabled={disabled}
-                    errorText={errorMap.defaultNodeBalancer}
                     value={selectedDefaultNodeBalancer?.id ?? null}
                   />
                   {!errorMap.defaultNodeBalancer && (
@@ -442,7 +445,7 @@ export const CreateDomain = () => {
           </StyledForm>
         </Paper>
       </StyledGrid>
-    </Grid>
+    </>
   );
 };
 

@@ -1,5 +1,5 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { useIsAcceleratedPlansEnabled } from 'src/features/components/PlansPanel/utils';
@@ -102,9 +102,24 @@ const Panel = (props: NodePoolPanelProps) => {
     <Grid container direction="column">
       <Grid>
         <KubernetesPlansPanel
+          copy={getPlansPanelCopy()}
+          error={apiError}
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
+          hasSelectedRegion={hasSelectedRegion}
+          header="Add Node Pools"
+          isAPLEnabled={isAPLEnabled}
+          isPlanPanelDisabled={isPlanPanelDisabled}
+          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
+          onAdd={addPool}
+          onSelect={(newType: string) => setSelectedType(newType)}
+          regionsData={regionsData}
+          resetValues={() => null} // In this flow we don't want to clear things on tab changes
+          selectedId={selectedType}
+          selectedRegionId={selectedRegionId}
+          selectedTier={selectedTier}
           types={extendedTypes.filter((t) => {
             if (!isAcceleratedLKEPlansEnabled && t.class === 'accelerated') {
               // Accelerated plans will appear only if they are enabled (account capability exists and feature flag on)
@@ -114,21 +129,6 @@ const Panel = (props: NodePoolPanelProps) => {
             // No Nanodes in Kubernetes clusters
             return t.class !== 'nanode';
           })}
-          copy={getPlansPanelCopy()}
-          notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          error={apiError}
-          hasSelectedRegion={hasSelectedRegion}
-          header="Add Node Pools"
-          isAPLEnabled={isAPLEnabled}
-          isPlanPanelDisabled={isPlanPanelDisabled}
-          isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-          onAdd={addPool}
-          onSelect={(newType: string) => setSelectedType(newType)}
-          regionsData={regionsData}
-          resetValues={() => null} // In this flow we don't want to clear things on tab changes
-          selectedId={selectedType}
-          selectedRegionId={selectedRegionId}
-          selectedTier={selectedTier}
           updatePlanCount={updatePlanCount}
         />
       </Grid>

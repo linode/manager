@@ -1,11 +1,10 @@
 import { usePreferences, useProfile } from '@linode/queries';
-import { Box, Chip, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -14,9 +13,7 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
-import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
-import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -33,14 +30,14 @@ import {
   StyledVPCBox,
   sxLastListItem,
 } from './LinodeEntityDetail.styles';
-import { getUnableToUpgradeTooltipText } from './LinodesDetail/LinodeConfigs/UpgradeInterfaces/utils';
+import { LinodeEntityDetailRowConfigFirewall } from './LinodeEntityDetailRowConfigFirewall';
+import { LinodeEntityDetailRowInterfaceFirewall } from './LinodeEntityDetailRowInterfaceFirewall';
 import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type {
   EncryptionStatus,
-  Firewall,
   Interface,
   InterfaceGenerationType,
   Linode,
@@ -65,7 +62,6 @@ export interface Props extends LinodeEntityDetailProps {
 
 export interface BodyProps {
   encryptionStatus: EncryptionStatus | undefined;
-  firewalls: Firewall[];
   gbRAM: number;
   gbStorage: number;
   interfaceGeneration: InterfaceGenerationType | undefined;
@@ -89,7 +85,6 @@ export interface BodyProps {
 export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const {
     encryptionStatus,
-    firewalls,
     gbRAM,
     gbStorage,
     interfaceGeneration,
@@ -110,13 +105,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
-  const location = useLocation();
-  const history = useHistory();
-
-  const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
-  };
-
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -129,21 +117,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
   const { isDiskEncryptionFeatureEnabled } =
     useIsDiskEncryptionFeatureEnabled();
 
-  const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const isLinodeInterface = interfaceGeneration === 'linode';
   const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
-
-  const { canUpgradeInterfaces, unableToUpgradeReasons } =
-    useCanUpgradeInterfaces(linodeLkeClusterId, region, interfaceGeneration);
-
-  const unableToUpgradeTooltipText = getUnableToUpgradeTooltipText(
-    unableToUpgradeReasons
-  );
-
-  // Take the first firewall to display. Linodes with legacy config interfaces can only be assigned to one firewall (currently). We'll only display
-  // the attached firewall for Linodes with legacy config interfaces - Linodes with new Linode interfaces can be associated with multiple firewalls
-  // since each interface can have a firewall.
-  const attachedFirewall = firewalls.length > 0 ? firewalls[0] : undefined;
 
   // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
@@ -176,15 +151,15 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     <>
       <StyledBodyGrid container spacing={2} sx={{ mb: 0 }}>
         <Grid
+          container
           size={{
             sm: isDisplayingEncryptedStatus ? 4 : 3,
             xs: 12,
           }}
+          spacing={0}
           sx={{
             flexDirection: matchesLgUp ? 'row' : 'column',
           }}
-          container
-          spacing={0}
         >
           <StyledColumnLabelGrid
             mb={matchesLgUp && !isDisplayingEncryptedStatus ? 0 : 2}
@@ -264,13 +239,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   flexDirection="row"
                 >
                   <EncryptedStatus
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                     tooltipText={
                       isLKELinode
                         ? undefined
                         : UNENCRYPTED_STANDARD_LINODE_GUIDANCE_COPY
                     }
-                    encryptionStatus={encryptionStatus}
-                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
                   />
                 </Box>
               </Grid>
@@ -279,11 +254,11 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
         </Grid>
 
         <Grid
+          container
           size={{
             sm: isDisplayingEncryptedStatus ? 8 : 9,
             xs: 12,
           }}
-          container
         >
           <Grid container size={12}>
             <AccessTable
@@ -301,6 +276,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   </Typography>
                 ) : undefined
               }
+              gridSize={{ lg: 5, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
+              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   isMasked: maskSensitiveDataPreference,
@@ -313,12 +291,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   text: secondAddress,
                 },
               ]}
-              gridSize={{ lg: 5, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0 }}
               title={`Public IP Address${numIPAddresses > 1 ? 'es' : ''}`}
             />
             <AccessTable
+              gridSize={{ lg: 7, xs: 12 }}
+              isLinodeInterface={isLinodeInterface}
+              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   heading: 'SSH Access',
@@ -335,8 +314,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                     : lishLink(username, region, linodeLabel),
                 },
               ]}
-              gridSize={{ lg: 7, xs: 12 }}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               sx={{ padding: 0, pt: matchesLgUp ? 0 : 2 }}
               title="Access"
             />
@@ -345,18 +322,21 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
       </StyledBodyGrid>
       {vpcLinodeIsAssignedTo && (
         <Grid
+          container
+          direction="column"
+          spacing={1}
           sx={{
             borderTop: `1px solid ${theme.borderColors.borderTable}`,
             padding: `${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
           }}
-          container
-          direction="column"
-          spacing={1}
         >
           <StyledColumnLabelGrid data-testid="vpc-section-title">
             VPC
           </StyledColumnLabelGrid>
           <Grid
+            container
+            direction="row"
+            spacing={0}
             sx={{
               alignItems: 'center',
               margin: 0,
@@ -367,9 +347,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 flexDirection: 'column',
               },
             }}
-            container
-            direction="row"
-            spacing={0}
           >
             <StyledVPCBox>
               <StyledListItem sx={{ paddingLeft: 0 }}>
@@ -406,104 +383,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
           </Grid>
         </Grid>
       )}
-      {(linodeLkeClusterId ||
-        attachedFirewall ||
-        isLinodeInterfacesEnabled) && (
-        <Grid
-          sx={{
-            borderTop: `1px solid ${theme.borderColors.borderTable}`,
-            padding: `${theme.spacingFunction(16)} ${theme.spacingFunction(
-              16
-            )} ${theme.spacingFunction(8)} ${theme.spacingFunction(16)}`,
-            [theme.breakpoints.down('md')]: {
-              paddingLeft: 2,
-            },
-          }}
-          container
-          direction="row"
-        >
-          {linodeLkeClusterId && (
-            <StyledListItem
-              sx={{
-                ...(!attachedFirewall && !isLinodeInterfacesEnabled
-                  ? { borderRight: 'unset' }
-                  : {}),
-                paddingLeft: 0,
-              }}
-            >
-              <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
-              <Link
-                data-testid="assigned-lke-cluster-label"
-                to={`/kubernetes/clusters/${linodeLkeClusterId}`}
-              >
-                {cluster?.label ?? `${linodeLkeClusterId}`}
-              </Link>
-              &nbsp;
-              {cluster ? `(ID: ${linodeLkeClusterId})` : undefined}
-            </StyledListItem>
-          )}
-          {!isLinodeInterface && attachedFirewall && (
-            <StyledListItem
-              sx={{
-                ...(!isLinodeInterfacesEnabled ? { borderRight: 'unset' } : {}),
-                ...(!linodeLkeClusterId ? { paddingLeft: 0 } : {}),
-              }}
-            >
-              <StyledLabelBox component="span">Firewall:</StyledLabelBox>{' '}
-              <Link
-                data-testid="assigned-firewall"
-                to={`/firewalls/${attachedFirewall.id}`}
-              >
-                {attachedFirewall.label ?? `${attachedFirewall.id}`}
-              </Link>
-              &nbsp;
-              {attachedFirewall && `(ID: ${attachedFirewall.id})`}
-            </StyledListItem>
-          )}
-          {isLinodeInterfacesEnabled && (
-            <StyledListItem
-              sx={{
-                ...(!linodeLkeClusterId && !attachedFirewall
-                  ? { paddingLeft: 0 }
-                  : {}),
-                borderRight: 'unset',
-              }}
-            >
-              <StyledLabelBox component="span">Interfaces:</StyledLabelBox>{' '}
-              {isLinodeInterface ? (
-                'Linode'
-              ) : (
-                <Box
-                  component="span"
-                  sx={{ alignItems: 'center', display: 'flex' }}
-                >
-                  Configuration Profile
-                  <span>
-                    <Chip
-                      sx={(theme) => ({
-                        backgroundColor: theme.color.tagButtonBg,
-                        color: theme.tokens.color.Neutrals[80],
-                        marginLeft: theme.spacingFunction(12),
-                      })}
-                      component="span"
-                      disabled={!canUpgradeInterfaces}
-                      label="UPGRADE"
-                      onClick={openUpgradeInterfacesDialog}
-                      size="small"
-                    />
-                    {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
-                      <TooltipIcon
-                        status="help"
-                        sxTooltipIcon={{ padding: 0 }}
-                        text={unableToUpgradeTooltipText}
-                      />
-                    )}
-                  </span>
-                </Box>
-              )}
-            </StyledListItem>
-          )}
-        </Grid>
+      {isLinodeInterface ? (
+        <LinodeEntityDetailRowInterfaceFirewall
+          cluster={cluster}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+        />
+      ) : (
+        <LinodeEntityDetailRowConfigFirewall
+          cluster={cluster}
+          interfaceGeneration={interfaceGeneration}
+          linodeId={linodeId}
+          linodeLkeClusterId={linodeLkeClusterId}
+          region={region}
+        />
       )}
     </>
   );

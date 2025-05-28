@@ -12,10 +12,12 @@ import {
   Typography,
 } from '@linode/ui';
 import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
+import { useLocation as useLocationTanstack } from '@tanstack/react-router';
 import { update } from 'ramda';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
+// eslint-disable-next-line no-restricted-imports
+import { useLocation as useLocationRouterDom } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import { sendSupportTicketExitEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -48,6 +50,7 @@ import type {
   TicketSeverity,
 } from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
+import type { SupportState } from 'src/routes/support';
 
 interface Accumulator {
   errors: AttachmentError[];
@@ -136,8 +139,11 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     prefilledTitle,
   } = props;
 
-  const location = useLocation<any>();
-  const stateParams = location.state;
+  const locationRouterDom = useLocationRouterDom<any>();
+  const locationTanstack = useLocationTanstack();
+  const locationTanstackState = locationTanstack.state as SupportState;
+  const stateParams =
+    locationRouterDom.state ?? locationTanstackState.supportTicketFormFields;
 
   // Collect prefilled data from props or Link parameters.
   const _prefilledDescription: string =
@@ -155,8 +161,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   const newPrefilledTitle = _prefilledTitle
     ? _prefilledTitle
     : _prefilledTicketType && TICKET_TYPE_MAP[_prefilledTicketType]
-    ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
-    : undefined;
+      ? TICKET_TYPE_MAP[_prefilledTicketType].ticketTitle
+      : undefined;
 
   const formContainerRef = React.useRef<HTMLFormElement>(null);
 
@@ -197,7 +203,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   React.useEffect(() => {
     if (!open) {
-      resetDrawer();
+      resetDialog();
     }
   }, [open]);
 
@@ -210,8 +216,9 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   };
 
   // Has to be a ref or else the timeout is redone with each render
-  const debouncedSave = React.useRef(debounce(500, false, saveFormData))
-    .current;
+  const debouncedSave = React.useRef(
+    debounce(500, false, saveFormData)
+  ).current;
 
   React.useEffect(() => {
     // Store in-progress work to localStorage
@@ -219,7 +226,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
   }, [summary, description, entityId, entityType, selectedSeverity]);
 
   /**
-   * Clear the drawer completely if clearValues is passed (when canceling out of the drawer or successfully submitting)
+   * Clear the dialog completely if clearValues is passed (when canceling out of the dialog or successfully submitting)
    * or reset to the default values (from localStorage) otherwise.
    */
   const resetTicket = (clearValues: boolean = false) => {
@@ -237,7 +244,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
     });
   };
 
-  const resetDrawer = (clearValues: boolean = false) => {
+  const resetDialog = (clearValues: boolean = false) => {
     resetTicket(clearValues);
     setFiles([]);
 
@@ -248,7 +255,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleClose = () => {
     if (ticketType !== 'general') {
-      window.setTimeout(() => resetDrawer(true), 500);
+      window.setTimeout(() => resetDialog(true), 500);
     }
     props.onClose();
     sendSupportTicketExitEvent('Close');
@@ -256,7 +263,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
 
   const handleCancel = () => {
     props.onClose();
-    window.setTimeout(() => resetDrawer(true), 500);
+    window.setTimeout(() => resetDialog(true), 500);
     sendSupportTicketExitEvent('Cancel');
   };
 
@@ -377,7 +384,7 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
         attachFiles(response!.id).then(({ errors: _errors }: Accumulator) => {
           setSubmitting(false);
           if (!props.keepOpenOnSuccess) {
-            window.setTimeout(() => resetDrawer(true), 500);
+            window.setTimeout(() => resetDialog(true), 500);
             props.onClose();
           }
           /* Errors will be an array of errors, or empty if all attachments succeeded. */
@@ -426,6 +433,8 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                 {TICKET_TYPE_MAP[ticketType].helperText}
               </Typography>
               <Controller
+                control={form.control}
+                name="summary"
                 render={({ field, fieldState }) => (
                   <TextField
                     data-qa-ticket-summary
@@ -438,32 +447,30 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
                     value={summary}
                   />
                 )}
-                control={form.control}
-                name="summary"
               />
               {hasSeverityCapability && (
                 <Controller
+                  control={form.control}
+                  name="selectedSeverity"
                   render={({ field }) => (
                     <Autocomplete
+                      autoHighlight
+                      data-qa-ticket-severity
+                      label="Severity"
                       onChange={(e, severity) =>
                         field.onChange(
                           severity !== null ? severity.value : undefined
                         )
                       }
+                      options={SEVERITY_OPTIONS}
+                      sx={{ maxWidth: 'initial' }}
                       textFieldProps={{
                         tooltipPosition: 'right',
                         tooltipText: TICKET_SEVERITY_TOOLTIP_TEXT,
                       }}
-                      autoHighlight
-                      data-qa-ticket-severity
-                      label="Severity"
-                      options={SEVERITY_OPTIONS}
-                      sx={{ maxWidth: 'initial' }}
                       value={selectedSeverityOption ?? null}
                     />
                   )}
-                  control={form.control}
-                  name="selectedSeverity"
                 />
               )}
             </>
@@ -481,19 +488,19 @@ export const SupportTicketDialog = (props: SupportTicketDialogProps) => {
               )}
               <Box mt={1}>
                 <Controller
+                  control={form.control}
+                  name="description"
                   render={({ field, fieldState }) => (
                     <TabbedReply
+                      error={fieldState.error?.message}
+                      handleChange={field.onChange}
                       placeholder={
                         'Tell us more about the trouble you’re having and any steps you’ve already taken to resolve it.'
                       }
-                      error={fieldState.error?.message}
-                      handleChange={field.onChange}
                       required
                       value={description}
                     />
                   )}
-                  control={form.control}
-                  name="description"
                 />
               </Box>
               <Accordion

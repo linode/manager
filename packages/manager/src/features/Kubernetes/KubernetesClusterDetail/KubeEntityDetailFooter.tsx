@@ -1,6 +1,7 @@
+import { useProfile } from '@linode/queries';
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -14,7 +15,6 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useProfile } from '@linode/queries';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -59,9 +59,8 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     ? `Enabled (${pluralize('IP Address', 'IP Addresses', totalNumberIPs)})`
     : 'Enable';
 
-  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
-    clusterId
-  );
+  const { mutateAsync: updateKubernetesCluster } =
+    useKubernetesClusterMutation(clusterId);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -83,16 +82,16 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   return (
     <Grid
+      container
+      data-qa-kube-entity-footer
+      direction="row"
+      spacing={2}
       sx={{
         alignItems: 'center',
         flex: 1,
         justifyContent: 'space-between',
         padding: 0,
       }}
-      container
-      data-qa-kube-entity-footer
-      direction="row"
-      spacing={2}
     >
       <Grid
         size={{
@@ -177,11 +176,11 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
+          disabled={isClusterReadOnly}
+          entityLabel={clusterLabel}
           sx={{
             width: '100%',
           }}
-          disabled={isClusterReadOnly}
-          entityLabel={clusterLabel}
           tags={clusterTags}
           updateTags={handleUpdateTags}
           view="inline"

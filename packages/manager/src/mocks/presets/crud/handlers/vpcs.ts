@@ -134,6 +134,13 @@ export const createVPC = (mockState: MockState) => [
         mockState
       );
 
+      const vpcIp = vpcIPFactory.build({
+        vpc_id: createdVPC.id,
+      });
+
+      // add entry for VPC IP
+      mswDB.add('vpcsIps', vpcIp, mockState);
+
       // so that we can assign subnets to the correct VPC
       for (const subnet of vpcSubnets) {
         createSubnetPromises.push(
@@ -221,12 +228,26 @@ export const updateVPC = (mockState: MockState) => [
 export const deleteVPC = (mockState: MockState) => [
   http.delete(
     '*/v4beta/vpcs/:id',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const id = Number(params.id);
       const vpc = await mswDB.get('vpcs', id);
 
       if (!vpc) {
         return makeNotFoundResponse();
+      }
+
+      const vpcsIPs = await mswDB.getAll('vpcsIps');
+      const deleteVPCsIPsPromises = [];
+
+      if (vpcsIPs) {
+        const vpcsIPsWithMatchingVPCId = vpcsIPs?.filter(
+          (vpcIP) => vpcIP.vpc_id === id
+        );
+        for (const vpcIP of vpcsIPsWithMatchingVPCId) {
+          deleteVPCsIPsPromises.push(
+            mswDB.delete('vpcsIps', vpcIP.vpc_id, mockState)
+          );
+        }
       }
 
       const deleteSubnetPromises = [];
@@ -238,6 +259,7 @@ export const deleteVPC = (mockState: MockState) => [
       }
 
       await Promise.all(deleteSubnetPromises);
+      await Promise.all(deleteVPCsIPsPromises);
       await mswDB.delete('vpcs', id, mockState);
 
       queueEvents({
@@ -376,7 +398,7 @@ export const updateSubnet = (mockState: MockState) => [
 export const deleteSubnet = (mockState: MockState) => [
   http.delete(
     '*/v4beta/vpcs/:id/subnets/:subnetId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const vpcId = Number(params.id);
       const subnetId = Number(params.subnetId);
       const vpc = await mswDB.get('vpcs', vpcId);
@@ -415,9 +437,6 @@ export const deleteSubnet = (mockState: MockState) => [
   ),
 ];
 
-// TODO: integrate with DB if needed
-const vpcIPs = vpcIPFactory.buildList(10);
-
 export const getVPCIPs = () => [
   http.get(
     '*/v4beta/vpcs/ips',
@@ -426,22 +445,35 @@ export const getVPCIPs = () => [
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
     > => {
+      const vpcsIPs = await mswDB.getAll('vpcsIps');
+
+      if (!vpcsIPs) {
+        return makeNotFoundResponse();
+      }
+
       return makePaginatedResponse({
-        data: vpcIPs,
+        data: vpcsIPs,
         request,
       });
     }
   ),
 
   http.get(
-    '*/v4beta/:vpcId/ips',
+    '*/v4beta/vpcs/:vpcId/ips',
     async ({
       params,
       request,
     }): Promise<
       StrictResponse<APIErrorResponse | APIPaginatedResponse<VPCIP>>
     > => {
-      const specificVPCIPs = vpcIPs.filter((ip) => ip.vpc_id === +params.vpcId);
+      const vpcsIPs = await mswDB.getAll('vpcsIps');
+      const specificVPCIPs = vpcsIPs?.filter(
+        (ip) => ip.vpc_id === +params.vpcId
+      );
+
+      if (!specificVPCIPs) {
+        return makeNotFoundResponse();
+      }
 
       return makePaginatedResponse({
         data: specificVPCIPs,

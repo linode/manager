@@ -1,6 +1,9 @@
 import { Box, Chip, SvgIcon } from '@linode/ui';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
+
+import { searchableEntityIconMap } from 'src/features/Search/utils';
 
 import {
   StyledSearchSuggestion,
@@ -12,7 +15,6 @@ import {
 } from './SearchSuggestion.styles';
 
 import type { SearchableItem } from 'src/features/Search/search.interfaces';
-import { searchableEntityIconMap } from 'src/features/Search/utils';
 
 export interface SearchSuggestionProps {
   data: SearchableItem;

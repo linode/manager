@@ -110,9 +110,9 @@ export const NodeTable = React.memo((props: Props) => {
       })
     : null;
 
-  // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
+  // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
-  const isEnterpriseClusterWithin10MinsOfCreation = () => {
+  const isEnterpriseClusterWithin20MinsOfCreation = () => {
     if (clusterTier !== 'enterprise') {
       return false;
     }
@@ -121,7 +121,7 @@ export const NodeTable = React.memo((props: Props) => {
 
     const interval = Interval.fromDateTimes(
       createdTime,
-      createdTime.plus({ minutes: 10 })
+      createdTime.plus({ minutes: 20 })
     );
 
     const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
@@ -148,38 +148,38 @@ export const NodeTable = React.memo((props: Props) => {
                 <TableHead>
                   <TableRow>
                     <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '35%',
-                      })}
                       active={orderBy === 'label'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'label'}
-                    >
-                      Linode
-                    </TableSortCell>
-                    <TableSortCell
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '25%',
-                      })}
-                      active={orderBy === 'instanceStatus'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'instanceStatus'}
-                    >
-                      Status
-                    </TableSortCell>
-                    <TableSortCell
                       sx={(theme) => ({
                         ...theme.applyTableHeaderStyles,
                         width: '35%',
                       })}
+                    >
+                      Linode
+                    </TableSortCell>
+                    <TableSortCell
+                      active={orderBy === 'instanceStatus'}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label={'instanceStatus'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '25%',
+                      })}
+                    >
+                      Status
+                    </TableSortCell>
+                    <TableSortCell
                       active={orderBy === 'ip'}
                       direction={order}
                       handleClick={handleOrderChange}
                       label={'ip'}
+                      sx={(theme) => ({
+                        ...theme.applyTableHeaderStyles,
+                        width: '35%',
+                      })}
                     >
                       IP Address
                     </TableSortCell>
@@ -188,10 +188,12 @@ export const NodeTable = React.memo((props: Props) => {
                 </TableHead>
                 <TableBody>
                   {rowData.length === 0 &&
-                    isEnterpriseClusterWithin10MinsOfCreation() && (
+                    isEnterpriseClusterWithin20MinsOfCreation() && (
                       <TableRow>
                         <TableCell colSpan={4}>
                           <ErrorState
+                            compact
+                            CustomIcon={EmptyStateCloud}
                             errorText={
                               <Box>
                                 <Typography
@@ -203,18 +205,16 @@ export const NodeTable = React.memo((props: Props) => {
                                   provisioning is complete.
                                 </Typography>
                                 <Typography>
-                                  Provisioning can take up to 10 minutes.
+                                  Provisioning can take up to ~20 minutes.
                                 </Typography>
                               </Box>
                             }
-                            CustomIcon={EmptyStateCloud}
-                            compact
                           />
                         </TableCell>
                       </TableRow>
                     )}
                   {(rowData.length > 0 ||
-                    !isEnterpriseClusterWithin10MinsOfCreation()) && (
+                    !isEnterpriseClusterWithin20MinsOfCreation()) && (
                     <TableContentWrapper
                       length={paginatedAndOrderedData.length}
                       loading={isLoading}
@@ -267,10 +267,10 @@ export const NodeTable = React.memo((props: Props) => {
                       </Typography>
                       <StyledVerticalDivider />
                       <EncryptedStatus
+                        encryptionStatus={encryptionStatus}
                         regionSupportsDiskEncryption={
                           regionSupportsDiskEncryption
                         }
-                        encryptionStatus={encryptionStatus}
                         tooltipText={undefined}
                       />
                     </Box>

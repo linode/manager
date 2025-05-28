@@ -4,10 +4,10 @@ import * as React from 'react';
 
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NodeTable, encryptionStatusTestId } from './NodeTable';
+import { encryptionStatusTestId, NodeTable } from './NodeTable';
 
 import type { Props } from './NodeTable';
 import type { KubernetesTier } from '@linode/api-v4';
@@ -56,13 +56,12 @@ describe('NodeTable', () => {
     return {
       ...actual,
       __esModule: true,
-      useIsDiskEncryptionFeatureEnabled: mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(
-        () => {
+      useIsDiskEncryptionFeatureEnabled:
+        mocks.useIsDiskEncryptionFeatureEnabled.mockImplementation(() => {
           return {
             isDiskEncryptionFeatureEnabled: false, // indicates the feature flag is off or account capability is absent
           };
-        }
-      ),
+        }),
     };
   });
 
@@ -92,7 +91,7 @@ describe('NodeTable', () => {
     getByText('Pool ID 1');
   });
 
-  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
+  it('displays a provisioning message if the cluster was created within the first 20 mins and there are no nodes yet', async () => {
     const clusterProps = {
       ...props,
       clusterCreated: DateTime.local().toISO(),
@@ -109,7 +108,7 @@ describe('NodeTable', () => {
     ).toBeVisible();
 
     expect(
-      await findByText('Provisioning can take up to 10 minutes.')
+      await findByText('Provisioning can take up to ~20 minutes.')
     ).toBeVisible();
   });
 

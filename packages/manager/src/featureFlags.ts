@@ -110,17 +110,20 @@ export interface Flags {
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpIntegration: boolean;
+  aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
+  aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  databaseVpc: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
@@ -136,7 +139,7 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
-  mtctt2025: boolean;
+  mtc2025: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
@@ -155,6 +158,7 @@ export interface Flags {
   tpaProviders: Provider[];
   udp: boolean;
   vmHostMaintenance: BetaFeatureFlag;
+  vpcIpv6: boolean;
 }
 
 interface MarketplaceAppOverride {
@@ -243,6 +247,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
+  | 'DataStream'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'

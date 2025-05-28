@@ -6,9 +6,9 @@ import {
   Drawer,
   FormControlLabel,
   Notice,
+  omittedProps,
   TextField,
   Typography,
-  omittedProps,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import {
@@ -21,7 +21,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { MultipleNonExtendedIPInput } from 'src/components/MultipleIPInput/MultipleNonExtendedIPInput';
-import { NotFound } from 'src/components/NotFound';
 import {
   useKubernetesClusterMutation,
   useKubernetesControlPlaneACLMutation,
@@ -104,7 +103,7 @@ export const KubeControlPlaneACLDrawer = (
             : [''],
         },
         enabled: aclPayload?.enabled ?? false,
-        'revision-id': aclPayload?.['revision-id'] ?? '',
+        'revision-id': aclPayload?.['revision-id'],
       },
     },
   });
@@ -150,7 +149,12 @@ export const KubeControlPlaneACLDrawer = (
     const payload: KubernetesControlPlaneACLPayload = {
       acl: {
         enabled: acl.enabled,
-        'revision-id': acl['revision-id'],
+        /**
+         * If revision-id is an empty string, we want to remove revision-id from the payload
+         * to let the API know to generate a new one
+         */
+        'revision-id':
+          acl['revision-id'] === '' ? undefined : acl['revision-id'],
         ...{
           addresses: {
             ipv4,
@@ -186,7 +190,6 @@ export const KubeControlPlaneACLDrawer = (
 
   return (
     <Drawer
-      NotFoundComponent={NotFound}
       onClose={handleClose}
       open={open}
       title={`Control Plane ACL for ${clusterLabel}`}

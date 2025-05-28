@@ -1,3 +1,9 @@
+import {
+  imageQueries,
+  useDeleteImageMutation,
+  useImageQuery,
+  useImagesQuery,
+} from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
 import {
   ActionsPanel,
@@ -12,6 +18,7 @@ import {
   TextField,
   Typography,
 } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
@@ -23,10 +30,8 @@ import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import { NotFound } from 'src/components/NotFound';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -37,7 +42,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useDialogData } from 'src/hooks/useDialogData';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
@@ -46,12 +50,6 @@ import {
   isEventInProgressDiskImagize,
 } from 'src/queries/events/event.helpers';
 import { useEventsInfiniteQuery } from 'src/queries/events/events';
-import {
-  imageQueries,
-  useDeleteImageMutation,
-  useImageQuery,
-  useImagesQuery,
-} from 'src/queries/images';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import {
@@ -73,7 +71,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, Image, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
+import type { ImageAction } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -110,7 +108,7 @@ export const ImagesLanding = () => {
   }: { action: ImageAction; imageId: string } = useParams({
     strict: false,
   });
-  const search: ImagesSearchParams = useSearch({ from: '/images' });
+  const search = useSearch({ from: '/images' });
   const { query } = search;
   const history = useHistory();
   const navigate = useNavigate();
@@ -262,14 +260,11 @@ export const ImagesLanding = () => {
     }
   );
 
-  const { data: selectedImage, isFetching: isFetchingSelectedImage } =
-    useDialogData({
-      enabled: !!selectedImageId,
-      paramKey: 'imageId',
-      queryHook: useImageQuery,
-      redirectToOnNotFound: '/images',
-    });
-
+  const {
+    data: selectedImage,
+    isFetching: isFetchingSelectedImage,
+    error: selectedImageError,
+  } = useImageQuery(selectedImageId, !!selectedImageId);
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
 
   const { events } = useEventsInfiniteQuery();
@@ -347,7 +342,6 @@ export const ImagesLanding = () => {
          * is ensuring the image is removed from the list, to prevent the user
          * from taking any action on the Image.
          */
-        // this.props.onDelete();
         enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info',
         });
@@ -427,17 +421,6 @@ export const ImagesLanding = () => {
 
   return (
     <React.Fragment>
-      {isCreateImageRestricted && (
-        <Notice
-          sx={{ marginBottom: 2 }}
-          text={getRestrictedResourceText({
-            action: 'create',
-            isSingular: false,
-            resourceType: 'Images',
-          })}
-          variant="error"
-        />
-      )}
       <LandingHeader
         breadcrumbProps={{
           pathname: 'Images',
@@ -456,10 +439,11 @@ export const ImagesLanding = () => {
         onButtonClick={() =>
           navigate({ search: () => ({}), to: '/images/create' })
         }
+        spacingBottom={16}
         title="Images"
       />
       <TextField
-        containerProps={{ mb: 2 }}
+        containerProps={{ mb: 3 }}
         errorText={searchParseError?.message}
         hideLabel
         InputProps={{
@@ -656,22 +640,24 @@ export const ImagesLanding = () => {
       </Paper>
       <EditImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'edit'}
       />
       <RebuildImageDrawer
         image={selectedImage}
+        imageError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'rebuild'}
       />
       <Drawer
+        error={selectedImageError}
         isFetching={isFetchingSelectedImage}
-        NotFoundComponent={NotFound}
         onClose={handleCloseDialog}
         open={action === 'manage-replicas'}
-        title={`Manage Replicas for ${selectedImage?.label}`}
+        title={`Manage Replicas for ${selectedImage?.label ?? 'Unknown'}`}
       >
         <ManageImageReplicasForm
           image={selectedImage}
@@ -695,6 +681,7 @@ export const ImagesLanding = () => {
             }}
           />
         }
+        entityError={selectedImageError}
         isFetching={isFetchingSelectedImage}
         onClose={handleCloseDialog}
         open={action === 'delete'}

@@ -7,9 +7,10 @@ import { getBooleanEnv } from '@linode/utilities';
 export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
-);
+export const ENABLE_DEV_TOOLS =
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS === undefined
+    ? import.meta.env.DEV
+    : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
 
 // allow us to explicity enable maintenance mode
 export const ENABLE_MAINTENANCE_MODE =
@@ -76,7 +77,6 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
-export const NUM_ADOBE_SCRIPTS = 3;
 
 /** Pendo */
 export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
@@ -289,7 +289,8 @@ export const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 export const DEVELOPERS_LINK = 'https://developers.linode.com';
 
 // URL validators
-export const OFFSITE_URL_REGEX = /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
+export const OFFSITE_URL_REGEX =
+  /(?=.{1,2000}$)((\s)*((ht|f)tp(s?):\/\/|mailto:)[A-Za-z0-9]+[~a-zA-Z0-9-_\.@\#\$%&amp;;:,\?=/\+!\(\)]*(\s)*)/;
 export const ONSITE_URL_REGEX = /^([A-Za-z0-9/\.\?=&\-~]){1,2000}$/;
 
 // Firewall links

@@ -1,9 +1,14 @@
+import {
+  useAllLinodeDisksQuery,
+  useGrants,
+  useLinodeQuery,
+} from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { Hidden } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { Hidden } from 'src/components/Hidden';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -16,13 +21,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  useAllLinodeDisksQuery,
-  useLinodeQuery,
-  useGrants,
-} from '@linode/queries';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import { addUsedDiskSpace } from '../utilities';
 import { CreateDiskDrawer } from './CreateDiskDrawer';
 import { DeleteDiskDialog } from './DeleteDiskDialog';
 import { LinodeDiskRow } from './LinodeDiskRow';
@@ -120,6 +121,9 @@ export const LinodeDisks = () => {
         </Typography>
         <Stack direction="row" spacing={1}>
           <Button
+            buttonType="primary"
+            disabled={readOnly || !hasFreeDiskSpace}
+            onClick={() => setIsCreateDrawerOpen(true)}
             tooltipAnalyticsEvent={() =>
               sendEvent({
                 action: `Open:tooltip`,
@@ -127,9 +131,6 @@ export const LinodeDisks = () => {
                 label: `Add a Disk help icon tooltip`,
               })
             }
-            buttonType="primary"
-            disabled={readOnly || !hasFreeDiskSpace}
-            onClick={() => setIsCreateDrawerOpen(true)}
             tooltipText={!hasFreeDiskSpace ? noFreeDiskSpaceWarning : undefined}
           >
             Add a Disk
@@ -237,8 +238,4 @@ export const LinodeDisks = () => {
       />
     </Box>
   );
-};
-
-export const addUsedDiskSpace = (disks: Disk[]) => {
-  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };

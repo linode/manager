@@ -1,10 +1,10 @@
+import { useRegionsQuery } from '@linode/queries';
 import React from 'react';
 import { useController, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useRegionsQuery } from '@linode/queries';
 import { useAllTypes } from 'src/queries/types';
 import { sendLinodeCreateFlowDocsClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -33,8 +33,12 @@ export const Plan = () => {
 
   return (
     <PlansPanel
+      data-qa-select-plan
+      disabled={isLinodeCreateRestricted}
       docsLink={
         <DocsLink
+          href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
+          label="Choosing a Plan"
           onClick={() => {
             sendLinodeCreateFlowDocsClickEvent('Choosing a Plan');
             sendLinodeCreateFormInputEvent({
@@ -44,12 +48,8 @@ export const Plan = () => {
               label: 'Choosing a Plan',
             });
           }}
-          href="https://techdocs.akamai.com/cloud-computing/docs/how-to-choose-a-compute-instance-plan"
-          label="Choosing a Plan"
         />
       }
-      data-qa-select-plan
-      disabled={isLinodeCreateRestricted}
       error={fieldState.error?.message}
       isCreate
       linodeID={linode?.id}

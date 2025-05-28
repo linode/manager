@@ -1,5 +1,6 @@
 import {
   firewallEventsHandler,
+  imageEventsHandler,
   nodebalancerEventHandler,
   oauthClientsEventHandler,
   placementGroupEventHandler,
@@ -11,13 +12,13 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { databaseEventsHandler } from 'src/queries/databases/events';
 import { domainEventsHandler } from 'src/queries/domains';
-import { imageEventsHandler } from 'src/queries/images';
 import { stackScriptEventHandler } from 'src/queries/stackscripts';
 import { supportTicketEventHandler } from 'src/queries/support';
 import { volumeEventsHandler } from 'src/queries/volumes/events';
 
 import {
   diskEventHandler,
+  interfaceEventHandler,
   linodeEventsHandler,
 } from '../queries/linodes/events';
 
@@ -91,6 +92,10 @@ export const eventHandlers: {
   {
     filter: (event) => event.action.startsWith('tax_id'),
     handler: taxIdEventHandler,
+  },
+  {
+    filter: (event) => event.action.startsWith('interface'),
+    handler: interfaceEventHandler,
   },
 ];
 

@@ -1,3 +1,19 @@
+## [2025-05-20] - v0.5.0
+
+### Added:
+
+- `useAddPaymentMethodMutation` for adding a payment method to your account ([#12136](https://github.com/linode/manager/pull/12136))
+
+### Upcoming Features:
+
+- Add queries for VPC IPs endpoints ([#12177](https://github.com/linode/manager/pull/12177))
+
+## [2025-05-06] - v0.4.0
+
+### Tech Stories:
+
+- Re-export everything from `@tanstack/react-query` ([#12106](https://github.com/linode/manager/pull/12106))
+
 ## [2025-04-22] - v0.3.0
 
 ### Added:

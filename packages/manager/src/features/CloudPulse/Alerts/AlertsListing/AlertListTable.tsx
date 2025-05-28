@@ -1,5 +1,12 @@
+import {
+  type Alert,
+  type AlertServiceType,
+  type APIError,
+  type DeleteAlertPayload,
+} from '@linode/api-v4';
+import { Notice, Typography } from '@linode/ui';
 import { groupByTags, sortGroups } from '@linode/utilities';
-import { Grid2, TableBody, TableHead, TableRow } from '@mui/material';
+import { GridLegacy, TableBody, TableHead, TableRow } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -12,7 +19,11 @@ import { Table } from 'src/components/Table';
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useEditAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
+import {
+  useDeleteAlertDefinitionMutation,
+  useEditAlertDefinition,
+} from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
@@ -22,7 +33,6 @@ import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
 
 import type { Item } from '../constants';
-import type { APIError, Alert, AlertServiceType } from '@linode/api-v4';
 import type { Order } from '@linode/utilities';
 
 export interface AlertsListTableProps {
@@ -71,10 +81,16 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
     : undefined;
   const history = useHistory();
   const { mutateAsync: editAlertDefinition } = useEditAlertDefinition(); // put call to update alert status
+  const { mutateAsync: deleteAlertDefinition } =
+    useDeleteAlertDefinitionMutation();
 
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isUpdating, setIsUpdating] = React.useState<boolean>(false);
+  const [deleteState, setDeleteState] = React.useState({
+    isDialogOpen: false,
+    isDeleting: false,
+  });
 
   const handleDetails = ({ id: _id, service_type: serviceType }: Alert) => {
     history.push(`${location.pathname}/detail/${serviceType}/${_id}`);
@@ -91,6 +107,11 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
   const handleCancel = React.useCallback(() => {
     setIsDialogOpen(false);
+  }, []);
+
+  const handleDelete = React.useCallback((alert: Alert) => {
+    setSelectedAlert(alert);
+    setDeleteState((prev) => ({ ...prev, isDialogOpen: true }));
   }, []);
 
   const handleConfirm = React.useCallback(
@@ -125,6 +146,32 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         });
     },
     [editAlertDefinition]
+  );
+
+  const handleDeleteConfirm = React.useCallback(
+    (alert: Alert) => {
+      const payload: DeleteAlertPayload = {
+        serviceType: alert.service_type,
+        alertId: alert.id,
+      };
+      setDeleteState((prev) => ({ ...prev, isDeleting: true }));
+
+      deleteAlertDefinition(payload)
+        .then(() => {
+          enqueueSnackbar('Alert deleted', { variant: 'success' });
+        })
+        .catch((deleteError: APIError[]) => {
+          const errorResponse = getAPIErrorOrDefault(
+            deleteError,
+            'Failed to delete alert. Please try again.'
+          );
+          enqueueSnackbar(errorResponse[0].reason, { variant: 'error' });
+        })
+        .finally(() => {
+          setDeleteState({ isDialogOpen: false, isDeleting: false });
+        });
+    },
+    [deleteAlertDefinition]
   );
 
   const isEnabled = selectedAlert.status !== 'disabled';
@@ -192,7 +239,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
                 return (
                   <>
-                    <Grid2 sx={{ marginTop: 2 }}>
+                    <GridLegacy sx={{ marginTop: 2 }}>
                       <Table
                         colCount={7}
                         data-qa="alert-table"
@@ -240,6 +287,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         {isGroupedByTag ? (
                           <GroupedAlertsTable
                             groupedAlerts={sortGroups(groupByTags(orderedData))}
+                            handleDelete={handleDelete}
                             handleDetails={handleDetails}
                             handleEdit={handleEdit}
                             handleStatusChange={handleStatusChange}
@@ -248,6 +296,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                         ) : (
                           <AlertsTable
                             alerts={paginatedAndOrderedAlerts}
+                            handleDelete={handleDelete}
                             handleDetails={handleDetails}
                             handleEdit={handleEdit}
                             handleStatusChange={handleStatusChange}
@@ -255,7 +304,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
                           />
                         )}
                       </Table>
-                    </Grid2>
+                    </GridLegacy>
                     {!isGroupedByTag && (
                       <PaginationFooter
                         count={count}
@@ -283,16 +332,40 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </OrderBy>
       <AlertConfirmationDialog
-        message={`Are you sure you want to ${
-          isEnabled ? 'disable' : 'enable'
-        } this alert definition?`}
         alert={selectedAlert}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isEnabled={isEnabled}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
+        message={`Are you sure you want to ${
+          isEnabled ? 'disable' : 'enable'
+        } this alert definition?`}
       />
+      <TypeToConfirmDialog
+        entity={{
+          action: 'deletion',
+          name: selectedAlert.label,
+          primaryBtnText: 'Delete',
+          type: 'Alert',
+        }}
+        expand
+        label="Alert Label"
+        loading={deleteState.isDeleting}
+        onClick={() => handleDeleteConfirm(selectedAlert)}
+        onClose={() =>
+          setDeleteState((prev) => ({ ...prev, isDialogOpen: false }))
+        }
+        open={deleteState.isDialogOpen}
+        title={`Delete ${selectedAlert.label ?? ''}? `}
+      >
+        <Notice variant="warning">
+          <Typography>
+            <strong>Warning:</strong> Deleting this Alert is permanent and
+            can&lsquo;t be undone.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
     </>
   );
 });

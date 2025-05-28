@@ -4,13 +4,13 @@ import * as React from 'react';
 
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
-import type { CombinedEntity, ExtendedRoleMap } from '../../Shared/types';
+import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
 import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
 
 interface Props {
   onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
-  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleMap) => void;
-  role: ExtendedRoleMap;
+  onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
+  role: ExtendedRoleView;
 }
 
 export const AssignedEntities = ({
@@ -59,7 +59,11 @@ export const AssignedEntities = ({
         <Chip
           data-testid="entities"
           deleteIcon={<CloseIcon data-testid="CloseIcon" />}
-          label={entity.name}
+          label={
+            entity.name.length > 20
+              ? `${entity.name.slice(0, 20)}...`
+              : entity.name
+          }
           onDelete={() => onRemoveAssignment(entity, role)}
           sx={{
             backgroundColor:
@@ -67,6 +71,9 @@ export const AssignedEntities = ({
                 ? theme.tokens.color.Ultramarine[20]
                 : theme.tokens.color.Neutrals.Black,
             color: theme.tokens.alias.Content.Text.Primary.Default,
+            '& .MuiChip-deleteIcon': {
+              color: theme.tokens.alias.Content.Text.Primary.Default,
+            },
           }}
         />
       </div>
@@ -74,7 +81,12 @@ export const AssignedEntities = ({
   );
 
   return (
-    <Box sx={{ alignItems: 'center', display: 'flex', maxWidth: '800px' }}>
+    <Box
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+      }}
+    >
       <div
         ref={containerRef}
         style={{

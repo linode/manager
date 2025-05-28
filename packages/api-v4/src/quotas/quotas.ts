@@ -1,7 +1,8 @@
-import { Filter, Params, ResourcePage as Page } from 'src/types';
 import { BETA_API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { Quota, QuotaType, QuotaUsage } from './types';
+
+import type { Quota, QuotaType, QuotaUsage } from './types';
+import type { Filter, ResourcePage as Page, Params } from 'src/types';
 
 /**
  * getQuota
@@ -14,7 +15,7 @@ import { Quota, QuotaType, QuotaUsage } from './types';
 export const getQuota = (type: QuotaType, id: number) =>
   Request<Quota>(
     setURL(`${BETA_API_ROOT}/${type}/quotas/${id}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -29,13 +30,13 @@ export const getQuota = (type: QuotaType, id: number) =>
 export const getQuotas = (
   type: QuotaType,
   params: Params = {},
-  filter: Filter = {}
+  filter: Filter = {},
 ) =>
   Request<Page<Quota>>(
     setURL(`${BETA_API_ROOT}/${type}/quotas`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   );
 
 /**
@@ -44,10 +45,10 @@ export const getQuotas = (
  * Returns the usage for a single quota within a particular service specified by `type`.
  *
  * @param type { QuotaType } retrieve a quota within this service type.
- * @param id { number } the quota ID to look up.
+ * @param id { string } the quota ID to look up.
  */
-export const getQuotaUsage = (type: QuotaType, id: number) =>
+export const getQuotaUsage = (type: QuotaType, id: string) =>
   Request<QuotaUsage>(
     setURL(`${BETA_API_ROOT}/${type}/quotas/${id}/usage`),
-    setMethod('GET')
+    setMethod('GET'),
   );

@@ -1,9 +1,9 @@
-import { MonitorStatus } from '@linode/api-v4/lib/managed';
-
 import Disabled from 'src/assets/icons/monitor-disabled.svg';
 import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
 import Pending from 'src/assets/icons/pending.svg';
+
+import type { MonitorStatus } from '@linode/api-v4/lib/managed';
 
 export const statusIconMap: Record<MonitorStatus, any> = {
   disabled: Disabled,

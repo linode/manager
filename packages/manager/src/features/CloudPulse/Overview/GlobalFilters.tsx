@@ -1,6 +1,6 @@
 import { Box, Divider } from '@linode/ui';
 import { IconButton } from '@mui/material';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import * as React from 'react';
 
 import Reload from 'src/assets/icons/refresh.svg';
@@ -35,10 +35,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
     handleToggleAppliedFilter,
   } = props;
 
-  const {
-    preferences,
-    updateGlobalFilterPreference: updatePreferences,
-  } = useAclpPreference();
+  const { preferences, updateGlobalFilterPreference: updatePreferences } =
+    useAclpPreference();
   const [selectedDashboard, setSelectedDashboard] = React.useState<
     Dashboard | undefined
   >();
@@ -91,8 +89,8 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
   }, []);
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
+    <GridLegacy container>
+      <GridLegacy item xs={12}>
         <Box
           display="flex"
           flexDirection={{ lg: 'row', xs: 'column' }}
@@ -119,32 +117,32 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
             />
             <CloudPulseTooltip placement="bottom-end" title="Refresh">
               <IconButton
-                sx={(theme) => ({
-                  marginBlockEnd: 'auto',
-                  marginTop: { md: theme.spacing(3.5) },
-                })}
                 aria-label="Refresh Dashboard Metrics"
                 color="inherit"
                 data-testid="global-refresh"
                 disabled={!selectedDashboard}
                 onClick={handleGlobalRefresh}
                 size="small"
+                sx={(theme) => ({
+                  marginBlockEnd: 'auto',
+                  marginTop: { md: theme.spacing(3.5) },
+                })}
               >
                 <Reload height="24px" width="24px" />
               </IconButton>
             </CloudPulseTooltip>
           </Box>
         </Box>
-      </Grid>
+      </GridLegacy>
       {selectedDashboard && (
-        <Grid item xs={12}>
+        <GridLegacy item xs={12}>
           <Divider
             sx={(theme) => ({
               borderColor: theme.color.grey5,
               margin: 0,
             })}
           />
-        </Grid>
+        </GridLegacy>
       )}
 
       {selectedDashboard && (
@@ -156,6 +154,6 @@ export const GlobalFilters = React.memo((props: GlobalFilterProperties) => {
           preferences={preferences}
         />
       )}
-    </Grid>
+    </GridLegacy>
   );
 });

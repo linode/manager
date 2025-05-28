@@ -1,7 +1,7 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Button, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -39,9 +39,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
   const isLegacy = database.platform !== 'rdbms-default';
 
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
-  const [isCACertDownloading, setIsCACertDownloading] = React.useState<boolean>(
-    false
-  );
+  const [isCACertDownloading, setIsCACertDownloading] =
+    React.useState<boolean>(false);
 
   const {
     data: credentials,
@@ -54,8 +53,8 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     database.platform === 'rdbms-default'
       ? 'akmadmin'
       : database.engine === 'postgresql'
-      ? 'linpostgres'
-      : DB_ROOT_USERNAME;
+        ? 'linpostgres'
+        : DB_ROOT_USERNAME;
 
   const password =
     showCredentials && credentials ? credentials?.password : '••••••••••';
@@ -220,13 +219,13 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
           )}
           {disableShowBtn && (
             <TooltipIcon
+              status="help"
+              sxTooltipIcon={sxTooltipIcon}
               text={
                 database.status === 'provisioning'
                   ? 'Your Database Cluster is currently provisioning.'
                   : 'Your root password is unavailable when your Database Cluster has failed.'
               }
-              status="help"
-              sxTooltipIcon={sxTooltipIcon}
             />
           )}
           {showCredentials && credentials && (

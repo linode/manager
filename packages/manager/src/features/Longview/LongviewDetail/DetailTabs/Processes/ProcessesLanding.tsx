@@ -1,7 +1,7 @@
 import { TextField } from '@linode/ui';
 import { isToday as _isToday } from '@linode/utilities';
 import { escapeRegExp } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -52,7 +52,7 @@ export const ProcessesLanding = React.memo((props: Props) => {
   const [inputText, setInputText] = React.useState<string>();
 
   // The selected process row.
-  const [selectedProcess, setSelectedProcess] = React.useState<Process | null>(
+  const [selectedProcess, setSelectedProcess] = React.useState<null | Process>(
     null
   );
 
@@ -118,11 +118,11 @@ export const ProcessesLanding = React.memo((props: Props) => {
         <Grid size={{ lg: 7, xs: 12 }}>
           <StyledBox display="flex" justifyContent="space-between">
             <TextField
+              hideLabel
+              label="Filter by process or user"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setInputText(e.target.value)
               }
-              hideLabel
-              label="Filter by process or user"
               placeholder="Filter by process or user..."
               sx={{ width: '300px' }}
             />

@@ -1,5 +1,5 @@
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -15,20 +15,20 @@ export interface ActionButtonProps {
 }
 
 export interface ErrorStateProps {
-  /**
-   * An SVG to display in place of the error icon.
-   */
-  CustomIcon?: React.ComponentType<SvgIconProps>;
-  /**
-   * CSS properties to apply to the custom icon.
-   */
-  CustomIconStyles?: React.CSSProperties;
   actionButtonProps?: ActionButtonProps;
-
   /**
    * Reduces the padding on the root element.
    */
   compact?: boolean;
+  /**
+   * An SVG to display in place of the error icon.
+   */
+  CustomIcon?: React.ComponentType<SvgIconProps>;
+
+  /**
+   * CSS properties to apply to the custom icon.
+   */
+  CustomIconStyles?: React.CSSProperties;
   errorText: JSX.Element | string;
 
   /**

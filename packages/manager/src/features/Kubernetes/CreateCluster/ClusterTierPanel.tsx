@@ -1,6 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
-import { Grid2, useMediaQuery } from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
@@ -50,7 +50,7 @@ export const ClusterTierPanel = (props: Props) => {
         </StyledDocsLinkContainer>
       </StyledStackWithTabletBreakpoint>
 
-      <Grid2 container marginTop={2} spacing={2}>
+      <Grid container marginTop={2} spacing={2}>
         <SelectionCard
           checked={selectedTier === 'standard' && !isUserRestricted}
           disabled={isUserRestricted}
@@ -61,11 +61,6 @@ export const ClusterTierPanel = (props: Props) => {
           sxCardBase={{ padding: '16px' }}
         />
         <SelectionCard
-          tooltip={
-            isLkeEnterpriseSelectionDisabled && !isUserRestricted
-              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
-              : undefined
-          }
           checked={selectedTier === 'enterprise' && !isUserRestricted}
           disabled={isLkeEnterpriseSelectionDisabled || isUserRestricted}
           gridSize={{ xs: 12, sm: 6, md: 4 }}
@@ -73,9 +68,14 @@ export const ClusterTierPanel = (props: Props) => {
           onClick={() => handleClusterTierSelection('enterprise')}
           subheadings={[EnterpriseSubheadings]}
           sxCardBase={{ padding: '16px' }}
+          tooltip={
+            isLkeEnterpriseSelectionDisabled && !isUserRestricted
+              ? 'LKE Enterprise is not currently enabled on this account. Please contact your account manager or our sales team using the request form or sales@linode.com.'
+              : undefined
+          }
           tooltipPlacement={smDownBreakpoint ? 'bottom' : 'right'}
         />
-      </Grid2>
+      </Grid>
     </Stack>
   );
 };

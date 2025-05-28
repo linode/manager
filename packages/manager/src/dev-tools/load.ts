@@ -1,4 +1,3 @@
-import { ENABLE_DEV_TOOLS } from 'src/constants';
 import { mswDB } from 'src/mocks/indexedDB';
 import { resolveMockPreset } from 'src/mocks/mockPreset';
 import { createInitialMockStore, emptyStore } from 'src/mocks/mockState';
@@ -12,9 +11,7 @@ import {
   isMSWEnabled,
 } from './utils';
 
-import type { QueryClient } from '@tanstack/react-query';
 import type { MockPresetExtra, MockSeeder, MockState } from 'src/mocks/types';
-import type { ApplicationStore } from 'src/store';
 
 export let mockState: MockState;
 
@@ -24,12 +21,7 @@ export let mockState: MockState;
  *
  * @param store Redux store to control
  */
-export async function loadDevTools(
-  store: ApplicationStore,
-  client: QueryClient
-) {
-  const devTools = await import('./DevTools');
-
+export async function loadDevTools() {
   if (isMSWEnabled) {
     const { worker: mswWorker } = await import('../mocks/mswWorkers');
     const mswPresetId = getBaselinePreset() ?? defaultBaselineMockPreset.id;
@@ -100,6 +92,14 @@ export async function loadDevTools(
         ...initialContext.firewalls,
         ...(seedContext?.firewalls || []),
       ],
+      kubernetesClusters: [
+        ...initialContext.kubernetesClusters,
+        ...(seedContext?.kubernetesClusters || []),
+      ],
+      kubernetesNodePools: [
+        ...initialContext.kubernetesNodePools,
+        ...(seedContext?.kubernetesNodePools || []),
+      ],
       linodeConfigs: [
         ...initialContext.linodeConfigs,
         ...(seedContext?.linodeConfigs || []),
@@ -155,15 +155,4 @@ export async function loadDevTools(
     const worker = mswWorker(extraHandlers, baseHandlers);
     await worker.start({ onUnhandledRequest: 'bypass' });
   }
-
-  devTools.install(store, client);
 }
-
-/**
- * Defaults to `true` for development
- * Default to `false` in production builds
- *
- * Define `REACT_APP_ENABLE_DEV_TOOLS` to explicitly enable or disable dev tools
- */
-export const shouldLoadDevTools =
-  ENABLE_DEV_TOOLS !== undefined ? ENABLE_DEV_TOOLS : import.meta.env.DEV;

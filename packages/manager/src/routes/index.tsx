@@ -1,14 +1,15 @@
+import { NotFound } from '@linode/ui';
 import { QueryClient } from '@tanstack/react-query';
 import { createRoute, createRouter, redirect } from '@tanstack/react-router';
 import React from 'react';
 
-import { NotFound } from 'src/components/NotFound';
 import { ErrorComponent } from 'src/features/ErrorBoundary/ErrorComponent';
 
 import { accountRouteTree } from './account';
 import { cloudPulseAlertsRouteTree } from './alerts';
 import { betaRouteTree } from './betas';
 import { databasesRouteTree } from './databases';
+import { dataStreamRouteTree } from './datastream';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
@@ -46,6 +47,7 @@ export const routeTree = rootRoute.addChildren([
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
   databasesRouteTree,
+  dataStreamRouteTree,
   domainsRouteTree,
   eventsRouteTree,
   firewallsRouteTree,
@@ -90,6 +92,7 @@ declare module '@tanstack/react-router' {
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   domainsRouteTree,
+  dataStreamRouteTree,
   firewallsRouteTree,
   imagesRouteTree,
   longviewRouteTree,
@@ -97,7 +100,9 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
+  searchRouteTree,
   stackScriptsRouteTree,
+  supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
 ]);

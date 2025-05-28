@@ -1,6 +1,6 @@
 import { Autocomplete, InputAdornment, Notice } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
 import { debounce } from 'throttle-debounce';
 
 import Search from 'src/assets/icons/search.svg';
@@ -10,23 +10,21 @@ import { SearchItem } from './SearchItem';
 
 import type { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import type { ConvertedItems } from '../SearchHOC';
-import type { RouteComponentProps } from 'react-router-dom';
 
 interface SelectedItem {
   data: { source: string };
   label: string;
   value: string;
 }
-interface AlgoliaSearchBarProps extends AlgoliaProps, RouteComponentProps<{}> {}
 
 /**
  * For Algolia search to work locally, ensure you have valid values set for
  * REACT_APP_ALGOLIA_APPLICATION_ID and REACT_APP_ALGOLIA_SEARCH_KEY in your .env file.
  */
-const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
+const AlgoliaSearchBar = (props: AlgoliaProps) => {
   const [inputValue, setInputValue] = React.useState('');
-  const { history, searchAlgolia, searchEnabled, searchError, searchResults } =
-    props;
+  const { searchAlgolia, searchEnabled, searchError, searchResults } = props;
+  const navigate = useNavigate();
 
   const options = React.useMemo(() => {
     const [docs, community] = searchResults;
@@ -50,13 +48,7 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
     [searchAlgolia]
   );
 
-  const getLinkTarget = (inputValue: string) => {
-    return inputValue
-      ? `/support/search/?query=${inputValue}`
-      : '/support/search/';
-  };
-
-  const handleSelect = (selected: ConvertedItems | SelectedItem | null) => {
+  const handleSelect = (selected: ConvertedItems | null | SelectedItem) => {
     if (!selected || !inputValue) {
       return;
     }
@@ -68,26 +60,36 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
       window.open(href, '_blank', 'noopener');
     } else {
       // If no href, we redirect to the search landing page.
-      const link = getLinkTarget(inputValue);
-      history.push(link);
+      navigate({
+        to: '/support/search',
+        search: { query: inputValue || undefined },
+      });
     }
   };
   return (
     <React.Fragment>
       {searchError && (
         <Notice
+          spacingTop={8}
           sx={(theme) => ({
             '& p': {
               color: theme.tokens.color.Neutrals.White,
             },
           })}
-          spacingTop={8}
           variant="error"
         >
           {searchError}
         </Notice>
       )}
       <Autocomplete
+        disabled={!searchEnabled}
+        inputValue={inputValue}
+        keepSearchEnabledOnMobile
+        label="Search for answers"
+        onChange={(_, selected) => handleSelect(selected)}
+        onInputChange={(_, value) => onInputValueChange(value)}
+        options={options}
+        placeholder="Search"
         renderOption={(props, option) => {
           return (
             <SearchItem
@@ -114,19 +116,11 @@ const AlgoliaSearchBar = (props: AlgoliaSearchBarProps) => {
           },
           hideLabel: true,
         }}
-        disabled={!searchEnabled}
-        inputValue={inputValue}
-        keepSearchEnabledOnMobile
-        label="Search for answers"
-        onChange={(_, selected) => handleSelect(selected)}
-        onInputChange={(_, value) => onInputValueChange(value)}
-        options={options}
-        placeholder="Search"
       />
     </React.Fragment>
   );
 };
 
 export default withSearch({ highlight: false, hitsPerPage: 10 })(
-  withRouter(AlgoliaSearchBar)
+  AlgoliaSearchBar
 );

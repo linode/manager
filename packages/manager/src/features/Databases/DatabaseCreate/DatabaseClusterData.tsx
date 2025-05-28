@@ -1,6 +1,6 @@
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Divider, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React from 'react';
 
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -17,6 +17,7 @@ import type {
   ClusterSize,
   DatabaseEngine,
   Engine,
+  PrivateNetwork,
   Region,
 } from '@linode/api-v4';
 import type { FormikErrors } from 'formik';
@@ -28,6 +29,7 @@ export interface DatabaseCreateValues {
   cluster_size: ClusterSize;
   engine: Engine;
   label: string;
+  private_network: PrivateNetwork;
   region: string;
   type: string;
 }

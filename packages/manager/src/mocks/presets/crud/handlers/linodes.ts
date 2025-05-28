@@ -2,11 +2,11 @@ import {
   configFactory,
   linodeBackupFactory,
   linodeFactory,
-  linodeIPFactory,
   linodeInterfaceFactoryPublic,
-  linodeInterfaceFactoryVPC,
   linodeInterfaceFactoryVlan,
+  linodeInterfaceFactoryVPC,
   linodeInterfaceSettingsFactory,
+  linodeIPFactory,
   linodeStatsFactory,
   linodeTransferFactory,
 } from '@linode/utilities';
@@ -32,10 +32,10 @@ import type {
   InterfaceGenerationType,
   Linode,
   LinodeBackupsResponse,
-  LinodeIPsResponse,
   LinodeInterface,
-  LinodeInterfaceSettings,
   LinodeInterfaces,
+  LinodeInterfaceSettings,
+  LinodeIPsResponse,
   RegionalNetworkUtilization,
   Stats,
   UpgradeInterfaceData,
@@ -182,13 +182,8 @@ const addFirewallDevice = async (inputs: {
   interfaceType: FirewallDeviceEntityType;
   mockState: MockState;
 }) => {
-  const {
-    entityId,
-    entityLabel,
-    firewallId,
-    interfaceType,
-    mockState,
-  } = inputs;
+  const { entityId, entityLabel, firewallId, interfaceType, mockState } =
+    inputs;
   const firewall = await mswDB.get('firewalls', firewallId);
   if (firewall) {
     const entity = {
@@ -236,10 +231,15 @@ const addFirewallDevice = async (inputs: {
 export const createLinode = (mockState: MockState) => [
   http.post('*/v4/linode/instances', async ({ request }) => {
     const payload = await request.clone().json();
+    const payloadCopy = { ...payload };
+
+    // Ensure linode object does not have `interfaces` property
+    delete payloadCopy['interfaces'];
+
     const linode = linodeFactory.build({
       created: DateTime.now().toISO(),
       status: 'provisioning',
-      ...payload,
+      ...payloadCopy,
     });
 
     if (!linode.label) {
@@ -280,6 +280,9 @@ export const createLinode = (mockState: MockState) => [
         if (subnetFromDB && vpc) {
           const vpcInterface = linodeInterfaceFactoryVPC.build({
             ...vpcIfacePayload,
+            default_route: {
+              ipv4: true,
+            },
             created: DateTime.now().toISO(),
             updated: DateTime.now().toISO(),
           });
@@ -825,7 +828,7 @@ export const createLinodeInterface = (mockState: MockState) => [
 export const deleteLinodeInterface = (mockState: MockState) => [
   http.delete(
     '*/v4*/linodes/instances/:id/interfaces/:interfaceId',
-    async ({ params }): Promise<StrictResponse<{} | APIErrorResponse>> => {
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const linodeId = Number(params.id);
       const interfaceId = Number(params.interfaceId);
       const linode = await mswDB.get('linodes', linodeId);

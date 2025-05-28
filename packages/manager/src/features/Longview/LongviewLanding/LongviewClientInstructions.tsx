@@ -1,15 +1,17 @@
-import Grid from '@mui/material/Grid2';
+import { Paper } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EditableEntityLabel } from 'src/components/EditableEntityLabel/EditableEntityLabel';
-import { Paper } from '@linode/ui';
-import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { InstallationInstructions } from '../shared/InstallationInstructions';
-import { ActionHandlers, LongviewActionMenu } from './LongviewActionMenu';
+import { LongviewActionMenu } from './LongviewActionMenu';
 import { RestrictedUserLabel } from './RestrictedUserLabel';
+
+import type { ActionHandlers } from './LongviewActionMenu';
+import type { DispatchProps } from 'src/containers/longview.container';
 
 interface Props extends ActionHandlers {
   clientAPIKey: string;
@@ -51,11 +53,11 @@ export const LongviewClientInstructions = (props: Props) => {
 
   return (
     <Paper
+      data-testid={clientID}
       sx={{
         marginBottom: theme.spacing(4),
         padding: theme.spacing(3),
       }}
-      data-testid={clientID}
     >
       <Grid
         aria-label="Installation instructions for the Longview agent"

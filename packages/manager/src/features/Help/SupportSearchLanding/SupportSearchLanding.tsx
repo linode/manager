@@ -1,10 +1,9 @@
 import { Box, H1Header, InputAdornment, Notice, TextField } from '@linode/ui';
 import { getQueryParamFromQueryString } from '@linode/utilities';
 import Search from '@mui/icons-material/Search';
-import Grid from '@mui/material/Grid2';
-import { createLazyRoute } from '@tanstack/react-router';
+import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
 import { COMMUNITY_SEARCH_URL, DOCS_SEARCH_URL } from 'src/constants';
@@ -38,7 +37,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 const SupportSearchLanding = (props: AlgoliaProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { searchAlgolia, searchEnabled, searchError, searchResults } = props;
   const [docs, community] = searchResults;
   const { classes } = useStyles();
@@ -58,7 +57,7 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value ?? '';
     setQueryString(newQuery);
-    history.replace({ search: `?query=${newQuery}` });
+    navigate({ to: '/search', search: { query: newQuery } });
     searchAlgolia(newQuery);
   };
 
@@ -70,18 +69,22 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
         }}
       >
         <H1Header
+          data-qa-support-search-landing-title
+          dataQaEl={queryString}
           title={
             queryString.length > 1
               ? `Search results for "${queryString}"`
               : 'Search'
           }
-          data-qa-support-search-landing-title
-          dataQaEl={queryString}
         />
       </Box>
       <Box>
         {searchError && <Notice variant="error">{searchError}</Notice>}
         <TextField
+          className={classes.searchBoxInner}
+          data-qa-search-landing-input
+          disabled={!searchEnabled}
+          hideLabel
           InputProps={{
             className: classes.searchBar,
             startAdornment: (
@@ -90,10 +93,6 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
               </InputAdornment>
             ),
           }}
-          className={classes.searchBoxInner}
-          data-qa-search-landing-input
-          disabled={!Boolean(searchEnabled)}
-          hideLabel
           label="Search Linode documentation and community questions"
           onChange={onInputChange}
           placeholder="Search Linode documentation and community questions"
@@ -121,10 +120,4 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
 
 export default withSearch({ highlight: false, hitsPerPage: 5 })(
   SupportSearchLanding
-);
-
-export const supportSearchLandingLazyRoute = createLazyRoute('/support/search')(
-  {
-    component: SupportSearchLanding,
-  }
 );

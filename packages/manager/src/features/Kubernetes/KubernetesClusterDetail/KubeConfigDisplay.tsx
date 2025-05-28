@@ -121,9 +121,8 @@ export const KubeConfigDisplay = (props: Props) => {
     clusterId,
     false
   );
-  const [isCopyTokenLoading, setIsCopyTokenLoading] = React.useState<boolean>(
-    false
-  );
+  const [isCopyTokenLoading, setIsCopyTokenLoading] =
+    React.useState<boolean>(false);
 
   const onCopyToken = async () => {
     try {
@@ -220,9 +219,9 @@ export const KubeConfigDisplay = (props: Props) => {
         </Typography>
         <div className={classes.kubeconfigElements}>
           <StyledLinkButton
+            aria-label={`Download kubeconfig for ${clusterLabel}`}
             className={classes.kubeconfigElement}
             onClick={downloadKubeConfig}
-            aria-label={`Download kubeconfig for ${clusterLabel}`}
           >
             <DownloadIcon
               className={classes.kubeconfigIcons}
@@ -233,17 +232,17 @@ export const KubeConfigDisplay = (props: Props) => {
             </Typography>
           </StyledLinkButton>
           <StyledLinkButton
+            aria-label="View kubeconfig details"
             className={classes.kubeconfigElement}
             onClick={handleOpenDrawer}
-            aria-label="View kubeconfig details"
           >
             <DetailsIcon className={classes.kubeconfigIcons} />
             <Typography className={classes.kubeconfigFileText}>View</Typography>
           </StyledLinkButton>
           <StyledLinkButton
+            aria-label="Copy kubeconfig token"
             className={classes.kubeconfigElement}
             onClick={onCopyToken}
-            aria-label="Copy kubeconfig token"
           >
             {isCopyTokenLoading ? (
               <CircleProgress
@@ -257,9 +256,9 @@ export const KubeConfigDisplay = (props: Props) => {
             <Box className={classes.kubeconfigFileText}>Copy Token</Box>
           </StyledLinkButton>
           <StyledLinkButton
+            aria-label="Reset kubeconfig"
             className={classes.kubeconfigElement}
             onClick={() => setResetKubeConfigDialogOpen(true)}
-            aria-label="Reset kubeconfig"
           >
             <ResetIcon
               className={cx({

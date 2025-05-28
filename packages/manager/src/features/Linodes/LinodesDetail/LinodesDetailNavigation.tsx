@@ -1,6 +1,6 @@
-import { useLinodeQuery } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import { useLinodeQuery, usePreferences } from '@linode/queries';
+import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import {
   matchPath,
@@ -17,9 +17,10 @@ import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
+import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 
-const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
+const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
   import('./LinodeNetworking/LinodeNetworking').then((module) => ({
     default: module.LinodeNetworking,
@@ -44,6 +45,11 @@ const LinodesDetailNavigation = () => {
   const { data: linode, error } = useLinodeQuery(id);
   const { url } = useRouteMatch();
   const history = useHistory();
+  const flags = useFlags();
+  const { data: aclpPreferences } = usePreferences((preferences) => ({
+    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
+    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
+  }));
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -55,6 +61,11 @@ const LinodesDetailNavigation = () => {
 
   const tabs = [
     {
+      chip:
+        flags.aclpIntegration &&
+        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
+          <BetaChip />
+        ) : null,
       routeName: `${url}/metrics`,
       title: 'Metrics',
     },
@@ -82,6 +93,10 @@ const LinodesDetailNavigation = () => {
       title: 'Activity Feed',
     },
     {
+      chip:
+        flags.aclpIntegration && aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+          <BetaChip />
+        ) : null,
       routeName: `${url}/alerts`,
       title: 'Alerts',
     },
@@ -148,7 +163,7 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeSummary linodeCreated={linode?.created} />
+                <LinodeMetrics linodeCreated={linode?.created} linodeId={id} />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />

@@ -9,13 +9,17 @@
   "license": "Apache-2.0",
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "peggy": "^4.0.3",
     "@linode/api-v4": "workspace:*"
   },
+  "devDependencies": {
+    "@linode/tsconfig": "workspace:*"
+  },
   "peerDependencies": {
-    "vite": "^6.3.2"
+    "vite": "^6.3.4"
   }
 }

@@ -1,5 +1,5 @@
 import { Tooltip, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
@@ -42,11 +42,11 @@ export const MonitorRow = (props: MonitorRowProps) => {
     >
       <StyledTableCell data-qa-monitor-label>
         <Grid
+          container
+          spacing={2}
           sx={{
             alignItems: 'center',
           }}
-          container
-          spacing={2}
           wrap="nowrap"
         >
           <StyledGrid>
@@ -57,12 +57,12 @@ export const MonitorRow = (props: MonitorRowProps) => {
       </StyledTableCell>
       <TableCell data-qa-monitor-status>
         <Grid
-          sx={{
-            alignItems: 'center',
-          }}
           container
           direction="row"
           spacing={1}
+          sx={{
+            alignItems: 'center',
+          }}
         >
           <Grid>
             <ConditionalTypography>

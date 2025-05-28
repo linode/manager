@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { supportTicketFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { HttpResponse, http, server } from 'src/mocks/testServer';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TicketList } from './TicketList';
@@ -17,6 +17,20 @@ const props: Props = {
 };
 
 const loadingTestId = 'table-row-loading';
+
+const queryMocks = vi.hoisted(() => ({
+  useSearch: vi.fn().mockReturnValue({ dialogOpen: false }),
+  useNavigate: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 describe('TicketList', () => {
   it('renders loading state', () => {

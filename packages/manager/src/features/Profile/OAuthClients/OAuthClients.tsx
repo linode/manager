@@ -1,9 +1,10 @@
+import { useOAuthClientsQuery } from '@linode/queries';
 import { Box, Button } from '@linode/ui';
+import { Hidden } from '@linode/ui';
 import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Hidden } from 'src/components/Hidden';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -16,7 +17,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useOAuthClientsQuery } from '@linode/queries';
 
 import { SecretTokenDialog } from '../SecretTokenDialog/SecretTokenDialog';
 import { CreateOAuthClientDrawer } from './CreateOAuthClientDrawer';
@@ -101,6 +101,7 @@ const OAuthClients = () => {
         </Hidden>
         <TableCell actionCell>
           <ActionMenu
+            label={label}
             onOpenDeleteDialog={() => {
               setSelectedOAuthClientId(id);
               setIsDeleteDialogOpen(true);
@@ -113,7 +114,6 @@ const OAuthClients = () => {
               setSelectedOAuthClientId(id);
               setIsResetDialogOpen(true);
             }}
-            label={label}
           />
         </TableCell>
       </TableRow>

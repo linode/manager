@@ -11,7 +11,7 @@ import {
   CHECK_INTERVAL,
   CHECK_TIMEOUT,
 } from '@linode/validation';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
@@ -80,9 +80,18 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
         </Grid>
         <Grid size={12}>
           <Autocomplete
+            autoHighlight
+            disableClearable
+            disabled={disabled}
+            errorText={errorMap.check}
+            helperText="Monitors backends to ensure they’re 'up' and handling requests."
+            id={`type-${configIdx}`}
+            label="Type"
+            noMarginTop
             onChange={(_, selected) =>
               props.onHealthCheckTypeChange(selected.value)
             }
+            options={HEALTHCHECK_TYPE_OPTIONS}
             renderOption={(props, option, state) => (
               <li {...props}>
                 <Stack
@@ -100,22 +109,13 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
                 </Stack>
               </li>
             )}
+            size="small"
             textFieldProps={{
               dataAttrs: {
                 'data-qa-active-check-select': true,
               },
               errorGroup: forEdit ? `${configIdx}` : undefined,
             }}
-            autoHighlight
-            disableClearable
-            disabled={disabled}
-            errorText={errorMap.check}
-            helperText="Monitors backends to ensure they’re 'up' and handling requests."
-            id={`type-${configIdx}`}
-            label="Type"
-            noMarginTop
-            options={HEALTHCHECK_TYPE_OPTIONS}
-            size="small"
             value={defaultType || HEALTHCHECK_TYPE_OPTIONS[0]}
           />
         </Grid>
@@ -181,17 +181,17 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               }}
             >
               <TextField
+                data-qa-active-check-interval
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.check_interval}
+                helperText={`Seconds (${CHECK_INTERVAL.MIN}-${CHECK_INTERVAL.MAX}) between health check probes.`}
                 InputProps={{
                   'aria-label': 'Active Health Check Interval',
                   endAdornment: (
                     <InputAdornment position="end">seconds</InputAdornment>
                   ),
                 }}
-                data-qa-active-check-interval
-                disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
-                errorText={errorMap.check_interval}
-                helperText={`Seconds (${CHECK_INTERVAL.MIN}-${CHECK_INTERVAL.MAX}) between health check probes.`}
                 label="Interval"
                 max={CHECK_INTERVAL.MAX}
                 min={CHECK_INTERVAL.MIN}
@@ -207,17 +207,17 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               }}
             >
               <TextField
+                data-qa-active-check-timeout
+                disabled={disabled}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorText={errorMap.check_timeout}
+                helperText={`Seconds to wait (${CHECK_TIMEOUT.MIN}-${CHECK_TIMEOUT.MAX}) before considering the probe a failure. Must be less than Interval.`}
                 InputProps={{
                   'aria-label': 'Active Health Check Timeout',
                   endAdornment: (
                     <InputAdornment position="end">seconds</InputAdornment>
                   ),
                 }}
-                data-qa-active-check-timeout
-                disabled={disabled}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
-                errorText={errorMap.check_timeout}
-                helperText={`Seconds to wait (${CHECK_TIMEOUT.MIN}-${CHECK_TIMEOUT.MAX}) before considering the probe a failure. Must be less than Interval.`}
                 label="Timeout"
                 max={CHECK_TIMEOUT.MAX}
                 min={CHECK_TIMEOUT.MIN}
@@ -233,14 +233,14 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
               }}
             >
               <TextField
-                InputProps={{
-                  'aria-label': 'Active Health Check Attempts',
-                }}
                 data-qa-active-check-attempts
                 disabled={disabled}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 errorText={errorMap.check_attempts}
                 helperText={`Number of failed probes (${CHECK_ATTEMPTS.MIN}-${CHECK_ATTEMPTS.MAX}) before taking a node out of rotation.`}
+                InputProps={{
+                  'aria-label': 'Active Health Check Attempts',
+                }}
                 label="Attempts"
                 max={CHECK_ATTEMPTS.MAX}
                 min={CHECK_ATTEMPTS.MIN}

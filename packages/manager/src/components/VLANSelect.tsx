@@ -61,7 +61,7 @@ export const VLANSelect = (props: Props) => {
   } = props;
 
   const [open, setOpen] = React.useState(false);
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(value ?? '');
 
   useEffect(() => {
     if (!value && inputValue) {
@@ -78,13 +78,8 @@ export const VLANSelect = (props: Props) => {
     inputValue: debouncedInputValue,
   });
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-  } = useVLANsInfiniteQuery(apiFilter, open);
+  const { data, error, fetchNextPage, hasNextPage, isFetching } =
+    useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
 
@@ -107,6 +102,17 @@ export const VLANSelect = (props: Props) => {
 
   return (
     <Autocomplete
+      disabled={disabled}
+      errorText={errorText ?? error?.[0].reason}
+      getOptionLabel={(option) =>
+        option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
+      }
+      helperText={helperText}
+      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
+      isOptionEqualToValue={(option1, options2) =>
+        option1.label === options2.label
+      }
+      label="VLAN"
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -119,12 +125,10 @@ export const VLANSelect = (props: Props) => {
           }
         },
       }}
-      getOptionLabel={(option) =>
-        option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
-      }
-      isOptionEqualToValue={(option1, options2) =>
-        option1.label === options2.label
-      }
+      loading={isFetching}
+      noMarginTop
+      noOptionsText="You have no VLANs in this region. Type to create one."
+      onBlur={onBlur}
       onChange={(event, value) => {
         if (onChange) {
           onChange(value?.label ?? null);
@@ -144,15 +148,6 @@ export const VLANSelect = (props: Props) => {
       onOpen={() => {
         setOpen(true);
       }}
-      disabled={disabled}
-      errorText={errorText ?? error?.[0].reason}
-      helperText={helperText}
-      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
-      label="VLAN"
-      loading={isFetching}
-      noMarginTop
-      noOptionsText="You have no VLANs in this region. Type to create one."
-      onBlur={onBlur}
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"

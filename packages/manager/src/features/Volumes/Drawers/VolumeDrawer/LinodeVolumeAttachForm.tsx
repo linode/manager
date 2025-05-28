@@ -97,7 +97,10 @@ export const LinodeVolumeAttachForm = (props: Props) => {
     validationSchema: AttachVolumeValidationSchema,
   });
 
-  const { data: volume } = useVolumeQuery(values.volume_id);
+  const { data: volume } = useVolumeQuery(
+    values.volume_id,
+    values.volume_id !== -1
+  );
 
   const linodeRequiresClientLibraryUpdate =
     volume?.encryption === 'enabled' &&

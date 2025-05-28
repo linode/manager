@@ -1,7 +1,8 @@
+import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -10,7 +11,6 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useRegionsQuery } from '@linode/queries';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import {
@@ -88,7 +88,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const highAvailabilityPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
-  const enterprisePrice = lkeEnterpriseType?.price.monthly ?? undefined;
+  const enterprisePrice =
+    cluster.tier === 'enterprise' && lkeEnterpriseType?.price.monthly
+      ? lkeEnterpriseType?.price.monthly
+      : undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
@@ -99,20 +102,20 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
       <>
         ${UNKNOWN_PRICE}/month
         <TooltipIcon
+          classes={{ popper: classes.tooltip }}
+          status="help"
           sxTooltipIcon={{
             marginBottom: theme.spacing(0.5),
             marginLeft: theme.spacing(1),
             padding: 0,
           }}
-          classes={{ popper: classes.tooltip }}
-          status="help"
           text={HA_PRICE_ERROR_MESSAGE}
           tooltipPosition="bottom"
         />
       </>
     ) : (
       `$${getTotalClusterPrice({
-        enterprisePrice: enterprisePrice,
+        enterprisePrice,
         highAvailabilityPrice: highAvailabilityPrice
           ? Number(highAvailabilityPrice)
           : undefined,
@@ -134,10 +137,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
       <Grid
         className={classes.item}
         key={`spec-${idx}`}
-        wrap="nowrap"
         sx={{
           alignItems: 'center',
         }}
+        wrap="nowrap"
       >
         <Grid className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>

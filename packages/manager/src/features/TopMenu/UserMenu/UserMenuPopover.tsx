@@ -1,7 +1,7 @@
-import { useProfile } from '@linode/queries';
+import { useAccount, useGrants, useProfile } from '@linode/queries';
 import { Box, Divider, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -10,8 +10,8 @@ import { Link } from 'src/components/Link';
 import { switchAccountSessionContext } from 'src/context/switchAccountSessionContext';
 import { SwitchAccountButton } from 'src/features/Account/SwitchAccountButton';
 import { useIsParentTokenExpired } from 'src/features/Account/SwitchAccounts/useIsParentTokenExpired';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
+import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendSwitchAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getStorage } from 'src/utilities/storage';
 
@@ -54,18 +54,30 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
   const flags = useFlags();
   const theme = useTheme();
 
-  const {
-    _hasAccountAccess,
-    _isRestrictedUser,
-    account,
-    canSwitchBetweenParentOrProxyAccount,
-    hasReadWriteAccess,
-    profile,
-  } = useAccountManagement();
+  const { data: account } = useAccount();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
+
+  const isChildAccountAccessRestricted = useRestrictedGlobalGrantCheck({
+    globalGrantType: 'child_account_access',
+  });
+
+  const isProxyUser = profile?.user_type === 'proxy';
+
+  const isRestrictedUser = profile?.restricted ?? false;
+
+  const hasAccountAccess =
+    !isRestrictedUser || Boolean(grants?.global.account_access);
+
+  const hasFullAccountAccess =
+    !isRestrictedUser || grants?.global.account_access === 'read_write';
+
+  const canSwitchBetweenParentOrProxyAccount =
+    (profile?.user_type === 'parent' && !isChildAccountAccessRestricted) ||
+    profile?.user_type === 'proxy';
 
   const open = Boolean(anchorEl);
   const id = open ? 'user-menu-popover' : undefined;
-  const isProxyUser = profile?.user_type === 'proxy';
 
   // Used for fetching parent profile and account data by making a request with the parent's token.
   const proxyHeaders = isProxyUser
@@ -92,7 +104,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       // Restricted users can't view the Users tab regardless of their grants
       {
         display: 'Users & Grants',
-        hide: _isRestrictedUser,
+        hide: isRestrictedUser,
         href: '/account/users',
       },
       {
@@ -103,7 +115,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       // Restricted users can't view the Transfers tab regardless of their grants
       {
         display: 'Service Transfers',
-        hide: _isRestrictedUser,
+        hide: isRestrictedUser,
         href: '/account/service-transfers',
       },
       {
@@ -113,11 +125,11 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
       // Restricted users with read_write account access can view Settings.
       {
         display: 'Account Settings',
-        hide: !hasReadWriteAccess,
+        hide: !hasFullAccountAccess,
         href: '/account/settings',
       },
     ],
-    [hasReadWriteAccess, _isRestrictedUser]
+    [hasFullAccountAccess, isRestrictedUser]
   );
 
   const renderLink = (link: MenuLink) => {
@@ -128,12 +140,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
     return (
       <Grid key={link.display} size={12}>
         <Link
+          data-testid={`menu-item-${link.display}`}
+          onClick={onClose}
           style={{
             color: theme.tokens.alias.Content.Text.Link.Default,
             font: theme.tokens.alias.Typography.Body.Semibold,
           }}
-          data-testid={`menu-item-${link.display}`}
-          onClick={onClose}
           to={link.href}
         >
           {link.display}
@@ -154,10 +166,16 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
 
   return (
     <Popover
+      anchorEl={anchorEl}
       anchorOrigin={{
         horizontal: 'right',
         vertical: 'bottom',
       }}
+      data-testid={id}
+      id={id}
+      marginThreshold={0}
+      onClose={onClose}
+      open={open}
       slotProps={{
         paper: {
           sx: (theme) => ({
@@ -167,12 +185,6 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           }),
         },
       }}
-      anchorEl={anchorEl}
-      data-testid={id}
-      id={id}
-      marginThreshold={0}
-      onClose={onClose}
-      open={open}
       // When the Switch Account drawer is open, hide the user menu popover so it's not covering the drawer.
       sx={{ zIndex: isDrawerOpen ? 0 : 1 }}
     >
@@ -204,12 +216,12 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
           </Typography>
           {canSwitchBetweenParentOrProxyAccount && (
             <SwitchAccountButton
+              buttonType="outlined"
+              data-testid="switch-account-button"
               onClick={() => {
                 sendSwitchAccountEvent('User Menu');
                 handleAccountSwitch();
               }}
-              buttonType="outlined"
-              data-testid="switch-account-button"
             />
           )}
         </Stack>
@@ -225,7 +237,7 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
             </Grid>
           </Grid>
         </Box>
-        {_hasAccountAccess && (
+        {hasAccountAccess && (
           <Box>
             <Heading>Account</Heading>
             <Divider />
@@ -236,13 +248,13 @@ export const UserMenuPopover = (props: UserMenuPopoverProps) => {
               {accountLinks.map((menuLink) =>
                 menuLink.hide ? null : (
                   <Link
+                    data-testid={`menu-item-${menuLink.display}`}
+                    key={menuLink.display}
+                    onClick={onClose}
                     style={{
                       color: theme.tokens.alias.Content.Text.Link.Default,
                       font: theme.tokens.alias.Typography.Body.Semibold,
                     }}
-                    data-testid={`menu-item-${menuLink.display}`}
-                    key={menuLink.display}
-                    onClick={onClose}
                     to={menuLink.href}
                   >
                     {menuLink.display}

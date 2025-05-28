@@ -1,3 +1,4 @@
+import { quotaQueries, useQuotasQuery } from '@linode/queries';
 import { Dialog, ErrorState } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
 import * as React from 'react';
@@ -12,8 +13,6 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
-import { quotaQueries } from 'src/queries/quotas/quotas';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
@@ -26,7 +25,7 @@ import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/S
 const quotaRowMinHeight = 58;
 
 interface QuotasTableProps {
-  selectedLocation: SelectOption<Quota['region_applied']> | null;
+  selectedLocation: null | SelectOption<Quota['region_applied']>;
   selectedService: SelectOption<QuotaType>;
 }
 
@@ -37,7 +36,14 @@ export const QuotasTable = (props: QuotasTableProps) => {
   const hasSelectedLocation = Boolean(selectedLocation);
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
   const [selectedQuota, setSelectedQuota] = React.useState<Quota | undefined>();
-
+  const [convertedResourceMetrics, setConvertedResourceMetrics] =
+    React.useState<{
+      limit: number;
+      metric: string;
+    }>({
+      limit: 0,
+      metric: '',
+    });
   const filters: Filter = getQuotasFilters({
     location: selectedLocation,
     service: selectedService,
@@ -96,14 +102,14 @@ export const QuotasTable = (props: QuotasTableProps) => {
     <>
       <Table
         sx={(theme) => ({
-          marginTop: theme.spacing(2),
+          marginTop: theme.spacingFunction(16),
           minWidth: theme.breakpoints.values.sm,
         })}
       >
         <TableHead>
           <TableRow>
             <TableCell sx={{ width: '25%' }}>Quota Name</TableCell>
-            <TableCell sx={{ width: '20%' }}>Account Quota Value</TableCell>
+            <TableCell sx={{ width: '30%' }}>Account Quota Value</TableCell>
             <TableCell sx={{ width: '35%' }}>Usage</TableCell>
             <TableCell sx={{ width: '10%' }} />
           </TableRow>
@@ -112,7 +118,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
           {hasSelectedLocation && isFetchingQuotas ? (
             <TableRowLoading
               columns={4}
-              rows={5}
+              rows={3}
               sx={{ height: quotaRowMinHeight }}
             />
           ) : !selectedLocation ? (
@@ -129,7 +135,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
             />
           ) : (
             quotasWithUsage.map((quota, index) => {
-              const hasQuotaUsage = quota.usage?.used !== null;
+              const hasQuotaUsage = quota.usage?.usage !== null;
 
               return (
                 <QuotasTableRow
@@ -138,6 +144,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
                   key={quota.quota_id}
                   quota={quota}
                   quotaUsageQueries={quotaUsageQueries}
+                  setConvertedResourceMetrics={setConvertedResourceMetrics}
                   setSelectedQuota={setSelectedQuota}
                   setSupportModalOpen={setSupportModalOpen}
                 />
@@ -159,21 +166,24 @@ export const QuotasTable = (props: QuotasTableProps) => {
       )}
 
       <Dialog
-        sx={{
-          '& .MuiDialog-paper': {
-            width: '600px',
-          },
-        }}
         onClose={() => setSupportModalOpen(false)}
         open={supportModalOpen}
-        title="Increase Quota"
+        sx={{
+          '& .MuiDialog-paper': {
+            maxWidth: 800,
+            width: '100%',
+          },
+        }}
+        title={`Contact Support: Increase ${selectedService.label} Quota`}
       >
         {selectedQuota && (
           <QuotasIncreaseForm
+            convertedResourceMetrics={convertedResourceMetrics}
             onClose={() => setSupportModalOpen(false)}
             onSuccess={onIncreaseQuotaTicketCreated}
             open={supportModalOpen}
             quota={selectedQuota}
+            selectedService={selectedService}
           />
         )}
       </Dialog>

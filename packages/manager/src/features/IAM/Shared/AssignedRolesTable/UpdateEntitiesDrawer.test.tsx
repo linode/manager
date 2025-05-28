@@ -1,4 +1,4 @@
-import { act, fireEvent, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -8,7 +8,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
-import type { ExtendedRoleMap } from '../types';
+import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
@@ -46,7 +46,7 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
-const mockRole: ExtendedRoleMap = {
+const mockRole: ExtendedRoleView = {
   access: 'entity_access',
   description: 'Access to update a linode instance',
   entity_ids: [1],
@@ -79,22 +79,22 @@ describe('UpdateEntitiesDrawer', () => {
     renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the title renders
-    expect(screen.getByText('Update List of Entities')).toBeInTheDocument();
+    expect(screen.getByText('Update List of Entities')).toBeVisible();
 
     // Verify the description renders
     expect(
-      screen.getByText('Add or remove entities the role should apply to.')
-    ).toBeInTheDocument();
+      screen.getByText('Add or remove entities attached to the role.')
+    ).toBeVisible();
 
     // Verify the role name renders
-    expect(screen.getByText(mockRole.name)).toBeInTheDocument();
+    expect(screen.getByText(mockRole.name)).toBeVisible();
   });
 
   it('should prefill the form with assigned entities', () => {
     renderWithTheme(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the prefilled entities
-    expect(screen.getByText('Linode 1')).toBeInTheDocument();
+    expect(screen.getByText('Linode 1')).toBeVisible();
   });
 
   it('should allow updating entities', async () => {
@@ -119,17 +119,13 @@ describe('UpdateEntitiesDrawer', () => {
     const autocomplete = screen.getByRole('combobox');
 
     // Verify that 'Linode 1' is initially selected
-    expect(screen.getByText('Linode 1')).toBeInTheDocument();
+    expect(screen.getByText('Linode 1')).toBeVisible();
 
-    act(() => {
-      // Open the dropdown
-      fireEvent.click(autocomplete);
+    // Open the dropdown
+    await userEvent.click(autocomplete);
 
-      // Type to filter options
-      fireEvent.change(autocomplete, {
-        target: { value: 'Linode 2' },
-      });
-    });
+    // Type to filter options
+    await userEvent.type(autocomplete, 'Linode 2');
 
     // Wait for and select the 'Linode 2' option
     const newRole = await screen.findByText('Linode 2');

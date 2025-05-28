@@ -1,10 +1,9 @@
-import { useLinodeQuery, useRegionQuery } from '@linode/queries';
+import { useImageQuery, useLinodeQuery, useRegionQuery } from '@linode/queries';
 import { Accordion, Checkbox, Notice, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { useImageQuery } from 'src/queries/images';
 
 import type { RebuildLinodeFormValues } from './utils';
 
@@ -91,8 +90,16 @@ export const UserData = (props: Props) => {
         </Notice>
       )}
       <Controller
+        control={control}
+        name="metadata.user_data"
         render={({ field, fieldState }) => (
           <TextField
+            disabled={reuseUserData || disabled}
+            errorText={fieldState.error?.message}
+            expand
+            label="User Data"
+            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
+            multiline
             onBlur={(e) => {
               field.onBlur();
               checkFormat({
@@ -108,20 +115,14 @@ export const UserData = (props: Props) => {
                 userData: e.target.value,
               });
             }}
-            disabled={reuseUserData || disabled}
-            errorText={fieldState.error?.message}
-            expand
-            label="User Data"
-            labelTooltipText="Compatible formats include cloud-config data and executable scripts."
-            multiline
             rows={1}
             value={field.value ?? ''}
           />
         )}
-        control={control}
-        name="metadata.user_data"
       />
       <Controller
+        control={control}
+        name="reuseUserData"
         render={({ field }) => (
           <Checkbox
             disabled={disabled}
@@ -130,8 +131,6 @@ export const UserData = (props: Props) => {
             text={`Reuse user data previously provided for ${linode?.label}`}
           />
         )}
-        control={control}
-        name="reuseUserData"
       />
     </Accordion>
   );
