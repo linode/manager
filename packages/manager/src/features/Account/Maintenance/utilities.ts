@@ -13,7 +13,7 @@ export const SCHEDULED_MAINTENANCE_FILTER = Object.freeze({
 });
 
 export const PENDING_MAINTENANCE_FILTER = Object.freeze({
-  status: { '+or': ['pending', 'started'] },
+  status: { '+or': ['pending', 'started', 'scheduled'] },
 });
 
 export const maintenanceDateColumnMap: Record<
@@ -25,3 +25,11 @@ export const maintenanceDateColumnMap: Record<
   scheduled: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
 };
+
+export const PLATFORM_MAINTENANCE_TYPE =
+  'security_reboot_maintenance_scheduled';
+
+export const PLATFORM_MAINTENANCE_REASON_MATCH = [
+  'critical platform update',
+  'critical security update',
+];
