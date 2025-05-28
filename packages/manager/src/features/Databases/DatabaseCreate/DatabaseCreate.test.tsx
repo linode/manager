@@ -45,6 +45,17 @@ describe('Database Create', () => {
     getAllByText('Create Database Cluster');
   });
 
+  it('should render VPC content when feature flag is present', async () => {
+    const { getAllByTestId, getAllByText } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        flags: { databaseVpc: true },
+      }
+    );
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
+    getAllByText('Configure Networking');
+  });
+
   it('should display the correct node price and disable 3 nodes for 1 GB plans', async () => {
     const standardTypes = [
       databaseTypeFactory.build({
