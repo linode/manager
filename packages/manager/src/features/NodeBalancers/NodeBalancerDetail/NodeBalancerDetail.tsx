@@ -20,8 +20,11 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 export const NodeBalancerDetail = () => {
   const { id } = useParams({ from: '/nodebalancers/$id' });
 
-  const { error: updateError, mutateAsync: updateNodeBalancer } =
-    useNodebalancerUpdateMutation(id);
+  const {
+    error: updateError,
+    mutateAsync: updateNodeBalancer,
+    reset,
+  } = useNodebalancerUpdateMutation(id);
 
   const { data: nodebalancer, error, isLoading } = useNodeBalancerQuery(id);
 
@@ -72,7 +75,7 @@ export const NodeBalancerDetail = () => {
           onEditHandlers: {
             editableTextTitle: nodebalancer.label,
             errorText: labelError,
-            onCancel: () => null,
+            onCancel: () => reset(),
             onEdit: (label) => updateNodeBalancer({ label }),
           },
           pathname: `/nodebalancers/${nodebalancer.label}`,
