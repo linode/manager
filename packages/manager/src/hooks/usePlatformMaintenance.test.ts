@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 
 import { accountMaintenanceFactory, notificationFactory } from 'src/factories';
 
@@ -18,7 +18,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('usePlatformMaintenace', () => {
-  it('returns false when there is no platform maintenance notification', async () => {
+  it('returns false when there is no platform maintenance notification', () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: accountMaintenanceFactory.buildList(3, {
         type: 'reboot',
@@ -34,12 +34,10 @@ describe('usePlatformMaintenace', () => {
 
     const { result } = renderHook(() => usePlatformMaintenance());
 
-    await waitFor(() =>
-      expect(result.current.accountHasPlatformMaintenance).toBe(false)
-    );
+    expect(result.current.accountHasPlatformMaintenance).toBe(false);
   });
 
-  it('returns true when there is a platform maintenance notifications', async () => {
+  it('returns true when there is a platform maintenance notifications', () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: [],
     });
@@ -53,16 +51,14 @@ describe('usePlatformMaintenace', () => {
 
     const { result } = renderHook(() => usePlatformMaintenance());
 
-    await waitFor(() =>
-      expect(result.current).toEqual({
-        accountHasPlatformMaintenance: true,
-        linodesWithPlatformMaintenance: new Set(),
-        platformMaintenanceByLinode: {},
-      })
-    );
+    expect(result.current).toEqual({
+      accountHasPlatformMaintenance: true,
+      linodesWithPlatformMaintenance: new Set(),
+      platformMaintenanceByLinode: {},
+    });
   });
 
-  it('includes linodes with platform maintenance', async () => {
+  it('includes linodes with platform maintenance', () => {
     const mockPlatformMaintenance = accountMaintenanceFactory.buildList(2, {
       type: 'reboot',
       entity: { type: 'linode' },
@@ -90,16 +86,14 @@ describe('usePlatformMaintenace', () => {
 
     const { result } = renderHook(() => usePlatformMaintenance());
 
-    await waitFor(() =>
-      expect(result.current).toEqual({
-        accountHasPlatformMaintenance: true,
-        linodesWithPlatformMaintenance: new Set(
-          mockPlatformMaintenance.map((m) => m.entity.id)
-        ),
-        platformMaintenanceByLinode: Object.fromEntries(
-          mockPlatformMaintenance.map((m) => [m.entity.id, [m]])
-        ),
-      })
-    );
+    expect(result.current).toEqual({
+      accountHasPlatformMaintenance: true,
+      linodesWithPlatformMaintenance: new Set(
+        mockPlatformMaintenance.map((m) => m.entity.id)
+      ),
+      platformMaintenanceByLinode: Object.fromEntries(
+        mockPlatformMaintenance.map((m) => [m.entity.id, [m]])
+      ),
+    });
   });
 });

@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 
 describe('LinodePlatformMaintenanceBanner', () => {
-  it("doesn't render when there is no platform maintenance", async () => {
+  it("doesn't render when there is no platform maintenance", () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: accountMaintenanceFactory.buildList(3, {
         type: 'reboot',
@@ -49,7 +49,7 @@ describe('LinodePlatformMaintenanceBanner', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('does not render if there is a notification but not a maintenance item', async () => {
+  it('does not render if there is a notification but not a maintenance item', () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: accountMaintenanceFactory.buildList(3, {
         type: 'reboot',
@@ -76,7 +76,7 @@ describe('LinodePlatformMaintenanceBanner', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders when a maintenance item is returned', async () => {
+  it('renders when a maintenance item is returned', () => {
     const mockPlatformMaintenance = accountMaintenanceFactory.buildList(2, {
       type: 'reboot',
       entity: { type: 'linode' },
@@ -111,15 +111,15 @@ describe('LinodePlatformMaintenanceBanner', () => {
       }),
     });
 
-    const { findByText } = renderWithTheme(
+    const { getByText } = renderWithTheme(
       <LinodePlatformMaintenanceBanner
         linodeId={mockPlatformMaintenance[0].entity.id}
       />
     );
 
-    expect(await findByText('linode-with-platform-maintenance')).toBeVisible();
+    expect(getByText('linode-with-platform-maintenance')).toBeVisible();
     expect(
-      await findByText((el) =>
+      getByText((el) =>
         el.includes('needs to be rebooted for critical platform maintenance.')
       )
     ).toBeVisible();

@@ -20,7 +20,7 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('PlatformMaintenanceBanner', () => {
-  it("doesn't render when there is no platform maintenance", async () => {
+  it("doesn't render when there is no platform maintenance", () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: accountMaintenanceFactory.buildList(3, {
         type: 'reboot',
@@ -42,7 +42,7 @@ describe('PlatformMaintenanceBanner', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders with generic message when there is a notification', async () => {
+  it('renders with generic message when there is a notification', () => {
     queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
       data: accountMaintenanceFactory.buildList(3, {
         type: 'reboot',
@@ -60,17 +60,17 @@ describe('PlatformMaintenanceBanner', () => {
       }),
     });
 
-    const { findByText } = renderWithTheme(<PlatformMaintenanceBanner />);
+    const { getByText } = renderWithTheme(<PlatformMaintenanceBanner />);
 
-    expect(await findByText('One or more Linodes')).toBeVisible();
+    expect(getByText('One or more Linodes')).toBeVisible();
     expect(
-      await findByText((el) =>
+      getByText((el) =>
         el.includes('need to be rebooted for critical platform maintenance.')
       )
     ).toBeVisible();
   });
 
-  it('renders with count of affected linodes', async () => {
+  it('renders with count of affected linodes', () => {
     const mockPlatformMaintenance = accountMaintenanceFactory.buildList(2, {
       type: 'reboot',
       entity: { type: 'linode' },
@@ -96,11 +96,11 @@ describe('PlatformMaintenanceBanner', () => {
       }),
     });
 
-    const { findByText } = renderWithTheme(<PlatformMaintenanceBanner />);
+    const { getByText } = renderWithTheme(<PlatformMaintenanceBanner />);
 
-    expect(await findByText('2 Linodes')).toBeVisible();
+    expect(getByText('2 Linodes')).toBeVisible();
     expect(
-      await findByText((el) =>
+      getByText((el) =>
         el.includes('need to be rebooted for critical platform maintenance.')
       )
     ).toBeVisible();
