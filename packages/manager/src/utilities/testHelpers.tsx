@@ -220,7 +220,7 @@ export const renderWithThemeAndRouter = async (
     });
 
   const utils: RenderResult = render(
-    wrapWithTheme(wrapWithRouter(ui, { ...options, router }), opts)
+    wrapWithTheme(wrapWithRouter(ui, { router }), opts)
   );
 
   // Wait for the router to be ready
@@ -229,9 +229,7 @@ export const renderWithThemeAndRouter = async (
   return {
     ...utils,
     rerender: (ui) =>
-      utils.rerender(
-        wrapWithTheme(wrapWithRouter(ui, { ...options, router }), opts)
-      ),
+      utils.rerender(wrapWithTheme(wrapWithRouter(ui, { router }), opts)),
     router,
   };
 };
