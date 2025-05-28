@@ -53,7 +53,7 @@ export const markEventSeen = (eventId: number) =>
  * @deprecated As of `5/20/2025`, this endpoint is deprecated. It will be sunset on `6/17/2025`.
  *
  * If you depend on using `read`, you may be able to use `markEventSeen` and `seen` instead.
- * Please note that the seen endpoint functions differently and will mark all events up to and including the referenced event-id as "seen" rather than individual events.
+ * Please note that the `seen` endpoint functions differently and will mark all events up to and including the referenced event ID as "seen" rather than individual events.
  */
 export const markEventRead = (eventId: number) =>
   Request<{}>(
