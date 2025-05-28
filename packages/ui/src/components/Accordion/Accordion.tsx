@@ -29,6 +29,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     lineHeight: 0,
     position: 'absolute',
     right: 50,
+    top: 8,
     width: 30,
   },
 }));
@@ -67,7 +68,7 @@ export interface AccordionProps extends _AccordionProps {
    */
   headingProps?: TypographyProps;
   /**
-   * SubHeading text that shows as a description under the heading
+   * Subheading text that shows as a description under the heading
    */
   subHeading?: React.ReactNode | string;
   /**
@@ -140,21 +141,21 @@ export const Accordion = (props: AccordionProps) => {
         data-qa-panel-summary={heading}
       >
         <div
-          style={{ display: 'flex', flexDirection: 'column', rowGap: '6px' }}
+          style={{ display: 'flex', flexDirection: 'column', rowGap: '8px' }}
         >
           <Typography {...headingProps} data-qa-panel-subheading variant="h3">
             {heading}
             {headingChip}
           </Typography>
-          {subHeading ? (
-            <Typography data-qa-panel-subheading variant="body1">
+          {subHeading && (
+            <Typography color="textSecondary" variant="body1">
               {subHeading}
             </Typography>
-          ) : undefined}
-          {headingNumberCount && headingNumberCount > 0 ? (
-            <span className={classes.itemCount}>{headingNumberCount}</span>
-          ) : null}
+          )}
         </div>
+        {headingNumberCount && headingNumberCount > 0 ? (
+          <span className={classes.itemCount}>{headingNumberCount}</span>
+        ) : null}
       </AccordionSummary>
       <AccordionDetails {...detailProps} data-qa-panel-details>
         <Grid container>

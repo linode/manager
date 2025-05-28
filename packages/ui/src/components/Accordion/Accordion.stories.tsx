@@ -1,18 +1,21 @@
-import { Link } from '@mui/material';
 import React from 'react';
 
 import { Accordion } from './Accordion';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
-const subHeadingString = `User data is a feature of the Metadata service that enables you to perform system configuration tasks (such as adding users and installing software) by providing custom instructions or scripts to cloud-init. Any user data should be added at this step and cannot be modified after the Linode has been created.`;
+const subHeadingString =
+  'User data is a feature of the Metadata service that enables you to perform system configuration tasks (such as adding users and installing software) by providing custom instructions or scripts to cloud-init. Any user data should be added at this step and cannot be modified after the Linode has been created.';
 
 const subHeadingNode = (
   <>
-    {`User data is a feature of the Metadata service that enables you to perform system configuration tasks (such as adding users and installing software) by providing custom instructions or scripts to cloud-init. Any user data should be added at this step and cannot be modified after the Linode has been created. `}
-    <Link href="https://www.linode.com/docs/guides/metadata-user-data/">
+    {subHeadingString}{' '}
+    <a
+      href="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service"
+      target="blank"
+    >
       Learn more.
-    </Link>
+    </a>
   </>
 );
 
