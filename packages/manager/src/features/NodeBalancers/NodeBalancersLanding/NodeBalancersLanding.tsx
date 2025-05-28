@@ -20,6 +20,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { NodeBalancerDeleteDialog } from '../NodeBalancerDeleteDialog';
+import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerLandingEmptyState } from './NodeBalancersLandingEmptyState';
 import { NodeBalancerTableRow } from './NodeBalancerTableRow';
 
@@ -60,6 +61,8 @@ export const NodeBalancersLanding = () => {
     isFetching: isFetchingNodeBalancer,
     error: selectedNodeBalancerError,
   } = useNodeBalancerQuery(Number(params.id), !!params.id);
+
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   if (error) {
     return (
@@ -126,6 +129,11 @@ export const NodeBalancersLanding = () => {
                 Region
               </TableSortCell>
             </Hidden>
+            {isNodebalancerVPCEnabled && (
+              <Hidden lgDown>
+                <TableCell>VPC</TableCell>
+              </Hidden>
+            )}
             <TableCell />
           </TableRow>
         </TableHead>

@@ -1,4 +1,4 @@
-import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import { Grid } from '@mui/material';
 import * as React from 'react';
@@ -8,9 +8,8 @@ import {
   StyledBox,
   StyledClampedContent,
   StyledContainer,
-  StyledGrid,
   StyledPermissionItem,
-  sxTooltipIcon,
+  StyledTitle,
 } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
@@ -46,21 +45,7 @@ export const Permissions = ({ permissions }: Props) => {
   // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
     <Grid container data-testid="parent" direction="column">
-      <StyledGrid container item md={1}>
-        <Typography
-          sx={(theme) => ({
-            font: theme.tokens.alias.Typography.Label.Bold.S,
-          })}
-        >
-          Permissions
-        </Typography>
-
-        <TooltipIcon
-          status="help"
-          sxTooltipIcon={sxTooltipIcon}
-          text="Link is coming..."
-        />
-      </StyledGrid>
+      <StyledTitle>Permissions</StyledTitle>
       {!permissions.length ? (
         <Typography>
           This role doesn’t include permissions. Refer to the role description
