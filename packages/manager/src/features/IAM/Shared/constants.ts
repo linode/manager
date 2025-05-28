@@ -19,3 +19,5 @@ export const PAID_ENTITY_TYPES = [
   'volume',
   'image',
 ];
+
+export const ROLES_TABLE_PREFERENCE_KEY = 'roles';
