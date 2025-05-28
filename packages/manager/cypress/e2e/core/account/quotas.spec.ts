@@ -121,7 +121,7 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
         quota_id: `obj-objects-${selectedDomain}`,
         description: randomLabel(50),
         endpoint_type: mockSelectedEndpoint.endpoint_type,
-        quota_limit: 555,
+        quota_limit: 400,
         quota_name: randomLabel(15),
         resource_metric: 'object',
         s3_endpoint: selectedDomain,
@@ -161,68 +161,6 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
       mockQuotaUsages[2]
     ).as('getQuotaUsages');
     mockApiInternalUser();
-    cy.visitWithLogin('/account/quotas');
-    cy.wait(['@getFeatureFlags', '@getProfile']);
-    // Quotas table placeholder text is shown
-    cy.get('[data-testid="table-row-empty"]').should('be.visible');
-
-    // Object Storage Endpoint field is blank
-    const placeholderText = 'Select an Object Storage S3 endpoint';
-    cy.findByPlaceholderText(placeholderText)
-      .should('be.visible')
-      .should('be.enabled');
-    ui.autocomplete
-      .findByLabel('Object Storage Endpoint')
-      .should('be.visible')
-      .type(selectedDomain);
-    ui.autocompletePopper
-      .findByTitle(selectedDomain, { exact: false })
-      .should('be.visible')
-      .click();
-    cy.wait(['@getObjectStorageEndpoints', '@getQuotas']);
-    cy.get('table[data-testid="table-endpoint-quotas"]')
-      .find('tbody')
-      .within(() => {
-        cy.get('tr').should('have.length', 3);
-        cy.get('[data-testid="table-row-empty"]').should('not.exist');
-        cy.get('tr').should('have.length', 3);
-        cy.get('tr').each((row, rowIndex) => {
-          cy.wrap(row).within(() => {
-            cy.get('td')
-              .eq(0)
-              .within(() => {
-                cy.findByText(mockQuotas[rowIndex].quota_name, {
-                  exact: false,
-                }).should('be.visible');
-                cy.get(
-                  `[aria-label="${mockQuotas[rowIndex].description}"]`
-                ).should('be.visible');
-              });
-            cy.get('td')
-              .eq(1)
-              .within(() => {
-                cy.findByText(mockQuotas[rowIndex].quota_limit, {
-                  exact: false,
-                }).should('be.visible');
-                cy.findByText(mockQuotas[rowIndex].resource_metric, {
-                  exact: false,
-                }).should('be.visible');
-              });
-          });
-        });
-        cy.wait(['@getQuotaUsages']);
-        cy.get('tr').each((row, rowIndex) => {
-          cy.wrap(row).within(() => {
-            cy.get('td')
-              .eq(2)
-              .within(() => {
-                // quota usage
-                const strUsage = `${mockQuotaUsages[rowIndex].usage} of ${mockQuotaUsages[rowIndex].quota_limit}`;
-                cy.findByText(strUsage, { exact: false }).should('be.visible');
-              });
-          });
-        });
-      });
     const ticketSummary = 'Increase Object Storage Quota';
     const expectedResults = [
       {
@@ -236,12 +174,78 @@ describe('Quotas accessible when limitsEvolution feature flag enabled', () => {
         metric: 'Buckets',
       },
       {
-        newQuotaLimit: mockQuotas[1].quota_limit * 2,
+        newQuotaLimit: mockQuotas[2].quota_limit * 2,
         description: randomLabel(),
         metric: 'Objects',
       },
     ];
     mockQuotas.forEach((mockQuota, index) => {
+      cy.visitWithLogin('/account/quotas');
+      cy.wait(['@getFeatureFlags', '@getProfile']);
+      // Quotas table placeholder text is shown
+      cy.get('[data-testid="table-row-empty"]').should('be.visible');
+
+      // Object Storage Endpoint field is blank
+      const placeholderText = 'Select an Object Storage S3 endpoint';
+      cy.findByPlaceholderText(placeholderText)
+        .should('be.visible')
+        .should('be.enabled');
+      ui.autocomplete
+        .findByLabel('Object Storage Endpoint')
+        .should('be.visible')
+        .type(selectedDomain);
+      ui.autocompletePopper
+        .findByTitle(selectedDomain, { exact: false })
+        .should('be.visible')
+        .click();
+      cy.wait(['@getObjectStorageEndpoints', '@getQuotas']);
+      cy.get('table[data-testid="table-endpoint-quotas"]')
+        .find('tbody')
+        .within(() => {
+          cy.get('tr').should('have.length', 3);
+          cy.get('[data-testid="table-row-empty"]').should('not.exist');
+          cy.get('tr').should('have.length', 3);
+          cy.get('tr').each(($row, rowIndex) => {
+            cy.wrap($row).within(() => {
+              cy.get('td')
+                .eq(0)
+                .within(() => {
+                  // TODO: this is flakey, unreliable
+                  cy.findByText(mockQuotas[rowIndex].quota_name, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.get(
+                    `[aria-label="${mockQuotas[rowIndex].description}"]`
+                  ).should('be.visible');
+                });
+              cy.get('td')
+                .eq(1)
+                .within(() => {
+                  cy.findByText(mockQuotas[rowIndex].quota_limit, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.findByText(mockQuotas[rowIndex].resource_metric, {
+                    exact: false,
+                  }).should('be.visible');
+                });
+            });
+          });
+          cy.wait(['@getQuotaUsages']);
+          cy.get('tr').each((row, rowIndex) => {
+            cy.wrap(row).within(() => {
+              cy.get('td')
+                .eq(2)
+                .within(() => {
+                  // quota usage
+                  const strUsage = `${mockQuotaUsages[rowIndex].usage} of ${mockQuotaUsages[rowIndex].quota_limit}`;
+                  cy.findByText(strUsage, { exact: false }).should(
+                    'be.visible'
+                  );
+                });
+            });
+          });
+        });
+
       // Quotas increase request workflow
       ui.actionMenu
         .findByTitle(`Action menu for quota ${mockQuota.quota_name}`)
