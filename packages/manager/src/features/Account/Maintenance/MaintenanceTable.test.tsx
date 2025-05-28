@@ -32,7 +32,7 @@ describe('Maintenance Table Row', () => {
       )
     );
     getByText(maintenance.entity.label);
-    getByText(formatDate(maintenance.start_time));
+    getByText(formatDate(maintenance.when));
   });
 
   it('should render a relative time', () => {
@@ -69,7 +69,7 @@ describe('Maintenance Table', () => {
     // Static text and table column headers
     screen.getAllByText('in progress');
     screen.getAllByText('Label');
-    screen.getAllByText('Start Date');
+    screen.getAllByText('Date');
 
     // Table data from mock api
     screen.queryAllByText('Scheduled');

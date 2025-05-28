@@ -19,9 +19,9 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { type MaintenanceTableType } from './MaintenanceTable';
 import { maintenanceDateColumnMap } from './utilities';
 
+import type { MaintenanceTableType } from './MaintenanceTable';
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import type { Status } from 'src/components/StatusIcon/StatusIcon';
 
