@@ -5,7 +5,10 @@ import * as React from 'react';
 import { accountFactory, databaseTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseCreate } from './DatabaseCreate';
 
@@ -26,13 +29,13 @@ vi.mock('@linode/queries', async () => {
 beforeAll(() => mockMatchMedia());
 
 describe('Database Create', () => {
-  it('should render loading state', () => {
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
+  it('should render loading state', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(<DatabaseCreate />);
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
   it('should render inputs', async () => {
-    const { getAllByTestId, getAllByText } = renderWithTheme(
+    const { getAllByTestId, getAllByText } = await renderWithThemeAndRouter(
       <DatabaseCreate />
     );
     await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
@@ -67,12 +70,14 @@ describe('Database Create', () => {
       })
     );
 
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-    });
+    const { getAllByText, getByTestId, getByLabelText, getByText } =
+      await renderWithThemeAndRouter(<DatabaseCreate />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const regionSelect = getByLabelText('Region');
+    await userEvent.click(regionSelect);
+    await userEvent.click(getByText('US, Newark, NJ (us-east)'));
 
     // default to $0 if no plan is selected
     const nodeRadioBtns = getByTestId('database-nodes');
@@ -95,15 +100,19 @@ describe('Database Create', () => {
       })
     );
 
-    const { getAllByRole, getAllByText, getByTestId } = renderWithTheme(
-      <DatabaseCreate />,
-      {
-        // Mock route history so the Plan Selection table displays prices without requiring a region in the DB Create flow.
-        MemoryRouter: { initialEntries: ['/databases/create'] },
-      }
-    );
+    const {
+      getAllByRole,
+      getAllByText,
+      getByTestId,
+      getByLabelText,
+      getByText,
+    } = await renderWithThemeAndRouter(<DatabaseCreate />);
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const regionSelect = getByLabelText('Region');
+    await userEvent.click(regionSelect);
+    await userEvent.click(getByText('US, Newark, NJ (us-east)'));
 
     const sharedTab = getAllByRole('tab')[1];
     await userEvent.click(sharedTab);
@@ -123,7 +132,9 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { findByText, getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { findByText, getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseCreate />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -143,7 +154,7 @@ describe('Database Create', () => {
       findAllByTestId,
       findByPlaceholderText,
       getByTestId,
-    } = renderWithTheme(<DatabaseCreate />);
+    } = await renderWithThemeAndRouter(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -169,7 +180,9 @@ describe('Database Create', () => {
   it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const { findByText, getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { findByText, getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseCreate />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -189,7 +202,7 @@ describe('Database Create', () => {
       findAllByTestId,
       findByPlaceholderText,
       getByTestId,
-    } = renderWithTheme(<DatabaseCreate />);
+    } = await renderWithThemeAndRouter(<DatabaseCreate />);
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 

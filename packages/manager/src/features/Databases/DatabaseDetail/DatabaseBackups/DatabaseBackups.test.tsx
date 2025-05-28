@@ -4,9 +4,24 @@ import React from 'react';
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import DatabaseBackups from './DatabaseBackups';
+
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 /**
  * Skipped due to repeated flake issues that we've been unable to fix after a few attempts
@@ -121,6 +136,13 @@ describe.skip('Database Backups (Legacy)', () => {
 });
 
 describe('Database Backups (v2)', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      engine: 'rdbms-default',
+      databaseId: '1234567890',
+    });
+  });
+
   it('should disable the restore button if no oldest_restore_time is returned', async () => {
     const mockDatabase = databaseFactory.build({
       oldest_restore_time: undefined,
@@ -133,7 +155,7 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<DatabaseBackups />);
+    const { findByText } = await renderWithThemeAndRouter(<DatabaseBackups />);
 
     const restoreButton = (await findByText('Restore')).closest('button');
 
@@ -151,7 +173,9 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { container } = renderWithTheme(<DatabaseBackups disabled={false} />);
+    const { container } = await renderWithThemeAndRouter(
+      <DatabaseBackups disabled={false} />
+    );
 
     await waitFor(() => {
       expect(
@@ -171,8 +195,11 @@ describe('Database Backups (v2)', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
-      <DatabaseBackups disabled={false} />
+    const { findByText } = await renderWithThemeAndRouter(
+      <DatabaseBackups disabled={false} />,
+      {
+        initialRoute: '/databases/$engine/$databaseId/backups',
+      }
     );
 
     const timePickerLabel = await findByText('Time (UTC)');

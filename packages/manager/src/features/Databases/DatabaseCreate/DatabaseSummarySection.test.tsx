@@ -7,7 +7,10 @@ import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCr
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 
@@ -43,11 +46,17 @@ describe('database summary section', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-      flags,
-    });
+    const { getByTestId, getByText, getByLabelText } =
+      await renderWithThemeAndRouter(<DatabaseCreate />, {
+        flags,
+      });
+
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    const regionSelect = getByLabelText('Region');
+    await userEvent.click(regionSelect);
+    await userEvent.click(getByText('US, Newark, NJ (us-east)'));
+
     const selectedPlan = await waitFor(
       () => document.getElementById('g6-dedicated-2') as HTMLInputElement
     );
@@ -67,12 +76,14 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = renderWithTheme(
+
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
       }
     );
+
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -91,12 +102,13 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
       }
     );
+
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
