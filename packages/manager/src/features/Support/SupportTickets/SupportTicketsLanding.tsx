@@ -1,107 +1,97 @@
-import { getQueryParamsFromQueryString } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { Tab } from 'src/components/Tabs/Tab';
-import { TabList } from 'src/components/Tabs/TabList';
-import { TabPanel } from 'src/components/Tabs/TabPanel';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 import { SupportTicketDialog } from './SupportTicketDialog';
 import { TicketList } from './TicketList';
 
 import type { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import type { BaseQueryParams } from '@linode/utilities';
-import type { BooleanString } from 'src/features/Linodes/types';
 
-interface QueryParams extends BaseQueryParams {
-  drawerOpen: BooleanString;
-}
-
-const tabs = ['open', 'closed'];
-
-const SupportTicketsLanding = () => {
-  const location = useLocation<any>();
-  const history = useHistory();
-
+export const SupportTicketsLanding = () => {
+  const navigate = useNavigate();
   /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
-  const parsedParams = getQueryParamsFromQueryString<QueryParams>(
-    location.search
-  );
+  const { dialogOpen } = useSearch({
+    strict: false,
+  });
 
-  const stateParams = location.state;
-
-  const [drawerOpen, setDrawerOpen] = React.useState(
-    stateParams ? stateParams.open : parsedParams.drawerOpen === 'true'
-  );
+  const { tabs, tabIndex, handleTabChange } = useTabs([
+    {
+      title: 'Open Tickets',
+      to: '/support/tickets/open',
+    },
+    {
+      title: 'Closed Tickets',
+      to: '/support/tickets/closed',
+    },
+  ]);
 
   const handleAddTicketSuccess = (
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+    navigate({
+      to: '/support/tickets/$ticketId',
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
+      params: {
+        ticketId,
+      },
     });
-    setDrawerOpen(false);
   };
-
-  const handleButtonKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (e.key === 'Enter') {
-      setDrawerOpen(true);
-    }
-  };
-
-  const tabIndex = tabs.indexOf(parsedParams.type);
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Support Tickets" />
       <LandingHeader
+        breadcrumbProps={{
+          labelTitle: 'Tickets',
+          firstAndLastOnly: true,
+        }}
         buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
         createButtonText="Open New Ticket"
         data-qa-breadcrumb
-        onButtonClick={() => setDrawerOpen(true)}
-        onButtonKeyPress={handleButtonKeyPress}
+        onButtonClick={() =>
+          navigate({
+            to: '/support/tickets',
+            search: { dialogOpen: true },
+          })
+        }
         spacingBottom={4}
         title="Tickets"
       />
-      <Tabs
-        index={tabIndex === -1 ? 0 : tabIndex}
-        onChange={(index) => {
-          history.push(`/support/tickets?type=${tabs[index]}`);
-        }}
-      >
-        <TabList>
-          <Tab data-qa-tab="Open Tickets">Open Tickets</Tab>
-          <Tab data-qa-tab="Closed Tickets">Closed Tickets</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel data-qa-open-tickets-tab>
-            <TicketList filterStatus="open" />
-          </TabPanel>
-          <TabPanel data-qa-closed-tickets-tab>
-            <TicketList filterStatus="closed" />
-          </TabPanel>
-        </TabPanels>
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel data-qa-open-tickets-tab index={0}>
+              <TicketList filterStatus="open" />
+            </SafeTabPanel>
+            <SafeTabPanel data-qa-closed-tickets-tab index={1}>
+              <TicketList filterStatus="closed" />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
       </Tabs>
       <SupportTicketDialog
-        onClose={() => setDrawerOpen(false)}
+        onClose={() =>
+          navigate({
+            to: '/support/tickets',
+            search: { dialogOpen: false },
+          })
+        }
         onSuccess={handleAddTicketSuccess}
-        open={drawerOpen}
+        open={Boolean(dialogOpen)}
       />
     </React.Fragment>
   );
 };
-
-export default SupportTicketsLanding;
-
-export const supportTicketsLandingLazyRoute = createLazyRoute(
-  '/support/tickets'
-)({
-  component: SupportTicketsLanding,
-});

@@ -388,6 +388,10 @@ export const getKubernetesVersions = () => [
       APIErrorResponse | APIPaginatedResponse<KubernetesVersion>
     > => {
       const versions = kubernetesVersionFactory.buildList(3);
+
+      // Send the data in this explicit order to match the API.
+      request.headers.set('X-Filter', JSON.stringify({ '+order': 'desc' }));
+
       return makePaginatedResponse({
         data: versions,
         request,
@@ -402,6 +406,9 @@ export const getKubernetesVersions = () => [
     }): StrictResponse<
       APIErrorResponse | APIPaginatedResponse<KubernetesTieredVersion>
     > => {
+      // Send the data in this explicit order to match the API.
+      request.headers.set('X-Filter', JSON.stringify({ '+order': 'desc' }));
+
       const versions = kubernetesStandardTierVersionFactory.buildList(3);
       return makePaginatedResponse({
         data: versions,
@@ -417,7 +424,23 @@ export const getKubernetesVersions = () => [
     }): StrictResponse<
       APIErrorResponse | APIPaginatedResponse<KubernetesTieredVersion>
     > => {
-      const versions = kubernetesEnterpriseTierVersionFactory.buildList(3);
+      const kubeVersion1 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.8+lke1',
+      });
+      const kubeVersion2 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.6+lke3',
+      });
+      const kubeVersion3 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.6+lke2',
+      });
+      const kubeVersion4 = kubernetesEnterpriseTierVersionFactory.build({
+        id: 'v1.31.1+lke4',
+      });
+      const versions = [kubeVersion1, kubeVersion2, kubeVersion3, kubeVersion4];
+
+      // Send the data in this explicit order to match the API.
+      request.headers.set('X-Filter', JSON.stringify({ '+order': 'desc' }));
+
       return makePaginatedResponse({
         data: versions,
         request,
