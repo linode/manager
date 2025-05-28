@@ -77,8 +77,8 @@ export const NodeBalancerActionMenu = (props: Props) => {
 
   const isInlineMenuEnabled = !matchesMdDown && !isNodebalancerVPCEnabled;
 
-  return isInlineMenuEnabled ? (
-    actions.map((action) => {
+  if (isInlineMenuEnabled) {
+    return actions.map((action) => {
       return (
         <InlineMenuAction
           actionText={action.title}
@@ -88,8 +88,9 @@ export const NodeBalancerActionMenu = (props: Props) => {
           tooltip={action.tooltip}
         />
       );
-    })
-  ) : (
+    });
+  }
+  return (
     <ActionMenu
       actionsList={actions}
       ariaLabel={`Action menu for NodeBalancer ${nodeBalancerId}`}
