@@ -1218,6 +1218,11 @@ export const lightTheme: ThemeOptions = {
             stroke: theme.tokens.component.RadioButton.Active.Hover.Border,
           },
           padding: '10px 10px',
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
+          },
         }),
       },
     },
