@@ -1,10 +1,10 @@
 import { getPrimaryInterfaceIndex } from '../Linodes/LinodesDetail/LinodeConfigs/utilities';
 
-import type { FormInterfacePayload } from '../Linodes/LinodeCreate/Networking/utilities';
 import type {
   APIError,
   Config,
   CreateLinodeInterfacePayload,
+  FormInterfacePayload,
   LinodeInterface,
   Subnet,
   VPC,

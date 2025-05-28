@@ -15,8 +15,10 @@ import * as React from 'react';
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
 
-import type { FormInterfacePayload } from '../../LinodeCreate/Networking/utilities';
-import type { InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
+import type {
+  FormInterfacePayload,
+  InterfacePurpose,
+} from '@linode/api-v4/lib/linodes/types';
 import type { SelectOption } from '@linode/ui';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 

@@ -27,15 +27,13 @@ import {
 } from './Networking/utilities';
 import { getDefaultUDFData } from './Tabs/StackScripts/UserDefinedFields/utilities';
 
-import type {
-  FormInterfacePayload,
-  LinodeCreateInterface,
-} from './Networking/utilities';
+import type { LinodeCreateInterface } from './Networking/utilities';
 import type { StackScriptTabType } from './Tabs/StackScripts/utilities';
 import type {
   AccountSettings,
   CreateLinodeRequest,
   FirewallSettings,
+  FormInterfacePayload,
   InterfaceGenerationType,
   InterfacePayload,
   Linode,

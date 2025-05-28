@@ -4,7 +4,7 @@ import type {
   APIError,
   CreateLinodeInterfacePayload,
   FirewallSettings,
-  InterfacePayload,
+  FormInterfacePayload,
   InterfacePurpose,
 } from '@linode/api-v4';
 
@@ -22,10 +22,6 @@ interface VPC extends NonNullable<CreateLinodeInterfacePayload['vpc']> {
 export interface LinodeCreateInterface extends CreateLinodeInterfacePayload {
   purpose: InterfacePurpose;
   vpc: null | VPC;
-}
-
-export interface FormInterfacePayload extends InterfacePayload {
-  vpc_id?: null | number;
 }
 
 /**

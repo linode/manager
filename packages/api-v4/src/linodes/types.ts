@@ -230,7 +230,13 @@ export interface InterfacePayload {
   primary?: boolean;
   purpose: InterfacePurpose;
   subnet_id?: null | number;
-  // vpc_id?: null | number;
+}
+
+/**
+ * We extend the new `InterfacePayload` to add `vpc_id` we need to track
+ */
+export interface FormInterfacePayload extends InterfacePayload {
+  vpc_id?: null | number;
 }
 
 export interface ConfigInterfaceOrderPayload {
@@ -467,7 +473,7 @@ export interface LinodeConfigCreationData {
     updatedb_disabled: boolean;
   };
   initrd: null | number | string;
-  interfaces?: Omit<Interface, 'active' | 'id'>[];
+  interfaces?: FormInterfacePayload[];
   kernel?: string;
   label: string;
   memory_limit?: number;
