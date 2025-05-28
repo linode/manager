@@ -132,7 +132,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
 
       <AlertListNoticeMessages
         errorMessage={REGION_GROUP_WARNING_MESSAGE}
-        variant={mode === 'view' ? 'info' : 'warning'}
+        variant="info"
       />
 
       <Box display="flex" gap={2}>

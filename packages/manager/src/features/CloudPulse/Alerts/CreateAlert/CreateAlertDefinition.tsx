@@ -267,7 +267,7 @@ export const AccountGroupingNotice = () => {
       >
         <AlertListNoticeMessages
           errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
-          variant="warning"
+          variant="info"
         />
       </Box>
     </Box>
