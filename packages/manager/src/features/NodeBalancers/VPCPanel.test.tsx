@@ -146,6 +146,16 @@ describe('VPCPanel', () => {
       await screen.findByText(vpcWithSubnet.label, { exact: false })
     );
 
+    const checkbox = screen.getByTestId('vpc-ipv4-checkbox');
+
+    await userEvent.click(checkbox);
+
+    expect(
+      screen.getByLabelText(
+        'Auto-assign a /30 CIDR in each subnet for this NodeBalancer'
+      )
+    ).not.toBeChecked();
+
     expect(
       screen.getByLabelText(`${subnets[0].label}`, {
         exact: false,

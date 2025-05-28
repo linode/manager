@@ -1,24 +1,32 @@
 import { useAllVPCsQuery, useRegionQuery } from '@linode/queries';
 import {
   Autocomplete,
+  Box,
+  Checkbox,
+  FormControlLabel,
   InputAdornment,
   Paper,
   Stack,
   TextField,
+  TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
+import {
+  NB_AUTO_ASSIGN_CIDR_TOOLTIP,
+  NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
+} from '../VPCs/constants';
 
 import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 
 export interface Props {
   disabled?: boolean;
   errors?: APIError[];
-  ipv4Change: (ipv4Range: string, index: number) => void;
+  ipv4Change: (ipv4Range: null | string, index: number) => void;
   regionSelected: string;
   setIsVpcSelected: (vpc: boolean) => void;
   subnetChange: (subnetIds: null | number[]) => void;
@@ -36,6 +44,9 @@ export const VPCPanel = (props: Props) => {
     subnetChange,
   } = props;
 
+  const theme = useTheme();
+  const isSmallBp = useMediaQuery(theme.breakpoints.down('sm'));
+
   const { data: region } = useRegionQuery(regionSelected);
 
   const regionSupportsVPC = region?.capabilities.includes('VPCs') || false;
@@ -49,6 +60,8 @@ export const VPCPanel = (props: Props) => {
     filter: { region: regionSelected },
   });
 
+  const [autoAssignIPv4WithinVPC, toggleAutoAssignIPv4Range] =
+    React.useState<boolean>(true);
   const [VPCSelected, setVPCSelected] = React.useState<null | VPC>(null);
 
   React.useEffect(() => {
@@ -126,31 +139,78 @@ export const VPCPanel = (props: Props) => {
                   ) ?? null
                 }
               />
-              {subnets &&
-                subnets.map((vpc, index) => (
-                  <TextField
-                    errorText={
-                      errors?.find((err) =>
-                        err.field?.includes(`vpcs[${index}].ipv4_range`)
-                      )?.reason
-                    }
-                    key={`${vpc.subnet_id}`}
-                    label={`NodeBalancer IPv4 CIDR for ${getVPCSubnetLabelFromId(vpc.subnet_id)}`}
-                    noMarginTop
-                    onChange={(e) => ipv4Change(e.target.value ?? '', index)}
-                    // eslint-disable-next-line sonarjs/no-hardcoded-ip
-                    placeholder="10.0.0.24"
-                    required
-                    slotProps={{
-                      input: {
-                        endAdornment: (
-                          <InputAdornment position="end">/30</InputAdornment>
-                        ),
-                      },
-                    }}
-                    value={vpc.ipv4_range}
-                  />
-                ))}
+              {subnets && (
+                <>
+                  <Box
+                    alignItems="center"
+                    display="flex"
+                    flexDirection="row"
+                    sx={(theme) => ({
+                      marginLeft: theme.spacingFunction(2),
+                      paddingTop: theme.spacingFunction(8),
+                    })}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={autoAssignIPv4WithinVPC}
+                          onChange={(_, checked) => {
+                            if (checked) {
+                              ipv4Change(null, 0);
+                            }
+                            toggleAutoAssignIPv4Range(checked);
+                          }}
+                        />
+                      }
+                      data-testid="vpc-ipv4-checkbox"
+                      label={
+                        <Box
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                        >
+                          <Typography noWrap={!isSmallBp}>
+                            Auto-assign a /30 CIDR in each subnet for this
+                            NodeBalancer
+                          </Typography>
+                          <TooltipIcon
+                            status="help"
+                            text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                          />
+                        </Box>
+                      }
+                    />
+                  </Box>
+                  {!autoAssignIPv4WithinVPC &&
+                    subnets.map((vpc, index) => (
+                      <TextField
+                        errorText={
+                          errors?.find((err) =>
+                            err.field?.includes(`vpcs[${index}].ipv4_range`)
+                          )?.reason
+                        }
+                        key={`${vpc.subnet_id}`}
+                        label={`NodeBalancer IPv4 CIDR for ${getVPCSubnetLabelFromId(vpc.subnet_id)}`}
+                        noMarginTop
+                        onChange={(e) =>
+                          ipv4Change(e.target.value ?? '', index)
+                        }
+                        // eslint-disable-next-line sonarjs/no-hardcoded-ip
+                        placeholder="10.0.0.24"
+                        slotProps={{
+                          input: {
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                /30
+                              </InputAdornment>
+                            ),
+                          },
+                        }}
+                        value={vpc.ipv4_range}
+                      />
+                    ))}
+                </>
+              )}
             </>
           )}
         </Stack>
