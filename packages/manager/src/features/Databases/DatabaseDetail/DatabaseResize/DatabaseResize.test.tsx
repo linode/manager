@@ -1,8 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import {
   accountFactory,
@@ -100,16 +98,19 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
-      const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/resize`);
+      // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
+      const location = window.location;
+      window.location = {
+        ...location,
+        pathname: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
+      };
+
       const { getByRole, getByTestId, getByText } =
         await renderWithThemeAndRouter(
-          <Router history={history}>
-            <DatabaseResize database={mockDatabase} />
-          </Router>,
+          <DatabaseResize database={mockDatabase} />,
           { flags }
         );
+
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
       const planRadioButton = document.getElementById('g6-standard-6');

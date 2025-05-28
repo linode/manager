@@ -55,6 +55,8 @@ export const PlanContainer = (props: PlanContainerProps) => {
     showLimits,
     wholePanelIsDisabled,
   } = props;
+  // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
+  // This works for both routers for now since the components re-rerenders on route change, but we should relay on a hook once ready.
   const location = window.location;
   const flags = useFlags();
 
