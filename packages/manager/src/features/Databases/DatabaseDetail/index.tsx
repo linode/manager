@@ -24,19 +24,25 @@ import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/D
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
-const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
-const DatabaseBackups = React.lazy(
-  () => import('./DatabaseBackups/DatabaseBackups')
+const DatabaseSummary = React.lazy(() =>
+  import('./DatabaseSummary/DatabaseSummary').then((module) => ({
+    default: module.DatabaseSummary,
+  }))
+);
+const DatabaseBackups = React.lazy(() =>
+  import('./DatabaseBackups/DatabaseBackups').then((module) => ({
+    default: module.DatabaseBackups,
+  }))
 );
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 const DatabaseResize = React.lazy(() =>
-  import('./DatabaseResize/DatabaseResize').then(({ DatabaseResize }) => ({
-    default: DatabaseResize,
+  import('./DatabaseResize/DatabaseResize').then((module) => ({
+    default: module.DatabaseResize,
   }))
 );
 const DatabaseMonitor = React.lazy(() =>
-  import('./DatabaseMonitor/DatabaseMonitor').then(({ DatabaseMonitor }) => ({
-    default: DatabaseMonitor,
+  import('./DatabaseMonitor/DatabaseMonitor').then((module) => ({
+    default: module.DatabaseMonitor,
   }))
 );
 

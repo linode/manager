@@ -9,7 +9,7 @@ import {
   renderWithThemeAndRouter,
 } from 'src/utilities/testHelpers';
 
-import DatabaseBackups from './DatabaseBackups';
+import { DatabaseBackups } from './DatabaseBackups';
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),

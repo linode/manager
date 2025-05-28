@@ -338,12 +338,6 @@ export const MainContent = () => {
                                   component={EventsLanding}
                                   path="/events"
                                 />
-                                {/* {isDatabasesEnabled && (
-                                  <Route
-                                    component={Databases}
-                                    path="/databases"
-                                  />
-                                )} */}
                                 {isACLPEnabled && (
                                   <Route
                                     component={CloudPulseMetrics}

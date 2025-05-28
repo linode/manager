@@ -77,7 +77,7 @@ export const DatabaseBackups = (props: Props) => {
   const { classes } = useStyles();
   const { disabled } = props;
   const { databaseId, engine } = useParams({
-    from: '/databases/$engine/$databaseId/backups',
+    from: '/databases/$engine/$databaseId',
   });
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
 
@@ -283,5 +283,3 @@ export const DatabaseBackups = (props: Props) => {
     />
   );
 };
-
-export default DatabaseBackups;
