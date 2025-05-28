@@ -55,7 +55,7 @@ import { cleanUp } from 'support/util/cleanup';
 import { fetchAllKernels, findKernelById } from 'support/util/kernels';
 import {
   assertPromptDialogContent,
-  assertUpgradeSummay,
+  assertUpgradeSummary,
   createTestLinode,
   fetchLinodeConfigs,
 } from 'support/util/linodes';
@@ -941,7 +941,7 @@ describe('Linode Config management', () => {
             ui.button.findByTitle('Cancel').click();
           });
 
-        // Confirm asbence of the interfaces section when adding a new config.
+        // Confirm absence of the interfaces section when adding a new config.
         ui.button
           .findByTitle('Add Configuration')
           .should('be.visible')
@@ -1038,7 +1038,7 @@ describe('Linode Config management', () => {
               .should('be.enabled')
               .click();
 
-            assertUpgradeSummay(mockPublicInterface, true);
+            assertUpgradeSummary(mockPublicInterface, true);
 
             ui.button
               .findByTitle('Continue to Upgrade')
@@ -1046,7 +1046,7 @@ describe('Linode Config management', () => {
               .should('be.enabled')
               .click();
 
-            assertUpgradeSummay(mockPublicInterface, false);
+            assertUpgradeSummary(mockPublicInterface, false);
 
             ui.button.findByTitle('Close').should('be.visible').click();
           });
@@ -1067,10 +1067,16 @@ describe('Linode Config management', () => {
               .should('be.enabled')
               .click();
 
-            assertUpgradeSummay(mockPublicInterface, false);
+            assertUpgradeSummary(mockPublicInterface, false);
 
-            ui.button.findByTitle('Close').should('be.visible').click();
+            ui.button
+              .findByTitle('View Network Settings')
+              .should('be.visible')
+              .click();
           });
+
+        // Confirm can navigate to linode/networking after success
+        cy.url().should('endWith', `linodes/${mockLinode.id}/networking`);
       });
 
       /*

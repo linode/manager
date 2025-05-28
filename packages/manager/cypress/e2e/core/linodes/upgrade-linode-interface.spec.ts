@@ -29,7 +29,7 @@ import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import {
   assertPromptDialogContent,
-  assertUpgradeSummay,
+  assertUpgradeSummary,
 } from 'support/util/linodes';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -59,7 +59,7 @@ describe('upgrade to new Linode Interface flow', () => {
    * - Confirms that config dialog interfaces section is absent on Linodes that use new interfaces.
    * - Confirms absence on edit and add config dialog.
    */
-  it('does not show interfaces section when upgrading to Linodes with new interfaces', () => {
+  it('does not show interfaces section in the config dialog for Linodes using new interfaces', () => {
     const mockLinode = linodeFactory.build({
       id: randomNumber(1000, 99999),
       label: randomLabel(),
@@ -82,7 +82,7 @@ describe('upgrade to new Linode Interface flow', () => {
       'be.visible'
     );
 
-    // "UPGRADE" button is absence
+    // "UPGRADE" button is absent
     cy.findByText('Linode').should('be.visible');
     cy.findByText('Configuration Profile').should('not.exist');
     cy.findByText('UPGRADE').should('not.exist');
@@ -118,7 +118,7 @@ describe('upgrade to new Linode Interface flow', () => {
         ui.button.findByTitle('Cancel').click();
       });
 
-    // Confirm asbence of the interfaces section when adding a new config.
+    // Confirm absence of the interfaces section when adding a new config.
     ui.button
       .findByTitle('Add Configuration')
       .should('be.visible')
@@ -197,7 +197,7 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, true);
+        assertUpgradeSummary(mockPublicInterface, true);
 
         ui.button
           .findByTitle('Continue to Upgrade')
@@ -205,7 +205,7 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, false);
+        assertUpgradeSummary(mockPublicInterface, false);
 
         ui.button.findByTitle('Close').should('be.visible').click();
       });
@@ -222,10 +222,16 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, false);
+        assertUpgradeSummary(mockPublicInterface, false);
 
-        ui.button.findByTitle('Close').should('be.visible').click();
+        ui.button
+          .findByTitle('View Network Settings')
+          .should('be.visible')
+          .click();
       });
+
+    // Confirm can navigate to linode/networking after success
+    cy.url().should('endWith', `linodes/${mockLinode.id}/networking`);
   });
 
   /*
@@ -312,7 +318,7 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, true);
+        assertUpgradeSummary(mockPublicInterface, true);
 
         ui.button
           .findByTitle('Continue to Upgrade')
@@ -320,7 +326,7 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, false);
+        assertUpgradeSummary(mockPublicInterface, false);
 
         ui.button.findByTitle('Close').should('be.visible').click();
       });
@@ -361,10 +367,13 @@ describe('upgrade to new Linode Interface flow', () => {
           .should('be.enabled')
           .click();
 
-        assertUpgradeSummay(mockPublicInterface, false);
+        assertUpgradeSummary(mockPublicInterface, false);
 
         ui.button.findByTitle('Close').should('be.visible').click();
       });
+
+    // Confirm can navigate to Linode after success
+    cy.url().should('endWith', `linodes/${mockLinode.id}`);
   });
 
   /*
