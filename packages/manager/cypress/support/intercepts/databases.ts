@@ -12,7 +12,9 @@ import type {
   Database,
   DatabaseCredentials,
   DatabaseEngine,
+  DatabaseEngineConfig,
   DatabaseType,
+  Engine,
 } from '@linode/api-v4';
 
 /**
@@ -326,5 +328,16 @@ export const mockGetDatabasesError = (
     'GET',
     apiMatcher('databases/instances*'),
     makeErrorResponse(errorMessage, status)
+  );
+};
+
+export const mockGetDatabaseEngineConfigs = (
+  engine: Engine,
+  engineConfigs: DatabaseEngineConfig
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`databases/${engine}/config`),
+    makeResponse(engineConfigs)
   );
 };

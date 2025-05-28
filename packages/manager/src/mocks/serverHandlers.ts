@@ -377,8 +377,9 @@ const databases = [
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/databases/:engine/config', () => {
-    return HttpResponse.json(databaseEngineConfigFactory.build());
+  http.get('*/databases/:engine/config', ({ params }) => {
+    const i: number = params.engine === 'mysql' ? 2 : 1;
+    return HttpResponse.json(databaseEngineConfigFactory.build(i));
   }),
 ];
 
