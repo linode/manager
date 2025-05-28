@@ -9,7 +9,7 @@ import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
 import {
   type AlertFormMode,
-  REGION_GROUP_WARNING_MESSAGE,
+  REGION_GROUP_INFO_MESSAGE,
   type SelectDeselectAll,
 } from '../constants';
 import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
@@ -131,7 +131,7 @@ export const AlertRegions = React.memo((props: AlertRegionsProps) => {
       {mode === 'view' && <Typography variant="h2">Regions</Typography>}
 
       <AlertListNoticeMessages
-        errorMessage={REGION_GROUP_WARNING_MESSAGE}
+        errorMessage={REGION_GROUP_INFO_MESSAGE}
         variant="info"
       />
 

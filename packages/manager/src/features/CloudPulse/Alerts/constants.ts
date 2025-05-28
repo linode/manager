@@ -222,10 +222,10 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
 
-export const ACCOUNT_GROUP_WARNING_MESSAGE =
+export const ACCOUNT_GROUP_INFO_MESSAGE =
   'This alert applies to all entities associated with your account, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
 
-export const REGION_GROUP_WARNING_MESSAGE =
+export const REGION_GROUP_INFO_MESSAGE =
   'This alert applies to all entities associated with selected regions, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
 
 export const ALERT_SCOPE_TOOLTIP_TEXT =

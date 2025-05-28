@@ -13,7 +13,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
-  ACCOUNT_GROUP_WARNING_MESSAGE,
+  ACCOUNT_GROUP_INFO_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
@@ -266,7 +266,7 @@ export const AccountGroupingNotice = () => {
         })}
       >
         <AlertListNoticeMessages
-          errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
+          errorMessage={ACCOUNT_GROUP_INFO_MESSAGE}
           variant="info"
         />
       </Box>

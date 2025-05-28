@@ -6,6 +6,7 @@ import React from 'react';
 import { databaseFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { REGION_GROUP_INFO_MESSAGE } from '../constants';
 import { AlertRegions } from './AlertRegions';
 
 import type { AlertServiceType } from '@linode/api-v4';
@@ -67,18 +68,14 @@ const component = (
 describe('Alert Regions', () => {
   it('Should render the filters and notices ', () => {
     renderWithTheme(component, { flags });
-    const text = screen.getByText(
-      'All entities associated with selected regions will be included in this alert definition.'
-    );
+    const text = screen.getByText(REGION_GROUP_INFO_MESSAGE);
 
     const regionSearch = screen.getByTestId('region-search');
     const showSelectedOnly = screen.getByTestId('show-selected-only');
-    const noticeInfo = screen.getByTestId('notice-info');
     expect(text).toBeInTheDocument();
 
     expect(regionSearch).toBeInTheDocument();
     expect(showSelectedOnly).toBeInTheDocument();
-    expect(noticeInfo).toBeInTheDocument();
   });
 
   it('should select all regions when the select all checkbox is checked', async () => {
