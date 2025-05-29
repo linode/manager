@@ -14,6 +14,7 @@ import {
   mockGetDatabases,
   mockGetDatabaseTypes,
   mockResetPassword,
+  mockResetPasswordProvisioningDatabase,
   mockResetPasswordSuspendResumeDatabase,
   mockResumeDatabase,
   mockSuspendDatabase,
@@ -237,7 +238,7 @@ const validateSuspendResume = (
   cy.visit(`/databases/${engine}/${id}`);
   cy.wait('@getDatabase');
 
-  // Cannot update database label.
+  // Cannot update label when database/cluster is suspended or resuming.
   updateDatabaseLabel(initialLabel, updateAttemptLabel);
   cy.wait('@updateDatabase');
   cy.findByText(errorMessage).should('be.visible');
@@ -247,16 +248,16 @@ const validateSuspendResume = (
     .click();
 
   cy.findByText('Connection Details');
-  // DBaaS hostnames are not available until database/cluster has provisioned.
+  // DBaaS hostnames are not available when database/cluster is suspended or resuming.
   cy.findByText(hostnameRegex).should('be.visible');
 
-  // DBaaS passwords cannot be revealed until database/cluster has provisioned.
+  // DBaaS passwords cannot be revealed when database/cluster is suspended or resuming.
   ui.button.findByTitle('Show').should('be.visible').should('be.enabled');
 
   // Navigate to "Settings" tab.
   ui.tabList.findTabByTitle('Settings').click();
 
-  // Cannot reset root password before database/cluster has provisioned.
+  // Cannot reset root password when database/cluster is suspended or resuming.
   resetRootPassword();
   cy.wait('@resetRootPassword');
   ui.dialog
@@ -272,7 +273,7 @@ const validateSuspendResume = (
         .click();
     });
 
-  // Cannot add or remove allowed IPs before database/cluster has provisioned.
+  // Cannot add or remove allowed IPs when database/cluster is suspended or resuming.
   removeAllowedIp(allowedIp);
   cy.wait('@updateDatabase');
   ui.dialog
@@ -290,7 +291,7 @@ const validateSuspendResume = (
     ui.drawerCloseButton.find().click();
   });
 
-  // Cannot change maintenance schedule before database/cluster has provisioned.
+  // Cannot change maintenance schedule when database/cluster is suspended or resuming.
   modifyMaintenanceWindow('Day of Week', 'Wednesday');
   cy.wait('@updateDatabase');
   cy.findByText(errorMessage).should('be.visible');
@@ -331,147 +332,258 @@ const validateActionItems = (state: string, label: string) => {
 };
 
 describe('Update database clusters', () => {
-  const successStatus = ['active', 'provisioning'];
-
   databaseConfigurations.forEach(
     (configuration: DatabaseClusterConfiguration) => {
       describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
-        successStatus.forEach((state) => {
-          /*
-           * - Tests active and provisioning database update UI flows using mocked data.
-           * - Confirms that users can change database label.
-           * - Confirms that users can change access controls.
-           * - Confirms that users can reset root passwords.
-           * - Confirms that users can change maintenance schedules.
-           */
-          it(`Can update ${state} database clusters`, () => {
-            const currentState = state === 'active' ? 'active' : 'provisioning';
-            const initialLabel = configuration.label;
-            const updatedLabel = randomLabel();
-            const allowedIp = randomIp();
-            const newAllowedIp = randomIp();
-            const initialPassword = randomString(16);
-            const database = databaseFactory.build({
-              allow_list: [allowedIp],
-              engine: configuration.dbType,
-              id: randomNumber(1, 1000),
-              label: initialLabel,
-              platform: 'rdbms-default',
-              region: configuration.region.id,
-              status: currentState,
-              type: configuration.linodeType,
-              version: configuration.version,
-            });
-
-            mockGetAccount(accountFactory.build()).as('getAccount');
-            mockGetDatabase(database).as('getDatabase');
-            mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
-            mockResetPassword(database.id, database.engine).as(
-              'resetRootPassword'
-            );
-            mockGetDatabaseCredentials(
-              database.id,
-              database.engine,
-              initialPassword
-            ).as('getCredentials');
-
-            cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
-            cy.wait(['@getDatabase', '@getDatabaseTypes']);
-
-            // Validation for summary page details
-            cy.findByText('Cluster Configuration');
-            cy.findByText(configuration.region.label).should('be.visible');
-            cy.findByText(database.total_disk_size_gb + ' GB').should(
-              'be.visible'
-            );
-
-            cy.findByText('Connection Details');
-
-            if (state === 'provisioning') {
-              // DBaaS passwords cannot be revealed until database/cluster has provisioned.
-              ui.button
-                .findByTitle('Show')
-                .should('be.visible')
-                .should('be.disabled');
-            } else {
-              // "Show" button should be enabled to reveal password when DB is active.
-              ui.button
-                .findByTitle('Show')
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-
-              cy.wait('@getCredentials');
-              cy.findByText(`${initialPassword}`);
-
-              // "Hide" button should be enabled to hide password when password is revealed.
-              ui.button
-                .findByTitle('Hide')
-                .should('be.visible')
-                .should('be.enabled')
-                .click();
-            }
-
-            // Update labels for cluster in active/provisioning state
-            mockUpdateDatabase(database.id, database.engine, {
-              ...database,
-              label: updatedLabel,
-            }).as('updateDatabaseLabel');
-            updateDatabaseLabel(initialLabel, updatedLabel);
-            cy.wait('@updateDatabaseLabel');
-            cy.get('[data-qa-header]')
-              .should('be.visible')
-              .should('have.text', updatedLabel);
-
-            // Navigate to "Settings" tab.
-            ui.tabList.findTabByTitle('Settings').click();
-
-            // Reset root password.
-            resetRootPassword();
-            cy.wait('@resetRootPassword');
-
-            // Remove allowed IP, manage IP access control.
-            mockUpdateDatabase(database.id, database.engine, {
-              ...database,
-              allow_list: [],
-            }).as('updateDatabaseAllowedIp');
-            removeAllowedIp(allowedIp);
-            cy.wait('@updateDatabaseAllowedIp');
-
-            mockUpdateDatabase(database.id, database.engine, {
-              ...database,
-              allow_list: [newAllowedIp],
-            }).as('updateAccessControl');
-            manageAccessControl([newAllowedIp]);
-            cy.wait('@updateAccessControl');
-            cy.get('[data-qa-access-controls]').within(() => {
-              cy.findByText(newAllowedIp).should('be.visible');
-            });
-
-            // Change maintenance window and databe version upgrade.
-            mockUpdateDatabase(database.id, database.engine, database).as(
-              'updateDatabaseMaintenance'
-            );
-            upgradeEngineVersion(database.engine, database.version);
-
-            modifyMaintenanceWindow('Day of Week', 'Wednesday');
-            cy.wait('@updateDatabaseMaintenance');
-            ui.toast.assertMessage(
-              'Maintenance Window settings saved successfully.'
-            );
-
-            modifyMaintenanceWindow('Time', '12:00');
-            cy.wait('@updateDatabaseMaintenance');
-            ui.toast.assertMessage(
-              'Maintenance Window settings saved successfully.'
-            );
-
-            if (state === 'provisioning') {
-              cy.get('[data-qa-settings-button="Suspend Cluster"]').should(
-                'be.disabled'
-              );
-            }
+        /*
+         * - Tests active database update UI flows using mocked data.
+         * - Confirms that users can change database label.
+         * - Confirms that users can change access controls.
+         * - Confirms that users can reset root passwords for active clusters.
+         * - Confirms that users can change maintenance schedules.
+         */
+        it(`Can update active database clusters`, () => {
+          const initialLabel = configuration.label;
+          const updatedLabel = randomLabel();
+          const allowedIp = randomIp();
+          const newAllowedIp = randomIp();
+          const initialPassword = randomString(16);
+          const database = databaseFactory.build({
+            allow_list: [allowedIp],
+            engine: configuration.dbType,
+            id: randomNumber(1, 1000),
+            label: initialLabel,
+            platform: 'rdbms-default',
+            region: configuration.region.id,
+            status: 'active',
+            type: configuration.linodeType,
+            version: configuration.version,
           });
+
+          mockGetAccount(accountFactory.build()).as('getAccount');
+          mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
+          mockResetPassword(database.id, database.engine).as(
+            'resetRootPassword'
+          );
+          mockGetDatabaseCredentials(
+            database.id,
+            database.engine,
+            initialPassword
+          ).as('getCredentials');
+
+          cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
+          cy.wait(['@getDatabase', '@getDatabaseTypes']);
+
+          // Validation for summary page details
+          cy.findByText('Cluster Configuration');
+          cy.findByText(configuration.region.label).should('be.visible');
+          cy.findByText(database.total_disk_size_gb + ' GB').should(
+            'be.visible'
+          );
+
+          cy.findByText('Connection Details');
+          // "Show" button should be enabled to reveal password when DB is active.
+          ui.button
+            .findByTitle('Show')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          cy.wait('@getCredentials');
+          cy.findByText(`${initialPassword}`);
+
+          // "Hide" button should be enabled to hide password when password is revealed.
+          ui.button
+            .findByTitle('Hide')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+
+          // Update labels for cluster in active/provisioning state
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            label: updatedLabel,
+          }).as('updateDatabaseLabel');
+          updateDatabaseLabel(initialLabel, updatedLabel);
+          cy.wait('@updateDatabaseLabel');
+          cy.get('[data-qa-header]')
+            .should('be.visible')
+            .should('have.text', updatedLabel);
+
+          // Navigate to "Settings" tab.
+          ui.tabList.findTabByTitle('Settings').click();
+
+          // Reset root password.
+          resetRootPassword();
+          cy.wait('@resetRootPassword');
+
+          // Remove allowed IP, manage IP access control.
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [],
+          }).as('updateDatabaseAllowedIp');
+          removeAllowedIp(allowedIp);
+          cy.wait('@updateDatabaseAllowedIp');
+
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [newAllowedIp],
+          }).as('updateAccessControl');
+          manageAccessControl([newAllowedIp]);
+          cy.wait('@updateAccessControl');
+          cy.get('[data-qa-access-controls]').within(() => {
+            cy.findByText(newAllowedIp).should('be.visible');
+          });
+
+          // Change maintenance window and databe version upgrade.
+          mockUpdateDatabase(database.id, database.engine, database).as(
+            'updateDatabaseMaintenance'
+          );
+          upgradeEngineVersion(database.engine, database.version);
+
+          modifyMaintenanceWindow('Day of Week', 'Wednesday');
+          cy.wait('@updateDatabaseMaintenance');
+          ui.toast.assertMessage(
+            'Maintenance Window settings saved successfully.'
+          );
+
+          modifyMaintenanceWindow('Time', '12:00');
+          cy.wait('@updateDatabaseMaintenance');
+          ui.toast.assertMessage(
+            'Maintenance Window settings saved successfully.'
+          );
+        });
+
+        /*
+         * - Tests provisioning database update UI flows using mocked data.
+         * - Confirms that users can change database label.
+         * - Confirms that users can change access controls.
+         * - Confirms that users cannot reset root passwords for provisioning clusters.
+         * - Confirms that users can change maintenance schedules.
+         */
+
+        it(`Can update provisioning database clusters`, () => {
+          const initialLabel = configuration.label;
+          const updatedLabel = randomLabel();
+          const allowedIp = randomIp();
+          const newAllowedIp = randomIp();
+          const initialPassword = randomString(16);
+          const database = databaseFactory.build({
+            allow_list: [allowedIp],
+            engine: configuration.dbType,
+            id: randomNumber(1, 1000),
+            label: initialLabel,
+            platform: 'rdbms-default',
+            region: configuration.region.id,
+            status: 'provisioning',
+            type: configuration.linodeType,
+            version: configuration.version,
+          });
+
+          const errorMessage =
+            'Database still provisioning; please try again later.';
+
+          mockGetAccount(accountFactory.build()).as('getAccount');
+          mockGetDatabase(database).as('getDatabase');
+          mockGetDatabaseTypes(mockDatabaseNodeTypes).as('getDatabaseTypes');
+          mockResetPasswordProvisioningDatabase(
+            database.id,
+            database.engine,
+            errorMessage
+          ).as('resetRootPassword');
+          mockGetDatabaseCredentials(
+            database.id,
+            database.engine,
+            initialPassword
+          ).as('getCredentials');
+
+          cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
+          cy.wait(['@getDatabase', '@getDatabaseTypes']);
+
+          // Validation for summary page details
+          cy.findByText('Cluster Configuration');
+          cy.findByText(configuration.region.label).should('be.visible');
+          cy.findByText(database.total_disk_size_gb + ' GB').should(
+            'be.visible'
+          );
+
+          cy.findByText('Connection Details');
+          // DBaaS passwords cannot be revealed until database/cluster has provisioned.
+          ui.button
+            .findByTitle('Show')
+            .should('be.visible')
+            .should('be.disabled');
+
+          // Update labels for cluster in active/provisioning state
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            label: updatedLabel,
+          }).as('updateDatabaseLabel');
+          updateDatabaseLabel(initialLabel, updatedLabel);
+          cy.wait('@updateDatabaseLabel');
+          cy.get('[data-qa-header]')
+            .should('be.visible')
+            .should('have.text', updatedLabel);
+
+          // Navigate to "Settings" tab.
+          ui.tabList.findTabByTitle('Settings').click();
+
+          // Reset root password.
+          resetRootPassword();
+          cy.wait('@resetRootPassword');
+          ui.dialog
+            .findByTitle('Reset Root Password')
+            .should('be.visible')
+            .within(() => {
+              cy.findByText(errorMessage).should('be.visible');
+
+              ui.buttonGroup
+                .findButtonByTitle('Cancel')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            });
+
+          // Remove allowed IP, manage IP access control.
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [],
+          }).as('updateDatabaseAllowedIp');
+          removeAllowedIp(allowedIp);
+          cy.wait('@updateDatabaseAllowedIp');
+
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [newAllowedIp],
+          }).as('updateAccessControl');
+          manageAccessControl([newAllowedIp]);
+          cy.wait('@updateAccessControl');
+          cy.get('[data-qa-access-controls]').within(() => {
+            cy.findByText(newAllowedIp).should('be.visible');
+          });
+
+          // Change maintenance window and databe version upgrade.
+          mockUpdateDatabase(database.id, database.engine, database).as(
+            'updateDatabaseMaintenance'
+          );
+          upgradeEngineVersion(database.engine, database.version);
+
+          modifyMaintenanceWindow('Day of Week', 'Wednesday');
+          cy.wait('@updateDatabaseMaintenance');
+          ui.toast.assertMessage(
+            'Maintenance Window settings saved successfully.'
+          );
+
+          modifyMaintenanceWindow('Time', '12:00');
+          cy.wait('@updateDatabaseMaintenance');
+          ui.toast.assertMessage(
+            'Maintenance Window settings saved successfully.'
+          );
+
+          cy.get('[data-qa-settings-button="Suspend Cluster"]').should(
+            'be.disabled'
+          );
         });
 
         /*
@@ -501,7 +613,8 @@ describe('Update database clusters', () => {
             type: configuration.linodeType,
           });
 
-          const errorMessage = `Your database is suspended; please wait until it becomes active to perform this operation.`;
+          const errorMessage =
+            'Your database is suspended; please wait until it becomes active to perform this operation.';
           const hostnameRegex =
             /your hostnames? will appear here once (it is|they are) available./i;
 
