@@ -99,7 +99,7 @@ const dedicatedType = dedicatedTypeFactory.build({
 }) as ExtendedType;
 const nanodeType = linodeTypeFactory.build({
   disk: 25600,
-  id: 'g6-nanode-1',
+  id: 'g6-nanode-2',
   label: 'Linode 2 GB',
   memory: 2048,
   price: {
