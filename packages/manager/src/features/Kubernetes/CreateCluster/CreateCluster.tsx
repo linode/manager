@@ -61,7 +61,7 @@ import {
 } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import { StyledHeader } from '../KubeCheckoutBar/KubeCheckoutSummary.styles';
-import { AddNodePoolUpdateStrategyDrawer } from '../KubernetesPlansPanel/AddNodePoolUpdateStrategyDrawer';
+import { NodePoolConfigDrawer } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
 import { ClusterTierPanel } from './ClusterTierPanel';
@@ -652,7 +652,7 @@ export const CreateCluster = () => {
           />
         </Grid>
       </Grid>
-      <AddNodePoolUpdateStrategyDrawer
+      <NodePoolConfigDrawer
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
       />
