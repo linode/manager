@@ -165,13 +165,22 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceTypes {
+interface ServiceAlert {
+  evaluation_periods_seconds: number[];
+  polling_interval_seconds: number[];
+  scope: AlertDefinitionGroup[];
+}
+
+export interface Service {
+  alert: ServiceAlert;
+  is_beta: boolean;
   label: string;
+  regions: string;
   service_type: string;
 }
 
 export interface ServiceTypesList {
-  data: ServiceTypes[];
+  data: Service[];
 }
 
 export interface CreateAlertDefinitionPayload {
