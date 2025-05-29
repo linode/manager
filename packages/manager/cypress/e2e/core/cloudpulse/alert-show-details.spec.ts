@@ -32,7 +32,8 @@ import {
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Database } from '@linode/api-v4';
+import type { AlertDefinitionGroup, Database } from '@linode/api-v4';
+import type { RecPartial } from 'factory.ts';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -71,17 +72,7 @@ const alertDetails = alertFactory.build({
   created: '2023-10-01T12:00:00Z',
   updated: new Date().toISOString(),
 });
-const {
-  created_by,
-  description,
-  id,
-  label,
-  rule_criteria,
-  service_type,
-  severity,
-  created,
-  updated,
-} = alertDetails;
+const { id, label, rule_criteria, service_type } = alertDetails;
 const { rules } = rule_criteria;
 const notificationChannels = notificationChannelFactory.build();
 
@@ -167,242 +158,315 @@ describe('Integration Tests for Alert Show Detail Page', () => {
     cy.findByText('Status:').should('be.visible');
     cy.findByText('Failed').should('be.visible');
   });
+  const scopeActions: Record<string, () => void> = {
+    Region: () => {
+      cy.get('[data-qa="region-tabls"]').within(() => {
+        const expectedRegions = [
+          'US, Chicago, IL (us-ord)',
+          'US, Newark (us-east)',
+        ];
 
-  it('should correctly display the details of the DBaaS alert in the alert details view', () => {
-    const searchPlaceholder = 'Search for a Region or Entity';
-    cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
-    cy.wait(['@getDBaaSAlertDefinitions', '@getMockedDbaasDatabases']);
+        expectedRegions.forEach((region) => {
+          cy.contains('tr', region).should('exist');
+        });
+      });
+    },
+    Account: () => {
+      const expectedMessage =
+        'All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included.';
+      cy.get('[data-qa-notice="true"]')
+        .find('[data-testid="alert_message_notice"]') // Note the typo in the attribute
+        .should('have.text', expectedMessage);
+    },
 
-    // Validating contents of Overview Section
-    cy.get('[data-qa-section="Overview"]').within(() => {
-      // Validate Name field
-      cy.findByText('Name:').should('be.visible');
-      cy.findByText(label).should('be.visible');
+    Entity: () => {
+      const searchPlaceholder = 'Search for a Region or Entity';
+      cy.get('[data-qa-section="Resources"]').within(() => {
+        // Validate headings
+        ui.heading
+          .findByText('entity')
+          .scrollIntoView()
+          .should('be.visible')
+          .should('have.text', 'Entity');
 
-      // Validate Description field
-      cy.findByText('Description:').should('be.visible');
-      cy.findByText(description).should('be.visible');
+        ui.heading
+          .findByText('region')
+          .should('be.visible')
+          .should('have.text', 'Region');
 
-      // Validate Status field
-      cy.findByText('Status:').should('be.visible');
-      cy.findByText('Enabled').should('be.visible');
+        // Validate search inputs
+        cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
+        cy.findByPlaceholderText('Select Regions').should('be.visible');
 
-      cy.findByText('Severity:').should('be.visible');
-      cy.findByText(severityMap[severity]).should('be.visible');
+        // Assert row count
+        cy.get('[data-qa-alert-row]').should('have.length', 4);
 
-      // Validate Service field
-      cy.findByText('Service:').should('be.visible');
-      cy.findByText('Databases').should('be.visible');
+        // Validate entity-region mapping
+        const regionMap = new Map(regions.map((r) => [r.id, r.label]));
 
-      // Validate Type field
-      cy.findByText('Type:').should('be.visible');
-      cy.findByText('User').should('be.visible');
+        cy.get('[data-qa-alert-row]')
+          .should('have.length', 4)
+          .each((row, index) => {
+            const db = databases[index];
+            const rowNumber = index + 1;
+            const regionLabel = regionMap.get(db.region) || 'Unknown Region';
 
-      // Validate Created By field
-      cy.findByText('Created By:').should('be.visible');
-      cy.findByText(created_by).should('be.visible');
+            cy.wrap(row).within(() => {
+              cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
+                'have.text',
+                db.label
+              );
 
-      // Validate Last Modified field
-      cy.findByText('Last Modified:').should('be.visible');
-      cy.findByText(
-        formatDate(updated, {
-          format: 'MMM dd, yyyy, h:mm a',
-          timezone: 'GMT',
-        })
-      ).should('be.visible');
-      cy.findByText(
-        formatDate(created, {
-          format: 'MMM dd, yyyy, h:mm a',
-          timezone: 'GMT',
-        })
-      ).should('be.visible');
-    });
-
-    // Validating contents of Criteria Section
-    cy.get('[data-qa-section="Criteria"]').within(() => {
-      rules.forEach((rule, index) => {
-        cy.get('[data-qa-item="Metric Threshold"]')
-          .eq(index)
-          .within(() => {
-            cy.get(
-              `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
-            )
-              .should('be.visible')
-              .should('have.text', aggregationTypeMap[rule.aggregate_function]);
-
-            cy.get(`[data-qa-chip="${rule.label}"]`)
-              .should('be.visible')
-              .should('have.text', rule.label);
-
-            cy.get(`[data-qa-chip="${metricOperatorTypeMap[rule.operator]}"]`)
-              .should('be.visible')
-              .should('have.text', metricOperatorTypeMap[rule.operator]);
-
-            cy.get(`[data-qa-chip="${rule.threshold}"]`)
-              .should('be.visible')
-              .should('have.text', rule.threshold);
-
-            cy.get(`[data-qa-chip="${rule.unit}"]`)
-              .should('be.visible')
-              .should('have.text', rule.unit);
-          });
-
-        // Validating contents of Dimension Filter
-        cy.get('[data-qa-item="Dimension Filter"]')
-          .eq(index)
-          .within(() => {
-            (rule.dimension_filters ?? []).forEach((filter) => {
-              // Validate the filter label
-              cy.get(`[data-qa-chip="${filter.label}"]`)
-                .should('be.visible')
-                .each(($chip) => {
-                  expect($chip).to.have.text(filter.label);
-                });
-              // Validate the filter operator
-              cy.get(
-                `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
-              )
-                .should('be.visible')
-                .each(($chip) => {
-                  expect($chip).to.have.text(
-                    dimensionOperatorTypeMap[filter.operator]
-                  );
-                });
-              // Validate the filter value
-              cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
-                .should('be.visible')
-                .each(($chip) => {
-                  expect($chip).to.have.text(capitalize(filter.value));
-                });
+              cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
+                'have.text',
+                `US, ${regionLabel} (${db.region})`
+              );
             });
           });
+
+        // Sorting validations
+        ui.heading.findByText('entity').click();
+        verifyRowOrder(['4', '3', '2', '1']);
+
+        ui.heading.findByText('entity').click();
+        verifyRowOrder(['1', '2', '3', '4']);
+
+        ui.heading.findByText('region').click();
+        verifyRowOrder(['2', '4', '1', '3']);
+
+        ui.heading.findByText('region').click();
+        verifyRowOrder(['1', '3', '2', '4']);
+
+        // Entity search
+        cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
+
+        cy.get('[data-qa-alert-table="true"]')
+          .find('[data-qa-alert-row]')
+          .should('have.length', 1);
+
+        cy.findByText(databases[0].label).should('be.visible');
+        [1, 2, 3].forEach((i) =>
+          cy.findByText(databases[i].label).should('not.exist')
+        );
+
+        // Region filter
+        cy.findByPlaceholderText(searchPlaceholder).clear();
+        ui.regionSelect
+          .find()
+          .click()
+          .type(`${regions[0].label}{enter}`)
+          .click();
+
+        cy.get('[data-qa-alert-table="true"]')
+          .find('[data-qa-alert-row]')
+          .should('have.length', 2);
+
+        [0, 2].forEach((i) =>
+          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('not.exist')
+        );
+
+        [1, 3].forEach((i) =>
+          cy.get(`[data-qa-alert-cell="${i}_region"]`).should('be.visible')
+        );
+      });
+    },
+  };
+
+  const scopes = [
+    { group: 'per-region', scopeLabel: 'Region' },
+    { group: 'per-entity', scopeLabel: 'Entity' },
+    { group: 'per-account', scopeLabel: 'Account' },
+  ];
+
+  scopes.forEach(({ group, scopeLabel }) => {
+    it(`should correctly display the details of the DBaaS alert in the alert details view for ${scopeLabel} level`, () => {
+      const regionList = ['us-ord', 'us-east'];
+      const alertDetails = alertFactory.build({
+        id: 2,
+        label: 'Alert-1',
+        entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
+        rule_criteria: { rules: alertRulesFactory.buildList(2) },
+        service_type: 'dbaas',
+        severity: 1,
+        status: 'enabled',
+        type: 'user',
+        created_by: 'user1',
+        updated_by: 'user2',
+        created: '2023-10-01T12:00:00Z',
+        updated: new Date().toISOString(),
+        group: group as RecPartial<AlertDefinitionGroup>,
+        ...(group === 'per-region' ? { regions: regionList } : {}),
+      });
+      const {
+        created_by,
+        description,
+        id,
+        label,
+        service_type,
+        severity,
+        created,
+        updated,
+      } = alertDetails;
+      mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
+      mockGetAlertDefinitions(service_type, id, alertDetails).as(
+        'getDBaaSAlertDefinitions'
+      );
+      cy.visitWithLogin(`/alerts/definitions/detail/${service_type}/${id}`);
+      cy.wait(['@getDBaaSAlertDefinitions']);
+
+      // Validating contents of Overview Section
+      cy.get('[data-qa-section="Overview"]').within(() => {
+        // Validate Name field
+        cy.findByText('Name:').should('be.visible');
+        cy.findByText(label).should('be.visible');
+
+        // Validate Description field
+        cy.findByText('Description:').should('be.visible');
+        cy.findByText(description).should('be.visible');
+
+        // Validate Status field
+        cy.findByText('Status:').should('be.visible');
+        cy.findByText('Enabled').should('be.visible');
+
+        cy.findByText('Severity:').should('be.visible');
+        cy.findByText(severityMap[severity]).should('be.visible');
+
+        // Validate Service field
+        cy.findByText('Service:').should('be.visible');
+        cy.findByText('Databases').should('be.visible');
+
+        // Validate Type field
+        cy.findByText('Type:').should('be.visible');
+        cy.findByText('User').should('be.visible');
+
+        // Validate Created By field
+        cy.findByText('Created By:').should('be.visible');
+        cy.findByText(created_by).should('be.visible');
+
+        // Validate Last Modified field
+        cy.findByText('Last Modified:').should('be.visible');
+        cy.findByText(
+          formatDate(updated, {
+            format: 'MMM dd, yyyy, h:mm a',
+            timezone: 'GMT',
+          })
+        ).should('be.visible');
+        cy.findByText(
+          formatDate(created, {
+            format: 'MMM dd, yyyy, h:mm a',
+            timezone: 'GMT',
+          })
+        ).should('be.visible');
+
+        cy.findByText('Scope:').should('be.visible');
+        cy.findByText(scopeLabel).should('be.visible');
       });
 
-      // Validating contents of Polling Interval
-      cy.get('[data-qa-item="Polling Interval"]')
-        .find('[data-qa-chip]')
-        .should('be.visible')
-        .should('have.text', '10 minutes');
+      // Validating contents of Criteria Section
+      cy.get('[data-qa-section="Criteria"]').within(() => {
+        rules.forEach((rule, index) => {
+          cy.get('[data-qa-item="Metric Threshold"]')
+            .eq(index)
+            .within(() => {
+              cy.get(
+                `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
+              )
+                .should('be.visible')
+                .should(
+                  'have.text',
+                  aggregationTypeMap[rule.aggregate_function]
+                );
 
-      // Validating contents of Evaluation Periods
-      cy.get('[data-qa-item="Evaluation Period"]')
-        .find('[data-qa-chip]')
-        .should('be.visible')
-        .should('have.text', '5 minutes');
+              cy.get(`[data-qa-chip="${rule.label}"]`)
+                .should('be.visible')
+                .should('have.text', rule.label);
 
-      // Validating contents of Trigger Alert
-      cy.get('[data-qa-chip="All"]')
-        .should('be.visible')
-        .should('have.text', 'All');
+              cy.get(`[data-qa-chip="${metricOperatorTypeMap[rule.operator]}"]`)
+                .should('be.visible')
+                .should('have.text', metricOperatorTypeMap[rule.operator]);
 
-      cy.get('[data-qa-chip="5 minutes"]')
-        .should('be.visible')
-        .should('have.text', '5 minutes');
+              cy.get(`[data-qa-chip="${rule.threshold}"]`)
+                .should('be.visible')
+                .should('have.text', rule.threshold);
 
-      cy.get('[data-qa-item="criteria are met for"]')
-        .should('be.visible')
-        .should('have.text', 'criteria are met for');
+              cy.get(`[data-qa-chip="${rule.unit}"]`)
+                .should('be.visible')
+                .should('have.text', rule.unit);
+            });
 
-      cy.get('[data-qa-item="consecutive occurrences"]')
-        .should('be.visible')
-        .should('have.text', 'consecutive occurrences.');
-    });
-    //  Validate the entity section (Entity and Region columns)
-    cy.get('[data-qa-section="Resources"]').within(() => {
-      ui.heading
-        .findByText('entity')
-        .scrollIntoView()
-        .should('be.visible')
-        .should('have.text', 'Entity');
-
-      ui.heading
-        .findByText('region')
-        .should('be.visible')
-        .should('have.text', 'Region');
-
-      cy.findByPlaceholderText(searchPlaceholder).should('be.visible');
-
-      cy.findByPlaceholderText('Select Regions').should('be.visible');
-
-      cy.get('[data-qa-alert-row]').should('have.length', 4);
-
-      // Validate entity-region mapping for each row in the table
-
-      const regionMap = new Map(regions.map((r) => [r.id, r.label]));
-
-      cy.get('[data-qa-alert-row]')
-        .should('have.length', 4)
-        .each((row, index) => {
-          const db = databases[index];
-          const rowNumber = index + 1;
-          const regionLabel = regionMap.get(db.region) || 'Unknown Region';
-
-          cy.wrap(row).within(() => {
-            cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
-              'have.text',
-              db.label
-            );
-
-            cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
-              'have.text',
-              `US, ${regionLabel} (${db.region})`
-            );
-          });
+          // Validating contents of Dimension Filter
+          cy.get('[data-qa-item="Dimension Filter"]')
+            .eq(index)
+            .within(() => {
+              (rule.dimension_filters ?? []).forEach((filter) => {
+                // Validate the filter label
+                cy.get(`[data-qa-chip="${filter.label}"]`)
+                  .should('be.visible')
+                  .each(($chip) => {
+                    expect($chip).to.have.text(filter.label);
+                  });
+                // Validate the filter operator
+                cy.get(
+                  `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
+                )
+                  .should('be.visible')
+                  .each(($chip) => {
+                    expect($chip).to.have.text(
+                      dimensionOperatorTypeMap[filter.operator]
+                    );
+                  });
+                // Validate the filter value
+                cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
+                  .should('be.visible')
+                  .each(($chip) => {
+                    expect($chip).to.have.text(capitalize(filter.value));
+                  });
+              });
+            });
         });
 
-      // Sorting by entity and Region columns
-      ui.heading.findByText('entity').should('be.visible').click();
-      verifyRowOrder(['4', '3', '2', '1']);
+        // Validating contents of Polling Interval
+        cy.get('[data-qa-item="Polling Interval"]')
+          .find('[data-qa-chip]')
+          .should('be.visible')
+          .should('have.text', '10 minutes');
 
-      ui.heading.findByText('entity').should('be.visible').click();
-      verifyRowOrder(['1', '2', '3', '4']);
+        // Validating contents of Evaluation Periods
+        cy.get('[data-qa-item="Evaluation Period"]')
+          .find('[data-qa-chip]')
+          .should('be.visible')
+          .should('have.text', '5 minutes');
 
-      ui.heading.findByText('region').should('be.visible').click();
-      verifyRowOrder(['2', '4', '1', '3']);
+        // Validating contents of Trigger Alert
+        cy.get('[data-qa-chip="All"]')
+          .should('be.visible')
+          .should('have.text', 'All');
 
-      ui.heading.findByText('region').should('be.visible').click();
-      verifyRowOrder(['1', '3', '2', '4']);
+        cy.get('[data-qa-chip="5 minutes"]')
+          .should('be.visible')
+          .should('have.text', '5 minutes');
 
-      // Search by Entity
-      cy.findByPlaceholderText(searchPlaceholder)
-        .should('be.visible')
-        .type(databases[0].label);
+        cy.get('[data-qa-item="criteria are met for"]')
+          .should('be.visible')
+          .should('have.text', 'criteria are met for');
 
-      cy.get('[data-qa-alert-table="true"]')
-        .find('[data-qa-alert-row]')
-        .should('have.length', 1);
+        cy.get('[data-qa-item="consecutive occurrences"]')
+          .should('be.visible')
+          .should('have.text', 'consecutive occurrences.');
+      });
 
-      cy.findByText(databases[0].label).should('be.visible');
-      [1, 2, 3].forEach((i) =>
-        cy.findByText(databases[i].label).should('not.exist')
-      );
+      scopeActions[scopeLabel]?.();
 
-      // Search by region
-      cy.findByPlaceholderText(searchPlaceholder).clear();
-
-      ui.regionSelect.find().click().type(`${regions[0].label}{enter}`);
-      ui.regionSelect.find().click();
-
-      cy.get('[data-qa-alert-table="true"]')
-        .find('[data-qa-alert-row]')
-        .should('have.length', 2);
-
-      [0, 2].forEach((i) =>
-        cy.get(`[data-qa-alert-cell="${i}_region"]`).should('not.exist')
-      );
-      [1, 3].forEach((i) =>
-        cy.get(`[data-qa-alert-cell="${i}_region"]`).should('be.visible')
-      );
-    });
-    // Validate Notification Channels Section
-    cy.get('[data-qa-section="Notification Channels"]').within(() => {
-      cy.findByText('Type:').should('be.visible');
-      cy.findByText('Email').should('be.visible');
-      cy.findByText('Channel:').should('be.visible');
-      cy.findByText('Channel-1').should('be.visible');
-      cy.findByText('To:').should('be.visible');
-      cy.findByText('test@test.com').should('be.visible');
-      cy.findByText('test2@test.com').should('be.visible');
+      // Validate Notification Channels Section
+      cy.get('[data-qa-section="Notification Channels"]').within(() => {
+        cy.findByText('Type:').should('be.visible');
+        cy.findByText('Email').should('be.visible');
+        cy.findByText('Channel:').should('be.visible');
+        cy.findByText('Channel-1').should('be.visible');
+        cy.findByText('To:').should('be.visible');
+        cy.findByText('test@test.com').should('be.visible');
+        cy.findByText('test2@test.com').should('be.visible');
+      });
     });
   });
 });
