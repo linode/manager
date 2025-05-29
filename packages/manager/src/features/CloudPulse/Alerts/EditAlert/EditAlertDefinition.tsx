@@ -186,13 +186,13 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
           <AlertEntityScopeSelect name="group" />
-          {scopeWatcher === 'per-entity' && (
+          {scopeWatcher === 'entity' && (
             <CloudPulseModifyAlertResources name="entity_ids" />
           )}
-          {scopeWatcher === 'per-region' && (
+          {scopeWatcher === 'region' && (
             <CloudPulseModifyAlertRegions name="regions" />
           )}
-          {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
+          {scopeWatcher === 'account' && <AccountGroupingNotice />}
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

@@ -67,7 +67,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
-  group: 'per-account',
+  group: 'account',
   type: 'user',
 };
 
@@ -217,13 +217,13 @@ export const CreateAlertDefinition = () => {
             />
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect name="group" />
-            {scopeWatcher === 'per-entity' && (
+            {scopeWatcher === 'entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
-            {scopeWatcher === 'per-region' && (
+            {scopeWatcher === 'region' && (
               <CloudPulseModifyAlertRegions name="regions" />
             )}
-            {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
+            {scopeWatcher === 'account' && <AccountGroupingNotice />}
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}

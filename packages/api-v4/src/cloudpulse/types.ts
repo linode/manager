@@ -10,7 +10,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertDefinitionGroup = 'per-account' | 'per-entity' | 'per-region';
+export type AlertDefinitionGroup = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =

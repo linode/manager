@@ -170,7 +170,7 @@ export const AlertDetail = () => {
           >
             {(() => {
               switch (group) {
-                case 'per-account':
+                case 'account':
                   return (
                     <Stack gap={2}>
                       <Typography variant="h2">Account</Typography>
@@ -182,7 +182,7 @@ export const AlertDetail = () => {
                     </Stack>
                   );
 
-                case 'per-entity':
+                case 'entity':
                   return (
                     <AlertResources
                       alertClass={alertClass}
@@ -192,7 +192,7 @@ export const AlertDetail = () => {
                     />
                   );
 
-                case 'per-region':
+                case 'region':
                   return (
                     <AlertRegions
                       mode="view"

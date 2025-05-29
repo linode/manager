@@ -79,7 +79,7 @@ export const createAlertDefinitionSchema = object({
   entity_ids: array().of(string().defined()).optional(),
   regions: array().of(string().defined()).optional(),
   group: string()
-    .oneOf(['per-entity', 'per-region', 'per-account'])
+    .oneOf(['entity', 'region', 'account'])
     .defined()
     .required(fieldErrorMessage),
 });
@@ -112,7 +112,7 @@ export const editAlertDefinitionSchema = object({
     .optional(),
   entity_ids: array().of(string().defined()).optional(),
   regions: array().of(string().defined()).optional(),
-  group: string().oneOf(['per-entity', 'per-region', 'per-account']).required(),
+  group: string().oneOf(['entity', 'region', 'account']).required(),
   rule_criteria: object({
     rules: array()
       .of(metricCriteria)

@@ -40,8 +40,8 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
               field.onChange(value);
             }
 
-            setValue('regions', value === 'per-region' ? [] : undefined);
-            setValue('entity_ids', value === 'per-entity' ? [] : undefined);
+            setValue('regions', value === 'region' ? [] : undefined);
+            setValue('entity_ids', value === 'entity' ? [] : undefined);
           }}
           options={entityGroupingOptions}
           placeholder="Select a scope"
