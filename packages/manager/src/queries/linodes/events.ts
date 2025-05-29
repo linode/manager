@@ -152,6 +152,20 @@ export const diskEventHandler = ({
   });
 };
 
+export const interfaceEventHandler = ({
+  event,
+  invalidateQueries,
+}: EventHandlerData) => {
+  // For Interface events, the `entity` is the Interface and the `secondary_entity` is the Linode.
+
+  if (event.secondary_entity) {
+    invalidateQueries({
+      queryKey: linodeQueries.linode(event.secondary_entity.id)._ctx.interfaces
+        .queryKey,
+    });
+  }
+};
+
 /**
  * shouldRequestNotifications
  *

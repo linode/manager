@@ -7,7 +7,7 @@ import {
 } from '@linode/queries';
 import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { formatNumber, formatPercentage, getMetrics } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { DateTime } from 'luxon';
 import * as React from 'react';

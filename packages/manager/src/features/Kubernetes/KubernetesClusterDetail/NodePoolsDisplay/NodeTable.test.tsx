@@ -91,7 +91,7 @@ describe('NodeTable', () => {
     getByText('Pool ID 1');
   });
 
-  it('displays a provisioning message if the cluster was created within the first 10 mins and there are no nodes yet', async () => {
+  it('displays a provisioning message if the cluster was created within the first 20 mins and there are no nodes yet', async () => {
     const clusterProps = {
       ...props,
       clusterCreated: DateTime.local().toISO(),
@@ -108,7 +108,7 @@ describe('NodeTable', () => {
     ).toBeVisible();
 
     expect(
-      await findByText('Provisioning can take up to 10 minutes.')
+      await findByText('Provisioning can take up to ~20 minutes.')
     ).toBeVisible();
   });
 

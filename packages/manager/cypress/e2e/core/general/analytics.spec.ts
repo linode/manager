@@ -2,9 +2,8 @@ import { ui } from 'support/ui';
 
 const ADOBE_LAUNCH_URLS = [
   'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-92311d9d9637-development.min.js', // New dev Launch script
-  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-09b7ca9d43ad-development.min.js', // Existing dev Launch script
-  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-a50be9afbe1d-staging.min.js', // Existing staging Launch script
-  'https://assets.adobedtm.com/fcfd3580c848/795fdfec4a0e/launch-de0ca78667e7.min.js', // Existing prod Launch script
+  'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-5bda4b7a1db9-staging.min.js', // New staging Launch script
+  'https://assets.adobedtm.com/fcfd3580c848/15e23aa7fce2/launch-9ea21650035a.min.js', // New prod Launch script
 ];
 
 describe('Script loading and user interaction test', () => {

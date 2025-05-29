@@ -1,3 +1,13 @@
+## [2025-06-03] - v0.13.0
+
+### Changed:
+
+- Akamai Design System - Label component ([#12224](https://github.com/linode/manager/pull/12224))
+
+### Fixed:
+
+- Input placeholder opacity ([#12208](https://github.com/linode/manager/pull/12208))
+
 ## [2025-05-20] - v0.12.0
 
 ### Added:

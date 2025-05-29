@@ -34,7 +34,7 @@ import {
   createStringsFromDevices,
   scrollErrorIntoViewV2,
 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';

@@ -1,7 +1,7 @@
 import { useAccountUsers } from '@linode/queries';
 import { ActionsPanel, Autocomplete, Drawer, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import React, { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 

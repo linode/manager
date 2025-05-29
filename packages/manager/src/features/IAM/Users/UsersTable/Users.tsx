@@ -1,6 +1,6 @@
 import { useAccountUsers, useProfile } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Button, Paper, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
@@ -20,8 +20,6 @@ import { UsersLandingTableBody } from './UsersLandingTableBody';
 import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
-
-const XS_TO_SM_BREAKPOINT = 475;
 
 export const UsersLanding = () => {
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
@@ -101,24 +99,18 @@ export const UsersLanding = () => {
           order={order}
         />
       )}
-      <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-        <Box
-          sx={(theme) => ({
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: theme.spacing(2),
-            [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-              alignItems: 'flex-start',
-              flexDirection: 'column',
-            },
-          })}
+      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+        <Stack
+          direction={isSmDown ? 'column' : 'row'}
+          justifyContent="space-between"
+          marginBottom={2}
+          spacing={2}
         >
           {isProxyUser ? (
             <Typography
               sx={(theme) => ({
                 [theme.breakpoints.down('md')]: {
-                  marginLeft: theme.spacing(1),
+                  marginLeft: theme.tokens.spacing.S8,
                 },
               })}
               variant="h3"
@@ -130,7 +122,7 @@ export const UsersLanding = () => {
               clearable
               containerProps={{
                 sx: {
-                  width: { md: '320px', xs: '100%' },
+                  width: '320px',
                 },
               }}
               debounceTime={250}
@@ -147,12 +139,9 @@ export const UsersLanding = () => {
             buttonType="primary"
             disabled={isRestrictedUser}
             onClick={() => setIsCreateDrawerOpen(true)}
-            sx={(theme) => ({
-              [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-                marginTop: theme.spacing(1),
-                width: '100%',
-              },
-            })}
+            sx={{
+              maxWidth: '120px',
+            }}
             tooltipText={
               isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
@@ -161,7 +150,7 @@ export const UsersLanding = () => {
           >
             Add a User
           </Button>
-        </Box>
+        </Stack>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
           <UsersLandingTableHead order={order} />
           <TableBody>

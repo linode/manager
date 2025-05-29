@@ -1,7 +1,7 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Button, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 

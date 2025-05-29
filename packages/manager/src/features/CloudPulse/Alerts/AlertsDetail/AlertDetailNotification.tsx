@@ -1,5 +1,5 @@
 import { CircleProgress, ErrorState, Stack, Typography } from '@linode/ui';
-import { Divider, Grid } from '@mui/material';
+import { Divider, GridLegacy } from '@mui/material';
 import React from 'react';
 
 import EntityIcon from 'src/assets/icons/entityIcons/alerts.svg';
@@ -58,7 +58,7 @@ export const AlertDetailNotification = React.memo(
         <Typography marginBottom={2} variant="h2">
           Notification Channels
         </Typography>
-        <Grid
+        <GridLegacy
           container
           spacing={2}
           sx={{
@@ -68,7 +68,7 @@ export const AlertDetailNotification = React.memo(
           {channels.map((notificationChannel, index) => {
             const { channel_type, id, label } = notificationChannel;
             return (
-              <Grid container item key={id} spacing={2}>
+              <GridLegacy container item key={id} spacing={2}>
                 <AlertDetailRow
                   label="Type"
                   labelGridColumns={2}
@@ -81,22 +81,22 @@ export const AlertDetailNotification = React.memo(
                   value={label}
                   valueGridColumns={10}
                 />
-                <Grid item xs={12}>
+                <GridLegacy item xs={12}>
                   <DisplayAlertDetailChips
                     {...getChipLabels(notificationChannel)}
                     labelGridColumns={2}
                     valueGridColumns={10}
                   />
-                </Grid>
+                </GridLegacy>
                 {channels.length > 1 && index !== channels.length - 1 && (
-                  <Grid item xs={12}>
+                  <GridLegacy item xs={12}>
                     <Divider />
-                  </Grid>
+                  </GridLegacy>
                 )}
-              </Grid>
+              </GridLegacy>
             );
           })}
-        </Grid>
+        </GridLegacy>
       </Stack>
     );
   }

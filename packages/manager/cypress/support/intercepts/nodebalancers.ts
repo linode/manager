@@ -4,6 +4,7 @@
 
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
+import { makeResponse } from 'support/util/response';
 
 import type { Firewall, NodeBalancer } from '@linode/api-v4';
 
@@ -67,4 +68,21 @@ export const mockGetNodeBalancerFirewalls = (
  */
 export const interceptCreateNodeBalancer = (): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher('nodebalancers'));
+};
+
+/**
+ * Intercepts POST request to create a nodeBalancer.
+ *
+ * @param nodebalancer - a mock nodeBalancer object
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateNodeBalancer = (
+  nodebalancer: NodeBalancer
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('nodebalancers'),
+    makeResponse(nodebalancer)
+  );
 };

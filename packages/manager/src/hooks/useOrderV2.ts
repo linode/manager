@@ -6,6 +6,7 @@ import { sortData } from 'src/components/OrderBy';
 
 import type { OrderSetWithPrefix } from '@linode/utilities';
 import type { LinkProps, RegisteredRouter } from '@tanstack/react-router';
+import type { TableSearchParams } from 'src/routes/types';
 
 export type Order = 'asc' | 'desc';
 
@@ -109,7 +110,7 @@ export const useOrderV2 = <T>({
         };
 
     navigate<RegisteredRouter, string, string>({
-      search: (prev) => ({
+      search: (prev: TableSearchParams) => ({
         ...prev,
         ...searchParams,
         ...urlData,

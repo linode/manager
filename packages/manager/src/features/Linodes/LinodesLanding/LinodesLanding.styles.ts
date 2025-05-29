@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 
 export const StyledWrapperGrid = styled(Grid, { label: 'StyledWrapperGrid' })({

@@ -12,19 +12,20 @@ Pendo is configured in [`usePendo.js`](https://github.com/linode/manager/blob/de
 
 Important notes:
 
-- Pendo is only loaded if the user has enabled Performance Cookies via OneTrust *and* if a valid `PENDO_API_KEY` is configured as an environment variable. In our development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
-- We load the Pendo agent from the CDN, rather than [self-hosting](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent), and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
+- Pendo is only loaded if a valid `PENDO_API_KEY` is configured as an environment variable. In our preview, development, staging, and production environments, `PENDO_API_KEY` is available at build time. See **Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo** for set up with local environments.
+- We [self-host](https://support.pendo.io/hc/en-us/articles/360038969692-Self-hosting-the-Pendo-agent) and load the Pendo agent from Adobe Launch, rather than from the CDN, and we have configured a [CNAME](https://support.pendo.io/hc/en-us/articles/360043539891-CNAME-for-Pendo).
+- As configured by Adobe Launch, Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in preview environments. Pendo will not run on localhost:3000 because it needs a Optanon cookie with the linode.com domain for consent.
 - At initialization, we do string transformation on select URL patterns to **remove  sensitive data**. When new URL patterns are added to Cloud Manager, verify that existing transforms remove sensitive data; if not, update the transforms.
-- Pendo will respect OneTrust cookie preferences in development, staging, and production environments and does not check cookie preferences in the local environment.
 - Pendo makes use of the existing `data-testid` properties, used in our automated testing, for tagging elements. They are more persistent and reliable than CSS properties, which are liable to change.
 
 ### Locally Testing Page Views & Custom Events and/or Troubleshooting Pendo
 
 1. Set the `REACT_APP_PENDO_API_KEY` environment variable in `.env`.
-2. Use the browser tools Network tab, filter requests by "psp.cloud", and check that successful network requests have been made to load Pendo scripts (also visible in the browser tools Sources tab).
-3. In the browser console, type `pendo.validateEnvironment()`.
-4. You should see command output in the console, and it should include an `accountId` and a `visitorId` that correspond with your APIv4 account `euuid` and profile `uid`, respectively. Each page view change or custom event that fires should be visible as a request in the Network tab.
-5. If the console does not output the expected ids and instead outputs something like `Cookies are disabled in Pendo config. Is this expected?` in response to the above command, clear app storage with the browser tools. Once redirected back to Login, update the OneTrust cookie settings to enable cookies via "Manage Preferences" in the banner at the bottom of the screen. Log back into Cloud Manager and Pendo should load.
+2. Confirm the Adobe Launch script has loaded. (View it in the browser console Sources tab under the assets.adobedtm.com directory.)
+3. Use the browser tools Network tab, filter requests by "psp.cloud", and check that successful network requests have been made to load Pendo scripts (also visible in the browser tools Sources tab).
+4. In the browser console, type `pendo.validateEnvironment()`.
+5. You should see command output in the console, and it should include an `accountId` and a `visitorId` that correspond with your APIv4 account `euuid` and profile `uid`, respectively. Each page view change or custom event that fires should be visible as a request in the Network tab.
+6. If the console does not output the expected ids and instead outputs something like `Cookies are disabled in Pendo config. Is this expected?` in response to the above command, clear app storage with the browser tools. Once redirected back to Login, update the OneTrust cookie settings to enable cookies via "Manage Preferences" in the banner at the bottom of the screen. Log back into Cloud Manager and Pendo should load.
 
 ## Adobe Analytics
 

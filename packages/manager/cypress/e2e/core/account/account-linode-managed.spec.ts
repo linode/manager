@@ -2,7 +2,11 @@
  * @file Integration tests for Cloud Manager account enable Linode Managed flows.
  */
 
-import { linodeFactory, profileFactory } from '@linode/utilities';
+import {
+  grantsFactory,
+  linodeFactory,
+  profileFactory,
+} from '@linode/utilities';
 import {
   visitUrlWithManagedDisabled,
   visitUrlWithManagedEnabled,
@@ -17,7 +21,10 @@ import {
   mockGetAccount,
 } from 'support/intercepts/account';
 import { mockGetLinodes } from 'support/intercepts/linodes';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { chooseRegion } from 'support/util/regions';
 
@@ -100,16 +107,18 @@ describe('Account Linode Managed', () => {
       restricted: true,
       username: 'mock-restricted-user',
     });
+    const mockGrants = grantsFactory.build();
     const errorMessage = 'Unauthorized';
 
     mockGetLinodes([]);
     mockGetAccount(mockAccount).as('getAccount');
     mockGetProfile(mockProfile).as('getProfile');
+    mockGetProfileGrants(mockGrants).as('getGrants');
     mockEnableLinodeManagedError(errorMessage, 403).as('enableLinodeManaged');
 
     // Navigate to Account Settings page, click "Add Linode Managed" button.
     visitUrlWithManagedDisabled('/account/settings');
-    cy.wait(['@getAccount', '@getProfile']);
+    cy.wait(['@getAccount', '@getProfile', '@getGrants']);
 
     ui.button
       .findByTitle('Add Linode Managed')
@@ -164,7 +173,7 @@ describe('Account Linode Managed', () => {
 
     // Navigate to the 'Open a Support Ticket' page.
     cy.findByText('Support Ticket').should('be.visible').click();
-    cy.url().should('endWith', '/support/tickets');
+    cy.url().should('endWith', '/support/tickets/open?dialogOpen=true');
 
     // Confirm that title and category are related to cancelling Linode Managed.
     cy.findByLabelText('Title (required)').should(

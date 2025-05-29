@@ -1,6 +1,6 @@
 import { Paper, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
@@ -71,7 +71,7 @@ const StyledHeading = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-const StyledSummary = styled(Grid2)(({ theme }) => ({
+const StyledSummary = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     '& > div': {
       '&:first-child': {

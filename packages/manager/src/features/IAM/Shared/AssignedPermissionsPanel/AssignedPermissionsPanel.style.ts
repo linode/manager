@@ -23,7 +23,9 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
   wordBreak: 'normal',
 }));
 
-export const StyledEntityBox = styled(Box)<{
+export const StyledEntityBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'hideDetails',
+})<{
   hideDetails: boolean | undefined;
 }>(({ theme, hideDetails }) => ({
   marginTop: !hideDetails ? theme.tokens.spacing.S12 : undefined,

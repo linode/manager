@@ -42,11 +42,11 @@ export interface NodeBalancer {
    * If the NB is associated with a cluster (active or deleted), return its info
    * If the NB is not associated with a cluster, return null
    */
-  lke_cluster?: LKEClusterInfo | null;
+  lke_cluster: LKEClusterInfo | null;
   region: string;
   tags: string[];
   transfer: BalancerTransfer;
-  type?: NodeBalancerType;
+  type: NodeBalancerType;
   updated: string;
 }
 
@@ -134,7 +134,13 @@ export interface NodeBalancerStats {
   title: string;
 }
 
-export interface NodebalancerVpcConfig {
+export interface NodeBalancerVpcPayload {
+  ipv4_range?: string;
+  ipv6_range?: string;
+  subnet_id: number;
+}
+
+export interface NodeBalancerVpcConfig {
   id: number;
   ipv4_range: null | string;
   ipv6_range: null | string;
@@ -247,9 +253,5 @@ export interface CreateNodeBalancerPayload {
   label?: string;
   region?: string;
   tags?: string[];
-  vpcs?: {
-    ipv4_range: string;
-    ipv6_range?: string;
-    subnet_id: number;
-  }[];
+  vpcs?: NodeBalancerVpcPayload[];
 }

@@ -1,23 +1,17 @@
 import { useProfile, useRegionQuery, useRegionsQuery } from '@linode/queries';
 import { Divider, Drawer, Typography } from '@linode/ui';
-import {
-  isFeatureEnabledV2,
-  pluralize,
-  readableBytes,
-  truncateMiddle,
-} from '@linode/utilities';
+import { pluralize, readableBytes, truncateMiddle } from '@linode/utilities';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useFlags } from 'src/hooks/useFlags';
 import { useObjectStorageClusters } from 'src/queries/object-storage/queries';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { AccessSelect } from '../BucketDetail/AccessSelect';
+import { useIsObjMultiClusterEnabled } from '../hooks/useIsObjectStorageGen2Enabled';
 
 import type { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 
@@ -42,14 +36,7 @@ export const BucketDetailsDrawer = React.memo(
       size,
     } = selectedBucket ?? {};
 
-    const flags = useFlags();
-    const { account } = useAccountManagement();
-
-    const isObjMultiClusterEnabled = isFeatureEnabledV2(
-      'Object Storage Access Key Regions',
-      Boolean(flags.objMultiCluster),
-      account?.capabilities ?? []
-    );
+    const { isObjMultiClusterEnabled } = useIsObjMultiClusterEnabled();
 
     // @TODO OBJGen2 - We could clean this up when OBJ Gen2 is in GA.
     const { data: clusters } = useObjectStorageClusters(

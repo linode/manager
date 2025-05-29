@@ -110,17 +110,20 @@ export interface Flags {
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpIntegration: boolean;
+  aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
+  aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  databaseVpc: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;
@@ -244,6 +247,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
+  | 'DataStream'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'

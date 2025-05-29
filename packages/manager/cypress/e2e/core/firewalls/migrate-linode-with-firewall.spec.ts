@@ -189,8 +189,8 @@ describe('Migrate Linode With Firewall', () => {
               .should('be.visible')
               .click();
 
-            // Click on the Select again to dismiss the autocomplete popper.
-            cy.findByLabelText('Linodes').should('be.visible').click();
+            // Dismiss the autocomplete popper.
+            cy.focused().type('{esc}');
 
             ui.buttonGroup
               .findButtonByTitle('Create Firewall')

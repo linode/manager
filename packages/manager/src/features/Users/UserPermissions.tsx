@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { enqueueSnackbar } from 'notistack';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
