@@ -29,6 +29,7 @@ export interface NodePoolPanelProps {
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
+  onConfigure: (isDrawerOpen: boolean) => void;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
   selectedTier: KubernetesTier;
@@ -63,6 +64,7 @@ const Panel = (props: NodePoolPanelProps) => {
     isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
+    onConfigure,
     regionsData,
     selectedRegionId,
     selectedTier,
@@ -114,6 +116,7 @@ const Panel = (props: NodePoolPanelProps) => {
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           onAdd={addPool}
+          onConfigure={onConfigure}
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes

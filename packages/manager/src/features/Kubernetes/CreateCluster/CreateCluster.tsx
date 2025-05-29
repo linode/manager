@@ -12,6 +12,7 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
 } from '@linode/ui';
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
@@ -59,6 +60,8 @@ import {
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
+import { StyledHeader } from '../KubeCheckoutBar/KubeCheckoutSummary.styles';
+import { AddNodePoolUpdateStrategyDrawer } from '../KubernetesPlansPanel/AddNodePoolUpdateStrategyDrawer';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
 import { ClusterTierPanel } from './ClusterTierPanel';
@@ -118,6 +121,7 @@ export const CreateCluster = () => {
     React.useState<KubernetesTier>('standard');
   const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
     React.useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -211,6 +215,13 @@ export const CreateCluster = () => {
       setVersion(getLatestVersion(versions).value);
     }
   }, [versionData]);
+
+  const handleOpenNodePoolConfigDrawer = (
+    isOpen: boolean,
+    poolLabel?: string
+  ) => {
+    setIsDrawerOpen(isOpen);
+  };
 
   const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
@@ -566,6 +577,7 @@ export const CreateCluster = () => {
               isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
+              onConfigure={handleOpenNodePoolConfigDrawer}
               regionsData={regionsData}
               selectedRegionId={selectedRegion?.id}
               selectedTier={selectedTier}
@@ -580,6 +592,21 @@ export const CreateCluster = () => {
               }
               typesLoading={typesLoading}
             />
+            <Typography variant="h3">Configure Node Pools</Typography>
+            {nodePools.map((pool) => {
+              // const poolType = types?.find((thisType) => pool.id === pool.type)
+              return (
+                <div key={pool.id}>
+                  <StyledHeader>{pool.type} Plan</StyledHeader>
+                  <Typography>
+                    {/* {pluralize('CPU', 'CPUs', pool.)}, GB Storage */}
+                  </Typography>
+                  <TextField label="Update Strategy" />
+                  <TextField label="Firewall" />
+                  <Divider />
+                </div>
+              );
+            })}
           </Paper>
         </Grid>
         <Grid
@@ -595,6 +622,7 @@ export const CreateCluster = () => {
                 ? lkeEnterpriseType?.price.monthly
                 : undefined
             }
+            handleConfig={handleOpenNodePoolConfigDrawer}
             hasAgreed={hasAgreed}
             highAvailability={highAvailability}
             highAvailabilityPrice={
@@ -624,6 +652,10 @@ export const CreateCluster = () => {
           />
         </Grid>
       </Grid>
+      <AddNodePoolUpdateStrategyDrawer
+        onClose={() => setIsDrawerOpen(false)}
+        open={isDrawerOpen}
+      />
     </>
   );
 };

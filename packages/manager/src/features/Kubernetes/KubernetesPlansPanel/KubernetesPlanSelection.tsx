@@ -31,6 +31,7 @@ export interface KubernetesPlanSelectionProps {
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
+  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
   selectedId?: string;
@@ -48,6 +49,7 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
+    onConfigure,
     plan,
     selectedId,
     selectedRegionId,
@@ -120,6 +122,16 @@ export const KubernetesPlanSelection = (
           setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
           value={count}
         />
+        {
+          <Button
+            buttonType="secondary"
+            disabled={count < 1 || rowIsDisabled}
+            onClick={() => onConfigure(true, plan.formattedLabel)}
+            sx={{ marginLeft: '10px', minWidth: '85px' }}
+          >
+            Configure
+          </Button>
+        }
         {onAdd && (
           <Button
             buttonType="primary"
@@ -198,6 +210,16 @@ export const KubernetesPlanSelection = (
                 }
                 value={count}
               />
+              {
+                <Button
+                  buttonType="secondary"
+                  disabled={count < 1 || rowIsDisabled}
+                  onClick={() => onConfigure(true, plan.formattedLabel)}
+                  sx={{ marginLeft: '10px', minWidth: '85px' }}
+                >
+                  Configure
+                </Button>
+              }
               {onAdd && (
                 <Button
                   aria-label={

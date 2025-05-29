@@ -21,6 +21,7 @@ export interface KubernetesPlanContainerProps {
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
+  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   plans: PlanWithAvailability[];
   planType?: LinodeTypeClass;
@@ -38,6 +39,7 @@ export const KubernetesPlanContainer = (
     getTypeCount,
     hasMajorityOfPlansDisabled,
     onAdd,
+    onConfigure,
     onSelect,
     planType,
     plans,
@@ -87,6 +89,7 @@ export const KubernetesPlanContainer = (
             idx={id}
             key={id}
             onAdd={onAdd}
+            onConfigure={onConfigure}
             onSelect={onSelect}
             plan={plan}
             selectedId={selectedId}
@@ -103,6 +106,7 @@ export const KubernetesPlanContainer = (
       hasMajorityOfPlansDisabled,
       getTypeCount,
       onAdd,
+      onConfigure,
       onSelect,
       plans,
       selectedId,

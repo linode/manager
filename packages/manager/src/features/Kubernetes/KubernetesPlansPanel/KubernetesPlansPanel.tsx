@@ -39,6 +39,7 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
+  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
@@ -61,6 +62,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
+    onConfigure,
     onSelect,
     notice,
     regionsData,
@@ -139,6 +141,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
+                onConfigure={onConfigure}
                 onSelect={onSelect}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}

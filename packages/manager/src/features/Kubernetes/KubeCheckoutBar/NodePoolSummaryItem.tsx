@@ -1,9 +1,16 @@
-import { Box, CloseIcon, Divider, Typography } from '@linode/ui';
+import {
+  Box,
+  CloseIcon,
+  Divider,
+  StyledLinkButton,
+  Typography,
+} from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import * as React from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
@@ -21,6 +28,7 @@ import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   clusterTier?: KubernetesTier;
+  handleConfig: (isOpen: boolean, poolLabel?: string) => void;
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
@@ -29,8 +37,15 @@ export interface Props {
 }
 
 export const NodePoolSummaryItem = React.memo((props: Props) => {
-  const { nodeCount, onRemove, poolType, price, updateNodeCount, clusterTier } =
-    props;
+  const {
+    handleConfig,
+    nodeCount,
+    onRemove,
+    poolType,
+    price,
+    updateNodeCount,
+    clusterTier,
+  } = props;
 
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
@@ -76,6 +91,14 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
             <DisplayPrice fontSize="14px" interval="month" price={price} />
           ) : undefined}
         </StyledPriceBox>
+        <StyledLinkButtonBox>
+          <StyledLinkButton
+            onClick={() => handleConfig(true, poolType.formattedLabel)}
+            sx={{ paddingLeft: 0 }}
+          >
+            Edit Configuration
+          </StyledLinkButton>
+        </StyledLinkButtonBox>
       </StyledNodePoolSummaryBox>
     </>
   );
