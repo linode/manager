@@ -57,6 +57,17 @@ const cloudPulseAlertsDefinitionsEditRoute = createRoute({
   )
 );
 
+const cloudPulseAlertsDefinitionsCatchAllRoute = createRoute({
+  getParentRoute: () => cloudPulseAlertsRoute,
+  path: 'definitions/$invalidPath',
+  beforeLoad: ({ params }) => {
+    // Only redirect if the path doesn't match our valid routes
+    if (!['create', 'detail', 'edit'].includes(params.invalidPath)) {
+      throw redirect({ to: '/alerts/definitions' });
+    }
+  },
+});
+
 export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
   cloudPulseAlertsIndexRoute,
   cloudPulseAlertsDefinitionsRoute.addChildren([
@@ -64,4 +75,5 @@ export const cloudPulseAlertsRouteTree = cloudPulseAlertsRoute.addChildren([
     cloudPulseAlertsDefinitionsDetailRoute,
     cloudPulseAlertsDefinitionsEditRoute,
   ]),
+  cloudPulseAlertsDefinitionsCatchAllRoute,
 ]);
