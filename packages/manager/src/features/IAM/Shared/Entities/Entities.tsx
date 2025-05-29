@@ -116,7 +116,8 @@ export const Entities = ({
         <Notice spacingBottom={0} spacingTop={8} variant="warning">
           <Typography fontSize="inherit">
             <Link to={getCreateLinkForEntityType(type)}>
-              Create a {getFormattedEntityType(type)} Entity
+              Create {type === 'image' ? `an` : `a`}{' '}
+              {getFormattedEntityType(type)} Entity{' '}
             </Link>{' '}
             first or choose a different role to continue assignment.
           </Typography>

@@ -1,7 +1,7 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 
@@ -111,20 +111,20 @@ export const SubnetLinodeRow = (props: Props) => {
       )
     : _hasUnrecommendedConfiguration(config, subnetId);
 
-  if (linodeLoading || !linode) {
+  if (linodeLoading) {
     return (
       <TableRow hover={hover}>
-        <TableCell colSpan={6}>
+        <TableCell colSpan={6} style={{ textAlign: 'center' }}>
           <CircleProgress size="sm" />
         </TableCell>
       </TableRow>
     );
   }
 
-  if (linodeError) {
+  if (linodeError || !linode) {
     return (
       <TableRow data-testid="subnet-linode-row-error" hover={hover}>
-        <TableCell colSpan={5} style={{ paddingLeft: 24 }}>
+        <TableCell colSpan={6} style={{ justifyItems: 'center' }}>
           <Box alignItems="center" display="flex">
             <ErrorOutline
               data-qa-error-icon
@@ -204,7 +204,7 @@ export const SubnetLinodeRow = (props: Props) => {
             />
           </>
         ) : (
-          capitalizeAllWords(linode.status.replace('_', ' '))
+          getFormattedStatus(linode.status)
         )}
       </TableCell>
       <Hidden smDown>
@@ -341,7 +341,7 @@ const getIPRangesCellContents = (
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <TableCell>Linode Label</TableCell>
+    <TableCell>Linode</TableCell>
     <TableCell sx={{ width: '14%' }}>Status</TableCell>
     <Hidden smDown>
       <TableCell>VPC IPv4</TableCell>

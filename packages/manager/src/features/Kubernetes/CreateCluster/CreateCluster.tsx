@@ -16,7 +16,7 @@ import {
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { createLazyRoute } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
@@ -35,6 +35,7 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -104,13 +105,14 @@ export const CreateCluster = () => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
+  const [aplEnabled, setAplEnabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
   const history = useHistory();
   const { data: account } = useAccount();
   const { showAPL } = useAPLAvailability();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
@@ -255,7 +257,6 @@ export const CreateCluster = () => {
       control_plane: {
         acl: {
           enabled: controlPlaneACL,
-          'revision-id': '',
           ...(controlPlaneACL && // only send the IPs if we are enabling IPACL
             (_ipv4.length > 0 || _ipv6.length > 0) && {
               addresses: {
@@ -273,17 +274,16 @@ export const CreateCluster = () => {
     };
 
     if (isAPLSupported) {
-      payload = { ...payload, apl_enabled };
+      payload = { ...payload, apl_enabled: aplEnabled };
     }
 
     if (isLkeEnterpriseLAFeatureEnabled) {
       payload = { ...payload, tier: selectedTier };
     }
 
-    const createClusterFn =
-      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
-        ? createKubernetesClusterBeta
-        : createKubernetesCluster;
+    const createClusterFn = isUsingBetaEndpoint
+      ? createKubernetesClusterBeta
+      : createKubernetesCluster;
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -499,7 +499,7 @@ export const CreateCluster = () => {
                   <Stack>
                     <ApplicationPlatform
                       isSectionDisabled={!isAPLSupported}
-                      setAPL={setApl_enabled}
+                      setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
                     />
                   </Stack>
@@ -520,7 +520,7 @@ export const CreateCluster = () => {
                       ? UNKNOWN_PRICE
                       : highAvailabilityPrice
                   }
-                  isAPLEnabled={apl_enabled}
+                  isAPLEnabled={aplEnabled}
                   isErrorKubernetesTypes={isErrorKubernetesTypes}
                   isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                   selectedRegionId={selectedRegion?.id}
@@ -569,7 +569,7 @@ export const CreateCluster = () => {
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
               hasSelectedRegion={hasSelectedRegion}
-              isAPLEnabled={apl_enabled}
+              isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               regionsData={regionsData}

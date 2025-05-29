@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useAllImagesQuery, useRegionsQuery } from '@linode/queries';
 import { Box, Paper, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
@@ -10,7 +10,6 @@ import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities
 import { Link } from 'src/components/Link';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useAllImagesQuery } from 'src/queries/images';
 
 import { Region } from '../Region';
 import { getGeneratedLinodeLabel } from '../utilities';
@@ -98,7 +97,6 @@ export const Images = () => {
             onBlur={field.onBlur}
             onChange={onChange}
             siteType={selectedRegion?.site_type}
-            sx={{ width: '416px' }}
             value={field.value ?? null}
             variant="private"
           />

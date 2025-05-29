@@ -6,14 +6,13 @@ import {
 } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import {
@@ -129,31 +128,10 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
-);
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (module) => ({
-      default: module.SupportTicketDetail,
-    })
-  )
-);
-const Help = React.lazy(() =>
-  import('./features/Help/index').then((module) => ({
-    default: module.HelpAndSupport,
-  }))
-);
-const SearchLanding = React.lazy(
-  () => import('src/features/Search/SearchLanding')
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
   }))
-);
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
 );
 const Databases = React.lazy(() => import('src/features/Databases'));
 
@@ -226,6 +204,13 @@ export const MainContent = () => {
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
 
+  migrationRouter.update({
+    context: {
+      globalErrors,
+      queryClient,
+    },
+  });
+
   /**
    * this is the case where the user has successfully completed signup
    * but needs a manual review from Customer Support. In this case,
@@ -235,34 +220,13 @@ export const MainContent = () => {
    */
   if (globalErrors.account_unactivated) {
     return (
-      <div className={classes.bgStyling}>
-        <div className={classes.activationWrapper}>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Logo className={classes.logo} width={215} />
-          </Box>
-          <Switch>
-            <Route
-              component={SupportTickets}
-              exact
-              path="/support/tickets"
-              strict
-            />
-            <Route
-              component={SupportTicketDetail}
-              exact
-              path="/support/tickets/:ticketId"
-              strict
-            />
-            <Route component={Help} exact path="/support" />
-            <Route component={AccountActivationLanding} />
-          </Switch>
-        </div>
-      </div>
+      <>
+        <Redirect to="/account-activation" />
+        <RouterProvider
+          context={{ queryClient }}
+          router={migrationRouter as AnyRouter}
+        />
+      </>
     );
   }
 
@@ -374,11 +338,6 @@ export const MainContent = () => {
                                 )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route component={Help} path="/support" />
-                                <Route
-                                  component={SearchLanding}
-                                  path="/search"
-                                />
                                 <Route
                                   component={EventsLanding}
                                   path="/events"
