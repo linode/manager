@@ -6,6 +6,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ChevronDownIcon } from '../../assets';
+import { Box } from '../Box';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
@@ -140,8 +141,10 @@ export const Accordion = (props: AccordionProps) => {
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
-        <div
-          style={{ display: 'flex', flexDirection: 'column', rowGap: '8px' }}
+        <Box
+          display="flex"
+          flexDirection="column"
+          rowGap={(theme) => theme.spacingFunction(8)}
         >
           <Typography {...headingProps} data-qa-panel-subheading variant="h3">
             {heading}
@@ -152,7 +155,7 @@ export const Accordion = (props: AccordionProps) => {
               {subHeading}
             </Typography>
           )}
-        </div>
+        </Box>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
         ) : null}

@@ -4,18 +4,25 @@ import { Accordion } from './Accordion';
 
 import type { Meta, StoryObj } from '@storybook/react';
 
+/**
+ * Pretend this is `react-router-dom`'s Link component.
+ * This is just an example to show usage with `Accordion`
+ */
+const Link = (props: React.PropsWithChildren<{ to?: string }>) => {
+  return (
+    <a {...props} href={props.to} rel="noreferrer" target="_blank">
+      {props.children}
+    </a>
+  );
+};
+
 const subHeadingString =
-  'User data is a feature of the Metadata service that enables you to perform system configuration tasks (such as adding users and installing software) by providing custom instructions or scripts to cloud-init. Any user data should be added at this step and cannot be modified after the Linode has been created.';
+  'This is a subheading. It provides context and an explanation of what this section is about.';
 
 const subHeadingNode = (
   <>
     {subHeadingString}{' '}
-    <a
-      href="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service"
-      target="blank"
-    >
-      Learn more.
-    </a>
+    <Link to="https://techdocs.akamai.com/home">Learn more</Link>.
   </>
 );
 
@@ -31,7 +38,6 @@ export const Default: Story = {
     children: <p>Any children can go here!</p>,
     heading: 'This is an Accordion',
   },
-  render: (args) => <Accordion {...args} />,
 };
 
 export const WithHeadingNumberCount: Story = {
@@ -40,7 +46,6 @@ export const WithHeadingNumberCount: Story = {
     heading: 'This is an Accordion',
     headingNumberCount: 1,
   },
-  render: (args) => <Accordion {...args} />,
 };
 
 export const WithSubheadingString: Story = {
@@ -49,7 +54,6 @@ export const WithSubheadingString: Story = {
     heading: 'This is an Accordion',
     subHeading: subHeadingString,
   },
-  render: (args) => <Accordion {...args} />,
 };
 
 export const WithSubheadingNode: Story = {
@@ -58,7 +62,6 @@ export const WithSubheadingNode: Story = {
     heading: 'This is an Accordion',
     subHeading: subHeadingNode,
   },
-  render: (args) => <Accordion {...args} />,
 };
 
 export default meta;
