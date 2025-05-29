@@ -2,9 +2,12 @@ import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
-import DatabaseCreate from './DatabaseCreate';
+import { DatabaseCreate } from './DatabaseCreate';
 
 const loadingTestId = 'circle-progress';
 
@@ -18,7 +21,9 @@ describe('database node selector', () => {
     },
   };
   it('should render 3 nodes for dedicated tab', async () => {
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />, { flags });
+    const { getByTestId } = await renderWithThemeAndRouter(<DatabaseCreate />, {
+      flags,
+    });
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -29,9 +34,12 @@ describe('database node selector', () => {
   });
 
   it('should render 2 nodes for shared tab', async () => {
-    const { getAllByRole, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      flags,
-    });
+    const { getAllByRole, getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseCreate />,
+      {
+        flags,
+      }
+    );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 

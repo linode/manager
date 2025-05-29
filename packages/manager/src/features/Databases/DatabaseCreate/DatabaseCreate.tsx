@@ -3,10 +3,9 @@ import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
@@ -50,8 +49,8 @@ import type { PlanSelectionWithDatabaseType } from 'src/features/components/Plan
 import type { DatabaseCreateValues } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
-const DatabaseCreate = () => {
-  const history = useHistory();
+export const DatabaseCreate = () => {
+  const navigate = useNavigate();
   const isRestricted = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_databases',
   });
@@ -143,7 +142,13 @@ const DatabaseCreate = () => {
     }
     try {
       const response = await createDatabase(createPayload);
-      history.push(`/databases/${response.engine}/${response.id}`);
+      navigate({
+        to: `/databases/$engine/$databaseId`,
+        params: {
+          engine: response.engine,
+          databaseId: response.id,
+        },
+      });
     } catch (errors) {
       const ipErrors = errors.filter(
         (error: APIError) => error.field === 'allow_list'
@@ -406,9 +411,3 @@ const DatabaseCreate = () => {
     </>
   );
 };
-
-export const databaseCreateLazyRoute = createLazyRoute('/databases/create')({
-  component: DatabaseCreate,
-});
-
-export default DatabaseCreate;
