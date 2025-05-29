@@ -6,8 +6,9 @@ import type { NoticeProps } from '@linode/ui';
 export const PremiumCPUPlanNotice = (props: NoticeProps) => {
   return (
     <Notice variant="info" {...props}>
-      Select Premium CPU instances for scenarios where low latency or high
-      throughput is expected.
+      To accommodate Enterprise workloads, especially where potential resource
+      contention can impact your workloads, using Premium instances is highly
+      recommended and required to achieve peak performance.
     </Notice>
   );
 };
