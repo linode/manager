@@ -232,6 +232,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertScopes;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -341,4 +342,11 @@ export interface EntityAlertUpdatePayload {
 export interface DeleteAlertPayload {
   alertId: number;
   serviceType: string;
+}
+
+export type AlertScopes = 'account' | 'entity' | 'region';
+
+export interface ServiceAlertsUpdatePayload {
+  system: Alert['id'][];
+  user: Alert['id'][];
 }

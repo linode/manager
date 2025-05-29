@@ -1,4 +1,5 @@
-import { Box } from '@linode/ui';
+import { type Alert, type APIError } from '@linode/api-v4';
+import { Box, Button } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -11,16 +12,13 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  useAddEntityToAlert,
-  useRemoveEntityFromAlert,
-} from 'src/queries/cloudpulse/alerts';
+import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
+import { AlertContextualViewConfirmDialog } from './AlertContextualViewConfirmDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { Alert, APIError, EntityAlertUpdatePayload } from '@linode/api-v4';
+import type { ServiceAlertsUpdatePayload } from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -52,6 +50,11 @@ export interface AlertInformationActionTableProps {
    * Column name by which columns will be ordered by default
    */
   orderByColumn: string;
+
+  /**
+   * Service type of the selected entity
+   */
+  serviceType: string;
 }
 
 export interface TableColumnHeader {
@@ -69,32 +72,63 @@ export interface TableColumnHeader {
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
-  const { alerts, columns, entityId, entityName, error, orderByColumn } = props;
+  const {
+    alerts,
+    columns,
+    entityId,
+    entityName,
+    error,
+    orderByColumn,
+    serviceType,
+  } = props;
 
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
     : undefined;
   const { enqueueSnackbar } = useSnackbar();
-  const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [alertStates, setAlertStates] = React.useState<Record<string, boolean>>(
+    {}
+  );
 
-  const { mutateAsync: addEntity } = useAddEntityToAlert();
+  const isAccountOrRegionLevelAlert = (alert: Alert) =>
+    alert.scope === 'region' || alert.scope === 'account';
 
-  const { mutateAsync: removeEntity } = useRemoveEntityFromAlert();
+  // Store initial alert states for comparison using a ref
+  const initialAlertStatesRef = React.useRef<Record<string, boolean>>({});
+
+  // Initialize alert states based on their current status
+  React.useEffect(() => {
+    const initialStates: Record<string, boolean> = {};
+    alerts.forEach((alert) => {
+      if (isAccountOrRegionLevelAlert(alert)) {
+        initialStates[alert.id] = true;
+      } else {
+        initialStates[alert.id] = alert.entity_ids.includes(entityId);
+      }
+    });
+    setAlertStates(initialStates);
+    initialAlertStatesRef.current = { ...initialStates };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(alerts), entityId]);
+
+  const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
+    serviceType,
+    entityId
+  );
 
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
-  const handleConfirm = React.useCallback(
-    (alert: Alert, currentStatus: boolean) => {
-      const payload: EntityAlertUpdatePayload = {
-        alert,
-        entityId,
-      };
 
+  const handleConfirm = React.useCallback(
+    (alertIds: ServiceAlertsUpdatePayload) => {
       setIsLoading(true);
-      (currentStatus ? removeEntity(payload) : addEntity(payload))
+      updateAlerts({
+        user: alertIds.user,
+        system: alertIds.system,
+      })
         .then(() => {
           enqueueSnackbar(
             `The alert settings for ${entityName} saved successfully.`,
@@ -102,26 +136,45 @@ export const AlertInformationActionTable = (
           );
         })
         .catch(() => {
-          enqueueSnackbar(
-            `${currentStatus ? 'Disabling' : 'Enabling'} alert failed.`,
-            {
-              variant: 'error',
-            }
-          );
+          enqueueSnackbar('Change in alert settings failed', {
+            variant: 'error',
+          });
         })
         .finally(() => {
           setIsLoading(false);
           setIsDialogOpen(false);
         });
     },
-    [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
+    [updateAlerts, enqueueSnackbar, entityName]
   );
+
   const handleToggle = (alert: Alert) => {
-    setIsDialogOpen(true);
-    setSelectedAlert(alert);
+    // Toggle the state for this alert
+    setAlertStates((prev) => ({
+      ...prev,
+      [alert.id]: !prev[alert.id],
+    }));
   };
 
-  const isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
+  // check if any alert state has changed from the initial state
+  const isAnyAlertStateChanged = Object.keys(alertStates).some(
+    (alertId) => alertStates[alertId] !== initialAlertStatesRef.current[alertId]
+  );
+
+  const enabledAlertIds = React.useMemo<ServiceAlertsUpdatePayload>(() => {
+    return {
+      user: alerts
+        .filter(
+          (alert) => alert.type === 'user' && alertStates[alert.id] === true
+        )
+        .map((alert) => alert.id),
+      system: alerts
+        .filter(
+          (alert) => alert.type === 'system' && alertStates[alert.id] === true
+        )
+        .map((alert) => alert.id),
+    };
+  }, [alerts, alertStates]);
 
   return (
     <>
@@ -136,73 +189,99 @@ export const AlertInformationActionTable = (
               page,
               pageSize,
             }) => (
-              <Box>
-                <Grid>
-                  <Table
-                    colCount={columns.length + 1}
-                    data-qa="alert-table"
-                    data-testid="alert-table"
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell actionCell />
-                        {columns.map(({ columnName, label }) => {
+              <>
+                <Box>
+                  <Grid>
+                    <Table
+                      colCount={columns.length + 1}
+                      data-qa="alert-table"
+                      data-testid="alert-table"
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell actionCell />
+                          {columns.map(({ columnName, label }) => {
+                            return (
+                              <TableSortCell
+                                active={orderBy === label}
+                                data-qa-header={label}
+                                data-qa-sorting={label}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                key={label}
+                                label={label}
+                              >
+                                {columnName}
+                              </TableSortCell>
+                            );
+                          })}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableContentWrapper
+                          error={_error}
+                          length={paginatedAndOrderedAlerts.length}
+                          loading={false}
+                        />
+                        {paginatedAndOrderedAlerts?.map((alert) => {
                           return (
-                            <TableSortCell
-                              active={orderBy === label}
-                              data-qa-header={label}
-                              data-qa-sorting={label}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              key={label}
-                              label={label}
-                            >
-                              {columnName}
-                            </TableSortCell>
+                            <AlertInformationActionRow
+                              alert={alert}
+                              handleToggle={handleToggle}
+                              isAlertActionRestricted={isAccountOrRegionLevelAlert(
+                                alert
+                              )}
+                              key={alert.id}
+                              status={
+                                isAccountOrRegionLevelAlert(alert)
+                                  ? true
+                                  : alertStates[alert.id]
+                              }
+                            />
                           );
                         })}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={_error}
-                        length={paginatedAndOrderedAlerts.length}
-                        loading={false}
-                      />
-                      {paginatedAndOrderedAlerts?.map((alert) => (
-                        <AlertInformationActionRow
-                          alert={alert}
-                          handleToggle={handleToggle}
-                          key={alert.id}
-                          status={alert.entity_ids.includes(entityId)}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Grid>
-                <PaginationFooter
-                  count={count}
-                  eventCategory="Alert Definitions Table"
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                />
-              </Box>
+                      </TableBody>
+                    </Table>
+                  </Grid>
+                  <PaginationFooter
+                    count={count}
+                    eventCategory="Alert Definitions Table"
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                  />
+                </Box>
+                <Box>
+                  <Button
+                    buttonType="primary"
+                    data-qa-buttons="true"
+                    data-testid="save-alerts"
+                    disabled={!isAnyAlertStateChanged}
+                    onClick={() => {
+                      window.scrollTo({
+                        behavior: 'instant',
+                        top: 0,
+                      });
+                      setIsDialogOpen(true);
+                    }}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </>
             )}
           </Paginate>
         )}
       </OrderBy>
-      <AlertConfirmationDialog
-        alert={selectedAlert}
+      <AlertContextualViewConfirmDialog
+        alertIds={enabledAlertIds}
+        entityId={entityId}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
-        isEnabled={isEnabled}
         isLoading={isLoading}
         isOpen={isDialogOpen}
-        message={`Are you sure you want to
-              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
       />
     </>
   );

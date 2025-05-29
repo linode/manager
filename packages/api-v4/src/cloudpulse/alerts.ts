@@ -19,6 +19,7 @@ import type {
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
   NotificationChannel,
+  ServiceAlertsUpdatePayload,
 } from './types';
 
 export const createAlertDefinition = (
@@ -126,4 +127,17 @@ export const deleteAlertDefinition = (serviceType: string, alertId: number) =>
       `${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}/alert-definitions/${encodeURIComponent(alertId)}`,
     ),
     setMethod('DELETE'),
+  );
+
+export const updateServiceAlerts = (
+  serviceType: string,
+  entityId: string,
+  payload: ServiceAlertsUpdatePayload,
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/${serviceType}/instances/${encodeURIComponent(entityId)}`,
+    ),
+    setMethod('PUT'),
+    setData(payload),
   );
