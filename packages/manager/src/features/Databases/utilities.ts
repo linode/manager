@@ -6,6 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 
 import type {
+  Database,
   DatabaseEngine,
   DatabaseFork,
   DatabaseInstance,
@@ -245,3 +246,6 @@ export const upgradableVersions = (
   version: string,
   engines?: Pick<DatabaseEngine, 'engine' | 'version'>[]
 ) => engines?.filter((e) => e.engine === engine && e.version > version);
+
+export const getReadOnlyHost = (database: Database | undefined) =>
+  database?.hosts?.standby ?? database?.hosts?.secondary ?? '';

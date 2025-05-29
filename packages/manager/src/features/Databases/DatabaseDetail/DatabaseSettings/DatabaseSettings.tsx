@@ -15,8 +15,10 @@ import { DatabaseSettingsReviewUpdatesDialog } from 'src/features/Databases/Data
 import { DatabaseSettingsUpgradeVersionDialog } from 'src/features/Databases/DatabaseDetail/DatabaseSettings/DatabaseSettingsUpgradeVersionDialog';
 import {
   isDefaultDatabase,
+  isLegacyDatabase,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
@@ -37,7 +39,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database, disabled } = props;
   const { data: profile } = useProfile();
   const { isDatabasesV2GA } = useIsDatabasesEnabled();
+  const flags = useFlags();
   const isDefaultDB = isDefaultDatabase(database);
+  const isVPCEnabled = flags.databaseVpc;
 
   const accessControlCopy = (
     <Typography>
@@ -125,11 +129,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
               sectionTitle={'Suspend Cluster'}
             />
           )}
-          <AccessControls
-            database={database}
-            description={accessControlCopy}
-            disabled={disabled}
-          />
+          {!isVPCEnabled || isLegacyDatabase(database) ? (
+            <AccessControls
+              database={database}
+              description={accessControlCopy}
+              disabled={disabled}
+            />
+          ) : null}
           <DatabaseSettingsMenuItem
             buttonText="Reset Root Password"
             descriptiveText={resetRootPasswordCopy}

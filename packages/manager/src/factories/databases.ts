@@ -229,6 +229,11 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   },
   oldest_restore_time: '2024-09-15T17:15:12',
   platform: Factory.each((i) => (adb10(i) ? 'rdbms-legacy' : 'rdbms-default')),
+  private_network: {
+    public_access: false,
+    subnet_id: 1,
+    vpc_id: 123,
+  },
   port: 3306,
   region: 'us-east',
   ssl_connection: false,

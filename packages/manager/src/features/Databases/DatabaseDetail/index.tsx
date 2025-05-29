@@ -1,8 +1,16 @@
-import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
+import {
+  BetaChip,
+  CircleProgress,
+  ErrorState,
+  NewFeatureChip,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useEditableLabelState } from '@linode/utilities';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
+import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -46,6 +54,12 @@ const DatabaseMonitor = React.lazy(() =>
   }))
 );
 
+const DatabaseNetworking = React.lazy(() =>
+  import('./DatabaseNetworking/DatabaseNetworking').then((module) => ({
+    default: module.DatabaseNetworking,
+  }))
+);
+
 export const DatabaseDetail = () => {
   const flags = useFlags();
 
@@ -73,7 +87,10 @@ export const DatabaseDetail = () => {
 
   const isDefault = database?.platform === 'rdbms-default';
   const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isVPCEnabled = isDefault && flags.databaseVpc;
   const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
+
+  const settingsTabPath = `/databases/$engine/$databaseId/settings`;
 
   const { tabs, tabIndex, handleTabChange, getTabIndex } = useTabs([
     {
@@ -87,6 +104,12 @@ export const DatabaseDetail = () => {
       chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
     },
     {
+      to: `/databases/$engine/$databaseId/networking`,
+      title: 'Networking',
+      hide: !isVPCEnabled,
+      chip: <NewFeatureChip />,
+    },
+    {
       to: `/databases/$engine/$databaseId/backups`,
       title: 'Backups',
     },
@@ -96,7 +119,7 @@ export const DatabaseDetail = () => {
       hide: !flags.databaseResize,
     },
     {
-      to: `/databases/$engine/$databaseId/settings`,
+      to: settingsTabPath,
       title: 'Settings',
     },
 
@@ -144,6 +167,8 @@ export const DatabaseDetail = () => {
       });
   };
 
+  const onSettingsTab = tabIndex === getTabIndex(settingsTabPath);
+
   return (
     <>
       <DocumentTitleSegment
@@ -183,6 +208,17 @@ export const DatabaseDetail = () => {
             variant="warning"
           />
         )}
+        {isVPCEnabled && onSettingsTab ? (
+          <DismissibleBanner
+            preferenceKey="database-manage-access-moved-notice"
+            variant="info"
+          >
+            <Typography>
+              The Manage Access settings were moved and are now available in the
+              Networking tab.
+            </Typography>
+          </DismissibleBanner>
+        ) : null}
 
         <TabPanels>
           <SafeTabPanel
@@ -200,6 +236,16 @@ export const DatabaseDetail = () => {
               <DatabaseMonitor database={database} />
             </SafeTabPanel>
           ) : null}
+          {isVPCEnabled ? (
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/networking')}
+            >
+              <DatabaseNetworking
+                database={database}
+                disabled={isDatabasesGrantReadOnly}
+              />
+            </SafeTabPanel>
+          ) : null}
           <SafeTabPanel
             index={getTabIndex('/databases/$engine/$databaseId/backups')}
           >
@@ -215,9 +261,7 @@ export const DatabaseDetail = () => {
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel
-            index={getTabIndex('/databases/$engine/$databaseId/settings')}
-          >
+          <SafeTabPanel index={getTabIndex(settingsTabPath)}>
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
