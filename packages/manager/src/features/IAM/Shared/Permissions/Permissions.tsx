@@ -47,7 +47,7 @@ export const Permissions = React.memo(({ permissions }: Props) => {
           to understand what access is granted by this role.
         </Typography>
       ) : (
-        <StyledContainer>
+        <StyledContainer data-testid="container">
           <StyledClampedContent ref={containerRef} showAll={showAll}>
             {permissions.map((permission: PermissionType, index: number) => (
               <StyledPermissionItem
@@ -63,10 +63,13 @@ export const Permissions = React.memo(({ permissions }: Props) => {
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>
               <StyledLinkButton
-                onClick={() => setShowAll(!showAll)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAll(!showAll);
+                }}
                 type="button"
               >
-                {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
+                {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
               </StyledLinkButton>
             </StyledBox>
           )}

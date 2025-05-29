@@ -41,6 +41,7 @@ interface Props {
 }
 
 export const RolesTable = ({ roles = [] }: Props) => {
+  const [expandedRows, setExpandedRows] = useState<string[]>([]);
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
   const [filterableEntityType, setFilterableEntityType] =
@@ -138,6 +139,12 @@ export const RolesTable = ({ roles = [] }: Props) => {
     const newSize = event.detail.pageSize;
     pagination.handlePageSizeChange(newSize);
     pagination.handlePageChange(1);
+  };
+  const handleExpandToggle = (e: React.MouseEvent, name: string) => {
+    e.stopPropagation();
+    setExpandedRows((prev) =>
+      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]
+    );
   };
   return (
     <>
@@ -239,6 +246,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
               paginatedRows.map((roleRow) => (
                 <TableRow
                   expandable
+                  expanded={expandedRows.includes(roleRow.name)}
                   hoverable
                   key={roleRow.name}
                   rowborder
@@ -247,7 +255,10 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
+
+                    onClick={(e) => handleExpandToggle(e, roleRow.name)}
                     style={{ minWidth: '26%', wordBreak: 'break-word' }}
+
                   >
                     {roleRow.name}
                   </TableCell>
@@ -281,7 +292,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     slot="expanded"
                     style={{ marginBottom: 12, padding: 0, width: '100%' }}
                   >
-                    <RolesTableExpandedRow permissions={roleRow.permissions} />
+                    {expandedRows.includes(roleRow.name) && (
+                      <RolesTableExpandedRow
+                        permissions={roleRow.permissions}
+                      />
+                    )}
                   </TableRowExpanded>
                 </TableRow>
               ))

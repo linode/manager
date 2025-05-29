@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 
 import type { PermissionType } from '@linode/api-v4';
 
@@ -9,8 +9,6 @@ export const useCalculateHiddenItems = (
   items: PermissionType[] | string[],
   showAll?: boolean
 ) => {
-  // eslint-disable-next-line no-console
-  console.count('useCalculateHiddenItems');
   const [numHiddenItems, setNumHiddenItems] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const itemRefs = useRef<(HTMLDivElement | HTMLSpanElement)[]>([]);
@@ -45,7 +43,7 @@ export const useCalculateHiddenItems = (
     setNumHiddenItems(numHiddenItems);
   }, [showAll]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let rafId: number;
 
     const run = () => {
