@@ -30,10 +30,14 @@ import {
   databaseFactory,
   notificationChannelFactory,
 } from 'src/factories';
+import {
+  ACCOUNT_GROUP_INFO_MESSAGE,
+  entityGroupingOptions,
+  REGION_GROUP_INFO_MESSAGE,
+} from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { AlertDefinitionGroup, Database } from '@linode/api-v4';
-import type { RecPartial } from 'factory.ts';
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -158,7 +162,10 @@ describe('Integration Tests for Alert Show Detail Page', () => {
     cy.findByText('Status:').should('be.visible');
     cy.findByText('Failed').should('be.visible');
   });
+
+  // Define actions to validate alert details based on the grouping scope (Region or Account)
   const scopeActions: Record<string, () => void> = {
+    // Region-level alert validations
     Region: () => {
       cy.get('[data-qa="region-tabls"]').within(() => {
         const expectedRegions = [
@@ -170,15 +177,18 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           cy.contains('tr', region).should('exist');
         });
       });
-    },
-    Account: () => {
-      const expectedMessage =
-        'All entities associated with current account will be included in this alert definition. Any new entity created with this account will also be included.';
-      cy.get('[data-qa-notice="true"]')
-        .find('[data-testid="alert_message_notice"]') // Note the typo in the attribute
-        .should('have.text', expectedMessage);
-    },
 
+      cy.get('[data-qa-notice="true"]')
+        .find('[data-testid="alert_message_notice"]')
+        .should('have.text', REGION_GROUP_INFO_MESSAGE);
+    },
+    // Account-level alert validations
+    Account: () => {
+      cy.get('[data-qa-notice="true"]')
+        .find('[data-testid="alert_message_notice"]')
+        .should('have.text', ACCOUNT_GROUP_INFO_MESSAGE);
+    },
+    // Entity-level alert validations
     Entity: () => {
       const searchPlaceholder = 'Search for a Region or Entity';
       cy.get('[data-qa-section="Resources"]').within(() => {
@@ -272,14 +282,8 @@ describe('Integration Tests for Alert Show Detail Page', () => {
     },
   };
 
-  const scopes = [
-    { group: 'per-region', scopeLabel: 'Region' },
-    { group: 'per-entity', scopeLabel: 'Entity' },
-    { group: 'per-account', scopeLabel: 'Account' },
-  ];
-
-  scopes.forEach(({ group, scopeLabel }) => {
-    it(`should correctly display the details of the DBaaS alert in the alert details view for ${scopeLabel} level`, () => {
+  entityGroupingOptions.forEach(({ label: groupLabel, value }) => {
+    it(`should correctly display the details of the DBaaS alert in the alert details view for ${groupLabel} level`, () => {
       const regionList = ['us-ord', 'us-east'];
       const alertDetails = alertFactory.build({
         id: 2,
@@ -294,8 +298,8 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         updated_by: 'user2',
         created: '2023-10-01T12:00:00Z',
         updated: new Date().toISOString(),
-        group: group as RecPartial<AlertDefinitionGroup>,
-        ...(group === 'per-region' ? { regions: regionList } : {}),
+        group: value,
+        ...(value === 'per-region' ? { regions: regionList } : {}),
       });
       const {
         created_by,
@@ -359,7 +363,7 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         ).should('be.visible');
 
         cy.findByText('Scope:').should('be.visible');
-        cy.findByText(scopeLabel).should('be.visible');
+        cy.findByText(groupLabel).should('be.visible');
       });
 
       // Validating contents of Criteria Section
@@ -454,9 +458,9 @@ describe('Integration Tests for Alert Show Detail Page', () => {
           .should('be.visible')
           .should('have.text', 'consecutive occurrences.');
       });
+      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
 
-      scopeActions[scopeLabel]?.();
-
+      scopeActions[label];
       // Validate Notification Channels Section
       cy.get('[data-qa-section="Notification Channels"]').within(() => {
         cy.findByText('Type:').should('be.visible');
