@@ -28,8 +28,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import { canEntityBeAssignedToFirewall } from './utils';
-
 import type { Linode, LinodeInterfaces } from '@linode/api-v4';
 
 interface Props {
@@ -66,18 +64,23 @@ export const AddLinodeDrawer = (props: Props) => {
     allLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
-    () =>
-      data
-        ?.map((firewall) => {
-          return firewall.entities.map((entity) => {
-            return {
-              ...entity,
-              firewallStatus: firewall.status,
-            };
-          });
-        })
-        .flat(),
+    () => data?.map((firewall) => firewall.entities).flat(),
     [data]
+  );
+
+  const assignedInterfaceIds = React.useMemo(
+    () =>
+      new Set<number>(
+        allFirewallEntities
+          ?.filter((service) => service.type === 'interface')
+          ?.map((service) => service.id) ?? []
+      ),
+    [allFirewallEntities]
+  );
+
+  const assignedLinodes = React.useMemo(
+    () => allFirewallEntities?.filter((service) => service.type === 'linode'),
+    [allFirewallEntities]
   );
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
@@ -89,7 +92,7 @@ export const AddLinodeDrawer = (props: Props) => {
     [grants, isRestrictedUser]
   );
 
-  // Keeps track of Linode and its eligible Linode Interfaces if they exist (eligible = a non-vlan interface that can be assigned to a firewall)
+  // Keeps track of Linode and its eligible Linode Interfaces if they exist (eligible = a non-vlan interface that isn't already assigned to a firewall)
   // Key is Linode ID. Value is an object containing the Linode object and the Linode's interfaces
   const linodesAndEligibleInterfaces = useQueries({
     queries:
@@ -106,14 +109,7 @@ export const AddLinodeDrawer = (props: Props) => {
       >((acc, res, index) => {
         if (res.data) {
           const eligibleInterfaces = res.data.interfaces.filter(
-            (iface) =>
-              !iface.vlan &&
-              canEntityBeAssignedToFirewall({
-                firewall,
-                firewallEntities: allFirewallEntities,
-                entityType: 'interface',
-                entityId: iface.id,
-              })
+            (iface) => !iface.vlan && !assignedInterfaceIds.has(iface.id)
           );
           if (eligibleInterfaces.length > 0) {
             acc[linodesUsingLinodeInterfaces[index].id] = {
@@ -139,12 +135,7 @@ export const AddLinodeDrawer = (props: Props) => {
     }
 
     // Lastly, confirm if Linode using legacy interfaces can be assigned
-    return canEntityBeAssignedToFirewall({
-      firewall,
-      firewallEntities: allFirewallEntities,
-      entityType: 'linode',
-      entityId: linode.id,
-    });
+    return !assignedLinodes?.some((service) => service.id === linode.id);
   });
 
   const theme = useTheme();
