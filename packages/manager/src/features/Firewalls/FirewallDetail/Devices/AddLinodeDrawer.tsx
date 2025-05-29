@@ -64,7 +64,7 @@ export const AddLinodeDrawer = (props: Props) => {
     allLinodes?.filter((l) => l.interface_generation === 'linode') ?? [];
 
   const allFirewallEntities = React.useMemo(
-    () => data?.map((firewall) => firewall.entities).flat(),
+    () => data?.map((firewall) => firewall.entities).flat() ?? [],
     [data]
   );
 
@@ -72,14 +72,14 @@ export const AddLinodeDrawer = (props: Props) => {
     () =>
       new Set<number>(
         allFirewallEntities
-          ?.filter((service) => service.type === 'interface')
-          ?.map((service) => service.id) ?? []
+          .filter((service) => service.type === 'interface')
+          .map((service) => service.id)
       ),
     [allFirewallEntities]
   );
 
   const assignedLinodes = React.useMemo(
-    () => allFirewallEntities?.filter((service) => service.type === 'linode'),
+    () => allFirewallEntities.filter((service) => service.type === 'linode'),
     [allFirewallEntities]
   );
 
