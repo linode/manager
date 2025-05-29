@@ -1,5 +1,10 @@
-import { useAllFirewallsQuery, useGrants, useProfile } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
+import {
+  useAllFirewallsQuery,
+  useAllLinodesQuery,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
+import { getDisabledLinodesOptions, LinodeSelect } from '@linode/shared';
 import {
   Box,
   FormControlLabel,
@@ -83,6 +88,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const assignedLinodes = assignedServices?.filter(
     (service) => service.type === 'linode'
   );
+
   const assignedNodeBalancers = assignedServices?.filter(
     (service) => service.type === 'nodebalancer'
   );
@@ -94,6 +100,23 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
       linode.interface_generation !== 'linode'
     );
   };
+
+  const { data: linodesAll } = useAllLinodesQuery({}, {});
+
+  const foo = linodesAll?.filter(
+    (linode) => !readOnlyLinodeIds.includes(linode.id)
+  );
+
+  const filteredLinodes = linodesAll?.filter(
+    (linode) =>
+      linodeOptionsFilter(linode) === false &&
+      !readOnlyLinodeIds.includes(linode.id)
+  );
+
+  const disabledLinodeOptions = getDisabledLinodesOptions(
+    { linodes: filteredLinodes ?? [] },
+    'A Linode can only be assigned to a single Firewall.'
+  );
 
   const nodebalancerOptionsFilter = (nodebalancer: NodeBalancer) => {
     return (
@@ -213,6 +236,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
         render={({ field, fieldState }) => (
           <LinodeSelect
             disabled={userCannotAddFirewall}
+            disabledLinodeOptions={disabledLinodeOptions}
             errorText={fieldState.error?.message}
             helperText={deviceSelectGuidance}
             label={
@@ -222,7 +246,7 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
             onSelectionChange={(linodes) => {
               field.onChange(linodes.map((linode) => linode.id));
             }}
-            optionsFilter={linodeOptionsFilter}
+            options={foo}
             value={field.value ?? null}
           />
         )}

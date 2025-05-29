@@ -7,7 +7,7 @@ import {
   useLinodeQuery,
   useRegionsQuery,
 } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
+import { getDisabledLinodesOptions, LinodeSelect } from '@linode/shared';
 import {
   Autocomplete,
   Box,
@@ -30,13 +30,9 @@ import { Link } from 'src/components/Link';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useEventsPollingActions } from 'src/queries/events/events';
 
-import {
-  getDisabledLinodes,
-  // useImageAndLinodeGrantCheck
-} from '../utils';
+import { useImageAndLinodeGrantCheck } from '../utils';
 
 import type { CreateImagePayload } from '@linode/api-v4';
 
@@ -75,24 +71,22 @@ export const CreateImageTab = () => {
 
   const { data: grants } = useGrants();
 
-  const isImageCreateRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_images',
-  });
-  // console.log('isImageCreateRestricted:: ', isImageCreateRestricted);
+  const reason = 'You can only select Linodes you have read/write access to.';
 
-  const { data: linodes, error, isFetching } = useAllLinodesQuery();
-  // console.log('linodes FROM useAllLinodesQuery():: ', linodes);
+  const { canCreateImage, permissionedLinodes } = useImageAndLinodeGrantCheck();
 
-  const listOfDisabledLinodes = getDisabledLinodes(
-    { linodes: linodes ?? [] },
-    grants
+  const { data: linodes, error } = useAllLinodesQuery();
+
+  const filteredLinodesss = linodes?.filter(
+    (linode) => !permissionedLinodes?.includes(linode.id)
   );
 
-  // const { permissionedLinodes: availableLinodes } =
-  //   useImageAndLinodeGrantCheck();
+  const disabledLinodeOptions = getDisabledLinodesOptions(
+    { linodes: filteredLinodesss ?? [] },
+    reason
+  );
 
   // const getAllLinodeOptions = () => {};
-
   // const getLAvailableinodeOptions = () => {};
 
   const onSubmit = handleSubmit(async (values) => {
@@ -179,7 +173,7 @@ export const CreateImageTab = () => {
   return (
     <form onSubmit={onSubmit}>
       <Stack spacing={2}>
-        {isImageCreateRestricted && (
+        {!canCreateImage && (
           <Notice
             text={getRestrictedResourceText({
               action: 'create',
@@ -211,24 +205,11 @@ export const CreateImageTab = () => {
               </Link>
               .
             </Typography>
-
-            {/* ******************************************************************************************************* */}
             <LinodeSelect
-              disabled={isImageCreateRestricted}
-              disabledLinodeOptions={listOfDisabledLinodes}
+              disabled={!canCreateImage}
+              disabledLinodeOptions={disabledLinodeOptions}
               errorText={error?.[0].reason}
-              getOptionDisabled={
-                grants
-                  ? (linode) =>
-                      grants.linode.some(
-                        (grant) =>
-                          grant.id === linode.id &&
-                          grant.permissions === 'read_only'
-                      )
-                  : undefined
-              }
               helperText={linodeSelectHelperText}
-              loading={isFetching}
               noMarginTop
               onSelectionChange={(linode) => {
                 setSelectedLinodeId(linode?.id ?? null);
@@ -239,8 +220,6 @@ export const CreateImageTab = () => {
               required
               value={selectedLinodeId}
             />
-            {/* ******************************************************************************************************* */}
-
             {selectedLinode && !linodeRegionSupportsImageStorage && (
               <Notice variant="warning">
                 This Linode’s region doesn’t support local image storage. This
@@ -261,9 +240,7 @@ export const CreateImageTab = () => {
               render={({ field, fieldState }) => (
                 <Autocomplete
                   clearOnBlur
-                  disabled={
-                    isImageCreateRestricted || selectedLinodeId === null
-                  }
+                  disabled={!canCreateImage || selectedLinodeId === null}
                   errorText={
                     fieldState.error?.message ?? disksError?.[0].reason
                   }
@@ -304,7 +281,7 @@ export const CreateImageTab = () => {
               name="label"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Label"
@@ -326,7 +303,7 @@ export const CreateImageTab = () => {
                 render={({ field }) => (
                   <Checkbox
                     checked={field.value ?? false}
-                    disabled={isImageCreateRestricted}
+                    disabled={!canCreateImage}
                     onChange={field.onChange}
                     sx={{ ml: -1 }}
                     text={
@@ -356,7 +333,7 @@ export const CreateImageTab = () => {
               name="tags"
               render={({ field, fieldState }) => (
                 <TagsInput
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   noMarginTop
                   onChange={(items) =>
                     field.onChange(items.map((item) => item.value))
@@ -374,7 +351,7 @@ export const CreateImageTab = () => {
               name="description"
               render={({ field, fieldState }) => (
                 <TextField
-                  disabled={isImageCreateRestricted}
+                  disabled={!canCreateImage}
                   errorText={fieldState.error?.message}
                   inputRef={field.ref}
                   label="Description"
@@ -401,7 +378,7 @@ export const CreateImageTab = () => {
         >
           <Button
             buttonType="primary"
-            disabled={isImageCreateRestricted}
+            disabled={!canCreateImage}
             loading={formState.isSubmitting}
             type="submit"
           >

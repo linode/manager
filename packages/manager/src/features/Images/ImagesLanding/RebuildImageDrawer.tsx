@@ -24,6 +24,7 @@ export const RebuildImageDrawer = (props: Props) => {
   const { image, imageError, isFetching, onClose, open } = props;
 
   const history = useHistory();
+
   const { permissionedLinodes: availableLinodes } =
     useImageAndLinodeGrantCheck();
 

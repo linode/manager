@@ -1,24 +1,33 @@
-// /**
-//  * Returns images that should be disabled on the Linode Create flow.
-//  *
-//  * @returns key/value pairs for disabled images. the key is the image id and the value is why the image is disabled
-//  */
-// export const getDisabledLinodes = (options: ) => {
-//   const { ,  } = options;
+import type { Linode } from '@linode/api-v4';
+import type { DisableItemOption } from '@linode/ui';
 
-//   // Disable images that do not support distributed sites if the selected region is distributed
-//   if () {
-//     const disabledLinodes: Record<string, DisableItemOption> = {};
-//     for (const xxx of xxxs) {
-//       if (!image.capabilities.includes('distributed-sites')) {
-//         disabledImages[image.id] = {
-//           reason:
-//             'The selected image cannot be deployed to a distributed region.',
-//         };
-//       }
-//     }
-//     return disabledImages;
-//   }
+export interface DisabledLinodeOptions {
+  linodes: Linode[] | undefined;
+}
+/**
+ * Returns Linode IDs with corresponding reason why the Linode should be disabled in the LinodeSelect component.
+ *
+ * @returns key/value pairs for disabled Linodes.
+ * Where `key` is the Linode ID and `value` is the reason why the Linode is disabled.
+ */
+export const getDisabledLinodesOptions = (
+  options: DisabledLinodeOptions,
+  reason: string,
+) => {
+  const { linodes } = options;
 
-//   return {};
-// };
+  // Disable Linodes that do not have read/write access.
+  if (linodes) {
+    const disabledLinodes: Record<string, DisableItemOption> = {};
+
+    for (const linode of linodes) {
+      disabledLinodes[linode.id] = {
+        reason,
+      };
+    }
+
+    return disabledLinodes;
+  }
+
+  return {};
+};

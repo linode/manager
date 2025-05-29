@@ -351,6 +351,12 @@ export const lightTheme: ThemeOptions = {
     },
     MuiAutocomplete: {
       styleOverrides: {
+        // root: {
+        //   '&$disabled': {
+        //     opacity: 0.5,
+        //     color: '#83838c !important',
+        //   },
+        // },
         clearIndicator: {
           color: Select.Default.Icon,
           padding: 0,
@@ -391,6 +397,10 @@ export const lightTheme: ThemeOptions = {
           borderTop: 0,
         },
         option: {
+          '&.Mui-disabled': {
+            // opacity: 0.5,
+            // color: '#83838c !important',
+          },
           '&.Mui-focused': {
             backgroundColor: 'transparent',
           },
@@ -1068,6 +1078,20 @@ export const lightTheme: ThemeOptions = {
         },
       },
     },
+    // MuiListItemOption: {
+    //   styleOverrides: {
+    //     root: {
+    //       '&$disabled': {
+    //         // opacity: 0.5,
+    //         // color: '#83838c !important',
+    //         backgroundColor: Dropdown.Background.Default,
+    //         color: Dropdown.Text.Disabled,
+    //         opacity: 1,
+    //       },
+    //       color: Content.Text.Primary.Default,
+    //     },
+    //   },
+    // },
     MuiListItemText: {
       styleOverrides: {
         root: {

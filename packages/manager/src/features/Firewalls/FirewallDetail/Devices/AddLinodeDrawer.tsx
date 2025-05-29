@@ -6,7 +6,7 @@ import {
   useGrants,
   useProfile,
 } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
+import { getDisabledLinodesOptions, LinodeSelect } from '@linode/shared';
 import { ActionsPanel, Drawer, Notice, Select, Typography } from '@linode/ui';
 import { getEntityIdsByPermission } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -232,6 +232,27 @@ export const AddLinodeDrawer = (props: Props) => {
     [grants, isRestrictedUser]
   );
 
+  const filteredLinodesA = allLinodes?.filter((linode) =>
+    readOnlyLinodeIds?.includes(linode.id)
+  );
+
+  const disabledLinodeOptionsA = getDisabledLinodesOptions(
+    { linodes: filteredLinodesA ?? [] },
+    'You can only select Linodes you have read/write access to.'
+  );
+
+  const linodeOptionIds = linodeOptions.map((option) => option.id);
+  const filteredLinodesB = allLinodes?.filter(
+    (linode) =>
+      !readOnlyLinodeIds.includes(linode.id) &&
+      !linodeOptionIds.includes(linode.id)
+  );
+
+  const disabledLinodeOptionsB = getDisabledLinodesOptions(
+    { linodes: filteredLinodesB ?? [] },
+    'A Linode can only be assigned to a single Firewall.'
+  );
+
   const firewallEntities = React.useMemo(
     () => data?.map((firewall) => firewall.entities).flat(),
     [data]
@@ -378,21 +399,20 @@ export const AddLinodeDrawer = (props: Props) => {
         }}
       >
         {localError ? errorNotice() : null}
-
-        {/* ******************************************************************************************************* */}
         <LinodeSelect
           disabled={isLoading}
+          disabledLinodeOptions={{
+            ...disabledLinodeOptionsA,
+            ...disabledLinodeOptionsB,
+          }}
           helperText={helperText}
           multiple
           onSelectionChange={(linodes) => onSelectionChange(linodes)}
-          options={linodeOptions}
           value={[
             ...linodesToAdd.map((linode) => linode.id),
             ...Array.from(interfacesToAddMap.keys()),
           ]}
         />
-        {/* ******************************************************************************************************* */}
-
         {isLinodeInterfacesEnabled &&
           linodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>

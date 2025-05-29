@@ -7,7 +7,7 @@ import {
   useAllPlacementGroupsQuery,
   useAssignLinodesToPlacementGroup,
 } from '@linode/queries';
-import { LinodeSelect } from '@linode/shared';
+import { getDisabledLinodesOptions, LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
   Box,
@@ -39,14 +39,15 @@ export const PlacementGroupsAssignLinodesDrawer = (
   props: PlacementGroupsAssignLinodesDrawerProps
 ) => {
   const { onClose, open, region, selectedPlacementGroup } = props;
+
   const { data: allLinodesInRegion, error: linodesError } = useAllLinodesQuery(
     {},
-    {
-      region: selectedPlacementGroup?.region,
-    }
+    { region: selectedPlacementGroup?.region }
   );
+
   const { data: allPlacementGroups, error: allPlacementGroupsError } =
     useAllPlacementGroupsQuery({});
+
   const { enqueueSnackbar } = useSnackbar();
 
   // We display a notice and disable inputs in case the user reaches this drawer somehow
@@ -55,11 +56,14 @@ export const PlacementGroupsAssignLinodesDrawer = (
     placementGroup: selectedPlacementGroup,
     region,
   });
+
   const { isPending, mutateAsync: assignLinodes } =
     useAssignLinodesToPlacementGroup(selectedPlacementGroup?.id ?? -1);
+
   const [selectedLinode, setSelectedLinode] = React.useState<Linode | null>(
     null
   );
+
   const [generalError, setGeneralError] = React.useState<string | undefined>(
     undefined
   );
@@ -94,6 +98,15 @@ export const PlacementGroupsAssignLinodesDrawer = (
   ) {
     return null;
   }
+
+  const filteredLinodes = allLinodesInRegion.filter(
+    (linode) => !getLinodeSelectOptions()?.includes(linode)
+  );
+
+  const disabledLinodeOptions = getDisabledLinodesOptions(
+    { linodes: filteredLinodes ?? [] },
+    'A Linode can only be assigned to one placement group.'
+  );
 
   const { label, placement_group_policy, placement_group_type } =
     selectedPlacementGroup;
@@ -168,11 +181,13 @@ export const PlacementGroupsAssignLinodesDrawer = (
             <LinodeSelect
               checkIsOptionEqualToValue
               disabled={hasReachedCapacity || isPending}
+              disabledLinodeOptions={disabledLinodeOptions}
               label={linodeSelectLabel}
               onSelectionChange={(value) => {
                 setSelectedLinode(value);
               }}
               options={getLinodeSelectOptions()}
+              // options={allLinodesInRegion}
               placeholder="Select Linode or type to search"
               sx={{ flexGrow: 1 }}
               value={selectedLinode?.id ?? null}

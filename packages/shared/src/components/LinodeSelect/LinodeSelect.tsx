@@ -18,13 +18,13 @@ interface LinodeSelectProps {
   clearable?: boolean;
   /** Disable the component. */
   disabled?: boolean;
-  /* New prop for Linode Ids and reasons for disable */
+  /* New prop for Linode IDs and reasons for disable */
   disabledLinodeOptions?: Record<string, DisableItemOption>;
   /** Hint displayed with error styling. */
   errorText?: string;
   /** Filter sent to the API when retrieving account Linodes. */
   filter?: Filter;
-  /** Determines if the Linode option should be disabled. */
+  /** Determines if the Linode option should be disabled.  */
   getOptionDisabled?: (linode: Linode) => boolean;
   /** Hint displayed in normal styling. */
   helperText?: string;
@@ -102,7 +102,7 @@ export const LinodeSelect = (
 
   const { data, error, isFetching } = useAllLinodesQuery({}, filter, !options);
 
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState<string>('');
 
   const linodes = optionsFilter ? data?.filter(optionsFilter) : data;
 
@@ -116,11 +116,6 @@ export const LinodeSelect = (
     }
   }, [value]);
 
-  // const disabledLinodesssMap = [
-  //   { id: 11221, reason: 'Linode is shut down' },
-  //   { id: 99001, reason: 'Linode is attached to vpc' },
-  // ];
-
   return (
     <Autocomplete
       clearOnBlur={false}
@@ -131,19 +126,6 @@ export const LinodeSelect = (
       disablePortal={true}
       errorText={error?.[0].reason ?? errorText}
       getOptionDisabled={getOptionDisabled}
-      // getOptionDisabled={(linode) => Boolean(disabledLinodesssMap?.[linode.id])}
-      // getOptionDisabled={(linode) => Boolean(disabledLinodesssMap?.[11221])}
-
-      /*
-      getOptionDisabled={(linode) => {
-        if (disabledLinodesMap?.[linode.id]) {
-          return true;
-        }
-        return getOptionDisabled?.(linode) ?? false;
-        getOptionDisabled?.(linode) ?? !!disabledLinodesssMap?.[linode.id];
-      }}
-        */
-
       helperText={helperText}
       id={id}
       inputValue={inputValue}
@@ -176,10 +158,6 @@ export const LinodeSelect = (
       }
       PopperComponent={CustomPopper}
       renderOption={(props, linode) => {
-        // const isDisabled = disabledLinodesssMap?.[linode.id];
-        // const isDisabled = !!disabledLinodesssMap?.[linode.id];
-        // const reason = disabledLinodesssMap?.[linode.id];
-        // const isDisabled = getOptionDisabled?.(linode);
         const { key, ...rest } = props;
 
         return (
@@ -188,7 +166,6 @@ export const LinodeSelect = (
             item={linode}
             key={`${linode.id}-${key}`}
             props={rest}
-            selected={false}
           />
         );
       }}

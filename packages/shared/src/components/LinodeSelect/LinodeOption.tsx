@@ -19,21 +19,8 @@ export const LinodeOption = ({
       selected={selected}
     >
       <Stack alignItems="center" direction="row" gap={1} width="100%">
-        <Typography color="inherit">{item.label}</Typography>
+        <Typography>{item.label}</Typography>
       </Stack>
     </ListItemOption>
   );
 };
-
-/*
-0: {
-    id: 77254548,
-    label: "ubuntu-us-ord", 
-    permissions: "read_only" 
-}
-1: {
-    id: 77254615, 
-    label: "ubuntu-us-sea", 
-    permissions: "read_write" 
-}
- */

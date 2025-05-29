@@ -104,11 +104,14 @@ export const StyledDisabledItem = styled(ListItem, {
   label: 'StyledDisabledItem',
 })(() => ({
   '&.Mui-disabled': {
+    // color: Action.Primary.Disabled,
+    color: '#83838c !important',
     cursor: 'not-allowed',
   },
   '&.MuiAutocomplete-option': {
     minHeight: 'auto !important',
     padding: '8px 10px !important',
+    // color: '#83838c !important',
   },
   '&.MuiListItem-root[aria-disabled="true"]:active': {
     pointerEvents: 'none !important',

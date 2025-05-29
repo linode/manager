@@ -1,22 +1,15 @@
 import { useGrants, useProfile } from '@linode/queries';
-import { getEntityIdsByPermission } from '@linode/utilities';
 
-import type { Event, Grants, Image, Linode } from '@linode/api-v4';
-import type { DisableItemOption } from '@linode/ui';
+import type { Event, Image, Linode } from '@linode/api-v4';
 
 export const useImageAndLinodeGrantCheck = () => {
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  // MORE CHECKS FOR RESTRICTED USE CASES
   const canCreateImage =
     Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
 
-  // console.log('canCreateImage:: ', canCreateImage);
-
-  // IMPORTANT!!!!
   // Unrestricted users can select Images from any disk;
-  //
   // Restricted users need read_write on the Linode they're trying to Imagize
   // (in addition to the global add_images grant).
   const permissionedLinodes = profile?.restricted
@@ -45,40 +38,3 @@ export const getEventsForImages = (images: Image[], events: Event[]) =>
       ),
     ])
   );
-
-interface DisabledLinodeOptions {
-  linodes: Linode[] | undefined;
-}
-
-/**
- * Returns linodes that should be disabled on the Image Create flow.
- *
- * @returns key/value pairs for disabled linodes. the key is the linode id and the value is why the linode is disabled
- */
-export const getDisabledLinodes = (
-  options: DisabledLinodeOptions,
-  grants: Grants | undefined
-) => {
-  const { linodes } = options;
-  const readOnlyLinodeIds = getEntityIdsByPermission(
-    grants,
-    'linode',
-    'read_only'
-  );
-
-  // Disable images that do not support distributed sites if the selected region is distributed
-  if (linodes) {
-    const disabledLinodes: Record<string, DisableItemOption> = {};
-
-    for (const linode of linodes) {
-      if (readOnlyLinodeIds.includes(linode.id)) {
-        disabledLinodes[linode.id] = {
-          reason: 'You can only select Linodes you have read/write access to.',
-        };
-      }
-    }
-    return disabledLinodes;
-  }
-
-  return {};
-};

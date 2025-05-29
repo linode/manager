@@ -256,6 +256,10 @@ export const darkTheme: ThemeOptions = {
           color: Color.Neutrals.White,
         },
         option: {
+          '&.Mui-disabled': {
+            opacity: 0.5,
+            color: '#83838c !important',
+          },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
             color: Dropdown.Text.Default,
@@ -626,6 +630,13 @@ export const darkTheme: ThemeOptions = {
     MuiListItem: {
       styleOverrides: {
         root: {
+          //   '&$disabled': {
+          //     // opacity: 0.5,
+          //     // color: '#83838c !important',
+          //     backgroundColor: Dropdown.Background.Default,
+          //     color: Dropdown.Text.Disabled,
+          //     opacity: 1,
+          //   },
           '&.selectHeader': {
             color: Content.Text.Primary.Default,
           },
