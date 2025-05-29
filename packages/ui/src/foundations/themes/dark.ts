@@ -791,6 +791,11 @@ export const darkTheme: ThemeOptions = {
             color: theme.palette.primary.main,
           },
           padding: '10px 10px',
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
+          },
         }),
       },
     },
