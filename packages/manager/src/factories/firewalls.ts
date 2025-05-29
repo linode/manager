@@ -1,15 +1,16 @@
+import {
+  type Firewall,
+  type FirewallDevice,
+  type FirewallDeviceEntityType,
+  type FirewallRules,
+  type FirewallRuleType,
+  type FirewallSettings,
+  type FirewallTemplate,
+  type FirewallTemplateRules,
+} from '@linode/api-v4/lib/firewalls/types';
 import { Factory } from '@linode/utilities';
 
-import type {
-  Firewall,
-  FirewallDevice,
-  FirewallDeviceEntityType,
-  FirewallRules,
-  FirewallRuleType,
-  FirewallSettings,
-  FirewallTemplate,
-  FirewallTemplateRules,
-} from '@linode/api-v4/lib/firewalls/types';
+import type { FirewallDeviceEntity } from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   action: 'DROP',
@@ -57,6 +58,14 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   tags: [],
   updated: '2020-01-01 00:00:00',
 });
+
+export const firewallEntityfactory =
+  Factory.Sync.makeFactory<FirewallDeviceEntity>({
+    id: 1,
+    label: 'my-linode',
+    type: 'linode' as FirewallDeviceEntityType,
+    url: '/test',
+  });
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   created: '2020-01-01',
