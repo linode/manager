@@ -88,7 +88,7 @@ const meta: Meta<RadioStoryProps> = {
   },
   component: Radio,
   decorators: [
-    (Story) => (
+    (Story: React.ComponentType) => (
       <Box sx={{ padding: 4 }}>
         <Story />
       </Box>
@@ -131,107 +131,63 @@ export const Default: Story = {
   },
 };
 
-export const States: Story = {
-  name: 'Radio Button States',
-  render: () => {
-    return (
-      <Box
-        sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 4 }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ mb: 1, fontWeight: 'bold' }}>Default</Box>
-          <Radio />
-          <Box sx={{ mt: 2 }}>
-            <Radio checked />
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ mb: 1, fontWeight: 'bold' }}>Hover</Box>
-          <Box
-            sx={{
-              '& .MuiRadio-root': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
-            }}
-          >
-            <Radio />
-          </Box>
-          <Box
-            sx={{
-              mt: 2,
-              '& .MuiRadio-root': { backgroundColor: 'rgba(0, 0, 0, 0.04)' },
-            }}
-          >
-            <Radio checked />
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ mb: 1, fontWeight: 'bold' }}>Active</Box>
-          <Box
-            sx={{
-              '& .MuiRadio-root': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
-            }}
-          >
-            <Radio />
-          </Box>
-          <Box
-            sx={{
-              mt: 2,
-              '& .MuiRadio-root': { backgroundColor: 'rgba(0, 0, 0, 0.08)' },
-            }}
-          >
-            <Radio checked />
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ mb: 1, fontWeight: 'bold' }}>Disabled</Box>
-          <Radio disabled />
-          <Box sx={{ mt: 2 }}>
-            <Radio checked disabled />
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Box sx={{ mb: 1, fontWeight: 'bold' }}>Read Only</Box>
-          <Radio readOnly />
-          <Box sx={{ mt: 2 }}>
-            <Radio checked readOnly />
-          </Box>
-        </Box>
-      </Box>
-    );
+export const Unchecked: Story = {
+  parameters: {
+    controls: { disable: true },
   },
+  render: () => <Radio />,
+};
+
+export const UncheckedDisabled: Story = {
+  name: 'Unchecked Disabled',
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => <Radio disabled />,
+};
+
+export const UncheckedReadOnly: Story = {
+  name: 'Unchecked Read Only',
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => <Radio readOnly />,
+};
+
+export const Checked: Story = {
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => <Radio checked />,
+};
+
+export const CheckedDisabled: Story = {
+  name: 'Checked Disabled',
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => <Radio checked disabled />,
+};
+
+export const CheckedReadOnly: Story = {
+  name: 'Checked Read Only',
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => <Radio checked readOnly />,
+};
+
+export const SmallSize: Story = {
+  name: 'Small Size',
+  parameters: {
+    controls: { disable: true },
+  },
+  render: () => (
+    <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+      <Radio size="small" />
+      <Radio checked size="small" />
+    </Box>
+  ),
 };
 
 const RadioGroupsDemo = (props: { size: 'medium' | 'small' }) => {
@@ -259,16 +215,15 @@ const RadioGroupsDemo = (props: { size: 'medium' | 'small' }) => {
         label="Option 2"
         value="Option 2"
       />
-      <FormControlLabel
-        control={<Radio readOnly size={size} />}
-        label="Read Only"
-        value="Read Only"
-      />
     </RadioGroup>
   );
 };
 
-export const Groups: Story = {
+interface GroupsArgs {
+  size: 'medium' | 'small';
+}
+
+export const Groups: StoryObj<GroupsArgs> = {
   name: 'Controlled Radio Groups',
   args: {
     size: 'medium',
@@ -287,54 +242,32 @@ export const Groups: Story = {
     },
   },
   render: (args) => {
-    return <RadioGroupsDemo size={args.size as 'medium' | 'small'} />;
+    return <RadioGroupsDemo size={args.size} />;
   },
 };
 
-export const Interactive: Story = {
-  name: 'Interactive Demo',
+export const WithLabel: Story = {
+  name: 'With Label',
   parameters: {
-    controls: { expanded: true },
+    controls: { disable: true },
   },
-  args: {
-    checkedState: 'unchecked',
-    size: 'medium',
-  },
-  argTypes: {
-    checkedState: {
-      options: ['unchecked', 'checked'],
-      control: { type: 'radio' },
-      description: 'The checked state of the radio button',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: '"unchecked"' },
-      },
-    },
-    size: {
-      control: {
-        type: 'radio',
-      },
-      options: ['small', 'medium'],
-      description: 'The size of the component',
-      table: {
-        type: { summary: 'string' },
-        defaultValue: { summary: '"medium"' },
-      },
-    },
-  },
-  render: (args) => {
-    const { checkedState = 'unchecked', ...radioProps } = args;
-    const isChecked = checkedState === 'checked';
-
-    return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Radio {...radioProps} checked={isChecked} />
-        <Box component="span" sx={{ ml: 1 }}>
-          Radio Label
-        </Box>
-      </Box>
-    );
-  },
+  render: () => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <FormControlLabel control={<Radio />} label="Unchecked with label" />
+      <FormControlLabel
+        control={<Radio checked />}
+        label="Checked with label"
+      />
+      <FormControlLabel
+        control={<Radio disabled />}
+        label="Disabled with label"
+      />
+      <FormControlLabel
+        control={<Radio checked disabled />}
+        label="Checked disabled with label"
+      />
+    </Box>
+  ),
 };
 
 export default meta;
