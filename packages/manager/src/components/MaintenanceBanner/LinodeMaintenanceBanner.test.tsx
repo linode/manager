@@ -18,7 +18,11 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-describe('PlatformMaintenanceBanner', () => {
+beforeEach(() => {
+  vi.stubEnv('TZ', 'UTC');
+});
+
+describe('LinodeMaintenanceBanner', () => {
   it('renders with maintenance date', () => {
     const mockMaintenance = [
       accountMaintenanceFactory.build({
@@ -57,7 +61,7 @@ describe('PlatformMaintenanceBanner', () => {
       getAllByText(
         (_, el) =>
           el?.textContent ===
-          'Linode linode-1 scheduled maintenance reboot will begin 05/28/2025 at 15:21. For more details, view Account Maintenance.'
+          'Linode linode-1 scheduled maintenance reboot will begin 05/28/2025 at 19:21. For more details, view Account Maintenance.'
       )[0]
     ).toBeVisible();
   });
@@ -92,7 +96,7 @@ describe('PlatformMaintenanceBanner', () => {
       queryByText(
         (_, el) =>
           el?.textContent ===
-          'Linode linode-1 scheduled maintenance reboot will begin 05/28/2025 at 15:21. For more details, view Account Maintenance.'
+          'Linode linode-1 scheduled maintenance reboot will begin 05/28/2025 at 19:21. For more details, view Account Maintenance.'
       )
     ).not.toBeInTheDocument();
   });

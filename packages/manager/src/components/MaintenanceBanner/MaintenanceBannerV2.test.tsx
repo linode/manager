@@ -18,7 +18,7 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-describe('PlatformMaintenanceBanner', () => {
+describe('MaintenanceBannerV2', () => {
   it('renders with count of affected linodes', () => {
     const mockMaintenance = [
       accountMaintenanceFactory.build({
