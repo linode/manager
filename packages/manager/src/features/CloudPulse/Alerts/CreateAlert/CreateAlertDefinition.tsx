@@ -13,7 +13,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
-  ACCOUNT_GROUP_WARNING_MESSAGE,
+  ACCOUNT_GROUP_INFO_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
@@ -67,7 +67,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
-  group: 'per-entity',
+  group: 'per-account',
   type: 'user',
 };
 
@@ -118,7 +118,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-  const entityGroupingWatcher = useWatch({ control, name: 'group' });
+  const scopeWatcher = useWatch({ control, name: 'group' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -217,15 +217,13 @@ export const CreateAlertDefinition = () => {
             />
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect name="group" />
-            {entityGroupingWatcher === 'per-entity' && (
+            {scopeWatcher === 'per-entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}
-            {entityGroupingWatcher === 'per-region' && (
+            {scopeWatcher === 'per-region' && (
               <CloudPulseModifyAlertRegions name="regions" />
             )}
-            {entityGroupingWatcher === 'per-account' && (
-              <AccountGroupingNotice />
-            )}
+            {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
@@ -268,8 +266,8 @@ export const AccountGroupingNotice = () => {
         })}
       >
         <AlertListNoticeMessages
-          errorMessage={ACCOUNT_GROUP_WARNING_MESSAGE}
-          variant="warning"
+          errorMessage={ACCOUNT_GROUP_INFO_MESSAGE}
+          variant="info"
         />
       </Box>
     </Box>
