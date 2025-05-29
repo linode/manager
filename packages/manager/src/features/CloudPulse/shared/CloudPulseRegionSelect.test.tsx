@@ -182,6 +182,8 @@ describe('CloudPulseRegionSelect', () => {
       { flags }
     );
 
+    // Wait for loading to finish
+    await screen.findByRole('button', { name: 'Open' });
     await user.click(screen.getByRole('button', { name: 'Open' }));
     // example: region id => 'us-west' belongs to service type - 'dbaas', capability -'Managed Databases', and is supported via launchDarkly
     const usWestRegion = screen.getByRole('option', {

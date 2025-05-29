@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { dashboardFactory, serviceTypesFactory } from 'src/factories';
@@ -117,7 +117,7 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     expect(screen.getByTestId('node-type-select')).toBeInTheDocument();
   });
 
-  it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for dbaas', () => {
+  it('renders a CloudPulseDashboardWithFilters component with mandatory filter error for dbaas', async () => {
     queryMocks.useCloudPulseDashboardByIdQuery.mockReturnValue({
       data: { ...mockDashboard, service_type: 'dbaas' },
       error: false,
@@ -129,10 +129,11 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
 
-    expect(screen.getByTestId('CloseIcon')).toBeDefined();
+    const clearButton = await screen.findByRole('button', { name: 'Clear' });
+    expect(clearButton).toBeDefined();
 
-    fireEvent.click(screen.getByTitle('Clear')); // clear the value
-    expect(screen.getByText(mandatoryFiltersError)).toBeDefined();
+    await userEvent.click(clearButton); // clear the value
+    expect(await screen.findByText(mandatoryFiltersError)).toBeDefined();
   });
 
   it('renders a CloudPulseDashboardWithFilters component with no filters configured error', () => {

@@ -168,8 +168,10 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
             },
           })}
           textFieldProps={{
-            InputProps: {
-              required,
+            slotProps: {
+              input: {
+                required,
+              },
             },
             tooltipText: helperText,
           }}
