@@ -1,16 +1,15 @@
 import { List, ListItem, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
 
-import type { APIError, KubeNodePoolResponse } from '@linode/api-v4';
+import type { KubeNodePoolResponse } from '@linode/api-v4';
 
-export interface DeleteKubernetesClusterDialogProps {
-  clusterError: APIError[] | null;
+export interface Props {
   clusterId: number;
   clusterLabel: string;
-  isFetching: boolean;
   onClose: () => void;
   open: boolean;
 }
@@ -30,19 +29,19 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
   }, 0);
 };
 
-export const DeleteKubernetesClusterDialog = (
-  props: DeleteKubernetesClusterDialogProps
-) => {
-  const { clusterId, clusterLabel, isFetching, onClose, open } = props;
+export const DeleteKubernetesClusterDialog = (props: Props) => {
+  const { clusterId, clusterLabel, onClose, open } = props;
   const {
     error,
     isPending: isDeleting,
     mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
+  const navigate = useNavigate();
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
+      navigate({ to: '/kubernetes/clusters' });
     });
   };
 
@@ -57,7 +56,6 @@ export const DeleteKubernetesClusterDialog = (
       }}
       errors={error}
       expand
-      isFetching={isFetching}
       label={'Cluster Name'}
       loading={isDeleting}
       onClick={onDelete}

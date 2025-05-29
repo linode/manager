@@ -24,8 +24,8 @@ import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterID } = useParams({ strict: false });
-  const id = Number(clusterID);
+  const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
+  const id = Number(clusterId);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();

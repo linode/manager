@@ -8,7 +8,6 @@ import {
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useMatch, useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -23,7 +22,6 @@ import {
 } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
-  useKubernetesClusterQuery,
   useKubernetesControlPlaneACLQuery,
   useKubernetesDashboardQuery,
   useResetKubeConfigMutation,
@@ -45,8 +43,7 @@ interface Props {
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
-  const navigate = useNavigate();
-  const match = useMatch({ strict: false });
+
   const { data: account } = useAccount();
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
 
@@ -55,6 +52,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [isControlPlaneACLDrawerOpen, setControlPlaneACLDrawerOpen] =
     React.useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
   // Access to the Kubernetes Dashboard is not supported for LKE-E clusters.
   const { data: dashboard, error: dashboardError } =
@@ -77,15 +75,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
   } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
-
-  const {
-    data: selectedCluster,
-    isFetching: isFetchingSelectedCluster,
-    error: selectedClusterError,
-  } = useKubernetesClusterQuery({
-    id: cluster.id,
-    enabled: match.routeId === '/kubernetes/clusters/$clusterID/summary/delete',
-  });
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
@@ -182,17 +171,11 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                       title: 'Kubernetes Dashboard',
                     },
                     {
-                      onClick: () =>
-                        navigate({
-                          to: '/kubernetes/clusters/$clusterID/summary/delete',
-                          params: {
-                            clusterID: (selectedCluster?.id ?? 0).toString(),
-                          },
-                        }),
+                      onClick: () => setIsDeleteDialogOpen(true),
                       title: 'Delete Cluster',
                     },
                   ]}
-                  ariaLabel={`Action menu for Kubernetes Cluster ${selectedCluster?.label ?? ''}`}
+                  ariaLabel={`Action menu for Kubernetes Cluster ${cluster.label}`}
                 />
               </Hidden>
               <Hidden smDown>
@@ -206,16 +189,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                     Kubernetes Dashboard
                   </StyledActionButton>
                 )}
-                <StyledActionButton
-                  onClick={() =>
-                    navigate({
-                      to: '/kubernetes/clusters/$clusterID/summary/delete',
-                      params: {
-                        clusterID: cluster.id.toString(),
-                      },
-                    })
-                  }
-                >
+                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
                   Delete Cluster
                 </StyledActionButton>
               </Hidden>
@@ -240,21 +214,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         open={isControlPlaneACLDrawerOpen}
       />
       <DeleteKubernetesClusterDialog
-        clusterError={selectedClusterError}
-        clusterId={selectedCluster?.id ?? 0}
-        clusterLabel={selectedCluster?.label ?? ''}
-        isFetching={isFetchingSelectedCluster}
-        onClose={() =>
-          navigate({
-            to: '/kubernetes/clusters/$clusterID/summary',
-            params: {
-              clusterID: cluster.id,
-            },
-          })
-        }
-        open={
-          match.routeId === '/kubernetes/clusters/$clusterID/summary/delete'
-        }
+        clusterId={cluster.id}
+        clusterLabel={cluster.label}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        open={isDeleteDialogOpen}
       />
       <ConfirmationDialog
         actions={

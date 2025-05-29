@@ -40,9 +40,9 @@ const kubernetesCreateRoute = createRoute({
 const kubernetesClusterDetailRoute = createRoute({
   getParentRoute: () => kubernetesRoute,
   parseParams: (params) => ({
-    clusterID: Number(params.clusterID),
+    clusterId: Number(params.clusterId),
   }),
-  path: 'clusters/$clusterID',
+  path: 'clusters/$clusterId',
 }).lazy(() =>
   import('./kubernetesLazyRoutes').then(
     (m) => m.kubernetesClusterDetailLazyRoute
@@ -56,15 +56,6 @@ const kubernetesClustersDeleteRoute = createRoute({
   import('./kubernetesLazyRoutes').then((m) => m.kubernetesLandingLazyRoute)
 );
 
-const kubernetesClustersSummaryDeleteRoute = createRoute({
-  getParentRoute: () => kubernetesRoute,
-  path: 'clusters/$clusterID/summary/delete',
-}).lazy(() =>
-  import('./kubernetesLazyRoutes').then(
-    (m) => m.kubernetesClusterDetailLazyRoute
-  )
-);
-
 const kubernetesClusterDetailSummaryRoute = createRoute({
   getParentRoute: () => kubernetesClusterDetailRoute,
   path: 'summary',
@@ -74,13 +65,21 @@ const kubernetesClusterDetailSummaryRoute = createRoute({
   )
 );
 
+const kubernetesClustersSummaryDeleteRoute = createRoute({
+  getParentRoute: () => kubernetesClusterDetailRoute,
+  path: 'summary/delete',
+}).lazy(() =>
+  import('./kubernetesLazyRoutes').then(
+    (m) => m.kubernetesClusterDetailLazyRoute
+  )
+);
+
 export const kubernetesRouteTree = kubernetesRoute.addChildren([
   kubernetesIndexRoute,
-  kubernetesClustersRoute,
-  kubernetesClustersDeleteRoute,
-  kubernetesCreateRoute,
+  kubernetesClustersRoute.addChildren([kubernetesClustersDeleteRoute]),
   kubernetesClusterDetailRoute.addChildren([
     kubernetesClusterDetailSummaryRoute,
     kubernetesClustersSummaryDeleteRoute,
   ]),
+  kubernetesCreateRoute,
 ]);

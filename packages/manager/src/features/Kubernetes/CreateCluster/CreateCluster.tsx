@@ -301,8 +301,8 @@ export const CreateCluster = () => {
     createClusterFn(payload)
       .then((cluster) => {
         navigate({
-          to: '/kubernetes/clusters/$clusterID',
-          params: { clusterID: cluster.id },
+          to: '/kubernetes/clusters/$clusterId',
+          params: { clusterId: cluster.id },
         });
         if (hasAgreed) {
           updateAccountAgreements({
