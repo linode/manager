@@ -10,6 +10,8 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 export const StyledTitle = styled(Typography, {
+  // Prevent the `showName` prop from being forwarded to the DOM.
+  // This resolves the React warning: "React does not recognize the `showName` prop on a DOM element."
   shouldForwardProp: (prop) => prop !== 'showName',
 })<{
   showName?: boolean | undefined;
@@ -26,6 +28,8 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
 }));
 
 export const StyledEntityBox = styled(Box, {
+  // Prevent the `hideDetails` prop from being forwarded to the DOM.
+  // This resolves the React warning: "React does not recognize the `hideDetails` prop on a DOM element."
   shouldForwardProp: (prop) => prop !== 'hideDetails',
 })<{
   hideDetails: boolean | undefined;

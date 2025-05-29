@@ -151,7 +151,7 @@ export const AssignSelectedRolesDrawer = ({
                   <Autocomplete
                     errorText={fieldState.error?.message}
                     getOptionLabel={(option) => option.label}
-                    label=""
+                    label="Select a User"
                     noMarginTop
                     onChange={(_, option) => {
                       const username = option?.label || null;
@@ -161,6 +161,7 @@ export const AssignSelectedRolesDrawer = ({
                     options={getUserOptions() || []}
                     placeholder="Select a User"
                     sx={{ marginTop: theme.tokens.spacing.S12 }}
+                    textFieldProps={{ hideLabel: true }}
                   />
                 )}
                 rules={{ required: 'Select a user.' }}
