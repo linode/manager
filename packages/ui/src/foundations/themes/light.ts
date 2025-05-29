@@ -518,9 +518,8 @@ export const lightTheme: ThemeOptions = {
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
-            border: `1px solid ${Border.Normal}`,
-            color: Color.Brand[80],
+            backgroundColor: Button.Secondary.Hover.Background,
+            color: Button.Secondary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: 'transparent',
@@ -555,18 +554,18 @@ export const lightTheme: ThemeOptions = {
           style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
               {
-                backgroundColor: Background.Negativesubtle,
-                border: `1px solid ${Border.Negative}`,
-                color: Content.Text.Negative,
+                backgroundColor: Button.Danger.Hover.Background,
+                border: `1px solid ${Button.Danger.Hover.Background}`,
+                color: Button.Danger.Hover.Text,
               },
             '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
+              backgroundColor: Button.Danger.Disabled.Background,
+              border: `1px solid ${Button.Danger.Disabled.Background}`,
+              color: Button.Danger.Disabled.Text,
             },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
+            backgroundColor: Button.Danger.Default.Background,
+            border: `1px solid ${Button.Danger.Default.Background}`,
+            color: Button.Danger.Default.Text,
           },
         },
       ],
