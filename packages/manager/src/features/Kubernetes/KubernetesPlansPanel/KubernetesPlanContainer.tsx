@@ -21,7 +21,7 @@ export interface KubernetesPlanContainerProps {
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
-  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
+  onConfigure?: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   plans: PlanWithAvailability[];
   planType?: LinodeTypeClass;

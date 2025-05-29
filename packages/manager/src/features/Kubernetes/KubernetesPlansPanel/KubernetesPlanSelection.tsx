@@ -31,7 +31,7 @@ export interface KubernetesPlanSelectionProps {
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
-  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
+  onConfigure?: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
   selectedId?: string;
@@ -126,7 +126,9 @@ export const KubernetesPlanSelection = (
           <Button
             buttonType="secondary"
             disabled={count < 1 || rowIsDisabled}
-            onClick={() => onConfigure(true, plan.formattedLabel)}
+            onClick={() =>
+              onConfigure ? onConfigure(true, plan.formattedLabel) : null
+            }
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
             Configure
@@ -214,7 +216,9 @@ export const KubernetesPlanSelection = (
                 <Button
                   buttonType="secondary"
                   disabled={count < 1 || rowIsDisabled}
-                  onClick={() => onConfigure(true, plan.formattedLabel)}
+                  onClick={() =>
+                    onConfigure ? onConfigure(true, plan.formattedLabel) : null
+                  }
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
                   Configure

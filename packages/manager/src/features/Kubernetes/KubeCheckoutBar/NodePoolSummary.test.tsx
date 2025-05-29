@@ -9,6 +9,7 @@ import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 import type { Props } from './NodePoolSummaryItem';
 
 const props: Props = {
+  handleConfig: vi.fn(),
   nodeCount: 3,
   onRemove: vi.fn(),
   poolType: extendedTypes[1],

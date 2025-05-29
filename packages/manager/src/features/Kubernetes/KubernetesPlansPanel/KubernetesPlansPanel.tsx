@@ -39,7 +39,7 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
-  onConfigure: (isDrawerOpen: boolean, planLabel: string) => void;
+  onConfigure?: (isDrawerOpen: boolean, planLabel: string) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
