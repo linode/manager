@@ -1,8 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import * as React from 'react';
-import { Router } from 'react-router-dom';
 
 import {
   accountFactory,
@@ -11,7 +9,10 @@ import {
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { DatabaseResize } from './DatabaseResize';
 import { isSmallerOrEqualCurrentPlan } from './DatabaseResize.utils';
@@ -58,7 +59,7 @@ describe('database resize', () => {
   });
 
   it('should render a loading state', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={database} />
     );
     // Should render a loading state
@@ -66,7 +67,7 @@ describe('database resize', () => {
   });
 
   it('should render configuration, summary sections and input field to choose a plan', async () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <DatabaseResize database={database} />
     );
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -87,7 +88,7 @@ describe('database resize', () => {
     };
 
     it('resize button should be disabled when no input is provided in the form', async () => {
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={database} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -97,15 +98,19 @@ describe('database resize', () => {
     });
 
     it('when a plan is selected, resize button should be enabled and on click of it, it should show a confirmation dialog', async () => {
-      // Mock route history so the Plan Selection table displays prices without requiring a region in the DB resize flow.
-      const history = createMemoryHistory();
-      history.push(`databases/${database.engine}/${database.id}/resize`);
-      const { getByRole, getByTestId, getByText } = renderWithTheme(
-        <Router history={history}>
-          <DatabaseResize database={mockDatabase} />
-        </Router>,
-        { flags }
-      );
+      // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
+      const location = window.location;
+      window.location = {
+        ...location,
+        pathname: `/databases/${mockDatabase.engine}/${mockDatabase.id}/resize`,
+      };
+
+      const { getByRole, getByTestId, getByText } =
+        await renderWithThemeAndRouter(
+          <DatabaseResize database={mockDatabase} />,
+          { flags }
+        );
+
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
       const planRadioButton = document.getElementById('g6-standard-6');
@@ -127,7 +132,7 @@ describe('database resize', () => {
     });
 
     it('Should disable the "Resize Database Cluster" button when disabled = true', async () => {
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} disabled={true} />
       );
       await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -183,7 +188,7 @@ describe('database resize', () => {
     });
 
     it('should render set node section', async () => {
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -198,7 +203,7 @@ describe('database resize', () => {
     });
 
     it('should render the correct number of node radio buttons, associated costs, and summary', async () => {
-      const { getByTestId } = renderWithTheme(
+      const { getByTestId } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -222,7 +227,7 @@ describe('database resize', () => {
     });
 
     it('should preselect cluster size in Set Number of Nodes', async () => {
-      const { getByTestId } = renderWithTheme(
+      const { getByTestId } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -239,7 +244,7 @@ describe('database resize', () => {
         platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -267,7 +272,7 @@ describe('database resize', () => {
         platform: 'rdbms-default',
         type: 'g6-nanode-1',
       });
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -347,7 +352,7 @@ describe('database resize', () => {
         },
       };
 
-      const { getByRole, getByTestId } = renderWithTheme(
+      const { getByRole, getByTestId } = await renderWithThemeAndRouter(
         <DatabaseResize database={mockDatabase} />,
         { flags }
       );
@@ -430,7 +435,7 @@ describe('database resize', () => {
         })
       );
 
-      const { getByTestId, getByText } = renderWithTheme(
+      const { getByTestId, getByText } = await renderWithThemeAndRouter(
         <DatabaseResize database={database} />
       );
       expect(getByTestId(loadingTestId)).toBeInTheDocument();

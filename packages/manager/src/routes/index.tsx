@@ -93,6 +93,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
+  databasesRouteTree,
   domainsRouteTree,
   dataStreamRouteTree,
   firewallsRouteTree,

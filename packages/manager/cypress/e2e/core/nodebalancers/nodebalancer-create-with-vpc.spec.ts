@@ -104,7 +104,13 @@ describe('Create a NodeBalancer with VPCs', () => {
       `${mockSubnet.label} (${mockSubnet.ipv4})`
     );
 
-    cy.findByText(`NodeBalancer IPv4 CIDR for ${mockSubnet.label}`);
+    // Confirm that the auto-assign for VPC IPv4 range is checked
+    cy.get('[data-testid="vpc-ipv4-checkbox"]')
+      .find('[type="checkbox"]')
+      .should('be.checked')
+      .click();
+
+    cy.findByText(`NodeBalancer IPv4 CIDR for ${mockSubnet.label}`).click();
     cy.focused().clear();
     cy.focused().type(`${mockUpdatedSubnet.nodebalancers[0].ipv4_range}`);
     // node backend config

@@ -36,7 +36,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -132,7 +131,6 @@ const EventsLanding = React.lazy(() =>
     default: module.EventsLanding,
   }))
 );
-const Databases = React.lazy(() => import('src/features/Databases'));
 
 const IAM = React.lazy(() =>
   import('src/features/IAM').then((module) => ({
@@ -171,8 +169,6 @@ export const MainContent = () => {
 
   const { data: profile } = useProfile();
   const username = profile?.username || '';
-
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
@@ -323,12 +319,6 @@ export const MainContent = () => {
                                   component={EventsLanding}
                                   path="/events"
                                 />
-                                {isDatabasesEnabled && (
-                                  <Route
-                                    component={Databases}
-                                    path="/databases"
-                                  />
-                                )}
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
