@@ -1,5 +1,6 @@
 import {
   getAlertDefinitionByServiceTypeAndId,
+  getCloudPulseServiceByServiceType,
   getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
@@ -52,6 +53,10 @@ export const queryFactory = createQueryKeys(key, {
   dashboardById: (dashboardId: number) => ({
     queryFn: () => getDashboardById(dashboardId),
     queryKey: [dashboardId],
+  }),
+  serviceByServiceType: (serviceType: string) => ({
+    queryFn: () => getCloudPulseServiceByServiceType(serviceType),
+    queryKey: [serviceType],
   }),
   lists: {
     contextQueries: {

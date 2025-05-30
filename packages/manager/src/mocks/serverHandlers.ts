@@ -2750,11 +2750,31 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          regions: '*',
         }),
       ],
     };
 
     return HttpResponse.json(response);
+  }),
+  http.get('*/monitor/services/:serviceType', ({ params }) => {
+    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
+      return HttpResponse.json({}, { status: 404 });
+    }
+
+    const response =
+      params.serviceType === 'linode'
+        ? serviceTypesFactory.build({
+            label: 'Linodes',
+            service_type: 'linode',
+          })
+        : serviceTypesFactory.build({
+            label: 'Databases',
+            service_type: 'dbaas',
+            regions: '*',
+          });
+
+    return HttpResponse.json(response, { status: 200 });
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {

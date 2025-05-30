@@ -164,7 +164,14 @@ export interface CloudPulseMetricsList {
 }
 
 export interface ServiceTypes {
+  alert: {
+    evaluation_periods_seconds: number[];
+    polling_interval_seconds: number[];
+    scope: string[];
+  };
+  is_beta: boolean;
   label: string;
+  regions: string;
   service_type: string;
 }
 

@@ -18,7 +18,10 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 import { useTypeQuery } from 'src/queries/types';
+
+import { isAclpSupportedRegion } from '../utilities';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
@@ -59,10 +62,22 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
+  const {
+    data: service,
+    // error: serviceTypesError,
+    // isLoading: serviceTypesLoading,
+  } = useCloudPulseServiceByServiceType('linode');
+
+  const isAclpSupportedRegionLinode = isAclpSupportedRegion(
+    linode?.region,
+    service?.regions
+  );
+
   const tabs = [
     {
       chip:
         flags.aclpIntegration &&
+        isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -163,7 +178,11 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeMetrics linodeCreated={linode?.created} linodeId={id} />
+                <LinodeMetrics
+                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  linodeCreated={linode?.created}
+                  linodeId={id}
+                />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
