@@ -297,6 +297,7 @@ export const VPCSubnetsTable = (props: Props) => {
       <TableCell sx={{ width: '18%' }}>
         Subnet {flags.vpcIpv6 ? 'IPv4' : 'IP'} Range
       </TableCell>
+      {flags.vpcIpv6 && <TableCell>Subnet IPv6 Range</TableCell>}
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
@@ -314,6 +315,9 @@ export const VPCSubnetsTable = (props: Props) => {
             <TableCell>{subnet.id}</TableCell>
           </Hidden>
           <TableCell>{subnet.ipv4}</TableCell>
+          {flags.vpcIpv6 && (
+            <TableCell>{subnet.ipv6?.[0]?.range ?? 'None'}</TableCell>
+          )}
           <Hidden smDown>
             <TableCell>
               {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
