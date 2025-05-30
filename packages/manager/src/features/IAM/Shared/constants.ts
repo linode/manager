@@ -7,9 +7,9 @@ export const NO_ASSIGNED_ROLES_TEXT = `The user doesn't have any roles assigned 
 
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity access roles assigned yet. Once you assigned the user a role on specific entities, these entities will show up here.`;
 
-export const ERROR_MESSAGE_FORM_1 = `Internal Error - Issue with updating permissions.`;
+export const INTERNAL_ERROR_UPDATE_PERMISSION = `Internal Error - Issue with updating permissions.`;
 
-export const ERROR_MESSAGE_FORM_2 = `No changes were saved.`;
+export const NO_CHANGES_SAVED = `No changes were saved.`;
 
 // Links
 // TODO: update the link when it's ready - UIE-8534

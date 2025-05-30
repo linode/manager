@@ -23,8 +23,8 @@ import {
 } from 'src/queries/iam/iam';
 
 import {
-  ERROR_MESSAGE_FORM_1,
-  ERROR_MESSAGE_FORM_2,
+  INTERNAL_ERROR_UPDATE_PERMISSION,
+  NO_CHANGES_SAVED,
 } from '../../Shared/constants';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
@@ -124,9 +124,9 @@ export const AssignSelectedRolesDrawer = ({
           {formState.errors.root?.message && (
             <Notice variant="error">
               <Typography>
-                {ERROR_MESSAGE_FORM_1}
+                {INTERNAL_ERROR_UPDATE_PERMISSION}
                 <br />
-                {ERROR_MESSAGE_FORM_2}
+                {NO_CHANGES_SAVED}
               </Typography>
             </Notice>
           )}

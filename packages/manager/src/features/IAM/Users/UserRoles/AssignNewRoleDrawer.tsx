@@ -18,8 +18,8 @@ import {
 import { iamQueries } from 'src/queries/iam/queries';
 
 import {
-  ERROR_MESSAGE_FORM_1,
-  ERROR_MESSAGE_FORM_2,
+  INTERNAL_ERROR_UPDATE_PERMISSION,
+  NO_CHANGES_SAVED,
 } from '../../Shared/constants';
 import {
   getAllRoles,
@@ -106,9 +106,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
           {formState.errors.root?.message && (
             <Notice variant="error">
               <Typography>
-                {ERROR_MESSAGE_FORM_1}
+                {INTERNAL_ERROR_UPDATE_PERMISSION}
                 <br />
-                {ERROR_MESSAGE_FORM_2}
+                {NO_CHANGES_SAVED}
               </Typography>
             </Notice>
           )}
