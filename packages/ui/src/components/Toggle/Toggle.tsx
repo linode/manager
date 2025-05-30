@@ -1,8 +1,10 @@
+import { SvgIcon } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import { ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
+import { CheckMarkIcon, ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
+import { Box } from '../Box';
 import { TooltipIcon } from '../TooltipIcon';
 
 import type { SwitchProps } from '@mui/material/Switch';
@@ -13,6 +15,21 @@ export interface ToggleProps extends SwitchProps {
    */
   tooltipText?: JSX.Element | string;
 }
+
+const checkedIcon = (
+  <Box sx={{ display: 'flex', gap: 0.5, marginLeft: '-16px', top: '8px' }}>
+    <SvgIcon
+      component={CheckMarkIcon}
+      sx={{
+        height: 20,
+        width: 20,
+        mt: 0.35,
+        color: 'white !important',
+      }}
+    />
+    <ToggleOnIcon />
+  </Box>
+);
 
 /**
  * ## Usage
@@ -31,7 +48,7 @@ export const Toggle = (props: ToggleProps) => {
   return (
     <React.Fragment>
       <Switch
-        checkedIcon={<ToggleOnIcon />}
+        checkedIcon={checkedIcon}
         color="primary"
         data-qa-toggle={props.checked}
         icon={<ToggleOffIcon />}
