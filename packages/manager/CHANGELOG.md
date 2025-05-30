@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Remove the `Accordion` wrapper from the default Alerts tab and replace it with `Paper` on the Linode details page ([#12215](https://github.com/linode/manager/pull/12215))
 - Update LKE flows for APL General Availability ([#12268](https://github.com/linode/manager/pull/12268))
+- Copy for premium plan recommendation for LKE ([#12300](https://github.com/linode/manager/pull/12300))
 
 ### Fixed:
 
