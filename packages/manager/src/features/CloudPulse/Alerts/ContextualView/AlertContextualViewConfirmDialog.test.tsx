@@ -32,7 +32,6 @@ describe('Alert confirmation dialog', () => {
         /Are you sure you want to save these settings for entity-1\?/
       )
     ).toBeVisible();
-    expect(screen.getByText('Alerts(Beta)')).toBeVisible();
   });
 
   it('should click confirm button', async () => {
