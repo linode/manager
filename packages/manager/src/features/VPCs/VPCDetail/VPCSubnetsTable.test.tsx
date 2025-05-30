@@ -1,4 +1,4 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -21,9 +21,17 @@ const loadingTestId = 'circle-progress';
 beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
 }));
 
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
@@ -181,6 +189,10 @@ describe('VPC Subnets table', () => {
   });
 
   it('should show linode table head data when table is expanded', async () => {
+    // @TODO VPC IPv6: Remove this flag mock once VPC IPv6 is fully rolled out, and update
+    // the assertion to expect the IPv6 columns are present
+    queryMocks.useFlags.mockReturnValue({ vpcIpv6: false });
+
     const subnet = subnetFactory.build({
       linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
     });
@@ -213,6 +225,53 @@ describe('VPC Subnets table', () => {
     getByText('Status');
     getByText('VPC IPv4');
     getByText('Firewalls');
+
+    expect(screen.queryByText('VPC IPv6')).not.toBeInTheDocument();
+    expect(screen.queryByText('VPC IPv6 Range')).not.toBeInTheDocument();
+  });
+
+  // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
+  it('renders VPC IPv6 and VPC IPv6 Range columns in Linode table when vpcIpv6 feature flag is enabled', async () => {
+    queryMocks.useFlags.mockReturnValue({ vpcIpv6: true });
+
+    const subnet = subnetFactory.build({
+      linodes: [subnetAssignedLinodeDataFactory.build({ id: 1 })],
+    });
+    server.use(
+      http.get('*/vpcs/:vpcId/subnets', () => {
+        return HttpResponse.json(makeResourcePage([subnet]));
+      }),
+      http.get('*/networking/firewalls/settings', () => {
+        return HttpResponse.json(firewallSettingsFactory.build());
+      })
+    );
+
+    await renderWithThemeAndRouter(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={3}
+        vpcRegion=""
+      />
+    );
+
+    const loadingState = screen.queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    const expandTableButton = screen.getAllByRole('button')[3];
+    await userEvent.click(expandTableButton);
+
+    await renderWithThemeAndRouter(
+      <VPCSubnetsTable
+        isVPCLKEEnterpriseCluster={false}
+        vpcId={3}
+        vpcRegion=""
+      />
+    );
+
+    screen.getByText('VPC IPv6');
+    screen.getByText('VPC IPv6 Range');
   });
 
   it('should display no nodeBalancers text if there are no nodeBalancers associated with the subnet', async () => {

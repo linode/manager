@@ -28,6 +28,7 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { useIsNodebalancerVPCEnabled } from 'src/features/NodeBalancers/utils';
 import { SubnetActionMenu } from 'src/features/VPCs/VPCDetail/SubnetActionMenu';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
@@ -62,6 +63,8 @@ export const VPCSubnetsTable = (props: Props) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
+  const flags = useFlags();
+
   const navigate = useNavigate();
   const params = useParams({ strict: false });
   const location = useLocation();
@@ -86,7 +89,7 @@ export const VPCSubnetsTable = (props: Props) => {
   });
   const { query } = search;
 
-  const flags = useIsNodebalancerVPCEnabled();
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
 
   const pagination = usePaginationV2({
     currentRoute: VPC_DETAILS_ROUTE,
@@ -295,7 +298,7 @@ export const VPCSubnetsTable = (props: Props) => {
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
-        >{`${flags.isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
+        >{`${isNodebalancerVPCEnabled ? 'Resources' : 'Linodes'}`}</TableCell>
       </Hidden>
       <TableCell />
     </TableRow>
@@ -311,7 +314,7 @@ export const VPCSubnetsTable = (props: Props) => {
           <TableCell>{subnet.ipv4}</TableCell>
           <Hidden smDown>
             <TableCell>
-              {`${flags.isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
+              {`${isNodebalancerVPCEnabled ? subnet.linodes.length + subnet.nodebalancers.length : subnet.linodes.length}`}
             </TableCell>
           </Hidden>
           <TableCell actionCell>
@@ -337,7 +340,7 @@ export const VPCSubnetsTable = (props: Props) => {
                 color: theme.tokens.color.Neutrals.White,
               }}
             >
-              {SubnetLinodeTableRowHead}
+              {SubnetLinodeTableRowHead(flags.vpcIpv6)}
             </TableHead>
             <TableBody>
               {subnet.linodes.length > 0 ? (
@@ -358,7 +361,7 @@ export const VPCSubnetsTable = (props: Props) => {
               )}
             </TableBody>
           </Table>
-          {flags.isNodebalancerVPCEnabled && (
+          {isNodebalancerVPCEnabled && (
             <Table aria-label="NodeBalancers" size="small" striped={false}>
               <TableHead
                 style={{

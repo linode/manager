@@ -59,6 +59,20 @@ export const linodeInterfaceFactoryVPC =
         ],
         ranges: [{ range: '10.0.0.1' }],
       },
+      ipv6: {
+        is_public: false,
+        ranges: [
+          {
+            range: '2600:3c03::f03c:91ff:fe0a:109a',
+          },
+        ],
+        slaac: [
+          {
+            address: '2600:3c03::f03c:91ff:fe0a:109a',
+            range: '2600:3c03::/64',
+          },
+        ],
+      },
       subnet_id: 1,
       vpc_id: 1,
     },
