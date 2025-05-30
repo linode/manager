@@ -1333,12 +1333,24 @@ export const lightTheme: ThemeOptions = {
         checked: {},
         disabled: {},
         root: {
+          '&:hover .MuiSwitch-switchBase:not(.Mui-disabled) + .MuiSwitch-track':
+            {
+              backgroundColor: Component.Switch.Inactive.Hover.Background,
+            },
+          '&:hover .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) + .MuiSwitch-track':
+            {
+              backgroundColor: Component.Switch.Active.Hover.Background,
+            },
+          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Active.Default.Background,
+          },
           '& $checked': {
             '& .square': {
               fill: Color.Neutrals.White,
             },
             // color: `${primaryColors.main} !important`,
             '& input': {
+              borderRadius: '10px',
               left: -20,
             },
             '&$switchBase': {
@@ -1350,7 +1362,7 @@ export const lightTheme: ThemeOptions = {
           '& $disabled': {
             '&$switchBase': {
               '& + $track': {
-                backgroundColor: Color.Neutrals[30],
+                backgroundColor: Component.Switch.Inactive.Disabled.Background,
                 borderColor: Color.Neutrals[40],
               },
               '& .square': {
@@ -1359,12 +1371,16 @@ export const lightTheme: ThemeOptions = {
             },
           },
           '& .icon': {
-            borderRadius: 1,
-            height: 16,
-            left: 0,
+            borderRadius: '50%',
+            height: 20,
+            top: -2,
+            left: -2,
             position: 'relative',
             transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-            width: 16,
+            width: 20,
+          },
+          '& .Mui-checked .icon': {
+            left: '-6px',
           },
           '& .square': {
             fill: Color.Neutrals.White,
@@ -1379,35 +1395,44 @@ export const lightTheme: ThemeOptions = {
           },
           '.MuiSwitch-track': {
             opacity: '1 !important',
+            height: '24px',
+            width: '48px',
+            borderRadius: 12,
           },
           height: 48,
-          width: 68,
+          width: 72,
         },
         switchBase: {
           '&$checked': {
-            transform: 'translateX(20px)',
+            transform: 'translateX(-20px)',
+            backgroundColor: `${Component.Switch.Active.Default.Background} !important`,
           },
           '&.Mui-disabled': {
             '& +.MuiSwitch-track': {
-              backgroundColor: Color.Neutrals[30],
+              backgroundColor: Component.Switch.Inactive.Disabled.Background,
               borderColor: Color.Neutrals[40],
             },
           },
-          color: primaryColors.main,
+          '&.Mui-checked.Mui-disabled + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Active.Disabled.Background,
+            borderColor: Color.Neutrals[40],
+          },
+          color: Component.Switch.Active.Default.Background,
           padding: 16,
+          '&:hover': {
+            backgroundColor: 'transparent !important',
+          },
+          '&:focus': {
+            backgroundColor: 'transparent !important',
+          },
         },
         track: {
-          backgroundColor: Color.Neutrals[40],
-          borderRadius: 1,
-          boxSizing: 'content-box',
-          height: 24,
-          left: 12,
-          marginLeft: 0,
-          marginTop: 0,
+          backgroundColor: Component.Switch.Inactive.Default.Background,
+          boxSizing: 'border-box',
           opacity: 1,
-          top: 12,
           transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          width: 44,
+          display: 'flex',
+          alignItems: 'flex-start',
         },
       },
     },
