@@ -245,20 +245,112 @@ export const darkTheme: ThemeOptions = {
         clearIndicator: {
           color: Select.Default.Icon,
         },
+        groupLabel: {
+          marginTop: '0px !important',
+          top: 0,
+          backgroundColor: Dropdown.Background.Category,
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+        },
+        paper: {
+          boxShadow: Alias.Elevation.S,
+          marginTop: Spacing.S4,
+          paddingTop: Spacing.S4,
+          paddingBottom: Spacing.S4,
+          backgroundColor: Component.Dropdown.Background.Default,
+          // Override padding when noOptions is present
+          '&:has(.MuiAutocomplete-noOptions)': {
+            paddingTop: Spacing.S0,
+            paddingBottom: Spacing.S0,
+          },
+        },
         listbox: {
-          backgroundColor: customDarkModeOptions.bg.white,
-          border: `1px solid ${primaryColors.main}`,
+          backgroundColor: Select.Default.Background,
+          paddingTop: Spacing.S4,
+          border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
+          border: `${Spacing.S4} !important`,
+          boxShadow: Alias.Elevation.S,
+        },
+        inputRoot: {
+          paddingLeft: Spacing.S12,
+          '& input::placeholder': {
+            color: Select.Default.Text,
+            opacity: 1,
+          },
         },
         noOptions: {
-          color: Color.Neutrals.White,
+          color: Select.Default.Icon,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
+          height: Spacing.S32,
+          display: 'flex',
+          alignItems: 'center',
         },
         option: {
+          '&.Mui-focused': {
+            backgroundColor: `${Dropdown.Background.Hover} !important`,
+          },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
             color: Dropdown.Text.Default,
+          },
+          '& .fi': {
+            width: Spacing.S28,
+            height: Spacing.S20,
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
+        },
+        popper: {
+          '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"]': {
+              '.MuiAutocomplete-listbox': {
+                borderTop: 0,
+                padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
+              },
+              '.MuiAutocomplete-option': {
+                height: Spacing.S32,
+                svg: {
+                  height: Spacing.S20,
+                  width: Spacing.S20,
+                },
+              },
+            },
+            '&[data-popper-placement="top"]': {
+              '.MuiAutocomplete-listbox': {
+                borderBottom: 0,
+                padding: 0,
+                '& .MuiAutocomplete-groupLabel': {
+                  fontSize: Font.FontSize.Xxxs,
+                  lineHeight: Font.LineHeight.Xxxs,
+                  fontWeight: Font.FontWeight.Bold,
+                  color: Dropdown.Text.Default,
+                  textTransform: 'uppercase',
+                },
+              },
+              '.MuiAutocomplete-option': {
+                height: Spacing.S32,
+                svg: {
+                  height: Spacing.S20,
+                  width: Spacing.S20,
+                },
+              },
+            },
           },
         },
         popupIndicator: {
@@ -266,7 +358,7 @@ export const darkTheme: ThemeOptions = {
         },
         tag: {
           '.MuiChip-deleteIcon': {
-            color: Content.Text.Primary.Default,
+            color: Select.Default.Icon,
             width: 'auto',
             height: 'auto',
           },
@@ -543,8 +635,10 @@ export const darkTheme: ThemeOptions = {
           '&[class*="error"]': {
             color: Select.Error.HintText,
           },
+          fontWeight: Font.FontWeight.Semibold,
           color: Color.Neutrals[40],
           lineHeight: 1.25,
+          marginTop: '4px',
         },
       },
     },
@@ -790,6 +884,11 @@ export const darkTheme: ThemeOptions = {
             color: theme.palette.primary.main,
           },
           padding: '10px 10px',
+          '&.MuiRadio-sizeSmall': {
+            '.MuiSvgIcon-fontSizeSmall': {
+              fontSize: '16px',
+            },
+          },
         }),
       },
     },
