@@ -328,8 +328,7 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: Button.Secondary.Hover.Background,
-            border: `1px solid ${Button.Secondary.Hover.Border}`,
-            color: Button.Secondary.Hover.Text,
+            color: Button.Secondary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: Button.Secondary.Disabled.Background,
@@ -351,18 +350,18 @@ export const darkTheme: ThemeOptions = {
           style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
               {
-                backgroundColor: Background.Negativesubtle,
-                border: `1px solid ${Border.Negative}`,
-                color: Content.Text.Negative,
+                backgroundColor: Button.Danger.Hover.Background,
+                border: `1px solid ${Button.Danger.Hover.Background}`,
+                color: Button.Danger.Hover.Text,
               },
             '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
+              backgroundColor: Button.Danger.Disabled.Background,
+              border: `1px solid ${Button.Danger.Disabled.Background}`,
+              color: Button.Danger.Disabled.Text,
             },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
+            backgroundColor: Button.Danger.Default.Background,
+            border: `1px solid ${Button.Danger.Default.Background}`,
+            color: Button.Danger.Default.Text,
           },
         },
       ],
