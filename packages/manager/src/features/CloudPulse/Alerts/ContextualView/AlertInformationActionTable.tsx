@@ -130,13 +130,12 @@ export const AlertInformationActionTable = (
         system: alertIds.system,
       })
         .then(() => {
-          enqueueSnackbar(
-            `The alert settings for ${entityName} saved successfully.`,
-            { variant: 'success' }
-          );
+          enqueueSnackbar('Your settings for alerts have been saved.', {
+            variant: 'success',
+          });
         })
         .catch(() => {
-          enqueueSnackbar('Change in alert settings failed', {
+          enqueueSnackbar('There is an error, please try saving again.', {
             variant: 'error',
           });
         })
@@ -145,7 +144,7 @@ export const AlertInformationActionTable = (
           setIsDialogOpen(false);
         });
     },
-    [updateAlerts, enqueueSnackbar, entityName]
+    [updateAlerts, enqueueSnackbar]
   );
 
   const handleToggle = (alert: Alert) => {
@@ -277,7 +276,7 @@ export const AlertInformationActionTable = (
       </OrderBy>
       <AlertContextualViewConfirmDialog
         alertIds={enabledAlertIds}
-        entityId={entityId}
+        entityName={entityName}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
         isLoading={isLoading}
