@@ -60,6 +60,7 @@ const Panel = (props: NodePoolPanelProps) => {
   const {
     addNodePool,
     apiError,
+    getTypeCount,
     hasSelectedRegion,
     isAPLEnabled,
     isPlanPanelDisabled,
@@ -73,9 +74,9 @@ const Panel = (props: NodePoolPanelProps) => {
 
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
-  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
-    new Map()
-  );
+  // const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+  //   new Map()
+  // );
   const [selectedType, setSelectedType] = React.useState<string | undefined>();
 
   const extendedTypes = types.map(extendType);
@@ -106,8 +107,7 @@ const Panel = (props: NodePoolPanelProps) => {
         <KubernetesPlansPanel
           copy={getPlansPanelCopy()}
           error={apiError}
-          getTypeCount={(planId) =>
-            typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+          getTypeCount={getTypeCount
           }
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"

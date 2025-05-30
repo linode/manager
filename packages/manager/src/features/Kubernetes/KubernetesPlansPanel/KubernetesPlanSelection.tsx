@@ -215,7 +215,7 @@ export const KubernetesPlanSelection = (
               {
                 <Button
                   buttonType="secondary"
-                  disabled={count < 1 || rowIsDisabled}
+                  disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
                   onClick={() =>
                     onConfigure ? onConfigure(true, plan.formattedLabel) : null
                   }

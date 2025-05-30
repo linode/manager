@@ -1,15 +1,25 @@
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../constants';
 import { NodePoolsUpdateStrategySelect } from '../NodePoolsUpdateStrategySelect';
 
-import type { NodePoolUpdateStrategy } from '@linode/api-v4';
+import type { KubernetesTier, NodePoolUpdateStrategy } from '@linode/api-v4';
 
 export interface Props {
+  getTypeCount: (planId: string) => number;
   // nodePool: KubeNodePoolResponseBeta | undefined;
   onClose: () => void;
   open: boolean;
+  planId: string;
+  selectedTier: KubernetesTier;
+  updatePlanCount: (planId: string, newCount: number) => void;
 }
 
 interface VersionUpdateFormFields {
@@ -17,12 +27,14 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open } = props;
+  const { onClose, open, selectedTier, planId, getTypeCount, updatePlanCount } = props;
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {},
     });
+
+  const count = getTypeCount(planId);
 
   // React.useEffect(() => {
   //   if (!nodePool) {
@@ -63,13 +75,16 @@ export const NodePoolConfigDrawer = (props: Props) => {
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Typography
-            marginBottom={(theme) => theme.spacing(3)}
-            marginTop={(theme) => theme.spacing()}
-          >
-            Choose how you would like your node pool to update. TODO: something
-            about how this related to cluster versioning.
-          </Typography>
+          <EnhancedNumberInput
+            inputLabel={`edit-quantity-${planId}`}
+            max={
+              selectedTier === 'enterprise'
+                ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                : MAX_NODES_PER_POOL_STANDARD_TIER
+            }
+            setValue={(newCount: number) => updatePlanCount(planId, newCount)}
+            value={count}
+          />
           <Controller
             control={control}
             name="update_strategy"

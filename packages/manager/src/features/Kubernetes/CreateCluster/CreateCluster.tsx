@@ -122,6 +122,9 @@ export const CreateCluster = () => {
   const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
     React.useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+    new Map()
+  );
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -573,6 +576,9 @@ export const CreateCluster = () => {
             <NodePoolPanel
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
+              getTypeCount={(planId) =>
+                typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+              }
               hasSelectedRegion={hasSelectedRegion}
               isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
