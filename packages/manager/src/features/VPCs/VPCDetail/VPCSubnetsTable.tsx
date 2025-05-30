@@ -294,7 +294,9 @@ export const VPCSubnetsTable = (props: Props) => {
           Subnet ID
         </TableSortCell>
       </Hidden>
-      <TableCell sx={{ width: '18%' }}>Subnet IP Range</TableCell>
+      <TableCell sx={{ width: '18%' }}>
+        Subnet {flags.vpcIpv6 ? 'IPv4' : 'IP'} Range
+      </TableCell>
       <Hidden smDown>
         <TableCell
           sx={{ width: '10%' }}
