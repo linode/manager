@@ -7,6 +7,7 @@ import { PlacementGroupsUnassignModal } from './PlacementGroupsUnassignModal';
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -14,6 +15,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
   };
 });
 
