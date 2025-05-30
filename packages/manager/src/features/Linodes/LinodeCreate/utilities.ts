@@ -377,13 +377,22 @@ export const defaultValues = async (
     undefined;
 
   if (isLinodeInterfacesEnabled) {
+    const linodeId = params.linodeID;
     try {
+      let linode: Linode | undefined;
+      if (linodeId) {
+        linode = await queryClient.ensureQueryData(
+          linodeQueries.linode(linodeId)
+        );
+      }
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
       );
-      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-        accountSettings.interfaces_for_new_linodes
-      );
+      interfaceGeneration =
+        linode?.interface_generation ??
+        getDefaultInterfaceGenerationFromAccountSetting(
+          accountSettings.interfaces_for_new_linodes
+        );
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
     }

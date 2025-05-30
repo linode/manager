@@ -106,6 +106,7 @@ export const LinodeSelectTable = (props: Props) => {
       private_ip: hasPrivateIP,
       region: linode.region,
       type: linode.type ?? '',
+      interface_generation: linode.interface_generation,
     }));
 
     if (!isLabelFieldDirty) {
