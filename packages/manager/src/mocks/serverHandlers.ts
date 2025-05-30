@@ -97,6 +97,7 @@ import {
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -2752,6 +2753,7 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2761,6 +2763,16 @@ export const handlers = [
     };
 
     return HttpResponse.json(response);
+  }),
+
+  http.get('*/monitor/services/:serviceType', ({ params }) => {
+    const serviceType = params.serviceType;
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
+      is_beta: pickRandom([true, false]),
+    });
+    return HttpResponse.json({ data: response });
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
