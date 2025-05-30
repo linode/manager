@@ -1519,7 +1519,6 @@ export const lightTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,
