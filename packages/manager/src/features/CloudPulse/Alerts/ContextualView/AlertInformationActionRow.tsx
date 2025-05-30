@@ -58,7 +58,7 @@ export const AlertInformationActionRow = (
               onChange={() => handleToggle(alert)}
               sx={(theme) => ({
                 '& .Mui-disabled+.MuiSwitch-track': {
-                  backgroundColor: theme.tokens.color.Brand[80] + ' !important',
+                  backgroundColor: theme.tokens.color.Brand[80],
                   opacity: '0.3 !important',
                 },
               })}
