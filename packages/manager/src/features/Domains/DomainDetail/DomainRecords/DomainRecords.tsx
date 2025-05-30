@@ -16,7 +16,7 @@ import {
 import { storage } from 'src/utilities/storage';
 
 import { DomainRecordDrawer } from './DomainRecordDrawer';
-import { StyledDiv, StyledGrid } from './DomainRecords.styles';
+import { StyledGrid } from './DomainRecords.styles';
 import { DomainRecordTable } from './DomainRecordTable';
 import { generateTypes } from './generateTypes';
 
@@ -257,9 +257,16 @@ export const DomainRecords = (props: Props) => {
                 alignItems="center"
                 container
                 justifyContent="space-between"
-                spacing={2}
+                spacing={1}
               >
-                <Grid ref={ref} sx={{ paddingLeft: 0, paddingRight: 0 }}>
+                <Grid
+                  ref={ref}
+                  sx={(theme) => ({
+                    marginBottom: type.link
+                      ? `-${theme.spacingFunction(8)}`
+                      : theme.spacingFunction(4),
+                  })}
+                >
                   <Typography
                     aria-level={2}
                     className="m0"
@@ -270,12 +277,7 @@ export const DomainRecords = (props: Props) => {
                     {type.title}
                   </Typography>
                 </Grid>
-                {type.link && (
-                  <Grid sx={{ paddingLeft: 0, paddingRight: 0 }}>
-                    {' '}
-                    <StyledDiv>{type.link()}</StyledDiv>{' '}
-                  </Grid>
-                )}
+                {type.link && <Grid>{type.link()}</Grid>}
               </StyledGrid>
               <OrderBy
                 data={type.data}

@@ -8,9 +8,9 @@ import {
   Typography,
 } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { determineInitialPlanCategoryTab } from 'src/features/components/PlansPanel/utils';
@@ -46,7 +46,7 @@ interface Props {
 }
 
 export const DatabaseResize = ({ database, disabled = false }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [selectedPlanId, setSelectedPlanId] = React.useState<
     string | undefined
@@ -92,7 +92,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       enqueueSnackbar(`Database cluster ${database.label} is being resized.`, {
         variant: 'info',
       });
-      history.push(`/databases/${database.engine}/${database.id}`);
+      navigate({
+        to: '/databases/$engine/$databaseId',
+        params: {
+          engine: database.engine,
+          databaseId: database.id,
+        },
+      });
     });
   };
 
@@ -318,8 +324,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           currentClusterSize={database.cluster_size}
           currentEngine={selectedEngine}
           currentPlan={currentPlan}
-          isResize={true}
           label={database.label}
+          mode="resize"
           platform={database.platform}
           resizeData={summaryText}
         />

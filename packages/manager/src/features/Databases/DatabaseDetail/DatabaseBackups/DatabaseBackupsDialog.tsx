@@ -1,8 +1,8 @@
 import { ActionsPanel, Dialog, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -23,7 +23,7 @@ interface Props extends Omit<DialogProps, 'title'> {
 
 export const DatabaseBackupDialog = (props: Props) => {
   const { database, onClose, open, selectedDate, selectedTime } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [isRestoring, setIsRestoring] = useState(false);
 
@@ -37,7 +37,13 @@ export const DatabaseBackupDialog = (props: Props) => {
   const handleRestoreDatabase = () => {
     setIsRestoring(true);
     restore().then((database: Database) => {
-      history.push(`/databases/${database.engine}/${database.id}`);
+      navigate({
+        to: `/databases/$engine/$databaseId`,
+        params: {
+          engine: database.engine,
+          databaseId: database.id,
+        },
+      });
       enqueueSnackbar('Your database is being restored.', {
         variant: 'success',
       });
