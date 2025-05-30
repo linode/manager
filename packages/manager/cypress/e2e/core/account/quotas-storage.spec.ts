@@ -27,16 +27,7 @@ import type { Quota } from '@linode/api-v4';
 const placeholderText = 'Select an Object Storage S3 endpoint';
 describe('Quota workflow tests', () => {
   beforeEach(() => {
-    // TODO M3-10003 - Remove all limitsEvolution references once `limitsEvolution` feature flag is removed.
-    mockAppendFeatureFlags({
-      limitsEvolution: {
-        enabled: true,
-        // this flag is not relevant for this test
-        // requestForIncreaseDisabledForAll: false,
-        // requestForIncreaseDisabledForInternalAccountsOnly: false,
-      },
-    }).as('getFeatureFlags');
-
+    // object storage mocks
     const mockDomain = randomDomainName();
     const mockRegions = regionFactory.buildList(4, {
       capabilities: ['Object Storage'],
@@ -135,74 +126,80 @@ describe('Quota workflow tests', () => {
   });
 
   describe('Quota storage table', () => {
+    beforeEach(() => {
+      // TODO M3-10003 - Remove all limitsEvolution references once `limitsEvolution` feature flag is removed.
+      mockAppendFeatureFlags({
+        limitsEvolution: {
+          enabled: true,
+        },
+      }).as('getFeatureFlags');
+    });
     it('Quotas and quota usages display properly', function () {
-      this.mockQuotas.forEach((mockQuota: Quota) => {
-        cy.visitWithLogin('/account/quotas');
-        cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
-        // Quotas table placeholder text is shown
-        cy.get('[data-testid="table-row-empty"]').should('be.visible');
+      cy.visitWithLogin('/account/quotas');
+      cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
+      // Quotas table placeholder text is shown
+      cy.get('[data-testid="table-row-empty"]').should('be.visible');
 
-        // Object Storage Endpoint field is blank
-        cy.findByPlaceholderText(placeholderText)
-          .should('be.visible')
-          .should('be.enabled');
-        ui.autocomplete
-          .findByLabel('Object Storage Endpoint')
-          .should('be.visible')
-          .type(this.selectedDomain);
-        ui.autocompletePopper
-          .findByTitle(this.selectedDomain, { exact: false })
-          .should('be.visible')
-          .click();
-        cy.wait(['@getQuotas', '@getQuotaUsages']);
-        cy.get('table[data-testid="table-endpoint-quotas"]')
-          .find('tbody')
-          .within(() => {
-            cy.get('tr').should('have.length', 3);
-            cy.get('[data-testid="table-row-empty"]').should('not.exist');
-            cy.get('tr').should('have.length', 3);
-            cy.get('tr').each((row, rowIndex) => {
-              cy.wrap(row).within(() => {
-                cy.get('td')
-                  .eq(0)
-                  .within(() => {
-                    cy.findByText(mockQuota.quota_name, {
-                      exact: false,
-                    }).should('be.visible');
-                    cy.get(`[aria-label="${mockQuota.description}"]`).should(
-                      'be.visible'
-                    );
-                  });
-                cy.get('td')
-                  .eq(1)
-                  .within(() => {
-                    cy.findByText(mockQuota.quota_limit, {
-                      exact: false,
-                    }).should('be.visible');
-                    cy.findByText(mockQuota.resource_metric, {
-                      exact: false,
-                    }).should('be.visible');
-                  });
-                cy.get('td')
-                  .eq(2)
-                  .within(() => {
-                    // quota usage
-                    const strUsage = `${this.mockQuotaUsages[rowIndex].usage} of ${this.mockQuotaUsages[rowIndex].quota_limit}`;
-                    cy.findByText(strUsage, { exact: false }).should(
-                      'be.visible'
-                    );
-                  });
-              });
+      // Object Storage Endpoint field is blank
+      cy.findByPlaceholderText(placeholderText)
+        .should('be.visible')
+        .should('be.enabled');
+      ui.autocomplete
+        .findByLabel('Object Storage Endpoint')
+        .should('be.visible')
+        .type(this.selectedDomain);
+      ui.autocompletePopper
+        .findByTitle(this.selectedDomain, { exact: false })
+        .should('be.visible')
+        .click();
+      cy.wait(['@getQuotas', '@getQuotaUsages']);
+      cy.get('table[data-testid="table-endpoint-quotas"]')
+        .find('tbody')
+        .within(() => {
+          cy.get('tr').should('have.length', 3);
+          cy.get('[data-testid="table-row-empty"]').should('not.exist');
+          cy.get('tr').should('have.length', 3);
+          cy.get('tr').each((row, rowIndex) => {
+            cy.wrap(row).within(() => {
+              cy.get('td')
+                .eq(0)
+                .within(() => {
+                  cy.findByText(this.mockQuotas[rowIndex].quota_name, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.get(
+                    `[aria-label="${this.mockQuotas[rowIndex].description}"]`
+                  ).should('be.visible');
+                });
+              cy.get('td')
+                .eq(1)
+                .within(() => {
+                  cy.findByText(this.mockQuotas[rowIndex].quota_limit, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.findByText(this.mockQuotas[rowIndex].resource_metric, {
+                    exact: false,
+                  }).should('be.visible');
+                });
+              cy.get('td')
+                .eq(2)
+                .within(() => {
+                  // quota usage
+                  const strUsage = `${this.mockQuotaUsages[rowIndex].usage} of ${this.mockQuotaUsages[rowIndex].quota_limit}`;
+                  cy.findByText(strUsage, { exact: false }).should(
+                    'be.visible'
+                  );
+                });
             });
           });
-      });
+        });
     });
 
     it('Quota error results in error message being displayed', function () {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
       cy.visitWithLogin('/account/quotas');
-      cy.wait('@getObjectStorageEndpoints');
+      cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
@@ -219,14 +216,16 @@ describe('Quota workflow tests', () => {
   });
 
   describe('Quota Request Increase workflow', () => {
-    // this test executed in context of internal user, using mockApiInternalUser()
-    it('Quota Request Increase workflow follows proper sequence', function () {
+    beforeEach(() => {
       mockAppendFeatureFlags({
         limitsEvolution: {
           enabled: true,
           requestForIncreaseDisabledForInternalAccountsOnly: false,
         },
       }).as('getFeatureFlags');
+    });
+    // this test executed in context of internal user, using mockApiInternalUser()
+    it('Quota Request Increase workflow follows proper sequence', function () {
       const mockProfile = profileFactory.build({
         email: 'mock-user@linode.com',
         restricted: false,
