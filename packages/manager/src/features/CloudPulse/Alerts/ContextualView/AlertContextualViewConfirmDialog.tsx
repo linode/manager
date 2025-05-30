@@ -12,9 +12,9 @@ interface AlertContextualViewConfirmDialogProps {
   alertIds: ServiceAlertsUpdatePayload;
 
   /**
-   * Id of the entity associated with the alerts
+   * Name of the entity associated with the alerts
    */
-  entityId: string;
+  entityName: string;
 
   /**
    * Handler function for cancel button
@@ -31,7 +31,6 @@ interface AlertContextualViewConfirmDialogProps {
    * Loading state of the confirmation dialog
    */
   isLoading?: boolean;
-
   /**
    * Current state of the confirmation dialoge whether open or not
    */
@@ -46,7 +45,7 @@ export const AlertContextualViewConfirmDialog = React.memo(
       handleConfirm,
       isLoading = false,
       isOpen,
-      entityId,
+      entityName,
     } = props;
 
     const actionsPanel = (
@@ -81,9 +80,9 @@ export const AlertContextualViewConfirmDialog = React.memo(
         <Typography variant="subtitle2">
           {
             <span>
-              Are you sure you want to save these settings for {entityId}?
+              Are you sure you want to save these settings for {entityName}? All
               legacy alert settings will be disabled and replaced by the new{' '}
-              <b>Alert(Beta)</b> settings.
+              <b>Alerts(Beta)</b> settings.
             </span>
           }
         </Typography>
