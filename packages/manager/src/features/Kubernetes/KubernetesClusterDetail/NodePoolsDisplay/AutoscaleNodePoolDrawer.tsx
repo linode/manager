@@ -1,4 +1,5 @@
 import {
+  ActionsPanel,
   Button,
   Drawer,
   FormControlLabel,
@@ -89,7 +90,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync } = useUpdateNodePoolMutation(
+  const { mutateAsync, isPending } = useUpdateNodePoolMutation(
     clusterId,
     nodePool?.id ?? -1
   );
@@ -257,6 +258,20 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
             )}
           </Grid>
         </Grid>
+        <ActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'submit',
+            disabled: isPending, //|| !formState.isDirty
+            label: 'Save Changes',
+            loading: isPending,
+            type: 'submit',
+          }}
+          secondaryButtonProps={{
+            'data-testid': 'cancel',
+            label: 'Cancel',
+            onClick: handleClose,
+          }}
+        />
       </form>
     </Drawer>
   );
