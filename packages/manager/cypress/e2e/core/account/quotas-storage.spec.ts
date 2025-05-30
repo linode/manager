@@ -27,13 +27,13 @@ import type { Quota } from '@linode/api-v4';
 const placeholderText = 'Select an Object Storage S3 endpoint';
 describe('Quota workflow tests', () => {
   beforeEach(() => {
-    // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
+    // TODO M3-10003 - Remove all limitsEvolution references once `limitsEvolution` feature flag is removed.
     mockAppendFeatureFlags({
       limitsEvolution: {
         enabled: true,
         // this flag is not relevant for this test
         // requestForIncreaseDisabledForAll: false,
-        requestForIncreaseDisabledForInternalAccountsOnly: false,
+        // requestForIncreaseDisabledForInternalAccountsOnly: false,
       },
     }).as('getFeatureFlags');
 
@@ -134,21 +134,11 @@ describe('Quota workflow tests', () => {
     mockGetObjectStorageQuotas(selectedDomain, mockQuotas).as('getQuotas');
   });
 
-  describe('Quota Request Increase workflow', () => {
+  describe('Quota storage table', () => {
     it('Quotas and quota usages display properly', function () {
-      // const mockProfile = profileFactory.build({
-      //   email: 'mock-user@linode.com',
-      //   restricted: false,
-      // });
-      // mockGetProfile(mockProfile).as('getProfile');
-      // mockApiInternalUser();
-      this.mockQuotas.forEach((mockQuota: Quota, index: number) => {
+      this.mockQuotas.forEach((mockQuota: Quota) => {
         cy.visitWithLogin('/account/quotas');
-        cy.wait([
-          '@getFeatureFlags',
-          // '@getProfile',
-          '@getObjectStorageEndpoints',
-        ]);
+        cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
         // Quotas table placeholder text is shown
         cy.get('[data-testid="table-row-empty"]').should('be.visible');
 
@@ -176,20 +166,20 @@ describe('Quota workflow tests', () => {
                 cy.get('td')
                   .eq(0)
                   .within(() => {
-                    cy.findByText(this.mockQuotas[rowIndex].quota_name, {
+                    cy.findByText(mockQuota.quota_name, {
                       exact: false,
                     }).should('be.visible');
-                    cy.get(
-                      `[aria-label="${this.mockQuotas[rowIndex].description}"]`
-                    ).should('be.visible');
+                    cy.get(`[aria-label="${mockQuota.description}"]`).should(
+                      'be.visible'
+                    );
                   });
                 cy.get('td')
                   .eq(1)
                   .within(() => {
-                    cy.findByText(this.mockQuotas[rowIndex].quota_limit, {
+                    cy.findByText(mockQuota.quota_limit, {
                       exact: false,
                     }).should('be.visible');
-                    cy.findByText(this.mockQuotas[rowIndex].resource_metric, {
+                    cy.findByText(mockQuota.resource_metric, {
                       exact: false,
                     }).should('be.visible');
                   });
@@ -208,11 +198,8 @@ describe('Quota workflow tests', () => {
       });
     });
 
-    xit('Quota error results in error message being displayed', function () {
+    it('Quota error results in error message being displayed', function () {
       const errorMsg = 'Request failed.';
-      //   mockGetObjectStorageEndpoints(this.mockEndpoints).as(
-      //     'getObjectStorageEndpoints'
-      //   );
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
       cy.visitWithLogin('/account/quotas');
       cy.wait('@getObjectStorageEndpoints');
@@ -231,20 +218,20 @@ describe('Quota workflow tests', () => {
     });
   });
 
-  xdescribe('Quota Request Increase workflow', () => {
+  describe('Quota Request Increase workflow', () => {
     // this test executed in context of internal user, using mockApiInternalUser()
     it('Quota Request Increase workflow follows proper sequence', function () {
+      mockAppendFeatureFlags({
+        limitsEvolution: {
+          enabled: true,
+          requestForIncreaseDisabledForInternalAccountsOnly: false,
+        },
+      }).as('getFeatureFlags');
       const mockProfile = profileFactory.build({
         email: 'mock-user@linode.com',
         restricted: false,
       });
       mockGetProfile(mockProfile).as('getProfile');
-      // mockGetObjectStorageEndpoints(this.mockEndpoints).as(
-      //   'getObjectStorageEndpoints'
-      // );
-      // mockGetObjectStorageQuotas(this.selectedDomain, this.mockQuotas).as(
-      //   'getQuotas'
-      // );
       mockApiInternalUser();
       const ticketSummary = 'Increase Object Storage Quota';
       const expectedResults = [
@@ -271,8 +258,6 @@ describe('Quota workflow tests', () => {
           '@getProfile',
           '@getObjectStorageEndpoints',
         ]);
-        // Quotas table placeholder text is shown
-        // cy.get('[data-testid="table-row-empty"]').should('be.visible');
 
         // Object Storage Endpoint field is blank
         const mockTicket = supportTicketFactory.build({
@@ -304,48 +289,6 @@ describe('Quota workflow tests', () => {
           .should('be.visible')
           .click();
         cy.wait(['@getQuotas', '@getQuotaUsages']);
-        // cy.get('table[data-testid="table-endpoint-quotas"]')
-        //   .find('tbody')
-        //   .within(() => {
-        //     cy.get('tr').should('have.length', 3);
-        //     cy.get('[data-testid="table-row-empty"]').should('not.exist');
-        //     cy.get('tr').should('have.length', 3);
-        //     cy.get('tr').each((row, rowIndex) => {
-        //       cy.wrap(row).within(() => {
-        //         cy.get('td')
-        //           .eq(0)
-        //           .within(() => {
-        //             cy.findByText(this.mockQuotas[rowIndex].quota_name, {
-        //               exact: false,
-        //             }).should('be.visible');
-        //             cy.get(
-        //               `[aria-label="${this.mockQuotas[rowIndex].description}"]`
-        //             ).should('be.visible');
-        //           });
-        //         cy.get('td')
-        //           .eq(1)
-        //           .within(() => {
-        //             cy.findByText(this.mockQuotas[rowIndex].quota_limit, {
-        //               exact: false,
-        //             }).should('be.visible');
-        //             cy.findByText(this.mockQuotas[rowIndex].resource_metric, {
-        //               exact: false,
-        //             }).should('be.visible');
-        //           });
-        //       });
-        //     });
-        //     cy.get('tr').each((row, rowIndex) => {
-        //       cy.wrap(row).within(() => {
-        //         cy.get('td')
-        //           .eq(2)
-        //           .within(() => {
-        //             // quota usage
-        //             const strUsage = `${this.mockQuotaUsages[rowIndex].usage} of ${this.mockQuotaUsages[rowIndex].quota_limit} ${expectedResults[rowIndex].metric} used`;
-        //             cy.findByText(strUsage).should('be.visible');
-        //           });
-        //       });
-        //     });
-        //   });
 
         // Quotas increase request workflow
         ui.actionMenu
@@ -426,9 +369,6 @@ describe('Quota workflow tests', () => {
 
     it('Quota error results in error message being displayed', function () {
       const errorMsg = 'Request failed.';
-      //   mockGetObjectStorageEndpoints(this.mockEndpoints).as(
-      //     'getObjectStorageEndpoints'
-      //   );
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
       cy.visitWithLogin('/account/quotas');
       cy.wait('@getObjectStorageEndpoints');
@@ -448,9 +388,6 @@ describe('Quota workflow tests', () => {
 
     // this test executed in context of internal user, using mockApiInternalUser()
     it('Quota Request Increase error results in error message being displayed', function () {
-      //   mockGetObjectStorageEndpoints(this.mockEndpoints).as(
-      //     'getObjectStorageEndpoints'
-      //   );
       mockGetObjectStorageQuotas(this.selectedDomain, this.mockQuotas).as(
         'getQuotas'
       );
@@ -496,7 +433,7 @@ describe('Quota workflow tests', () => {
     });
   });
 
-  xdescribe('Feature flag determines if Request Increase is enabled', function () {
+  describe('Feature flag determines if Request Increase is enabled', function () {
     it('Request Increase enabled for normal user when requestForIncreaseDisabledForAll is false and requestForIncreaseDisabledForInternalAccountsOnly is false', function () {
       mockAppendFeatureFlags({
         limitsEvolution: {
@@ -563,7 +500,6 @@ describe('Quota workflow tests', () => {
     });
 
     it('Request Increase disabled for normal user when requestForIncreaseDisabledForAll is true', function () {
-      // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
       mockAppendFeatureFlags({
         limitsEvolution: {
           enabled: true,
@@ -594,7 +530,6 @@ describe('Quota workflow tests', () => {
     });
 
     it('Request Increase disabled for internal user when requestForIncreaseDisabledForAll is true', function () {
-      // TODO M3-10003 - Remove mock once `limitsEvolution` feature flag is removed.
       mockAppendFeatureFlags({
         limitsEvolution: {
           enabled: true,
