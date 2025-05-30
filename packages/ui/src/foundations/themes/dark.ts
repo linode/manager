@@ -247,6 +247,7 @@ export const darkTheme: ThemeOptions = {
         },
         groupLabel: {
           marginTop: '0px !important',
+          top: 0,
           backgroundColor: Dropdown.Background.Category,
           padding: `${Spacing.S8} ${Spacing.S12} !important`,
         },
@@ -255,6 +256,7 @@ export const darkTheme: ThemeOptions = {
           marginTop: Spacing.S4,
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
+          backgroundColor: Component.Dropdown.Background.Default,
           // Override padding when noOptions is present
           '&:has(.MuiAutocomplete-noOptions)': {
             paddingTop: Spacing.S0,

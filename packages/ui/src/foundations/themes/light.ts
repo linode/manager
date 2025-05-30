@@ -367,6 +367,7 @@ export const lightTheme: ThemeOptions = {
         },
         groupLabel: {
           marginTop: '0px !important',
+          top: 0,
           backgroundColor: Dropdown.Background.Category,
           padding: `${Spacing.S8} ${Spacing.S12} !important`,
         },
