@@ -246,7 +246,7 @@ export const useServiceAlertsMutation = (
     },
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: [serviceType, entityId],
+        queryKey: queryFactory.resources(serviceType).queryKey,
       });
     },
   });
