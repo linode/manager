@@ -193,6 +193,125 @@ describe('Quota workflow tests', () => {
             });
           });
         });
+
+      // selecting new object storage endpoint triggers update of quotas and quota usages
+      const updatedEndpoint = this.mockEndpoints[this.mockEndpoints.length - 1];
+      const updatedDomain = updatedEndpoint.s3_endpoint || '';
+      const updatedQuotas = [
+        quotaFactory.build({
+          quota_id: `obj-bytes-${updatedDomain}`,
+          description: randomLabel(50),
+          endpoint_type: updatedEndpoint.endpoint_type,
+          quota_limit: 20,
+          quota_name: randomLabel(15),
+          resource_metric: 'byte',
+          s3_endpoint: updatedDomain,
+        }),
+        quotaFactory.build({
+          quota_id: `obj-buckets-${updatedDomain}`,
+          description: randomLabel(50),
+          endpoint_type: updatedEndpoint.endpoint_type,
+          quota_limit: 122,
+          quota_name: randomLabel(15),
+          resource_metric: 'bucket',
+          s3_endpoint: updatedDomain,
+        }),
+        quotaFactory.build({
+          quota_id: `obj-objects-${updatedDomain}`,
+          description: randomLabel(50),
+          endpoint_type: updatedEndpoint.endpoint_type,
+          quota_limit: 450,
+          quota_name: randomLabel(15),
+          resource_metric: 'object',
+          s3_endpoint: updatedDomain,
+        }),
+      ];
+      const updatedQuotaUsages = [
+        quotaUsageFactory.build({
+          quota_limit: updatedQuotas[0].quota_limit,
+          usage: Math.round(updatedQuotas[0].quota_limit * 0.1),
+        }),
+        quotaUsageFactory.build({
+          quota_limit: updatedQuotas[1].quota_limit,
+          usage: Math.round(updatedQuotas[1].quota_limit * 0.1),
+        }),
+        quotaUsageFactory.build({
+          quota_limit: updatedQuotas[2].quota_limit,
+          usage: Math.round(updatedQuotas[2].quota_limit * 0.1),
+        }),
+      ];
+      mockGetObjectStorageQuotaUsages(
+        updatedDomain,
+        'bytes',
+        updatedQuotaUsages[0]
+      );
+      mockGetObjectStorageQuotaUsages(
+        updatedDomain,
+        'buckets',
+        updatedQuotaUsages[1]
+      );
+      mockGetObjectStorageQuotaUsages(
+        updatedDomain,
+        'objects',
+        updatedQuotaUsages[2]
+      ).as('getUpdatedQuotaUsages');
+      mockGetObjectStorageQuotas(updatedDomain, updatedQuotas).as(
+        'getUpdatedQuotas'
+      );
+
+      // select new endpoint in dropdown
+      ui.autocomplete
+        .findByLabel('Object Storage Endpoint')
+        .should('be.visible')
+        .clear();
+      ui.autocomplete
+        .findByLabel('Object Storage Endpoint')
+        .type(updatedDomain);
+      ui.autocompletePopper
+        .findByTitle(updatedDomain, { exact: false })
+        .should('be.visible')
+        .click();
+      cy.wait(['@getUpdatedQuotas', '@getUpdatedQuotaUsages']);
+      cy.get('table[data-testid="table-endpoint-quotas"]')
+        .find('tbody')
+        .within(() => {
+          cy.get('tr').should('have.length', 3);
+          cy.get('[data-testid="table-row-empty"]').should('not.exist');
+          cy.get('tr').should('have.length', 3);
+          cy.get('tr').each((row, rowIndex) => {
+            cy.wrap(row).within(() => {
+              cy.get('td')
+                .eq(0)
+                .within(() => {
+                  cy.findByText(updatedQuotas[rowIndex].quota_name, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.get(
+                    `[aria-label="${updatedQuotas[rowIndex].description}"]`
+                  ).should('be.visible');
+                });
+              cy.get('td')
+                .eq(1)
+                .within(() => {
+                  cy.findByText(updatedQuotas[rowIndex].quota_limit, {
+                    exact: false,
+                  }).should('be.visible');
+                  cy.findByText(updatedQuotas[rowIndex].resource_metric, {
+                    exact: false,
+                  }).should('be.visible');
+                });
+              cy.get('td')
+                .eq(2)
+                .within(() => {
+                  // quota usage
+                  const strUsage = `${updatedQuotaUsages[rowIndex].usage} of ${updatedQuotaUsages[rowIndex].quota_limit}`;
+                  cy.findByText(strUsage, { exact: false }).should(
+                    'be.visible'
+                  );
+                });
+            });
+          });
+        });
     });
 
     it('Quota error results in error message being displayed', function () {
