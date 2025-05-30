@@ -17,7 +17,7 @@ import { useAlertDefinitionByServiceTypeQuery } from 'src/queries/cloudpulse/ale
 import { AlertContextualViewTableHeaderMap } from '../AlertsListing/constants';
 import {
   convertAlertsToTypeSet,
-  filterAlertsByStatusAndType,
+  filterAlertsBySearchTextAndType,
 } from '../Utils/utils';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
@@ -53,8 +53,8 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on serach text & selected type
-  const filteredAlerts = filterAlertsByStatusAndType(
+  // Filter alerts based on search text & selected type
+  const filteredAlerts = filterAlertsBySearchTextAndType(
     alerts,
     searchText,
     selectedType

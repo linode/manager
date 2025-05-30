@@ -1,4 +1,5 @@
 import { within } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
@@ -32,6 +33,7 @@ const props: AlertInformationActionTableProps = {
   columns,
   entityId,
   entityName,
+  serviceType,
   orderByColumn: 'Alert Name',
 };
 
@@ -54,7 +56,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     expect(getByText('No data to display.')).toBeInTheDocument();
   });
 
-  it('Shoud render table row toggle in table row', async () => {
+  it('Should render table row toggle in table row', async () => {
     const { findByTestId } = renderWithTheme(
       <AlertInformationActionTable {...props} />
     );
@@ -66,18 +68,28 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     expect(checkbox).toHaveProperty('checked');
   });
 
-  it('Should show confirm dialog on checkbox click', async () => {
-    const { findByTestId, findByText } = renderWithTheme(
-      <AlertInformationActionTable {...props} />
-    );
+  it('Should show confirm dialog on save button click when changes are made', async () => {
+    renderWithTheme(<AlertInformationActionTable {...props} />);
+
+    // First toggle an alert to make changes
     const alert = alerts[0];
-    const row = await findByTestId(alert.id);
+    const row = await screen.findByTestId(alert.id);
+    const toggle = await within(row).findByRole('checkbox');
+    await userEvent.click(toggle);
 
-    const checkbox = await within(row).findByRole('checkbox');
+    // Now the save button should be enabled
+    const saveButton = screen.getByTestId('save-alerts');
+    expect(saveButton).not.toBeDisabled();
 
-    await userEvent.click(checkbox);
+    // Click save and verify dialog appears
+    await userEvent.click(saveButton);
+    expect(screen.getByTestId('confirmation-dialog')).toBeVisible();
+  });
 
-    const text = await findByText(`Disable ${alert.label} Alert?`);
-    expect(text).toBeInTheDocument();
+  it('Should have save button in disabled form when no changes are made', () => {
+    renderWithTheme(<AlertInformationActionTable {...props} />);
+
+    const saveButton = screen.getByTestId('save-alerts');
+    expect(saveButton).toBeDisabled();
   });
 });
