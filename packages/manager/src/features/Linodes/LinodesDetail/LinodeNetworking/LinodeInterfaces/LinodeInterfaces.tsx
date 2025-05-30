@@ -7,6 +7,7 @@ import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
+import { HistoryDialog } from './LinodeInterfacesHistory/HistoryDialog';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -22,6 +23,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = React.useState(false);
 
   const [selectedInterfaceId, setSelectedInterfaceId] = useState<number>();
 
@@ -54,7 +56,16 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+          <Button
+            buttonType="secondary"
+            onClick={() => setIsHistoryDialogOpen(true)}
+          >
+            Interface History
+          </Button>
+          <Button
+            buttonType="outlined"
+            onClick={() => setIsSettingsDrawerOpen(true)}
+          >
             Interface Settings
           </Button>
           <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
@@ -83,6 +94,13 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         linodeId={linodeId}
         onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
         open={location.pathname.includes('networking/interfaces')}
+      />
+      <HistoryDialog
+        linodeId={linodeId}
+        onClose={() => {
+          setIsHistoryDialogOpen(false);
+        }}
+        open={isHistoryDialogOpen}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}

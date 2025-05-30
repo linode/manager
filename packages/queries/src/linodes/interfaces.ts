@@ -15,12 +15,15 @@ import { linodeQueries } from './linodes';
 import type {
   APIError,
   CreateLinodeInterfacePayload,
+  Filter,
   Firewall,
   LinodeInterface,
+  LinodeInterfaceHistory,
   LinodeInterfaces,
   LinodeInterfaceSettings,
   LinodeInterfaceSettingsPayload,
   ModifyLinodeInterfacePayload,
+  Params,
   ResourcePage,
   UpgradeInterfaceData,
   UpgradeInterfacePayload,
@@ -268,4 +271,18 @@ export const useUpgradeToLinodeInterfacesMutation = (linodeId: number) => {
       },
     },
   );
+};
+
+export const useLinodeInterfacesHistory = (
+  linodeId: number,
+  params: Params,
+  filter: Filter,
+  enabled = true,
+) => {
+  return useQuery<ResourcePage<LinodeInterfaceHistory>, APIError[]>({
+    ...linodeQueries
+      .linode(linodeId)
+      ._ctx.interfaces._ctx.interfacesHistory(params, filter),
+    enabled,
+  });
 };
