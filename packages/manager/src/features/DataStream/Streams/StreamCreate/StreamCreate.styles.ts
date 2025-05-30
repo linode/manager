@@ -3,6 +3,9 @@ import { makeStyles } from 'tss-react/mui';
 import type { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles()((theme: Theme) => ({
+  input: {
+    width: 416,
+  },
   root: {
     '& .mlMain': {
       [theme.breakpoints.down('lg')]: {
