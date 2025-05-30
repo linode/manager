@@ -62,6 +62,7 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 interface AclpFlag {
   beta: boolean;
   enabled: boolean;
+  open?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
