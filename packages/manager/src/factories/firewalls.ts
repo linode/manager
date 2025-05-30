@@ -66,6 +66,7 @@ export const firewallEntityfactory =
     label: 'my-linode',
     type: 'linode' as FirewallDeviceEntityType,
     url: '/test',
+    parent_entity: null,
   });
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
