@@ -258,7 +258,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   created: Factory.each(() => {
     const now = new Date();
     const tenDaysAgo = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000);
-    return randomDate(tenDaysAgo, now).toISOString();
+    return randomDate(tenDaysAgo, now).toISO() ?? '';
   }),
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${crypto.randomUUID()}`),

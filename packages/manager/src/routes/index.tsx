@@ -91,6 +91,7 @@ declare module '@tanstack/react-router' {
  */
 export const migrationRouteTree = migrationRootRoute.addChildren([
   betaRouteTree,
+  databasesRouteTree,
   domainsRouteTree,
   dataStreamRouteTree,
   firewallsRouteTree,
