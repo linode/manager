@@ -200,9 +200,7 @@ export const MaintenanceTable = ({ type }: Props) => {
                 >
                   Label
                 </TableCell>
-                {(!flags.vmHostMaintenance?.enabled ||
-                  type === 'scheduled' ||
-                  type === 'completed') && (
+                {(type === 'scheduled' || type === 'completed') && (
                   <Hidden mdDown>
                     <TableSortCell
                       active={orderBy === 'when'}
