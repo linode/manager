@@ -165,7 +165,7 @@ const renderEventFields = (
     label="Secondary Entity"
     name="secondary_entity"
     onChange={onChange}
-    value={event.entity}
+    value={event.secondary_entity}
   />,
 
   <label key="read">
