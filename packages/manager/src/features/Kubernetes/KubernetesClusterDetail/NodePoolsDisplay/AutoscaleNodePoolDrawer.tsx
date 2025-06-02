@@ -8,7 +8,6 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
-// import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -16,15 +15,15 @@ import { Controller, useForm } from 'react-hook-form';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-// import { defaultValues } from 'src/features/Linodes/LinodeCreate/utilities';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
-// import {
-//   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
-//   MAX_NODES_PER_POOL_STANDARD_TIER,
-// } from '../../constants';
+import {
+  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+  MAX_NODES_PER_POOL_STANDARD_TIER,
+} from '../../constants';
+
 import type {
   AutoscaleSettings,
   KubeNodePoolResponse,
@@ -81,7 +80,7 @@ export interface Props {
 export const AutoscaleNodePoolDrawer = (props: Props) => {
   const {
     clusterId,
-    // clusterTier,
+    clusterTier,
     handleOpenResizeDrawer,
     nodePool,
     onClose,
@@ -102,17 +101,32 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     ? extendType(typesQuery[0].data)
     : undefined;
 
-  const { control, formState, setValue, watch, ...form } = useForm({
+  const {
+    control,
+    formState: { errors, isDirty, isSubmitting, isValid },
+    setValue,
+    watch,
+    ...form
+  } = useForm({
     defaultValues: {
       enabled: autoscaler?.enabled ?? false,
       max: autoscaler?.max ?? 1,
       min: autoscaler?.min ?? 1,
     },
+    mode: 'onChange',
   });
 
   const { max: _max, enabled: _enabled } = watch();
+  const maxLimit =
+    clusterTier === 'enterprise'
+      ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+      : MAX_NODES_PER_POOL_STANDARD_TIER;
 
   const onSubmit = async (values: AutoscaleSettings) => {
+    if (!isValid) {
+      return;
+    }
+
     try {
       await updateNodePool({ autoscaler: values }).then(() => {
         enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
@@ -122,7 +136,18 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
       });
     } catch (errResponse) {
       for (const error of errResponse) {
-        if (!error.field) {
+        const fieldMap: Record<string, keyof AutoscaleSettings> = {
+          'autoscaler.min': 'min',
+          'autoscaler.max': 'max',
+          'autoscaler.enabled': 'enabled',
+        };
+        const field = fieldMap[error.field];
+
+        if (field) {
+          form.setError(field, {
+            message: error.reason || 'Invalid value',
+          });
+        } else {
           form.setError('root', {
             message: error.reason,
           });
@@ -135,49 +160,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     onClose();
     form.reset();
   };
-
-  // const {
-  //   errors,
-  //   handleChange,
-  //   handleReset,
-  //   handleSubmit,
-  //   isSubmitting,
-  //   values,
-  // } = useFormik({
-  //   enableReinitialize: true,
-  //   initialValues: {
-  //     enabled: autoscaler?.enabled ?? false,
-  //     max: autoscaler?.max ?? 1,
-  //     min: autoscaler?.min ?? 1,
-  //   },
-  //   onSubmit,
-  //   validate: (values) => {
-  //     const errors: { max?: string; min?: string } = {};
-  //     const maxLimit =
-  //       clusterTier === 'enterprise'
-  //         ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-  //         : MAX_NODES_PER_POOL_STANDARD_TIER;
-  //     if (values.enabled) {
-  //       if (!values.min) {
-  //         errors.min = 'Minimum is a required field.';
-  //       }
-  //       if (
-  //         values.min > values.max ||
-  //         values.min < 1 ||
-  //         values.min > maxLimit
-  //       ) {
-  //         errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
-  //       }
-  //       if (!values.max) {
-  //         errors.max = 'Maximum is a required field.';
-  //       }
-  //       if (values.max > maxLimit || values.max < 1) {
-  //         errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
-  //       }
-  //     }
-  //     return errors;
-  //   },
-  // });
 
   const warning =
     autoscaler && autoscaler.max > 1 && +_max < autoscaler.max
@@ -227,7 +209,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                 control={
                   <Toggle
                     checked={field.value}
-                    // disabled={isSubmitting}
+                    disabled={isSubmitting}
                     name="enabled"
                     onChange={field.onChange}
                   />
@@ -252,18 +234,27 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                   <TextField
                     {...field}
                     className={classes.input}
-                    disabled={!_enabled} // || isSubmitting
+                    disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
-                    errorText={fieldState.error?.message}
                     label="Min"
                     onChange={(e) =>
                       setValue('min', Number(e.target.value), {
                         shouldDirty: true,
                       })
                     }
+                    type="number"
                     value={field.value}
                   />
                 );
+              }}
+              rules={{
+                required: 'Minimum is required',
+                validate: (value) => {
+                  if (!value) return 'Minimum is a required field.';
+                  if (value > _max || value < 1 || value > maxLimit)
+                    return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+                  return true;
+                },
               }}
             />
           </Grid>
@@ -284,39 +275,47 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                   <TextField
                     {...field}
                     className={classes.input}
-                    disabled={!_enabled} // || isSubmitting
+                    disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
-                    errorText={fieldState.error?.message}
                     label="Max"
                     onChange={(e) =>
                       setValue('max', Number(e.target.value), {
                         shouldDirty: true,
                       })
                     }
+                    type="number"
                     value={field.value}
                   />
                 );
               }}
+              rules={{
+                required: 'Maximum is required',
+                validate: (value) => {
+                  if (!value) return 'Maximum is a required field.';
+                  if (value > maxLimit || value < 1)
+                    return `Maximum must be between 1 and ${maxLimit} nodes.`;
+                  return true;
+                },
+              }}
             />
           </Grid>
-        </Grid>
-        {/* <Grid size={12} style={{ padding: '0 8px' }}>
+          <Grid size={12} style={{ padding: '0 8px' }}>
             {errors.min && (
               <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
-                {errors.min}
+                {errors.min.message}
               </Typography>
             )}
             {errors.max && (
               <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
-                {errors.max}
+                {errors.max.message}
               </Typography>
             )}
           </Grid>
-        </Grid> */}
+        </Grid>
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: isPending || !formState.isDirty,
+            disabled: isPending || !isDirty,
             label: 'Save Changes',
             loading: isPending,
             type: 'submit',
