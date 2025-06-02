@@ -748,8 +748,21 @@ export const handlers = [
         id: 1002,
       }),
     ];
+    const aclpSupportedRegionLinodes = [
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-1',
+        region: 'us-iad',
+        id: 1004,
+      }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-2',
+        region: 'us-east',
+        id: 1005,
+      }),
+    ];
     const linodes = [
       ...mtcLinodes,
+      ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
@@ -871,6 +884,20 @@ export const handlers = [
           type: 'g8-premium-128-ht',
         }),
       ];
+      const linodeAclpSupportedRegionDetails = [
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-1',
+          region: 'us-iad',
+        }),
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-2',
+          region: 'us-east',
+        }),
+      ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
         id,
         backups: { enabled: false },
@@ -899,6 +926,10 @@ export const handlers = [
           return linodeMTCPlanDetails[1];
         case 1003:
           return linodeNonMTCPlanInMTCSupportedRegionsDetail;
+        case 1004:
+          return linodeAclpSupportedRegionDetails[0];
+        case 1005:
+          return linodeAclpSupportedRegionDetails[1];
         default:
           return linodeDetail;
       }
@@ -2767,11 +2798,11 @@ export const handlers = [
         ? serviceTypesFactory.build({
             label: 'Linodes',
             service_type: 'linode',
+            regions: 'us-iad,us-east',
           })
         : serviceTypesFactory.build({
             label: 'Databases',
             service_type: 'dbaas',
-            regions: '*',
           });
 
     return HttpResponse.json(response, { status: 200 });
