@@ -376,23 +376,17 @@ export const defaultValues = async (
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
 
-  if (isLinodeInterfacesEnabled) {
-    const linodeId = params.linodeID;
+  const linodeId = params.linodeID;
+
+  // only run if no Linode is preselected
+  if (isLinodeInterfacesEnabled && !linodeId) {
     try {
-      let linode: Linode | undefined;
-      if (linodeId) {
-        linode = await queryClient.ensureQueryData(
-          linodeQueries.linode(linodeId)
-        );
-      }
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
       );
-      interfaceGeneration =
-        linode?.interface_generation ??
-        getDefaultInterfaceGenerationFromAccountSetting(
-          accountSettings.interfaces_for_new_linodes
-        );
+      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+        accountSettings.interfaces_for_new_linodes
+      );
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
     }

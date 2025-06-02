@@ -103,10 +103,10 @@ export const LinodeSelectTable = (props: Props) => {
       backup_id: null,
       backups_enabled: linode.backups.enabled,
       linode,
-      private_ip: hasPrivateIP,
+      private_ip: linode.interface_generation !== 'linode' && hasPrivateIP,
       region: linode.region,
       type: linode.type ?? '',
-      interface_generation: linode.interface_generation,
+      interface_generation: undefined,
     }));
 
     if (!isLabelFieldDirty) {
