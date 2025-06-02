@@ -410,7 +410,9 @@ export const defaultValues = async (
     }
   }
 
-  const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
+  const privateIp =
+    interfaceGeneration !== 'linode' &&
+    (linode?.ipv4.some(isPrivateIP) ?? false);
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,
