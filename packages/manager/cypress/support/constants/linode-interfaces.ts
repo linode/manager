@@ -2,15 +2,20 @@ export const dryRunButtonText = 'Perform Dry Run';
 
 export const upgradeInterfacesButtonText = 'Upgrade Interfaces';
 
-export const upgradeTooltipText1 = 'Configuration Profile interfaces from a single profile can be upgraded to Linode Interfaces.';
+export const upgradeTooltipText1 =
+  'Configuration Profile interfaces from a single profile can be upgraded to Linode Interfaces.';
 
-export const upgradeTooltipText2 = 'After the upgrade, the Linode can only use Linode Interfaces and cannot revert to Configuration Profile interfaces. Use the dry-run feature to review the changes before committing.';
+export const upgradeTooltipText2 =
+  'After the upgrade, the Linode can only use Linode Interfaces and cannot revert to Configuration Profile interfaces. Use the dry-run feature to review the changes before committing.';
 
-export const promptDialogDescription1 = 'Upgrading allows interface connections to be associated directly with the Linode, rather than its configuration profile.';
+export const promptDialogDescription1 =
+  'Upgrading allows interface connections to be associated directly with the Linode, rather than its configuration profile.';
 
-export const promptDialogDescription2 = 'We recommend performing a dry run before upgrading to identify and resolve any potential conflicts.';
+export const promptDialogDescription2 =
+  'We recommend performing a dry run before upgrading to identify and resolve any potential conflicts.';
 
-export const promptDialogUpgradeWhatHappensTitle = 'What happens after the upgrade:';
+export const promptDialogUpgradeWhatHappensTitle =
+  'What happens after the upgrade:';
 
 export const promptDialogUpgradeDetails = [
   'New Linode Interfaces are created to match the existing Configuration Profile Interfaces.',
