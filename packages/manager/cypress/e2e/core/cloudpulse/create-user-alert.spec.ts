@@ -30,10 +30,9 @@ import {
   triggerConditionFactory,
 } from 'src/factories';
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
+import { entityGroupingOptions } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { AlertDefinitionGroup } from '@linode/api-v4';
-import type { RecPartial } from 'factory.ts';
 import type { Flags } from 'src/featureFlags';
 
 export interface MetricDetails {
@@ -241,14 +240,11 @@ describe('Create Alert', () => {
     cy.url().should('endWith', CREATE_ALERT_PAGE_URL);
   });
 
-  const scopes = [
-    { group: 'per-region', scopeLabel: 'Region' },
-    { group: 'per-entity', scopeLabel: 'Entity' },
-    { group: 'per-account', scopeLabel: 'Account' },
-  ];
-
-  scopes.forEach(({ group, scopeLabel }) => {
-    it(`should successfully create a new alert for ${scopeLabel} level`, () => {
+  // entityGroupingOptions is an array of predefined grouping strategies for alert definitions.
+  // Each item in the array represents a way to group entities when generating or organizing alerts.
+  // The grouping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
+  entityGroupingOptions.forEach(({ label: groupLabel, value }) => {
+    it(`should successfully create a new alert for ${groupLabel} level`, () => {
       const alerts = alertFactory.build({
         alert_channels: [{ id: 1 }],
         created_by: 'user1',
@@ -261,8 +257,8 @@ describe('Create Alert', () => {
         severity: 0,
         tags: [''],
         trigger_conditions: triggerConditionFactory.build(),
-        group: group as RecPartial<AlertDefinitionGroup>,
-        ...(group === 'per-region' ? { regions: regionList } : {}),
+        group: value,
+        ...(value === 'per-region' ? { regions: regionList } : {}),
       });
 
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
@@ -295,14 +291,14 @@ describe('Create Alert', () => {
         .findByLabel('Scope')
         .should('be.visible')
         .clear()
-        .type(scopeLabel);
+        .type(groupLabel);
 
       ui.autocompletePopper
-        .findByTitle(scopeLabel)
+        .findByTitle(groupLabel)
         .should('be.visible')
         .click();
 
-      scopeLabel !== 'Account' &&
+      groupLabel !== 'Account' &&
         cy.get('[data-testid="select_all_notice"]').click();
       // Fill metric details for the first rule
       const cpuUsageMetricDetails = {
@@ -490,7 +486,7 @@ describe('Create Alert', () => {
         );
         // Validate entity IDs and channels
         expect(request.body.channel_ids).to.include(1);
-        expect(response?.body.group).to.eq(group);
+        expect(response?.body.group).to.eq(value);
 
         // Verify URL redirection and toast notification
         cy.url().should('endWith', '/alerts/definitions');

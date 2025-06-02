@@ -33,11 +33,12 @@ import {
   notificationChannelFactory,
   triggerConditionFactory,
 } from 'src/factories';
-import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
+import {
+  CREATE_ALERT_SUCCESS_MESSAGE,
+  entityGroupingOptions,
+} from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { AlertDefinitionGroup } from '@linode/api-v4';
-import type { RecPartial } from 'factory.ts';
 import type { Flags } from 'src/featureFlags';
 
 export interface MetricDetails {
@@ -212,13 +213,10 @@ describe('Create Alert', () => {
    * - Confirms that API interactions work correctly and return the expected responses.
    * - Confirms that the UI displays a success message after creating an alert.
    */
-  const scopes = [
-    { group: 'per-region', scopeLabel: 'Region' },
-    { group: 'per-entity', scopeLabel: 'Entity' },
-    { group: 'per-account', scopeLabel: 'Account' },
-  ];
-
-  scopes.forEach(({ group, scopeLabel }) => {
+  // entityGroupingOptions is an array of predefined grouping strategies for alert definitions.
+  // Each item in the array represents a way to group entities when generating or organizing alerts.
+  // The grouping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
+  entityGroupingOptions.forEach(({ label: scopeLabel, value }) => {
     it(`should successfully create a new alert for ${scopeLabel} level`, () => {
       const alerts = alertFactory.build({
         alert_channels: [{ id: 1 }],
@@ -232,8 +230,8 @@ describe('Create Alert', () => {
         severity: 0,
         tags: ['tag-2', 'tag-3'],
         trigger_conditions: triggerConditionFactory.build(),
-        group: group as RecPartial<AlertDefinitionGroup>,
-        ...(group === 'per-region' ? { regions: regionList } : {}),
+        group: value,
+        ...(value === 'per-region' ? { regions: regionList } : {}),
       });
       mockAppendFeatureFlags(flags);
       mockGetAccount(mockAccount);
@@ -292,11 +290,6 @@ describe('Create Alert', () => {
           .should('be.visible')
           .type('linode-resource');
 
-        // Search for Entity
-        /* cy.findByPlaceholderText('Select Tags')
-          .should('be.visible')
-          .type('tag-2');*/
-
         // Find the table and locate the entity cell containing 'database-2', then check the corresponding checkbox
         cy.get('[data-qa-alert-table="true"]') // Find the table
           .contains('[data-qa-alert-cell*="entity"]', 'linode-resource') // Find resource cell
@@ -314,10 +307,6 @@ describe('Create Alert', () => {
         ui.heading
           .findByText('region')
           .should('have.attr', 'aria-sort', 'ascending');
-        // ui.heading.findByText('tags').should('be.visible');
-        /* ui.heading
-          .findByText('tags')
-          .should('have.attr', 'aria-sort', 'ascending');*/
 
         // Assert resource selection notice
         cy.findByText('1 of 10 entities are selected.');
@@ -497,7 +486,7 @@ describe('Create Alert', () => {
         expect(secondRule.metric).to.equal(secondCustomRule.metric);
         expect(secondRule.operator).to.equal(secondCustomRule.operator);
         expect(secondRule.threshold).to.equal(secondCustomRule.threshold);
-        expect(response?.body.group).to.eq(group);
+        expect(response?.body.group).to.eq(value);
 
         // Validate trigger conditions
         const triggerConditions = request.body.trigger_conditions;
