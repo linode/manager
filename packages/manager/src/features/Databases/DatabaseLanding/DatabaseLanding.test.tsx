@@ -9,14 +9,14 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { accountFactory, databaseInstanceFactory } from 'src/factories';
-import DatabaseLanding from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
+import { DatabaseLanding } from 'src/features/Databases/DatabaseLanding/DatabaseLanding';
 import DatabaseRow from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
-  renderWithTheme,
+  renderWithThemeAndRouter,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -45,10 +45,10 @@ const newDBTabTitle = 'New Database Clusters';
 const legacyDBTabTitle = 'Legacy Database Clusters';
 
 describe('Database Table Row', () => {
-  it('should render a database row', () => {
+  it('should render a database row', async () => {
     const database = databaseInstanceFactory.build();
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
@@ -58,12 +58,12 @@ describe('Database Table Row', () => {
     getByText(capitalize(database.status));
   });
 
-  it('should render a relative time in the created column if the database was created in the last 3 days', () => {
+  it('should render a relative time in the created column if the database was created in the last 3 days', async () => {
     const database = databaseInstanceFactory.build({
       created: DateTime.local().minus({ days: 1 }).toISO(),
     });
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<DatabaseRow database={database} />)
     );
 
@@ -91,9 +91,8 @@ describe('Database Table', () => {
       })
     );
 
-    const { getAllByText, getByTestId, queryAllByText } = renderWithTheme(
-      <DatabaseLanding />
-    );
+    const { getAllByText, getByTestId, queryAllByText } =
+      await renderWithThemeAndRouter(<DatabaseLanding />);
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -126,9 +125,12 @@ describe('Database Table', () => {
         return HttpResponse.json(makeResourcePage([]));
       })
     );
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: true, enabled: true } },
+      }
+    );
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
@@ -159,9 +161,12 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: true, enabled: true } },
+      }
+    );
 
     // Loading state should render
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
@@ -194,9 +199,12 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: true, enabled: true } },
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -218,9 +226,12 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: false, enabled: false } },
-    });
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: false, enabled: false } },
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -264,9 +275,12 @@ describe('Database Table', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(<DatabaseLanding />, {
-      flags: { dbaasV2: { beta: true, enabled: true } },
-    });
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />,
+      {
+        flags: { dbaasV2: { beta: true, enabled: true } },
+      }
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -287,7 +301,9 @@ describe('Database Landing', () => {
   it('should have the "Create Database Cluster" button disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: true } });
 
-    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
+    const { container, getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -303,7 +319,9 @@ describe('Database Landing', () => {
   it('should have the "Create Database Cluster" button enabled for users with full access', async () => {
     queryMocks.useProfile.mockReturnValue({ data: { restricted: false } });
 
-    const { container, getByTestId } = renderWithTheme(<DatabaseLanding />);
+    const { container, getByTestId } = await renderWithThemeAndRouter(
+      <DatabaseLanding />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 
@@ -327,7 +345,7 @@ describe('Database Landing', () => {
       })
     );
 
-    const { getByLabelText, getByTestId } = renderWithTheme(
+    const { getByLabelText, getByTestId } = await renderWithThemeAndRouter(
       <DatabaseLanding />,
       {
         flags: { dbaasV2: { beta: false, enabled: true } },
@@ -358,12 +376,10 @@ describe('Database Landing', () => {
       })
     );
 
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <DatabaseLanding />,
-      {
+    const { getByLabelText, getByTestId, getByText } =
+      await renderWithThemeAndRouter(<DatabaseLanding />, {
         flags: { dbaasV2: { beta: false, enabled: true } },
-      }
-    );
+      });
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
 

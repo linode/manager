@@ -27,7 +27,9 @@ describe('Maintenance Table Row', () => {
   const maintenance = accountMaintenanceFactory.build();
   it('should render the maintenance event', () => {
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<MaintenanceTableRow {...maintenance} />)
+      wrapWithTableBody(
+        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+      )
     );
     getByText(maintenance.entity.label);
     getByText(formatDate(maintenance.when));
@@ -35,7 +37,9 @@ describe('Maintenance Table Row', () => {
 
   it('should render a relative time', () => {
     renderWithTheme(
-      wrapWithTableBody(<MaintenanceTableRow {...maintenance} />)
+      wrapWithTableBody(
+        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+      )
     );
     const { getByText } = within(screen.getByTestId('relative-date'));
 
@@ -55,7 +59,7 @@ describe('Maintenance Table', () => {
         return HttpResponse.json(makeResourcePage(accountMaintenance));
       })
     );
-    renderWithTheme(<MaintenanceTable type="pending" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -63,7 +67,7 @@ describe('Maintenance Table', () => {
     await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
 
     // Static text and table column headers
-    screen.getAllByText('pending');
+    screen.getAllByText('in progress');
     screen.getAllByText('Label');
     screen.getAllByText('Date');
 
@@ -72,7 +76,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    renderWithTheme(<MaintenanceTable type="pending" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     screen.getByText('Download CSV');
   });
@@ -84,11 +88,11 @@ describe('Maintenance Table', () => {
       })
     );
 
-    renderWithTheme(<MaintenanceTable type="pending" />);
+    renderWithTheme(<MaintenanceTable type="in progress" />);
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 
     // Check for custom empty state
-    screen.getByText('No pending maintenance.');
+    screen.getByText('No in progress maintenance.');
   });
 });
