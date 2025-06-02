@@ -301,7 +301,11 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               padding: 1,
             }}
           >
-            <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
+            <Typography
+              flex={{ sm: 2, xs: 0 }}
+              marginLeft={1}
+              variant="h2"
+            >
               {convertStringToCamelCasesWithSpaces(widget.label)} (
               {scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
