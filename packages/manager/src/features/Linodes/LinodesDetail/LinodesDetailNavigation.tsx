@@ -109,7 +109,9 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpIntegration && aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        flags.aclpIntegration &&
+        isAclpSupportedRegionLinode &&
+        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : null,
       routeName: `${url}/alerts`,
@@ -205,7 +207,9 @@ const LinodesDetailNavigation = () => {
                 <LinodeActivity />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeAlerts />
+                <LinodeAlerts
+                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeSettings />
