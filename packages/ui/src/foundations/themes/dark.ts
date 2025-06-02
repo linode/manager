@@ -895,10 +895,6 @@ export const darkTheme: ThemeOptions = {
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,
           },
-          '&.MuiTableRow-hover:hover.disabled-row': {
-            // Exception to make disabled radio buttons not blend into the background
-            backgroundColor: `color-mix(in srgb, ${Table.Row.Background.Hover} 50%, transparent) !important`,
-          },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
             {

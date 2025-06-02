@@ -1512,6 +1512,10 @@ export const lightTheme: ThemeOptions = {
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,
           },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            background: 'none',
+            cursor: 'not-allowed',
+          },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
             {
