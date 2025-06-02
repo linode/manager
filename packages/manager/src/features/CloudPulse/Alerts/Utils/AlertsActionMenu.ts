@@ -47,9 +47,7 @@ export const getAlertTypeToActionsList = (
         title: getTitleForStatusChange(alertStatus),
       },
       {
-        disabled:
-          /* Hardcoding it to be disabled for now as the API's are not ready yet, once they're available will remove the true. */
-          alertStatus === 'in progress' || alertStatus === 'failed' || true,
+        disabled: alertStatus === 'in progress' || alertStatus === 'failed',
         onClick: handleDelete,
         title: 'Delete',
       },
