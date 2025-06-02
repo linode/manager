@@ -3,7 +3,7 @@
  * A single "*" means all regions are supported.
  *
  * @param selectedRegion - Region to check.
- * @param aclpSupportedRegions - Comma-separated supported regions (for eg., "us-ord,us-east" or "*").
+ * @param aclpSupportedRegions - Comma-separated supported regions (for eg., "us-iad,us-east" or "*").
  */
 export const isAclpSupportedRegion = (
   selectedRegion: string | undefined,
