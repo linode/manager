@@ -37,7 +37,11 @@ import {
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
 
-import type { Database } from '@linode/api-v4';
+import type {
+  AlertDefinitionDimensionFilter,
+  AlertDefinitionMetricCriteria,
+  Database,
+} from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -93,6 +97,83 @@ const verifyRowOrder = (expectedIds: string[]) => {
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
+
+/**
+ * Asserts that the given dimension filter's label, operator, and value
+ * are correctly displayed in the UI as visible chips.
+ *
+ * @param {AlertDefinitionDimensionFilter} filter - The dimension filter object containing
+ *   the label (string), operator (string), and value (string) to validate.
+ */
+const assertDimensionFilter = (filter: AlertDefinitionDimensionFilter) => {
+  cy.get(`[data-qa-chip="${filter.label}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(filter.label);
+    });
+
+  cy.get(`[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(dimensionOperatorTypeMap[filter.operator]);
+    });
+
+  cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
+    .should('be.visible')
+    .each(($chip) => {
+      expect($chip).to.have.text(capitalize(filter.value));
+    });
+};
+/**
+ * Validates the UI display of an array of metric criteria rules.
+ *
+ * For each rule, it checks the Metric Threshold section and the Dimension Filters section,
+ * ensuring all expected chips are visible and have the correct text.
+ *
+ * @param {AlertDefinitionMetricCriteria[]} rules - Array of metric criteria objects,
+ *   each containing properties such as aggregate_function, label, operator, threshold,
+ *   unit, and optional dimension_filters to validate.
+ */
+const assertRuleBlock = (rules: AlertDefinitionMetricCriteria[]) => {
+  cy.get('[data-qa-section="Criteria"]').within(() => {
+    rules.forEach((rule, index) => {
+      // Validate Metric Threshold section
+      cy.get('[data-qa-item="Metric Threshold"]')
+        .eq(index)
+        .within(() => {
+          cy.get(
+            `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
+          )
+            .should('be.visible')
+            .should('have.text', aggregationTypeMap[rule.aggregate_function]);
+
+          cy.get(`[data-qa-chip="${rule.label}"]`)
+            .should('be.visible')
+            .should('have.text', rule.label);
+
+          cy.get(`[data-qa-chip="${metricOperatorTypeMap[rule.operator]}"]`)
+            .should('be.visible')
+            .should('have.text', metricOperatorTypeMap[rule.operator]);
+
+          cy.get(`[data-qa-chip="${rule.threshold}"]`)
+            .should('be.visible')
+            .should('have.text', rule.threshold);
+
+          cy.get(`[data-qa-chip="${rule.unit}"]`)
+            .should('be.visible')
+            .should('have.text', rule.unit);
+        });
+
+      // Validate Dimension Filters section
+      cy.get('[data-qa-item="Dimension Filter"]')
+        .eq(index)
+        .within(() => {
+          (rule.dimension_filters ?? []).forEach(assertDimensionFilter);
+        });
+    });
+  });
+};
+
 /**
  * Integration tests for the CloudPulse Alerts Detail Page, ensuring that the alert details, criteria, and entity information are correctly displayed and validated, including various fields like name, description, status, severity, and trigger conditions.
  */
@@ -365,99 +446,37 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         cy.findByText('Scope:').should('be.visible');
         cy.findByText(groupLabel).should('be.visible');
       });
+      // Validate the Criteria section by checking each metric rule's threshold details
+      // and all related dimension filters for correct visibility and text content.
+      assertRuleBlock(rules);
+      // Validating contents of Polling Interval
+      cy.get('[data-qa-item="Polling Interval"]')
+        .find('[data-qa-chip]')
+        .should('be.visible')
+        .should('have.text', '10 minutes');
 
-      // Validating contents of Criteria Section
-      cy.get('[data-qa-section="Criteria"]').within(() => {
-        rules.forEach((rule, index) => {
-          cy.get('[data-qa-item="Metric Threshold"]')
-            .eq(index)
-            .within(() => {
-              cy.get(
-                `[data-qa-chip="${aggregationTypeMap[rule.aggregate_function]}"]`
-              )
-                .should('be.visible')
-                .should(
-                  'have.text',
-                  aggregationTypeMap[rule.aggregate_function]
-                );
+      // Validating contents of Evaluation Periods
+      cy.get('[data-qa-item="Evaluation Period"]')
+        .find('[data-qa-chip]')
+        .should('be.visible')
+        .should('have.text', '5 minutes');
 
-              cy.get(`[data-qa-chip="${rule.label}"]`)
-                .should('be.visible')
-                .should('have.text', rule.label);
+      // Validating contents of Trigger Alert
+      cy.get('[data-qa-chip="All"]')
+        .should('be.visible')
+        .should('have.text', 'All');
 
-              cy.get(`[data-qa-chip="${metricOperatorTypeMap[rule.operator]}"]`)
-                .should('be.visible')
-                .should('have.text', metricOperatorTypeMap[rule.operator]);
+      cy.get('[data-qa-chip="5 minutes"]')
+        .should('be.visible')
+        .should('have.text', '5 minutes');
 
-              cy.get(`[data-qa-chip="${rule.threshold}"]`)
-                .should('be.visible')
-                .should('have.text', rule.threshold);
+      cy.get('[data-qa-item="criteria are met for"]')
+        .should('be.visible')
+        .should('have.text', 'criteria are met for');
 
-              cy.get(`[data-qa-chip="${rule.unit}"]`)
-                .should('be.visible')
-                .should('have.text', rule.unit);
-            });
-
-          // Validating contents of Dimension Filter
-          cy.get('[data-qa-item="Dimension Filter"]')
-            .eq(index)
-            .within(() => {
-              (rule.dimension_filters ?? []).forEach((filter) => {
-                // Validate the filter label
-                cy.get(`[data-qa-chip="${filter.label}"]`)
-                  .should('be.visible')
-                  .each(($chip) => {
-                    expect($chip).to.have.text(filter.label);
-                  });
-                // Validate the filter operator
-                cy.get(
-                  `[data-qa-chip="${dimensionOperatorTypeMap[filter.operator]}"]`
-                )
-                  .should('be.visible')
-                  .each(($chip) => {
-                    expect($chip).to.have.text(
-                      dimensionOperatorTypeMap[filter.operator]
-                    );
-                  });
-                // Validate the filter value
-                cy.get(`[data-qa-chip="${capitalize(filter.value)}"]`)
-                  .should('be.visible')
-                  .each(($chip) => {
-                    expect($chip).to.have.text(capitalize(filter.value));
-                  });
-              });
-            });
-        });
-
-        // Validating contents of Polling Interval
-        cy.get('[data-qa-item="Polling Interval"]')
-          .find('[data-qa-chip]')
-          .should('be.visible')
-          .should('have.text', '10 minutes');
-
-        // Validating contents of Evaluation Periods
-        cy.get('[data-qa-item="Evaluation Period"]')
-          .find('[data-qa-chip]')
-          .should('be.visible')
-          .should('have.text', '5 minutes');
-
-        // Validating contents of Trigger Alert
-        cy.get('[data-qa-chip="All"]')
-          .should('be.visible')
-          .should('have.text', 'All');
-
-        cy.get('[data-qa-chip="5 minutes"]')
-          .should('be.visible')
-          .should('have.text', '5 minutes');
-
-        cy.get('[data-qa-item="criteria are met for"]')
-          .should('be.visible')
-          .should('have.text', 'criteria are met for');
-
-        cy.get('[data-qa-item="consecutive occurrences"]')
-          .should('be.visible')
-          .should('have.text', 'consecutive occurrences.');
-      });
+      cy.get('[data-qa-item="consecutive occurrences"]')
+        .should('be.visible')
+        .should('have.text', 'consecutive occurrences.');
       // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
 
       scopeActions[label];
