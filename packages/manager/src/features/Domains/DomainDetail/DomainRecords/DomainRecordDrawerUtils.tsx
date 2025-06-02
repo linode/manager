@@ -189,8 +189,6 @@ export const filterDataByType = (
 ): Partial<EditableDomainFields | EditableRecordFields> => {
   switch (type) {
     case 'A':
-
-    // eslint-disable-next-line no-fallthrough
     case 'AAAA':
     case 'CNAME':
     case 'NS':

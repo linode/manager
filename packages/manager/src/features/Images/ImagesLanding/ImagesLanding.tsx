@@ -71,7 +71,7 @@ import { RebuildImageDrawer } from './RebuildImageDrawer';
 import type { Handlers as ImageHandlers } from './ImagesActionMenu';
 import type { Filter, Image, ImageStatus } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { ImageAction, ImagesSearchParams } from 'src/routes/images';
+import type { ImageAction } from 'src/routes/images';
 
 const useStyles = makeStyles()((theme: Theme) => ({
   imageTable: {
@@ -108,7 +108,7 @@ export const ImagesLanding = () => {
   }: { action: ImageAction; imageId: string } = useParams({
     strict: false,
   });
-  const search: ImagesSearchParams = useSearch({ from: '/images' });
+  const search = useSearch({ from: '/images' });
   const { query } = search;
   const history = useHistory();
   const navigate = useNavigate();
