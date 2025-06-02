@@ -183,7 +183,6 @@ export const AccessSelect = React.memo((props: Props) => {
         name="acl"
         render={({ field }) => (
           <Autocomplete
-            {...field}
             data-testid="acl-select"
             disableClearable
             disabled={bucketAccessIsFetching || objectAccessIsFetching}
@@ -222,9 +221,9 @@ export const AccessSelect = React.memo((props: Props) => {
             <FormControlLabel
               control={
                 <Toggle
-                  {...field}
                   checked={field.value}
                   disabled={bucketAccessIsFetching || objectAccessIsFetching}
+                  onChange={field.onChange}
                 />
               }
               label={
