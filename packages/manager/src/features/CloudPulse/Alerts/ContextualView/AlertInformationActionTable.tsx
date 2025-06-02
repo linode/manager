@@ -110,8 +110,7 @@ export const AlertInformationActionTable = (
     });
     setAlertStates(initialStates);
     initialAlertStatesRef.current = { ...initialStates };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(alerts), entityId]);
+  }, [alerts, entityId]);
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
