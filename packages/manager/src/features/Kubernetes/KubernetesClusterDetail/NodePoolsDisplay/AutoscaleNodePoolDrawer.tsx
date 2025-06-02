@@ -8,22 +8,23 @@ import {
   Toggle,
   Typography,
 } from '@linode/ui';
+// import { capitalize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
-import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
+// import { defaultValues } from 'src/features/Linodes/LinodeCreate/utilities';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
-import {
-  MAX_NODES_PER_POOL_ENTERPRISE_TIER,
-  MAX_NODES_PER_POOL_STANDARD_TIER,
-} from '../../constants';
-
+// import {
+//   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
+//   MAX_NODES_PER_POOL_STANDARD_TIER,
+// } from '../../constants';
 import type {
   AutoscaleSettings,
   KubeNodePoolResponse,
@@ -80,7 +81,7 @@ export interface Props {
 export const AutoscaleNodePoolDrawer = (props: Props) => {
   const {
     clusterId,
-    clusterTier,
+    // clusterTier,
     handleOpenResizeDrawer,
     nodePool,
     onClose,
@@ -90,7 +91,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
   const { classes, cx } = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { mutateAsync, isPending } = useUpdateNodePoolMutation(
+  const { mutateAsync: updateNodePool, isPending } = useUpdateNodePoolMutation(
     clusterId,
     nodePool?.id ?? -1
   );
@@ -101,65 +102,85 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     ? extendType(typesQuery[0].data)
     : undefined;
 
-  const onSubmit = async (values: AutoscaleSettings) => {
-    await mutateAsync({ autoscaler: values }).then(() => {
-      enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
-        variant: 'success',
-      });
-      onClose();
-    });
-  };
-
-  const handleClose = () => {
-    onClose();
-    handleReset(values);
-  };
-
-  const {
-    errors,
-    handleChange,
-    handleReset,
-    handleSubmit,
-    isSubmitting,
-    values,
-  } = useFormik({
-    enableReinitialize: true,
-    initialValues: {
+  const { control, formState, setValue, watch, ...form } = useForm({
+    defaultValues: {
       enabled: autoscaler?.enabled ?? false,
       max: autoscaler?.max ?? 1,
       min: autoscaler?.min ?? 1,
     },
-    onSubmit,
-    validate: (values) => {
-      const errors: { max?: string; min?: string } = {};
-      const maxLimit =
-        clusterTier === 'enterprise'
-          ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-          : MAX_NODES_PER_POOL_STANDARD_TIER;
-      if (values.enabled) {
-        if (!values.min) {
-          errors.min = 'Minimum is a required field.';
-        }
-        if (
-          values.min > values.max ||
-          values.min < 1 ||
-          values.min > maxLimit
-        ) {
-          errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
-        }
-        if (!values.max) {
-          errors.max = 'Maximum is a required field.';
-        }
-        if (values.max > maxLimit || values.max < 1) {
-          errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
-        }
-      }
-      return errors;
-    },
   });
 
+  const { max: _max, enabled: _enabled } = watch();
+
+  const onSubmit = async (values: AutoscaleSettings) => {
+    try {
+      await updateNodePool({ autoscaler: values }).then(() => {
+        enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
+          variant: 'success',
+        });
+        onClose();
+      });
+    } catch (errResponse) {
+      for (const error of errResponse) {
+        if (!error.field) {
+          form.setError('root', {
+            message: error.reason,
+          });
+        }
+      }
+    }
+  };
+
+  const handleClose = () => {
+    onClose();
+    form.reset();
+  };
+
+  // const {
+  //   errors,
+  //   handleChange,
+  //   handleReset,
+  //   handleSubmit,
+  //   isSubmitting,
+  //   values,
+  // } = useFormik({
+  //   enableReinitialize: true,
+  //   initialValues: {
+  //     enabled: autoscaler?.enabled ?? false,
+  //     max: autoscaler?.max ?? 1,
+  //     min: autoscaler?.min ?? 1,
+  //   },
+  //   onSubmit,
+  //   validate: (values) => {
+  //     const errors: { max?: string; min?: string } = {};
+  //     const maxLimit =
+  //       clusterTier === 'enterprise'
+  //         ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+  //         : MAX_NODES_PER_POOL_STANDARD_TIER;
+  //     if (values.enabled) {
+  //       if (!values.min) {
+  //         errors.min = 'Minimum is a required field.';
+  //       }
+  //       if (
+  //         values.min > values.max ||
+  //         values.min < 1 ||
+  //         values.min > maxLimit
+  //       ) {
+  //         errors.min = `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+  //       }
+  //       if (!values.max) {
+  //         errors.max = 'Maximum is a required field.';
+  //       }
+  //       if (values.max > maxLimit || values.max < 1) {
+  //         errors.max = `Maximum must be between 1 and ${maxLimit} nodes.`;
+  //       }
+  //     }
+  //     return errors;
+  //   },
+  // });
+
   const warning =
-    autoscaler && autoscaler.max > 1 && +values.max < autoscaler.max
+    autoscaler && autoscaler.max > 1 && +_max < autoscaler.max
       ? 'The Node Pool will only be scaled down if there are unneeded nodes.'
       : undefined;
 
@@ -196,56 +217,90 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         </Link>
         .
       </Typography>
-      <form onSubmit={handleSubmit}>
-        <FormControlLabel
-          control={
-            <Toggle
-              checked={values.enabled}
-              disabled={isSubmitting}
-              name="enabled"
-              onChange={handleChange}
-            />
-          }
-          label="Autoscale"
-          style={{ marginTop: 12 }}
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Controller
+          control={control}
+          name="enabled"
+          render={({ field }) => {
+            return (
+              <FormControlLabel
+                control={
+                  <Toggle
+                    checked={field.value}
+                    // disabled={isSubmitting}
+                    name="enabled"
+                    onChange={field.onChange}
+                  />
+                }
+                label="Autoscale"
+                style={{ marginTop: 12 }}
+              />
+            );
+          }}
         />
+
         <Typography marginTop={1}>
           Define the minimum and maximum node constraints:
         </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
-            <TextField
-              className={classes.input}
-              disabled={!values.enabled || isSubmitting}
-              error={Boolean(errors.min)}
-              label="Min"
+            <Controller
+              control={control}
               name="min"
-              onChange={handleChange}
-              type="number"
-              value={values.min}
+              render={({ field, fieldState }) => {
+                return (
+                  <TextField
+                    {...field}
+                    className={classes.input}
+                    disabled={!_enabled} // || isSubmitting
+                    error={!!fieldState.error}
+                    errorText={fieldState.error?.message}
+                    label="Min"
+                    onChange={(e) =>
+                      setValue('min', Number(e.target.value), {
+                        shouldDirty: true,
+                      })
+                    }
+                    value={field.value}
+                  />
+                );
+              }}
             />
           </Grid>
           <Grid
             className={cx({
-              [classes.disabled]: !values.enabled,
+              [classes.disabled]: !_enabled,
               [classes.slash]: true,
             })}
           >
             <Typography>/</Typography>
           </Grid>
           <Grid>
-            <TextField
-              className={classes.input}
-              disabled={!values.enabled || isSubmitting}
-              error={Boolean(errors.max)}
-              label="Max"
+            <Controller
+              control={control}
               name="max"
-              onChange={handleChange}
-              type="number"
-              value={values.max}
+              render={({ field, fieldState }) => {
+                return (
+                  <TextField
+                    {...field}
+                    className={classes.input}
+                    disabled={!_enabled} // || isSubmitting
+                    error={!!fieldState.error}
+                    errorText={fieldState.error?.message}
+                    label="Max"
+                    onChange={(e) =>
+                      setValue('max', Number(e.target.value), {
+                        shouldDirty: true,
+                      })
+                    }
+                    value={field.value}
+                  />
+                );
+              }}
             />
           </Grid>
-          <Grid size={12} style={{ padding: '0 8px' }}>
+        </Grid>
+        {/* <Grid size={12} style={{ padding: '0 8px' }}>
             {errors.min && (
               <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
                 {errors.min}
@@ -257,11 +312,11 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               </Typography>
             )}
           </Grid>
-        </Grid>
+        </Grid> */}
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: isPending, //|| !formState.isDirty
+            disabled: isPending || !formState.isDirty,
             label: 'Save Changes',
             loading: isPending,
             type: 'submit',
