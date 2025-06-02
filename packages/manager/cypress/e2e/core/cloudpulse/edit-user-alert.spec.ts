@@ -442,9 +442,8 @@ describe('Integration Tests for Edit Alert', () => {
         .clear()
         .type(groupLabel);
 
-      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
-
-      scopeActions[label];
+      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account' or 'Entity')
+      scopeActions[groupLabel];
 
       cy.get(
         '[data-qa-metric-threshold="rule_criteria.rules.0-data-field"]'
