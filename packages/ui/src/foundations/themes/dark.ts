@@ -895,6 +895,9 @@ export const darkTheme: ThemeOptions = {
           '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
             backgroundColor: Table.Row.Background.Hover,
           },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            cursor: 'not-allowed',
+          },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
             {
@@ -902,6 +905,7 @@ export const darkTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
+            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,
