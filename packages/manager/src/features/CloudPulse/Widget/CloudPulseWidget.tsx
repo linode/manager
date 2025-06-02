@@ -302,7 +302,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography
-              flex={{ sm: 2, xs: 'unset' }}
+              flex={{ sm: 2, xs: 0 }}
               marginLeft={1}
               variant="h2"
             >
@@ -313,7 +313,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               direction={{ sm: 'row' }}
               sx={{
-                flex: { sm: 3, xs: 'unset' },
+                flex: { sm: 3, xs: 0 },
                 justifyContent: 'end',
                 alignItems: 'center',
                 gap: 2,
