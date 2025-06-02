@@ -546,6 +546,8 @@ describe('LKE cluster updates', () => {
         },
       };
 
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Linode 2 GB Plan';
+
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       mockGetKubernetesVersions().as('getVersions');
@@ -577,8 +579,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
@@ -624,8 +626,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
@@ -680,6 +682,8 @@ describe('LKE cluster updates', () => {
         },
       };
 
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 4 GB Plan';
+
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       mockGetKubernetesVersions().as('getVersions');
@@ -711,8 +715,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
