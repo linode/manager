@@ -160,7 +160,9 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
       deleteAlertDefinition(payload)
         .then(() => {
-          enqueueSnackbar('Alert deleted', { variant: 'success' });
+          enqueueSnackbar('Alert successfully deleted.', {
+            variant: 'success',
+          });
         })
         .catch((deleteError: APIError[]) => {
           const errorResponse = getAPIErrorOrDefault(
