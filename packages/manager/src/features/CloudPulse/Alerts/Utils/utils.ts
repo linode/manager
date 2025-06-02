@@ -280,14 +280,15 @@ export const getChipLabels = (
  * @param selectedType selecte alert type
  * @returns list of filtered alerts based on searchText & selectedType
  */
-export const filterAlertsBySearchTextAndType = (
+export const filterAlertsByStatusAndType = (
   alerts: Alert[] | undefined,
   searchText: string,
   selectedType: string | undefined
 ): Alert[] => {
   return (
-    alerts?.filter(({ label, type }) => {
+    alerts?.filter(({ label, status, type }) => {
       return (
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );

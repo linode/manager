@@ -5,7 +5,7 @@ import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
-  filterAlertsBySearchTextAndType,
+  filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
   handleMultipleError,
@@ -39,12 +39,12 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
 });
 
-it('test filterAlertsBySearchTextAndType method', () => {
+it('test filterAlertsByStatusAndType method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'system' });
-  expect(filterAlertsBySearchTextAndType(alerts, '', 'system')).toHaveLength(12);
-  expect(filterAlertsBySearchTextAndType(alerts, '', 'user')).toHaveLength(0);
+  expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
+  expect(filterAlertsByStatusAndType(alerts, '', 'user')).toHaveLength(0);
   expect(
-    filterAlertsBySearchTextAndType(alerts, 'Alert-1', 'system')
+    filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')
   ).toHaveLength(4);
 });
 
