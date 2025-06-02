@@ -442,7 +442,7 @@ describe('Integration Tests for Edit Alert', () => {
         .clear()
         .type(groupLabel);
 
-      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account')
+      // Execute the appropriate validation logic based on the alert's grouping label (e.g., 'Region' or 'Account' or 'Entity')
       scopeActions[groupLabel];
 
       cy.get(
