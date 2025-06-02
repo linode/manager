@@ -410,6 +410,7 @@ export const baseConfig = [
       'src/features/DataStream/**/*',
       'src/features/Firewalls/**/*',
       'src/features/Help/**/*',
+      'src/features/IAM/**/*',
       'src/features/Images/**/*',
       'src/features/Kubernetes/**/*',
       'src/features/Longview/**/*',

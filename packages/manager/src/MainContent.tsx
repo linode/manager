@@ -36,7 +36,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
 import { migrationRouter } from './routes';
@@ -127,12 +126,6 @@ const EventsLanding = React.lazy(() =>
   }))
 );
 
-const IAM = React.lazy(() =>
-  import('src/features/IAM').then((module) => ({
-    default: module.IdentityAccessManagement,
-  }))
-);
-
 export const MainContent = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
@@ -167,8 +160,6 @@ export const MainContent = () => {
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
-  const { isIAMEnabled } = useIsIAMEnabled();
 
   const isNarrowViewport = useMediaQuery((theme: Theme) =>
     theme.breakpoints.down(960)
@@ -301,9 +292,6 @@ export const MainContent = () => {
                                   component={LinodesRoutes}
                                   path="/linodes"
                                 />
-                                {isIAMEnabled && (
-                                  <Route component={IAM} path="/iam" />
-                                )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
                                 <Route
