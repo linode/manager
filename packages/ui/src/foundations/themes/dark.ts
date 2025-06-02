@@ -903,9 +903,10 @@ export const darkTheme: ThemeOptions = {
             {
               backgroundColor: Table.Row.Background.Default,
             },
+          // TODO: Use design tokens in future when ready
           '&.disabled-row .MuiTableCell-root': {
-            // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
+            // Exception to make disabled radio buttons not blend into the background
+            backgroundColor: `color-mix(in srgb, ${Interaction.Background.Disabled} 80%, ${Background.Black})`,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,
