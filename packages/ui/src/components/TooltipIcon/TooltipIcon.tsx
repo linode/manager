@@ -139,7 +139,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = <HelpOutline sx={sxRootStyle} />;
       break;
     case 'info':
-      renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
+      renderIcon = <InfoOutline sx={sxRootStyle} />;
       break;
     case 'other':
       renderIcon = icon ?? null;

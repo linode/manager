@@ -1,12 +1,5 @@
 import { useProfile, useSMSOptOutMutation } from '@linode/queries';
-import {
-  ActionsPanel,
-  Box,
-  Button,
-  Notice,
-  omittedProps,
-  Typography,
-} from '@linode/ui';
+import { ActionsPanel, Box, Button, Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -49,21 +42,18 @@ export const SMSMessaging = () => {
 
   return (
     <>
-      <StyledNotice
-        hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
+      <Notice
         spacingBottom={16}
         spacingLeft={1}
         spacingTop={12}
         variant={hasVerifiedPhoneNumber ? 'success' : 'warning'}
       >
         <Typography sx={{ fontSize: '0.875rem !important' }}>
-          <b>
-            {hasVerifiedPhoneNumber
-              ? 'You have opted in to SMS messaging.'
-              : 'You are opted out of SMS messaging.'}
-          </b>
+          {hasVerifiedPhoneNumber
+            ? 'You have opted in to SMS messaging.'
+            : 'You are opted out of SMS messaging.'}
         </Typography>
-      </StyledNotice>
+      </Notice>
       <StyledCopy>
         An authentication code is sent via SMS as part of the phone verification
         process. Messages are not sent for any other reason. SMS authentication
@@ -130,14 +120,3 @@ const StyledCopy = styled(Typography, {
   lineHeight: '20px',
   maxWidth: 960,
 }));
-
-const StyledNotice = styled(Notice, {
-  label: 'StyledNotice',
-  shouldForwardProp: omittedProps(['hasVerifiedPhoneNumber']),
-})<{ hasVerifiedPhoneNumber: boolean }>(
-  ({ hasVerifiedPhoneNumber, theme }) => ({
-    borderLeft: hasVerifiedPhoneNumber
-      ? `5px solid ${theme.color.green}`
-      : `5px solid ${theme.color.yellow}`,
-  })
-);
