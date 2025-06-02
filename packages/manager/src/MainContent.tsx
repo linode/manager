@@ -36,7 +36,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -128,22 +127,6 @@ const EventsLanding = React.lazy(() =>
   }))
 );
 
-const CloudPulseMetrics = React.lazy(() =>
-  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
-    (module) => ({
-      default: module.CloudPulseDashboardLanding,
-    })
-  )
-);
-
-const CloudPulseAlerts = React.lazy(() =>
-  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
-    (module) => ({
-      default: module.AlertsLanding,
-    })
-  )
-);
-
 const IAM = React.lazy(() =>
   import('src/features/IAM').then((module) => ({
     default: module.IdentityAccessManagement,
@@ -184,8 +167,6 @@ export const MainContent = () => {
 
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
-  const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
@@ -329,18 +310,6 @@ export const MainContent = () => {
                                   component={EventsLanding}
                                   path="/events"
                                 />
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseMetrics}
-                                    path="/metrics"
-                                  />
-                                )}
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseAlerts}
-                                    path="/alerts"
-                                  />
-                                )}
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
