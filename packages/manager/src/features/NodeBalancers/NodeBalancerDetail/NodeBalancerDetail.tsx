@@ -1,11 +1,10 @@
 import {
-  useGrants,
   useNodeBalancerQuery,
   useNodebalancerUpdateMutation,
 } from '@linode/queries';
 import { CircleProgress, ErrorState, Notice } from '@linode/ui';
-import { useMatch, useParams } from '@tanstack/react-router';
-import * as React from 'react';
+import { useParams } from '@tanstack/react-router';
+import React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -18,21 +17,20 @@ import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useTabs } from 'src/hooks/useTabs';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-import NodeBalancerConfigurations from './NodeBalancerConfigurations';
+import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
 import { NodeBalancerSettings } from './NodeBalancerSettings';
 import { NodeBalancerSummary } from './NodeBalancerSummary/NodeBalancerSummary';
-
-import type { NodeBalancerConfigurationsBaseProps } from './NodeBalancerConfigurations';
 
 export const NodeBalancerDetail = () => {
   const { id } = useParams({
     strict: false,
   });
-  const [label, setLabel] = React.useState<string>();
-  const { data: grants } = useGrants();
 
-  const { error: updateError, mutateAsync: updateNodeBalancer } =
-    useNodebalancerUpdateMutation(Number(id));
+  const {
+    error: updateError,
+    mutateAsync: updateNodeBalancer,
+    reset,
+  } = useNodebalancerUpdateMutation(Number(id));
 
   const {
     data: nodebalancer,
@@ -45,16 +43,6 @@ export const NodeBalancerDetail = () => {
     grantType: 'nodebalancer',
     id: nodebalancer?.id,
   });
-
-  React.useEffect(() => {
-    if (label !== nodebalancer?.label) {
-      setLabel(nodebalancer?.label);
-    }
-  }, [nodebalancer]);
-
-  const cancelUpdate = () => {
-    setLabel(nodebalancer?.label);
-  };
 
   const { handleTabChange, tabIndex, tabs } = useTabs([
     {
@@ -88,8 +76,6 @@ export const NodeBalancerDetail = () => {
   const errorMap = getErrorMap(['label'], updateError);
   const labelError = errorMap.label;
 
-  const nodeBalancerLabel = label !== undefined ? label : nodebalancer?.label;
-
   return (
     <React.Fragment>
       <LandingHeader
@@ -97,17 +83,17 @@ export const NodeBalancerDetail = () => {
           crumbOverrides: [{ label: 'NodeBalancers', position: 1 }],
           firstAndLastOnly: true,
           onEditHandlers: {
-            editableTextTitle: nodeBalancerLabel,
+            editableTextTitle: nodebalancer.label,
             errorText: labelError,
-            onCancel: cancelUpdate,
+            onCancel: () => reset(),
             onEdit: (label) => updateNodeBalancer({ label }),
           },
-          pathname: `/nodebalancers/${nodeBalancerLabel}`,
+          pathname: `/nodebalancers/${nodebalancer.label}`,
         }}
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-nodebalancers"
         spacingBottom={4}
-        title={nodeBalancerLabel}
+        title={nodebalancer.label}
       />
       {errorMap.none && <Notice text={errorMap.none} variant="error" />}
       {isNodeBalancerReadOnly && (
@@ -126,11 +112,7 @@ export const NodeBalancerDetail = () => {
               <NodeBalancerSummary />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
-              <NodeBalancerConfigurationWrapper
-                grants={grants}
-                nodeBalancerLabel={nodebalancer.label}
-                nodeBalancerRegion={nodebalancer.region}
-              />
+              <NodeBalancerConfigurationsWrapper />
             </SafeTabPanel>
             <SafeTabPanel index={2}>
               <NodeBalancerSettings />
@@ -141,34 +123,3 @@ export const NodeBalancerDetail = () => {
     </React.Fragment>
   );
 };
-
-const NodeBalancerConfigurationWrapper = (
-  props: NodeBalancerConfigurationsBaseProps
-) => {
-  const { configId, id: nodeBalancerId } = useParams({
-    strict: false,
-  });
-  const match = useMatch({
-    strict: false,
-  });
-
-  if (
-    (match.routeId === '/nodebalancers/$id/configurations' &&
-      !nodeBalancerId) ||
-    (!configId &&
-      match.routeId === '/nodebalancers/$id/configurations/$configId')
-  ) {
-    return null;
-  }
-
-  const matchProps = {
-    params: {
-      configId,
-      id: nodeBalancerId,
-    },
-  };
-
-  return <NodeBalancerConfigurations {...props} {...matchProps} />;
-};
-
-export default NodeBalancerDetail;
