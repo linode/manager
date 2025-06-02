@@ -1,4 +1,5 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
@@ -50,9 +51,9 @@ describe('AssignedRolesTable', () => {
       data: {},
     });
 
-    const { getByText } = renderWithTheme(<AssignedRolesTable />);
+    renderWithTheme(<AssignedRolesTable />);
 
-    getByText('No Roles are assigned.');
+    expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
@@ -68,19 +69,17 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getAllByLabelText, getAllByText, getByText } = renderWithTheme(
-      <AssignedRolesTable />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
-    expect(getByText('account_linode_admin')).toBeInTheDocument();
-    expect(getAllByText('All Linodes')[0]).toBeInTheDocument();
+    expect(screen.getByText('account_linode_admin')).toBeVisible();
+    expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
 
-    const actionMenuButton = getAllByLabelText('action menu')[0];
-    expect(actionMenuButton).toBeInTheDocument();
+    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    expect(actionMenuButton).toBeVisible();
 
-    fireEvent.click(actionMenuButton);
-    expect(getByText('Change Role')).toBeInTheDocument();
-    expect(getByText('Unassign Role')).toBeInTheDocument();
+    await userEvent.click(actionMenuButton);
+    expect(screen.getByText('Change Role')).toBeVisible();
+    expect(screen.getByText('Unassign Role')).toBeVisible();
   });
 
   it('should display empty state when no roles match filters', async () => {
@@ -96,15 +95,13 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, getByText } = renderWithTheme(
-      <AssignedRolesTable />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
-    const searchInput = getByPlaceholderText('Search');
-    fireEvent.change(searchInput, { target: { value: 'NonExistentRole' } });
+    const searchInput = screen.getByPlaceholderText('Search');
+    await userEvent.type(searchInput, 'NonExistentRole');
 
     await waitFor(() => {
-      expect(getByText('No Roles are assigned.')).toBeInTheDocument();
+      expect(screen.getByText('No items to display.')).toBeVisible();
     });
   });
 
@@ -121,17 +118,13 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, queryByText } = renderWithTheme(
-      <AssignedRolesTable />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
-    const searchInput = getByPlaceholderText('Search');
-    fireEvent.change(searchInput, {
-      target: { value: 'account_linode_admin' },
-    });
+    const searchInput = screen.getByPlaceholderText('Search');
+    await userEvent.type(searchInput, 'account_linode_admin');
 
     await waitFor(() => {
-      expect(queryByText('account_linode_admin')).toBeInTheDocument();
+      expect(screen.queryByText('account_linode_admin')).toBeVisible();
     });
   });
 
@@ -148,15 +141,13 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    const { getByPlaceholderText, queryByText } = renderWithTheme(
-      <AssignedRolesTable />
-    );
+    renderWithTheme(<AssignedRolesTable />);
 
-    const autocomplete = getByPlaceholderText('All Assigned Roles');
-    fireEvent.change(autocomplete, { target: { value: 'Firewall Roles' } });
+    const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
+    await userEvent.type(autocomplete, 'Firewall Roles');
 
     await waitFor(() => {
-      expect(queryByText('firewall_creator')).toBeInTheDocument();
+      expect(screen.queryByText('firewall_creator')).toBeVisible();
     });
   });
 });

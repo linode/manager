@@ -21,3 +21,7 @@ export const PAID_ENTITY_TYPES = [
 ];
 
 export const ROLES_TABLE_PREFERENCE_KEY = 'roles';
+
+export const ENTITIES_TABLE_PREFERENCE_KEY = 'entities';
+
+export const ASSIGNED_ROLES_TABLE_PREFERENCE_KEY = 'assigned-roles';
