@@ -227,7 +227,7 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
 
     expect(screen.queryByText('VPC IPv6')).not.toBeInTheDocument();
-    expect(screen.queryByText('VPC IPv6 Range')).not.toBeInTheDocument();
+    expect(screen.queryByText('VPC IPv6 Ranges')).not.toBeInTheDocument();
   });
 
   // @TODO VPC IPv6: Remove this assertion once VPC IPv6 is fully rolled out
@@ -271,7 +271,7 @@ describe('VPC Subnets table', () => {
     );
 
     screen.getByText('VPC IPv6');
-    screen.getByText('VPC IPv6 Range');
+    screen.getByText('Linode IPv6 Ranges');
   });
 
   it('should display no nodeBalancers text if there are no nodeBalancers associated with the subnet', async () => {
