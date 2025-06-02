@@ -5,6 +5,7 @@ import { useLocation, useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -14,9 +15,11 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePagination } from 'src/hooks/usePagination';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
+import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
   getFilteredRoles,
@@ -46,12 +49,15 @@ type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 export const AssignedEntitiesTable = () => {
   const { username } = useParams<{ username: string }>();
   const location = useLocation();
+
   const theme = useTheme();
 
   const locationState = location.state as LocationState;
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
+
+  const pagination = usePagination(1, ENTITIES_TABLE_PREFERENCE_KEY);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -116,6 +122,26 @@ export const AssignedEntitiesTable = () => {
     setSelectedRole(role);
   };
 
+  const filteredRoles = getFilteredRoles({
+    entityType: entityType?.value as 'all' | EntityType,
+    getSearchableFields,
+    query,
+    roles,
+  }) as EntitiesRole[];
+
+  const filteredAndSortedRoles = [...filteredRoles].sort((a, b) => {
+    const aValue = a[orderBy]?.toLowerCase();
+    const bValue = b[orderBy]?.toLowerCase();
+
+    if (aValue < bValue) {
+      return order === 'asc' ? -1 : 1;
+    }
+    if (aValue > bValue) {
+      return order === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
   const renderTableBody = () => {
     if (entitiesLoading || assignedRolesLoading) {
       return <TableRowLoading columns={3} rows={1} />;
@@ -130,70 +156,53 @@ export const AssignedEntitiesTable = () => {
       );
     }
 
-    const filteredRoles = getFilteredRoles({
-      entityType: entityType?.value as 'all' | EntityType,
-      getSearchableFields,
-      query,
-      roles,
-    }) as EntitiesRole[];
-
-    const sortedRoles = [...filteredRoles].sort((a, b) => {
-      const aValue = a[orderBy]?.toLowerCase();
-      const bValue = b[orderBy]?.toLowerCase();
-
-      if (aValue < bValue) {
-        return order === 'asc' ? -1 : 1;
-      }
-      if (aValue > bValue) {
-        return order === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-
     if (!entities || !assignedRoles || filteredRoles.length === 0) {
-      return (
-        <TableRowEmpty colSpan={3} message={'No Entities are assigned.'} />
-      );
+      return <TableRowEmpty colSpan={3} message={'No items to display.'} />;
     }
 
     if (assignedRoles && entities) {
       return (
         <>
-          {sortedRoles.map((el: EntitiesRole) => {
-            const actions: Action[] = [
-              {
-                onClick: () => {
-                  handleChangeRole(el, 'change-role-for-entity');
+          {filteredAndSortedRoles
+            .slice(
+              (pagination.page - 1) * pagination.pageSize,
+              pagination.page * pagination.pageSize
+            )
+            .map((el: EntitiesRole) => {
+              const actions: Action[] = [
+                {
+                  onClick: () => {
+                    handleChangeRole(el, 'change-role-for-entity');
+                  },
+                  title: 'Change Role ',
                 },
-                title: 'Change Role ',
-              },
-              {
-                onClick: () => {
-                  handleRemoveAssignment(el);
+                {
+                  onClick: () => {
+                    handleRemoveAssignment(el);
+                  },
+                  title: 'Remove',
                 },
-                title: 'Remove',
-              },
-            ];
+              ];
 
-            return (
-              <TableRow key={el.id}>
-                <TableCell>
-                  <Typography>{el.entity_name}</Typography>
-                </TableCell>
-                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                  <Typography>
-                    {getFormattedEntityType(el.entity_type)}
-                  </Typography>
-                </TableCell>
-                <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-                  <Typography>{el.role_name}</Typography>
-                </TableCell>
-                <TableCell actionCell>
-                  <ActionMenu actionsList={actions} ariaLabel="action menu" />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+              return (
+                <TableRow key={el.id}>
+                  <TableCell>
+                    <Typography>{el.entity_name}</Typography>
+                  </TableCell>
+                  <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                    <Typography>
+                      {getFormattedEntityType(el.entity_type)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                    <Typography>{el.role_name}</Typography>
+                  </TableCell>
+                  <TableCell actionCell>
+                    <ActionMenu actionsList={actions} ariaLabel="action menu" />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
         </>
       );
     }
@@ -221,9 +230,13 @@ export const AssignedEntitiesTable = () => {
               width: { md: '416px', xs: '100%' },
             },
           }}
+          debounceTime={250}
           hideLabel
           label="Filter"
-          onSearch={setQuery}
+          onSearch={(value) => {
+            pagination.handlePageChange(1);
+            setQuery(value);
+          }}
           placeholder="Search"
           sx={{ height: 34 }}
           value={query}
@@ -231,7 +244,10 @@ export const AssignedEntitiesTable = () => {
         <Select
           hideLabel
           label="Select type"
-          onChange={(_, selected) => setEntityType(selected ?? null)}
+          onChange={(_, selected) => {
+            pagination.handlePageChange(1);
+            setEntityType(selected ?? null);
+          }}
           options={filterableOptions}
           placeholder="All Entities"
           sx={{ minWidth: 250 }}
@@ -285,6 +301,15 @@ export const AssignedEntitiesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />
+      {filteredRoles.length > pagination.pageSize && (
+        <PaginationFooter
+          count={filteredRoles.length}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      )}
     </Grid>
   );
 };
