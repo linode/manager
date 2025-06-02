@@ -131,7 +131,7 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Typography>
       </Notice>
       <RegionMultiSelect
-        currentCapability={undefined} // Image's don't have a region capability yet
+        currentCapability={undefined} // Images don't have a region capability yet
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
         isGeckoLAEnabled={isGeckoLAEnabled}
