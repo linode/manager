@@ -53,7 +53,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
     AlertDefinitionType | undefined
   >();
 
-  // Filter alerts based on search text & selected type
+  // Filter alerts based on status, search text & selected type
   const filteredAlerts = filterAlertsByStatusAndType(
     alerts,
     searchText,
