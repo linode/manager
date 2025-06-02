@@ -62,11 +62,7 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
-  const {
-    data: service,
-    // error: serviceTypesError,
-    // isLoading: serviceTypesLoading,
-  } = useCloudPulseServiceByServiceType('linode');
+  const { data: service } = useCloudPulseServiceByServiceType('linode');
 
   const isAclpSupportedRegionLinode = isAclpSupportedRegion(
     linode?.region,
