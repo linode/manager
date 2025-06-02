@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
-import { Paper, Typography } from '@linode/ui';
-import { Box, Grid, Stack, useTheme } from '@mui/material';
+import { Box, Paper, Typography } from '@linode/ui';
+import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
 
@@ -280,7 +280,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const hours = end.diff(start, 'hours').hours;
   const tickFormat = hours <= 24 ? 'hh:mm a' : 'LLL dd';
   return (
-    <Grid container item lg={widget.size} xs={12}>
+    <GridLegacy container item lg={widget.size} xs={12}>
       <Stack
         spacing={2}
         sx={{
@@ -301,7 +301,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               padding: 1,
             }}
           >
-            <Typography marginLeft={1} variant="h2">
+            <Typography flex={1} marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} (
               {scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
@@ -309,6 +309,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               direction={{ sm: 'row' }}
               sx={{
+                flex: 1,
+                justifyContent: 'end',
                 alignItems: 'center',
                 gap: 2,
                 maxHeight: `calc(${theme.spacing(10)} + 5px)`,
@@ -368,6 +370,6 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
           />
         </Paper>
       </Stack>
-    </Grid>
+    </GridLegacy>
   );
 };

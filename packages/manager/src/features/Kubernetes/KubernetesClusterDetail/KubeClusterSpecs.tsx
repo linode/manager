@@ -2,7 +2,7 @@ import { useRegionsQuery } from '@linode/queries';
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -88,7 +88,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const highAvailabilityPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
-  const enterprisePrice = lkeEnterpriseType?.price.monthly ?? undefined;
+  const enterprisePrice =
+    cluster.tier === 'enterprise' && lkeEnterpriseType?.price.monthly
+      ? lkeEnterpriseType?.price.monthly
+      : undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,

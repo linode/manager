@@ -4,7 +4,7 @@ import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -17,11 +17,14 @@ import {
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
+import { AccountGroupingNotice } from '../CreateAlert/CreateAlertDefinition';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { AlertEntityScopeSelect } from '../CreateAlert/GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
+import { CloudPulseModifyAlertRegions } from '../CreateAlert/Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
@@ -81,7 +84,10 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { mutateAsync: editAlert } = useEditAlertDefinition();
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
-
+  const scopeWatcher = useWatch<EditAlertDefintionForm>({
+    name: 'group',
+    control,
+  });
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -179,7 +185,14 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <CloudPulseModifyAlertResources name="entity_ids" />
+          <AlertEntityScopeSelect name="group" />
+          {scopeWatcher === 'per-entity' && (
+            <CloudPulseModifyAlertResources name="entity_ids" />
+          )}
+          {scopeWatcher === 'per-region' && (
+            <CloudPulseModifyAlertRegions name="regions" />
+          )}
+          {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

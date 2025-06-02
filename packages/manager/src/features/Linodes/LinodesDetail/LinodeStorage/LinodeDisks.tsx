@@ -5,7 +5,7 @@ import {
 } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import { addUsedDiskSpace } from '../utilities';
 import { CreateDiskDrawer } from './CreateDiskDrawer';
 import { DeleteDiskDialog } from './DeleteDiskDialog';
 import { LinodeDiskRow } from './LinodeDiskRow';
@@ -237,8 +238,4 @@ export const LinodeDisks = () => {
       />
     </Box>
   );
-};
-
-export const addUsedDiskSpace = (disks: Disk[]) => {
-  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };

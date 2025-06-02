@@ -2,6 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
+  AlertDefinitionGroup,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -88,10 +89,6 @@ export const dimensionOperatorOptions: Item<
     value: 'eq',
   },
   {
-    label: 'Ends with',
-    value: 'endswith',
-  },
-  {
     label: 'Not Equal',
     value: 'neq',
   },
@@ -99,7 +96,27 @@ export const dimensionOperatorOptions: Item<
     label: 'Starts with',
     value: 'startswith',
   },
+  {
+    label: 'Ends with',
+    value: 'endswith',
+  },
+  {
+    label: 'In',
+    value: 'in',
+  },
 ];
+
+export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
+  { label: 'Account', value: 'per-account' },
+  { label: 'Region', value: 'per-region' },
+  { label: 'Entity', value: 'per-entity' },
+];
+
+export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
+  'per-account': 'Account',
+  'per-region': 'Region',
+  'per-entity': 'Entity',
+};
 
 export const textFieldOperators = ['endswith', 'startswith'];
 
@@ -164,9 +181,11 @@ export const dimensionOperatorTypeMap: Record<
 > = {
   endswith: 'ends with',
   eq: 'equals',
+  in: 'in',
   neq: 'not equals',
   startswith: 'starts with',
 };
+
 export const alertStatuses: Record<AlertStatusType, string> = {
   disabled: 'Disabled',
   enabled: 'Enabled',
@@ -202,3 +221,16 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
+
+export const ACCOUNT_GROUP_INFO_MESSAGE =
+  'This alert applies to all entities associated with your account, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
+
+export const REGION_GROUP_INFO_MESSAGE =
+  'This alert applies to all entities associated with selected regions, and will be applied to any new entities that are added. The alert is triggered per entity rather than being based on the aggregated data for all entities.';
+
+export const ALERT_SCOPE_TOOLTIP_TEXT =
+  'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
+
+export type SelectDeselectAll = 'Deselect All' | 'Select All';
+
+export type AlertFormMode = 'create' | 'edit' | 'view';

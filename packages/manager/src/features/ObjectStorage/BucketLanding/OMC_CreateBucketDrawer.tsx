@@ -20,7 +20,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
@@ -229,10 +228,6 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
 
   const hasSingleEndpointType = filteredEndpointOptions?.length === 1;
 
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
-
   const selectedEndpointOption = React.useMemo(() => {
     const currentEndpointType = watch('endpoint_type');
     const currentS3Endpoint = watch('s3_endpoint');
@@ -402,7 +397,7 @@ export const OMC_CreateBucketDrawer = (props: Props) => {
             disabled:
               (showGDPRCheckbox && !state.hasSignedAgreement) ||
               isErrorTypes ||
-              isBucketCreationRestricted,
+              isRestrictedUser,
             label: 'Create Bucket',
             loading: isPending || Boolean(selectedRegion?.id && isLoadingTypes),
             tooltipText:

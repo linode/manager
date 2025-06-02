@@ -1,6 +1,6 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
-import { Grid } from '@mui/material';
+import { GridLegacy } from '@mui/material';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
@@ -8,6 +8,7 @@ import type { FieldPathByValue } from 'react-hook-form';
 import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
+import type { Item } from '../../constants';
 import type { CreateAlertDefinitionForm, DimensionFilterForm } from '../types';
 import type { Dimension, DimensionFilterOperatorType } from '@linode/api-v4';
 
@@ -72,6 +73,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     name: `${name}.operator`,
   });
 
+  const dimensionValueWatcher = useWatch({ control, name: `${name}.value` });
   const selectedDimension =
     dimensionOptions && dimensionFieldWatcher
       ? (dimensionOptions.find(
@@ -88,18 +90,60 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     }
     return [];
   };
-  const isTextField = dimensionOperatorWatcher
-    ? textFieldOperators.includes(dimensionOperatorWatcher)
-    : false;
+  const isValueMultiple =
+    valueOptions().length > 0 && dimensionOperatorWatcher === 'in';
+
+  const isTextField =
+    !valueOptions().length ||
+    (dimensionOperatorWatcher
+      ? textFieldOperators.includes(dimensionOperatorWatcher)
+      : false);
+
+  const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
+
+  const resolveSelectedValues = (
+    options: Item<string, string>[],
+    value: null | string,
+    isMultiple: boolean
+  ): Item<string, string> | Item<string, string>[] | null => {
+    if (!value) return isMultiple ? [] : null;
+
+    if (isMultiple) {
+      return options.filter((option) =>
+        value.split(',').includes(option.value)
+      );
+    }
+
+    return options.find((option) => option.value === value) ?? null;
+  };
+
+  const handleValueChange = (
+    selected: Item<string, string> | Item<string, string>[] | null,
+    operation: string,
+    isMultiple: boolean
+  ): string => {
+    if (operation !== 'selectOption') return '';
+
+    if (isMultiple && Array.isArray(selected)) {
+      return selected.map((item) => item.value).join(',');
+    }
+
+    if (!isMultiple && selected && !Array.isArray(selected)) {
+      return selected.value;
+    }
+
+    return '';
+  };
+
   return (
-    <Grid
+    <GridLegacy
       container
       data-testid={`${name}-id`}
       sx={{
         gap: 2,
       }}
     >
-      <Grid item md={3} xs={12}>
+      <GridLegacy item md={3} xs={12}>
         <Controller
           control={control}
           name={`${name}.dimension_label`}
@@ -128,8 +172,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             />
           )}
         />
-      </Grid>
-      <Grid item md={2} xs={12}>
+      </GridLegacy>
+      <GridLegacy item md={2} xs={12}>
         <Controller
           control={control}
           name={`${name}.operator`}
@@ -160,8 +204,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             />
           )}
         />
-      </Grid>
-      <Grid item md={3} xs={12}>
+      </GridLegacy>
+      <GridLegacy item md={3} xs={12}>
         <Box display="flex" gap={2}>
           <Controller
             control={control}
@@ -176,7 +220,11 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   label="Value"
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
+                  placeholder={
+                    dimensionOperatorWatcher === 'in'
+                      ? 'Enter Value(s) (e.g., abc, xyz)'
+                      : 'Enter a Value'
+                  }
                   sx={{ flex: 1, width: '256px' }}
                   value={field.value ?? ''}
                 />
@@ -190,24 +238,28 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                     value.value === option.value
                   }
                   label="Value"
+                  limitTags={1}
+                  multiple={isValueMultiple}
                   onBlur={field.onBlur}
-                  onChange={(
-                    _,
-                    selected: { label: string; value: string },
-                    operation
-                  ) => {
+                  onChange={(_, selected, operation) => {
                     field.onChange(
-                      operation === 'selectOption' ? selected.value : null
+                      handleValueChange(selected, operation, isValueMultiple)
                     );
                   }}
                   options={valueOptions()}
-                  placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
-                  sx={{ flex: 1 }}
-                  value={
-                    valueOptions().find(
-                      (option) => option.value === field.value
-                    ) ?? null
+                  placeholder={
+                    dimensionValueWatcher &&
+                    (!Array.isArray(dimensionValueWatcher) ||
+                      dimensionValueWatcher.length)
+                      ? ''
+                      : valuePlaceholder
                   }
+                  sx={{ flex: 1 }}
+                  value={resolveSelectedValues(
+                    valueOptions(),
+                    field.value,
+                    isValueMultiple
+                  )}
                 />
               )
             }
@@ -216,7 +268,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
             <ClearIconButton handleClick={onFilterDelete} />
           </Box>
         </Box>
-      </Grid>
-    </Grid>
+      </GridLegacy>
+    </GridLegacy>
   );
 };

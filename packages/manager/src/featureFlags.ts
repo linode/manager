@@ -62,6 +62,7 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 interface AclpFlag {
   beta: boolean;
   enabled: boolean;
+  open?: boolean;
 }
 
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
@@ -110,11 +111,13 @@ export interface Flags {
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
   aclpIntegration: boolean;
+  aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
+  aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseAdvancedConfig: boolean;
@@ -244,6 +247,7 @@ export type ProductInformationBannerLocation =
   | 'Account'
   | 'Betas'
   | 'Databases'
+  | 'DataStream'
   | 'Domains'
   | 'Firewalls'
   | 'Identity and Access'

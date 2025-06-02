@@ -1,4 +1,4 @@
-import { Grid, Paper } from '@mui/material';
+import { GridLegacy, Paper } from '@mui/material';
 import React from 'react';
 
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
@@ -42,11 +42,11 @@ interface WidgetProps {
 
 const renderPlaceHolder = (subtitle: string) => {
   return (
-    <Grid item xs>
+    <GridLegacy item xs>
       <Paper>
         <CloudPulseErrorPlaceholder errorMessage={subtitle} />
       </Paper>
-    </Grid>
+    </GridLegacy>
   );
 };
 
@@ -138,14 +138,14 @@ export const RenderWidgets = React.memo(
     // maintain a copy
     const newDashboard: Dashboard = createObjectCopy(dashboard)!;
     return (
-      <Grid columnSpacing={2} container item rowSpacing={2} xs={12}>
+      <GridLegacy columnSpacing={2} container item rowSpacing={2} xs={12}>
         {{ ...newDashboard }.widgets.map((widget, index) => {
           // check if widget metric definition is available or not
           if (widget) {
             // find the metric defintion of the widget label
             const availMetrics = metricDefinitions?.data.find(
               (availMetrics: MetricDefinition) =>
-                widget.label === availMetrics.label
+                widget.metric === availMetrics.metric
             );
             const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
               ...widget,
@@ -174,7 +174,7 @@ export const RenderWidgets = React.memo(
             return <React.Fragment key={index} />;
           }
         })}
-      </Grid>
+      </GridLegacy>
     );
   },
   (oldProps: WidgetProps, newProps: WidgetProps) => {

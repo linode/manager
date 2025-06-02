@@ -1,5 +1,5 @@
-import { useGrants, usePreferences } from '@linode/queries';
-import { Box, Notice } from '@linode/ui';
+import { useGrants, useLinodeQuery, usePreferences } from '@linode/queries';
+import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -12,8 +12,10 @@ import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlert
 const LinodeAlerts = () => {
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
+
   const flags = useFlags();
   const { data: grants } = useGrants();
+  const { data: linode } = useLinodeQuery(id);
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpAlertsBeta
   );
@@ -28,10 +30,9 @@ const LinodeAlerts = () => {
       {flags.aclpIntegration ? <AclpPreferenceToggle type="alerts" /> : null}
       {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
-       // <Notice variant="info">ACLP Alerts Coming soon...</Notice>
         <AlertReusableComponent
-          entityId={String(id)}
-          entityName={`linode-${id}`}
+          entityId={linodeId}
+          entityName={linode?.label ?? ''}
           serviceType="linode"
         />
       ) : (

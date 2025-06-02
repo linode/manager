@@ -9,6 +9,7 @@ import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 import sonarjs from 'eslint-plugin-sonarjs';
 import testingLibrary from 'eslint-plugin-testing-library';
 import xss from 'eslint-plugin-xss';
@@ -20,7 +21,6 @@ import cloudPulseRules from '../../cloudpulse-pr-eslint-rules/index.js';
 
 // Shared import restrictions between different rule contexts
 const restrictedImportPaths = [
-  'rxjs',
   '@mui/core',
   '@mui/system',
   '@mui/icons-material',
@@ -150,11 +150,12 @@ export const baseConfig = [
     },
   },
 
-  // 5. React and React Hooks
+  // 5. React, React Hooks, and React Refresh
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
       react,
+      'react-refresh': reactRefresh,
     },
     rules: {
       'react-hooks/exhaustive-deps': 'warn',
@@ -166,6 +167,7 @@ export const baseConfig = [
       'react/no-unescaped-entities': 'warn',
       'react/prop-types': 'off',
       'react/self-closing-comp': 'warn',
+      'react-refresh/only-export-components': 'warn', // @todo make this error once we fix all occurrences
     },
   },
 
@@ -417,14 +419,20 @@ export const baseConfig = [
       // for each new features added to the migration router, add its directory here
       'src/features/Betas/**/*',
       'src/features/Domains/**/*',
+      'src/features/DataStream/**/*',
       'src/features/Firewalls/**/*',
+      'src/features/Help/**/*',
       'src/features/Images/**/*',
       'src/features/Longview/**/*',
       'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',
+      'src/features/Search/**/*',
+      'src/features/TopMenu/SearchBar/**/*',
+      'src/components/Tag/**/*',
       'src/features/StackScripts/**/*',
+      'src/features/Support/**/*',
       'src/features/Volumes/**/*',
       'src/features/VPCs/**/*',
     ],
