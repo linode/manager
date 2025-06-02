@@ -10,7 +10,7 @@ import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { useRegionsThatSupportImages } from '../../utils';
+import { useRegionsThatSupportImageStorage } from '../../utils';
 import { ImageRegionRow } from './ImageRegionRow';
 
 import type {
@@ -42,7 +42,7 @@ export const ManageImageReplicasForm = (props: Props) => {
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
 
   const { enqueueSnackbar } = useSnackbar();
-  const { regions } = useRegionsThatSupportImages();
+  const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
 
   const {

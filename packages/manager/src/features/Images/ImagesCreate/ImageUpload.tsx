@@ -43,7 +43,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
 import { uploadImageFile } from '../requests';
-import { useRegionsThatSupportImages } from '../utils';
+import { useRegionsThatSupportImageStorage } from '../utils';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
@@ -73,7 +73,7 @@ export const ImageUpload = () => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const { regions } = useRegionsThatSupportImages();
+  const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
 

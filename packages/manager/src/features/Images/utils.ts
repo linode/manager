@@ -46,7 +46,7 @@ export const getEventsForImages = (images: Image[], events: Event[]) =>
  * so we can use this useRegionsQuery wrapper to do
  * some filtering to get compatible regions.
  */
-export const useRegionsThatSupportImages = () => {
+export const useRegionsThatSupportImageStorage = () => {
   const { data: regions } = useRegionsQuery();
 
   return {
