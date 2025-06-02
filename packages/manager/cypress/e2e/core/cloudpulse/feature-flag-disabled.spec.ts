@@ -11,10 +11,13 @@ import type { UserPreferences } from '@linode/api-v4';
 describe('ACLP Components UI when aclpIntegration feature flag disabled', () => {
   // TODO: what is proper definition of a) downgrade banner  b) legacy metrics
   // TODO: M3-10057 modify these tests when aclpIntegration ff removed
-  it('Upgrade banner not display when isAclpAlertsBeta is false', () => {
+  beforeEach(() => {
     mockAppendFeatureFlags({
       aclpIntegration: false,
     }).as('getFeatureFlags');
+  });
+
+  it('Upgrade banner not display when isAclpAlertsBeta is false', () => {
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: false,
     } as Partial<UserPreferences>);
@@ -42,9 +45,6 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
   });
 
   it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpAlertsBeta is true', () => {
-    mockAppendFeatureFlags({
-      aclpIntegration: false,
-    }).as('getFeatureFlags');
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: true,
     } as Partial<UserPreferences>);
@@ -77,9 +77,6 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
   });
 
   it('Uppgrade banner not display when isAclpMetricBeta is false', () => {
-    mockAppendFeatureFlags({
-      aclpIntegration: false,
-    }).as('getFeatureFlags');
     const userPreferences = userPreferencesFactory.build({
       isAclpMetricBeta: false,
     } as Partial<UserPreferences>);
@@ -107,10 +104,6 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
   });
 
   it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpMetricBeta is true', () => {
-    mockAppendFeatureFlags({
-      aclpIntegration: false,
-      // aclp: { beta: true, enabled: true },
-    }).as('getFeatureFlags');
     const userPreferences = userPreferencesFactory.build({
       isAclpMetricBeta: true,
     } as Partial<UserPreferences>);
