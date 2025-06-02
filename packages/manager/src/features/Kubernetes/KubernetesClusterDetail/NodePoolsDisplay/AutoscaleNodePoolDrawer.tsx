@@ -240,6 +240,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     onChange={(e) =>
                       setValue('min', Number(e.target.value), {
                         shouldDirty: true,
+                        shouldValidate: true,
                       })
                     }
                     type="number"
@@ -281,6 +282,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     onChange={(e) =>
                       setValue('max', Number(e.target.value), {
                         shouldDirty: true,
+                        shouldValidate: true,
                       })
                     }
                     type="number"
