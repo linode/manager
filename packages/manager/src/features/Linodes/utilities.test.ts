@@ -11,16 +11,16 @@ describe('isAclpSupportedRegion', () => {
   });
 
   it('returns false if selectedRegion is undefined', () => {
-    expect(isAclpSupportedRegion(undefined, 'us-east,us-ord')).toBe(false);
+    expect(isAclpSupportedRegion(undefined, 'us-east,us-iad')).toBe(false);
   });
 
   it('returns true if selectedRegion is included in aclpSupportedRegions', () => {
-    expect(isAclpSupportedRegion('us-east', 'us-east,us-ord')).toBe(true);
-    expect(isAclpSupportedRegion('us-ord', 'us-east,us-ord')).toBe(true);
+    expect(isAclpSupportedRegion('us-east', 'us-east,us-iad')).toBe(true);
+    expect(isAclpSupportedRegion('us-iad', 'us-east,us-iad')).toBe(true);
   });
 
   it('returns false if selectedRegion is not included in aclpSupportedRegions', () => {
-    expect(isAclpSupportedRegion('us-southeast', 'us-east,us-ord')).toBe(false);
+    expect(isAclpSupportedRegion('us-southeast', 'us-east,us-iad')).toBe(false);
   });
 
   it('returns false if both selectedRegion and aclpSupportedRegions are empty strings', () => {
@@ -28,6 +28,6 @@ describe('isAclpSupportedRegion', () => {
   });
 
   it('returns true if selectedRegion is included in aclpSupportedRegions even with spaces around regions', () => {
-    expect(isAclpSupportedRegion('us-ord', 'us-east, us-ord')).toBe(true);
+    expect(isAclpSupportedRegion('us-iad', 'us-east, us-iad')).toBe(true);
   });
 });
