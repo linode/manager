@@ -1,7 +1,7 @@
 import { Autocomplete } from '@linode/ui';
 import React, { useMemo } from 'react';
 
-import { useDataForLinodesInVPC } from 'src/hooks/useDataForLinodesInVPC';
+import { useGetLinodeIPAndVPCData } from 'src/hooks/useDataForLinodesInVPC';
 
 import {
   getPrivateIPOptions,
@@ -70,8 +70,8 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     subnetId,
   } = props;
 
-  const { linodeData, linodeIpData, error, isLoading, subnetData } =
-    useDataForLinodesInVPC({
+  const { linodesData, linodeIpsData, error, isLoading, subnetData } =
+    useGetLinodeIPAndVPCData({
       region,
       vpcId,
       subnetId,
@@ -80,10 +80,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
   let options: NodeOption[] = [];
 
   if (region) {
-    options = getPrivateIPOptions(linodeData);
+    options = getPrivateIPOptions(linodesData);
   }
   if (region && vpcId) {
-    options = getVPCIPOptions(linodeIpData, linodeData, subnetData);
+    options = getVPCIPOptions(linodeIpsData, linodesData, subnetData);
   }
 
   const noOptionsText = useMemo(() => {
@@ -104,11 +104,11 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
       loading={isLoading}
       noMarginTop
       noOptionsText={noOptionsText}
-      onChange={(e, value) =>
+      onChange={(e, value: NodeOption) =>
         handleChange(
           nodeIndex,
           value?.label ?? null,
-          value && 'subnetId' in value ? value?.subnetId : undefined
+          value && 'subnet' in value ? value?.subnet?.id : undefined
         )
       }
       options={options}

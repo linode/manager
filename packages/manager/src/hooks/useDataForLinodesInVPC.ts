@@ -7,9 +7,9 @@ import {
 import { useMemo } from 'react';
 
 import type { APIError, LinodeIPsResponse } from '@linode/api-v4';
-import type { UseQueryResult } from '@linode/queries';
+import type { UseQueryOptions } from '@linode/queries';
 
-export const useDataForLinodesInVPC = (props: {
+export const useGetLinodeIPAndVPCData = (props: {
   region?: string;
   subnetId?: number;
   vpcId?: null | number;
@@ -35,11 +35,13 @@ export const useDataForLinodesInVPC = (props: {
 
   const linodeIPQueries = useQueries({
     queries:
-      linodesData?.map(({ id }) => ({
-        ...linodeQueries.linode(id)._ctx.ips,
-        enabled: isSubnetSelected,
-      })) ?? [],
-  }) as UseQueryResult<LinodeIPsResponse, APIError[]>[];
+      linodesData?.map<UseQueryOptions<LinodeIPsResponse, APIError[]>>(
+        ({ id }) => ({
+          ...linodeQueries.linode(id)._ctx.ips,
+          enabled: isSubnetSelected,
+        })
+      ) ?? [],
+  });
 
   if (region && !vpcId) {
     return {
@@ -49,13 +51,13 @@ export const useDataForLinodesInVPC = (props: {
     };
   }
 
-  const linodeIpData: LinodeIPsResponse[] = [];
+  const linodeIpsData: LinodeIPsResponse[] = [];
   let isIpLoading: boolean = false;
   const ipError: APIError[] = [];
 
   linodeIPQueries.forEach(({ data, isLoading, error }) => {
     if (data) {
-      linodeIpData.push(data);
+      linodeIpsData.push(data);
     }
     if (isLoading) {
       isIpLoading = true;
@@ -66,8 +68,8 @@ export const useDataForLinodesInVPC = (props: {
   });
 
   return {
-    linodeData: linodesData,
-    linodeIpData,
+    linodesData,
+    linodeIpsData,
     error: [...(linodesError ?? []), ...(subnetError ?? []), ...ipError],
     isLoading: linodesIsLoading ?? subnetIsLoading ?? isIpLoading,
     subnetData,

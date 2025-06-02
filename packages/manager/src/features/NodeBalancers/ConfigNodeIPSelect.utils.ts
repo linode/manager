@@ -10,30 +10,14 @@ export interface PrivateIPOption {
   /**
    * The Linode associated with the private IPv4 address
    */
-  linode: Linode;
+  linode: Partial<Linode>;
 }
 
-export interface VPCIPOption {
+export interface VPCIPOption extends PrivateIPOption {
   /**
-   * A VPC IPv4 address
+   * The Subnet associated with the VPC IPv4 address
    */
-  label: string;
-  /**
-   * The ID for the Linode associated with the VPC IPv4 address
-   */
-  linodeId: number;
-  /**
-   * The label for the Linode
-   */
-  linodeLabel: string;
-  /**
-   * The ID for the Subnet associated with the VPC IPv4 address
-   */
-  subnetId: number;
-  /**
-   * The label for the Subnet
-   */
-  subnetLabel: string;
+  subnet: Partial<Subnet>;
 }
 
 /**
@@ -61,7 +45,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 export const getVPCIPOptions = (
   vpcIPs: LinodeIPsResponse[] | undefined,
   linodes: Linode[] | undefined,
-  subnet?: Subnet
+  subnet?: Subnet | undefined
 ) => {
   if (!vpcIPs || !subnet) {
     return [];
@@ -82,16 +66,17 @@ export const getVPCIPOptions = (
       const vpcData = ipv4.vpc
         ?.filter((vpc) => vpc.subnet_id === subnet.id)
         .map((vpc) => {
-          const linodeLabel = linodeLabelMap[vpc.linode_id];
-
+          const linode: Partial<Linode> = {
+            label: linodeLabelMap[vpc.linode_id],
+            id: vpc.linode_id,
+          };
           return {
             label: vpc.address,
-            linodeLabel,
-            linodeId: vpc.linode_id,
-            subnetLabel: subnet.label,
-            subnetId: vpc.subnet_id,
+            linode,
+            subnet,
           };
         });
+
       if (vpcData) {
         options.push(...vpcData);
       }

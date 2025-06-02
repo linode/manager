@@ -104,7 +104,7 @@ describe('Create a NodeBalancer with VPCs', () => {
       `${mockSubnet.label} (${mockSubnet.ipv4})`
     );
 
-    // Confirm that the auto-assign for VPC IPv4 range is checked
+    // Uncheck the option for auto-assigning VPC IPv4 range
     cy.get('[data-testid="vpc-ipv4-checkbox"]')
       .find('[type="checkbox"]')
       .should('be.checked')

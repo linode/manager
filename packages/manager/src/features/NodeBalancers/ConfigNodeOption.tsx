@@ -15,7 +15,7 @@ export const ConfigNodeOption = ({
   listItemProps,
   selected,
 }: NodeOptionProps) => {
-  const privateIPEnabled = 'linode' in option;
+  const vpcIPEnabled = 'subnet' in option;
   return (
     <li {...listItemProps}>
       <Box
@@ -35,15 +35,11 @@ export const ConfigNodeOption = ({
           >
             {option.label}
           </Typography>
-          <Typography color="inherit">
-            {privateIPEnabled
-              ? `${option.linode.label}`
-              : `${option.linodeLabel}`}
-          </Typography>
+          <Typography color="inherit">{option.linode.label}</Typography>
         </Stack>
         <Box flexGrow={1} />
-        {!privateIPEnabled
-          ? `${option.subnetLabel}`
+        {vpcIPEnabled
+          ? `${option.subnet?.label}`
           : selected && <SelectedIcon visible />}
       </Box>
     </li>

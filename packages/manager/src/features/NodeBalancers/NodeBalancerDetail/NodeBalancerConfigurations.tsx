@@ -705,8 +705,6 @@ class NodeBalancerConfigurations extends React.Component<
             healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
             healthCheckType={view(L.healthCheckTypeLens, this.state)}
             nodeBalancerRegion={this.props.nodeBalancerRegion}
-            // nodeBalancerVpcId={107061}
-            // nodeBalancerSubnetId={103500}
             nodeMessage={panelNodeMessages[idx]}
             nodes={config.nodes}
             onAlgorithmChange={this.updateState(L.algorithmLens)}

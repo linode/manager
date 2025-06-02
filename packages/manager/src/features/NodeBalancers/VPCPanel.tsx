@@ -30,7 +30,7 @@ export interface Props {
   regionSelected: string;
   setVpcSelected: (vpc: null | VPC) => void;
   subnetChange: (subnetIds: null | number[]) => void;
-  subnets?: NodeBalancerVpcPayload[];
+  subnetsSelected?: NodeBalancerVpcPayload[];
   vpcSelected: null | VPC;
 }
 
@@ -41,7 +41,7 @@ export const VPCPanel = (props: Props) => {
     ipv4Change,
     regionSelected,
     setVpcSelected,
-    subnets,
+    subnetsSelected,
     subnetChange,
     vpcSelected,
   } = props;
@@ -131,11 +131,11 @@ export const VPCPanel = (props: Props) => {
                 placeholder="Select Subnet"
                 value={
                   vpcSelected?.subnets.find(
-                    (subnet) => subnet.id === subnets?.[0].subnet_id
+                    (subnet) => subnet.id === subnetsSelected?.[0].subnet_id
                   ) ?? null
                 }
               />
-              {subnets && (
+              {subnetsSelected && (
                 <>
                   <Box
                     alignItems="center"
@@ -178,7 +178,7 @@ export const VPCPanel = (props: Props) => {
                     />
                   </Box>
                   {!autoAssignIPv4WithinVPC &&
-                    subnets.map((vpc, index) => (
+                    subnetsSelected.map((vpc, index) => (
                       <TextField
                         errorText={
                           errors?.find((err) =>

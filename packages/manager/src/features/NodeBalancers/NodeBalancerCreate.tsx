@@ -233,7 +233,7 @@ const NodeBalancerCreate = () => {
     subnetId?: number
   ) => {
     setNodeValue(configIdx, nodeIdx, 'address', value);
-    if (subnetId) {
+    if (subnetId && isNodebalancerVPCEnabled) {
       setNodeValue(configIdx, nodeIdx, 'subnet_id', subnetId);
     }
   };
@@ -519,11 +519,7 @@ const NodeBalancerCreate = () => {
       });
     } else {
       const vpcs = subnetIds.map((id) => ({ subnet_id: id }));
-      // setNodeBalancerFields((prev) => ({
-      //   ...prev,
-      //   vpcs,
-      // }));
-      setNodeBalancerFields((prev) => ({ ...prev, vpcs: vpcs }));
+      setNodeBalancerFields((prev) => ({ ...prev, vpcs }));
     }
   };
 
@@ -531,28 +527,35 @@ const NodeBalancerCreate = () => {
     if (nodeBalancerFields?.vpcs?.[index].ipv4_range === ipv4Range) {
       return;
     }
-    const vpcs = nodeBalancerFields?.vpcs;
     if (ipv4Range === null) {
-      // handling auto-assign ipv4 ranges for all subnets
+      // handling auto-assign ipv4 ranges for subnets
       setNodeBalancerFields((prev) => {
         const { vpcs: vpcs, ...rest } = prev;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const updatedVpcs = vpcs?.map(({ subnet_id }) => ({
           subnet_id,
         }));
         return { ...rest, vpcs: updatedVpcs };
       });
-    } else if (ipv4Range === '') {
-      // removing vpcs from the payload if ipv4 ranges are removed
+      return;
+    }
+    if (ipv4Range === '') {
+      // removing vpcs from the payload if the ipv4Range field is cleared
       setNodeBalancerFields((prev) => {
         // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
         const { vpcs: _, ...rest } = prev;
         return { ...rest };
       });
-    } else if (vpcs) {
-      vpcs[index].ipv4_range = ipv4Range;
+    } else {
+      const updatedVpcs = nodeBalancerFields?.vpcs?.map((vpc, idx) => {
+        if (idx === index) {
+          return { ...vpc, ipv4_range: ipv4Range };
+        }
+        return vpc;
+      });
       setNodeBalancerFields((prev) => ({
         ...prev,
-        vpcs,
+        updatedVpcs,
       }));
     }
   };
@@ -727,7 +730,7 @@ const NodeBalancerCreate = () => {
             regionSelected={nodeBalancerFields.region ?? ''}
             setVpcSelected={setVPCSelected}
             subnetChange={subnetChange}
-            subnets={nodeBalancerFields.vpcs}
+            subnetsSelected={nodeBalancerFields.vpcs}
             vpcSelected={vpcSelected}
           />
         )}
