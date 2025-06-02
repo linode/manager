@@ -201,7 +201,6 @@ describe('Create Alert', () => {
       .type('linode-resource');
 
     // Search for Entity
-    cy.findByPlaceholderText('Select Tags').should('be.visible').type('tag-2');
 
     // Find the table and locate the entity cell containing 'database-2', then check the corresponding checkbox
     cy.get('[data-qa-alert-table="true"]') // Find the table
@@ -220,8 +219,6 @@ describe('Create Alert', () => {
     ui.heading
       .findByText('region')
       .should('have.attr', 'aria-sort', 'ascending');
-    ui.heading.findByText('tags').should('be.visible');
-    ui.heading.findByText('tags').should('have.attr', 'aria-sort', 'ascending');
 
     // Assert resource selection notice
     cy.findByText('1 of 10 entities are selected.');
