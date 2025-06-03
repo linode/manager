@@ -3,6 +3,7 @@ import {
   useLinodeChangePasswordMutation,
   useLinodeDiskChangePasswordMutation,
   useLinodeQuery,
+  useTypeQuery,
 } from '@linode/queries';
 import { Accordion, ActionsPanel, Notice, Select } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -10,7 +11,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
-import { useTypeQuery } from 'src/queries/types';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 const PasswordInput = React.lazy(() =>

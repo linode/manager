@@ -1,4 +1,4 @@
-import { useLinodeQuery, usePreferences } from '@linode/queries';
+import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -18,7 +18,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>

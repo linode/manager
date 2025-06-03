@@ -1,4 +1,8 @@
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useTypeQuery,
+} from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -6,7 +10,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';

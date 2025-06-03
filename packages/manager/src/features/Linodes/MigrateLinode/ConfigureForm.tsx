@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
@@ -10,7 +10,6 @@ import { MTC } from 'src/features/components/PlansPanel/constants';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';

@@ -1,3 +1,4 @@
+import { useSpecificTypes } from '@linode/queries';
 import {
   ActionsPanel,
   Button,
@@ -12,7 +13,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { LabelInput } from './LabelInput';

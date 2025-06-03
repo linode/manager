@@ -14,6 +14,7 @@ export * from './regions';
 export * from './stackscripts';
 export * from './support';
 export * from './tags';
+export * from './types';
 export * from './vlans';
 export * from './volumes';
 export * from './vpcs';

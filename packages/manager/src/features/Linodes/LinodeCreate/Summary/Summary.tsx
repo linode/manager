@@ -1,4 +1,4 @@
-import { useImageQuery, useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -6,7 +6,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { useTypeQuery } from 'src/queries/types';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';

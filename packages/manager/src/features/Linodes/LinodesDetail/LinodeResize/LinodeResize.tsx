@@ -1,5 +1,6 @@
 import {
   useAllLinodeDisksQuery,
+  useAllTypes,
   useLinodeQuery,
   useLinodeResizeMutation,
   usePreferences,
@@ -29,7 +30,6 @@ import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
 import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { HostMaintenanceError } from '../HostMaintenanceError';

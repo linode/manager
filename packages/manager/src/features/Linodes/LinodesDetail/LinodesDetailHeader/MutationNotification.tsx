@@ -2,6 +2,7 @@ import {
   useAllLinodeDisksQuery,
   useLinodeQuery,
   useStartLinodeMutationMutation,
+  useTypeQuery,
 } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
@@ -10,7 +11,6 @@ import * as React from 'react';
 
 import { MBpsIntraDC } from 'src/constants';
 import { useEventsPollingActions } from 'src/queries/events/events';
-import { useTypeQuery } from 'src/queries/types';
 
 import { MutateDrawer } from '../MutateDrawer/MutateDrawer';
 import { addUsedDiskSpace } from '../utilities';

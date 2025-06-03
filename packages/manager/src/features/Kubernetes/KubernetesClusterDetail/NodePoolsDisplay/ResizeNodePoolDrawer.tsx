@@ -1,3 +1,4 @@
+import { useSpecificTypes } from '@linode/queries';
 import {
   ActionsPanel,
   CircleProgress,
@@ -16,7 +17,6 @@ import {
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from 'src/features/Kubernetes/constants';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
