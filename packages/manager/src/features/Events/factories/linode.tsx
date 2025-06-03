@@ -1,14 +1,10 @@
-import { useLinodeQuery } from '@linode/queries';
-import { formatStorageUnits } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { useTypeQuery } from 'src/queries/types';
 
 import { EventLink } from '../EventLink';
 
 import type { PartialEventMap } from '../types';
-import type { Event } from '@linode/api-v4';
 
 export const linode: PartialEventMap<'linode'> = {
   linode_addip: {
@@ -488,7 +484,12 @@ export const linode: PartialEventMap<'linode'> = {
         <strong>resizing</strong>.
       </>
     ),
-    started: (e) => <LinodeResizeStartedMessage event={e} />,
+    started: (e) => (
+      <>
+        Linode <EventLink event={e} to="entity" /> is <strong>resizing</strong>{' '}
+        to the selected plan.
+      </>
+    ),
   },
   linode_resize_create: {
     notification: (e) => (
@@ -570,27 +571,4 @@ export const linode: PartialEventMap<'linode'> = {
       </>
     ),
   },
-};
-
-const LinodeResizeStartedMessage = ({ event }: { event: Event }) => {
-  const { data: linode } = useLinodeQuery(event.entity?.id ?? -1);
-  const type = useTypeQuery(linode?.type ?? '');
-
-  return (
-    <>
-      Linode <EventLink event={event} to="entity" /> is{' '}
-      <strong>resizing</strong>
-      {type && (
-        <>
-          {' '}
-          to the{' '}
-          {type.data?.label && (
-            <strong>{formatStorageUnits(type.data.label)}</strong>
-          )}{' '}
-          Plan
-        </>
-      )}
-      .
-    </>
-  );
 };

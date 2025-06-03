@@ -3,6 +3,7 @@ import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
+import { eventFactory } from 'src/factories';
 import { getEventMessage } from 'src/features/Events/utils';
 
 import type { Meta, StoryObj } from '@storybook/react';
@@ -97,18 +98,20 @@ export const WithEventMessage: Story = {
   render: (args) => {
     const WithEventMessage = () => {
       const { enqueueSnackbar } = useSnackbar();
-      const message = getEventMessage({
-        action: 'placement_group_assign',
-        entity: {
-          label: 'Entity',
-          url: 'https://google.com',
-        },
-        secondary_entity: {
-          label: 'Secondary Entity',
-          url: 'https://google.com',
-        },
-        status: 'notification',
-      });
+      const message = getEventMessage(
+        eventFactory.build({
+          action: 'placement_group_assign',
+          entity: {
+            label: 'Entity',
+            url: 'https://google.com',
+          },
+          secondary_entity: {
+            label: 'Secondary Entity',
+            url: 'https://google.com',
+          },
+          status: 'notification',
+        })
+      );
 
       return (
         <Button

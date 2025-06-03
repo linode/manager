@@ -1,7 +1,8 @@
 import { Button, Select, Typography } from '@linode/ui';
 import { capitalizeAllWords } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { Pagination } from 'akamai-cds-react-components/Pagination';
 import {
   sortRows,
   Table,
@@ -23,65 +24,36 @@ import {
   getFacadeRoleDescription,
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
+import { usePagination } from 'src/hooks/usePagination';
+
+import { ROLES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
 import type { Order } from 'akamai-cds-react-components/Table';
-
 const ALL_ROLES_OPTION: SelectOption = {
   label: 'All Roles',
   value: 'all',
 };
 
 interface Props {
-  roles: RoleView[];
+  roles?: RoleView[];
 }
 
-export const RolesTable = ({ roles }: Props) => {
-  const [rows, setRows] = useState(roles);
-
+export const RolesTable = ({ roles = [] }: Props) => {
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
-
-  // Get just the list of entity types from this list of roles, to be used in the selection filter
-  const filterableOptions = React.useMemo(() => {
-    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
-  }, [roles]);
-
   const [filterableEntityType, setFilterableEntityType] =
     useState<null | SelectOption>(ALL_ROLES_OPTION);
-
   const [sort, setSort] = useState<
     undefined | { column: string; order: Order }
   >(undefined);
-
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const areAllSelected = React.useMemo(() => {
-    return (
-      !!rows?.length &&
-      !!selectedRows?.length &&
-      rows?.length === selectedRows?.length
-    );
-  }, [rows, selectedRows]);
+  const pagination = usePagination(1, ROLES_TABLE_PREFERENCE_KEY);
 
-  const handleSort = (event: CustomEvent, column: string) => {
-    setSort({ column, order: event.detail as Order });
-    const visibleRows = sortRows(rows, event.detail as Order, column);
-    setRows(visibleRows);
-  };
-
-  const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
-    if (row === 'all') {
-      setSelectedRows(areAllSelected ? [] : rows);
-    } else if (selectedRows.includes(row)) {
-      setSelectedRows(selectedRows.filter((r) => r !== row));
-    } else {
-      setSelectedRows([...selectedRows, row]);
-    }
-  };
-
+  // Filtering
   const getFilteredRows = (
     text: string,
     entityTypeVal = ALL_ROLES_OPTION.value
@@ -96,16 +68,56 @@ export const RolesTable = ({ roles }: Props) => {
     );
   };
 
+  const filteredRows = React.useMemo(
+    () => getFilteredRows(filterString, filterableEntityType?.value),
+    [roles, filterString, filterableEntityType]
+  );
+
+  // Get just the list of entity types from this list of roles, to be used in the selection filter
+  const filterableOptions = React.useMemo(() => {
+    return [ALL_ROLES_OPTION, ...mapEntityTypesForSelect(roles, ' Roles')];
+  }, [roles]);
+
+  const sortedRows = React.useMemo(() => {
+    if (!sort) return filteredRows;
+    return sortRows(filteredRows, sort.order, sort.column);
+  }, [filteredRows, sort]);
+
+  const paginatedRows = React.useMemo(() => {
+    const start = (pagination.page - 1) * pagination.pageSize;
+    return sortedRows.slice(start, start + pagination.pageSize);
+  }, [sortedRows, pagination.page, pagination.pageSize]);
+
+  const areAllSelected = React.useMemo(() => {
+    return (
+      !!paginatedRows?.length &&
+      !!selectedRows?.length &&
+      paginatedRows?.length === selectedRows?.length
+    );
+  }, [paginatedRows, selectedRows]);
+
+  const handleSort = (event: CustomEvent, column: string) => {
+    setSort({ column, order: event.detail as Order });
+  };
+
+  const handleSelect = (event: CustomEvent, row: 'all' | RoleView) => {
+    if (row === 'all') {
+      setSelectedRows(areAllSelected ? [] : paginatedRows);
+    } else if (selectedRows.includes(row)) {
+      setSelectedRows(selectedRows.filter((r) => r !== row));
+    } else {
+      setSelectedRows([...selectedRows, row]);
+    }
+  };
+
   const handleTextFilter = (fs: string) => {
     setFilterString(fs);
-    const filteredRows = getFilteredRows(fs, filterableEntityType?.value);
-    setRows(filteredRows);
+    pagination.handlePageChange(1);
   };
 
   const handleChangeEntityTypeFilter = (_: never, entityType: SelectOption) => {
     setFilterableEntityType(entityType ?? ALL_ROLES_OPTION);
-    const filteredRows = getFilteredRows(filterString, entityType?.value);
-    setRows(filteredRows);
+    pagination.handlePageChange(1);
   };
 
   const assignRoleRow = (row: RoleView) => {
@@ -118,6 +130,15 @@ export const RolesTable = ({ roles }: Props) => {
     setIsDrawerOpen(true);
   };
 
+  const handlePageChange = (event: CustomEvent<{ page: number }>) => {
+    pagination.handlePageChange(Number(event.detail));
+  };
+
+  const handlePageSizeChange = (event: CustomEvent<{ pageSize: number }>) => {
+    const newSize = event.detail.pageSize;
+    pagination.handlePageSizeChange(newSize);
+    pagination.handlePageChange(1);
+  };
   return (
     <>
       <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
@@ -125,7 +146,10 @@ export const RolesTable = ({ roles }: Props) => {
           container
           direction="row"
           spacing={2}
-          sx={{ justifyContent: 'space-between' }}
+          sx={(theme) => ({
+            justifyContent: 'space-between',
+            marginBottom: theme.tokens.spacing.S12,
+          })}
         >
           <Grid
             container
@@ -198,24 +222,21 @@ export const RolesTable = ({ roles }: Props) => {
               >
                 Role Type
               </TableHeaderCell>
-              <TableHeaderCell
-                sort={(event) => handleSort(event, 'description')}
-                sortable
-                sorted={sort?.column === 'description' ? sort.order : undefined}
-                style={{ minWidth: '38%' }}
-              >
+              <TableHeaderCell style={{ minWidth: '38%' }}>
                 Description
               </TableHeaderCell>
               <TableHeaderCell style={{ minWidth: '10%' }} />
             </TableRow>
           </TableHead>
           <TableBody>
-            {!rows?.length ? (
+            {!paginatedRows?.length ? (
               <TableRow>
-                <TableCell>No items to display.</TableCell>
+                <TableCell style={{ justifyContent: 'center' }}>
+                  No items to display.
+                </TableCell>
               </TableRow>
             ) : (
-              rows.map((roleRow) => (
+              paginatedRows.map((roleRow) => (
                 <TableRow
                   expandable
                   hoverable
@@ -225,7 +246,9 @@ export const RolesTable = ({ roles }: Props) => {
                   selectable
                   selected={selectedRows.includes(roleRow)}
                 >
-                  <TableCell style={{ minWidth: '26%' }}>
+                  <TableCell
+                    style={{ minWidth: '26%', wordBreak: 'break-word' }}
+                  >
                     {roleRow.name}
                   </TableCell>
                   <TableCell style={{ minWidth: '14%' }}>
@@ -242,7 +265,12 @@ export const RolesTable = ({ roles }: Props) => {
                       </Typography>
                     )}
                   </TableCell>
-                  <TableCell style={{ minWidth: '10%' }}>
+                  <TableCell
+                    style={{
+                      minWidth: '10%',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
                     <RolesTableActionMenu
                       onClick={() => {
                         assignRoleRow(roleRow);
@@ -260,6 +288,14 @@ export const RolesTable = ({ roles }: Props) => {
             )}
           </TableBody>
         </Table>
+        <Pagination
+          count={filteredRows.length}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          style={{ borderTop: 0 }}
+        />
       </Paper>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}

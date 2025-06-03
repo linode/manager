@@ -2,13 +2,16 @@
  * @file Integration tests for Cloud Manager account login history flows.
  */
 
-import { profileFactory } from '@linode/utilities';
+import { grantsFactory, profileFactory } from '@linode/utilities';
 import {
   loginEmptyStateMessageText,
   loginHelperText,
 } from 'support/constants/account';
 import { mockGetAccountLogins } from 'support/intercepts/account';
-import { mockGetProfile } from 'support/intercepts/profile';
+import {
+  mockGetProfile,
+  mockGetProfileGrants,
+} from 'support/intercepts/profile';
 
 import { accountLoginFactory } from 'src/factories/accountLogin';
 import { PARENT_USER } from 'src/features/Account/constants';
@@ -100,12 +103,14 @@ describe('Account login history', () => {
       user_type: 'child',
       username: 'mock-child-user',
     });
+    const mockGrants = grantsFactory.build();
 
     mockGetProfile(mockProfile).as('getProfile');
+    mockGetProfileGrants(mockGrants).as('getGrants');
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait(['@getProfile']);
+    cy.wait(['@getProfile', '@getGrants']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(loginHelperText).should('not.exist');
@@ -149,12 +154,14 @@ describe('Account login history', () => {
       user_type: 'default',
       username: 'mock-restricted-user',
     });
+    const mockGrants = grantsFactory.build();
 
+    mockGetProfileGrants(mockGrants).as('getGrants');
     mockGetProfile(mockProfile).as('getProfile');
 
     // Navigate to Account Login History page.
     cy.visitWithLogin('/account/login-history');
-    cy.wait(['@getProfile']);
+    cy.wait(['@getProfile', '@getGrants']);
 
     // Confirm helper text above table and table are not visible.
     cy.findByText(loginHelperText).should('not.exist');

@@ -318,8 +318,8 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
           currentClusterSize={database.cluster_size}
           currentEngine={selectedEngine}
           currentPlan={currentPlan}
-          isResize={true}
           label={database.label}
+          mode="resize"
           platform={database.platform}
           resizeData={summaryText}
         />

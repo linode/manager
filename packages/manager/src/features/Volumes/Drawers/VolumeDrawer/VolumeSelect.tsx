@@ -1,5 +1,6 @@
-import { useInfiniteVolumesQuery } from '@linode/queries';
+import { useInfiniteVolumesQuery, useVolumeQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
+import { useDebouncedValue } from '@linode/utilities';
 import * as React from 'react';
 
 interface Props {
@@ -17,11 +18,13 @@ export const VolumeSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
-  const searchFilter = inputValue
+  const debouncedInputValue = useDebouncedValue(inputValue);
+
+  const searchFilter = debouncedInputValue
     ? {
         '+or': [
-          { label: { '+contains': inputValue } },
-          { tags: { '+contains': inputValue } },
+          { label: { '+contains': debouncedInputValue } },
+          { tags: { '+contains': debouncedInputValue } },
         ],
       }
     : {};
@@ -35,9 +38,16 @@ export const VolumeSelect = (props: Props) => {
       '+order_by': 'label',
     });
 
-  const options = data?.pages
-    .flatMap((page) => page.data)
-    .map(({ id, label }) => ({ id, label }));
+  const options = data?.pages.flatMap((page) => page.data);
+
+  const { data: volume, isLoading: isLoadingSelected } = useVolumeQuery(
+    value,
+    value > 0
+  );
+
+  if (value && volume && !options?.some((item) => item.id === volume.id)) {
+    options?.push(volume);
+  }
 
   const selectedVolume = options?.find((option) => option.id === value) ?? null;
 
@@ -45,6 +55,7 @@ export const VolumeSelect = (props: Props) => {
     <Autocomplete
       disabled={disabled}
       errorText={error}
+      filterOptions={(options) => options}
       helperText={
         region && "Only volumes in this Linode's region are attachable."
       }
@@ -64,13 +75,13 @@ export const VolumeSelect = (props: Props) => {
           }
         },
       }}
-      loading={isLoading}
+      loading={isLoading || isLoadingSelected}
       onBlur={onBlur}
-      onChange={(event, value) => {
-        onChange(value?.id ?? -1);
+      onChange={(_, value) => {
         setInputValue('');
+        onChange(value?.id ?? -1);
       }}
-      onInputChange={(event, value, reason) => {
+      onInputChange={(_, value, reason) => {
         if (reason === 'input') {
           setInputValue(value);
         } else {

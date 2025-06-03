@@ -1,4 +1,8 @@
-import { useGrants, useProfile } from '@linode/queries';
+import {
+  useCreateDomainMutation,
+  useGrants,
+  useProfile,
+} from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   ActionsPanel,
@@ -13,7 +17,7 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
@@ -24,7 +28,6 @@ import { LandingHeader } from 'src/components/LandingHeader';
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { reportException } from 'src/exceptionReporting';
 import { NodeBalancerSelect } from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { useCreateDomainMutation } from 'src/queries/domains';
 import { sendCreateDomainEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {

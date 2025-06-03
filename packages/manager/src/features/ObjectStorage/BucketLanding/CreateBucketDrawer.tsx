@@ -13,7 +13,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
@@ -55,10 +54,6 @@ export const CreateBucketDrawer = (props: Props) => {
     isError: isErrorTransferTypes,
     isInitialLoading: isLoadingTransferTypes,
   } = useNetworkTransferPricesQuery(isOpen);
-
-  const isBucketCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_buckets',
-  });
 
   const isErrorTypes = isErrorTransferTypes || isErrorObjTypes;
   const isLoadingTypes = isLoadingTransferTypes || isLoadingObjTypes;
@@ -201,7 +196,7 @@ export const CreateBucketDrawer = (props: Props) => {
             disabled:
               (showGDPRCheckbox && !hasSignedAgreement) ||
               isErrorTypes ||
-              isBucketCreationRestricted,
+              isRestrictedUser,
             label: 'Create Bucket',
             loading: isPending || Boolean(clusterRegion?.id && isLoadingTypes),
             tooltipText:

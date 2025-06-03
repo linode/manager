@@ -1,7 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Tooltip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { capitalize, truncate } from '@linode/utilities';
+import { capitalize, getFormattedStatus, truncate } from '@linode/utilities';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -70,7 +70,7 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell noWrap>{capitalize(type.replace('_', ' '))}</TableCell>
+        <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
       <TableCell statusCell>
         <StatusIcon status={statusIconMap[status] ?? 'other'} />

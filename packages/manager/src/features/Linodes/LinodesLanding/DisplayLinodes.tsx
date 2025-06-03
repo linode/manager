@@ -1,7 +1,7 @@
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 

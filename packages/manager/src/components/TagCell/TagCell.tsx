@@ -6,7 +6,7 @@ import {
   StyledTagButton,
 } from '@linode/ui';
 import MoreHoriz from '@mui/icons-material/MoreHoriz';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 

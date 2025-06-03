@@ -1,3 +1,4 @@
+import { useAccount } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
@@ -8,7 +9,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AccessKeyActionMenu } from './AccessKeyActionMenu';
@@ -34,7 +34,7 @@ export const AccessKeyTableRow = (props: Props) => {
     storageKeyData,
   } = props;
 
-  const { account } = useAccountManagement();
+  const { data: account } = useAccount();
   const flags = useFlags();
 
   const isObjMultiClusterEnabled = isFeatureEnabledV2(

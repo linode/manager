@@ -1,7 +1,7 @@
 import { useAddPaymentMethodMutation } from '@linode/queries';
 import { ActionsPanel, Notice, TextField } from '@linode/ui';
 import { CreditCardSchema } from '@linode/validation';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import { useFormik, yupToFormErrors } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -12,7 +12,7 @@ import { makeStyles } from 'tss-react/mui';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 
-import type { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import type { InputBaseComponentProps } from '@mui/material';
 import type { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles()((theme: Theme) => ({

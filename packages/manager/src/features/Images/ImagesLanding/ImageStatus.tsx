@@ -1,5 +1,5 @@
 import { Stack, TooltipIcon } from '@linode/ui';
-import { capitalizeAllWords } from '@linode/utilities';
+import { capitalizeAllWords, getFormattedStatus } from '@linode/utilities';
 import React from 'react';
 
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -65,7 +65,7 @@ export const ImageStatus = (props: Props) => {
   return (
     <Stack direction="row">
       <StatusIcon status={imageStatusIconMap[image.status]} />
-      {capitalizeAllWords(image.status.replace('_', ' '))}
+      {getFormattedStatus(image.status)}
       {showEventProgress && ` (${event.percent_complete}%)`}
     </Stack>
   );

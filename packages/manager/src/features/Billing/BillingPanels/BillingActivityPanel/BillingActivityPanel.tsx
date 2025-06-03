@@ -8,7 +8,7 @@ import {
 } from '@linode/queries';
 import { Autocomplete, Typography } from '@linode/ui';
 import { getAll, useSet } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
