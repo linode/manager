@@ -6,7 +6,10 @@ import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
+import {
+  DELETE_ALERT_SUCCESS_MESSAGE,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+} from '../constants';
 import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
@@ -237,7 +240,7 @@ describe('Alert List Table test', () => {
     await userEvent.type(textInput, alert.label);
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(screen.getByText('Alert successfully deleted.')).toBeVisible();
+    expect(screen.getByText(DELETE_ALERT_SUCCESS_MESSAGE)).toBeVisible();
   });
 
   it('should show the proper api error message in error snackbar when deleting alert fails with a reason', async () => {
