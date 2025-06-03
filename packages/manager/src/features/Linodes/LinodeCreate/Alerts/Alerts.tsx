@@ -10,7 +10,7 @@ import { AclpPreferenceToggle } from '../../LinodesDetail/AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../../LinodesDetail/LinodeSettings/LinodeSettingsAlertsPanel';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import type { Alert } from '@linode/api-v4';
+import type { LinodeAclpAlertsPayload } from '@linode/api-v4';
 
 export const Alerts = () => {
   const flags = useFlags();
@@ -25,21 +25,7 @@ export const Alerts = () => {
     defaultValue: { system: [], user: [] },
   });
 
-  const handleToggleAlert = (alert: Alert) => {
-    const alerts = field.value;
-    const currentAlertIds = alerts?.[alert.type] || [];
-    const updatedAlerts = { ...alerts };
-
-    if (currentAlertIds.includes(alert.id)) {
-      // Disable the alert (remove from the list)
-      updatedAlerts[alert.type] = currentAlertIds.filter(
-        (id) => id !== alert.id
-      );
-    } else {
-      // Enable the alert (add to the list)
-      updatedAlerts[alert.type] = [...currentAlertIds, alert.id];
-    }
-
+  const handleToggleAlert = (updatedAlerts: LinodeAclpAlertsPayload) => {
     field.onChange(updatedAlerts);
   };
 
@@ -48,7 +34,6 @@ export const Alerts = () => {
       {flags.aclpIntegration && <AclpPreferenceToggle type="alerts" />}
       {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
         <AlertReusableComponent
-          enabledAlerts={field.value}
           onToggleAlert={handleToggleAlert}
           serviceType="linode"
         />
