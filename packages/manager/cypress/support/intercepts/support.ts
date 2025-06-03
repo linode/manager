@@ -2,6 +2,7 @@
  * @file Cypress mock and intercept utilities for Help & Support API requests.
  */
 
+import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { makeResponse } from 'support/util/response';
@@ -22,6 +23,23 @@ export const mockCreateSupportTicket = (
     'POST',
     apiMatcher('support/tickets'),
     makeResponse(ticket)
+  );
+};
+
+/**
+ * Intercepts request to open a support ticket and mocks error response.
+ *
+ * @param errorMessage - Mocks an error response with the given message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateSupportTicketError = (
+  errorMessage: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('support/tickets'),
+    makeErrorResponse(errorMessage)
   );
 };
 
