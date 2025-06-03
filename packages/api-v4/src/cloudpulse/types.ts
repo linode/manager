@@ -354,7 +354,7 @@ export interface DeleteAlertPayload {
 
 export type AlertScopes = 'account' | 'entity' | 'region';
 
-export interface ServiceAlertsUpdatePayload {
-  system: Alert['id'][];
-  user: Alert['id'][];
+export interface CloudPulseAlertsPayload {
+  system: number[];
+  user: number[];
 }

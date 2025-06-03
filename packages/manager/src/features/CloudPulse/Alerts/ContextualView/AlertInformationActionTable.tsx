@@ -18,7 +18,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertContextualViewConfirmDialog } from './AlertContextualViewConfirmDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { ServiceAlertsUpdatePayload } from '@linode/api-v4';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import { compareArrays } from '../../Utils/FilterBuilder';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -88,28 +89,39 @@ export const AlertInformationActionTable = (
   const { enqueueSnackbar } = useSnackbar();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [alertStates, setAlertStates] = React.useState<Record<string, boolean>>(
-    {}
-  );
+  const [enabledAlerts, setEnabledAlerts] =
+  React.useState<CloudPulseAlertsPayload>({
+    system: [],
+    user: [],
+  });
 
   const isAccountOrRegionLevelAlert = (alert: Alert) =>
     alert.scope === 'region' || alert.scope === 'account';
 
   // Store initial alert states for comparison using a ref
-  const initialAlertStatesRef = React.useRef<Record<string, boolean>>({});
+  const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
+    system: [],
+    user: [],
+  });
 
   // Initialize alert states based on their current status
   React.useEffect(() => {
-    const initialStates: Record<string, boolean> = {};
+    const initialStates: CloudPulseAlertsPayload = {
+      system: [],
+      user: [],
+    };
     alerts.forEach((alert) => {
       if (isAccountOrRegionLevelAlert(alert)) {
-        initialStates[alert.id] = true;
+        initialStates[alert.type].push(alert.id);
       } else {
-        initialStates[alert.id] = alert.entity_ids.includes(entityId);
+        alert.entity_ids.includes(entityId) && initialStates[alert.type].push(alert.id);
       }
     });
-    setAlertStates(initialStates);
-    initialAlertStatesRef.current = { ...initialStates };
+    setEnabledAlerts(initialStates);
+    initialAlertStatesRef.current = {
+      system: [...initialStates.system],
+      user: [...initialStates.user]
+    };
   }, [alerts, entityId]);
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
@@ -122,7 +134,7 @@ export const AlertInformationActionTable = (
   };
 
   const handleConfirm = React.useCallback(
-    (alertIds: ServiceAlertsUpdatePayload) => {
+    (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
       updateAlerts({
         user: alertIds.user,
@@ -134,7 +146,7 @@ export const AlertInformationActionTable = (
           });
         })
         .catch(() => {
-          enqueueSnackbar('There is an error, please try saving again.', {
+          enqueueSnackbar('Alerts changes were not saved, please try again.', {
             variant: 'error',
           });
         })
@@ -147,32 +159,31 @@ export const AlertInformationActionTable = (
   );
 
   const handleToggle = (alert: Alert) => {
-    // Toggle the state for this alert
-    setAlertStates((prev) => ({
-      ...prev,
-      [alert.id]: !prev[alert.id],
-    }));
+    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+      const newPayload: CloudPulseAlertsPayload = {...prev};
+      const index = newPayload[alert.type].indexOf(alert.id);
+      
+      // If the alert is already in the payload, remove it, otherwise add it
+      if (index !== -1) {
+        newPayload[alert.type].splice(index, 1);
+      } else {
+        newPayload[alert.type].push(alert.id);
+      }
+      
+      return newPayload;
+    });
   };
 
-  // check if any alert state has changed from the initial state
-  const isAnyAlertStateChanged = Object.keys(alertStates).some(
-    (alertId) => alertStates[alertId] !== initialAlertStatesRef.current[alertId]
-  );
-
-  const enabledAlertIds = React.useMemo<ServiceAlertsUpdatePayload>(() => {
-    return {
-      user: alerts
-        .filter(
-          (alert) => alert.type === 'user' && alertStates[alert.id] === true
-        )
-        .map((alert) => alert.id),
-      system: alerts
-        .filter(
-          (alert) => alert.type === 'system' && alertStates[alert.id] === true
-        )
-        .map((alert) => alert.id),
-    };
-  }, [alerts, alertStates]);
+  const isAnyAlertStateChanged = React.useMemo(() => {
+    const initial = initialAlertStatesRef.current;
+    const current = enabledAlerts;
+    
+    if (!compareArrays(current.system, initial.system)) {
+      return true;
+    } else {
+      return !compareArrays(current.user, initial.user);
+    }
+  }, [enabledAlerts]);
 
   return (
     <>
@@ -232,9 +243,7 @@ export const AlertInformationActionTable = (
                               )}
                               key={alert.id}
                               status={
-                                isAccountOrRegionLevelAlert(alert)
-                                  ? true
-                                  : alertStates[alert.id]
+                                enabledAlerts[alert.type].includes(alert.id)
                               }
                             />
                           );
@@ -274,7 +283,7 @@ export const AlertInformationActionTable = (
         )}
       </OrderBy>
       <AlertContextualViewConfirmDialog
-        alertIds={enabledAlertIds}
+        alertIds={enabledAlerts}
         entityName={entityName}
         handleCancel={handleCancel}
         handleConfirm={handleConfirm}
