@@ -46,7 +46,7 @@ describe('AssignedEntitiesTable', () => {
 
     renderWithTheme(<AssignedEntitiesTable />);
 
-    expect(screen.getByText('No Entities are assigned.')).toBeVisible();
+    expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
@@ -87,7 +87,7 @@ describe('AssignedEntitiesTable', () => {
     await userEvent.type(searchInput, 'NonExistentRole');
 
     await waitFor(() => {
-      expect(screen.getByText('No Entities are assigned.')).toBeVisible();
+      expect(screen.getByText('No items to display.')).toBeVisible();
     });
   });
 

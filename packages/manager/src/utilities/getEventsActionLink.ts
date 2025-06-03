@@ -81,7 +81,7 @@ export const getLinkForEvent = (action: EventAction, entity: Entity | null) => {
         : `/linodes/${id}`;
 
     case 'lkecluster':
-      return `/kubernetes/clusters/${id}`;
+      return `/kubernetes/clusters/${id}/summary`;
 
     case 'nodebalancer':
       // eslint-disable-next-line sonarjs/no-small-switch
@@ -140,7 +140,7 @@ export const getLinkTargets = (entity: Entity | null) => {
     case 'linode':
       return `/linodes/${entity.id}`;
     case 'lkecluster':
-      return `/kubernetes/clusters/${entity.id}`;
+      return `/kubernetes/clusters/${entity.id}/summary`;
     case 'longview':
       return '/longview';
     case 'nodebalancer':
