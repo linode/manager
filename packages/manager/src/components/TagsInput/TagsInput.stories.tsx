@@ -4,7 +4,7 @@ import React from 'react';
 
 import { TagsInput } from './TagsInput';
 
-import type { Tag, TagsInputProps } from './TagsInput';
+import type { TagOption, TagsInputProps } from './TagsInput';
 import type { Meta, StoryObj } from '@storybook/react';
 
 export const Default: StoryObj<TagsInputProps> = {
@@ -23,7 +23,7 @@ export const Default: StoryObj<TagsInputProps> = {
   render: (args) => {
     const TagsInputWrapper = () => {
       const [, setTags] = useArgs();
-      const handleUpdateTags = (selected: Tag[]) => {
+      const handleUpdateTags = (selected: TagOption[]) => {
         return setTags({ value: selected });
       };
 

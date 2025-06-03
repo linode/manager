@@ -1,4 +1,3 @@
-import { path } from 'ramda';
 import { connect } from 'react-redux';
 
 import { getClientStats } from 'src/store/longviewStats/longviewStats.requests';
@@ -65,9 +64,9 @@ const connected = <OwnProps extends {}>(
 
       return {
         longviewClientData: foundClient?.data ?? {},
-        longviewClientDataError: path(['error'], foundClient),
+        longviewClientDataError: foundClient?.error,
         longviewClientDataLoading: foundClient?.loading ?? true,
-        longviewClientLastUpdated: path(['lastUpdated'], foundClient),
+        longviewClientLastUpdated: foundClient?.lastUpdated,
       };
     },
     (dispatch: ThunkDispatch, ownProps: OwnProps) => ({
