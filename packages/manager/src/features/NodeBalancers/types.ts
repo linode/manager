@@ -33,7 +33,7 @@ export interface NodeBalancerConfigNodeFields
   /**
    * @note `port` is an "extended" field. The API includes it in the `address`
    */
-  port?: number;
+  port?: string;
   subnet_id?: number;
 }
 

@@ -27,7 +27,7 @@ const node: NodeBalancerConfigNodeFields = {
   label: '',
   mode: 'accept',
   modifyStatus: 'new',
-  port: 80,
+  port: '80',
   weight: 100,
 };
 
