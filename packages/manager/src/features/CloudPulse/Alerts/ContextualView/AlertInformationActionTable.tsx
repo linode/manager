@@ -95,9 +95,6 @@ export const AlertInformationActionTable = (
     user: [],
   });
 
-  const isAccountOrRegionLevelAlert = (alert: Alert) =>
-    alert.scope === 'region' || alert.scope === 'account';
-
   // Store initial alert states for comparison using a ref
   const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
     system: [],
@@ -111,11 +108,7 @@ export const AlertInformationActionTable = (
       user: [],
     };
     alerts.forEach((alert) => {
-      if (isAccountOrRegionLevelAlert(alert)) {
-        initialStates[alert.type].push(alert.id);
-      } else {
         alert.entity_ids.includes(entityId) && initialStates[alert.type].push(alert.id);
-      }
     });
     setEnabledAlerts(initialStates);
     initialAlertStatesRef.current = {
@@ -238,9 +231,6 @@ export const AlertInformationActionTable = (
                             <AlertInformationActionRow
                               alert={alert}
                               handleToggle={handleToggle}
-                              isAlertActionRestricted={isAccountOrRegionLevelAlert(
-                                alert
-                              )}
                               key={alert.id}
                               status={
                                 enabledAlerts[alert.type].includes(alert.id)

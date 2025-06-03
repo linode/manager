@@ -41,7 +41,6 @@ export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [
   { columnName: 'Alert Name', label: 'label' },
   { columnName: 'Metric Threshold', label: 'id' },
   { columnName: 'Alert Type', label: 'type' },
-  { columnName: 'Scope', label: 'scope' },
 ];
 
 export const alertLimitMessage =

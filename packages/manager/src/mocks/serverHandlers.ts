@@ -2627,15 +2627,9 @@ export const handlers = [
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
           }),
-          ...alertFactory.buildList(6, {
+          ...alertFactory.buildList(5, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
-            scope: 'account',
-          }),
-          ...alertFactory.buildList(6, {
-            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
-            type: 'user',
-            scope: 'region',
           }),
         ],
       });
