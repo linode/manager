@@ -247,8 +247,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                           shouldValidate: true,
                         });
                       }
-                      // Re-validate the max field.
-                      trigger('max');
                     }}
                     type="number"
                     value={field.value}
