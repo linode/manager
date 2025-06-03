@@ -61,7 +61,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   slash: {
     '& p': {
       fontSize: '1rem',
-      padding: `${theme.spacing(2)} 0`,
+      padding: `${theme.spacingFunction(4)} 0`,
     },
     alignSelf: 'end',
     padding: '0px !important',
@@ -173,8 +173,8 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     >
       {warning ? (
         <Notice className={classes.notice} variant="warning">
-          {warning}
-          <div>
+          {warning}{' '}
+          <span>
             <Button
               buttonType="secondary"
               className={classes.resize}
@@ -187,7 +187,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               Resize
             </Button>
             to immediately scale your Node Pool up or down.
-          </div>
+          </span>
         </Notice>
       ) : null}
       <Typography>
@@ -310,14 +310,22 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               }}
             />
           </Grid>
-          <Grid size={12} style={{ padding: '0 8px' }}>
+          <Grid size={12} sx={{ padding: '0 8px' }}>
             {errors.min && (
-              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
+              <Typography
+                sx={(theme) => ({
+                  color: theme.tokens.component.TextField.Error.HintText,
+                })}
+              >
                 {errors.min.message}
               </Typography>
             )}
             {errors.max && (
-              <Typography sx={(theme) => ({ color: theme.palette.error.dark })}>
+              <Typography
+                sx={(theme) => ({
+                  color: theme.tokens.component.TextField.Error.HintText,
+                })}
+              >
                 {errors.max.message}
               </Typography>
             )}
