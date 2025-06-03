@@ -159,7 +159,6 @@
     "@types/md5": "^2.1.32",
     "@types/mocha": "^10.0.2",
     "@types/node": "^20.17.0",
-    "@types/qrcode.react": "^0.8.0",
     "@types/ramda": "0.25.16",
     "@types/react": "^18.2.55",
     "@types/react-csv": "^1.1.3",

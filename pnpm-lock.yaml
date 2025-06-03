@@ -453,9 +453,6 @@ importers:
       '@types/node':
         specifier: ^20.17.0
         version: 20.17.6
-      '@types/qrcode.react':
-        specifier: ^0.8.0
-        version: 0.8.2
       '@types/ramda':
         specifier: 0.25.16
         version: 0.25.16
@@ -2698,9 +2695,6 @@ packages:
 
   '@types/prop-types@15.7.14':
     resolution: {integrity: sha512-gNMvNH49DJ7OJYv+KAKn0Xp45p8PLl6zo2YnvDIbTd4J6MER2BmWN49TG7n9LvkyihINxeKW8+3bfS2yDC9dzQ==}
-
-  '@types/qrcode.react@0.8.2':
-    resolution: {integrity: sha512-nxGOQzQBV3Ny1g7uMGa3jTAi7SNHUUJ91K7EMO1FEQtb38A4vwq3pZvz0QcfIN7ypP4xTwl7G6NIQMCZZQoXIQ==}
 
   '@types/raf@3.4.3':
     resolution: {integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==}
@@ -8622,10 +8616,6 @@ snapshots:
   '@types/prop-types@15.7.13': {}
 
   '@types/prop-types@15.7.14': {}
-
-  '@types/qrcode.react@0.8.2':
-    dependencies:
-      '@types/react': 18.3.12
 
   '@types/raf@3.4.3':
     optional: true
