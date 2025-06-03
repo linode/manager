@@ -243,9 +243,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
-  },
+  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+    {
+      background: Table.Row.Background.Hover,
+    },
 };
 
 const MuiTableZebraStyles = {
@@ -1581,11 +1582,13 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: Table.Row.Background.Hover,
-          },
+          '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+            {
+              backgroundColor: Table.Row.Background.Hover,
+            },
           '&.MuiTableRow-hover:hover.disabled-row': {
             cursor: 'not-allowed',
+            backgroundColor: 'inherit',
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
@@ -1594,7 +1597,6 @@ export const lightTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,
