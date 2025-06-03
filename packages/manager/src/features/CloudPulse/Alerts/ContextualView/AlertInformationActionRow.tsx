@@ -6,7 +6,6 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { alertScopeLabelMap } from '../AlertsListing/constants';
 import { processMetricCriteria } from '../Utils/utils';
 import { MetricThreshold } from './MetricThreshold';
 
@@ -33,11 +32,7 @@ interface AlertInformationActionRowProps {
 export const AlertInformationActionRow = (
   props: AlertInformationActionRowProps
 ) => {
-  const {
-    alert,
-    handleToggle,
-    status = false,
-  } = props;
+  const { alert, handleToggle, status = false } = props;
   const { id, label, rule_criteria, service_type, type } = alert;
   const metricThreshold = processMetricCriteria(rule_criteria.rules);
 
@@ -46,10 +41,7 @@ export const AlertInformationActionRow = (
       <TableCell sx={{ width: 0 }}>
         <FormControlLabel
           control={
-            <Toggle
-              checked={status}
-              onChange={() => handleToggle(alert)}
-            />
+            <Toggle checked={status} onChange={() => handleToggle(alert)} />
           }
           label={''}
         />

@@ -15,11 +15,11 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { compareArrays } from '../../Utils/FilterBuilder';
 import { AlertContextualViewConfirmDialog } from './AlertContextualViewConfirmDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
-import { compareArrays } from '../../Utils/FilterBuilder';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -90,10 +90,10 @@ export const AlertInformationActionTable = (
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [enabledAlerts, setEnabledAlerts] =
-  React.useState<CloudPulseAlertsPayload>({
-    system: [],
-    user: [],
-  });
+    React.useState<CloudPulseAlertsPayload>({
+      system: [],
+      user: [],
+    });
 
   // Store initial alert states for comparison using a ref
   const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
@@ -108,12 +108,14 @@ export const AlertInformationActionTable = (
       user: [],
     };
     alerts.forEach((alert) => {
-        alert.entity_ids.includes(entityId) && initialStates[alert.type].push(alert.id);
+      if (alert.entity_ids.includes(entityId)) {
+        initialStates[alert.type].push(alert.id);
+      }
     });
     setEnabledAlerts(initialStates);
     initialAlertStatesRef.current = {
       system: [...initialStates.system],
-      user: [...initialStates.user]
+      user: [...initialStates.user],
     };
   }, [alerts, entityId]);
 
@@ -153,16 +155,16 @@ export const AlertInformationActionTable = (
 
   const handleToggle = (alert: Alert) => {
     setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
-      const newPayload: CloudPulseAlertsPayload = {...prev};
+      const newPayload: CloudPulseAlertsPayload = { ...prev };
       const index = newPayload[alert.type].indexOf(alert.id);
-      
+
       // If the alert is already in the payload, remove it, otherwise add it
       if (index !== -1) {
         newPayload[alert.type].splice(index, 1);
       } else {
         newPayload[alert.type].push(alert.id);
       }
-      
+
       return newPayload;
     });
   };
@@ -170,7 +172,7 @@ export const AlertInformationActionTable = (
   const isAnyAlertStateChanged = React.useMemo(() => {
     const initial = initialAlertStatesRef.current;
     const current = enabledAlerts;
-    
+
     if (!compareArrays(current.system, initial.system)) {
       return true;
     } else {
@@ -232,9 +234,9 @@ export const AlertInformationActionTable = (
                               alert={alert}
                               handleToggle={handleToggle}
                               key={alert.id}
-                              status={
-                                enabledAlerts[alert.type].includes(alert.id)
-                              }
+                              status={enabledAlerts[alert.type].includes(
+                                alert.id
+                              )}
                             />
                           );
                         })}
