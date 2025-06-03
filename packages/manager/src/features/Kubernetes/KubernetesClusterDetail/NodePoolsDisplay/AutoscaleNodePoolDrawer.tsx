@@ -104,6 +104,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
   const {
     control,
     formState: { errors, isDirty, isSubmitting, isValid },
+    trigger,
     watch,
     ...form
   } = useForm({
@@ -246,6 +247,8 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                           shouldValidate: true,
                         });
                       }
+                      // Re-validate the max field.
+                      trigger('max');
                     }}
                     type="number"
                     value={field.value}
@@ -255,6 +258,8 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               rules={{
                 required: 'Minimum is a required field.',
                 validate: (value) => {
+                  // Gets the current max value and converts empty string to 0 for comparison.
+                  const _max = Number(form.getValues('max'));
                   if (value > _max || value < 1 || value > maxLimit) {
                     return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
                   }
@@ -293,6 +298,8 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                           shouldValidate: true,
                         });
                       }
+                      // Re-validate the min field.
+                      trigger('min');
                     }}
                     type="number"
                     value={field.value}
