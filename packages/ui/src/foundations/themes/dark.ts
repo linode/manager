@@ -898,7 +898,7 @@ export const darkTheme: ThemeOptions = {
             width: 20,
           },
           '& .Mui-checked .icon': {
-            left: '-6px',
+            marginLeft: '4px',
           },
           '.MuiSwitch-track': {
             opacity: '1 !important',
