@@ -216,7 +216,10 @@ export const CreateAlertDefinition = () => {
               name="serviceType"
             />
             <CloudPulseAlertSeveritySelect name="severity" />
-            <AlertEntityScopeSelect name="group" />
+            <AlertEntityScopeSelect
+              name="group"
+              serviceType={serviceTypeWatcher}
+            />
             {scopeWatcher === 'entity' && (
               <CloudPulseModifyAlertResources name="entity_ids" />
             )}

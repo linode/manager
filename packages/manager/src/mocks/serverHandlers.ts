@@ -2767,12 +2767,17 @@ export const handlers = [
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
     const serviceType = params.serviceType;
+
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
       label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
       is_beta: pickRandom([true, false]),
+      alert:
+        serviceType === 'dbaas'
+          ? serviceAlertFactory.build()
+          : serviceAlertFactory.build({ scope: ['entity'] }),
     });
-    return HttpResponse.json({ data: response });
+    return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
