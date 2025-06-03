@@ -7,8 +7,10 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+import { LinodePlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/LinodePlatformMaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { MigrationNotification } from './MigrationNotification';
 
@@ -31,11 +33,13 @@ const Notifications = () => {
     PENDING_MAINTENANCE_FILTER
   );
 
-  const maintenanceForThisLinode = accountMaintenanceData?.find(
-    (thisMaintenance) =>
-      thisMaintenance.entity.type === 'linode' &&
-      thisMaintenance.entity.id === linode?.id
-  );
+  const maintenanceForThisLinode = accountMaintenanceData
+    ?.filter((maintenance) => !isPlatformMaintenance(maintenance)) // Platform maintenance is handled separately
+    ?.find(
+      (thisMaintenance) =>
+        thisMaintenance.entity.type === 'linode' &&
+        thisMaintenance.entity.id === linode?.id
+    );
 
   const generateNotificationBody = (notification: Notification) => {
     switch (notification.type) {
@@ -78,6 +82,9 @@ const Notifications = () => {
           </React.Fragment>
         );
       })}
+      {linode ? (
+        <LinodePlatformMaintenanceBanner linodeId={linode?.id} />
+      ) : null}
       {maintenanceForThisLinode ? (
         <MaintenanceBanner
           maintenanceStart={maintenanceForThisLinode.when}

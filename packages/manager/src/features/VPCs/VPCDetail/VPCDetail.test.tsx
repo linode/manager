@@ -76,6 +76,43 @@ describe('VPC Detail Summary section', () => {
     getAllByText(vpcFactory1.updated);
   });
 
+  it('should display number of subnets and resources, region, id, creation and update dates', async () => {
+    const vpcFactory1 = vpcFactory.build({ id: 1, subnets: [] });
+    server.use(
+      http.get('*/vpcs/:vpcId', () => {
+        return HttpResponse.json(vpcFactory1);
+      })
+    );
+
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    getAllByText('Subnets');
+    getAllByText('Resources');
+    getAllByText('0');
+
+    getAllByText('Region');
+    getAllByText('US, Newark, NJ');
+
+    getAllByText('VPC ID');
+    getAllByText(vpcFactory1.id);
+
+    getAllByText('Created');
+    getAllByText(vpcFactory1.created);
+
+    getAllByText('Updated');
+    getAllByText(vpcFactory1.updated);
+  });
+
   it('should display description if one is provided', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database.`,

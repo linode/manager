@@ -44,6 +44,31 @@ export function useTabs<T extends Tab>(tabs: T[]) {
     [tabs]
   );
 
+  const visibleTabIndices = React.useMemo(() => {
+    const indices = new Map<string, number>();
+    let visibleIndex = 0;
+
+    tabs.forEach((tab) => {
+      if (!tab.hide) {
+        indices.set(String(tab.to), visibleIndex);
+        visibleIndex++;
+      }
+    });
+
+    return indices;
+  }, [tabs]);
+
+  // This helper function is used to get the index of a tab based on its path.
+  // It is meant to be used in the SafeTabPanel component when tabs are conditionally rendered.
+  // Without this, the logic to calculate the current index for a tab's content is tedious.
+  // In most cases this won't be needed as indexes can be passed statically.
+  const getTabIndex = React.useCallback(
+    (path: T['to']): null | number => {
+      return visibleTabIndices.get(String(path)) ?? null;
+    },
+    [visibleTabIndices]
+  );
+
   // Calculate current index based on route
   const tabIndex = React.useMemo(() => {
     const index = visibleTabs.findIndex((tab) => {
@@ -71,5 +96,6 @@ export function useTabs<T extends Tab>(tabs: T[]) {
     handleTabChange,
     tabIndex,
     tabs: visibleTabs,
+    getTabIndex,
   };
 }

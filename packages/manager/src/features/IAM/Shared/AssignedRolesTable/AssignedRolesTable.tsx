@@ -7,10 +7,12 @@ import { useHistory, useParams } from 'react-router-dom';
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Link } from 'src/components/Link';
+import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
+import { usePagination } from 'src/hooks/usePagination';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import {
   useAccountPermissions,
@@ -19,6 +21,7 @@ import {
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
+import { ASSIGNED_ROLES_TABLE_PREFERENCE_KEY } from '../constants';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -69,6 +72,8 @@ export const AssignedRolesTable = () => {
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+
+  const pagination = usePagination(1, ASSIGNED_ROLES_TABLE_PREFERENCE_KEY);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -165,8 +170,8 @@ export const AssignedRolesTable = () => {
     });
   };
 
-  const memoizedTableItems: TableItem[] = React.useMemo(() => {
-    const filteredRoles = getFilteredRoles({
+  const filteredAndSortedRoles = React.useMemo(() => {
+    const rolesToFilter = getFilteredRoles({
       entityType: entityType?.value as 'all' | EntityTypePermissions,
       getSearchableFields,
       query,
@@ -181,7 +186,7 @@ export const AssignedRolesTable = () => {
     // 2. After the first user interaction with sorting (isInitialLoad is set to false):
     //    - Roles are sorted alphabetically by the selected column (orderBy) and direction (order).
     //    - The special prioritization of roles’ access is no longer applied.
-    const filteredAndSortedRoles = [...filteredRoles].sort((a, b) => {
+    return [...rolesToFilter].sort((a, b) => {
       if (isInitialLoad && a.access !== b.access) {
         return a.access === 'account_access' ? -1 : 1;
       }
@@ -194,77 +199,89 @@ export const AssignedRolesTable = () => {
       }
       return 0;
     });
+  }, [roles, query, entityType, order, orderBy, isInitialLoad]);
 
-    return filteredAndSortedRoles.map((role: ExtendedRoleView) => {
-      const OuterTableCells = (
-        <>
-          {role.access === 'account_access' ? (
-            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-              <Typography>
-                {role.entity_type === 'account'
-                  ? 'All Entities'
-                  : `All ${getFormattedEntityType(role.entity_type)}s`}
-              </Typography>
-            </TableCell>
-          ) : (
-            <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
-              <AssignedEntities
-                onButtonClick={handleViewEntities}
-                onRemoveAssignment={handleRemoveAssignment}
+  const memoizedTableItems: TableItem[] = React.useMemo(() => {
+    return filteredAndSortedRoles
+      .slice(
+        (pagination.page - 1) * pagination.pageSize,
+        pagination.page * pagination.pageSize
+      )
+      .map((role: ExtendedRoleView) => {
+        const OuterTableCells = (
+          <>
+            {role.access === 'account_access' ? (
+              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                <Typography>
+                  {role.entity_type === 'account'
+                    ? 'All Entities'
+                    : `All ${getFormattedEntityType(role.entity_type)}s`}
+                </Typography>
+              </TableCell>
+            ) : (
+              <TableCell sx={{ display: { sm: 'table-cell', xs: 'none' } }}>
+                <AssignedEntities
+                  onButtonClick={handleViewEntities}
+                  onRemoveAssignment={handleRemoveAssignment}
+                  role={role}
+                />
+              </TableCell>
+            )}
+            <TableCell actionCell>
+              <AssignedRolesActionMenu
+                handleChangeRole={handleChangeRole}
+                handleUnassignRole={handleUnassignRole}
+                handleUpdateEntities={handleUpdateEntities}
+                handleViewEntities={handleViewEntities}
                 role={role}
               />
             </TableCell>
-          )}
-          <TableCell actionCell>
-            <AssignedRolesActionMenu
-              handleChangeRole={handleChangeRole}
-              handleUnassignRole={handleUnassignRole}
-              handleUpdateEntities={handleUpdateEntities}
-              handleViewEntities={handleViewEntities}
-              role={role}
-            />
-          </TableCell>
-        </>
-      );
-      // TODO: update the link for 'Learn more' in the description when it's ready - UIE-8534
-      const InnerTable = (
-        <Grid
-          sx={{
-            padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
-          }}
-        >
-          <Typography
+          </>
+        );
+        // TODO: update the link for 'Learn more' in the description when it's ready - UIE-8534
+        const InnerTable = (
+          <Grid
             sx={{
-              font: theme.tokens.alias.Typography.Label.Bold.S,
+              padding: `${theme.tokens.spacing.S0} ${theme.tokens.spacing.S16}`,
             }}
           >
-            Description
-          </Typography>
-          <Typography
-            sx={{
-              marginBottom: theme.tokens.spacing.S8,
-            }}
-          >
-            {role.permissions.length ? (
-              role.description
-            ) : (
-              <>
-                {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
-              </>
-            )}
-          </Typography>
-          <Permissions permissions={role.permissions} />
-        </Grid>
-      );
+            <Typography
+              sx={{
+                font: theme.tokens.alias.Typography.Label.Bold.S,
+              }}
+            >
+              Description
+            </Typography>
+            <Typography
+              sx={{
+                marginBottom: theme.tokens.spacing.S8,
+              }}
+            >
+              {role.permissions.length ? (
+                role.description
+              ) : (
+                <>
+                  {getFacadeRoleDescription(role)}{' '}
+                  <Link to="#">Learn more.</Link>
+                </>
+              )}
+            </Typography>
+            <Permissions permissions={role.permissions} />
+          </Grid>
+        );
 
-      return {
-        InnerTable,
-        OuterTableCells,
-        id: role.id,
-        label: role.name,
-      };
-    });
-  }, [roles, query, entityType, order, orderBy]);
+        return {
+          InnerTable,
+          OuterTableCells,
+          id: role.id,
+          label: role.name,
+        };
+      });
+  }, [filteredAndSortedRoles, pagination]);
+
+  const filteredAndSortedRolesCount = React.useMemo(() => {
+    return filteredAndSortedRoles.length;
+  }, [filteredAndSortedRoles]);
 
   if (accountPermissionsLoading || entitiesLoading || assignedRolesLoading) {
     return <CircleProgress />;
@@ -329,14 +346,20 @@ export const AssignedRolesTable = () => {
             }}
             hideLabel
             label="Filter"
-            onSearch={setQuery}
+            onSearch={(value) => {
+              pagination.handlePageChange(1);
+              setQuery(value);
+            }}
             placeholder="Search"
             value={query}
           />
           <Select
             hideLabel
             label="Select type"
-            onChange={(_, selected) => setEntityType(selected ?? null)}
+            onChange={(_, selected) => {
+              pagination.handlePageChange(1);
+              setEntityType(selected ?? null);
+            }}
             options={filterableOptions}
             placeholder="All Assigned Roles"
             sx={{ minWidth: 250 }}
@@ -355,7 +378,7 @@ export const AssignedRolesTable = () => {
       <CollapsibleTable
         TableItems={memoizedTableItems}
         TableRowEmpty={
-          <TableRowEmpty colSpan={5} message={'No Roles are assigned.'} />
+          <TableRowEmpty colSpan={5} message={'No items to display.'} />
         }
         TableRowHead={RoleTableRowHead}
       />
@@ -384,6 +407,15 @@ export const AssignedRolesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
       />
+      {filteredAndSortedRolesCount > pagination.pageSize && (
+        <PaginationFooter
+          count={filteredAndSortedRolesCount}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+        />
+      )}
     </Grid>
   );
 };
