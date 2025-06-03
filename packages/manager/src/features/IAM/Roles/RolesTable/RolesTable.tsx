@@ -24,7 +24,7 @@ import {
   getFacadeRoleDescription,
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { ROLES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 
@@ -51,7 +51,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const pagination = usePagination(1, ROLES_TABLE_PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/roles',
+    initialPage: 1,
+    preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
+  });
 
   // Filtering
   const getFilteredRows = (
