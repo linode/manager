@@ -19,7 +19,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('@tanstack/react-router', async () => {
-  const actual = await vi.importActual<any>('@tanstack/react-router');
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
     useNavigate: queryMocks.useNavigate,

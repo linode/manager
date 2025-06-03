@@ -111,12 +111,6 @@ export const AccountLanding = () => {
     },
   ]);
 
-  // const overrideWhitelist = [
-  //   '/account/billing/make-payment',
-  //   '/account/billing/add-payment-method',
-  //   '/account/billing/edit',
-  // ];
-
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
       return sessionContext.updateState({
@@ -126,31 +120,6 @@ export const AccountLanding = () => {
 
     setIsDrawerOpen(true);
   };
-
-  // const getDefaultTabIndex = () => {
-  //   const tabChoice = tabs.findIndex((tab) =>
-  //     Boolean(matchPath(tab.routeName, { path: location.pathname }))
-  //   );
-
-  //   if (tabChoice < 0) {
-  //     // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
-  //     // and `/account/billing/edit`
-  //     if (!overrideWhitelist.includes(location.pathname)) {
-  //       history.push('/account/billing');
-  //     }
-
-  //     // Redirect to the landing page if the path does not exist
-  //     return 0;
-  //   } else {
-  //     return tabChoice;
-  //   }
-  // };
-
-  // const handleTabChange = (index: number) => {
-  //   history.push(tabs[index].routeName);
-  // };
-
-  // let idx = 0;
 
   const isBillingTabSelected = getTabIndex('/account/billing') === tabIndex;
   const canSwitchBetweenParentOrProxyAccount =

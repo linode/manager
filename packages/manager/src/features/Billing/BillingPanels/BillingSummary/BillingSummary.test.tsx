@@ -16,11 +16,23 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
+const queryMocks = vi.hoisted(() => ({
+  useMatch: vi.fn().mockReturnValue({}),
+}));
+
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual('@linode/api-v4/lib/account');
   return {
     ...actual,
     getClientToken: vi.fn().mockResolvedValue('mockedBraintreeClientToken'),
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useMatch: queryMocks.useMatch,
   };
 });
 
@@ -135,7 +147,7 @@ describe('BillingSummary', () => {
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', async () => {
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText, rerender } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
       </PayPalScriptProvider>
@@ -143,6 +155,21 @@ describe('BillingSummary', () => {
 
     const paymentButton = getByText('Make a payment', { exact: false });
     await userEvent.click(paymentButton);
+    queryMocks.useMatch.mockReturnValue({
+      routeId: '/account/billing/make-payment',
+    });
+
+    rerender(
+      wrapWithThemeAndRouter(
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={5}
+            balanceUninvoiced={5}
+            paymentMethods={[]}
+          />
+        </PayPalScriptProvider>
+      )
+    );
 
     expect(getByTestId('drawer')).toBeVisible();
     expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
