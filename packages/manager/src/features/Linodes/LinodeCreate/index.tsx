@@ -37,8 +37,8 @@ import {
 } from 'src/utilities/linodes';
 
 import { Actions } from './Actions';
+import { AdditionalOptions } from './AdditionalOptions/AdditionalOptions';
 import { Addons } from './Addons/Addons';
-import Alerts from './Alerts/Alerts';
 import { Details } from './Details/Details';
 import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
@@ -275,7 +275,7 @@ export const LinodeCreate = () => {
           )}
           <UserData />
           {isLinodeInterfacesEnabled && <Networking />}
-          <Alerts />
+          <AdditionalOptions />
           <Addons />
           <EUAgreement />
           <Summary />

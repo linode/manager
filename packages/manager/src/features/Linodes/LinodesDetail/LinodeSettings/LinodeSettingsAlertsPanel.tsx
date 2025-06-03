@@ -238,13 +238,19 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
 
   return (
-    <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
-      <Typography
-        sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-        variant="h2"
-      >
-        {alertsHeading}
-      </Typography>
+    <Paper
+      sx={(theme) =>
+        isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
+      }
+    >
+      {!isCreateFlow && (
+        <Typography
+          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+          variant="h2"
+        >
+          {alertsHeading}
+        </Typography>
+      )}
       {generalError && <Notice variant="error">{generalError}</Notice>}
       {alertSections.map((p, idx) => (
         <React.Fragment key={`alert-${idx}`}>
