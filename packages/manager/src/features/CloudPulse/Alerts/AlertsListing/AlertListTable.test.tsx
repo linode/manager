@@ -6,7 +6,10 @@ import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
+import {
+  DELETE_ALERT_SUCCESS_MESSAGE,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+} from '../constants';
 import { AlertsListTable } from './AlertListTable';
 
 const queryMocks = vi.hoisted(() => ({
@@ -214,5 +217,60 @@ describe('Alert List Table test', () => {
     expect(screen.getByText('tag1')).toBeVisible();
     expect(screen.getByText('tag2')).toBeVisible();
   });
-  // TODO: Add tests for the delete alert functionality once API's are available
+
+  it('should show success snackbar when deleting alert succeeds', async () => {
+    const alert = alertFactory.build({ type: 'user' });
+    renderWithTheme(
+      <AlertsListTable
+        alerts={[alert]}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[{ label: 'Linode', value: 'linode' }]}
+      />
+    );
+
+    const actionMenu = screen.getByLabelText(
+      `Action menu for Alert ${alert.label}`
+    );
+    await userEvent.click(actionMenu);
+    await userEvent.click(screen.getByText('Delete'));
+
+    expect(screen.getByText(`Delete ${alert.label}?`)).toBeVisible();
+    const textInput = screen.getByTestId('textfield-input');
+    await userEvent.type(textInput, alert.label);
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(screen.getByText(DELETE_ALERT_SUCCESS_MESSAGE)).toBeVisible();
+  });
+
+  it('should show the proper api error message in error snackbar when deleting alert fails with a reason', async () => {
+    queryMocks.useDeleteAlertDefinitionMutation.mockReturnValue({
+      mutateAsync: vi
+        .fn()
+        .mockRejectedValue([{ reason: 'Deleting alert failed' }]),
+    });
+
+    const alert = alertFactory.build({ type: 'user' });
+    renderWithTheme(
+      <AlertsListTable
+        alerts={[alert]}
+        isLoading={false}
+        scrollToElement={mockScroll}
+        services={[{ label: 'Linode', value: 'linode' }]}
+      />
+    );
+
+    const actionMenu = screen.getByLabelText(
+      `Action menu for Alert ${alert.label}`
+    );
+    await userEvent.click(actionMenu);
+    await userEvent.click(screen.getByText('Delete'));
+
+    expect(screen.getByText(`Delete ${alert.label}?`)).toBeVisible();
+    const textInput = screen.getByTestId('textfield-input');
+    await userEvent.type(textInput, alert.label);
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+
+    expect(screen.getByText('Deleting alert failed')).toBeVisible();
+  });
 });
