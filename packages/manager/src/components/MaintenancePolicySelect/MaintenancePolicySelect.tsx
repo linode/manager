@@ -29,6 +29,7 @@ const maintenancePolicyOptions: MaintenancePolicyOption[] = [
 ];
 
 interface MaintenancePolicySelectProps {
+  disabled?: boolean;
   errorText?: string;
   hideDefaultOptionChip?: boolean;
   onChange: SelectProps<MaintenancePolicyOption>['onChange'];
@@ -41,6 +42,7 @@ export const MaintenancePolicySelect = (
   props: MaintenancePolicySelectProps
 ) => {
   const {
+    disabled,
     errorText,
     onChange,
     sx,
@@ -55,6 +57,7 @@ export const MaintenancePolicySelect = (
 
   return (
     <Autocomplete
+      disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"
       onChange={onChange}
