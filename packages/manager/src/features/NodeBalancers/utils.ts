@@ -82,7 +82,7 @@ export const parseAddress = (node: NodeBalancerConfigNode) => {
     return {
       ...node,
       address: match![1],
-      port: match![3],
+      port: match![4],
     };
   }
   return node;
