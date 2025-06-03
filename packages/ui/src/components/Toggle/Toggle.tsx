@@ -28,47 +28,50 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { tooltipText, size, sx, ...rest } = props;
-
-  const checkedIcon = (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: size === 'small' ? 0.75 : 0.5,
-        marginLeft: size === 'small' ? '-18px' : '-16px',
-      }}
-    >
-      <SvgIcon
-        component={CheckMarkIcon}
-        height="20px"
-        sx={{
-          mt: size === 'small' ? 0 : 0.2,
-          fill: 'white',
-        }}
-        viewBox="0 0 20 20"
-        width="20px"
-      />
-      <ToggleOnIcon />
-    </Box>
-  );
+  const { disabled, tooltipText, size = 'medium', sx, ...rest } = props;
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        position: 'relative',
+        display: 'inline-flex',
+      }}
+    >
+      {!disabled && (
+        <SvgIcon
+          component={CheckMarkIcon}
+          height="16px"
+          sx={{
+            position: 'absolute',
+            top: size === 'medium' ? '37%' : '32%',
+            left:
+              size === 'medium'
+                ? tooltipText
+                  ? '18%'
+                  : '30%'
+                : tooltipText
+                  ? '15%'
+                  : '25%',
+            fill: 'white',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+          viewBox="0 0 20 20"
+          width="16px"
+        />
+      )}
+
       <Switch
-        checkedIcon={checkedIcon}
+        checkedIcon={<ToggleOnIcon />}
         color="primary"
         data-qa-toggle={props.checked}
+        disabled={disabled}
         icon={<ToggleOffIcon />}
         {...rest}
         sx={{
           ...(size === 'small' && {
             '& .icon': {
-              borderRadius: '50%',
               height: 16,
-              top: -2,
-              left: -2,
-              position: 'relative',
-              transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
               width: 16,
             },
             '.MuiSwitch-track': {
@@ -78,13 +81,13 @@ export const Toggle = (props: ToggleProps) => {
               borderRadius: 10,
             },
             '& .Mui-checked .icon': {
-              left: '-10px',
+              left: '-6px',
             },
           }),
           ...sx,
         }}
       />
       {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
-    </React.Fragment>
+    </Box>
   );
 };

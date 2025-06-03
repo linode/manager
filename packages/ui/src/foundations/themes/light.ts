@@ -1380,7 +1380,7 @@ export const lightTheme: ThemeOptions = {
             width: 20,
           },
           '& .Mui-checked .icon': {
-            left: '-6px',
+            marginLeft: '4px',
           },
           '& .square': {
             fill: Color.Neutrals.White,
