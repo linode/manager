@@ -173,7 +173,7 @@ export const NodePool = (props: Props) => {
               </StyledActionButton>
               {autoscaler.enabled && (
                 <Typography mx={1}>
-                  (Min {autoscaler.min} / Max {autoscaler.max})
+                  (Autoscaling Min {autoscaler.min} / Max {autoscaler.max})
                 </Typography>
               )}
               <StyledActionButton
