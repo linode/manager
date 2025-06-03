@@ -20,19 +20,21 @@ interface Props {
 export const HistoryTableContent = (props: Props) => {
   const { data, error, isPending } = props;
 
+  const cols = 6;
+
   if (isPending) {
-    return <TableRowLoading columns={6} rows={1} />;
+    return <TableRowLoading columns={cols} rows={1} />;
   }
 
   if (error) {
-    return <TableRowError colSpan={6} message={error?.[0].reason} />;
+    return <TableRowError colSpan={cols} message={error?.[0].reason} />;
   }
 
   if (data?.length === 0) {
     return (
       <TableRowEmpty
-        colSpan={6}
-        message="There is no Network Interface History for this Linode."
+        colSpan={cols}
+        message="There is no network interface history for this Linode."
       />
     );
   }

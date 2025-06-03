@@ -130,7 +130,7 @@ export const getLinodes = () => [
       }
 
       return makePaginatedResponse({
-        data: linodeInterfaceHistoryFactory.buildList(5),
+        data: linodeInterfaceHistoryFactory.buildList(10),
         request,
       });
     }
