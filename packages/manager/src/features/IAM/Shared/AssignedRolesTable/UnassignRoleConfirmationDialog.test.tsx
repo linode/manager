@@ -3,10 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import {
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
@@ -30,17 +27,10 @@ const props = {
   role: mockRole,
 };
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useParams: () => ({ username: 'test_user' }),
-  };
-});
-
 const queryMocks = vi.hoisted(() => ({
   useAccountPermissions: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
@@ -49,6 +39,14 @@ vi.mock('src/queries/iam/iam', async () => {
     ...actual,
     useAccountPermissions: queryMocks.useAccountPermissions,
     useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -64,6 +62,12 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('UnassignRoleConfirmationDialog', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should render', async () => {
     const { getAllByRole, getByText } = await renderWithThemeAndRouter(
       <UnassignRoleConfirmationDialog {...props} />
@@ -86,7 +90,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('calls the corresponding functions when buttons are clicked', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <UnassignRoleConfirmationDialog {...props} />
     );
 
@@ -117,7 +121,7 @@ describe('UnassignRoleConfirmationDialog', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <UnassignRoleConfirmationDialog {...props} />
     );
 

@@ -44,7 +44,7 @@ type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
 export const AssignedEntitiesTable = () => {
   const { username } = useParams({
-    from: '/iam/users/$username/entities',
+    from: '/iam/users/$username',
   });
   const theme = useTheme();
 

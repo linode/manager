@@ -3,10 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import {
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
@@ -28,17 +25,10 @@ const props = {
   role: mockRole,
 };
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
-  return {
-    ...actual,
-    useParams: () => ({ username: 'test_user' }),
-  };
-});
-
 const queryMocks = vi.hoisted(() => ({
   useAccountPermissions: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
@@ -47,6 +37,14 @@ vi.mock('src/queries/iam/iam', async () => {
     ...actual,
     useAccountPermissions: queryMocks.useAccountPermissions,
     useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -62,8 +60,16 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('RemoveAssignmentConfirmationDialog', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should render', async () => {
-    renderWithThemeAndRouter(<RemoveAssignmentConfirmationDialog {...props} />);
+    await renderWithThemeAndRouter(
+      <RemoveAssignmentConfirmationDialog {...props} />
+    );
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'
@@ -86,7 +92,9 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('calls onClose when the cancel button is clicked', async () => {
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    await renderWithThemeAndRouter(
+      <RemoveAssignmentConfirmationDialog {...props} />
+    );
 
     const cancelButton = screen.getByText('Cancel');
     expect(cancelButton).toBeVisible();
@@ -113,7 +121,9 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       data: accountPermissionsFactory.build(),
     });
 
-    renderWithTheme(<RemoveAssignmentConfirmationDialog {...props} />);
+    await renderWithThemeAndRouter(
+      <RemoveAssignmentConfirmationDialog {...props} />
+    );
 
     const removeButton = screen.getByText('Remove');
     expect(removeButton).toBeVisible();
