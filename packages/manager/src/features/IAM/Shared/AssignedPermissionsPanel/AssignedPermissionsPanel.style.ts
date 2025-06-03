@@ -9,7 +9,11 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
 }));
 
-export const StyledTitle = styled(Typography)<{
+export const StyledTitle = styled(Typography, {
+  // Prevent the `showName` prop from being forwarded to the DOM.
+  // This resolves the React warning: "React does not recognize the `showName` prop on a DOM element."
+  shouldForwardProp: (prop) => prop !== 'showName',
+})<{
   showName?: boolean | undefined;
 }>(({ theme, showName }) => ({
   font: theme.tokens.alias.Typography.Label.Bold.S,
@@ -23,7 +27,11 @@ export const StyledDescription = styled(Typography)(({ theme }) => ({
   wordBreak: 'normal',
 }));
 
-export const StyledEntityBox = styled(Box)<{
+export const StyledEntityBox = styled(Box, {
+  // Prevent the `hideDetails` prop from being forwarded to the DOM.
+  // This resolves the React warning: "React does not recognize the `hideDetails` prop on a DOM element."
+  shouldForwardProp: (prop) => prop !== 'hideDetails',
+})<{
   hideDetails: boolean | undefined;
 }>(({ theme, hideDetails }) => ({
   marginTop: !hideDetails ? theme.tokens.spacing.S12 : undefined,

@@ -145,7 +145,7 @@ export const RenderWidgets = React.memo(
             // find the metric defintion of the widget label
             const availMetrics = metricDefinitions?.data.find(
               (availMetrics: MetricDefinition) =>
-                widget.label === availMetrics.label
+                widget.metric === availMetrics.metric
             );
             const cloudPulseWidgetProperties = getCloudPulseGraphProperties({
               ...widget,

@@ -1,10 +1,18 @@
 import { useAccountUsers } from '@linode/queries';
-import { ActionsPanel, Autocomplete, Drawer, Typography } from '@linode/ui';
+import {
+  ActionsPanel,
+  Autocomplete,
+  Drawer,
+  Notice,
+  Typography,
+} from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { enqueueSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { Controller, FormProvider, useForm } from 'react-hook-form';
 
+import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
@@ -14,32 +22,36 @@ import {
   useAccountUserPermissionsMutation,
 } from 'src/queries/iam/iam';
 
+import {
+  INTERNAL_ERROR_UPDATE_PERMISSION,
+  NO_CHANGES_SAVED,
+} from '../../Shared/constants';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
-import type {
-  AssignNewRoleFormValues,
-  RolesType,
-} from '../../Shared/utilities';
+import type { AssignNewRoleFormValues } from '../../Shared/utilities';
+import type { User } from '@linode/api-v4';
 import type { RoleView } from 'src/features/IAM/Shared/types';
 
 interface Props {
   onClose: () => void;
+  onSuccess: () => void;
   open: boolean;
   selectedRoles: RoleView[];
 }
 
 export const AssignSelectedRolesDrawer = ({
   onClose,
+  onSuccess,
   open,
   selectedRoles,
 }: Props) => {
   const theme = useTheme();
 
   const { data: allUsers } = useAccountUsers({});
-  const [username, setUsername] = useState<string>('');
+  const [username, setUsername] = useState<null | string>('');
 
   const getUserOptions = () => {
-    return allUsers?.data.map((user) => ({
+    return allUsers?.data.map((user: User) => ({
       label: user.username,
       value: user.username,
     }));
@@ -51,30 +63,54 @@ export const AssignSelectedRolesDrawer = ({
 
   const values = {
     roles: selectedRoles.map((r) => ({
-      role: r.name as unknown as RolesType,
+      role: {
+        access: r.access,
+        entity_type: r.entity_type,
+        label: r.name,
+        value: r.name,
+      },
       entities: null,
     })),
+    username: null,
   };
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: values,
     values,
   });
-  const { handleSubmit, reset } = form;
+
+  const { handleSubmit, reset, control, formState, setError } = form;
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
-  const { mutateAsync: updateUserRolePermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRolePermissions, isPending } =
+    useAccountUserPermissionsMutation(username ?? '');
 
-  const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
-    const mergedRoles = mergeAssignedRolesIntoExistingRoles(
-      values,
-      existingRoles
-    );
-    await updateUserRolePermissions(mergedRoles);
-    handleClose();
-  });
+  const onSubmit = async (values: AssignNewRoleFormValues) => {
+    try {
+      const mergedRoles = mergeAssignedRolesIntoExistingRoles(
+        values,
+        existingRoles
+      );
+
+      await updateUserRolePermissions(mergedRoles);
+      const successMessage = (
+        <Typography>
+          Roles assigned. See user&apos;s{' '}
+          {<Link to={`/iam/users/${username}/roles`}>Assigned Roles</Link>} to
+          review them.
+        </Typography>
+      );
+      enqueueSnackbar(successMessage, {
+        variant: 'success',
+      });
+      onSuccess();
+
+      handleClose();
+    } catch (error) {
+      setError(error.field ?? 'root', { message: error[0].reason });
+    }
+  };
 
   const handleClose = () => {
     reset();
@@ -84,7 +120,16 @@ export const AssignSelectedRolesDrawer = ({
   return (
     <Drawer onClose={onClose} open={open} title="Assign Selected Roles to User">
       <FormProvider {...form}>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {formState.errors.root?.message && (
+            <Notice variant="error">
+              <Typography>
+                {INTERNAL_ERROR_UPDATE_PERMISSION}
+                <br />
+                {NO_CHANGES_SAVED}
+              </Typography>
+            </Notice>
+          )}
           <Typography sx={{ marginBottom: 2.5 }}>
             Select the user you want to assign selected roles to. Some roles
             require selecting entities they should apply to.
@@ -99,16 +144,27 @@ export const AssignSelectedRolesDrawer = ({
           >
             <Typography variant={'h3'}>Users</Typography>
             {allUsers && allUsers?.data?.length > 0 && (
-              <Autocomplete
-                getOptionLabel={(option) => option.label}
-                label=""
-                noMarginTop
-                onChange={(_, option) => {
-                  setUsername(option?.label || '');
-                }}
-                options={getUserOptions() || []}
-                placeholder="Select a User"
-                sx={{ marginTop: theme.tokens.spacing.S12 }}
+              <Controller
+                control={control}
+                name={`username`}
+                render={({ field: { onChange }, fieldState }) => (
+                  <Autocomplete
+                    errorText={fieldState.error?.message}
+                    getOptionLabel={(option) => option.label}
+                    label="Select a User"
+                    noMarginTop
+                    onChange={(_, option) => {
+                      const username = option?.label || null;
+                      onChange(username);
+                      setUsername(username);
+                    }}
+                    options={getUserOptions() || []}
+                    placeholder="Select a User"
+                    sx={{ marginTop: theme.tokens.spacing.S12 }}
+                    textFieldProps={{ hideLabel: true }}
+                  />
+                )}
+                rules={{ required: 'Select a user.' }}
               />
             )}
           </Grid>
@@ -122,7 +178,10 @@ export const AssignSelectedRolesDrawer = ({
               marginBottom: theme.spacingFunction(16),
             })}
           >
-            <Typography variant={'h3'}>Roles</Typography>
+            <Typography variant={'h3'}>
+              Role
+              {selectedRoles.length > 1 ? `s` : ``}
+            </Typography>
             {selectedRoles.length > 0 && (
               <StyledLinkButtonBox sx={{ marginTop: 0 }}>
                 <LinkButton
@@ -140,7 +199,6 @@ export const AssignSelectedRolesDrawer = ({
                 hideDetails={areDetailsHidden}
                 index={index}
                 key={role.id}
-                permissions={accountPermissions}
                 role={role}
               />
             ))}
@@ -150,6 +208,7 @@ export const AssignSelectedRolesDrawer = ({
               'data-testid': 'submit',
               label: 'Assign',
               type: 'submit',
+              loading: isPending || formState.isSubmitting,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',

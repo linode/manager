@@ -13,7 +13,6 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
-import Logo from 'src/assets/logo/akamai-logo.svg';
 import { MainContentBanner } from 'src/components/MainContentBanner';
 import { MaintenanceScreen } from 'src/components/MaintenanceScreen';
 import {
@@ -37,8 +36,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
-import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -119,58 +116,15 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Kubernetes = React.lazy(() =>
-  import('src/features/Kubernetes').then((module) => ({
-    default: module.Kubernetes,
-  }))
-);
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
   }))
 );
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
-);
-const SupportTicketDetail = React.lazy(() =>
-  import('src/features/Support/SupportTicketDetail/SupportTicketDetail').then(
-    (module) => ({
-      default: module.SupportTicketDetail,
-    })
-  )
-);
-const Help = React.lazy(() =>
-  import('./features/Help/index').then((module) => ({
-    default: module.HelpAndSupport,
-  }))
-);
-const SearchLanding = React.lazy(
-  () => import('src/features/Search/SearchLanding')
-);
 const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
   }))
-);
-const AccountActivationLanding = React.lazy(
-  () => import('src/components/AccountActivation/AccountActivationLanding')
-);
-const Databases = React.lazy(() => import('src/features/Databases'));
-
-const CloudPulseMetrics = React.lazy(() =>
-  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
-    (module) => ({
-      default: module.CloudPulseDashboardLanding,
-    })
-  )
-);
-
-const CloudPulseAlerts = React.lazy(() =>
-  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
-    (module) => ({
-      default: module.AlertsLanding,
-    })
-  )
 );
 
 const IAM = React.lazy(() =>
@@ -211,12 +165,8 @@ export const MainContent = () => {
   const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
-
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
-  const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
@@ -225,6 +175,13 @@ export const MainContent = () => {
   );
 
   const { isPageScrollable } = useIsPageScrollable(contentRef);
+
+  migrationRouter.update({
+    context: {
+      globalErrors,
+      queryClient,
+    },
+  });
 
   /**
    * this is the case where the user has successfully completed signup
@@ -235,34 +192,13 @@ export const MainContent = () => {
    */
   if (globalErrors.account_unactivated) {
     return (
-      <div className={classes.bgStyling}>
-        <div className={classes.activationWrapper}>
-          <Box
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Logo className={classes.logo} width={215} />
-          </Box>
-          <Switch>
-            <Route
-              component={SupportTickets}
-              exact
-              path="/support/tickets"
-              strict
-            />
-            <Route
-              component={SupportTicketDetail}
-              exact
-              path="/support/tickets/:ticketId"
-              strict
-            />
-            <Route component={Help} exact path="/support" />
-            <Route component={AccountActivationLanding} />
-          </Switch>
-        </div>
-      </div>
+      <>
+        <Redirect to="/account-activation" />
+        <RouterProvider
+          context={{ queryClient }}
+          router={migrationRouter as AnyRouter}
+        />
+      </>
     );
   }
 
@@ -365,42 +301,15 @@ export const MainContent = () => {
                                   component={LinodesRoutes}
                                   path="/linodes"
                                 />
-                                <Route
-                                  component={Kubernetes}
-                                  path="/kubernetes"
-                                />
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
                                 )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route component={Help} path="/support" />
-                                <Route
-                                  component={SearchLanding}
-                                  path="/search"
-                                />
                                 <Route
                                   component={EventsLanding}
                                   path="/events"
                                 />
-                                {isDatabasesEnabled && (
-                                  <Route
-                                    component={Databases}
-                                    path="/databases"
-                                  />
-                                )}
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseMetrics}
-                                    path="/metrics"
-                                  />
-                                )}
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseAlerts}
-                                    path="/alerts"
-                                  />
-                                )}
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
