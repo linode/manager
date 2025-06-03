@@ -104,7 +104,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
   const {
     control,
     formState: { errors, isDirty, isSubmitting, isValid },
-    setValue,
     watch,
     ...form
   } = useForm({
@@ -237,23 +236,28 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
                     label="Min"
-                    onChange={(e) =>
-                      setValue('min', Number(e.target.value), {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      })
-                    }
+                    onChange={(e) => {
+                      // Set value to an empty string if field is cleared; else, convert string to number.
+                      if (e.target.value === '') {
+                        field.onChange(e);
+                      } else {
+                        form.setValue('min', Number(e.target.value), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
                     type="number"
                     value={field.value}
                   />
                 );
               }}
               rules={{
-                required: 'Minimum is required',
+                required: 'Minimum is a required field.',
                 validate: (value) => {
-                  if (!value) return 'Minimum is a required field.';
-                  if (value > _max || value < 1 || value > maxLimit)
+                  if (value > _max || value < 1 || value > maxLimit) {
                     return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+                  }
                   return true;
                 },
               }}
@@ -279,23 +283,28 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
                     label="Max"
-                    onChange={(e) =>
-                      setValue('max', Number(e.target.value), {
-                        shouldDirty: true,
-                        shouldValidate: true,
-                      })
-                    }
+                    onChange={(e) => {
+                      // Set value to an empty string if field is cleared; else, convert string to number.
+                      if (e.target.value === '') {
+                        field.onChange(e);
+                      } else {
+                        form.setValue('max', Number(e.target.value), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
                     type="number"
                     value={field.value}
                   />
                 );
               }}
               rules={{
-                required: 'Maximum is required',
+                required: 'Maximum is a required field.',
                 validate: (value) => {
-                  if (!value) return 'Maximum is a required field.';
-                  if (value > maxLimit || value < 1)
+                  if (value > maxLimit || value < 1) {
                     return `Maximum must be between 1 and ${maxLimit} nodes.`;
+                  }
                   return true;
                 },
               }}
@@ -317,9 +326,9 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: isPending || !isDirty,
+            disabled: !isDirty || Object.keys(errors).length !== 0,
             label: 'Save Changes',
-            loading: isPending,
+            loading: isPending || isSubmitting,
             type: 'submit',
           }}
           secondaryButtonProps={{
