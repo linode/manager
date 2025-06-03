@@ -6,7 +6,6 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
-import { alertScopeLabelMap } from '../AlertsListing/constants';
 import { processMetricCriteria } from '../Utils/utils';
 import { MetricThreshold } from './MetricThreshold';
 
