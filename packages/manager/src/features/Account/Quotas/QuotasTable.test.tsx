@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { quotaFactory, quotaUsageFactory } from 'src/factories/quotas';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { QuotasTable } from './QuotasTable';
 
@@ -38,16 +38,17 @@ vi.mock('@tanstack/react-query', async () => {
 });
 
 describe('QuotasTable', () => {
-  it('should render', () => {
-    const { getByRole, getByTestId, getByText } = renderWithTheme(
-      <QuotasTable
-        selectedLocation={null}
-        selectedService={{
-          label: 'Linodes',
-          value: 'linode',
-        }}
-      />
-    );
+  it('should render', async () => {
+    const { getByRole, getByTestId, getByText } =
+      await renderWithThemeAndRouter(
+        <QuotasTable
+          selectedLocation={null}
+          selectedService={{
+            label: 'Linodes',
+            value: 'linode',
+          }}
+        />
+      );
     expect(
       getByRole('columnheader', { name: 'Quota Name' })
     ).toBeInTheDocument();
@@ -94,18 +95,19 @@ describe('QuotasTable', () => {
       isFetching: false,
     });
 
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
-      <QuotasTable
-        selectedLocation={{
-          label: 'NJ',
-          value: 'us-east',
-        }}
-        selectedService={{
-          label: 'Linodes',
-          value: 'linode',
-        }}
-      />
-    );
+    const { getByLabelText, getByTestId, getByText } =
+      await renderWithThemeAndRouter(
+        <QuotasTable
+          selectedLocation={{
+            label: 'NJ',
+            value: 'us-east',
+          }}
+          selectedService={{
+            label: 'Linodes',
+            value: 'linode',
+          }}
+        />
+      );
 
     const quota = quotas[0];
 

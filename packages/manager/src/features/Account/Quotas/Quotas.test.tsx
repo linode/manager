@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { Quotas } from './Quotas';
 
@@ -48,8 +48,8 @@ describe('Quotas', () => {
     },
   });
 
-  it('renders the component with initial state', () => {
-    const { getByText } = renderWithTheme(<Quotas />, {
+  it('renders the component with initial state', async () => {
+    const { getByText } = await renderWithThemeAndRouter(<Quotas />, {
       queryClient,
     });
 
@@ -72,9 +72,12 @@ describe('Quotas', () => {
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText, getByRole } = renderWithTheme(<Quotas />, {
-      queryClient,
-    });
+    const { getByPlaceholderText, getByRole } = await renderWithThemeAndRouter(
+      <Quotas />,
+      {
+        queryClient,
+      }
+    );
 
     const endpointSelect = getByPlaceholderText(
       'Select an Object Storage S3 endpoint'
@@ -101,16 +104,19 @@ describe('Quotas', () => {
     });
   });
 
-  it('shows loading state when fetching data', () => {
+  it('shows loading state when fetching data', async () => {
     queryMocks.useGetLocationsForQuotaService.mockReturnValue({
       isFetchingS3Endpoints: true,
       s3Endpoints: null,
       service: 'object-storage',
     });
 
-    const { getByPlaceholderText } = renderWithTheme(<Quotas />, {
-      queryClient,
-    });
+    const { getByPlaceholderText } = await renderWithThemeAndRouter(
+      <Quotas />,
+      {
+        queryClient,
+      }
+    );
 
     expect(getByPlaceholderText('Loading S3 endpoints...')).toBeInTheDocument();
   });
