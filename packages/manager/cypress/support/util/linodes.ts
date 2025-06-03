@@ -5,6 +5,15 @@ import { findOrCreateDependencyVlan } from 'support/api/vlans';
 import { pageSize } from 'support/constants/api';
 import {
   dryRunButtonText,
+  legacyInterfacesDescriptionText1,
+  legacyInterfacesDescriptionText2,
+  legacyInterfacesLabelText,
+  linodeInterfacesDescriptionText1,
+  linodeInterfacesDescriptionText2,
+  linodeInterfacesLabelText,
+  networkConnectionDescriptionText,
+  networkConnectionSectionText,
+  networkInterfaceTypeSectionText,
   promptDialogDescription1,
   promptDialogDescription2,
   promptDialogUpgradeDetails,
@@ -308,4 +317,24 @@ export const assertUpgradeSummary = (
       'be.visible'
     );
   }
+};
+
+/**
+ * Check the elements of Linode Interfaces.
+ *
+ * @param linodeInterfacesEnabled - Indicator if Linode Interfaces feature is enabled.
+ */
+export const assertNewLinodeInterfacesIsAvailable = (
+  linodeInterfacesEnabled: boolean = true
+): void => {
+  const expectedBehavior = linodeInterfacesEnabled ? 'be.visible' : 'not.exist';
+  cy.findByText(networkInterfaceTypeSectionText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(linodeInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(legacyInterfacesLabelText).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText1).should(expectedBehavior);
+  cy.findByText(legacyInterfacesDescriptionText2).should(expectedBehavior);
+  cy.findByText(networkConnectionSectionText).should(expectedBehavior);
+  cy.findByText(networkConnectionDescriptionText).should(expectedBehavior);
 };
