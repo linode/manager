@@ -1,8 +1,8 @@
 import {
   Autocomplete,
+  Box,
   InputAdornment,
   SelectedIcon,
-  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -94,19 +94,20 @@ export const ActiveCheck = (props: ActiveCheckProps) => {
             options={HEALTHCHECK_TYPE_OPTIONS}
             renderOption={(props, option, state) => (
               <li {...props}>
-                <Stack
+                <Box
                   alignItems="center"
-                  direction="row"
+                  display="flex"
+                  flexDirection="row"
                   flexGrow={1}
                   gap={1}
                   justifyContent="space-between"
                 >
-                  <Stack>
+                  <Box>
                     <b>{option.label}</b>
-                    {option.description}
-                  </Stack>
+                    <Box>{option.description}</Box>
+                  </Box>
                   {state.selected && <SelectedIcon visible />}
-                </Stack>
+                </Box>
               </li>
             )}
             size="small"
