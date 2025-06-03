@@ -11,12 +11,8 @@ export const Default: StoryObj<ToggleProps> = {
   render: (args) => <Toggle {...args} tooltipText={EXAMPLE_TEXT} />,
 };
 
-const meta: Meta<ToggleProps> = {
-  args: {
-    disabled: false,
-  },
-  component: Toggle,
-  title: 'Foundations/Toggle',
+export const Disabled: StoryObj<ToggleProps> = {
+  render: (args) => <Toggle {...args} disabled tooltipText={EXAMPLE_TEXT} />,
 };
 
 export const ToggleWithSmallSize: StoryObj<ToggleProps> = {
@@ -25,10 +21,12 @@ export const ToggleWithSmallSize: StoryObj<ToggleProps> = {
   ),
 };
 
-export const ToggleWithMediumSize: StoryObj<ToggleProps> = {
-  render: (args) => (
-    <Toggle {...args} size="medium" tooltipText={EXAMPLE_TEXT} />
-  ),
+const meta: Meta<ToggleProps> = {
+  args: {
+    disabled: false,
+  },
+  component: Toggle,
+  title: 'Foundations/Toggle',
 };
 
 export default meta;
