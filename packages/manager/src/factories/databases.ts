@@ -1,18 +1,17 @@
+import {
+  type ClusterSize,
+  type Database,
+  type DatabaseBackup,
+  type DatabaseEngine,
+  type DatabaseInstance,
+  type DatabaseStatus,
+  type DatabaseType,
+  type Engine,
+  type MySQLReplicationType,
+  type PostgresReplicationType,
+} from '@linode/api-v4';
 import { pickRandom, randomDate } from '@linode/utilities';
 import { Factory } from '@linode/utilities';
-
-import type {
-  ClusterSize,
-  Database,
-  DatabaseBackup,
-  DatabaseEngine,
-  DatabaseInstance,
-  DatabaseStatus,
-  DatabaseType,
-  Engine,
-  MySQLReplicationType,
-  PostgresReplicationType,
-} from '@linode/api-v4';
 
 export const possibleStatuses: DatabaseStatus[] = [
   'active',

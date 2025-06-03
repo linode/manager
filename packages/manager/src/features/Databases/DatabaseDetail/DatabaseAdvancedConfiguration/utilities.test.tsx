@@ -40,7 +40,8 @@ describe('formatConfigValue', () => {
 });
 
 describe('findConfigItem', () => {
-  const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
+  const mockConfigs: DatabaseEngineConfig =
+    databaseEngineConfigFactory.build(1);
   const expectedConfig = {
     category: 'other',
     description:
@@ -79,7 +80,8 @@ describe('findConfigItem', () => {
 });
 
 describe('convertExistingConfigsToArray', () => {
-  const mockConfigs: DatabaseEngineConfig = databaseEngineConfigFactory.build();
+  const mockConfigs: DatabaseEngineConfig =
+    databaseEngineConfigFactory.build(1);
 
   const existingConfigs: DatabaseInstanceAdvancedConfig = {
     advanced: {
