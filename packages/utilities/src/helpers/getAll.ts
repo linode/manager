@@ -74,6 +74,7 @@ export const getAll: <T>(
 
         const promises: Promise<any>[] = [];
 
+        // For all remaining pages, build a promise for each page that will be resolved in parallel.
         for (let i = page + 1; i < pages + 1; i++) {
           const promise = getter({ ...pagination, page: i }, filter).then(
             (response) => response.data,
