@@ -38,16 +38,15 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
       }
     }
   }
-
   return options;
 };
 
 export const getVPCIPOptions = (
-  vpcIPs: LinodeIPsResponse[] | undefined,
+  vpcIps: LinodeIPsResponse[] | undefined,
   linodes: Linode[] | undefined,
   subnet?: Subnet | undefined
 ) => {
-  if (!vpcIPs || !subnet) {
+  if (!vpcIps || !subnet) {
     return [];
   }
 
@@ -61,7 +60,7 @@ export const getVPCIPOptions = (
     {}
   );
 
-  vpcIPs.forEach(({ ipv4 }) => {
+  vpcIps.forEach(({ ipv4 }) => {
     if (ipv4.vpc) {
       const vpcData = ipv4.vpc
         ?.filter((vpc) => vpc.subnet_id === subnet.id)
@@ -82,5 +81,6 @@ export const getVPCIPOptions = (
       }
     }
   });
-  return options;
+
+  return options.sort((a, b) => a.label.localeCompare(b.label));
 };

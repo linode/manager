@@ -45,7 +45,7 @@ export const useGetLinodeIPAndVPCData = (props: {
 
   if (region && !vpcId) {
     return {
-      linodeData: linodesData,
+      linodesData,
       error: linodesError,
       isLoading: linodesIsLoading,
     };
