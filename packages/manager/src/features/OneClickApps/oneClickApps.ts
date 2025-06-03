@@ -2125,4 +2125,24 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'Developer portal for managing services and infrastructure.',
     website: 'https://backstage.io/',
   },
+  1785544: {
+    alt_description: `Lightweight, software-based gateway that provides secure, zero-trust networking between endpoints.`,
+    alt_name: 'Software Edge Router',
+    categories: ['Development'],
+    colors: {
+      end: '65ce4b',
+      start: '056abd',
+    },
+    description:
+      'Netfoundry Edge Router is a software gateway that enables secure, zero-trust, high-performance connectivity between local networks, cloud environments, and applications.',
+    logo_url: 'netfoundry.svg',
+    related_guides: [
+      {
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/netfoundry/',
+        title: 'Deploy Netfoundry through the Linode Marketplace',
+      },
+    ],
+    summary: 'Software gateway solution at the edge.',
+    website: 'https://netfoundry.io/',
+  },
 };
