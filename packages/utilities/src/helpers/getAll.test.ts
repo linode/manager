@@ -40,7 +40,7 @@ describe('getAll', () => {
     // Verify the getter function was called the correct number of times total
     expect(getLinodes).toHaveBeenCalledTimes(3);
 
-    // Lastly, verify each function call had the correct params
+    // Verify each call to our "getter" function has the correct params
 
     // The first call should not include a page number, but should include the given page size
     expect(getLinodes).toHaveBeenNthCalledWith(1, { page_size: 25 }, undefined);
