@@ -116,11 +116,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Kubernetes = React.lazy(() =>
-  import('src/features/Kubernetes').then((module) => ({
-    default: module.Kubernetes,
-  }))
-);
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
@@ -305,10 +300,6 @@ export const MainContent = () => {
                                 <Route
                                   component={LinodesRoutes}
                                   path="/linodes"
-                                />
-                                <Route
-                                  component={Kubernetes}
-                                  path="/kubernetes"
                                 />
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
