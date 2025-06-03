@@ -37,16 +37,6 @@ describe('getAll', () => {
 
     const result = await getAllLinodes();
 
-    // Verify the data is present and in the correct order
-    expect(result.data).toStrictEqual([
-      ...firstPage.data,
-      ...secondPage.data,
-      ...thirdPage.data,
-    ]);
-
-    // Verify the result count is correct
-    expect(result.results).toBe(75);
-
     // Verify the getter function was called the correct number of times total
     expect(getLinodes).toHaveBeenCalledTimes(3);
 
@@ -68,5 +58,15 @@ describe('getAll', () => {
       { page: 3, page_size: 25 },
       undefined,
     );
+
+    // Verify the data is present and in the correct order
+    expect(result.data).toStrictEqual([
+      ...firstPage.data,
+      ...secondPage.data,
+      ...thirdPage.data,
+    ]);
+
+    // Verify the result count is correct
+    expect(result.results).toBe(75);
   });
 });
