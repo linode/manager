@@ -33,7 +33,6 @@
   "dependencies": {
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
-    "ramda": "~0.25.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -43,7 +42,6 @@
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
     "@types/luxon": "3.4.2",
-    "@types/ramda": "0.25.16",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.18",
     "factory.ts": "^0.5.1"
