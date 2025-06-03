@@ -1,8 +1,7 @@
 import { CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -21,8 +20,8 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -64,8 +63,11 @@ const defaultUpgradeDialogState = {
 const preferenceKey = 'kubernetes';
 
 export const KubernetesLanding = () => {
-  const { push } = useHistory();
-  const pagination = usePagination(1, preferenceKey);
+  const navigate = useNavigate();
+  const pagination = usePaginationV2({
+    currentRoute: '/kubernetes/clusters',
+    preferenceKey,
+  });
 
   const [dialog, setDialogState] =
     React.useState<ClusterDialogState>(defaultDialogState);
@@ -73,13 +75,16 @@ export const KubernetesLanding = () => {
   const [upgradeDialog, setUpgradeDialogState] =
     React.useState<UpgradeDialogState>(defaultUpgradeDialogState);
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: '/kubernetes/clusters',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
   const filter = {
     ['+order']: order,
@@ -176,7 +181,7 @@ export const KubernetesLanding = () => {
         disabledCreateButton={isRestricted}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         entity="Cluster"
-        onButtonClick={() => push('/kubernetes/create')}
+        onButtonClick={() => navigate({ to: '/kubernetes/create' })}
         removeCrumbX={1}
         title="Kubernetes"
       />
@@ -266,9 +271,3 @@ export const KubernetesLanding = () => {
     </>
   );
 };
-
-export const kubernetesLandingLazyRoute = createLazyRoute(
-  '/kubernetes/clusters'
-)({
-  component: KubernetesLanding,
-});
