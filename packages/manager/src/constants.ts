@@ -7,9 +7,10 @@ import { getBooleanEnv } from '@linode/utilities';
 export const isProductionBuild = import.meta.env.PROD;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = getBooleanEnv(
-  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
-);
+export const ENABLE_DEV_TOOLS =
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS === undefined
+    ? import.meta.env.DEV
+    : getBooleanEnv(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
 
 // allow us to explicity enable maintenance mode
 export const ENABLE_MAINTENANCE_MODE =
@@ -76,7 +77,6 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Adobe Analytics */
 export const ADOBE_ANALYTICS_URL = import.meta.env
   .REACT_APP_ADOBE_ANALYTICS_URL;
-export const NUM_ADOBE_SCRIPTS = 3;
 
 /** Pendo */
 export const PENDO_API_KEY = import.meta.env.REACT_APP_PENDO_API_KEY;
@@ -331,3 +331,24 @@ export const LD_DX_TOOLS_METRICS_KEYS = {
     'A/B Test: Step 2 : DX Tools SDK Python resources links',
   SDK_TAB_SELECTION: 'A/B Test: Step 2 : DX Tools SDK tab selection',
 };
+
+/**
+ * An array of region IDs.
+ *
+ * Currently, we don't have a region capability for Images.
+ * We check for the Object Storage capability (because images use Object Stoarge on the backend)
+ * but we need to exclude some regions manually because not every Object Stoage region support images.
+ *
+ * I made https://github.com/bnussman/image-compat-checker to try to help us identify which regions support images
+ * and which regions do not.
+ *
+ * Long term, we will hopefully remove this constant if
+ * - the API provides us a region capability for Images
+ * - or all Object Storage regions support Images
+ */
+export const DISALLOWED_IMAGE_REGIONS = [
+  'gb-lon',
+  'au-mel',
+  'sg-sin-2',
+  'jp-tyo-3',
+];

@@ -29,9 +29,18 @@ export const ImageOption = ({
       <Stack alignItems="center" direction="row" gap={1} width="100%">
         {item?.id !== 'any/all' && (
           <OSIcon
-            fontSize="1.8em"
+            fontSize="1.5em"
+            height="20px"
             os={item.vendor}
-            sx={{ position: 'relative', top: 2 }}
+            sx={{
+              position: 'relative',
+              top: 2,
+              '::before': {
+                width: '100%',
+                height: '100%',
+              },
+            }}
+            width="20px"
           />
         )}
         <Typography color="inherit">

@@ -1,5 +1,6 @@
 import {
   createNodeBalancer,
+  createNodeBalancerBeta,
   createNodeBalancerConfig,
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
@@ -17,6 +18,7 @@ import {
 import { queryPresets } from '../base';
 import { firewallQueries } from '../firewalls';
 import { profileQueries } from '../profile';
+import { vpcQueries } from '../vpcs';
 import { nodebalancerQueries } from './keys';
 
 import type { EventHandlerData } from '../eventHandlers';
@@ -29,6 +31,7 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerStats,
+  NodeBalancerVpcConfig,
   Params,
   PriceType,
   ResourcePage,
@@ -121,6 +124,52 @@ export const useNodebalancerCreateMutation = () => {
         queryClient.invalidateQueries({
           queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
         });
+      }
+    },
+  });
+};
+
+/**
+ * duplicated function of useNodebalancerCreateMutation
+ */
+
+export const useNodebalancerCreateBetaMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation<NodeBalancer, APIError[], CreateNodeBalancerPayload>({
+    mutationFn: createNodeBalancerBeta,
+    onSuccess(nodebalancer, variables) {
+      // Invalidate paginated stores
+      queryClient.invalidateQueries({
+        queryKey: nodebalancerQueries.nodebalancers.queryKey,
+      });
+      // Prime the cache for this specific NodeBalancer
+      queryClient.setQueryData<NodeBalancer>(
+        nodebalancerQueries.nodebalancer(nodebalancer.id).queryKey,
+        nodebalancer,
+      );
+      // If a restricted user creates an entity, we must make sure grants are up to date.
+      queryClient.invalidateQueries({
+        queryKey: profileQueries.grants.queryKey,
+      });
+
+      // If a NodeBalancer is assigned to a firewall upon creation, make sure we invalidate that firewall
+      // so it reflects the new entity.
+      if (variables.firewall_id) {
+        // Invalidate the paginated list of firewalls because GET /v4/networking/firewalls returns all firewall entities
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewalls.queryKey,
+        });
+
+        // Invalidate the affected firewall
+        queryClient.invalidateQueries({
+          queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
+        });
+      }
+      // If a Nodebalancer is created with a VPC, invalidate the related VPC queries
+      // so it reflects the new entity.
+      if (variables.vpcs?.length) {
+        // Invalidating all vpc related queries since we don't have the specific vpc_id
+        queryClient.invalidateQueries({ queryKey: vpcQueries._def });
       }
     },
   });
@@ -281,3 +330,12 @@ export const nodebalancerEventHandler = ({
     });
   }
 };
+
+export const useNodeBalancerVPCConfigsBetaQuery = (
+  nodebalancerId: number,
+  enabled = false,
+) =>
+  useQuery<ResourcePage<NodeBalancerVpcConfig>, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.vpcsBeta,
+    enabled,
+  });

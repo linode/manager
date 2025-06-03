@@ -2,7 +2,7 @@
   "name": "@linode/ui",
   "author": "Linode",
   "description": "Linode UI component library",
-  "version": "0.11.0",
+  "version": "0.13.0",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -34,7 +34,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "coverage": "vitest run --coverage && open coverage/index.html",
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
@@ -45,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "@storybook/addon-actions": "^8.6.7",
     "@storybook/preview-api": "^8.6.7",
     "@storybook/react": "^8.6.7",
