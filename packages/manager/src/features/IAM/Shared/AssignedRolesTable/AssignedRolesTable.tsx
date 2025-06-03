@@ -74,7 +74,7 @@ export const AssignedRolesTable = () => {
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
   const pagination = usePaginationV2({
-    currentRoute: '/iam/users/$username',
+    currentRoute: '/iam/users/$username/roles',
     initialPage: 1,
     preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
   });
