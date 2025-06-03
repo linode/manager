@@ -393,6 +393,12 @@ describe('utilities', () => {
       expect(portString).toEqual('');
     });
 
+    it('should handle duplicates', () => {
+      const [items, portString] = portStringToItems('22, 443, 22');
+      expect(items).toEqual([PORT_PRESETS['22'], PORT_PRESETS['443']]);
+      expect(portString).toEqual('');
+    });
+
     it('should handle empty input', () => {
       const [items, portString] = portStringToItems('');
       expect(items).toEqual([]);

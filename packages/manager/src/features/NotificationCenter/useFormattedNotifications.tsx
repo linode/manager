@@ -6,7 +6,6 @@ import {
 import { StyledLinkButton, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { DateTime } from 'luxon';
-import { path } from 'ramda';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -178,10 +177,7 @@ const interceptNotification = (
     notification.entity?.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
-    const linodeAttachedToNotification: string | undefined = path(
-      ['label'],
-      notification.entity
-    );
+    const linodeAttachedToNotification = notification.entity.label;
 
     const jsx = (
       <Typography>

@@ -1,6 +1,5 @@
 import { Button } from '@linode/ui';
 import AttachFile from '@mui/icons-material/AttachFile';
-import { remove } from 'ramda';
 import * as React from 'react';
 
 import { AttachFileListItem } from './AttachFileListItem';
@@ -34,7 +33,7 @@ export const AttachFileForm = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const removeFile = (fileIdx: number) => {
-    const newFiles = remove(fileIdx, 1, files);
+    const newFiles = [...files].splice(fileIdx, 1);
     if (inputRef.current) {
       inputRef.current.value = '';
     }

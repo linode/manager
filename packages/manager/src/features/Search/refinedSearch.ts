@@ -1,5 +1,5 @@
+import { isEmpty } from '@linode/api-v4';
 import logicQueryParser from 'logic-query-parser';
-import { all, any, equals, isEmpty } from 'ramda';
 import searchString from 'search-string';
 
 import type { SearchableItem, SearchField } from './search.interfaces';
@@ -248,10 +248,10 @@ export const getRealEntityKey = (key: string): SearchField | string => {
 };
 
 // Returns true if all values in array are true
-export const areAllTrue = all(equals(true));
+export const areAllTrue = (values: boolean[]) => values.every((value) => value);
 
 // Returns true if at least ONE value in array is true
-export const areAnyTrue = any(equals(true));
+export const areAnyTrue = (values: boolean[]) => values.some((value) => value);
 
 // This type is used by 'logic-query-parser
 export type ValueType = 'and' | 'or' | 'string';

@@ -1,5 +1,4 @@
 import { useProfile, useSecurityQuestions } from '@linode/queries';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
@@ -80,9 +79,11 @@ export const GlobalNotifications = () => {
           hasVerifiedPhoneNumber={hasVerifiedPhoneNumber}
         />
       )}
-      {!isEmpty(suppliedMaintenances) && !hasDismissedMaintenances ? (
-        <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
-      ) : null}
+      {suppliedMaintenances !== undefined &&
+        suppliedMaintenances.length > 0 &&
+        !hasDismissedMaintenances && (
+          <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
+        )}
       {flags.taxCollectionBanner &&
       Object.keys(flags.taxCollectionBanner).length > 0 ? (
         <TaxCollectionBanner />

@@ -3,7 +3,6 @@ import {
   isCustomPortsValid,
 } from '@linode/validation';
 import { parseCIDR, parse as parseIP } from 'ipaddr.js';
-import { uniq } from 'ramda';
 
 import {
   allIPs,
@@ -254,7 +253,7 @@ export const itemsToPortString = (
     .split(',')
     .map((port) => port.trim())
     .filter(Boolean);
-  return uniq([...presets, ...customArray])
+  return Array.from(new Set([...presets, ...customArray]))
     .sort(sortString)
     .join(', ');
 };
@@ -281,17 +280,29 @@ export const portStringToItems = (
   const items: FirewallOptionItem<string>[] = [];
   const customInput: string[] = [];
 
-  ports.forEach((thisPort) => {
-    if (thisPort in PORT_PRESETS) {
-      items.push(PORT_PRESETS[thisPort as keyof typeof PORT_PRESETS]);
-    } else {
-      customInput.push(thisPort);
+  for (const port of ports) {
+    if (
+      port in PORT_PRESETS && 
+      items.some(
+        (i) => i.value === PORT_PRESETS[port as keyof typeof PORT_PRESETS].value
+      )
+    ) {
+      // If we have already added the port preset to our `items` array, just skip it
+      // to avoid duplicate options
+      continue;
     }
-  });
+
+    if (port in PORT_PRESETS) {
+      items.push(PORT_PRESETS[port as keyof typeof PORT_PRESETS]);
+    } else {
+      customInput.push(port);
+    }
+  }
+
   if (customInput.length > 0) {
     items.push({ label: 'Custom', value: 'CUSTOM' });
   }
-  return [uniq(items), customInput.join(', ')];
+  return [items, customInput.join(', ')];
 };
 
 export const validateForm = ({

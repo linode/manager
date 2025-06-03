@@ -6,7 +6,6 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
-import { isEmpty } from 'ramda';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -27,7 +26,7 @@ export const UserEntities = () => {
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
-    ? !isEmpty(assignedRoles.entity_access)
+    ? assignedRoles.entity_access.length > 0
     : false;
 
   if (isLoading) {

@@ -1,5 +1,4 @@
 import { Radio } from '@linode/ui';
-import { update } from 'ramda';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
@@ -27,15 +26,17 @@ export const getUpdatedScopes = (
   newScope: ObjectStorageKeyBucketAccess
 ): ObjectStorageKeyBucketAccess[] => {
   // Cluster and bucket together form a primary key
-  const scopeToUpdate = oldScopes.findIndex(
+  const scopeToUpdateIndex = oldScopes.findIndex(
     (thisScope) =>
       thisScope.bucket_name === newScope.bucket_name &&
       thisScope.cluster === newScope.cluster
   );
-  if (scopeToUpdate < 0) {
+  if (scopeToUpdateIndex < 0) {
     return oldScopes;
   }
-  return update(scopeToUpdate, newScope, oldScopes);
+  const updatedScopes = [...oldScopes];
+  updatedScopes[scopeToUpdateIndex] = newScope;
+  return updatedScopes;
 };
 
 export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
