@@ -653,8 +653,8 @@ const CreateVlanInterfaceSchema = object({
 });
 
 const AclpAlertsPayloadSchema = object({
-  system: array().of(number()).required(),
-  user: array().of(number()).required(),
+  system: array().of(number().defined()).required(),
+  user: array().of(number().defined()).required(),
 });
 
 export const CreateVPCInterfaceSchema = object({

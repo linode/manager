@@ -25,7 +25,7 @@ import { AlertInformationActionTable } from './AlertInformationActionTable';
 
 import type {
   AlertDefinitionType,
-  LinodeAclpAlertsPayload,
+  CloudPulseAlertsPayload,
 } from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
@@ -44,7 +44,7 @@ interface AlertReusableComponentProps {
    * Only use in create flow.
    * @param payload enabled alerts ids
    */
-  onToggleAlert?: (payload: LinodeAclpAlertsPayload) => void;
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
    * Service type of selected entity

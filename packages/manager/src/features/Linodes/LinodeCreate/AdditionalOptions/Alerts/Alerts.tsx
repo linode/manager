@@ -9,7 +9,7 @@ import { LinodeSettingsAlertsPanel } from 'src/features/Linodes/LinodesDetail/Li
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../../utilities';
-import type { LinodeAclpAlertsPayload } from '@linode/api-v4';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 export const Alerts = () => {
   const flags = useFlags();
@@ -24,7 +24,7 @@ export const Alerts = () => {
     defaultValue: { system: [], user: [] },
   });
 
-  const handleToggleAlert = (updatedAlerts: LinodeAclpAlertsPayload) => {
+  const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
     field.onChange(updatedAlerts);
   };
 
