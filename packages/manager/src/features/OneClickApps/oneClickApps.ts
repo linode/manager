@@ -2135,6 +2135,7 @@ export const oneClickApps: Record<number, OCA> = {
     },
     description:
       'Netfoundry Edge Router is a software gateway that enables secure, zero-trust, high-performance connectivity between local networks, cloud environments, and applications.',
+    isNew: true,
     logo_url: 'netfoundry.svg',
     related_guides: [
       {
