@@ -1,5 +1,8 @@
-import { Autocomplete, SelectedIcon, Stack, Typography } from '@linode/ui';
+import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
+import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
+
+import { DefaultPolicyChip } from './DefaultPolicyChip';
 
 import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { SelectProps, SxProps, Theme } from '@linode/ui';
@@ -27,6 +30,7 @@ const maintenancePolicyOptions: MaintenancePolicyOption[] = [
 
 interface MaintenancePolicySelectProps {
   errorText?: string;
+  hideDefaultOptionChip?: boolean;
   onChange: SelectProps<MaintenancePolicyOption>['onChange'];
   sx?: SxProps<Theme>;
   textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
@@ -36,12 +40,23 @@ interface MaintenancePolicySelectProps {
 export const MaintenancePolicySelect = (
   props: MaintenancePolicySelectProps
 ) => {
-  const { errorText, onChange, sx, textFieldProps, value } = props;
+  const {
+    errorText,
+    onChange,
+    sx,
+    textFieldProps,
+    value,
+    hideDefaultOptionChip,
+  } = props;
+
+  const { data: maintenancePolicies } = useAccountMaintenancePoliciesQuery();
+
+  const defaultPolicy = maintenancePolicies?.find((p) => p.is_default);
 
   return (
     <Autocomplete
       errorText={errorText}
-      label="MaintenancePolicy"
+      label="Maintenance Policy"
       onChange={onChange}
       options={maintenancePolicyOptions}
       renderOption={(props, option, state) => (
@@ -51,13 +66,27 @@ export const MaintenancePolicySelect = (
               <b>{option.label}</b>
               {option.description}
             </Stack>
+            <Box flexGrow={1} />
+            {defaultPolicy?.id === option.value && !hideDefaultOptionChip && (
+              <DefaultPolicyChip
+                tooltipText={`${option.label} is currently the account-wide default Host Maintenance Policy.`}
+              />
+            )}
             {state.selected && <SelectedIcon visible />}
           </Stack>
         </li>
       )}
       sx={sx}
       textFieldProps={{
-        ...{ tooltipText: optionsTooltipText, tooltipWidth: 410 },
+        InputProps: {
+          endAdornment: value === defaultPolicy?.id && (
+            <DefaultPolicyChip
+              tooltipText={`${maintenancePolicyOptions.find((option) => option.value === value)?.label ?? 'This'} is currently the account-wide default Host Maintenance Policy.`}
+            />
+          ),
+        },
+        tooltipText: optionsTooltipText,
+        tooltipWidth: 410,
         ...textFieldProps,
       }}
       value={maintenancePolicyOptions.find((option) => option.value === value)}
