@@ -520,8 +520,8 @@ describe('LKE cluster updates', () => {
      * - Confirms that UI updates to reflect node pool autoscale state.
      */
     it('can toggle autoscaling on a standard tier cluster', () => {
-      const autoscaleMin = 3;
-      const autoscaleMax = 10;
+      const autoscaleMin = 1;
+      const autoscaleMax = 100;
       const minWarning =
         'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.';
       const maxWarning = 'Maximum must be between 1 and 100 nodes.';
@@ -587,21 +587,28 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Min').should('be.visible').click();
           cy.focused().clear();
-          cy.focused().type(`${autoscaleMin}`);
+          cy.focused().type(`${autoscaleMin - 1}`);
 
+          // Min is 0 (invalid); max is 100 (valid)
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('101');
 
-          cy.findByText(minWarning).should('not.exist');
+          // Min is 0; max is 101 - both invalid
+          cy.findByText(minWarning).should('be.visible');
           cy.findByText(maxWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMax}`);
 
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMin + 1}`);
+
+          // Min is 2; max is 100 - both valid
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('not.exist');
 
@@ -682,7 +689,7 @@ describe('LKE cluster updates', () => {
         },
       };
 
-      const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 4 GB Plan';
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 8 GB Plan';
 
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
@@ -725,20 +732,23 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin - 1}`);
 
+          // Min is 0 (invalid); max is 500 (valid)
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('501');
 
+          // Min is 0; max is 501 - both invalid
           cy.findByText(maxWarning).should('be.visible');
-          cy.findByText(minWarning).should('not.exist');
+          cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMax}`);
 
-          cy.findByText(minWarning).should('not.exist');
+          // Min is 0 (invalid); max is 500 (valid)
+          cy.findByText(minWarning).should('be.visible');
           cy.findByText(maxWarning).should('not.exist');
 
           ui.button.findByTitle('Save Changes').should('be.disabled');
@@ -747,6 +757,7 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin + 1}`);
 
+          // Min is 1, max is 500 - both valid
           ui.button.findByTitle('Save Changes').should('be.visible').click();
         });
 
