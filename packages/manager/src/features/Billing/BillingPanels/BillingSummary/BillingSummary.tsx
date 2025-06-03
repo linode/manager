@@ -7,8 +7,8 @@ import {
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
+import { useMatch, useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { isWithinDays } from 'src/utilities/date';
@@ -53,12 +53,14 @@ export const BillingSummary = (props: BillingSummaryProps) => {
 
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
-  // On-the-fly route matching so this component can open the drawer itself.
-  const routeForMakePayment = '/account/billing/make-payment';
-  const makePaymentRouteMatch = Boolean(useRouteMatch(routeForMakePayment));
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
+  const { paymentMethod } = useSearch({
+    strict: false,
+  });
 
-  const { replace } = useHistory();
-  const location = useLocation<{ paymentMethod: PaymentMethod }>();
+  const routeForMakePayment = '/account/billing/make-payment';
+  const makePaymentRouteMatch = match?.routeId === routeForMakePayment;
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] =
     React.useState<boolean>(false);
@@ -68,7 +70,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   >(undefined);
 
   const openPaymentDrawer = React.useCallback(
-    (selectedPaymentMethod: PaymentMethod) => {
+    (selectedPaymentMethod: PaymentMethod | undefined) => {
       setPaymentDrawerOpen(true);
       setSelectedPaymentMethod(selectedPaymentMethod);
     },
@@ -78,8 +80,8 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const closePaymentDrawer = React.useCallback(() => {
     setPaymentDrawerOpen(false);
     setSelectedPaymentMethod(undefined);
-    replace('/account/billing');
-  }, [replace]);
+    navigate({ to: '/account/billing' });
+  }, []);
 
   const openPromoDialog = () => setIsPromoDialogOpen(true);
   const closePromoDialog = () => setIsPromoDialogOpen(false);
@@ -90,17 +92,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     }
 
     const selectedPaymentMethod =
-      location?.state?.paymentMethod ??
+      paymentMethod ??
       paymentMethods?.find((payment) => payment.is_default) ??
       undefined;
 
     openPaymentDrawer(selectedPaymentMethod);
-  }, [
-    paymentMethods,
-    openPaymentDrawer,
-    makePaymentRouteMatch,
-    location.state,
-  ]);
+  }, [paymentMethods, openPaymentDrawer, makePaymentRouteMatch, paymentMethod]);
 
   //
   // Account Balance logic
@@ -134,7 +131,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <Button
-          onClick={() => replace(routeForMakePayment)}
+          onClick={() => navigate({ to: routeForMakePayment })}
           sx={{
             ...theme.applyLinkStyles,
             verticalAlign: 'initial',

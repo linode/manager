@@ -2,6 +2,7 @@ import { useAccount } from '@linode/queries';
 import { ActionsPanel, Typography } from '@linode/ui';
 import { pluralize, useInterval } from '@linode/utilities';
 import React, { useEffect } from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

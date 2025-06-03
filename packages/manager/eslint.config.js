@@ -403,6 +403,8 @@ export const baseConfig = [
   {
     files: [
       // for each new features added to the migration router, add its directory here
+      'src/features/Account/**/*',
+      'src/features/Billing/**/*',
       'src/features/Betas/**/*',
       'src/features/CloudPulse/**/*',
       'src/features/Databases/**/*',

@@ -1,8 +1,8 @@
 import { quotaQueries, useQuotasQuery } from '@linode/queries';
 import { Dialog, ErrorState } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table/Table';
@@ -31,7 +31,7 @@ interface QuotasTableProps {
 
 export const QuotasTable = (props: QuotasTableProps) => {
   const { selectedLocation, selectedService } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const pagination = usePagination(1, 'quotas-table');
   const hasSelectedLocation = Boolean(selectedLocation);
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
@@ -91,9 +91,12 @@ export const QuotasTable = (props: QuotasTableProps) => {
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+    navigate({
+      to: `/support/tickets/${ticketId}`,
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
     setSupportModalOpen(false);
   };

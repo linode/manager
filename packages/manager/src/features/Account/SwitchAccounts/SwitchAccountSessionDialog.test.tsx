@@ -1,31 +1,19 @@
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { SwitchAccountSessionDialog } from 'src/features/Account/SwitchAccounts/SwitchAccountSessionDialog';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 const mockHistory = {
   push: vi.fn(),
   replace: vi.fn(),
 };
 
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
-
 describe('SwitchAccountSessionDialog', () => {
-  it('renders correctly when isOpen is true', () => {
+  it('renders correctly when isOpen is true', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+    const { getByText } = await renderWithThemeAndRouter(
+      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
     );
 
     expect(getByText('Session expired')).toBeInTheDocument();
@@ -38,23 +26,19 @@ describe('SwitchAccountSessionDialog', () => {
     expect(getByText('Close')).toBeInTheDocument();
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('calls onClose when close button is clicked', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+    const { getByText } = await renderWithThemeAndRouter(
+      <SwitchAccountSessionDialog isOpen={true} onClose={onCloseMock} />
     );
 
     fireEvent.click(getByText('Close'));
     expect(onCloseMock).toHaveBeenCalled();
   });
 
-  it('calls history.push("/logout") when Log in button is clicked', () => {
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SwitchAccountSessionDialog isOpen={true} onClose={vi.fn()} />
-      </MemoryRouter>
+  it('calls history.push("/logout") when Log in button is clicked', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <SwitchAccountSessionDialog isOpen={true} onClose={vi.fn()} />
     );
 
     fireEvent.click(getByText('Log in'));
