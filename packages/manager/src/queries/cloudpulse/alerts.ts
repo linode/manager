@@ -23,7 +23,7 @@ import type {
   DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
-  ServiceAlertsUpdatePayload,
+  CloudPulseAlertsPayload,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
@@ -240,8 +240,8 @@ export const useServiceAlertsMutation = (
   entityId: string
 ) => {
   const queryClient = useQueryClient();
-  return useMutation<{}, APIError[], ServiceAlertsUpdatePayload>({
-    mutationFn: (payload: ServiceAlertsUpdatePayload) => {
+  return useMutation<{}, APIError[], CloudPulseAlertsPayload>({
+    mutationFn: (payload: CloudPulseAlertsPayload) => {
       return updateServiceAlerts(serviceType, entityId, payload);
     },
     onSuccess() {

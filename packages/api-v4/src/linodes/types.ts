@@ -9,7 +9,7 @@ import type {
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
 import type { MaintenancePolicyId } from 'src/account';
-import type { ServiceAlertsUpdatePayload } from 'src/cloudpulse';
+import { CloudPulseAlertsPayload } from 'src/cloudpulse';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -29,7 +29,7 @@ export interface LinodeSpecs {
 }
 
 export interface Linode {
-  alerts: LinodeAlerts | ServiceAlertsUpdatePayload;
+  alerts: LinodeAlerts | CloudPulseAlertsPayload;
   backups: LinodeBackups;
   capabilities: LinodeCapabilities[];
   created: string;

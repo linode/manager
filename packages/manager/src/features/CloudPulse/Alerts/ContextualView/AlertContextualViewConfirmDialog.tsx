@@ -3,13 +3,13 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { ServiceAlertsUpdatePayload } from '@linode/api-v4';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 interface AlertContextualViewConfirmDialogProps {
   /**
    * Alert ids to be enabled/disabled
    */
-  alertIds: ServiceAlertsUpdatePayload;
+  alertIds: CloudPulseAlertsPayload;
 
   /**
    * Name of the entity associated with the alerts
@@ -25,7 +25,7 @@ interface AlertContextualViewConfirmDialogProps {
    * Handler function for enable/disable button
    * @param alertIds alert ids to be enabled/disabled
    */
-  handleConfirm: (alertIds: ServiceAlertsUpdatePayload) => void;
+  handleConfirm: (alertIds: CloudPulseAlertsPayload) => void;
 
   /**
    * Loading state of the confirmation dialog
