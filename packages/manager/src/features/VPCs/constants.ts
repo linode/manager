@@ -14,11 +14,17 @@ export const WARNING_ICON_UNRECOMMENDED_CONFIG =
 export const REGION_CAVEAT_HELPER_TEXT =
   'A Linode may be assigned only to a VPC in the same region.';
 
+export const NODEBALANCER_REGION_CAVEAT_HELPER_TEXT =
+  'A NodeBalancer may be assigned only to a VPC in the same region.';
+
 export const REGIONAL_LINODE_MESSAGE =
   "Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.";
 
 export const MULTIPLE_CONFIGURATIONS_MESSAGE =
   'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
+
+export const NB_AUTO_ASSIGN_CIDR_TOOLTIP =
+  'A /30 CIDR is needed for the NodeBalancer to communicate with the subnet. Deselect this option to define a custom IP range.';
 
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';

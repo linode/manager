@@ -1,6 +1,6 @@
 import { Box, Notice, Typography } from '@linode/ui';
 import { isToday as _isToday } from '@linode/utilities';
-import Grid from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

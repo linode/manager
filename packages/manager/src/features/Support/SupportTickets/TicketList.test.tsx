@@ -18,6 +18,20 @@ const props: Props = {
 
 const loadingTestId = 'table-row-loading';
 
+const queryMocks = vi.hoisted(() => ({
+  useSearch: vi.fn().mockReturnValue({ dialogOpen: false }),
+  useNavigate: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useSearch: queryMocks.useSearch,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 describe('TicketList', () => {
   it('renders loading state', () => {
     renderWithTheme(<TicketList {...props} />);

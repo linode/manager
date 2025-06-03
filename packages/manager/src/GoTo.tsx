@@ -1,17 +1,25 @@
+import { useAccountSettings, useGrants, useProfile } from '@linode/queries';
 import { Dialog, Select } from '@linode/ui';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsPlacementGroupsEnabled } from './features/PlacementGroups/utils';
-import { useAccountManagement } from './hooks/useAccountManagement';
 import { useGlobalKeyboardListener } from './hooks/useGlobalKeyboardListener';
 
 import type { SelectOption } from '@linode/ui';
 
 export const GoTo = React.memo(() => {
   const routerHistory = useHistory();
-  const { _hasAccountAccess, _isManagedAccount } = useAccountManagement();
+
+  const { data: accountSettings } = useAccountSettings();
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+
+  const isManagedAccount = accountSettings?.managed ?? false;
+
+  const hasAccountAccess =
+    !profile?.restricted || Boolean(grants?.global.account_access);
 
   const { isPlacementGroupsEnabled } = useIsPlacementGroupsEnabled();
   const { isDatabasesEnabled } = useIsDatabasesEnabled();
@@ -30,7 +38,7 @@ export const GoTo = React.memo(() => {
     () => [
       {
         display: 'Managed',
-        hide: !_isManagedAccount,
+        hide: !isManagedAccount,
         href: '/managed',
       },
       {
@@ -97,7 +105,7 @@ export const GoTo = React.memo(() => {
       },
       {
         display: 'Account',
-        hide: !_hasAccountAccess,
+        hide: !hasAccountAccess,
         href: '/account/billing',
       },
       {
@@ -109,7 +117,7 @@ export const GoTo = React.memo(() => {
         href: '/profile/display',
       },
     ],
-    [_hasAccountAccess, _isManagedAccount, isPlacementGroupsEnabled]
+    [hasAccountAccess, isManagedAccount, isPlacementGroupsEnabled]
   );
 
   const options: SelectOption<string>[] = React.useMemo(
