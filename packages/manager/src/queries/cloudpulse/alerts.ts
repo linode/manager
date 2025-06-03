@@ -19,11 +19,12 @@ import { queryFactory } from './queries';
 import type {
   Alert,
   AlertServiceType,
+  CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
   EntityAlertUpdatePayload,
-  CloudPulseAlertsPayload,
+  NotificationChannel,
 } from '@linode/api-v4/lib/cloudpulse';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
