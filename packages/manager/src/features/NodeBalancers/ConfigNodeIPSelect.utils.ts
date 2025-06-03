@@ -1,5 +1,3 @@
-import { isPrivateIP } from 'src/utilities/ipUtils';
-
 import type { Linode, LinodeIPsResponse, Subnet } from '@linode/api-v4';
 
 export interface PrivateIPOption {
@@ -33,7 +31,7 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 
   for (const linode of linodes) {
     for (const ip of linode.ipv4) {
-      if (isPrivateIP(ip)) {
+      if (ip.startsWith('192.168.')) {
         options.push({ label: ip, linode });
       }
     }

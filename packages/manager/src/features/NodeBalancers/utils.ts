@@ -75,8 +75,7 @@ export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
   const match =
-    // eslint-disable-next-line sonarjs/regex-complexity
-    /^(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
+    /^((10.\d{1,3}|192\.168|172\.(1[6-9]|2\d|3[0-1]))\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
       node.address
     );
   if (match) {
