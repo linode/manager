@@ -1,13 +1,20 @@
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { BillingDetail } from './BillingDetail';
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { findByTestId } = renderWithTheme(<BillingDetail />);
+    const { findByTestId, findByText } = await renderWithThemeAndRouter(
+      <BillingDetail />
+    );
     await findByTestId('billing-detail');
-    // Todo: add some get-by-texts once the correct text is available
+    await findByText('Account Balance');
+    await findByText('Promotions');
+    await findByText('Accrued Charges');
+    await findByText('Billing Contact');
+    await findByText('Payment Methods');
+    await findByText('Billing & Payment History');
   });
 });

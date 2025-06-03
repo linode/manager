@@ -81,7 +81,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     setPaymentDrawerOpen(false);
     setSelectedPaymentMethod(undefined);
     navigate({ to: '/account/billing' });
-  }, []);
+  }, [navigate]);
 
   const openPromoDialog = () => setIsPromoDialogOpen(true);
   const closePromoDialog = () => setIsPromoDialogOpen(false);

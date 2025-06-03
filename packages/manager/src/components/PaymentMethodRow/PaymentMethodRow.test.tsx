@@ -1,14 +1,32 @@
 import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { PaymentMethodRow } from './PaymentMethodRow';
+
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+  useMatch: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual<any>('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useMatch: queryMocks.useMatch,
+    useSearch: queryMocks.useSearch,
+  };
+});
 
 vi.mock('@linode/api-v4/lib/account', async () => {
   const actual = await vi.importActual<any>('@linode/api-v4/lib/account');
@@ -20,8 +38,8 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 });
 
 describe('Payment Method Row', () => {
-  it('Displays "Default" chip if payment method is set as default', () => {
-    const { getByText } = renderWithTheme(
+  it('Displays "Default" chip if payment method is set as default', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -33,8 +51,8 @@ describe('Payment Method Row', () => {
     expect(getByText('DEFAULT')).toBeVisible();
   });
 
-  it('Does not display "Default" chip if payment method is not set as default', () => {
-    const { queryByText } = renderWithTheme(
+  it('Does not display "Default" chip if payment method is not set as default', async () => {
+    const { queryByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -46,7 +64,7 @@ describe('Payment Method Row', () => {
     expect(queryByText('DEFAULT')).toBeNull();
   });
 
-  it('Has default ARIA label for credit card and Google Pay payment methods', () => {
+  it('Has default ARIA label for credit card and Google Pay payment methods', async () => {
     const expectedLabelCreditCard = 'Action menu for card ending in 1881';
     const expectedLabelGooglePay = 'Action menu for card ending in 1111';
 
@@ -70,7 +88,7 @@ describe('Payment Method Row', () => {
       type: 'google_pay',
     });
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -87,7 +105,7 @@ describe('Payment Method Row', () => {
     expect(getByLabelText(expectedLabelGooglePay)).toBeVisible();
   });
 
-  it('Has PayPal-specific ARIA label for PayPal payment methods', () => {
+  it('Has PayPal-specific ARIA label for PayPal payment methods', async () => {
     const expectedLabelPayPal =
       'Action menu for Paypal testpaypaluser@example.com';
     const payPalPaymentMethod = paymentMethodFactory.build({
@@ -99,7 +117,7 @@ describe('Payment Method Row', () => {
       type: 'paypal',
     });
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -112,7 +130,7 @@ describe('Payment Method Row', () => {
   });
 
   it('Disables "Make Default" and "Delete" actions if payment method is set as default', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={vi.fn()}
@@ -132,7 +150,7 @@ describe('Payment Method Row', () => {
   it('Calls `onDelete` callback when "Delete" action is clicked', async () => {
     const mockFunction = vi.fn();
 
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow
           onDelete={mockFunction}
@@ -160,7 +178,7 @@ describe('Payment Method Row', () => {
       is_default: false,
     });
 
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
       </PayPalScriptProvider>
@@ -183,7 +201,36 @@ describe('Payment Method Row', () => {
      * The <BillingSummary /> component is responsible for rendering the "Make a Payment" drawer,
      * and is required for this test. We may want to consider decoupling these components in the future.
      */
-    const { getByLabelText, getByTestId, getByText } = renderWithTheme(
+    const { getByLabelText, getByTestId, getByText, rerender } =
+      await renderWithThemeAndRouter(
+        <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={0}
+            balanceUninvoiced={0}
+            paymentMethods={[paymentMethod]}
+          />
+          <PaymentMethodRow onDelete={vi.fn()} paymentMethod={paymentMethod} />
+        </PayPalScriptProvider>,
+        {
+          initialRoute: '/account/billing',
+        }
+      );
+
+    const actionMenu = getByLabelText('Action menu for card ending in 1881');
+    await userEvent.click(actionMenu);
+
+    const makePaymentButton = getByText('Make a Payment');
+    expect(makePaymentButton).toBeVisible();
+    await userEvent.click(makePaymentButton);
+
+    queryMocks.useMatch.mockReturnValue({
+      routeId: '/account/billing/make-payment',
+    });
+    queryMocks.useSearch.mockReturnValue({
+      paymentMethod: paymentMethod,
+    });
+
+    rerender(
       <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
         <BillingSummary
           balance={0}
@@ -194,14 +241,26 @@ describe('Payment Method Row', () => {
       </PayPalScriptProvider>
     );
 
-    const actionMenu = getByLabelText('Action menu for card ending in 1881');
-    await userEvent.click(actionMenu);
+    expect(navigate).toHaveBeenCalledWith({
+      search: {
+        paymentMethod: {
+          created: '2021-05-21T14:27:51',
+          data: {
+            card_type: 'Visa',
+            expiry: '12/2022',
+            last_four: '1881',
+          },
+          id: 9,
+          is_default: false,
+          type: 'credit_card',
+        },
+      },
+      to: '/account/billing/make-payment',
+    });
 
-    const makePaymentButton = getByText('Make a Payment');
-    expect(makePaymentButton).toBeVisible();
-    await userEvent.click(makePaymentButton);
-
-    expect(getByTestId('drawer')).toBeVisible();
-    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+    await waitFor(() => {
+      expect(getByTestId('drawer')).toBeVisible();
+      expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
+    });
   });
 });
