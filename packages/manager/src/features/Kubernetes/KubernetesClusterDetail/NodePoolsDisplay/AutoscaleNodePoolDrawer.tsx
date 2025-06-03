@@ -326,7 +326,10 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         <ActionsPanel
           primaryButtonProps={{
             'data-testid': 'submit',
-            disabled: !isDirty || Object.keys(errors).length !== 0,
+            disabled:
+              !isDirty ||
+              Object.keys(errors).length !== 0 ||
+              (_enabled && _max > maxLimit),
             label: 'Save Changes',
             loading: isPending || isSubmitting,
             type: 'submit',
