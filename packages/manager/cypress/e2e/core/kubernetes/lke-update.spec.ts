@@ -520,8 +520,8 @@ describe('LKE cluster updates', () => {
      * - Confirms that UI updates to reflect node pool autoscale state.
      */
     it('can toggle autoscaling on a standard tier cluster', () => {
-      const autoscaleMin = 1;
-      const autoscaleMax = 100;
+      const autoscaleMin = 3;
+      const autoscaleMax = 10;
       const minWarning =
         'Minimum must be between 1 and 99 nodes and cannot be greater than Maximum.';
       const maxWarning = 'Maximum must be between 1 and 100 nodes.';
@@ -587,28 +587,24 @@ describe('LKE cluster updates', () => {
 
           cy.findByLabelText('Min').should('be.visible').click();
           cy.focused().clear();
-          cy.focused().type(`${autoscaleMin - 1}`);
+          cy.focused().type(`${autoscaleMin}`);
 
-          // Min is 0 (invalid); max is 100 (valid)
+          // Min is 3; max is 1 - invalid
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('101');
 
-          // Min is 0; max is 101 - both invalid
-          cy.findByText(minWarning).should('be.visible');
+          // Min is 3 (valid); max is 101 (invalid)
           cy.findByText(maxWarning).should('be.visible');
+          cy.findByText(minWarning).should('not.exist');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMax}`);
 
-          cy.findByLabelText('Min').should('be.visible').click();
-          cy.focused().clear();
-          cy.focused().type(`${autoscaleMin + 1}`);
-
-          // Min is 2; max is 100 - both valid
+          // Min is 3; max is 10 - both valid
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('not.exist');
 
@@ -1828,7 +1824,7 @@ describe('LKE cluster updates', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByTitle('Autoscale Pool')
+            .findByTitle('Recycle Pool Nodes')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -1837,7 +1833,7 @@ describe('LKE cluster updates', () => {
 
     // Exit dialog
     ui.dialog
-      .findByTitle('Autoscale Pool')
+      .findByTitle('Recycle node pool?')
       .should('be.visible')
       .within(() => {
         ui.button
