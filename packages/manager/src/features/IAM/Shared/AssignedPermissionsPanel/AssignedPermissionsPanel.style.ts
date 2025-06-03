@@ -22,7 +22,7 @@ export const StyledTitle = styled(Typography, {
 
 export const StyledDescription = styled(Typography)(({ theme }) => ({
   marginBottom: theme.tokens.spacing.S12,
-  marginTop: theme.tokens.spacing.S6,
+  marginTop: theme.tokens.spacing.S8,
   overflowWrap: 'anywhere',
   wordBreak: 'normal',
 }));
@@ -34,5 +34,5 @@ export const StyledEntityBox = styled(Box, {
 })<{
   hideDetails: boolean | undefined;
 }>(({ theme, hideDetails }) => ({
-  marginTop: !hideDetails ? theme.tokens.spacing.S12 : undefined,
+  marginTop: !hideDetails ? theme.tokens.spacing.S16 : undefined,
 }));

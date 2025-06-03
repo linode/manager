@@ -39,7 +39,7 @@ const ALL_ROLES_OPTION: SelectOption = {
 interface Props {
   roles?: RoleView[];
 }
-
+const DEFAULT_PAGE_SIZE = 10;
 export const RolesTable = ({ roles = [] }: Props) => {
   // Filter string for the search bar
   const [filterString, setFilterString] = React.useState('');
@@ -288,14 +288,16 @@ export const RolesTable = ({ roles = [] }: Props) => {
             )}
           </TableBody>
         </Table>
-        <Pagination
-          count={filteredRows.length}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          style={{ borderTop: 0 }}
-        />
+        {sortedRows.length !== 0 && sortedRows.length > DEFAULT_PAGE_SIZE && (
+          <Pagination
+            count={filteredRows.length}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            page={pagination.page}
+            pageSize={pagination.pageSize}
+            style={{ borderTop: 0 }}
+          />
+        )}
       </Paper>
       <AssignSelectedRolesDrawer
         onClose={() => setIsDrawerOpen(false)}
