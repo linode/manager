@@ -118,7 +118,11 @@ export const AssignSelectedRolesDrawer = ({
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Assign Selected Roles to User">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`Assign Role${selectedRoles.length > 1 ? `s` : ``}`}
+    >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
@@ -139,10 +143,12 @@ export const AssignSelectedRolesDrawer = ({
             direction="column"
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacingFunction(16),
+              marginBottom: theme.spacingFunction(20),
             })}
           >
-            <Typography variant={'h3'}>Users</Typography>
+            <Typography mb={theme.spacingFunction(8)} variant="h3">
+              Users
+            </Typography>
             {allUsers && allUsers?.data?.length > 0 && (
               <Controller
                 control={control}
@@ -160,7 +166,6 @@ export const AssignSelectedRolesDrawer = ({
                     }}
                     options={getUserOptions() || []}
                     placeholder="Select a User"
-                    sx={{ marginTop: theme.tokens.spacing.S12 }}
                     textFieldProps={{ hideLabel: true }}
                   />
                 )}
@@ -175,7 +180,6 @@ export const AssignSelectedRolesDrawer = ({
             spacing={2}
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacingFunction(16),
             })}
           >
             <Typography variant={'h3'}>
