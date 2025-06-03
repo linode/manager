@@ -2974,7 +2974,7 @@ export const handlers = [
           aggregate_function: 'avg',
           chart_type: 'area',
           color: 'default',
-          label: 'Network Traffic',
+          label: 'Network Traffic In By The Instance',
           metric: 'system_network_io_by_resource',
           size: 6,
           unit: 'Bytes',

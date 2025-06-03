@@ -231,6 +231,7 @@ export const REGION_GROUP_INFO_MESSAGE =
 export const ALERT_SCOPE_TOOLTIP_TEXT =
   'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
 
+export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
