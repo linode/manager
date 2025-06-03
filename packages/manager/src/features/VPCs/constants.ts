@@ -41,6 +41,9 @@ export const VPC_CREATE_FORM_VPC_HELPER_TEXT =
 export const VPC_REBOOT_MESSAGE =
   'The VPC configuration has been updated. Reboot the Linode to reflect configuration changes.';
 
+export const VPC_NODEBALANCER_REBOOT_MESSAGE =
+  'The VPC configuration has been updated. Reboot the NodeBalancer to reflect configuration changes.';
+
 export const VPC_READ_ONLY_TOOLTIP = 'VPC does not support Read Only access';
 
 export const ASSIGN_IPV4_RANGES_TITLE = 'Assign additional IPv4 ranges';
