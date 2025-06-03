@@ -16,10 +16,10 @@ import type { Filter, Params, ResourcePage } from '../types';
 import type {
   Alert,
   AlertServiceType,
+  CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
   NotificationChannel,
-  ServiceAlertsUpdatePayload,
 } from './types';
 
 export const createAlertDefinition = (
@@ -132,7 +132,7 @@ export const deleteAlertDefinition = (serviceType: string, alertId: number) =>
 export const updateServiceAlerts = (
   serviceType: string,
   entityId: string,
-  payload: ServiceAlertsUpdatePayload,
+  payload: CloudPulseAlertsPayload,
 ) =>
   Request<{}>(
     setURL(
