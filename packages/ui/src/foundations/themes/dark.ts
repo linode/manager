@@ -993,6 +993,9 @@ export const darkTheme: ThemeOptions = {
           '&.MuiTableRow-hover:hover.disabled-row': {
             cursor: 'not-allowed',
             backgroundColor: 'inherit',
+            '& .MuiFormControlLabel-root.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
