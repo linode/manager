@@ -69,12 +69,6 @@ export const AlertContextualViewConfirmDialog = React.memo(
         data-testid="confirmation-dialog"
         onClose={handleCancel}
         open={isOpen}
-        sx={{
-          width: '500px',
-          height: '275px',
-          marginTop: '445px',
-          marginLeft: '571px',
-        }}
         title="Save Alerts?"
       >
         <Typography variant="subtitle2">
