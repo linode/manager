@@ -7,6 +7,10 @@ export const NO_ASSIGNED_ROLES_TEXT = `The user doesn't have any roles assigned 
 
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity access roles assigned yet. Once you assigned the user a role on specific entities, these entities will show up here.`;
 
+export const INTERNAL_ERROR_UPDATE_PERMISSION = `Internal Error - Issue with updating permissions.`;
+
+export const NO_CHANGES_SAVED = `No changes were saved.`;
+
 // Links
 // TODO: update the link when it's ready - UIE-8534
 export const IAM_DOCS_LINK =
@@ -21,3 +25,7 @@ export const PAID_ENTITY_TYPES = [
 ];
 
 export const ROLES_TABLE_PREFERENCE_KEY = 'roles';
+
+export const ENTITIES_TABLE_PREFERENCE_KEY = 'entities';
+
+export const ASSIGNED_ROLES_TABLE_PREFERENCE_KEY = 'assigned-roles';

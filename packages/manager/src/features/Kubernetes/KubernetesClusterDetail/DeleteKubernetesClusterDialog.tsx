@@ -1,6 +1,6 @@
 import { List, ListItem, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useDeleteKubernetesClusterMutation } from 'src/queries/kubernetes';
@@ -36,12 +36,12 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     isPending: isDeleting,
     mutateAsync: deleteCluster,
   } = useDeleteKubernetesClusterMutation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
-      history.replace('/kubernetes/clusters');
+      navigate({ to: '/kubernetes/clusters' });
     });
   };
 
