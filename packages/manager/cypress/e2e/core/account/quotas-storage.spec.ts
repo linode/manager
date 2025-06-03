@@ -271,7 +271,9 @@ describe('Quota workflow tests', () => {
         .findByTitle(updatedDomain, { exact: false })
         .should('be.visible')
         .click();
+
       cy.wait(['@getUpdatedQuotas', '@getUpdatedQuotaUsages']);
+
       cy.get('table[data-testid="table-endpoint-quotas"]')
         .find('tbody')
         .within(() => {
@@ -317,7 +319,9 @@ describe('Quota workflow tests', () => {
     it('Quota error results in error message being displayed', function () {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
+
       cy.visitWithLogin('/account/quotas');
+
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
@@ -489,7 +493,9 @@ describe('Quota workflow tests', () => {
       const errorMsg = 'Request failed.';
       mockGetObjectStorageQuotaError(errorMsg).as('getQuotasError');
       cy.visitWithLogin('/account/quotas');
+
       cy.wait('@getObjectStorageEndpoints');
+
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
@@ -513,7 +519,9 @@ describe('Quota workflow tests', () => {
       const errorMessage = 'Ticket creation failed.';
       mockCreateSupportTicketError(errorMessage).as('createTicketError');
       cy.visitWithLogin('/account/quotas');
+
       cy.wait(['@getFeatureFlags', '@getObjectStorageEndpoints']);
+
       ui.autocomplete
         .findByLabel('Object Storage Endpoint')
         .should('be.visible')
