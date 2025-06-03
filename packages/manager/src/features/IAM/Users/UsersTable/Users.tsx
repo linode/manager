@@ -3,15 +3,15 @@ import { getAPIFilterFromQuery } from '@linode/search';
 import { Button, Paper, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -22,6 +22,10 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
+  const navigate = useNavigate();
+  const { query } = useSearch({
+    from: '/iam/users',
+  });
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -29,17 +33,26 @@ export const UsersLanding = () => {
 
   const { data: profile } = useProfile();
   const theme = useTheme();
-  const pagination = usePagination(1, 'account-users');
-  const order = useOrder();
-
-  const location = useLocation();
-  const history = useHistory();
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users',
+    initialPage: 1,
+    preferenceKey: 'iam-account-users-pagination',
+  });
+  const order = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'username',
+      },
+      from: '/iam/users',
+    },
+    preferenceKey: 'iam-account-users-order',
+  });
 
   const isProxyUser =
     profile?.user_type === 'child' || profile?.user_type === 'proxy';
 
   const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get('query') ?? '';
 
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
@@ -81,7 +94,10 @@ export const UsersLanding = () => {
     } else {
       queryParams.delete('query');
     }
-    history.push({ search: queryParams.toString() });
+    navigate({
+      to: '/iam/users',
+      search: { query: value },
+    });
   };
 
   const handleDelete = (username: string) => {
@@ -132,7 +148,7 @@ export const UsersLanding = () => {
               label="Filter"
               onSearch={handleSearch}
               placeholder="Filter"
-              value={query}
+              value={query ?? ''}
             />
           )}
           <Button

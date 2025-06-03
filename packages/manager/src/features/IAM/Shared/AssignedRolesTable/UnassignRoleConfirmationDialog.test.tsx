@@ -1,10 +1,12 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
@@ -62,11 +64,9 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('UnassignRoleConfirmationDialog', () => {
-  it('should render', () => {
-    const { getAllByRole, getByText } = renderWithTheme(
-      <MemoryRouter>
-        <UnassignRoleConfirmationDialog {...props} />{' '}
-      </MemoryRouter>
+  it('should render', async () => {
+    const { getAllByRole, getByText } = await renderWithThemeAndRouter(
+      <UnassignRoleConfirmationDialog {...props} />
     );
 
     const headerText = getByText('Unassign the account_admin role?');

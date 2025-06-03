@@ -1,8 +1,8 @@
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -65,8 +65,8 @@ const ALL_ROLES_OPTION: SelectOption = {
 };
 
 export const AssignedRolesTable = () => {
-  const { username } = useParams<{ username: string }>();
-  const history = useHistory();
+  const { username } = useParams({ from: '/iam/users/$username' });
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
@@ -164,9 +164,10 @@ export const AssignedRolesTable = () => {
     roleName: AccountAccessRole | EntityAccessRole
   ) => {
     const selectedRole = roleName;
-    history.push({
-      pathname: `/iam/users/${username}/entities`,
-      state: { selectedRole },
+    navigate({
+      to: '/iam/users/$username/entities',
+      params: { username },
+      search: { selectedRole },
     });
   };
 

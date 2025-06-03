@@ -1,10 +1,12 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
@@ -60,12 +62,8 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('RemoveAssignmentConfirmationDialog', () => {
-  it('should render', () => {
-    renderWithTheme(
-      <MemoryRouter>
-        <RemoveAssignmentConfirmationDialog {...props} />{' '}
-      </MemoryRouter>
-    );
+  it('should render', async () => {
+    renderWithThemeAndRouter(<RemoveAssignmentConfirmationDialog {...props} />);
 
     const headerText = screen.getByText(
       'Remove the Test entity from the firewall_admin role assignment?'

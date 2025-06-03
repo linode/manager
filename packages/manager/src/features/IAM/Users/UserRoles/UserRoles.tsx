@@ -6,9 +6,9 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { isEmpty } from 'ramda';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
@@ -18,7 +18,7 @@ import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
   const theme = useTheme();
 
   const { data: assignedRoles, isLoading } = useAccountUserPermissions(

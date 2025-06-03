@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 import { IAM_DOCS_LINK } from './Shared/constants';
 
@@ -24,31 +24,16 @@ const Roles = React.lazy(() =>
 );
 
 export const IdentityAccessLanding = React.memo(() => {
-  const history = useHistory();
-  const location = useLocation();
-
-  const tabs = [
+  const { tabs, tabIndex, handleTabChange } = useTabs([
     {
-      routeName: `/iam/users`,
+      to: `/iam/users`,
       title: 'Users',
     },
     {
-      routeName: `/iam/roles`,
+      to: `/iam/roles`,
       title: 'Roles',
     },
-  ];
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  const getDefaultTabIndex = () => {
-    return (
-      tabs.findIndex((tab) =>
-        Boolean(matchPath(tab.routeName, { path: location.pathname }))
-      ) || 0
-    );
-  };
+  ]);
 
   const landingHeaderProps = {
     breadcrumbProps: {
@@ -66,8 +51,8 @@ export const IdentityAccessLanding = React.memo(() => {
       <DocumentTitleSegment segment="Identity and Access" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 
-      <Tabs index={getDefaultTabIndex()} onChange={navToURL}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>

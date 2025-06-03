@@ -1,7 +1,7 @@
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -35,10 +35,6 @@ import type { EntityType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface LocationState {
-  selectedRole?: string;
-}
-
 const ALL_ENTITIES_OPTION: SelectOption = {
   label: 'All Entities',
   value: 'all',
@@ -47,12 +43,14 @@ const ALL_ENTITIES_OPTION: SelectOption = {
 type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
 export const AssignedEntitiesTable = () => {
-  const { username } = useParams<{ username: string }>();
-  const location = useLocation();
-
+  const { username } = useParams({
+    from: '/iam/users/$username/entities',
+  });
   const theme = useTheme();
 
-  const locationState = location.state as LocationState;
+  const { selectedRole: selectedRoleSearchParam } = useSearch({
+    from: '/iam/users/$username/entities',
+  });
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
@@ -68,7 +66,7 @@ export const AssignedEntitiesTable = () => {
     }
   };
 
-  const [query, setQuery] = React.useState(locationState?.selectedRole ?? '');
+  const [query, setQuery] = React.useState(selectedRoleSearchParam ?? '');
 
   const [entityType, setEntityType] = React.useState<null | SelectOption>(
     ALL_ENTITIES_OPTION
