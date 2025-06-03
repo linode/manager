@@ -5,6 +5,7 @@ import {
   linodeInterfaceFactoryPublic,
   linodeInterfaceFactoryVlan,
   linodeInterfaceFactoryVPC,
+  linodeInterfaceHistoryFactory,
   linodeInterfaceSettingsFactory,
   linodeIPFactory,
   linodeStatsFactory,
@@ -33,6 +34,7 @@ import type {
   Linode,
   LinodeBackupsResponse,
   LinodeInterface,
+  LinodeInterfaceHistory,
   LinodeInterfaces,
   LinodeInterfaceSettings,
   LinodeIPsResponse,
@@ -106,6 +108,30 @@ export const getLinodes = () => [
 
       return makeResponse({
         interfaces,
+      });
+    }
+  ),
+
+  http.get(
+    '*/v4*/linode/instances/:id/interfaces/history',
+    async ({
+      request,
+      params,
+    }): Promise<
+      StrictResponse<
+        APIErrorResponse | APIPaginatedResponse<LinodeInterfaceHistory>
+      >
+    > => {
+      const id = Number(params.id);
+      const linode = await mswDB.get('linodes', id);
+
+      if (!linode || linode.interface_generation !== 'linode') {
+        return makeNotFoundResponse();
+      }
+
+      return makePaginatedResponse({
+        data: linodeInterfaceHistoryFactory.buildList(5),
+        request,
       });
     }
   ),
