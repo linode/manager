@@ -19,4 +19,16 @@ const meta: Meta<ToggleProps> = {
   title: 'Foundations/Toggle',
 };
 
+export const ToggleWithSmallSize: StoryObj<ToggleProps> = {
+  render: (args) => (
+    <Toggle {...args} size="small" tooltipText={EXAMPLE_TEXT} />
+  ),
+};
+
+export const ToggleWithMediumSize: StoryObj<ToggleProps> = {
+  render: (args) => (
+    <Toggle {...args} size="medium" tooltipText={EXAMPLE_TEXT} />
+  ),
+};
+
 export default meta;

@@ -1,4 +1,4 @@
-import { SvgIcon } from '@mui/material';
+import { SvgIcon, SxProps, Theme } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
 import type { JSX } from 'react';
@@ -17,15 +17,16 @@ export interface ToggleProps extends SwitchProps {
 }
 
 const checkedIcon = (
-  <Box sx={{ display: 'flex', gap: 0.5, marginLeft: '-16px', top: '8px' }}>
+  <Box sx={{ display: 'flex', gap: 0.5, marginLeft: '-16px' }}>
     <SvgIcon
       component={CheckMarkIcon}
+      height="20px"
       sx={{
-        height: 20,
-        width: 20,
-        mt: 0.35,
-        color: 'white !important',
+        mt: 0.15,
+        fill: 'white',
       }}
+      viewBox="0 0 20 20"
+      width="20px"
     />
     <ToggleOnIcon />
   </Box>
@@ -43,7 +44,31 @@ const checkedIcon = (
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { tooltipText, ...rest } = props;
+  const { tooltipText, size, sx, ...rest } = props;
+
+  const smallSizeOverrides: SxProps<Theme> =
+    size === 'small'
+      ? {
+          '& .icon': {
+            borderRadius: '50%',
+            height: 16,
+            top: -2,
+            left: -2,
+            position: 'relative',
+            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+            width: 16,
+          },
+          '.MuiSwitch-track': {
+            opacity: '1 !important',
+            height: 20,
+            width: 40,
+            borderRadius: 10,
+          },
+          '& .Mui-checked .icon': {
+            left: '-10px',
+          },
+        }
+      : {};
 
   return (
     <React.Fragment>
@@ -53,6 +78,10 @@ export const Toggle = (props: ToggleProps) => {
         data-qa-toggle={props.checked}
         icon={<ToggleOffIcon />}
         {...rest}
+        sx={{
+          ...smallSizeOverrides,
+          ...sx,
+        }}
       />
       {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
     </React.Fragment>
