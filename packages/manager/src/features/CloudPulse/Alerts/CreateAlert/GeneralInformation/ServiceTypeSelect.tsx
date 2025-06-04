@@ -34,7 +34,7 @@ export const CloudPulseServiceSelect = (
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
+  const { control } = useFormContext<CreateAlertDefinitionForm>();
 
   const getServicesList = React.useMemo((): Item<
     string,
@@ -78,7 +78,6 @@ export const CloudPulseServiceSelect = (
             if (handleServiceTypeChange !== undefined) {
               handleServiceTypeChange();
             }
-            setValue('group', 'account');
           }}
           options={getServicesList}
           placeholder="Select a Service"
