@@ -202,3 +202,6 @@ export const CREATE_ALERT_SUCCESS_MESSAGE =
 
 export const UPDATE_ALERT_SUCCESS_MESSAGE =
   'Alert successfully updated. It may take a few minutes for your changes to take effect.';
+
+export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
+  'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).';
