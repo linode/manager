@@ -237,6 +237,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertScopes;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
