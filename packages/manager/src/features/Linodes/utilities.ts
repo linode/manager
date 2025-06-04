@@ -11,7 +11,7 @@ export const isAclpSupportedRegion = (
 ) => {
   if (!aclpSupportedRegions) return false;
 
-  if (aclpSupportedRegions.includes('*')) {
+  if (aclpSupportedRegions === '*') {
     return true;
   }
 
@@ -19,9 +19,7 @@ export const isAclpSupportedRegion = (
     return false;
   }
 
-  const supportedRegions = aclpSupportedRegions
+  return aclpSupportedRegions
     .split(',')
-    .map((region) => region.trim());
-
-  return supportedRegions.includes(selectedRegion);
+    .some((region) => region.trim() === selectedRegion);
 };
