@@ -17,15 +17,13 @@ import {
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
-import { AccountGroupingNotice } from '../CreateAlert/CreateAlertDefinition';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { EntityScopeRenderer } from '../CreateAlert/EntityScopeRenderer';
 import { AlertEntityScopeSelect } from '../CreateAlert/GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertRegions } from '../CreateAlert/Regions/CloudPulseModifyAlertRegions';
-import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
@@ -37,6 +35,7 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
+  AlertDefinitionGroup,
   AlertServiceType,
   APIError,
   EditAlertPayloadWithService,
@@ -87,7 +86,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const scopeWatcher = useWatch<EditAlertDefintionForm>({
     name: 'scope',
     control,
-  });
+  }) as AlertDefinitionGroup | null;
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -190,13 +189,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             name="scope"
             serviceType={serviceType}
           />
-          {scopeWatcher === 'entity' && (
-            <CloudPulseModifyAlertResources name="entity_ids" />
-          )}
-          {scopeWatcher === 'region' && (
-            <CloudPulseModifyAlertRegions name="regions" />
-          )}
-          {scopeWatcher === 'account' && <AccountGroupingNotice />}
+          <EntityScopeRenderer scope={scopeWatcher} />
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}

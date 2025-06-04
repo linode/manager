@@ -64,6 +64,10 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
 
   React.useEffect(() => {
     if (formMode === 'create') {
+      if (options.length === 0) {
+        setValue(name, null);
+        return;
+      }
       const selectedOption = getSelectedOption(null, options);
 
       // Update the form value only if we're in create mode

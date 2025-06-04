@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
-import { ActionsPanel, Box, Paper, TextField, Typography } from '@linode/ui';
+import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -13,26 +13,22 @@ import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
 
 import {
-  ACCOUNT_GROUP_INFO_MESSAGE,
   CREATE_ALERT_ERROR_FIELD_MAP,
   CREATE_ALERT_SUCCESS_MESSAGE,
   MULTILINE_ERROR_SEPARATOR,
   SINGLELINE_ERROR_SEPARATOR,
 } from '../constants';
-import { AlertListNoticeMessages } from '../Utils/AlertListNoticeMessages';
 import {
-  getAlertBoxStyles,
   getSchemaWithEntityIdValidation,
   handleMultipleError,
 } from '../Utils/utils';
 import { MetricCriteriaField } from './Criteria/MetricCriteria';
 import { TriggerConditions } from './Criteria/TriggerConditions';
+import { EntityScopeRenderer } from './EntityScopeRenderer';
 import { AlertEntityScopeSelect } from './GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from './GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from './GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from './NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertRegions } from './Regions/CloudPulseModifyAlertRegions';
-import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from './schemas';
 import { filterFormValues } from './utilities';
 
@@ -67,7 +63,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
-  scope: 'account',
+  scope: null,
   type: 'user',
 };
 
@@ -220,13 +216,7 @@ export const CreateAlertDefinition = () => {
               name="scope"
               serviceType={serviceTypeWatcher}
             />
-            {scopeWatcher === 'entity' && (
-              <CloudPulseModifyAlertResources name="entity_ids" />
-            )}
-            {scopeWatcher === 'region' && (
-              <CloudPulseModifyAlertRegions name="regions" />
-            )}
-            {scopeWatcher === 'account' && <AccountGroupingNotice />}
+            <EntityScopeRenderer scope={scopeWatcher} />
             <MetricCriteriaField
               name="rule_criteria.rules"
               serviceType={serviceTypeWatcher!}
@@ -255,24 +245,5 @@ export const CreateAlertDefinition = () => {
         </FormProvider>
       </Paper>
     </React.Fragment>
-  );
-};
-
-export const AccountGroupingNotice = () => {
-  return (
-    <Box display="flex" flexDirection="column" gap={3} paddingTop={3}>
-      <Typography variant="h2">2. Account</Typography>
-      <Box
-        sx={(theme) => ({
-          ...getAlertBoxStyles(theme),
-          overflow: 'auto',
-        })}
-      >
-        <AlertListNoticeMessages
-          errorMessage={ACCOUNT_GROUP_INFO_MESSAGE}
-          variant="info"
-        />
-      </Box>
-    </Box>
   );
 };
