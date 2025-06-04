@@ -48,8 +48,8 @@ const DatabaseMonitor = React.lazy(() =>
 
 const DatabaseAlert = React.lazy(() =>
   import('../../CloudPulse/Alerts/ContextualView/AlertReusableComponent').then(
-    ({ AlertReusableComponent }) => ({
-      default: AlertReusableComponent,
+    (module) => ({
+      default: module.AlertReusableComponent,
     })
   )
 );
@@ -111,6 +111,12 @@ export const DatabaseDetail = () => {
       to: `/databases/$engine/$databaseId/configs`,
       title: 'Advanced Configuration',
       hide: !isAdvancedConfigEnabled,
+    },
+    {
+      to: `/databases/$engine/$databaseId/alerts`,
+      title: 'Alerts',
+      hide: false,
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
     },
   ]);
 
@@ -237,7 +243,9 @@ export const DatabaseDetail = () => {
               <DatabaseAdvancedConfiguration database={database} />
             </SafeTabPanel>
           )}
-          <SafeTabPanel index={6}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/alerts')}
+          >
             <DatabaseAlert
               entityId={String(database.id)}
               entityName={database.label}
