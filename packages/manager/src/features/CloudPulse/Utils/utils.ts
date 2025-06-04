@@ -33,7 +33,7 @@ export const useIsACLPEnabled = (): {
   }
 
   const isACLPEnabled =
-    (flags.aclp?.enabled && flags.aclp?.open) ||
+    (flags.aclp?.enabled && flags.aclp?.bypassAccountCapabilities) ||
     isFeatureEnabledV2(
       'Akamai Cloud Pulse',
       Boolean(flags.aclp?.enabled),
