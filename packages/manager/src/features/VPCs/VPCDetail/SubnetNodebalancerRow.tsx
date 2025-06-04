@@ -3,7 +3,7 @@ import {
   useNodeBalancerQuery,
   useNodeBalancersFirewallsQuery,
 } from '@linode/queries';
-import { Box, CircleProgress, Hidden, TooltipIcon } from '@linode/ui';
+import { Box, CircleProgress, TooltipIcon } from '@linode/ui';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { Typography } from '@mui/material';
 import * as React from 'react';
@@ -165,14 +165,9 @@ const getFirewallLinks = (data: Firewall[]): JSX.Element => {
 
 export const SubnetNodebalancerTableRowHead = (
   <TableRow>
-    <TableCell>NodeBalancer</TableCell>
-    <TableCell>Backend Status</TableCell>
-    <Hidden smDown>
-      <TableCell>VPC IPv4 Range</TableCell>
-    </Hidden>
-    <Hidden smDown>
-      <TableCell>Firewalls</TableCell>
-    </Hidden>
-    <TableCell />
+    <TableCell sx={{ width: '14%' }}>NodeBalancer</TableCell>
+    <TableCell sx={{ width: '24.5%' }}>Backend Status</TableCell>
+    <TableCell sx={{ width: '16.5%' }}>VPC IPv4 Range</TableCell>
+    <TableCell>Firewalls</TableCell>
   </TableRow>
 );
