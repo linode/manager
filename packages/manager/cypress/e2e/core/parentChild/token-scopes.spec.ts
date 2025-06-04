@@ -2,6 +2,7 @@ import { grantsFactory, profileFactory } from '@linode/utilities';
 import { accountFactory, appTokenFactory } from '@src/factories';
 import { accountUserFactory } from '@src/factories/accountUsers';
 import { DateTime } from 'luxon';
+import { mockDataPrefix } from 'support/constants/cypress';
 import {
   mockGetAccount,
   mockGetChildAccounts,
@@ -44,7 +45,8 @@ const mockParentAccountToken = appTokenFactory.build({
   label: `${mockParentAccount.company}_proxy`,
   scopes: '*',
   thumbnail_url: undefined,
-  token: randomString(32),
+  token:
+    mockDataPrefix['token'] + randomString(32 - mockDataPrefix['token'].length),
   website: undefined,
 });
 

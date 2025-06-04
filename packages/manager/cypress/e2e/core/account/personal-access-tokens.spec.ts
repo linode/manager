@@ -3,6 +3,7 @@
  */
 
 import { profileFactory } from '@linode/utilities';
+import { mockDataPrefix } from 'support/constants/cypress';
 import {
   mockCreatePersonalAccessToken,
   mockGetAppTokens,
@@ -32,7 +33,9 @@ describe('Personal access tokens', () => {
   it('can create personal access tokens', () => {
     const token = appTokenFactory.build({
       label: randomLabel(),
-      token: randomString(64),
+      token:
+        mockDataPrefix['token'] +
+        randomString(64 - mockDataPrefix['token'].length),
     });
 
     mockGetPersonalAccessTokens([]).as('getTokens');
@@ -182,7 +185,9 @@ describe('Personal access tokens', () => {
   it('sends scope as "*" when all permissions are set to read/write', () => {
     const token = appTokenFactory.build({
       label: randomLabel(),
-      token: randomString(64),
+      token:
+        mockDataPrefix['token'] +
+        randomString(64 - mockDataPrefix['token'].length),
     });
 
     mockCreatePersonalAccessToken(token).as('createToken');
@@ -253,7 +258,9 @@ describe('Personal access tokens', () => {
   it('can rename and revoke personal access tokens', () => {
     const oldToken: Token = appTokenFactory.build({
       label: randomLabel(),
-      token: randomString(64),
+      token:
+        mockDataPrefix['token'] +
+        randomString(64 - mockDataPrefix['token'].length),
     });
 
     const newToken: Token = {
@@ -345,7 +352,9 @@ describe('Personal access tokens', () => {
   it('disables API token creation and editing for a proxy user', () => {
     const proxyToken: Token = appTokenFactory.build({
       label: randomLabel(),
-      token: randomString(64),
+      token:
+        mockDataPrefix['token'] +
+        randomString(64 - mockDataPrefix['token'].length),
     });
     const proxyUserProfile = profileFactory.build({ user_type: 'proxy' });
 
