@@ -1,6 +1,6 @@
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createMemoryHistory } from 'history';
-import { isEmpty, set } from 'ramda';
+import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 
