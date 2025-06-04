@@ -1,10 +1,11 @@
 import { useRegionQuery } from '@linode/queries';
-import { Paper, Stack, Typography } from '@linode/ui';
+import { BetaChip, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { MaintenancePolicyId } from '@linode/api-v4';
@@ -16,6 +17,8 @@ export const MaintenancePolicy = () => {
   const selectedRegion = watch('region');
   const { data: region } = useRegionQuery(selectedRegion);
 
+  const flags = useFlags();
+
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
 
@@ -24,7 +27,10 @@ export const MaintenancePolicy = () => {
   return (
     <Paper>
       <Stack spacing={2}>
-        <Typography variant="h2">Host Maintenance Policy</Typography>
+        <Typography variant="h2">
+          Host Maintenance Policy{' '}
+          {flags.vmHostMaintenance?.beta && <BetaChip />}
+        </Typography>
         <Typography>
           Set the preferred host maintenance policy for this Linode. During host
           maintenance events (such as host upgrades), this policy setting helps

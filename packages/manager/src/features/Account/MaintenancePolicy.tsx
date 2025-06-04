@@ -1,11 +1,12 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
-import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import { BetaChip, Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { AccountSettings, MaintenancePolicyId } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -17,6 +18,8 @@ export const MaintenancePolicy = () => {
   const { data: accountSettings } = useAccountSettings();
 
   const { mutateAsync: updateAccountSettings } = useMutateAccountSettings();
+
+  const flags = useFlags();
 
   const values: MaintenancePolicyValues = {
     maintenance_policy_id: accountSettings?.maintenance_policy_id ?? 1,
@@ -45,7 +48,9 @@ export const MaintenancePolicy = () => {
 
   return (
     <Paper data-testid="host-maintenance-policy">
-      <Typography variant="h2">Host Maintenance Policy</Typography>
+      <Typography variant="h2">
+        Host Maintenance Policy {flags.vmHostMaintenance?.beta && <BetaChip />}
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1}>
           <Typography variant="body1">
