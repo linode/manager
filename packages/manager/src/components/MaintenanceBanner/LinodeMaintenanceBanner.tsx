@@ -8,10 +8,8 @@ import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 import { DateTimeDisplay } from '../DateTimeDisplay';
 import { Link } from '../Link';
 
-import type { Linode } from '@linode/api-v4';
-
 interface Props {
-  linodeId: Linode['id'] | undefined;
+  linodeId: number | undefined;
 }
 
 export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
@@ -31,17 +29,18 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
 
   const maintenanceTypeLabel = linodeMaintenance?.type.split('_').join(' ');
 
+  if (!linodeMaintenance) return null;
+
   return (
-    linodeMaintenance && (
-      <Notice variant="warning">
-        <Typography>
-          Linode {linodeMaintenance.entity.label}{' '}
-          {linodeMaintenance.description} maintenance {maintenanceTypeLabel}{' '}
-          will begin{' '}
+    <Notice variant="warning">
+      <Typography>
+        Linode {linodeMaintenance.entity.label} {linodeMaintenance.description}{' '}
+        maintenance {maintenanceTypeLabel} will begin{' '}
+        <strong>
           <DateTimeDisplay
             format="MM/dd/yyyy"
             sx={(theme) => ({
-              fontWeight: theme.tokens.font.FontWeight.Semibold,
+              font: theme.font.bold,
             })}
             value={linodeMaintenance.start_time}
           />{' '}
@@ -49,14 +48,14 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
           <DateTimeDisplay
             format="HH:mm"
             sx={(theme) => ({
-              fontWeight: theme.tokens.font.FontWeight.Semibold,
+              font: theme.font.bold,
             })}
             value={linodeMaintenance.start_time}
           />
-          . For more details, view{' '}
-          <Link to="/account/maintenance">Account Maintenance</Link>.
-        </Typography>
-      </Notice>
-    )
+        </strong>
+        . For more details, view{' '}
+        <Link to="/account/maintenance">Account Maintenance</Link>.
+      </Typography>
+    </Notice>
   );
 };

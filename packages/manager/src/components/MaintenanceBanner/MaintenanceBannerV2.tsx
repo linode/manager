@@ -1,5 +1,6 @@
 import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
+import { pluralize } from '@linode/utilities';
 import React from 'react';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
@@ -49,8 +50,7 @@ const renderBanner = (
       <Notice variant="warning">
         <Typography>
           <strong>
-            {maintenanceLinodes.size} Linode
-            {maintenanceLinodes.size !== 1 && 's'}
+            {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
           </strong>{' '}
           {maintenanceLinodes.size === 1 ? 'has' : 'have'} upcoming{' '}
           <strong>{description}</strong> maintenance. For more details, view{' '}
