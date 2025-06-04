@@ -57,6 +57,7 @@ export const MaintenancePolicySelect = (
 
   return (
     <Autocomplete
+      disableClearable
       disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"

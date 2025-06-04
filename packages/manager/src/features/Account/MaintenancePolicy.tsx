@@ -74,16 +74,8 @@ export const MaintenancePolicy = () => {
                 onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
                   field.onChange(item?.value);
                 }}
-                sx={(theme) => ({
-                  [theme.breakpoints.up('md')]: {
-                    minWidth: '480px',
-                  },
-                })}
                 textFieldProps={{
                   expand: true,
-                  sx: {
-                    width: '468px',
-                  },
                 }}
                 value={field.value}
               />
