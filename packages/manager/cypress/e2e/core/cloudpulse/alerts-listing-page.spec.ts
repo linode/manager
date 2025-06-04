@@ -525,24 +525,18 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       );
   });
   /**
-   * Actions to take based on the alert status.
-   * - For 'enabled' and 'disabled', the alert can be deleted.
-   * - For 'in progress' and 'failed', the alert cannot be deleted.
+   * Determines whether an alert with the given status is eligible for deletion.
+   *
+   * Alerts in the 'enabled' or 'disabled' state can be deleted.
+   * Other statuses like 'in progress' or 'failed' are considered non-deletable.
+   *
+   * @param status - The current status of the alert.
+   * @returns `true` if the alert can be deleted, otherwise `false`.
    */
-  const statusActions: Record<AlertStatusType, (label: string) => void> = {
-    enabled: (label) => {
-      validateDeleteFlow(label, true);
-    },
-    disabled: (label) => {
-      validateDeleteFlow(label, true);
-    },
-    'in progress': (label) => {
-      validateDeleteFlow(label, false);
-    },
-    failed: (label) => {
-      validateDeleteFlow(label, false);
-    },
+  const getCanDelete = (status: AlertStatusType): boolean => {
+    return status === 'enabled' || status === 'disabled';
   };
+
   /**
    * Validates the delete flow for an alert based on its label and whether deletion is allowed.
    * @param {string} label - The label of the alert to be deleted.
@@ -600,7 +594,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   };
 
   statusList.forEach((status, index) => {
-    it(`should validate the delete alert behavior based on its status: ${status}`, () => {
+    it(`should validate the delete alert behavior based on its status: ${status} `, () => {
       const label = `Alert-${index + 1}`;
       const id = index + 1;
 
@@ -620,11 +614,8 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       cy.visitWithLogin(alertDefinitionsUrl);
       cy.wait(`@getAlerts-${label}`);
 
-      // Validate the delete action based on alert status
-      if (!(status in statusActions)) {
-        throw new Error(`Unsupported alert status: ${status}`);
-      }
-      statusActions[status](label);
+      const canDelete = getCanDelete(status);
+      validateDeleteFlow(label, canDelete);
     });
   });
 });
