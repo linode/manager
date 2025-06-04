@@ -10,7 +10,7 @@ import {
   mockGetAccessKeys,
 } from 'support/intercepts/object-storage';
 import { ui } from 'support/ui';
-import { randomLabel, randomNumber, randomString } from 'support/util/random';
+import { randomLabel, randomNumber } from 'support/util/random';
 
 import { accountFactory } from 'src/factories';
 import { objectStorageKeyFactory } from 'src/factories/objectStorage';
@@ -24,9 +24,7 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can create access key - smoke', () => {
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       label: randomLabel(),
-      secret_key: randomString(39),
     });
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
@@ -98,10 +96,8 @@ describe('object storage access keys smoke tests', () => {
    */
   it('can revoke access key - smoke', () => {
     const accessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       id: randomNumber(1, 99999),
       label: randomLabel(),
-      secret_key: randomString(39),
     });
 
     mockGetAccount(accountFactory.build({ capabilities: ['Object Storage'] }));
