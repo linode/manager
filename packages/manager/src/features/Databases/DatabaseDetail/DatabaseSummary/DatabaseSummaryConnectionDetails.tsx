@@ -124,9 +124,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
 
   const readOnlyHost = () => {
     const defaultValue = isLegacy ? '-' : 'N/A';
-    const value = getReadOnlyHost(database)
-      ? getReadOnlyHost(database)
-      : defaultValue;
+    const value = getReadOnlyHost(database) || defaultValue;
     const hasHost = value !== '-' && value !== 'N/A';
     return (
       <>
@@ -327,7 +325,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
         <StyledValueGrid size={{ md: 8, xs: 9 }}>
           {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </StyledValueGrid>
-        {displayConnectionType ? (
+        {displayConnectionType && (
           <>
             <Grid
               size={{
@@ -352,7 +350,7 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
               </Link>
             </StyledValueGrid>
           </>
-        ) : null}
+        )}
       </StyledGridContainer>
       <div className={classes.actionBtnsCtn}>
         {database.ssl_connection ? caCertificateJSX : null}

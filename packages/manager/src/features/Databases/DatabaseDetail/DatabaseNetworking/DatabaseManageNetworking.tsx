@@ -66,19 +66,13 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
 
   const { data: vpc, isLoading, error } = useVPCQuery(vpcId, hasVPCConfigured);
 
-  const currentSubnet = React.useMemo(
-    () =>
-      vpc?.subnets.find(
-        (subnet) => subnet.id === database?.private_network?.subnet_id
-      ),
-    [vpc]
+  const currentSubnet = vpc?.subnets.find(
+    (subnet) => subnet.id === database?.private_network?.subnet_id
   );
 
   const readOnlyHost = () => {
     const defaultValue = 'N/A';
-    const value = getReadOnlyHost(database)
-      ? getReadOnlyHost(database)
-      : defaultValue;
+    const value = getReadOnlyHost(database) || defaultValue;
     return <span>{value}</span>;
   };
 
@@ -110,7 +104,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <Button
           buttonType="outlined"
           className={classes.manageNetworkingBtn}
-          disabled={true} // Disabled until manage networking is fully implemented
+          disabled={true} // TODO (UIE-8617): Add Manage Networking functionality
           onClick={() => null}
         >
           Manage Networking

@@ -129,13 +129,13 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
               sectionTitle={'Suspend Cluster'}
             />
           )}
-          {!isVPCEnabled || isLegacyDatabase(database) ? (
+          {(!isVPCEnabled || isLegacyDatabase(database)) && (
             <AccessControls
               database={database}
               description={accessControlCopy}
               disabled={disabled}
             />
-          ) : null}
+          )}
           <DatabaseSettingsMenuItem
             buttonText="Reset Root Password"
             descriptiveText={resetRootPasswordCopy}

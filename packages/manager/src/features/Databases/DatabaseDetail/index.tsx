@@ -208,7 +208,7 @@ export const DatabaseDetail = () => {
             variant="warning"
           />
         )}
-        {isVPCEnabled && onSettingsTab ? (
+        {isVPCEnabled && onSettingsTab && (
           <DismissibleBanner
             preferenceKey="database-manage-access-moved-notice"
             variant="info"
@@ -218,7 +218,7 @@ export const DatabaseDetail = () => {
               Networking tab.
             </Typography>
           </DismissibleBanner>
-        ) : null}
+        )}
 
         <TabPanels>
           <SafeTabPanel

@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, it } from 'vitest';
 
@@ -6,6 +7,8 @@ import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
+
+const defaultPlatform = 'rdbms-default';
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
@@ -31,17 +34,15 @@ describe('DatabaseManageNetworking Component', () => {
   });
 
   it('Should render Manage Networking field with Public grid variation when no VPC is configured for the database', () => {
-    const mockDatabase = databaseFactory.build({ platform: 'rdbms-default' });
+    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
     mockDatabase.private_network = null;
-    const { getByRole, queryByText } = renderWithTheme(
-      <DatabaseManageNetworking database={mockDatabase} />
-    );
+    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
 
-    const heading = getByRole('heading');
+    const heading = screen.getByRole('heading');
     expect(heading.textContent).toBe('Manage Networking');
-    const connectionTypeLabel = queryByText('Connection Type');
+    const connectionTypeLabel = screen.queryByText('Connection Type');
     expect(connectionTypeLabel).toBeInTheDocument();
-    const connectionTypeValue = queryByText('Public');
+    const connectionTypeValue = screen.queryByText('Public');
     expect(connectionTypeValue).toBeInTheDocument();
   });
 
@@ -50,26 +51,23 @@ describe('DatabaseManageNetworking Component', () => {
       isLoading: true,
       data: null,
     });
-    const mockDatabase = databaseFactory.build({ platform: 'rdbms-default' });
-    const { getByTestId } = await renderWithTheme(
-      <DatabaseManageNetworking database={mockDatabase} />
-    );
+    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
+    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
     // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loadingSpinner = screen.getByTestId(loadingTestId);
+    expect(loadingSpinner).toBeInTheDocument();
   });
 
   it('should render error state when a VPC is configured, but useVPCQuery responds with an error', async () => {
     queryMocks.useVPCQuery.mockReturnValue({
       error: new Error('Failed to fetch VPC'),
     });
-    const mockDatabase = databaseFactory.build({ platform: 'rdbms-default' });
-    const { getByText } = await renderWithTheme(
-      <DatabaseManageNetworking database={mockDatabase} />
-    );
+    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
+    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
     // Should render a loading state
     const expectedErrorText =
       'There was a problem retrieving your VPC. Please try again later.';
-    const errorState = getByText(expectedErrorText);
+    const errorState = screen.getByText(expectedErrorText);
     expect(errorState).toBeInTheDocument();
   });
 
@@ -77,14 +75,12 @@ describe('DatabaseManageNetworking Component', () => {
     queryMocks.useVPCQuery.mockReturnValue({
       data: null,
     });
-    const mockDatabase = databaseFactory.build({ platform: 'rdbms-default' });
-    const { getByText } = await renderWithTheme(
-      <DatabaseManageNetworking database={mockDatabase} />
-    );
+    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
+    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
     // Should render a loading state
     const expectedErrorText =
       'There was a problem retrieving your VPC. Please try again later.';
-    const errorState = getByText(expectedErrorText);
+    const errorState = screen.getByText(expectedErrorText);
     expect(errorState).toBeInTheDocument();
   });
 
@@ -94,16 +90,14 @@ describe('DatabaseManageNetworking Component', () => {
       data: vpcFactory.build(),
       error: null,
     });
-    const mockDatabase = databaseFactory.build({ platform: 'rdbms-default' });
-    const { getByRole, queryByText, getAllByText } = renderWithTheme(
-      <DatabaseManageNetworking database={mockDatabase} />
-    );
+    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
+    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
 
-    const heading = getByRole('heading');
+    const heading = screen.getByRole('heading');
     expect(heading.textContent).toBe('Manage Networking');
-    const connectionTypeLabel = queryByText('Connection Type');
+    const connectionTypeLabel = screen.queryByText('Connection Type');
     expect(connectionTypeLabel).toBeInTheDocument();
-    const connectionTypeValue = getAllByText('VPC');
+    const connectionTypeValue = screen.getAllByText('VPC');
     expect(connectionTypeValue.length).toBeGreaterThan(0);
   });
 });
