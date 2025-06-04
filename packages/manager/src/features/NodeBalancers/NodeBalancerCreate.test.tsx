@@ -7,6 +7,7 @@ import NodeBalancerCreate from './NodeBalancerCreate';
 const queryMocks = vi.hoisted(() => ({
   useNavigate: vi.fn(() => vi.fn()),
   useFlags: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({ id: undefined }),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -14,6 +15,7 @@ vi.mock('@tanstack/react-router', async () => {
   return {
     ...actual,
     useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -30,6 +32,7 @@ describe('NodeBalancerCreate', () => {
   queryMocks.useFlags.mockReturnValue({
     nodebalancerVpc: true,
   });
+  queryMocks.useParams.mockReturnValue({ id: undefined });
   it('renders all parts of the NodeBalancerCreate page', () => {
     const { getAllByText, getByLabelText, getByText } = renderWithTheme(
       <NodeBalancerCreate />

@@ -88,10 +88,8 @@ const privateKey = 'private-key';
 const proxyProtocol = 'Proxy Protocol';
 
 describe('NodeBalancerConfigPanel', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-    queryMocks.useParams.mockReturnValue({ id: undefined });
-  });
+  queryMocks.useParams.mockReturnValue({ id: undefined });
+
   it('renders the NodeBalancerConfigPanel', () => {
     const {
       getByLabelText,
