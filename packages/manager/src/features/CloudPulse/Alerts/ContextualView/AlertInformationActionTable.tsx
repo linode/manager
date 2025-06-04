@@ -1,5 +1,5 @@
 import { type Alert, type APIError } from '@linode/api-v4';
-import { Box, Button } from '@linode/ui';
+import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -16,6 +16,7 @@ import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { compareArrays } from '../../Utils/FilterBuilder';
+import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { AlertContextualViewConfirmDialog } from './AlertContextualViewConfirmDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
@@ -222,8 +223,22 @@ export const AlertInformationActionTable = (
                                 handleClick={handleOrderChange}
                                 key={label}
                                 label={label}
+                                sx={{ position: 'relative' }}
                               >
                                 {columnName}
+                                {columnName === 'Scope' && (
+                                  <TooltipIcon
+                                    data-qa-tooltip="scope-tooltip"
+                                    status="info"
+                                    sxTooltipIcon={{
+                                      position: 'absolute',
+                                      right: '-30px',
+                                      top: '50%',
+                                      transform: 'translateY(-50%)',
+                                    }}
+                                    text={ALERT_SCOPE_TOOLTIP_CONTEXTUAL}
+                                  />
+                                )}
                               </TableSortCell>
                             );
                           })}
