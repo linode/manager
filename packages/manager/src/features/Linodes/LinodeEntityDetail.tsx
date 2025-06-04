@@ -63,11 +63,16 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const isLinodeInterface = linode.interface_generation === 'linode';
 
-  const { configs, interfaceWithVPC, isVPCOnlyLinode, vpcLinodeIsAssignedTo } =
-    useVPCInterface({
-      isLinodeInterface,
-      linodeId: linode.id,
-    });
+  const {
+    configs,
+    hasPublicInterface,
+    interfaceWithVPC,
+    isVPCOnlyLinode,
+    vpcLinodeIsAssignedTo,
+  } = useVPCInterface({
+    isLinodeInterface,
+    linodeId: linode.id,
+  });
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -123,6 +128,7 @@ export const LinodeEntityDetail = (props: Props) => {
             encryptionStatus={linode.disk_encryption}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
+            hasPublicInterface={hasPublicInterface}
             interfaceGeneration={linode.interface_generation}
             interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}

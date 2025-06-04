@@ -29,6 +29,7 @@ export interface IPAddressRowHandlers {
 }
 
 interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
+  hasPublicInterface?: boolean;
   isLinodeInterface: boolean;
   isVPCOnlyLinode: boolean;
   linodeId: number;
@@ -44,6 +45,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    hasPublicInterface,
     isLinodeInterface,
     isVPCOnlyLinode,
     linodeId,
@@ -99,6 +101,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
       <TableCell actionCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
+            hasPublicInterface={hasPublicInterface}
             ipAddress={_ip}
             ipType={type}
             isLinodeInterface={isLinodeInterface}

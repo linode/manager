@@ -11,23 +11,29 @@ const sxTooltipIcon = {
 export const PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not assigned to the network interfaces in this configuration profile.';
 
-export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT =
+export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not assigned to a network interface.';
 
+export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT =
+  'The noted Public IP Addresses are provisionally reserved but not the default route. To update this, please review your Interface Settings.';
+
 export const PublicIPAddressesTooltip = ({
+  hasPublicInterface,
   isLinodeInterface,
 }: {
+  hasPublicInterface: boolean | undefined;
   isLinodeInterface: boolean;
 }) => {
+  const linodeInterfaceCopy = hasPublicInterface
+    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
+    : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
   return (
     <TooltipIcon
       status="help"
       sxTooltipIcon={sxTooltipIcon}
       text={
         isLinodeInterface ? (
-          <Typography>
-            {PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT}
-          </Typography>
+          <Typography>{linodeInterfaceCopy}</Typography>
         ) : (
           <Typography>
             {PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT}{' '}

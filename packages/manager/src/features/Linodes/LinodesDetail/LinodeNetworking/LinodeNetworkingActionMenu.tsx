@@ -7,7 +7,8 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import {
   PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT,
-  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT,
+  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT,
+  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT,
 } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
 import type { IPTypes } from './types';
@@ -16,6 +17,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  hasPublicInterface?: boolean;
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
@@ -30,6 +32,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const {
+    hasPublicInterface,
     ipAddress,
     ipType,
     isOnlyPublicIP,
@@ -62,8 +65,12 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
+  const linodeInterfacePublicIPCopy = hasPublicInterface
+    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
+    : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
+
   const isPublicIPNotAssignedCopy = isLinodeInterface
-    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT
+    ? linodeInterfacePublicIPCopy
     : PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT;
 
   const getAriaLabel = (): string => {
