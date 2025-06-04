@@ -4,6 +4,78 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-06-03] - v1.143.0
+
+### Changed:
+
+- Remove the `Accordion` wrapper from the default Alerts tab and replace it with `Paper` on the Linode details page ([#12215](https://github.com/linode/manager/pull/12215))
+- Update LKE flows for APL General Availability ([#12268](https://github.com/linode/manager/pull/12268))
+- Copy for premium plan recommendation for LKE ([#12300](https://github.com/linode/manager/pull/12300))
+
+### Fixed:
+
+- Bug where first pageview of landing page was not fired in Adobe Analytics ([#12203](https://github.com/linode/manager/pull/12203))
+- Formatting of the volume status and broken spacing in MultipleIPInput component ([#12207](https://github.com/linode/manager/pull/12207))
+- ACL Revision ID being set to empty string on LKE clusters ([#12210](https://github.com/linode/manager/pull/12210))
+- NodeBalancer label and connection throttle not updating until page refresh ([#12217](https://github.com/linode/manager/pull/12217))
+- Inconsistent restricted user notices on landing pages ([#12223](https://github.com/linode/manager/pull/12223))
+- `linode_resize` started event referencing the wrong linode  ([#12252](https://github.com/linode/manager/pull/12252))
+- Image Select overflows off screen on mobile viewports ([#12269](https://github.com/linode/manager/pull/12269))
+- LinodeCreateError notice not spanning full width ([#12276](https://github.com/linode/manager/pull/12276))
+- Manual clearing of default Alerts fields now resets values to zero, preventing empty string/NaN and ensuring consistency with toggle off state ([#12215](https://github.com/linode/manager/pull/12215))
+
+### Tech Stories:
+
+- Reduce api requests made for every keystroke in Volume attach drawer ([#12052](https://github.com/linode/manager/pull/12052))
+- Add support for NB-VPC related /v4/vpcs changes in CRUD mocks ([#12201](https://github.com/linode/manager/pull/12201))
+- Move images related queries and dependencies to shared `queries` package ([#12205](https://github.com/linode/manager/pull/12205))
+- Move domain related queries and dependencies to shared `queries` package  ([#12204](https://github.com/linode/manager/pull/12204))
+- Move quotas related queries and dependencies to shared `queries` package ([#12221](https://github.com/linode/manager/pull/12221))
+- Add MSW presets for Events, Maintenance, and Notifications ([#12212](https://github.com/linode/manager/pull/12212))
+- Upgrade @sentry/react to v9 ([#12219](https://github.com/linode/manager/pull/12219))
+- Remove `useAccountManagement` hook ([#12223](https://github.com/linode/manager/pull/12223))
+- Remove recompose from Longview ([#12239](https://github.com/linode/manager/pull/12239))
+- Reroute Support & Help features ([#12242](https://github.com/linode/manager/pull/12242))
+- Use `unstable_createBreakpoints` to define our MUI breakpoints ([#12244](https://github.com/linode/manager/pull/12244))
+- Reroute search feature ([#12258](https://github.com/linode/manager/pull/12258))
+- Stop MSW and DevTools from existing in production bundles ([#12263](https://github.com/linode/manager/pull/12263))
+- Fix erroneous Sentry error in useAdobeAnalytics hook ([#12265](https://github.com/linode/manager/pull/12265))
+- Re-add `eslint-plugin-react-refresh` eslint plugin ([#12267](https://github.com/linode/manager/pull/12267))
+- Switch to self-hosting the Pendo agent with Adobe Launch ([#12203](https://github.com/linode/manager/pull/12203))
+- Fix bug in loadScript function not resolving promise if script already existed  ([#12203](https://github.com/linode/manager/pull/12203))
+- Make quota_id a string ([#12272](https://github.com/linode/manager/pull/12272))
+
+### Tests:
+
+- Unskip Cypress Firewall end-to-end tests ([#12218](https://github.com/linode/manager/pull/12218))
+- Exclude distributed regions when selecting regions for API operations ([#12226](https://github.com/linode/manager/pull/12226))
+- Add Cypress test for Longview create page for restricted users ([#12230](https://github.com/linode/manager/pull/12230))
+- Add test for firewall create page for restricted users ([#12237](https://github.com/linode/manager/pull/12237))
+- Add VPC tests for restricted user ([#12238](https://github.com/linode/manager/pull/12238))
+- Add Cypress test for Account quotas navigation and permissions ([#12250](https://github.com/linode/manager/pull/12250))
+- Add integration test for Upgrade to new Linode Interface flow ([#12259](https://github.com/linode/manager/pull/12259))
+
+### Upcoming Features:
+
+- DataStream: routes, feature flag, tabs ([#12155](https://github.com/linode/manager/pull/12155))
+- Show VPC details in the Nodebalancer summary page ([#12162](https://github.com/linode/manager/pull/12162))
+- Show Linode Interface firewalls in `LinodeEntityDetail` ([#12176](https://github.com/linode/manager/pull/12176))
+- Add VPC Section in the Nodebalancer create flow ([#12181](https://github.com/linode/manager/pull/12181))
+- IAM RBAC: fix bugs in the assign new roles drawer ([#12227](https://github.com/linode/manager/pull/12227))
+- QEMU reboot notices ([#12231](https://github.com/linode/manager/pull/12231))
+- Add NodeBalancer Table under VPC Subnets Table and rename "Linodes" column to "Resources" ([#12232](https://github.com/linode/manager/pull/12232))
+- IAM RBAC: fix UI issues in Users and Roles tabs, including button styling, layout, and permissions toggle ([#12233](https://github.com/linode/manager/pull/12233))
+- DataStream: add Streams empty state and Create Stream views ([#12235](https://github.com/linode/manager/pull/12235))
+- Add beta ACLP contextual alerts to the Alerts tab on the Linode details page ([#12236](https://github.com/linode/manager/pull/12236))
+- Event message tweaks for Linode Interfaces ([#12243](https://github.com/linode/manager/pull/12243))
+- Fix newest LKE-E kubernetes version not being selected by default in create flow ([#12246](https://github.com/linode/manager/pull/12246))
+- IAM RBAC: Fix bugs for the assigned roles table ([#12249](https://github.com/linode/manager/pull/12249))
+- Update estimated time for LKE-E node pool pending creation message ([#12251](https://github.com/linode/manager/pull/12251))
+- Add VPC column to the Nodebalancer Landing table ([#12256](https://github.com/linode/manager/pull/12256))
+- IAM RBAC: add pagination to the Roles table ([#12264](https://github.com/linode/manager/pull/12264))
+- Disable the Kubernetes Dashboard request for LKE-E clusters ([#12266](https://github.com/linode/manager/pull/12266))
+- Configure Networking section and VPC functionality for DBaaS Create view ([#12281](https://github.com/linode/manager/pull/12281))
+
 ## [2025-05-20] - v1.142.1
 
 ### Fixed:

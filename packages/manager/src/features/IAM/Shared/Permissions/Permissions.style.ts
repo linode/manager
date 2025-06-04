@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 export const StyledTitle = styled(Typography, { label: 'StyledTitle' })(
   ({ theme }) => ({
     font: theme.tokens.alias.Typography.Label.Bold.S,
-    marginBottom: theme.tokens.spacing.S4,
+    marginBottom: theme.tokens.spacing.S8,
   })
 );
 
