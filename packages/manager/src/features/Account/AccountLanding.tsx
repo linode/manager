@@ -1,5 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { useNavigate } from '@tanstack/react-router';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -51,6 +51,9 @@ const MaintenanceLanding = React.lazy(
 
 export const AccountLanding = () => {
   const navigate = useNavigate();
+  const match = useMatch({
+    strict: false,
+  });
   const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { limitsEvolution } = useFlags();
@@ -110,6 +113,14 @@ export const AccountLanding = () => {
       title: 'Settings',
     },
   ]);
+
+  React.useEffect(() => {
+    if (match.routeId === '/account/quotas' && !showQuotasTab) {
+      navigate({
+        to: '/account/billing',
+      });
+    }
+  }, [match.routeId, showQuotasTab, navigate]);
 
   const handleAccountSwitch = () => {
     if (isParentTokenExpired) {
