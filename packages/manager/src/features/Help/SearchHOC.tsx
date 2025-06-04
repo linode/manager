@@ -122,10 +122,11 @@ export const cleanDescription = (description: string): string => {
   return description.replace(/<r>|<t>/, '');
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export default (options: SearchOptions) =>
-  (Component: React.ComponentType<any>) => {
+  <Props,>(Component: React.ComponentType<Props & AlgoliaState>) => {
     const { highlight, hitsPerPage } = options;
-    class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
+    class WrappedComponent extends React.PureComponent<Props, AlgoliaState> {
       client: SearchClient;
       mounted: boolean = false;
 
