@@ -122,7 +122,6 @@ export const cleanDescription = (description: string): string => {
   return description.replace(/<r>|<t>/, '');
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export default (options: SearchOptions) =>
   <Props,>(Component: React.ComponentType<Props & AlgoliaState>) => {
     const { highlight, hitsPerPage } = options;
