@@ -113,6 +113,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
           />
         ) : _range ? (
           <LinodeNetworkingActionMenu
+            hasPublicLinodeInterface={hasPublicLinodeInterface}
             ipAddress={_range}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
