@@ -58,9 +58,11 @@ describe('Expiring Tokens', () => {
       token: 'helloworld',
     });
 
-    // Set CLIENT_ID because `handleError` needs it to redirect to Login when
-    // a 401 error occours.
-    vi.stubEnv('CLIENT_ID', '12345');
+    // Set CLIENT_ID because `handleError` needs it to redirect to Login with the Client ID when a 401 error occours
+    vi.mock('src/constants', async (importOriginal) => ({
+      ...(await importOriginal()),
+      CLIENT_ID: '12345',
+    }));
 
     const result = handleError(error401, store);
 
