@@ -4,10 +4,7 @@ import React from 'react';
 
 import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
-import {
-  renderWithTheme,
-  renderWithThemeAndRouter,
-} from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import {
   DELETE_ALERT_SUCCESS_MESSAGE,
