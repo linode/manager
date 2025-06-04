@@ -2,6 +2,7 @@ import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
@@ -16,6 +17,11 @@ export const MaintenanceBannerV2 = () => {
     PENDING_MAINTENANCE_FILTER
   );
 
+  const location = useLocation();
+
+  const hideAccountMaintenanceLink =
+    location.pathname === '/account/maintenance';
+
   // Filter out platform maintenance, since that is handled separately
   const linodeMaintenance =
     allMaintenance?.filter(
@@ -26,15 +32,16 @@ export const MaintenanceBannerV2 = () => {
 
   return (
     <>
-      {renderBanner(linodeMaintenance, 'scheduled')}
-      {renderBanner(linodeMaintenance, 'emergency')}
+      {renderBanner(linodeMaintenance, 'scheduled', hideAccountMaintenanceLink)}
+      {renderBanner(linodeMaintenance, 'emergency', hideAccountMaintenanceLink)}
     </>
   );
 };
 
 const renderBanner = (
   maintenance: AccountMaintenance[],
-  description: AccountMaintenance['description']
+  description: AccountMaintenance['description'],
+  hideAccountMaintenanceLink: boolean
 ) => {
   const filteredMaintenance =
     maintenance?.filter(
@@ -53,8 +60,14 @@ const renderBanner = (
             {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
           </strong>{' '}
           {maintenanceLinodes.size === 1 ? 'has' : 'have'} upcoming{' '}
-          <strong>{description}</strong> maintenance. For more details, view{' '}
-          <Link to="/account/maintenance">Account Maintenance</Link>.
+          <strong>{description}</strong> maintenance.
+          {!hideAccountMaintenanceLink && (
+            <>
+              {' '}
+              For more details, view{' '}
+              <Link to="/account/maintenance">Account Maintenance</Link>.
+            </>
+          )}
         </Typography>
       </Notice>
     )
