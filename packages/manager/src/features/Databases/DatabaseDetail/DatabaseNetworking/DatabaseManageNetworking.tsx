@@ -25,6 +25,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
       minWidth: 225,
       [theme.breakpoints.down('md')]: {
         alignSelf: 'flex-start',
+        marginTop: '1rem',
         marginBottom: '1rem',
       },
     },
@@ -123,7 +124,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <StyledValueGrid size={gridValueSize}>
           {hasVPCConfigured ? 'VPC' : 'Public'}
         </StyledValueGrid>
-        {hasVPCConfigured ? (
+        {hasVPCConfigured && (
           <>
             <Grid size={gridLabelSize}>
               <StyledLabelTypography>VPC</StyledLabelTypography>
@@ -136,7 +137,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
               {`${currentSubnet?.label} (${currentSubnet?.ipv4})`}
             </StyledValueGrid>
           </>
-        ) : null}
+        )}
 
         <Grid size={gridLabelSize}>
           <StyledLabelTypography>Host</StyledLabelTypography>
@@ -154,7 +155,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
           <StyledLabelTypography>Read-only Host</StyledLabelTypography>
         </Grid>
         <StyledValueGrid size={gridValueSize}>{readOnlyHost()}</StyledValueGrid>
-        {hasVPCConfigured ? (
+        {hasVPCConfigured && (
           <>
             <Grid size={gridLabelSize}>
               <StyledLabelTypography>Public Access</StyledLabelTypography>
@@ -163,7 +164,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
               {database?.private_network?.public_access ? 'Yes' : 'No'}
             </StyledValueGrid>
           </>
-        ) : null}
+        )}
       </StyledGridContainer>
     </>
   );
