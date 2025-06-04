@@ -36,7 +36,7 @@ export const handleError = (
     !store.getState().pendingUpload
   ) {
     clearAuthDataFromLocalStorage();
-    redirectToLogin(window.location.pathname);
+    redirectToLogin(window.location.pathname, window.location.search);
   }
 
   const status: number = error.response?.status ?? 0;

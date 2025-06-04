@@ -57,7 +57,7 @@ export function useOAuth() {
 
   // If no token is stored and we are not in the process of authentication, redirect to login.
   if (!token && !isPendingAuthentication) {
-    redirectToLogin(window.location.pathname);
+    redirectToLogin(window.location.pathname, window.location.search);
   }
 
   return { isPendingAuthentication };
