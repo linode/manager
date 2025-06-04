@@ -343,26 +343,6 @@ export const oneClickApps: Record<number, OCA> = {
       'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
     website: 'https://redis.io/',
   },
-  609018: {
-    alt_description:
-      'Web interface for MySQL/MariaDB operations and server administration.',
-    alt_name: 'SQL database GUI',
-    categories: ['Databases'],
-    colors: {
-      end: '6c78af',
-      start: 'f89d10',
-    },
-    description: `Intuitive web interface for MySQL and MariaDB operations, including importing/exporting data, administering multiple servers, and global database search.`,
-    logo_url: 'phpmyadmin.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/phpmyadmin/',
-        title: 'Deploy phpMyAdmin through the Linode Marketplace',
-      },
-    ],
-    summary: 'Popular free administration tool for MySQL and MariaDB.',
-    website: 'https://www.phpmyadmin.net/',
-  },
   609048: {
     alt_description: 'Ruby web application framework with development tools.',
     alt_name: 'Web application framework',
@@ -886,47 +866,6 @@ export const oneClickApps: Record<number, OCA> = {
       'All-in-one database deployment, management, and monitoring system.',
     website: 'https://docs.splunk.com/Documentation/Splunk',
   },
-  869158: {
-    alt_description:
-      'SQL and NoSQL database interface and monitoring for MySQL, PostgreSQL, and more.',
-    alt_name: 'Database monitoring',
-    categories: ['Databases'],
-    colors: {
-      end: '3f434c',
-      start: '0589de',
-    },
-    description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
-    logo_url: 'clustercontrol.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/clustercontrol/',
-        title: 'Deploy ClusterControl through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'All-in-one database deployment, management, and monitoring system.',
-    website: 'https://docs.severalnines.com/docs/clustercontrol/',
-  },
-  869623: {
-    alt_description: 'Enterprise-ready backups tool.',
-    alt_name: 'Server backups management and control panel',
-    categories: ['Control Panels'],
-    colors: {
-      end: '1f2c38',
-      start: 'ff6c2c',
-    },
-    description: `Powerful and customizable backups for several websites and data all in the same interface. JetBackup integrates with any control panel via API, and has native support for cPanel and DirectAdmin. Easily backup your data to storage you already use, including Linode’s S3-compatible Object Storage.`,
-    logo_url: 'jetbackup.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/jetbackup/',
-        title: 'Deploy JetBackup through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Advanced customizable backups to integrate with your preferred control panel.',
-    website: 'https://docs.jetapps.com/',
-  },
   912262: {
     alt_description: 'Container registry for Kubernetes.',
     alt_name: 'Container registry for Kubernetes.',
@@ -1023,25 +962,6 @@ export const oneClickApps: Record<number, OCA> = {
     ],
     summary: 'OLS web server with Django development framework.',
     website: 'https://docs.litespeedtech.com/cloud/images/django/',
-  },
-  923030: {
-    alt_description: 'Ruby web application framework with development tools.',
-    alt_name: 'Ruby web application framework.',
-    categories: ['Development'],
-    colors: {
-      end: 'd94b7a',
-      start: '8e1a4a',
-    },
-    description: `Easy setup to run Ruby apps in the cloud and take advantage of OpenLiteSpeed server features like SSL, HTTP/3 support, and RewriteRules.`,
-    logo_url: 'openlitespeedrails.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/openlitespeed-rails/',
-        title: 'Deploy OpenLiteSpeed Rails through the Linode Marketplace ',
-      },
-    ],
-    summary: 'OLS web server with Ruby and CertBot.',
-    website: 'https://docs.litespeedtech.com/cloud/images/rails/',
   },
   923031: {
     alt_description:
@@ -1557,26 +1477,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary: 'User-friendly web application firewall.',
     website: 'https://www.haltdos.com/',
   },
-  1102904: {
-    alt_description:
-      'A simple SQL interface to store and search unstructured data.',
-    alt_name: 'SuperinsightDB',
-    categories: ['Databases'],
-    colors: {
-      end: 'C54349',
-      start: 'E6645F',
-    },
-    description: `Superinsight provides a simple SQL interface to store and search unstructured data. Superinsight is built on top of PostgreSQL to take advantage of powerful extensions and features, plus the ability to run machine learning operations using SQL statements.`,
-    logo_url: 'superinsight.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
-        title: 'Deploy Superinsight through the Linode Marketplace',
-      },
-    ],
-    summary: 'Relational database for unstructured data.',
-    website: 'https://www.superinsight.ai/',
-  },
   1102906: {
     alt_description: 'Password Manager',
     alt_name: 'Pass Key',
@@ -1634,26 +1534,6 @@ export const oneClickApps: Record<number, OCA> = {
     summary:
       'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
     website: 'https://redis.io/',
-  },
-  1160816: {
-    alt_description: 'Self-hosted file sharing and collaboration platform.',
-    alt_name: 'Collabrative file sharing',
-    categories: ['Productivity'],
-    colors: {
-      end: '041e42',
-      start: '041e42',
-    },
-    description: `LAMP-stack-based server application that allows you to access your files from anywhere in a secure way.`,
-    logo_url: 'owncloud.svg',
-    related_guides: [
-      {
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/owncloud/',
-        title: 'Deploy ownCloud through the Linode Marketplace',
-      },
-    ],
-    summary:
-      'Dropbox and OneDrive alternative that lets you remain in control of your files.',
-    website: 'https://doc.owncloud.com/docs/next/',
   },
   1160820: {
     alt_description:
