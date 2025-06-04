@@ -762,9 +762,6 @@ importers:
       luxon:
         specifier: 3.4.4
         version: 3.4.4
-      ramda:
-        specifier: ~0.25.0
-        version: 0.25.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -787,9 +784,6 @@ importers:
       '@types/luxon':
         specifier: 3.4.2
         version: 3.4.2
-      '@types/ramda':
-        specifier: 0.25.16
-        version: 0.25.16
       '@types/react':
         specifier: ^18.2.55
         version: 18.3.12

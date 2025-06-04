@@ -55,7 +55,7 @@ export const Entities = ({
         <FormLabel>
           <Typography
             sx={{
-              marginBottom: theme.tokens.spacing.S4,
+              marginBottom: theme.tokens.spacing.S8,
               font: theme.tokens.alias.Typography.Label.Bold.S,
             }}
           >
