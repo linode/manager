@@ -582,6 +582,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
   };
 
   statusList.forEach((status, index) => {
+    // Loop through each alert status in the list
     it(`should validate the delete alert behavior based on its status: ${status} `, () => {
       const label = `Alert-${index + 1}`;
       const id = index + 1;
@@ -595,15 +596,25 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         created_by: 'user1',
         updated_by: 'user1',
       });
+      // Build a mock alert object with required fields
 
       mockGetAllAlertDefinitions([mockAlert]).as(`getAlerts-${label}`);
+      // Mock the API call to fetch alerts with this mock alert
+
       mockDeleteAlert('dbaas', id).as(`deleteAlert-${label}`);
+      // Mock the API call to delete this alert
 
       cy.visitWithLogin(alertDefinitionsUrl);
+      // Visit the alerts page as a logged-in user
+
       cy.wait(`@getAlerts-${label}`);
+      // Wait for the alerts to load
 
       const canDelete = status === 'enabled' || status === 'disabled';
+      // Determine if the alert should allow deletion
+
       validateDeleteFlow(label, canDelete);
+      // Run the test steps to verify the delete behavior
     });
   });
 });
