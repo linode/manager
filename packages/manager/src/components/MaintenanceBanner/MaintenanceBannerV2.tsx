@@ -9,8 +9,6 @@ import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { Link } from '../Link';
 
-import type { AccountMaintenance } from '@linode/api-v4';
-
 export const MaintenanceBannerV2 = () => {
   const { data: allMaintenance } = useAllAccountMaintenanceQuery(
     {},
@@ -30,26 +28,8 @@ export const MaintenanceBannerV2 = () => {
         !isPlatformMaintenance(maintenance)
     ) ?? [];
 
-  return (
-    <>
-      {renderBanner(linodeMaintenance, 'scheduled', hideAccountMaintenanceLink)}
-      {renderBanner(linodeMaintenance, 'emergency', hideAccountMaintenanceLink)}
-    </>
-  );
-};
-
-const renderBanner = (
-  maintenance: AccountMaintenance[],
-  description: AccountMaintenance['description'],
-  hideAccountMaintenanceLink: boolean
-) => {
-  const filteredMaintenance =
-    maintenance?.filter(
-      (maintenance) => maintenance.description === description
-    ) ?? [];
-
   const maintenanceLinodes = new Set(
-    filteredMaintenance.map((maintenance) => maintenance.entity.id)
+    linodeMaintenance.map((maintenance) => maintenance.entity.id)
   );
 
   return (
@@ -60,7 +40,7 @@ const renderBanner = (
             {pluralize('Linode', 'Linodes', maintenanceLinodes.size)}
           </strong>{' '}
           {maintenanceLinodes.size === 1 ? 'has' : 'have'} upcoming{' '}
-          <strong>{description}</strong> maintenance.
+          <strong>scheduled</strong> maintenance.
           {!hideAccountMaintenanceLink && (
             <>
               {' '}
