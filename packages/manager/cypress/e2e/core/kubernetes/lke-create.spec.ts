@@ -558,6 +558,8 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
       })
     );
     mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
+
     const clusterLabel = randomLabel();
     const clusterPlans = new Array(2)
       .fill(null)
@@ -573,7 +575,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     // Confirm that, without a region selected, no pricing information is displayed.
