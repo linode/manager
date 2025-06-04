@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
@@ -48,9 +47,7 @@ export const IdentityAccessLanding = React.memo(() => {
 
   return (
     <>
-      <DocumentTitleSegment segment="Identity and Access" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
-
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
 

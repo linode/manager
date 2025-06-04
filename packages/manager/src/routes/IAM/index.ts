@@ -67,6 +67,53 @@ const iamUserNameEntitiesRoute = createRoute({
   import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
 );
 
+// Catch all route for user details page
+const iamUserNameCatchAllRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: 'users/$username/$invalidPath',
+  beforeLoad: ({ params }) => {
+    if (!['details', 'entities', 'roles'].includes(params.invalidPath)) {
+      throw redirect({
+        to: '/iam/users/$username',
+        params: { username: params.username },
+      });
+    }
+  },
+});
+
+const iamUserNameDetailsCatchAllRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: 'details/$invalidPath',
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/iam/users/$username/details',
+      params: { username: params.username },
+    });
+  },
+});
+
+const iamUserNameRolesCatchAllRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: 'roles/$invalidPath',
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/iam/users/$username/roles',
+      params: { username: params.username },
+    });
+  },
+});
+
+const iamUserNameEntitiesCatchAllRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: 'entities/$invalidPath',
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/iam/users/$username/entities',
+      params: { username: params.username },
+    });
+  },
+});
+
 export const iamRouteTree = iamRoute.addChildren([
   iamIndexRoute,
   iamRolesRoute,
@@ -75,5 +122,9 @@ export const iamRouteTree = iamRoute.addChildren([
     iamUserNameDetailsRoute,
     iamUserNameRolesRoute,
     iamUserNameEntitiesRoute,
+    iamUserNameCatchAllRoute,
+    iamUserNameDetailsCatchAllRoute,
+    iamUserNameRolesCatchAllRoute,
+    iamUserNameEntitiesCatchAllRoute,
   ]),
 ]);
