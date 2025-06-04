@@ -68,8 +68,8 @@ describe('AlertDefinition Create', () => {
     expect(screen.getByLabelText('Description (optional)')).toBeVisible();
     expect(screen.getByLabelText('Severity')).toBeVisible();
     expect(screen.getByLabelText('Service')).toBeVisible();
-    expect(screen.getByText('2. Account')).toBeVisible();
-    expect(screen.getByText(ACCOUNT_GROUP_INFO_MESSAGE)).toBeVisible();
+    expect(screen.getByText('2. Account/Region/Entity')).toBeVisible();
+    expect(screen.getByText('No scope selected')).toBeVisible();
     expect(screen.getByText('3. Criteria')).toBeVisible();
     expect(screen.getByText('Metric Threshold')).toBeVisible();
     expect(screen.getByLabelText('Data Field')).toBeVisible();
