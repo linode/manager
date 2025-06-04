@@ -27,6 +27,7 @@ const columns: TableColumnHeader[] = [
   { columnName: 'Alert Name', label: 'label' },
   { columnName: 'Metric Threshold', label: 'id' },
   { columnName: 'Alert Type', label: 'type' },
+  { columnName: 'Scope', label: 'scope' },
 ];
 const props: AlertInformationActionTableProps = {
   alerts,
@@ -38,7 +39,7 @@ const props: AlertInformationActionTableProps = {
 };
 
 describe('Alert Listing Reusable Table for contextual view', () => {
-  it('Should render alert table', () => {
+  it('Should render alert table', async () => {
     const { getByText } = renderWithTheme(
       <AlertInformationActionTable {...props} />
     );
@@ -46,6 +47,7 @@ describe('Alert Listing Reusable Table for contextual view', () => {
     expect(getByText('Alert Name')).toBeInTheDocument();
     expect(getByText('Metric Threshold')).toBeInTheDocument();
     expect(getByText('Alert Type')).toBeInTheDocument();
+    expect(getByText('Scope')).toBeInTheDocument();
   });
 
   it('Should show message for empty table', () => {

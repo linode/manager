@@ -231,6 +231,9 @@ export const REGION_GROUP_INFO_MESSAGE =
 export const ALERT_SCOPE_TOOLTIP_TEXT =
   'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
 
+export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
+  'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).';
+
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
