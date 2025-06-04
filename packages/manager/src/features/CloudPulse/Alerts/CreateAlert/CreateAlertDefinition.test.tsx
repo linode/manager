@@ -153,7 +153,7 @@ describe('AlertDefinition Create', () => {
     );
 
     await user.click(submitButton!);
-    expect(container.getAllByText(errorMessage).length).toBe(11);
+    expect(container.getAllByText(errorMessage).length).toBe(12);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });
