@@ -18,13 +18,13 @@ export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not the default route. To update this, please review your Interface Settings.';
 
 export const PublicIPAddressesTooltip = ({
-  hasPublicInterface,
+  hasPublicLinodeInterface,
   isLinodeInterface,
 }: {
-  hasPublicInterface: boolean | undefined;
+  hasPublicLinodeInterface: boolean | undefined;
   isLinodeInterface: boolean;
 }) => {
-  const linodeInterfaceCopy = hasPublicInterface
+  const linodeInterfaceCopy = hasPublicLinodeInterface
     ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
     : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
   return (

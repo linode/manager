@@ -17,7 +17,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  hasPublicInterface?: boolean;
+  hasPublicLinodeInterface?: boolean;
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
@@ -32,7 +32,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const {
-    hasPublicInterface,
+    hasPublicLinodeInterface,
     ipAddress,
     ipType,
     isOnlyPublicIP,
@@ -65,7 +65,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
-  const linodeInterfacePublicIPCopy = hasPublicInterface
+  const linodeInterfacePublicIPCopy = hasPublicLinodeInterface
     ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
     : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
 

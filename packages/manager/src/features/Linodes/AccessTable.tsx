@@ -27,7 +27,7 @@ interface AccessTableProps {
     lg: number;
     xs: number;
   };
-  hasPublicInterface?: boolean;
+  hasPublicLinodeInterface?: boolean;
   isLinodeInterface?: boolean;
   isVPCOnlyLinode: boolean;
   rows: AccessTableRow[];
@@ -39,7 +39,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
   const {
     footer,
     gridSize,
-    hasPublicInterface,
+    hasPublicLinodeInterface,
     isVPCOnlyLinode,
     isLinodeInterface = false,
     rows,
@@ -61,7 +61,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
         {title}{' '}
         {isDisabled && (
           <PublicIPAddressesTooltip
-            hasPublicInterface={hasPublicInterface}
+            hasPublicLinodeInterface={hasPublicLinodeInterface}
             isLinodeInterface={isLinodeInterface}
           />
         )}

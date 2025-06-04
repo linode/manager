@@ -14,7 +14,7 @@ export const useVPCInterface = (inputs: {
   const { isLinodeInterface, linodeId } = inputs;
 
   const {
-    hasPublicInterface,
+    hasPublicLinodeInterface,
     isVPCOnlyLinodeInterface,
     linodeInterfaceWithVPC,
     vpcLinodeIsAssignedTo: vpcLinodeIsAssignedToInterface,
@@ -32,7 +32,7 @@ export const useVPCInterface = (inputs: {
 
   return {
     configs, // undefined if this Linode is using Linode Interfaces
-    hasPublicInterface, // undefined if this Linode is using config interfaces. Is only used when the Linode is known to be using Linode Interfaces
+    hasPublicLinodeInterface, // undefined if this Linode is using config interfaces. Is only used when the Linode is known to be using Linode Interfaces
     interfaceWithVPC: linodeInterfaceWithVPC ?? configInterfaceWithVPC,
     isVPCOnlyLinode,
     vpcLinodeIsAssignedTo,
@@ -54,7 +54,7 @@ export const useVPCLinodeInterface = (
 
   // if a Linode is a VPCOnlyLinode but has a public interface, its public IPv4 address will be associated with
   // this public interface, but just won't be the default route
-  const hasPublicInterface = interfaces?.interfaces.some(
+  const hasPublicLinodeInterface = interfaces?.interfaces.some(
     (iface) => iface.public
   );
 
@@ -79,7 +79,7 @@ export const useVPCLinodeInterface = (
   );
 
   return {
-    hasPublicInterface,
+    hasPublicLinodeInterface,
     isVPCOnlyLinodeInterface,
     linodeInterfaceWithVPC,
     vpcLinodeIsAssignedTo,
