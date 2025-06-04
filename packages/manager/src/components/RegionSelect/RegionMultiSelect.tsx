@@ -47,7 +47,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
     errorText,
     forcefullyShownRegionIds,
     helperText,
-    ignoreAccountAvailability,
     isClearable,
     isGeckoLAEnabled,
     label,
@@ -62,7 +61,7 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
   } = props;
 
   const { data: accountAvailability, isLoading: accountAvailabilityLoading } =
-    useAllAccountAvailabilitiesQuery(!ignoreAccountAvailability);
+    useAllAccountAvailabilitiesQuery(!!currentCapability);
 
   const regionOptions = getRegionOptions({
     currentCapability,
@@ -85,7 +84,6 @@ export const RegionMultiSelect = React.memo((props: RegionMultiSelectProps) => {
       acc[region.id] = disabledRegionsFromProps[region.id];
     }
     if (
-      !ignoreAccountAvailability &&
       isRegionOptionUnavailable({
         accountAvailabilityData: accountAvailability,
         currentCapability,

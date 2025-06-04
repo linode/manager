@@ -18,6 +18,18 @@ export const createDatabaseSchema = object({
   replication_commit_type: string().notRequired().nullable(), // TODO (UIE-8214) remove POST GA
 });
 
+export const getDynamicDatabaseSchema = (isVPCSelected: boolean) => {
+  if (!isVPCSelected) {
+    return createDatabaseSchema;
+  }
+
+  return createDatabaseSchema.shape({
+    private_network: object().shape({
+      subnet_id: number().nullable().required('Subnet is required.'),
+    }),
+  });
+};
+
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
   allow_list: array().of(string()).notRequired(),

@@ -2,10 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { ActionsPanel, Box, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -84,8 +84,8 @@ const overrides = [
   },
 ];
 export const CreateAlertDefinition = () => {
-  const history = useHistory();
-  const alertCreateExit = () => history.push('/alerts/definitions');
+  const navigate = useNavigate();
+  const alertCreateExit = () => navigate({ to: '/alerts/definitions' });
   const formRef = React.useRef<HTMLFormElement>(null);
   const flags = useFlags();
 

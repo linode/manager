@@ -7,7 +7,7 @@ import {
   notificationChannelFactory,
   serviceTypesFactory,
 } from 'src/factories/';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { AlertDetail } from './AlertDetail';
 
@@ -28,6 +28,7 @@ const queryMocks = vi.hoisted(() => ({
   useCloudPulseServiceTypes: vi.fn(),
   useRegionsQuery: vi.fn(),
   useResourcesQuery: vi.fn(),
+  useParams: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -53,6 +54,14 @@ vi.mock('@linode/queries', async (importOriginal) => ({
   ...(await importOriginal()),
   useRegionsQuery: queryMocks.useRegionsQuery,
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
 
 // Shared Setup
 beforeEach(() => {
@@ -90,10 +99,14 @@ beforeEach(() => {
     isError: false,
     isFetching: false,
   });
+  queryMocks.useParams.mockReturnValue({
+    alertId: '1',
+    serviceType: 'linode',
+  });
 });
 
 describe('AlertDetail component tests', () => {
-  it('should render the error state on details API call failure', () => {
+  it('should render the error state on details API call failure', async () => {
     // return isError true
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
@@ -101,7 +114,12 @@ describe('AlertDetail component tests', () => {
       isFetching: false,
     });
 
-    const { getByTestId, getByText } = renderWithTheme(<AlertDetail />);
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      <AlertDetail />,
+      {
+        initialRoute: '/alerts/definitions/detail/linode/1',
+      }
+    );
 
     // Assert error message is displayed
     expect(
@@ -114,7 +132,7 @@ describe('AlertDetail component tests', () => {
     validateBreadcrumbs(getByTestId('link-text'));
   });
 
-  it('should render the loading state when API call is fetching', () => {
+  it('should render the loading state when API call is fetching', async () => {
     // return isFetching true
     queryMocks.useAlertDefinitionQuery.mockReturnValueOnce({
       data: null,
@@ -122,7 +140,9 @@ describe('AlertDetail component tests', () => {
       isLoading: true,
     });
 
-    const { getByTestId } = renderWithTheme(<AlertDetail />);
+    const { getByTestId } = await renderWithThemeAndRouter(<AlertDetail />, {
+      initialRoute: '/alerts/definitions/detail/linode/1',
+    });
 
     expect(getByTestId('circle-progress')).toBeInTheDocument();
 
@@ -130,8 +150,10 @@ describe('AlertDetail component tests', () => {
     validateBreadcrumbs(getByTestId('link-text'));
   });
 
-  it('should render the component successfully with alert details page', () => {
-    const { getByText } = renderWithTheme(<AlertDetail />);
+  it('should render the component successfully with alert details overview', async () => {
+    const { getByText } = await renderWithThemeAndRouter(<AlertDetail />, {
+      initialRoute: '/alerts/definitions/detail/linode/1',
+    });
     // validate overview is present with its couple of properties (values will be validated in its own components test)
     expect(getByText('Overview')).toBeInTheDocument();
     expect(getByText('Criteria')).toBeInTheDocument(); // validate if criteria is present
@@ -141,7 +163,7 @@ describe('AlertDetail component tests', () => {
     expect(getByText('Description:')).toBeInTheDocument();
   });
 
-  it('should show error notice for failed alert', () => {
+  it('should show error notice for failed alert', async () => {
     const alert = alertFactory.build({
       status: 'failed',
     });
@@ -151,7 +173,9 @@ describe('AlertDetail component tests', () => {
       isLoadiing: false,
     });
 
-    renderWithTheme(<AlertDetail />);
+    await renderWithThemeAndRouter(<AlertDetail />, {
+      initialRoute: '/alerts/definitions/detail/linode/1',
+    });
 
     const element = screen.getByTestId('notice-error').textContent;
     expect(element).toEqual(

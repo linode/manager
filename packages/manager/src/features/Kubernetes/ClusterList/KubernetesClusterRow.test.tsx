@@ -1,11 +1,14 @@
 import { regionFactory } from '@linode/utilities';
-import { render } from '@testing-library/react';
 import * as React from 'react';
 
 import { kubernetesClusterFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithThemeAndRouter,
+  wrapWithTableBody,
+  wrapWithTheme,
+} from 'src/utilities/testHelpers';
 
 import { KubernetesClusterRow } from './KubernetesClusterRow';
 
@@ -20,8 +23,8 @@ const props: Props = {
 };
 
 describe('ClusterRow component', () => {
-  it('should render', () => {
-    const { getByTestId } = render(
+  it('should render', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(
       wrapWithTheme(wrapWithTableBody(<KubernetesClusterRow {...props} />))
     );
 
@@ -39,7 +42,7 @@ describe('ClusterRow component', () => {
       })
     );
 
-    const { findByText, getByText } = render(
+    const { findByText, getByText } = await renderWithThemeAndRouter(
       wrapWithTableBody(<KubernetesClusterRow {...props} />)
     );
 
@@ -47,17 +50,18 @@ describe('ClusterRow component', () => {
     await findByText('US, Fake Region, NC');
   });
 
-  it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {
-    const { getByTestId, queryByTestId, rerender } = render(
-      wrapWithTableBody(
-        <KubernetesClusterRow
-          {...props}
-          cluster={kubernetesClusterFactory.build({
-            control_plane: { high_availability: true },
-          })}
-        />
-      )
-    );
+  it('renders HA chip for highly available clusters and hides chip for non-ha clusters', async () => {
+    const { getByTestId, queryByTestId, rerender } =
+      await renderWithThemeAndRouter(
+        wrapWithTableBody(
+          <KubernetesClusterRow
+            {...props}
+            cluster={kubernetesClusterFactory.build({
+              control_plane: { high_availability: true },
+            })}
+          />
+        )
+      );
 
     getByTestId('ha-chip');
 

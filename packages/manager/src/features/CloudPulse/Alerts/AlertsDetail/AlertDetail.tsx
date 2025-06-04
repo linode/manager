@@ -8,8 +8,8 @@ import {
   Typography,
 } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -39,7 +39,9 @@ export interface AlertRouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<AlertRouteParams>();
+  const { alertId, serviceType } = useParams({
+    from: '/alerts/definitions/detail/$serviceType/$alertId',
+  });
 
   const {
     data: alertDetails,
