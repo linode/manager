@@ -6,6 +6,7 @@ import { profileFactory } from '@linode/utilities';
 import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
 import { mockGetAccount } from 'support/intercepts/account';
 import {
+  mockDeleteAlert,
   mockGetAllAlertDefinitions,
   mockGetCloudPulseServices,
   mockUpdateAlertDefinitions,
@@ -22,6 +23,7 @@ import {
 } from 'src/features/CloudPulse/Alerts/AlertsListing/constants';
 import {
   alertStatuses,
+  DELETE_ALERT_SUCCESS_MESSAGE,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from 'src/features/CloudPulse/Alerts/constants';
 import { formatDate } from 'src/utilities/formatDate';
@@ -39,6 +41,7 @@ const now = new Date();
 const mockAlerts = [
   alertFactory.build({
     created_by: 'user1',
+    id: 1,
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-1',
     service_type: 'dbaas',
@@ -50,6 +53,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user4',
+    id: 2,
     updated_by: 'updated4',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-2',
@@ -61,6 +65,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user2',
+    id: 3,
     updated_by: 'updated2',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-3',
@@ -72,6 +77,7 @@ const mockAlerts = [
   }),
   alertFactory.build({
     created_by: 'user3',
+    id: 4,
     updated_by: 'updated3',
     entity_ids: ['1', '2', '3', '4', '5'],
     label: 'Alert-4',
@@ -212,6 +218,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
     );
     cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
+    mockDeleteAlert('dbaas', 1).as('deleteAlert');
   });
 
   it('should verify sorting functionality for multiple columns in ascending and descending order', () => {
@@ -490,7 +497,9 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         updated_by: `updated_user-${index}`,
       })
     );
-
+    mockAlerts.forEach((alert) => {
+      mockDeleteAlert('dbaas', alert.id).as(`deleteAlert-${alert.label}`);
+    });
     mockGetAllAlertDefinitions(mockAlerts).as('getAlertDefinitionsList');
     cy.visitWithLogin(alertDefinitionsUrl);
     cy.wait('@getAlertDefinitionsList');
@@ -514,5 +523,108 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         'have.text',
         'Creation of 25 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
       );
+  });
+  /**
+   * Actions to take based on the alert status.
+   * - For 'enabled' and 'disabled', the alert can be deleted.
+   * - For 'in progress' and 'failed', the alert cannot be deleted.
+   */
+  const statusActions: Record<AlertStatusType, (label: string) => void> = {
+    enabled: (label) => {
+      validateDeleteFlow(label, true);
+    },
+    disabled: (label) => {
+      validateDeleteFlow(label, true);
+    },
+    'in progress': (label) => {
+      validateDeleteFlow(label, false);
+    },
+    failed: (label) => {
+      validateDeleteFlow(label, false);
+    },
+  };
+  /**
+   * Validates the delete flow for an alert based on its label and whether deletion is allowed.
+   * @param {string} label - The label of the alert to be deleted.
+   * @param {boolean} canDelete - Whether the alert can be deleted.
+   */
+  const validateDeleteFlow = (label: string, canDelete: boolean) => {
+    // Locate the alert row by label and open the action menu
+    cy.findByText(label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        // Open the action menu for the alert
+        ui.actionMenu
+          .findByTitle(`Action menu for Alert ${label}`)
+          .should('be.visible')
+          .click();
+      });
+    if (canDelete) {
+      // Click the "Delete" option from the action menu
+      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+
+      // Verify the delete confirmation dialog appears with the correct title
+      ui.dialog
+        .findByTitle(`Delete ${label}? `)
+        .should('be.visible')
+        .within(() => {
+          // Focus the "Alert Label" confirmation input
+          cy.findByLabelText('Alert Label').click();
+
+          // Type the alert label to enable the Delete button
+          cy.focused().type(label);
+
+          // Click the Delete button to confirm
+          ui.buttonGroup
+            .findButtonByTitle('Delete')
+            .should('be.enabled')
+            .should('be.visible')
+            .click();
+        });
+
+      // Wait for the DELETE request to be intercepted
+      cy.wait(`@deleteAlert-${label}`);
+
+      // Verify the user is redirected to the alerts listing page
+      cy.url().should('endWith', '/alerts/definitions');
+
+      // Confirm the success toast message is shown
+      ui.toast.assertMessage(DELETE_ALERT_SUCCESS_MESSAGE);
+
+      // Ensure the deleted alert no longer appears in the list
+      cy.findByText(label).should('not.exist');
+    } else {
+      ui.actionMenuItem.findByTitle('Delete').should('be.disabled');
+    }
+  };
+
+  statusList.forEach((status, index) => {
+    it(`should validate the delete alert behavior based on its status: ${status}`, () => {
+      const label = `Alert-${index + 1}`;
+      const id = index + 1;
+
+      const mockAlert = alertFactory.build({
+        id,
+        label,
+        service_type: 'dbaas',
+        status,
+        type: 'user',
+        created_by: 'user1',
+        updated_by: 'user1',
+      });
+
+      mockGetAllAlertDefinitions([mockAlert]).as(`getAlerts-${label}`);
+      mockDeleteAlert('dbaas', id).as(`deleteAlert-${label}`);
+
+      cy.visitWithLogin(alertDefinitionsUrl);
+      cy.wait(`@getAlerts-${label}`);
+
+      // Validate the delete action based on alert status
+      if (!(status in statusActions)) {
+        throw new Error(`Unsupported alert status: ${status}`);
+      }
+      statusActions[status](label);
+    });
   });
 });
