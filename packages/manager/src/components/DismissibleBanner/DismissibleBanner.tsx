@@ -96,8 +96,10 @@ export const DismissibleBanner = (props: Props) => {
           alignSelf="flex-start"
           direction="row"
           justifyContent="flex-end"
-          marginLeft="24px"
           spacing={1}
+          sx={(theme) => ({
+            marginLeft: theme.spacingFunction(24),
+          })}
         >
           {actionButton}
           {dismissible ? dismissibleButton : null}
