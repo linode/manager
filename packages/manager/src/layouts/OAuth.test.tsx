@@ -1,15 +1,18 @@
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createMemoryHistory } from 'history';
-import { isEmpty } from 'ramda';
+import { isEmpty, set } from 'ramda';
 import * as React from 'react';
 import { act } from 'react-dom/test-utils';
 
 import { LOGIN_ROOT } from 'src/constants';
 import { OAuthCallbackPage } from 'src/layouts/OAuth';
+import * as utils from 'src/OAuth/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import type { OAuthQueryParams } from './OAuth';
 import type { MemoryHistory } from 'history';
+
+const setAuthDataInLocalStorage = vi.spyOn(utils, 'setAuthDataInLocalStorage');
 
 describe('layouts/OAuth', () => {
   describe('parseQueryParams', () => {
@@ -51,35 +54,16 @@ describe('layouts/OAuth', () => {
       match,
     };
 
-    const localStorageMock = (() => {
-      let store: { [key: string]: string } = {};
-      return {
-        clear: vi.fn(() => {
-          store = {};
-        }),
-        getItem: vi.fn((key: string) => store[key]),
-        key: vi.fn(),
-        length: 0,
-        removeItem: vi.fn((key: string) => {
-          delete store[key];
-        }),
-        setItem: vi.fn((key: string, value: string) => {
-          store[key] = value.toString();
-        }),
-      };
-    })();
-
     let originalLocation: Location;
 
     beforeEach(() => {
       originalLocation = window.location;
       window.location = { assign: vi.fn() } as any;
-      global.localStorage = localStorageMock;
     });
 
     afterEach(() => {
       window.location = originalLocation;
-      vi.restoreAllMocks();
+      vi.clearAllMocks();
     });
 
     it('parses query params of the expected format', () => {
@@ -123,7 +107,7 @@ describe('layouts/OAuth', () => {
         renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      // expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
+      expect(setAuthDataInLocalStorage).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -146,7 +130,7 @@ describe('layouts/OAuth', () => {
         renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      // expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
+      expect(setAuthDataInLocalStorage).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -169,7 +153,7 @@ describe('layouts/OAuth', () => {
         renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      // expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
+      expect(setAuthDataInLocalStorage).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -180,7 +164,7 @@ describe('layouts/OAuth', () => {
         renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      // expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
+      expect(setAuthDataInLocalStorage).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );
@@ -220,12 +204,14 @@ describe('layouts/OAuth', () => {
         })
       );
 
-      // expect(mockProps.dispatchStartSession).toHaveBeenCalledWith(
-      //   '198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
-      //   'bearer',
-      //   '*',
-      //   expect.any(String)
-      // );
+      expect(setAuthDataInLocalStorage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          token:
+            'Bearer 198864fedc821dbb5941cd5b8c273b4e25309a08d31c77cbf65a38372fdfe5b5',
+          scopes: '*',
+          expires: expect.any(String),
+        })
+      );
       expect(mockProps.history.push).toHaveBeenCalledWith('/');
     });
 
@@ -236,7 +222,7 @@ describe('layouts/OAuth', () => {
         renderWithTheme(<OAuthCallbackPage {...mockProps} />);
       });
 
-      // expect(mockProps.dispatchStartSession).not.toHaveBeenCalled();
+      expect(setAuthDataInLocalStorage).not.toHaveBeenCalled();
       expect(window.location.assign).toHaveBeenCalledWith(
         `${LOGIN_ROOT}` + '/logout'
       );

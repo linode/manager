@@ -6,7 +6,7 @@
  * if the user was navgiated from Login. Further, we are doing no nonce checking here
  */
 
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import { useEffect } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
@@ -69,7 +69,7 @@ export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
      * We have all the information we need and can persist it to localStorage
      */
     setAuthDataInLocalStorage({
-      token: `${tokenType} ${accessToken}`,
+      token: `${capitalize(tokenType)} ${accessToken}`,
       scopes: '',
       expires: expireDate.toString(),
     });
