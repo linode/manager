@@ -7,19 +7,12 @@
  */
 
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import type { MapDispatchToProps } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useEffect } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
+import { setAuthDataInLocalStorage } from 'src/OAuth/utils';
 
 import type { BaseQueryParams } from '@linode/utilities';
-
-interface LoginAsCustomerCallbackProps
-  extends DispatchProps,
-    RouteComponentProps {}
 
 interface QueryParams extends BaseQueryParams {
   access_token: string;
@@ -28,8 +21,8 @@ interface QueryParams extends BaseQueryParams {
   token_type: string;
 }
 
-export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallbackProps> {
-  componentDidMount() {
+export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
+  useEffect(() => {
     /**
      * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
      * the data we need and should bounce.
@@ -38,7 +31,7 @@ export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallba
      * 'location.hash = `#access_token=something&token_type=Admin&destination=linodes/1234`
      *
      */
-    const { history, location } = this.props;
+    const { history, location } = props;
 
     /**
      * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
@@ -73,51 +66,20 @@ export class LoginAsCustomerCallback extends PureComponent<LoginAsCustomerCallba
     expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
 
     /**
-     * We have all the information we need and can persist it to localStorage and Redux.
+     * We have all the information we need and can persist it to localStorage
      */
-    this.props.dispatchStartSession(
-      accessToken,
-      tokenType,
-      expireDate.toString()
-    );
+    setAuthDataInLocalStorage({
+      token: `${tokenType} ${accessToken}`,
+      scopes: '',
+      expires: expireDate.toString(),
+    });
 
     /**
      * All done, redirect to the destination from the hash params
      * NOTE: the param does not include a leading slash
      */
     history.push(`/${destination}`);
-  }
+  }, []);
 
-  render() {
-    return null;
-  }
-}
-
-interface DispatchProps {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    expires: string
-  ) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    dispatchStartSession: (token, tokenType, expires) =>
-      dispatch(
-        handleStartSession({
-          expires,
-          scopes: '*',
-          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-            1
-          )} ${token}`,
-        })
-      ),
-  };
+  return null;
 };
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(withRouter(LoginAsCustomerCallback));

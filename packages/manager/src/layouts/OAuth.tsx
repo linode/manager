@@ -1,21 +1,18 @@
-import { getQueryParamsFromQueryString } from '@linode/utilities';
+import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
 import {
+  clearAuthDataFromLocalStorage,
   clearNonceAndCodeVerifierFromLocalStorage,
-  clearTokenDataFromLocalStorage,
-} from 'src/store/authentication/authentication.helpers';
+  setAuthDataInLocalStorage,
+} from 'src/OAuth/utils';
 import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
-
-export type CombinedProps = DispatchProps & RouteComponentProps;
 
 const localStorageOverrides = getEnvLocalStorageOverrides();
 const loginURL = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
@@ -27,21 +24,7 @@ export type OAuthQueryParams = {
   state: string; // nonce
 };
 
-type DispatchProps = {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    scopes: string,
-    expiry: string
-  ) => void;
-};
-
-export const OAuthCallbackPage = ({
-  dispatchStartSession,
-  history,
-}: CombinedProps) => {
-  const { location } = history;
-
+export const OAuthCallbackPage = ({ history }: RouteComponentProps) => {
   const checkNonce = (nonce: string) => {
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = authentication.nonce.get();
@@ -109,12 +92,11 @@ export const OAuthCallbackPage = ({
             expireDate.getTime() + +tokenParams.expires_in * 1000
           );
 
-          dispatchStartSession(
-            tokenParams.access_token,
-            tokenParams.token_type,
-            tokenParams.scopes,
-            expireDate.toString()
-          );
+          setAuthDataInLocalStorage({
+            token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
+            scopes: tokenParams.scopes,
+            expires: expireDate.toString(),
+          });
 
           /**
            * All done, redirect this bad-boy to the returnTo URL we generated earlier.
@@ -162,22 +144,7 @@ const clearStorageAndRedirectToLogout = () => {
 
 const clearLocalStorage = () => {
   clearNonceAndCodeVerifierFromLocalStorage();
-  clearTokenDataFromLocalStorage();
+  clearAuthDataFromLocalStorage();
 };
 
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  dispatchStartSession: (token, tokenType, scopes, expiry) =>
-    dispatch(
-      handleStartSession({
-        expires: expiry,
-        scopes,
-        token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-          1
-        )} ${token}`,
-      })
-    ),
-});
-
-const connected = connect(undefined, mapDispatchToProps);
-
-export default connected(OAuthCallbackPage);
+export default OAuthCallbackPage;
