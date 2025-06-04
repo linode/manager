@@ -46,7 +46,6 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
-  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -81,6 +80,7 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
+  mysqlConfigResponse,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -96,6 +96,7 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
+  postgresConfigResponse,
   promoFactory,
   serviceTypesFactory,
   stackScriptFactory,
@@ -377,8 +378,16 @@ const databases = [
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/databases/:engine/config', () => {
-    return HttpResponse.json(databaseEngineConfigFactory.build());
+  http.get('*/databases/:engine/config', ({ params }) => {
+    const { engine } = params as { engine: string };
+    if (engine === 'mysql') {
+      return HttpResponse.json(mysqlConfigResponse);
+    }
+    if (engine === 'postgresql') {
+      return HttpResponse.json(postgresConfigResponse);
+    }
+
+    return HttpResponse.json(mysqlConfigResponse);
   }),
 ];
 
