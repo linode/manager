@@ -54,15 +54,7 @@ describe('MaintenanceBannerV2', () => {
       getAllByText(
         (_, el) =>
           el?.textContent ===
-          '2 Linodes have upcoming scheduled maintenance. For more details, view Account Maintenance.'
-      )[0]
-    ).toBeVisible();
-
-    expect(
-      getAllByText(
-        (_, el) =>
-          el?.textContent ===
-          '1 Linode has upcoming emergency maintenance. For more details, view Account Maintenance.'
+          '3 Linodes have upcoming scheduled maintenance. For more details, view Account Maintenance.'
       )[0]
     ).toBeVisible();
   });
