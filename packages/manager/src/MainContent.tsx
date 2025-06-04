@@ -312,10 +312,6 @@ export const MainContent = () => {
                                   component={NewDetailTemplateA}
                                   path="/new-detail-template-a"
                                 />
-                                <Route
-                                  component={EventsLanding}
-                                  path="/events"
-                                />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
