@@ -80,23 +80,17 @@ const accountSettingsRoute = createRoute({
 const accountUsersUsernameRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: 'users/$username',
-}).lazy(() =>
-  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
-);
+}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
 
 const accountUsersUsernameProfileRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'profile',
-}).lazy(() =>
-  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
-);
+}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
 
 const accountUsersUsernamePermissionsRoute = createRoute({
   getParentRoute: () => accountUsersUsernameRoute,
   path: 'permissions',
-}).lazy(() =>
-  import('src/features/Users/UserDetail').then((m) => m.userDetailLazyRoute)
-);
+}).lazy(() => import('./accountLazyRoutes').then((m) => m.userDetailLazyRoute));
 
 const accountBillingMakePaymentRoute = createRoute({
   getParentRoute: () => accountRoute,

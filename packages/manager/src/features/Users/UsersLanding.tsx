@@ -2,6 +2,7 @@ import { useAccountUsers, useProfile } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -13,7 +14,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import CreateUserDrawer from './CreateUserDrawer';
+import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
@@ -23,6 +24,7 @@ import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -184,6 +186,7 @@ export const UsersLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateUserDrawer
+        navigate={navigate}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         refetch={refetch}

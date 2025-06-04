@@ -424,6 +424,7 @@ export const baseConfig = [
       'src/components/Tag/**/*',
       'src/features/StackScripts/**/*',
       'src/features/Support/**/*',
+      'src/features/Users/**/*',
       'src/features/Volumes/**/*',
       'src/features/VPCs/**/*',
     ],
