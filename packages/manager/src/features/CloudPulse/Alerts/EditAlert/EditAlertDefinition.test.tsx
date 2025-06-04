@@ -38,7 +38,7 @@ beforeEach(() => {
 const alertDetails = alertFactory.build({
   id: 1,
   service_type: 'linode',
-  group: 'entity',
+  scope: 'entity',
 });
 describe('EditAlertDefinition component', () => {
   it(

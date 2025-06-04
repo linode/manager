@@ -67,7 +67,7 @@ it('should correctly convert an alert definition values to the required format',
     tags,
     trigger_conditions,
     type,
-    group,
+    scope,
     regions,
   } = alert;
   const expected: EditAlertPayloadWithService = {
@@ -88,7 +88,7 @@ it('should correctly convert an alert definition values to the required format',
     tags,
     trigger_conditions,
     type,
-    group,
+    scope,
     regions,
   };
 

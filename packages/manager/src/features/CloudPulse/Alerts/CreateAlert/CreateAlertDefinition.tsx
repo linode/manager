@@ -67,7 +67,7 @@ const initialValues: CreateAlertDefinitionForm = {
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
   entity_ids: [],
-  group: 'account',
+  scope: 'account',
   type: 'user',
 };
 
@@ -118,7 +118,7 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
-  const scopeWatcher = useWatch({ control, name: 'group' });
+  const scopeWatcher = useWatch({ control, name: 'scope' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
   const onSubmit = handleSubmit(async (values) => {
@@ -217,7 +217,7 @@ export const CreateAlertDefinition = () => {
             />
             <CloudPulseAlertSeveritySelect name="severity" />
             <AlertEntityScopeSelect
-              name="group"
+              name="scope"
               serviceType={serviceTypeWatcher}
             />
             {scopeWatcher === 'entity' && (

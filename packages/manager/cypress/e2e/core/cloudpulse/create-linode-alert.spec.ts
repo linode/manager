@@ -213,9 +213,9 @@ describe('Create Alert', () => {
    * - Confirms that API interactions work correctly and return the expected responses.
    * - Confirms that the UI displays a success message after creating an alert.
    */
-  // entityGroupingOptions is an array of predefined grouping strategies for alert definitions.
-  // Each item in the array represents a way to group entities when generating or organizing alerts.
-  // The grouping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
+  // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
+  // Each item in the array represents a way to scope entities when generating or organizing alerts.
+  // The scoping strategies include 'Account', 'Entity', and 'Region'.
   entityGroupingOptions.forEach(({ label: scopeLabel, value }) => {
     it(`should successfully create a new alert for ${scopeLabel} level`, () => {
       const alerts = alertFactory.build({
@@ -230,8 +230,8 @@ describe('Create Alert', () => {
         severity: 0,
         tags: ['tag-2', 'tag-3'],
         trigger_conditions: triggerConditionFactory.build(),
-        group: value,
-        ...(value === 'per-region' ? { regions: regionList } : {}),
+        scope: value,
+        ...(value === 'region' ? { regions: regionList } : {}),
       });
       mockAppendFeatureFlags(flags);
       mockGetAccount(mockAccount);
@@ -450,7 +450,7 @@ describe('Create Alert', () => {
         expect(request.body.label).to.equal(label);
         expect(request.body.description).to.equal(description);
         expect(request.body.severity).to.equal(severity);
-        expect(request.body.group).to.equal(alerts.group);
+        expect(request.body.scope).to.equal(alerts.scope);
 
         // Validate rule criteria
         expect(request.body.rule_criteria).to.have.property('rules');
@@ -486,7 +486,7 @@ describe('Create Alert', () => {
         expect(secondRule.metric).to.equal(secondCustomRule.metric);
         expect(secondRule.operator).to.equal(secondCustomRule.operator);
         expect(secondRule.threshold).to.equal(secondCustomRule.threshold);
-        expect(response?.body.group).to.eq(value);
+        expect(response?.body.scope).to.eq(value);
 
         // Validate trigger conditions
         const triggerConditions = request.body.trigger_conditions;

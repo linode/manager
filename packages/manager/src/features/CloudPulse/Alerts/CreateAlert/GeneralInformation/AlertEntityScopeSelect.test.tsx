@@ -23,7 +23,7 @@ describe('AlertEntityGroupingSelect', () => {
       data: serviceTypesFactory.build(),
     });
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityScopeSelect name="group" serviceType="linode" />,
+      component: <AlertEntityScopeSelect name="scope" serviceType="linode" />,
     });
 
     expect(screen.getByTestId('entity-grouping')).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe('AlertEntityGroupingSelect', () => {
 
   it('Select option from drop down', async () => {
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityScopeSelect name="group" serviceType="dbaas" />,
+      component: <AlertEntityScopeSelect name="scope" serviceType="dbaas" />,
     });
 
     await userEvent.click(screen.getByRole('button', { name: 'Open' }));
@@ -52,7 +52,7 @@ describe('AlertEntityGroupingSelect', () => {
     });
 
     renderWithThemeAndHookFormContext({
-      component: <AlertEntityScopeSelect name="group" serviceType="dbaas" />,
+      component: <AlertEntityScopeSelect name="scope" serviceType="dbaas" />,
     });
 
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Entity');

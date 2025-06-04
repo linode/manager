@@ -379,8 +379,8 @@ describe('Integration Tests for Alert Show Detail Page', () => {
         updated_by: 'user2',
         created: '2023-10-01T12:00:00Z',
         updated: new Date().toISOString(),
-        group: value,
-        ...(value === 'per-region' ? { regions: regionList } : {}),
+        scope: value,
+        ...(value === 'region' ? { regions: regionList } : {}),
       });
       const {
         created_by,

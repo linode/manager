@@ -240,9 +240,9 @@ describe('Create Alert', () => {
     cy.url().should('endWith', CREATE_ALERT_PAGE_URL);
   });
 
-  // entityGroupingOptions is an array of predefined grouping strategies for alert definitions.
-  // Each item in the array represents a way to group entities when generating or organizing alerts.
-  // The grouping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
+  // entityScopingOptions is an array of predefined scoping strategies for alert definitions.
+  // Each item in the array represents a way to scope entities when generating or organizing alerts.
+  // The scoping strategies include 'Per Account', 'Per Entity', and 'Per Region'.
   entityGroupingOptions.forEach(({ label: groupLabel, value }) => {
     it(`should successfully create a new alert for ${groupLabel} level`, () => {
       const alerts = alertFactory.build({
@@ -257,8 +257,8 @@ describe('Create Alert', () => {
         severity: 0,
         tags: [''],
         trigger_conditions: triggerConditionFactory.build(),
-        group: value,
-        ...(value === 'per-region' ? { regions: regionList } : {}),
+        scope: value,
+        ...(value === 'region' ? { regions: regionList } : {}),
       });
 
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
@@ -433,7 +433,7 @@ describe('Create Alert', () => {
         expect(request.body.label).to.equal(label);
         expect(request.body.description).to.equal(description);
         expect(request.body.severity).to.equal(severity);
-        expect(request.body.group).to.equal(alerts.group);
+        expect(request.body.scope).to.equal(alerts.scope);
 
         // Validate rule criteria
         expect(request.body.rule_criteria).to.have.property('rules');
@@ -486,7 +486,7 @@ describe('Create Alert', () => {
         );
         // Validate entity IDs and channels
         expect(request.body.channel_ids).to.include(1);
-        expect(response?.body.group).to.eq(value);
+        expect(response?.body.scope).to.eq(value);
 
         // Verify URL redirection and toast notification
         cy.url().should('endWith', '/alerts/definitions');

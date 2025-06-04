@@ -238,7 +238,6 @@ export interface Alert {
   created_by: string;
   description: string;
   entity_ids: string[];
-  group: AlertDefinitionGroup;
   has_more_resources: boolean;
   id: number;
   label: string;
@@ -246,6 +245,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertDefinitionGroup;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -329,12 +329,12 @@ export interface EditAlertDefinitionPayload {
   channel_ids?: number[];
   description?: string;
   entity_ids?: string[];
-  group: AlertDefinitionGroup | null;
   label?: string;
   regions?: string[];
   rule_criteria?: {
     rules: MetricCriteria[];
   };
+  scope: AlertDefinitionGroup | null;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];

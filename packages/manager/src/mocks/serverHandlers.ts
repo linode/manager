@@ -2643,7 +2643,7 @@ export const handlers = [
       type: 'user',
       updated: '2021-10-16T04:00:00',
       updated_by: 'user1',
-      group: pickRandom(['account', 'entity', 'region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
       created_by: 'user1',
@@ -2651,13 +2651,13 @@ export const handlers = [
       severity: 1,
       type: 'user',
       updated_by: 'user1',
-      group: pickRandom(['account', 'entity', 'region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
       service_type: 'dbaas',
       severity: 3,
-      group: pickRandom(['account', 'entity', 'region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const alerts = [
       ...defaultAlerts,
@@ -2713,7 +2713,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
-            group: pickRandom(['account', 'entity', 'region']),
+            scope: pickRandom(['account', 'entity', 'region']),
           })
         );
       }

@@ -85,7 +85,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
   const scopeWatcher = useWatch<EditAlertDefintionForm>({
-    name: 'group',
+    name: 'scope',
     control,
   });
   const onSubmit = handleSubmit(async (values) => {
@@ -187,7 +187,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           <CloudPulseAlertSeveritySelect name="severity" />
           <AlertEntityScopeSelect
             formMode="edit"
-            name="group"
+            name="scope"
             serviceType={serviceType}
           />
           {scopeWatcher === 'entity' && (

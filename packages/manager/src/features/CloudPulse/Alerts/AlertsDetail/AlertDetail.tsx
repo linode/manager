@@ -111,7 +111,7 @@ export const AlertDetail = () => {
     status,
     label,
     regions,
-    group,
+    scope,
   } = alertDetails;
 
   return (
@@ -169,7 +169,7 @@ export const AlertDetail = () => {
             }}
           >
             {(() => {
-              switch (group) {
+              switch (scope) {
                 case 'account':
                   return (
                     <Stack gap={2}>
