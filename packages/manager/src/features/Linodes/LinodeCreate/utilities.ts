@@ -36,6 +36,7 @@ import type {
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
+  MaintenancePolicyId,
   Profile,
   StackScript,
 } from '@linode/api-v4';
@@ -402,6 +403,16 @@ export const defaultValues = async (
     }
   }
 
+  let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
+  try {
+    const accountSettings = await queryClient.ensureQueryData(
+      accountQueries.settings
+    );
+    defaultMaintenancePolicy = accountSettings.maintenance_policy_id ?? null;
+  } catch (error) {
+    // silently fail because the user may be a restricted user that can't access this endpoint
+  }
+
   const privateIp =
     linode?.interface_generation !== 'linode' &&
     (linode?.ipv4.some(isPrivateIP) ?? false);
@@ -418,6 +429,7 @@ export const defaultValues = async (
     interfaces: defaultInterfaces,
     linode,
     linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
+    maintenance_policy_id: defaultMaintenancePolicy,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

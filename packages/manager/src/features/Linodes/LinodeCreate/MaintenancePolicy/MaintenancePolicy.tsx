@@ -1,3 +1,4 @@
+import { useRegionQuery } from '@linode/queries';
 import { Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -10,7 +11,15 @@ import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 
 export const MaintenancePolicy = () => {
-  const { control } = useFormContext<LinodeCreateFormValues>();
+  const { control, watch } = useFormContext<LinodeCreateFormValues>();
+
+  const selectedRegion = watch('region');
+  const { data: region } = useRegionQuery(selectedRegion);
+
+  const regionSupportsMaintenancePolicy =
+    region?.capabilities.includes('Maintenance Policy') ?? false;
+
+  if (!regionSupportsMaintenancePolicy) return null;
 
   return (
     <Paper>
