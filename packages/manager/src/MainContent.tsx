@@ -36,8 +36,6 @@ import { ENABLE_MAINTENANCE_MODE } from './constants';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { sessionExpirationContext } from './context/sessionExpirationContext';
 import { switchAccountSessionContext } from './context/switchAccountSessionContext';
-import { useIsACLPEnabled } from './features/CloudPulse/Utils/utils';
-import { useIsDatabasesEnabled } from './features/Databases/utilities';
 import { useIsIAMEnabled } from './features/IAM/hooks/useIsIAMEnabled';
 import { TOPMENU_HEIGHT } from './features/TopMenu/constants';
 import { useGlobalErrors } from './hooks/useGlobalErrors';
@@ -118,11 +116,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Kubernetes = React.lazy(() =>
-  import('src/features/Kubernetes').then((module) => ({
-    default: module.Kubernetes,
-  }))
-);
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
@@ -132,23 +125,6 @@ const EventsLanding = React.lazy(() =>
   import('src/features/Events/EventsLanding').then((module) => ({
     default: module.EventsLanding,
   }))
-);
-const Databases = React.lazy(() => import('src/features/Databases'));
-
-const CloudPulseMetrics = React.lazy(() =>
-  import('src/features/CloudPulse/Dashboard/CloudPulseDashboardLanding').then(
-    (module) => ({
-      default: module.CloudPulseDashboardLanding,
-    })
-  )
-);
-
-const CloudPulseAlerts = React.lazy(() =>
-  import('src/features/CloudPulse/Alerts/AlertsLanding/AlertsLanding').then(
-    (module) => ({
-      default: module.AlertsLanding,
-    })
-  )
 );
 
 const IAM = React.lazy(() =>
@@ -189,12 +165,8 @@ export const MainContent = () => {
   const { data: profile } = useProfile();
   const username = profile?.username || '';
 
-  const { isDatabasesEnabled } = useIsDatabasesEnabled();
-
   const { data: accountSettings } = useAccountSettings();
   const defaultRoot = accountSettings?.managed ? '/managed' : '/linodes';
-
-  const { isACLPEnabled } = useIsACLPEnabled();
 
   const { isIAMEnabled } = useIsIAMEnabled();
 
@@ -329,10 +301,6 @@ export const MainContent = () => {
                                   component={LinodesRoutes}
                                   path="/linodes"
                                 />
-                                <Route
-                                  component={Kubernetes}
-                                  path="/kubernetes"
-                                />
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
                                 )}
@@ -342,24 +310,6 @@ export const MainContent = () => {
                                   component={EventsLanding}
                                   path="/events"
                                 />
-                                {isDatabasesEnabled && (
-                                  <Route
-                                    component={Databases}
-                                    path="/databases"
-                                  />
-                                )}
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseMetrics}
-                                    path="/metrics"
-                                  />
-                                )}
-                                {isACLPEnabled && (
-                                  <Route
-                                    component={CloudPulseAlerts}
-                                    path="/alerts"
-                                  />
-                                )}
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />

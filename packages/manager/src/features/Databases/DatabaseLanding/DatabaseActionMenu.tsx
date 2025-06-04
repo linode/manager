@@ -1,6 +1,6 @@
+import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -49,7 +49,7 @@ export const DatabaseActionMenu = (props: Props) => {
   const isDatabaseSuspended =
     databaseStatus === 'suspended' || databaseStatus === 'suspending';
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleResume = async () => {
     try {
@@ -101,8 +101,12 @@ export const DatabaseActionMenu = (props: Props) => {
       disabled:
         isDatabaseNotRunning || isDatabaseSuspended || isDatabaseReadOnly,
       onClick: () => {
-        history.push({
-          pathname: `/databases/${databaseEngine}/${databaseId}/resize`,
+        navigate({
+          to: `/databases/$engine/$databaseId/resize`,
+          params: {
+            engine: databaseEngine,
+            databaseId,
+          },
         });
       },
       title: 'Resize',
