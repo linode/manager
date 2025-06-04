@@ -30,8 +30,11 @@ export const handleError = (
   error: AxiosError<LinodeError>,
   store: ApplicationStore
 ) => {
-  if (error.response && error.response.status === 401) {
-    // @todo Don't redirect if an image upload is in progress
+  if (
+    error.response &&
+    error.response.status === 401 &&
+    !store.getState().pendingUpload
+  ) {
     clearAuthDataFromLocalStorage();
     redirectToLogin(window.location.pathname);
   }

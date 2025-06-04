@@ -50,6 +50,10 @@ const error401: AxiosError<LinodeError> = {
   },
 };
 
+// Set CLIENT_ID because `handleError` needs it to redirect to Login when
+// a 401 error occours.
+vi.stubEnv('CLIENT_ID', '12345');
+
 describe('Expiring Tokens', () => {
   it('should properly expire tokens if given a 401 error', () => {
     setAuthDataInLocalStorage({
