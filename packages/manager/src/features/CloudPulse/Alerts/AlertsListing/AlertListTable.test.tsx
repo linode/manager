@@ -223,7 +223,7 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when deleting alert succeeds', async () => {
     const alert = alertFactory.build({ type: 'user' });
-    renderWithTheme(
+    await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -254,7 +254,7 @@ describe('Alert List Table test', () => {
     });
 
     const alert = alertFactory.build({ type: 'user' });
-    renderWithTheme(
+    await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
