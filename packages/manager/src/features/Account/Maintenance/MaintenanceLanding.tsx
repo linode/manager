@@ -15,7 +15,7 @@ const MaintenanceLanding = () => {
       {flags.vmHostMaintenance?.enabled ? (
         <>
           <MaintenanceTable type="in progress" />
-          <MaintenanceTable type="scheduled" />
+          <MaintenanceTable type="upcoming" />
         </>
       ) : (
         <MaintenanceTable type="pending" />

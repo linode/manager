@@ -28,7 +28,7 @@ describe('Maintenance Table Row', () => {
   it('should render the maintenance event', () => {
     const { getByText } = renderWithTheme(
       wrapWithTableBody(
-        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+        <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
     );
     getByText(maintenance.entity.label);
@@ -38,7 +38,7 @@ describe('Maintenance Table Row', () => {
   it('should render a relative time', () => {
     renderWithTheme(
       wrapWithTableBody(
-        <MaintenanceTableRow maintenance={maintenance} tableType="scheduled" />
+        <MaintenanceTableRow maintenance={maintenance} tableType="upcoming" />
       )
     );
     const { getByText } = within(screen.getByTestId('relative-date'));
