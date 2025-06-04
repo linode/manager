@@ -514,3 +514,26 @@ export const mockUpdateAlertDefinitionsError = (
     makeErrorResponse(errorMessage, 500)
   );
 };
+
+/**
+ * Intercepts DELETE request to delete an alert definition for a specific service and mocks response.
+ *
+ * @param serviceType - Type of the service (e.g., 'linode').
+ * @param alertId - ID of the alert definition to delete.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteAlert = (
+  serviceType: string,
+  alertId: number,
+  statusCode: number = 200
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`monitor/services/${serviceType}/alert-definitions/${alertId}`),
+    {
+      body: {},
+      statusCode,
+    }
+  );
+};
