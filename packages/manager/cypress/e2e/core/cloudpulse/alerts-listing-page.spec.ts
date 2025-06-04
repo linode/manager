@@ -524,18 +524,6 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
         'Creation of 25 alerts has failed as indicated in the status column. Please open a support ticket for assistance.'
       );
   });
-  /**
-   * Determines whether an alert with the given status is eligible for deletion.
-   *
-   * Alerts in the 'enabled' or 'disabled' state can be deleted.
-   * Other statuses like 'in progress' or 'failed' are considered non-deletable.
-   *
-   * @param status - The current status of the alert.
-   * @returns `true` if the alert can be deleted, otherwise `false`.
-   */
-  const getCanDelete = (status: AlertStatusType): boolean => {
-    return status === 'enabled' || status === 'disabled';
-  };
 
   /**
    * Validates the delete flow for an alert based on its label and whether deletion is allowed.
@@ -614,7 +602,7 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       cy.visitWithLogin(alertDefinitionsUrl);
       cy.wait(`@getAlerts-${label}`);
 
-      const canDelete = getCanDelete(status);
+      const canDelete = status === 'enabled' || status === 'disabled';
       validateDeleteFlow(label, canDelete);
     });
   });
