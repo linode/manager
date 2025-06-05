@@ -68,13 +68,13 @@ export const NewDetailTemplateA = () => {
   else if (isTablet) columns = 2;
 
   const dataItems = [
-    { label: 'Status', value: 'A. Running', color: '#48bb78' },
-    { label: 'CPU Core', value: 'B. 1' },
-    { label: 'RAM', value: 'C. 2 GB' },
-    { label: 'Label', value: 'Value' },
-    { label: 'Label', value: 'Value' },
-    { label: 'Label', value: 'Value' },
-    { label: 'Label', value: 'Value' },
+    { label: '3 Col Item', value: 'A' },
+    { label: '3 Col Item', value: 'B' },
+    { label: '3 Col Item', value: 'C' },
+    { label: '3 Col Item', value: 'D' },
+    { label: '3 Col Item', value: 'E' },
+    { label: '3 Col Item', value: 'F' },
+    { label: '3 Col Item', value: 'G' },
   ];
 
   const sidebarItems = [
@@ -84,12 +84,12 @@ export const NewDetailTemplateA = () => {
   ];
 
   const gridItems = [
-    { label: 'Grid Item', value: '1' },
-    { label: 'Grid Item', value: '2' },
-    { label: 'Grid Item', value: '3' },
-    { label: 'Grid Item', value: '4' },
-    { label: 'Grid Item', value: '5' },
-    { label: 'Grid Item', value: '6' },
+    { label: '2 Col Item', value: '1' },
+    { label: '2 Col Item', value: '2' },
+    { label: '2 Col Item', value: '3' },
+    { label: '2 Col Item', value: '4' },
+    { label: '2 Col Item', value: '5' },
+    { label: '2 Col Item', value: '6' },
   ];
 
   const reverseGridItems = gridItems.map((item) => ({ ...item }));
