@@ -181,7 +181,7 @@ export const isValidPort = (
   let errorMsg = PORTS_ERROR_MESSAGE;
 
   if (port === '') {
-    return { errorMsg, isValid: true };
+    return { errorMsg: undefined, isValid: true };
   }
 
   if (!port) {
