@@ -9,6 +9,11 @@ import {
 } from '@linode/ui';
 import * as React from 'react';
 
+import { Link } from 'src/components/Link';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
+import { MANAGE_NETWORKING_LEARN_MORE_LINK } from '../constants';
+
 import type { DatabaseCreateValues } from './DatabaseClusterData';
 import type { PrivateNetwork, VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
@@ -16,16 +21,18 @@ import type { FormikErrors } from 'formik';
 
 interface DatabaseVPCSelectorProps {
   errors: FormikErrors<DatabaseCreateValues>;
+  mode: 'create' | 'networking';
   onChange: (field: string, value: boolean | null | number) => void;
-  onConfigurationChange: (vpc: null | VPC) => void;
+  onConfigurationChange?: (vpc: null | VPC) => void;
   privateNetworkValues: PrivateNetwork;
-  resetFormFields: (partialValues?: Partial<DatabaseCreateValues>) => void;
+  resetFormFields?: (partialValues?: Partial<DatabaseCreateValues>) => void;
   selectedRegionId: string;
 }
 
 export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
   const {
     errors,
+    mode,
     onConfigurationChange,
     onChange,
     selectedRegionId,
@@ -33,22 +40,28 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     privateNetworkValues,
   } = props;
 
+  const isCreate = mode === 'create';
   const { data: selectedRegion } = useRegionQuery(selectedRegionId);
   const regionSupportsVPCs = selectedRegion?.capabilities.includes('VPCs');
 
   const {
     data: vpcs,
-    error,
+    error: vpcsError,
     isLoading,
   } = useAllVPCsQuery({
     enabled: regionSupportsVPCs,
     filter: { region: selectedRegionId },
   });
 
+  const vpcErrorMessage = vpcsError
+    ? getAPIErrorOrDefault(vpcsError, 'Unable to load VPCs')[0].reason
+    : undefined;
+
   const selectedVPC = React.useMemo(
     () => vpcs?.find((vpc) => vpc.id === privateNetworkValues.vpc_id),
     [vpcs, privateNetworkValues.vpc_id]
   );
+
   const selectedSubnet = React.useMemo(
     () =>
       selectedVPC?.subnets.find(
@@ -59,10 +72,11 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
 
   const prevRegionId = React.useRef<string | undefined>();
   const regionHasVPCs = Boolean(vpcs && vpcs.length > 0);
-  const disableVPCSelectors = !regionSupportsVPCs || !regionHasVPCs;
+  const disableVPCSelectors =
+    !!vpcsError || !regionSupportsVPCs || !regionHasVPCs;
 
   const resetVPCConfiguration = () => {
-    resetFormFields({
+    resetFormFields?.({
       private_network: {
         vpc_id: null,
         subnet_id: null,
@@ -76,7 +90,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     // Then switch back to default validation behavior
     if (prevRegionId.current && prevRegionId.current !== selectedRegionId) {
       resetVPCConfiguration();
-      onConfigurationChange(null);
+      onConfigurationChange?.(null);
     }
     prevRegionId.current = selectedRegionId;
   }, [selectedRegionId]);
@@ -91,11 +105,26 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
       longHelperText: '.75rem',
       shortHelperText: '1.75rem',
       noHelperText: '2.75rem',
+      errorText: '1.5rem',
+      errorTextWithLongHelperText: '-.5rem',
     };
+    if (disableVPCSelectors && vpcsError)
+      return margins.errorTextWithLongHelperText;
+    if (errors?.private_network?.vpc_id) return margins.errorText;
     if (disableVPCSelectors && !selectedRegionId) return margins.longHelperText;
     if (disableVPCSelectors && selectedRegionId) return margins.shortHelperText;
     return margins.noHelperText;
   };
+
+  const accessNotice = isCreate && (
+    <Notice
+      sx={(theme: Theme) => ({
+        marginTop: theme.spacingFunction(20),
+      })}
+      text="The cluster will have public access by default if a VPC is not assigned."
+      variant="info"
+    />
+  );
 
   return (
     <>
@@ -109,12 +138,15 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
         Assign a VPC
       </Typography>
 
-      <Typography>Assign this cluster to an existing VPC.</Typography>
+      <Typography>
+        Assign this cluster to an existing VPC.{' '}
+        <Link to={MANAGE_NETWORKING_LEARN_MORE_LINK}>Learn more.</Link>
+      </Typography>
       <Box style={{ display: 'flex' }}>
         <Autocomplete
           data-testid="database-vpc-selector"
           disabled={disableVPCSelectors}
-          errorText={error?.[0].reason}
+          errorText={vpcErrorMessage || errors?.private_network?.vpc_id}
           helperText={disableVPCSelectors ? vpcHelperTextCopy : undefined}
           label="VPC"
           loading={isLoading}
@@ -124,7 +156,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
               onChange('private_network.subnet_id', null);
               onChange('private_network.public_access', false);
             }
-            onConfigurationChange(value ?? null);
+            onConfigurationChange?.(value ?? null);
             onChange('private_network.vpc_id', value?.id ?? null);
           }}
           options={vpcs ?? []}
@@ -177,13 +209,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           </Box>
         </>
       ) : (
-        <Notice
-          sx={(theme: Theme) => ({
-            marginTop: theme.spacingFunction(20),
-          })}
-          text="The cluster will have public access by default if a VPC is not assigned."
-          variant="info"
-        />
+        accessNotice
       )}
     </>
   );
