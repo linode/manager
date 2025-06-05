@@ -121,11 +121,6 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const EventsLanding = React.lazy(() =>
-  import('src/features/Events/EventsLanding').then((module) => ({
-    default: module.EventsLanding,
-  }))
-);
 
 const IAM = React.lazy(() =>
   import('src/features/IAM').then((module) => ({
@@ -306,10 +301,6 @@ export const MainContent = () => {
                                 )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route
-                                  component={EventsLanding}
-                                  path="/events"
-                                />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
