@@ -2,7 +2,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 
@@ -60,7 +60,7 @@ beforeEach(() => {
 
 describe('AlertDefinition Create', () => {
   it('should render input components', async () => {
-    renderWithTheme(<CreateAlertDefinition />);
+    await renderWithThemeAndRouter(<CreateAlertDefinition />);
 
     expect(screen.getByText('1. General Information')).toBeVisible();
     expect(screen.getByLabelText('Name')).toBeVisible();
@@ -81,7 +81,9 @@ describe('AlertDefinition Create', () => {
   });
 
   it('should be able to enter a value in the textbox', async () => {
-    const { getByLabelText } = renderWithTheme(<CreateAlertDefinition />);
+    const { getByLabelText } = await renderWithThemeAndRouter(
+      <CreateAlertDefinition />
+    );
     const input = getByLabelText('Name');
 
     await userEvent.type(input, 'text');
@@ -107,9 +109,10 @@ describe('AlertDefinition Create', () => {
       ],
     },
   });
+
   it('should render client side validation errors for threshold and trigger occurences text field', async () => {
     const user = userEvent.setup();
-    const container = renderWithTheme(<CreateAlertDefinition />);
+    const container = await renderWithThemeAndRouter(<CreateAlertDefinition />);
 
     const serviceTypeInput = container.getByPlaceholderText('Select a Service');
     await user.click(serviceTypeInput);
@@ -143,7 +146,7 @@ describe('AlertDefinition Create', () => {
   it('should render the client side validation error messages for the form', async () => {
     const errorMessage = 'This field is required.';
     const user = userEvent.setup();
-    const container = renderWithTheme(<CreateAlertDefinition />);
+    const container = await renderWithThemeAndRouter(<CreateAlertDefinition />);
 
     const submitButton = container.getByText('Submit');
 
@@ -166,7 +169,7 @@ describe('AlertDefinition Create', () => {
 
   it('should validate the checks of Alert Name and Description', async () => {
     const user = userEvent.setup();
-    const container = renderWithTheme(<CreateAlertDefinition />);
+    const container = await renderWithThemeAndRouter(<CreateAlertDefinition />);
     const nameInput = container.getByLabelText('Name');
     const descriptionInput = container.getByLabelText('Description (optional)');
     await user.type(nameInput, '*#&+:<>"?@%');

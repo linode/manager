@@ -1,18 +1,18 @@
 import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
 import React from 'react';
-import { Router } from 'react-router-dom';
 
 import { alertFactory, notificationChannelFactory } from 'src/factories';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { EditAlertDefinition } from './EditAlertDefinition';
 
+const navigate = vi.fn();
 const queryMocks = vi.hoisted(() => ({
   useAllAlertNotificationChannelsQuery: vi.fn(),
   useEditAlertDefinition: vi.fn(),
+  useNavigate: vi.fn(() => navigate),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', () => ({
@@ -21,6 +21,14 @@ vi.mock('src/queries/cloudpulse/alerts', () => ({
     queryMocks.useAllAlertNotificationChannelsQuery,
   useEditAlertDefinition: queryMocks.useEditAlertDefinition,
 }));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -45,7 +53,7 @@ describe('EditAlertDefinition component', () => {
     'renders the components of the form',
     async () => {
       const { findByPlaceholderText, getByLabelText, getByText } =
-        renderWithTheme(
+        await renderWithThemeAndRouter(
           <EditAlertDefinition
             alertDetails={alertDetails}
             serviceType="linode"
@@ -77,19 +85,17 @@ describe('EditAlertDefinition component', () => {
   it(
     'should submit form data correctly',
     async () => {
-      const push = vi.fn();
-      const history = createMemoryHistory();
-      history.push = push;
-      history.push('/alerts/definitions/edit/linode/1');
+      navigate({
+        to: '/alerts/definitions/edit/linode/1',
+      });
       const mutateAsyncSpy = queryMocks.useEditAlertDefinition().mutateAsync;
-      const { getByPlaceholderText, getByText } = renderWithTheme(
-        <Router history={history}>
+      const { getByPlaceholderText, getByText } =
+        await renderWithThemeAndRouter(
           <EditAlertDefinition
             alertDetails={alertDetails}
             serviceType="linode"
           />
-        </Router>
-      );
+        );
       const descriptionValue = 'Updated Description';
       const nameValue = 'Updated Label';
       const nameInput = getByPlaceholderText('Enter a Name');
@@ -104,7 +110,9 @@ describe('EditAlertDefinition component', () => {
 
       await waitFor(() => expect(mutateAsyncSpy).toHaveBeenCalledTimes(1));
 
-      expect(push).toHaveBeenLastCalledWith('/alerts/definitions');
+      expect(navigate).toHaveBeenLastCalledWith({
+        to: '/alerts/definitions',
+      });
       await waitFor(() => {
         expect(
           getByText(UPDATE_ALERT_SUCCESS_MESSAGE) // validate whether snackbar is displayed properly

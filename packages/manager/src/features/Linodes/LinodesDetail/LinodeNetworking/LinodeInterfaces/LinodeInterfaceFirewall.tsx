@@ -27,7 +27,9 @@ export const LinodeInterfaceFirewall = ({ interfaceId, linodeId }: Props) => {
     return 'None';
   }
 
-  const firewall = data.data[0];
+  // display the enabled firewall if it exists, otherwise display the first firewall
+  const firewall =
+    data.data.find((firewall) => firewall.status === 'enabled') ?? data.data[0];
 
   return <Link to={`/firewalls/${firewall.id}`}>{firewall.label}</Link>;
 };

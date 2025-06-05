@@ -2,7 +2,7 @@ import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 
@@ -35,8 +35,8 @@ queryMocks.usePreferences.mockReturnValue({
 });
 
 describe('Kubernetes deletion dialog', () => {
-  it('should close the drawer on cancel', () => {
-    const { getByTestId } = renderWithTheme(
+  it('should close the drawer on cancel', async () => {
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DeleteKubernetesClusterDialog {...props} />
     );
     const button = getByTestId('cancel');
@@ -56,7 +56,7 @@ describe('Kubernetes deletion dialog', () => {
       })
     );
 
-    const { findByTestId, getByTestId } = renderWithTheme(
+    const { findByTestId, getByTestId } = await renderWithThemeAndRouter(
       <DeleteKubernetesClusterDialog {...props} />
     );
     const button = getByTestId('confirm');

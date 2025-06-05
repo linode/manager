@@ -163,12 +163,16 @@ export const TypeToConfirmDialog = (props: CombinedProps) => {
   const getButtonProps = () => {
     const confirmProps: ActionButtonsProps = {
       ...primaryButtonProps,
+      ...((entity.action === 'deletion' ||
+        entity.action === 'cancellation' ||
+        isCloseAccount) && {
+        color: 'error',
+      }),
       'data-testid': 'confirm',
       disabled: isPrimaryButtonDisabled,
       label: entity.primaryBtnText,
       loading,
       onClick,
-      ...(reversePrimaryButtonPosition && { color: 'error' }),
     };
 
     const cancelProps: ActionButtonsProps = {

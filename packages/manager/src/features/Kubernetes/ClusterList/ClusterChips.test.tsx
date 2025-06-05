@@ -1,8 +1,7 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 
 import { kubernetesClusterFactory } from 'src/factories';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ClusterChips } from './ClusterChips';
 
@@ -32,31 +31,32 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('Kubernetes cluster action menu', () => {
-  it('renders an HA chip if the cluster is high availability', () => {
-    const { getByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockHACluster} />)
+  it('renders an HA chip if the cluster is high availability', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <ClusterChips cluster={mockHACluster} />
     );
 
     expect(getByText('HA', { exact: false }));
   });
 
-  it('does not render an HA chip if the cluster is not high availability', () => {
-    const { queryByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockCluster} />)
+  it('does not render an HA chip if the cluster is not high availability', async () => {
+    const { queryByText } = await renderWithThemeAndRouter(
+      <ClusterChips cluster={mockCluster} />
     );
 
     expect(queryByText('HA', { exact: false })).toBe(null);
   });
 
-  it('renders both enterprise and HA chips for an enterprise cluster if the feature is enabled', () => {
+  it('renders both enterprise and HA chips for an enterprise cluster if the feature is enabled', async () => {
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
 
-    const { getByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />, {
+    const { getByText } = await renderWithThemeAndRouter(
+      <ClusterChips cluster={mockEnterpriseCluster} />,
+      {
         flags: {
           lkeEnterprise: {
             enabled: true,
@@ -64,22 +64,23 @@ describe('Kubernetes cluster action menu', () => {
             la: true,
           },
         },
-      })
+      }
     );
 
     expect(getByText('HA', { exact: false })).toBeVisible();
     expect(getByText('ENTERPRISE')).toBeVisible();
   });
 
-  it('does not render an enterprise chip for an enterprise cluster if the feature is disabled', () => {
+  it('does not render an enterprise chip for an enterprise cluster if the feature is disabled', async () => {
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
 
-    const { getByText, queryByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockEnterpriseCluster} />, {
+    const { getByText, queryByText } = await renderWithThemeAndRouter(
+      <ClusterChips cluster={mockEnterpriseCluster} />,
+      {
         flags: {
           lkeEnterprise: {
             enabled: false,
@@ -87,22 +88,23 @@ describe('Kubernetes cluster action menu', () => {
             la: true,
           },
         },
-      })
+      }
     );
 
     expect(getByText('HA', { exact: false })).toBeVisible();
     expect(queryByText('ENTERPRISE')).toBe(null);
   });
 
-  it('does not render an enterprise chip for a standard cluster', () => {
+  it('does not render an enterprise chip for a standard cluster', async () => {
     queryMocks.useAccount.mockReturnValue({
       data: {
         capabilities: ['Kubernetes Enterprise'],
       },
     });
 
-    const { queryByText } = render(
-      wrapWithTheme(<ClusterChips cluster={mockStandardCluster} />, {
+    const { queryByText } = await renderWithThemeAndRouter(
+      <ClusterChips cluster={mockStandardCluster} />,
+      {
         flags: {
           lkeEnterprise: {
             enabled: true,
@@ -110,7 +112,7 @@ describe('Kubernetes cluster action menu', () => {
             la: true,
           },
         },
-      })
+      }
     );
 
     expect(queryByText('HA')).toBe(null);

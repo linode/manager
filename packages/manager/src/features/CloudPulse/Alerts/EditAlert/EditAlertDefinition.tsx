@@ -2,10 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
@@ -54,7 +54,7 @@ export interface EditAlertProps {
 
 export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -99,7 +99,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
-      history.push(definitionLanding);
+      navigate({ to: definitionLanding });
     } catch (errors) {
       handleMultipleError<EditAlertDefintionForm>({
         errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
@@ -208,7 +208,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: () => history.push(definitionLanding),
+              onClick: () => navigate({ to: definitionLanding }),
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />

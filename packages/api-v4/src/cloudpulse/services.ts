@@ -50,7 +50,7 @@ export const getCloudPulseServiceTypes = () =>
     setMethod('GET'),
   );
 
-export const getCloudPulseServiceByType = (serviceType: string) =>
+export const getCloudPulseServiceByServiceType = (serviceType: string) =>
   Request<Service>(
     setURL(`${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}`),
     setMethod('GET'),

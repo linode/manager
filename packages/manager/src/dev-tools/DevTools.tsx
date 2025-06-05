@@ -1,5 +1,4 @@
 import { CloseIcon } from '@linode/ui';
-import { getRoot } from '@linode/utilities';
 import Handyman from '@mui/icons-material/Handyman';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled } from '@mui/material';
@@ -27,66 +26,71 @@ const reactQueryDevtoolsStyle = {
   width: '100%',
 };
 
-export const install = (store: ApplicationStore, queryClient: QueryClient) => {
-  const DevTools = () => {
-    const [isOpen, setIsOpen] = React.useState<boolean>(false);
-    const [isDraggable, setIsDraggable] = React.useState<boolean>(false);
-    const [view, setView] = React.useState<DevToolsView>('mocks');
-    const devToolsMainRef = React.useRef<HTMLDivElement>(null);
+interface Props {
+  queryClient: QueryClient;
+  store: ApplicationStore;
+}
 
-    const handleOpenReactQuery = () => {
-      setView('react-query');
-    };
+export const DevTools = (props: Props) => {
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
+  const [isDraggable, setIsDraggable] = React.useState<boolean>(false);
+  const [view, setView] = React.useState<DevToolsView>('mocks');
+  const devToolsMainRef = React.useRef<HTMLDivElement>(null);
 
-    const handleOpenMocks = () => {
-      setView('mocks');
-    };
+  const handleOpenReactQuery = () => {
+    setView('react-query');
+  };
 
-    const handleOpenDesignTokens = () => {
-      setView('design-tokens');
-    };
+  const handleOpenMocks = () => {
+    setView('mocks');
+  };
 
-    const handleDraggableToggle = () => {
-      setIsDraggable(!isDraggable);
-      if (isDraggable) {
-        setIsOpen(false);
-      }
-    };
+  const handleOpenDesignTokens = () => {
+    setView('design-tokens');
+  };
 
-    const handleGoToPreferences = () => {
-      window.location.assign('/profile/settings?preferenceEditor=true');
-    };
+  const handleDraggableToggle = () => {
+    setIsDraggable(!isDraggable);
+    if (isDraggable) {
+      setIsOpen(false);
+    }
+  };
 
-    React.useEffect(() => {
-      // Prevent scrolling of the window when scrolling start/end of the dev tools
-      // Particularly useful when in draggable mode
-      if (!isDraggable) {
+  const handleGoToPreferences = () => {
+    window.location.assign('/profile/settings?preferenceEditor=true');
+  };
+
+  React.useEffect(() => {
+    // Prevent scrolling of the window when scrolling start/end of the dev tools
+    // Particularly useful when in draggable mode
+    if (!isDraggable) {
+      return;
+    }
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!devToolsMainRef.current?.contains(e.target as Node)) {
         return;
       }
 
-      const handleWheel = (e: WheelEvent) => {
-        if (!devToolsMainRef.current?.contains(e.target as Node)) {
-          return;
-        }
+      const target = devToolsMainRef.current;
+      const isAtTop = target.scrollTop === 0;
+      const isAtBottom =
+        target.scrollHeight - target.clientHeight <= target.scrollTop + 1;
 
-        const target = devToolsMainRef.current;
-        const isAtTop = target.scrollTop === 0;
-        const isAtBottom =
-          target.scrollHeight - target.clientHeight <= target.scrollTop + 1;
+      if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+        e.preventDefault();
+      }
+    };
 
-        if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
-          e.preventDefault();
-        }
-      };
+    window.addEventListener('wheel', handleWheel, { passive: false });
 
-      window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
 
-      return () => {
-        window.removeEventListener('wheel', handleWheel);
-      };
-    }, []);
-
-    return (
+  return (
+    <Provider store={props.store}>
       <Draggable draggable={isDraggable}>
         <div
           className={`dev-tools ${isMSWEnabled ? 'dev-tools--msw' : ''} ${
@@ -171,7 +175,7 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
                   <StyledReactQueryDevtoolsContainer
                     style={reactQueryDevtoolsStyle}
                   >
-                    <QueryClientProvider client={queryClient}>
+                    <QueryClientProvider client={props.queryClient}>
                       <ReactQueryDevtools initialIsOpen={true} />
                     </QueryClientProvider>
                   </StyledReactQueryDevtoolsContainer>
@@ -182,22 +186,6 @@ export const install = (store: ApplicationStore, queryClient: QueryClient) => {
           </div>
         </div>
       </Draggable>
-    );
-  };
-
-  const devToolsRoot =
-    document.getElementById('dev-tools-root') ||
-    (() => {
-      const newRoot = document.createElement('div');
-      newRoot.id = 'dev-tools-root';
-      document.body.appendChild(newRoot);
-      return newRoot;
-    })();
-
-  const root = getRoot(devToolsRoot);
-  root.render(
-    <Provider store={store}>
-      <DevTools />
     </Provider>
   );
 };

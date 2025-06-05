@@ -6,7 +6,6 @@ import {
   plansNoticesUtils,
 } from '@linode/utilities';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import {
   getIsDistributedRegion,
@@ -95,7 +94,7 @@ export const PlansPanel = (props: PlansPanelProps) => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
-  const location = useLocation();
+  const location = window.location;
   const params = getQueryParamsFromQueryString<LinodeCreateQueryParams>(
     location.search
   );
