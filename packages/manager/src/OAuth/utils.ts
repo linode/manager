@@ -20,12 +20,14 @@ interface TokensWithExpiry {
   expires: string;
   /**
    * The OAuth scopes
+   *
    * @example "*"
    */
   scopes: string;
   /**
-   * The token including the "Bearer" prefix
-   * @example "Bearer 12345"
+   * The token including the prefix
+   *
+   * @example "Bearer 12345" or "Admin 12345"
    */
   token: string;
 }
