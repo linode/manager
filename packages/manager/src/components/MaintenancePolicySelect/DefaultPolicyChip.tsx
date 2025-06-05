@@ -5,7 +5,7 @@ import type { ChipProps } from '@linode/ui';
 
 interface Props {
   chipProps?: Partial<ChipProps>;
-  tooltipText: React.ReactNode;
+  tooltipText?: React.ReactNode;
 }
 
 export const DefaultPolicyChip = (props: Props) => {

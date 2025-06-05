@@ -31,7 +31,6 @@ const maintenancePolicyOptions: MaintenancePolicyOption[] = [
 interface MaintenancePolicySelectProps {
   disabled?: boolean;
   errorText?: string;
-  hideDefaultOptionChip?: boolean;
   onChange: SelectProps<MaintenancePolicyOption>['onChange'];
   sx?: SxProps<Theme>;
   textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
@@ -41,15 +40,7 @@ interface MaintenancePolicySelectProps {
 export const MaintenancePolicySelect = (
   props: MaintenancePolicySelectProps
 ) => {
-  const {
-    disabled,
-    errorText,
-    onChange,
-    sx,
-    textFieldProps,
-    value,
-    hideDefaultOptionChip,
-  } = props;
+  const { disabled, errorText, onChange, sx, textFieldProps, value } = props;
 
   const { data: maintenancePolicies } = useAccountMaintenancePoliciesQuery();
 
@@ -71,11 +62,7 @@ export const MaintenancePolicySelect = (
               {option.description}
             </Stack>
             <Box flexGrow={1} />
-            {defaultPolicy?.id === option.value && !hideDefaultOptionChip && (
-              <DefaultPolicyChip
-                tooltipText={`${option.label} is currently the account-wide default Host Maintenance Policy.`}
-              />
-            )}
+            {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
             {state.selected && <SelectedIcon visible />}
           </Stack>
         </li>
@@ -85,7 +72,7 @@ export const MaintenancePolicySelect = (
         InputProps: {
           endAdornment: value === defaultPolicy?.id && (
             <DefaultPolicyChip
-              tooltipText={`${maintenancePolicyOptions.find((option) => option.value === value)?.label ?? 'This'} is currently the account-wide default Host Maintenance Policy.`}
+              tooltipText={`${maintenancePolicyOptions.find((option) => option.value === value)?.label ?? 'This'} is the account host maintenance policy default setting.`}
             />
           ),
         },

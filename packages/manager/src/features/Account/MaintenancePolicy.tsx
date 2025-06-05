@@ -70,7 +70,6 @@ export const MaintenancePolicy = () => {
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
                 errorText={fieldState.error?.message}
-                hideDefaultOptionChip
                 onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
                   field.onChange(item?.value);
                 }}
