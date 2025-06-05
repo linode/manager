@@ -14,16 +14,21 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
-import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_ROLES_TEXT,
+} from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
   const { username } = useParams<{ username: string }>();
   const theme = useTheme();
 
-  const { data: assignedRoles, isLoading } = useAccountUserPermissions(
-    username ?? ''
-  );
+  const {
+    data: assignedRoles,
+    isLoading,
+    error: assignedRolesError,
+  } = useAccountUserPermissions(username ?? '');
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
@@ -35,8 +40,8 @@ export const UserRoles = () => {
     return <CircleProgress />;
   }
 
-  if (error) {
-    return <ErrorState errorText={error[0].reason} />;
+  if (error || assignedRolesError) {
+    return <ErrorState errorText={ERROR_STATE_TEXT} />;
   }
 
   return (

@@ -13,7 +13,10 @@ import { useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
-import { NO_ASSIGNED_ENTITIES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_ENTITIES_TEXT,
+} from '../../Shared/constants';
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 
@@ -21,9 +24,11 @@ export const UserEntities = () => {
   const theme = useTheme();
 
   const { username } = useParams<{ username: string }>();
-  const { data: assignedRoles, isLoading } = useAccountUserPermissions(
-    username ?? ''
-  );
+  const {
+    data: assignedRoles,
+    isLoading,
+    error: assignedRolesError,
+  } = useAccountUserPermissions(username ?? '');
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
@@ -34,8 +39,8 @@ export const UserEntities = () => {
     return <CircleProgress />;
   }
 
-  if (error) {
-    return <ErrorState errorText={error[0].reason} />;
+  if (error || assignedRolesError) {
+    return <ErrorState errorText={ERROR_STATE_TEXT} />;
   }
 
   return (

@@ -11,6 +11,9 @@ export const INTERNAL_ERROR_UPDATE_PERMISSION = `Internal Error - Issue with upd
 
 export const NO_CHANGES_SAVED = `No changes were saved.`;
 
+export const ERROR_STATE_TEXT =
+  'An unexpected error occurred. Refresh the page or try again later.';
+
 // Links
 // TODO: update the link when it's ready - UIE-8534
 export const IAM_DOCS_LINK =
