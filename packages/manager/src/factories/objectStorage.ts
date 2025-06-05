@@ -84,21 +84,23 @@ export const objectStorageObjectFactory =
     size: 1024,
   });
 
+// Generate fake access_key and secret_key on the fly.
 export const objectStorageKeyFactory =
   Factory.Sync.makeFactory<ObjectStorageKey>({
-    access_key: '4LRW3T5FX5Z55LB3LYQ8',
+    access_key: Factory.each((id) => `FAKeACCeSsKEy${id}`),
     bucket_access: null,
     id: Factory.each((id) => id),
     label: Factory.each((id) => `access-key-${id}`),
     limited: false,
     regions: [{ id: 'us-east', s3_endpoint: 'us-east.com' }],
-    secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
+    secret_key: Factory.each((id) => `FAkeSECretkEY${id}`),
   });
 
 // TODO: OBJ Gen2 - Once we eliminate legacy and Gen1 support, we can rename this to `objectStorageKeyFactory` and set it as the default.
+// Generate fake access_key and secret_key on the fly.
 export const objectStorageKeyFactoryGen2 =
   Factory.Sync.makeFactory<ObjectStorageKey>({
-    access_key: '4LRW3T5FX5Z55LB3LYQ8',
+    access_key: Factory.each((id) => `FAKeACCeSsKEy${id}`),
     bucket_access: null,
     id: Factory.each((id) => id),
     label: Factory.each((id) => `access-key-${id}`),
@@ -106,7 +108,7 @@ export const objectStorageKeyFactoryGen2 =
     regions: [
       { endpoint_type: 'E1', id: 'us-east', s3_endpoint: 'us-east.com' },
     ],
-    secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
+    secret_key: Factory.each((id) => `FAkeSECretkEY${id}`),
   });
 
 export const makeObjectsPage = (
