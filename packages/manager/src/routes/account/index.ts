@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { AccountRoute } from './AccountRoute';
@@ -23,6 +23,11 @@ const accountRoute = createRoute({
 const accountIndexRoute = createRoute({
   getParentRoute: () => accountRoute,
   path: '/',
+  beforeLoad: () => {
+    throw redirect({
+      to: '/account/billing',
+    });
+  },
 }).lazy(() =>
   import('./accountLazyRoutes').then((m) => m.accountLandingLazyRoute)
 );
