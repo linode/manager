@@ -102,6 +102,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     : undefined;
 
   const {
+    clearErrors,
     control,
     formState: { errors, isDirty, isSubmitting, isValid },
     trigger,
@@ -116,11 +117,16 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     mode: 'onChange',
   });
 
-  const { max: _max, enabled: _enabled } = watch();
+  const { max: _max, enabled: _enabled, min: _min } = watch();
   const maxLimit =
     clusterTier === 'enterprise'
       ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
       : MAX_NODES_PER_POOL_STANDARD_TIER;
+
+  // Clear any API errors once form is updated to allow for resubmission.
+  React.useEffect(() => {
+    clearErrors('root');
+  }, [_max, _min, _enabled, clearErrors]);
 
   const onSubmit = async (values: AutoscaleSettings) => {
     if (!isValid) {
@@ -172,6 +178,9 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
       open={open}
       title={`Autoscale Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
     >
+      {errors.root?.message ? (
+        <Notice spacingBottom={16} text={errors.root.message} variant="error" />
+      ) : null}
       {warning ? (
         <Notice className={classes.notice} variant="warning">
           {warning}{' '}
