@@ -1,7 +1,6 @@
 import { useOAuthClientsQuery } from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -206,9 +205,5 @@ const OAuthClients = () => {
     </>
   );
 };
-
-export const OAuthClientsLazyRoute = createLazyRoute('/profile/clients')({
-  component: OAuthClients,
-});
 
 export default OAuthClients;

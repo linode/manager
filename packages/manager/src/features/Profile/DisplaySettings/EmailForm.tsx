@@ -1,9 +1,9 @@
 import { useMutateProfile, useProfile } from '@linode/queries';
 import { Button, TextField } from '@linode/ui';
+import { useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
 
 import { RESTRICTED_FIELD_TOOLTIP } from 'src/features/Account/constants';
 
@@ -18,15 +18,15 @@ export const EmailForm = () => {
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { enqueueSnackbar } = useSnackbar();
 
-  const location = useLocation<{ focusEmail: boolean }>();
+  const { focusEmail } = useSearch({ strict: false });
   const emailRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
-    if (location.state?.focusEmail && emailRef.current) {
+    if (focusEmail && emailRef.current) {
       emailRef.current.focus();
       emailRef.current.scrollIntoView();
     }
-  }, [emailRef, location.state]);
+  }, [emailRef, focusEmail]);
 
   const values = { email: profile?.email ?? '' };
 

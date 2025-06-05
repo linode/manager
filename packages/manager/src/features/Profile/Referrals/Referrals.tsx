@@ -1,7 +1,6 @@
 import { useProfile } from '@linode/queries';
 import { CircleProgress, Notice, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import Step1 from 'src/assets/referrals/step-1.svg';
@@ -160,7 +159,3 @@ export const Referrals = () => {
     </Paper>
   );
 };
-
-export const ReferralsLazyRoute = createLazyRoute('/profile/referrals')({
-  component: Referrals,
-});
