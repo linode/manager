@@ -116,19 +116,9 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Kubernetes = React.lazy(() =>
-  import('src/features/Kubernetes').then((module) => ({
-    default: module.Kubernetes,
-  }))
-);
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
-  }))
-);
-const EventsLanding = React.lazy(() =>
-  import('src/features/Events/EventsLanding').then((module) => ({
-    default: module.EventsLanding,
   }))
 );
 
@@ -306,19 +296,11 @@ export const MainContent = () => {
                                   component={LinodesRoutes}
                                   path="/linodes"
                                 />
-                                <Route
-                                  component={Kubernetes}
-                                  path="/kubernetes"
-                                />
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
                                 )}
                                 <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route
-                                  component={EventsLanding}
-                                  path="/events"
-                                />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
