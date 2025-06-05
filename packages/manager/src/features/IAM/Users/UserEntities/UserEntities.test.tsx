@@ -52,9 +52,9 @@ describe('UserEntities', () => {
     });
 
     renderWithTheme(<UserEntities />);
+    expect(screen.getByText('This list is empty')).toBeVisible();
 
-    expect(screen.getByText('Entity Access')).toBeVisible();
-
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
@@ -68,7 +68,9 @@ describe('UserEntities', () => {
 
     renderWithTheme(<UserEntities />);
 
-    expect(screen.getByText('Entity Access')).toBeVisible();
+    expect(screen.getByText('This list is empty')).toBeVisible();
+
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
 
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
@@ -87,6 +89,8 @@ describe('UserEntities', () => {
     });
 
     renderWithTheme(<UserEntities />);
+
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
 
     expect(screen.getByText('firewall_admin')).toBeVisible();
     expect(screen.getByText('firewall-1')).toBeVisible();

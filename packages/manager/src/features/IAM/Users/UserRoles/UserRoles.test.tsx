@@ -52,9 +52,11 @@ describe('UserRoles', () => {
 
     renderWithTheme(<UserRoles />);
 
-    expect(screen.getByText('Assigned Roles')).toBeVisible();
-
+    expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Assign New Roles' })
+    ).toBeVisible();
   });
 
   it('should display table if no entity access roles are assigned to user', async () => {

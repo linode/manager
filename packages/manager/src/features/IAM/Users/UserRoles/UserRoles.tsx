@@ -42,22 +42,25 @@ export const UserRoles = () => {
   return (
     <>
       <DocumentTitleSegment segment={`${username} - User Roles`} />
-      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
-        <Typography variant="h2">Assigned Roles</Typography>
-        <Typography
-          sx={{
-            margin: `${theme.tokens.spacing.S12} 0 ${theme.tokens.spacing.S20}`,
-          }}
-          variant="body1"
-        >
-          View and manage roles assigned to the user.
-        </Typography>
-        {hasAssignedRoles ? (
+      {hasAssignedRoles ? (
+        <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+          <Typography variant="h2">Assigned Roles</Typography>
+          <Typography
+            sx={{
+              margin: `${theme.tokens.spacing.S12} 0 ${theme.tokens.spacing.S20}`,
+            }}
+            variant="body1"
+          >
+            View and manage roles assigned to the user.
+          </Typography>
           <AssignedRolesTable />
-        ) : (
-          <NoAssignedRoles text={NO_ASSIGNED_ROLES_TEXT} />
-        )}
-      </Paper>
+        </Paper>
+      ) : (
+        <NoAssignedRoles
+          hasAssignNewRoleDrawer={true}
+          text={NO_ASSIGNED_ROLES_TEXT}
+        />
+      )}
     </>
   );
 };
