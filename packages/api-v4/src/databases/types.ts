@@ -196,6 +196,7 @@ export interface PendingUpdates {
 // Database is the base interface for the shape of data returned by /databases/{engine}/instances
 interface BaseDatabase extends DatabaseInstance {
   port: number;
+  private_network?: null | PrivateNetwork; //  TODO (UIE-8831): Confirm whether this still needs to be optional (?) post VPC release.
   /** @Deprecated used by rdbms-legacy only, rdbms-default always uses TLS */
   ssl_connection: boolean;
   total_disk_size_gb: number;
