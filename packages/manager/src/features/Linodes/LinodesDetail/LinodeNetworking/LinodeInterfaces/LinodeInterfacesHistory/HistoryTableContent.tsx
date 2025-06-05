@@ -1,3 +1,4 @@
+import { getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -7,22 +8,20 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
-import { humanizeLinodeInterfaceStatus } from '../utilities';
-
 import type { APIError, LinodeInterfaceHistory } from '@linode/api-v4';
 
 interface Props {
   data: LinodeInterfaceHistory[] | undefined;
   error: APIError[] | null;
-  isPending: boolean;
+  isLoading: boolean;
 }
 
 export const HistoryTableContent = (props: Props) => {
-  const { data, error, isPending } = props;
+  const { data, error, isLoading } = props;
 
   const cols = 6;
 
-  if (isPending) {
+  if (isLoading) {
     return <TableRowLoading columns={cols} rows={1} />;
   }
 
@@ -48,7 +47,7 @@ export const HistoryTableContent = (props: Props) => {
       <TableCell>{history.linode_id}</TableCell>
       <TableCell>{history.event_id}</TableCell>
       <TableCell>{history.version}</TableCell>
-      <TableCell>{humanizeLinodeInterfaceStatus(history.status)}</TableCell>
+      <TableCell>{getFormattedStatus(history.status)}</TableCell>
     </TableRow>
   ));
 };

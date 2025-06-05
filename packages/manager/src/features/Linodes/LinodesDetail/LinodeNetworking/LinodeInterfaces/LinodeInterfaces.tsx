@@ -23,7 +23,6 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
-  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = React.useState(false);
 
   const [selectedInterfaceId, setSelectedInterfaceId] = useState<number>();
 
@@ -42,6 +41,10 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
     history.replace(`${location.pathname}/interfaces/${interfaceId}`);
   };
 
+  const onShowHistory = () => {
+    history.replace(`${location.pathname}/history`);
+  };
+
   return (
     <Box>
       <Paper
@@ -56,10 +59,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button
-            buttonType="secondary"
-            onClick={() => setIsHistoryDialogOpen(true)}
-          >
+          <Button buttonType="secondary" onClick={onShowHistory}>
             Interface History
           </Button>
           <Button
@@ -97,10 +97,8 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       />
       <HistoryDialog
         linodeId={linodeId}
-        onClose={() => {
-          setIsHistoryDialogOpen(false);
-        }}
-        open={isHistoryDialogOpen}
+        onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
+        open={location.pathname.includes('networking/history')}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}

@@ -4,10 +4,7 @@ import {
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
 
-import {
-  getLinodeInterfaceType,
-  humanizeLinodeInterfaceStatus,
-} from './utilities';
+import { getLinodeInterfaceType } from './utilities';
 
 describe('getLinodeInterfaceType', () => {
   it("returns 'public' if the given interface defines a public interface", () => {
@@ -26,13 +23,5 @@ describe('getLinodeInterfaceType', () => {
     const networkInterface = linodeInterfaceFactoryVlan.build();
 
     expect(getLinodeInterfaceType(networkInterface)).toBe('VLAN');
-  });
-});
-
-describe('humanizeLinodeInterfaceStatus', () => {
-  it('humanizes each status', () => {
-    expect(humanizeLinodeInterfaceStatus('active')).toBe('Active');
-    expect(humanizeLinodeInterfaceStatus('inactive')).toBe('Inactive');
-    expect(humanizeLinodeInterfaceStatus('deleted')).toBe('Deleted');
   });
 });

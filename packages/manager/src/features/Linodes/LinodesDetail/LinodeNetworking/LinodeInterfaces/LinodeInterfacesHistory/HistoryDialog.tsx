@@ -14,13 +14,12 @@ export const HistoryDialog = (props: Props) => {
 
   return (
     <Dialog
-      fullHeight
       fullWidth
       onClose={onClose}
       open={open}
       title="Network Interfaces History"
     >
-      <HistoryTable linodeId={linodeId} open={open} />
+      <HistoryTable linodeId={linodeId} />
       <ActionsPanel
         secondaryButtonProps={{
           label: 'Close',

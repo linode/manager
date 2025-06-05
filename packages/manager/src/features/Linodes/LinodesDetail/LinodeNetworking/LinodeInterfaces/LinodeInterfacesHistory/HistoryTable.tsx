@@ -16,11 +16,10 @@ const preferenceKey = 'linode-interface-history';
 
 interface Props {
   linodeId: number;
-  open: boolean;
 }
 
 export const HistoryTable = (props: Props) => {
-  const { linodeId, open } = props;
+  const { linodeId } = props;
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -39,15 +38,14 @@ export const HistoryTable = (props: Props) => {
   const {
     data: interfaceHistory,
     error,
-    isPending,
+    isLoading,
   } = useLinodeInterfacesHistory(
     linodeId,
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter,
-    open
+    filter
   );
 
   return (
@@ -109,7 +107,7 @@ export const HistoryTable = (props: Props) => {
           <HistoryTableContent
             data={interfaceHistory?.data}
             error={error}
-            isPending={isPending}
+            isLoading={isLoading}
           />
         </TableBody>
       </Table>

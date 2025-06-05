@@ -5,7 +5,12 @@ import {
   updateLinodeInterfacesSettings,
   upgradeToLinodeInterface,
 } from '@linode/api-v4';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 import { firewallQueries } from '../firewalls';
 import { networkingQueries } from '../networking';
@@ -284,5 +289,6 @@ export const useLinodeInterfacesHistory = (
       .linode(linodeId)
       ._ctx.interfaces._ctx.interfacesHistory(params, filter),
     enabled,
+    placeholderData: keepPreviousData,
   });
 };
