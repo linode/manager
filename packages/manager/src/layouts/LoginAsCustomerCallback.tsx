@@ -70,7 +70,7 @@ export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
      */
     setAuthDataInLocalStorage({
       token: `${capitalize(tokenType)} ${accessToken}`,
-      scopes: '',
+      scopes: '*',
       expires: expireDate.toString(),
     });
 

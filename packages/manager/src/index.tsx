@@ -10,13 +10,13 @@ import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import 'src/exceptionReporting';
 import { SplashScreen } from 'src/components/SplashScreen';
-import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import { App } from './App';
 import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
+import { Logout } from './layouts/Logout';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { useOAuth } from './OAuth/utils';
 

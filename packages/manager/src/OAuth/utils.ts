@@ -1,7 +1,13 @@
+/* eslint-disable no-console */
 import { useLocation } from 'react-router-dom';
 
-import { redirectToLogin } from 'src/session';
-import { storage } from 'src/utilities/storage';
+import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
+import { redirectToLogin, revokeToken } from 'src/session';
+import {
+  clearUserInput,
+  getEnvLocalStorageOverrides,
+  storage,
+} from 'src/utilities/storage';
 
 interface TokensWithExpiry {
   /**
@@ -71,4 +77,45 @@ export function useOAuth() {
   }
 
   return { isPendingAuthentication };
+}
+
+function getSafeLoginURL() {
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  let loginUrl = LOGIN_ROOT;
+
+  if (localStorageOverrides?.loginRoot) {
+    try {
+      loginUrl = new URL(localStorageOverrides.loginRoot).toString();
+    } catch (error) {
+      console.error('The currently selected Login URL is invalid.', error);
+    }
+  }
+
+  return loginUrl;
+}
+
+export async function logout() {
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+  const loginUrl = getSafeLoginURL();
+  const clientId = localStorageOverrides?.clientID ?? CLIENT_ID;
+  const token = storage.authentication.token.get();
+
+  clearUserInput();
+  clearAuthDataFromLocalStorage();
+
+  if (clientId && token) {
+    const tokenWithoutPrefix = token.split(' ')[1];
+
+    try {
+      await revokeToken(clientId, tokenWithoutPrefix);
+    } catch (error) {
+      console.error(
+        `Unable to revoke OAuth token by calling POST ${loginUrl}/oauth/revoke.`,
+        error
+      );
+    }
+  }
+
+  window.location.assign(`${loginUrl}/logout`);
 }

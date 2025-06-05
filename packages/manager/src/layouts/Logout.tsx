@@ -1,45 +1,7 @@
 import * as React from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
-import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { clearAuthDataFromLocalStorage } from 'src/OAuth/utils';
-import { revokeToken } from 'src/session';
-import {
-  clearUserInput,
-  getEnvLocalStorageOverrides,
-  storage,
-} from 'src/utilities/storage';
-
-async function logout() {
-  // Clear any user input (in the Support Drawer) since the user is manually logging out.
-  clearUserInput();
-
-  const localStorageOverrides = getEnvLocalStorageOverrides();
-
-  let loginURL;
-  try {
-    loginURL = new URL(localStorageOverrides?.loginRoot ?? LOGIN_ROOT);
-  } catch (_) {
-    loginURL = LOGIN_ROOT;
-  }
-
-  const clientId = localStorageOverrides?.clientID ?? CLIENT_ID
-  const token = storage.authentication.token.get();
-
-  clearAuthDataFromLocalStorage();
-
-  if (clientId && token) {
-    const tokenWithoutPrefix = token.split(' ')[1];
-    try {
-      await revokeToken(clientId, tokenWithoutPrefix);
-    } catch (error) {
-      // We were unable to revoke the token, but we'll send the user to
-      // logout in the login app to end the session.
-    }
-  }
-
-  window.location.assign(`${loginURL}/logout`);
-}
+import { logout } from 'src/OAuth/utils';
 
 export const Logout = () => {
   React.useEffect(() => {
@@ -48,5 +10,3 @@ export const Logout = () => {
 
   return <SplashScreen />;
 };
-
-export default Logout;

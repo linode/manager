@@ -50,8 +50,6 @@ export const clearStorage = (key: string) => {
 
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
-const TYPE_TO_CONFIRM = 'typeToConfirm';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const CODE_VERIFIER = 'authentication/code-verifier';
@@ -109,10 +107,6 @@ export interface Storage {
     scopes: AuthGetAndSet;
     token: AuthGetAndSet;
   };
-  BackupsCtaDismissed: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
   devToolsEnv: {
     get: () => DevToolsEnv | null;
     set: (devToolsEnv: DevToolsEnv) => void;
@@ -145,17 +139,9 @@ export interface Storage {
     get: () => TicketReply;
     set: (v: TicketReply) => void;
   };
-  typeToConfirm: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
 }
 
 export const storage: Storage = {
-  BackupsCtaDismissed: {
-    get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
-  },
   authentication: {
     codeVerifier: {
       get: () => getStorage(CODE_VERIFIER),
@@ -237,14 +223,9 @@ export const storage: Storage = {
     get: () => getStorage(TICKET, { text: '' }),
     set: (v) => setStorage(TICKET, JSON.stringify(v)),
   },
-  typeToConfirm: {
-    get: () => getStorage(TYPE_TO_CONFIRM),
-    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
-  },
 };
 
 export const {
-  BackupsCtaDismissed,
   authentication,
   stackScriptInProgress,
   supportTicket,
