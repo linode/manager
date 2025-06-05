@@ -55,7 +55,7 @@ describe('DatabaseSettings Component', () => {
     await renderWithThemeAndRouter(<DatabaseSettings database={database} />);
   });
 
-  it('Should render a Paper component with headers for Manage Access, Reseting the Root password, and Deleting the Cluster', async () => {
+  it('should render a Paper component with headers for Manage Access, Resetting the Root password, and Deleting the Cluster', async () => {
     spy.mockReturnValue(v2GA());
     const { container, getAllByRole } = await renderWithThemeAndRouter(
       <DatabaseSettings database={database} />
@@ -67,6 +67,32 @@ describe('DatabaseSettings Component', () => {
     expect(headings[1].textContent).toBe('Manage Access');
     expect(headings[2].textContent).toBe('Reset the Root Password');
     expect(headings[3].textContent).toBe('Delete the Cluster');
+  });
+
+  it('should not render Manage Access for a default database when databaseVpc flag is enabled', async () => {
+    spy.mockReturnValue(v2GA());
+    const defaultDatabase = databaseFactory.build({
+      platform: 'rdbms-default',
+    });
+    const { getAllByRole } = await renderWithThemeAndRouter(
+      <DatabaseSettings database={defaultDatabase} />,
+      { flags: { databaseVpc: true } }
+    );
+    const headings = getAllByRole('heading');
+    expect(headings[1].textContent).not.toBe('Manage Access');
+  });
+
+  it('should render Manage Access for a legacy database when databaseVpc flag is enabled', async () => {
+    spy.mockReturnValue(v2GA());
+    const legacyDatabase = databaseFactory.build({
+      platform: 'rdbms-legacy',
+    });
+    const { getAllByRole } = await renderWithThemeAndRouter(
+      <DatabaseSettings database={legacyDatabase} />,
+      { flags: { databaseVpc: true } }
+    );
+    const headings = getAllByRole('heading');
+    expect(headings[0].textContent).toBe('Manage Access');
   });
 
   it.each([

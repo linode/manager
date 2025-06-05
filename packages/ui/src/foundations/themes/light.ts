@@ -243,9 +243,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
-  },
+  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+    {
+      background: Table.Row.Background.Hover,
+    },
 };
 
 const MuiTableZebraStyles = {
@@ -590,9 +591,8 @@ export const lightTheme: ThemeOptions = {
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
-            border: `1px solid ${Border.Normal}`,
-            color: Color.Brand[80],
+            backgroundColor: Button.Secondary.Hover.Background,
+            color: Button.Secondary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: 'transparent',
@@ -627,18 +627,18 @@ export const lightTheme: ThemeOptions = {
           style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
               {
-                backgroundColor: Background.Negativesubtle,
-                border: `1px solid ${Border.Negative}`,
-                color: Content.Text.Negative,
+                backgroundColor: Button.Danger.Hover.Background,
+                border: `1px solid ${Button.Danger.Hover.Background}`,
+                color: Button.Danger.Hover.Text,
               },
             '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
+              backgroundColor: Button.Danger.Disabled.Background,
+              border: `1px solid ${Button.Danger.Disabled.Background}`,
+              color: Button.Danger.Disabled.Text,
             },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
+            backgroundColor: Button.Danger.Default.Background,
+            border: `1px solid ${Button.Danger.Default.Background}`,
+            color: Button.Danger.Default.Text,
           },
         },
       ],
@@ -1264,51 +1264,38 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '&:active': {
-            color: theme.tokens.component.RadioButton.Active.Active.Border,
-          },
-          '&.Mui-checked': {
-            color: theme.tokens.component.RadioButton.Active.Default.Border,
-            '&:active': {
-              color: theme.tokens.component.RadioButton.Active.Active.Border,
-            },
-          },
-          '& .defaultFill': {
-            fill: theme.color.white,
-            transition: theme.transitions.create(['fill']),
-          },
           '& svg circle': {
-            fill: Color.Neutrals.White,
+            fill: theme.tokens.component.RadioButton.Inactive.Default
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Default.Border,
           },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              fill: Color.Neutrals[5],
-            },
-            '&:not(.Mui-checked) svg circle': {
-              fill: Color.Neutrals[20],
-            },
-            '&:not(.Mui-checked)': {
-              color:
-                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
-            },
-            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
-            pointerEvents: 'none',
+          '&.Mui-checked svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Default.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Default.Border,
           },
+          '&.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Disabled
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+          },
+          '&.Mui-checked.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Disabled.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Disabled.Border,
+          },
+          '&:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Hover.Border,
+          },
+          '&.Mui-checked:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Hover.Border,
+          },
+          padding: '10px 10px',
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
               fontSize: '16px',
             },
           },
-          '&:hover': {
-            '& .defaultFill': {
-              fill: theme.color.white,
-            },
-            color: theme.tokens.component.RadioButton.Active.Hover.Border,
-            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
-          },
-          color: theme.tokens.alias.Action.Neutral,
-          padding: '10px 10px',
-          transition: theme.transitions.create(['color']),
         }),
       },
     },
@@ -1595,8 +1582,16 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: Table.Row.Background.Hover,
+          '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+            {
+              backgroundColor: Table.Row.Background.Hover,
+            },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            cursor: 'not-allowed',
+            backgroundColor: 'inherit',
+            '& .MuiFormControlLabel-root.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
@@ -1605,7 +1600,6 @@ export const lightTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,

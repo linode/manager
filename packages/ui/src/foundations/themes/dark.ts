@@ -203,9 +203,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
-  },
+  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+    {
+      background: Table.Row.Background.Hover,
+    },
 };
 
 const MuiTableZebraStyles = {
@@ -420,8 +421,7 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover, &:focus': {
             backgroundColor: Button.Secondary.Hover.Background,
-            border: `1px solid ${Button.Secondary.Hover.Border}`,
-            color: Button.Secondary.Hover.Text,
+            color: Button.Secondary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: Button.Secondary.Disabled.Background,
@@ -443,18 +443,18 @@ export const darkTheme: ThemeOptions = {
           style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
               {
-                backgroundColor: Background.Negativesubtle,
-                border: `1px solid ${Border.Negative}`,
-                color: Content.Text.Negative,
+                backgroundColor: Button.Danger.Hover.Background,
+                border: `1px solid ${Button.Danger.Hover.Background}`,
+                color: Button.Danger.Hover.Text,
               },
             '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
+              backgroundColor: Button.Danger.Disabled.Background,
+              border: `1px solid ${Button.Danger.Disabled.Background}`,
+              color: Button.Danger.Disabled.Text,
             },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
+            backgroundColor: Button.Danger.Default.Background,
+            border: `1px solid ${Button.Danger.Default.Background}`,
+            color: Button.Danger.Default.Text,
           },
         },
       ],
@@ -867,30 +867,6 @@ export const darkTheme: ThemeOptions = {
           },
           color: primaryColors.main,
         },
-        root: ({ theme }) => ({
-          '& .defaultFill': {
-            '& circle': {
-              color: Color.Neutrals[40],
-            },
-            color: Color.Neutrals[80],
-            fill: Color.Neutrals[80],
-          },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              color: Color.Neutrals[40],
-              opacity: 0.15,
-            },
-          },
-          '&:hover': {
-            color: theme.palette.primary.main,
-          },
-          padding: '10px 10px',
-          '&.MuiRadio-sizeSmall': {
-            '.MuiSvgIcon-fontSizeSmall': {
-              fontSize: '16px',
-            },
-          },
-        }),
       },
     },
     MuiSelect: {
@@ -1010,17 +986,24 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: Table.Row.Background.Hover,
+          '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+            {
+              backgroundColor: Table.Row.Background.Hover,
+            },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            cursor: 'not-allowed',
+            backgroundColor: 'inherit',
+            '& .MuiFormControlLabel-root.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
             {
               backgroundColor: Table.Row.Background.Default,
             },
+          // TODO: Use design tokens in future when ready
           '&.disabled-row .MuiTableCell-root': {
-            // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,
