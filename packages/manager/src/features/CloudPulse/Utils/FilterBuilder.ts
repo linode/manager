@@ -300,11 +300,7 @@ export const getTimeDurationProperties = (
 
 export const getPortProperties = (
   props: CloudPulseFilterProperties,
-  handlePortChange: (
-    port: string | undefined,
-    label: string[],
-    savePref?: boolean
-  ) => void
+  handlePortChange: (port: string, label: string[], savePref?: boolean) => void
 ): CloudPulsePortFilterProps => {
   const { name: label, placeholder } = props.config.configuration;
   const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
