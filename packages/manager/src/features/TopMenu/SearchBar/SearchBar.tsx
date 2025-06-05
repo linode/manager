@@ -70,8 +70,7 @@ export const SearchBar = () => {
         return;
       }
 
-      // Query params may be numeric, so convert to string.
-      setSearchText(String(q));
+      setSearchText(q);
     }
   }, [history.location]);
 
