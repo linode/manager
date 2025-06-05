@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from "react";
 import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 
@@ -25,8 +26,6 @@ import type {
   EditableDomainFields,
   EditableRecordFields,
 } from './DomainRecordDrawer';
-
-import type { JSX } from "react";
 
 type FieldRenderFunction = (idx: number) => JSX.Element;
 

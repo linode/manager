@@ -4,6 +4,7 @@ import { useScript } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+import type { JSX } from "react";
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
@@ -18,8 +19,6 @@ import type { APIWarning } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material/styles';
 import type { QueryClient } from '@tanstack/react-query';
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-
-import type { JSX } from "react";
 
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {

@@ -1,9 +1,8 @@
 import { Tooltip } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import type { Theme } from '@mui/material';
-
-import type { JSX } from "react";
 
 interface Props {
   children: JSX.Element;

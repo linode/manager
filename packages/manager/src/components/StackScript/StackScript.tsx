@@ -14,6 +14,7 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 
@@ -25,8 +26,6 @@ import { CodeBlock } from '../CodeBlock/CodeBlock';
 
 import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import type { Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 const useStyles = makeStyles()((theme: Theme) => ({
   author: {

@@ -1,5 +1,6 @@
 import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -14,8 +15,6 @@ import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 import type { APIError, Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {

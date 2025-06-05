@@ -1,5 +1,6 @@
 import { Box, CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import {
   SelectedOptionsHeader,
@@ -13,8 +14,6 @@ import {
 
 import type { ButtonProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
-
-import type { JSX } from "react";
 
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed

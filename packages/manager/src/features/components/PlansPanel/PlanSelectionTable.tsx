@@ -1,5 +1,6 @@
 import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
@@ -14,8 +15,6 @@ import type { PlanSelectionFilterOptionsTable } from './PlanContainer';
 import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass } from '@linode/api-v4/';
 import type { TooltipIconStatus } from '@linode/ui';
-
-import type { JSX } from "react";
 
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;

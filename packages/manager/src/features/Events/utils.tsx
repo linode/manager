@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import { formatDuration } from '@linode/utilities';
 import { Duration } from 'luxon';
+import type { JSX } from "react";
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';
@@ -10,8 +11,6 @@ import { ACTIONS_WITHOUT_USERNAMES } from './constants';
 import { eventMessages } from './factory';
 
 import type { Event } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 /**
  * The event Message Getter gets an event message (JSX) from an `Event`

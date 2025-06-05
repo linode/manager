@@ -1,12 +1,11 @@
 import { Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import * as factories from './factories';
 
 import type { EventMap, OptionalEventMap } from './types';
 import type { Event } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 /**
  * The event Message Mapper

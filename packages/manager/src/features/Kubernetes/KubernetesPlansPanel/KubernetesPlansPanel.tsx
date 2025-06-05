@@ -1,5 +1,6 @@
 import { useRegionAvailabilityQuery } from '@linode/queries';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';
@@ -23,8 +24,6 @@ import type {
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
-
-import type { JSX } from "react";
 
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;

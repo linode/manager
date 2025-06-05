@@ -4,6 +4,7 @@ import { Hidden } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
@@ -39,8 +40,6 @@ import type {
   SubnetLinodeInterfaceData,
 } from '@linode/api-v4';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-
-import type { JSX } from "react";
 
 interface Props {
   handlePowerActionsLinode: (

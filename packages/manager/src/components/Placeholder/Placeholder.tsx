@@ -1,14 +1,13 @@
 import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 
 import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
 import type { ButtonProps } from '@linode/ui';
-
-import type { JSX } from "react";
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;

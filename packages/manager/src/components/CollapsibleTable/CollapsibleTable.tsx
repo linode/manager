@@ -1,12 +1,11 @@
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
 
 import { CollapsibleRow } from './CollapsibleRow';
-
-import type { JSX } from "react";
 
 export interface TableItem {
   id: number | string;

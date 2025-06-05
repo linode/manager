@@ -1,5 +1,6 @@
 import { Checkbox } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -13,8 +14,6 @@ import {
   StyledTable,
   StyledTypography,
 } from './TransferTable.styles';
-
-import type { JSX } from "react";
 
 export interface Props {
   children: JSX.Element;

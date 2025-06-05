@@ -1,12 +1,11 @@
 import { usePreferences } from '@linode/queries';
 import { Stack, Typography, VisibilityTooltip } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import type { SxProps, Theme } from '@mui/material';
-
-import type { JSX } from "react";
 
 export type MaskableTextLength = 'ipv4' | 'ipv6' | 'plaintext';
 

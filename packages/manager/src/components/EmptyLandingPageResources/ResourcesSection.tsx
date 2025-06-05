@@ -1,5 +1,6 @@
 import { Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import DocsIcon from 'src/assets/icons/docs.svg';
 import PointerIcon from 'src/assets/icons/pointer.svg';
@@ -21,8 +22,6 @@ import type {
   ResourcesHeaders,
   ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
-
-import type { JSX } from "react";
 
 interface ButtonProps {
   children: string;

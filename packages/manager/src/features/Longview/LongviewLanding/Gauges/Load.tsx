@@ -1,6 +1,7 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { GaugePercent } from 'src/components/GaugePercent/GaugePercent';
 import withClientData from 'src/containers/longview.stats.container';
@@ -9,8 +10,6 @@ import { baseGaugeProps } from './common';
 
 import type { BaseProps as Props } from './common';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
-
-import type { JSX } from "react";
 
 interface LoadGaugeProps extends Props, LVDataProps {}
 

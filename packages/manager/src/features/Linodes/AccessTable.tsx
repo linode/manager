@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TableBody } from 'src/components/TableBody';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
@@ -13,8 +14,6 @@ import {
 
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
-
-import type { JSX } from "react";
 
 interface AccessTableRow {
   heading?: string;

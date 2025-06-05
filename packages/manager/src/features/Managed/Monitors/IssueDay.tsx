@@ -1,6 +1,7 @@
 import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
@@ -14,8 +15,6 @@ import {
 } from './IssueDay.styles';
 
 import type { ManagedIssue } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 export interface IssueDayProps {
   day: string;

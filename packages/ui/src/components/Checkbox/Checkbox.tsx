@@ -1,6 +1,7 @@
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import {
   CheckboxCheckedIcon,
@@ -12,8 +13,6 @@ import { TooltipIcon } from '../TooltipIcon';
 
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 interface Props extends CheckboxProps {
   /**

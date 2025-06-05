@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -11,8 +12,6 @@ import {
 } from './CardBase.styles';
 
 import type { SxProps, Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 export interface CardBaseProps {
   checked?: boolean;

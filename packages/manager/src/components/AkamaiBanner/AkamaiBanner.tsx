@@ -2,6 +2,7 @@ import { Box, Stack, Typography } from '@linode/ui';
 import { replaceNewlinesWithLineBreaks } from '@linode/utilities';
 import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
@@ -15,8 +16,6 @@ import {
 } from './AkamaiBanner.styles';
 
 import type { Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 interface AkamaiBannerProps {
   action?: JSX.Element;

@@ -1,10 +1,9 @@
 import { useSnackbar } from 'notistack';
+import type { JSX } from "react";
 
 import { toasts } from 'src/features/Events/asyncToasts';
 
 import type { Event } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 export const getLabel = (event: Event) => event.entity?.label ?? '';
 export const getSecondaryLabel = (event: Event) =>

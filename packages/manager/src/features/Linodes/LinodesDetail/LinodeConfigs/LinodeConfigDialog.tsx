@@ -40,6 +40,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
@@ -83,8 +84,6 @@ import type {
 } from '@linode/api-v4';
 import type { DevicesAsStrings } from '@linode/utilities';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-
-import type { JSX } from "react";
 
 interface Helpers {
   devtmpfs_automount: boolean;

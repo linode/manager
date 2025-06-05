@@ -1,14 +1,13 @@
 import { useTheme } from '@mui/material/styles';
 import { Chart } from 'chart.js';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import {
   StyledGaugeWrapperDiv,
   StyledInnerTextDiv,
   StyledSubTitleDiv,
 } from './GaugePercent.styles';
-
-import type { JSX } from "react";
 
 export interface GaugePercentProps {
   /**

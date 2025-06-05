@@ -1,10 +1,10 @@
 import { Dialog, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import type { APIError } from '@linode/api-v4';
 import type { DialogProps } from '@linode/ui';
-import type { JSX } from "react";
 export interface ConfirmationDialogProps extends DialogProps {
   /**
    * The actions to be displayed in the dialog.

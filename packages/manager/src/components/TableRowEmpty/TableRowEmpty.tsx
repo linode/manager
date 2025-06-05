@@ -1,11 +1,10 @@
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
 import type { SxProps } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 export interface TableRowEmptyProps {
   /**

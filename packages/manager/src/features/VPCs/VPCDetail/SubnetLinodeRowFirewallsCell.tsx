@@ -3,13 +3,12 @@ import {
   useLinodeInterfaceFirewallsQuery,
 } from '@linode/queries';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 
 import type { APIError, Firewall } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 export const ConfigInterfaceFirewallCell = (props: { linodeId: number }) => {
   const { linodeId } = props;

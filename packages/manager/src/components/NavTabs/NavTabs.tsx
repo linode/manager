@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from "react";
 import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -8,8 +9,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { TabLinkList } from '../Tabs/TabLinkList';
-
-import type { JSX } from "react";
 
 export interface NavTab {
   // especially when a component behind a tab performs network requests.

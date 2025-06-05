@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import * as React from 'react';
-
 import type { JSX } from "react";
 
 interface Props {

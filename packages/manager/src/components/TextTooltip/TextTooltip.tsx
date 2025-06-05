@@ -1,12 +1,11 @@
 import { Tooltip, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import type { TypographyProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
-
-import type { JSX } from "react";
 
 export interface TextTooltipProps {
   /**

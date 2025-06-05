@@ -1,5 +1,6 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
 
@@ -49,8 +50,6 @@ import type { WithProfileProps } from 'src/containers/profile.container';
 import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
-
-import type { JSX } from "react";
 
 interface State {
   deleteDialogOpen: boolean;

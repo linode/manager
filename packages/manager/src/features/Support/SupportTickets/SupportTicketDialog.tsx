@@ -15,6 +15,7 @@ import { reduceAsync, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { useLocation as useLocationTanstack } from '@tanstack/react-router';
 import { update } from 'ramda';
 import * as React from 'react';
+import type { JSX } from "react";
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation as useLocationRouterDom } from 'react-router-dom';
@@ -51,8 +52,6 @@ import type {
 } from '@linode/api-v4';
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import type { SupportState } from 'src/routes/support';
-
-import type { JSX } from "react";
 
 interface Accumulator {
   errors: AttachmentError[];

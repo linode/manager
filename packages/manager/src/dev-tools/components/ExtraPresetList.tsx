@@ -9,11 +9,10 @@ import { CSS } from '@dnd-kit/utilities';
 import { Dialog, Stack } from '@linode/ui';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { MockPresetExtra } from 'src/mocks/types';
-
-import type { JSX } from "react";
 
 interface ExtraPresetListProps<T> {
   customData: null | T[] | undefined;

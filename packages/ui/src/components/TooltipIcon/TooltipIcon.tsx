@@ -6,6 +6,7 @@ import InfoOutline from '@mui/icons-material/InfoOutlined';
 import WarningSolid from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
@@ -13,8 +14,6 @@ import { Tooltip, tooltipClasses } from '../Tooltip';
 
 import type { TooltipProps } from '../Tooltip';
 import type { SxProps, Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 export type TooltipIconStatus =
   | 'error'

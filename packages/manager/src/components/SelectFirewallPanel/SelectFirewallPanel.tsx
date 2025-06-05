@@ -2,6 +2,7 @@ import { useFirewallsQuery } from '@linode/queries';
 import { Autocomplete, Box, Paper, Stack, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { CreateFirewallDrawer } from 'src/features/Firewalls/FirewallLanding/CreateFirewallDrawer';
 import { useFlags } from 'src/hooks/useFlags';
@@ -12,8 +13,6 @@ import { GenerateFirewallDialog } from '../GenerateFirewallDialog/GenerateFirewa
 import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
-
-import type { JSX } from "react";
 
 interface Props {
   disabled?: boolean;

@@ -2,14 +2,13 @@ import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { CardBase } from './CardBase';
 
 import type { TooltipProps } from '@linode/ui';
 import type { GridProps } from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/material/styles';
-
-import type { JSX } from "react";
 
 export interface SelectionCardProps {
   /**

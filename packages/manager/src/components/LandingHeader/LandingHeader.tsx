@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -10,8 +11,6 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 
 import type { Theme } from '@mui/material/styles';
 import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
-
-import type { JSX } from "react";
 
 export interface LandingHeaderProps {
   analyticsLabel?: string;

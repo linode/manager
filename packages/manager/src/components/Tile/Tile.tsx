@@ -1,12 +1,11 @@
 import { Notice, Typography } from '@linode/ui';
 import Button from '@mui/material/Button';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { Link } from 'src/components/Link';
 
 import { useStyles } from './Tile.styles';
-
-import type { JSX } from "react";
 
 type onClickFn = (
   e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement>

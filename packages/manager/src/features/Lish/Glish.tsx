@@ -143,7 +143,7 @@ export default Glish;
  */
 const sendCharacter = (
   character: string,
-  ref: React.RefObject<VncScreenHandle | null>
+  ref: React.RefObject<null | VncScreenHandle>
 ) => {
   if (
     !ref.current?.rfb ||
@@ -182,7 +182,7 @@ const sendCharacter = (
  */
 const sendString = (
   contents: string,
-  ref: React.RefObject<VncScreenHandle | null>,
+  ref: React.RefObject<null | VncScreenHandle>,
   delay: number = 10
 ) => {
   // Bail out if contents is empty.

@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -21,8 +22,6 @@ import type {
 } from '@linode/api-v4/lib/linodes/types';
 import type { SelectOption } from '@linode/ui';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
-
-import type { JSX } from "react";
 
 interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
 

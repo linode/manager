@@ -1,13 +1,12 @@
 import { Stack } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 import zxcvbn from 'zxcvbn';
 
 import { StrengthIndicator } from '../PasswordInput/StrengthIndicator';
 import { HideShowText } from './HideShowText';
 
 import type { TextFieldProps } from '@linode/ui';
-
-import type { JSX } from "react";
 
 interface Props extends TextFieldProps {
   disabledReason?: JSX.Element | string;

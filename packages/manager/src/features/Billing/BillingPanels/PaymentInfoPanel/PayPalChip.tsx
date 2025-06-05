@@ -7,7 +7,7 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import { useSnackbar } from 'notistack';
-import React, { useEffect, type JSX } from 'react';
+import React, { type JSX, useEffect } from 'react';
 
 import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

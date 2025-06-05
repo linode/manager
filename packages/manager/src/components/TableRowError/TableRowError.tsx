@@ -1,10 +1,9 @@
 import { ErrorState } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-
-import type { JSX } from "react";
 
 export interface TableRowErrorProps {
   /**

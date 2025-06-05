@@ -2,6 +2,7 @@ import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from "react";
 
 import { omittedProps } from '../../utilities';
 import { getErrorText } from '../../utilities/error';
@@ -14,7 +15,6 @@ import { NotFound } from '../NotFound/NotFound';
 
 import type { APIError } from '../../utilities/error';
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
-import type { JSX } from "react";
 export interface DialogProps extends _DialogProps {
   /**
    * Additional CSS to be applied to the Dialog.

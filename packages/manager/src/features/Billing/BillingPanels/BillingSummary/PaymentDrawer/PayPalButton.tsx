@@ -10,6 +10,7 @@ import {
 } from '@paypal/react-paypal-js';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+import type { JSX } from "react";
 import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
@@ -23,8 +24,6 @@ import type {
   OnApproveBraintreeActions,
   OnApproveBraintreeData,
 } from '@paypal/react-paypal-js';
-
-import type { JSX } from "react";
 
 const useStyles = makeStyles()(() => ({
   loading: {
