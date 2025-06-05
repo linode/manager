@@ -97,6 +97,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   databasesRouteTree,
   domainsRouteTree,
   dataStreamRouteTree,
+  eventsRouteTree,
   firewallsRouteTree,
   imagesRouteTree,
   kubernetesRouteTree,
