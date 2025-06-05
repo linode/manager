@@ -9,6 +9,8 @@ import type { TooltipProps } from '@linode/ui';
 import type { GridProps } from '@mui/material/Grid';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface SelectionCardProps {
   /**
    * If true, the card will be selected and displayed as in a selected state.

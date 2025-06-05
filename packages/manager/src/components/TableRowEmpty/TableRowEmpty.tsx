@@ -5,6 +5,8 @@ import { TableRow } from 'src/components/TableRow';
 
 import type { SxProps } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface TableRowEmptyProps {
   /**
    *  The number of columns the empty state should span

@@ -2,6 +2,8 @@ import { getEventMessage } from './utils';
 
 import type { Event, EventAction } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 interface ToastMessage {
   /**
    * If true, the toast will be displayed with an error variant for success messages \

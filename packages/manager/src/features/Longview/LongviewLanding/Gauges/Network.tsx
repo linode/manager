@@ -15,6 +15,8 @@ import type { LongviewNetwork } from '../../request.types';
 import type { BaseProps as Props } from './common';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
+import type { JSX } from "react";
+
 interface NetworkProps extends Props, LVDataProps {}
 
 const Network = (props: NetworkProps) => {

@@ -9,6 +9,8 @@ import { Typography } from '../Typography';
 import type { SvgIconProps } from '../SvgIcon';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface ActionButtonProps {
   onClick: () => void;
   text: string;

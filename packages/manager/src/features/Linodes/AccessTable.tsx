@@ -14,6 +14,8 @@ import {
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
+import type { JSX } from "react";
+
 interface AccessTableRow {
   heading?: string;
   isMasked?: boolean;

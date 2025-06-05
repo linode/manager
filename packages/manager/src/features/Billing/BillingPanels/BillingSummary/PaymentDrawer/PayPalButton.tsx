@@ -24,6 +24,8 @@ import type {
   OnApproveBraintreeData,
 } from '@paypal/react-paypal-js';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()(() => ({
   loading: {
     padding: 4,
@@ -128,7 +130,7 @@ export const PayPalButton = (props: Props) => {
    * Needed to pass dynamic amount to PayPal without re-render
    * https://github.com/paypal/react-paypal-js/issues/161
    */
-  const stateRef = React.useRef<TransactionInfo>();
+  const stateRef = React.useRef<TransactionInfo>(undefined);
 
   const [transaction, setTransaction] = React.useState<TransactionInfo>({
     amount: usd,

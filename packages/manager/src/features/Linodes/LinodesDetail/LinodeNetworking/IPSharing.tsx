@@ -30,6 +30,8 @@ import type { IPRangeInformation } from '@linode/api-v4/lib/networking';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { SelectOption } from '@linode/ui';
 
+import type { JSX } from "react";
+
 interface Props {
   linodeId: number;
   onClose: () => void;

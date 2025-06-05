@@ -10,6 +10,8 @@ import type { TooltipProps } from '../Tooltip';
 import type { ButtonProps as _ButtonProps } from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export type ButtonType = 'outlined' | 'primary' | 'secondary';
 
 const buttonTypeToColor: Record<ButtonType, _ButtonProps['color']> = {

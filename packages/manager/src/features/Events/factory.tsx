@@ -6,6 +6,8 @@ import * as factories from './factories';
 import type { EventMap, OptionalEventMap } from './types';
 import type { Event } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 /**
  * The event Message Mapper
  *

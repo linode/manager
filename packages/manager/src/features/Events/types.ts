@@ -1,5 +1,7 @@
 import type { Event, EventAction, EventStatus } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 type PrefixByUnderscore<T> = T extends `${infer s}_${string}` ? s : never;
 
 type EventActionPrefixes = PrefixByUnderscore<EventAction>;

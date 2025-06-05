@@ -58,7 +58,9 @@ export const Permissions = ({ permissions }: Props) => {
               <StyledPermissionItem
                 data-testid="permission"
                 key={permission}
-                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
+                ref={(el: HTMLSpanElement) => {
+                  (itemRefs.current[index] = el);
+                }}
               >
                 {permission}
               </StyledPermissionItem>

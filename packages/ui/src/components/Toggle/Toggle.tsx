@@ -6,6 +6,8 @@ import { TooltipIcon } from '../TooltipIcon';
 
 import type { SwitchProps } from '@mui/material/Switch';
 
+import type { JSX } from "react";
+
 export interface ToggleProps extends SwitchProps {
   /**
    * Content to display inside an optional tooltip.

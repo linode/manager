@@ -2,6 +2,8 @@ import * as React from 'react';
 
 import { reportException } from 'src/exceptionReporting';
 
+import type { JSX } from "react";
+
 interface State {
   error: boolean;
 }

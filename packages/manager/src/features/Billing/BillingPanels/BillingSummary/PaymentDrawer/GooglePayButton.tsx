@@ -19,6 +19,8 @@ import type { Theme } from '@mui/material/styles';
 import type { QueryClient } from '@tanstack/react-query';
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()((theme: Theme) => ({
   button: {
     '& svg': {

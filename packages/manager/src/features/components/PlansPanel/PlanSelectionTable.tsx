@@ -15,6 +15,8 @@ import type { PlanWithAvailability } from './types';
 import type { LinodeTypeClass } from '@linode/api-v4/';
 import type { TooltipIconStatus } from '@linode/ui';
 
+import type { JSX } from "react";
+
 interface PlanSelectionTableProps {
   filterOptions?: PlanSelectionFilterOptionsTable;
   plans?: PlanWithAvailability[];

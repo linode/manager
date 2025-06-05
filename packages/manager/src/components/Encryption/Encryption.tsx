@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { checkboxTestId, descriptionTestId, headerTestId } from './constants';
 
+import type { JSX } from "react";
+
 export interface EncryptionProps {
   descriptionCopy: JSX.Element | string;
   disabled?: boolean;

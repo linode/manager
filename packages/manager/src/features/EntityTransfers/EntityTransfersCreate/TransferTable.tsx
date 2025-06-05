@@ -14,6 +14,8 @@ import {
   StyledTypography,
 } from './TransferTable.styles';
 
+import type { JSX } from "react";
+
 export interface Props {
   children: JSX.Element;
   count: number;

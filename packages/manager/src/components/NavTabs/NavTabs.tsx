@@ -9,6 +9,8 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 
 import { TabLinkList } from '../Tabs/TabLinkList';
 
+import type { JSX } from "react";
+
 export interface NavTab {
   // especially when a component behind a tab performs network requests.
   backgroundRendering?: boolean;

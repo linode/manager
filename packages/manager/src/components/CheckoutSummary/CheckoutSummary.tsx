@@ -9,6 +9,8 @@ import { SummaryItem } from './SummaryItem';
 
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface CheckoutSummaryProps {
   /**
    * JSX element to be displayed as an agreement section.

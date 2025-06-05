@@ -26,6 +26,8 @@ import { CodeBlock } from '../CodeBlock/CodeBlock';
 import type { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()((theme: Theme) => ({
   author: {
     marginBottom: theme.spacing(2),

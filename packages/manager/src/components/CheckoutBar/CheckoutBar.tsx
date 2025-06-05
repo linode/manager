@@ -11,6 +11,8 @@ import {
   SxTypography,
 } from './styles';
 
+import type { JSX } from "react";
+
 export interface CheckoutBarProps {
   /**
    * Additional pricing to display after the calculated total

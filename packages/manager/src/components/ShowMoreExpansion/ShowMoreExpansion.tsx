@@ -7,6 +7,8 @@ import { makeStyles } from 'tss-react/mui';
 import type { ButtonProps } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles<void, 'caret'>()(
   (theme: Theme, _params, classes) => ({
     caret: {

@@ -7,6 +7,8 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { TableRowLoadingProps } from 'src/components/TableRowLoading/TableRowLoading';
 
+import type { JSX } from "react";
+
 interface TableContentWrapperProps {
   children?: React.ReactNode;
   customFirstRow?: JSX.Element;

@@ -12,6 +12,8 @@ import {
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface CardBaseProps {
   checked?: boolean;
   heading: JSX.Element | string;

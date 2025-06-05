@@ -4,6 +4,8 @@ import { Link } from 'src/components/Link';
 
 import type { ACLType } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 export const copy: Record<
   'bucket' | 'object',
   Partial<Record<ACLType, JSX.Element>>

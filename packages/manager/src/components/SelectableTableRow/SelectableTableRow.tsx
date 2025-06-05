@@ -5,6 +5,8 @@ import * as React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import type { JSX } from "react";
+
 interface SelectableTableRowProps {
   /**
    * The content to be rendered inside the table row.

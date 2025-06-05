@@ -84,6 +84,8 @@ import type {
 import type { DevicesAsStrings } from '@linode/utilities';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
+import type { JSX } from "react";
+
 interface Helpers {
   devtmpfs_automount: boolean;
   distro: boolean;

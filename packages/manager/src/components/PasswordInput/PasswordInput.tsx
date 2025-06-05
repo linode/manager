@@ -7,6 +7,8 @@ import { HideShowText } from './HideShowText';
 
 import type { TextFieldProps } from '@linode/ui';
 
+import type { JSX } from "react";
+
 interface Props extends TextFieldProps {
   disabledReason?: JSX.Element | string;
   hideStrengthLabel?: boolean;

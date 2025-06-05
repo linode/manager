@@ -10,6 +10,8 @@ import { baseGaugeProps } from './common';
 import type { BaseProps as Props } from './common';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
+import type { JSX } from "react";
+
 interface LoadGaugeProps extends Props, LVDataProps {}
 
 export const LoadGauge = withClientData<Props>((ownProps) => ownProps.clientID)(

@@ -52,6 +52,8 @@ import type {
 import type { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import type { SupportState } from 'src/routes/support';
 
+import type { JSX } from "react";
+
 interface Accumulator {
   errors: AttachmentError[];
   success: string[];

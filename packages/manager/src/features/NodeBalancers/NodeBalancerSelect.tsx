@@ -7,6 +7,8 @@ import * as React from 'react';
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 interface NodeBalancerSelectProps {
   /** Whether to display the clear icon. Defaults to `true`. */
   clearable?: boolean;

@@ -6,6 +6,8 @@ import { Link } from 'src/components/Link';
 
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(2),

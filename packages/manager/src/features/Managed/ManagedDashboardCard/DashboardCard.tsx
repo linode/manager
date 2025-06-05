@@ -8,6 +8,8 @@ import {
   StyledTypography,
 } from './DashboardCard.styles';
 
+import type { JSX } from "react";
+
 interface DashboardCardProps {
   alignHeader?: 'flex-start' | 'space-between';
   alignItems?: 'center' | 'flex-start';

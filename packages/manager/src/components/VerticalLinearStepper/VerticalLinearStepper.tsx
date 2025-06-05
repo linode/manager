@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import Box from '@mui/material/Box';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useState } from 'react';
+import React, { useState, type JSX } from 'react';
 
 import {
   CustomStepIcon,

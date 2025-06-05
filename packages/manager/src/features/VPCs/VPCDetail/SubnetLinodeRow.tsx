@@ -40,6 +40,8 @@ import type {
 } from '@linode/api-v4';
 import type { Action } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 
+import type { JSX } from "react";
+
 interface Props {
   handlePowerActionsLinode: (
     linode: Linode,

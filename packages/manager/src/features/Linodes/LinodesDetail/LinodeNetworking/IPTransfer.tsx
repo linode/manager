@@ -23,6 +23,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { APIError, IPRange } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 interface Props {
   linodeId: number;
   onClose: () => void;

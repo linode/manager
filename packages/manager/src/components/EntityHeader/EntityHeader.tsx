@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import type { TypographyProps } from '@linode/ui';
 
+import type { JSX } from "react";
+
 export interface HeaderProps {
   children?: React.ReactNode;
   isSummaryView?: boolean;

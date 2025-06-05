@@ -9,6 +9,8 @@ import type { TextFieldProps, TypographyProps } from '@linode/ui';
 import type { Theme } from '@mui/material';
 import type { SxProps } from '@mui/material';
 
+import type { JSX } from "react";
+
 export interface TypeToConfirmProps extends Omit<TextFieldProps, 'onChange'> {
   confirmationText?: JSX.Element | string;
   expand?: boolean;

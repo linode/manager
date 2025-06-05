@@ -4,6 +4,8 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 
+import type { JSX } from "react";
+
 const getFacilitiesList = (warnings: string[]) => (
   <ul>
     {warnings.map((thisWarning) => (

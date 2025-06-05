@@ -2,6 +2,8 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 
 import type { ManagerPreferences } from '@linode/utilities';
 
+import type { JSX } from "react";
+
 interface RenderChildrenProps<T> {
   preference: NonNullable<T>;
   togglePreference: () => NonNullable<T>;

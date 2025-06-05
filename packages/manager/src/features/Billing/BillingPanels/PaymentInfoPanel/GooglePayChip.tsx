@@ -13,6 +13,8 @@ import {
 
 import type { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()(() => ({
   button: {
     '&:hover': {

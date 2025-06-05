@@ -5,6 +5,8 @@ import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 import { sendHelpButtonClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 
+import type { JSX } from "react";
+
 export interface DocsLinkProps {
   /** The label to use for analytics purposes */
   analyticsLabel?: string;

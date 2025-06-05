@@ -16,6 +16,8 @@ import type { AccordionProps as _AccordionProps } from '@mui/material/Accordion'
 import type { AccordionDetailsProps } from '@mui/material/AccordionDetails';
 import type { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()((theme: Theme) => ({
   itemCount: {
     alignItems: 'center',

@@ -31,6 +31,8 @@ import type { PlanSelectionType } from './types';
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
 import type { LinodeCreateQueryParams } from 'src/features/Linodes/types';
 
+import type { JSX } from "react";
+
 export interface PlansPanelProps {
   className?: string;
   copy?: string;

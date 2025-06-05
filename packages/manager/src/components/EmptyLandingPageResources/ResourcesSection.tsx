@@ -22,6 +22,8 @@ import type {
   ResourcesLinkSection,
 } from 'src/components/EmptyLandingPageResources/ResourcesLinksTypes';
 
+import type { JSX } from "react";
+
 interface ButtonProps {
   children: string;
   disabled?: boolean;

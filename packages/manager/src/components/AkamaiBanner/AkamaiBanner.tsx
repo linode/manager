@@ -16,6 +16,8 @@ import {
 
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 interface AkamaiBannerProps {
   action?: JSX.Element;
   link?: {

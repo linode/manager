@@ -22,6 +22,8 @@ import type {
 import type { SelectOption } from '@linode/ui';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
+import type { JSX } from "react";
+
 interface InterfaceErrors extends VPCInterfaceErrors, OtherInterfaceErrors {}
 
 interface InterfaceSelectProps extends VPCState {

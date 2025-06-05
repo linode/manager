@@ -6,6 +6,8 @@ import { TableHead } from 'src/components/TableHead';
 
 import { CollapsibleRow } from './CollapsibleRow';
 
+import type { JSX } from "react";
+
 export interface TableItem {
   id: number | string;
   InnerTable: JSX.Element;

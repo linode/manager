@@ -8,6 +8,8 @@ import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
 import type { ButtonProps } from '@linode/ui';
 
+import type { JSX } from "react";
+
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }

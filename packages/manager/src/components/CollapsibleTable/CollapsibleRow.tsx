@@ -8,6 +8,8 @@ import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import type { JSX } from "react";
+
 interface Props {
   InnerTable: JSX.Element;
   label: string;

@@ -11,6 +11,8 @@ import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import type { Theme } from '@mui/material/styles';
 import type { BreadcrumbProps } from 'src/components/Breadcrumb/Breadcrumb';
 
+import type { JSX } from "react";
+
 export interface LandingHeaderProps {
   analyticsLabel?: string;
   betaFeedbackLink?: string;

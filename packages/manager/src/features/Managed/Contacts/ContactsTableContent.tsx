@@ -13,6 +13,8 @@ import type { ManagedContact } from '@linode/api-v4/lib/managed';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { Theme } from '@mui/material';
 
+import type { JSX } from "react";
+
 interface ContactsTableContentProps {
   contacts: ManagedContact[];
   error?: APIError[] | null;

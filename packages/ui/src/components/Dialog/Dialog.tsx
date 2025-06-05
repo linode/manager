@@ -14,6 +14,7 @@ import { NotFound } from '../NotFound/NotFound';
 
 import type { APIError } from '../../utilities/error';
 import type { DialogProps as _DialogProps } from '@mui/material/Dialog';
+import type { JSX } from "react";
 export interface DialogProps extends _DialogProps {
   /**
    * Additional CSS to be applied to the Dialog.

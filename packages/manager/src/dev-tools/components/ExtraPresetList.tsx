@@ -13,6 +13,8 @@ import * as React from 'react';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { MockPresetExtra } from 'src/mocks/types';
 
+import type { JSX } from "react";
+
 interface ExtraPresetListProps<T> {
   customData: null | T[] | undefined;
   isEnabled: boolean;

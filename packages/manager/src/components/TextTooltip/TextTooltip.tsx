@@ -6,6 +6,8 @@ import type { TypographyProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
 import type { TooltipProps } from '@mui/material/Tooltip';
 
+import type { JSX } from "react";
+
 export interface TextTooltipProps {
   /**
    * The data-qa-tooltip attribute for the tooltip.

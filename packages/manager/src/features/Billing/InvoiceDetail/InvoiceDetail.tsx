@@ -29,7 +29,7 @@ export const InvoiceDetail = () => {
   const { invoiceId } = useParams<{ invoiceId: string }>();
   const theme = useTheme();
 
-  const csvRef = React.useRef<any>();
+  const csvRef = React.useRef<any>(undefined);
 
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();

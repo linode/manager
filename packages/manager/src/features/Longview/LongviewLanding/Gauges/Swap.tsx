@@ -11,6 +11,8 @@ import { baseGaugeProps } from './common';
 import type { BaseProps as Props } from './common';
 import type { Props as LVDataProps } from 'src/containers/longview.stats.container';
 
+import type { JSX } from "react";
+
 interface SwapGaugeProps extends Props, LVDataProps {}
 
 export const SwapGauge = withClientData<Props>((ownProps) => ownProps.clientID)(

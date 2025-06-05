@@ -26,6 +26,8 @@ import type {
   EditableRecordFields,
 } from './DomainRecordDrawer';
 
+import type { JSX } from "react";
+
 type FieldRenderFunction = (idx: number) => JSX.Element;
 
 interface RecordTypeFields {

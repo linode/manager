@@ -50,6 +50,8 @@ import type { DialogType } from 'src/features/Linodes/types';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 import type { RegionFilter } from 'src/utilities/storage';
 
+import type { JSX } from "react";
+
 interface State {
   deleteDialogOpen: boolean;
   enableBackupsDialogOpen: boolean;
@@ -84,7 +86,7 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  LandingHeader?: React.ReactElement;
+  LandingHeader?: React.ReactElement<any>;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];

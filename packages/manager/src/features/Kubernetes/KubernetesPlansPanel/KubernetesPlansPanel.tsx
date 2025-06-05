@@ -24,6 +24,8 @@ import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
+import type { JSX } from "react";
+
 interface Props {
   addPool?: (pool?: CreateNodePoolData) => void;
   copy?: string;

@@ -15,6 +15,8 @@ import {
 
 import type { ManagedIssue } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 export interface IssueDayProps {
   day: string;
   issues: ManagedIssue[];

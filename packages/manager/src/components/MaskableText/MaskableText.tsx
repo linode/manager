@@ -6,6 +6,8 @@ import { createMaskedText } from 'src/utilities/createMaskedText';
 
 import type { SxProps, Theme } from '@mui/material';
 
+import type { JSX } from "react";
+
 export type MaskableTextLength = 'ipv4' | 'ipv6' | 'plaintext';
 
 export interface MaskableTextProps {

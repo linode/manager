@@ -8,6 +8,8 @@ import { Box } from '../Box';
 import type { CircularProgressProps } from '@mui/material/CircularProgress';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export interface CircleProgressProps
   extends Omit<CircularProgressProps, 'size'> {
   /**

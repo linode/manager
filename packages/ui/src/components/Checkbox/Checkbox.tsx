@@ -13,6 +13,8 @@ import { TooltipIcon } from '../TooltipIcon';
 import type { CheckboxProps } from '@mui/material/Checkbox';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 interface Props extends CheckboxProps {
   /**
    * New custom size prop (Overides and restrict 'size' to only 'small' and 'medium' per ADS)

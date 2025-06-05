@@ -14,6 +14,8 @@ import { Tooltip, tooltipClasses } from '../Tooltip';
 import type { TooltipProps } from '../Tooltip';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 export type TooltipIconStatus =
   | 'error'
   | 'help'

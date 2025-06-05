@@ -8,6 +8,8 @@ import {
   StyledSubTitleDiv,
 } from './GaugePercent.styles';
 
+import type { JSX } from "react";
+
 export interface GaugePercentProps {
   /**
    * The color for the filled in portion of the gauge.

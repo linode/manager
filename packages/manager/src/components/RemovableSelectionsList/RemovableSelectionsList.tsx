@@ -14,6 +14,8 @@ import {
 import type { ButtonProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material';
 
+import type { JSX } from "react";
+
 export type RemovableItem = {
   // The remaining key-value pairs must have their values typed
   // as 'any' because we do not know what types they could be.

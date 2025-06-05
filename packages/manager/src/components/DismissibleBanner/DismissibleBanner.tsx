@@ -6,6 +6,8 @@ import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotificatio
 import type { NoticeProps } from '@linode/ui';
 import type { DismissibleNotificationOptions } from 'src/hooks/useDismissibleNotifications';
 
+import type { JSX } from "react";
+
 interface Props extends NoticeProps {
   /**
    * Optional element to pass to the banner to trigger actions

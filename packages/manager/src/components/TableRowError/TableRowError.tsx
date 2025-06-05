@@ -4,6 +4,8 @@ import * as React from 'react';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import type { JSX } from "react";
+
 export interface TableRowErrorProps {
   /**
    *  The number of columns the empty state should span

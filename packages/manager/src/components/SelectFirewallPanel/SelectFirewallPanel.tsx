@@ -13,6 +13,8 @@ import { LinkButton } from '../LinkButton';
 
 import type { Firewall, FirewallDeviceEntityType } from '@linode/api-v4';
 
+import type { JSX } from "react";
+
 interface Props {
   disabled?: boolean;
   entityType: FirewallDeviceEntityType | undefined;

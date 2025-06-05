@@ -15,6 +15,8 @@ import AddAccessControlDrawer from './AddAccessControlDrawer';
 import type { APIError, Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
 
+import type { JSX } from "react";
+
 const useStyles = makeStyles()((theme: Theme) => ({
   addAccessControlBtn: {
     minWidth: 225,

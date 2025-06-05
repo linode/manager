@@ -6,6 +6,8 @@ import { Link } from 'src/components/Link';
 
 import { useStyles } from './Tile.styles';
 
+import type { JSX } from "react";
+
 type onClickFn = (
   e: React.KeyboardEvent<HTMLElement> | React.MouseEvent<HTMLElement>
 ) => void;
