@@ -18,6 +18,10 @@ import {
 import { iamQueries } from 'src/queries/iam/queries';
 
 import {
+  INTERNAL_ERROR_UPDATE_PERMISSION,
+  NO_CHANGES_SAVED,
+} from '../../Shared/constants';
+import {
   getAllRoles,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
@@ -102,9 +106,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
           {formState.errors.root?.message && (
             <Notice variant="error">
               <Typography>
-                Internal Error - Issue with updating permissions.
+                {INTERNAL_ERROR_UPDATE_PERMISSION}
                 <br />
-                No changes were saved.
+                {NO_CHANGES_SAVED}
               </Typography>
             </Notice>
           )}
