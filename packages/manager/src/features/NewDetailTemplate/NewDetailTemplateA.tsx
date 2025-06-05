@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTheme, useMediaQuery } from '@mui/material';
 
-const DataItem = ({ label, value, color }) => (
+const DataItem = ({ label, value, color, backgroundColor }) => (
   <div
     style={{
-      backgroundColor: '#f7b731',
+      backgroundColor: backgroundColor,
       borderRadius: 8,
       padding: 16,
       minWidth: 120,
@@ -17,7 +17,7 @@ const DataItem = ({ label, value, color }) => (
     <div
       style={{
         fontSize: 12,
-        color: '#2d3748',
+        color: color,
         marginBottom: 4,
         fontWeight: 400,
         opacity: 0.8,
@@ -29,7 +29,7 @@ const DataItem = ({ label, value, color }) => (
       style={{
         fontSize: 16,
         fontWeight: 600,
-        color: color || '#2d3748',
+        color: color,
       }}
     >
       {value}
@@ -42,6 +42,18 @@ const distributeItems = (items, columns) => {
   items.forEach((item, index) => {
     result[index % columns].push(item);
   });
+  return result;
+};
+
+const distributeItemsSequentially = (items, columns) => {
+  const result = Array.from({ length: columns }, () => []);
+  const itemsPerColumn = Math.ceil(items.length / columns);
+
+  items.forEach((item, index) => {
+    const columnIndex = Math.floor(index / itemsPerColumn);
+    result[columnIndex].push(item);
+  });
+
   return result;
 };
 
@@ -65,7 +77,30 @@ export const NewDetailTemplateA = () => {
     { label: 'Label', value: 'Value' },
   ];
 
+  const sidebarItems = [
+    { label: 'Item', value: '1' },
+    { label: 'Item', value: '2' },
+    { label: 'Item', value: '3' },
+  ];
+
+  const gridItems = [
+    { label: 'Grid Item', value: '1' },
+    { label: 'Grid Item', value: '2' },
+    { label: 'Grid Item', value: '3' },
+    { label: 'Grid Item', value: '4' },
+    { label: 'Grid Item', value: '5' },
+    { label: 'Grid Item', value: '6' },
+  ];
+
+  const reverseGridItems = gridItems.map((item) => ({ ...item }));
+  const reverseSidebarItems = sidebarItems.map((item) => ({ ...item }));
+
   const distributedItems = distributeItems(dataItems, columns);
+  const distributedGridItems = distributeItemsSequentially(gridItems, 2);
+  const distributedReverseGridItems = distributeItemsSequentially(
+    reverseGridItems,
+    2
+  );
 
   return (
     <div
@@ -111,11 +146,346 @@ export const NewDetailTemplateA = () => {
                 key={`${colIndex}-${idx}`}
                 label={item.label}
                 value={item.value}
-                color={item.color}
+                color={item.color || '#2d3748'}
+                backgroundColor="#f7b731"
               />
             ))}
           </div>
         ))}
+      </div>
+
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 600,
+          marginBottom: 24,
+          marginTop: 40,
+          color: '#2d3748',
+        }}
+      >
+        Side-by-Side Layout
+      </h2>
+
+      {isDesktop ? (
+        <div
+          style={{
+            display: 'flex',
+            gap: 24,
+            flexDirection: 'row',
+          }}
+        >
+          <div
+            style={{
+              flex: '0 0 300px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0,
+            }}
+          >
+            {sidebarItems.map((item, idx) => (
+              <DataItem
+                key={`sidebar-${idx}`}
+                label={item.label}
+                value={item.value}
+                color="#ffffff"
+                backgroundColor="#3182ce"
+              />
+            ))}
+          </div>
+
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              gap: 16,
+              flexDirection: 'row',
+            }}
+          >
+            {distributedGridItems.map((columnItems, colIndex) => (
+              <div
+                key={colIndex}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                }}
+              >
+                {columnItems.map((item, idx) => (
+                  <DataItem
+                    key={`grid-${colIndex}-${idx}`}
+                    label={item.label}
+                    value={item.value}
+                    color="#ffffff"
+                    backgroundColor="#e53e3e"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={{ marginBottom: 24 }}>
+            {isTablet ? (
+              <div style={{ display: 'flex', gap: 16 }}>
+                <div style={{ flex: 1 }}>
+                  {sidebarItems
+                    .filter((_, idx) => idx % 2 === 0)
+                    .map((item, idx) => (
+                      <DataItem
+                        key={`sidebar-left-${idx}`}
+                        label={item.label}
+                        value={item.value}
+                        color="#ffffff"
+                        backgroundColor="#3182ce"
+                      />
+                    ))}
+                </div>
+                <div style={{ flex: 1 }}>
+                  {sidebarItems
+                    .filter((_, idx) => idx % 2 === 1)
+                    .map((item, idx) => (
+                      <DataItem
+                        key={`sidebar-right-${idx}`}
+                        label={item.label}
+                        value={item.value}
+                        color="#ffffff"
+                        backgroundColor="#3182ce"
+                      />
+                    ))}
+                </div>
+              </div>
+            ) : (
+              sidebarItems.map((item, idx) => (
+                <DataItem
+                  key={`sidebar-${idx}`}
+                  label={item.label}
+                  value={item.value}
+                  color="#ffffff"
+                  backgroundColor="#3182ce"
+                />
+              ))
+            )}
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              gap: 16,
+              flexDirection: isTablet ? 'row' : 'column',
+            }}
+          >
+            {distributedGridItems.map((columnItems, colIndex) => (
+              <div
+                key={colIndex}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                }}
+              >
+                {columnItems.map((item, idx) => (
+                  <DataItem
+                    key={`grid-${colIndex}-${idx}`}
+                    label={item.label}
+                    value={item.value}
+                    color="#ffffff"
+                    backgroundColor="#e53e3e"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 600,
+          marginBottom: 24,
+          marginTop: 40,
+          color: '#2d3748',
+        }}
+      >
+        Reverse Layout (2-col left, single right)
+      </h2>
+
+      {isDesktop ? (
+        <div
+          style={{
+            display: 'flex',
+            gap: 24,
+            flexDirection: 'row',
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              display: 'flex',
+              gap: 16,
+              flexDirection: 'row',
+            }}
+          >
+            {distributedReverseGridItems.map((columnItems, colIndex) => (
+              <div
+                key={colIndex}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                }}
+              >
+                {columnItems.map((item, idx) => (
+                  <DataItem
+                    key={`reverse-grid-${colIndex}-${idx}`}
+                    label={item.label}
+                    value={item.value}
+                    color="#ffffff"
+                    backgroundColor="#e53e3e"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              flex: '0 0 300px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0,
+            }}
+          >
+            {reverseSidebarItems.map((item, idx) => (
+              <DataItem
+                key={`reverse-sidebar-${idx}`}
+                label={item.label}
+                value={item.value}
+                color="#ffffff"
+                backgroundColor="#3182ce"
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 16,
+              flexDirection: isTablet ? 'row' : 'column',
+              marginBottom: 24,
+            }}
+          >
+            {distributedReverseGridItems.map((columnItems, colIndex) => (
+              <div
+                key={colIndex}
+                style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                }}
+              >
+                {columnItems.map((item, idx) => (
+                  <DataItem
+                    key={`reverse-grid-${colIndex}-${idx}`}
+                    label={item.label}
+                    value={item.value}
+                    color="#ffffff"
+                    backgroundColor="#e53e3e"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div>
+            {isTablet ? (
+              <div style={{ display: 'flex', gap: 16 }}>
+                <div style={{ flex: 1 }}>
+                  {reverseSidebarItems
+                    .filter((_, idx) => idx % 2 === 0)
+                    .map((item, idx) => (
+                      <DataItem
+                        key={`reverse-sidebar-left-${idx}`}
+                        label={item.label}
+                        value={item.value}
+                        color="#ffffff"
+                        backgroundColor="#3182ce"
+                      />
+                    ))}
+                </div>
+                <div style={{ flex: 1 }}>
+                  {sidebarItems
+                    .filter((_, idx) => idx % 2 === 1)
+                    .map((item, idx) => (
+                      <DataItem
+                        key={`reverse-sidebar-right-${idx}`}
+                        label={item.label}
+                        value={item.value}
+                        color="#ffffff"
+                        backgroundColor="#3182ce"
+                      />
+                    ))}
+                </div>
+              </div>
+            ) : (
+              reverseSidebarItems.map((item, idx) => (
+                <DataItem
+                  key={`reverse-sidebar-${idx}`}
+                  label={item.label}
+                  value={item.value}
+                  color="#ffffff"
+                  backgroundColor="#3182ce"
+                />
+              ))
+            )}
+          </div>
+        </div>
+      )}
+
+      <div
+        style={{
+          width: '100%',
+          marginTop: 40,
+          padding: 20,
+          backgroundColor: '#48bb78',
+          borderRadius: 8,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        }}
+      >
+        <h2
+          style={{
+            fontSize: 20,
+            fontWeight: 600,
+            marginBottom: 16,
+            color: '#2d3748',
+          }}
+        >
+          About This Layout
+        </h2>
+        <p
+          style={{
+            fontSize: 16,
+            lineHeight: 1.6,
+            color: '#4a5568',
+            margin: 0,
+          }}
+        >
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
+          consequat dolor justo, vitae tincidunt nisi sollicitudin sed. Vivamus
+          at tortor ut augue tincidunt tempus et at lectus. Nam rutrum sapien
+          porttitor, dictum diam id, rutrum velit. Suspendisse sodales euismod
+          dui et gravida. Integer volutpat non sem et blandit. Phasellus at
+          magna ut mi pretium pharetra eget pretium orci. Donec gravida est dui,
+          rhoncus ullamcorper tortor dignissim non. Nullam nulla est, euismod
+          nec nisl vitae, porta blandit nibh.
+        </p>
       </div>
     </div>
   );
