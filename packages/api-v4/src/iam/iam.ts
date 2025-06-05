@@ -1,7 +1,12 @@
 import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 
-import type { IamAccountRoles, IamUserRoles } from './types';
+import type {
+  EntityTypePermissions,
+  IamAccountRoles,
+  IamUserRoles,
+  PermissionType,
+} from './types';
 
 /**
  * getUserRoles
@@ -54,3 +59,44 @@ export const getAccountRoles = () => {
     setMethod('GET'),
   );
 };
+
+/**
+ * getUserAccountPermissions
+ *
+ * Returns the current permissions for this User on the account.
+ *
+ * @param username { string } the username to look up.
+ *
+ */
+export const getUserAccountPermissions = (username: string) =>
+  Request<PermissionType[]>(
+    setURL(
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+        username,
+      )}/permissions/account`,
+    ),
+    setMethod('GET'),
+  );
+
+/**
+ * getUserEntityPermissions
+ *
+ * Returns the current permissions for this User on the entity.
+ *
+ * @param username { string } the username to look up.
+ * @param entityType { EntityTypePermissions } the entityType to look up.
+ * @param entityId { number } the entityId to look up.
+ */
+export const getUserEntityPermissions = (
+  username: string,
+  entityType: EntityTypePermissions,
+  entityId: number,
+) =>
+  Request<PermissionType[]>(
+    setURL(
+      `${BETA_API_ROOT}/iam/users/${encodeURIComponent(
+        username,
+      )}/permissions/${entityType}/${entityId}`,
+    ),
+    setMethod('GET'),
+  );

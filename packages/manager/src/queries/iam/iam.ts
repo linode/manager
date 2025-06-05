@@ -4,7 +4,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { iamQueries } from './queries';
 
-import type { APIError, IamAccountRoles, IamUserRoles } from '@linode/api-v4';
+import type {
+  APIError,
+  EntityTypePermissions,
+  IamAccountRoles,
+  IamUserRoles,
+  PermissionType,
+} from '@linode/api-v4';
 
 export const useUserRoles = (username?: string) => {
   return useQuery<IamUserRoles, APIError[]>({
@@ -33,5 +39,25 @@ export const useUserRolesMutation = (username: string) => {
         role
       );
     },
+  });
+};
+
+export const useUserAccountPermissions = (username?: string) => {
+  return useQuery<PermissionType[], APIError[]>({
+    ...iamQueries.user(username ?? '')._ctx.accountPermissions,
+    enabled: Boolean(username),
+  });
+};
+
+export const useUserEntityPermissions = (
+  entityType: EntityTypePermissions,
+  entityId: number,
+  username?: string
+) => {
+  return useQuery<PermissionType[], APIError[]>({
+    ...iamQueries
+      .user(username ?? '')
+      ._ctx.entityPermissions(entityType, entityId),
+    enabled: Boolean(username),
   });
 };
