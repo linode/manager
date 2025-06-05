@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { ACCOUNT_GROUP_INFO_MESSAGE } from '../constants';
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
