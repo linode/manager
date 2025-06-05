@@ -105,7 +105,7 @@ export const CloudPulsePortFilter = React.memo(
     // Only call handlePortChange if the user has stopped typing for 5 seconds
     const debouncedPortChange = React.useMemo(
       () =>
-        debounce(5000, (value: string) => {
+        debounce(500, (value: string) => {
           handlePortChange(value, [PORT], savePreferences);
         }),
       [handlePortChange, savePreferences]
