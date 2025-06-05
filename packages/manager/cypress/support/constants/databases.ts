@@ -392,3 +392,27 @@ export const databaseConfigurationsResize: DatabaseClusterConfiguration[] = [
     ip: randomIp(),
   },
 ];
+
+// Array of database cluster configurations for which to test creation.
+export const databaseConfigurationsAdvConfig: DatabaseClusterConfiguration[] = [
+  {
+    clusterSize: 1,
+    dbType: 'mysql',
+    engine: 'MySQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '8',
+    ip: randomIp(),
+  },
+  {
+    clusterSize: 3,
+    dbType: 'postgresql',
+    engine: 'PostgreSQL',
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    region: chooseRegion({ capabilities: ['Managed Databases'] }),
+    version: '13',
+    ip: randomIp(),
+  },
+];
