@@ -1,0 +1,80 @@
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+
+import { dashboardFactory } from 'src/factories';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+
+import { CloudPulsePortFilter } from './CloudPulsePortFilter';
+
+import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
+
+const mockHandlePortChange = vi.fn();
+
+const defaultProps: CloudPulsePortFilterProps = {
+  dashboard: dashboardFactory.build(),
+  handlePortChange: mockHandlePortChange,
+  label: 'Port',
+  savePreferences: false,
+};
+
+describe('CloudPulsePortFilter', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('should render with default props', () => {
+    renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
+
+    expect(screen.getByLabelText('Port')).toBeVisible();
+    expect(
+      screen.getByText(
+        'Enter one or more ports (1-65535) comma-separated numbers.'
+      )
+    ).toBeVisible();
+    expect(screen.getByPlaceholderText('e.g., 80,443,3000')).toBeVisible();
+  });
+
+  it('should initialize with default value', () => {
+    const propsWithDefault = {
+      ...defaultProps,
+      defaultValue: '80,443',
+    };
+    renderWithTheme(<CloudPulsePortFilter {...propsWithDefault} />);
+
+    const input = screen.getByLabelText('Port');
+    expect(input).toHaveValue('80,443');
+  });
+
+  it('should allow typing valid digits and commas', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
+
+    const input = screen.getByLabelText('Port');
+    await user.type(input, '80,443');
+    expect(input).toHaveValue('80,443');
+  });
+
+  it('should prevent typing non-numeric characters', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
+
+    const input = screen.getByLabelText('Port');
+    await user.type(input, 'a');
+    expect(
+      screen.getByText(
+        'Input must be an integer or a comma-separated list of integers.'
+      )
+    ).toBeVisible();
+    expect(input).toHaveValue('');
+  });
+
+  it('should not call handlePortChange immediately while typing', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
+
+    const input = screen.getByLabelText('Port');
+    await user.type(input, '8');
+    expect(mockHandlePortChange).not.toHaveBeenCalled();
+  });
+});

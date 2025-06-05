@@ -22,7 +22,7 @@ export interface CloudPulseServiceTypeFilterMap {
   /**
    * The service types like dbaas, linode etc.,
    */
-  readonly serviceType: 'dbaas' | 'linode';
+  readonly serviceType: 'dbaas' | 'linode' | 'nodebalancers';
 }
 
 /**

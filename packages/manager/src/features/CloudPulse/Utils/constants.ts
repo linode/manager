@@ -31,3 +31,11 @@ export const RELATIVE_TIME_DURATION = 'relative_time_duration';
 export const RESOURCE_ID = 'resource_id';
 
 export const WIDGETS = 'widgets';
+
+export const PORT = 'port';
+
+export const PORTS_HELPER_TEXT =
+  'Enter one or more ports (1-65535) comma-separated numbers.';
+
+export const PORTS_ERROR_MESSAGE =
+  'Input must be an integer or a comma-separated list of integers.';
