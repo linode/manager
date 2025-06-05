@@ -16,6 +16,9 @@ const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535';
 const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Consecutive commas are not allowed.';
 const PORTS_LEADING_COMMA_ERROR_MESSAGE = 'Ports must not have leading commas.';
+const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
+  'Ports must not have trailing commas.';
+const DUPLICATE_PORTS_ERROR_MESSAGE = 'Duplicate ports are not allowed';
 
 // Validation schema for a single input port
 const singlePortSchema = string().test(
@@ -52,13 +55,26 @@ const commaSeparatedPortListSchema = string().test(
       return this.createError({ message: MULTIPLE_PORTS_ERROR_MESSAGE });
     }
 
-    if (value.includes(',,')) {
+    if (value.trim().endsWith(',')) {
+      return this.createError({ message: PORTS_TRAILING_COMMA_ERROR_MESSAGE });
+    }
+    const rawSegments = value.split(',');
+
+    // Check for empty segments (consecutive commas, or commas with just spaces)
+    if (rawSegments.some((segment) => segment.trim() === '')) {
       return this.createError({
         message: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
       });
     }
 
-    const ports = value.split(',').map((p) => p.trim());
+    const ports = rawSegments.map((p) => p.trim());
+
+    const unique = new Set(ports);
+    if (unique.size !== ports.length) {
+      return this.createError({
+        message: DUPLICATE_PORTS_ERROR_MESSAGE,
+      });
+    }
 
     for (const port of ports) {
       const num = Number(port);

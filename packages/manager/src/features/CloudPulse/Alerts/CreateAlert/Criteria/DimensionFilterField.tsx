@@ -222,7 +222,9 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   onChange={(event) => field.onChange(event.target.value)}
                   placeholder={
                     dimensionOperatorWatcher === 'in'
-                      ? 'Enter Value(s) (e.g., abc, xyz)'
+                      ? dimensionFieldWatcher === 'port'
+                        ? 'Enter Value(s) (e.g., 80,443,3000)'
+                        : 'Enter Value(s) (e.g., abc, xyz)'
                       : 'Enter a Value'
                   }
                   sx={{ flex: 1, width: '256px' }}
