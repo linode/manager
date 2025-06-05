@@ -6,7 +6,7 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import { useCloudPulseServiceByType } from 'src/queries/cloudpulse/services';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import {
   ALERT_SCOPE_TOOLTIP_TEXT,
@@ -31,7 +31,10 @@ interface AlertEntityScopeSelectProps {
 }
 export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
   const { name, serviceType, formMode = 'create' } = props;
-  const { isLoading, data } = useCloudPulseServiceByType(serviceType);
+  const { isLoading, data } = useCloudPulseServiceByServiceType(
+    serviceType ?? '',
+    serviceType !== null
+  );
   const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
   const options: ScopeOption[] = React.useMemo(() => {

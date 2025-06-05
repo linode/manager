@@ -8,17 +8,18 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { AlertEntityScopeSelect } from './AlertEntityScopeSelect';
 
 const queryMock = vi.hoisted(() => ({
-  useCloudPulseServiceByType: vi.fn(),
+  useCloudPulseServiceByServiceType: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/services.ts', async (importOriginal) => ({
   ...(await importOriginal()),
-  useCloudPulseServiceByType: queryMock.useCloudPulseServiceByType,
+  useCloudPulseServiceByServiceType:
+    queryMock.useCloudPulseServiceByServiceType,
 }));
 
 describe('AlertEntityGroupingSelect', () => {
   it('should render the component', () => {
-    queryMock.useCloudPulseServiceByType.mockReturnValue({
+    queryMock.useCloudPulseServiceByServiceType.mockReturnValue({
       isLoading: false,
       data: serviceTypesFactory.build(),
     });
@@ -42,7 +43,7 @@ describe('AlertEntityGroupingSelect', () => {
   });
 
   it('should disable options that are not available for the service type', async () => {
-    queryMock.useCloudPulseServiceByType.mockReturnValue({
+    queryMock.useCloudPulseServiceByServiceType.mockReturnValue({
       isLoading: false,
       data: serviceTypesFactory.build({
         alert: serviceAlertFactory.build({
