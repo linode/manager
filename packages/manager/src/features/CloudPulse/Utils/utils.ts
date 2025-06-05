@@ -219,7 +219,7 @@ export const arePortsValid = (
     return { isValid: false, errorMsg: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE };
   }
 
-  const portList = ports?.split(',') || [];
+  const portList = ports.split(',');
   let portLimitCount = 0;
 
   for (const port of portList) {
