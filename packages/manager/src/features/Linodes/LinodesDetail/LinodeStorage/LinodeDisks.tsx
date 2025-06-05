@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -120,6 +121,10 @@ export const LinodeDisks = () => {
           Disks
         </Typography>
         <Stack direction="row" spacing={1}>
+          <DocsLink
+            href="https://techdocs.akamai.com/cloud-computing/docs/manage-disks-on-a-compute-instance#create-a-disk"
+            label="Creating Disks"
+          />
           <Button
             buttonType="primary"
             disabled={readOnly || !hasFreeDiskSpace}
