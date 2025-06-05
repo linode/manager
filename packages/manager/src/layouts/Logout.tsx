@@ -2,11 +2,12 @@ import * as React from 'react';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { clearAuthDataFromLocalStorage, TOKEN } from 'src/OAuth/utils';
+import { clearAuthDataFromLocalStorage } from 'src/OAuth/utils';
 import { revokeToken } from 'src/session';
 import {
   clearUserInput,
   getEnvLocalStorageOverrides,
+  storage,
 } from 'src/utilities/storage';
 
 async function logout() {
@@ -23,7 +24,7 @@ async function logout() {
   }
 
   const clientId = localStorageOverrides?.clientID ?? CLIENT_ID
-  const token = localStorage.getItem(TOKEN)
+  const token = storage.authentication.token.get();
 
   clearAuthDataFromLocalStorage();
 

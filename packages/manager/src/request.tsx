@@ -4,9 +4,9 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage, TOKEN } from './OAuth/utils';
+import { clearAuthDataFromLocalStorage } from './OAuth/utils';
 import { redirectToLogin } from './session';
-import { getEnvLocalStorageOverrides } from './utilities/storage';
+import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
 import type { Profile } from '@linode/api-v4';
@@ -126,7 +126,7 @@ export const isSuccessfulGETProfileResponse = (
 export const setupInterceptors = (store: ApplicationStore) => {
   baseRequest.interceptors.request.use((config) => {
     /** Will end up being "Admin 1234" or "Bearer 1234" */
-    const token = ACCESS_TOKEN || localStorage.getItem(TOKEN);
+    const token = ACCESS_TOKEN ?? storage.authentication.token.get() ?? null;
 
     const url = getURL(config);
 

@@ -1,14 +1,10 @@
 import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
-import {
-  EXPIRE,
-  SCOPES,
-  setAuthDataInLocalStorage,
-  TOKEN,
-} from './OAuth/utils';
+import { setAuthDataInLocalStorage } from './OAuth/utils';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
+import { storage } from './utilities/storage';
 
 import type { LinodeError } from './request';
 import type { APIError } from '@linode/api-v4';
@@ -67,8 +63,9 @@ describe('Expiring Tokens', () => {
     const result = handleError(error401, store);
 
     // the local storage state should nulled out because the error is a 401
-    expect(localStorage.getItem(TOKEN)).toBeNull();
-    expect(localStorage.getItem(EXPIRE)).toBeNull();
+    expect(storage.authentication.token.get()).toBeNull();
+    expect(storage.authentication.expire.get()).toBeNull();
+    expect(storage.authentication.scopes.get()).toBeNull();
 
     result.catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
@@ -84,9 +81,9 @@ describe('Expiring Tokens', () => {
 
     const result = handleError(error400, store);
 
-    expect(localStorage.getItem(TOKEN)).toEqual('helloworld');
-    expect(localStorage.getItem(EXPIRE)).toEqual('never');
-    expect(localStorage.getItem(SCOPES)).toEqual('*');
+    expect(storage.authentication.token.get()).toEqual('helloworld');
+    expect(storage.authentication.expire.get()).toEqual('never');
+    expect(storage.authentication.scopes.get()).toEqual('*');
 
     result.catch((e: APIError[]) =>
       expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)

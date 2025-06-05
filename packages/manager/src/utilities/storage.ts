@@ -43,6 +43,11 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
+export const clearStorage = (key: string) => {
+  delete localStorageCache[key];
+  window.localStorage.removeItem(key);
+};
+
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
@@ -63,7 +68,8 @@ export type PageSize = number;
 export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
-  get: () => any;
+  clear: () => void;
+  get: () => string | undefined;
   set: (value: string) => void;
 }
 
@@ -154,22 +160,27 @@ export const storage: Storage = {
     codeVerifier: {
       get: () => getStorage(CODE_VERIFIER),
       set: (v) => setStorage(CODE_VERIFIER, v),
+      clear: () => clearStorage(CODE_VERIFIER),
     },
     expire: {
       get: () => getStorage(EXPIRE),
       set: (v) => setStorage(EXPIRE, v),
+      clear: () => clearStorage(EXPIRE),
     },
     nonce: {
       get: () => getStorage(NONCE),
       set: (v) => setStorage(NONCE, v),
+      clear: () => clearStorage(NONCE),
     },
     scopes: {
       get: () => getStorage(SCOPES),
       set: (v) => setStorage(SCOPES, v),
+      clear: () => clearStorage(SCOPES),
     },
     token: {
       get: () => getStorage(TOKEN),
       set: (v) => setStorage(TOKEN, v),
+      clear: () => clearStorage(TOKEN),
     },
   },
   devToolsEnv: {

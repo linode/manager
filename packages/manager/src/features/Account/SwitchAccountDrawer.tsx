@@ -5,9 +5,8 @@ import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextFiel
 import { PARENT_USER_SESSION_EXPIRED } from 'src/features/Account/constants';
 import { useParentChildAuthentication } from 'src/features/Account/SwitchAccounts/useParentChildAuthentication';
 import { setTokenInLocalStorage } from 'src/features/Account/SwitchAccounts/utils';
-import { TOKEN } from 'src/OAuth/utils';
 import { sendSwitchToParentAccountEvent } from 'src/utilities/analytics/customEventAnalytics';
-import { getStorage, setStorage } from 'src/utilities/storage';
+import { getStorage, setStorage, storage } from 'src/utilities/storage';
 
 import { ChildAccountList } from './SwitchAccounts/ChildAccountList';
 import { updateParentTokenInLocalStorage } from './SwitchAccounts/utils';
@@ -39,7 +38,7 @@ export const SwitchAccountDrawer = (props: Props) => {
   const isProxyUser = userType === 'proxy';
   const currentParentTokenWithBearer =
     getStorage('authentication/parent_token/token') ?? '';
-  const currentTokenWithBearer = localStorage.getItem(TOKEN) ?? '';
+  const currentTokenWithBearer = storage.authentication.token.get() ?? '';
 
   const {
     createToken,
