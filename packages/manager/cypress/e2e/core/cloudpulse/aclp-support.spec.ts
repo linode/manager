@@ -127,9 +127,12 @@ describe('ACLP Components UI varies according to ACLP support', () => {
     mockAppendFeatureFlags({
       aclpIntegration: false,
     }).as('getFeatureFlags');
+    // these mock preferences should not affect result, beta should be hidden regardless of preference
+    mockGetUserPreferences({ isAclpMetricsBeta: false }).as('getUserPrefences');
 
     cy.wait([
       '@getFeatureFlags',
+      '@getUserPrefences',
       '@getLinode',
       '@getCloudPulseService',
       '@getLinodeStats',
