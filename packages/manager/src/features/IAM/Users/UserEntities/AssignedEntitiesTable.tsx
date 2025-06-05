@@ -6,6 +6,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -301,7 +302,7 @@ export const AssignedEntitiesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />
-      {filteredRoles.length > pagination.pageSize && (
+      {filteredRoles.length > PAGE_SIZES[0] && (
         <PaginationFooter
           count={filteredRoles.length}
           handlePageChange={pagination.handlePageChange}

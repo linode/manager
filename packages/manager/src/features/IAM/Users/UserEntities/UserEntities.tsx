@@ -41,22 +41,27 @@ export const UserEntities = () => {
   return (
     <>
       <DocumentTitleSegment segment={`${username} - User Entities`} />
-      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
-        <Typography variant="h2">Entity Access</Typography>
-        <Typography
-          sx={{
-            margin: `${theme.tokens.spacing.S12} 0 ${theme.tokens.spacing.S20}`,
-          }}
-          variant="body1"
-        >
-          View and manage entities attached to user&apos;s entity access roles.
-        </Typography>
-        {hasAssignedRoles ? (
+
+      {hasAssignedRoles ? (
+        <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+          <Typography variant="h2">Entity Access</Typography>
+          <Typography
+            sx={{
+              margin: `${theme.tokens.spacing.S12} 0 ${theme.tokens.spacing.S20}`,
+            }}
+            variant="body1"
+          >
+            View and manage entities attached to user&apos;s entity access
+            roles.
+          </Typography>
           <AssignedEntitiesTable />
-        ) : (
-          <NoAssignedRoles text={NO_ASSIGNED_ENTITIES_TEXT} />
-        )}
-      </Paper>
+        </Paper>
+      ) : (
+        <NoAssignedRoles
+          hasAssignNewRoleDrawer={false}
+          text={NO_ASSIGNED_ENTITIES_TEXT}
+        />
+      )}
     </>
   );
 };
