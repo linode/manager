@@ -13,7 +13,6 @@ const PORTS_ERROR_MESSAGE = 'Input must be an integer.';
 const MULTIPLE_PORTS_ERROR_MESSAGE =
   'Input must be an integer or comma-separated list of integers.';
 const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535';
-const PORTS_LEADING_ZEROES_ERROR_MESSAGE = 'Port must not have leading zeroes';
 const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Consecutive commas are not allowed.';
 const PORTS_LEADING_COMMA_ERROR_MESSAGE = 'Ports must not have leading commas.';
@@ -32,10 +31,6 @@ const singlePortSchema = string().test(
     const num = Number(value);
     if (!Number.isInteger(num) || num < 1 || num > 65535) {
       return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
-    }
-
-    if (/^0\d+/.test(value)) {
-      return this.createError({ message: PORTS_LEADING_ZEROES_ERROR_MESSAGE });
     }
 
     return true;
@@ -73,12 +68,6 @@ const commaSeparatedPortListSchema = string().test(
 
       if (!Number.isInteger(num) || num < 1 || num > 65535) {
         return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
-      }
-
-      if (/^0\d+/.test(port)) {
-        return this.createError({
-          message: PORTS_LEADING_ZEROES_ERROR_MESSAGE,
-        });
       }
     }
 
