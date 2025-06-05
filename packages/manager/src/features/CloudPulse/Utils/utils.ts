@@ -200,10 +200,6 @@ export const isValidPort = (
     return { errorMsg, isValid: false };
   }
 
-  if (String(convertedPort) !== port) {
-    return { errorMsg, isValid: false };
-  }
-
   return { errorMsg: undefined, isValid: true };
 };
 
