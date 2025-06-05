@@ -15,7 +15,7 @@ export const SearchLanding = () => {
 
   const { combinedResults, entityErrors, isLoading, searchResultsByEntity } =
     useCMSearch({
-      query,
+      query: String(query || ''), // Query params may be numeric, so convert to string.
     });
 
   const errors = getErrorsFromErrorMap(entityErrors);
