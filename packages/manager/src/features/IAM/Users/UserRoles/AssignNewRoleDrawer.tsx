@@ -11,10 +11,7 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import {
-  useAccountPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useAccountRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 import { iamQueries } from 'src/queries/iam/queries';
 
 import {
@@ -27,7 +24,7 @@ import {
 } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
-import type { IamUserPermissions } from '@linode/api-v4';
+import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -39,7 +36,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const { username } = useParams<{ username: string }>();
   const queryClient = useQueryClient();
 
-  const { data: accountPermissions } = useAccountPermissions();
+  const { data: accountRoles } = useAccountRoles();
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
@@ -64,27 +61,26 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const roles = watch('roles');
 
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountPermissions);
-  }, [accountPermissions]);
+    return getAllRoles(accountRoles);
+  }, [accountRoles]);
 
-  const { mutateAsync: updateUserRolePermissions, isPending } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles, isPending } =
+    useUserRolesMutation(username);
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
       const queryKey = iamQueries.user(username)._ctx.permissions.queryKey;
-      const currentRoles =
-        queryClient.getQueryData<IamUserPermissions>(queryKey);
+      const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
 
       const mergedRoles = mergeAssignedRolesIntoExistingRoles(
         values,
         structuredClone(currentRoles)
       );
 
-      await updateUserRolePermissions(mergedRoles);
+      await updateUserRoles(mergedRoles);
 
       enqueueSnackbar(`Roles added.`, { variant: 'success' });
       handleClose();
@@ -140,7 +136,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             fields.map((field, index) => (
               <AssignSingleRole
                 hideDetails={areDetailsHidden}
@@ -148,7 +144,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
                 key={field.id}
                 onRemove={() => remove(index)}
                 options={allRoles}
-                permissions={accountPermissions}
+                permissions={accountRoles}
               />
             ))}
 

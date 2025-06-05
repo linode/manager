@@ -11,7 +11,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
+import { useUserRoles } from 'src/queries/iam/iam';
 
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import {
@@ -28,7 +28,8 @@ export const UserRoles = () => {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useAccountUserPermissions(username ?? '');
+  } = useUserRoles(username ?? '');
+
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles

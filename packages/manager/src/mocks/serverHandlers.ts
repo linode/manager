@@ -122,8 +122,8 @@ const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { MTC } from 'src/features/components/PlansPanel/constants';
 
 import type {
@@ -450,10 +450,10 @@ const vpc = [
 
 const iam = [
   http.get('*/iam/role-permissions', () => {
-    return HttpResponse.json(accountPermissionsFactory.build());
+    return HttpResponse.json(accountRolesFactory.build());
   }),
   http.get('*/iam/users/:username/role-permissions', () => {
-    return HttpResponse.json(userPermissionsFactory.build());
+    return HttpResponse.json(userRolesFactory.build());
   }),
 ];
 

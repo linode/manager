@@ -1,18 +1,18 @@
-import { getAccountPermissions, getUserPermissions } from '@linode/api-v4';
+import { getAccountRoles, getUserRoles } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 export const iamQueries = createQueryKeys('iam', {
   user: (username: string) => ({
     contextQueries: {
       permissions: {
-        queryFn: () => getUserPermissions(username),
+        queryFn: () => getUserRoles(username),
         queryKey: null,
       },
     },
     queryKey: [username],
   }),
   permissions: {
-    queryFn: getAccountPermissions,
+    queryFn: getAccountRoles,
     queryKey: null,
   },
 });
