@@ -13,9 +13,9 @@ export const TruncatedWithTooltip = ({
   maxLength = 50,
   text,
 }: TruncatedWithTooltipProps) => {
-  const truncated = truncateEnd(maxLength, text);
-
   if (text.length > maxLength) {
+    const truncated = truncateEnd(maxLength, text);
+
     return (
       <Tooltip title={text}>
         <span>{truncated}</span>
@@ -23,5 +23,5 @@ export const TruncatedWithTooltip = ({
     );
   }
 
-  return <>{truncated}</>;
+  return text;
 };
