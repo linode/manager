@@ -1,5 +1,6 @@
 import {
   NODE_TYPE,
+  PORT,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -12,6 +13,7 @@ import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
+import type { CloudPulsePortFilterProps } from '../shared/CloudPulsePortFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -290,6 +292,27 @@ export const getTimeDurationProperties = (
   return {
     defaultValue: timeDuration,
     handleStatsChange: handleTimeRangeChange,
+    label,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
+  };
+};
+
+export const getPortProperties = (
+  props: CloudPulseFilterProperties,
+  handlePortChange: (
+    port: string | undefined,
+    label: string[],
+    savePref?: boolean
+  ) => void
+): CloudPulsePortFilterProps => {
+  const { name: label, placeholder } = props.config.configuration;
+  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+
+  return {
+    dashboard,
+    defaultValue: preferences?.[PORT],
+    handlePortChange,
     label,
     placeholder,
     savePreferences: !isServiceAnalyticsIntegration,

@@ -161,3 +161,77 @@ export const getAllDashboards = (
     isLoading,
   };
 };
+
+/**
+ * @param port
+ * @returns object with isValid boolean and errorMsg string
+ * @description Validates a single port and returns the error message
+ */
+export const isValidPort = (
+  port: string
+): { errorMsg: string | undefined; isValid: boolean } => {
+  let errorMsg =
+    'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+
+  if (port === '') {
+    return { errorMsg, isValid: true };
+  }
+
+  if (!port) {
+    errorMsg = 'Must be 1-65535';
+    return { errorMsg, isValid: false };
+  }
+
+  if (port.startsWith('0')) {
+    errorMsg = 'Port must not have leading zeroes';
+    return { errorMsg, isValid: false };
+  }
+
+  const convertedPort = parseInt(port, 10);
+  if (!(1 <= convertedPort && convertedPort <= 65535)) {
+    errorMsg = 'Must be 1-65535';
+    return { errorMsg, isValid: false };
+  }
+
+  if (String(convertedPort) !== port) {
+    return { errorMsg, isValid: false };
+  }
+
+  return { errorMsg: undefined, isValid: true };
+};
+
+/**
+ * @param ports
+ * @returns object with isValid boolean and errorMsg string
+ * @description Validates a comma-separated list of ports and sets the error message
+ */
+export const arePortsValid = (
+  ports: string
+): { errorMsg: string | undefined; isValid: boolean } => {
+  if (ports.startsWith(',')) {
+    return { isValid: false, errorMsg: 'Ports cannot start with a comma.' };
+  }
+
+  if (ports.includes(',,')) {
+    return { isValid: false, errorMsg: 'Consecutive commas are not allowed.' };
+  }
+
+  const portList = ports?.split(',') || [];
+  let portLimitCount = 0;
+
+  for (const port of portList) {
+    const result = isValidPort(port);
+    if (!result.isValid) {
+      return result;
+    }
+    portLimitCount++;
+  }
+
+  if (portLimitCount > 15) {
+    const errorMsg =
+      'Number of ports or port range endpoints exceeded. Max allowed is 15';
+    return { isValid: false, errorMsg };
+  }
+
+  return { isValid: true, errorMsg: undefined };
+};
