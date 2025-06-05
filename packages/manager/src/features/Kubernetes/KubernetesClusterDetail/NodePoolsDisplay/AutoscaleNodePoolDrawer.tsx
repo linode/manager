@@ -241,7 +241,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               render={({ field, fieldState }) => {
                 return (
                   <TextField
-                    {...field}
                     className={classes.input}
                     disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
@@ -290,7 +289,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
               render={({ field, fieldState }) => {
                 return (
                   <TextField
-                    {...field}
                     className={classes.input}
                     disabled={!_enabled || isSubmitting}
                     error={!!fieldState.error}
