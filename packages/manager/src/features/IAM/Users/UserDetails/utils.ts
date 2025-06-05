@@ -1,9 +1,4 @@
-import type {
-  AccountAccessRole,
-  EntityAccess,
-  EntityAccessRole,
-  IamUserPermissions,
-} from '@linode/api-v4';
+import type { IamUserPermissions } from '@linode/api-v4';
 
 /* Calculates the total number of unique roles assigned to a user. */
 export const getTotalAssignedRoles = (
@@ -11,13 +6,10 @@ export const getTotalAssignedRoles = (
 ): number => {
   const accountAccessRoles = assignedRoles.account_access || [];
 
-  const entityAccessRoles = assignedRoles.entity_access
-    ? assignedRoles.entity_access
-        .map((entity: EntityAccess) => entity.roles)
-        .flat()
-    : [];
+  const entityAccessRoles =
+    assignedRoles.entity_access?.flatMap((entity) => entity.roles || []) ?? [];
 
-  const combinedRoles: (AccountAccessRole | EntityAccessRole)[] = Array.from(
+  const combinedRoles = Array.from(
     new Set([...accountAccessRoles, ...entityAccessRoles])
   );
 
