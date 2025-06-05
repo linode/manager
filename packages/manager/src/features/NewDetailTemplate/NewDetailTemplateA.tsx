@@ -120,8 +120,7 @@ export const NewDetailTemplateA = () => {
           color: '#2d3748',
         }}
       >
-        Responsive Data Items - Vertical Cascading Columns with MUI
-        useMediaQuery
+        3 Col Layout
       </h1>
 
       <div
@@ -467,7 +466,7 @@ export const NewDetailTemplateA = () => {
             color: '#2d3748',
           }}
         >
-          About This Layout
+          Long Text
         </h2>
         <p
           style={{
