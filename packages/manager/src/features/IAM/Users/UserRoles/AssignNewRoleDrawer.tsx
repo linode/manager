@@ -72,7 +72,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
-      const queryKey = iamQueries.user(username)._ctx.permissions.queryKey;
+      const queryKey = iamQueries.user(username)._ctx.roles.queryKey;
       const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
 
       const mergedRoles = mergeAssignedRolesIntoExistingRoles(

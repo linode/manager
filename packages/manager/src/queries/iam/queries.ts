@@ -11,7 +11,7 @@ import type { EntityTypePermissions } from '@linode/api-v4';
 export const iamQueries = createQueryKeys('iam', {
   user: (username: string) => ({
     contextQueries: {
-      permissions: {
+      roles: {
         queryFn: () => getUserRoles(username),
         queryKey: null,
       },
@@ -29,7 +29,7 @@ export const iamQueries = createQueryKeys('iam', {
     },
     queryKey: [username],
   }),
-  permissions: {
+  accountRoles: {
     queryFn: getAccountRoles,
     queryKey: null,
   },

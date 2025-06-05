@@ -14,7 +14,7 @@ import type {
 
 export const useUserRoles = (username?: string) => {
   return useQuery<IamUserRoles, APIError[]>({
-    ...iamQueries.user(username ?? '')._ctx.permissions,
+    ...iamQueries.user(username ?? '')._ctx.roles,
     refetchOnMount: 'always',
     enabled: Boolean(username),
   });
@@ -22,7 +22,7 @@ export const useUserRoles = (username?: string) => {
 
 export const useAccountRoles = (enabled = true) => {
   return useQuery<IamAccountRoles, APIError[]>({
-    ...iamQueries.permissions,
+    ...iamQueries.accountRoles,
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
     enabled,
@@ -35,7 +35,7 @@ export const useUserRolesMutation = (username: string) => {
     mutationFn: (data) => updateUserRoles(username, data),
     onSuccess: (role) => {
       queryClient.setQueryData<IamUserRoles>(
-        iamQueries.user(username)._ctx.permissions.queryKey,
+        iamQueries.user(username)._ctx.roles.queryKey,
         role
       );
     },
