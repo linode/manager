@@ -46,7 +46,6 @@ import {
   creditPaymentResponseFactory,
   dashboardFactory,
   databaseBackupFactory,
-  databaseEngineConfigFactory,
   databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
@@ -81,6 +80,7 @@ import {
   managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
+  mysqlConfigResponse,
   nodeBalancerTypeFactory,
   nodePoolFactory,
   notificationChannelFactory,
@@ -96,6 +96,7 @@ import {
   placementGroupFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
+  postgresConfigResponse,
   promoFactory,
   serviceTypesFactory,
   stackScriptFactory,
@@ -377,8 +378,16 @@ const databases = [
   http.post('*/databases/:engine/instances/:databaseId/resume', () => {
     return HttpResponse.json({});
   }),
-  http.get('*/databases/:engine/config', () => {
-    return HttpResponse.json(databaseEngineConfigFactory.build());
+  http.get('*/databases/:engine/config', ({ params }) => {
+    const { engine } = params as { engine: string };
+    if (engine === 'mysql') {
+      return HttpResponse.json(mysqlConfigResponse);
+    }
+    if (engine === 'postgresql') {
+      return HttpResponse.json(postgresConfigResponse);
+    }
+
+    return HttpResponse.json(mysqlConfigResponse);
   }),
 ];
 
@@ -748,8 +757,21 @@ export const handlers = [
         id: 1002,
       }),
     ];
+    const aclpSupportedRegionLinodes = [
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-1',
+        region: 'us-iad',
+        id: 1004,
+      }),
+      linodeFactory.build({
+        label: 'aclp-supported-region-linode-2',
+        region: 'us-east',
+        id: 1005,
+      }),
+    ];
     const linodes = [
       ...mtcLinodes,
+      ...aclpSupportedRegionLinodes,
       nonMTCPlanInMTCSupportedRegionsLinode,
       metadataLinodeWithCompatibleImage,
       metadataLinodeWithCompatibleImageAndRegion,
@@ -871,6 +893,20 @@ export const handlers = [
           type: 'g8-premium-128-ht',
         }),
       ];
+      const linodeAclpSupportedRegionDetails = [
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-1',
+          region: 'us-iad',
+        }),
+        linodeFactory.build({
+          id,
+          backups: { enabled: false },
+          label: 'aclp-supported-region-linode-2',
+          region: 'us-east',
+        }),
+      ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
         id,
         backups: { enabled: false },
@@ -899,6 +935,10 @@ export const handlers = [
           return linodeMTCPlanDetails[1];
         case 1003:
           return linodeNonMTCPlanInMTCSupportedRegionsDetail;
+        case 1004:
+          return linodeAclpSupportedRegionDetails[0];
+        case 1005:
+          return linodeAclpSupportedRegionDetails[1];
         default:
           return linodeDetail;
       }
@@ -2752,6 +2792,7 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
+          regions: 'us-iad,us-east',
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2761,6 +2802,25 @@ export const handlers = [
     };
 
     return HttpResponse.json(response);
+  }),
+  http.get('*/monitor/services/:serviceType', ({ params }) => {
+    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
+      return HttpResponse.json({}, { status: 404 });
+    }
+
+    const response =
+      params.serviceType === 'linode'
+        ? serviceTypesFactory.build({
+            label: 'Linodes',
+            service_type: 'linode',
+            regions: 'us-iad,us-east',
+          })
+        : serviceTypesFactory.build({
+            label: 'Databases',
+            service_type: 'dbaas',
+          });
+
+    return HttpResponse.json(response, { status: 200 });
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
