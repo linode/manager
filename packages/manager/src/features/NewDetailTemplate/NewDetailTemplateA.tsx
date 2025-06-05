@@ -60,8 +60,8 @@ const distributeItemsSequentially = (items, columns) => {
 export const NewDetailTemplateA = () => {
   const theme = useTheme();
 
-  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
 
   let columns = 1;
   if (isDesktop) columns = 3;
@@ -176,7 +176,7 @@ export const NewDetailTemplateA = () => {
         >
           <div
             style={{
-              flex: '0 0 300px',
+              flex: 1,
               display: 'flex',
               flexDirection: 'column',
               gap: 0,
@@ -195,7 +195,7 @@ export const NewDetailTemplateA = () => {
 
           <div
             style={{
-              flex: 1,
+              flex: 2,
               display: 'flex',
               gap: 16,
               flexDirection: 'row',
@@ -323,7 +323,7 @@ export const NewDetailTemplateA = () => {
         >
           <div
             style={{
-              flex: 1,
+              flex: 2,
               display: 'flex',
               gap: 16,
               flexDirection: 'row',
@@ -354,7 +354,7 @@ export const NewDetailTemplateA = () => {
 
           <div
             style={{
-              flex: '0 0 300px',
+              flex: 1,
               display: 'flex',
               flexDirection: 'column',
               gap: 0,
