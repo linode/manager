@@ -99,7 +99,6 @@ export const CloudPulsePortFilter = React.memo(
         return;
       }
 
-      // Clear error if validation passes
       setErrorText(undefined);
     };
 
