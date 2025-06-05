@@ -42,9 +42,6 @@ export const PORTS_ERROR_MESSAGE =
 
 export const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535';
 
-export const PORTS_LEADING_ZEROES_ERROR_MESSAGE =
-  'Port must not have leading zeroes';
-
 export const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Consecutive commas are not allowed.';
 

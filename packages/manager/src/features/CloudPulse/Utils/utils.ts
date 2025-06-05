@@ -8,7 +8,6 @@ import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
-  PORTS_LEADING_ZEROES_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
 } from './constants';
 
@@ -186,11 +185,6 @@ export const isValidPort = (
 
   if (!port) {
     errorMsg = 'Must be 1-65535';
-    return { errorMsg, isValid: false };
-  }
-
-  if (port.startsWith('0')) {
-    errorMsg = PORTS_LEADING_ZEROES_ERROR_MESSAGE;
     return { errorMsg, isValid: false };
   }
 

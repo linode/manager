@@ -1,7 +1,6 @@
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
-  PORTS_LEADING_ZEROES_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
 } from './constants';
 import { arePortsValid, isValidPort } from './utils';
@@ -12,12 +11,6 @@ describe('isValidPort', () => {
     expect(isValidPort('1').isValid).toBe(true);
     expect(isValidPort('80').isValid).toBe(true);
     expect(isValidPort('65535').isValid).toBe(true);
-  });
-
-  it('should return invalid for ports with leading zeros', () => {
-    const result = isValidPort('0');
-    expect(result.isValid).toBe(false);
-    expect(result.errorMsg).toBe(PORTS_LEADING_ZEROES_ERROR_MESSAGE);
   });
 
   it('should return invalid for ports outside range 1-65535', () => {
