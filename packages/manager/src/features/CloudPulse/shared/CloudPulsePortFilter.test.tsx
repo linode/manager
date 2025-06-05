@@ -5,6 +5,7 @@ import React from 'react';
 import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
+import { PORTS_ERROR_MESSAGE, PORTS_HELPER_TEXT } from '../Utils/constants';
 import { CloudPulsePortFilter } from './CloudPulsePortFilter';
 
 import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
@@ -27,11 +28,7 @@ describe('CloudPulsePortFilter', () => {
     renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
 
     expect(screen.getByLabelText('Port')).toBeVisible();
-    expect(
-      screen.getByText(
-        'Enter one or more ports (1-65535) comma-separated numbers.'
-      )
-    ).toBeVisible();
+    expect(screen.getByText(PORTS_HELPER_TEXT)).toBeVisible();
     expect(screen.getByPlaceholderText('e.g., 80,443,3000')).toBeVisible();
   });
 
@@ -61,11 +58,7 @@ describe('CloudPulsePortFilter', () => {
 
     const input = screen.getByLabelText('Port');
     await user.type(input, 'a');
-    expect(
-      screen.getByText(
-        'Input must be an integer or a comma-separated list of integers.'
-      )
-    ).toBeVisible();
+    expect(screen.getByText(PORTS_ERROR_MESSAGE)).toBeVisible();
     expect(input).toHaveValue('');
   });
 

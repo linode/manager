@@ -1,3 +1,9 @@
+import {
+  PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZEROES_ERROR_MESSAGE,
+  PORTS_LIMIT_ERROR_MESSAGE,
+} from './constants';
 import { arePortsValid, isValidPort } from './utils';
 
 describe('isValidPort', () => {
@@ -11,7 +17,7 @@ describe('isValidPort', () => {
   it('should return invalid for ports with leading zeros', () => {
     const result = isValidPort('0');
     expect(result.isValid).toBe(false);
-    expect(result.errorMsg).toBe('Port must not have leading zeroes');
+    expect(result.errorMsg).toBe(PORTS_LEADING_ZEROES_ERROR_MESSAGE);
   });
 
   it('should return invalid for ports outside range 1-65535', () => {
@@ -36,12 +42,12 @@ describe('arePortsValid', () => {
   it('should return invalid for consecutive commas', () => {
     const result = arePortsValid('80,,443');
     expect(result.isValid).toBe(false);
-    expect(result.errorMsg).toBe('Consecutive commas are not allowed.');
+    expect(result.errorMsg).toBe(PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE);
   });
 
   it('should return invalid for starting with comma', () => {
     expect(arePortsValid(',80').errorMsg).toBe(
-      'Ports cannot start with a comma.'
+      PORTS_LEADING_COMMA_ERROR_MESSAGE
     );
   });
 
@@ -49,8 +55,6 @@ describe('arePortsValid', () => {
     const ports = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
     const result = arePortsValid(ports);
     expect(result.isValid).toBe(false);
-    expect(result.errorMsg).toBe(
-      'Number of ports or port range endpoints exceeded. Max allowed is 15'
-    );
+    expect(result.errorMsg).toBe(PORTS_LIMIT_ERROR_MESSAGE);
   });
 });

@@ -4,6 +4,14 @@ import { isFeatureEnabledV2 } from '@linode/utilities';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import {
+  PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  PORTS_ERROR_MESSAGE,
+  PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZEROES_ERROR_MESSAGE,
+  PORTS_LIMIT_ERROR_MESSAGE,
+} from './constants';
+
 import type {
   APIError,
   Dashboard,
@@ -170,8 +178,7 @@ export const getAllDashboards = (
 export const isValidPort = (
   port: string
 ): { errorMsg: string | undefined; isValid: boolean } => {
-  let errorMsg =
-    'Ports must be an integer, range of integers, or a comma-separated list of integers.';
+  let errorMsg = PORTS_ERROR_MESSAGE;
 
   if (port === '') {
     return { errorMsg, isValid: true };
@@ -183,7 +190,7 @@ export const isValidPort = (
   }
 
   if (port.startsWith('0')) {
-    errorMsg = 'Port must not have leading zeroes';
+    errorMsg = PORTS_LEADING_ZEROES_ERROR_MESSAGE;
     return { errorMsg, isValid: false };
   }
 
@@ -209,11 +216,11 @@ export const arePortsValid = (
   ports: string
 ): { errorMsg: string | undefined; isValid: boolean } => {
   if (ports.startsWith(',')) {
-    return { isValid: false, errorMsg: 'Ports cannot start with a comma.' };
+    return { isValid: false, errorMsg: PORTS_LEADING_COMMA_ERROR_MESSAGE };
   }
 
   if (ports.includes(',,')) {
-    return { isValid: false, errorMsg: 'Consecutive commas are not allowed.' };
+    return { isValid: false, errorMsg: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE };
   }
 
   const portList = ports?.split(',') || [];
@@ -228,8 +235,7 @@ export const arePortsValid = (
   }
 
   if (portLimitCount > 15) {
-    const errorMsg =
-      'Number of ports or port range endpoints exceeded. Max allowed is 15';
+    const errorMsg = PORTS_LIMIT_ERROR_MESSAGE;
     return { isValid: false, errorMsg };
   }
 
