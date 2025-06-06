@@ -1,3 +1,4 @@
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -10,16 +11,30 @@ import { NoAssignedRoles } from './NoAssignedRoles';
 
 describe('NoAssignedRoles', () => {
   it('renders with correct text for the Assigned Roles tab', () => {
-    const { getByText } = renderWithTheme(
-      <NoAssignedRoles text={NO_ASSIGNED_ROLES_TEXT} />
+    renderWithTheme(
+      <NoAssignedRoles
+        hasAssignNewRoleDrawer={true}
+        text={NO_ASSIGNED_ROLES_TEXT}
+      />
     );
-    expect(getByText(NO_ASSIGNED_ROLES_TEXT)).toBeInTheDocument();
+    expect(screen.getByText('This list is empty')).toBeVisible();
+    expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Assign New Roles' })
+    ).toBeVisible();
   });
 
   it('renders with correct text for the Assigned Entities tab', () => {
-    const { getByText } = renderWithTheme(
-      <NoAssignedRoles text={NO_ASSIGNED_ENTITIES_TEXT} />
+    renderWithTheme(
+      <NoAssignedRoles
+        hasAssignNewRoleDrawer={false}
+        text={NO_ASSIGNED_ENTITIES_TEXT}
+      />
     );
-    expect(getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeInTheDocument();
+    expect(screen.getByText('This list is empty')).toBeVisible();
+    expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: 'Assign New Roles' })
+    ).not.toBeInTheDocument();
   });
 });

@@ -419,9 +419,11 @@ export const getFacadeRoleDescription = (
 
 export const getFormattedEntityType = (entityType: string): string => {
   const overrideCapitalization: Record<string, string> = {
-    vpc: 'VPC',
-    stackscript: 'StackScript',
+    lkecluster: 'Kubernetes Cluster',
     nodebalancer: 'NodeBalancer',
+    placement_group: 'Placement Group',
+    stackscript: 'StackScript',
+    vpc: 'VPC',
   };
 
   // Return the overridden capitalization if it exists, otherwise capitalize normally

@@ -5,8 +5,10 @@ export type EntityTypePermissions =
   | 'firewall'
   | 'image'
   | 'linode'
+  | 'lkecluster'
   | 'longview'
   | 'nodebalancer'
+  | 'placement_group'
   | 'stackscript'
   | 'volume'
   | 'vpc';
@@ -25,6 +27,7 @@ export type EntityAccessRole =
   | 'database_admin'
   | 'firewall_admin'
   | 'firewall_creator'
+  | 'firewall_viewer'
   | 'image_viewer'
   | 'linode_contributor'
   | 'linode_creator'

@@ -376,7 +376,8 @@ export const defaultValues = async (
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
 
-  if (isLinodeInterfacesEnabled) {
+  // only run if no Linode is preselected
+  if (isLinodeInterfacesEnabled && !linode) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
@@ -401,7 +402,9 @@ export const defaultValues = async (
     }
   }
 
-  const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
+  const privateIp =
+    linode?.interface_generation !== 'linode' &&
+    (linode?.ipv4.some(isPrivateIP) ?? false);
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,

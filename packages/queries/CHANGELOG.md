@@ -1,3 +1,15 @@
+## [2025-06-03] - v0.6.0
+
+### Added:
+
+- Create `domains/` directory and migrate relevant query keys and hooks ([#12204](https://github.com/linode/manager/pull/12204))
+- Create `images/` directory and migrate relevant query keys and hooks ([#12205](https://github.com/linode/manager/pull/12205))
+- `quotas/` directory and migrated relevant query keys and hook ([#12221](https://github.com/linode/manager/pull/12221))
+
+### Removed:
+
+- `isUsingBetaEndpoint` parameter from `useNodeBalancerQuery` ([#12217](https://github.com/linode/manager/pull/12217))
+
 ## [2025-05-20] - v0.5.0
 
 ### Added:
