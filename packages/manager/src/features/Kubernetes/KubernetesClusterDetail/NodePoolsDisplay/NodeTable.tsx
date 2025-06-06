@@ -106,6 +106,10 @@ export const NodeTable = React.memo((props: Props) => {
         if (statusFilter === 'provisioning') {
           return ['provisioning', undefined].includes(row.instanceStatus);
         }
+        if (statusFilter === 'running') {
+          // The linode instance status needs to be running AND the node status needs to be ready before we consider it "running"
+          return row.instanceStatus === 'running' && row.nodeStatus === 'ready';
+        }
         return row.instanceStatus === statusFilter;
       })
     : null;

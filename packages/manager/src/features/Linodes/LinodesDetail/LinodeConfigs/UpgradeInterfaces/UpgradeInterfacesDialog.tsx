@@ -1,4 +1,5 @@
 import { BetaChip, Dialog } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import { ConfigSelectDialogContent } from './DialogContents/ConfigSelectDialogContent';
@@ -7,6 +8,7 @@ import { PromptDialogContent } from './DialogContents/PromptDialogContent';
 import { SuccessDialogContent } from './DialogContents/SuccessDialogContent';
 
 import type { UpgradeInterfacesDialogState } from './types';
+import type { Theme } from '@mui/material/styles';
 
 interface UpgradeInterfacesProps {
   linodeId: number;
@@ -21,6 +23,10 @@ export const initialState: UpgradeInterfacesDialogState = {
 
 export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
   const { linodeId, onClose, open } = props;
+
+  const isDesktopSize = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.up('md')
+  );
 
   const [dialogState, setDialogState] =
     React.useState<UpgradeInterfacesDialogState>({ ...initialState });
@@ -41,11 +47,18 @@ export const UpgradeInterfacesDialog = (props: UpgradeInterfacesProps) => {
 
   return (
     <Dialog
-      fullHeight
+      fullHeight={!isDesktopSize}
       fullWidth
       maxWidth="sm"
       onClose={closeAndResetDialog}
       open={open}
+      slotProps={{
+        paper: {
+          sx: {
+            minHeight: '500px',
+          },
+        },
+      }}
       title={dialogState.dialogTitle ?? 'Upgrade Interfaces'}
       titleSuffix={<BetaChip />}
     >
