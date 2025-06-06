@@ -546,6 +546,8 @@ describe('LKE cluster updates', () => {
         },
       };
 
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Linode 2 GB Plan';
+
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       mockGetKubernetesVersions().as('getVersions');
@@ -577,8 +579,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
@@ -587,19 +589,22 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin}`);
 
+          // Min is 3; max is 1 - invalid
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('101');
 
-          cy.findByText(minWarning).should('not.exist');
+          // Min is 3 (valid); max is 101 (invalid)
           cy.findByText(maxWarning).should('be.visible');
+          cy.findByText(minWarning).should('not.exist');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMax}`);
 
+          // Min is 3; max is 10 - both valid
           cy.findByText(minWarning).should('not.exist');
           cy.findByText(maxWarning).should('not.exist');
 
@@ -624,8 +629,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
@@ -680,6 +685,8 @@ describe('LKE cluster updates', () => {
         },
       };
 
+      const mockNodePoolDrawerTitle = 'Autoscale Pool: Dedicated 8 GB Plan';
+
       mockGetCluster(mockCluster).as('getCluster');
       mockGetClusterPools(mockCluster.id, [mockNodePool]).as('getNodePools');
       mockGetKubernetesVersions().as('getVersions');
@@ -711,8 +718,8 @@ describe('LKE cluster updates', () => {
         .should('be.enabled')
         .click();
 
-      ui.dialog
-        .findByTitle('Autoscale Pool')
+      ui.drawer
+        .findByTitle(mockNodePoolDrawerTitle)
         .should('be.visible')
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
@@ -721,20 +728,23 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin - 1}`);
 
+          // Min is 0 (invalid); max is 500 (valid)
           cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('501');
 
+          // Min is 0; max is 501 - both invalid
           cy.findByText(maxWarning).should('be.visible');
-          cy.findByText(minWarning).should('not.exist');
+          cy.findByText(minWarning).should('be.visible');
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMax}`);
 
-          cy.findByText(minWarning).should('not.exist');
+          // Min is 0 (invalid); max is 500 (valid)
+          cy.findByText(minWarning).should('be.visible');
           cy.findByText(maxWarning).should('not.exist');
 
           ui.button.findByTitle('Save Changes').should('be.disabled');
@@ -743,6 +753,7 @@ describe('LKE cluster updates', () => {
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin + 1}`);
 
+          // Min is 1, max is 500 - both valid
           ui.button.findByTitle('Save Changes').should('be.visible').click();
         });
 
@@ -1813,7 +1824,7 @@ describe('LKE cluster updates', () => {
         .should('be.visible')
         .within(() => {
           ui.button
-            .findByTitle('Autoscale Pool')
+            .findByTitle('Recycle Pool Nodes')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -1822,7 +1833,7 @@ describe('LKE cluster updates', () => {
 
     // Exit dialog
     ui.dialog
-      .findByTitle('Autoscale Pool')
+      .findByTitle('Recycle node pool?')
       .should('be.visible')
       .within(() => {
         ui.button

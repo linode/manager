@@ -32,11 +32,11 @@ interface Props {
   count: number;
   encryptionStatus: EncryptionStatus | undefined;
   handleAccordionClick: () => void;
+  handleClickAutoscale: (poolId: number) => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
-  openAutoscalePoolDialog: (poolId: number) => void;
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
@@ -57,11 +57,11 @@ export const NodePool = (props: Props) => {
     count,
     encryptionStatus,
     handleAccordionClick,
+    handleClickAutoscale,
     handleClickLabelsAndTaints,
     handleClickResize,
     isOnlyNodePool,
     nodes,
-    openAutoscalePoolDialog,
     openDeletePoolDialog,
     openRecycleAllNodesDialog,
     openRecycleNodeDialog,
@@ -120,7 +120,7 @@ export const NodePool = (props: Props) => {
                     title: 'Labels and Taints',
                   },
                   {
-                    onClick: () => openAutoscalePoolDialog(poolId),
+                    onClick: () => handleClickAutoscale(poolId),
                     title: 'Autoscale Pool',
                   },
                   {
@@ -166,7 +166,7 @@ export const NodePool = (props: Props) => {
                 compactY
                 onClick={(e) => {
                   e.stopPropagation();
-                  openAutoscalePoolDialog(poolId);
+                  handleClickAutoscale(poolId);
                 }}
               >
                 Autoscale Pool
