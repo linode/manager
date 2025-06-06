@@ -1,6 +1,5 @@
 import { clamp } from '@linode/ui';
 import { scrollTo } from '@linode/utilities';
-import { slice } from 'ramda';
 import * as React from 'react';
 
 import { storage } from 'src/utilities/storage';
@@ -22,7 +21,7 @@ export const createDisplayPage =
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = Math.min(startIndex + pageSize - 1, count - 1);
 
-    return slice(startIndex, endIndex + 1, list);
+    return list.slice(startIndex, endIndex + 1);
   };
 
 export interface PaginationProps<T> extends State {

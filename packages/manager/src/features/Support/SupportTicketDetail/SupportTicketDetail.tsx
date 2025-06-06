@@ -7,7 +7,6 @@ import { CircleProgress, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import { useLocation, useParams } from '@tanstack/react-router';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Waypoint } from 'react-waypoint';
 
@@ -95,7 +94,7 @@ export const SupportTicketDetail = () => {
         <TicketStatus {...ticket} />
         {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}
         {locationState?.attachmentErrors !== undefined &&
-          !isEmpty(locationState?.attachmentErrors) &&
+          locationState?.attachmentErrors.length > 0 &&
           locationState?.attachmentErrors?.map(
             (error: AttachmentError, idx: number) => (
               <AttachmentError

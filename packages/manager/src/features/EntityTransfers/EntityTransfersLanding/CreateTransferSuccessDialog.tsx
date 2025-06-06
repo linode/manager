@@ -2,7 +2,6 @@ import { Button, Tooltip, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import copy from 'copy-to-clipboard';
 import { DateTime } from 'luxon';
-import { update } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 
@@ -43,11 +42,23 @@ interface Props {
 export const CreateTransferSuccessDialog = React.memo((props: Props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
+
   const handleCopy = (idx: number, text: string) => {
     copy(text);
-    setTooltipOpen((state) => update(idx, true, state));
+
+    setTooltipOpen((prev) => {
+      const newToolTipState = [...prev];
+      newToolTipState[idx] = true;
+      return newToolTipState;
+    });
+
     setTimeout(
-      () => setTooltipOpen((state) => update(idx, false, state)),
+      () =>
+        setTooltipOpen((prev) => {
+          const newToolTipState = [...prev];
+          newToolTipState[idx] = false;
+          return newToolTipState;
+        }),
       1000
     );
   };
