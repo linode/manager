@@ -174,7 +174,7 @@ export const VPCPanel = (props: Props) => {
                             NodeBalancer
                           </Typography>
                           <TooltipIcon
-                            status="help"
+                            status="info"
                             text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
                           />
                         </Box>

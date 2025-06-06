@@ -198,7 +198,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <>
             {'Reboot Needed'}
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={{ paddingRight: 0 }}
               text={VPC_REBOOT_MESSAGE}
             />

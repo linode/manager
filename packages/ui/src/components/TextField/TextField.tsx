@@ -325,7 +325,7 @@ export const TextField = (props: TextFieldProps) => {
         {labelTooltipText && labelTooltipIconPosition === 'left' && (
           <TooltipIcon
             labelTooltipIconSize={labelTooltipIconSize}
-            status="help"
+            status="info"
             sxTooltipIcon={sxTooltipIconLeft}
             text={labelTooltipText}
             width={tooltipWidth}
@@ -355,7 +355,7 @@ export const TextField = (props: TextFieldProps) => {
         {labelTooltipText && labelTooltipIconPosition === 'right' && (
           <TooltipIcon
             labelTooltipIconSize={labelTooltipIconSize}
-            status="help"
+            status="info"
             sxTooltipIcon={sxTooltipIconRight}
             text={labelTooltipText}
             width={tooltipWidth}

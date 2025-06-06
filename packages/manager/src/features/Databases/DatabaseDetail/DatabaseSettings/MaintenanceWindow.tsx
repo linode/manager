@@ -265,7 +265,7 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                 />
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{
                     marginTop: '1.75rem',
                     padding: '0px 8px',
