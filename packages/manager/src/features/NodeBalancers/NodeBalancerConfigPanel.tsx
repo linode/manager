@@ -1,13 +1,13 @@
 import {
   ActionsPanel,
   Autocomplete,
-  Box,
   Button,
   Divider,
   FormHelperText,
   Notice,
   Select,
   SelectedIcon,
+  Stack,
   TextField,
   Typography,
 } from '@linode/ui';
@@ -278,18 +278,13 @@ export const NodeBalancerConfigPanel = (
             options={algOptions}
             renderOption={(props, option, state) => (
               <li {...props}>
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="row"
-                  gap={1}
-                >
-                  <Box>
+                <Stack alignItems="center" direction="row" gap={1}>
+                  <Stack>
                     <b>{option.label}</b>
-                    <Box>{option.description}</Box>
-                  </Box>
+                    {option.description}
+                  </Stack>
                   {state.selected && <SelectedIcon visible />}
-                </Box>
+                </Stack>
               </li>
             )}
             size="small"
@@ -324,18 +319,13 @@ export const NodeBalancerConfigPanel = (
             options={sessionOptions}
             renderOption={(props, option, state) => (
               <li {...props}>
-                <Box
-                  alignItems="center"
-                  display="flex"
-                  flexDirection="row"
-                  gap={1}
-                >
-                  <Box>
+                <Stack alignItems="center" direction="row" gap={1}>
+                  <Stack>
                     <b>{option.label}</b>
-                    <Box>{option.description}</Box>
-                  </Box>
+                    {option.description}
+                  </Stack>
                   {state.selected && <SelectedIcon visible />}
-                </Box>
+                </Stack>
               </li>
             )}
             size="small"

@@ -413,13 +413,10 @@ export const lightTheme: ThemeOptions = {
           boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          padding: `${Spacing.S8} 10px`,
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
           lineHeight: 1.143,
         },
         option: {
-          '& .MuiStack-root': {
-            height: '16px',
-          },
           '&.Mui-focused': {
             backgroundColor: `${Dropdown.Background.Hover} !important`,
           },
@@ -436,6 +433,7 @@ export const lightTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
           // To remove the double border of listbox and input
@@ -453,9 +451,7 @@ export const lightTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                '& .MuiStack-root': {
-                  height: '16px',
-                },
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
                   height: Spacing.S16,
                   width: Spacing.S16,
@@ -475,9 +471,7 @@ export const lightTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                '& .MuiStack-root': {
-                  height: '16px',
-                },
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
                   height: Spacing.S16,
                   width: Spacing.S16,
