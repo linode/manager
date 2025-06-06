@@ -8,13 +8,16 @@ import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
-import { NO_ASSIGNED_ROLES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_ROLES_TEXT,
+} from '../../Shared/constants';
 import { UserRoles } from './UserRoles';
 
 const mockEntities = [
   accountEntityFactory.build({
-    id: 7,
-    type: 'linode',
+    id: 1,
+    type: 'firewall',
   }),
 ];
 
@@ -72,9 +75,11 @@ describe('UserRoles', () => {
 
     renderWithThemeAndRouter(<UserRoles />);
 
-    expect(screen.getByText('Assigned Roles')).toBeVisible();
-
+    expect(screen.getByText('This list is empty')).toBeVisible();
     expect(screen.getByText(NO_ASSIGNED_ROLES_TEXT)).toBeVisible();
+    expect(
+      screen.getByRole('button', { name: 'Assign New Roles' })
+    ).toBeVisible();
   });
 
   it('should display table if no entity access roles are assigned to user', async () => {
@@ -130,6 +135,33 @@ describe('UserRoles', () => {
     expect(screen.getByText('firewall_admin')).toBeVisible();
   });
 
+  it('should exclude the role from the table if the assigned entity (firewall with id 2) was removed', async () => {
+    queryMocks.useAccountUserPermissions.mockReturnValue({
+      data: userPermissionsFactory.build({
+        account_access: ['account_admin'],
+        entity_access: [
+          {
+            id: 2,
+            roles: ['firewall_admin'],
+            type: 'firewall',
+          },
+        ],
+      }),
+    });
+
+    queryMocks.useAccountPermissions.mockReturnValue({
+      data: accountPermissionsFactory.build(),
+    });
+
+    queryMocks.useAccountEntities.mockReturnValue({
+      data: makeResourcePage(mockEntities),
+    });
+
+    renderWithThemeAndRouter(<UserRoles />);
+
+    expect(screen.getByText('account_admin')).toBeVisible();
+    expect(screen.queryByText('firewall_admin')).not.toBeInTheDocument();
+  });
   it('should display roles and menu when data is available', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: userPermissionsFactory.build(),
@@ -154,5 +186,17 @@ describe('UserRoles', () => {
     await userEvent.click(actionMenuButton);
     expect(screen.getByText('Change Role')).toBeVisible();
     expect(screen.getByText('Unassign Role')).toBeVisible();
+  });
+
+  it('should show error state when api fails', () => {
+    queryMocks.useAccountUserPermissions.mockReturnValue({
+      data: null,
+      error: [{ reason: 'An unexpected error occurred' }],
+      isLoading: false,
+      status: 'error',
+    });
+
+    renderWithThemeAndRouter(<UserRoles />);
+    expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });
