@@ -3,7 +3,7 @@ import WarningSolid from '@mui/icons-material/Warning';
 import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
 
-import InfoOutline from '../../assets/icons/info-outlined.svg';
+import InfoOutlined from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
 import { Tooltip, tooltipClasses } from '../Tooltip';
@@ -90,7 +90,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     icon,
     leaveDelay,
     status,
-    sx,
     sxTooltipIcon,
     text,
     tooltipAnalyticsEvent,
@@ -120,7 +119,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     case 'info':
       renderIcon = (
         <SvgIcon
-          component={InfoOutline}
+          component={InfoOutlined}
           data-testid="tooltip-info-icon"
           sx={cdsIconProps.rootStyle}
           viewBox={cdsIconProps.viewBox}
@@ -147,7 +146,12 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       leaveTouchDelay={5000}
       onOpen={handleOpenTooltip}
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
-      sx={sx}
+      sx={{
+        ...sxTooltipIcon,
+        '&:hover > svg': {
+          color: theme.tokens.alias.Content.Icon.Primary.Hover,
+        },
+      }}
       title={text}
       width={width}
     >
