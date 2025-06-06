@@ -2793,10 +2793,18 @@ export const handlers = [
           label: 'Linodes',
           service_type: 'linode',
           regions: 'us-iad,us-east',
+          alert: {
+            evaluation_periods_seconds: [300, 900, 1800, 3600],
+            polling_interval_seconds: [300, 900, 1800, 3600],
+          },
         }),
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          alert: {
+            evaluation_periods_seconds: [300],
+            polling_interval_seconds: [300],
+          },
         }),
       ],
     };
@@ -2814,10 +2822,18 @@ export const handlers = [
             label: 'Linodes',
             service_type: 'linode',
             regions: 'us-iad,us-east',
+            alert: {
+              evaluation_periods_seconds: [300, 900, 1800, 3600],
+              polling_interval_seconds: [300, 900, 1800, 3600],
+            },
           })
         : serviceTypesFactory.build({
             label: 'Databases',
             service_type: 'dbaas',
+            alert: {
+              evaluation_periods_seconds: [300],
+              polling_interval_seconds: [300],
+            },
           });
 
     return HttpResponse.json(response, { status: 200 });

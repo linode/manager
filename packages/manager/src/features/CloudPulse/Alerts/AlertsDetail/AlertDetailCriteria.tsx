@@ -2,7 +2,7 @@ import { Typography } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
-import { convertSecondsToMinutes } from '../Utils/utils';
+import { convertSecondsToHumanReadable } from '../Utils/utils';
 import { StyledAlertChip, StyledAlertTypography } from './AlertDetail';
 import { DisplayAlertDetailChips } from './DisplayAlertDetailChips';
 import { RenderAlertMetricsAndDimensions } from './RenderAlertsMetricsAndDimensions';
@@ -89,12 +89,12 @@ export const AlertDetailCriteria = React.memo((props: CriteriaProps) => {
         <DisplayAlertDetailChips // label chip for polling interval
           label="Polling Interval"
           mergeChips
-          values={[convertSecondsToMinutes(pollingIntervalSeconds)]}
+          values={[convertSecondsToHumanReadable(pollingIntervalSeconds)]}
         />
         <DisplayAlertDetailChips // label chip for evaluation period
           label="Evaluation Period"
           mergeChips
-          values={[convertSecondsToMinutes(evaluationPeriod)]}
+          values={[convertSecondsToHumanReadable(evaluationPeriod)]}
         />
         {renderTriggerCriteria} {/** Render the trigger criteria */}
       </GridLegacy>

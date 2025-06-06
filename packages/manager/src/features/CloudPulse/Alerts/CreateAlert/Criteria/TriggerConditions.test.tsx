@@ -4,10 +4,6 @@ import * as React from 'react';
 
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
-import {
-  evaluationPeriodOptions,
-  pollingIntervalOptions,
-} from '../../constants';
 import { TriggerConditions } from './TriggerConditions';
 
 import type { CreateAlertDefinitionForm } from '../types';
@@ -16,13 +12,45 @@ const EvaluationPeriodTestId = 'evaluation-period';
 
 const PollingIntervalTestId = 'polling-interval';
 
+import { convertSecondsToHumanReadable } from '../../Utils/utils';
+
+const mockServiceMetadata = {
+  alert: {
+    evaluation_periods_seconds: [60, 120, 300],
+    polling_interval_seconds: [30, 60, 180],
+    scope: ['region'],
+  },
+  is_beta: false,
+  label: 'Linode',
+  regions: 'all',
+  service_type: 'linode',
+};
+
+const evaluationPeriodOptions =
+  mockServiceMetadata.alert.evaluation_periods_seconds.map((value) => ({
+    label: convertSecondsToHumanReadable(value),
+    value,
+  }));
+
+const pollingIntervalOptions =
+  mockServiceMetadata.alert.polling_interval_seconds.map((value) => ({
+    label: convertSecondsToHumanReadable(value),
+    value,
+  }));
+
 describe('Trigger Conditions', () => {
   const user = userEvent.setup();
 
   it('should render all the components and names', () => {
     renderWithThemeAndHookFormContext({
       component: (
-        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
+        <TriggerConditions
+          maxScrapingInterval={0}
+          name="trigger_conditions"
+          serviceMetadata={mockServiceMetadata}
+          serviceMetadataError={null}
+          serviceMetadataLoading={false}
+        />
       ),
     });
     expect(screen.getByLabelText('Evaluation Period')).toBeVisible();
@@ -36,7 +64,13 @@ describe('Trigger Conditions', () => {
   it('should render the tooltips for the Autocomplete components', () => {
     renderWithThemeAndHookFormContext({
       component: (
-        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
+        <TriggerConditions
+          maxScrapingInterval={0}
+          name="trigger_conditions"
+          serviceMetadata={mockServiceMetadata}
+          serviceMetadataError={null}
+          serviceMetadataLoading={false}
+        />
       ),
       useFormOptions: {
         defaultValues: {
@@ -68,93 +102,12 @@ describe('Trigger Conditions', () => {
   it('should render the Evaluation Period component with options happy path and select an option', async () => {
     renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
       component: (
-        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          serviceType: 'linode',
-        },
-      },
-    });
-    const evaluationPeriodContainer = screen.getByTestId(
-      EvaluationPeriodTestId
-    );
-    const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
-      'button',
-      { name: 'Open' }
-    );
-
-    user.click(evaluationPeriodInput);
-
-    expect(
-      await screen.findByRole('option', {
-        name: evaluationPeriodOptions.linode[1].label,
-      })
-    ).toBeVisible();
-    expect(
-      await screen.findByRole('option', {
-        name: evaluationPeriodOptions.linode[2].label,
-      })
-    ).toBeVisible();
-
-    await user.click(
-      screen.getByRole('option', {
-        name: evaluationPeriodOptions.linode[0].label,
-      })
-    );
-
-    expect(
-      within(evaluationPeriodContainer).getByRole('combobox')
-    ).toHaveAttribute('value', evaluationPeriodOptions.linode[0].label);
-  });
-
-  it('should render the Polling Interval component with options happy path and select an option', async () => {
-    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
-      component: (
-        <TriggerConditions maxScrapingInterval={0} name="trigger_conditions" />
-      ),
-      useFormOptions: {
-        defaultValues: {
-          serviceType: 'linode',
-        },
-      },
-    });
-    const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
-    const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
-      'button',
-      { name: 'Open' }
-    );
-
-    user.click(pollingIntervalInput);
-
-    expect(
-      await screen.findByRole('option', {
-        name: pollingIntervalOptions.linode[1].label,
-      })
-    ).toBeVisible();
-
-    expect(
-      await screen.findByRole('option', {
-        name: pollingIntervalOptions.linode[2].label,
-      })
-    ).toBeVisible();
-
-    await user.click(
-      screen.getByRole('option', {
-        name: pollingIntervalOptions.linode[0].label,
-      })
-    );
-    expect(
-      within(pollingIntervalContainer).getByRole('combobox')
-    ).toHaveAttribute('value', pollingIntervalOptions.linode[0].label);
-  });
-
-  it('should be able to show the options that are greater than or equal to max scraping Interval', () => {
-    renderWithThemeAndHookFormContext({
-      component: (
         <TriggerConditions
-          maxScrapingInterval={120}
+          maxScrapingInterval={0}
           name="trigger_conditions"
+          serviceMetadata={mockServiceMetadata}
+          serviceMetadataError={null}
+          serviceMetadataLoading={false}
         />
       ),
       useFormOptions: {
@@ -174,7 +127,103 @@ describe('Trigger Conditions', () => {
     user.click(evaluationPeriodInput);
 
     expect(
-      screen.queryByText(evaluationPeriodOptions.linode[0].label)
+      await screen.findByRole('option', {
+        name: evaluationPeriodOptions[1].label,
+      })
+    ).toBeVisible();
+    expect(
+      await screen.findByRole('option', {
+        name: evaluationPeriodOptions[2].label,
+      })
+    ).toBeVisible();
+
+    await user.click(
+      screen.getByRole('option', {
+        name: evaluationPeriodOptions[0].label,
+      })
+    );
+
+    expect(
+      within(evaluationPeriodContainer).getByRole('combobox')
+    ).toHaveAttribute('value', evaluationPeriodOptions[0].label);
+  });
+
+  it('should render the Polling Interval component with options happy path and select an option', async () => {
+    renderWithThemeAndHookFormContext<CreateAlertDefinitionForm>({
+      component: (
+        <TriggerConditions
+          maxScrapingInterval={0}
+          name="trigger_conditions"
+          serviceMetadata={mockServiceMetadata}
+          serviceMetadataError={null}
+          serviceMetadataLoading={false}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          serviceType: 'linode',
+        },
+      },
+    });
+    const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
+    const pollingIntervalInput = within(pollingIntervalContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
+
+    user.click(pollingIntervalInput);
+
+    expect(
+      await screen.findByRole('option', {
+        name: pollingIntervalOptions[1].label,
+      })
+    ).toBeVisible();
+
+    expect(
+      await screen.findByRole('option', {
+        name: pollingIntervalOptions[2].label,
+      })
+    ).toBeVisible();
+
+    await user.click(
+      screen.getByRole('option', {
+        name: pollingIntervalOptions[0].label,
+      })
+    );
+    expect(
+      within(pollingIntervalContainer).getByRole('combobox')
+    ).toHaveAttribute('value', pollingIntervalOptions[0].label);
+  });
+
+  it('should be able to show the options that are greater than or equal to max scraping Interval', () => {
+    renderWithThemeAndHookFormContext({
+      component: (
+        <TriggerConditions
+          maxScrapingInterval={120}
+          name="trigger_conditions"
+          serviceMetadata={mockServiceMetadata}
+          serviceMetadataError={null}
+          serviceMetadataLoading={false}
+        />
+      ),
+      useFormOptions: {
+        defaultValues: {
+          serviceType: 'linode',
+        },
+      },
+    });
+    const evaluationPeriodContainer = screen.getByTestId(
+      EvaluationPeriodTestId
+    );
+    const evaluationPeriodInput = within(evaluationPeriodContainer).getByRole(
+      'button',
+      { name: 'Open' }
+    );
+
+    user.click(evaluationPeriodInput);
+
+    expect(
+      screen.queryByText(evaluationPeriodOptions[0].label)
     ).not.toBeInTheDocument();
 
     const pollingIntervalContainer = screen.getByTestId(PollingIntervalTestId);
@@ -184,7 +233,7 @@ describe('Trigger Conditions', () => {
     );
     user.click(pollingIntervalInput);
     expect(
-      screen.queryByText(pollingIntervalOptions.linode[0].label)
+      screen.queryByText(pollingIntervalOptions[0].label)
     ).not.toBeInTheDocument();
   });
 });
