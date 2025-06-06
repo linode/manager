@@ -19,6 +19,14 @@ const iamRoute = createRoute({
   path: 'iam',
 });
 
+const iamCatchAllRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/users' });
+  },
+});
+
 const iamIndexRoute = createRoute({
   beforeLoad: async () => {
     throw redirect({ to: '/iam/users' });
@@ -27,20 +35,49 @@ const iamIndexRoute = createRoute({
   path: '/',
 }).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
 
-const iamRolesRoute = createRoute({
-  getParentRoute: () => iamRoute,
-  path: 'roles',
-}).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
-
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'users',
   validateSearch: (search: IamUsersSearchParams) => search,
 }).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
 
+const iamUsersCatchAllRoute = createRoute({
+  getParentRoute: () => iamUsersRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/users' });
+  },
+});
+
+const iamRolesRoute = createRoute({
+  getParentRoute: () => iamRoute,
+  path: 'roles',
+}).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
+
+const iamRolesCatchAllRoute = createRoute({
+  getParentRoute: () => iamRolesRoute,
+  path: '/$invalidPath',
+  beforeLoad: () => {
+    throw redirect({ to: '/iam/roles' });
+  },
+});
+
 const iamUserNameRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'users/$username',
+}).lazy(() =>
+  import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
+);
+
+const iamUserNameIndexRoute = createRoute({
+  getParentRoute: () => iamUserNameRoute,
+  path: '/',
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/iam/users/$username/details',
+      params: { username: params.username },
+    });
+  },
 }).lazy(() =>
   import('./IAMLazyRoutes').then((m) => m.userDetailsLandingLazyRoute)
 );
@@ -118,7 +155,11 @@ export const iamRouteTree = iamRoute.addChildren([
   iamIndexRoute,
   iamRolesRoute,
   iamUsersRoute,
+  iamCatchAllRoute,
+  iamUsersCatchAllRoute,
+  iamRolesCatchAllRoute,
   iamUserNameRoute.addChildren([
+    iamUserNameIndexRoute,
     iamUserNameDetailsRoute,
     iamUserNameRolesRoute,
     iamUserNameEntitiesRoute,
