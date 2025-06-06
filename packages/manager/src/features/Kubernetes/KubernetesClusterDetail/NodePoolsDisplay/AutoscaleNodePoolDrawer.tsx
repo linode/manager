@@ -106,27 +106,39 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
     control,
     formState: { errors, isDirty, isSubmitting, isValid },
     trigger,
+    reset,
     watch,
+    setValue,
     ...form
   } = useForm({
-    defaultValues: {
-      enabled: autoscaler?.enabled ?? false,
-      max: autoscaler?.max ?? 1,
-      min: autoscaler?.min ?? 1,
-    },
     mode: 'onChange',
+    defaultValues: {
+      enabled: false,
+      max: 1,
+      min: 1,
+    },
   });
 
-  const { max: _max, enabled: _enabled, min: _min } = watch();
+  const { max: _max, enabled: _enabled } = watch();
   const maxLimit =
     clusterTier === 'enterprise'
       ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
       : MAX_NODES_PER_POOL_STANDARD_TIER;
 
-  // Clear any API errors once form is updated to allow for resubmission.
+  // Node pool must be defined to set form fields with autoscaler's initial values.
   React.useEffect(() => {
-    clearErrors('root');
-  }, [_max, _min, _enabled, clearErrors]);
+    // Will be undefined when drawer first mounts.
+    if (!nodePool) {
+      return;
+    }
+    if (open) {
+      reset({
+        enabled: autoscaler?.enabled,
+        max: autoscaler?.max,
+        min: autoscaler?.min,
+      });
+    }
+  }, [nodePool, open, autoscaler, reset]);
 
   const onSubmit = async (values: AutoscaleSettings) => {
     if (!isValid) {
@@ -164,7 +176,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
 
   const handleClose = () => {
     onClose();
-    form.reset();
+    reset();
   };
 
   const warning =
@@ -220,7 +232,10 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     checked={field.value}
                     disabled={isSubmitting}
                     name="enabled"
-                    onChange={field.onChange}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      clearErrors('root');
+                    }}
                   />
                 }
                 label="Autoscale"
@@ -246,11 +261,13 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     error={!!fieldState.error}
                     label="Min"
                     onChange={(e) => {
+                      clearErrors('root');
+
                       // Set value to an empty string if field is cleared; else, convert string to number.
                       if (e.target.value === '') {
                         field.onChange(e);
                       } else {
-                        form.setValue('min', Number(e.target.value), {
+                        setValue('min', Number(e.target.value), {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
@@ -294,11 +311,13 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                     error={!!fieldState.error}
                     label="Max"
                     onChange={(e) => {
+                      clearErrors('root');
+
                       // Set value to an empty string if field is cleared; else, convert string to number.
                       if (e.target.value === '') {
                         field.onChange(e);
                       } else {
-                        form.setValue('max', Number(e.target.value), {
+                        setValue('max', Number(e.target.value), {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
