@@ -28,7 +28,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+  const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -37,7 +37,7 @@ vi.mock('src/queries/iam/iam', async () => {
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
@@ -116,8 +116,8 @@ describe('UserRoles', () => {
   });
 
   it('should exclude the role from the table if the assigned entity (firewall with id 2) was removed', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: ['account_admin'],
         entity_access: [
           {
@@ -129,8 +129,8 @@ describe('UserRoles', () => {
       }),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -169,7 +169,7 @@ describe('UserRoles', () => {
   });
 
   it('should show error state when api fails', () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: null,
       error: [{ reason: 'An unexpected error occurred' }],
       isLoading: false,

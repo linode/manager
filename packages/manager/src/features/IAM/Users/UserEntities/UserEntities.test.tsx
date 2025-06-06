@@ -29,7 +29,7 @@ const queryMocks = vi.hoisted(() => ({
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+  const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -38,7 +38,7 @@ vi.mock('src/queries/iam/iam', async () => {
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
@@ -107,7 +107,7 @@ describe('UserEntities', () => {
   });
 
   it('should show error state when api fails', () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: null,
       error: [{ reason: 'An unexpected error occurred' }],
       isLoading: false,

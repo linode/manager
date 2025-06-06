@@ -9,13 +9,7 @@ import { TextTooltip } from 'src/components/TextTooltip';
 
 import { getTotalAssignedRoles } from './utils';
 
-import type {
-  AccountAccessRole,
-  EntityAccess,
-  EntityAccessRole,
-  IamUserRoles,
-  User,
-} from '@linode/api-v4';
+import type { IamUserRoles, User } from '@linode/api-v4';
 
 interface Props {
   assignedRoles?: IamUserRoles;
@@ -140,4 +134,3 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
     </Paper>
   );
 };
-
