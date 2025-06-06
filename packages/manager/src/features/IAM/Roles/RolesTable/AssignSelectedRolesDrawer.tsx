@@ -17,9 +17,9 @@ import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
 } from 'src/queries/iam/iam';
 
 import {
@@ -57,9 +57,9 @@ export const AssignSelectedRolesDrawer = ({
     }));
   };
 
-  const { data: accountPermissions } = useAccountPermissions();
+  const { data: accountRoles } = useAccountRoles();
 
-  const { data: existingRoles } = useAccountUserPermissions(username ?? '');
+  const { data: existingRoles } = useUserRoles(username ?? '');
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -83,8 +83,9 @@ export const AssignSelectedRolesDrawer = ({
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
-  const { mutateAsync: updateUserRolePermissions, isPending } =
-    useAccountUserPermissionsMutation(username ?? '');
+  const { mutateAsync: updateUserRoles, isPending } = useUserRolesMutation(
+    username ?? ''
+  );
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
@@ -93,7 +94,7 @@ export const AssignSelectedRolesDrawer = ({
         existingRoles
       );
 
-      await updateUserRolePermissions(mergedRoles);
+      await updateUserRoles(mergedRoles);
       const successMessage = (
         <Typography>
           Roles assigned. See user&apos;s{' '}
@@ -197,7 +198,7 @@ export const AssignSelectedRolesDrawer = ({
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             selectedRoles.map((role, index) => (
               <AssignSingleSelectedRole
                 hideDetails={areDetailsHidden}

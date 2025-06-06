@@ -1,5 +1,5 @@
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 
 import {
   addEntitiesNamesToRoles,
@@ -11,7 +11,7 @@ import type { ExtendedRoleView } from '../types';
 import type { CombinedRoles } from './utils';
 import type { AccountEntity, EntityType } from '@linode/api-v4';
 
-const userPermissions = userPermissionsFactory.build({
+const userPermissions = userRolesFactory.build({
   account_access: ['account_linode_admin', 'linode_creator'],
   entity_access: [
     {
@@ -25,7 +25,7 @@ const userPermissions = userPermissionsFactory.build({
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions = accountPermissionsFactory.build();
+const accountPermissions = accountRolesFactory.build();
 describe('combineRoles', () => {
   it('should return an object of users roles', () => {
     const expectedRoles = [

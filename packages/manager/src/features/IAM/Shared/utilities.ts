@@ -18,8 +18,8 @@ import type {
   EntityTypePermissions,
   IamAccess,
   IamAccessType,
-  IamAccountPermissions,
-  IamUserPermissions,
+  IamAccountRoles,
+  IamUserRoles,
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -103,9 +103,7 @@ export interface ExtendedEntityRole extends EntitiesRole {
   value: EntityAccessRole;
 }
 
-export const getAllRoles = (
-  permissions: IamAccountPermissions
-): RolesType[] => {
+export const getAllRoles = (permissions: IamAccountRoles): RolesType[] => {
   const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
 
   return accessTypes.flatMap((accessType: IamAccessType) =>
@@ -121,7 +119,7 @@ export const getAllRoles = (
 };
 
 export const getRoleByName = (
-  accountPermissions: IamAccountPermissions,
+  accountPermissions: IamAccountRoles,
   roleName: string
 ): ExtendedRole | null => {
   const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
@@ -160,7 +158,7 @@ export const mapEntityTypesForSelect = (
  * Add descriptions, permissions, type to all roles
  */
 export const mapAccountPermissionsToRoles = (
-  accountPermissions: IamAccountPermissions
+  accountPermissions: IamAccountRoles
 ): RoleView[] => {
   const mapperFn = (access: string, entity_type: string, role: Roles) => ({
     access,
@@ -187,17 +185,17 @@ export const mapAccountPermissionsToRoles = (
 
 interface UpdateUserRolesProps {
   access: 'account_access' | 'entity_access';
-  assignedRoles?: IamUserPermissions;
+  assignedRoles?: IamUserRoles;
   initialRole?: string;
   newRole: string;
 }
 
-export const updateUserRoles = ({
+export const changeUserRole = ({
   access,
   assignedRoles,
   initialRole,
   newRole,
-}: UpdateUserRolesProps): IamUserPermissions => {
+}: UpdateUserRolesProps): IamUserRoles => {
   if (access === 'account_access' && assignedRoles) {
     return {
       ...assignedRoles,
@@ -235,7 +233,7 @@ export interface AssignNewRoleFormValues {
   roles: {
     entities?: EntitiesOption[] | null;
     role: null | RolesType;
-  }[],
+  }[];
   username?: null | string;
 }
 
@@ -245,7 +243,7 @@ export interface UpdateEntitiesFormValues {
 
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
-  assignedRoles?: IamUserPermissions;
+  assignedRoles?: IamUserRoles;
   initialRole?: string;
 }
 
@@ -253,7 +251,7 @@ export const deleteUserRole = ({
   access,
   assignedRoles,
   initialRole,
-}: DeleteUserRolesProps): IamUserPermissions => {
+}: DeleteUserRolesProps): IamUserRoles => {
   if (!assignedRoles) {
     return {
       account_access: [],
@@ -467,10 +465,10 @@ export const partition = <T>(
  */
 export const mergeAssignedRolesIntoExistingRoles = (
   selectedRoles: AssignNewRoleFormValues,
-  existingRoles: IamUserPermissions | undefined
-): IamUserPermissions => {
+  existingRoles: IamUserRoles | undefined
+): IamUserRoles => {
   // Set up what is going to be returned
-  const selectedPlusExistingRoles: IamUserPermissions = {
+  const selectedPlusExistingRoles: IamUserRoles = {
     account_access: existingRoles?.account_access || [],
     entity_access: existingRoles?.entity_access || [],
   };

@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserDetailsPanel } from './UserDetailsPanel';
 
-import type { IamUserPermissions } from '@linode/api-v4';
+import type { IamUserRoles } from '@linode/api-v4';
 
 describe('UserDetailsPanel', () => {
   it("renders the user's username and email", async () => {
@@ -37,7 +37,7 @@ describe('UserDetailsPanel', () => {
 
   it("renders '5' if the user has 5 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
-    const assignedRoles: IamUserPermissions = {
+    const assignedRoles: IamUserRoles = {
       account_access: [
         'account_linode_admin',
         'linode_creator',
@@ -67,7 +67,7 @@ describe('UserDetailsPanel', () => {
 
   it("renders '3' if the user has 3 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
-    const assignedRoles: IamUserPermissions = {
+    const assignedRoles: IamUserRoles = {
       account_access: [
         'account_linode_admin',
         'linode_creator',

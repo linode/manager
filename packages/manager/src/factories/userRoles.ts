@@ -4,7 +4,7 @@ import type {
   EntityAccess,
   EntityAccessRole,
   EntityType,
-  IamUserPermissions,
+  IamUserRoles,
 } from '@linode/api-v4';
 
 const possibleRoles: EntityAccessRole[] = [
@@ -52,14 +52,13 @@ const entityAccessList = [
   }),
 ];
 
-export const userPermissionsFactory =
-  Factory.Sync.makeFactory<IamUserPermissions>({
-    account_access: [
-      'account_linode_admin',
-      'linode_creator',
-      'firewall_creator',
-      'account_admin',
-      'account_viewer',
-    ],
-    entity_access: entityAccessList,
-  });
+export const userRolesFactory = Factory.Sync.makeFactory<IamUserRoles>({
+  account_access: [
+    'account_linode_admin',
+    'linode_creator',
+    'firewall_creator',
+    'account_admin',
+    'account_viewer',
+  ],
+  entity_access: entityAccessList,
+});
