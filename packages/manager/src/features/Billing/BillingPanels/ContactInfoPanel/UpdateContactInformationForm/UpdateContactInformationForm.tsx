@@ -51,7 +51,7 @@ const UpdateContactInformationForm = ({ focusEmail, onClose }: Props) => {
   const { data: notifications, refetch } = useNotificationsQuery();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { classes } = useStyles();
-  const emailRef = React.useRef<HTMLInputElement>();
+  const emailRef = React.useRef<HTMLInputElement>(undefined);
   const { data: profile } = useProfile();
   const [billingAgreementChecked, setBillingAgreementChecked] =
     React.useState(false);

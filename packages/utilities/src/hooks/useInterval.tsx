@@ -46,7 +46,7 @@ const useInterval = ({
   startImmediately = false,
   when = true,
 }: UseIntervalOptions): UseIntervalReturn => {
-  const intervalRef = useRef<number | undefined>();
+  const intervalRef = useRef<number | undefined>(undefined);
 
   // Save the callback to a ref to ensure it has the most recent version
   // without needing to reset the interval each time the callback changes.

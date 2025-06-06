@@ -9,7 +9,7 @@ import { DownloadCSV } from 'src/components/DownloadCSV/DownloadCSV';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 
 export const LinodesLandingCSVDownload = () => {
-  const csvRef = React.useRef<any>();
+  const csvRef = React.useRef<any>(undefined);
   const formattedDate = useFormattedDate();
 
   const { data: linodes, refetch: getCSVData } = useAllLinodesQuery(

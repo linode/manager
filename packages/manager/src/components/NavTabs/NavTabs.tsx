@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from "react";
 import { matchPath, Redirect, useHistory, useLocation } from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';

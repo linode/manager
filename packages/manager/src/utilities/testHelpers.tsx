@@ -300,7 +300,7 @@ export const renderWithTheme = (
  */
 
 export const renderWithThemeAndFormik = <T extends FormikValues>(
-  ui: React.ReactElement,
+  ui: React.ReactElement<any>,
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
@@ -318,7 +318,7 @@ const FormContextWrapper = <T extends FieldValues>(
 };
 
 interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
-  component: React.ReactElement;
+  component: React.ReactElement<any>;
   options?: Options;
   useFormOptions?: UseFormProps<T>;
 }

@@ -43,7 +43,7 @@ export interface SelectPhoneVerificationOption {
 export const PhoneVerification = ({
   phoneNumberRef,
 }: {
-  phoneNumberRef: React.RefObject<HTMLInputElement>;
+  phoneNumberRef: React.RefObject<HTMLInputElement | null>;
 }) => {
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();

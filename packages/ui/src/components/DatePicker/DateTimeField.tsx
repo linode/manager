@@ -22,7 +22,7 @@ interface DateTimeFieldProps
     | 'MM/dd/yyyy hh:mm a'
     | 'yyyy-MM-dd HH:mm'
     | 'yyyy-MM-dd hh:mm a';
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   label: string;
   onChange: (date: DateTime | null) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

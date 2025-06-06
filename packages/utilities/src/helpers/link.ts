@@ -20,8 +20,10 @@ export const flattenChildrenIntoAriaLabel = (
     return children;
   } else if (React.isValidElement(children)) {
     // If children is a single React element, extract its text content if any.
-    return children.props.children
-      ? flattenChildrenIntoAriaLabel(children.props.children)
+    return (children.props as { children: React.ReactNode }).children
+      ? flattenChildrenIntoAriaLabel(
+          (children.props as { children: React.ReactNode }).children,
+        )
       : '';
   } else if (Array.isArray(children)) {
     // If children is an array of React elements, flatten each child and join the results.
@@ -45,7 +47,9 @@ export const childrenContainsNoText = (children: React.ReactNode): boolean => {
   if (typeof children === 'string') {
     return children.trim() === '';
   } else if (React.isValidElement(children)) {
-    const { children: childText } = children.props;
+    const { children: childText } = children.props as {
+      children: React.ReactNode;
+    };
 
     if (childText === null) {
       return true; // Consider null as having no text content.

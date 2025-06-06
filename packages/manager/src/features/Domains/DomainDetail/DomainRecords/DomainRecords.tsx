@@ -249,7 +249,7 @@ export const DomainRecords = (props: Props) => {
       <DocumentTitleSegment segment={`${domain.domain} - DNS Records`} />
       <Stack spacing={3}>
         {state.types.map((type, eachTypeIdx) => {
-          const ref: React.RefObject<HTMLDivElement> = React.createRef();
+          const ref: React.RefObject<HTMLDivElement | null> = React.createRef();
 
           return (
             <div key={eachTypeIdx}>

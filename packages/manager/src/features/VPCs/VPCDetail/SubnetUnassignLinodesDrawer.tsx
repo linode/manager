@@ -78,7 +78,7 @@ export const SubnetUnassignLinodesDrawer = React.memo(
     const { setUnassignLinodesErrors, unassignLinode, unassignLinodesErrors } =
       useUnassignLinode();
 
-    const csvRef = React.useRef<any>();
+    const csvRef = React.useRef<any>(undefined);
     const formattedDate = useFormattedDate();
 
     const [selectedLinodes, setSelectedLinodes] = React.useState<Linode[]>(

@@ -38,7 +38,7 @@ const LinodePubKey = () => {
   const [isSSHKeyMasked, setIsSSHKeyMasked] = React.useState(
     preferences?.maskSensitiveData
   );
-  const timeout = React.useRef<NodeJS.Timeout>();
+  const timeout = React.useRef<NodeJS.Timeout>(undefined);
   const matchesSmDownBreakpoint = useMediaQuery<Theme>((theme) =>
     theme.breakpoints.down('sm')
   );

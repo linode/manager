@@ -7,14 +7,14 @@ import {
 
 import { NotificationMenu } from './NotificationMenu';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof NotificationMenu>;
 
 const meta: Meta<typeof NotificationMenu> = {
   component: NotificationMenu,
   decorators: [
-    (Story: StoryFn) => {
+    (Story) => {
       const contextValue = useNotificationContext();
       const NotificationProvider = _notificationContext.Provider;
       return (

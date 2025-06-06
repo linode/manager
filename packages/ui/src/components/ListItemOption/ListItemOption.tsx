@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { SelectedIcon } from '../Autocomplete';
 import { Box } from '../Box';
