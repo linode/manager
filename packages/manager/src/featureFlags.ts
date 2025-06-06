@@ -110,6 +110,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
+  aclpBetaServices: AlertServiceType[];
   aclpIntegration: boolean;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
