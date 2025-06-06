@@ -1,7 +1,5 @@
-import { useLinodeQuery } from '@linode/queries';
+import { useLinodeQuery, useTypeQuery } from '@linode/queries';
 import * as React from 'react';
-
-import { useTypeQuery } from 'src/queries/types';
 
 import { BareMetalRescue } from './BareMetalRescue';
 import { StandardRescueDialog } from './StandardRescueDialog';

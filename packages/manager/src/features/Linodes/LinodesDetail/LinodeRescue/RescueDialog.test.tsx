@@ -31,8 +31,8 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual<any>('src/queries/types');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useTypeQuery: queryMocks.useTypeQuery,
