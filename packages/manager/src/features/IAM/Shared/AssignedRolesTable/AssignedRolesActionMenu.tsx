@@ -62,5 +62,10 @@ export const AssignedRolesActionMenu = ({
 
   const actions = role.access === 'account_access' ? accountMenu : entitiesMenu;
 
-  return <ActionMenu actionsList={actions} ariaLabel="action menu" />;
+  return (
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for role ${role.name}`}
+    />
+  );
 };

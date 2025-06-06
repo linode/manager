@@ -137,7 +137,7 @@ export const ChangeRoleForEntityDrawer = ({
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
           Change the role for <strong>{role?.entity_name}</strong> from{' '}
           <strong>{role?.role_name}</strong> to:
         </Typography>
@@ -153,6 +153,7 @@ export const ChangeRoleForEntityDrawer = ({
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
+              sx={{ marginBottom: theme.spacingFunction(16) }}
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
               value={field.value || null}
             />

@@ -137,7 +137,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
           Change from role <strong>{role?.name}</strong> to:
         </Typography>
 
@@ -152,6 +152,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
+              sx={{ marginBottom: theme.spacingFunction(16) }}
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
               value={field.value || null}
             />
