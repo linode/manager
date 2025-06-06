@@ -113,7 +113,11 @@ export const search = (
   entities: SearchableItem[],
   inputValue: string
 ): SearchResults => {
-  if (!inputValue || inputValue === '') {
+  if (
+    !inputValue ||
+    typeof inputValue !== 'string' ||
+    inputValue.trim() === ''
+  ) {
     return { combinedResults: [], searchResultsByEntity: emptyResults };
   }
 
