@@ -124,7 +124,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
-import { MTC } from 'src/features/components/PlansPanel/constants';
+import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -2408,20 +2408,20 @@ export const handlers = [
         plan: 'g6-standard-7',
         region: selectedRegion,
       }),
-      // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
-      ...(MTC['availability_regions'].includes(
-        selectedRegion as (typeof MTC)['availability_regions'][number]
-      )
+      // MTC plans are region-specific and only available to customers with the MTC customer tag.
+      // The supported regions check list below is hardcoded for mock purposes and may grow in the future.
+      // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
+      ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
         ? [
             regionAvailabilityFactory.build({
-              available: true,
+              available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).
               plan: 'g8-premium-128-ht',
               region: selectedRegion,
             }),
           ]
         : [
             regionAvailabilityFactory.build({
-              available: false,
+              available: false, // In unsupported region, this will always be `false` (Plan not offered/not available).
               plan: 'g8-premium-128-ht',
               region: selectedRegion,
             }),

@@ -30,9 +30,9 @@ export type PlanWithAvailability =
 
 export interface PlanSelectionAvailabilityTypes {
   planBelongsToDisabledClass: boolean;
-  planBelongsToMTCDisabledGroup?: boolean;
   planHasLimitedAvailability: boolean;
   planIsDisabled512Gb: boolean;
+  planIsMTCWithResizing?: boolean;
   planIsSmallerThanUsage?: boolean;
   planIsTooSmall: boolean;
   planIsTooSmallForAPL?: boolean;
