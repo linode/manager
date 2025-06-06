@@ -281,19 +281,19 @@ export const portStringToItems = (
   const customInput: string[] = [];
 
   for (const port of ports) {
-    if (
-      port in PORT_PRESETS && 
-      items.some(
-        (i) => i.value === PORT_PRESETS[port as keyof typeof PORT_PRESETS].value
-      )
-    ) {
+    const preset =
+      port in PORT_PRESETS
+        ? PORT_PRESETS[port as keyof typeof PORT_PRESETS]
+        : undefined;
+
+    if (preset && items.some((i) => i.value === preset.value)) {
       // If we have already added the port preset to our `items` array, just skip it
       // to avoid duplicate options
       continue;
     }
 
-    if (port in PORT_PRESETS) {
-      items.push(PORT_PRESETS[port as keyof typeof PORT_PRESETS]);
+    if (preset) {
+      items.push(preset);
     } else {
       customInput.push(port);
     }
