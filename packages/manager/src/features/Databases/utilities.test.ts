@@ -8,6 +8,7 @@ import {
 } from 'src/factories';
 import {
   getDatabasesDescription,
+  getReadOnlyHost,
   hasPendingUpdates,
   isDateOutsideBackup,
   isDefaultDatabase,
@@ -561,5 +562,35 @@ describe('upgradableVersions', () => {
   it('should return undefined when no engines are provided', () => {
     const result = upgradableVersions('mysql', '8.0.26', undefined);
     expect(result).toBeUndefined();
+  });
+});
+
+describe('getReadOnlyHost', () => {
+  it('should return the standby host from the database when present', () => {
+    const db: Database = databaseFactory.build();
+    const mockHosts = {
+      primary: 'primary.example.com',
+      standby: 'standby.example.com',
+      secondary: 'secondary.example.com',
+    };
+    db.hosts = mockHosts;
+    const result = getReadOnlyHost(db);
+    expect(result).toBe(mockHosts.standby);
+  });
+
+  it('should return the secondary host from the database if standby is not present', () => {
+    const db: Database = databaseFactory.build();
+    const mockHosts = {
+      primary: 'primary.example.com',
+      secondary: 'secondary.example.com',
+    };
+    db.hosts = mockHosts;
+    const result = getReadOnlyHost(db);
+    expect(result).toBe(mockHosts.secondary);
+  });
+
+  it('should return an empty string when no database data is provided', () => {
+    const result = getReadOnlyHost({} as Database);
+    expect(result).toBe('');
   });
 });

@@ -20,10 +20,10 @@ export const InterfaceDetailsContent = (props: LinodeInterface) => {
       {(default_route.ipv4 || default_route.ipv6) && (
         <Box>
           {default_route.ipv4 && (
-            <Chip color="info" component="span" label="IPv4 Default Route" />
+            <Chip component="span" label="IPv4 Default Route" />
           )}
           {default_route.ipv6 && (
-            <Chip color="info" component="span" label="IPv6 Default Route" />
+            <Chip component="span" label="IPv6 Default Route" />
           )}
         </Box>
       )}

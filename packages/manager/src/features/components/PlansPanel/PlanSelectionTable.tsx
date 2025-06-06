@@ -130,7 +130,7 @@ export const PlanSelectionTable = (props: PlanSelectionTableProps) => {
                 isPlanCell={isPlanCell}
                 key={testId}
                 noWrap={noWrap}
-                sx={isPlanCell ? { paddingLeft: 0.5 } : undefined}
+                {...(isPlanCell && { sx: { paddingLeft: 0.5 } })}
               >
                 {isPlanCell && filterOptions?.header
                   ? filterOptions?.header

@@ -8,7 +8,10 @@ import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { NO_ASSIGNED_ENTITIES_TEXT } from '../../Shared/constants';
+import {
+  ERROR_STATE_TEXT,
+  NO_ASSIGNED_ENTITIES_TEXT,
+} from '../../Shared/constants';
 import { UserEntities } from './UserEntities';
 
 const mockEntities = [
@@ -52,9 +55,9 @@ describe('UserEntities', () => {
     });
 
     renderWithTheme(<UserEntities />);
+    expect(screen.getByText('This list is empty')).toBeVisible();
 
-    expect(screen.getByText('Entity Access')).toBeVisible();
-
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
 
@@ -68,7 +71,9 @@ describe('UserEntities', () => {
 
     renderWithTheme(<UserEntities />);
 
-    expect(screen.getByText('Entity Access')).toBeVisible();
+    expect(screen.getByText('This list is empty')).toBeVisible();
+
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
 
     expect(screen.getByText(NO_ASSIGNED_ENTITIES_TEXT)).toBeVisible();
   });
@@ -88,6 +93,8 @@ describe('UserEntities', () => {
 
     renderWithTheme(<UserEntities />);
 
+    expect(screen.queryByText('Assign New Roles')).toBeNull();
+
     expect(screen.getByText('firewall_admin')).toBeVisible();
     expect(screen.getByText('firewall-1')).toBeVisible();
 
@@ -97,5 +104,17 @@ describe('UserEntities', () => {
     await userEvent.click(actionMenuButton);
     expect(screen.getByText('Change Role')).toBeVisible();
     expect(screen.getByText('Remove')).toBeVisible();
+  });
+
+  it('should show error state when api fails', () => {
+    queryMocks.useAccountUserPermissions.mockReturnValue({
+      data: null,
+      error: [{ reason: 'An unexpected error occurred' }],
+      isLoading: false,
+      status: 'error',
+    });
+
+    renderWithTheme(<UserEntities />);
+    expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });

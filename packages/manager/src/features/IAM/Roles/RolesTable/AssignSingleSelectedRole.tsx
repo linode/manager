@@ -29,7 +29,8 @@ export const AssignSingleSelectedRole = ({
         {index !== 0 && (
           <Divider
             sx={{
-              marginBottom: theme.tokens.spacing.S12,
+              marginBottom: theme.tokens.spacing.S6,
+              marginTop: theme.tokens.spacing.S12,
             }}
           />
         )}

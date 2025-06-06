@@ -136,4 +136,52 @@ describe('addResourceNamesToRoles', () => {
       expectedRoles
     );
   });
+
+  it('should exclude the role if the assigned entity was removed and the role was associated with only one entity', () => {
+    // the list of availiable entities doesn't contain the entity with id 12345678 anymore
+    const mockGoupedEntities: Map<
+      EntityType,
+      Pick<AccountEntity, 'id' | 'label'>[]
+    > = new Map([['linode', [{ id: 2, label: 'test 2' }]]]);
+
+    const userRoles: ExtendedRoleView[] = [
+      {
+        access: accountAccess,
+        description:
+          'Access to perform any supported action on all resources in the account',
+        id: 'account_admin',
+        name: 'account_admin',
+        permissions: ['create_linode', 'update_linode', 'update_firewall'],
+        entity_ids: null,
+        entity_type: 'account',
+      },
+      {
+        access: entityAccess,
+        description: 'Access to update a linode instance',
+        id: 'linode_contributor',
+        name: 'linode_contributor',
+        permissions: ['update_linode', 'view_linode'],
+        entity_ids: [12345678],
+        entity_type: 'linode',
+      },
+    ];
+
+    const expectedRoles = [
+      {
+        access: accountAccess,
+        description:
+          'Access to perform any supported action on all resources in the account',
+        id: 'account_admin',
+        name: 'account_admin',
+        permissions: ['create_linode', 'update_linode', 'update_firewall'],
+        entity_ids: null,
+        entity_names: [],
+        entity_type: 'account',
+      },
+    ];
+
+    expect(addEntitiesNamesToRoles(userRoles, mockGoupedEntities)).toEqual(
+      expectedRoles
+    );
+  });
 });

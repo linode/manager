@@ -4,8 +4,10 @@ export type EntityType =
   | 'firewall'
   | 'image'
   | 'linode'
+  | 'lkecluster'
   | 'longview'
   | 'nodebalancer'
+  | 'placement_group'
   | 'stackscript'
   | 'volume'
   | 'vpc';
