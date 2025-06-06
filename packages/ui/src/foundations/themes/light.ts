@@ -398,11 +398,6 @@ export const lightTheme: ThemeOptions = {
           marginTop: Spacing.S4,
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
-          // Override padding when noOptions is present
-          '&:has(.MuiAutocomplete-noOptions)': {
-            paddingTop: Spacing.S0,
-            paddingBottom: Spacing.S0,
-          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
@@ -419,12 +414,8 @@ export const lightTheme: ThemeOptions = {
           boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          borderTop: 0,
-          border: '0px !important',
-          boxShadow: Alias.Elevation.S,
-          height: Spacing.S32,
-          display: 'flex',
-          alignItems: 'center',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
@@ -436,7 +427,6 @@ export const lightTheme: ThemeOptions = {
             transition: 'background-color 0.2s',
           },
           fontSize: '0.9rem',
-          padding: '10px !important',
           '& .fi': {
             width: Spacing.S28,
             height: Spacing.S20,
@@ -444,6 +434,7 @@ export const lightTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
           // To remove the double border of listbox and input
@@ -461,10 +452,10 @@ export const lightTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: Spacing.S32,
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
+                  height: Spacing.S16,
+                  width: Spacing.S16,
                 },
               },
             },
@@ -481,10 +472,10 @@ export const lightTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: Spacing.S32,
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
+                  height: Spacing.S16,
+                  width: Spacing.S16,
                 },
               },
             },

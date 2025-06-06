@@ -258,11 +258,6 @@ export const darkTheme: ThemeOptions = {
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
           backgroundColor: Component.Dropdown.Background.Default,
-          // Override padding when noOptions is present
-          '&:has(.MuiAutocomplete-noOptions)': {
-            paddingTop: Spacing.S0,
-            paddingBottom: Spacing.S0,
-          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
@@ -287,12 +282,8 @@ export const darkTheme: ThemeOptions = {
           },
         },
         noOptions: {
-          color: Select.Default.Icon,
-          border: '0px !important',
-          boxShadow: Alias.Elevation.S,
-          height: Spacing.S32,
-          display: 'flex',
-          alignItems: 'center',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
@@ -309,6 +300,7 @@ export const darkTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
           '&.MuiAutocomplete-popper': {
@@ -325,10 +317,10 @@ export const darkTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: Spacing.S32,
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
+                  height: Spacing.S16,
+                  width: Spacing.S16,
                 },
               },
             },
@@ -345,10 +337,10 @@ export const darkTheme: ThemeOptions = {
                 },
               },
               '.MuiAutocomplete-option': {
-                height: Spacing.S32,
+                padding: `${Spacing.S6} ${Spacing.S12} !important`,
                 svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
+                  height: Spacing.S16,
+                  width: Spacing.S16,
                 },
               },
             },
