@@ -3,6 +3,7 @@
  */
 
 import { profileFactory, securityQuestionsFactory } from '@linode/utilities';
+import { mockDataPrefix } from 'support/constants/cypress';
 import {
   mockConfirmTwoFactorAuth,
   mockDisableTwoFactorAuth,
@@ -141,7 +142,9 @@ describe('Two-factor authentication', () => {
   it('can enable two factor auth', () => {
     const invalidToken = randomToken();
     const validToken = randomToken();
-    const mockedKey = randomHex(16);
+    const mockedKey =
+      mockDataPrefix['secret'] +
+      randomHex(16 - mockDataPrefix['secret'].length);
     const mockedScratchCode = randomScratchCode();
 
     // Mock profile data to ensure that 2FA is disabled.
@@ -298,7 +301,10 @@ describe('Two-factor authentication', () => {
     cy.wait('@getSecurityQuestions');
 
     getTwoFactorSection().within(() => {
-      mockEnableTwoFactorAuth(randomHex(16)).as('resetTwoFactorAuth');
+      mockEnableTwoFactorAuth(
+        mockDataPrefix['secret'] +
+          randomHex(16 - mockDataPrefix['secret'].length)
+      ).as('resetTwoFactorAuth');
 
       // Confirm that reset link is present, click on it.
       cy.findByText('Reset two-factor authentication')
