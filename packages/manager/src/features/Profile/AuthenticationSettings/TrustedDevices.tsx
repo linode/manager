@@ -16,8 +16,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { RevokeTrustedDeviceDialog } from './RevokeTrustedDevicesDialog';
 
@@ -42,15 +42,22 @@ const TrustedDevices = () => {
 
   const { classes } = useStyles();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    preferenceKey,
+    currentRoute: '/profile/auth',
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'asc',
-      orderBy: 'expiry',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'expiry',
+      },
+      from: '/profile/auth',
     },
-    preferenceKey
-  );
+    preferenceKey,
+  });
 
   const { data, error, isLoading } = useTrustedDevicesQuery(
     {
@@ -154,15 +161,15 @@ const TrustedDevices = () => {
           </TableRow>
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
-        <PaginationFooter
-          count={data?.results ?? 0}
-          eventCategory="Trusted Devices Panel"
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-        />
       </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        eventCategory="Trusted Devices Panel"
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+      />
       <RevokeTrustedDeviceDialog
         deviceId={selectedDeviceId}
         onClose={() => setIsRevokeDialogOpen(false)}

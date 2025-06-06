@@ -20,8 +20,8 @@ import { StyledTableSortCell } from 'src/components/TableSortCell/StyledTableSor
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { PROXY_USER_RESTRICTED_TOOLTIP_TEXT } from 'src/features/Account/constants';
 import { SecretTokenDialog } from 'src/features/Profile/SecretTokenDialog/SecretTokenDialog';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { APITokenMenu } from './APITokenMenu';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
@@ -49,15 +49,22 @@ export const APITokenTable = (props: Props) => {
   const { title, type } = props;
 
   const { data: profile } = useProfile();
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'created',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'created',
+      },
+      from: '/profile/tokens',
     },
-    `${PREFERENCE_KEY}-order}`,
-    type === 'OAuth Client Token' ? 'oauth' : 'token'
-  );
-  const pagination = usePagination(1, PREFERENCE_KEY);
+    preferenceKey: `${PREFERENCE_KEY}-order`,
+    prefix: type === 'OAuth Client Token' ? 'oauth' : 'token',
+  });
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    preferenceKey: PREFERENCE_KEY,
+    currentRoute: '/profile/tokens',
+  });
 
   const queryMap = {
     'OAuth Client Token': useAppTokensQuery,

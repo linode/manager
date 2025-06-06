@@ -123,6 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { trustedDeviceFactory } from 'src/factories/devices';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { MTC } from 'src/features/components/PlansPanel/constants';
 
@@ -570,7 +571,7 @@ export const handlers = [
     );
   }),
   http.get('*/profile/apps', () => {
-    const tokens = appTokenFactory.buildList(5);
+    const tokens = appTokenFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(tokens));
   }),
   http.post('*/profile/phone-number', async () => {
@@ -1469,7 +1470,9 @@ export const handlers = [
     });
   }),
   http.get('*/profile/devices', () => {
-    return HttpResponse.json(makeResourcePage([]));
+    return HttpResponse.json(
+      makeResourcePage(trustedDeviceFactory.buildList(30))
+    );
   }),
   http.put('*/profile/preferences', async ({ request }) => {
     const reqBody = await request.json();
