@@ -64,7 +64,7 @@ export const LinodePlatformMaintenanceBanner = (props: {
                     <DateTimeDisplay
                       format="MM/dd/yyyy"
                       sx={(theme) => ({
-                        fontWeight: theme.tokens.font.FontWeight.Bold,
+                        font: theme.font.bold,
                       })}
                       value={startTime}
                     />{' '}
@@ -72,7 +72,7 @@ export const LinodePlatformMaintenanceBanner = (props: {
                     <DateTimeDisplay
                       format="HH:mm"
                       sx={(theme) => ({
-                        fontWeight: theme.tokens.font.FontWeight.Bold,
+                        font: theme.font.bold,
                       })}
                       value={startTime}
                     />
