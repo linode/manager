@@ -33,10 +33,16 @@ export const AttachFileForm = (props: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const removeFile = (fileIdx: number) => {
-    const newFiles = [...files].splice(fileIdx, 1);
+    // copy the files array
+    const newFiles = [...files];
+
+    // remove the file
+    newFiles.splice(fileIdx, 1);
+
     if (inputRef.current) {
       inputRef.current.value = '';
     }
+
     // Send the updated file list to the parent component's state
     updateFiles(newFiles);
   };
