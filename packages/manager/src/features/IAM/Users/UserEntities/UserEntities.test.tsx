@@ -98,7 +98,9 @@ describe('UserEntities', () => {
     expect(screen.getByText('firewall_admin')).toBeVisible();
     expect(screen.getByText('firewall-1')).toBeVisible();
 
-    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    const actionMenuButton = screen.getAllByLabelText(
+      'Action menu for entity firewall-1'
+    )[0];
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
