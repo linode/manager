@@ -13,6 +13,7 @@ import type {
 export const useAccountUserPermissions = (username?: string) => {
   return useQuery<IamUserPermissions, APIError[]>({
     ...iamQueries.user(username ?? '')._ctx.permissions,
+    refetchOnMount: 'always',
     enabled: Boolean(username),
   });
 };
