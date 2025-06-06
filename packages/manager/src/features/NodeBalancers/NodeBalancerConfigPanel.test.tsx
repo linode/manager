@@ -10,8 +10,16 @@ import type {
   NodeBalancerConfigPanelProps,
 } from './types';
 
-beforeEach(() => {
-  vi.resetAllMocks();
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({ id: undefined }),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
 });
 
 const node: NodeBalancerConfigNodeFields = {
@@ -80,6 +88,8 @@ const privateKey = 'private-key';
 const proxyProtocol = 'Proxy Protocol';
 
 describe('NodeBalancerConfigPanel', () => {
+  queryMocks.useParams.mockReturnValue({ id: undefined });
+
   it('renders the NodeBalancerConfigPanel', () => {
     const {
       getByLabelText,

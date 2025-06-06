@@ -235,7 +235,7 @@ export interface AssignNewRoleFormValues {
   roles: {
     entities?: EntitiesOption[] | null;
     role: null | RolesType;
-  }[],
+  }[];
   username?: null | string;
 }
 

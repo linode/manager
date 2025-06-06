@@ -1,5 +1,6 @@
 import {
   getNodeBalancerConfigNodes,
+  getNodeBalancerConfigNodesBeta,
   getNodeBalancerConfigs,
 } from '@linode/api-v4';
 
@@ -15,6 +16,23 @@ export const getConfigsWithNodes = (nodeBalancerId: number) => {
     return Promise.all(
       configs.data.map((config) => {
         return getNodeBalancerConfigNodes(nodeBalancerId, config.id).then(
+          ({ data: nodes }) => {
+            return {
+              ...config,
+              nodes: parseAddresses(nodes),
+            };
+          }
+        );
+      })
+    );
+  });
+};
+
+export const getConfigsWithNodesBeta = (nodeBalancerId: number) => {
+  return getNodeBalancerConfigs(nodeBalancerId).then((configs) => {
+    return Promise.all(
+      configs.data.map((config) => {
+        return getNodeBalancerConfigNodesBeta(nodeBalancerId, config.id).then(
           ({ data: nodes }) => {
             return {
               ...config,

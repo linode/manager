@@ -11,12 +11,13 @@ describe('getPrivateIPOptions', () => {
     expect(getPrivateIPOptions([])).toStrictEqual([]);
   });
 
-  it('returns an option for each private IPv4 on a Linode', () => {
-    const linode = linodeFactory.build({ ipv4: ['192.168.1.1', '172.16.0.1'] });
+  it('returns an option for each private IPv4 starting with 192.168.x.x on a Linode', () => {
+    const linode = linodeFactory.build({
+      ipv4: ['192.168.1.1', '172.16.0.1'],
+    });
 
     expect(getPrivateIPOptions([linode])).toStrictEqual([
       { label: '192.168.1.1', linode },
-      { label: '172.16.0.1', linode },
     ]);
   });
 

@@ -475,8 +475,13 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
   };
 
   onNodeAddressChange =
-    (configIdx: number) => (nodeIdx: number, value: string) =>
+    (configIdx: number) =>
+    (nodeIdx: number, value: string, subnetId?: number) => {
       this.setNodeValue(configIdx, nodeIdx, 'address', value);
+      if (subnetId) {
+        this.setNodeValue(configIdx, nodeIdx, 'subnet_id', subnetId);
+      }
+    };
 
   onNodeLabelChange = (configIdx: number) => (nodeIdx: number, value: string) =>
     this.setNodeValue(configIdx, nodeIdx, 'label', value);
@@ -1072,4 +1077,4 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
       this.clearMessages();
       this.setState(set(lens, value), L && callback ? callback(L) : undefined);
     };
-};
+}
