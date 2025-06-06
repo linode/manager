@@ -23,6 +23,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import {
@@ -41,6 +42,7 @@ import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
+import { MaintenancePolicy } from './MaintenancePolicy/MaintenancePolicy';
 import { Networking } from './Networking/Networking';
 import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
@@ -92,6 +94,7 @@ export const LinodeCreate = () => {
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const flags = useFlags();
 
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
@@ -264,6 +267,8 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
+          {isLinodeInterfacesEnabled && <Networking />}
+          {flags.vmHostMaintenance?.enabled && <MaintenancePolicy />}
           <Addons />
           <EUAgreement />
           <Summary />

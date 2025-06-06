@@ -5,6 +5,7 @@ import { matchPath, useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
@@ -195,6 +196,7 @@ const AccountLanding = () => {
   return (
     <React.Fragment>
       <PlatformMaintenanceBanner />
+      <MaintenanceBannerV2 />
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 

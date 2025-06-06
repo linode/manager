@@ -570,7 +570,7 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   complete_time: string;
-  description: string;
+  description: 'emergency' | 'scheduled';
   entity: {
     id: number;
     label: string;
