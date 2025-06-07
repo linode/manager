@@ -160,7 +160,6 @@ export const SubnetLinodeRow = (props: Props) => {
       >
         <TooltipIcon
           icon={<StyledWarningIcon />}
-          status="other"
           sxTooltipIcon={{ paddingLeft: 0 }}
           text={
             <Typography>

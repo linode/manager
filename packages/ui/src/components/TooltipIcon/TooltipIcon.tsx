@@ -11,13 +11,23 @@ import { Tooltip, tooltipClasses } from '../Tooltip';
 import type { TooltipProps } from '../Tooltip';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-export type TooltipIconStatus = 'info' | 'other' | 'warning';
+export type TooltipIconStatus = 'info' | 'warning';
 
 interface EnhancedTooltipProps extends TooltipProps {
   width?: number;
 }
 
-export interface TooltipIconProps
+type TooltipIconWithStatus = {
+  icon?: never;
+  status: TooltipIconStatus;
+};
+
+type TooltipIconWithCustomIcon = {
+  icon: JSX.Element;
+  status?: never;
+};
+
+export interface TooltipIconBaseProps
   extends Omit<
     TooltipProps,
     'children' | 'disableInteractive' | 'leaveDelay' | 'title'
@@ -26,11 +36,6 @@ export interface TooltipIconProps
    * An optional className that does absolutely nothing
    */
   className?: string;
-  /**
-   * Use this custom icon when `status` is `other`
-   * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
-   */
-  icon?: JSX.Element;
   /**
    * Size of the tooltip icon
    * @default small
@@ -41,10 +46,6 @@ export interface TooltipIconProps
    * @default false
    */
   leaveDelay?: number;
-  /**
-   * Sets the icon and color
-   */
-  status: TooltipIconStatus;
   /**
    * Pass specific styles to the Tooltip
    */
@@ -71,6 +72,9 @@ export interface TooltipIconProps
    */
   width?: number;
 }
+
+export type TooltipIconProps = TooltipIconBaseProps &
+  (TooltipIconWithCustomIcon | TooltipIconWithStatus);
 /**
  * ## Usage
  *
@@ -87,8 +91,8 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const {
     classes,
-    icon,
     leaveDelay,
+    icon,
     status,
     sxTooltipIcon,
     text,
@@ -126,14 +130,11 @@ export const TooltipIcon = (props: TooltipIconProps) => {
         />
       );
       break;
-    case 'other':
-      renderIcon = icon ?? null;
-      break;
     case 'warning':
       renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
       break;
     default:
-      renderIcon = null;
+      renderIcon = icon ?? null;
   }
 
   return (
