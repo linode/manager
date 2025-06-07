@@ -149,7 +149,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
               </Tooltip>
               {!canUpgradeInterfaces && unableToUpgradeTooltipText && (
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{ padding: 0 }}
                   text={unableToUpgradeTooltipText}
                 />

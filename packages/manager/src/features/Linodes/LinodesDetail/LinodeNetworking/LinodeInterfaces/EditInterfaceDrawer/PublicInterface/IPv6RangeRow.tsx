@@ -38,7 +38,7 @@ export const IPv6RangeRow = (props: Props) => {
           )}
           {error && (
             <TooltipIcon
-              status="error"
+              status="warning"
               sxTooltipIcon={{ padding: 0 }}
               text={
                 <ErrorMessage

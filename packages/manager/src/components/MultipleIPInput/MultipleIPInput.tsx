@@ -226,7 +226,7 @@ export const MultipleIPInput = React.memo((props: MultipeIPInputProps) => {
         <div className={classes.ipNetmaskTooltipSection}>
           <InputLabel>{title}</InputLabel>
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={{
               marginLeft: '-4px',
               marginTop: '-15px',

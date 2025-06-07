@@ -257,7 +257,7 @@ export const StackScript = React.memo((props: StackScriptProps) => {
               >
                 <Typography variant="h3">Deprecated Images</Typography>
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{
                     marginLeft: theme.spacing(),
                     padding: 0,
