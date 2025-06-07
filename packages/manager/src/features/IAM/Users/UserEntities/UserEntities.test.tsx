@@ -6,7 +6,7 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountPermissionsFactory } from 'src/factories/accountPermissions';
 import { userPermissionsFactory } from 'src/factories/userPermissions';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import {
   ERROR_STATE_TEXT,
@@ -26,10 +26,12 @@ const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
   useAccountPermissions: vi.fn().mockReturnValue({}),
   useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+  const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
     useAccountPermissions: queryMocks.useAccountPermissions,
@@ -38,14 +40,32 @@ vi.mock('src/queries/iam/iam', async () => {
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
   };
 });
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
+  };
+});
+
 describe('UserEntities', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test-user',
+    });
+    queryMocks.useSearch.mockReturnValue({
+      selectedRole: '',
+    });
+  });
+
   it('should display no entities text if no entity roles are assigned to user', async () => {
     queryMocks.useAccountUserPermissions.mockReturnValue({
       data: userPermissionsFactory.build({
@@ -54,7 +74,7 @@ describe('UserEntities', () => {
       }),
     });
 
-    renderWithTheme(<UserEntities />);
+    await renderWithThemeAndRouter(<UserEntities />);
     expect(screen.getByText('This list is empty')).toBeVisible();
 
     expect(screen.queryByText('Assign New Roles')).toBeNull();
@@ -69,7 +89,7 @@ describe('UserEntities', () => {
       }),
     });
 
-    renderWithTheme(<UserEntities />);
+    await renderWithThemeAndRouter(<UserEntities />);
 
     expect(screen.getByText('This list is empty')).toBeVisible();
 
@@ -91,7 +111,7 @@ describe('UserEntities', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<UserEntities />);
+    await renderWithThemeAndRouter(<UserEntities />);
 
     expect(screen.queryByText('Assign New Roles')).toBeNull();
 
@@ -114,7 +134,7 @@ describe('UserEntities', () => {
       status: 'error',
     });
 
-    renderWithTheme(<UserEntities />);
+    renderWithThemeAndRouter(<UserEntities />);
     expect(screen.getByText(ERROR_STATE_TEXT)).toBeVisible();
   });
 });

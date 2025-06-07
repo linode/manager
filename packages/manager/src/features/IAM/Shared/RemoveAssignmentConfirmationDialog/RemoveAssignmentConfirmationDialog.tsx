@@ -1,7 +1,7 @@
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import {
@@ -22,7 +22,7 @@ interface Props {
 
 export const RemoveAssignmentConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { enqueueSnackbar } = useSnackbar();
 

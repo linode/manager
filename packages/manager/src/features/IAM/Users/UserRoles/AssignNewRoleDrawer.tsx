@@ -2,10 +2,10 @@ import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
@@ -36,7 +36,9 @@ interface Props {
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username/roles',
+  });
   const queryClient = useQueryClient();
 
   const { data: accountPermissions } = useAccountPermissions();

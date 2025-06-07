@@ -1,8 +1,8 @@
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import {
   useAccountUserPermissions,
@@ -25,7 +25,7 @@ interface Props {
 export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   const theme = useTheme();
 
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
 
