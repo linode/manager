@@ -1,10 +1,10 @@
 import { useNotificationsQuery, usePreferences } from '@linode/queries';
 import { Box, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import { allCountries } from 'country-region-data';
 import * as React from 'react';
 import { useState } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { MaskableTextAreaCopy } from 'src/components/MaskableText/MaskableTextArea';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -59,21 +59,16 @@ export const ContactInformation = React.memo((props: Props) => {
     zip,
   } = props;
 
-  const history = useHistory<{
-    contactDrawerOpen?: boolean;
-    focusEmail?: boolean;
-  }>();
-
-  const [editContactDrawerOpen, setEditContactDrawerOpen] =
-    React.useState<boolean>(false);
+  const navigate = useNavigate();
+  const { contactDrawerOpen, focusEmail } = useSearch({
+    strict: false,
+  });
 
   const { data: notifications } = useNotificationsQuery();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
   );
-
-  const [focusEmail, setFocusEmail] = React.useState(false);
 
   const isChildUser = Boolean(profile?.user_type === 'child');
 
@@ -87,34 +82,12 @@ export const ContactInformation = React.memo((props: Props) => {
       permittedGrantLevel: 'read_write',
     }) || isChildUser;
 
-  const handleEditDrawerOpen = React.useCallback(
-    () => setEditContactDrawerOpen(true),
-    [setEditContactDrawerOpen]
-  );
-
-  // On-the-fly route matching so this component can open the drawer itself.
-  const editBillingContactRouteMatch = Boolean(
-    useRouteMatch('/account/billing/edit')
-  );
-
-  React.useEffect(() => {
-    if (editBillingContactRouteMatch) {
-      handleEditDrawerOpen();
-    }
-  }, [editBillingContactRouteMatch, handleEditDrawerOpen]);
-
-  // Listen for changes to history state and open the drawer if necessary.
-  // This is currently in use by the EmailBounceNotification, which navigates
-  // the user to the Account page and opens the drawer to prompt them to change
-  // their billing email address.
-  React.useEffect(() => {
-    if (!editContactDrawerOpen && history.location.state?.contactDrawerOpen) {
-      setEditContactDrawerOpen(true);
-      if (history.location.state?.focusEmail) {
-        setFocusEmail(true);
-      }
-    }
-  }, [editContactDrawerOpen, history.location.state]);
+  const handleEditDrawerOpen = () => {
+    navigate({
+      to: '/account/billing/edit',
+      search: { contactDrawerOpen: true, focusEmail: false },
+    });
+  };
 
   const [isContactInfoMasked, setIsContactInfoMasked] = useState(
     maskSensitiveDataPreference
@@ -167,10 +140,7 @@ export const ContactInformation = React.memo((props: Props) => {
                 disableFocusRipple
                 disableRipple
                 disableTouchRipple
-                onClick={() => {
-                  history.push('/account/billing/edit');
-                  handleEditDrawerOpen();
-                }}
+                onClick={handleEditDrawerOpen}
                 tooltipText={getRestrictedResourceText({
                   includeContactInfo: false,
                   isChildUser,
@@ -279,13 +249,14 @@ export const ContactInformation = React.memo((props: Props) => {
         )}
       </BillingPaper>
       <BillingContactDrawer
-        focusEmail={focusEmail}
+        focusEmail={Boolean(focusEmail)}
         onClose={() => {
-          history.replace('/account/billing', { contactDrawerOpen: false });
-          setEditContactDrawerOpen(false);
-          setFocusEmail(false);
+          navigate({
+            to: '/account/billing',
+            search: undefined,
+          });
         }}
-        open={editContactDrawerOpen}
+        open={Boolean(contactDrawerOpen)}
       />
     </Grid>
   );

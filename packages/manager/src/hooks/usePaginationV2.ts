@@ -13,13 +13,6 @@ export interface PaginationPropsV2 {
   pageSize: number;
 }
 
-const setTableSearchParams = (prev: TableSearchParams) => ({
-  order: prev.order,
-  orderBy: prev.orderBy,
-  page: prev.page,
-  pageSize: prev.pageSize,
-});
-
 export interface UsePaginationV2Props<T extends TableSearchParams> {
   /**
    * The route to which the pagination params are applied.
@@ -60,13 +53,15 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   const search: TableSearchParams = useSearch({ strict: false });
   const navigate = useNavigate();
 
-  const searchParamPage = search.page;
-  const searchParamPageSize = search.pageSize;
-
   const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
   const pageSizeKey = queryParamsPrefix
     ? `${queryParamsPrefix}-pageSize`
     : 'pageSize';
+
+  const searchParamPage =
+    search[pageKey as keyof TableSearchParams] || search.page;
+  const searchParamPageSize =
+    search[pageSizeKey as keyof TableSearchParams] || search.pageSize;
 
   const preferredPageSize = preferenceKey
     ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
@@ -80,7 +75,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   const setPage = (page: number) => {
     navigate<RegisteredRouter, string, string>({
       search: (prev: TableSearchParams & T) => ({
-        ...setTableSearchParams(prev),
+        ...prev,
         ...(searchParams?.(prev) ?? {}),
         [pageKey]: page,
         ...(queryParamsPrefix ? {} : { page }),
@@ -92,7 +87,7 @@ export const usePaginationV2 = <T extends TableSearchParams>({
   const setPageSize = (pageSize: number) => {
     navigate<RegisteredRouter, string, string>({
       search: (prev: TableSearchParams & T) => ({
-        ...setTableSearchParams(prev),
+        ...prev,
         ...(searchParams?.(prev) ?? {}),
         [pageSizeKey]: pageSize,
         ...(queryParamsPrefix ? {} : { pageSize }),

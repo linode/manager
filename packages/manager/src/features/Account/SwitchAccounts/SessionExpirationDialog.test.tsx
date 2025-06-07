@@ -1,9 +1,8 @@
 import { act, fireEvent } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { SessionExpirationDialog } from 'src/features/Account/SwitchAccounts/SessionExpirationDialog';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 const mockParentChildAuthentication = {
   createToken: vi.fn(),
@@ -41,12 +40,10 @@ vi.mock('react-router-dom', async () => {
 });
 
 describe('SessionExpirationDialog', () => {
-  it('renders correctly when isOpen is true', () => {
+  it('renders correctly when isOpen is true', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+    const { getByText } = await renderWithThemeAndRouter(
+      <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
     expect(getByText('Your session is about to expire')).toBeInTheDocument();
@@ -54,10 +51,8 @@ describe('SessionExpirationDialog', () => {
 
   it('tests the Continue Working button when is clicked', async () => {
     const onCloseMock = vi.fn();
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
-      </MemoryRouter>
+    const { getByText } = await renderWithThemeAndRouter(
+      <SessionExpirationDialog isOpen={true} onClose={onCloseMock} />
     );
 
     await act(async () => {
@@ -75,10 +70,8 @@ describe('SessionExpirationDialog', () => {
 
     window.location = { ...realLocation, reload: mockReload };
 
-    const { getByText } = renderWithTheme(
-      <MemoryRouter>
-        <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
-      </MemoryRouter>
+    const { getByText } = await renderWithThemeAndRouter(
+      <SessionExpirationDialog isOpen={true} onClose={vi.fn()} />
     );
 
     await act(async () => {
