@@ -21,6 +21,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -42,6 +43,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -63,6 +65,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -84,6 +87,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -105,6 +109,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -126,6 +131,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -147,6 +153,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -168,6 +175,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -189,5 +197,6 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
+    monitors: [],
   },
 ];

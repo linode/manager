@@ -1,4 +1,8 @@
-import { useLinodeQuery, usePreferences } from '@linode/queries';
+import {
+  useLinodeQuery,
+  usePreferences,
+  useRegionsQuery,
+} from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -18,7 +22,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
-import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 import { useTypeQuery } from 'src/queries/types';
 
 import { isAclpSupportedRegion } from '../utilities';
@@ -62,11 +65,12 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
-  const { data: service } = useCloudPulseServiceByServiceType('linode');
+  const { data: regions } = useRegionsQuery();
 
   const isAclpSupportedRegionLinode = isAclpSupportedRegion(
+    'Linodes',
     linode?.region,
-    service?.regions
+    regions
   );
 
   const tabs = [

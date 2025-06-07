@@ -2789,7 +2789,6 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
-          regions: 'us-iad,us-east',
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2810,7 +2809,6 @@ export const handlers = [
         ? serviceTypesFactory.build({
             label: 'Linodes',
             service_type: 'linode',
-            regions: 'us-iad,us-east',
           })
         : serviceTypesFactory.build({
             label: 'Databases',

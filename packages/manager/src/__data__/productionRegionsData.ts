@@ -32,6 +32,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -60,6 +61,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -88,6 +90,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -118,6 +121,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: ['Linodes'],
   },
   {
     capabilities: [
@@ -149,6 +153,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -181,6 +186,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -211,6 +217,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -240,6 +247,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -269,6 +277,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -298,6 +307,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -327,6 +337,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -356,6 +367,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -386,6 +398,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -415,6 +428,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -444,6 +458,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -473,6 +488,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -502,6 +518,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -530,6 +547,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -558,6 +576,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -588,6 +607,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -618,6 +638,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: ['Linodes'],
   },
   {
     capabilities: [
@@ -646,6 +667,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -676,6 +698,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -706,6 +729,7 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
   {
     capabilities: [
@@ -734,5 +758,6 @@ export const productionRegions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
+    monitors: [],
   },
 ];

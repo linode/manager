@@ -169,9 +169,7 @@ export interface ServiceTypes {
     polling_interval_seconds: number[];
     scope: string[];
   };
-  is_beta: boolean;
   label: string;
-  regions: string;
   service_type: string;
 }
 

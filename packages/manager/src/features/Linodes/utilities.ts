@@ -1,25 +1,25 @@
+import type { MonitorCapabilities, Region } from '@linode/api-v4';
+
+// @todo - Add unit tests for this utility
+
 /**
- * Checks if a region is aclp supported based on a comma-separated string.
- * A single "*" means all regions are supported.
+ * Checks if a region is aclp supported for the monitorCapability service type based on /regions end point.
  *
+ * @param monitorCapability - monitorCapability servicetype to check for (eg., Linodes, DBAAS, etc).
  * @param selectedRegion - Region to check.
- * @param aclpSupportedRegions - Comma-separated supported regions (for eg., "us-iad,us-east" or "*").
+ * @param regions - all the regions from regions query.
  */
 export const isAclpSupportedRegion = (
+  monitorCapability: MonitorCapabilities,
   selectedRegion: string | undefined,
-  aclpSupportedRegions: string | undefined
+  regions: Region[] | undefined
 ) => {
-  if (!aclpSupportedRegions) return false;
+  if (!regions) return false;
 
-  if (aclpSupportedRegions === '*') {
-    return true;
-  }
+  const region = regions.find((region) => region.id === selectedRegion);
 
-  if (!selectedRegion) {
+  if (!region) {
     return false;
   }
-
-  return aclpSupportedRegions
-    .split(',')
-    .some((region) => region.trim() === selectedRegion);
+  return region.monitors.includes(monitorCapability);
 };
