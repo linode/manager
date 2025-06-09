@@ -52,10 +52,9 @@ export const EmailBounceNotificationSection = React.memo(() => {
       {billingEmailBounceNotification && accountEmailRef && (
         <EmailBounceNotification
           changeEmail={() =>
-            history.push('/account', {
-              contactDrawerOpen: true,
-              focusEmail: true,
-            })
+            history.push(
+              '/account/billing?contactDrawerOpen=true&focusEmail=true'
+            )
           }
           confirmEmail={confirmAccountEmail}
           text={
