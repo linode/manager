@@ -5,6 +5,8 @@ import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+import { Prompt } from 'src/components/Prompt/Prompt';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
@@ -223,31 +225,65 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const generalError = hasErrorFor('none');
   const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
 
+  const hasUnsavedChanges = formik.dirty;
+
   return (
-    <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
-      <Typography
-        sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-        variant="h2"
-      >
-        {alertsHeading}
-      </Typography>
-      {generalError && <Notice variant="error">{generalError}</Notice>}
-      {alertSections.map((p, idx) => (
-        <React.Fragment key={`alert-${idx}`}>
-          <AlertSection {...p} readOnly={isReadOnly} />
-          {idx !== alertSections.length - 1 ? <Divider /> : null}
-        </React.Fragment>
-      ))}
-      <StyledActionsPanel
-        primaryButtonProps={{
-          'data-testid': 'alerts-save',
-          disabled: isReadOnly || !formik.dirty,
-          label: 'Save',
-          loading: isPending,
-          onClick: () => formik.handleSubmit(),
-        }}
-      />
-    </Paper>
+    <>
+      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
+        {({ handleCancel, handleConfirm, isModalOpen }) => (
+          <ConfirmationDialog
+            actions={() => (
+              <ActionsPanel
+                primaryButtonProps={{
+                  label: 'Go back and review changes',
+                  onClick: handleCancel,
+                }}
+                secondaryButtonProps={{
+                  buttonType: 'secondary',
+                  color: 'error',
+                  label: 'Leave and discard changes',
+                  onClick: handleConfirm,
+                }}
+              />
+            )}
+            onClose={handleCancel}
+            open={isModalOpen}
+            title="Unsaved Legacy Alerts changes"
+          >
+            <Typography variant="subtitle1">
+              Are you sure you want to leave the page? You have unsaved changes.
+              If you navigate away from this page, your changes will be
+              discarded.
+            </Typography>
+          </ConfirmationDialog>
+        )}
+      </Prompt>
+
+      <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
+        <Typography
+          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+          variant="h2"
+        >
+          {alertsHeading}
+        </Typography>
+        {generalError && <Notice variant="error">{generalError}</Notice>}
+        {alertSections.map((p, idx) => (
+          <React.Fragment key={`alert-${idx}`}>
+            <AlertSection {...p} readOnly={isReadOnly} />
+            {idx !== alertSections.length - 1 ? <Divider /> : null}
+          </React.Fragment>
+        ))}
+        <StyledActionsPanel
+          primaryButtonProps={{
+            'data-testid': 'alerts-save',
+            disabled: isReadOnly || !formik.dirty,
+            label: 'Save',
+            loading: isPending,
+            onClick: () => formik.handleSubmit(),
+          }}
+        />
+      </Paper>
+    </>
   );
 };
 
