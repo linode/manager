@@ -9,7 +9,7 @@ import {
   mockCreateNodeBalancer,
   mockGetNodeBalancer,
 } from 'support/intercepts/nodebalancers';
-import { mockGetSubnet, mockGetVPCs } from 'support/intercepts/vpc';
+import { mockGetSubnets, mockGetVPCs } from 'support/intercepts/vpc';
 import { ui } from 'support/ui';
 import { randomIp, randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
@@ -84,7 +84,7 @@ describe('Create a NodeBalancer with VPCs', () => {
     }).as('getFeatureFlags');
 
     mockGetVPCs([mockVPC]).as('getVPCs');
-    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet).as('getSubnets');
+    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
     mockGetLinodes([mockLinode]).as('getLinodes');
     mockCreateNodeBalancer(mockNodeBalancer).as('createNodeBalancer');
     mockGetNodeBalancer(mockNodeBalancer);
