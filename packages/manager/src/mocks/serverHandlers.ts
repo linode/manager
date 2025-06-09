@@ -2408,8 +2408,7 @@ export const handlers = [
         plan: 'g6-standard-7',
         region: selectedRegion,
       }),
-      // MTC plans are region-specific and only available to customers with the MTC customer tag.
-      // The supported regions check list below is hardcoded for mock purposes and may grow in the future.
+      // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
       ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
         ? [

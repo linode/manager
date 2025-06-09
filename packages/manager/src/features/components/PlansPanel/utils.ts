@@ -367,7 +367,7 @@ export const extractPlansInformation = ({
       // - Resizing existing MTC linodes is not supported at all (Disabled at the `Resize` Action Menu as well).
       // - Resizing existing linodes (from non-MTC regions) to this MTC plan is not supported.
       // - Resizing existing linodes (from MTC regions) to this MTC plan is not supported.
-      const planIsMTCWithResizing = isCustomMTCPlan && isResize;
+      const planResizeNotSupported = isCustomMTCPlan && isResize;
 
       const planHasLimitedAvailability = getIsLimitedAvailability({
         plan,
@@ -395,7 +395,7 @@ export const extractPlansInformation = ({
         planBelongsToDisabledClass,
         planHasLimitedAvailability,
         planIsDisabled512Gb,
-        planIsMTCWithResizing,
+        planResizeNotSupported,
         planIsSmallerThanUsage,
         planIsTooSmall,
         planIsTooSmallForAPL,
@@ -408,7 +408,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass,
       planHasLimitedAvailability,
       planIsDisabled512Gb,
-      planIsMTCWithResizing,
+      planResizeNotSupported,
       planIsSmallerThanUsage,
       planIsTooSmall,
       planIsTooSmallForAPL,
@@ -422,7 +422,7 @@ export const extractPlansInformation = ({
       planBelongsToDisabledClass ||
       planHasLimitedAvailability ||
       planIsDisabled512Gb ||
-      planIsMTCWithResizing ||
+      planResizeNotSupported ||
       planIsSmallerThanUsage ||
       planIsTooSmall ||
       planIsTooSmallForAPL
@@ -452,7 +452,7 @@ export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass,
   planHasLimitedAvailability,
   planIsDisabled512Gb,
-  planIsMTCWithResizing,
+  planResizeNotSupported,
   planIsSmallerThanUsage,
   planIsTooSmall,
   planIsTooSmallForAPL,
@@ -461,10 +461,10 @@ export const getDisabledPlanReasonCopy = ({
   planBelongsToDisabledClass: DisabledTooltipReasons['planBelongsToDisabledClass'];
   planHasLimitedAvailability: DisabledTooltipReasons['planHasLimitedAvailability'];
   planIsDisabled512Gb: DisabledTooltipReasons['planIsDisabled512Gb'];
-  planIsMTCWithResizing?: DisabledTooltipReasons['planIsMTCWithResizing'];
   planIsSmallerThanUsage?: DisabledTooltipReasons['planIsSmallerThanUsage'];
   planIsTooSmall: DisabledTooltipReasons['planIsTooSmall'];
   planIsTooSmallForAPL?: DisabledTooltipReasons['planIsTooSmallForAPL'];
+  planResizeNotSupported?: DisabledTooltipReasons['planResizeNotSupported'];
   wholePanelIsDisabled?: DisabledTooltipReasons['wholePanelIsDisabled'];
 }): string => {
   if (wholePanelIsDisabled) {
@@ -488,7 +488,7 @@ export const getDisabledPlanReasonCopy = ({
   if (
     planHasLimitedAvailability ||
     planIsDisabled512Gb ||
-    planIsMTCWithResizing
+    planResizeNotSupported
   ) {
     return LIMITED_AVAILABILITY_COPY;
   }
