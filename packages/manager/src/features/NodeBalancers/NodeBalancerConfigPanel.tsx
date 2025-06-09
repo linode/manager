@@ -3,7 +3,6 @@ import {
   type NodeBalancerProxyProtocol,
   type Protocol,
 } from '@linode/api-v4';
-import { useNodeBalancerVPCConfigsBetaQuery } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -19,7 +18,6 @@ import {
 } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -33,7 +31,6 @@ import {
   getAlgorithmOptions,
   getStickinessOptions,
   setErrorMap,
-  useIsNodebalancerVPCEnabled,
 } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
@@ -61,19 +58,6 @@ export const NodeBalancerConfigPanel = (
     sslCertificate,
     submitting,
   } = props;
-
-  const { id } = useParams({ strict: false });
-  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
-
-  const { data: vpcConfigData } = useNodeBalancerVPCConfigsBetaQuery(
-    Number(id),
-    isNodebalancerVPCEnabled && id !== undefined
-  );
-
-  const nodeBalancerVpcId =
-    props.nodeBalancerVpcId || vpcConfigData?.data?.[0]?.vpc_id;
-  const nodeBalancerSubnetId =
-    props.nodeBalancerSubnetId || vpcConfigData?.data?.[0]?.subnet_id;
 
   const onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     props.onPortChange(e.target.value);
@@ -487,8 +471,8 @@ export const NodeBalancerConfigPanel = (
                 key={`nb-node-${nodeIdx}`}
                 node={node}
                 nodeBalancerRegion={props.nodeBalancerRegion}
-                nodeBalancerSubnetId={nodeBalancerSubnetId}
-                nodeBalancerVpcId={nodeBalancerVpcId}
+                nodeBalancerSubnetId={props.nodeBalancerSubnetId}
+                nodeBalancerVpcId={props.nodeBalancerVpcId}
                 onNodeAddressChange={props.onNodeAddressChange}
                 onNodeLabelChange={onNodeLabelChange}
                 onNodeModeChange={onNodeModeChange}

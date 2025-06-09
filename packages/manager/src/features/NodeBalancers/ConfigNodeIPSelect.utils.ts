@@ -42,9 +42,9 @@ export const getPrivateIPOptions = (linodes: Linode[] | undefined) => {
 export const getVPCIPOptions = (
   vpcIps: LinodeIPsResponse[] | undefined,
   linodes: Linode[] | undefined,
-  subnet?: Subnet | undefined
+  subnets?: Subnet[] | undefined
 ) => {
-  if (!vpcIps || !subnet) {
+  if (!vpcIps || !subnets) {
     return [];
   }
 
@@ -57,11 +57,18 @@ export const getVPCIPOptions = (
     },
     {}
   );
+  const subnetLabelMap = (subnets ?? []).reduce(
+    (acc: Record<number, string>, subnet) => {
+      acc[subnet.id] = subnet.label;
+      return acc;
+    },
+    {}
+  );
 
   vpcIps.forEach(({ ipv4 }) => {
     if (ipv4.vpc) {
       const vpcData = ipv4.vpc
-        ?.filter((vpc) => vpc.subnet_id === subnet.id)
+        .filter((vpc) => vpc.subnet_id in subnetLabelMap)
         .map((vpc) => {
           const linode: Partial<Linode> = {
             label: linodeLabelMap[vpc.linode_id],
@@ -70,7 +77,10 @@ export const getVPCIPOptions = (
           return {
             label: vpc.address,
             linode,
-            subnet,
+            subnet: {
+              id: vpc.subnet_id,
+              label: subnetLabelMap[vpc.subnet_id],
+            },
           };
         });
 

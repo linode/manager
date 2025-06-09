@@ -328,7 +328,7 @@ const NodeBalancerCreate = () => {
     if (vpcSelected && nodeBalancerFields?.vpcs === undefined) {
       const subnetError = {
         field: 'vpc[0].subnet_id',
-        reason: 'Subnet is required',
+        reason: 'Select a Subnet within the chosen VPC.',
       };
       setVPCErrors((prev) => (prev ? [...prev, subnetError] : [subnetError]));
       scrollErrorIntoViewV2(formContainerRef);
@@ -555,7 +555,7 @@ const NodeBalancerCreate = () => {
       });
       setNodeBalancerFields((prev) => ({
         ...prev,
-        updatedVpcs,
+        vpcs: updatedVpcs,
       }));
     }
   };

@@ -57,7 +57,7 @@ export interface NodeBalancerConfigPanelProps {
 
   nodeBalancerRegion?: string;
   nodeBalancerSubnetId?: number;
-  nodeBalancerVpcId?: null | number;
+  nodeBalancerVpcId?: number;
   nodeMessage?: string;
 
   nodes: NodeBalancerConfigNodeFields[];

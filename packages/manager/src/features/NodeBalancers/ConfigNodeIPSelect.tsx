@@ -52,7 +52,7 @@ interface Props {
   /**
    * The vpcId for which to load available VPC IPs
    */
-  vpcId?: null | number;
+  vpcId?: number;
 }
 
 export type NodeOption = PrivateIPOption | VPCIPOption;
@@ -70,7 +70,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     subnetId,
   } = props;
 
-  const { linodesData, linodeIpsData, error, isLoading, subnetData } =
+  const { linodesData, linodeIpsData, error, isLoading, subnetsData } =
     useGetLinodeIPAndVPCData({
       region,
       vpcId,
@@ -83,7 +83,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     options = getPrivateIPOptions(linodesData);
   }
   if (region && vpcId) {
-    options = getVPCIPOptions(linodeIpsData, linodesData, subnetData);
+    options = getVPCIPOptions(linodeIpsData, linodesData, subnetsData?.data);
   }
 
   const noOptionsText = useMemo(() => {
@@ -105,11 +105,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
       noMarginTop
       noOptionsText={noOptionsText}
       onChange={(e, value: NodeOption) =>
-        handleChange(
-          nodeIndex,
-          value?.label ?? null,
-          value && 'subnet' in value ? value?.subnet?.id : undefined
-        )
+        handleChange(nodeIndex, value?.label ?? null, subnetId)
       }
       options={options}
       placeholder="Enter IP Address"

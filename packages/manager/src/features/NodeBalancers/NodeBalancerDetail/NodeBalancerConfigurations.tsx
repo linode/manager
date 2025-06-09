@@ -79,6 +79,8 @@ interface Props {
   nodeBalancerId: number;
   nodeBalancerLabel: string;
   nodeBalancerRegion: string;
+  nodeBalancerSubnetId?: number;
+  nodeBalancerVpcId?: number;
   queryClient: QueryClient;
 }
 
@@ -655,6 +657,8 @@ export class NodeBalancerConfigurations extends React.Component<Props, State> {
             healthCheckTimeout={view(L.healthCheckTimeoutLens, this.state)}
             healthCheckType={view(L.healthCheckTypeLens, this.state)}
             nodeBalancerRegion={this.props.nodeBalancerRegion}
+            nodeBalancerSubnetId={this.props.nodeBalancerSubnetId}
+            nodeBalancerVpcId={this.props.nodeBalancerVpcId}
             nodeMessage={panelNodeMessages[idx]}
             nodes={config.nodes}
             onAlgorithmChange={this.updateState(L.algorithmLens)}

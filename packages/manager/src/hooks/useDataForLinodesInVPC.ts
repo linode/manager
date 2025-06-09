@@ -2,7 +2,7 @@ import {
   linodeQueries,
   useAllLinodesQuery,
   useQueries,
-  useSubnetQuery,
+  useSubnetsQuery,
 } from '@linode/queries';
 import { useMemo } from 'react';
 
@@ -28,10 +28,10 @@ export const useGetLinodeIPAndVPCData = (props: {
   } = useAllLinodesQuery({}, { region }, region !== undefined);
 
   const {
-    data: subnetData,
-    error: subnetError,
-    isLoading: subnetIsLoading,
-  } = useSubnetQuery(Number(vpcId), Number(subnetId), isSubnetSelected);
+    data: subnetsData,
+    error: subnetsError,
+    isLoading: subnetsIsLoading,
+  } = useSubnetsQuery(Number(vpcId), {}, {}, isSubnetSelected);
 
   const linodeIPQueries = useQueries({
     queries:
@@ -70,8 +70,8 @@ export const useGetLinodeIPAndVPCData = (props: {
   return {
     linodesData,
     linodeIpsData,
-    error: [...(linodesError ?? []), ...(subnetError ?? []), ...ipError],
-    isLoading: linodesIsLoading ?? subnetIsLoading ?? isIpLoading,
-    subnetData,
+    error: [...(linodesError ?? []), ...(subnetsError ?? []), ...ipError],
+    isLoading: linodesIsLoading ?? subnetsIsLoading ?? isIpLoading,
+    subnetsData,
   };
 };

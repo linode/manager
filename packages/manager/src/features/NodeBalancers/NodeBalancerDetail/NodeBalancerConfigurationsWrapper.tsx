@@ -1,4 +1,8 @@
-import { useGrants, useNodeBalancerQuery } from '@linode/queries';
+import {
+  useGrants,
+  useNodeBalancerQuery,
+  useNodeBalancerVPCConfigsBetaQuery,
+} from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
@@ -23,6 +27,14 @@ export const NodeBalancerConfigurationsWrapper = () => {
   const { data: grants } = useGrants();
   const { data: nodeBalancer } = useNodeBalancerQuery(+nodeBalancerId);
   const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+
+  const { data: vpcConfigData } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(nodeBalancerId),
+    isNodebalancerVPCEnabled && nodeBalancerId !== undefined
+  );
+
+  const nodeBalancerVpcId = vpcConfigData?.data?.[0]?.vpc_id;
+  const nodeBalancerSubnetId = vpcConfigData?.data?.[0]?.subnet_id;
 
   const getConfigNodesFn = isNodebalancerVPCEnabled
     ? getConfigsWithNodesBeta
@@ -53,6 +65,8 @@ export const NodeBalancerConfigurationsWrapper = () => {
       nodeBalancerId={+nodeBalancerId}
       nodeBalancerLabel={nodeBalancer?.label ?? ''}
       nodeBalancerRegion={nodeBalancer?.region ?? ''}
+      nodeBalancerSubnetId={nodeBalancerSubnetId}
+      nodeBalancerVpcId={nodeBalancerVpcId}
       queryClient={queryClient}
     />
   );

@@ -28,7 +28,7 @@ export interface NodeBalancerConfigNodeProps {
   node: NodeBalancerConfigNodeFields;
   nodeBalancerRegion?: string;
   nodeBalancerSubnetId?: number;
-  nodeBalancerVpcId?: null | number;
+  nodeBalancerVpcId?: number;
   onNodeAddressChange: (
     nodeIdx: number,
     value: string,
