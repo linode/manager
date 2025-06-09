@@ -38,18 +38,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   input: {
     backgroundColor: theme.tokens.alias.Background.Neutral,
-    border: `solid ${theme.tokens.alias.Border.Normal}`,
+    border: `solid 0.125rem ${theme.tokens.alias.Border.Normal}`,
     padding: 8,
   },
   inputContainer: {
+    marginTop: 13,
     '& label': {
-      marginTop: 13,
+      font: theme.font.bold,
     },
-  },
-  inputLabel: {
-    paddingTop: 12,
-    paddingBottom: 4,
-    font: theme.font.bold,
   },
   notice: {
     font: theme.font.bold,
@@ -255,9 +251,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
-            <label className={classes.inputLabel} htmlFor="min">
-              Min
-            </label>
+            <label htmlFor="min">Min</label>
             <Box className={classes.input}>
               <Controller
                 control={control}
@@ -301,9 +295,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
             <Typography>/</Typography>
           </Grid>
           <Grid>
-            <label className={classes.inputLabel} htmlFor="max">
-              Max
-            </label>
+            <label htmlFor="max">Max</label>
             <Box className={classes.input}>
               <Controller
                 control={control}
