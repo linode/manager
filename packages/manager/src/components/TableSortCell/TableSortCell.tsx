@@ -51,7 +51,7 @@ export const TableSortCell = (props: TableSortCellProps) => {
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onHandleClick?.();
+          onHandleClick();
         }
       }}
       role="columnheader"
