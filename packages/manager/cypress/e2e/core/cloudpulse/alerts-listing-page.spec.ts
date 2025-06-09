@@ -617,4 +617,48 @@ describe('Integration Tests for CloudPulse Alerts Listing Page', () => {
       // Run the test steps to verify the delete behavior
     });
   });
+
+  it('should validate that the delete button is not available for a system alert with status: enabled', () => {
+    const label = 'system-alert';
+
+    const mockAlert = alertFactory.build({
+      id: 1,
+      label,
+      service_type: 'dbaas',
+      status: 'enabled',
+      type: 'system',
+    });
+
+    // Mock the alert list API with a system alert
+    mockGetAllAlertDefinitions([mockAlert]).as('getSystemAlert');
+
+    // Visit the Alert Definitions page as a logged-in user
+    cy.visitWithLogin(alertDefinitionsUrl);
+
+    // Wait for alerts to load and find the row containing the system alert
+    cy.wait('@getSystemAlert');
+    // Verify that the system alert is visible in the table
+    cy.findByText(label)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        // Open the action menu
+        ui.actionMenu
+          .findByTitle(`Action menu for Alert ${label}`)
+          .should('be.visible')
+          .click();
+      });
+
+    // Verify that the Delete menu item is NOT present
+    cy.get('[data-qa-action-menu-item="Delete"]').should('not.exist');
+
+    // Define the list of expected visible action menu items
+    const visibleItems = ['Edit', 'Show Details'];
+    // Loop through each expected item and assert that it exists and is visible in the action menu
+    visibleItems.forEach((item) => {
+      cy.get(`[data-qa-action-menu-item="${item}"]`)
+        .should('exist')
+        .and('be.visible');
+    });
+  });
 });
