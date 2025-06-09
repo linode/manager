@@ -114,17 +114,12 @@ export const DismissibleBanner = (props: Props) => {
               alignItems: {
                 sm: 'center',
               },
-              paddingLeft: {
-                sm: 4,
-              },
               mt: {
                 xs: theme.spacingFunction(12),
                 sm: theme.spacingFunction(0),
               },
               ml: {
-                xs: theme.spacingFunction(0),
-                sm: theme.spacingFunction(12),
-                md: theme.spacing(24),
+                sm: theme.spacingFunction(24),
               },
             })}
           >
@@ -140,7 +135,7 @@ export const DismissibleBanner = (props: Props) => {
               },
             }}
           >
-            {dismissible ? dismissibleButton : null}
+            {dismissibleButton}
           </Stack>
         )}
       </Stack>
