@@ -6,8 +6,8 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { createLazyRoute } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { Currency } from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -26,7 +26,9 @@ import type { Account, Invoice, InvoiceItem } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
 
 export const InvoiceDetail = () => {
-  const { invoiceId } = useParams<{ invoiceId: string }>();
+  const { invoiceId } = useParams({
+    from: '/account/billing/invoices/$invoiceId',
+  });
   const theme = useTheme();
 
   const csvRef = React.useRef<any>();
