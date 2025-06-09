@@ -10,6 +10,7 @@ import {
   mockGetAlertChannels,
   mockGetAllAlertDefinitions,
   mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseServiceByType,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
@@ -27,6 +28,8 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
+  serviceAlertFactory,
+  serviceTypesFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import { CREATE_ALERT_SUCCESS_MESSAGE } from 'src/features/CloudPulse/Alerts/constants';
@@ -260,7 +263,13 @@ describe('Create Alert', () => {
         scope: value,
         ...(value === 'region' ? { regions: regionList } : {}),
       });
-
+      const services = serviceTypesFactory.build({
+        service_type: serviceType,
+        label: serviceType,
+        alert: serviceAlertFactory.build({ scope: [value] }),
+        regions: 'us-ord,us-east',
+      });
+      mockGetCloudPulseServiceByType(serviceType, services);
       mockGetAllAlertDefinitions([alerts]).as('getAlertDefinitionsList');
       mockCreateAlertDefinition(serviceType, alerts).as(
         'createAlertDefinition'
