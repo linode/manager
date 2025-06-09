@@ -66,7 +66,7 @@ export const UserData = (props: Props) => {
         perform system configuration tasks (such as adding users and installing
         software) by providing custom instructions or scripts to cloud-init. Any
         user data should be added at this step and cannot be modified after the
-        the Linode has been created.{' '}
+        Linode has been created.{' '}
         <Link to="https://techdocs.akamai.com/cloud-computing/docs/overview-of-the-metadata-service">
           Learn more
         </Link>

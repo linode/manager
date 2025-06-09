@@ -386,7 +386,7 @@ describe('rebuild linode', () => {
       // Type a root password
       assertPasswordComplexity(rootPassword, 'Good');
 
-      // Verify a into notice shows because this Linode has existing user data
+      // Verify a "info" notice shows because this Linode has existing user data
       cy.findByText(
         'Adding new user data is recommended as part of the rebuild process.'
       ).should('be.visible');
