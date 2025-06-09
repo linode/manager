@@ -57,6 +57,9 @@ export const refinedSearch = (
 };
 
 export const formatQuery = (query: string) => {
+  if (!query || typeof query !== 'string') {
+    return '';
+  }
   return query.trim().replace(' && ', ' AND ').replace(' || ', ' OR ');
 };
 
