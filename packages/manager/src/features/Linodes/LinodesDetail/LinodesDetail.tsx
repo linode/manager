@@ -1,7 +1,6 @@
 import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { getQueryParamsFromQueryString } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 import {
   Redirect,
@@ -107,7 +106,3 @@ export const LinodeDetail = () => {
     </React.Suspense>
   );
 };
-
-export const linodeDetailLazyRoute = createLazyRoute('/linodes/$linodeId')({
-  component: LinodeDetail,
-});
