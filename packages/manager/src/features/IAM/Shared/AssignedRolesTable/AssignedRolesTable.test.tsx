@@ -74,7 +74,9 @@ describe('AssignedRolesTable', () => {
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
 
-    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    const actionMenuButton = screen.getAllByLabelText(
+      'Action menu for role account_linode_admin'
+    )[0];
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
