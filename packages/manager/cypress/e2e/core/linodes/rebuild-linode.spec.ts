@@ -386,8 +386,10 @@ describe('rebuild linode', () => {
       // Type a root password
       assertPasswordComplexity(rootPassword, 'Good');
 
-      // Open the User Data accordion
-      ui.accordionHeading.findByTitle('Add User Data').scrollIntoView().click();
+      // Verify a into notice shows because this Linode has existing user data
+      cy.findByText(
+        'Adding new user data is recommended as part of the rebuild process.'
+      ).should('be.visible');
 
       // Verify the reuse checkbox is not checked by default and check it
       cy.findByLabelText(
