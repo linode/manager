@@ -42,37 +42,42 @@ const linodesDetailRoute = createRoute({
 const linodesDetailAnalyticsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'analytics',
-})
+});
 
 const linodesDetailNetworkingRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'networking',
-})
+});
 
 const linodesDetailStorageRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'storage',
-})
+});
 
 const linodesDetailConfigurationsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'configurations',
-})
+});
 
 const linodesDetailBackupsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'backup',
-})
+});
 
 const linodesDetailActivityRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'activity',
-})
+});
 
 const linodesDetailSettingsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'settings',
-})
+});
+
+const linodesDetailUpgradeInterfacesRoute = createRoute({
+  getParentRoute: () => linodesDetailRoute,
+  path: 'upgrade-interfaces',
+});
 
 export const linodesRouteTree = linodesRoute.addChildren([
   linodesIndexRoute,
@@ -85,5 +90,6 @@ export const linodesRouteTree = linodesRoute.addChildren([
     linodesDetailBackupsRoute,
     linodesDetailActivityRoute,
     linodesDetailSettingsRoute,
+    linodesDetailUpgradeInterfacesRoute,
   ]),
 ]);

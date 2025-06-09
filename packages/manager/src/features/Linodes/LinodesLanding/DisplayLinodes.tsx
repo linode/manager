@@ -1,9 +1,8 @@
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, CircleProgress, IconButton, Paper, Tooltip } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
+import { useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import GridView from 'src/assets/icons/grid-view.svg';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';
@@ -103,9 +102,8 @@ export const DisplayLinodes = React.memo((props: DisplayLinodesProps) => {
       : infinitePageSize;
   const maxPageNumber = Math.ceil(count / pageSize);
 
-  const { search } = useLocation();
-  const params = getQueryParamsFromQueryString<QueryParams>(search);
-  const queryPage = Math.min(Number(params.page), maxPageNumber) || 1;
+  const search = useSearch({ strict: false });
+  const queryPage = Math.min(Number(search.page), maxPageNumber) || 1;
 
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
