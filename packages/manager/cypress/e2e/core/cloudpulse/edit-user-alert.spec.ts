@@ -71,7 +71,7 @@ const alertDetails = alertFactory.build({
   trigger_conditions: triggerConditionFactory.build(),
   type: 'user',
   updated: new Date().toISOString(),
-  group: 'per-entity',
+  scope: 'entity',
   regions: regionList,
 });
 const { description, id, label, service_type, updated } = alertDetails;
@@ -419,7 +419,7 @@ describe('Integration Tests for Edit Alert', () => {
         trigger_conditions: triggerConditionFactory.build(),
         type: 'user',
         updated: new Date().toISOString(),
-        group: value,
+        scope: value,
         regions: regionList,
       });
       mockGetRegions(regions);
@@ -475,7 +475,7 @@ describe('Integration Tests for Edit Alert', () => {
         expect(request.body.label).to.equal('Alert-2');
         expect(request.body.description).to.equal('update-description');
         expect(request.body.severity).to.equal(3);
-        value === 'per-region' &&
+        value === 'region' &&
           expect(
             request.body.regions,
             'Regions should match when grouping is per-region'

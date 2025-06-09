@@ -86,7 +86,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
     regions: array().of(string().defined()),
-    group: mixed<AlertDefinitionGroup>()
+    scope: mixed<AlertDefinitionGroup>()
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
