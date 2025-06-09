@@ -234,7 +234,7 @@ export const SubnetLinodeRow = (props: Props) => {
       {flags.vpcIpv6 && (
         <>
           <Hidden smDown>
-            <TableCell noWrap>
+            <TableCell data-testid="vpc-ipv6-cell" noWrap>
               {getSubnetLinodeIPCellString({
                 interfaceData,
                 ipType: 'ipv6',
@@ -244,7 +244,7 @@ export const SubnetLinodeRow = (props: Props) => {
             </TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell noWrap>
+            <TableCell data-testid="linode-ipv6-ranges-cell" noWrap>
               {getIPRangesCellContents({
                 interfaceData,
                 ipType: 'ipv6',
@@ -339,7 +339,7 @@ const getSubnetLinodeIPCellString = (
 
     return (
       <span key={interfaceData.id}>
-        {interfaceData.vpc?.ipv6?.slaac[0].address}
+        {interfaceData.vpc?.ipv6?.slaac[0]?.address ?? 'None'}
       </span>
     );
   }
@@ -356,7 +356,7 @@ const getIPLinkForConfigInterface = (
         <span key={configInterface.id}>
           {ipType === 'ipv4'
             ? configInterface.ipv4?.vpc
-            : configInterface.ipv6?.slaac[0].address}
+            : (configInterface.ipv6?.slaac[0]?.address ?? 'None')}
         </span>
       )}
     </>
