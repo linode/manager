@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
-import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 
@@ -22,7 +21,7 @@ import { TransferCheckoutBar } from './TransferCheckoutBar';
 import { TransferHeader } from './TransferHeader';
 import { defaultTransferState, transferReducer } from './transferReducer';
 
-import type { TransferableEntity } from './transferReducer';
+import type { Entity, TransferableEntity } from './transferReducer';
 import type { CreateTransferPayload } from '@linode/api-v4';
 import type { QueryClient } from '@tanstack/react-query';
 
@@ -40,21 +39,19 @@ export const EntityTransfersCreate = () => {
     defaultTransferState
   );
 
-  const addEntitiesToTransfer = curry(
-    (entityType: TransferableEntity, entitiesToAdd: any[]) => {
+  const addEntitiesToTransfer =
+    (entityType: TransferableEntity) => (entitiesToAdd: Entity[]) => {
       dispatch({ entitiesToAdd, entityType, type: 'ADD' });
-    }
-  );
+    };
 
-  const removeEntitiesFromTransfer = curry(
-    (entityType: TransferableEntity, entitiesToRemove: any[]) => {
+  const removeEntitiesFromTransfer =
+    (entityType: TransferableEntity) => (entitiesToRemove: string[]) => {
       dispatch({ entitiesToRemove, entityType, type: 'REMOVE' });
-    }
-  );
+    };
 
-  const toggleEntity = curry((entityType: TransferableEntity, entity: any) => {
+  const toggleEntity = (entityType: TransferableEntity) => (entity: Entity) => {
     dispatch({ entity, entityType, type: 'TOGGLE' });
-  });
+  };
 
   /**
    * Helper functions

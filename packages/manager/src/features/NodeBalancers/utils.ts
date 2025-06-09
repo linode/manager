@@ -1,4 +1,5 @@
-import { filter, isNil } from 'ramda';
+import { isNullOrUndefined } from '@linode/utilities';
+import { filter } from 'ramda';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -100,13 +101,13 @@ export const transformConfigsForRequest = (
       {
         algorithm: config.algorithm || undefined,
         check: config.check || undefined,
-        check_attempts: !isNil(config.check_attempts)
+        check_attempts: !isNullOrUndefined(config.check_attempts)
           ? +config.check_attempts
           : undefined,
         check_body: shouldIncludeCheckBody(config)
           ? config.check_body
           : undefined,
-        check_interval: !isNil(config.check_interval)
+        check_interval: !isNullOrUndefined(config.check_interval)
           ? +config.check_interval
           : undefined,
         // Passive checks must be false for UDP
@@ -114,7 +115,7 @@ export const transformConfigsForRequest = (
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
-        check_timeout: !isNil(config.check_timeout)
+        check_timeout: !isNullOrUndefined(config.check_timeout)
           ? +config.check_timeout
           : undefined,
         cipher_suite: shouldIncludeCipherSuite(config)
