@@ -162,7 +162,7 @@ export const NewDetailTemplateA = () => {
           color: '#2d3748',
         }}
       >
-        Side-by-Side Layout
+        Side by Side Layout
       </h2>
 
       {isDesktop ? (
