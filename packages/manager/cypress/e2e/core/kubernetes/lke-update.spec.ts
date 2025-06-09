@@ -597,8 +597,9 @@ describe('LKE cluster updates', () => {
           cy.focused().type('101');
 
           // Min is 3 (valid); max is 101 (invalid)
-          cy.findByLabelText('Max').should('have.value', 100);
           cy.findByText(minWarning).should('not.exist');
+          // Confirm max can't go above the max limit
+          cy.findByLabelText('Max').should('have.value', 100);
 
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
@@ -730,7 +731,7 @@ describe('LKE cluster updates', () => {
           cy.focused().type(`${autoscaleMax + 1}`);
           // Confirm min warning and disabled button
           cy.findByText(minWarning).should('be.visible');
-          cy.findByLabelText('Max').should('have.value', 499);
+          cy.findByLabelText('Max').should('have.value', autoscaleMax);
           ui.button.findByTitle('Save Changes').should('be.disabled');
 
           // Try to set min to 0

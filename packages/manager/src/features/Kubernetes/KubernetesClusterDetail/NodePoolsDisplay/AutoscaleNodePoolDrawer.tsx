@@ -255,7 +255,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
-            <label className={classes.inputLabel} htmlFor={'min'}>
+            <label className={classes.inputLabel} htmlFor="min">
               Min
             </label>
             <Box className={classes.input}>
@@ -271,7 +271,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                       min={1}
                       setValue={(e) => {
                         clearErrors('root');
-
                         setValue('min', Number(e), {
                           shouldDirty: true,
                           shouldValidate: true,
