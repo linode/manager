@@ -337,7 +337,7 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions: triggerConditions,
     type,
-    group,
+    scope,
     regions,
   }: Alert,
   serviceType: AlertServiceType
@@ -360,7 +360,7 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions: triggerConditions,
     type,
-    group,
+    scope,
     regions,
   };
 };

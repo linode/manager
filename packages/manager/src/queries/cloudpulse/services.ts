@@ -1,18 +1,18 @@
+import {
+  type APIError,
+  type Filter,
+  type JWEToken,
+  type JWETokenPayLoad,
+  type MetricDefinition,
+  type Params,
+  type ResourcePage,
+  type ServiceTypesList,
+} from '@linode/api-v4';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { queryFactory } from './queries';
 
-import type {
-  APIError,
-  Filter,
-  JWEToken,
-  JWETokenPayLoad,
-  MetricDefinition,
-  Params,
-  ResourcePage,
-  ServiceTypes,
-  ServiceTypesList,
-} from '@linode/api-v4';
+import type { Service } from '@linode/api-v4';
 
 export const useGetCloudPulseMetricDefinitionsByServiceType = (
   serviceType: string | undefined,
@@ -50,7 +50,7 @@ export const useCloudPulseServiceByServiceType = (
   serviceType: string,
   enabled: boolean = true
 ) => {
-  return useQuery<ServiceTypes, APIError[]>({
+  return useQuery<Service, APIError[]>({
     ...queryFactory.serviceByServiceType(serviceType),
     enabled,
   });

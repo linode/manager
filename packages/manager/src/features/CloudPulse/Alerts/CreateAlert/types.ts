@@ -19,11 +19,11 @@ export interface CreateAlertDefinitionForm
     'rule_criteria' | 'severity' | 'trigger_conditions'
   > {
   entity_ids?: string[];
-  group: AlertDefinitionGroup | null;
   regions?: string[];
   rule_criteria: {
     rules: MetricCriteriaForm[];
   };
+  scope: AlertDefinitionGroup | null;
   serviceType: AlertServiceType | null;
   severity: AlertSeverityType | null;
   trigger_conditions: TriggerConditionForm;

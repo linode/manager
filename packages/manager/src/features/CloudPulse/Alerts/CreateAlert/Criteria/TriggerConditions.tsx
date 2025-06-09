@@ -13,7 +13,7 @@ import type { CreateAlertDefinitionForm } from '../types';
 import type {
   APIError,
   CreateAlertDefinitionPayload,
-  ServiceTypes,
+  ServiceAlert,
   TriggerCondition,
 } from '@linode/api-v4';
 
@@ -29,7 +29,7 @@ interface TriggerConditionProps {
   /**
    * Service metadata containing alert configuration options such as evaluation periods and polling intervals.
    */
-  serviceMetadata: ServiceTypes | undefined;
+  serviceMetadata: ServiceAlert | undefined;
   /**
    * Array of API errors related to service metadata fetching.
    */
@@ -51,7 +51,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
 
   const { control } = useFormContext<CreateAlertDefinitionForm>();
   const getPollingIntervalOptions = React.useMemo(() => {
-    const options = serviceMetadata?.alert?.polling_interval_seconds ?? [];
+    const options = serviceMetadata?.polling_interval_seconds ?? [];
     return options
       .filter((value) => value >= maxScrapingInterval)
       .map((value) => ({
@@ -61,7 +61,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
   }, [serviceMetadata, maxScrapingInterval]);
 
   const getEvaluationPeriodOptions = React.useMemo(() => {
-    const options = serviceMetadata?.alert?.evaluation_periods_seconds ?? [];
+    const options = serviceMetadata?.evaluation_periods_seconds ?? [];
     return options
       .filter((value) => value >= maxScrapingInterval)
       .map((value) => ({

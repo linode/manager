@@ -107,19 +107,18 @@ export const dimensionOperatorOptions: Item<
 ];
 
 export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
-  { label: 'Account', value: 'per-account' },
-  { label: 'Region', value: 'per-region' },
-  { label: 'Entity', value: 'per-entity' },
+  { label: 'Account', value: 'account' },
+  { label: 'Region', value: 'region' },
+  { label: 'Entity', value: 'entity' },
 ];
 
 export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
-  'per-account': 'Account',
-  'per-region': 'Region',
-  'per-entity': 'Entity',
+  account: 'Account',
+  region: 'Region',
+  entity: 'Entity',
 };
 
 export const textFieldOperators = ['endswith', 'startswith'];
-
 
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',

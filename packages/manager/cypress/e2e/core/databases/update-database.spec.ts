@@ -21,6 +21,7 @@ import {
   mockUpdateDatabase,
   mockUpdateSuspendResumeDatabase,
 } from 'support/intercepts/databases';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { ui } from 'support/ui';
 import {
   randomIp,
@@ -273,6 +274,14 @@ const validateSuspendResume = (
         .click();
     });
 
+  // Cannot change maintenance schedule when database/cluster is suspended or resuming.
+  modifyMaintenanceWindow('Day of Week', 'Wednesday');
+  cy.wait('@updateDatabase');
+  cy.findByText(errorMessage).should('be.visible');
+
+  // Navigate to "Networking" tab.
+  ui.tabList.findTabByTitle('Networking').click();
+
   // Cannot add or remove allowed IPs when database/cluster is suspended or resuming.
   removeAllowedIp(allowedIp);
   cy.wait('@updateDatabase');
@@ -290,11 +299,6 @@ const validateSuspendResume = (
     cy.findByText(errorMessage).should('be.visible');
     ui.drawerCloseButton.find().click();
   });
-
-  // Cannot change maintenance schedule when database/cluster is suspended or resuming.
-  modifyMaintenanceWindow('Day of Week', 'Wednesday');
-  cy.wait('@updateDatabase');
-  cy.findByText(errorMessage).should('be.visible');
 };
 
 const validateActionItems = (state: string, label: string) => {
@@ -332,6 +336,11 @@ const validateActionItems = (state: string, label: string) => {
 };
 
 describe('Update database clusters', () => {
+  beforeEach(() => {
+    mockAppendFeatureFlags({
+      databaseVpc: true,
+    });
+  });
   databaseConfigurations.forEach(
     (configuration: DatabaseClusterConfiguration) => {
       describe(`updates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster`, () => {
@@ -418,25 +427,7 @@ describe('Update database clusters', () => {
           resetRootPassword();
           cy.wait('@resetRootPassword');
 
-          // Remove allowed IP, manage IP access control.
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            allow_list: [],
-          }).as('updateDatabaseAllowedIp');
-          removeAllowedIp(allowedIp);
-          cy.wait('@updateDatabaseAllowedIp');
-
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            allow_list: [newAllowedIp],
-          }).as('updateAccessControl');
-          manageAccessControl([newAllowedIp]);
-          cy.wait('@updateAccessControl');
-          cy.get('[data-qa-access-controls]').within(() => {
-            cy.findByText(newAllowedIp).should('be.visible');
-          });
-
-          // Change maintenance window and databe version upgrade.
+          // Change maintenance window and database version upgrade.
           mockUpdateDatabase(database.id, database.engine, database).as(
             'updateDatabaseMaintenance'
           );
@@ -453,6 +444,28 @@ describe('Update database clusters', () => {
           ui.toast.assertMessage(
             'Maintenance Window settings saved successfully.'
           );
+
+          // Navigate to "Networking" tab.
+          ui.tabList.findTabByTitle('Networking').click();
+
+          // Remove allowed IP, manage IP access control.
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [],
+          }).as('updateDatabaseAllowedIp');
+          removeAllowedIp(allowedIp);
+          cy.wait('@updateDatabaseAllowedIp');
+
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [newAllowedIp],
+          }).as('updateAccessControl');
+
+          manageAccessControl([newAllowedIp]);
+          cy.wait('@updateAccessControl');
+          cy.get('[data-qa-access-controls]').within(() => {
+            cy.findByText(newAllowedIp).should('be.visible');
+          });
         });
 
         /*
@@ -545,24 +558,6 @@ describe('Update database clusters', () => {
                 .click();
             });
 
-          // Remove allowed IP, manage IP access control.
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            allow_list: [],
-          }).as('updateDatabaseAllowedIp');
-          removeAllowedIp(allowedIp);
-          cy.wait('@updateDatabaseAllowedIp');
-
-          mockUpdateDatabase(database.id, database.engine, {
-            ...database,
-            allow_list: [newAllowedIp],
-          }).as('updateAccessControl');
-          manageAccessControl([newAllowedIp]);
-          cy.wait('@updateAccessControl');
-          cy.get('[data-qa-access-controls]').within(() => {
-            cy.findByText(newAllowedIp).should('be.visible');
-          });
-
           // Change maintenance window and databe version upgrade.
           mockUpdateDatabase(database.id, database.engine, database).as(
             'updateDatabaseMaintenance'
@@ -584,6 +579,28 @@ describe('Update database clusters', () => {
           cy.get('[data-qa-settings-button="Suspend Cluster"]').should(
             'be.disabled'
           );
+
+          // Navigate to "Networking" tab.
+          ui.tabList.findTabByTitle('Networking').click();
+
+          // Remove allowed IP, manage IP access control.
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [],
+          }).as('updateDatabaseAllowedIp');
+          removeAllowedIp(allowedIp);
+          cy.wait('@updateDatabaseAllowedIp');
+
+          mockUpdateDatabase(database.id, database.engine, {
+            ...database,
+            allow_list: [newAllowedIp],
+          }).as('updateAccessControl');
+
+          manageAccessControl([newAllowedIp]);
+          cy.wait('@updateAccessControl');
+          cy.get('[data-qa-access-controls]').within(() => {
+            cy.findByText(newAllowedIp).should('be.visible');
+          });
         });
 
         /*

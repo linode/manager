@@ -1945,8 +1945,8 @@ describe('LKE cluster updates', () => {
       nodePoolFactory.build({
         count: 4,
         nodes: [
-          ...kubeLinodeFactory.buildList(3),
-          kubeLinodeFactory.build({ status: 'not_ready' }),
+          ...kubeLinodeFactory.buildList(2),
+          ...kubeLinodeFactory.buildList(2, { status: 'not_ready' }),
         ],
       }),
       nodePoolFactory.build({
@@ -1963,7 +1963,6 @@ describe('LKE cluster updates', () => {
       }),
       linodeFactory.build({
         id: mockNodePools[0].nodes[2].instance_id ?? undefined,
-        status: 'offline',
       }),
       linodeFactory.build({
         id: mockNodePools[0].nodes[3].instance_id ?? undefined,
@@ -1999,7 +1998,7 @@ describe('LKE cluster updates', () => {
     ui.autocomplete.findByLabel('Status').click();
     ui.autocompletePopper.findByTitle('Running').should('be.visible').click();
 
-    // Only Running nodes should be displayed
+    // Only Running nodes should be displayed (Linode instance status = running AND node status = ready)
     cy.findByText(
       'Nodes will appear once cluster provisioning is complete.'
     ).should('not.exist');
@@ -2019,7 +2018,7 @@ describe('LKE cluster updates', () => {
       'Nodes will appear once cluster provisioning is complete.'
     ).should('not.exist');
     cy.get(`[data-qa-node-pool-id="${mockNodePools[0].id}"]`).within(() => {
-      cy.get('[data-qa-node-row]').should('have.length', 1);
+      cy.get('[data-qa-node-row]').should('have.length', 0);
     });
     cy.get(`[data-qa-node-pool-id="${mockNodePools[1].id}"]`).within(() => {
       cy.get('[data-qa-node-row]').should('have.length', 1);

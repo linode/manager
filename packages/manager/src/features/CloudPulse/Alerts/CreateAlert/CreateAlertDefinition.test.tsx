@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
-import { ACCOUNT_GROUP_INFO_MESSAGE } from '../constants';
 import { CreateAlertDefinition } from './CreateAlertDefinition';
 
 vi.mock('src/queries/cloudpulse/resources', () => ({
@@ -68,8 +67,8 @@ describe('AlertDefinition Create', () => {
     expect(screen.getByLabelText('Description (optional)')).toBeVisible();
     expect(screen.getByLabelText('Severity')).toBeVisible();
     expect(screen.getByLabelText('Service')).toBeVisible();
-    expect(screen.getByText('2. Account')).toBeVisible();
-    expect(screen.getByText(ACCOUNT_GROUP_INFO_MESSAGE)).toBeVisible();
+    expect(screen.getByText('2. Account/Region/Entity')).toBeVisible();
+    expect(screen.getByText('No scope selected')).toBeVisible();
     expect(screen.getByText('3. Criteria')).toBeVisible();
     expect(screen.getByText('Metric Threshold')).toBeVisible();
     expect(screen.getByLabelText('Data Field')).toBeVisible();
@@ -156,7 +155,7 @@ describe('AlertDefinition Create', () => {
     );
 
     await user.click(submitButton!);
-    expect(container.getAllByText(errorMessage).length).toBe(11);
+    expect(container.getAllByText(errorMessage).length).toBe(12);
     container.getAllByText(errorMessage).forEach((element) => {
       expect(element).toBeVisible();
     });

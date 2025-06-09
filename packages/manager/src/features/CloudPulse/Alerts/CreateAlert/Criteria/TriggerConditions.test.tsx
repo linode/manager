@@ -14,26 +14,22 @@ const PollingIntervalTestId = 'polling-interval';
 
 import { convertSecondsToHumanReadable } from '../../Utils/utils';
 
-const mockServiceMetadata = {
-  alert: {
-    evaluation_periods_seconds: [60, 120, 300],
-    polling_interval_seconds: [30, 60, 180],
-    scope: ['region'],
-  },
-  is_beta: false,
-  label: 'Linode',
-  regions: 'all',
-  service_type: 'linode',
+import type { ServiceAlert } from '@linode/api-v4';
+
+const mockServiceAlertMetadata: ServiceAlert = {
+  evaluation_periods_seconds: [60, 120, 300],
+  polling_interval_seconds: [30, 60, 180],
+  scope: ['region'],
 };
 
 const evaluationPeriodOptions =
-  mockServiceMetadata.alert.evaluation_periods_seconds.map((value) => ({
+  mockServiceAlertMetadata.evaluation_periods_seconds.map((value) => ({
     label: convertSecondsToHumanReadable(value),
     value,
   }));
 
 const pollingIntervalOptions =
-  mockServiceMetadata.alert.polling_interval_seconds.map((value) => ({
+  mockServiceAlertMetadata.polling_interval_seconds.map((value) => ({
     label: convertSecondsToHumanReadable(value),
     value,
   }));
@@ -47,7 +43,7 @@ describe('Trigger Conditions', () => {
         <TriggerConditions
           maxScrapingInterval={0}
           name="trigger_conditions"
-          serviceMetadata={mockServiceMetadata}
+          serviceMetadata={mockServiceAlertMetadata}
           serviceMetadataError={null}
           serviceMetadataLoading={false}
         />
@@ -67,7 +63,7 @@ describe('Trigger Conditions', () => {
         <TriggerConditions
           maxScrapingInterval={0}
           name="trigger_conditions"
-          serviceMetadata={mockServiceMetadata}
+          serviceMetadata={mockServiceAlertMetadata}
           serviceMetadataError={null}
           serviceMetadataLoading={false}
         />
@@ -105,7 +101,7 @@ describe('Trigger Conditions', () => {
         <TriggerConditions
           maxScrapingInterval={0}
           name="trigger_conditions"
-          serviceMetadata={mockServiceMetadata}
+          serviceMetadata={mockServiceAlertMetadata}
           serviceMetadataError={null}
           serviceMetadataLoading={false}
         />
@@ -154,7 +150,7 @@ describe('Trigger Conditions', () => {
         <TriggerConditions
           maxScrapingInterval={0}
           name="trigger_conditions"
-          serviceMetadata={mockServiceMetadata}
+          serviceMetadata={mockServiceAlertMetadata}
           serviceMetadataError={null}
           serviceMetadataLoading={false}
         />
@@ -201,7 +197,7 @@ describe('Trigger Conditions', () => {
         <TriggerConditions
           maxScrapingInterval={120}
           name="trigger_conditions"
-          serviceMetadata={mockServiceMetadata}
+          serviceMetadata={mockServiceAlertMetadata}
           serviceMetadataError={null}
           serviceMetadataLoading={false}
         />
