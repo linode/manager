@@ -255,7 +255,9 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
-            <Typography className={classes.inputLabel}>Min</Typography>
+            <label className={classes.inputLabel} htmlFor={'min'}>
+              Min
+            </label>
             <Box className={classes.input}>
               <Controller
                 control={control}
@@ -282,9 +284,7 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                 rules={{
                   required: 'Minimum is a required field.',
                   validate: (value) => {
-                    // Gets the current max value and converts empty string to 0 for comparison.
-                    const _max = Number(form.getValues('max'));
-                    if (value > _max || value > maxLimit) {
+                    if (value > form.getValues('max') || value > maxLimit) {
                       return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
                     }
                     return true;
@@ -302,7 +302,9 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
             <Typography>/</Typography>
           </Grid>
           <Grid>
-            <Typography className={classes.inputLabel}>Max</Typography>
+            <label className={classes.inputLabel} htmlFor="max">
+              Max
+            </label>
             <Box className={classes.input}>
               <Controller
                 control={control}
@@ -311,12 +313,11 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                   return (
                     <EnhancedNumberInput
                       disabled={!_enabled || isSubmitting}
-                      inputLabel="Min"
+                      inputLabel="Max"
                       max={maxLimit}
                       min={1}
                       setValue={(e) => {
                         clearErrors('root');
-
                         setValue('max', Number(e), {
                           shouldDirty: true,
                           shouldValidate: true,
@@ -330,12 +331,6 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
                 }}
                 rules={{
                   required: 'Maximum is a required field.',
-                  validate: (value) => {
-                    if (value > maxLimit) {
-                      return `Maximum must be between 1 and ${maxLimit} nodes.`;
-                    }
-                    return true;
-                  },
                 }}
               />
             </Box>

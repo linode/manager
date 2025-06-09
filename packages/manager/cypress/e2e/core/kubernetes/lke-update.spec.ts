@@ -597,7 +597,7 @@ describe('LKE cluster updates', () => {
           cy.focused().type('101');
 
           // Min is 3 (valid); max is 101 (invalid)
-          cy.findByText(maxWarning).should('be.visible');
+          cy.findByLabelText('Max').should('have.value', 100);
           cy.findByText(minWarning).should('not.exist');
 
           cy.findByLabelText('Max').should('be.visible').click();
@@ -659,7 +659,7 @@ describe('LKE cluster updates', () => {
      */
     it('can toggle autoscaling on an enterprise tier cluster', () => {
       const autoscaleMin = 1;
-      const autoscaleMax = 500;
+      const autoscaleMax = 499;
 
       const minWarning =
         'Minimum must be between 1 and 499 nodes and cannot be greater than Maximum.';
@@ -724,36 +724,32 @@ describe('LKE cluster updates', () => {
         .within(() => {
           cy.findByText('Autoscale').should('be.visible').click();
 
+          // Try to set min above the max
+          cy.findByLabelText('Min').should('be.visible').click();
+          cy.focused().clear();
+          cy.focused().type(`${autoscaleMax + 1}`);
+          // Confirm min warning and disabled button
+          cy.findByText(minWarning).should('be.visible');
+          cy.findByLabelText('Max').should('have.value', 499);
+          ui.button.findByTitle('Save Changes').should('be.disabled');
+
+          // Try to set min to 0
           cy.findByLabelText('Min').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type(`${autoscaleMin - 1}`);
+          // Confirm min can't go below the min limit
+          cy.findByLabelText('Min').should('have.value', 1);
 
-          // Min is 0 (invalid); max is 500 (valid)
-          cy.findByText(minWarning).should('be.visible');
-
+          // Try to set max above max limit
           cy.findByLabelText('Max').should('be.visible').click();
           cy.focused().clear();
           cy.focused().type('501');
-
-          // Min is 0; max is 501 - both invalid
-          cy.findByText(maxWarning).should('be.visible');
-          cy.findByText(minWarning).should('be.visible');
-
-          cy.findByLabelText('Max').should('be.visible').click();
-          cy.focused().clear();
-          cy.focused().type(`${autoscaleMax}`);
-
-          // Min is 0 (invalid); max is 500 (valid)
-          cy.findByText(minWarning).should('be.visible');
-          cy.findByText(maxWarning).should('not.exist');
-
-          ui.button.findByTitle('Save Changes').should('be.disabled');
-
-          cy.findByLabelText('Min').should('be.visible').click();
-          cy.focused().clear();
-          cy.focused().type(`${autoscaleMin + 1}`);
+          // Confirm max can't go above the max limit
+          cy.findByLabelText('Max').should('have.value', 500);
 
           // Min is 1, max is 500 - both valid
+          cy.findByText(minWarning).should('not.exist');
+          cy.findByText(maxWarning).should('not.exist');
           ui.button.findByTitle('Save Changes').should('be.visible').click();
         });
 
