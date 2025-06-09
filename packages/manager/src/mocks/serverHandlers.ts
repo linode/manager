@@ -122,8 +122,10 @@ const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
+import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { MTC } from 'src/features/components/PlansPanel/constants';
 
 import type {
@@ -310,6 +312,9 @@ const databases = [
       db.ssl_connection = true;
     }
     const database = databaseFactory.build(db);
+    if (database.platform !== 'rdbms-default') {
+      delete database.private_network;
+    }
     return HttpResponse.json(database);
   }),
 
@@ -447,10 +452,16 @@ const vpc = [
 
 const iam = [
   http.get('*/iam/role-permissions', () => {
-    return HttpResponse.json(accountPermissionsFactory.build());
+    return HttpResponse.json(accountRolesFactory.build());
   }),
   http.get('*/iam/users/:username/role-permissions', () => {
-    return HttpResponse.json(userPermissionsFactory.build());
+    return HttpResponse.json(userRolesFactory.build());
+  }),
+  http.get('*/iam/users/:username/permissions/:entity_type/:entity_id', () => {
+    return HttpResponse.json(userEntityPermissionsFactory.build());
+  }),
+  http.get('*/v4*/iam/users/:username/permissions/account', () => {
+    return HttpResponse.json(userAccountPermissionsFactory.build());
   }),
 ];
 
@@ -542,6 +553,7 @@ const parentAccountNonAdminUser = accountUserFactory.build({
 });
 
 export const handlers = [
+  ...iam,
   http.get('*/profile', () => {
     const profile = profileFactory.build({
       restricted: false,
@@ -3168,6 +3180,5 @@ export const handlers = [
   ...statusPage,
   ...databases,
   ...vpc,
-  ...iam,
   ...entities,
 ];
