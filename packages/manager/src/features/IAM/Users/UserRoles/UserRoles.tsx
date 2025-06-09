@@ -7,7 +7,6 @@ import {
   useTheme,
 } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
-import { isEmpty } from 'ramda';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -32,8 +31,8 @@ export const UserRoles = () => {
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
-    ? !isEmpty(assignedRoles.account_access) ||
-      !isEmpty(assignedRoles.entity_access)
+    ? assignedRoles.account_access.length > 0 ||
+      assignedRoles.entity_access.length > 0
     : false;
 
   if (isLoading) {
