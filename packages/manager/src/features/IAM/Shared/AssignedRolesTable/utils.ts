@@ -6,8 +6,8 @@ import type {
   AccountEntity,
   EntityAccessRole,
   EntityType,
-  IamAccountPermissions,
-  IamUserPermissions,
+  IamAccountRoles,
+  IamUserRoles,
 } from '@linode/api-v4';
 
 export interface CombinedRoles {
@@ -69,7 +69,7 @@ export const addEntitiesNamesToRoles = (
 /**
  * Group account_access and entity_access roles of the user
  */
-export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
+export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
   const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
     new Map();
@@ -109,7 +109,7 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
  * Add descriptions, permissions, type, entities to assigned users roles
  */
 export const mapRolesToPermissions = (
-  accountPermissions: IamAccountPermissions,
+  accountPermissions: IamAccountRoles,
   userRoles: CombinedRoles[]
 ): RoleView[] => {
   const allRoles = mapAccountPermissionsToRoles(accountPermissions);

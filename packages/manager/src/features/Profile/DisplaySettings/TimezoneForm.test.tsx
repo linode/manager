@@ -3,6 +3,7 @@ import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { http, HttpResponse, server } from 'src/mocks/testServer';
+import { storage } from 'src/utilities/storage';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { getOptionLabel, TimezoneForm } from './TimezoneForm';
@@ -27,23 +28,22 @@ describe('Timezone change form', () => {
   });
 
   it('should show a message if an admin is logged in as a customer', async () => {
-    const { getByTestId } = renderWithTheme(<TimezoneForm />, {
-      customStore: { authentication: { loggedInAsCustomer: true } },
-    });
+    storage.authentication.token.set('Admin 12345');
+    const { getByTestId } = renderWithTheme(<TimezoneForm />);
 
     expect(getByTestId('admin-notice')).toBeInTheDocument();
   });
 
   it('should not show a message if the user is logged in normally', async () => {
+    storage.authentication.token.set('Bearer 12345');
     const { queryByTestId } = renderWithTheme(<TimezoneForm />);
 
     expect(queryByTestId('admin-notice')).not.toBeInTheDocument();
   });
 
   it("should include text with the user's current time zone in the admin warning", async () => {
-    const { queryByTestId } = renderWithTheme(<TimezoneForm />, {
-      customStore: { authentication: { loggedInAsCustomer: true } },
-    });
+    storage.authentication.token.set('Admin 12345');
+    const { queryByTestId } = renderWithTheme(<TimezoneForm />);
 
     await waitFor(() => {
       expect(queryByTestId('admin-notice')).toHaveTextContent(
