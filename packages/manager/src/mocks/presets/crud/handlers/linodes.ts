@@ -278,10 +278,16 @@ export const createLinode = (mockState: MockState) => [
         );
 
         if (subnetFromDB && vpc) {
+          const prelimVPCInterface = linodeInterfaceFactoryVPC.build(); // Created just to pull a few values from
+
           const vpcInterface = linodeInterfaceFactoryVPC.build({
             ...vpcIfacePayload,
             default_route: {
               ipv4: true,
+            },
+            vpc: {
+              ipv4: prelimVPCInterface.vpc?.ipv4,
+              ipv6: prelimVPCInterface.vpc?.ipv6,
             },
             created: DateTime.now().toISO(),
             updated: DateTime.now().toISO(),

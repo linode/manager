@@ -18,7 +18,7 @@ export const ConfigInterfaceFirewallCell = (props: { linodeId: number }) => {
   } = useLinodeFirewallsQuery(linodeId);
 
   return (
-    <TableCell>
+    <TableCell noWrap>
       {getFirewallsCellString(
         attachedFirewalls?.data ?? [],
         isLoading,
@@ -40,7 +40,7 @@ export const LinodeInterfaceFirewallCell = (props: {
   } = useLinodeInterfaceFirewallsQuery(linodeId, interfaceId);
 
   return (
-    <TableCell>
+    <TableCell noWrap>
       {getFirewallsCellString(
         attachedFirewalls?.data ?? [],
         isLoading,

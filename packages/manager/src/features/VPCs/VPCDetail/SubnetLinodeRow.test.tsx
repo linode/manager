@@ -27,6 +27,18 @@ import { SubnetLinodeRow } from './SubnetLinodeRow';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  useFlags: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+  };
+});
+
 const loadingTestId = 'circle-progress';
 const mockFirewall0 = 'mock-firewall-0';
 
@@ -69,6 +81,8 @@ describe('SubnetLinodeRow', () => {
   const handleUnassignLinode = vi.fn();
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
+    // @TODO VPC IPv6: This assertion assumes the VPC IPv6 feature flag is off. Once the feature is fully rolled out, update the checks to ensure the
+    // VPC IPv6 and Linode IPv6 Ranges cells are displayed/populated.
     const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const config = linodeConfigFactory.build({
       interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
@@ -82,7 +96,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, findByText } =
+    const { getAllByRole, getAllByText, getByTestId, findByText, queryByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -110,6 +124,10 @@ describe('SubnetLinodeRow', () => {
 
     getAllByText('10.0.0.0');
 
+    // VPC IPv6 and Linode IPv6 Ranges columns not present, so contents of those cells should not be in the document
+    expect(queryByText('2001:db8::1')).toBeNull();
+    expect(queryByText('2001:db8::/64')).toBeNull();
+
     const plusChipButton = getAllByRole('button')[1];
     expect(plusChipButton).toHaveTextContent('+1');
 
@@ -124,6 +142,93 @@ describe('SubnetLinodeRow', () => {
     expect(handleUnassignLinode).toHaveBeenCalled();
     const firewall = await findByText(mockFirewall0);
     expect(firewall).toBeVisible();
+  });
+
+  it('should display the VPC IPv6 and Linode IPv6 Ranges when vpcIpv6 feature flag is enabled (config/legacy interface)', async () => {
+    queryMocks.useFlags.mockReturnValue({ vpcIpv6: true });
+
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const config = linodeConfigFactory.build({
+      interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
+    });
+    server.use(
+      http.get('*/instances/*/configs/:configId', async () => {
+        return HttpResponse.json(config);
+      })
+    );
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const { getByTestId, findByText } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+        />
+      )
+    );
+
+    // Loading states should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
+    await findByText('2001:db8::1');
+    await findByText('2001:db8::/64');
+  });
+
+  it('should display the VPC IPv6 and Linode IPv6 Ranges when vpcIpv6 feature flag is enabled (Linode Interface)', async () => {
+    queryMocks.useFlags.mockReturnValue({ vpcIpv6: true });
+
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const vpcLinodeInterface = linodeInterfaceFactoryVPC.build({
+      id: 1,
+    });
+
+    server.use(
+      http.get('*/instances/*/interfaces/:interfaceId', async () => {
+        return HttpResponse.json(vpcLinodeInterface);
+      })
+    );
+
+    const handlePowerActionsLinode = vi.fn();
+    const handleUnassignLinode = vi.fn();
+
+    const { getByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[
+            { active: true, config_id: null, id: vpcLinodeInterface.id },
+          ]}
+        />
+      )
+    );
+
+    // Loading states should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+
+    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+
+    // VPC IPv6 and Linode IPv6 Ranges columns present, so contents of those cells should be populated
+    expect(getByTestId('vpc-ipv6-cell')).toHaveTextContent(
+      '2600:3c03::f03c:91ff:fe0a:109a'
+    );
+    expect(getByTestId('linode-ipv6-ranges-cell')).toHaveTextContent(
+      '2600:3c03::f03c:91ff:fe0a:109a'
+    );
   });
 
   it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
