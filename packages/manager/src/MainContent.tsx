@@ -128,11 +128,6 @@ const Profile = React.lazy(() =>
     default: module.Profile,
   }))
 );
-const EventsLanding = React.lazy(() =>
-  import('src/features/Events/EventsLanding').then((module) => ({
-    default: module.EventsLanding,
-  }))
-);
 
 const IAM = React.lazy(() =>
   import('src/features/IAM').then((module) => ({
