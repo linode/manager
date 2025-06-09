@@ -42,7 +42,7 @@ export const ChangeRoleForEntityDrawer = ({
 }: Props) => {
   const theme = useTheme();
   const { username } = useParams({
-    from: '/iam/users/$username/entities',
+    from: '/iam/users/$username',
   });
 
   const { data: accountPermissions, isLoading: accountPermissionsLoading } =

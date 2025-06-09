@@ -50,7 +50,7 @@ export const AssignedEntitiesTable = () => {
   const theme = useTheme();
 
   const { selectedRole: selectedRoleSearchParam } = useSearch({
-    from: '/iam/users/$username/entities',
+    strict: false,
   });
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');

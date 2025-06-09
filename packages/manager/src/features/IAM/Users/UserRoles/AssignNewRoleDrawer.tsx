@@ -37,7 +37,7 @@ interface Props {
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const theme = useTheme();
   const { username } = useParams({
-    from: '/iam/users/$username/roles',
+    from: '/iam/users/$username',
   });
   const queryClient = useQueryClient();
 
