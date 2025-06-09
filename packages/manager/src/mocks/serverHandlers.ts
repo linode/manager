@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -2685,7 +2686,7 @@ export const handlers = [
       type: 'user',
       updated: '2021-10-16T04:00:00',
       updated_by: 'user1',
-      group: pickRandom(['per-account', 'per-entity', 'per-region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const customAlertsWithServiceType = alertFactory.buildList(10, {
       created_by: 'user1',
@@ -2693,13 +2694,13 @@ export const handlers = [
       severity: 1,
       type: 'user',
       updated_by: 'user1',
-      group: pickRandom(['per-account', 'per-entity', 'per-region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const defaultAlerts = alertFactory.buildList(15);
     const defaultAlertsWithServiceType = alertFactory.buildList(7, {
       service_type: 'dbaas',
       severity: 3,
-      group: pickRandom(['per-account', 'per-entity', 'per-region']),
+      scope: pickRandom(['account', 'entity', 'region']),
     });
     const alerts = [
       ...defaultAlerts,
@@ -2755,7 +2756,7 @@ export const handlers = [
             },
             service_type: params.serviceType === 'linode' ? 'linode' : 'dbaas',
             type: 'user',
-            group: pickRandom(['per-account', 'per-entity', 'per-region']),
+            scope: pickRandom(['account', 'entity', 'region']),
           })
         );
       }
@@ -2796,6 +2797,7 @@ export const handlers = [
           label: 'Linodes',
           service_type: 'linode',
           regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2806,24 +2808,20 @@ export const handlers = [
 
     return HttpResponse.json(response);
   }),
+
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
-      return HttpResponse.json({}, { status: 404 });
-    }
+    const serviceType = params.serviceType;
 
-    const response =
-      params.serviceType === 'linode'
-        ? serviceTypesFactory.build({
-            label: 'Linodes',
-            service_type: 'linode',
-            regions: 'us-iad,us-east',
-          })
-        : serviceTypesFactory.build({
-            label: 'Databases',
-            service_type: 'dbaas',
-          });
-
-    return HttpResponse.json(response, { status: 200 });
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
+      is_beta: pickRandom([true, false]),
+      alert:
+        serviceType === 'dbaas'
+          ? serviceAlertFactory.build()
+          : serviceAlertFactory.build({ scope: ['entity'] }),
+    });
+    return HttpResponse.json(response);
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
