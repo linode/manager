@@ -145,7 +145,7 @@ export const SubnetNodeBalancerRow = ({
           {nodebalancer?.label}
         </Link>
       </TableCell>
-      <TableCell statusCell>
+      <TableCell capitalizationOverride statusCell>
         {getNodebalancerStatus(
           configs ?? [],
           isConfigsLoading,
@@ -166,9 +166,9 @@ export const SubnetNodeBalancerRow = ({
 
 export const SubnetNodebalancerTableRowHead = (
   <TableRow>
-    <TableCell sx={{ width: '14%' }}>NodeBalancer</TableCell>
-    <TableCell sx={{ width: '24.5%' }}>Backend Status</TableCell>
-    <TableCell sx={{ width: '16.5%' }}>VPC IPv4 Range</TableCell>
+    <TableCell sx={{ width: '16.25%' }}>NodeBalancer</TableCell>
+    <TableCell sx={{ width: '24%' }}>Backend Status</TableCell>
+    <TableCell sx={{ width: '16%' }}>VPC IPv4 Range</TableCell>
     <TableCell>Firewalls</TableCell>
   </TableRow>
 );
