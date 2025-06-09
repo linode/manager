@@ -1,4 +1,4 @@
-import { useImageQuery, useLinodeQuery, useRegionQuery } from '@linode/queries';
+import { useImageQuery, useRegionQuery } from '@linode/queries';
 import { Accordion, Checkbox, Notice, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -6,10 +6,11 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 
 import type { RebuildLinodeFormValues } from './utils';
+import type { Linode } from '@linode/api-v4';
 
 interface Props {
   disabled: boolean;
-  linodeId: number;
+  linode: Linode;
 }
 
 export const UserData = (props: Props) => {
@@ -22,8 +23,7 @@ export const UserData = (props: Props) => {
 
   const [formatWarning, setFormatWarning] = React.useState(false);
 
-  const { data: linode } = useLinodeQuery(props.linodeId);
-  const { data: region } = useRegionQuery(linode?.region ?? '');
+  const { data: region } = useRegionQuery(props.linode.region);
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
   const checkFormat = ({
@@ -51,13 +51,16 @@ export const UserData = (props: Props) => {
 
   return (
     <Accordion
+      defaultExpanded={props.linode.has_user_data}
       detailProps={{ sx: { p: 0 } }}
       heading="Add User Data"
       summaryProps={{ sx: { p: 0 } }}
     >
-      <Notice spacingBottom={8} spacingTop={0} variant="success">
-        Adding new user data is recommended as part of the rebuild process.
-      </Notice>
+      {props.linode.has_user_data && (
+        <Notice spacingBottom={8} spacingTop={0} variant="info">
+          Adding new user data is recommended as part of the rebuild process.
+        </Notice>
+      )}
       <Typography>
         User data is a feature of the Metadata service that enables you to
         perform system configuration tasks (such as adding users and installing
@@ -81,7 +84,7 @@ export const UserData = (props: Props) => {
       )}
       {!image && (
         <Notice spacingBottom={8} spacingTop={12} variant="warning">
-          Select an Image compatible with clout-init to configure user data.
+          Select an Image compatible with cloud-init to configure user data.
         </Notice>
       )}
       {region && !doesRegionSupportMetadata && (
@@ -125,10 +128,15 @@ export const UserData = (props: Props) => {
         name="reuseUserData"
         render={({ field }) => (
           <Checkbox
-            disabled={disabled}
+            disabled={disabled || !props.linode.has_user_data}
             onChange={field.onChange}
             sx={{ pl: 1.5 }}
-            text={`Reuse user data previously provided for ${linode?.label}`}
+            text={`Reuse user data previously provided for ${props.linode.label}`}
+            toolTipText={
+              !props.linode.has_user_data
+                ? 'This Linode does not have existing user data.'
+                : undefined
+            }
           />
         )}
       />
