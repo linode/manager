@@ -98,10 +98,6 @@ export const DismissibleBanner = (props: Props) => {
               xs: 'column',
               sm: 'row',
             },
-            ml: {
-              xs: '8px',
-              sm: '0px',
-            },
           }}
         >
           <Stack direction="column" flex={1} justifyContent="center">
