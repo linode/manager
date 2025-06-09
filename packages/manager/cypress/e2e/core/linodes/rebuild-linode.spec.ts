@@ -360,7 +360,7 @@ describe('rebuild linode', () => {
     });
     const linode = linodeFactory.build({
       region: region.id,
-      // has_user_data: true - add this when we add the type to make this test more realistic
+      has_user_data: true,
     });
     const image = imageFactory.build({
       capabilities: ['cloud-init'],
