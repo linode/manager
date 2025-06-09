@@ -1,10 +1,10 @@
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { userRolesFactory } from 'src/factories/userRoles';
 
 import { getTotalAssignedRoles } from './utils';
 
 describe('getTotalAssignedRoles', () => {
   it('should return the correct total number of assigned roles', () => {
-    const mockPermissions = userPermissionsFactory.build({
+    const mockPermissions = userRolesFactory.build({
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [
         {
@@ -27,7 +27,7 @@ describe('getTotalAssignedRoles', () => {
   });
 
   it('should return 0 if no roles are assigned', () => {
-    const mockPermissions = userPermissionsFactory.build({
+    const mockPermissions = userRolesFactory.build({
       account_access: [],
       entity_access: [],
     });
@@ -38,7 +38,7 @@ describe('getTotalAssignedRoles', () => {
   });
 
   it('should handle missing entity_access gracefully', () => {
-    const mockPermissions = userPermissionsFactory.build({
+    const mockPermissions = userRolesFactory.build({
       account_access: ['account_admin'],
       entity_access: [],
     });
@@ -49,7 +49,7 @@ describe('getTotalAssignedRoles', () => {
   });
 
   it('should handle missing account_access gracefully', () => {
-    const mockPermissions = userPermissionsFactory.build({
+    const mockPermissions = userRolesFactory.build({
       account_access: [],
       entity_access: [
         {

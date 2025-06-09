@@ -1,33 +1,33 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({ foo: 'bar' }),
+  useAccountRoles: vi.fn().mockReturnValue({ foo: 'bar' }),
 }));
 
 vi.mock(import('src/queries/iam/iam'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
   };
 });
 
 describe('useIsIAMEnabled', () => {
   it('should be enabled for a BETA user', async () => {
-    const rolePermissions = accountPermissionsFactory.build();
+    const rolePermissions = accountRolesFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
         return HttpResponse.json(rolePermissions);
       })
     );
 
-    queryMocks.useAccountPermissions.mockReturnValue({
+    queryMocks.useAccountRoles.mockReturnValue({
       data: rolePermissions,
     });
 
@@ -44,14 +44,14 @@ describe('useIsIAMEnabled', () => {
   });
 
   it('should enabled for a GA user', async () => {
-    const rolePermissions = accountPermissionsFactory.build();
+    const rolePermissions = accountRolesFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
         return HttpResponse.json(rolePermissions);
       })
     );
 
-    queryMocks.useAccountPermissions.mockReturnValue({
+    queryMocks.useAccountRoles.mockReturnValue({
       data: rolePermissions,
     });
 
@@ -66,19 +66,19 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(true);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(true);
+      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
     });
   });
 
   it('should be diabled for all users via a feature flag', async () => {
-    const rolePermissions = accountPermissionsFactory.build();
+    const rolePermissions = accountRolesFactory.build();
     server.use(
       http.get('*/v4beta/iam/role-permissions', () => {
         return HttpResponse.json(rolePermissions);
       })
     );
 
-    queryMocks.useAccountPermissions.mockReturnValue({
+    queryMocks.useAccountRoles.mockReturnValue({
       data: rolePermissions,
     });
 
@@ -93,7 +93,7 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(false);
+      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(false);
     });
   });
 
@@ -104,7 +104,7 @@ describe('useIsIAMEnabled', () => {
       })
     );
 
-    queryMocks.useAccountPermissions.mockReturnValue({
+    queryMocks.useAccountRoles.mockReturnValue({
       data: null,
     });
 
@@ -119,7 +119,7 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountPermissions).toHaveBeenCalledWith(true);
+      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
     });
   });
 });

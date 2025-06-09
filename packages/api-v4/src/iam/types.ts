@@ -36,7 +36,7 @@ export type EntityAccessRole =
   | 'stackscript_viewer'
   | 'update_firewall';
 
-export interface IamUserPermissions {
+export interface IamUserRoles {
   account_access: AccountAccessRole[];
   entity_access: EntityAccess[];
 }
@@ -203,7 +203,7 @@ export type PermissionType =
   | 'view_vpc'
   | 'view_vpc_subnet';
 
-export interface IamAccountPermissions {
+export interface IamAccountRoles {
   account_access: IamAccess[];
   entity_access: IamAccess[];
 }
@@ -219,4 +219,4 @@ export interface Roles {
   permissions: PermissionType[];
 }
 
-export type IamAccessType = keyof IamAccountPermissions;
+export type IamAccessType = keyof IamAccountRoles;
