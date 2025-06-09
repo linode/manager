@@ -1,6 +1,5 @@
 import { H1Header } from '@linode/ui';
 import { screen } from '@testing-library/react';
-import { assocPath } from 'ramda';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -30,12 +29,6 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-const propsWithMultiWordURLQuery = assocPath(
-  ['location', 'search'],
-  '?query=two%20words',
-  props
-);
-
 describe('SupportSearchLanding Component', () => {
   beforeEach(() => {
     queryMocks.useLocation.mockReturnValue({
@@ -62,18 +55,13 @@ describe('SupportSearchLanding Component', () => {
   });
 
   it('should display multi-word query string in the header', () => {
-    renderWithTheme(
-      <H1Header title={propsWithMultiWordURLQuery.location.search} />
-    );
-    expect(
-      screen.getByText(propsWithMultiWordURLQuery.location.search)
-    ).toBeInTheDocument();
+    // what is going on here?
+    renderWithTheme(<H1Header title="?query=two%20words" />);
+    expect(screen.getByText('?query=two%20words')).toBeInTheDocument();
   });
 
   it('should display empty DocumentationResults components with empty query string', () => {
-    const newProps = assocPath(['location', 'search'], '?query=', props);
-
-    renderWithTheme(<SupportSearchLanding {...newProps} />);
+    renderWithTheme(<SupportSearchLanding {...props} />);
     expect(
       screen.getAllByTestId('data-qa-documentation-no-results')
     ).toHaveLength(2);

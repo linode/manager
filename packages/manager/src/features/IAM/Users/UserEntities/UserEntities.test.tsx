@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -24,21 +24,21 @@ const mockEntities = [
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+  const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
@@ -47,8 +47,8 @@ vi.mock('src/queries/entities/entities', async () => {
 
 describe('UserEntities', () => {
   it('should display no entities text if no entity roles are assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: ['account_admin'],
         entity_access: [],
       }),
@@ -62,8 +62,8 @@ describe('UserEntities', () => {
   });
 
   it('should display no entities text if no roles are assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: [],
         entity_access: [],
       }),
@@ -79,12 +79,12 @@ describe('UserEntities', () => {
   });
 
   it('should display entities and menu when data is available', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -107,7 +107,7 @@ describe('UserEntities', () => {
   });
 
   it('should show error state when api fails', () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: null,
       error: [{ reason: 'An unexpected error occurred' }],
       isLoading: false,

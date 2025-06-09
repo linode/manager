@@ -1,5 +1,3 @@
-import { last } from 'ramda';
-
 import { firewallRuleFactory } from 'src/factories/firewalls';
 
 import {
@@ -35,8 +33,8 @@ describe('Rule Editor', () => {
           type: 'NEW_RULE',
         });
         expect(newState).toHaveLength(INITIAL_RULE_LENGTH + 1);
-        const lastRevisionList = last(newState);
-        const lastRevision = last(lastRevisionList!);
+        const lastRevisionList = newState.at(-1);
+        const lastRevision = lastRevisionList!.at(-1);
         expect(lastRevision).toHaveProperty('status', 'NEW');
       });
 
@@ -50,7 +48,7 @@ describe('Rule Editor', () => {
 
         const revisionList = newState[idxToDelete];
 
-        expect(last(revisionList)).toHaveProperty('status', 'PENDING_DELETION');
+        expect(revisionList.at(-1)).toHaveProperty('status', 'PENDING_DELETION');
       });
 
       it('modifies a rule', () => {
@@ -67,8 +65,8 @@ describe('Rule Editor', () => {
         const revisionList = newState[idxToModify];
 
         expect(revisionList).toHaveLength(2);
-        expect(last(revisionList)).toHaveProperty('status', 'MODIFIED');
-        expect(last(revisionList)).toHaveProperty('ports', '999');
+        expect(revisionList.at(-1)).toHaveProperty('status', 'MODIFIED');
+        expect(revisionList.at(-1)).toHaveProperty('ports', '999');
       });
 
       it('allows undoing of an operation', () => {
@@ -86,7 +84,7 @@ describe('Rule Editor', () => {
         });
 
         expect(newState[idx]).toHaveLength(1);
-        expect(last(newState[idx])).toHaveProperty('status', 'NOT_MODIFIED');
+        expect(newState[idx].at(-1)).toHaveProperty('status', 'NOT_MODIFIED');
       });
 
       it('discards all changes', () => {

@@ -1,4 +1,4 @@
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { userRolesFactory } from 'src/factories/userRoles';
 
 import { addEntityNamesToRoles } from './utils';
 
@@ -19,7 +19,7 @@ const mockGoupedEntities: Map<
 
 describe('addEntityNamesToRoles', () => {
   it('should map entity names to roles correctly', () => {
-    const assignedRoles = userPermissionsFactory.build({
+    const assignedRoles = userRolesFactory.build({
       account_access: ['account_linode_admin', 'account_admin'],
       entity_access: [
         {
@@ -45,7 +45,7 @@ describe('addEntityNamesToRoles', () => {
   });
 
   it('should return an empty array if no matching entities are found', () => {
-    const assignedRoles = userPermissionsFactory.build({
+    const assignedRoles = userRolesFactory.build({
       account_access: ['account_linode_admin', 'account_admin'],
       entity_access: [],
     });
