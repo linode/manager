@@ -1,10 +1,10 @@
 import {
   ActionsPanel,
+  Box,
   Button,
   Drawer,
   FormControlLabel,
   Notice,
-  TextField,
   Toggle,
   Typography,
 } from '@linode/ui';
@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { makeStyles } from 'tss-react/mui';
 
+import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
@@ -36,15 +37,19 @@ const useStyles = makeStyles()((theme: Theme) => ({
     opacity: 0.5,
   },
   input: {
-    '& input': {
-      width: 70,
-    },
-    minWidth: 'auto',
+    backgroundColor: theme.tokens.alias.Background.Neutral,
+    border: `solid ${theme.tokens.alias.Border.Normal}`,
+    padding: 8,
   },
   inputContainer: {
     '& label': {
       marginTop: 13,
     },
+  },
+  inputLabel: {
+    paddingTop: 12,
+    paddingBottom: 4,
+    font: theme.font.bold,
   },
   notice: {
     font: theme.font.bold,
@@ -60,8 +65,8 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   slash: {
     '& p': {
-      fontSize: '1rem',
-      padding: `${theme.spacingFunction(4)} 0`,
+      padding: `${theme.tokens.spacing.S16} 0`,
+      color: theme.tokens.alias.Border.Neutral,
     },
     alignSelf: 'end',
     padding: '0px !important',
@@ -250,46 +255,43 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
         </Typography>
         <Grid className={classes.inputContainer} container spacing={2}>
           <Grid>
-            <Controller
-              control={control}
-              name="min"
-              render={({ field, fieldState }) => {
-                return (
-                  <TextField
-                    className={classes.input}
-                    disabled={!_enabled || isSubmitting}
-                    error={!!fieldState.error}
-                    label="Min"
-                    onChange={(e) => {
-                      clearErrors('root');
+            <Typography className={classes.inputLabel}>Min</Typography>
+            <Box className={classes.input}>
+              <Controller
+                control={control}
+                name="min"
+                render={({ field }) => {
+                  return (
+                    <EnhancedNumberInput
+                      disabled={!_enabled || isSubmitting}
+                      inputLabel="Min"
+                      max={maxLimit}
+                      min={1}
+                      setValue={(e) => {
+                        clearErrors('root');
 
-                      // Set value to an empty string if field is cleared; else, convert string to number.
-                      if (e.target.value === '') {
-                        field.onChange(e);
-                      } else {
-                        setValue('min', Number(e.target.value), {
+                        setValue('min', Number(e), {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
-                      }
-                    }}
-                    type="number"
-                    value={field.value}
-                  />
-                );
-              }}
-              rules={{
-                required: 'Minimum is a required field.',
-                validate: (value) => {
-                  // Gets the current max value and converts empty string to 0 for comparison.
-                  const _max = Number(form.getValues('max'));
-                  if (value > _max || value < 1 || value > maxLimit) {
-                    return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
-                  }
-                  return true;
-                },
-              }}
-            />
+                      }}
+                      value={field.value}
+                    />
+                  );
+                }}
+                rules={{
+                  required: 'Minimum is a required field.',
+                  validate: (value) => {
+                    // Gets the current max value and converts empty string to 0 for comparison.
+                    const _max = Number(form.getValues('max'));
+                    if (value > _max || value > maxLimit) {
+                      return `Minimum must be between 1 and ${maxLimit - 1} nodes and cannot be greater than Maximum.`;
+                    }
+                    return true;
+                  },
+                }}
+              />
+            </Box>
           </Grid>
           <Grid
             className={cx({
@@ -300,48 +302,45 @@ export const AutoscaleNodePoolDrawer = (props: Props) => {
             <Typography>/</Typography>
           </Grid>
           <Grid>
-            <Controller
-              control={control}
-              name="max"
-              render={({ field, fieldState }) => {
-                return (
-                  <TextField
-                    className={classes.input}
-                    disabled={!_enabled || isSubmitting}
-                    error={!!fieldState.error}
-                    label="Max"
-                    onChange={(e) => {
-                      clearErrors('root');
+            <Typography className={classes.inputLabel}>Max</Typography>
+            <Box className={classes.input}>
+              <Controller
+                control={control}
+                name="max"
+                render={({ field }) => {
+                  return (
+                    <EnhancedNumberInput
+                      disabled={!_enabled || isSubmitting}
+                      inputLabel="Min"
+                      max={maxLimit}
+                      min={1}
+                      setValue={(e) => {
+                        clearErrors('root');
 
-                      // Set value to an empty string if field is cleared; else, convert string to number.
-                      if (e.target.value === '') {
-                        field.onChange(e);
-                      } else {
-                        setValue('max', Number(e.target.value), {
+                        setValue('max', Number(e), {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
-                      }
-                      // Re-validate the min field.
-                      trigger('min');
-                    }}
-                    type="number"
-                    value={field.value}
-                  />
-                );
-              }}
-              rules={{
-                required: 'Maximum is a required field.',
-                validate: (value) => {
-                  if (value > maxLimit || value < 1) {
-                    return `Maximum must be between 1 and ${maxLimit} nodes.`;
-                  }
-                  return true;
-                },
-              }}
-            />
+                        // Re-validate the min field.
+                        trigger('min');
+                      }}
+                      value={field.value}
+                    />
+                  );
+                }}
+                rules={{
+                  required: 'Maximum is a required field.',
+                  validate: (value) => {
+                    if (value > maxLimit) {
+                      return `Maximum must be between 1 and ${maxLimit} nodes.`;
+                    }
+                    return true;
+                  },
+                }}
+              />
+            </Box>
           </Grid>
-          <Grid size={12} sx={{ padding: '0 8px' }}>
+          <Grid size={12}>
             {errors.min && (
               <Typography
                 sx={(theme) => ({
