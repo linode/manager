@@ -66,6 +66,7 @@ export interface Props {
   clusterLabel: string;
   clusterRegionId: string;
   clusterTier: KubernetesTier;
+  isLkeClusterRestricted: boolean;
   regionsData: Region[];
 }
 
@@ -76,6 +77,7 @@ export const NodePoolsDisplay = (props: Props) => {
     clusterLabel,
     clusterRegionId,
     clusterTier,
+    isLkeClusterRestricted,
     regionsData,
   } = props;
 
@@ -236,10 +238,12 @@ export const NodePoolsDisplay = (props: Props) => {
               <ActionMenu
                 actionsList={[
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: () => setIsRecycleClusterOpen(true),
                     title: 'Recycle All Nodes',
                   },
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: handleOpenAddDrawer,
                     title: 'Add a Node Pool',
                   },
@@ -251,11 +255,16 @@ export const NodePoolsDisplay = (props: Props) => {
           <Hidden mdDown>
             <Button
               buttonType="outlined"
+              disabled={isLkeClusterRestricted}
               onClick={() => setIsRecycleClusterOpen(true)}
             >
               Recycle All Nodes
             </Button>
-            <Button buttonType="primary" onClick={handleOpenAddDrawer}>
+            <Button
+              buttonType="primary"
+              disabled={isLkeClusterRestricted}
+              onClick={handleOpenAddDrawer}
+            >
               Add a Node Pool
             </Button>
           </Hidden>
