@@ -2950,6 +2950,11 @@ export const handlers = [
               label: 'Linode ID',
               values: null,
             },
+            {
+              dimension_label: 'port',
+              label: ' Port',
+              values: [],
+            },
           ],
           label: 'Network Traffic',
           metric: 'system_network_io_by_resource',
