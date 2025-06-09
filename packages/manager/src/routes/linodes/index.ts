@@ -13,14 +13,16 @@ const linodesIndexRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: '/',
 }).lazy(() =>
-  import('src/features/Linodes/index').then((m) => m.linodesLandingLazyRoute)
+  import('src/features/Linodes/linodesLandingLazyRoute').then(
+    (m) => m.linodesLandingLazyRoute
+  )
 );
 
 const linodesCreateRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: 'create',
 }).lazy(() =>
-  import('src/features/Linodes/LinodeCreate').then(
+  import('src/features/Linodes/LinodeCreate/linodeCreateLazyRoute').then(
     (m) => m.linodeCreateLazyRoute
   )
 );
@@ -32,7 +34,7 @@ const linodesDetailRoute = createRoute({
   }),
   path: '$linodeId',
 }).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
+  import('src/features/Linodes/LinodesDetail/linodeDetailLazyRoute').then(
     (m) => m.linodeDetailLazyRoute
   )
 );
@@ -40,65 +42,37 @@ const linodesDetailRoute = createRoute({
 const linodesDetailAnalyticsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'analytics',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailNetworkingRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'networking',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailStorageRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'storage',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailConfigurationsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'configurations',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailBackupsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'backup',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailActivityRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'activity',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 const linodesDetailSettingsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'settings',
-}).lazy(() =>
-  import('src/features/Linodes/LinodesDetail/LinodesDetail').then(
-    (m) => m.linodeDetailLazyRoute
-  )
-);
+})
 
 export const linodesRouteTree = linodesRoute.addChildren([
   linodesIndexRoute,
