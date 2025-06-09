@@ -5,13 +5,18 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { useStyles } from 'src/features/DataStream/DataStream.styles';
 
-import { useStyles } from './StreamCreate.styles';
 import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
 import { StreamCreateDataSet } from './StreamCreateDataSet';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { type CreateStreamForm, EventType, StreamType } from './types';
+import {
+  type CreateStreamForm,
+  DestinationType,
+  EventType,
+  StreamType,
+} from './types';
 
 export const StreamCreate = () => {
   const { classes } = useStyles();
@@ -21,6 +26,8 @@ export const StreamCreate = () => {
       [EventType.Authorization]: false,
       [EventType.Authentication]: false,
       [EventType.Configuration]: false,
+      destination_type: DestinationType.LinodeObjectStorage,
+      region: '',
     },
   });
 
