@@ -190,7 +190,7 @@ export const SubnetLinodeRow = (props: Props) => {
 
   return (
     <TableRow>
-      <TableCell component="th" scope="row">
+      <TableCell component="th" noWrap scope="row">
         {labelCell}
       </TableCell>
       <TableCell statusCell>
@@ -212,7 +212,7 @@ export const SubnetLinodeRow = (props: Props) => {
         )}
       </TableCell>
       <Hidden smDown>
-        <TableCell>
+        <TableCell noWrap>
           {getSubnetLinodeIPCellString({
             interfaceData,
             ipType: 'ipv4',
@@ -222,7 +222,7 @@ export const SubnetLinodeRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <Hidden smDown>
-        <TableCell>
+        <TableCell noWrap>
           {getIPRangesCellContents({
             interfaceData,
             ipType: 'ipv4',
@@ -234,7 +234,7 @@ export const SubnetLinodeRow = (props: Props) => {
       {flags.vpcIpv6 && (
         <>
           <Hidden smDown>
-            <TableCell>
+            <TableCell noWrap>
               {getSubnetLinodeIPCellString({
                 interfaceData,
                 ipType: 'ipv6',
@@ -244,7 +244,7 @@ export const SubnetLinodeRow = (props: Props) => {
             </TableCell>
           </Hidden>
           <Hidden smDown>
-            <TableCell>
+            <TableCell noWrap>
               {getIPRangesCellContents({
                 interfaceData,
                 ipType: 'ipv6',
@@ -265,7 +265,7 @@ export const SubnetLinodeRow = (props: Props) => {
           <ConfigInterfaceFirewallCell linodeId={linodeId} />
         )}
       </Hidden>
-      <TableCell actionCell>
+      <TableCell actionCell noWrap>
         {!isVPCLKEEnterpriseCluster && (
           <>
             {isRebootNeeded && (
