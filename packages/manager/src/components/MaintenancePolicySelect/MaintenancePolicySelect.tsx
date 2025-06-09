@@ -52,6 +52,7 @@ export const MaintenancePolicySelect = (
       disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"
+      noMarginTop
       onChange={onChange}
       options={maintenancePolicyOptions}
       renderOption={(props, option, state) => (
@@ -70,11 +71,7 @@ export const MaintenancePolicySelect = (
       sx={sx}
       textFieldProps={{
         InputProps: {
-          endAdornment: value === defaultPolicy?.id && (
-            <DefaultPolicyChip
-              tooltipText={`${maintenancePolicyOptions.find((option) => option.value === value)?.label ?? 'This'} is the account host maintenance policy default setting.`}
-            />
-          ),
+          endAdornment: value === defaultPolicy?.id && <DefaultPolicyChip />,
         },
         tooltipText: optionsTooltipText,
         tooltipWidth: 410,

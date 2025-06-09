@@ -1,23 +1,28 @@
 import { useRegionQuery } from '@linode/queries';
-import { BetaChip, Paper, Stack, Typography } from '@linode/ui';
+import { BetaChip, Notice, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useAllTypes } from 'src/queries/types';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 
 export const MaintenancePolicy = () => {
-  const { control, watch } = useFormContext<LinodeCreateFormValues>();
+  const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const selectedRegion = watch('region');
+  const selectedRegion = useWatch({ name: 'region' });
   const { data: region } = useRegionQuery(selectedRegion);
-
+  const selectedType = useWatch({ name: 'type' });
+  const { data: types } = useAllTypes();
   const flags = useFlags();
+
+  const isGPUPlan =
+    types?.find((type) => type.id === selectedType)?.class === 'gpu';
 
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
@@ -40,6 +45,12 @@ export const MaintenancePolicy = () => {
           </Link>
           .
         </Typography>
+        {isGPUPlan && (
+          <Notice variant="warning">
+            GPU plan does not support live migration and will perform a warm
+            migration and then cold migration as fallbacks.
+          </Notice>
+        )}
         <Controller
           control={control}
           name="maintenance_policy_id"
