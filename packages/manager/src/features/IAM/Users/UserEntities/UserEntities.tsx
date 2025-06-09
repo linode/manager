@@ -10,7 +10,7 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
+import { useUserRoles } from 'src/queries/iam/iam';
 
 import {
   ERROR_STATE_TEXT,
@@ -27,7 +27,8 @@ export const UserEntities = () => {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useAccountUserPermissions(username ?? '');
+  } = useUserRoles(username ?? '');
+
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles

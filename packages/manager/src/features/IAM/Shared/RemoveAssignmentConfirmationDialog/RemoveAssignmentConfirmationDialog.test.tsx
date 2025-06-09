@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
@@ -26,17 +26,17 @@ const props = {
 };
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
   const actual = await vi.importActual<any>('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
@@ -52,7 +52,7 @@ const mockDeleteUserRole = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
     ...(await vi.importActual<any>('@linode/api-v4')),
-    updateUserPermissions: (username: string, data: any) => {
+    updateUserRoles: (username: string, data: any) => {
       mockDeleteUserRole(data);
       return Promise.resolve(props);
     },
@@ -104,7 +104,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('should allow remove the assignment', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: {
         account_access: ['account_linode_admin', 'account_admin'],
         entity_access: [
@@ -117,8 +117,8 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       },
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     await renderWithThemeAndRouter(

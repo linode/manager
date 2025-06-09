@@ -12,9 +12,9 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
 } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
@@ -45,24 +45,23 @@ export const ChangeRoleForEntityDrawer = ({
     from: '/iam/users/$username',
   });
 
-  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
-    useAccountPermissions();
+  const { data: accountRoles, isLoading: accountPermissionsLoading } =
+    useAccountRoles();
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
 
-    return getAllRoles(accountPermissions).filter(
+    return getAllRoles(accountRoles).filter(
       (el) => el.entity_type === role?.entity_type && el.access === role?.access
     );
-  }, [accountPermissions, role]);
+  }, [accountRoles, role]);
 
   const {
     control,
@@ -83,12 +82,12 @@ export const ChangeRoleForEntityDrawer = ({
 
   // Get the selected role based on the `selectedOptions`
   const selectedRole = React.useMemo(() => {
-    if (!selectedOptions || !accountPermissions) {
+    if (!selectedOptions || !accountRoles) {
       return null;
     }
 
-    return getRoleByName(accountPermissions, selectedOptions.value);
-  }, [selectedOptions, accountPermissions]);
+    return getRoleByName(accountRoles, selectedOptions.value);
+  }, [selectedOptions, accountRoles]);
 
   const onSubmit = async (data: { roleName: ExtendedEntityRole }) => {
     if (role?.role_name === data.roleName.label) {
@@ -109,7 +108,7 @@ export const ChangeRoleForEntityDrawer = ({
         newRole
       );
 
-      await updateUserPermissions({
+      await updateUserRoles({
         ...assignedRoles!,
         entity_access: updatedEntityRoles,
       });

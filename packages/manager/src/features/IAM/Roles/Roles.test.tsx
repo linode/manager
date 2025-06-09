@@ -1,25 +1,27 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { RolesLanding } from './Roles';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual('src/queries/iam/iam');
+  const actual = await vi.importActual<any>('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
   };
 });
 
 vi.mock('src/features/IAM/Shared/utilities', async () => {
-  const actual = await vi.importActual('src/features/IAM/Shared/utilities');
+  const actual = await vi.importActual<any>(
+    'src/features/IAM/Shared/utilities'
+  );
   return {
     ...actual,
     mapAccountPermissionsToRoles: vi.fn(),
@@ -32,7 +34,7 @@ beforeEach(() => {
 
 describe('RolesLanding', () => {
   it('renders loading state when permissions are loading', async () => {
-    queryMocks.useAccountPermissions.mockReturnValue({
+    queryMocks.useAccountRoles.mockReturnValue({
       data: null,
       isLoading: true,
     });
@@ -43,8 +45,8 @@ describe('RolesLanding', () => {
   });
 
   it('renders roles table when permissions are loaded', async () => {
-    const mockPermissions = accountPermissionsFactory.build();
-    queryMocks.useAccountPermissions.mockReturnValue({
+    const mockPermissions = accountRolesFactory.build();
+    queryMocks.useAccountRoles.mockReturnValue({
       data: mockPermissions,
       isLoading: false,
     });

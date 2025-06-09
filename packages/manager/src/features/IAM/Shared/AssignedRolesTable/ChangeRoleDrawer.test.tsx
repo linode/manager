@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
@@ -12,17 +12,17 @@ import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
   const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
@@ -74,7 +74,7 @@ const mockUpdateUserRole = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
     ...(await vi.importActual<any>('@linode/api-v4')),
-    updateUserPermissions: (username: string, data: any) => {
+    updateUserRoles: (username: string, data: any) => {
       mockUpdateUserRole(data);
       return Promise.resolve(props);
     },
@@ -122,7 +122,7 @@ describe('ChangeRoleDrawer', () => {
   });
 
   it('should allow changing role', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: {
         account_access: ['account_linode_admin', 'account_admin'],
         entity_access: [
@@ -135,8 +135,8 @@ describe('ChangeRoleDrawer', () => {
       },
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({

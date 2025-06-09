@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
@@ -23,23 +23,23 @@ const mockEntities = [
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
   useSearch: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+  const actual = await vi.importActual('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
@@ -66,8 +66,8 @@ describe('UserRoles', () => {
   });
 
   it('should display no roles text if no roles are assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: [],
         entity_access: [],
       }),
@@ -83,15 +83,15 @@ describe('UserRoles', () => {
   });
 
   it('should display table if no entity access roles are assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: ['account_admin'],
         entity_access: [],
       }),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -109,8 +109,8 @@ describe('UserRoles', () => {
   });
 
   it('should display table if no account access roles are assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: [],
         entity_access: [
           {
@@ -122,8 +122,8 @@ describe('UserRoles', () => {
       }),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -136,8 +136,8 @@ describe('UserRoles', () => {
   });
 
   it('should exclude the role from the table if the assigned entity (firewall with id 2) was removed', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: ['account_admin'],
         entity_access: [
           {
@@ -149,8 +149,8 @@ describe('UserRoles', () => {
       }),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -163,12 +163,12 @@ describe('UserRoles', () => {
     expect(screen.queryByText('firewall_admin')).not.toBeInTheDocument();
   });
   it('should display roles and menu when data is available', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
@@ -189,7 +189,7 @@ describe('UserRoles', () => {
   });
 
   it('should show error state when api fails', () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: null,
       error: [{ reason: 'An unexpected error occurred' }],
       isLoading: false,

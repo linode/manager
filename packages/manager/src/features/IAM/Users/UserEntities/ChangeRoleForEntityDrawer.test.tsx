@@ -2,8 +2,8 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
@@ -11,17 +11,17 @@ import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 import type { EntitiesRole } from '../../Shared/types';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
   useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('src/queries/iam/iam', async () => {
   const actual = await vi.importActual<any>('src/queries/iam/iam');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
@@ -52,8 +52,8 @@ const props = {
 const mockUpdateUserRole = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
-    ...(await vi.importActual<any>('@linode/api-v4')),
-    updateUserPermissions: (username: string, data: any) => {
+    ...(await vi.importActual('@linode/api-v4')),
+    updateUserRoles: (username: string, data: any) => {
       mockUpdateUserRole(data);
       return Promise.resolve(props);
     },
@@ -78,8 +78,8 @@ describe('ChangeRoleForEntityDrawer', () => {
   });
 
   it('should allow changing role for entity from "linode_contributor" to "linode_viewer"', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build({
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build({
         account_access: ['account_linode_admin', 'account_admin'],
         entity_access: [
           {
@@ -91,8 +91,8 @@ describe('ChangeRoleForEntityDrawer', () => {
       }),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     await renderWithThemeAndRouter(<ChangeRoleForEntityDrawer {...props} />);

@@ -18,7 +18,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
+import { useUserRoles } from 'src/queries/iam/iam';
 
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
@@ -94,7 +94,7 @@ export const AssignedEntitiesTable = () => {
     data: assignedRoles,
     error: assignedRolesError,
     isLoading: assignedRolesLoading,
-  } = useAccountUserPermissions(username ?? '');
+  } = useUserRoles(username ?? '');
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
