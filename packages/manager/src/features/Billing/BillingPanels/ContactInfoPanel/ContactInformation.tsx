@@ -249,6 +249,9 @@ export const ContactInformation = React.memo((props: Props) => {
         )}
       </BillingPaper>
       <BillingContactDrawer
+        // This is currently in use by the EmailBounceNotification, which navigates
+        // the user to the Account page and opens the drawer to prompt them to change
+        // their billing email address.
         focusEmail={Boolean(focusEmail)}
         onClose={() => {
           navigate({
