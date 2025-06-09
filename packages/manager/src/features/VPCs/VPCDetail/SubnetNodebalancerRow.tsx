@@ -166,9 +166,9 @@ export const SubnetNodeBalancerRow = ({
 
 export const SubnetNodebalancerTableRowHead = (
   <TableRow>
-    <TableCell sx={{ width: '16.25%' }}>NodeBalancer</TableCell>
-    <TableCell sx={{ width: '24%' }}>Backend Status</TableCell>
-    <TableCell sx={{ width: '16%' }}>VPC IPv4 Range</TableCell>
+    <TableCell sx={{ width: '24%' }}>NodeBalancer</TableCell>
+    <TableCell sx={{ width: '23%' }}>Backend Status</TableCell>
+    <TableCell sx={{ width: '14.25%' }}>VPC IPv4 Range</TableCell>
     <TableCell>Firewalls</TableCell>
   </TableRow>
 );
