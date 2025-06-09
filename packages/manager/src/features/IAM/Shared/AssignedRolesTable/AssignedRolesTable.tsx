@@ -8,16 +8,14 @@ import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTab
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-} from 'src/queries/iam/iam';
+import { useAccountRoles, useUserRoles } from 'src/queries/iam/iam';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -126,19 +124,20 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
-    useAccountPermissions();
+  const { data: accountRoles, isLoading: accountPermissionsLoading } =
+    useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
-  const { data: assignedRoles, isLoading: assignedRolesLoading } =
-    useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
+    username ?? ''
+  );
 
   const { filterableOptions, roles } = React.useMemo(() => {
-    if (!assignedRoles || !accountPermissions) {
+    if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
     }
 
     const userRoles = combineRoles(assignedRoles);
-    let roles = mapRolesToPermissions(accountPermissions, userRoles);
+    let roles = mapRolesToPermissions(accountRoles, userRoles);
 
     const filterableOptions = [
       ALL_ROLES_OPTION,
@@ -152,7 +151,7 @@ export const AssignedRolesTable = () => {
     }
 
     return { filterableOptions, roles };
-  }, [assignedRoles, accountPermissions, entities]);
+  }, [assignedRoles, accountRoles, entities]);
 
   const [query, setQuery] = React.useState('');
 
@@ -407,7 +406,7 @@ export const AssignedRolesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
       />
-      {filteredAndSortedRolesCount > pagination.pageSize && (
+      {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter
           count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
