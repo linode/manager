@@ -302,45 +302,34 @@ export const darkTheme: ThemeOptions = {
           padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
+          // To remove the double border of listbox and input
           '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"], &[data-popper-placement="top"]':
+              {
+                '.MuiAutocomplete-listbox': {
+                  padding: 0,
+                  '& .MuiAutocomplete-groupLabel': {
+                    color: Dropdown.Text.Default,
+                    font: Typography.Heading.Overline,
+                    textTransform: Typography.Heading.OverlineTextCase,
+                  },
+                },
+                '.MuiAutocomplete-option': {
+                  padding: `${Spacing.S6} ${Spacing.S12} !important`,
+                  svg: {
+                    height: Spacing.S16,
+                    width: Spacing.S16,
+                  },
+                },
+              },
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                padding: `${Spacing.S6} ${Spacing.S12} !important`,
-                svg: {
-                  height: Spacing.S16,
-                  width: Spacing.S16,
-                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                padding: `${Spacing.S6} ${Spacing.S12} !important`,
-                svg: {
-                  height: Spacing.S16,
-                  width: Spacing.S16,
-                },
               },
             },
           },
