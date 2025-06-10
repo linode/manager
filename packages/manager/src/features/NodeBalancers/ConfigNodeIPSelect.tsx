@@ -79,10 +79,9 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
 
   let options: NodeOption[] = [];
 
-  if (region) {
+  if (region && !vpcId) {
     options = getPrivateIPOptions(linodesData);
-  }
-  if (region && vpcId) {
+  } else if (region && vpcId && subnetId) {
     options = getVPCIPOptions(linodeIpsData, linodesData, subnetsData?.data);
   }
 
@@ -92,7 +91,7 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
     } else if (vpcId && !subnetId) {
       return 'No options - please ensure you have selected a Subnet from the selected VPC';
     } else
-      return 'No options - please ensure you have at least 1 Linode in the selected Subnet.';
+      return 'No options - please ensure you have at least 1 Linode in the selected VPC.';
   }, [vpcId, subnetId]);
 
   return (

@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormControlLabel,
   InputAdornment,
+  Notice,
   Paper,
   Stack,
   TextField,
@@ -79,6 +80,10 @@ export const VPCPanel = (props: Props) => {
       <Stack spacing={2}>
         <Typography variant="h2">VPC</Typography>
         <Stack spacing={1.5}>
+          <Typography>
+            Select a VPC if your NodeBalancer will use backend nodes within a
+            VPC.
+          </Typography>
           <Autocomplete
             disabled={disabled}
             errorText={vpcError}
@@ -87,7 +92,7 @@ export const VPCPanel = (props: Props) => {
                 ? 'VPC is not available in the selected region.'
                 : undefined
             }
-            label="Assign VPC"
+            label="VPC"
             loading={isVPCLoading}
             noMarginTop
             noOptionsText={
@@ -111,11 +116,20 @@ export const VPCPanel = (props: Props) => {
             placeholder="None"
             textFieldProps={{
               tooltipText: NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
+              tooltipPosition: 'right',
             }}
             value={vpcSelected ?? null}
           />
           {vpcSelected && (
-            <>
+            <Stack>
+              <Notice
+                spacingBottom={16}
+                spacingTop={8}
+                text={
+                  'Once a NodeBalancer is created, its VPC configuration cannot be changed.'
+                }
+                variant="warning"
+              />
               <Autocomplete
                 errorText={
                   errors?.find((err) => err.field?.includes('subnet_id'))
@@ -128,7 +142,16 @@ export const VPCPanel = (props: Props) => {
                   subnetChange(subnet ? [subnet.id] : null)
                 }
                 options={vpcSelected?.subnets ?? []}
-                placeholder="Select Subnet"
+                placeholder="Subnet"
+                textFieldProps={{
+                  helperText: (
+                    <Typography mb={2}>
+                      Select a subnet in which to allocate the VPC CIDR for the
+                      NodeBalancer.
+                    </Typography>
+                  ),
+                  helperTextPosition: 'top',
+                }}
                 value={
                   vpcSelected?.subnets.find(
                     (subnet) => subnet.id === subnetsSelected?.[0].subnet_id
@@ -153,6 +176,8 @@ export const VPCPanel = (props: Props) => {
                           onChange={(_, checked) => {
                             if (checked) {
                               ipv4Change(null, 0);
+                            } else {
+                              ipv4Change('', 0);
                             }
                             toggleAutoAssignIPv4Range(checked);
                           }}
@@ -166,12 +191,12 @@ export const VPCPanel = (props: Props) => {
                           flexDirection="row"
                         >
                           <Typography noWrap={!isSmallBp}>
-                            Auto-assign a /30 CIDR in each subnet for this
-                            NodeBalancer
+                            Auto-assign a /30 CIDR for this NodeBalancer
                           </Typography>
                           <TooltipIcon
                             status="help"
                             text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                            tooltipPosition="right"
                           />
                         </Box>
                       }
@@ -193,6 +218,7 @@ export const VPCPanel = (props: Props) => {
                         }
                         // eslint-disable-next-line sonarjs/no-hardcoded-ip
                         placeholder="10.0.0.24"
+                        required
                         slotProps={{
                           input: {
                             endAdornment: (
@@ -207,7 +233,7 @@ export const VPCPanel = (props: Props) => {
                     ))}
                 </>
               )}
-            </>
+            </Stack>
           )}
         </Stack>
       </Stack>

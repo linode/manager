@@ -537,15 +537,6 @@ const NodeBalancerCreate = () => {
         }));
         return { ...rest, vpcs: updatedVpcs };
       });
-      return;
-    }
-    if (ipv4Range === '') {
-      // removing vpcs from the payload if the ipv4Range field is cleared
-      setNodeBalancerFields((prev) => {
-        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
-        const { vpcs: _, ...rest } = prev;
-        return { ...rest };
-      });
     } else {
       const updatedVpcs = nodeBalancerFields?.vpcs?.map((vpc, idx) => {
         if (idx === index) {
