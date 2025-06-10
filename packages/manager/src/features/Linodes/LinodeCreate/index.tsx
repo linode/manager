@@ -146,7 +146,11 @@ export const LinodeCreate = () => {
             })
           : await createLinode(payload);
 
-      navigate({ to: `/linodes/$linodeId`, params: { linodeId: linode.id } });
+      navigate({
+        to: `/linodes/$linodeId`,
+        params: { linodeId: linode.id },
+        search: undefined,
+      });
 
       enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
         variant: 'success',

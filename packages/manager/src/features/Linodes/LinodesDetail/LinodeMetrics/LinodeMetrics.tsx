@@ -1,5 +1,6 @@
 import { usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
@@ -47,3 +48,9 @@ const LinodeMetrics = (props: Props) => {
 };
 
 export default LinodeMetrics;
+
+export const linodeMetricsLazyRoute = createLazyRoute(
+  '/linodes/$linodeId/metrics'
+)({
+  component: LinodeMetrics,
+});

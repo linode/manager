@@ -3,6 +3,16 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
+interface LinodeDetailSearchParams {
+  delete?: boolean;
+  migrate?: boolean;
+  rebuild?: boolean;
+  rescue?: boolean;
+  resize?: boolean;
+  selectedImageId?: string;
+  upgrade?: boolean;
+}
+
 export const linodesRoute = createRoute({
   component: LinodesRoute,
   getParentRoute: () => rootRoute,
@@ -32,6 +42,7 @@ const linodesDetailRoute = createRoute({
   parseParams: (params) => ({
     linodeId: Number(params.linodeId),
   }),
+  validateSearch: (search: LinodeDetailSearchParams) => search,
   path: '$linodeId',
 }).lazy(() =>
   import('src/features/Linodes/LinodesDetail/linodeDetailLazyRoute').then(
@@ -47,6 +58,19 @@ const linodesDetailAnalyticsRoute = createRoute({
 const linodesDetailNetworkingRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'networking',
+});
+
+const linodesDetailNetworkingInterfacesRoute = createRoute({
+  getParentRoute: () => linodesDetailNetworkingRoute,
+  path: 'interfaces',
+});
+
+const linodesDetailNetworkingInterfacesDetailRoute = createRoute({
+  getParentRoute: () => linodesDetailNetworkingInterfacesRoute,
+  path: '$interfaceId',
+  parseParams: (params) => ({
+    interfaceId: Number(params.interfaceId),
+  }),
 });
 
 const linodesDetailStorageRoute = createRoute({
@@ -74,6 +98,16 @@ const linodesDetailSettingsRoute = createRoute({
   path: 'settings',
 });
 
+const linodesDetailAlertsRoute = createRoute({
+  getParentRoute: () => linodesDetailRoute,
+  path: 'alerts',
+});
+
+const linodesDetailMetricsRoute = createRoute({
+  getParentRoute: () => linodesDetailRoute,
+  path: 'metrics',
+});
+
 const linodesDetailUpgradeInterfacesRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
   path: 'upgrade-interfaces',
@@ -84,12 +118,17 @@ export const linodesRouteTree = linodesRoute.addChildren([
   linodesCreateRoute,
   linodesDetailRoute.addChildren([
     linodesDetailAnalyticsRoute,
-    linodesDetailNetworkingRoute,
+    linodesDetailNetworkingRoute.addChildren([
+      linodesDetailNetworkingInterfacesRoute,
+      linodesDetailNetworkingInterfacesDetailRoute,
+    ]),
     linodesDetailStorageRoute,
     linodesDetailConfigurationsRoute,
     linodesDetailBackupsRoute,
     linodesDetailActivityRoute,
     linodesDetailSettingsRoute,
     linodesDetailUpgradeInterfacesRoute,
+    linodesDetailAlertsRoute,
+    linodesDetailMetricsRoute,
   ]),
 ]);
