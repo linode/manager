@@ -17,15 +17,15 @@ export const Alerts = () => {
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
+        flags.aclpIntegration?.alerts && isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : undefined
       }
       subHeading="Receive notifications through system alerts when metric thresholds are exceeded."
       summaryProps={{ sx: { p: 0 } }}
     >
-      {flags.aclpIntegration && <AclpPreferenceToggle type="alerts" />}
-      {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
+      {flags.aclpIntegration?.alerts && <AclpPreferenceToggle type="alerts" />}
+      {flags.aclpIntegration?.alerts && isAclpAlertsPreferenceBeta ? (
         <Notice variant="info">ACLP Alerts coming soon...</Notice>
       ) : (
         <LinodeSettingsAlertsPanel />
