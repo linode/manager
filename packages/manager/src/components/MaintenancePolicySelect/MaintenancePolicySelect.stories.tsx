@@ -1,30 +1,35 @@
+import { Box } from '@linode/ui';
+import React, { useState } from 'react';
+
+import { maintenancePolicyOptions } from './constants';
 import { MaintenancePolicySelect } from './MaintenancePolicySelect';
 
 import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { Meta, StoryObj } from '@storybook/react';
 
-type MaintenancePolicyOption = {
-  description: string;
-  label: string;
-  value: MaintenancePolicyId;
-};
-
-const mockPolicies: MaintenancePolicyOption[] = [
-  {
-    description: 'Description 1',
-    label: 'Label 1',
-    value: 1,
-  },
-  {
-    description: 'Description 2',
-    label: 'Label 2',
-    value: 2,
-  },
-];
-
 const meta: Meta<typeof MaintenancePolicySelect> = {
-  title: 'Components/MaintenancePolicySelect',
+  title: 'Components/Selects/MaintenancePolicySelect',
   component: MaintenancePolicySelect,
+  decorators: [
+    (Story) => (
+      <Box p={2}>
+        <Story />
+      </Box>
+    ),
+    (Story, context) => {
+      const [value, setValue] = useState<MaintenancePolicyId>(1);
+      return (
+        <Story
+          args={{
+            ...context.args,
+            value,
+            onChange: (_, option) => setValue(option.value),
+            options: maintenancePolicyOptions,
+          }}
+        />
+      );
+    },
+  ],
 };
 
 export default meta;
@@ -33,9 +38,6 @@ type Story = StoryObj<typeof MaintenancePolicySelect>;
 export const Default: Story = {
   args: {
     defaultPolicyId: 1,
-    value: 1,
-    onChange: () => {},
-    options: mockPolicies,
   },
 };
 
@@ -54,9 +56,19 @@ export const WithError: Story = {
 };
 
 export const WithoutDefault: Story = {
-  args: {
-    value: 2,
-    onChange: () => {},
-    options: mockPolicies,
-  },
+  decorators: [
+    (Story, context) => {
+      const [value, setValue] = useState<MaintenancePolicyId>(2);
+      return (
+        <Story
+          args={{
+            ...context.args,
+            value,
+            onChange: (_, option) => setValue(option.value),
+            options: maintenancePolicyOptions,
+          }}
+        />
+      );
+    },
+  ],
 };

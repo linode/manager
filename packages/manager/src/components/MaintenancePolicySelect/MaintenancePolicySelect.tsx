@@ -2,31 +2,16 @@ import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
 import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import {
+  maintenancePolicyOptions,
+  MIGRATE_TOOLTIP_TEXT,
+  POWER_OFF_TOOLTIP_TEXT,
+} from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
 
+import type { MaintenancePolicyOption } from './constants';
 import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { SelectProps, SxProps, Theme } from '@linode/ui';
-
-type MaintenancePolicyOption = {
-  description: string;
-  label: string;
-  value: MaintenancePolicyId;
-};
-
-const maintenancePolicyOptions: MaintenancePolicyOption[] = [
-  {
-    label: 'Migrate',
-    value: 1,
-    description:
-      'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
-  },
-  {
-    label: 'Power Off / Power On',
-    value: 2,
-    description:
-      'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
-  },
-];
 
 interface MaintenancePolicySelectProps {
   defaultPolicyId?: MaintenancePolicyId;
@@ -38,6 +23,17 @@ interface MaintenancePolicySelectProps {
   textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
   value: MaintenancePolicyId;
 }
+
+const optionsTooltipText = (
+  <Stack spacing={2}>
+    <Typography>
+      <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}
+    </Typography>
+    <Typography>
+      <strong>Power Off / Power On:</strong> {POWER_OFF_TOOLTIP_TEXT}
+    </Typography>
+  </Stack>
+);
 
 export const MaintenancePolicySelect = (
   props: MaintenancePolicySelectProps
@@ -73,7 +69,7 @@ export const MaintenancePolicySelect = (
         const { key } = props;
         return (
           <li {...props} key={key}>
-            <Stack alignItems="center" direction="row" gap={1}>
+            <Stack alignItems="center" direction="row" gap={1} width="100%">
               <Stack>
                 <b>{option.label}</b>
                 {option.description}
@@ -100,23 +96,3 @@ export const MaintenancePolicySelect = (
     />
   );
 };
-
-const optionsTooltipText = (
-  <Stack spacing={2}>
-    <Typography>
-      <strong>Migrate:</strong> Migrates the Linode to a new host while it is
-      still running. During the migration, the instance remains fully
-      operational, though there is a temporary performance impact. For most
-      maintenance events and Linode types, no reboot is required after the
-      migration completes. If a reboot is required, it is automatically
-      performed.
-    </Typography>
-    <Typography>
-      <strong>Power Off / Power On:</strong> Powers off the Linode at the start
-      of the maintenance event and reboots it once the maintenance finishes.
-      Depending on the maintenance event and Linode type, the Linode may or may
-      not remain on the same host. Do not select this option for Linodes that
-      are used for container orchestration solutions like Kubernetes.
-    </Typography>
-  </Stack>
-);
