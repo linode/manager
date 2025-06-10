@@ -13,6 +13,7 @@ import type {
 export const useAccountUserPermissions = (username?: string) => {
   return useQuery<IamUserPermissions, APIError[]>({
     ...iamQueries.user(username ?? '')._ctx.permissions,
+    refetchOnMount: 'always',
     enabled: Boolean(username),
   });
 };
@@ -30,7 +31,7 @@ export const useAccountUserPermissionsMutation = (username: string) => {
   const queryClient = useQueryClient();
   return useMutation<IamUserPermissions, APIError[], IamUserPermissions>({
     mutationFn: (data) => updateUserPermissions(username, data),
-    onSuccess(role) {
+    onSuccess: (role) => {
       queryClient.setQueryData<IamUserPermissions>(
         iamQueries.user(username)._ctx.permissions.queryKey,
         role

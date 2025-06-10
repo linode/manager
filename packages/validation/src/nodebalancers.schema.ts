@@ -1,6 +1,6 @@
-import { array, boolean, lazy, mixed, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
 
-import { IP_EITHER_BOTH_NOT_NEITHER, vpcsValidateIP } from './vpcs.schema';
+import { vpcsValidateIP } from './vpcs.schema';
 
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
@@ -265,79 +265,40 @@ const clientUdpSessThrottle = number()
   )
   .typeError('UDP Session Throttle must be a number.');
 
-const createNodeBalancerVPCsSchema = object().shape(
-  {
-    subnet_id: number()
-      .typeError('Subnet ID must be a number.')
-      .required('Subnet ID is required.'),
-    ipv4_range: string().when('ipv6_range', {
-      is: (value: unknown) =>
-        value === '' || value === null || value === undefined,
-      then: (schema) =>
-        schema
-          .required(IP_EITHER_BOTH_NOT_NEITHER)
-          .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING)
-          .test({
-            name: 'IPv4 CIDR format',
-            message: 'The IPv4 range must be in CIDR format.',
-            test: (value) =>
-              vpcsValidateIP({
-                value,
-                shouldHaveIPMask: true,
-                mustBeIPMask: false,
-              }),
-          }),
-      otherwise: (schema) =>
-        lazy((value: string | undefined) => {
-          switch (typeof value) {
-            case 'string':
-              return schema
-                .notRequired()
-                .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING)
-                .test({
-                  name: 'IPv4 CIDR format',
-                  message: 'The IPv4 range must be in CIDR format.',
-                  test: (value) =>
-                    vpcsValidateIP({
-                      value,
-                      shouldHaveIPMask: true,
-                      mustBeIPMask: false,
-                    }),
-                });
-
-            case 'undefined':
-              return schema.notRequired().nullable();
-
-            default:
-              return schema.notRequired().nullable();
-          }
+const createNodeBalancerVPCsSchema = object().shape({
+  subnet_id: number()
+    .typeError('Subnet ID must be a number.')
+    .required('Subnet ID is required.'),
+  ipv4_range: string()
+    .notRequired()
+    .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING)
+    .test({
+      name: 'IPv4 CIDR format',
+      message: 'The IPv4 range must be in CIDR format.',
+      test: (value) =>
+        !value ||
+        vpcsValidateIP({
+          value,
+          shouldHaveIPMask: true,
+          mustBeIPMask: false,
         }),
     }),
-    ipv6_range: string().when('ipv4_range', {
-      is: (value: unknown) =>
-        value === '' || value === null || value === undefined,
-      then: (schema) =>
-        schema
-          .required(IP_EITHER_BOTH_NOT_NEITHER)
-          .matches(PRIVATE_IPV6_REGEX, 'Must be a valid private IPv6 address.')
-          .test({
-            name: 'valid-ipv6-range',
-            message:
-              'Must be a valid private IPv6 range, e.g. fd12:3456:789a:1::1/64.',
-            test: (value) =>
-              vpcsValidateIP({
-                value,
-                shouldHaveIPMask: true,
-                mustBeIPMask: false,
-              }),
-          }),
+  ipv6_range: string()
+    .notRequired()
+    .matches(PRIVATE_IPV6_REGEX, 'Must be a valid private IPv6 address.')
+    .test({
+      name: 'valid-ipv6-range',
+      message:
+        'Must be a valid private IPv6 range, e.g. fd12:3456:789a:1::1/64.',
+      test: (value) =>
+        !value ||
+        vpcsValidateIP({
+          value,
+          shouldHaveIPMask: true,
+          mustBeIPMask: false,
+        }),
     }),
-  },
-  [
-    ['ipv4_range', 'ipv6_range'],
-    ['ipv6_range', 'ipv4_range'],
-  ],
-);
+});
 
 export const NodeBalancerSchema = object({
   label: string()

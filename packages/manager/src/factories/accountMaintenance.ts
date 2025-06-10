@@ -45,8 +45,16 @@ export const accountMaintenanceFactory =
     type: Factory.each(() =>
       pickRandom(['cold_migration', 'live_migration', 'reboot'])
     ),
-    when: Factory.each(() => randomDate().toISOString()),
-    not_before: Factory.each(() => randomDate().toISOString()),
-    start_time: Factory.each(() => randomDate().toISOString()),
-    complete_time: Factory.each(() => randomDate().toISOString()),
+    when: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    not_before: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    start_time: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
+    complete_time: Factory.each(
+      () => randomDate().toISO({ includeOffset: false }) ?? ''
+    ),
   });

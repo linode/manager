@@ -19,11 +19,18 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
-import { PENDING_MAINTENANCE_FILTER } from './utilities';
+import {
+  COMPLETED_MAINTENANCE_FILTER,
+  IN_PROGRESS_MAINTENANCE_FILTER,
+  maintenanceDateColumnMap,
+  PENDING_MAINTENANCE_FILTER,
+  SCHEDULED_MAINTENANCE_FILTER,
+} from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
 
@@ -34,6 +41,9 @@ const headersForCSVDownload = [
   { key: 'entity.type', label: 'Entity Type' },
   { key: 'entity.id', label: 'Entity ID' },
   { key: 'when', label: 'Date' },
+  { key: 'not_before', label: 'Not Before' },
+  { key: 'start_time', label: 'Start Date' },
+  { key: 'complete_time', label: 'End Date' },
   { key: 'type', label: 'Type' },
   { key: 'status', label: 'Status' },
   { key: 'reason', label: 'Reason' },
@@ -41,12 +51,18 @@ const headersForCSVDownload = [
 
 const useStyles = makeStyles()(() => ({
   cell: {
-    width: '12%',
+    width: '10%',
   },
 }));
 
+export type MaintenanceTableType =
+  | 'completed'
+  | 'in progress'
+  | 'pending' // TODO VM & Host Maintenance: Remove pending type after GA
+  | 'scheduled';
+
 interface Props {
-  type: 'completed' | 'pending';
+  type: MaintenanceTableType;
 }
 
 export const MaintenanceTable = ({ type }: Props) => {
@@ -54,6 +70,7 @@ export const MaintenanceTable = ({ type }: Props) => {
   const { classes } = useStyles();
   const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
   const formattedDate = useFormattedDate();
+  const flags = useFlags();
 
   const { handleOrderChange, order, orderBy } = useOrder(
     {
@@ -68,7 +85,9 @@ export const MaintenanceTable = ({ type }: Props) => {
    * We use a different API filter depending on the table's `type`
    */
   const filters: Record<Props['type'], Filter> = {
-    completed: { status: 'completed' },
+    completed: COMPLETED_MAINTENANCE_FILTER,
+    'in progress': IN_PROGRESS_MAINTENANCE_FILTER,
+    scheduled: SCHEDULED_MAINTENANCE_FILTER,
     pending: PENDING_MAINTENANCE_FILTER,
   };
 
@@ -117,7 +136,11 @@ export const MaintenanceTable = ({ type }: Props) => {
 
     if (data) {
       return data.data.map((item: AccountMaintenance) => (
-        <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
+        <MaintenanceTableRow
+          key={`${item.entity.id}-${item.type}`}
+          maintenance={item}
+          tableType={type}
+        />
       ));
     }
 
@@ -162,28 +185,73 @@ export const MaintenanceTable = ({ type }: Props) => {
       <Table aria-label={`List of ${type} maintenance`}>
         <TableHead>
           <TableRow>
-            <TableCell className={classes.cell}>Entity</TableCell>
-            <TableCell className={classes.cell}>Label</TableCell>
-            <TableSortCell
-              active={orderBy === 'when'}
-              className={classes.cell}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="when"
-            >
-              Date
-            </TableSortCell>
-            <Hidden mdDown>
-              <TableSortCell
-                active={orderBy === 'when'}
-                className={classes.cell}
-                direction={order}
-                handleClick={handleOrderChange}
-                label="when"
-              >
-                When
-              </TableSortCell>
-            </Hidden>
+            {flags.vmHostMaintenance?.enabled && (
+              <>
+                <TableCell className={classes.cell} style={{ width: '5%' }}>
+                  Entity
+                </TableCell>
+                <TableCell
+                  className={classes.cell}
+                  style={
+                    flags.vmHostMaintenance?.enabled && type === 'in progress'
+                      ? { width: '30%' }
+                      : {}
+                  }
+                >
+                  Label
+                </TableCell>
+                {(type === 'scheduled' || type === 'completed') && (
+                  <Hidden mdDown>
+                    <TableSortCell
+                      active={orderBy === 'when'}
+                      className={classes.cell}
+                      direction={order}
+                      handleClick={handleOrderChange}
+                      label="when"
+                    >
+                      When
+                    </TableSortCell>
+                  </Hidden>
+                )}
+                <TableSortCell
+                  active={orderBy === maintenanceDateColumnMap[type][0]}
+                  className={classes.cell}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={maintenanceDateColumnMap[type][0]}
+                >
+                  {maintenanceDateColumnMap[type][1]}
+                </TableSortCell>
+              </>
+            )}
+
+            {!flags.vmHostMaintenance?.enabled && (
+              <>
+                <TableCell className={classes.cell}>Entity</TableCell>
+                <TableCell className={classes.cell}>Label</TableCell>
+                <TableSortCell
+                  active={orderBy === 'when'}
+                  className={classes.cell}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label="when"
+                >
+                  Date
+                </TableSortCell>
+                <Hidden mdDown>
+                  <TableSortCell
+                    active={orderBy === 'when'}
+                    className={classes.cell}
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    label="when"
+                  >
+                    When
+                  </TableSortCell>
+                </Hidden>
+              </>
+            )}
+
             <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
@@ -195,15 +263,19 @@ export const MaintenanceTable = ({ type }: Props) => {
                 Type
               </TableSortCell>
             </Hidden>
-            <TableSortCell
-              active={orderBy === 'status'}
-              className={classes.cell}
-              direction={order}
-              handleClick={handleOrderChange}
-              label="status"
-            >
-              Status
-            </TableSortCell>
+            {(!flags.vmHostMaintenance?.enabled ||
+              type === 'scheduled' ||
+              type === 'completed') && (
+              <TableSortCell
+                active={orderBy === 'status'}
+                className={classes.cell}
+                direction={order}
+                handleClick={handleOrderChange}
+                label="status"
+              >
+                Status
+              </TableSortCell>
+            )}
             <Hidden lgDown>
               <TableCell style={{ width: '40%' }}>Reason</TableCell>
             </Hidden>

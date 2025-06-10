@@ -8,8 +8,8 @@ import {
   Typography,
 } from '@linode/ui';
 import { styled, useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
@@ -39,7 +39,9 @@ export interface AlertRouteParams {
 }
 
 export const AlertDetail = () => {
-  const { alertId, serviceType } = useParams<AlertRouteParams>();
+  const { alertId, serviceType } = useParams({
+    from: '/alerts/definitions/detail/$serviceType/$alertId',
+  });
 
   const {
     data: alertDetails,
@@ -111,7 +113,7 @@ export const AlertDetail = () => {
     status,
     label,
     regions,
-    group,
+    scope,
   } = alertDetails;
 
   return (
@@ -169,8 +171,8 @@ export const AlertDetail = () => {
             }}
           >
             {(() => {
-              switch (group) {
-                case 'per-account':
+              switch (scope) {
+                case 'account':
                   return (
                     <Stack gap={2}>
                       <Typography variant="h2">Account</Typography>
@@ -182,7 +184,7 @@ export const AlertDetail = () => {
                     </Stack>
                   );
 
-                case 'per-entity':
+                case 'entity':
                   return (
                     <AlertResources
                       alertClass={alertClass}
@@ -192,7 +194,7 @@ export const AlertDetail = () => {
                     />
                   );
 
-                case 'per-region':
+                case 'region':
                   return (
                     <AlertRegions
                       mode="view"

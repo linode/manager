@@ -37,7 +37,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
     type,
     updated,
     updated_by: updatedBy,
-    group,
+    scope,
   } = alertDetails;
 
   const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
@@ -90,7 +90,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
           })}
         />
         <AlertDetailRow label="Last Modified By" value={updatedBy} />
-        <AlertDetailRow label="Scope" value={entityGroupMap[group]} />
+        <AlertDetailRow label="Scope" value={entityGroupMap[scope]} />
       </Grid>
     </>
   );
