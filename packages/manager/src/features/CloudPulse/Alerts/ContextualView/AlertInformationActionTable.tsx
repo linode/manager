@@ -16,8 +16,8 @@ import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { compareArrays } from '../../Utils/FilterBuilder';
+import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
-import { AlertContextualViewConfirmDialog } from './AlertContextualViewConfirmDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
@@ -255,9 +255,6 @@ export const AlertInformationActionTable = (
                             <AlertInformationActionRow
                               alert={alert}
                               handleToggle={handleToggle}
-                              isAlertActionRestricted={isAccountOrRegionLevelAlert(
-                                alert
-                              )}
                               key={alert.id}
                               status={enabledAlerts[alert.type].includes(
                                 alert.id
@@ -299,13 +296,20 @@ export const AlertInformationActionTable = (
           </Paginate>
         )}
       </OrderBy>
-      <AlertContextualViewConfirmDialog
-        alertIds={enabledAlerts}
-        entityName={entityName}
+      <AlertConfirmationDialog
         handleCancel={handleCancel}
-        handleConfirm={handleConfirm}
+        handleConfirm={() => handleConfirm(enabledAlerts)}
         isLoading={isLoading}
         isOpen={isDialogOpen}
+        message={
+          <span>
+            Are you sure you want to save these settings for {entityName}? All
+            legacy alert settings will be disabled and replaced by the new{' '}
+            <b>Alerts(Beta)</b> settings.
+          </span>
+        }
+        primaryButtonLabel="Save"
+        title="Save Alerts?"
       />
     </>
   );
