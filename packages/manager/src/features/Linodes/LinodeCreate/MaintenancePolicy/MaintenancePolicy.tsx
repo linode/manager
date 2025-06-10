@@ -61,6 +61,7 @@ export const MaintenancePolicy = () => {
                 field.onChange(item?.value);
               }}
               sx={(theme) => ({
+                '&&': { marginTop: 0 }, // Override Stack spacing rather than setting `noMarginTop` since component is used elsewhere.
                 [theme.breakpoints.up('md')]: {
                   minWidth: '480px',
                 },

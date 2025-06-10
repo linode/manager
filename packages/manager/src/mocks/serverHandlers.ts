@@ -2027,6 +2027,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
+      maintenance_policy_id: 1,
       network_helper: true,
       object_storage: 'active',
     });
@@ -3181,4 +3182,28 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...entities,
+  http.get('*/v4beta/maintenance/policies', () => {
+    return HttpResponse.json([
+      {
+        id: 1,
+        label: 'Migrate',
+        name: 'Migrate',
+        description:
+          'Maximize availability by migrating your Linode to a new host.',
+        is_default: false,
+        notification_period_sec: 86400,
+        type: 'migrate',
+      },
+      {
+        id: 2,
+        label: 'Power Off / Power On',
+        name: 'Power Off / Power On',
+        description:
+          'Maximize performance by powering off your Linode during maintenance.',
+        is_default: false,
+        notification_period_sec: 86400,
+        type: 'power on/off',
+      },
+    ]);
+  }),
 ];
