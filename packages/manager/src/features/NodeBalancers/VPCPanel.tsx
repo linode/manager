@@ -166,7 +166,7 @@ export const VPCPanel = (props: Props) => {
                     display="flex"
                     flexDirection="row"
                     sx={(theme) => ({
-                      marginLeft: '2px',
+                      marginLeft: theme.spacingFunction(4),
                       paddingTop: theme.spacingFunction(8),
                     })}
                   >
