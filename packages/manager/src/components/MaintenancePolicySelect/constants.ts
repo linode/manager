@@ -26,3 +26,14 @@ export const MIGRATE_TOOLTIP_TEXT =
 
 export const POWER_OFF_TOOLTIP_TEXT =
   'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Depending on the maintenance event and Linode type, the Linode may or may not remain on the same host. Do not select this option for Linodes that are used for container orchestration solutions like Kubernetes.';
+
+export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
+
+export const MAINTENANCE_POLICY_DESCRIPTION =
+  'Set the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.';
+
+export const MAINTENANCE_POLICY_LEARN_MORE_URL =
+  'https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy';
+
+export const GPU_PLAN_NOTICE =
+  'GPU plan does not support live migration and will perform a warm migration and then cold migration as fallbacks.';

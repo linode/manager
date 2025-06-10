@@ -6,6 +6,11 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import {
+  MAINTENANCE_POLICY_DESCRIPTION,
+  MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_TITLE,
+} from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -69,19 +74,14 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
         defaultExpanded
         heading={
           <>
-            Host Maintenance Policy{' '}
+            {MAINTENANCE_POLICY_TITLE}{' '}
             {flags.vmHostMaintenance?.beta && <BetaChip />}
           </>
         }
       >
         <Typography>
-          Set the preferred host maintenance policy for this Linode. During host
-          maintenance events (such as host upgrades), this policy setting helps
-          determine which maintenance method is performed.{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy">
-            Learn more
-          </Link>
-          .
+          {MAINTENANCE_POLICY_DESCRIPTION}{' '}
+          <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
         </Typography>
         <Controller
           control={control}

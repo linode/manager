@@ -4,6 +4,12 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import {
+  GPU_PLAN_NOTICE,
+  MAINTENANCE_POLICY_DESCRIPTION,
+  MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_TITLE,
+} from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAllTypes } from 'src/queries/types';
@@ -33,24 +39,14 @@ export const MaintenancePolicy = () => {
     <Paper>
       <Stack spacing={2}>
         <Typography variant="h2">
-          Host Maintenance Policy{' '}
+          {MAINTENANCE_POLICY_TITLE}{' '}
           {flags.vmHostMaintenance?.beta && <BetaChip />}
         </Typography>
         <Typography>
-          Set the preferred host maintenance policy for this Linode. During host
-          maintenance events (such as host upgrades), this policy setting helps
-          determine which maintenance method is performed.{' '}
-          <Link to="https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy">
-            Learn more
-          </Link>
-          .
+          {MAINTENANCE_POLICY_DESCRIPTION}{' '}
+          <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
         </Typography>
-        {isGPUPlan && (
-          <Notice variant="warning">
-            GPU plan does not support live migration and will perform a warm
-            migration and then cold migration as fallbacks.
-          </Notice>
-        )}
+        {isGPUPlan && <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>}
         <Controller
           control={control}
           name="maintenance_policy_id"
