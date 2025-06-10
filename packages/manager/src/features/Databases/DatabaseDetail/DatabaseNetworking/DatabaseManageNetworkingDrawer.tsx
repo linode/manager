@@ -1,9 +1,9 @@
 import { Box, Button, Drawer, Notice } from '@linode/ui';
+import { updatePrivateNetworkSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-import { boolean, number, object } from 'yup';
 
 import { useDatabaseMutation } from 'src/queries/databases/databases';
 
@@ -16,7 +16,6 @@ import type {
   VPC,
 } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
-import type { ObjectSchema } from 'yup';
 
 interface Props {
   database: Database;
@@ -29,14 +28,6 @@ interface Props {
 export type ManageNetworkingFormValues = {
   private_network: PrivateNetwork;
 };
-
-const privateNetworkSchema: ObjectSchema<ManageNetworkingFormValues> = object({
-  private_network: object().shape({
-    vpc_id: number().required('VPC is required.'),
-    subnet_id: number().required('Subnet is required.'),
-    public_access: boolean().default(false),
-  }),
-});
 
 const DatabaseManageNetworkingDrawer = (props: Props) => {
   const { database, vpc, onClose, onUnassign, open } = props;
@@ -73,8 +64,8 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     useFormik<ManageNetworkingFormValues>({
       initialValues,
       onSubmit: submitForm,
-      validationSchema: privateNetworkSchema,
-    });
+      validationSchema: updatePrivateNetworkSchema,
+    }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
   const hasVPCConfigured = !!database?.private_network?.vpc_id;
   const hasConfigChanged =

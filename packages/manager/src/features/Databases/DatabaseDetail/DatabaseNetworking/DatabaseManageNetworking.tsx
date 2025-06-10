@@ -80,9 +80,7 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     filter: { region: database?.region },
   });
 
-  const currentVPC = React.useMemo(() => {
-    return vpcs?.find((vpc) => vpc.id === vpcId);
-  }, [vpcs, vpcId]);
+  const currentVPC = vpcs?.find((vpc) => vpc.id === vpcId);
 
   const currentSubnet = currentVPC?.subnets.find(
     (subnet) => subnet.id === database?.private_network?.subnet_id
@@ -193,24 +191,20 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         )}
       </StyledGridContainer>
 
-      {isManageNetworkingDrawerOpen && (
-        <DatabaseManageNetworkingDrawer
-          database={database}
-          onClose={() => setIsManageNetworkingDrawerOpen(false)}
-          onUnassign={handleUnassignVPC}
-          open={isManageNetworkingDrawerOpen}
-          vpc={currentVPC}
-        />
-      )}
-      {!isManageNetworkingDrawerOpen && isUnassignVPCDialogOpen && (
-        <DatabaseNetworkingUnassignVPCDialog
-          databaseEngine={database?.engine}
-          databaseId={database?.id}
-          databaseLabel={database?.label}
-          onClose={() => setIsUnassignVPCDialogOpen(false)}
-          open={isUnassignVPCDialogOpen}
-        />
-      )}
+      <DatabaseManageNetworkingDrawer
+        database={database}
+        onClose={() => setIsManageNetworkingDrawerOpen(false)}
+        onUnassign={handleUnassignVPC}
+        open={isManageNetworkingDrawerOpen}
+        vpc={currentVPC}
+      />
+      <DatabaseNetworkingUnassignVPCDialog
+        databaseEngine={database?.engine}
+        databaseId={database?.id}
+        databaseLabel={database?.label}
+        onClose={() => setIsUnassignVPCDialogOpen(false)}
+        open={isUnassignVPCDialogOpen}
+      />
     </>
   );
 };

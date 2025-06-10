@@ -63,6 +63,7 @@ const vpcSelectorTestId = 'database-vpc-selector';
 const subnetSelectorTestId = 'database-subnet-selector';
 const vpcPlaceholder = 'Select a VPC';
 const subnetPlaceholder = 'Select a subnet';
+const mockMode: 'create' | 'networking' = 'create';
 
 describe('DatabaseVPCSelector', () => {
   const mockProps = {
@@ -76,7 +77,7 @@ describe('DatabaseVPCSelector', () => {
     },
     resetFormFields: vi.fn(),
     selectedRegionId: '',
-    mode: 'create' as 'create' | 'networking',
+    mode: mockMode,
   };
 
   beforeEach(() => {

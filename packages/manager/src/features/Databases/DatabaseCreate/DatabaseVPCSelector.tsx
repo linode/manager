@@ -20,7 +20,7 @@ import type { Theme } from '@mui/material/styles';
 import type { FormikErrors } from 'formik';
 
 interface DatabaseVPCSelectorProps {
-  errors: FormikErrors<DatabaseCreateValues>;
+  errors: FormikErrors<DatabaseCreateValues>; // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
   mode: 'create' | 'networking';
   onChange: (field: string, value: boolean | null | number) => void;
   onConfigurationChange?: (vpc: null | VPC) => void;
@@ -53,21 +53,16 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     filter: { region: selectedRegionId },
   });
 
-  const vpcErrorMessage = vpcsError
-    ? getAPIErrorOrDefault(vpcsError, 'Unable to load VPCs')[0].reason
-    : undefined;
+  const vpcErrorMessage =
+    vpcsError &&
+    getAPIErrorOrDefault(vpcsError, 'Unable to load VPCs')[0].reason;
 
-  const selectedVPC = React.useMemo(
-    () => vpcs?.find((vpc) => vpc.id === privateNetworkValues.vpc_id),
-    [vpcs, privateNetworkValues.vpc_id]
+  const selectedVPC = vpcs?.find(
+    (vpc) => vpc.id === privateNetworkValues.vpc_id
   );
 
-  const selectedSubnet = React.useMemo(
-    () =>
-      selectedVPC?.subnets.find(
-        (subnet) => subnet.id === privateNetworkValues.subnet_id
-      ),
-    [selectedVPC, privateNetworkValues.subnet_id]
+  const selectedSubnet = selectedVPC?.subnets.find(
+    (subnet) => subnet.id === privateNetworkValues.subnet_id
   );
 
   const prevRegionId = React.useRef<string | undefined>();
