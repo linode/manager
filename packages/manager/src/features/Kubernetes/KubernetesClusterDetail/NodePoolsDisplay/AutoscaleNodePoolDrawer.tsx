@@ -38,7 +38,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
   input: {
     backgroundColor: theme.tokens.alias.Background.Neutral,
-    border: `solid 0.125rem ${theme.tokens.alias.Border.Normal}`,
+    border: `solid 1px ${theme.tokens.alias.Border.Normal}`,
     padding: 8,
   },
   inputContainer: {
