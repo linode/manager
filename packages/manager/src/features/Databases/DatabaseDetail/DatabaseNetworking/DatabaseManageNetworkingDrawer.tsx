@@ -60,12 +60,19 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     });
   };
 
-  const { errors, handleSubmit, isValid, dirty, setFieldValue, values } =
-    useFormik<ManageNetworkingFormValues>({
-      initialValues,
-      onSubmit: submitForm,
-      validationSchema: updatePrivateNetworkSchema,
-    }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
+  const {
+    errors,
+    handleSubmit,
+    resetForm,
+    isValid,
+    dirty,
+    setFieldValue,
+    values,
+  } = useFormik<ManageNetworkingFormValues>({
+    initialValues,
+    onSubmit: submitForm,
+    validationSchema: updatePrivateNetworkSchema,
+  }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
   const hasVPCConfigured = !!database?.private_network?.vpc_id;
   const hasConfigChanged =
@@ -82,8 +89,13 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     mutateAsync: updateDatabase,
   } = useDatabaseMutation(database.engine, database.id);
 
+  const handleOnClose = () => {
+    onClose();
+    resetForm();
+  };
+
   return (
-    <Drawer onClose={onClose} open={open} title="Manage Networking">
+    <Drawer onClose={handleOnClose} open={open} title="Manage Networking">
       {manageNetworkingError && (
         <Notice text={manageNetworkingError[0].reason} variant="error" />
       )}
@@ -121,7 +133,7 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
               buttonType="secondary"
               disabled={false}
               loading={false}
-              onClick={onClose}
+              onClick={handleOnClose}
             >
               Cancel
             </Button>
