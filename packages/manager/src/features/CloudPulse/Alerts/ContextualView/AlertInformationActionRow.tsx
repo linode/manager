@@ -25,11 +25,6 @@ interface AlertInformationActionRowProps {
   handleToggle: (alert: Alert) => void;
 
   /**
-   * Boolean to check if the alert enable/disable action is restricted
-   */
-  isAlertActionRestricted?: boolean;
-
-  /**
    * Status for the alert whether it is enabled or disabled
    */
   status?: boolean;
@@ -38,14 +33,11 @@ interface AlertInformationActionRowProps {
 export const AlertInformationActionRow = (
   props: AlertInformationActionRowProps
 ) => {
-  const {
-    alert,
-    handleToggle,
-    isAlertActionRestricted,
-    status = false,
-  } = props;
+  const { alert, handleToggle, status = false } = props;
   const { id, label, rule_criteria, service_type, type } = alert;
   const metricThreshold = processMetricCriteria(rule_criteria.rules);
+  const isAccountOrRegionLevelAlert = (alert: Alert) =>
+    alert.scope === 'region' || alert.scope === 'account';
 
   return (
     <TableRow data-qa-alert-cell={id} data-testid={id} key={`alert-row-${id}`}>
@@ -54,7 +46,7 @@ export const AlertInformationActionRow = (
           control={
             <Toggle
               checked={status}
-              disabled={isAlertActionRestricted}
+              disabled={isAccountOrRegionLevelAlert(alert)}
               onChange={() => handleToggle(alert)}
               sx={(theme) => ({
                 '& .Mui-disabled+.MuiSwitch-track': {
@@ -63,7 +55,7 @@ export const AlertInformationActionRow = (
                 },
               })}
               tooltipText={
-                isAlertActionRestricted
+                isAccountOrRegionLevelAlert(alert)
                   ? `${alertScopeLabelMap[alert.scope]}-level alerts can't be enabled or disabled for a single entity.`
                   : undefined
               }
