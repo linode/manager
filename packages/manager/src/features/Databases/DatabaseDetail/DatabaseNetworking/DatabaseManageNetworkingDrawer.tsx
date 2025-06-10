@@ -87,11 +87,13 @@ const DatabaseManageNetworkingDrawer = (props: Props) => {
     error: manageNetworkingError,
     isPending: submitInProgress,
     mutateAsync: updateDatabase,
+    reset: resetMutation,
   } = useDatabaseMutation(database.engine, database.id);
 
   const handleOnClose = () => {
     onClose();
     resetForm();
+    resetMutation?.();
   };
 
   return (

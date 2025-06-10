@@ -26,6 +26,7 @@ export const DatabaseNetworkingUnassignVPCDialog = (props: Props) => {
     error,
     isPending: submitInProgress,
     mutateAsync: updateDatabase,
+    reset: resetMutation,
   } = useDatabaseMutation(databaseEngine, databaseId);
 
   const onUnassign = async () => {
@@ -65,10 +66,15 @@ export const DatabaseNetworkingUnassignVPCDialog = (props: Props) => {
     );
   };
 
+  const handleOnClose = () => {
+    onClose();
+    resetMutation?.();
+  };
+
   return (
     <ConfirmationDialog
-      actions={renderActions(onClose, onUnassign, submitInProgress)}
-      onClose={onClose}
+      actions={renderActions(handleOnClose, onUnassign, submitInProgress)}
+      onClose={handleOnClose}
       open={open}
       title={`Unassign ${databaseLabel} from VPC?`}
     >
