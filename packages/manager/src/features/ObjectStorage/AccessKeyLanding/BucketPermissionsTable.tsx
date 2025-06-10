@@ -1,5 +1,4 @@
 import { Radio } from '@linode/ui';
-import { update } from 'ramda';
 import * as React from 'react';
 
 import { TableBody } from 'src/components/TableBody';
@@ -10,6 +9,7 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
 
 import { AccessCell } from './AccessCell';
+import { getUpdatedScopes } from './AccessTable';
 import {
   StyledBucketCell,
   StyledClusterCell,
@@ -24,22 +24,6 @@ import type {
   ObjectStorageKeyBucketAccess,
   ObjectStorageKeyBucketAccessPermissions,
 } from '@linode/api-v4/lib/object-storage/types';
-
-export const getUpdatedScopes = (
-  oldScopes: ObjectStorageKeyBucketAccess[],
-  newScope: ObjectStorageKeyBucketAccess
-): ObjectStorageKeyBucketAccess[] => {
-  // Region and bucket together form a primary key
-  const scopeToUpdate = oldScopes.findIndex(
-    (thisScope) =>
-      thisScope.bucket_name === newScope.bucket_name &&
-      thisScope.region === newScope.region
-  );
-  if (scopeToUpdate < 0) {
-    return oldScopes;
-  }
-  return update(scopeToUpdate, newScope, oldScopes);
-};
 
 export const SCOPES: Record<string, ObjectStorageKeyBucketAccessPermissions> = {
   none: 'none',
