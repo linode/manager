@@ -74,9 +74,10 @@ export const Actions = () => {
       <ApiAwarenessModal
         isOpen={isAPIAwarenessModalOpen}
         onClose={() => setIsAPIAwarenessModalOpen(false)}
-        payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
-          isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-        })}
+        payLoad={getLinodeCreatePayload(
+          structuredClone(getValues()),
+          isLinodeInterfacesEnabled
+        )}
       />
     </Box>
   );

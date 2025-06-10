@@ -652,11 +652,6 @@ const CreateVlanInterfaceSchema = object({
   ipam_address: string().nullable(),
 });
 
-const AclpAlertsPayloadSchema = object({
-  system: array().of(number().defined()).required(),
-  user: array().of(number().defined()).required(),
-});
-
 export const CreateVPCInterfaceSchema = object({
   subnet_id: number().required('Subnet is required.'),
   ipv4: object({
@@ -830,5 +825,4 @@ export const CreateLinodeSchema = object({
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
   maintenance_policy_id: number().notRequired().nullable(),
-  alerts: AclpAlertsPayloadSchema.notRequired().default(undefined),
 });
