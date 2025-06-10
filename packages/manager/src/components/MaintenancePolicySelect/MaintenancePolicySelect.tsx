@@ -1,5 +1,12 @@
 import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
-import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
+import {
+  Autocomplete,
+  Box,
+  InputAdornment,
+  SelectedIcon,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import React from 'react';
 
 import { MIGRATE_TOOLTIP_TEXT, POWER_OFF_TOOLTIP_TEXT } from './constants';
@@ -45,12 +52,12 @@ export const MaintenancePolicySelect = (
     value,
   } = props;
 
-  const { data: maintenancePolicies } =
+  const { data: maintenancePolicies, isFetching } =
     useAccountMaintenancePoliciesQuery(!options);
 
   const defaultPolicy = options
-    ? { id: defaultPolicyId ?? 1 }
-    : (maintenancePolicies?.find((p) => p.is_default) ?? { id: 1 });
+    ? { id: defaultPolicyId }
+    : maintenancePolicies?.find((p) => p.is_default);
 
   const availableOptions =
     options ||
@@ -61,24 +68,26 @@ export const MaintenancePolicySelect = (
     })) ||
     [];
 
-  const isLoading = !options && !maintenancePolicies;
+  const noMaintenancePolicies = !options && maintenancePolicies === undefined;
 
-  // Separate instance needed to maintain consistent controlled state.
-  // As opposed to using same instance and switching between controlled and uncontrolled states.
-  if (isLoading) {
+  // If there's no maintenance policies, show empty list
+  if (noMaintenancePolicies) {
     return (
       <Autocomplete
         disabled
+        errorText={errorText}
         label="Maintenance Policy"
-        loading
         noMarginTop
         options={[]}
+        textFieldProps={{
+          ...textFieldProps,
+        }}
         value={null}
       />
     );
   }
 
-  const selectedValue = value ?? defaultPolicy.id;
+  const selectedValue = value ?? defaultPolicy?.id;
   const selectedOption = availableOptions.find(
     (option) => option.value === selectedValue
   );
@@ -89,6 +98,7 @@ export const MaintenancePolicySelect = (
       disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"
+      loading={isFetching}
       noMarginTop
       onChange={onChange}
       options={availableOptions}
@@ -112,7 +122,9 @@ export const MaintenancePolicySelect = (
       textFieldProps={{
         InputProps: {
           endAdornment: defaultPolicy?.id === selectedValue && (
-            <DefaultPolicyChip />
+            <InputAdornment position="end">
+              <DefaultPolicyChip />
+            </InputAdornment>
           ),
         },
         tooltipText: optionsTooltipText,

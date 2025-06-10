@@ -34,6 +34,8 @@ export const MaintenancePolicy = () => {
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
 
+  const showHelperText = selectedRegion && !regionSupportsMaintenancePolicy;
+
   return (
     <Accordion
       detailProps={{ sx: { p: 0 } }}
@@ -60,13 +62,13 @@ export const MaintenancePolicy = () => {
         name="maintenance_policy_id"
         render={({ field, fieldState }) => (
           <MaintenancePolicySelect
-            disabled={!regionSupportsMaintenancePolicy}
+            disabled={!selectedRegion || !regionSupportsMaintenancePolicy}
             errorText={fieldState.error?.message}
             onChange={(_, item) => {
               field.onChange(item.value);
             }}
             textFieldProps={{
-              helperText: !regionSupportsMaintenancePolicy
+              helperText: showHelperText
                 ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
                 : undefined,
             }}
