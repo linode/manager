@@ -1,6 +1,12 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import { Accordion, ActionsPanel, BetaChip, Typography } from '@linode/ui';
-import { styled } from '@mui/material/styles';
+import {
+  Accordion,
+  BetaChip,
+  Box,
+  Button,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -14,8 +20,7 @@ import {
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { AccountSettings, MaintenancePolicyId } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
+import type { AccountSettings } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
@@ -58,64 +63,47 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Accordion
-        actions={() => (
-          <StyledActionsPanel
-            primaryButtonProps={{
-              buttonType: 'outlined',
-              disabled: !isDirty || isReadOnly,
-              loading: isSubmitting,
-              type: 'submit',
-              label: 'Save',
-            }}
+    <Accordion
+      defaultExpanded
+      heading={
+        <>
+          {MAINTENANCE_POLICY_TITLE}{' '}
+          {flags.vmHostMaintenance?.beta && <BetaChip />}
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={2}>
+          <Typography>
+            {MAINTENANCE_POLICY_DESCRIPTION}{' '}
+            <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
+          </Typography>
+          <Controller
+            control={control}
+            name="maintenance_policy_id"
+            render={({ field, fieldState }) => (
+              <MaintenancePolicySelect
+                disabled={isReadOnly}
+                errorText={fieldState.error?.message}
+                onChange={(_, item) => {
+                  field.onChange(item.value);
+                }}
+                value={field.value}
+              />
+            )}
           />
-        )}
-        defaultExpanded
-        heading={
-          <>
-            {MAINTENANCE_POLICY_TITLE}{' '}
-            {flags.vmHostMaintenance?.beta && <BetaChip />}
-          </>
-        }
-      >
-        <Typography>
-          {MAINTENANCE_POLICY_DESCRIPTION}{' '}
-          <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
-        </Typography>
-        <Controller
-          control={control}
-          name="maintenance_policy_id"
-          render={({ field, fieldState }) => (
-            <MaintenancePolicySelect
-              disabled={isReadOnly}
-              errorText={fieldState.error?.message}
-              onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
-                field.onChange(item?.value);
-              }}
-              sx={(theme) => ({
-                [theme.breakpoints.up('md')]: {
-                  minWidth: '480px',
-                },
-              })}
-              textFieldProps={{
-                expand: true,
-                sx: {
-                  width: '468px',
-                },
-              }}
-              value={field.value}
-            />
-          )}
-        />
-      </Accordion>
-    </form>
+          <Box>
+            <Button
+              buttonType="outlined"
+              disabled={!isDirty || isReadOnly}
+              loading={isSubmitting}
+              type="submit"
+            >
+              Save
+            </Button>
+          </Box>
+        </Stack>
+      </form>
+    </Accordion>
   );
 };
-
-const StyledActionsPanel = styled(ActionsPanel, {
-  label: 'StyledActionsPanel',
-})({
-  justifyContent: 'flex-start',
-  margin: 0,
-});

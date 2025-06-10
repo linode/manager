@@ -16,7 +16,6 @@ import { useTypeQuery } from 'src/queries/types';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { MaintenancePolicyId } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
 
 export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
@@ -56,20 +55,8 @@ export const MaintenancePolicy = () => {
           render={({ field, fieldState }) => (
             <MaintenancePolicySelect
               errorText={fieldState.error?.message}
-              onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
-                field.onChange(item?.value);
-              }}
-              sx={(theme) => ({
-                '&&': { marginTop: 0 }, // Override Stack spacing rather than setting `noMarginTop` since component is used elsewhere.
-                [theme.breakpoints.up('md')]: {
-                  minWidth: '480px',
-                },
-              })}
-              textFieldProps={{
-                expand: true,
-                sx: {
-                  width: '468px',
-                },
+              onChange={(_, item) => {
+                field.onChange(item.value);
               }}
               value={field.value as MaintenancePolicyId}
             />

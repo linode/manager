@@ -62,6 +62,7 @@ export const MaintenancePolicySelect = (
       disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"
+      noMarginTop
       onChange={onChange}
       options={options || maintenancePolicyOptions}
       renderOption={(props, option, state) => {
