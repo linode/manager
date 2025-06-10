@@ -154,5 +154,6 @@ const MinusIcon = styled(Minus)({
 });
 
 const PlusIcon = styled(PlusSignIcon)({
-  width: 14,
+  width: 12,
+  height: 12,
 });
