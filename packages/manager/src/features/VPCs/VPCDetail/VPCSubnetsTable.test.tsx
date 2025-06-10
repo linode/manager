@@ -217,6 +217,7 @@ describe('VPC Subnets table', () => {
 
   it('should show Nodebalancer table head data when table is expanded', async () => {
     const subnet = subnetFactory.build();
+
     server.use(
       http.get('*/vpcs/:vpcId/subnets', () => {
         return HttpResponse.json(makeResourcePage([subnet]));
@@ -225,7 +226,8 @@ describe('VPC Subnets table', () => {
         return HttpResponse.json(firewallSettingsFactory.build());
       })
     );
-    const { getAllByRole, getByText, queryByTestId } =
+
+    const { getAllByRole, findByText, queryByTestId } =
       await renderWithThemeAndRouter(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
@@ -243,10 +245,10 @@ describe('VPC Subnets table', () => {
     const expandTableButton = getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
 
-    getByText('NodeBalancer');
-    getByText('Backend Status');
-    getByText('VPC IPv4 Range');
-  }, 10000);
+    await findByText('NodeBalancer');
+    await findByText('Backend Status');
+    await findByText('VPC IPv4 Range');
+  });
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
     server.use(
