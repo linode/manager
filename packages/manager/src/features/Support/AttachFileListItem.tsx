@@ -64,6 +64,7 @@ export const AttachFileListItem = (props: Props) => {
           InputProps={{
             endAdornment: (
               <InputAdornment
+                aria-label={`Remove file ${file.name}`}
                 className={classes.closeIcon}
                 data-qa-inline-delete
                 data-testid="delete-button"
