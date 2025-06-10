@@ -20,8 +20,8 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import {
@@ -68,18 +68,26 @@ interface Props {
 export const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const { classes } = useStyles();
-  const pagination = usePagination(1, `${preferenceKey}-${type}`, type);
   const formattedDate = useFormattedDate();
   const flags = useFlags();
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'status',
+  const pagination = usePaginationV2({
+    currentRoute: `/account/maintenance`,
+    preferenceKey: `${preferenceKey}-${type}`,
+    queryParamsPrefix: type,
+  });
+
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'status',
+      },
+      from: `/account/maintenance`,
     },
-    `${preferenceKey}-order-${type}`,
-    type
-  );
+    preferenceKey: `${preferenceKey}-order-${type}`,
+    prefix: type,
+  });
 
   /**
    * We use a different API filter depending on the table's `type`

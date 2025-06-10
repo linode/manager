@@ -106,8 +106,16 @@ export const Entities = ({
         )}
         sx={{
           marginTop: 0,
+          '& .MuiChip-root': {
+            padding: theme.tokens.spacing.S4,
+            height: 'auto',
+          },
           '& .MuiInputLabel-root': {
             color: theme.tokens.alias.Content.Text.Primary.Default,
+          },
+          '& .MuiChip-labelMedium': {
+            textWrap: 'auto',
+            height: 'auto',
           },
         }}
         value={value || []}

@@ -4,7 +4,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
+import { useUserRoles } from 'src/queries/iam/iam';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
@@ -15,7 +15,7 @@ export const UserProfile = () => {
   const { username } = useParams<{ username: string }>();
 
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
   if (isLoading) {
     return <CircleProgress />;
