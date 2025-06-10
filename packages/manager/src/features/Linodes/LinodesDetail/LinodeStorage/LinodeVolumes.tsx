@@ -5,8 +5,8 @@ import {
 } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -37,7 +37,7 @@ import type { Volume } from '@linode/api-v4';
 export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
