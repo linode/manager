@@ -82,7 +82,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
   const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
-    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
+    useStackScriptQuery(
+      params.stackScriptID ? Number(params.stackScriptID) : -1,
+      hasPreselectedStackScript
+    );
 
   const filter =
     type === 'Community'

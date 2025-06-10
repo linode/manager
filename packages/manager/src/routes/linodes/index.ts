@@ -3,6 +3,9 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
 
+import type { LinodeCreateType } from '@linode/utilities';
+import type { StackScriptTabType } from 'src/features/Linodes/LinodeCreate/Tabs/StackScripts/utilities';
+
 interface LinodeDetailSearchParams {
   delete?: boolean;
   migrate?: boolean;
@@ -11,6 +14,16 @@ interface LinodeDetailSearchParams {
   resize?: boolean;
   selectedImageId?: string;
   upgrade?: boolean;
+}
+
+export interface LinodeCreateSearchParams {
+  appID?: string;
+  backupID?: string;
+  imageID?: string;
+  linodeID?: string;
+  stackScriptID?: string;
+  subtype?: StackScriptTabType;
+  type?: LinodeCreateType;
 }
 
 export const linodesRoute = createRoute({
@@ -31,6 +44,7 @@ const linodesIndexRoute = createRoute({
 const linodesCreateRoute = createRoute({
   getParentRoute: () => linodesRoute,
   path: 'create',
+  validateSearch: (search: LinodeCreateSearchParams) => search,
 }).lazy(() =>
   import('src/features/Linodes/LinodeCreate/linodeCreateLazyRoute').then(
     (m) => m.linodeCreateLazyRoute
@@ -49,6 +63,25 @@ const linodesDetailRoute = createRoute({
     (m) => m.linodeDetailLazyRoute
   )
 );
+
+const linodesDetailCloneRoute = createRoute({
+  getParentRoute: () => linodesDetailRoute,
+  path: 'clone',
+}).lazy(() =>
+  import('src/features/Linodes/CloneLanding/cloneLandingLazyRoute').then(
+    (m) => m.cloneLandingLazyRoute
+  )
+);
+
+const linodesDetailCloneConfigsRoute = createRoute({
+  getParentRoute: () => linodesDetailCloneRoute,
+  path: 'configs',
+});
+
+const linodesDetailCloneDisksRoute = createRoute({
+  getParentRoute: () => linodesDetailCloneRoute,
+  path: 'disks',
+});
 
 const linodesDetailAnalyticsRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
@@ -117,6 +150,10 @@ export const linodesRouteTree = linodesRoute.addChildren([
   linodesIndexRoute,
   linodesCreateRoute,
   linodesDetailRoute.addChildren([
+    linodesDetailCloneRoute.addChildren([
+      linodesDetailCloneConfigsRoute,
+      linodesDetailCloneDisksRoute,
+    ]),
     linodesDetailAnalyticsRoute,
     linodesDetailNetworkingRoute.addChildren([
       linodesDetailNetworkingInterfacesRoute,

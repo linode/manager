@@ -17,11 +17,6 @@ const LinodesDetailHeader = React.lazy(() =>
 const LinodesDetailNavigation = React.lazy(
   () => import('./LinodesDetailNavigation')
 );
-const CloneLanding = React.lazy(() =>
-  import('src/features/Linodes/CloneLanding/CloneLanding').then((module) => ({
-    default: module.CloneLanding,
-  }))
-);
 
 export const LinodeDetail = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
@@ -54,21 +49,19 @@ export const LinodeDetail = () => {
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
-      {/* <Route component={CloneLanding} path={`${path}/clone`} />
-        {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
-          <Redirect
-            from={`${url}/${path}`}
-            key={path}
-            to={{
-              pathname: url,
-              search: new URLSearchParams({
-                ...queryParams,
-                [path]: 'true',
-              }).toString(),
-            }}
-          />
-        ))} */}
-      {/* <CloneLanding /> */}
+      {/* {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
+        <Redirect
+          from={`${url}/${path}`}
+          key={path}
+          to={{
+            pathname: url,
+            search: new URLSearchParams({
+              ...queryParams,
+              [path]: 'true',
+            }).toString(),
+          }}
+        />
+      ))} */}
       <LinodesDetailHeader />
       <LinodesDetailNavigation />
       <UpgradeInterfacesDialog

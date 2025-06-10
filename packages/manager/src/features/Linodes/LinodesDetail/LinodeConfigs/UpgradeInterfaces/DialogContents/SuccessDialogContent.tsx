@@ -1,6 +1,6 @@
 import { Box, Button, Notice, Stack, Typography } from '@linode/ui';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { initialState } from '../UpgradeInterfacesDialog';
 import { useUpgradeToLinodeInterfaces } from '../useUpgradeToLinodeInterfaces';
@@ -18,7 +18,7 @@ export const SuccessDialogContent = (
   const { isDryRun, linodeInterfaces, selectedConfig } = state;
 
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { isPending, upgradeToLinodeInterfaces } = useUpgradeToLinodeInterfaces(
     {
@@ -102,7 +102,9 @@ export const SuccessDialogContent = (
                 // join everything back together
                 .join('/')
                 .concat('/networking');
-              history.replace(newPath);
+              navigate({
+                to: newPath,
+              });
             }}
           >
             View Network Settings
