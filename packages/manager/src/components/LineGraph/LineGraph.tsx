@@ -6,7 +6,6 @@ import { roundTo } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Chart } from 'chart.js';
-import { curry } from 'ramda';
 import * as React from 'react';
 
 import { humanizeLargeData } from 'src/components/AreaChart/utils';
@@ -127,6 +126,8 @@ const lineOptions: ChartDataSets = {
  * - Keep charts compact
  * - When selecting a chart color palette make sure colors are distinct when viewed by a person with color blindness
  * - Test the palette with a checker such as the [Coblis — Color Blindness Simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/)
+ *
+ * @deprecated We don't use chart.js anymore. We use Recharts.
  */
 export const LineGraph = (props: LineGraphProps) => {
   const theme = useTheme<Theme>();
@@ -453,14 +454,13 @@ export const metricsBySection = (data: Metrics): number[] => [
   data.last,
 ];
 
-export const _formatTooltip = curry(
+export const _formatTooltip =
   (
     data: DataSet[],
     formatter: ((v: number) => string) | undefined,
-    unit: string | undefined,
-    t: ChartTooltipItem,
-    _d: ChartData
-  ) => {
+    unit: string | undefined
+  ) =>
+  (t: ChartTooltipItem, _d: ChartData) => {
     /**
      * t and d are the params passed by chart.js to this component.
      * data and formatter should be partially applied before this function
@@ -471,5 +471,4 @@ export const _formatTooltip = curry(
     const val = t?.index !== undefined ? dataset.data[t?.index][1] || 0 : 0; // bug, t?.index if 0, it is considered as false, so added undefined check directly
     const value = formatter ? formatter(val) : roundTo(val);
     return `${label}: ${value}${unit ? unit : ''}`;
-  }
-);
+  };

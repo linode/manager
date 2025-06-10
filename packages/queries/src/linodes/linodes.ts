@@ -425,6 +425,11 @@ export const useCloneLinodeMutation = () => {
         linodeQueries.linode(linode.id).queryKey,
         linode,
       );
+      /**
+       * For restricted users, we need to invalidate grants when a Linode is cloned
+       * so that Cloud Manager reflects the correct permissions for the newly created Linode.
+       */
+      queryClient.invalidateQueries(profileQueries.grants);
     },
   });
 };
