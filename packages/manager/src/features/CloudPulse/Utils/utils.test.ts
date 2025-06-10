@@ -15,6 +15,7 @@ describe('isValidPort', () => {
 
   it('should return invalid for ports outside range 1-65535', () => {
     expect(isValidPort('0').isValid).toBe(false);
+    expect(isValidPort('01').isValid).toBe(false);
     expect(isValidPort('99999').isValid).toBe(false);
   });
 

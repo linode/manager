@@ -298,6 +298,15 @@ export const getTimeDurationProperties = (
   };
 };
 
+/**
+ * This function helps in building the properties needed for port selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters that has config of port key
+ * @param handlePortChange - the callback when we select new port
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences, else no need
+ * @returns CloudPulsePortFilterProps
+ */
 export const getPortProperties = (
   props: CloudPulseFilterProperties,
   handlePortChange: (port: string, label: string[], savePref?: boolean) => void

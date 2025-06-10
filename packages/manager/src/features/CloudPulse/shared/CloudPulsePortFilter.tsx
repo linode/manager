@@ -61,38 +61,41 @@ export const CloudPulsePortFilter = React.memo(
     );
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const allowedKeys = [
-        'Backspace',
-        'Delete',
-        'ArrowLeft',
-        'ArrowRight',
-        'Tab',
-      ];
+      const allowedKeys = ['ArrowLeft', 'ArrowRight', 'Tab'];
 
       if (allowedKeys.includes(e.key)) {
         setErrorText(undefined);
         return;
       }
 
-      // Allow digits and commas, prevent everything else
-      if (!/^[\d,]$/.test(e.key)) {
-        e.preventDefault();
-        setErrorText(PORTS_ERROR_MESSAGE);
-        return;
+      const selectionStart = (e.target as HTMLInputElement).selectionStart ?? 0;
+      const selectionEnd = (e.target as HTMLInputElement).selectionEnd ?? 0;
+      let newValue;
+
+      // Calculate new value based on key type
+      if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (selectionStart > 0) {
+          newValue =
+            value.substring(0, selectionStart - 1) +
+            value.substring(selectionStart);
+        } else {
+          return;
+        }
+      } else {
+        if (/^[\d,]$/.test(e.key)) {
+          newValue =
+            value.substring(0, selectionStart) +
+            e.key +
+            value.substring(selectionEnd);
+        } else {
+          e.preventDefault();
+          setErrorText(PORTS_ERROR_MESSAGE);
+          return;
+        }
       }
 
-      const selectionStart = (e.target as HTMLInputElement).selectionStart;
-      const selectionEnd = (e.target as HTMLInputElement).selectionEnd;
-
-      // Predict what the input would look like if this key is allowed
-      const newValue =
-        value.substring(0, selectionStart ?? 0) +
-        e.key +
-        value.substring(selectionEnd ?? 0);
-
-      // Check if each segment (split by comma) is a valid partial or complete port
+      // Check if each segment (split by comma) is a valid port
       const allValid = arePortsValid(newValue);
-
       if (!allValid.isValid) {
         e.preventDefault();
         setErrorText(allValid.errorMsg);

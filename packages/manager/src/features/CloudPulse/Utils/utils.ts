@@ -9,6 +9,7 @@ import {
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
+  PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 
 import type {
@@ -183,14 +184,15 @@ export const isValidPort = (
     return { errorMsg: undefined, isValid: true };
   }
 
-  if (!port) {
-    errorMsg = 'Must be 1-65535';
+  // Check for leading zeros
+  if (!port || port.startsWith('0')) {
+    errorMsg = PORTS_RANGE_ERROR_MESSAGE;
     return { errorMsg, isValid: false };
   }
 
   const convertedPort = parseInt(port, 10);
   if (!(1 <= convertedPort && convertedPort <= 65535)) {
-    errorMsg = 'Must be 1-65535';
+    errorMsg = PORTS_RANGE_ERROR_MESSAGE;
     return { errorMsg, isValid: false };
   }
 
