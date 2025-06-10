@@ -267,7 +267,6 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
-          {isLinodeInterfacesEnabled && <Networking />}
           {flags.vmHostMaintenance?.enabled && <MaintenancePolicy />}
           <Addons />
           <EUAgreement />

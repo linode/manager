@@ -376,19 +376,23 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
+  let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
 
-  // only run if no Linode is preselected
-  if (isLinodeInterfacesEnabled && !linode) {
-    try {
-      const accountSettings = await queryClient.ensureQueryData(
-        accountQueries.settings
-      );
+  try {
+    const accountSettings = await queryClient.ensureQueryData(
+      accountQueries.settings
+    );
+
+    defaultMaintenancePolicy = accountSettings.maintenance_policy_id ?? null;
+
+    // Don't set the interface generation when cloning. The API can figure that out
+    if (isLinodeInterfacesEnabled && params.type !== 'Clone Linode') {
       interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
         accountSettings.interfaces_for_new_linodes
       );
-    } catch (error) {
-      // silently fail because the user may be a restricted user that can't access this endpoint
     }
+  } catch (error) {
+    // silently fail because the user may be a restricted user that can't access this endpoint
   }
 
   let firewallSettings: FirewallSettings | null = null;
@@ -401,16 +405,6 @@ export const defaultValues = async (
     } catch {
       // We can silently fail. Worst case, a user's default firewall won't be pre-populated.
     }
-  }
-
-  let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
-  try {
-    const accountSettings = await queryClient.ensureQueryData(
-      accountQueries.settings
-    );
-    defaultMaintenancePolicy = accountSettings.maintenance_policy_id ?? null;
-  } catch (error) {
-    // silently fail because the user may be a restricted user that can't access this endpoint
   }
 
   const privateIp =
