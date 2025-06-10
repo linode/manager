@@ -137,7 +137,7 @@ export const LKEClusterCell = ({
       <StyledLabelBox component="span">LKE Cluster:</StyledLabelBox>{' '}
       <Link
         data-testid="assigned-lke-cluster-label"
-        to={`/kubernetes/clusters/${linodeLkeClusterId}`}
+        to={`/kubernetes/clusters/${linodeLkeClusterId}/summary`}
       >
         {cluster?.label ?? `${linodeLkeClusterId}`}
       </Link>

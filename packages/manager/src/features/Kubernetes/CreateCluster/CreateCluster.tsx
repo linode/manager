@@ -17,10 +17,9 @@ import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -87,6 +86,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const flags = useFlags();
+  const navigate = useNavigate();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
@@ -109,7 +109,6 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const history = useHistory();
   const { data: account } = useAccount();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
@@ -225,7 +224,6 @@ export const CreateCluster = () => {
       return;
     }
 
-    const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
 
@@ -302,7 +300,10 @@ export const CreateCluster = () => {
 
     createClusterFn(payload)
       .then((cluster) => {
-        push(`/kubernetes/clusters/${cluster.id}`);
+        navigate({
+          to: '/kubernetes/clusters/$clusterId/summary',
+          params: { clusterId: cluster.id },
+        });
         if (hasAgreed) {
           updateAccountAgreements({
             eu_model: true,
@@ -634,7 +635,3 @@ export const CreateCluster = () => {
     </>
   );
 };
-
-export const createClusterLazyRoute = createLazyRoute('/kubernetes/create')({
-  component: CreateCluster,
-});

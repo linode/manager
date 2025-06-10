@@ -1,6 +1,5 @@
 import { Button, H1Header, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
-import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
@@ -38,10 +37,10 @@ const useStyles = makeStyles()((theme: Theme) => ({
 
 export const CancelLanding = React.memo(() => {
   const { classes } = useStyles();
-  const location = useLocation();
+  const location = useLocation<{ survey_link?: string }>();
   const theme = useTheme();
 
-  const surveyLink = path<string>(['state', 'survey_link'], location);
+  const surveyLink = location.state?.survey_link;
 
   if (!surveyLink) {
     return <Redirect to="/" />;

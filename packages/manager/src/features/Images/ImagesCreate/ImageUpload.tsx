@@ -3,7 +3,6 @@ import {
   useAccountAgreements,
   useMutateAccountAgreements,
   useProfile,
-  useRegionsQuery,
   useUploadImageMutation,
 } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
@@ -44,6 +43,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 import { EUAgreementCheckbox } from '../../Account/Agreements/EUAgreementCheckbox';
 import { getRestrictedResourceText } from '../../Account/utils';
 import { uploadImageFile } from '../requests';
+import { useRegionsThatSupportImageStorage } from '../utils';
 import { ImageUploadSchema, recordImageAnalytics } from './ImageUpload.utils';
 import { ImageUploadCLIDialog } from './ImageUploadCLIDialog';
 
@@ -73,7 +73,7 @@ export const ImageUpload = () => {
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
-  const { data: regions } = useRegionsQuery();
+  const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync: createImage } = useUploadImageMutation();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -267,18 +267,16 @@ export const ImageUpload = () => {
               name="region"
               render={({ field, fieldState }) => (
                 <RegionSelect
-                  currentCapability="Object Storage" // Images use Object Storage as their storage backend
+                  currentCapability={undefined} // Images don't have a region capability yet
                   disableClearable
                   disabled={
                     isImageCreateRestricted || form.formState.isSubmitting
                   }
                   errorText={fieldState.error?.message}
-                  ignoreAccountAvailability
                   isGeckoLAEnabled={isGeckoLAEnabled}
                   label="Region"
                   onChange={(e, region) => field.onChange(region.id)}
-                  regionFilter="core" // Images service will not be supported for Gecko Beta
-                  regions={regions ?? []}
+                  regions={regions}
                   textFieldProps={{
                     inputRef: field.ref,
                     onBlur: field.onBlur,

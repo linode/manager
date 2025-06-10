@@ -2,7 +2,6 @@ import { Typography } from '@linode/ui';
 import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
 import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import Grid from '@mui/material/Grid';
-import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
@@ -33,9 +32,10 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
     setShowMoreAttachments((prev) => !prev);
   };
 
-  if (isEmpty(attachments)) {
+  if (attachments.length === 0) {
     return null;
   }
+
   // create an array of icons to use
   const icons = addIconsToAttachments(attachments);
 
@@ -64,7 +64,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
       >
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
-          attachments={slice(0, 5, attachments)}
+          attachments={attachments.slice(0, 5)}
           icons={icons}
         />
         {attachments.length > 5 && (
@@ -83,7 +83,7 @@ export const TicketAttachmentList = ({ attachments }: Props) => {
               }
             >
               <TicketAttachmentRow
-                attachments={slice(5, Infinity, attachments)}
+                attachments={attachments.slice(5)}
                 icons={icons}
               />
             </ShowMoreExpansion>

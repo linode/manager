@@ -5,10 +5,7 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import {
-  PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT,
-  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT,
-} from 'src/features/Linodes/PublicIPAddressesTooltip';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/constants';
 
 import type { IPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
@@ -16,6 +13,7 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  hasPublicLinodeInterface?: boolean;
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
@@ -30,6 +28,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const {
+    hasPublicLinodeInterface,
     ipAddress,
     ipType,
     isOnlyPublicIP,
@@ -62,8 +61,12 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
+  const linodeInterfacePublicIPCopy = hasPublicLinodeInterface
+    ? 'This Public IP Address is provisionally reserved but not the default route. To update this, please review your Interface Settings.'
+    : 'This Public IP Address is provisionally reserved but not assigned to a network interface.';
+
   const isPublicIPNotAssignedCopy = isLinodeInterface
-    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_TOOLTIP_TEXT
+    ? linodeInterfacePublicIPCopy
     : PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT;
 
   const getAriaLabel = (): string => {

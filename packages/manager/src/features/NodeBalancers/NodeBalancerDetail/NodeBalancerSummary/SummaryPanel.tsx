@@ -227,7 +227,11 @@ export const SummaryPanel = () => {
               <strong>VPC:</strong>{' '}
               {vpcConfig?.data.map((vpc, i) => (
                 <React.Fragment key={vpc.id}>
-                  <Link className="secondaryLink" to={`/vpcs/${vpc.vpc_id}`}>
+                  <Link
+                    accessibleAriaLabel={`VPC ${vpcDetails?.label}`}
+                    className="secondaryLink"
+                    to={`/vpcs/${vpc.vpc_id}`}
+                  >
                     {vpcDetails?.label}
                   </Link>
                   {i < vpcConfig.data.length - 1 ? ', ' : ''}

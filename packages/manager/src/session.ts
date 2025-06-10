@@ -2,11 +2,12 @@ import Axios from 'axios';
 
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import { generateCodeChallenge, generateCodeVerifier } from 'src/pkce';
-import { clearNonceAndCodeVerifierFromLocalStorage } from 'src/store/authentication/authentication.helpers';
 import {
   authentication,
   getEnvLocalStorageOverrides,
 } from 'src/utilities/storage';
+
+import { clearNonceAndCodeVerifierFromLocalStorage } from './OAuth/utils';
 
 // If there are local storage overrides, use those. Otherwise use variables set in the ENV.
 const localStorageOverrides = getEnvLocalStorageOverrides();
@@ -89,10 +90,6 @@ export const redirectToLogin = async (
   const redirectUri = `${returnToPath}${queryString}`;
   window.location.assign(prepareOAuthEndpoint(redirectUri));
 };
-
-export interface RevokeTokenSuccess {
-  success: true;
-}
 
 export const revokeToken = (client_id: string, token: string) => {
   return Axios({

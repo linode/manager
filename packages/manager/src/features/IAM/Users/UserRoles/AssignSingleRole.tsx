@@ -7,7 +7,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { getRoleByName } from 'src/features/IAM/Shared/utilities';
 
-import type { IamAccountPermissions } from '@linode/api-v4';
+import type { IamAccountRoles } from '@linode/api-v4';
 import type {
   AssignNewRoleFormValues,
   RolesType,
@@ -18,7 +18,7 @@ interface Props {
   index: number;
   onRemove: (idx: number) => void;
   options: RolesType[];
-  permissions: IamAccountPermissions;
+  permissions: IamAccountRoles;
 }
 
 export const AssignSingleRole = ({

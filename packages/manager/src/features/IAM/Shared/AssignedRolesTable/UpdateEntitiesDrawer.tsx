@@ -4,10 +4,7 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
-import {
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';
@@ -27,10 +24,9 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
 
   const { username } = useParams<{ username: string }>();
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -89,7 +85,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
         role!.entity_type
       );
 
-      await updateUserPermissions({
+      await updateUserRoles({
         ...assignedRoles!,
         entity_access: entityAccess,
       });

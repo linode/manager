@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { enqueueSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 
@@ -11,19 +11,20 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import {
-  useAccountPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useAccountRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 import { iamQueries } from 'src/queries/iam/queries';
 
+import {
+  INTERNAL_ERROR_UPDATE_PERMISSION,
+  NO_CHANGES_SAVED,
+} from '../../Shared/constants';
 import {
   getAllRoles,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
-import type { IamUserPermissions } from '@linode/api-v4';
+import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -35,7 +36,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const { username } = useParams<{ username: string }>();
   const queryClient = useQueryClient();
 
-  const { data: accountPermissions } = useAccountPermissions();
+  const { data: accountRoles } = useAccountRoles();
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
@@ -60,27 +61,26 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const roles = watch('roles');
 
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountPermissions);
-  }, [accountPermissions]);
+    return getAllRoles(accountRoles);
+  }, [accountRoles]);
 
-  const { mutateAsync: updateUserRolePermissions, isPending } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles, isPending } =
+    useUserRolesMutation(username);
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
-      const queryKey = iamQueries.user(username)._ctx.permissions.queryKey;
-      const currentRoles =
-        queryClient.getQueryData<IamUserPermissions>(queryKey);
+      const queryKey = iamQueries.user(username)._ctx.roles.queryKey;
+      const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
 
       const mergedRoles = mergeAssignedRolesIntoExistingRoles(
         values,
         structuredClone(currentRoles)
       );
 
-      await updateUserRolePermissions(mergedRoles);
+      await updateUserRoles(mergedRoles);
 
       enqueueSnackbar(`Roles added.`, { variant: 'success' });
       handleClose();
@@ -94,6 +94,13 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     onClose();
   };
 
+  useEffect(() => {
+    if (open) {
+      reset({
+        roles: [{ role: null, entities: null }],
+      });
+    }
+  }, [open, reset]);
   // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={handleClose} open={open} title="Assign New Roles">
@@ -102,9 +109,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
           {formState.errors.root?.message && (
             <Notice variant="error">
               <Typography>
-                Internal Error - Issue with updating permissions.
+                {INTERNAL_ERROR_UPDATE_PERMISSION}
                 <br />
-                No changes were saved.
+                {NO_CHANGES_SAVED}
               </Typography>
             </Notice>
           )}
@@ -136,7 +143,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             fields.map((field, index) => (
               <AssignSingleRole
                 hideDetails={areDetailsHidden}
@@ -144,12 +151,12 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
                 key={field.id}
                 onRemove={() => remove(index)}
                 options={allRoles}
-                permissions={accountPermissions}
+                permissions={accountRoles}
               />
             ))}
 
           {/* If all roles are filled, allow them to add another */}
-          {roles.length > 0 && roles.every((field) => field.role) && (
+          {roles.length > 0 && roles.every((field) => field.role?.value) && (
             <StyledLinkButtonBox sx={{ marginTop: theme.tokens.spacing.S12 }}>
               <LinkButton onClick={() => append({ role: null })}>
                 Add another role

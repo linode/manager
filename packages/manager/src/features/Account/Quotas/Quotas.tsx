@@ -7,8 +7,8 @@ import {
   Stack,
   Typography,
 } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
@@ -21,7 +21,7 @@ import type { SelectOption } from '@linode/ui';
 import type { Theme } from '@mui/material';
 
 export const Quotas = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [selectedLocation, setSelectedLocation] =
     React.useState<null | SelectOption<Quota['region_applied']>>(null);
   const locationData = useGetLocationsForQuotaService('object-storage');
@@ -68,7 +68,7 @@ export const Quotas = () => {
                   label: value?.label,
                   value: value?.value,
                 });
-                history.push('/account/quotas');
+                navigate({ to: '/account/quotas' });
               }}
               options={
                 sortedS3Endpoints?.map((location) => ({

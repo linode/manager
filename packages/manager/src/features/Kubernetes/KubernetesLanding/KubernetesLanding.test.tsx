@@ -1,7 +1,7 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { KubernetesLanding } from './KubernetesLanding';
 
@@ -26,7 +26,9 @@ describe('Kubernetes Landing', () => {
 
     const loadingTestId = 'circle-progress';
 
-    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
+    const { container, getByTestId } = await renderWithThemeAndRouter(
+      <KubernetesLanding />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
@@ -43,7 +45,9 @@ describe('Kubernetes Landing', () => {
 
     const loadingTestId = 'circle-progress';
 
-    const { container, getByTestId } = renderWithTheme(<KubernetesLanding />);
+    const { container, getByTestId } = await renderWithThemeAndRouter(
+      <KubernetesLanding />
+    );
 
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
     await waitForElementToBeRemoved(getByTestId(loadingTestId));

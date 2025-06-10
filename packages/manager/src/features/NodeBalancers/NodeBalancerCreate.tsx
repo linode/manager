@@ -68,7 +68,7 @@ import { VPCPanel } from './VPCPanel';
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { TagOption } from 'src/components/TagsInput/TagsInput';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -456,7 +456,7 @@ const NodeBalancerCreate = () => {
     }));
   };
 
-  const tagsChange = (tags: Tag[]) => {
+  const tagsChange = (tags: TagOption[]) => {
     setNodeBalancerFields((prev) => ({
       ...prev,
       tags: tags.map((tag) => tag.value),

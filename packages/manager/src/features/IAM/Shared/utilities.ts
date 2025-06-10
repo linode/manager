@@ -18,8 +18,8 @@ import type {
   EntityTypePermissions,
   IamAccess,
   IamAccessType,
-  IamAccountPermissions,
-  IamUserPermissions,
+  IamAccountRoles,
+  IamUserRoles,
   Roles,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
@@ -103,9 +103,7 @@ export interface ExtendedEntityRole extends EntitiesRole {
   value: EntityAccessRole;
 }
 
-export const getAllRoles = (
-  permissions: IamAccountPermissions
-): RolesType[] => {
+export const getAllRoles = (permissions: IamAccountRoles): RolesType[] => {
   const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
 
   return accessTypes.flatMap((accessType: IamAccessType) =>
@@ -121,7 +119,7 @@ export const getAllRoles = (
 };
 
 export const getRoleByName = (
-  accountPermissions: IamAccountPermissions,
+  accountPermissions: IamAccountRoles,
   roleName: string
 ): ExtendedRole | null => {
   const accessTypes: IamAccessType[] = ['account_access', 'entity_access'];
@@ -160,7 +158,7 @@ export const mapEntityTypesForSelect = (
  * Add descriptions, permissions, type to all roles
  */
 export const mapAccountPermissionsToRoles = (
-  accountPermissions: IamAccountPermissions
+  accountPermissions: IamAccountRoles
 ): RoleView[] => {
   const mapperFn = (access: string, entity_type: string, role: Roles) => ({
     access,
@@ -187,17 +185,17 @@ export const mapAccountPermissionsToRoles = (
 
 interface UpdateUserRolesProps {
   access: 'account_access' | 'entity_access';
-  assignedRoles?: IamUserPermissions;
+  assignedRoles?: IamUserRoles;
   initialRole?: string;
   newRole: string;
 }
 
-export const updateUserRoles = ({
+export const changeUserRole = ({
   access,
   assignedRoles,
   initialRole,
   newRole,
-}: UpdateUserRolesProps): IamUserPermissions => {
+}: UpdateUserRolesProps): IamUserRoles => {
   if (access === 'account_access' && assignedRoles) {
     return {
       ...assignedRoles,
@@ -236,6 +234,7 @@ export interface AssignNewRoleFormValues {
     entities?: EntitiesOption[] | null;
     role: null | RolesType;
   }[];
+  username?: null | string;
 }
 
 export interface UpdateEntitiesFormValues {
@@ -244,7 +243,7 @@ export interface UpdateEntitiesFormValues {
 
 interface DeleteUserRolesProps {
   access?: 'account_access' | 'entity_access';
-  assignedRoles?: IamUserPermissions;
+  assignedRoles?: IamUserRoles;
   initialRole?: string;
 }
 
@@ -252,7 +251,7 @@ export const deleteUserRole = ({
   access,
   assignedRoles,
   initialRole,
-}: DeleteUserRolesProps): IamUserPermissions => {
+}: DeleteUserRolesProps): IamUserRoles => {
   if (!assignedRoles) {
     return {
       account_access: [],
@@ -418,9 +417,11 @@ export const getFacadeRoleDescription = (
 
 export const getFormattedEntityType = (entityType: string): string => {
   const overrideCapitalization: Record<string, string> = {
-    vpc: 'VPC',
-    stackscript: 'StackScript',
+    lkecluster: 'Kubernetes Cluster',
     nodebalancer: 'NodeBalancer',
+    placement_group: 'Placement Group',
+    stackscript: 'StackScript',
+    vpc: 'VPC',
   };
 
   // Return the overridden capitalization if it exists, otherwise capitalize normally
@@ -464,10 +465,10 @@ export const partition = <T>(
  */
 export const mergeAssignedRolesIntoExistingRoles = (
   selectedRoles: AssignNewRoleFormValues,
-  existingRoles: IamUserPermissions | undefined
-): IamUserPermissions => {
+  existingRoles: IamUserRoles | undefined
+): IamUserRoles => {
   // Set up what is going to be returned
-  const selectedPlusExistingRoles: IamUserPermissions = {
+  const selectedPlusExistingRoles: IamUserRoles = {
     account_access: existingRoles?.account_access || [],
     entity_access: existingRoles?.entity_access || [],
   };
@@ -507,7 +508,7 @@ export const mergeAssignedRolesIntoExistingRoles = (
         selectedPlusExistingRoles.entity_access.push({
           id: e.value,
           roles: [r.role?.value as EntityAccessRole],
-          type: r.role?.value.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
+          type: r.role?.entity_type as EntityTypePermissions,
         });
       }
     });

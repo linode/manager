@@ -4,7 +4,7 @@ import React from 'react';
 
 import { alertFactory } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
 import { AlertsListTable } from './AlertListTable';
@@ -34,7 +34,7 @@ queryMocks.useDeleteAlertDefinitionMutation.mockReturnValue({
 
 describe('Alert List Table test', () => {
   it('should render the alert landing table ', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[]}
         isLoading={false}
@@ -50,7 +50,7 @@ describe('Alert List Table test', () => {
   });
 
   it('should render the error message', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[]}
         error={[{ reason: 'Error in fetching the alerts' }]}
@@ -72,7 +72,7 @@ describe('Alert List Table test', () => {
       updated,
       updated_by: 'user2',
     });
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -97,7 +97,7 @@ describe('Alert List Table test', () => {
   it('should show success snackbar when enabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
     const { getByLabelText, getByRole, getByTestId, getByText } =
-      renderWithTheme(
+      await renderWithThemeAndRouter(
         <AlertsListTable
           alerts={[alert]}
           isLoading={false}
@@ -120,7 +120,7 @@ describe('Alert List Table test', () => {
   it('should show success snackbar when disabling alert succeeds', async () => {
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
     const { getByLabelText, getByRole, getByTestId, getByText } =
-      renderWithTheme(
+      await renderWithThemeAndRouter(
         <AlertsListTable
           alerts={[alert]}
           isLoading={false}
@@ -149,7 +149,7 @@ describe('Alert List Table test', () => {
 
     const alert = alertFactory.build({ status: 'disabled', type: 'user' });
     const { getByLabelText, getByRole, getByTestId, getByText } =
-      renderWithTheme(
+      await renderWithThemeAndRouter(
         <AlertsListTable
           alerts={[alert]}
           isLoading={false}
@@ -178,7 +178,7 @@ describe('Alert List Table test', () => {
 
     const alert = alertFactory.build({ status: 'enabled', type: 'user' });
     const { getByLabelText, getByRole, getByTestId, getByText } =
-      renderWithTheme(
+      await renderWithThemeAndRouter(
         <AlertsListTable
           alerts={[alert]}
           isLoading={false}
@@ -199,7 +199,7 @@ describe('Alert List Table test', () => {
   });
 
   it('should toggle alerts grouped by tag', async () => {
-    renderWithTheme(
+    await renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alertFactory.build({ label: 'Test Alert' })]}
         isGroupedByTag={true}

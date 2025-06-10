@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -21,7 +21,7 @@ interface Props {
 export const KubernetesEmptyState = (props: Props) => {
   const { isRestricted = false } = props;
 
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -37,7 +37,7 @@ export const KubernetesEmptyState = (props: Props) => {
                 category: linkAnalyticsEvent.category,
                 label: 'Create Cluster',
               });
-              push('/kubernetes/create');
+              navigate({ to: '/kubernetes/create' });
             },
             tooltipText: getRestrictedResourceText({
               action: 'create',
