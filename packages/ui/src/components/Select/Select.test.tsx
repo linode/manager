@@ -32,15 +32,29 @@ describe('Select', () => {
     expect(getByText('My Select')).toBeInTheDocument();
     expect(getByRole('button', { name: 'Open' })).toBeInTheDocument();
 
-    const selectInput = getByRole('combobox');
+    // Open up the select
+    await userEvent.click(select);
 
-    options.forEach(async (option) => {
-      await userEvent.click(selectInput);
-      await userEvent.type(selectInput, option.label);
+    // Verify each option is visible
+    for (const option of options) {
+      expect(getByText(option.label)).toBeVisible();
+    }
+  });
 
-      expect(getByText(option.label)).toBeInTheDocument();
-      expect(selectInput).toHaveValue(option.label);
-    });
+  it('can search the options', async () => {
+    const { getByLabelText, getByRole, queryByText } = renderWithTheme(
+      <Select label="My Select" options={options} searchable />,
+    );
+
+    const select = getByLabelText('My Select');
+
+    await userEvent.type(select, 'Option 2');
+
+    // Verify the expected option shows
+    expect(getByRole('option', { name: 'Option 2' })).toBeVisible();
+
+    expect(queryByText('Option 1')).toBeNull();
+    expect(queryByText('Option 3')).toBeNull();
   });
 
   it('can have its label visually hidden', async () => {
