@@ -81,7 +81,7 @@ export const UserData = (props: Props) => {
       )}
       {!image && (
         <Notice spacingBottom={8} spacingTop={12} variant="warning">
-          Select an Image compatible with clout-init to configure user data.
+          Select an Image compatible with cloud-init to configure user data.
         </Notice>
       )}
       {region && !doesRegionSupportMetadata && (
