@@ -72,7 +72,7 @@ const LinodesDetailNavigation = () => {
   const tabs = [
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpIntegration?.metrics &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
@@ -105,7 +105,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpIntegration?.alerts &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />

@@ -221,7 +221,9 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
+  const alertsHeading = flags.aclpIntegration?.alerts
+    ? 'Default Alerts'
+    : 'Alerts';
 
   return (
     <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
