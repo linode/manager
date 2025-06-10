@@ -117,13 +117,12 @@ export const AlertInformationActionTable = (
     },
     [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
   );
-
   const handleToggle = (alert: Alert) => {
     setIsDialogOpen(true);
     setSelectedAlert(alert);
   };
 
-  const isEnabled = selectedAlert.entity_ids?.includes(entityId ?? '') ?? false;
+  const isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
 
   return (
     <>
