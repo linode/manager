@@ -24,13 +24,12 @@ import type { Filter } from '@linode/api-v4';
 export const UsersLanding = () => {
   const navigate = useNavigate();
   const { query } = useSearch({
-    from: '/iam/users',
+    from: '/iam',
   });
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-
   const { data: profile } = useProfile();
   const theme = useTheme();
   const pagination = usePaginationV2({

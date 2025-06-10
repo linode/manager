@@ -16,6 +16,8 @@ interface IamUsersSearchParams extends TableSearchParams {
 const iamRoute = createRoute({
   component: IAMRoute,
   getParentRoute: () => rootRoute,
+  validateSearch: (search: IamUsersSearchParams) => search,
+
   path: 'iam',
 });
 
@@ -38,7 +40,6 @@ const iamIndexRoute = createRoute({
 const iamUsersRoute = createRoute({
   getParentRoute: () => iamRoute,
   path: 'users',
-  validateSearch: (search: IamUsersSearchParams) => search,
 }).lazy(() => import('./IAMLazyRoutes').then((m) => m.iamLandingLazyRoute));
 
 const iamUsersCatchAllRoute = createRoute({
