@@ -3,14 +3,7 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import type { Alert } from '@linode/api-v4';
-
 interface AlertConfirmationDialogProps {
-  /**
-   * alert object of the selected row
-   */
-  alert: Alert;
-
   /**
    * Handler function for cancel button
    */
@@ -18,15 +11,8 @@ interface AlertConfirmationDialogProps {
 
   /**
    * Handler function for enable/disable button
-   * @param alert selected alert from the row
-   * @param currentStatus current state of the toggle button
    */
-  handleConfirm: (alert: Alert, currentStatus: boolean) => void;
-
-  /**
-   * Current state of the toggle button whether active or not
-   */
-  isEnabled: boolean;
+  handleConfirm: () => void;
 
   /**
    * Loading state of the confirmation dialog
@@ -41,27 +27,37 @@ interface AlertConfirmationDialogProps {
   /**
    * Message to be displayed in the confirmation dialog
    */
-  message: string;
+  message: React.ReactNode;
+
+  /**
+   * Label of the primary button
+   */
+  primaryButtonLabel: string;
+
+  /**
+   * Title of the confirmation dialog
+   */
+  title: string;
 }
 
 export const AlertConfirmationDialog = React.memo(
   (props: AlertConfirmationDialogProps) => {
     const {
-      alert,
       handleCancel,
       handleConfirm,
-      isEnabled,
       isLoading = false,
       isOpen,
       message,
+      title,
+      primaryButtonLabel,
     } = props;
 
     const actionsPanel = (
       <ActionsPanel
         primaryButtonProps={{
-          label: isEnabled ? 'Disable' : 'Enable',
+          label: primaryButtonLabel,
           loading: isLoading,
-          onClick: () => handleConfirm(alert, isEnabled),
+          onClick: handleConfirm,
         }}
         secondaryButtonProps={{
           disabled: isLoading,
@@ -77,7 +73,7 @@ export const AlertConfirmationDialog = React.memo(
         data-testid="confirmation-dialog"
         onClose={handleCancel}
         open={isOpen}
-        title={`${isEnabled ? 'Disable' : 'Enable'} ${alert.label} Alert?`}
+        title={title}
       >
         <Typography variant="subtitle2">{message}</Typography>
       </ConfirmationDialog>
