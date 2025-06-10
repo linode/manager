@@ -81,7 +81,7 @@ export const LinodeSelectTable = (props: Props) => {
   const order = useOrder();
 
   const { filter, filterError } = getLinodeXFilter(
-    preselectedLinodeId,
+    preselectedLinodeId ? Number(preselectedLinodeId) : undefined,
     query,
     order
   );

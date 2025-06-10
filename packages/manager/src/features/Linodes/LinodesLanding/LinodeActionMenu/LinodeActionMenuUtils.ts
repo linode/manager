@@ -1,4 +1,5 @@
 import type { LinodeType, Region } from '@linode/api-v4';
+import type { LinodeCreateSearchParams } from 'src/routes/linodes';
 
 export const buildQueryStringForLinodeClone = (
   linodeId: number,
@@ -6,7 +7,7 @@ export const buildQueryStringForLinodeClone = (
   linodeType: null | string,
   types: LinodeType[] | null | undefined,
   regions: Region[]
-): string => {
+): LinodeCreateSearchParams => {
   const linodeRegionId =
     regions.find((region) => region.label === linodeRegion)?.id ?? '';
   const params: Record<string, string> = {
@@ -25,5 +26,5 @@ export const buildQueryStringForLinodeClone = (
     params.regionID = linodeRegion;
   }
 
-  return new URLSearchParams(params).toString();
+  return params;
 };
