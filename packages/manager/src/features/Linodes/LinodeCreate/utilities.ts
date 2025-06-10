@@ -342,7 +342,10 @@ export interface LinodeCreateFormContext {
 export const defaultValues = async (
   params: ParsedLinodeCreateQueryParams,
   queryClient: QueryClient,
-  isLinodeInterfacesEnabled: boolean
+  flags: {
+    isLinodeInterfacesEnabled: boolean;
+    isVMHostMaintenanceEnabled: boolean;
+  }
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
@@ -378,7 +381,7 @@ export const defaultValues = async (
     undefined;
 
   // only run if no Linode is preselected
-  if (isLinodeInterfacesEnabled && !linode) {
+  if (flags.isLinodeInterfacesEnabled && !linode) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
@@ -393,7 +396,7 @@ export const defaultValues = async (
 
   let firewallSettings: FirewallSettings | null = null;
 
-  if (isLinodeInterfacesEnabled) {
+  if (flags.isLinodeInterfacesEnabled) {
     try {
       firewallSettings = await queryClient.ensureQueryData(
         firewallQueries.settings
@@ -404,13 +407,16 @@ export const defaultValues = async (
   }
 
   let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
-  try {
-    const accountSettings = await queryClient.ensureQueryData(
-      accountQueries.settings
-    );
-    defaultMaintenancePolicy = accountSettings.maintenance_policy_id ?? null;
-  } catch (error) {
-    // silently fail because the user may be a restricted user that can't access this endpoint
+
+  if (flags.isVMHostMaintenanceEnabled) {
+    try {
+      const accountSettings = await queryClient.ensureQueryData(
+        accountQueries.settings
+      );
+      defaultMaintenancePolicy = accountSettings.maintenance_policy_id ?? null;
+    } catch (error) {
+      // silently fail because the user may be a restricted user that can't access this endpoint
+    }
   }
 
   const privateIp =

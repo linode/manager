@@ -2,11 +2,7 @@ import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
 import { Autocomplete, Box, SelectedIcon, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
-import {
-  maintenancePolicyOptions,
-  MIGRATE_TOOLTIP_TEXT,
-  POWER_OFF_TOOLTIP_TEXT,
-} from './constants';
+import { MIGRATE_TOOLTIP_TEXT, POWER_OFF_TOOLTIP_TEXT } from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
 
 import type { MaintenancePolicyOption } from './constants';
@@ -56,6 +52,15 @@ export const MaintenancePolicySelect = (
     ? { id: defaultPolicyId }
     : maintenancePolicies?.find((p) => p.is_default);
 
+  const availableOptions =
+    options ||
+    maintenancePolicies?.map((policy) => ({
+      label: policy.name,
+      value: policy.id,
+      description: policy.description,
+    })) ||
+    [];
+
   return (
     <Autocomplete
       disableClearable
@@ -63,7 +68,7 @@ export const MaintenancePolicySelect = (
       errorText={errorText}
       label="Maintenance Policy"
       onChange={onChange}
-      options={options || maintenancePolicyOptions}
+      options={availableOptions}
       renderOption={(props, option, state) => {
         const { key } = props;
         return (
@@ -89,9 +94,7 @@ export const MaintenancePolicySelect = (
         tooltipWidth: 410,
         ...textFieldProps,
       }}
-      value={(options || maintenancePolicyOptions).find(
-        (option) => option.value === value
-      )}
+      value={availableOptions.find((option) => option.value === value)}
     />
   );
 };

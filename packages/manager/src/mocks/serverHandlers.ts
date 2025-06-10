@@ -3189,7 +3189,7 @@ export const handlers = [
         label: 'Migrate',
         name: 'Migrate',
         description:
-          'Maximize availability by migrating your Linode to a new host.',
+          'Set the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.',
         is_default: false,
         notification_period_sec: 86400,
         type: 'migrate',
@@ -3199,7 +3199,7 @@ export const handlers = [
         label: 'Power Off / Power On',
         name: 'Power Off / Power On',
         description:
-          'Maximize performance by powering off your Linode during maintenance.',
+          'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
         is_default: false,
         notification_period_sec: 86400,
         type: 'power on/off',

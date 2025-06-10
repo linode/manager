@@ -1,11 +1,26 @@
 import { Box } from '@linode/ui';
 import React, { useState } from 'react';
 
-import { maintenancePolicyOptions } from './constants';
 import { MaintenancePolicySelect } from './MaintenancePolicySelect';
 
+import type { MaintenancePolicyOption } from './constants';
 import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { Meta, StoryObj } from '@storybook/react';
+
+const maintenancePolicyOptions: MaintenancePolicyOption[] = [
+  {
+    label: 'Migrate',
+    value: 1,
+    description:
+      'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
+  },
+  {
+    label: 'Power Off / Power On',
+    value: 2,
+    description:
+      'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
+  },
+];
 
 const meta: Meta<typeof MaintenancePolicySelect> = {
   title: 'Components/Selects/MaintenancePolicySelect',
