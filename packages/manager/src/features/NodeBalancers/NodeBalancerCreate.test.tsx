@@ -53,7 +53,7 @@ describe('NodeBalancerCreate', () => {
     ).toBeVisible();
 
     // confirm VPC Panel renders
-    expect(getByLabelText('Assign VPC')).toBeVisible();
+    expect(getByLabelText('VPC')).toBeVisible();
 
     // confirm default configuration renders - only confirming headers, as we have additional
     // unit tests to check the functionality of the NodeBalancerConfigPanel

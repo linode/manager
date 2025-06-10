@@ -24,7 +24,7 @@ describe('VPCPanel', () => {
   it('should render no options for the VPC select if no region is selected', async () => {
     renderWithTheme(<VPCPanel {...props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
 
     expect(vpcSelect).toBeVisible();
     await userEvent.click(vpcSelect);
@@ -86,7 +86,7 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     expect(screen.getByLabelText('Subnet')).toBeVisible();
@@ -127,7 +127,7 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -171,7 +171,7 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -181,9 +181,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByLabelText(
-          'Auto-assign a /30 CIDR in each subnet for this NodeBalancer'
-        )
+        screen.getByLabelText('Auto-assign a /30 CIDR for this NodeBalancer')
       ).toBeChecked();
     });
   });
@@ -224,7 +222,7 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
@@ -233,7 +231,7 @@ describe('VPCPanel', () => {
     );
 
     const checkbox = screen.getByLabelText(
-      'Auto-assign a /30 CIDR in each subnet for this NodeBalancer'
+      'Auto-assign a /30 CIDR for this NodeBalancer'
     );
 
     await userEvent.click(checkbox);
@@ -281,7 +279,7 @@ describe('VPCPanel', () => {
 
     renderWithTheme(<VPCPanel {..._props} />);
 
-    const vpcSelect = screen.getByLabelText('Assign VPC');
+    const vpcSelect = screen.getByLabelText('VPC');
     expect(vpcSelect).toHaveValue(vpcWithSubnet.label);
 
     const subnetSelect = screen.getByLabelText('Subnet');
