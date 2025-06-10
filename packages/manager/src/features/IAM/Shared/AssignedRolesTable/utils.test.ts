@@ -1,5 +1,5 @@
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 
 import {
   addEntitiesNamesToRoles,
@@ -11,7 +11,7 @@ import type { ExtendedRoleView } from '../types';
 import type { CombinedRoles } from './utils';
 import type { AccountEntity, EntityType } from '@linode/api-v4';
 
-const userPermissions = userPermissionsFactory.build({
+const userPermissions = userRolesFactory.build({
   account_access: ['account_linode_admin', 'linode_creator'],
   entity_access: [
     {
@@ -25,7 +25,7 @@ const userPermissions = userPermissionsFactory.build({
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions = accountPermissionsFactory.build();
+const accountPermissions = accountRolesFactory.build();
 describe('combineRoles', () => {
   it('should return an object of users roles', () => {
     const expectedRoles = [
@@ -129,6 +129,54 @@ describe('addResourceNamesToRoles', () => {
         entity_ids: [12345678],
         entity_names: ['linode-1'],
         entity_type: 'linode',
+      },
+    ];
+
+    expect(addEntitiesNamesToRoles(userRoles, mockGoupedEntities)).toEqual(
+      expectedRoles
+    );
+  });
+
+  it('should exclude the role if the assigned entity was removed and the role was associated with only one entity', () => {
+    // the list of availiable entities doesn't contain the entity with id 12345678 anymore
+    const mockGoupedEntities: Map<
+      EntityType,
+      Pick<AccountEntity, 'id' | 'label'>[]
+    > = new Map([['linode', [{ id: 2, label: 'test 2' }]]]);
+
+    const userRoles: ExtendedRoleView[] = [
+      {
+        access: accountAccess,
+        description:
+          'Access to perform any supported action on all resources in the account',
+        id: 'account_admin',
+        name: 'account_admin',
+        permissions: ['create_linode', 'update_linode', 'update_firewall'],
+        entity_ids: null,
+        entity_type: 'account',
+      },
+      {
+        access: entityAccess,
+        description: 'Access to update a linode instance',
+        id: 'linode_contributor',
+        name: 'linode_contributor',
+        permissions: ['update_linode', 'view_linode'],
+        entity_ids: [12345678],
+        entity_type: 'linode',
+      },
+    ];
+
+    const expectedRoles = [
+      {
+        access: accountAccess,
+        description:
+          'Access to perform any supported action on all resources in the account',
+        id: 'account_admin',
+        name: 'account_admin',
+        permissions: ['create_linode', 'update_linode', 'update_firewall'],
+        entity_ids: null,
+        entity_names: [],
+        entity_type: 'account',
       },
     ];
 

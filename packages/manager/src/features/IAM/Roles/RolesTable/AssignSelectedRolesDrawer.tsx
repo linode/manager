@@ -17,9 +17,9 @@ import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
 import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
 } from 'src/queries/iam/iam';
 
 import {
@@ -57,9 +57,9 @@ export const AssignSelectedRolesDrawer = ({
     }));
   };
 
-  const { data: accountPermissions } = useAccountPermissions();
+  const { data: accountRoles } = useAccountRoles();
 
-  const { data: existingRoles } = useAccountUserPermissions(username ?? '');
+  const { data: existingRoles } = useUserRoles(username ?? '');
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -83,8 +83,9 @@ export const AssignSelectedRolesDrawer = ({
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
-  const { mutateAsync: updateUserRolePermissions, isPending } =
-    useAccountUserPermissionsMutation(username ?? '');
+  const { mutateAsync: updateUserRoles, isPending } = useUserRolesMutation(
+    username ?? ''
+  );
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
@@ -93,7 +94,7 @@ export const AssignSelectedRolesDrawer = ({
         existingRoles
       );
 
-      await updateUserRolePermissions(mergedRoles);
+      await updateUserRoles(mergedRoles);
       const successMessage = (
         <Typography>
           Roles assigned. See user&apos;s{' '}
@@ -118,7 +119,11 @@ export const AssignSelectedRolesDrawer = ({
   };
 
   return (
-    <Drawer onClose={onClose} open={open} title="Assign Selected Roles to User">
+    <Drawer
+      onClose={onClose}
+      open={open}
+      title={`Assign Role${selectedRoles.length > 1 ? `s` : ``}`}
+    >
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
@@ -139,10 +144,12 @@ export const AssignSelectedRolesDrawer = ({
             direction="column"
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacingFunction(16),
+              marginBottom: theme.spacingFunction(20),
             })}
           >
-            <Typography variant={'h3'}>Users</Typography>
+            <Typography mb={theme.spacingFunction(8)} variant="h3">
+              Users
+            </Typography>
             {allUsers && allUsers?.data?.length > 0 && (
               <Controller
                 control={control}
@@ -160,7 +167,6 @@ export const AssignSelectedRolesDrawer = ({
                     }}
                     options={getUserOptions() || []}
                     placeholder="Select a User"
-                    sx={{ marginTop: theme.tokens.spacing.S12 }}
                     textFieldProps={{ hideLabel: true }}
                   />
                 )}
@@ -175,7 +181,6 @@ export const AssignSelectedRolesDrawer = ({
             spacing={2}
             sx={() => ({
               justifyContent: 'space-between',
-              marginBottom: theme.spacingFunction(16),
             })}
           >
             <Typography variant={'h3'}>
@@ -193,7 +198,7 @@ export const AssignSelectedRolesDrawer = ({
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             selectedRoles.map((role, index) => (
               <AssignSingleSelectedRole
                 hideDetails={areDetailsHidden}

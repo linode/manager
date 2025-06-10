@@ -274,7 +274,9 @@ export const LinodeCreate = () => {
             <VLAN />
           )}
           <UserData />
-          {isLinodeInterfacesEnabled && <Networking />}
+          {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
+            <Networking />
+          )}
           <AdditionalOptions />
           <Addons />
           <EUAgreement />
