@@ -27,7 +27,23 @@ const props: LinodeActionMenuProps = {
   onOpenResizeDialog: vi.fn(),
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+
 describe('LinodeActionMenu', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+  });
+
   describe('Action menu', () => {
     it('should contain all basic actions when the Linode is running', async () => {
       const { getByLabelText, getByText } = renderWithTheme(
@@ -151,18 +167,24 @@ describe('LinodeActionMenu', () => {
         [],
         []
       );
-      expect(result).toMatch('type=');
-      expect(result).toMatch('linodeID=');
+      expect(result).toMatchObject({
+        type: 'Clone Linode',
+        linodeID: '1',
+      });
     });
 
     it('includes `regionID` param if valid region', () => {
       const regionsData = regionFactory.buildList(1, { id: 'us-east' });
       expect(
         buildQueryStringForLinodeClone(1, 'us-east', '', [], regionsData)
-      ).toMatch('regionID=us-east');
+      ).toMatchObject({
+        regionID: 'us-east',
+      });
       expect(
         buildQueryStringForLinodeClone(1, 'invalid-region', '', [], regionsData)
-      ).not.toMatch('regionID=us-east');
+      ).not.toMatchObject({
+        regionID: 'us-east',
+      });
     });
 
     it('includes `typeID` param if valid type', () =>
@@ -174,9 +196,14 @@ describe('LinodeActionMenu', () => {
           extendedTypes,
           []
         )
-      ).toMatch('typeID=g6-standard-2'));
+      ).toMatchObject({
+        typeID: 'g6-standard-2',
+      }));
+
     expect(
       buildQueryStringForLinodeClone(1, '', 'invalid-type', extendedTypes, [])
-    ).not.toMatch('typeID=');
+    ).not.toMatchObject({
+      typeID: 'g6-standard-2',
+    });
   });
 });
