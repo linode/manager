@@ -124,6 +124,11 @@ export const CloudPulsePortFilter = React.memo(
       }
     };
 
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      const validationResult = arePortsValid(e.target.value);
+      setErrorText(validationResult.errorMsg);
+    };
+
     return (
       <TextField
         autoComplete="off"
@@ -131,6 +136,7 @@ export const CloudPulsePortFilter = React.memo(
         helperText={!errorText ? PORTS_HELPER_TEXT : undefined}
         label={label}
         noMarginTop
+        onBlur={handleBlur}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
