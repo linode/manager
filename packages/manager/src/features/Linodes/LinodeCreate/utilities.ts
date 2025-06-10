@@ -165,8 +165,7 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  isShowingNewNetworkingUI: boolean,
-  regionCapabilities?: string[]
+  isShowingNewNetworkingUI: boolean
 ): CreateLinodeRequest => {
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
@@ -175,13 +174,8 @@ export const getLinodeCreatePayload = (
     'linodeInterfaces',
   ]);
 
-  // Only include maintenance_policy_id if the region supports it
-  // TODO: We can remove this condition when it's available in all regions
-  const regionSupportsMaintenancePolicy =
-    regionCapabilities?.includes('Maintenance Policy') ?? false;
-  if (!regionSupportsMaintenancePolicy) {
-    delete values.maintenance_policy_id;
-  } else if (values.maintenance_policy_id === null) {
+  // Convert null to undefined for maintenance_policy_id
+  if (values.maintenance_policy_id === null) {
     values.maintenance_policy_id = undefined;
   }
 

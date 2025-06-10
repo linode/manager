@@ -4,7 +4,6 @@ import {
   useCreateLinodeMutation,
   useMutateAccountAgreements,
   useProfile,
-  useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
@@ -79,7 +78,6 @@ import type {
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
-  const { data: regions } = useRegionsQuery();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
@@ -131,12 +129,7 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const region = regions?.find((r: { id: string }) => r.id === values.region);
-    const payload = getLinodeCreatePayload(
-      values,
-      isLinodeInterfacesEnabled,
-      region?.capabilities
-    );
+    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
 
     try {
       const linode =
