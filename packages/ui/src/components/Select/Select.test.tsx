@@ -41,7 +41,7 @@ describe('Select', () => {
     }
   });
 
-  it('can search the options', async () => {
+  it('can search the options and select one', async () => {
     const { getByLabelText, getByRole, queryByText } = renderWithTheme(
       <Select label="My Select" options={options} searchable />,
     );
@@ -50,11 +50,20 @@ describe('Select', () => {
 
     await userEvent.type(select, 'Option 2');
 
-    // Verify the expected option shows
-    expect(getByRole('option', { name: 'Option 2' })).toBeVisible();
+    const expectedOption = getByRole('option', { name: 'Option 2' });
 
+    // Verify the expected option shows
+    expect(expectedOption).toBeVisible();
+
+    // Verify the other options don't show
     expect(queryByText('Option 1')).toBeNull();
     expect(queryByText('Option 3')).toBeNull();
+
+    // Select the expected option
+    await userEvent.click(expectedOption);
+
+    // Verify the Select's value updates
+    expect(select).toHaveDisplayValue('Option 2');
   });
 
   it('can have its label visually hidden', async () => {
