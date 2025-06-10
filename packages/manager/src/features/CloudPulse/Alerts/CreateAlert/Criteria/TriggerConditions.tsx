@@ -102,6 +102,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     : undefined)
                 }
                 label="Evaluation Period"
+                loading={serviceMetadataLoading}
                 onBlur={field.onBlur}
                 onChange={(
                   _,
@@ -142,6 +143,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     : undefined)
                 }
                 label="Polling Interval"
+                loading={serviceMetadataLoading}
                 onBlur={field.onBlur}
                 onChange={(
                   _,
