@@ -15,10 +15,13 @@ export const POWER_OFF_TOOLTIP_TEXT =
 export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 
 export const MAINTENANCE_POLICY_DESCRIPTION =
-  'Set the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.';
+  'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
 
 export const MAINTENANCE_POLICY_LEARN_MORE_URL =
   'https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy';
+
+export const MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT =
+  'Maintenance policy is not available in the selected region.';
 
 export const GPU_PLAN_NOTICE =
   'GPU plan does not support live migration and will perform a warm migration and then cold migration as fallbacks.';

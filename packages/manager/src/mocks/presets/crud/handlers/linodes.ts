@@ -236,9 +236,17 @@ export const createLinode = (mockState: MockState) => [
     // Ensure linode object does not have `interfaces` property
     delete payloadCopy['interfaces'];
 
+    // TODO: Get region capabilities. We can remove this once it's available in all regions
+    const region = await mswDB.get('regions', payload.region);
+    const regionSupportsMaintenancePolicy =
+      region?.capabilities?.includes('Maintenance Policy') ?? false;
+
     const linode = linodeFactory.build({
       created: DateTime.now().toISO(),
       status: 'provisioning',
+      ...(regionSupportsMaintenancePolicy
+        ? { maintenance_policy_id: payload.maintenance_policy_id ?? 1 }
+        : {}),
       ...payloadCopy,
     });
 

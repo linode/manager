@@ -4,6 +4,7 @@ import {
   useCreateLinodeMutation,
   useMutateAccountAgreements,
   useProfile,
+  useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
@@ -38,13 +39,13 @@ import {
 } from 'src/utilities/linodes';
 
 import { Actions } from './Actions';
+import { AdditionalOptions } from './AdditionalOptions/AdditionalOptions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { LinodeCreateError } from './Error';
 import { EUAgreement } from './EUAgreement';
 import { Firewall } from './Firewall';
 import { FirewallAuthorization } from './FirewallAuthorization';
-import { MaintenancePolicy } from './MaintenancePolicy/MaintenancePolicy';
 import { Networking } from './Networking/Networking';
 import { transformLegacyInterfaceErrorsToLinodeInterfaceErrors } from './Networking/utilities';
 import { Plan } from './Plan';
@@ -78,6 +79,7 @@ import type {
 
 export const LinodeCreate = () => {
   const { params, setParams } = useLinodeCreateQueryParams();
+  const { data: regions } = useRegionsQuery();
   const { secureVMNoticesEnabled } = useSecureVMNoticesEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
@@ -129,7 +131,12 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
+    const region = regions?.find((r: { id: string }) => r.id === values.region);
+    const payload = getLinodeCreatePayload(
+      values,
+      isLinodeInterfacesEnabled,
+      region?.capabilities
+    );
 
     try {
       const linode =
@@ -271,7 +278,7 @@ export const LinodeCreate = () => {
             <Networking />
           )}
           {isLinodeInterfacesEnabled && <Networking />}
-          {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
+          <AdditionalOptions />
           <Addons />
           <EUAgreement />
           <Summary />

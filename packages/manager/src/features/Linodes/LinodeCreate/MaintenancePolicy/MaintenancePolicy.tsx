@@ -1,5 +1,5 @@
 import { useRegionQuery } from '@linode/queries';
-import { BetaChip, Notice, Paper, Stack, Typography } from '@linode/ui';
+import { Accordion, BetaChip, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -8,17 +8,18 @@ import {
   GPU_PLAN_NOTICE,
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
+  MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT,
   MAINTENANCE_POLICY_TITLE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
-import { useFlags } from 'src/hooks/useFlags';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { useTypeQuery } from 'src/queries/types';
 
 import type { LinodeCreateFormValues } from '../utilities';
-import type { MaintenancePolicyId } from '@linode/api-v4';
 
 export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const [selectedRegion, selectedType] = useWatch({
     control,
@@ -28,47 +29,51 @@ export const MaintenancePolicy = () => {
   const { data: region } = useRegionQuery(selectedRegion);
   const { data: type } = useTypeQuery(selectedType, Boolean(selectedType));
 
-  const flags = useFlags();
-
   const isGPUPlan = type && type.class === 'gpu';
 
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
 
   return (
-    <Paper>
-      <Stack spacing={2}>
-        <Typography variant="h2">
-          {MAINTENANCE_POLICY_TITLE}{' '}
-          {flags.vmHostMaintenance?.beta && <BetaChip />}
-        </Typography>
-        <Typography>
+    <Accordion
+      detailProps={{ sx: { p: 0 } }}
+      heading={MAINTENANCE_POLICY_TITLE}
+      headingChip={isVMHostMaintenanceEnabled ? <BetaChip /> : undefined}
+      subHeading={
+        <>
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}
           <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
-        </Typography>
-        {regionSupportsMaintenancePolicy && isGPUPlan && (
-          <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>
+        </>
+      }
+      summaryProps={{ sx: { p: 0 } }}
+      sx={{
+        '&.Mui-expanded': {
+          marginTop: 0,
+        },
+      }}
+    >
+      {regionSupportsMaintenancePolicy && isGPUPlan && (
+        <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>
+      )}
+      <Controller
+        control={control}
+        name="maintenance_policy_id"
+        render={({ field, fieldState }) => (
+          <MaintenancePolicySelect
+            disabled={!regionSupportsMaintenancePolicy}
+            errorText={fieldState.error?.message}
+            onChange={(_, item) => {
+              field.onChange(item.value);
+            }}
+            textFieldProps={{
+              helperText: !regionSupportsMaintenancePolicy
+                ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
+                : undefined,
+            }}
+            value={field.value ?? undefined}
+          />
         )}
-        <Controller
-          control={control}
-          name="maintenance_policy_id"
-          render={({ field, fieldState }) => (
-            <MaintenancePolicySelect
-              disabled={!regionSupportsMaintenancePolicy}
-              errorText={fieldState.error?.message}
-              onChange={(_, item) => {
-                field.onChange(item.value);
-              }}
-              textFieldProps={{
-                helperText: !regionSupportsMaintenancePolicy
-                  ? 'Maintenance policy is not available in the selected region.'
-                  : undefined,
-              }}
-              value={field.value as MaintenancePolicyId}
-            />
-          )}
-        />
-      </Stack>
-    </Paper>
+      />
+    </Accordion>
   );
 };

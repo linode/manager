@@ -165,7 +165,8 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  isShowingNewNetworkingUI: boolean
+  isShowingNewNetworkingUI: boolean,
+  regionCapabilities?: string[]
 ): CreateLinodeRequest => {
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
@@ -173,6 +174,16 @@ export const getLinodeCreatePayload = (
     'firewallOverride',
     'linodeInterfaces',
   ]);
+
+  // Only include maintenance_policy_id if the region supports it
+  // TODO: We can remove this condition when it's available in all regions
+  const regionSupportsMaintenancePolicy =
+    regionCapabilities?.includes('Maintenance Policy') ?? false;
+  if (!regionSupportsMaintenancePolicy) {
+    delete values.maintenance_policy_id;
+  } else if (values.maintenance_policy_id === null) {
+    values.maintenance_policy_id = undefined;
+  }
 
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -284,10 +295,18 @@ const defaultInterfaces: InterfacePayload[] = [
  * For example, we add `linode` so we can store the currently selected Linode
  * for the Backups and Clone tab.
  *
+ * We omit `maintenance_policy_id` from CreateLinodeRequest because:
+ * 1. The API expects it to be either 1, 2, or undefined
+ * 2. The form needs to handle null (no policy selected) and undefined (omit from API)
+ * 3. The actual API payload is handled in getLinodeCreatePayload where we:
+ *    - Delete the field if region doesn't support it
+ *    - Convert null to undefined if region supports it
+ *
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
-export interface LinodeCreateFormValues extends CreateLinodeRequest {
+export interface LinodeCreateFormValues
+  extends Omit<CreateLinodeRequest, 'maintenance_policy_id'> {
   /**
    * Manually override firewall policy for sensitive users
    */
@@ -315,6 +334,10 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * Form state for the new Linode interface
    */
   linodeInterfaces: LinodeCreateInterface[];
+  /**
+   * The maintenance policy ID for the Linode
+   */
+  maintenance_policy_id?: MaintenancePolicyId | null;
 }
 
 export interface LinodeCreateFormContext {
