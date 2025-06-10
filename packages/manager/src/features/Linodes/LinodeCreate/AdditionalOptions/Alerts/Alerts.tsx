@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
-import { AclpPreferenceToggle } from 'src/features/Linodes/LinodesDetail/AclpPreferenceToggle';
+import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/LinodeSettingsAlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
