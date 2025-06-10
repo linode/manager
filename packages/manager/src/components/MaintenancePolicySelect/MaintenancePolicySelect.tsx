@@ -29,9 +29,11 @@ const maintenancePolicyOptions: MaintenancePolicyOption[] = [
 ];
 
 interface MaintenancePolicySelectProps {
+  defaultPolicyId?: MaintenancePolicyId;
   disabled?: boolean;
   errorText?: string;
   onChange: SelectProps<MaintenancePolicyOption>['onChange'];
+  options?: MaintenancePolicyOption[];
   sx?: SxProps<Theme>;
   textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
   value: MaintenancePolicyId;
@@ -40,11 +42,23 @@ interface MaintenancePolicySelectProps {
 export const MaintenancePolicySelect = (
   props: MaintenancePolicySelectProps
 ) => {
-  const { disabled, errorText, onChange, sx, textFieldProps, value } = props;
+  const {
+    defaultPolicyId,
+    disabled,
+    errorText,
+    onChange,
+    options,
+    sx,
+    textFieldProps,
+    value,
+  } = props;
 
-  const { data: maintenancePolicies } = useAccountMaintenancePoliciesQuery();
+  const { data: maintenancePolicies } =
+    useAccountMaintenancePoliciesQuery(!options);
 
-  const defaultPolicy = maintenancePolicies?.find((p) => p.is_default);
+  const defaultPolicy = options
+    ? { id: defaultPolicyId }
+    : maintenancePolicies?.find((p) => p.is_default);
 
   return (
     <Autocomplete
@@ -54,20 +68,23 @@ export const MaintenancePolicySelect = (
       label="Maintenance Policy"
       noMarginTop
       onChange={onChange}
-      options={maintenancePolicyOptions}
-      renderOption={(props, option, state) => (
-        <li {...props}>
-          <Stack alignItems="center" direction="row" gap={1}>
-            <Stack>
-              <b>{option.label}</b>
-              {option.description}
+      options={options || maintenancePolicyOptions}
+      renderOption={(props, option, state) => {
+        const { key } = props;
+        return (
+          <li {...props} key={key}>
+            <Stack alignItems="center" direction="row" gap={1}>
+              <Stack>
+                <b>{option.label}</b>
+                {option.description}
+              </Stack>
+              <Box flexGrow={1} />
+              {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
+              {state.selected && <SelectedIcon visible />}
             </Stack>
-            <Box flexGrow={1} />
-            {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
-            {state.selected && <SelectedIcon visible />}
-          </Stack>
-        </li>
-      )}
+          </li>
+        );
+      }}
       sx={sx}
       textFieldProps={{
         InputProps: {
@@ -77,7 +94,9 @@ export const MaintenancePolicySelect = (
         tooltipWidth: 410,
         ...textFieldProps,
       }}
-      value={maintenancePolicyOptions.find((option) => option.value === value)}
+      value={(options || maintenancePolicyOptions).find(
+        (option) => option.value === value
+      )}
     />
   );
 };
