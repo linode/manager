@@ -32,10 +32,12 @@ export const TRANSFER_COSTS_LINK =
 export const ACCELERATED_COMPUTE_INSTANCES_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/accelerated-compute-instances';
 
-export const MTC = {
-  availability_regions: ['us-iad', 'no-east'], // Currently available in iad/oslo regions.
-  available_types: ['g8-premium-128-ht'],
-} as const;
+// List of plan types that belong to the MTC plan group.
+export const MTC_AVAILABLE_PLAN_TYPES = ['g8-premium-128-ht'];
+
+// Only use this for the RegionSelect dropdown in the Linode Migration flow and for mocks in serverHandlers.ts
+// Note: We need to find a way to determine MTC supported regions from the API rather than relying on client-side hardcoded values here.
+export const MTC_SUPPORTED_REGIONS = ['no-east', 'us-iad'];
 
 export const DEDICATED_512_GB_PLAN: ExtendedType = {
   accelerated_devices: 0,
