@@ -35,8 +35,6 @@ export const MaintenancePolicy = () => {
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
 
-  if (!regionSupportsMaintenancePolicy) return null;
-
   return (
     <Paper>
       <Stack spacing={2}>
@@ -48,15 +46,23 @@ export const MaintenancePolicy = () => {
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}
           <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
         </Typography>
-        {isGPUPlan && <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>}
+        {regionSupportsMaintenancePolicy && isGPUPlan && (
+          <Notice variant="warning">{GPU_PLAN_NOTICE}</Notice>
+        )}
         <Controller
           control={control}
           name="maintenance_policy_id"
           render={({ field, fieldState }) => (
             <MaintenancePolicySelect
+              disabled={!regionSupportsMaintenancePolicy}
               errorText={fieldState.error?.message}
               onChange={(_, item) => {
                 field.onChange(item.value);
+              }}
+              textFieldProps={{
+                helperText: !regionSupportsMaintenancePolicy
+                  ? 'Maintenance policy is not available in the selected region.'
+                  : undefined,
               }}
               value={field.value as MaintenancePolicyId}
             />

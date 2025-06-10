@@ -17,7 +17,7 @@ interface MaintenancePolicySelectProps {
   options?: MaintenancePolicyOption[];
   sx?: SxProps<Theme>;
   textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
-  value: MaintenancePolicyId;
+  value?: MaintenancePolicyId;
 }
 
 const optionsTooltipText = (
@@ -49,8 +49,8 @@ export const MaintenancePolicySelect = (
     useAccountMaintenancePoliciesQuery(!options);
 
   const defaultPolicy = options
-    ? { id: defaultPolicyId }
-    : maintenancePolicies?.find((p) => p.is_default);
+    ? { id: defaultPolicyId ?? 1 }
+    : (maintenancePolicies?.find((p) => p.is_default) ?? { id: 1 });
 
   const availableOptions =
     options ||
@@ -60,6 +60,28 @@ export const MaintenancePolicySelect = (
       description: policy.description,
     })) ||
     [];
+
+  const isLoading = !options && !maintenancePolicies;
+
+  // Separate instance needed to maintain consistent controlled state.
+  // As opposed to using same instance and switching between controlled and uncontrolled states.
+  if (isLoading) {
+    return (
+      <Autocomplete
+        disabled
+        label="Maintenance Policy"
+        loading
+        noMarginTop
+        options={[]}
+        value={null}
+      />
+    );
+  }
+
+  const selectedValue = value ?? defaultPolicy.id;
+  const selectedOption = availableOptions.find(
+    (option) => option.value === selectedValue
+  );
 
   return (
     <Autocomplete
@@ -89,13 +111,15 @@ export const MaintenancePolicySelect = (
       sx={sx}
       textFieldProps={{
         InputProps: {
-          endAdornment: value === defaultPolicy?.id && <DefaultPolicyChip />,
+          endAdornment: defaultPolicy?.id === selectedValue && (
+            <DefaultPolicyChip />
+          ),
         },
         tooltipText: optionsTooltipText,
         tooltipWidth: 410,
         ...textFieldProps,
       }}
-      value={availableOptions.find((option) => option.value === value)}
+      value={selectedOption}
     />
   );
 };

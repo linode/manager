@@ -123,6 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
@@ -3182,27 +3183,8 @@ export const handlers = [
   ...vpc,
   ...entities,
   http.get('*/v4beta/maintenance/policies', () => {
-    return HttpResponse.json([
-      {
-        id: 1,
-        label: 'Migrate',
-        name: 'Migrate',
-        description:
-          'Set the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.',
-        is_default: false,
-        notification_period_sec: 86400,
-        type: 'migrate',
-      },
-      {
-        id: 2,
-        label: 'Power Off / Power On',
-        name: 'Power Off / Power On',
-        description:
-          'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
-        is_default: false,
-        notification_period_sec: 86400,
-        type: 'power on/off',
-      },
-    ]);
+    return HttpResponse.json(
+      makeResourcePage(maintenancePolicyFactory.buildList(2))
+    );
   }),
 ];
