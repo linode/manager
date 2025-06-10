@@ -49,6 +49,7 @@ export const LinodeDetail = () => {
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
+      {/* TODO: Tanstack Router - what do we do with this */}
       {/* {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
         <Redirect
           from={`${url}/${path}`}

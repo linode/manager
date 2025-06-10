@@ -30,7 +30,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import {
   getGeneratedLinodeLabel,
@@ -56,9 +56,15 @@ export const StackScriptSelectionList = ({ type }: Props) => {
 
   const queryClient = useQueryClient();
 
-  const { handleOrderChange, order, orderBy } = useOrder({
-    order: 'desc',
-    orderBy: 'deployments_total',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'deployments_total',
+      },
+      from: '/linodes/create',
+    },
+    preferenceKey: 'linode-clone-stackscripts',
   });
 
   const {
