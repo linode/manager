@@ -4,7 +4,7 @@ import { dashboardFactory } from 'src/factories';
 import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
-import { deepEqual, getFilters } from './FilterBuilder';
+import { deepEqual, getFilters, getPortProperties } from './FilterBuilder';
 import {
   buildXFilter,
   checkIfAllMandatoryFiltersAreSelected,
@@ -25,6 +25,8 @@ const mockDashboard = dashboardFactory.build();
 const linodeConfig = FILTER_CONFIG.get('linode');
 
 const dbaasConfig = FILTER_CONFIG.get('dbaas');
+
+const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancers');
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
 
@@ -421,6 +423,29 @@ it('test getCustomSelectProperties method', () => {
     expect(savePreferencesApi).toEqual(false);
     expect(isMultiSelectApi).toEqual(true);
     expect(label).toEqual(name);
+  }
+});
+
+it('test getPortFilterProperties method', () => {
+  const portFilterConfig = nodeBalancerConfig?.filters.find(
+    (filterObj) => filterObj.name === 'Port'
+  );
+
+  expect(portFilterConfig).toBeDefined();
+
+  if (portFilterConfig) {
+    const { handlePortChange, label, savePreferences } = getPortProperties(
+      {
+        config: portFilterConfig,
+        dashboard: dashboardFactory.build({ service_type: 'nodebalancers' }),
+        isServiceAnalyticsIntegration: false,
+      },
+      vi.fn()
+    );
+
+    expect(handlePortChange).toBeDefined();
+    expect(label).toEqual(portFilterConfig.configuration.name);
+    expect(savePreferences).toEqual(true);
   }
 });
 
