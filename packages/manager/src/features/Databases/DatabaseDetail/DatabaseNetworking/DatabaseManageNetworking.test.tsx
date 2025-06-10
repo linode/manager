@@ -27,6 +27,8 @@ const errorStateMessage =
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
   useAllVPCsQuery: vi.fn().mockReturnValue({ data: [] }),
+  useNavigate: vi.fn(() => vi.fn()),
+  useRegionQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -34,6 +36,15 @@ vi.mock('@linode/queries', async () => {
   return {
     ...actual,
     useAllVPCsQuery: queryMocks.useAllVPCsQuery,
+    useRegionQuery: queryMocks.useRegionQuery,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
