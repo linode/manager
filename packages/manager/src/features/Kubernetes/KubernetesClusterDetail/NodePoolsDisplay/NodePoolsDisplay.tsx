@@ -297,6 +297,7 @@ export const NodePoolsDisplay = (props: Props) => {
               handleAccordionClick={() => handleAccordionClick(id)}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
+              isLkeClusterRestricted={isLkeClusterRestricted}
               isOnlyNodePool={pools?.length === 1}
               key={id}
               nodes={nodes ?? []}
