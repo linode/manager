@@ -6,6 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  PORTS_DUPLICATE_PORT_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
@@ -207,12 +208,16 @@ export const isValidPort = (
 export const arePortsValid = (
   ports: string
 ): { errorMsg: string | undefined; isValid: boolean } => {
+  const containsDuplicatePort = ports
+    .split(',')
+    .some((port, index, self) => self.indexOf(port) !== index);
+
   if (ports.startsWith(',')) {
     return { isValid: false, errorMsg: PORTS_LEADING_COMMA_ERROR_MESSAGE };
-  }
-
-  if (ports.includes(',,')) {
+  } else if (ports.includes(',,')) {
     return { isValid: false, errorMsg: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE };
+  } else if (containsDuplicatePort) {
+    return { isValid: true, errorMsg: PORTS_DUPLICATE_PORT_ERROR_MESSAGE };
   }
 
   const portList = ports.split(',');
