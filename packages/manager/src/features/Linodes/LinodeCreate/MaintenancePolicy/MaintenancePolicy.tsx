@@ -12,23 +12,25 @@ import {
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
-import { useAllTypes } from 'src/queries/types';
+import { useTypeQuery } from 'src/queries/types';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { MaintenancePolicyId } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
 
 export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
 
-  const selectedRegion = useWatch({ name: 'region' });
+  const [selectedRegion, selectedType] = useWatch({
+    control,
+    name: ['region', 'type'],
+  });
+
   const { data: region } = useRegionQuery(selectedRegion);
-  const selectedType = useWatch({ name: 'type' });
-  const { data: types } = useAllTypes();
+  const { data: type } = useTypeQuery(selectedType, Boolean(selectedType));
+
   const flags = useFlags();
 
-  const isGPUPlan =
-    types?.find((type) => type.id === selectedType)?.class === 'gpu';
+  const isGPUPlan = type && type.class === 'gpu';
 
   const regionSupportsMaintenancePolicy =
     region?.capabilities.includes('Maintenance Policy') ?? false;
@@ -53,20 +55,8 @@ export const MaintenancePolicy = () => {
           render={({ field, fieldState }) => (
             <MaintenancePolicySelect
               errorText={fieldState.error?.message}
-              onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
-                field.onChange(item?.value);
-              }}
-              sx={(theme) => ({
-                '&&': { marginTop: 0 }, // Override Stack spacing rather than setting `noMarginTop` since component is used elsewhere.
-                [theme.breakpoints.up('md')]: {
-                  minWidth: '480px',
-                },
-              })}
-              textFieldProps={{
-                expand: true,
-                sx: {
-                  width: '468px',
-                },
+              onChange={(_, item) => {
+                field.onChange(item.value);
               }}
               value={field.value as MaintenancePolicyId}
             />

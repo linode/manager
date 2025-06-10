@@ -8,8 +8,7 @@ import { Link } from 'src/components/Link';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { AccountSettings, MaintenancePolicyId } from '@linode/api-v4';
-import type { SelectOption } from '@linode/ui';
+import type { AccountSettings } from '@linode/api-v4';
 
 type MaintenancePolicyValues = Pick<AccountSettings, 'maintenance_policy_id'>;
 
@@ -52,7 +51,7 @@ export const MaintenancePolicy = () => {
         Host Maintenance Policy {flags.vmHostMaintenance?.beta && <BetaChip />}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack mt={1}>
+        <Stack mt={1} spacing={2}>
           <Typography variant="body1">
             Select the preferred default host maintenance policy for newly
             deployed Linodes. During host maintenance events (such as host
@@ -70,11 +69,8 @@ export const MaintenancePolicy = () => {
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
                 errorText={fieldState.error?.message}
-                onChange={(_, item: SelectOption<MaintenancePolicyId>) => {
-                  field.onChange(item?.value);
-                }}
-                textFieldProps={{
-                  expand: true,
+                onChange={(_, item) => {
+                  field.onChange(item.value);
                 }}
                 value={field.value}
               />
