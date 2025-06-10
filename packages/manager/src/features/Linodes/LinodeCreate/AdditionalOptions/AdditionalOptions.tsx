@@ -3,7 +3,7 @@ import React from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import Alerts from './Alerts/Alerts';
+import { Alerts } from './Alerts/Alerts';
 
 export const AdditionalOptions = () => {
   const flags = useFlags();

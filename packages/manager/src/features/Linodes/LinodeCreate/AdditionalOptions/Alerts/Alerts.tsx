@@ -33,5 +33,3 @@ export const Alerts = () => {
     </Accordion>
   );
 };
-
-export default Alerts;
