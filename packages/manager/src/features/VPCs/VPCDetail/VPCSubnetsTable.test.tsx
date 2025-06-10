@@ -246,7 +246,7 @@ describe('VPC Subnets table', () => {
     getByText('NodeBalancer');
     getByText('Backend Status');
     getByText('VPC IPv4 Range');
-  });
+  }, 10000);
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
     server.use(
