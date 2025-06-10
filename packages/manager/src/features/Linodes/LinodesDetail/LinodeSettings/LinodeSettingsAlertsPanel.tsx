@@ -15,6 +15,11 @@ import type { Linode } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
+  /**
+   * Optional Linode ID.
+   * - If provided, the Alerts Panel will be in the edit flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode.
+   */
   linodeId?: number;
 }
 

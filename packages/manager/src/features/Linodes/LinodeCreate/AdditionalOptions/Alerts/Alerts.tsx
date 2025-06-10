@@ -26,7 +26,7 @@ export const Alerts = () => {
     >
       {flags.aclpIntegration && <AclpPreferenceToggle type="alerts" />}
       {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
-        <Notice variant="info">ACLP Alerts comming soon...</Notice>
+        <Notice variant="info">ACLP Alerts coming soon...</Notice>
       ) : (
         <LinodeSettingsAlertsPanel />
       )}
