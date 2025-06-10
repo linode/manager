@@ -85,6 +85,7 @@ export const VPCPanel = (props: Props) => {
             VPC.
           </Typography>
           <Autocomplete
+            data-testid="vpc-select"
             disabled={disabled}
             errorText={vpcError}
             helperText={

@@ -110,7 +110,7 @@ describe('Create a NodeBalancer with VPCs', () => {
     ui.regionSelect.findItemByRegionLabel(region.label).click();
 
     // Confirm that mocked VPC is shown in the Autocomplete, and then select it.
-    cy.findByText('Assign VPC').click();
+    cy.get('[data-testid="vpc-select"]').click();
     cy.focused().type(mockVPC.label);
 
     ui.autocompletePopper
