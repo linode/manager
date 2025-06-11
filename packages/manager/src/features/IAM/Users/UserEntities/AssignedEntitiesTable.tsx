@@ -199,7 +199,10 @@ export const AssignedEntitiesTable = () => {
                     <Typography>{el.role_name}</Typography>
                   </TableCell>
                   <TableCell actionCell>
-                    <ActionMenu actionsList={actions} ariaLabel="action menu" />
+                    <ActionMenu
+                      actionsList={actions}
+                      ariaLabel={`Action menu for entity ${el.entity_name}`}
+                    />
                   </TableCell>
                 </TableRow>
               );
