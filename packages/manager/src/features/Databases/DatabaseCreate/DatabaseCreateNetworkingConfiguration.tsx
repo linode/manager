@@ -47,6 +47,7 @@ export const DatabaseCreateNetworkingConfiguration = (
       <DatabaseCreateAccessControls {...accessControlsConfiguration} />
       <DatabaseVPCSelector
         errors={errors}
+        mode="create"
         onChange={onChange}
         onConfigurationChange={onNetworkingConfigurationChange}
         privateNetworkValues={privateNetworkValues}
