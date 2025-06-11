@@ -18,6 +18,8 @@ import { lkeLimitsPreset } from './extra/limits/lke-limits';
 import { coreAndDistributedRegionsPreset } from './extra/regions/coreAndDistributed';
 import { coreOnlyRegionsPreset } from './extra/regions/coreOnly';
 import { legacyRegionsPreset } from './extra/regions/legacyRegions';
+import { customUserAccountPermissionsPreset } from './extra/userPermissions/customUserAccountPermissions';
+import { customUserEntityPermissionsPreset } from './extra/userPermissions/customUserEntityPermissions';
 
 import type { MockPresetBaseline, MockPresetExtra } from '../types';
 
@@ -45,6 +47,8 @@ export const extraMockPresets: MockPresetExtra[] = [
   customAccountPreset,
   customProfilePreset,
   customEventsPreset,
+  customUserAccountPermissionsPreset,
+  customUserEntityPermissionsPreset,
   customMaintenancePreset,
   customNotificationsPreset,
   linodeLimitsPreset,
