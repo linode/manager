@@ -50,7 +50,6 @@ describe('Alert list table row', () => {
       <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
-        isAlertActionRestricted={true}
         status={true}
       />
     );
