@@ -110,7 +110,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpBetaServices: AlertServiceType[];
+  aclpBetaServices: AclpBetaServices;
   aclpIntegration: boolean;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
@@ -297,4 +297,8 @@ export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
   serviceType: AlertServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
+}
+
+export interface AclpBetaServices {
+  [serviceType: string]: boolean;
 }
