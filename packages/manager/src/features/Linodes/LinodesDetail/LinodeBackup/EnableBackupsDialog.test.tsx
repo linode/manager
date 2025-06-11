@@ -40,13 +40,6 @@ vi.mock('@linode/queries', async () => {
     ...actual,
     useLinodeQuery: queryMocks.useLinodeQuery,
     useRegionsQuery: queryMocks.useRegionsQuery,
-  };
-});
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
     useTypeQuery: queryMocks.useTypeQuery,
   };
 });
