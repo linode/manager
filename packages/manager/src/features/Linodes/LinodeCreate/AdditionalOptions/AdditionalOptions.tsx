@@ -1,14 +1,30 @@
+import { useRegionsQuery } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
+import { isAclpSupportedRegion } from '@linode/utilities';
 import React from 'react';
+import { useWatch } from 'react-hook-form';
 
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Alerts } from './Alerts/Alerts';
 
+import type { CreateLinodeRequest } from '@linode/api-v4';
+
 export const AdditionalOptions = () => {
   const flags = useFlags();
+  const { data: regions } = useRegionsQuery();
 
-  if (!flags.aclpIntegration) {
+  const selectedRegionId = useWatch<CreateLinodeRequest, 'region'>({
+    name: 'region',
+  });
+
+  const isAclpSupportedRegionLinode = isAclpSupportedRegion(
+    'Linodes',
+    selectedRegionId,
+    regions
+  );
+
+  if (!(flags.aclpIntegration && isAclpSupportedRegionLinode)) {
     return null;
   }
 
