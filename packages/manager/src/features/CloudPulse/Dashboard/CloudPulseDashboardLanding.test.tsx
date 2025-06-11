@@ -58,7 +58,9 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     );
 
     expect(
-      screen.getByText('Select a dashboard and filters to visualize metrics.')
+      screen.getByText(
+        'Select a dashboard and apply filters to visualize metrics.'
+      )
     ).toBeDefined();
   });
 
@@ -105,7 +107,9 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
     );
 
     expect(
-      screen.getByText('Select a dashboard and filters to visualize metrics.')
+      screen.getByText(
+        'Select a dashboard and apply filters to visualize metrics.'
+      )
     ).toBeDefined();
   });
 });
