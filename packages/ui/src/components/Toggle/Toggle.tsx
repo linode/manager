@@ -10,6 +10,7 @@ import { TooltipIcon } from '../TooltipIcon';
 import type { SwitchProps } from '@mui/material/Switch';
 
 export interface ToggleProps extends SwitchProps {
+  toggleDisabled?: boolean;
   /**
    * Content to display inside an optional tooltip.
    */
@@ -28,7 +29,7 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { disabled, tooltipText, size = 'medium', sx, ...rest } = props;
+  const { toggleDisabled, tooltipText, size = 'medium', sx, ...rest } = props;
 
   return (
     <Box
@@ -37,40 +38,33 @@ export const Toggle = (props: ToggleProps) => {
         display: 'inline-flex',
       }}
     >
-      {!disabled && (
-        <SvgIcon
-          component={CheckMarkIcon}
-          height="16px"
-          sx={{
-            position: 'absolute',
-            top: size === 'medium' ? '37%' : '32%',
-            left:
-              size === 'medium'
-                ? tooltipText
-                  ? '18%'
-                  : '30%'
-                : tooltipText
-                  ? '15%'
-                  : '25%',
-            fill: 'white',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-          viewBox="0 0 20 20"
-          width="16px"
-        />
-      )}
+      <SvgIcon
+        component={CheckMarkIcon}
+        height="16px"
+        sx={{
+          position: 'absolute',
+          top: size === 'medium' ? '18px' : '15.5px',
+          left: size === 'medium' ? '20px' : tooltipText ? '18px' : '25px',
+          fill: 'white',
+          zIndex: 1,
+          pointerEvents: 'none',
+          opacity: props.checked ? 1 : 0,
+          transition: 'opacity 0.2s ease',
+        }}
+        viewBox="0 0 20 20"
+        width="16px"
+      />
 
       <Switch
+        {...rest}
         checkedIcon={<ToggleOnIcon />}
         color="primary"
         data-qa-toggle={props.checked}
-        disabled={disabled}
+        disabled={toggleDisabled}
         icon={<ToggleOffIcon />}
-        {...rest}
         sx={{
           ...(size === 'small' && {
-            '& .icon': {
+            '&& .icon': {
               height: 16,
               width: 16,
             },
