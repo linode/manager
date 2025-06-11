@@ -1,8 +1,15 @@
-import { Autocomplete } from '@linode/ui';
+import {
+  Autocomplete,
+  BetaChip,
+  Box,
+  SelectedIcon,
+  StyledListItem,
+} from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
 import type { Item } from '../../constants';
@@ -35,7 +42,7 @@ export const CloudPulseServiceSelect = (
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-
+  const { aclpBetaServices = {} } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -81,6 +88,17 @@ export const CloudPulseServiceSelect = (
           }}
           options={getServicesList}
           placeholder="Select a Service"
+          renderOption={(props, option, { selected }) => {
+            const { key, ...rest } = props;
+            const ListItem = key === 'Select All ' ? StyledListItem : 'li';
+            return (
+              <ListItem {...rest} data-qa-option key={key}>
+                <Box flexGrow={1}>{option.label}</Box>{' '}
+                {aclpBetaServices[option.value] && <BetaChip />}
+                <SelectedIcon visible={selected} />
+              </ListItem>
+            );
+          }}
           sx={{ marginTop: '5px' }}
           value={
             getServicesList.find((option) => option.value === field.value) ??
