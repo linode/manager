@@ -112,5 +112,4 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'system',
-  scope: 'entity',
 });
