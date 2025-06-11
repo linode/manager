@@ -25,11 +25,11 @@ const LinodeMetrics = (props: Props) => {
 
   return (
     <Box>
-      {flags.aclpIntegration?.metrics && isAclpSupportedRegionLinode && (
+      {flags.aclpBetaServices?.metrics && isAclpSupportedRegionLinode && (
         <AclpPreferenceToggle type="metrics" />
       )}
 
-      {flags.aclpIntegration?.metrics &&
+      {flags.aclpBetaServices?.metrics &&
       isAclpSupportedRegionLinode &&
       isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View

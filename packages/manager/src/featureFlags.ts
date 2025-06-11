@@ -99,8 +99,9 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
-interface AclpIntegrationFlag {
+interface AclpBetaServices {
   alerts: boolean;
+  dbaas: boolean;
   metrics: boolean;
 }
 
@@ -115,7 +116,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpIntegration: AclpIntegrationFlag;
+  aclpBetaServices: AclpBetaServices;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];
