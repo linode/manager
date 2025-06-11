@@ -10,10 +10,6 @@ import type {
   NodeBalancerConfigPanelProps,
 } from './types';
 
-beforeEach(() => {
-  vi.resetAllMocks();
-});
-
 const node: NodeBalancerConfigNodeFields = {
   address: '',
   label: '',

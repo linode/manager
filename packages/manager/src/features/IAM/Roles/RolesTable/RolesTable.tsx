@@ -255,10 +255,8 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-
                     onClick={(e) => handleExpandToggle(e, roleRow.name)}
                     style={{ minWidth: '26%', wordBreak: 'break-word' }}
-
                   >
                     {roleRow.name}
                   </TableCell>
