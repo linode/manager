@@ -1,4 +1,5 @@
 import { capitalize } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
 import { alertFactory } from 'src/factories';
@@ -12,7 +13,7 @@ describe('Alert list table row', () => {
   it('Should display the data', () => {
     const alert = alertFactory.build();
 
-    const { getByText } = renderWithTheme(
+    renderWithTheme(
       <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
@@ -20,9 +21,9 @@ describe('Alert list table row', () => {
       />
     );
 
-    expect(getByText(alert.label)).toBeInTheDocument();
-    expect(getByText(capitalize(alert.type))).toBeInTheDocument();
-    expect(getByText(alertScopeLabelMap[alert.scope])).toBeInTheDocument();
+    expect(screen.getByText(alert.label)).toBeVisible();
+    expect(screen.getByText(capitalize(alert.type))).toBeVisible();
+    expect(screen.getByText(alertScopeLabelMap[alert.scope])).toBeVisible();
   });
 
   it('Should display metric threshold', () => {
@@ -46,7 +47,7 @@ describe('Alert list table row', () => {
     const alert = alertFactory.build({
       scope: 'region',
     });
-    const { getByRole } = renderWithTheme(
+    renderWithTheme(
       <AlertInformationActionRow
         alert={alert}
         handleToggle={vi.fn()}
@@ -54,8 +55,8 @@ describe('Alert list table row', () => {
       />
     );
 
-    expect(getByRole('checkbox')).toHaveProperty('checked');
-    expect(getByRole('checkbox')).toBeDisabled();
+    expect(screen.getByRole('checkbox')).toHaveProperty('checked');
+    expect(screen.getByRole('checkbox')).toBeDisabled();
 
     const tooltipIcon = document.querySelector('[data-qa-help-tooltip="true"]');
     expect(tooltipIcon).toHaveAttribute(
