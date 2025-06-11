@@ -4,6 +4,7 @@ import {
   useRegionsQuery,
 } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import {
@@ -23,8 +24,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useTypeQuery } from 'src/queries/types';
-
-import { isAclpSupportedRegion } from '../utilities';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>

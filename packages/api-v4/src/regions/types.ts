@@ -27,7 +27,7 @@ export type Capabilities =
   | 'Vlans'
   | 'VPCs';
 
-export type MonitorCapabilities = 'DBAAS' | Capabilities;
+export type AclpServiceTypeCapabilities = 'DBAAS' | Capabilities;
 
 export interface DNSResolvers {
   ipv4: string; // Comma-separated IP addresses
@@ -43,7 +43,7 @@ export interface Region {
   country: Country;
   id: string;
   label: string;
-  monitors: MonitorCapabilities[];
+  monitors: AclpServiceTypeCapabilities[];
   placement_group_limits: {
     maximum_linodes_per_pg: number;
     maximum_pgs_per_customer: null | number; // This value can be unlimited for some customers, for which the API returns the `null` value.
