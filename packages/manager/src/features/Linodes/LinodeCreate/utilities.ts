@@ -399,26 +399,42 @@ export const defaultValues = async (
   let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
   let firewallSettings: FirewallSettings | null = null;
 
-  // Fetch account settings once if either feature flag is enabled
-  if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
+  // Fetch account settings for interface generation if enabled
+  if (flags.isLinodeInterfacesEnabled) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
       );
 
       // Don't set the interface generation when cloning. The API can figure that out
-      if (flags.isLinodeInterfacesEnabled && params.type !== 'Clone Linode') {
+      if (params.type !== 'Clone Linode') {
         interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
           accountSettings.interfaces_for_new_linodes
         );
       }
-
-      if (flags.isVMHostMaintenanceEnabled) {
-        defaultMaintenancePolicy =
-          accountSettings.maintenance_policy_id ?? null;
-      }
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
+    }
+  }
+
+  // Fetch maintenance policies if VM host maintenance is enabled
+  //
+  // We use the /v4beta/maintenance/policies endpoint instead of account settings
+  // because maintenance_policy_id is only available in the beta account settings
+  // endpoint (/v4beta/account/settings). By fetching the policies directly and
+  // finding the one marked as default, we avoid having to conditionally use
+  // different API versions.
+  if (flags.isVMHostMaintenanceEnabled) {
+    try {
+      const maintenancePolicies = await queryClient.ensureQueryData(
+        accountQueries.maintenance._ctx.policies
+      );
+      const defaultPolicy = maintenancePolicies.find(
+        (policy) => policy.is_default
+      );
+      defaultMaintenancePolicy = defaultPolicy?.id ?? null;
+    } catch (error) {
+      // silently fail if user can't access maintenance policies
     }
   }
 
