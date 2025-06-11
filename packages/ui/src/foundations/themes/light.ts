@@ -1330,109 +1330,62 @@ export const lightTheme: ThemeOptions = {
     },
     MuiSwitch: {
       styleOverrides: {
-        checked: {},
-        disabled: {},
         root: {
-          '&:hover .MuiSwitch-switchBase:not(.Mui-disabled) + .MuiSwitch-track':
-            {
-              backgroundColor: Component.Switch.Inactive.Hover.Background,
+          width: Spacing.S72,
+          height: Spacing.S48,
+        },
+        switchBase: {
+          padding: Spacing.S16,
+          '&:hover + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Inactive.Hover.Background,
+          },
+          '&.Mui-checked': {
+            '&:hover, &:focus': {
+              backgroundColor: 'transparent',
             },
-          '&:hover .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) + .MuiSwitch-track':
-            {
+            '&:hover + .MuiSwitch-track': {
               backgroundColor: Component.Switch.Active.Hover.Background,
             },
-          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-            backgroundColor: Component.Switch.Active.Default.Background,
+            '.icon': {
+              marginLeft: Spacing.S4,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Default.Background,
+              opacity: 1,
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Disabled.Background,
+            },
           },
-          '& $checked': {
+          '&.Mui-disabled': {
             '& .square': {
-              fill: Color.Neutrals.White,
+              fill: Component.Switch.Inactive.Disabled.Circle,
+              opacity: 0.5,
             },
-            // color: `${primaryColors.main} !important`,
-            '& input': {
-              borderRadius: '10px',
-              left: -20,
-            },
-            '&$switchBase': {
-              '& + $track': {
-                opacity: 1,
-              },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Inactive.Disabled.Background,
+              opacity: 1,
             },
           },
-          '& $disabled': {
-            '&$switchBase': {
-              '& + $track': {
-                backgroundColor: Component.Switch.Inactive.Disabled.Background,
-                borderColor: Color.Neutrals[40],
-              },
-              '& .square': {
-                fill: Color.Neutrals.White,
-              },
-            },
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent',
           },
-          '& .icon': {
+          '.icon': {
             borderRadius: '50%',
-            height: 20,
+            height: Spacing.S20,
+            width: Spacing.S20,
             top: -2,
             left: -2,
             position: 'relative',
-            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-            width: 20,
           },
-          '& .Mui-checked .icon': {
-            marginLeft: '4px',
-          },
-          '& .square': {
-            fill: Color.Neutrals.White,
-            transition: 'fill 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          },
-          '&:hover, &:focus': {
-            '& $checked': {
-              '& + $track': {
-                opacity: 1,
-              },
-            },
-          },
-          '.MuiSwitch-track': {
-            opacity: '1 !important',
-            height: '24px',
-            width: '48px',
-            borderRadius: 12,
-          },
-          height: 48,
-          width: 72,
-        },
-        switchBase: {
-          '&$checked': {
-            transform: 'translateX(-20px)',
-            backgroundColor: `${Component.Switch.Active.Default.Background} !important`,
-          },
-          '&.Mui-disabled': {
-            '& +.MuiSwitch-track': {
-              backgroundColor: Component.Switch.Inactive.Disabled.Background,
-              borderColor: Color.Neutrals[40],
-            },
-          },
-          '&.Mui-checked.Mui-disabled + .MuiSwitch-track': {
-            backgroundColor: Component.Switch.Active.Disabled.Background,
-            borderColor: Color.Neutrals[40],
-          },
-          color: Component.Switch.Active.Default.Background,
-          padding: 16,
-          '&:hover': {
-            backgroundColor: 'transparent !important',
-          },
-          '&:focus': {
-            backgroundColor: 'transparent !important',
+          '.square': {
+            fill: Component.Switch.Inactive.Default.Circle,
           },
         },
         track: {
-          backgroundColor: Component.Switch.Inactive.Default.Background,
-          boxSizing: 'border-box',
           opacity: 1,
-          transition: 'border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-          display: 'flex',
-          alignItems: 'flex-start',
+          borderRadius: Spacing.S12,
+          backgroundColor: Component.Switch.Inactive.Default.Background,
         },
       },
     },
