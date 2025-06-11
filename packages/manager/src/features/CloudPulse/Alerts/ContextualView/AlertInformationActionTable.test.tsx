@@ -40,14 +40,12 @@ const props: AlertInformationActionTableProps = {
 
 describe('Alert Listing Reusable Table for contextual view', () => {
   it('Should render alert table', async () => {
-    const { getByText } = renderWithTheme(
-      <AlertInformationActionTable {...props} />
-    );
+    renderWithTheme(<AlertInformationActionTable {...props} />);
 
-    expect(getByText('Alert Name')).toBeInTheDocument();
-    expect(getByText('Metric Threshold')).toBeInTheDocument();
-    expect(getByText('Alert Type')).toBeInTheDocument();
-    expect(getByText('Scope')).toBeInTheDocument();
+    expect(screen.getByText('Alert Name')).toBeVisible();
+    expect(screen.getByText('Metric Threshold')).toBeVisible();
+    expect(screen.getByText('Alert Type')).toBeVisible();
+    expect(screen.getByText('Scope')).toBeVisible();
   });
 
   it('Should show message for empty table', () => {

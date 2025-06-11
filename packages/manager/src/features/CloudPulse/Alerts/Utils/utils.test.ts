@@ -43,9 +43,9 @@ it('test filterAlertsByStatusAndType method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'system' });
   expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
   expect(filterAlertsByStatusAndType(alerts, '', 'user')).toHaveLength(0);
-  expect(
-    filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')
-  ).toHaveLength(4);
+  expect(filterAlertsByStatusAndType(alerts, 'Alert-1', 'system')).toHaveLength(
+    4
+  );
 });
 
 it('test convertAlertsToTypeSet method', () => {
