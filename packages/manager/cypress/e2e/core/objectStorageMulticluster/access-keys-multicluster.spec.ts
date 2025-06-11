@@ -58,14 +58,12 @@ describe('Object Storage Multicluster access keys', () => {
    */
   it('can create unlimited access keys with OBJ Multicluster', () => {
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       regions: mockRegionsObj.map((mockObjRegion) => ({
         id: mockObjRegion.id,
         s3_endpoint: randomDomainName(),
       })),
-      secret_key: randomString(39),
     });
 
     mockGetAccessKeys([]);
@@ -163,7 +161,6 @@ describe('Object Storage Multicluster access keys', () => {
     });
 
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       bucket_access: mockBuckets.map(
         (bucket): ObjectStorageKeyBucketAccess => ({
           bucket_name: bucket.label,
@@ -181,7 +178,6 @@ describe('Object Storage Multicluster access keys', () => {
           s3_endpoint: randomDomainName(),
         },
       ],
-      secret_key: randomString(39),
     });
 
     mockGetAccessKeys([]);
@@ -304,7 +300,6 @@ describe('Object Storage Multicluster access keys', () => {
     const mockRegions = [mockInitialRegion, mockUpdatedRegion];
 
     const mockAccessKey = objectStorageKeyFactory.build({
-      access_key: randomString(20),
       id: randomNumber(10000, 99999),
       label: randomLabel(),
       regions: [
@@ -313,7 +308,6 @@ describe('Object Storage Multicluster access keys', () => {
           s3_endpoint: randomDomainName(),
         },
       ],
-      secret_key: randomString(39),
     });
 
     const mockUpdatedAccessKeyEndpoint = randomDomainName();

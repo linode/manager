@@ -106,11 +106,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const Account = React.lazy(() =>
-  import('src/features/Account').then((module) => ({
-    default: module.Account,
-  }))
-);
 const LinodesRoutes = React.lazy(() =>
   import('src/features/Linodes').then((module) => ({
     default: module.LinodesRoutes,
@@ -119,11 +114,6 @@ const LinodesRoutes = React.lazy(() =>
 const Profile = React.lazy(() =>
   import('src/features/Profile/Profile').then((module) => ({
     default: module.Profile,
-  }))
-);
-const EventsLanding = React.lazy(() =>
-  import('src/features/Events/EventsLanding').then((module) => ({
-    default: module.EventsLanding,
   }))
 );
 
@@ -304,12 +294,7 @@ export const MainContent = () => {
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
                                 )}
-                                <Route component={Account} path="/account" />
                                 <Route component={Profile} path="/profile" />
-                                <Route
-                                  component={EventsLanding}
-                                  path="/events"
-                                />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
