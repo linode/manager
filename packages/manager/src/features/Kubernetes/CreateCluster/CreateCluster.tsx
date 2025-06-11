@@ -72,7 +72,7 @@ import {
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
-import { NodePoolPanel } from './NodePoolPanel';
+import { DEFAULT_PLAN_COUNT, NodePoolPanel } from './NodePoolPanel';
 
 import type {
   CreateKubeClusterPayload,
@@ -125,6 +125,7 @@ export const CreateCluster = () => {
   const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
     new Map()
   );
+  const [selectedType, setSelectedType] = React.useState<string>();
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -224,6 +225,11 @@ export const CreateCluster = () => {
     poolLabel?: string
   ) => {
     setIsDrawerOpen(isOpen);
+  };
+
+  const updatePlanCount = (planId: string, newCount: number) => {
+    setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
+    setSelectedType(planId);
   };
 
   const createCluster = async () => {
@@ -659,8 +665,14 @@ export const CreateCluster = () => {
         </Grid>
       </Grid>
       <NodePoolConfigDrawer
+        getTypeCount={(planId) =>
+          typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+        }
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
+        planId={selectedType}
+        selectedTier={selectedTier}
+        updatePlanCount={updatePlanCount}
       />
     </>
   );

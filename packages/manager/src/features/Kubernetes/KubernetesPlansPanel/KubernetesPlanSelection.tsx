@@ -214,7 +214,10 @@ export const KubernetesPlanSelection = (
               />
               {
                 <Button
-                  buttonType="secondary"
+                  aria-label={
+                    rowIsDisabled ? disabledPlanReasonCopy : undefined
+                  }
+                  buttonType="primary"
                   disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
                   onClick={() =>
                     onConfigure ? onConfigure(true, plan.formattedLabel) : null

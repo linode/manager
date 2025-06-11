@@ -17,7 +17,7 @@ export interface Props {
   // nodePool: KubeNodePoolResponseBeta | undefined;
   onClose: () => void;
   open: boolean;
-  planId: string;
+  planId: string | undefined;
   selectedTier: KubernetesTier;
   updatePlanCount: (planId: string, newCount: number) => void;
 }
@@ -27,14 +27,15 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open, selectedTier, planId, getTypeCount, updatePlanCount } = props;
+  const { onClose, open, selectedTier, planId, getTypeCount, updatePlanCount } =
+    props;
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {},
     });
 
-  const count = getTypeCount(planId);
+  const count = planId ? getTypeCount(planId) : 0;
 
   // React.useEffect(() => {
   //   if (!nodePool) {
@@ -82,7 +83,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
                 ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
                 : MAX_NODES_PER_POOL_STANDARD_TIER
             }
-            setValue={(newCount: number) => updatePlanCount(planId, newCount)}
+            setValue={(newCount: number) =>
+              planId && updatePlanCount(planId, newCount)
+            }
             value={count}
           />
           <Controller

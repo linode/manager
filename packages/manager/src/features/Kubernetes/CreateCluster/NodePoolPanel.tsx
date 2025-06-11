@@ -20,11 +20,12 @@ import type {
 } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
-const DEFAULT_PLAN_COUNT = 3;
+export const DEFAULT_PLAN_COUNT = 3;
 
 export interface NodePoolPanelProps {
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   apiError?: string;
+  getTypeCount: (planId: string) => number;
   hasSelectedRegion: boolean;
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
@@ -74,9 +75,9 @@ const Panel = (props: NodePoolPanelProps) => {
 
   const { isAcceleratedLKEPlansEnabled } = useIsAcceleratedPlansEnabled();
 
-  // const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
-  //   new Map()
-  // );
+  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+    new Map()
+  );
   const [selectedType, setSelectedType] = React.useState<string | undefined>();
 
   const extendedTypes = types.map(extendType);
@@ -107,8 +108,7 @@ const Panel = (props: NodePoolPanelProps) => {
         <KubernetesPlansPanel
           copy={getPlansPanelCopy()}
           error={apiError}
-          getTypeCount={getTypeCount
-          }
+          getTypeCount={getTypeCount}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
           isAPLEnabled={isAPLEnabled}
