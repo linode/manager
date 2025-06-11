@@ -14,13 +14,17 @@ import { AlertSection } from './AlertSection';
 import type { Linode } from '@linode/api-v4';
 
 interface Props {
-  isCreateFlow?: boolean;
   isReadOnly?: boolean;
+  /**
+   * Optional Linode ID.
+   * - If provided, the Alerts Panel will be in the edit flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode.
+   */
   linodeId?: number;
 }
 
 export const LinodeSettingsAlertsPanel = (props: Props) => {
-  const { isCreateFlow, isReadOnly, linodeId } = props;
+  const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
@@ -41,6 +45,8 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   );
 
   const isBareMetalInstance = type?.class === 'metal';
+
+  const isCreateFlow = !linodeId;
 
   const initialValues = isCreateFlow
     ? {

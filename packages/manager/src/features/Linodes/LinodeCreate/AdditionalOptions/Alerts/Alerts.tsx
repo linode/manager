@@ -47,10 +47,8 @@ export const Alerts = () => {
           serviceType="linode"
         />
       ) : (
-        <LinodeSettingsAlertsPanel isCreateFlow />
+        <LinodeSettingsAlertsPanel />
       )}
     </Accordion>
   );
 };
-
-export default Alerts;
