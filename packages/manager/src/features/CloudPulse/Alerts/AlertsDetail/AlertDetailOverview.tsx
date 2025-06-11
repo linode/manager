@@ -3,6 +3,7 @@ import { CircleProgress, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -41,6 +42,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
   } = alertDetails;
 
   const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
+  const { aclpBetaServices = {} } = useFlags();
 
   if (isFetching) {
     return <CircleProgress />;
@@ -68,6 +70,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         <AlertDetailRow label="Severity" value={severityMap[severity]} />
         <AlertDetailRow
           label="Service"
+          showBetaChip={aclpBetaServices[serviceType]}
           value={getServiceTypeLabel(serviceType, serviceTypeList)}
         />
         <AlertDetailRow

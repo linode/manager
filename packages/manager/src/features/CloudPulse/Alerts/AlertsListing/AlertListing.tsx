@@ -1,9 +1,12 @@
 import {
   Autocomplete,
+  BetaChip,
   Box,
   Button,
   Notice,
+  SelectedIcon,
   Stack,
+  StyledListItem,
   Typography,
 } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
@@ -13,6 +16,7 @@ import AlertsIcon from 'src/assets/icons/entityIcons/alerts.svg';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { SupportLink } from 'src/components/SupportLink';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAllAlertDefinitionsQuery } from 'src/queries/cloudpulse/alerts';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -52,7 +56,7 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-
+  const { aclpBetaServices = {} } = useFlags();
   const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
   const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
 
@@ -238,6 +242,17 @@ export const AlertListing = () => {
             }}
             options={getServicesList}
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
+            renderOption={(props, option, { selected }) => {
+              const { key, ...rest } = props;
+              const ListItem = key === 'Select All ' ? StyledListItem : 'li';
+              return (
+                <ListItem {...rest} data-qa-option key={key}>
+                  <Box flexGrow={1}>{option.label}</Box>{' '}
+                  {aclpBetaServices[option.value] && <BetaChip />}
+                  <SelectedIcon visible={selected} />
+                </ListItem>
+              );
+            }}
             sx={{
               width: searchAndSelectSx,
             }}
