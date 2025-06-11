@@ -173,7 +173,6 @@ export interface ServiceAlert {
 
 export interface Service {
   alert: ServiceAlert;
-  is_beta: boolean;
   label: string;
   regions: string;
   service_type: string;
