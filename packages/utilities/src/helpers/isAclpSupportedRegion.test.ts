@@ -31,6 +31,12 @@ describe('isAclpSupportedRegion', () => {
       id: 'ca-central',
       label: 'Toronto',
     }),
+    regionFactory.build({
+      monitors: undefined,
+      country: 'in',
+      id: 'in-maa',
+      label: 'Chennai',
+    }),
   ];
 
   it('should return false if selectedRegion is undefined', () => {
@@ -73,5 +79,10 @@ describe('isAclpSupportedRegion', () => {
     expect(isAclpSupportedRegion('DBAAS', 'ca-central', mockRegions)).toBe(
       false,
     );
+  });
+
+  it('should return false if monitors is undefined', () => {
+    expect(isAclpSupportedRegion('Linodes', 'in-maa', mockRegions)).toBe(false);
+    expect(isAclpSupportedRegion('DBAAS', 'in-maa', mockRegions)).toBe(false);
   });
 });

@@ -17,5 +17,5 @@ export const isAclpSupportedRegion = (
 
   const region = regions.find((region) => region.id === selectedRegion);
 
-  return region?.monitors.includes(aclpServiceTypeCapability) ?? false;
+  return region?.monitors?.includes(aclpServiceTypeCapability) ?? false;
 };
