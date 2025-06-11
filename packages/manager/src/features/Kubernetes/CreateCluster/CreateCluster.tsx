@@ -1,5 +1,6 @@
 import {
   useAccount,
+  useAllTypes,
   useMutateAccountAgreements,
   useRegionsQuery,
 } from '@linode/queries';
@@ -44,7 +45,6 @@ import {
   useCreateKubernetesClusterMutation,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';

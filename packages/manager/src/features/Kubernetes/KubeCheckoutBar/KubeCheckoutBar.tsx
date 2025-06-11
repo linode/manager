@@ -1,4 +1,8 @@
-import { useAccountAgreements, useProfile } from '@linode/queries';
+import {
+  useAccountAgreements,
+  useProfile,
+  useSpecificTypes,
+} from '@linode/queries';
 import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -6,7 +10,6 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {

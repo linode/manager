@@ -1,3 +1,4 @@
+import { useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -17,7 +18,6 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';

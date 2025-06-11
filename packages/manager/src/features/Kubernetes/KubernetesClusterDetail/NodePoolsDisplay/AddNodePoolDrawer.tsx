@@ -1,3 +1,4 @@
+import { useAllTypes } from '@linode/queries';
 import { ActionsPanel, Box, Drawer, Notice, Typography } from '@linode/ui';
 import {
   isNumber,
@@ -18,7 +19,6 @@ import {
   useCreateNodePoolBetaMutation,
   useCreateNodePoolMutation,
 } from 'src/queries/kubernetes';
-import { useAllTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';

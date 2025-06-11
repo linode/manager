@@ -1,3 +1,4 @@
+import { useSpecificTypes } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -17,7 +18,6 @@ import { makeStyles } from 'tss-react/mui';
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { Link } from 'src/components/Link';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import {
