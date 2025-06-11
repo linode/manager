@@ -102,9 +102,9 @@ export const KubernetesClusterDetail = () => {
       {isLkeClusterRestricted && (
         <Notice
           text={getRestrictedResourceText({
-            action: ['create', 'edit'],
+            action: 'edit',
             resourceType: 'LKE Clusters',
-            isSingular: false,
+            isSingular: true,
           })}
           variant="warning"
         />
