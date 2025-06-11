@@ -71,7 +71,7 @@ export interface FirewallTemplate {
 
 export interface CreateFirewallPayload {
   devices?: null | {
-    linode_interface?: number[];
+    linode_interfaces?: number[];
     linodes?: number[];
     nodebalancers?: number[];
   };
