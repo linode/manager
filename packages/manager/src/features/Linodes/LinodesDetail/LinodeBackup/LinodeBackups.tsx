@@ -81,7 +81,7 @@ export const LinodeBackups = () => {
         ...prev,
         type: 'Backups',
         backupID: backup.id.toString(),
-        linodeID: linode?.id.toString(),
+        linodeID: linode?.id,
         typeID: linode?.type,
       }),
     });

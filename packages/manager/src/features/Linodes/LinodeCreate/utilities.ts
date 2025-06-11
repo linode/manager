@@ -115,9 +115,9 @@ export const useLinodeCreateQueryParams = () => {
   return { params, setParams, updateParams };
 };
 
-const getParsedLinodeCreateQueryParams = (rawParams: {
-  [key: string]: string;
-}): LinodeCreateSearchParams => {
+const getParsedLinodeCreateQueryParams = (
+  rawParams: LinodeCreateSearchParams
+): LinodeCreateSearchParams => {
   return {
     appID: rawParams.appID ?? undefined,
     backupID: rawParams.backupID ?? undefined,

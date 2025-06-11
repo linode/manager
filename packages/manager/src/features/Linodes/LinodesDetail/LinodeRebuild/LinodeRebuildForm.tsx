@@ -39,7 +39,7 @@ interface Props {
 export const LinodeRebuildForm = (props: Props) => {
   const { linode, onSuccess } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const search = useSearch({ from: '/linodes/$linodeId' });
+  const search = useSearch({ strict: false });
 
   const [type, setType] = useState<LinodeRebuildType>('Image');
 
