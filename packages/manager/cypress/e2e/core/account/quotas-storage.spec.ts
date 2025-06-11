@@ -464,11 +464,15 @@ describe('Quota workflow tests', () => {
               });
             });
 
+            mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
+            ui.button.findByTitle('Submit').scrollIntoView();
+
             ui.button
               .findByTitle('Submit')
               .should('be.visible')
-              .scrollIntoView();
-            ui.button.findByTitle('Submit').should('be.enabled').click();
+              .should('be.enabled')
+              .click();
+
             cy.wait('@createTicket').then((xhr) => {
               expect(xhr.request.body?.summary).to.eq(mockTicket.summary);
               // body description appends region id to description so strings don't precisely match
@@ -477,7 +481,6 @@ describe('Quota workflow tests', () => {
               );
             });
           });
-        mockGetSupportTicketReplies(mockTicket.id, []).as('getReplies');
         cy.wait('@getReplies');
         cy.url().should('endWith', `support/tickets/${mockTicket.id}`);
         const header = `#${mockTicket.id}: Increase Object Storage Quota`;
