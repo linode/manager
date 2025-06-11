@@ -24,7 +24,10 @@ export type OAuthQueryParams = {
   state: string; // nonce
 };
 
-export const OAuthCallbackPage = ({ history, location }: RouteComponentProps) => {
+export const OAuthCallbackPage = ({
+  history,
+  location,
+}: RouteComponentProps) => {
   const checkNonce = (nonce: string) => {
     // nonce should be set and equal to ours otherwise retry auth
     const storedNonce = authentication.nonce.get();
