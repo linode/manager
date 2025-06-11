@@ -20,7 +20,11 @@ export const StackScriptSelection = () => {
 
   const onTabChange = (index: number) => {
     // Update the "subtype" query param. (This switches between "Community" and "Account" tabs).
-    updateParams({ stackScriptID: undefined, subtype: tabs[index] });
+    updateParams({
+      stackScriptID: undefined,
+      subtype: tabs[index],
+      type: 'StackScripts',
+    });
     // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
     reset((prev) => ({
       ...prev,
