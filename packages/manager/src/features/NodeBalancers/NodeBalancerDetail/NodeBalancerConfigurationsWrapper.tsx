@@ -1,11 +1,16 @@
-import { useGrants, useNodeBalancerQuery } from '@linode/queries';
+import {
+  useGrants,
+  useNodeBalancerQuery,
+  useNodeBalancerVPCConfigsBetaQuery,
+} from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
+import { useIsNodebalancerVPCEnabled } from '../utils';
 import { NodeBalancerConfigurations } from './NodeBalancerConfigurations';
-import { getConfigsWithNodes } from './requests';
+import { getConfigsWithNodes, getConfigsWithNodesBeta } from './requests';
 
 import type { ConfigsWithNodes } from './requests';
 import type { APIError } from '@linode/api-v4';
@@ -21,10 +26,23 @@ export const NodeBalancerConfigurationsWrapper = () => {
 
   const { data: grants } = useGrants();
   const { data: nodeBalancer } = useNodeBalancerQuery(+nodeBalancerId);
+  const { isNodebalancerVPCEnabled } = useIsNodebalancerVPCEnabled();
+
+  const { data: vpcConfigData } = useNodeBalancerVPCConfigsBetaQuery(
+    Number(nodeBalancerId),
+    isNodebalancerVPCEnabled && nodeBalancerId !== undefined
+  );
+
+  const nodeBalancerVpcId = vpcConfigData?.data?.[0]?.vpc_id;
+  const nodeBalancerSubnetId = vpcConfigData?.data?.[0]?.subnet_id;
+
+  const getConfigNodesFn = isNodebalancerVPCEnabled
+    ? getConfigsWithNodesBeta
+    : getConfigsWithNodes;
 
   const { data, isPending, error } = useQuery<ConfigsWithNodes, APIError[]>({
     queryKey: ['nodebalancers', nodeBalancerId, 'configs-with-nodes'],
-    queryFn: () => getConfigsWithNodes(+nodeBalancerId),
+    queryFn: () => getConfigNodesFn(+nodeBalancerId),
     /**
      * Don't ever cache this query to match old behavior. When we rewrite NodeBalancerConfigurations we will change this.
      */
@@ -47,6 +65,8 @@ export const NodeBalancerConfigurationsWrapper = () => {
       nodeBalancerId={+nodeBalancerId}
       nodeBalancerLabel={nodeBalancer?.label ?? ''}
       nodeBalancerRegion={nodeBalancer?.region ?? ''}
+      nodeBalancerSubnetId={nodeBalancerSubnetId}
+      nodeBalancerVpcId={nodeBalancerVpcId}
       queryClient={queryClient}
     />
   );

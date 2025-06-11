@@ -48,7 +48,10 @@ describe('Rule Editor', () => {
 
         const revisionList = newState[idxToDelete];
 
-        expect(revisionList.at(-1)).toHaveProperty('status', 'PENDING_DELETION');
+        expect(revisionList.at(-1)).toHaveProperty(
+          'status',
+          'PENDING_DELETION'
+        );
       });
 
       it('modifies a rule', () => {
