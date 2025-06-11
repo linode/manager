@@ -18,7 +18,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   const { device, isLinodeRelatedDevice } = props;
   const { id, label, type, url } = device.entity;
 
-  const isInterfaceDevice = type === 'interface';
+  const isInterfaceDevice = type === 'linode_interface';
   // for Linode Interfaces, the url comes in as '/v4/linode/instances/:linodeId/interfaces/:interfaceId
   // we need the Linode ID to create a link
   const entityId = isInterfaceDevice ? Number(url.split('/')[4]) : id;

@@ -72,7 +72,7 @@ export const AddLinodeDrawer = (props: Props) => {
     () =>
       new Set<number>(
         allFirewallEntities
-          .filter((service) => service.type === 'interface')
+          .filter((service) => service.type === 'linode_interface')
           .map((service) => service.id)
       ),
     [allFirewallEntities]
@@ -211,7 +211,7 @@ export const AddLinodeDrawer = (props: Props) => {
         addDevice({
           firewallId: Number(id),
           id: interfaceInfo.interfaceId,
-          type: 'interface',
+          type: 'linode_interface',
         })
       )
     );
