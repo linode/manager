@@ -50,7 +50,7 @@ const DEFAULT_OS = 'linode/ubuntu24.04';
  * We have this because react-router-dom's query strings are not typesafe.
  */
 export const useLinodeCreateQueryParams = () => {
-  const search = useSearch({ from: '/linodes/create' });
+  const search = useSearch({ strict: false });
   const navigate = useNavigate();
 
   /**

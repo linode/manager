@@ -15,6 +15,7 @@ import {
   TooltipIcon,
 } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -53,6 +54,7 @@ interface Props {
 
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
+  const location = useLocation();
 
   const queryClient = useQueryClient();
 
@@ -62,7 +64,9 @@ export const StackScriptSelectionList = ({ type }: Props) => {
         order: 'desc',
         orderBy: 'deployments_total',
       },
-      from: '/linodes/create',
+      from: location.pathname.includes('/linodes/create')
+        ? '/linodes/create'
+        : '/linodes/$linodeId',
     },
     preferenceKey: 'linode-clone-stackscripts',
   });
