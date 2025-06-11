@@ -11,6 +11,7 @@ import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCreateAlertDefinition } from 'src/queries/cloudpulse/alerts';
+import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
 
 import {
   CREATE_ALERT_ERROR_FIELD_MAP,
@@ -114,6 +115,14 @@ export const CreateAlertDefinition = () => {
   );
 
   const serviceTypeWatcher = useWatch({ control, name: 'serviceType' });
+  const {
+    data: serviceMetadata,
+    isLoading: serviceMetadataLoading,
+    error: serviceMetadataError,
+  } = useCloudPulseServiceByServiceType(
+    serviceTypeWatcher ?? '',
+    !!serviceTypeWatcher
+  );
   const scopeWatcher = useWatch({ control, name: 'scope' });
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
 
@@ -227,6 +236,9 @@ export const CreateAlertDefinition = () => {
             <TriggerConditions
               maxScrapingInterval={maxScrapeInterval}
               name="trigger_conditions"
+              serviceMetadata={serviceMetadata?.alert ?? undefined}
+              serviceMetadataError={serviceMetadataError}
+              serviceMetadataLoading={serviceMetadataLoading}
             />
             <AddChannelListing name="channel_ids" />
             <ActionsPanel

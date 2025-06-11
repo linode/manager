@@ -2810,6 +2810,10 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          alert: {
+            evaluation_periods_seconds: [300],
+            polling_interval_seconds: [300],
+          },
         }),
       ],
     };
@@ -2826,7 +2830,10 @@ export const handlers = [
       is_beta: pickRandom([true, false]),
       alert:
         serviceType === 'dbaas'
-          ? serviceAlertFactory.build()
+          ? serviceAlertFactory.build({
+              evaluation_periods_seconds: [300],
+              polling_interval_seconds: [300],
+            })
           : serviceAlertFactory.build({ scope: ['entity'] }),
     });
     return HttpResponse.json(response);

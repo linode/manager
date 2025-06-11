@@ -120,26 +120,6 @@ export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
 
 export const textFieldOperators = ['endswith', 'startswith'];
 
-export const evaluationPeriodOptions = {
-  dbaas: [{ label: '5 min', value: 300 }],
-  linode: [
-    { label: '1 min', value: 60 },
-    { label: '5 min', value: 300 },
-    { label: '15 min', value: 900 },
-    { label: '30 min', value: 1800 },
-    { label: '1 hr', value: 3600 },
-  ],
-};
-
-export const pollingIntervalOptions = {
-  dbaas: [{ label: '5 min', value: 300 }],
-  linode: [
-    { label: '1 min', value: 60 },
-    { label: '5 min', value: 300 },
-    { label: '10 min', value: 600 },
-  ],
-};
-
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
