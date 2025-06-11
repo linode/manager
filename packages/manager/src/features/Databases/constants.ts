@@ -39,3 +39,5 @@ export const LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#ipv6-support';
 export const ADVANCED_CONFIG_LEARN_MORE_LINK =
   'https://techdocs.akamai.com/cloud-computing/docs/advanced-configuration-parameters';
+export const MANAGE_NETWORKING_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/aiven-manage-database#manage-networking';

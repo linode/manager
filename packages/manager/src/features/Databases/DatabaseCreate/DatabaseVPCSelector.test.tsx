@@ -1,4 +1,5 @@
 import { regionFactory } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -54,6 +55,16 @@ const setUpBaseMocks = () => {
   });
 };
 
+const initialHelperText =
+  'In the Select Engine and Region section, select a region with an existing VPC to see available VPCs.';
+const altHelperText = 'No VPC is available in the selected region.';
+
+const vpcSelectorTestId = 'database-vpc-selector';
+const subnetSelectorTestId = 'database-subnet-selector';
+const vpcPlaceholder = 'Select a VPC';
+const subnetPlaceholder = 'Select a subnet';
+const mockMode: 'create' | 'networking' = 'create';
+
 describe('DatabaseVPCSelector', () => {
   const mockProps = {
     errors: {},
@@ -66,6 +77,7 @@ describe('DatabaseVPCSelector', () => {
     },
     resetFormFields: vi.fn(),
     selectedRegionId: '',
+    mode: mockMode,
   };
 
   beforeEach(() => {
@@ -81,25 +93,21 @@ describe('DatabaseVPCSelector', () => {
   });
 
   it('Should render the VPC selector heading', () => {
-    const { getByText } = renderWithTheme(
-      <DatabaseVPCSelector {...mockProps} />
-    );
-    expect(getByText('Assign a VPC', { exact: true })).toBeInTheDocument();
+    renderWithTheme(<DatabaseVPCSelector {...mockProps} />);
+    const vpcField = screen.getByText('Assign a VPC', { exact: true });
+    expect(vpcField).toBeInTheDocument();
   });
 
   it('Should render VPC autocomplete in initial disabled state', () => {
-    const { getByTestId, getByText } = renderWithTheme(
-      <DatabaseVPCSelector {...mockProps} />
-    );
-    const vpcSelector = getByTestId('database-vpc-selector');
+    renderWithTheme(<DatabaseVPCSelector {...mockProps} />);
+    const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     expect(vpcSelector).toBeInTheDocument();
-    expect(vpcSelector.querySelector('input')).toBeDisabled();
-    expect(
-      getByText(
-        'In the Select Engine and Region section, select a region with an existing VPC to see available VPCs.',
-        { exact: true }
-      )
-    ).toBeInTheDocument();
+    const vpcSelectorInput = screen.getByPlaceholderText(vpcPlaceholder);
+    expect(vpcSelectorInput).toBeDisabled();
+    const expectedHelperText = screen.getByText(initialHelperText, {
+      exact: true,
+    });
+    expect(expectedHelperText).toBeInTheDocument();
   });
 
   it('Should enable VPC autocomplete when VPCs are available', () => {
@@ -120,13 +128,12 @@ describe('DatabaseVPCSelector', () => {
     });
 
     const mockEnabledProps = { ...mockProps, selectedRegionId: 'us-east' };
-    const { getByTestId } = renderWithTheme(
-      <DatabaseVPCSelector {...mockEnabledProps} />
-    );
+    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
 
-    const vpcSelector = getByTestId('database-vpc-selector');
+    const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     expect(vpcSelector).toBeInTheDocument();
-    expect(vpcSelector.querySelector('input')).toBeEnabled();
+    const vpcSelectorInput = screen.getByPlaceholderText(vpcPlaceholder);
+    expect(vpcSelectorInput).toBeEnabled();
   });
 
   it('Should enable Subnet autocomplete when VPC is selected', async () => {
@@ -150,18 +157,16 @@ describe('DatabaseVPCSelector', () => {
       privateNetworkValues: mockPrivateNetwork,
       selectedRegionId: 'us-east',
     };
-    const { getByTestId } = renderWithTheme(
-      <DatabaseVPCSelector {...mockEnabledProps} />
-    );
+    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
 
-    const vpcSelector = getByTestId('database-vpc-selector');
-    const vpcSelectorInput = vpcSelector.querySelector(
-      'input'
+    const vpcInput = screen.getByPlaceholderText(
+      vpcPlaceholder
     ) as HTMLInputElement;
-    expect(vpcSelectorInput?.value).toBe(mockVPCWithSubnet.label);
-    const subnetSelector = getByTestId('database-subnet-selector');
+    expect(vpcInput?.value).toBe(mockVPCWithSubnet.label);
+    const subnetSelector = screen.getByTestId(subnetSelectorTestId);
     expect(subnetSelector).toBeInTheDocument();
-    expect(subnetSelector.querySelector('input')).toBeEnabled();
+    const subnetInput = screen.getByPlaceholderText(subnetPlaceholder);
+    expect(subnetInput).toBeEnabled();
   });
 
   it('Should set fields for VPC, Subnet, and Public Access based on privateNetworkValues values', async () => {
@@ -185,23 +190,24 @@ describe('DatabaseVPCSelector', () => {
       privateNetworkValues: mockPrivateNetwork,
       selectedRegionId: 'us-east',
     };
-    const { getByTestId } = renderWithTheme(
-      <DatabaseVPCSelector {...mockEnabledProps} />
-    );
+    renderWithTheme(<DatabaseVPCSelector {...mockEnabledProps} />);
 
-    const vpcSelector = getByTestId('database-vpc-selector');
-    const vpcSelectorInput = vpcSelector.querySelector(
-      'input'
+    const vpcInput = screen.getByPlaceholderText(
+      vpcPlaceholder
     ) as HTMLInputElement;
-    const subnetSelector = getByTestId('database-subnet-selector');
+    const subnetSelector = screen.getByTestId(subnetSelectorTestId);
     const expectedSubnetValue = `${mockSubnets[0].label} (${mockSubnets[0].ipv4})`;
-    const publicAccessCheckbox = getByTestId('database-public-access-checkbox');
-
-    expect(vpcSelectorInput?.value).toBe(mockVPCWithSubnet.label);
-    expect(subnetSelector).toBeInTheDocument();
-    expect(subnetSelector.querySelector('input')?.value).toBe(
-      expectedSubnetValue
+    const publicAccessCheckbox = screen.getByTestId(
+      'database-public-access-checkbox'
     );
+
+    expect(vpcInput?.value).toBe(mockVPCWithSubnet.label);
+    expect(subnetSelector).toBeInTheDocument();
+
+    const subnetInput = screen.getByPlaceholderText(
+      subnetPlaceholder
+    ) as HTMLInputElement;
+    expect(subnetInput?.value).toBe(expectedSubnetValue);
     expect(publicAccessCheckbox).toBeInTheDocument();
     expect(publicAccessCheckbox.querySelector('input')).toBeChecked();
   });
@@ -235,7 +241,7 @@ describe('DatabaseVPCSelector', () => {
     const resetFormFields = vi.fn();
     const onConfigurationChange = vi.fn();
 
-    const { rerender, getByTestId } = renderWithTheme(
+    const { rerender } = renderWithTheme(
       <DatabaseVPCSelector
         {...mockProps}
         onConfigurationChange={onConfigurationChange}
@@ -261,13 +267,13 @@ describe('DatabaseVPCSelector', () => {
 
     expect(resetFormFields).toHaveBeenCalled();
     expect(onConfigurationChange).toHaveBeenCalledWith(null);
-    const vpcSelector = getByTestId('database-vpc-selector');
-    expect((vpcSelector.querySelector('input') as HTMLInputElement).value).toBe(
-      ''
-    );
+    const vpcInput = screen.getByPlaceholderText(
+      vpcPlaceholder
+    ) as HTMLInputElement;
+    expect((vpcInput as HTMLInputElement).value).toBe('');
   });
 
-  it('Should NOT clear VPC and subnet when selectedRegionId changes from undefined to a valid region', () => {
+  it('Should not clear VPC and subnet when selectedRegionId changes from undefined to a valid region', () => {
     // Initial render with no region selected
     queryMocks.useRegionQuery.mockReturnValue({ data: null });
     queryMocks.useAllVPCsQuery.mockReturnValue({ data: [], isLoading: false });
@@ -302,30 +308,26 @@ describe('DatabaseVPCSelector', () => {
   });
 
   it('Should show long helper text when no region is selected', () => {
-    const { getByText } = renderWithTheme(
-      <DatabaseVPCSelector {...mockProps} selectedRegionId="" />
-    );
-    expect(
-      getByText(
-        'In the Select Engine and Region section, select a region with an existing VPC to see available VPCs.',
-        { exact: true }
-      )
-    ).toBeInTheDocument();
+    renderWithTheme(<DatabaseVPCSelector {...mockProps} selectedRegionId="" />);
+    const expectedHelperText = screen.getByText(initialHelperText, {
+      exact: true,
+    });
+    expect(expectedHelperText).toBeInTheDocument();
   });
 
   it('Should show short helper text when a region is selected but no VPCs are available', () => {
     queryMocks.useRegionQuery.mockReturnValue({ data: mockRegion });
     queryMocks.useAllVPCsQuery.mockReturnValue({ data: [], isLoading: false });
 
-    const { getByText } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector {...mockProps} selectedRegionId="us-east" />
     );
-    expect(
-      getByText('No VPC is available in the selected region.', { exact: true })
-    ).toBeInTheDocument();
+
+    const expectedHelperText = screen.getByText(altHelperText, { exact: true });
+    expect(expectedHelperText).toBeInTheDocument();
   });
 
-  it('Should NOT show helper text when VPCs are available', () => {
+  it('Should not show helper text when VPCs are available', () => {
     const vpcWithSubnet = vpcFactory.build({
       region: 'us-east',
       subnets: subnetFactory.buildList(1, { ipv4: mockIpv4 }),
@@ -336,17 +338,42 @@ describe('DatabaseVPCSelector', () => {
       isLoading: false,
     });
 
-    const { queryByText } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector {...mockProps} selectedRegionId="us-east" />
     );
-    expect(
-      queryByText('No VPC is available in the selected region.')
-    ).not.toBeInTheDocument();
-    expect(
-      queryByText(
-        'In the Select Engine and Region section, select a region with an existing VPC to see available VPCs.'
-      )
-    ).not.toBeInTheDocument();
+    const expectedAltHelperText = screen.queryByText(altHelperText);
+    const expectedInitialHelperText = screen.queryByText(initialHelperText);
+    expect(expectedAltHelperText).not.toBeInTheDocument();
+    expect(expectedInitialHelperText).not.toBeInTheDocument();
+  });
+
+  it('Should show vpc validation error text when there is a vpc error', () => {
+    setUpBaseMocks();
+    const mockPrivateNetwork: PrivateNetwork = {
+      vpc_id: 1234,
+      subnet_id: null,
+      public_access: false,
+    };
+
+    const mockErrors = {
+      private_network: {
+        vpc_id: 'VPC is required.',
+      },
+    };
+
+    renderWithTheme(
+      <DatabaseVPCSelector
+        {...mockProps}
+        errors={mockErrors}
+        privateNetworkValues={mockPrivateNetwork}
+        selectedRegionId="us-east"
+      />
+    );
+
+    const subnetSelector = screen.getByTestId(subnetSelectorTestId);
+    expect(subnetSelector).toBeInTheDocument();
+    const expectedValidationError = screen.getByText('VPC is required.');
+    expect(expectedValidationError).toBeInTheDocument();
   });
 
   it('Should show subnet validation error text when there is a subnet error', () => {
@@ -363,7 +390,7 @@ describe('DatabaseVPCSelector', () => {
       },
     };
 
-    const { getByTestId, getByText } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector
         {...mockProps}
         errors={mockErrors}
@@ -372,9 +399,10 @@ describe('DatabaseVPCSelector', () => {
       />
     );
 
-    const subnetSelector = getByTestId('database-subnet-selector');
+    const subnetSelector = screen.getByTestId(subnetSelectorTestId);
     expect(subnetSelector).toBeInTheDocument();
-    expect(getByText('Subnet is required.')).toBeInTheDocument();
+    const expectedValidationError = screen.getByText('Subnet is required.');
+    expect(expectedValidationError).toBeInTheDocument();
   });
 
   it('Should clear subnet field when the VPC field is cleared', async () => {
@@ -388,7 +416,7 @@ describe('DatabaseVPCSelector', () => {
       public_access: false,
     };
 
-    const { getByTestId } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector
         {...mockProps}
         onChange={onChange}
@@ -398,7 +426,7 @@ describe('DatabaseVPCSelector', () => {
     );
 
     // Simulate clearing the VPC field (user clears the Autocomplete)
-    const vpcSelector = getByTestId('database-vpc-selector');
+    const vpcSelector = screen.getByTestId(vpcSelectorTestId);
     const clearButton = vpcSelector.querySelector(
       'button[title="Clear"]'
     ) as HTMLElement;
@@ -423,7 +451,7 @@ describe('DatabaseVPCSelector', () => {
       public_access: false,
     };
 
-    const { getByTestId, findByText } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector
         {...mockProps}
         onChange={onChange}
@@ -433,14 +461,14 @@ describe('DatabaseVPCSelector', () => {
     );
 
     // Simulate selecting a VPC from the Autocomplete
-    const vpcSelector = getByTestId('database-vpc-selector').querySelector(
-      'input'
+    const vpcInput = screen.getByPlaceholderText(
+      vpcPlaceholder
     ) as HTMLInputElement;
     // Open the autocomplete dropdown
-    await userEvent.click(vpcSelector);
+    await userEvent.click(vpcInput);
 
     // Select the option
-    const newVPC = await findByText('VPC 1');
+    const newVPC = await screen.findByText('VPC 1');
     await userEvent.click(newVPC);
 
     expect(onChange).toHaveBeenCalledWith(
@@ -460,7 +488,7 @@ describe('DatabaseVPCSelector', () => {
       public_access: false,
     };
 
-    const { getByTestId, findByText } = renderWithTheme(
+    renderWithTheme(
       <DatabaseVPCSelector
         {...mockProps}
         onChange={onChange}
@@ -470,15 +498,15 @@ describe('DatabaseVPCSelector', () => {
     );
 
     // Simulate selecting a Subnet from the Autocomplete
-    const subnetSelector = getByTestId(
-      'database-subnet-selector'
-    ).querySelector('input') as HTMLInputElement;
+    const subnetInput = screen.getByPlaceholderText(
+      subnetPlaceholder
+    ) as HTMLInputElement;
 
-    await userEvent.click(subnetSelector);
+    await userEvent.click(subnetInput);
 
     // Select the option
     const expectedSubnetLabel = `${mockSubnets[0].label} (${mockSubnets[0].ipv4})`;
-    const newSubnet = await findByText(expectedSubnetLabel);
+    const newSubnet = await screen.findByText(expectedSubnetLabel);
     await userEvent.click(newSubnet);
 
     expect(onChange).toHaveBeenCalledWith(

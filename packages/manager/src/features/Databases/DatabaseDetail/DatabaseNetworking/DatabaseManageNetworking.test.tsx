@@ -2,24 +2,49 @@ import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, it } from 'vitest';
 
-import { vpcFactory } from 'src/factories';
+import { subnetFactory, vpcFactory } from 'src/factories';
 import { databaseFactory } from 'src/factories/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseManageNetworking } from './DatabaseManageNetworking';
 
 const defaultPlatform = 'rdbms-default';
+const mockVPC = vpcFactory.build({ id: 12345 });
+const mockSubnet = subnetFactory.build({ id: 1 });
+const mockPrivateNetwork = {
+  vpc_id: mockVPC.id,
+  subnet_id: mockSubnet.id,
+  public_access: false,
+};
+const mockDatabase = databaseFactory.build({
+  platform: defaultPlatform,
+  private_network: mockPrivateNetwork,
+});
+
+const errorStateMessage =
+  'There was a problem retrieving your VPC assignment settings. Refresh the page or try again later.';
 
 // Hoist query mocks
 const queryMocks = vi.hoisted(() => ({
-  useVPCQuery: vi.fn().mockReturnValue({ data: {} }),
+  useAllVPCsQuery: vi.fn().mockReturnValue({ data: [] }),
+  useNavigate: vi.fn(() => vi.fn()),
+  useRegionQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useVPCQuery: queryMocks.useVPCQuery,
+    useAllVPCsQuery: queryMocks.useAllVPCsQuery,
+    useRegionQuery: queryMocks.useRegionQuery,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
   };
 });
 
@@ -28,15 +53,19 @@ const loadingTestId = 'circle-progress';
 describe('DatabaseManageNetworking Component', () => {
   beforeEach(() => {
     vi.resetAllMocks();
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: vpcFactory.build(),
+    queryMocks.useAllVPCsQuery.mockReturnValue({
+      data: [vpcFactory.build()],
     });
   });
 
   it('Should render Manage Networking field with Public grid variation when no VPC is configured for the database', () => {
-    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
-    mockDatabase.private_network = null;
-    renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
+    const publicAccessDatabase = databaseFactory.build({
+      platform: defaultPlatform,
+      private_network: null,
+    });
+    renderWithTheme(
+      <DatabaseManageNetworking database={publicAccessDatabase} />
+    );
 
     const heading = screen.getByRole('heading');
     expect(heading.textContent).toBe('Manage Networking');
@@ -47,50 +76,45 @@ describe('DatabaseManageNetworking Component', () => {
   });
 
   it('should render a loading state', async () => {
-    queryMocks.useVPCQuery.mockReturnValue({
+    queryMocks.useAllVPCsQuery.mockReturnValue({
       isLoading: true,
-      data: null,
+      data: [],
     });
-    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
     renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
-    // Should render a loading state
+    // Should render loading state
     const loadingSpinner = screen.getByTestId(loadingTestId);
     expect(loadingSpinner).toBeInTheDocument();
   });
 
-  it('should render error state when a VPC is configured, but useVPCQuery responds with an error', async () => {
-    queryMocks.useVPCQuery.mockReturnValue({
+  it('should render error state when a VPC is configured, but useAllVPCsQuery responds with an error', async () => {
+    queryMocks.useAllVPCsQuery.mockReturnValue({
       error: new Error('Failed to fetch VPC'),
     });
-    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
     renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
-    // Should render a loading state
-    const expectedErrorText =
-      'There was a problem retrieving your VPC. Please try again later.';
+    const expectedErrorText = errorStateMessage;
     const errorState = screen.getByText(expectedErrorText);
     expect(errorState).toBeInTheDocument();
   });
 
-  it('should render error state when a VPC is configured, but useVPCQuery responds without a VPC', async () => {
-    queryMocks.useVPCQuery.mockReturnValue({
-      data: null,
+  it('Should render error state when all VPCs query response is successful, but configured VPC is not found', () => {
+    const altVPCId = mockVPC.id + 1;
+    const altMockVPC = vpcFactory.build({ id: altVPCId });
+    queryMocks.useAllVPCsQuery.mockReturnValue({
+      data: [altMockVPC],
+      isLoading: false,
     });
-    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
     renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
-    // Should render a loading state
-    const expectedErrorText =
-      'There was a problem retrieving your VPC. Please try again later.';
-    const errorState = screen.getByText(expectedErrorText);
-    expect(errorState).toBeInTheDocument();
+
+    const expectedErrorMessage = errorStateMessage;
+    const errorMessage = screen.getByText(expectedErrorMessage);
+    expect(errorMessage).toBeInTheDocument();
   });
 
   it('Should render Manage Networking field with VPC grid variation when VPC is configured for the database', () => {
-    queryMocks.useVPCQuery.mockReturnValue({
+    queryMocks.useAllVPCsQuery.mockReturnValue({
       isLoading: false,
-      data: vpcFactory.build(),
-      error: null,
+      data: [mockVPC],
     });
-    const mockDatabase = databaseFactory.build({ platform: defaultPlatform });
     renderWithTheme(<DatabaseManageNetworking database={mockDatabase} />);
 
     const heading = screen.getByRole('heading');

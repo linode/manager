@@ -1,4 +1,4 @@
-import { useVPCQuery } from '@linode/queries';
+import { useAllVPCsQuery } from '@linode/queries';
 import { Button, CircleProgress, ErrorState, Typography } from '@linode/ui';
 import { Grid } from '@mui/material';
 import React from 'react';
@@ -10,6 +10,8 @@ import {
   StyledLabelTypography,
   StyledValueGrid,
 } from '../DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
+import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
+import { DatabaseNetworkingUnassignVPCDialog } from './DatabaseNetworkingUnassignVPCDialog';
 
 import type { Database } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
@@ -58,17 +60,32 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
   }));
 
   const { classes } = useStyles();
+  const [isManageNetworkingDrawerOpen, setIsManageNetworkingDrawerOpen] =
+    React.useState(false);
+  const [isUnassignVPCDialogOpen, setIsUnassignVPCDialogOpen] =
+    React.useState(false);
+
   const vpcId = Number(database.private_network?.vpc_id);
   const hasVPCConfigured = Boolean(vpcId);
   const gridContainerSize = { lg: 7, md: 10 };
   const gridValueSize = { md: 8, xs: 9 };
   const gridLabelSize = { md: 4, xs: 3 };
 
-  const { data: vpc, isLoading, error } = useVPCQuery(vpcId, hasVPCConfigured);
+  const {
+    data: vpcs,
+    error,
+    isLoading,
+  } = useAllVPCsQuery({
+    enabled: !!database?.region,
+    filter: { region: database?.region },
+  });
 
-  const currentSubnet = vpc?.subnets.find(
+  const currentVPC = vpcs?.find((vpc) => vpc.id === vpcId);
+
+  const currentSubnet = currentVPC?.subnets.find(
     (subnet) => subnet.id === database?.private_network?.subnet_id
   );
+  const hasVPCs = Boolean(vpcs && vpcs.length > 0);
 
   const readOnlyHost = () => {
     const defaultValue = 'N/A';
@@ -76,13 +93,22 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
     return <span>{value}</span>;
   };
 
+  const onManageAccess = () => {
+    setIsManageNetworkingDrawerOpen(true);
+  };
+
+  const handleUnassignVPC = () => {
+    setIsManageNetworkingDrawerOpen(false);
+    setIsUnassignVPCDialogOpen(true);
+  };
+
   if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (error || (hasVPCConfigured && !vpc)) {
+  if (error || (hasVPCConfigured && !currentVPC)) {
     return (
-      <ErrorState errorText="There was a problem retrieving your VPC. Please try again later." />
+      <ErrorState errorText="There was a problem retrieving your VPC assignment settings. Refresh the page or try again later." />
     );
   }
 
@@ -104,8 +130,10 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
         <Button
           buttonType="outlined"
           className={classes.manageNetworkingBtn}
-          disabled={true} // TODO (UIE-8617): Add Manage Networking functionality
-          onClick={() => null}
+          disabled={!hasVPCs}
+          onClick={onManageAccess}
+          TooltipProps={{ placement: 'top' }}
+          tooltipText="To manage networking, you need to have a VPC in the same region as the database cluster."
         >
           Manage Networking
         </Button>
@@ -123,7 +151,9 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
             <Grid size={gridLabelSize}>
               <StyledLabelTypography>VPC</StyledLabelTypography>
             </Grid>
-            <StyledValueGrid size={gridValueSize}>{vpc?.label}</StyledValueGrid>
+            <StyledValueGrid size={gridValueSize}>
+              {currentVPC?.label}
+            </StyledValueGrid>
             <Grid size={gridLabelSize}>
               <StyledLabelTypography>Subnet</StyledLabelTypography>
             </Grid>
@@ -160,6 +190,21 @@ export const DatabaseManageNetworking = ({ database }: Props) => {
           </>
         )}
       </StyledGridContainer>
+
+      <DatabaseManageNetworkingDrawer
+        database={database}
+        onClose={() => setIsManageNetworkingDrawerOpen(false)}
+        onUnassign={handleUnassignVPC}
+        open={isManageNetworkingDrawerOpen}
+        vpc={currentVPC}
+      />
+      <DatabaseNetworkingUnassignVPCDialog
+        databaseEngine={database?.engine}
+        databaseId={database?.id}
+        databaseLabel={database?.label}
+        onClose={() => setIsUnassignVPCDialogOpen(false)}
+        open={isUnassignVPCDialogOpen}
+      />
     </>
   );
 };

@@ -128,7 +128,7 @@ export interface DatabaseInstance {
 export type ClusterSize = 1 | 2 | 3;
 
 export interface PrivateNetwork {
-  public_access: boolean;
+  public_access?: boolean;
   subnet_id: null | number;
   vpc_id: null | number;
 }
@@ -241,6 +241,7 @@ export interface UpdateDatabasePayload {
   cluster_size?: number;
   engine_config?: DatabaseInstanceAdvancedConfig;
   label?: string;
+  private_network?: null | PrivateNetwork;
   type?: string;
   updates?: UpdatesSchedule;
   version?: string;
