@@ -14,6 +14,7 @@ interface Props {
 }
 
 export const UserData = (props: Props) => {
+  const { linode, disabled: isReadOnly } = props;
   const { control } = useFormContext<RebuildLinodeFormValues>();
 
   const [imageId, reuseUserData] = useWatch({
@@ -23,7 +24,7 @@ export const UserData = (props: Props) => {
 
   const [formatWarning, setFormatWarning] = React.useState(false);
 
-  const { data: region } = useRegionQuery(props.linode.region);
+  const { data: region } = useRegionQuery(linode.region);
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
   const checkFormat = ({
@@ -47,16 +48,16 @@ export const UserData = (props: Props) => {
   const doesImageSupportCloudInit = image?.capabilities.includes('cloud-init');
 
   const disabled =
-    props.disabled || !doesRegionSupportMetadata || !doesImageSupportCloudInit;
+    isReadOnly || !doesRegionSupportMetadata || !doesImageSupportCloudInit;
 
   return (
     <Accordion
-      defaultExpanded={props.linode.has_user_data}
+      defaultExpanded={linode.has_user_data}
       detailProps={{ sx: { p: 0 } }}
       heading="Add User Data"
       summaryProps={{ sx: { p: 0 } }}
     >
-      {props.linode.has_user_data && (
+      {linode.has_user_data && (
         <Notice spacingBottom={8} spacingTop={0} variant="info">
           Adding new user data is recommended as part of the rebuild process.
         </Notice>
@@ -128,12 +129,12 @@ export const UserData = (props: Props) => {
         name="reuseUserData"
         render={({ field }) => (
           <Checkbox
-            disabled={disabled || !props.linode.has_user_data}
+            disabled={disabled || !linode.has_user_data}
             onChange={field.onChange}
             sx={{ pl: 1.5 }}
-            text={`Reuse user data previously provided for ${props.linode.label}`}
+            text={`Reuse user data previously provided for ${linode.label}`}
             toolTipText={
-              !props.linode.has_user_data
+              !linode.has_user_data
                 ? 'This Linode does not have existing user data.'
                 : undefined
             }
