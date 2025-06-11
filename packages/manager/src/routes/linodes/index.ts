@@ -1,4 +1,4 @@
-import { createRoute } from '@tanstack/react-router';
+import { createRoute, redirect } from '@tanstack/react-router';
 
 import { rootRoute } from '../root';
 import { LinodesRoute } from './LinodesRoute';
@@ -63,6 +63,26 @@ const linodesDetailRoute = createRoute({
     (m) => m.linodeDetailLazyRoute
   )
 );
+
+const linodeCatchAllRoute = createRoute({
+  getParentRoute: () => linodesDetailRoute,
+  path: '$invalidPath',
+  beforeLoad: ({ params }) => {
+    if (
+      ['migrate', 'rebuild', 'rescue', 'resize', 'upgrade'].includes(
+        params.invalidPath
+      )
+    ) {
+      throw redirect({
+        to: '/linodes/$linodeId',
+        params: { linodeId: params.linodeId },
+        search: {
+          [params.invalidPath]: true,
+        },
+      });
+    }
+  },
+});
 
 const linodesDetailCloneRoute = createRoute({
   getParentRoute: () => linodesDetailRoute,
@@ -168,5 +188,6 @@ export const linodesRouteTree = linodesRoute.addChildren([
     linodesDetailSettingsRoute,
     linodesDetailAlertsRoute,
     linodesDetailMetricsRoute,
+    linodeCatchAllRoute,
   ]),
 ]);
