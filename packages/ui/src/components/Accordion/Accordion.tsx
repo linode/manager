@@ -6,6 +6,7 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ChevronDownIcon } from '../../assets';
+import { Box } from '../Box';
 import { Notice } from '../Notice';
 import { Typography } from '../Typography';
 
@@ -29,6 +30,7 @@ const useStyles = makeStyles()((theme: Theme) => ({
     lineHeight: 0,
     position: 'absolute',
     right: 50,
+    top: 8,
     width: 30,
   },
 }));
@@ -66,6 +68,10 @@ export interface AccordionProps extends _AccordionProps {
    * Props to pass to heading's `<Typography />` component
    */
   headingProps?: TypographyProps;
+  /**
+   * Subheading text that shows as a description under the heading
+   */
+  subHeading?: React.ReactNode | string;
   /**
    * Success text that shows as a `<Notice />` at the top of the Accordion's body
    */
@@ -107,6 +113,7 @@ export const Accordion = (props: AccordionProps) => {
     headingNumberCount,
     headingProps,
     success,
+    subHeading,
     summaryProps,
     warning,
     ...accordionProps
@@ -134,10 +141,21 @@ export const Accordion = (props: AccordionProps) => {
         {...summaryProps}
         data-qa-panel-summary={heading}
       >
-        <Typography {...headingProps} data-qa-panel-subheading variant="h3">
-          {heading}
-          {headingChip}
-        </Typography>
+        <Box
+          display="flex"
+          flexDirection="column"
+          rowGap={(theme) => theme.spacingFunction(8)}
+        >
+          <Typography {...headingProps} data-qa-panel-subheading variant="h3">
+            {heading}
+            {headingChip}
+          </Typography>
+          {subHeading && (
+            <Typography color="textSecondary" variant="body1">
+              {subHeading}
+            </Typography>
+          )}
+        </Box>
         {headingNumberCount && headingNumberCount > 0 ? (
           <span className={classes.itemCount}>{headingNumberCount}</span>
         ) : null}

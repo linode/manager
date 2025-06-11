@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
@@ -16,7 +16,7 @@ import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGran
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 export const DatabaseEmptyState = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
   const { isDatabasesV2Enabled, isDatabasesV2GA } = useIsDatabasesEnabled();
 
   const isRestricted = useRestrictedGlobalGrantCheck({
@@ -41,7 +41,9 @@ export const DatabaseEmptyState = () => {
               category: linkAnalyticsEvent.category,
               label: 'Create Database Cluster',
             });
-            push('/databases/create');
+            navigate({
+              to: '/databases/create',
+            });
           },
           tooltipText: getRestrictedResourceText({
             action: 'create',

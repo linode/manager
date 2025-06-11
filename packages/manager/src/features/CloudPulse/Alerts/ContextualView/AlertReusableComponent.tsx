@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@linode/ui';
 import React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';

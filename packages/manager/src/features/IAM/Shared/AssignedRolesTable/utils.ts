@@ -6,8 +6,8 @@ import type {
   AccountEntity,
   EntityAccessRole,
   EntityType,
-  IamAccountPermissions,
-  IamUserPermissions,
+  IamAccountRoles,
+  IamUserRoles,
 } from '@linode/api-v4';
 
 export interface CombinedRoles {
@@ -34,30 +34,42 @@ export const addEntitiesNamesToRoles = (
   roles: ExtendedRoleView[],
   entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): ExtendedRoleView[] => {
-  return roles.map((role) => {
-    // Find the resource group by entity_type
-    const resourceGroup = entities.get(role.entity_type as EntityType);
+  return roles
+    .map((role) => {
+      // Find the entity group by entity_type
+      const entityGroup = entities.get(role.entity_type as EntityType);
 
-    if (resourceGroup && role.entity_ids) {
-      // Map entity_ids to their names
-      const resourceNames = role.entity_ids
-        .map(
-          (id) => resourceGroup.find((resource) => resource.id === id)?.label
-        )
-        .filter((label): label is string => label !== undefined); // Remove undefined values
+      if (entityGroup && role.entity_ids) {
+        // Map entity_ids to their names
+        const entityNames = role.entity_ids
+          .map(
+            (id) => entityGroup.find((resource) => resource.id === id)?.label
+          )
+          .filter((label): label is string => label !== undefined);
 
-      return { ...role, entity_names: resourceNames };
-    }
+        // If the role has `entity_access` and no `entity_names`, exclude it
+        // This can happen if the assigned entity was removed, and the `entityGroup` no longer contains that entity
+        if (role.access === 'entity_access' && entityNames.length === 0) {
+          return null;
+        }
 
-    // If no matching entity_type, return the role unchanged
-    return { ...role, entity_names: [] };
-  });
+        return { ...role, entity_names: entityNames };
+      }
+
+      if (role.access === 'account_access') {
+        return { ...role, entity_names: [] };
+      }
+
+      // For `entity_access` with no matching entity_type, exclude the role
+      return null;
+    })
+    .filter((role) => role !== null);
 };
 
 /**
  * Group account_access and entity_access roles of the user
  */
-export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
+export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
   const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
     new Map();
@@ -97,7 +109,7 @@ export const combineRoles = (data: IamUserPermissions): CombinedRoles[] => {
  * Add descriptions, permissions, type, entities to assigned users roles
  */
 export const mapRolesToPermissions = (
-  accountPermissions: IamAccountPermissions,
+  accountPermissions: IamAccountRoles,
   userRoles: CombinedRoles[]
 ): RoleView[] => {
   const allRoles = mapAccountPermissionsToRoles(accountPermissions);

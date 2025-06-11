@@ -745,7 +745,7 @@ export const mockGetMaintenance = (
   return cy.intercept('GET', apiMatcher(`account/maintenance*`), (req) => {
     const filters = getFilters(req);
 
-    if (filters?.['status'] === 'completed') {
+    if (JSON.stringify(filters?.['status']).includes('completed')) {
       req.reply(paginateResponse(accountCompletedMaintenance));
     } else {
       req.reply(paginateResponse(accountPendingMaintenance));

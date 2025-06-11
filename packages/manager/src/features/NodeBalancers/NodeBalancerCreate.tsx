@@ -68,7 +68,7 @@ import { VPCPanel } from './VPCPanel';
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
 import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { TagOption } from 'src/components/TagsInput/TagsInput';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -337,13 +337,15 @@ const NodeBalancerCreate = () => {
       nodeBalancerRequestData?.vpcs &&
       nodeBalancerRequestData.vpcs.length > 0
     ) {
-      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map(
-        (vpc) => ({
-          ...vpc,
-          ipv4_range: vpc.ipv4_range.endsWith('/30')
-            ? vpc.ipv4_range
-            : `${vpc.ipv4_range}/30`,
-        })
+      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map((vpc) =>
+        vpc.ipv4_range
+          ? {
+              ...vpc,
+              ipv4_range: vpc.ipv4_range.endsWith('/30')
+                ? vpc.ipv4_range
+                : `${vpc.ipv4_range}/30`,
+            }
+          : vpc
       );
     }
     nodeBalancerRequestData.configs = transformConfigsForRequest(
@@ -454,7 +456,7 @@ const NodeBalancerCreate = () => {
     }));
   };
 
-  const tagsChange = (tags: Tag[]) => {
+  const tagsChange = (tags: TagOption[]) => {
     setNodeBalancerFields((prev) => ({
       ...prev,
       tags: tags.map((tag) => tag.value),
@@ -512,7 +514,7 @@ const NodeBalancerCreate = () => {
         return { ...rest };
       });
     } else {
-      const vpcs = subnetIds.map((id) => ({ subnet_id: id, ipv4_range: '' }));
+      const vpcs = subnetIds.map((id) => ({ subnet_id: id }));
       setNodeBalancerFields((prev) => ({
         ...prev,
         vpcs,
@@ -520,19 +522,28 @@ const NodeBalancerCreate = () => {
     }
   };
 
-  const ipv4Change = (ipv4Range: string, index: number) => {
+  const ipv4Change = (ipv4Range: null | string, index: number) => {
     if (nodeBalancerFields?.vpcs?.[index].ipv4_range === ipv4Range) {
       return;
     }
-    if (ipv4Range === '') {
+    const vpcs = nodeBalancerFields?.vpcs;
+    if (ipv4Range === null) {
+      // handling auto-assign ipv4 ranges for all subnets
+      setNodeBalancerFields((prev) => {
+        const { vpcs: vpcs, ...rest } = prev;
+        const updatedVpcs = vpcs?.map(({ subnet_id }) => ({
+          subnet_id,
+        }));
+        return { ...rest, vpcs: updatedVpcs };
+      });
+    } else if (ipv4Range === '') {
+      // removing vpcs from the payload if ipv4 ranges are removed
       setNodeBalancerFields((prev) => {
         // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
         const { vpcs: _, ...rest } = prev;
         return { ...rest };
       });
-    }
-    const vpcs = nodeBalancerFields?.vpcs;
-    if (vpcs) {
+    } else if (vpcs) {
       vpcs[index].ipv4_range = ipv4Range;
       setNodeBalancerFields((prev) => ({
         ...prev,

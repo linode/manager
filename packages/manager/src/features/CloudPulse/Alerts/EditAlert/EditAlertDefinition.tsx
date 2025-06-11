@@ -2,10 +2,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { isEmpty } from '@linode/api-v4';
 import { ActionsPanel, Paper, TextField, Typography } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';
 import { useFlags } from 'src/hooks/useFlags';
@@ -17,15 +17,13 @@ import {
   SINGLELINE_ERROR_SEPARATOR,
   UPDATE_ALERT_SUCCESS_MESSAGE,
 } from '../constants';
-import { AccountGroupingNotice } from '../CreateAlert/CreateAlertDefinition';
 import { MetricCriteriaField } from '../CreateAlert/Criteria/MetricCriteria';
 import { TriggerConditions } from '../CreateAlert/Criteria/TriggerConditions';
+import { EntityScopeRenderer } from '../CreateAlert/EntityScopeRenderer';
 import { AlertEntityScopeSelect } from '../CreateAlert/GeneralInformation/AlertEntityScopeSelect';
 import { CloudPulseAlertSeveritySelect } from '../CreateAlert/GeneralInformation/AlertSeveritySelect';
 import { CloudPulseServiceSelect } from '../CreateAlert/GeneralInformation/ServiceTypeSelect';
 import { AddChannelListing } from '../CreateAlert/NotificationChannels/AddChannelListing';
-import { CloudPulseModifyAlertRegions } from '../CreateAlert/Regions/CloudPulseModifyAlertRegions';
-import { CloudPulseModifyAlertResources } from '../CreateAlert/Resources/CloudPulseModifyAlertResources';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import { filterEditFormValues } from '../CreateAlert/utilities';
 import {
@@ -37,6 +35,7 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
+  AlertDefinitionGroup,
   AlertServiceType,
   APIError,
   EditAlertPayloadWithService,
@@ -55,7 +54,7 @@ export interface EditAlertProps {
 
 export const EditAlertDefinition = (props: EditAlertProps) => {
   const { alertDetails, serviceType } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const formRef = React.useRef<HTMLFormElement>(null);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -85,9 +84,9 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const { control, formState, handleSubmit, setError } = formMethods;
   const [maxScrapeInterval, setMaxScrapeInterval] = React.useState<number>(0);
   const scopeWatcher = useWatch<EditAlertDefintionForm>({
-    name: 'group',
+    name: 'scope',
     control,
-  });
+  }) as AlertDefinitionGroup | null;
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
@@ -100,7 +99,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       enqueueSnackbar(UPDATE_ALERT_SUCCESS_MESSAGE, {
         variant: 'success',
       });
-      history.push(definitionLanding);
+      navigate({ to: definitionLanding });
     } catch (errors) {
       handleMultipleError<EditAlertDefintionForm>({
         errorFieldMap: EDIT_ALERT_ERROR_FIELD_MAP,
@@ -185,14 +184,12 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
           />
           <CloudPulseServiceSelect isDisabled={true} name="serviceType" />
           <CloudPulseAlertSeveritySelect name="severity" />
-          <AlertEntityScopeSelect name="group" />
-          {scopeWatcher === 'per-entity' && (
-            <CloudPulseModifyAlertResources name="entity_ids" />
-          )}
-          {scopeWatcher === 'per-region' && (
-            <CloudPulseModifyAlertRegions name="regions" />
-          )}
-          {scopeWatcher === 'per-account' && <AccountGroupingNotice />}
+          <AlertEntityScopeSelect
+            formMode="edit"
+            name="scope"
+            serviceType={serviceType}
+          />
+          <EntityScopeRenderer scope={scopeWatcher} />
           <MetricCriteriaField
             name="rule_criteria.rules"
             serviceType={serviceType}
@@ -211,7 +208,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
             }}
             secondaryButtonProps={{
               label: 'Cancel',
-              onClick: () => history.push(definitionLanding),
+              onClick: () => navigate({ to: definitionLanding }),
             }}
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           />

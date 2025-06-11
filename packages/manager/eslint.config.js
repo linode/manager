@@ -417,12 +417,18 @@ export const baseConfig = [
   {
     files: [
       // for each new features added to the migration router, add its directory here
+      'src/features/Account/**/*',
+      'src/features/Billing/**/*',
       'src/features/Betas/**/*',
+      'src/features/CloudPulse/**/*',
+      'src/features/Databases/**/*',
       'src/features/Domains/**/*',
       'src/features/DataStream/**/*',
+      'src/features/Events/**/*',
       'src/features/Firewalls/**/*',
       'src/features/Help/**/*',
       'src/features/Images/**/*',
+      'src/features/Kubernetes/**/*',
       'src/features/Longview/**/*',
       'src/features/Managed/**/*',
       'src/features/NodeBalancers/**/*',
@@ -433,6 +439,7 @@ export const baseConfig = [
       'src/components/Tag/**/*',
       'src/features/StackScripts/**/*',
       'src/features/Support/**/*',
+      'src/features/Users/**/*',
       'src/features/Volumes/**/*',
       'src/features/VPCs/**/*',
     ],

@@ -1,20 +1,20 @@
-import { CircleProgress, Paper } from '@linode/ui';
+import { CircleProgress, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
-import { useAccountPermissions } from 'src/queries/iam/iam';
+import { useAccountRoles } from 'src/queries/iam/iam';
 
 export const RolesLanding = () => {
-  const { data: accountPermissions, isLoading } = useAccountPermissions();
+  const { data: accountRoles, isLoading } = useAccountRoles();
 
   const { roles } = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return { roles: [] };
     }
-    const roles = mapAccountPermissionsToRoles(accountPermissions);
+    const roles = mapAccountPermissionsToRoles(accountRoles);
     return { roles };
-  }, [accountPermissions]);
+  }, [accountRoles]);
 
   if (isLoading) {
     return <CircleProgress />;
@@ -22,6 +22,7 @@ export const RolesLanding = () => {
 
   return (
     <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+      <Typography variant="h2">Roles</Typography>
       <RolesTable roles={roles} />
     </Paper>
   );
