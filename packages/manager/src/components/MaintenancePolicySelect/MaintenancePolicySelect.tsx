@@ -1,7 +1,6 @@
 import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
 import {
   Autocomplete,
-  Box,
   InputAdornment,
   SelectedIcon,
   Stack,
@@ -106,14 +105,27 @@ export const MaintenancePolicySelect = (
         const { key } = props;
         return (
           <li {...props} key={key}>
-            <Stack alignItems="center" direction="row" gap={1} width="100%">
-              <Stack>
-                <b>{option.label}</b>
-                {option.description}
+            <Stack gap={0.5} width="100%">
+              <Stack
+                alignItems="center"
+                direction="row"
+                gap={1}
+                justifyContent="space-between"
+                width="100%"
+              >
+                <Typography>{option.label}</Typography>
+                {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
               </Stack>
-              <Box flexGrow={1} />
-              {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
-              {state.selected && <SelectedIcon visible />}
+              <Stack direction="row">
+                <Typography
+                  sx={(theme) => ({
+                    font: theme.tokens.alias.Typography.Label.Regular.Xs,
+                  })}
+                >
+                  {option.description}
+                </Typography>
+                {state.selected && <SelectedIcon visible />}
+              </Stack>
             </Stack>
           </li>
         );

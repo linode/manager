@@ -17,6 +17,12 @@ export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 export const MAINTENANCE_POLICY_DESCRIPTION =
   'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
 
+export const MIGRATE_OPTION =
+  'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.';
+
+export const POWER_OFF_OPTION =
+  'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.';
+
 export const MAINTENANCE_POLICY_LEARN_MORE_URL =
   'https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy';
 
