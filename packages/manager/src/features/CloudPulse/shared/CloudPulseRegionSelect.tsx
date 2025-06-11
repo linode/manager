@@ -6,6 +6,7 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { useFlags } from 'src/hooks/useFlags';
 import { useResourcesQuery } from 'src/queries/cloudpulse/resources';
 
+import { NO_REGION_MESSAGE } from '../Utils/constants';
 import { deepEqual } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 
@@ -145,6 +146,10 @@ export const CloudPulseRegionSelect = React.memo(
         label={label || 'Region'}
         loading={isLoading || isResourcesLoading}
         noMarginTop
+        noOptionsText={
+          NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??
+          'No Regions Available'
+        }
         onChange={(_, region) => {
           setSelectedRegion(region?.id ?? '');
           handleRegionChange(
