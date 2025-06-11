@@ -5,7 +5,7 @@ import React from 'react';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateDelivery } from './StreamCreateDelivery';
-import { DestinationType } from './types';
+import { destinationType } from './types';
 
 describe('StreamCreateDelivery', () => {
   it('should render disabled Destination Type input with proper selection', async () => {
@@ -13,7 +13,7 @@ describe('StreamCreateDelivery', () => {
       component: <StreamCreateDelivery />,
       useFormOptions: {
         defaultValues: {
-          destination_type: DestinationType.LinodeObjectStorage,
+          destination_type: destinationType.LinodeObjectStorage,
         },
       },
     });

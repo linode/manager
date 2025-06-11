@@ -13,20 +13,20 @@ import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
 import {
   type CreateStreamForm,
-  DestinationType,
-  EventType,
-  StreamType,
+  destinationType,
+  eventType,
+  streamType,
 } from './types';
 
 export const StreamCreate = () => {
   const { classes } = useStyles();
   const form = useForm<CreateStreamForm>({
     defaultValues: {
-      type: StreamType.AuditLogs,
-      [EventType.Authorization]: false,
-      [EventType.Authentication]: false,
-      [EventType.Configuration]: false,
-      destination_type: DestinationType.LinodeObjectStorage,
+      type: streamType.AuditLogs,
+      [eventType.Authorization]: false,
+      [eventType.Authentication]: false,
+      [eventType.Configuration]: false,
+      destination_type: destinationType.LinodeObjectStorage,
       region: '',
     },
   });

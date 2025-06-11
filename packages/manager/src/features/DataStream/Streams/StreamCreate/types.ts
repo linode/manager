@@ -1,7 +1,10 @@
-export enum DestinationType {
-  CustomHttps = 'custom_https',
-  LinodeObjectStorage = 'linode_object_storage',
-}
+export const destinationType = {
+  CustomHttps: 'custom_https',
+  LinodeObjectStorage: 'linode_object_storage',
+} as const;
+
+export type DestinationType =
+  (typeof destinationType)[keyof typeof destinationType];
 
 export interface LinodeObjectStorageDetails {
   access_key_id: string;
@@ -19,26 +22,32 @@ export interface CreateDestinationForm extends DestinationDetails {
   destination_type: DestinationType;
 }
 
-export enum StreamType {
-  AuditLogs = 'audit_logs',
-  ErrorLogs = 'error_logs',
-}
+export const streamType = {
+  AuditLogs: 'audit_logs',
+  ErrorLogs: 'error_logs',
+} as const;
 
-export enum StreamStatus {
-  Active = 'active',
-  Inactive = 'inactive',
-}
+export type StreamType = (typeof streamType)[keyof typeof streamType];
 
-export enum EventType {
-  Authentication = 'authn',
-  Authorization = 'authz',
-  Configuration = 'configuration',
-}
+export const streamStatus = {
+  Active: 'active',
+  Inactive: 'inactive',
+} as const;
+
+export type StreamStatus = (typeof streamStatus)[keyof typeof streamStatus];
+
+export const eventType = {
+  Authentication: 'authn',
+  Authorization: 'authz',
+  Configuration: 'configuration',
+} as const;
+
+export type EventType = (typeof eventType)[keyof typeof eventType];
 
 export interface CreateStreamForm extends CreateDestinationForm {
-  [EventType.Authentication]: boolean;
-  [EventType.Authorization]: boolean;
-  [EventType.Configuration]: boolean;
+  [eventType.Authentication]: boolean;
+  [eventType.Authorization]: boolean;
+  [eventType.Configuration]: boolean;
   destination_id: number;
   label: string;
   status: StreamStatus;

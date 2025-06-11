@@ -20,6 +20,6 @@ export const PathSample = (props: PathSampleProps) => {
 
 const StyledValue = styled('span', { label: 'StyledValue' })(({ theme }) => ({
   backgroundColor: theme.tokens.alias.Interaction.Background.Disabled,
-  height: '34px',
+  height: 34,
   padding: theme.spacingFunction(8),
 }));

@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { createFilterOptions } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -19,7 +20,7 @@ import { useStyles } from 'src/features/DataStream/DataStream.styles';
 import { PathSample } from 'src/features/DataStream/Shared/PathSample';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { type CreateStreamForm, DestinationType } from './types';
+import { type CreateStreamForm, destinationType } from './types';
 
 type DestinationName = {
   id?: number;
@@ -32,6 +33,7 @@ export const StreamCreateDelivery = () => {
   const { isGeckoLAEnabled } = useIsGeckoEnabled(gecko2?.enabled, gecko2?.la);
   const { data: regions } = useRegionsQuery();
   const { classes } = useStyles();
+  const theme = useTheme();
   const { control } = useFormContext<CreateStreamForm>();
 
   const [showDestinationForm, setShowDestinationForm] =
@@ -39,11 +41,11 @@ export const StreamCreateDelivery = () => {
 
   const destinationTypeOptions = [
     {
-      value: DestinationType.CustomHttps,
+      value: destinationType.CustomHttps,
       label: 'Custom HTTPS',
     },
     {
-      value: DestinationType.LinodeObjectStorage,
+      value: destinationType.LinodeObjectStorage,
       label: 'Linode Object Storage',
     },
   ];
@@ -71,7 +73,7 @@ export const StreamCreateDelivery = () => {
           label="Docs"
         />
       </Box>
-      <Typography sx={{ marginTop: '12px' }}>
+      <Typography sx={{ mt: theme.spacingFunction(12) }}>
         Define a destination where you want this stream to send logs.
       </Typography>
       <Controller

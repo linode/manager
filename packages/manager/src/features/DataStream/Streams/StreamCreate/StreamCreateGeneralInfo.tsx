@@ -4,7 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { useStyles } from 'src/features/DataStream/DataStream.styles';
 
-import { type CreateStreamForm, StreamType } from './types';
+import { type CreateStreamForm, streamType } from './types';
 
 export const StreamCreateGeneralInfo = () => {
   const { control } = useFormContext<CreateStreamForm>();
@@ -12,11 +12,11 @@ export const StreamCreateGeneralInfo = () => {
 
   const streamTypeOptions = [
     {
-      value: StreamType.AuditLogs,
+      value: streamType.AuditLogs,
       label: 'Audit Logs',
     },
     {
-      value: StreamType.ErrorLogs,
+      value: streamType.ErrorLogs,
       label: 'Error Logs',
     },
   ];
