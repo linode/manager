@@ -20,7 +20,7 @@ export interface LinodeCreateSearchParams {
   appID?: string;
   backupID?: string;
   imageID?: string;
-  linodeID?: string;
+  linodeID?: number;
   stackScriptID?: string;
   subtype?: StackScriptTabType;
   type?: LinodeCreateType;
@@ -142,7 +142,7 @@ const linodesDetailMetricsRoute = createRoute({
 });
 
 const linodesDetailUpgradeInterfacesRoute = createRoute({
-  getParentRoute: () => linodesDetailRoute,
+  getParentRoute: () => linodesDetailConfigurationsRoute,
   path: 'upgrade-interfaces',
 });
 
@@ -160,11 +160,12 @@ export const linodesRouteTree = linodesRoute.addChildren([
       linodesDetailNetworkingInterfacesDetailRoute,
     ]),
     linodesDetailStorageRoute,
-    linodesDetailConfigurationsRoute,
+    linodesDetailConfigurationsRoute.addChildren([
+      linodesDetailUpgradeInterfacesRoute,
+    ]),
     linodesDetailBackupsRoute,
     linodesDetailActivityRoute,
     linodesDetailSettingsRoute,
-    linodesDetailUpgradeInterfacesRoute,
     linodesDetailAlertsRoute,
     linodesDetailMetricsRoute,
   ]),

@@ -88,7 +88,7 @@ const LinodeConfigs = () => {
 
   const openUpgradeInterfacesDialog = () => {
     navigate({
-      to: `/linodes/$linodeId/upgrade-interfaces`,
+      to: `/linodes/$linodeId/configurations/upgrade-interfaces`,
       params: {
         linodeId: id,
       },

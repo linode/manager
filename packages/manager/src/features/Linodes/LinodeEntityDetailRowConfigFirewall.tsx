@@ -59,7 +59,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
 
   const openUpgradeInterfacesDialog = () => {
     navigate({
-      to: '/linodes/$linodeId/upgrade-interfaces',
+      to: '/linodes/$linodeId/configurations/upgrade-interfaces',
       params: { linodeId },
     });
   };

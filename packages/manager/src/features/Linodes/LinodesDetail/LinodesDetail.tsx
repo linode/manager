@@ -1,6 +1,6 @@
 import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { useMatch, useNavigate, useParams } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
@@ -21,13 +21,14 @@ const LinodesDetailNavigation = React.lazy(
 export const LinodeDetail = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
+  const location = useLocation();
 
   const closeUpgradeInterfacesDialog = () => {
     const newPath =
-      match.routeId === '/linodes/$linodeId/upgrade-interfaces'
-        ? match.pathname.split('/').slice(0, -1).join('/')
-        : match.pathname;
+      location.pathname ===
+      `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        ? location.pathname.split('/').slice(0, -1).join('/')
+        : location.pathname;
     navigate({ to: newPath });
   };
 
@@ -68,7 +69,10 @@ export const LinodeDetail = () => {
       <UpgradeInterfacesDialog
         linodeId={linodeId}
         onClose={closeUpgradeInterfacesDialog}
-        open={match.routeId === '/linodes/$linodeId/upgrade-interfaces'}
+        open={
+          location.pathname ===
+          `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        }
       />
     </React.Suspense>
   );
