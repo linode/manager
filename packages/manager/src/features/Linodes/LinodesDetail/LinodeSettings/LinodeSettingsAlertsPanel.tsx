@@ -241,7 +241,9 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
+  const alertsHeading = flags.aclpBetaServices?.alerts
+    ? 'Default Alerts'
+    : 'Alerts';
 
   return (
     <Paper
