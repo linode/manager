@@ -7,12 +7,7 @@ import {
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useMediaQuery, useTheme } from '@mui/material';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-  useSearch,
-} from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -49,7 +44,6 @@ import type { Filter, PlacementGroup } from '@linode/api-v4';
 
 export const PlacementGroupsLanding = React.memo(() => {
   const navigate = useNavigate();
-  const location = useLocation();
   const pagination = usePaginationV2({
     currentRoute: PLACEMENT_GROUPS_LANDING_ROUTE,
     preferenceKey: PG_LANDING_TABLE_PREFERENCE_KEY,
@@ -58,7 +52,6 @@ export const PlacementGroupsLanding = React.memo(() => {
       query: search.query,
     }),
   });
-  const params = useParams({ strict: false });
   const search = useSearch({
     from: PLACEMENT_GROUPS_LANDING_ROUTE,
   });
@@ -116,7 +109,7 @@ export const PlacementGroupsLanding = React.memo(() => {
     isFetching: isFetchingPlacementGroup,
     isLoading: isLoadingPlacementGroup,
     error: selectedPlacementGroupError,
-  } = usePlacementGroupQuery(Number(params.id), !!params.id);
+  } = usePlacementGroupQuery(Number(search.id), !!search.id);
 
   const { data: regions } = useRegionsQuery();
   const getPlacementGroupRegion = (
@@ -130,30 +123,47 @@ export const PlacementGroupsLanding = React.memo(() => {
   });
 
   const handleCreatePlacementGroup = () => {
-    navigate({ search: (prev) => prev, to: '/placement-groups/create' });
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        action: 'create',
+      }),
+      to: PLACEMENT_GROUPS_LANDING_ROUTE,
+    });
   };
 
   const handleEditPlacementGroup = (placementGroup: PlacementGroup) => {
     navigate({
-      params: { action: 'edit', id: placementGroup.id },
-      search: (prev) => prev,
-      to: '/placement-groups/$action/$id',
+      search: (prev) => ({
+        ...prev,
+        action: 'edit',
+        id: placementGroup.id,
+      }),
+      to: PLACEMENT_GROUPS_LANDING_ROUTE,
     });
   };
 
   const handleDeletePlacementGroup = (placementGroup: PlacementGroup) => {
     navigate({
-      params: { action: 'delete', id: placementGroup.id },
-      search: (prev) => prev,
-      to: '/placement-groups/$action/$id',
+      search: (prev) => ({
+        ...prev,
+        action: 'delete',
+        id: placementGroup.id,
+      }),
+      to: '/placement-groups',
     });
   };
 
   const onClosePlacementGroupDrawer = () => {
-    navigate({ search: (prev) => prev, to: PLACEMENT_GROUPS_LANDING_ROUTE });
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        id: undefined,
+      }),
+      to: PLACEMENT_GROUPS_LANDING_ROUTE,
+    });
   };
-
-  const isPlacementGroupCreateDrawerOpen = location.pathname.endsWith('create');
 
   const onSearch = (searchString: string) => {
     navigate({
@@ -161,6 +171,8 @@ export const PlacementGroupsLanding = React.memo(() => {
         ...prev,
         page: undefined,
         query: searchString || undefined,
+        action: undefined,
+        id: undefined,
       }),
       to: PLACEMENT_GROUPS_LANDING_ROUTE,
     });
@@ -180,7 +192,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         <PlacementGroupsCreateDrawer
           disabledPlacementGroupCreateButton={isLinodeReadOnly}
           onClose={onClosePlacementGroupDrawer}
-          open={isPlacementGroupCreateDrawerOpen}
+          open={search.action === 'create'}
         />
       </>
     );
@@ -306,13 +318,13 @@ export const PlacementGroupsLanding = React.memo(() => {
       <PlacementGroupsCreateDrawer
         disabledPlacementGroupCreateButton={isLinodeReadOnly}
         onClose={onClosePlacementGroupDrawer}
-        open={isPlacementGroupCreateDrawerOpen}
+        open={search.action === 'create'}
       />
       <PlacementGroupsEditDrawer
         disableEditButton={isLinodeReadOnly}
         isFetching={isFetchingPlacementGroup}
         onClose={onClosePlacementGroupDrawer}
-        open={params.action === 'edit'}
+        open={search.action === 'edit'}
         region={getPlacementGroupRegion(selectedPlacementGroup)}
         selectedPlacementGroup={selectedPlacementGroup}
         selectedPlacementGroupError={selectedPlacementGroupError}
@@ -322,7 +334,7 @@ export const PlacementGroupsLanding = React.memo(() => {
         isFetching={isLoadingPlacementGroup}
         linodes={linodes}
         onClose={onClosePlacementGroupDrawer}
-        open={params.action === 'delete'}
+        open={search.action === 'delete'}
         selectedPlacementGroup={selectedPlacementGroup}
         selectedPlacementGroupError={selectedPlacementGroupError}
       />
