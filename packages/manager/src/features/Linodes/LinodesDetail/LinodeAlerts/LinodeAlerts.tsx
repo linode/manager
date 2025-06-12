@@ -12,7 +12,7 @@ import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlert
 interface Props {
   isAclpBetaLocal: boolean;
   isAclpSupportedRegionLinode: boolean;
-  setIsAclpBetaLocal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAclpBetaLocal: (value: boolean) => void;
 }
 
 const LinodeAlerts = (props: Props) => {

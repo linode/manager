@@ -7,7 +7,7 @@ import type { ManagerPreferences } from '@linode/utilities';
 
 export interface AclpPreferenceToggleType {
   isAclpBetaLocal: boolean;
-  setIsAclpBetaLocal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAclpBetaLocal: (value: boolean) => void;
   type: 'alerts' | 'metrics';
 }
 

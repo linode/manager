@@ -12,7 +12,7 @@ interface Props {
   isAclpSupportedRegionLinode: boolean;
   linodeCreated: string;
   linodeId: number;
-  setIsAclpBetaLocal: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAclpBetaLocal: (value: boolean) => void;
 }
 
 const LinodeMetrics = (props: Props) => {
