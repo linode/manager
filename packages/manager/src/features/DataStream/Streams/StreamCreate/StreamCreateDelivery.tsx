@@ -23,8 +23,8 @@ import { useFlags } from 'src/hooks/useFlags';
 import { type CreateStreamForm, destinationType } from './types';
 
 type DestinationName = {
+  create?: boolean;
   id?: number;
-  inputValue?: string;
   label: string;
 };
 
@@ -111,40 +111,36 @@ export const StreamCreateDelivery = () => {
 
               if (inputValue !== '' && !isExisting) {
                 filtered.push({
-                  inputValue,
-                  label: `Create "${inputValue}"`,
+                  create: true,
+                  label: inputValue,
                 });
               }
 
               return filtered;
             }}
-            getOptionLabel={(option) => option.inputValue ?? option.label}
+            getOptionLabel={(option) => option.label}
             label="Destination Name"
             onChange={(_, newValue) => {
-              if (newValue?.inputValue) {
-                field.onChange(newValue.inputValue);
-                return setShowDestinationForm(true);
-              } else if (newValue?.label) {
-                field.onChange(newValue.label);
-              } else {
-                field.onChange(newValue);
-              }
-              setShowDestinationForm(false);
+              field.onChange(newValue?.label || newValue);
+              setShowDestinationForm(!!newValue?.create);
             }}
             options={destinationNameOptions}
+            placeholder="Create or Select Destination Name"
             renderOption={(props, option) => {
               const { key, ...optionProps } = props;
               return (
                 <li key={key} {...optionProps}>
-                  {option.label}
+                  {option.create ? (
+                    <>
+                      <strong>Create&nbsp;</strong> &quot;{option.label}&quot;
+                    </>
+                  ) : (
+                    option.label
+                  )}
                 </li>
               );
             }}
-            value={
-              destinationNameOptions.find(
-                ({ label }) => label === field.value
-              ) ?? (field.value ? { label: field.value } : null)
-            }
+            value={field.value ? { label: field.value } : null}
           />
         )}
         rules={{ required: true }}

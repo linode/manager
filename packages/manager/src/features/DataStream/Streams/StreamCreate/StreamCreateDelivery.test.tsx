@@ -69,7 +69,8 @@ describe('StreamCreateDelivery', () => {
 
     // Select the "Create New test destination" option
     const createNewTestDestination = await screen.findByText(
-      'Create "New test destination"'
+      'New test destination',
+      { exact: false }
     );
     await userEvent.click(createNewTestDestination);
   };
