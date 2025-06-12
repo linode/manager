@@ -64,15 +64,13 @@ export const MaintenancePolicy = () => {
           <MaintenancePolicySelect
             disabled={!selectedRegion || !regionSupportsMaintenancePolicy}
             errorText={fieldState.error?.message}
-            onChange={(_, item) => {
-              field.onChange(item.value);
-            }}
+            onChange={(policy) => field.onChange(policy.id)}
             textFieldProps={{
               helperText: showHelperText
                 ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
                 : undefined,
             }}
-            value={field.value ?? undefined}
+            value={field.value}
           />
         )}
       />

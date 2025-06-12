@@ -85,9 +85,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
               <MaintenancePolicySelect
                 disabled={isReadOnly}
                 errorText={fieldState.error?.message}
-                onChange={(_, item) => {
-                  field.onChange(item.value);
-                }}
+                onChange={(policy) => field.onChange(policy.id)}
                 value={field.value}
               />
             )}

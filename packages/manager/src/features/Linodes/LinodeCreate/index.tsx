@@ -270,7 +270,6 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
-          {isLinodeInterfacesEnabled && <Networking />}
           <AdditionalOptions />
           <Addons />
           <EUAgreement />

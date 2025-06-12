@@ -1,4 +1,7 @@
-import { useAccountMaintenancePoliciesQuery } from '@linode/queries';
+import {
+  useAccountMaintenancePoliciesQuery,
+  useAccountSettings,
+} from '@linode/queries';
 import {
   Autocomplete,
   InputAdornment,
@@ -11,97 +14,61 @@ import React from 'react';
 import { MIGRATE_TOOLTIP_TEXT, POWER_OFF_TOOLTIP_TEXT } from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
 
-import type { MaintenancePolicyOption } from './constants';
-import type { MaintenancePolicyId } from '@linode/api-v4';
-import type { SelectProps, SxProps, Theme } from '@linode/ui';
+import type { MaintenancePolicy } from '@linode/api-v4';
+import type { TextFieldProps } from '@linode/ui';
 
-interface MaintenancePolicySelectProps {
-  defaultPolicyId?: MaintenancePolicyId;
+interface Props {
   disabled?: boolean;
   errorText?: string;
-  onChange: SelectProps<MaintenancePolicyOption>['onChange'];
-  options?: MaintenancePolicyOption[];
-  sx?: SxProps<Theme>;
-  textFieldProps?: SelectProps<MaintenancePolicyOption>['textFieldProps'];
-  value?: MaintenancePolicyId;
+  hideDefaultChip?: boolean;
+  onChange: (policy: MaintenancePolicy) => void;
+  textFieldProps?: Partial<TextFieldProps>;
+  value?: null | number;
 }
 
-const optionsTooltipText = (
-  <Stack spacing={2}>
-    <Typography>
-      <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}
-    </Typography>
-    <Typography>
-      <strong>Power Off / Power On:</strong> {POWER_OFF_TOOLTIP_TEXT}
-    </Typography>
-  </Stack>
-);
-
-export const MaintenancePolicySelect = (
-  props: MaintenancePolicySelectProps
-) => {
+export const MaintenancePolicySelect = (props: Props) => {
   const {
-    defaultPolicyId,
     disabled,
     errorText,
     onChange,
-    options,
-    sx,
-    textFieldProps,
     value,
+    hideDefaultChip,
+    textFieldProps,
   } = props;
 
-  const { data: maintenancePolicies, isFetching } =
-    useAccountMaintenancePoliciesQuery(!options);
+  const { data: policies, isFetching } = useAccountMaintenancePoliciesQuery();
+  const { data: accountSettings } = useAccountSettings();
 
-  const defaultPolicy = options
-    ? { id: defaultPolicyId }
-    : maintenancePolicies?.find((p) => p.is_default);
-
-  const availableOptions =
-    options ||
-    maintenancePolicies?.map((policy) => ({
+  const options =
+    policies?.map((policy) => ({
+      ...policy,
       label: policy.name,
-      value: policy.id,
-      description: policy.description,
-    })) ||
-    [];
+    })) ?? [];
 
-  const noMaintenancePolicies = !options && maintenancePolicies === undefined;
+  const defaultPolicyId =
+    accountSettings?.maintenance_policy_id ??
+    policies?.find((p) => p.is_default)?.id;
 
-  // If there's no maintenance policies, show empty list
-  if (noMaintenancePolicies) {
-    return (
-      <Autocomplete
-        disabled
-        errorText={errorText}
-        label="Maintenance Policy"
-        noMarginTop
-        options={[]}
-        textFieldProps={{
-          ...textFieldProps,
-        }}
-        value={null}
-      />
-    );
-  }
-
-  const selectedValue = value ?? defaultPolicy?.id;
-  const selectedOption = availableOptions.find(
-    (option) => option.value === selectedValue
-  );
+  const selectedOption =
+    (value
+      ? options.find((o) => o.id === value)
+      : options.find((o) => o.is_default)) ?? null;
 
   return (
     <Autocomplete
-      disableClearable
+      disableClearable={!!selectedOption}
       disabled={disabled}
       errorText={errorText}
       label="Maintenance Policy"
       loading={isFetching}
       noMarginTop
-      onChange={onChange}
-      options={availableOptions}
-      renderOption={(props, option, state) => {
+      onChange={(e, policy) => {
+        if (policy) {
+          onChange(policy);
+        }
+      }}
+      options={options}
+      renderOption={(props, policy, state) => {
         const { key } = props;
         return (
           <li {...props} key={key}>
@@ -113,8 +80,10 @@ export const MaintenancePolicySelect = (
                 justifyContent="space-between"
                 width="100%"
               >
-                <Typography>{option.label}</Typography>
-                {defaultPolicy?.id === option.value && <DefaultPolicyChip />}
+                <Typography>{policy.name}</Typography>
+                {!hideDefaultChip && defaultPolicyId === policy.id && (
+                  <DefaultPolicyChip />
+                )}
               </Stack>
               <Stack direction="row">
                 <Typography
@@ -122,7 +91,7 @@ export const MaintenancePolicySelect = (
                     font: theme.tokens.alias.Typography.Label.Regular.Xs,
                   })}
                 >
-                  {option.description}
+                  {policy.description}
                 </Typography>
                 {state.selected && <SelectedIcon visible />}
               </Stack>
@@ -130,16 +99,25 @@ export const MaintenancePolicySelect = (
           </li>
         );
       }}
-      sx={sx}
       textFieldProps={{
         InputProps: {
-          endAdornment: defaultPolicy?.id === selectedValue && (
-            <InputAdornment position="end">
-              <DefaultPolicyChip />
-            </InputAdornment>
-          ),
+          endAdornment: !hideDefaultChip &&
+            selectedOption?.id === defaultPolicyId && (
+              <InputAdornment position="end">
+                <DefaultPolicyChip />
+              </InputAdornment>
+            ),
         },
-        tooltipText: optionsTooltipText,
+        tooltipText: (
+          <Stack spacing={2}>
+            <Typography>
+              <strong>Migrate:</strong> {MIGRATE_TOOLTIP_TEXT}
+            </Typography>
+            <Typography>
+              <strong>Power Off / Power On:</strong> {POWER_OFF_TOOLTIP_TEXT}
+            </Typography>
+          </Stack>
+        ),
         tooltipWidth: 410,
         ...textFieldProps,
       }}
