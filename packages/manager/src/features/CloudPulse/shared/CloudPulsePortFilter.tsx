@@ -95,17 +95,17 @@ export const CloudPulsePortFilter = React.memo(
       }
 
       // Check if each segment (split by comma) is a valid port
-      const allValid = arePortsValid(newValue);
-      if (!allValid.isValid) {
+      const validationError = arePortsValid(newValue);
+      if (validationError !== undefined) {
         e.preventDefault();
-        setErrorText(allValid.errorMsg);
+        setErrorText(validationError);
         return;
       }
 
-      setErrorText(undefined);
+      setErrorText(validationError);
     };
 
-    // Only call handlePortChange if the user has stopped typing for 5 seconds
+    // Only call handlePortChange if the user has stopped typing for 0.5 seconds
     const debouncedPortChange = React.useMemo(
       () =>
         debounce(500, (value: string) => {
@@ -118,15 +118,19 @@ export const CloudPulsePortFilter = React.memo(
       setValue(e.target.value);
 
       // Validate and handle the change
-      const validationResult = arePortsValid(e.target.value);
-      if (validationResult.isValid) {
+      const validationError = arePortsValid(e.target.value);
+      if (validationError === undefined) {
         debouncedPortChange(e.target.value);
       }
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      const validationResult = arePortsValid(e.target.value);
-      setErrorText(validationResult.errorMsg);
+      const validationError = arePortsValid(e.target.value);
+      if (validationError === undefined) {
+        // Cancel any pending debouncedPortChange calls
+        debouncedPortChange.cancel();
+        handlePortChange(e.target.value, [PORT], savePreferences);
+      }
     };
 
     return (

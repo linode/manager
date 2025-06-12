@@ -5,11 +5,7 @@ import React from 'react';
 import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import {
-  PORTS_DUPLICATE_PORT_ERROR_MESSAGE,
-  PORTS_ERROR_MESSAGE,
-  PORTS_HELPER_TEXT,
-} from '../Utils/constants';
+import { PORTS_ERROR_MESSAGE, PORTS_HELPER_TEXT } from '../Utils/constants';
 import { CloudPulsePortFilter } from './CloudPulsePortFilter';
 
 import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
@@ -73,16 +69,5 @@ describe('CloudPulsePortFilter', () => {
     const input = screen.getByLabelText('Port');
     await user.type(input, '8');
     expect(mockHandlePortChange).not.toHaveBeenCalled();
-  });
-
-  it('should throw error on duplicate value input on blur', async () => {
-    const user = userEvent.setup();
-    renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
-
-    const input = screen.getByLabelText('Port');
-    await user.type(input, '80,443,80');
-    // blur the input by clicking outside
-    await user.keyboard('{Tab}');
-    expect(screen.getByText(PORTS_DUPLICATE_PORT_ERROR_MESSAGE)).toBeVisible();
   });
 });

@@ -6,8 +6,6 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
-  PORTS_DUPLICATE_PORT_ERROR_MESSAGE,
-  PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
@@ -173,51 +171,39 @@ export const getAllDashboards = (
 
 /**
  * @param port
- * @returns object with isValid boolean and errorMsg string
+ * @returns error message string
  * @description Validates a single port and returns the error message
  */
-export const isValidPort = (
-  port: string
-): { errorMsg: string | undefined; isValid: boolean } => {
-  let errorMsg = PORTS_ERROR_MESSAGE;
-
+export const isValidPort = (port: string): string | undefined => {
   if (port === '') {
-    return { errorMsg: undefined, isValid: true };
+    return undefined;
   }
 
   // Check for leading zeros
   if (!port || port.startsWith('0')) {
-    errorMsg = PORTS_RANGE_ERROR_MESSAGE;
-    return { errorMsg, isValid: false };
+    return PORTS_RANGE_ERROR_MESSAGE;
   }
 
   const convertedPort = parseInt(port, 10);
   if (!(1 <= convertedPort && convertedPort <= 65535)) {
-    errorMsg = PORTS_RANGE_ERROR_MESSAGE;
-    return { errorMsg, isValid: false };
+    return PORTS_RANGE_ERROR_MESSAGE;
   }
 
-  return { errorMsg: undefined, isValid: true };
+  return undefined;
 };
 
 /**
  * @param ports
- * @returns object with isValid boolean and errorMsg string
+ * @returns error message string
  * @description Validates a comma-separated list of ports and sets the error message
  */
-export const arePortsValid = (
-  ports: string
-): { errorMsg: string | undefined; isValid: boolean } => {
-  const containsDuplicatePort = ports
-    .split(',')
-    .some((port, index, self) => self.indexOf(port) !== index);
-
+export const arePortsValid = (ports: string): string | undefined => {
   if (ports.startsWith(',')) {
-    return { isValid: false, errorMsg: PORTS_LEADING_COMMA_ERROR_MESSAGE };
-  } else if (ports.includes(',,')) {
-    return { isValid: false, errorMsg: PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE };
-  } else if (containsDuplicatePort) {
-    return { isValid: true, errorMsg: PORTS_DUPLICATE_PORT_ERROR_MESSAGE };
+    return PORTS_LEADING_COMMA_ERROR_MESSAGE;
+  }
+
+  if (ports.includes(',,')) {
+    return PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE;
   }
 
   const portList = ports.split(',');
@@ -225,16 +211,15 @@ export const arePortsValid = (
 
   for (const port of portList) {
     const result = isValidPort(port);
-    if (!result.isValid) {
+    if (result !== undefined) {
       return result;
     }
     portLimitCount++;
   }
 
   if (portLimitCount > 15) {
-    const errorMsg = PORTS_LIMIT_ERROR_MESSAGE;
-    return { isValid: false, errorMsg };
+    return PORTS_LIMIT_ERROR_MESSAGE;
   }
 
-  return { isValid: true, errorMsg: undefined };
+  return undefined;
 };

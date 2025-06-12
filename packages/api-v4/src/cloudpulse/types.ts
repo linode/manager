@@ -1,7 +1,10 @@
+import type { AccountCapability } from 'src/account';
+
 export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
-export type AlertServiceType = 'dbaas' | 'linode';
+export type AlertServiceType = 'dbaas' | 'linode' | 'nodebalancers';
+export type MetricsServiceType = 'dbaas' | 'linode' | 'nodebalancers';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -359,3 +362,12 @@ export interface DeleteAlertPayload {
   alertId: number;
   serviceType: string;
 }
+
+export const capabilityServiceTypeMapping: Record<
+  AlertServiceType,
+  AccountCapability
+> = {
+  linode: 'Linodes',
+  dbaas: 'Managed Databases',
+  nodebalancers: 'NodeBalancers',
+};
