@@ -122,7 +122,7 @@ describe('FirewallRow', () => {
         entity: {
           id: 10,
           label: null,
-          type: 'interface' as FirewallDeviceEntityType,
+          type: 'linode_interface' as FirewallDeviceEntityType,
           url: '/linodes/11/interfaces/10',
           parent_entity: {
             id: 11,

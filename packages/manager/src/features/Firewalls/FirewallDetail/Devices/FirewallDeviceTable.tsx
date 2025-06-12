@@ -42,7 +42,7 @@ export const FirewallDeviceTable = React.memo(
     const devices =
       allDevices?.filter((device) =>
         type === 'linode' && isLinodeInterfacesEnabled
-          ? device.entity.type !== 'nodebalancer' // include entities with type 'interface' in Linode table
+          ? device.entity.type !== 'nodebalancer' // include entities with type 'linode_interface' in Linode table
           : device.entity.type === type
       ) || [];
 
