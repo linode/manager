@@ -31,8 +31,7 @@ export const MaintenancePolicy = () => {
 
   const isGPUPlan = type && type.class === 'gpu';
 
-  const regionSupportsMaintenancePolicy =
-    region?.capabilities.includes('Maintenance Policy') ?? false;
+  const regionSupportsMaintenancePolicy = true
 
   return (
     <Accordion

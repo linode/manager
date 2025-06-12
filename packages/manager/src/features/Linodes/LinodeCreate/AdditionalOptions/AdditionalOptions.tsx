@@ -2,7 +2,7 @@ import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
-import { MaintenancePolicy } from 'src/features/Linodes/LinodeCreate/MaintenancePolicy/MaintenancePolicy';
+import { MaintenancePolicy } from 'src/features/Linodes/LinodeCreate/AdditionalOptions/MaintenancePolicy';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Alerts } from './Alerts/Alerts';
