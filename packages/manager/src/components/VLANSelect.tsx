@@ -82,6 +82,7 @@ export const VLANSelect = (props: Props) => {
     useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
+  const originalVlanSize = vlans?.length ?? 0;
 
   const newVlanPlaceholder = {
     cidr_block: '',
@@ -100,6 +101,8 @@ export const VLANSelect = (props: Props) => {
 
   const selectedVLAN = vlans?.find((option) => option.label === value) ?? null;
 
+  console.log('hmm', vlans?.length, vlans, originalVlanSize)
+
   return (
     <Autocomplete
       disabled={disabled}
@@ -116,11 +119,21 @@ export const VLANSelect = (props: Props) => {
       loading={isFetching}
       noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
-      onBlur={onBlur}
+      onBlur={() => {
+        if (onBlur) {
+          onBlur();
+        }
+
+        console.log('onblur', value, newVlanPlaceholder)
+        if (!value) { // this doesn't work for many reasons, but saving thoughts for now
+          setInputValue('');
+        }
+      }}
       onChange={(event, value) => {
         if (onChange) {
           onChange(value?.label ?? null);
         }
+        console.log('on change', value, newVlanPlaceholder)
         if (value !== newVlanPlaceholder) {
           setInputValue('');
         }
