@@ -12,7 +12,6 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
 } from '@linode/ui';
 import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
@@ -60,7 +59,6 @@ import {
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
 import KubeCheckoutBar from '../KubeCheckoutBar';
-import { StyledHeader } from '../KubeCheckoutBar/KubeCheckoutSummary.styles';
 import { NodePoolConfigDrawer } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import { ApplicationPlatform } from './ApplicationPlatform';
 import { ClusterNetworkingPanel } from './ClusterNetworkingPanel';
@@ -82,6 +80,7 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
@@ -122,9 +121,9 @@ export const CreateCluster = () => {
   const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
     React.useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
-    new Map()
-  );
+  // const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
+  //   new Map()
+  // );
   const [selectedType, setSelectedType] = React.useState<string>();
 
   const {
@@ -222,15 +221,17 @@ export const CreateCluster = () => {
 
   const handleOpenNodePoolConfigDrawer = (
     isOpen: boolean,
-    poolLabel?: string
+    plan?: PlanWithAvailability
   ) => {
     setIsDrawerOpen(isOpen);
+    setSelectedType(plan?.id);
   };
 
-  const updatePlanCount = (planId: string, newCount: number) => {
-    setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
-    setSelectedType(planId);
-  };
+  // const updatePlanCount = (planId: string, newCount: number) => {
+  //   setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
+  //   setSelectedType(planId);
+  // };
+  // console.log({typeCountMap}, {nodePools}, {selectedType})
 
   const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
@@ -582,8 +583,9 @@ export const CreateCluster = () => {
             <NodePoolPanel
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
-              getTypeCount={(planId) =>
-                typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+              getTypeCount={
+                (planId) => DEFAULT_PLAN_COUNT
+                // typeCountMap?.get(planId) ?? DEFAULT_PLAN_COUNT
               }
               hasSelectedRegion={hasSelectedRegion}
               isAPLEnabled={aplEnabled}
@@ -604,21 +606,6 @@ export const CreateCluster = () => {
               }
               typesLoading={typesLoading}
             />
-            <Typography variant="h3">Configure Node Pools</Typography>
-            {nodePools.map((pool) => {
-              // const poolType = types?.find((thisType) => pool.id === pool.type)
-              return (
-                <div key={pool.id}>
-                  <StyledHeader>{pool.type} Plan</StyledHeader>
-                  <Typography>
-                    {/* {pluralize('CPU', 'CPUs', pool.)}, GB Storage */}
-                  </Typography>
-                  <TextField label="Update Strategy" />
-                  <TextField label="Firewall" />
-                  <Divider />
-                </div>
-              );
-            })}
           </Paper>
         </Grid>
         <Grid
@@ -665,14 +652,17 @@ export const CreateCluster = () => {
         </Grid>
       </Grid>
       <NodePoolConfigDrawer
-        getTypeCount={(planId) =>
-          typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
+        addPool={addPool}
+        getTypeCount={
+          (planId) => DEFAULT_PLAN_COUNT
+          // typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
         }
+        mode="add"
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
         planId={selectedType}
         selectedTier={selectedTier}
-        updatePlanCount={updatePlanCount}
+        updatePool={updatePool}
       />
     </>
   );

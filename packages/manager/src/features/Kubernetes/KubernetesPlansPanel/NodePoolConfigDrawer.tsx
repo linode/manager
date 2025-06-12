@@ -1,4 +1,4 @@
-import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
@@ -8,46 +8,74 @@ import {
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
+import { DEFAULT_PLAN_COUNT } from '../CreateCluster/NodePoolPanel';
 import { NodePoolsUpdateStrategySelect } from '../NodePoolsUpdateStrategySelect';
 
-import type { KubernetesTier, NodePoolUpdateStrategy } from '@linode/api-v4';
+import type {
+  KubeNodePoolResponse,
+  KubernetesTier,
+  NodePoolUpdateStrategy,
+} from '@linode/api-v4';
+import type { Theme } from '@linode/ui';
 
 export interface Props {
+  addPool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   getTypeCount: (planId: string) => number;
+  mode: 'add' | 'edit';
   // nodePool: KubeNodePoolResponseBeta | undefined;
   onClose: () => void;
   open: boolean;
   planId: string | undefined;
   selectedTier: KubernetesTier;
-  updatePlanCount: (planId: string, newCount: number) => void;
+  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
 interface VersionUpdateFormFields {
+  nodeCount: number;
   update_strategy: NodePoolUpdateStrategy;
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const { onClose, open, selectedTier, planId, getTypeCount, updatePlanCount } =
-    props;
+  const {
+    addPool,
+    onClose,
+    open,
+    selectedTier,
+    planId,
+    getTypeCount,
+    mode,
+    // updatePool
+  } = props;
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
-      defaultValues: {},
+      defaultValues: { nodeCount: DEFAULT_PLAN_COUNT },
     });
 
   const count = planId ? getTypeCount(planId) : 0;
 
-  // React.useEffect(() => {
-  //   if (!nodePool) {
-  //     return;
-  //   }
-  //   if (open) {
-  //     setValue('update_strategy', nodePool.update_strategy);
-  //   }
-  // }, [nodePool, open]);
+  const isAddMode = mode === 'add';
+
+  React.useEffect(() => {
+    if (!planId) {
+      return;
+    }
+    // If the plan has been added to the cluster, set the existing node count for editing.
+    setValue('nodeCount', count);
+  }, [planId, open]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
+      if (isAddMode) {
+        addPool({
+          count: values.nodeCount,
+          // eslint-disable-next-line sonarjs/pseudo-random
+          id: Math.random(),
+          type: planId,
+        });
+      } else {
+        // updatePool(planId, values.nodeCount)
+      }
       handleClose();
     } catch (errResponse) {
       /* TODO */
@@ -76,17 +104,26 @@ export const NodePoolConfigDrawer = (props: Props) => {
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <EnhancedNumberInput
-            inputLabel={`edit-quantity-${planId}`}
-            max={
-              selectedTier === 'enterprise'
-                ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                : MAX_NODES_PER_POOL_STANDARD_TIER
-            }
-            setValue={(newCount: number) =>
-              planId && updatePlanCount(planId, newCount)
-            }
-            value={count}
+          <Typography
+            sx={(theme: Theme) => ({ marginBottom: theme.spacingFunction(8) })}
+          >
+            Add Linodes to your cluster:
+          </Typography>
+          <Controller
+            control={control}
+            name="nodeCount"
+            render={({ field }) => (
+              <EnhancedNumberInput
+                inputLabel={`edit-quantity-${planId}`}
+                max={
+                  selectedTier === 'enterprise'
+                    ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                    : MAX_NODES_PER_POOL_STANDARD_TIER
+                }
+                setValue={field.onChange}
+                value={field.value}
+              />
+            )}
           />
           <Controller
             control={control}
@@ -101,8 +138,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
 
           <ActionsPanel
             primaryButtonProps={{
-              'data-testid': 'add',
-              label: 'Add',
+              'data-testid': isAddMode ? 'add' : 'update',
+              label: isAddMode ? 'Add' : 'Update',
               type: 'submit',
             }}
             secondaryButtonProps={{

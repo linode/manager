@@ -24,11 +24,12 @@ import {
 } from './KubeCheckoutSummary.styles';
 
 import type { KubernetesTier } from '@linode/api-v4';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   clusterTier?: KubernetesTier;
-  handleConfig: (isOpen: boolean, poolLabel?: string) => void;
+  handleConfig: (isOpen: boolean, plan?: PlanWithAvailability) => void;
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
@@ -38,7 +39,7 @@ export interface Props {
 
 export const NodePoolSummaryItem = React.memo((props: Props) => {
   const {
-    handleConfig,
+    // handleConfig,
     nodeCount,
     onRemove,
     poolType,
@@ -93,7 +94,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
         </StyledPriceBox>
         <StyledLinkButtonBox>
           <StyledLinkButton
-            onClick={() => handleConfig(true, poolType.formattedLabel)}
+            onClick={() => {}} //handleConfig(true, poolType)} //TODO: fix this type
             sx={{ paddingLeft: 0 }}
           >
             Edit Configuration

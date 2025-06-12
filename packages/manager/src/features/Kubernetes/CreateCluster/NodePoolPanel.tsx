@@ -18,6 +18,7 @@ import type {
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
+import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export const DEFAULT_PLAN_COUNT = 3;
@@ -30,7 +31,7 @@ export interface NodePoolPanelProps {
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
-  onConfigure: (isDrawerOpen: boolean) => void;
+  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
   selectedTier: KubernetesTier;

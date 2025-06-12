@@ -10,6 +10,7 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
@@ -31,7 +32,7 @@ import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 export interface Props {
   createCluster: () => void;
   enterprisePrice?: number;
-  handleConfig: (isOpen: boolean, poolLabel?: string) => void;
+  handleConfig: (isOpen: boolean, plan?: PlanWithAvailability) => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;

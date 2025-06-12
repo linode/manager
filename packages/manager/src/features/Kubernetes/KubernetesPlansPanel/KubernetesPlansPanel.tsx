@@ -22,7 +22,10 @@ import type {
   Region,
 } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
+import type {
+  PlanSelectionType,
+  PlanWithAvailability,
+} from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
@@ -39,7 +42,7 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
-  onConfigure?: (isDrawerOpen: boolean, planLabel: string) => void;
+  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
