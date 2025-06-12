@@ -5,7 +5,7 @@ import {
 } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useMatchRoute, useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { useIsNodebalancerVPCEnabled } from '../utils';
@@ -18,11 +18,17 @@ import type { APIError } from '@linode/api-v4';
 export const NodeBalancerConfigurationsWrapper = () => {
   const queryClient = useQueryClient();
 
-  const { id: nodeBalancerId } = useParams({
-    from: '/nodebalancers/$id/configurations',
+  const matchRoute = useMatchRoute();
+
+  const routeParams = useParams({ from: '/nodebalancers/$id/configurations' });
+  const nodeBalancerId = routeParams.id;
+
+  const configParams = matchRoute({
+    to: '/nodebalancers/$id/configurations/$configId',
+    fuzzy: false,
   });
 
-  const { configId } = useParams({ strict: false });
+  const configId = configParams !== false ? configParams.configId : undefined;
 
   const { data: grants } = useGrants();
   const { data: nodeBalancer } = useNodeBalancerQuery(+nodeBalancerId);

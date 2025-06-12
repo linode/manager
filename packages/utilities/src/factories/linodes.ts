@@ -308,6 +308,7 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   type: 'g6-standard-1',
   updated: '2020-01-01',
   watchdog_enabled: true,
+  has_user_data: false,
 });
 
 export const createLinodeRequestFactory =

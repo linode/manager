@@ -11,7 +11,7 @@ export const AdditionalOptions = () => {
   const flags = useFlags();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  if (!flags.aclpIntegration && !isVMHostMaintenanceEnabled) {
+  if (!flags.aclpBetaServices?.alerts && !isVMHostMaintenanceEnabled) {
     return null;
   }
 
@@ -24,7 +24,7 @@ export const AdditionalOptions = () => {
         Additional Options
       </Typography>
       <Stack divider={<Divider />}>
-        {flags.aclpIntegration && <Alerts />}
+        {flags.aclpBetaServices?.alerts && <Alerts />}
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
       </Stack>
     </Paper>

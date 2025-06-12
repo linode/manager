@@ -1,4 +1,4 @@
-import { useRegionQuery } from '@linode/queries';
+import { useRegionQuery, useTypeQuery } from '@linode/queries';
 import { Accordion, BetaChip, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -13,7 +13,6 @@ import {
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
-import { useTypeQuery } from 'src/queries/types';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
@@ -31,7 +30,8 @@ export const MaintenancePolicy = () => {
 
   const isGPUPlan = type && type.class === 'gpu';
 
-  const regionSupportsMaintenancePolicy = true
+  const regionSupportsMaintenancePolicy =
+    region?.capabilities.includes('Maintenance Policy') ?? false;
 
   return (
     <Accordion

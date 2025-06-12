@@ -182,7 +182,7 @@ const CreateFirewallDevicesSchema = object()
   .shape({
     linodes: array().of(number().defined()),
     nodebalancers: array().of(number().defined()),
-    interfaces: array().of(number().defined()),
+    linode_interfaces: array().of(number().defined()),
   })
   .notRequired();
 
@@ -205,7 +205,7 @@ export const UpdateFirewallSchema = object().shape({
 
 export const FirewallDeviceSchema = object({
   type: string()
-    .oneOf(['linode', 'nodebalancer', 'interface'])
+    .oneOf(['linode', 'nodebalancer', 'linode_interface'])
     .required('Device type is required.'),
   id: number().required('ID is required.'),
 });
