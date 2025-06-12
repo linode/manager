@@ -126,9 +126,7 @@ export const VPCPanel = (props: Props) => {
               <Notice
                 spacingBottom={16}
                 spacingTop={8}
-                text={
-                  'Once a NodeBalancer is created, its VPC configuration cannot be changed.'
-                }
+                text={"The VPC can't be changed after NodeBalancer creation."}
                 variant="warning"
               />
               <Autocomplete
@@ -147,8 +145,7 @@ export const VPCPanel = (props: Props) => {
                 textFieldProps={{
                   helperText: (
                     <Typography mb={2}>
-                      Select a subnet in which to allocate the VPC CIDR for the
-                      NodeBalancer.
+                      The VPC subnet for this NodeBalancer.
                     </Typography>
                   ),
                   helperTextPosition: 'top',
@@ -192,11 +189,18 @@ export const VPCPanel = (props: Props) => {
                           flexDirection="row"
                         >
                           <Typography noWrap={!isSmallBp}>
-                            Auto-assign a /30 CIDR for this NodeBalancer
+                            Auto-assign IPs for this NodeBalancer
                           </Typography>
                           <TooltipIcon
                             status="help"
-                            text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                            text={
+                              <Typography
+                                component={'span'}
+                                sx={{ whiteSpace: 'pre-line' }}
+                              >
+                                {NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                              </Typography>
+                            }
                             tooltipPosition="right"
                           />
                         </Box>
