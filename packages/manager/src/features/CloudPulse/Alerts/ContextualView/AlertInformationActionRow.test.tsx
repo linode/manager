@@ -58,10 +58,10 @@ describe('Alert list table row', () => {
     expect(screen.getByRole('checkbox')).toHaveProperty('checked');
     expect(screen.getByRole('checkbox')).toBeDisabled();
 
-    const tooltipIcon = document.querySelector('[data-qa-help-tooltip="true"]');
-    expect(tooltipIcon).toHaveAttribute(
-      'aria-label',
-      "Region-level alerts can't be enabled or disabled for a single entity."
-    );
+    expect(
+      screen.getByLabelText(
+        "Region-level alerts can't be enabled or disabled for a single entity."
+      )
+    ).toBeVisible();
   });
 });
