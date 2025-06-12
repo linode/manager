@@ -191,6 +191,7 @@ const addFirewallDevice = async (inputs: {
       label: entityLabel,
       type: interfaceType,
       url: `/linodes/${entityId}`,
+      parent_entity: null,
     };
 
     const updatedFirewall = {
