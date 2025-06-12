@@ -88,7 +88,10 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
     usePreferences((preferences) => {
       return preferences?.isAclpMetricsBeta;
     }, type === 'metrics');
+
   const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  const isBeta = type === 'alerts' ? isAclpBetaLocal : isAclpMetricsBeta;
 
   if (isAclpMetricsBetaLoading) {
     return (
@@ -109,12 +112,12 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
           buttonType="primary"
           onClick={() =>
             type === 'alerts'
-              ? setIsAclpBetaLocal(!isAclpBetaLocal)
-              : updatePreferences({ isAclpMetricsBeta: !isAclpMetricsBeta })
+              ? setIsAclpBetaLocal(!isBeta)
+              : updatePreferences({ isAclpMetricsBeta: !isBeta })
           }
           sx={{ textTransform: 'none' }}
         >
-          {config.getButtonText(isAclpBetaLocal)}
+          {config.getButtonText(isBeta)}
         </Button>
       }
       dismissible={false}
@@ -123,7 +126,7 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
       variant="info"
     >
       <Typography data-testid={`${type}-preference-banner-text`}>
-        {config.getBannerText(isAclpBetaLocal)}
+        {config.getBannerText(isBeta)}
       </Typography>
     </DismissibleBanner>
   );
