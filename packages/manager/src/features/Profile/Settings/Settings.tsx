@@ -1,7 +1,6 @@
 import { Stack } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
@@ -13,16 +12,16 @@ import { Theme } from './Theme';
 import { TypeToConfirm } from './TypeToConfirm';
 
 export const ProfileSettings = () => {
-  const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const { preferenceEditor } = useSearch({ from: '/profile/settings' });
 
-  const queryParams = new URLSearchParams(location.search);
-
-  const isPreferenceEditorOpen = queryParams.has('preferenceEditor');
+  const isPreferenceEditorOpen = !!preferenceEditor;
 
   const handleClosePreferenceEditor = () => {
-    queryParams.delete('preferenceEditor');
-    history.replace({ search: queryParams.toString() });
+    navigate({
+      to: '/profile/settings',
+      search: { preferenceEditor: undefined },
+    });
   };
 
   return (
@@ -42,7 +41,3 @@ export const ProfileSettings = () => {
     </>
   );
 };
-
-export const SettingsLazyRoute = createLazyRoute('/profile/settings')({
-  component: ProfileSettings,
-});
