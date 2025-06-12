@@ -11,7 +11,11 @@ import {
 } from '@linode/ui';
 import React from 'react';
 
-import { MIGRATE_TOOLTIP_TEXT, POWER_OFF_TOOLTIP_TEXT } from './constants';
+import {
+  MAINTENANCE_POLICY_DESCRIPTIONS,
+  MIGRATE_TOOLTIP_TEXT,
+  POWER_OFF_TOOLTIP_TEXT,
+} from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
 
 import type { MaintenancePolicy } from '@linode/api-v4';
@@ -91,7 +95,8 @@ export const MaintenancePolicySelect = (props: Props) => {
                     font: theme.tokens.alias.Typography.Label.Regular.Xs,
                   })}
                 >
-                  {policy.description}
+                  {MAINTENANCE_POLICY_DESCRIPTIONS[policy.id] ??
+                    policy.description}
                 </Typography>
                 {state.selected && <SelectedIcon visible />}
               </Stack>

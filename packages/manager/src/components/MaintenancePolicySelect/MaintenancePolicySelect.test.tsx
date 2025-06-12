@@ -1,48 +1,15 @@
 import { userEvent } from '@testing-library/user-event';
 import React from 'react';
-import { vi } from 'vitest';
 
+import { accountSettingsFactory } from 'src/factories';
 import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { MaintenancePolicySelect } from './MaintenancePolicySelect';
 
-import type { MaintenancePolicyOption } from './constants';
-import type { MaintenancePolicyId } from '@linode/api-v4';
-
-const queryMocks = vi.hoisted(() => ({
-  useAccountMaintenancePoliciesQuery: vi.fn().mockReturnValue({}),
-  useRegionQuery: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('@linode/queries');
-  return {
-    ...actual,
-    useAccountMaintenancePoliciesQuery:
-      queryMocks.useAccountMaintenancePoliciesQuery,
-    useRegionQuery: queryMocks.useRegionQuery,
-  };
-});
-
 describe('MaintenancePolicySelect', () => {
-  beforeEach(() => {
-    queryMocks.useRegionQuery.mockReturnValue({
-      data: {
-        capabilities: ['Maintenance Policy'],
-        id: 'us-east',
-      },
-    });
-
-    queryMocks.useAccountMaintenancePoliciesQuery.mockReturnValue({
-      data: [
-        maintenancePolicyFactory.build({ id: 1, name: 'Migrate' }),
-        maintenancePolicyFactory.build({ id: 2, name: 'Power Off / Power On' }),
-      ],
-      isFetching: false,
-    });
-  });
-
   it('should render a label', () => {
     const { getByLabelText } = renderWithTheme(
       <MaintenancePolicySelect onChange={vi.fn()} value={1} />
@@ -51,9 +18,7 @@ describe('MaintenancePolicySelect', () => {
     expect(getByLabelText('Maintenance Policy')).toBeVisible();
   });
 
-  it('should be disabled when no region is selected', () => {
-    queryMocks.useRegionQuery.mockReturnValue({ data: null });
-
+  it('should be disabled when disabled prop is true', () => {
     const { getByRole } = renderWithTheme(
       <MaintenancePolicySelect
         disabled={true}
@@ -65,33 +30,7 @@ describe('MaintenancePolicySelect', () => {
     expect(getByRole('combobox')).toBeDisabled();
   });
 
-  it('should be disabled when region does not support maintenance policy', () => {
-    queryMocks.useRegionQuery.mockReturnValue({
-      data: {
-        capabilities: [],
-        id: 'us-east',
-      },
-    });
-
-    const { getByRole } = renderWithTheme(
-      <MaintenancePolicySelect
-        disabled={true}
-        onChange={vi.fn()}
-        value={undefined}
-      />
-    );
-
-    expect(getByRole('combobox')).toBeDisabled();
-  });
-
-  it('should show helper text when region does not support maintenance policy', () => {
-    queryMocks.useRegionQuery.mockReturnValue({
-      data: {
-        capabilities: [],
-        id: 'us-east',
-      },
-    });
-
+  it('should show helper text from props', () => {
     const { getByText } = renderWithTheme(
       <MaintenancePolicySelect
         onChange={vi.fn()}
@@ -107,63 +46,84 @@ describe('MaintenancePolicySelect', () => {
     ).toBeVisible();
   });
 
-  it('should show maintenance policy options when region supports it', async () => {
-    const { getByRole, getByText } = renderWithTheme(
+  it('should show maintenance policy options returned by the API', async () => {
+    const policies = [
+      maintenancePolicyFactory.build({ name: 'Power Off / Power On' }),
+      maintenancePolicyFactory.build({ name: 'Migrate' }),
+    ];
+
+    server.use(
+      http.get('*/maintenance/policies', () => {
+        return HttpResponse.json(makeResourcePage(policies));
+      })
+    );
+
+    const { getByRole, findByText } = renderWithTheme(
       <MaintenancePolicySelect onChange={vi.fn()} value={undefined} />
     );
 
     await userEvent.click(getByRole('combobox'));
 
-    expect(getByText('Migrate')).toBeVisible();
-    expect(getByText('Power Off / Power On')).toBeVisible();
+    expect(await findByText('Migrate')).toBeVisible();
+    expect(await findByText('Power Off / Power On')).toBeVisible();
   });
 
-  it('should call onChange when selecting a policy', async () => {
+  it('should call onChange with the policy when one is chosen', async () => {
     const onChange = vi.fn();
-    const { getByRole, getByText } = renderWithTheme(
-      <MaintenancePolicySelect onChange={onChange} value={1} />
-    );
-
-    await userEvent.click(getByRole('combobox'));
-    await userEvent.click(getByText('Power Off / Power On'));
-
-    expect(onChange).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({
-        value: 2,
-        label: 'Power Off / Power On',
-        description: expect.any(String),
-      }),
-      'selectOption',
-      expect.any(Object)
-    );
-  });
-
-  it('should use provided options when available', async () => {
-    const customOptions: MaintenancePolicyOption[] = [
-      {
-        label: 'Custom Option 1',
-        value: 1 as MaintenancePolicyId,
-        description: 'Description 1',
-      },
-      {
-        label: 'Custom Option 2',
-        value: 2 as MaintenancePolicyId,
-        description: 'Description 2',
-      },
+    const policies = [
+      maintenancePolicyFactory.build({ name: 'Power Off / Power On' }),
+      maintenancePolicyFactory.build({ name: 'Migrate' }),
     ];
 
-    const { getByRole, getByText } = renderWithTheme(
-      <MaintenancePolicySelect
-        onChange={vi.fn()}
-        options={customOptions}
-        value={undefined}
-      />
+    server.use(
+      http.get('*/maintenance/policies', () => {
+        return HttpResponse.json(makeResourcePage(policies));
+      })
+    );
+
+    const { getByRole, findByText } = renderWithTheme(
+      <MaintenancePolicySelect onChange={onChange} />
     );
 
     await userEvent.click(getByRole('combobox'));
 
-    expect(getByText('Custom Option 1')).toBeVisible();
-    expect(getByText('Custom Option 2')).toBeVisible();
+    const option = await findByText('Power Off / Power On');
+
+    await userEvent.click(option);
+
+    expect(onChange).toHaveBeenCalledWith({
+      ...policies[0],
+      label: policies[0].name,
+    });
+  });
+
+  it('should show a default chip for the account default', async () => {
+    const policies = [
+      maintenancePolicyFactory.build({ name: 'Power Off / Power On', id: 100 }),
+      maintenancePolicyFactory.build({ name: 'Migrate', id: 101 }),
+    ];
+    const accountSettings = accountSettingsFactory.build({
+      maintenance_policy_id: 101,
+    });
+
+    server.use(
+      http.get('*/maintenance/policies', () => {
+        return HttpResponse.json(makeResourcePage(policies));
+      }),
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(accountSettings);
+      })
+    );
+
+    const { getByRole, findByText } = renderWithTheme(
+      <MaintenancePolicySelect onChange={vi.fn()} value={undefined} />
+    );
+
+    await userEvent.click(getByRole('combobox'));
+
+    expect(await findByText('Migrate')).toBeVisible();
+    expect(await findByText('Power Off / Power On')).toBeVisible();
+
+    expect(await findByText('DEFAULT')).toBeVisible();
   });
 });

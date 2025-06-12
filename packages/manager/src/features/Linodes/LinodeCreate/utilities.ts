@@ -36,7 +36,6 @@ import type {
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
-  MaintenancePolicyId,
   Profile,
   StackScript,
 } from '@linode/api-v4';
@@ -299,8 +298,7 @@ const defaultInterfaces: InterfacePayload[] = [
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
-export interface LinodeCreateFormValues
-  extends Omit<CreateLinodeRequest, 'maintenance_policy_id'> {
+export interface LinodeCreateFormValues extends CreateLinodeRequest {
   /**
    * Manually override firewall policy for sensitive users
    */
@@ -328,10 +326,6 @@ export interface LinodeCreateFormValues
    * Form state for the new Linode interface
    */
   linodeInterfaces: LinodeCreateInterface[];
-  /**
-   * The maintenance policy ID for the Linode
-   */
-  maintenance_policy_id?: MaintenancePolicyId | null;
 }
 
 export interface LinodeCreateFormContext {
@@ -396,47 +390,35 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
-  let defaultMaintenancePolicy: MaintenancePolicyId | null = null;
-  let firewallSettings: FirewallSettings | null = null;
+  let defaultMaintenancePolicy: null | number = null;
 
   // Fetch account settings for interface generation if enabled
-  if (flags.isLinodeInterfacesEnabled) {
+  if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
       );
 
       // Don't set the interface generation when cloning. The API can figure that out
-      if (params.type !== 'Clone Linode') {
+      if (flags.isLinodeInterfacesEnabled && params.type !== 'Clone Linode') {
         interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
           accountSettings.interfaces_for_new_linodes
         );
+      }
+
+      // If the Maintenance Policy feature is enabled, set the default policy if the user has one set
+      if (
+        flags.isVMHostMaintenanceEnabled &&
+        accountSettings.maintenance_policy_id
+      ) {
+        defaultMaintenancePolicy = accountSettings.maintenance_policy_id;
       }
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
     }
   }
 
-  // Fetch maintenance policies if VM host maintenance is enabled
-  //
-  // We use the /v4beta/maintenance/policies endpoint instead of account settings
-  // because maintenance_policy_id is only available in the beta account settings
-  // endpoint (/v4beta/account/settings). By fetching the policies directly and
-  // finding the one marked as default, we avoid having to conditionally use
-  // different API versions.
-  if (flags.isVMHostMaintenanceEnabled) {
-    try {
-      const maintenancePolicies = await queryClient.ensureQueryData(
-        accountQueries.maintenance._ctx.policies
-      );
-      const defaultPolicy = maintenancePolicies.find(
-        (policy) => policy.is_default
-      );
-      defaultMaintenancePolicy = defaultPolicy?.id ?? null;
-    } catch (error) {
-      // silently fail if user can't access maintenance policies
-    }
-  }
+  let firewallSettings: FirewallSettings | null = null;
 
   // Fetch firewall settings separately since it's a different endpoint
   if (flags.isLinodeInterfacesEnabled) {

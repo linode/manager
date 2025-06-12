@@ -2,12 +2,11 @@ import {
   CreateLinodeSchema as BaseCreateLinodeSchema,
   ConfigProfileInterfaceSchema,
 } from '@linode/validation';
-import { array, boolean, mixed, number, object, string } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 
 import { CreateLinodeInterfaceFormSchema } from '../LinodesDetail/LinodeNetworking/LinodeInterfaces/AddInterfaceDrawer/utilities';
 
 import type { LinodeCreateFormValues } from './utilities';
-import type { MaintenancePolicyId } from '@linode/api-v4';
 import type { ObjectSchema } from 'yup';
 
 /**
@@ -28,15 +27,6 @@ export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> =
         type: string().defined().nullable(),
       }).notRequired(),
       linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
-      maintenance_policy_id: mixed<MaintenancePolicyId>()
-        .oneOf([1, 2])
-        .nullable()
-        .transform((value) => {
-          if (value === null || value === undefined) {
-            return value;
-          }
-          return value === 1 || value === 2 ? value : undefined;
-        }),
     })
   );
 
