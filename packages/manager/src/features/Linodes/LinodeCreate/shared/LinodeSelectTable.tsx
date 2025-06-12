@@ -253,7 +253,7 @@ export const LinodeSelectTable = (props: Props) => {
 };
 
 export const getLinodeXFilter = (
-  preselectedLinodeId: number | undefined,
+  _preselectedLinodeId: number | undefined,
   query: string,
   order?: Order,
   orderBy?: string

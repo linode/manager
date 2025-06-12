@@ -77,11 +77,6 @@ export interface LinodeHandlers {
   onOpenResizeDialog: () => void;
 }
 
-// interface Params {
-//   groupByTag?: 'false' | 'true';
-//   view?: string;
-// }
-
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;

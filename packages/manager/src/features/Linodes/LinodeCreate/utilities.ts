@@ -65,17 +65,6 @@ export const useLinodeCreateQueryParams = () => {
    * Updates query params
    */
   const updateParams = (params: Partial<LinodeCreateSearchParams>) => {
-    // const newParams = new URLSearchParams(rawParams);
-
-    // for (const key in params) {
-    //   if (!params[key as keyof LinodeCreateQueryParams]) {
-    //     newParams.delete(key);
-    //   } else {
-    //     newParams.set(key, params[key as keyof LinodeCreateQueryParams]!);
-    //   }
-    // }
-
-    // history.push({ search: newParams.toString() });
     navigate({
       to: '/linodes/create',
       search: (prev) => ({
