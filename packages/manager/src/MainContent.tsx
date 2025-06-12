@@ -111,11 +111,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Profile = React.lazy(() =>
-  import('src/features/Profile/Profile').then((module) => ({
-    default: module.Profile,
-  }))
-);
 
 const IAM = React.lazy(() =>
   import('src/features/IAM').then((module) => ({
@@ -294,7 +289,6 @@ export const MainContent = () => {
                                 {isIAMEnabled && (
                                   <Route component={IAM} path="/iam" />
                                 )}
-                                <Route component={Profile} path="/profile" />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />
