@@ -17,6 +17,7 @@ import type {
   Dashboard,
   MetricDefinition,
   NotificationChannel,
+  Service,
 } from '@linode/api-v4';
 
 /**
@@ -535,5 +536,25 @@ export const mockDeleteAlert = (
       body: {},
       statusCode,
     }
+  );
+};
+
+/**
+ * Mocks the API response for a specific CloudPulse service endpoint.
+ * Intercepts the GET request to `/monitor/services/:serviceType` and returns
+ * a paginated mock response containing the provided service object.
+ *
+ * @param {string} serviceType - The type of the service (e.g., 'dbaas', 'linode').
+ * @param {Service} service - The mocked service object to be returned in the response.
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable used to continue the test flow.
+ */
+export const mockGetCloudPulseServiceByType = (
+  serviceType: string,
+  service: Service
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`monitor/services/${serviceType}`),
+    makeResponse(service)
   );
 };

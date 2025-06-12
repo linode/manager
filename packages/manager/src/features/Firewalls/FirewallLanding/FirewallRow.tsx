@@ -36,7 +36,7 @@ export const FirewallRow = React.memo((props: FirewallRowProps) => {
 
   const neededLinodeIdsForInterfaceDevices = entities
     .slice(0, 3) // only take the first three entities since we only show those entity links
-    .filter((entity) => entity.type === 'interface')
+    .filter((entity) => entity.type === 'linode_interface')
     .map((entity) => {
       return { id: getLinodeIdFromInterfaceDevice(entity) };
     });
@@ -151,7 +151,7 @@ const getDevicesCellString = (inputs: DeviceLinkInputs) => {
   } = inputs;
   const filteredEntities = isLinodeInterfacesEnabled
     ? entities
-    : entities.filter((entity) => entity.type !== 'interface');
+    : entities.filter((entity) => entity.type !== 'linode_interface');
 
   if (filteredEntities.length === 0) {
     return 'None assigned';
@@ -178,7 +178,7 @@ export const getDeviceLinks = (
     <>
       {firstThree.map((entity, idx) => {
         // TODO @Linode Interfaces - switch to parent entity when endpoints are updated
-        const isInterfaceDevice = entity.type === 'interface';
+        const isInterfaceDevice = entity.type === 'linode_interface';
         let entityLabel = entity.label;
         let entityLink = `/${entity.type}s/${entity.id}/${
           entity.type === 'linode' ? 'networking' : 'summary'

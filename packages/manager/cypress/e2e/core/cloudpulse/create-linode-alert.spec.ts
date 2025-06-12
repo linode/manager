@@ -15,6 +15,7 @@ import {
   mockGetAlertChannels,
   mockGetAllAlertDefinitions,
   mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseServiceByType,
   mockGetCloudPulseServices,
 } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
@@ -31,6 +32,8 @@ import {
   dashboardMetricFactory,
   memoryRulesFactory,
   notificationChannelFactory,
+  serviceAlertFactory,
+  serviceTypesFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import {
@@ -233,6 +236,13 @@ describe('Create Alert', () => {
         scope: value,
         ...(value === 'region' ? { regions: regionList } : {}),
       });
+      const services = serviceTypesFactory.build({
+        service_type: serviceType,
+        label: serviceType,
+        alert: serviceAlertFactory.build({ scope: [value] }),
+        regions: 'us-ord,us-east',
+      });
+      mockGetCloudPulseServiceByType(serviceType, services);
       mockAppendFeatureFlags(flags);
       mockGetAccount(mockAccount);
       mockGetProfile(mockProfile);
