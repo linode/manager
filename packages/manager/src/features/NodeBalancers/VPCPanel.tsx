@@ -201,8 +201,9 @@ export const VPCPanel = (props: Props) => {
                                 Subnet for the NodeBalancer&apos;s backend nodes
                                 in the VPC.
                                 <br />
-                                <br /> Disable to assign a <Code>/30</Code> IPv4
-                                CIDR subnet range for this NodeBalancer.
+                                <br /> Disable this option to assign a{' '}
+                                <Code>/30</Code> IPv4 CIDR subnet range for this
+                                NodeBalancer.
                               </Typography>
                             }
                             tooltipPosition="right"
