@@ -22,7 +22,6 @@ const props: Props = {
   region: 'us-east',
   regionsData: regionFactory.buildList(1),
   removePool: vi.fn(),
-  showHighAvailability: true,
   submitting: false,
   toggleHasAgreed: vi.fn(),
   updatePool: vi.fn(),
