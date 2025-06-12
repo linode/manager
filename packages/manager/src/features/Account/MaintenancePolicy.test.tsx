@@ -1,6 +1,9 @@
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { accountSettingsFactory } from 'src/factories';
+import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
@@ -15,19 +18,30 @@ describe('MaintenancePolicy', () => {
     expect(getByText('Save Maintenance Policy')).toBeVisible();
   });
 
-  it('populates select with the returned maintenance_policy_id value', async () => {
+  it("populates select with the account's default maintenance_policy_id value", async () => {
+    const policies = [
+      maintenancePolicyFactory.build({ name: 'Power Off / Power On', id: 99 }),
+      maintenancePolicyFactory.build({ name: 'Migrate', id: 100 }),
+    ];
     const accountSettings = accountSettingsFactory.build({
-      maintenance_policy_id: 2,
+      maintenance_policy_id: 99,
     });
 
     server.use(
-      http.get('*/v4/account/settings', () =>
-        HttpResponse.json(accountSettings)
-      )
+      http.get('*/maintenance/policies', () => {
+        return HttpResponse.json(makeResourcePage(policies));
+      }),
+      http.get('*/account/settings', () => {
+        return HttpResponse.json(accountSettings);
+      })
     );
 
-    const { findByDisplayValue } = renderWithTheme(<MaintenancePolicy />);
+    const { getByLabelText } = renderWithTheme(<MaintenancePolicy />);
 
-    await findByDisplayValue('Power Off / Power On');
+    await waitFor(() => {
+      expect(getByLabelText('Maintenance Policy')).toHaveDisplayValue(
+        'Power Off / Power On'
+      );
+    });
   });
 });
