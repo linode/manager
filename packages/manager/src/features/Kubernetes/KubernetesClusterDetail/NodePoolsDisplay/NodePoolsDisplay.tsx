@@ -1,3 +1,4 @@
+import { useSpecificTypes } from '@linode/queries';
 import {
   Box,
   Button,
@@ -17,13 +18,12 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { FormLabel } from 'src/components/FormLabel';
 import { useDefaultExpandedNodePools } from 'src/hooks/useDefaultExpandedNodePools';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
-import { AutoscalePoolDialog } from './AutoscalePoolDialog';
+import { AutoscaleNodePoolDrawer } from './AutoscaleNodePoolDrawer';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { LabelAndTaintDrawer } from './LabelsAndTaints/LabelAndTaintDrawer';
 import { NodePool } from './NodePool';
@@ -101,7 +101,7 @@ export const NodePoolsDisplay = (props: Props) => {
   const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
   const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
 
-  const [isAutoscaleDialogOpen, setIsAutoscaleDialogOpen] = useState(false);
+  const [isAutoscaleDrawerOpen, setIsAutoscaleDrawerOpen] = useState(false);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(5);
   const _pools = pools?.slice(0, numPoolsToDisplay);
@@ -123,6 +123,11 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const handleOpenAddDrawer = () => {
     setAddDrawerOpen(true);
+  };
+
+  const handleOpenAutoscaleDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsAutoscaleDrawerOpen(true);
   };
 
   const handleOpenResizeDrawer = (poolId: number) => {
@@ -295,16 +300,13 @@ export const NodePoolsDisplay = (props: Props) => {
               count={count}
               encryptionStatus={disk_encryption}
               handleAccordionClick={() => handleAccordionClick(id)}
+              handleClickAutoscale={handleOpenAutoscaleDrawer}
               handleClickLabelsAndTaints={handleOpenLabelsAndTaintsDrawer}
               handleClickResize={handleOpenResizeDrawer}
               isLkeClusterRestricted={isLkeClusterRestricted}
               isOnlyNodePool={pools?.length === 1}
               key={id}
               nodes={nodes ?? []}
-              openAutoscalePoolDialog={(poolId) => {
-                setSelectedPoolId(poolId);
-                setIsAutoscaleDialogOpen(true);
-              }}
               openDeletePoolDialog={(id) => {
                 setSelectedPoolId(id);
                 setIsDeleteNodePoolOpen(true);
@@ -354,13 +356,13 @@ export const NodePoolsDisplay = (props: Props) => {
         onClose={() => setIsResizeDrawerOpen(false)}
         open={isResizeDrawerOpen}
       />
-      <AutoscalePoolDialog
+      <AutoscaleNodePoolDrawer
         clusterId={clusterID}
         clusterTier={clusterTier}
         handleOpenResizeDrawer={handleOpenResizeDrawer}
         nodePool={selectedPool}
-        onClose={() => setIsAutoscaleDialogOpen(false)}
-        open={isAutoscaleDialogOpen}
+        onClose={() => setIsAutoscaleDrawerOpen(false)}
+        open={isAutoscaleDrawerOpen}
       />
       <DeleteNodePoolDialog
         kubernetesClusterId={clusterID}
