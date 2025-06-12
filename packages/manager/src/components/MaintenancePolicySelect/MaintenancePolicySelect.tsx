@@ -17,6 +17,7 @@ import {
   POWER_OFF_TOOLTIP_TEXT,
 } from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
+import { getPolicyLabel } from './utils';
 
 import type { MaintenancePolicy } from '@linode/api-v4';
 import type { TextFieldProps } from '@linode/ui';
@@ -46,7 +47,8 @@ export const MaintenancePolicySelect = (props: Props) => {
   const options =
     policies?.map((policy) => ({
       ...policy,
-      label: policy.name,
+      name: getPolicyLabel(policy),
+      label: getPolicyLabel(policy),
     })) ?? [];
 
   const defaultPolicyId =
@@ -84,7 +86,7 @@ export const MaintenancePolicySelect = (props: Props) => {
                 justifyContent="space-between"
                 width="100%"
               >
-                <Typography>{policy.name}</Typography>
+                <Typography>{policy.name.replace('Default ', '')}</Typography>
                 {!hideDefaultChip && defaultPolicyId === policy.id && (
                   <DefaultPolicyChip />
                 )}
