@@ -15,12 +15,10 @@ import {
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
+import { Code } from 'src/components/Code/Code';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import {
-  NB_AUTO_ASSIGN_CIDR_TOOLTIP,
-  NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
-} from '../VPCs/constants';
+import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 
 import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 
@@ -198,7 +196,13 @@ export const VPCPanel = (props: Props) => {
                                 component={'span'}
                                 sx={{ whiteSpace: 'pre-line' }}
                               >
-                                {NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                                When enabled, the system automatically allocates
+                                a <Code>/30</Code> CIDR from the specified
+                                Subnet for the NodeBalancer&apos;s backend nodes
+                                in the VPC.
+                                <br />
+                                <br /> Disable to assign a <Code>/30</Code> IPv4
+                                CIDR subnet range for this NodeBalancer.
                               </Typography>
                             }
                             tooltipPosition="right"
