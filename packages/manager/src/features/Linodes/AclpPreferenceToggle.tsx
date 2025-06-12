@@ -1,13 +1,13 @@
-import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import { Skeleton } from 'src/components/Skeleton';
 
 import type { ManagerPreferences } from '@linode/utilities';
 
 export interface AclpPreferenceToggleType {
+  isAclpBetaLocal: boolean;
+  setIsAclpBetaLocal: React.Dispatch<React.SetStateAction<boolean>>;
   type: 'alerts' | 'metrics';
 }
 
@@ -16,9 +16,6 @@ interface PreferenceConfigItem {
   getButtonText: (isBeta: boolean | undefined) => string;
   preferenceKey: string;
   updateKey: keyof ManagerPreferences;
-  usePreferenceSelector: (
-    preferences: ManagerPreferences | undefined
-  ) => boolean | undefined;
 }
 
 const preferenceConfig: Record<
@@ -26,7 +23,6 @@ const preferenceConfig: Record<
   PreferenceConfigItem
 > = {
   metrics: {
-    usePreferenceSelector: (preferences) => preferences?.isAclpMetricsBeta,
     updateKey: 'isAclpMetricsBeta',
     preferenceKey: 'metrics-preference',
     getButtonText: (isBeta) =>
@@ -46,7 +42,6 @@ const preferenceConfig: Record<
       ),
   },
   alerts: {
-    usePreferenceSelector: (preferences) => preferences?.isAclpAlertsBeta,
     updateKey: 'isAclpAlertsBeta',
     preferenceKey: 'alerts-preference',
     getButtonText: (isBeta) =>
@@ -67,40 +62,22 @@ const preferenceConfig: Record<
   },
 };
 
-export const AclpPreferenceToggle = ({ type }: AclpPreferenceToggleType) => {
+export const AclpPreferenceToggle = ({
+  type,
+  setIsAclpBetaLocal,
+  isAclpBetaLocal,
+}: AclpPreferenceToggleType) => {
   const config = preferenceConfig[type];
-
-  const { data: isBeta, isLoading } = usePreferences(
-    config.usePreferenceSelector
-  );
-
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
-
-  if (isLoading) {
-    return (
-      <Skeleton
-        data-testid={`${type}-preference-skeleton`}
-        height="90px"
-        sx={(theme) => ({
-          marginTop: `-${theme.tokens.spacing.S20}`,
-        })}
-      />
-    );
-  }
 
   return (
     <DismissibleBanner
       actionButton={
         <Button
           buttonType="primary"
-          onClick={() =>
-            updatePreferences({
-              [config.updateKey]: !isBeta,
-            })
-          }
+          onClick={() => setIsAclpBetaLocal(!isAclpBetaLocal)}
           sx={{ textTransform: 'none' }}
         >
-          {config.getButtonText(isBeta)}
+          {config.getButtonText(isAclpBetaLocal)}
         </Button>
       }
       dismissible={false}
@@ -109,7 +86,7 @@ export const AclpPreferenceToggle = ({ type }: AclpPreferenceToggleType) => {
       variant="info"
     >
       <Typography data-testid={`${type}-preference-banner-text`}>
-        {config.getBannerText(isBeta)}
+        {config.getBannerText(isAclpBetaLocal)}
       </Typography>
     </DismissibleBanner>
   );

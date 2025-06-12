@@ -1,4 +1,4 @@
-import { useGrants, useLinodeQuery, usePreferences } from '@linode/queries';
+import { useGrants, useLinodeQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
@@ -10,20 +10,20 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
 
 interface Props {
+  isAclpBetaLocal: boolean;
   isAclpSupportedRegionLinode: boolean;
+  setIsAclpBetaLocal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const LinodeAlerts = (props: Props) => {
-  const { isAclpSupportedRegionLinode } = props;
+  const { isAclpSupportedRegionLinode, isAclpBetaLocal, setIsAclpBetaLocal } =
+    props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
   const flags = useFlags();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
   const isReadOnly =
     grants !== undefined &&
@@ -33,12 +33,16 @@ const LinodeAlerts = (props: Props) => {
   return (
     <Box>
       {flags.aclpBetaServices?.alerts && isAclpSupportedRegionLinode && (
-        <AclpPreferenceToggle type="alerts" />
+        <AclpPreferenceToggle
+          isAclpBetaLocal={isAclpBetaLocal}
+          setIsAclpBetaLocal={setIsAclpBetaLocal}
+          type="alerts"
+        />
       )}
 
       {flags.aclpBetaServices?.alerts &&
       isAclpSupportedRegionLinode &&
-      isAclpAlertsPreferenceBeta ? (
+      isAclpBetaLocal ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId}

@@ -1,4 +1,4 @@
-import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
+import { useLinodeQuery, useTypeQuery } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -48,10 +48,11 @@ const LinodesDetailNavigation = () => {
   const { url } = useRouteMatch();
   const history = useHistory();
   const flags = useFlags();
-  const { data: aclpPreferences } = usePreferences((preferences) => ({
-    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
-    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
-  }));
+
+  const [isAclpMetricsBetaLocalEditFlow, setIsAclpMetricsBetaLocalEditFlow] =
+    React.useState<boolean>(linode?.is_metrics_beta ?? false);
+  const [isAclpAlertsBetaLocalEditFlow, setIsAclpAlertsBetaLocalEditFlow] =
+    React.useState<boolean>(linode?.is_alerts_beta ?? false);
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -73,7 +74,7 @@ const LinodesDetailNavigation = () => {
       chip:
         flags.aclpBetaServices?.metrics &&
         isAclpSupportedRegionLinode &&
-        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
+        isAclpMetricsBetaLocalEditFlow ? (
           <BetaChip />
         ) : null,
       routeName: `${url}/metrics`,
@@ -106,7 +107,7 @@ const LinodesDetailNavigation = () => {
       chip:
         flags.aclpBetaServices?.alerts &&
         isAclpSupportedRegionLinode &&
-        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        isAclpAlertsBetaLocalEditFlow ? (
           <BetaChip />
         ) : null,
       routeName: `${url}/alerts`,
@@ -176,9 +177,11 @@ const LinodesDetailNavigation = () => {
             <TabPanels>
               <SafeTabPanel index={idx++}>
                 <LinodeMetrics
+                  isAclpBetaLocal={isAclpMetricsBetaLocalEditFlow}
                   isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
                   linodeCreated={linode?.created}
                   linodeId={id}
+                  setIsAclpBetaLocal={setIsAclpMetricsBetaLocalEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
@@ -203,7 +206,9 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeAlerts
+                  isAclpBetaLocal={isAclpAlertsBetaLocalEditFlow}
                   isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  setIsAclpBetaLocal={setIsAclpAlertsBetaLocalEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
