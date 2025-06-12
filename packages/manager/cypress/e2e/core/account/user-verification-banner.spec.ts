@@ -79,7 +79,10 @@ describe('User verification banner', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.url().should('endWith', `/profile/auth`);
+    cy.url().should(
+      'endWith',
+      `/profile/auth?focusSecurityQuestions=true&focusTel=false`
+    );
   });
 
   /*
@@ -157,7 +160,10 @@ describe('User verification banner', () => {
       .should('be.visible')
       .should('be.enabled')
       .click();
-    cy.url().should('endWith', `/profile/auth`);
+    cy.url().should(
+      'endWith',
+      `/profile/auth?focusSecurityQuestions=true&focusTel=false`
+    );
   });
 
   /*

@@ -420,6 +420,7 @@ export const baseConfig = [
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',
+      'src/features/Profile/**/*',
       'src/features/Search/**/*',
       'src/features/TopMenu/SearchBar/**/*',
       'src/components/Tag/**/*',
