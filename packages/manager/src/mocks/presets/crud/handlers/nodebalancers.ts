@@ -252,6 +252,7 @@ export const createNodeBalancer = (mockState: MockState) => [
             label: nodeBalancer.label,
             type: 'nodebalancer' as FirewallDeviceEntityType,
             url: `/nodebalancer/${nodeBalancer.id}`,
+            parent_entity: null,
           };
           const updatedFirewall = {
             ...firewall,
