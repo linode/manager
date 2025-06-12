@@ -10,18 +10,24 @@ import type { Theme } from '@mui/material/styles';
 
 interface Props {
   instanceLabel?: string;
+  isLkeClusterRestricted: boolean;
   nodeId?: string;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
 export const NodeActionMenu = (props: Props) => {
-  const { instanceLabel, nodeId, openRecycleNodeDialog } = props;
+  const {
+    instanceLabel,
+    isLkeClusterRestricted,
+    nodeId,
+    openRecycleNodeDialog,
+  } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {
-      disabled: !nodeId || !instanceLabel,
+      disabled: !nodeId || !instanceLabel || isLkeClusterRestricted,
       onClick: () => {
         if (!nodeId || !instanceLabel) {
           return;
