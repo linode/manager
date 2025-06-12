@@ -8,7 +8,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -21,13 +20,12 @@ import { MaintenancePolicy } from './MaintenancePolicy';
 import { NetworkHelper } from './NetworkHelper';
 import { NetworkInterfaceType } from './NetworkInterfaceType';
 import { ObjectStorageSettings } from './ObjectStorageSettings';
+import { useVMHostMaintenanceEnabled } from './utils';
 
 import type { APIError } from '@linode/api-v4';
 
 const GlobalSettings = () => {
   const [isBackupsDrawerOpen, setIsBackupsDrawerOpen] = React.useState(false);
-
-  const flags = useFlags();
 
   const {
     data: accountSettings,
@@ -36,6 +34,8 @@ const GlobalSettings = () => {
   } = useAccountSettings();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
+
   const { data: linodes } = useAllLinodesQuery();
 
   const hasLinodesWithoutBackups =
@@ -89,7 +89,7 @@ const GlobalSettings = () => {
     <div>
       <DocumentTitleSegment segment="Settings" />
       <Stack spacing={2}>
-        {flags.vmHostMaintenance?.enabled && <MaintenancePolicy />}
+        {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
         {isLinodeInterfacesEnabled && <NetworkInterfaceType />}
         {isLinodeInterfacesEnabled && <DefaultFirewalls />}
         <AutoBackups

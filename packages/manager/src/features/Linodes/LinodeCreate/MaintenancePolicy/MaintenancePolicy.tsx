@@ -19,7 +19,7 @@ import type { LinodeCreateFormValues } from '../utilities';
 
 export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
-  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
+  const { isVMHostMaintenanceInBeta } = useVMHostMaintenanceEnabled();
 
   const [selectedRegion, selectedType] = useWatch({
     control,
@@ -38,7 +38,7 @@ export const MaintenancePolicy = () => {
     <Accordion
       detailProps={{ sx: { p: 0 } }}
       heading={MAINTENANCE_POLICY_TITLE}
-      headingChip={isVMHostMaintenanceEnabled ? <BetaChip /> : undefined}
+      headingChip={isVMHostMaintenanceInBeta ? <BetaChip /> : undefined}
       subHeading={
         <>
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}

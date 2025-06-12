@@ -96,21 +96,18 @@ export const useIsTaxIdEnabled = (): {
 /**
  * Hook to determine if the VM Host Maintenance feature should be visible to the user.
  * Based on the feature flag.
- *
- * @returns {boolean} - Whether the VM Host Maintenance feature is enabled for the current user.
  */
-export const useVMHostMaintenanceEnabled = (): {
-  isVMHostMaintenanceEnabled: boolean;
-} => {
+export const useVMHostMaintenanceEnabled = () => {
   const flags = useFlags();
 
   if (!flags) {
     return { isVMHostMaintenanceEnabled: false };
   }
 
-  const isVMHostMaintenanceEnabled = Boolean(flags.vmHostMaintenance?.beta);
+  const isVMHostMaintenanceEnabled = Boolean(flags.vmHostMaintenance?.enabled);
+  const isVMHostMaintenanceInBeta = Boolean(flags.vmHostMaintenance?.beta);
 
-  return { isVMHostMaintenanceEnabled };
+  return { isVMHostMaintenanceEnabled, isVMHostMaintenanceInBeta };
 };
 
 /**

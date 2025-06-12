@@ -2,7 +2,7 @@ import { useGrants } from '@linode/queries';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useFlags } from 'src/hooks/useFlags';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 
 import { LinodeSettingsDeletePanel } from './LinodeSettingsDeletePanel';
 import { LinodeSettingsLabelPanel } from './LinodeSettingsLabelPanel';
@@ -15,7 +15,8 @@ const LinodeSettings = () => {
   const id = Number(linodeId);
 
   const { data: grants } = useGrants();
-  const flags = useFlags();
+
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const isReadOnly =
     grants !== undefined &&
@@ -26,7 +27,7 @@ const LinodeSettings = () => {
     <>
       <LinodeSettingsLabelPanel isReadOnly={isReadOnly} linodeId={id} />
       <LinodeSettingsPasswordPanel isReadOnly={isReadOnly} linodeId={id} />
-      {flags.vmHostMaintenance?.enabled && (
+      {isVMHostMaintenanceEnabled && (
         <LinodeSettingsMaintenancePolicyPanel
           isReadOnly={isReadOnly}
           linodeId={id}
