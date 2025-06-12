@@ -31,7 +31,6 @@ import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperT
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
   getKubeControlPlaneACL,
-  getKubeHighAvailability,
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
@@ -112,7 +111,6 @@ export const CreateCluster = () => {
   const { data: account } = useAccount();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-  const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
@@ -513,7 +511,7 @@ export const CreateCluster = () => {
                 marginTop: showAPL ? 1 : 4,
               }}
             />
-            {showHighAvailability && selectedTier !== 'enterprise' && (
+            {selectedTier !== 'enterprise' && (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
                   highAvailabilityPrice={
@@ -613,7 +611,6 @@ export const CreateCluster = () => {
             region={selectedRegion?.id}
             regionsData={regionsData}
             removePool={removePool}
-            showHighAvailability={showHighAvailability}
             submitting={submitting}
             toggleHasAgreed={toggleHasAgreed}
             updateFor={[

@@ -171,17 +171,12 @@ export const getKubeHighAvailability = (
   account: Account | undefined,
   cluster?: KubernetesCluster | null
 ) => {
-  const showHighAvailability = account?.capabilities.includes(
-    'LKE HA Control Planes'
-  );
-
   const isClusterHighlyAvailable = Boolean(
-    showHighAvailability && cluster?.control_plane.high_availability
+    cluster?.control_plane.high_availability
   );
 
   return {
     isClusterHighlyAvailable,
-    showHighAvailability,
   };
 };
 

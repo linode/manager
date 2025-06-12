@@ -64,9 +64,15 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
+  // const areClusterLinodesReadOnly = useIsResourceRestricted({
+  //   grantLevel: 'read_only',
+  //   grantType: 'linode',
+  //   id: cluster.id,
+  // });
+
   const isClusterReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
-    grantType: 'linode',
+    grantType: 'lkecluster',
     id: cluster.id,
   });
 
