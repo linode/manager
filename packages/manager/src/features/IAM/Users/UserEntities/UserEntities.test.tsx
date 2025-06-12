@@ -28,8 +28,8 @@ const queryMocks = vi.hoisted(() => ({
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,

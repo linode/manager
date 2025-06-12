@@ -1,5 +1,6 @@
+import { useAccountRoles } from '@linode/queries';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountRoles } from 'src/queries/iam/iam';
 
 /**
  * Hook to determine if the IAM feature is enabled for the current user.

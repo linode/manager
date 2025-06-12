@@ -1,4 +1,9 @@
-import { useAccountUsers } from '@linode/queries';
+import {
+  useAccountRoles,
+  useAccountUsers,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -16,11 +21,6 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import {
   INTERNAL_ERROR_UPDATE_PERMISSION,

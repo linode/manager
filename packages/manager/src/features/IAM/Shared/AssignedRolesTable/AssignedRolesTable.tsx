@@ -1,3 +1,4 @@
+import { useAccountRoles, useUserRoles } from '@linode/queries';
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -15,7 +16,6 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { usePagination } from 'src/hooks/usePagination';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import { useAccountRoles, useUserRoles } from 'src/queries/iam/iam';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
