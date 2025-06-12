@@ -322,6 +322,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleUnassignLinodes={handleSubnetUnassignLinodes}
               isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
+              numNodebalancers={subnet.nodebalancers.length}
               subnet={subnet}
               vpcId={vpcId}
             />
