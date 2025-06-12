@@ -221,8 +221,6 @@ export const VPCPanel = (props: Props) => {
                         onChange={(e) =>
                           ipv4Change(e.target.value ?? '', index)
                         }
-                        // eslint-disable-next-line sonarjs/no-hardcoded-ip
-                        placeholder="10.0.0.24"
                         required
                         slotProps={{
                           input: {
