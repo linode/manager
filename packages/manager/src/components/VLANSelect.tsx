@@ -109,22 +109,10 @@ export const VLANSelect = (props: Props) => {
       }
       helperText={helperText}
       inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
-      isOptionEqualToValue={(option1, options2) =>
-        option1.label === options2.label
+      isOptionEqualToValue={(option1, option2) =>
+        option1.label === option2.label
       }
       label="VLAN"
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
       loading={isFetching}
       noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
@@ -151,6 +139,20 @@ export const VLANSelect = (props: Props) => {
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"
+      slotProps={{
+        listbox: {
+          onScroll: (event: React.SyntheticEvent) => {
+            const listboxNode = event.currentTarget;
+            if (
+              listboxNode.scrollTop + listboxNode.clientHeight >=
+                listboxNode.scrollHeight &&
+              hasNextPage
+            ) {
+              fetchNextPage();
+            }
+          },
+        },
+      }}
       sx={sx}
       value={selectedVLAN}
     />
