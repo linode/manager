@@ -20,6 +20,7 @@ import {
   mockGetAlertDefinitions,
   mockGetAllAlertDefinitions,
   mockGetCloudPulseMetricDefinitions,
+  mockGetCloudPulseServiceByType,
   mockGetCloudPulseServices,
   mockUpdateAlertDefinitions,
 } from 'support/intercepts/cloudpulse';
@@ -37,6 +38,8 @@ import {
   databaseFactory,
   memoryRulesFactory,
   notificationChannelFactory,
+  serviceAlertFactory,
+  serviceTypesFactory,
   triggerConditionFactory,
 } from 'src/factories';
 import {
@@ -116,7 +119,12 @@ const notificationChannels = notificationChannelFactory.build({
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-
+const services = serviceTypesFactory.build({
+  service_type: 'dbaas',
+  label: 'dbaas',
+  alert: serviceAlertFactory.build(),
+  regions: 'us-ord,us-east',
+});
 describe('Integration Tests for Edit Alert', () => {
   /*
    * - Confirms that the Edit Alert page loads with the correct alert details.
@@ -138,6 +146,7 @@ describe('Integration Tests for Edit Alert', () => {
     mockGetAccount(mockAccount);
     mockGetProfile(mockProfile);
     mockGetRegions(regions);
+    mockGetCloudPulseServiceByType('dbaas', services);
     mockGetCloudPulseServices([alertDetails.service_type]);
     mockGetAllAlertDefinitions([alertDetails]).as('getAlertDefinitionsList');
     mockGetAlertDefinitions(service_type, id, alertDetails).as(
@@ -206,6 +215,7 @@ describe('Integration Tests for Edit Alert', () => {
       });
     });
   };
+
   const scopeActions: Record<string, () => void> = {
     // Region-level alert validations
     Region: () => {
@@ -258,23 +268,9 @@ describe('Integration Tests for Edit Alert', () => {
 
         cy.get('[data-qa-alert-row]')
           .should('have.length', 4)
-          .each((row, index) => {
-            const db = databases[index];
-            const rowNumber = index + 1;
-            const regionLabel = regionMap.get(db.region) || 'Unknown Region';
-
-            cy.wrap(row).within(() => {
-              cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
-                'have.text',
-                db.label
-              );
-
-              cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
-                'have.text',
-                `US, ${regionLabel} (${db.region})`
-              );
-            });
-          });
+          .each((row, index) =>
+            validateAlertRow(row, index, databases, regionMap)
+          );
 
         // Entity search
         cy.findByPlaceholderText(searchPlaceholder).type(databases[0].label);
@@ -309,6 +305,28 @@ describe('Integration Tests for Edit Alert', () => {
         );
       });
     },
+  };
+  const validateAlertRow = (
+    row: JQuery<HTMLElement>,
+    index: number,
+    databases: Database[], // Replace with the correct type
+    regionMap: Map<string, string>
+  ) => {
+    const db = databases[index];
+    const rowNumber = index + 1;
+    const regionLabel = regionMap.get(db.region) || 'Unknown Region';
+
+    cy.wrap(row).within(() => {
+      cy.get(`[data-qa-alert-cell="${rowNumber}_entity"]`).should(
+        'have.text',
+        db.label
+      );
+
+      cy.get(`[data-qa-alert-cell="${rowNumber}_region"]`).should(
+        'have.text',
+        `US, ${regionLabel} (${db.region})`
+      );
+    });
   };
 
   it('should correctly display the details of the alert in the Edit Alert page', () => {
