@@ -1,3 +1,4 @@
+import { usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
 import * as React from 'react';
 
@@ -8,38 +9,29 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import LinodeSummary from './LinodeSummary/LinodeSummary';
 
 interface Props {
-  isAclpBetaLocal: boolean;
   isAclpSupportedRegionLinode: boolean;
   linodeCreated: string;
   linodeId: number;
-  setIsAclpBetaLocal: (value: boolean) => void;
 }
 
 const LinodeMetrics = (props: Props) => {
-  const {
-    linodeCreated,
-    linodeId,
-    isAclpSupportedRegionLinode,
-    isAclpBetaLocal,
-    setIsAclpBetaLocal,
-  } = props;
+  const { linodeCreated, linodeId, isAclpSupportedRegionLinode } = props;
 
   const flags = useFlags();
+  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsBeta
+  );
   const linodeDashboardId = 2;
 
   return (
     <Box>
       {flags.aclpBetaServices?.metrics && isAclpSupportedRegionLinode && (
-        <AclpPreferenceToggle
-          isAclpBetaLocal={isAclpBetaLocal}
-          setIsAclpBetaLocal={setIsAclpBetaLocal}
-          type="metrics"
-        />
+        <AclpPreferenceToggle type="metrics" />
       )}
 
       {flags.aclpBetaServices?.metrics &&
       isAclpSupportedRegionLinode &&
-      isAclpBetaLocal ? (
+      isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View
         <CloudPulseDashboardWithFilters
           dashboardId={linodeDashboardId}

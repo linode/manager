@@ -8,7 +8,7 @@ import { useFlags } from 'src/hooks/useFlags';
 export const Alerts = () => {
   const flags = useFlags();
 
-  const [isAclpBetaLocalCreateFlow, setIsAclpBetaLocalCreateFlow] =
+  const [isAclpAlertsBetaLocalCreateFlow, setIsAclpBetaLocalCreateFlow] =
     React.useState<boolean>(false);
 
   return (
@@ -16,7 +16,7 @@ export const Alerts = () => {
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        flags.aclpBetaServices?.alerts && isAclpBetaLocalCreateFlow ? (
+        flags.aclpBetaServices?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
           <BetaChip />
         ) : undefined
       }
@@ -25,12 +25,12 @@ export const Alerts = () => {
     >
       {flags.aclpBetaServices?.alerts && (
         <AclpPreferenceToggle
-          isAclpBetaLocal={isAclpBetaLocalCreateFlow}
+          isAclpBetaLocal={isAclpAlertsBetaLocalCreateFlow}
           setIsAclpBetaLocal={setIsAclpBetaLocalCreateFlow}
           type="alerts"
         />
       )}
-      {flags.aclpBetaServices?.alerts && isAclpBetaLocalCreateFlow ? (
+      {flags.aclpBetaServices?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
         <Notice variant="info">ACLP Alerts coming soon...</Notice>
       ) : (
         <LinodeSettingsAlertsPanel />

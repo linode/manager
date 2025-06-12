@@ -1,21 +1,40 @@
+import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
 import React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import { Skeleton } from 'src/components/Skeleton';
 
-import type { ManagerPreferences } from '@linode/utilities';
-
-export interface AclpPreferenceToggleType {
+type AlertsToggleType = {
   isAclpBetaLocal: boolean;
   setIsAclpBetaLocal: (value: boolean) => void;
-  type: 'alerts' | 'metrics';
-}
+  type: 'alerts';
+};
+
+type MetricsToggleType = {
+  /**
+   * `isAclpBetaLocal` prop is not allowed for metrics type.
+   */
+  isAclpBetaLocal?: never;
+  /**
+   * `setIsAclpBetaLocal` is not allowed for metrics type.
+   */
+  setIsAclpBetaLocal?: never;
+  type: 'metrics';
+};
+
+/**
+ * ACLP preference toggle type configuration.
+ *
+ * For `alerts`, the `isAclpBetaLocal` and `setIsAclpBetaLocal` props are required.
+ * For `metrics`, ACLP beta-related props are not allowed.
+ */
+export type AclpPreferenceToggleType = AlertsToggleType | MetricsToggleType;
 
 interface PreferenceConfigItem {
   getBannerText: (isBeta: boolean | undefined) => JSX.Element;
   getButtonText: (isBeta: boolean | undefined) => string;
   preferenceKey: string;
-  updateKey: keyof ManagerPreferences;
 }
 
 const preferenceConfig: Record<
@@ -23,7 +42,6 @@ const preferenceConfig: Record<
   PreferenceConfigItem
 > = {
   metrics: {
-    updateKey: 'isAclpMetricsBeta',
     preferenceKey: 'metrics-preference',
     getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Metrics' : 'Try the Metrics (Beta)',
@@ -42,7 +60,6 @@ const preferenceConfig: Record<
       ),
   },
   alerts: {
-    updateKey: 'isAclpAlertsBeta',
     preferenceKey: 'alerts-preference',
     getButtonText: (isBeta) =>
       isBeta ? 'Switch to legacy Alerts' : 'Try Alerts (Beta)',
@@ -62,19 +79,39 @@ const preferenceConfig: Record<
   },
 };
 
-export const AclpPreferenceToggle = ({
-  type,
-  setIsAclpBetaLocal,
-  isAclpBetaLocal,
-}: AclpPreferenceToggleType) => {
+export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
+  const { type, isAclpBetaLocal, setIsAclpBetaLocal } = props;
+
   const config = preferenceConfig[type];
+
+  const { data: isAclpMetricsBeta, isLoading: isAclpMetricsBetaLoading } =
+    usePreferences((preferences) => {
+      return preferences?.isAclpMetricsBeta;
+    }, type === 'metrics');
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  if (isAclpMetricsBetaLoading) {
+    return (
+      <Skeleton
+        data-testid="metrics-preference-skeleton"
+        height="90px"
+        sx={(theme) => ({
+          marginTop: `-${theme.tokens.spacing.S20}`,
+        })}
+      />
+    );
+  }
 
   return (
     <DismissibleBanner
       actionButton={
         <Button
           buttonType="primary"
-          onClick={() => setIsAclpBetaLocal(!isAclpBetaLocal)}
+          onClick={() =>
+            type === 'alerts'
+              ? setIsAclpBetaLocal(!isAclpBetaLocal)
+              : updatePreferences({ isAclpMetricsBeta: !isAclpMetricsBeta })
+          }
           sx={{ textTransform: 'none' }}
         >
           {config.getButtonText(isAclpBetaLocal)}

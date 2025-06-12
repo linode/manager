@@ -42,7 +42,6 @@ export interface Linode {
   ipv4: string[];
   ipv6: null | string;
   is_alerts_beta: boolean;
-  is_metrics_beta: boolean;
   label: string;
   lke_cluster_id: null | number;
   maintenance_policy_id?: MaintenancePolicyId;
