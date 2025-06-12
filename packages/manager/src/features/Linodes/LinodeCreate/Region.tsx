@@ -125,11 +125,12 @@ export const Region = React.memo(() => {
       setValue('metadata.user_data', null);
     }
 
-    if (values.maintenance_policy_id !== undefined) {
-      // Clear maintenance_policy_id if the new region doesn't support it
-      if (!region.capabilities.includes('Maintenance Policy')) {
-        setValue('maintenance_policy_id', undefined);
-      }
+    if (
+      values.maintenance_policy_id &&
+      !region.capabilities.includes('Maintenance Policy')
+    ) {
+      // Clear maintenance_policy_id if the selected region doesn't support it
+      setValue('maintenance_policy_id', undefined);
     }
 
     if (values.placement_group?.id) {
