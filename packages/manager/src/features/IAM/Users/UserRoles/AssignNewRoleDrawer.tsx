@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
@@ -96,6 +96,13 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     onClose();
   };
 
+  useEffect(() => {
+    if (open) {
+      reset({
+        roles: [{ role: null, entities: null }],
+      });
+    }
+  }, [open, reset]);
   // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={handleClose} open={open} title="Assign New Roles">
@@ -151,7 +158,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             ))}
 
           {/* If all roles are filled, allow them to add another */}
-          {roles.length > 0 && roles.every((field) => field.role) && (
+          {roles.length > 0 && roles.every((field) => field.role?.value) && (
             <StyledLinkButtonBox sx={{ marginTop: theme.tokens.spacing.S12 }}>
               <LinkButton onClick={() => append({ role: null })}>
                 Add another role

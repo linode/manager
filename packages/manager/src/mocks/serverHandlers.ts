@@ -123,6 +123,7 @@ const getRandomWholeNumber = (min: number, max: number) =>
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { trustedDeviceFactory } from 'src/factories/devices';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
@@ -458,10 +459,10 @@ const iam = [
     return HttpResponse.json(userRolesFactory.build());
   }),
   http.get('*/iam/users/:username/permissions/:entity_type/:entity_id', () => {
-    return HttpResponse.json(userEntityPermissionsFactory.build());
+    return HttpResponse.json(userEntityPermissionsFactory);
   }),
   http.get('*/v4*/iam/users/:username/permissions/account', () => {
-    return HttpResponse.json(userAccountPermissionsFactory.build());
+    return HttpResponse.json(userAccountPermissionsFactory);
   }),
 ];
 
@@ -579,7 +580,7 @@ export const handlers = [
     );
   }),
   http.get('*/profile/apps', () => {
-    const tokens = appTokenFactory.buildList(5);
+    const tokens = appTokenFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(tokens));
   }),
   http.post('*/profile/phone-number', async () => {
@@ -1478,7 +1479,9 @@ export const handlers = [
     });
   }),
   http.get('*/profile/devices', () => {
-    return HttpResponse.json(makeResourcePage([]));
+    return HttpResponse.json(
+      makeResourcePage(trustedDeviceFactory.buildList(30))
+    );
   }),
   http.put('*/profile/preferences', async ({ request }) => {
     const reqBody = await request.json();

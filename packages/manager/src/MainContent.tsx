@@ -110,11 +110,6 @@ const LinodesRoutes = React.lazy(() =>
     default: module.LinodesRoutes,
   }))
 );
-const Profile = React.lazy(() =>
-  import('src/features/Profile/Profile').then((module) => ({
-    default: module.Profile,
-  }))
-);
 
 export const MainContent = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -282,7 +277,6 @@ export const MainContent = () => {
                                   component={LinodesRoutes}
                                   path="/linodes"
                                 />
-                                <Route component={Profile} path="/profile" />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />

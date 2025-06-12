@@ -71,9 +71,8 @@ describe('VerificationDetailsBanner', () => {
     fireEvent.click(getByTestId('confirmButton'));
 
     // Ensure that history.push is called with the correct arguments
-    expect(mockHistory.push).toHaveBeenCalledWith('/profile/auth', {
-      focusSecurityQuestions: true,
-      focusTel: false,
-    });
+    expect(mockHistory.push).toHaveBeenCalledWith(
+      '/profile/auth?focusSecurityQuestions=true&focusTel=false'
+    );
   });
 });
