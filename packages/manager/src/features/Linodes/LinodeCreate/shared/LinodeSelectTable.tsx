@@ -258,13 +258,6 @@ export const getLinodeXFilter = (
   order?: Order,
   orderBy?: string
 ) => {
-  // TODO: Tanstack router - this is breaking the sorting - confirm if can be removed
-  // if (preselectedLinodeId) {
-  //   return {
-  //     id: preselectedLinodeId,
-  //   };
-  // }
-
   const { error: filterError, filter: apiFilter } = getAPIFilterFromQuery(
     query,
     {
