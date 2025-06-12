@@ -22,6 +22,7 @@ import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
 interface FooterProps {
   aclData: KubernetesControlPlaneACLPayload | undefined;
+  areClusterLinodesReadOnly: boolean;
   clusterCreated: string;
   clusterId: number;
   clusterLabel: string;
@@ -38,6 +39,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
   const {
     aclData,
+    areClusterLinodesReadOnly,
     clusterCreated,
     clusterId,
     clusterLabel,
@@ -172,7 +174,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
-          disabled={isClusterReadOnly}
+          disabled={areClusterLinodesReadOnly}
           entityLabel={clusterLabel}
           sx={{
             width: '100%',

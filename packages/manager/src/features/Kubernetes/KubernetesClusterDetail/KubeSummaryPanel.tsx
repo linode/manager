@@ -57,11 +57,11 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     mutateAsync: resetKubeConfig,
   } = useResetKubeConfigMutation();
 
-  // const areClusterLinodesReadOnly = useIsResourceRestricted({
-  //   grantLevel: 'read_only',
-  //   grantType: 'linode',
-  //   id: cluster.id,
-  // });
+  const areClusterLinodesReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: cluster.id,
+  });
 
   const isClusterReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -134,6 +134,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
         footer={
           <KubeEntityDetailFooter
             aclData={aclData}
+            areClusterLinodesReadOnly={areClusterLinodesReadOnly}
             clusterCreated={cluster.created}
             clusterId={cluster.id}
             clusterLabel={cluster.label}
