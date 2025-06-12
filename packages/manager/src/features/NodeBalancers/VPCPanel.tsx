@@ -81,8 +81,8 @@ export const VPCPanel = (props: Props) => {
         <Typography variant="h2">VPC</Typography>
         <Stack spacing={1.5}>
           <Typography>
-            Select a VPC if your NodeBalancer will use backend nodes within a
-            VPC.
+            Complete this section to allow this NodeBalancer to communicate with
+            backend nodes in a VPC.
           </Typography>
           <Autocomplete
             data-testid="vpc-select"
