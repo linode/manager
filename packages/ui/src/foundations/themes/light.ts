@@ -243,7 +243,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
     {
       background: Table.Row.Background.Hover,
     },
