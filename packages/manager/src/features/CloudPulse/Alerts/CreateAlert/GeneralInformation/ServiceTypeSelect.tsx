@@ -2,8 +2,8 @@ import {
   Autocomplete,
   BetaChip,
   Box,
+  ListItem,
   SelectedIcon,
-  StyledListItem,
 } from '@linode/ui';
 import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -90,7 +90,6 @@ export const CloudPulseServiceSelect = (
           placeholder="Select a Service"
           renderOption={(props, option, { selected }) => {
             const { key, ...rest } = props;
-            const ListItem = key === 'Select All ' ? StyledListItem : 'li';
             return (
               <ListItem {...rest} data-qa-option key={key}>
                 <Box flexGrow={1}>{option.label}</Box>{' '}

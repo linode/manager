@@ -148,7 +148,7 @@ export const CloudPulseRegionSelect = React.memo(
         noMarginTop
         noOptionsText={
           NO_REGION_MESSAGE[selectedDashboard?.service_type ?? ''] ??
-          'No Regions Available'
+          'No Regions Available.'
         }
         onChange={(_, region) => {
           setSelectedRegion(region?.id ?? '');
