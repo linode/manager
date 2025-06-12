@@ -71,7 +71,8 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
         );
         // Find the Firewall device by checking the entity
         const device = devices.find(
-          (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
+          (d) =>
+            d.entity.id === interfaceId && d.entity.type === 'linode_interface'
         );
         if (device) {
           await deleteFirewallDevice({
@@ -81,7 +82,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
           await createFirewallDevice({
             firewallId: firewall_id,
             id: interfaceId,
-            type: 'interface',
+            type: 'linode_interface',
           });
         } else {
           return Promise.reject([
@@ -96,7 +97,7 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
         await createFirewallDevice({
           firewallId: firewall_id,
           id: interfaceId,
-          type: 'interface',
+          type: 'linode_interface',
         });
 
         return firewall_id;
@@ -110,7 +111,8 @@ export const useUpdateLinodeInterfaceFirewallMutation = (
         );
         // Find the Firewall device by checking the entity
         const device = devices.find(
-          (d) => d.entity.id === interfaceId && d.entity.type === 'interface'
+          (d) =>
+            d.entity.id === interfaceId && d.entity.type === 'linode_interface'
         );
         if (device) {
           await deleteFirewallDevice({

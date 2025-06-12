@@ -46,6 +46,14 @@ export const updateDatabaseSchema = object({
   type: string().notRequired(),
 });
 
+export const updatePrivateNetworkSchema = object({
+  private_network: object().shape({
+    vpc_id: number().required('VPC is required.'),
+    subnet_id: number().required('Subnet is required.'),
+    public_access: boolean().default(false),
+  }),
+});
+
 /**
  * Creates a base Yup validator based on the field type.
  */

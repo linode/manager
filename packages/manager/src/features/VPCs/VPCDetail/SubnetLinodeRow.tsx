@@ -340,7 +340,7 @@ const getIPRangesCellContents = (
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <TableCell>Linode</TableCell>
+    <TableCell sx={{ width: '24%' }}>Linode</TableCell>
     <TableCell sx={{ width: '14%' }}>Status</TableCell>
     <Hidden smDown>
       <TableCell>VPC IPv4</TableCell>

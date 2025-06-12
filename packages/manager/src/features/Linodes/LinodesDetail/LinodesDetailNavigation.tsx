@@ -1,4 +1,4 @@
-import { useLinodeQuery, usePreferences } from '@linode/queries';
+import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
@@ -19,7 +19,6 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
-import { useTypeQuery } from 'src/queries/types';
 
 import { isAclpSupportedRegion } from '../utilities';
 
@@ -72,7 +71,7 @@ const LinodesDetailNavigation = () => {
   const tabs = [
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpBetaServices?.metrics &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
@@ -105,7 +104,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpBetaServices?.alerts &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />

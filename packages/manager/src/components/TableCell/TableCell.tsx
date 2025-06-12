@@ -7,6 +7,7 @@ import type { TableCellProps as _TableCellProps } from '@mui/material/TableCell'
 
 export interface TableCellProps extends _TableCellProps {
   actionCell?: boolean;
+  capitalizationOverride?: boolean;
   center?: boolean;
   className?: string;
   compact?: boolean;
@@ -19,6 +20,7 @@ export interface TableCellProps extends _TableCellProps {
 export const TableCell = (props: TableCellProps) => {
   const {
     actionCell,
+    capitalizationOverride,
     center,
     className,
     errorCell,
@@ -34,7 +36,8 @@ export const TableCell = (props: TableCellProps) => {
       sx={{
         paddingRight: actionCell ? 0 : '',
         textAlign: actionCell ? 'right' : center ? 'center' : '',
-        textTransform: statusCell ? 'capitalize' : '',
+        textTransform:
+          statusCell && !capitalizationOverride ? 'capitalize' : '',
         whiteSpace: noWrap ? 'nowrap' : '',
       }}
       {...rest}
