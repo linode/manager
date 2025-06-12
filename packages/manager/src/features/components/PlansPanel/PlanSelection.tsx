@@ -59,7 +59,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planBelongsToMTCDisabledGroup,
+    planResizeNotSupported,
     planIsSmallerThanUsage,
     planIsTooSmall,
   } = plan;
@@ -89,14 +89,14 @@ export const PlanSelection = (props: PlanSelectionProps) => {
     planBelongsToDisabledClass ||
     planIsDisabled512Gb ||
     planHasLimitedAvailability ||
-    planBelongsToMTCDisabledGroup ||
+    planResizeNotSupported ||
     wholePanelIsDisabled;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
     planHasLimitedAvailability,
     planIsDisabled512Gb,
-    planBelongsToMTCDisabledGroup,
+    planResizeNotSupported,
     planIsSmallerThanUsage,
     planIsTooSmall,
     wholePanelIsDisabled,
@@ -114,7 +114,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
       planHasLimitedAvailability ||
       planIsTooSmall ||
       planIsSmallerThanUsage ||
-      planBelongsToMTCDisabledGroup);
+      planResizeNotSupported);
 
   const isDistributedPlan =
     plan.id.includes('dedicated-edge') || plan.id.includes('nanode-edge');
@@ -153,6 +153,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
                     }
                     id={plan.id}
                     onChange={() => onSelect(plan.id)}
+                    size="small"
                   />
                 }
                 label={plan.heading}
@@ -162,6 +163,7 @@ export const PlanSelection = (props: PlanSelectionProps) => {
           <TableCell
             className={rowIsDisabled ? 'hasTooltip' : ''}
             data-qa-plan-name
+            sx={{ paddingLeft: 0.5 }}
           >
             {plan.heading} &nbsp;
             {showDisabledTooltip && (
