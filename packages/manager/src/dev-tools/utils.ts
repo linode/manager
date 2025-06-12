@@ -12,6 +12,8 @@ import {
   LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
   LOCAL_STORAGE_SEEDERS_KEY,
   LOCAL_STORAGE_SEEDS_COUNT_MAP_KEY,
+  LOCAL_STORAGE_USER_ACCOUNT_PERMISSIONS_FORM_DATA_KEY,
+  LOCAL_STORAGE_USER_ENTITY_PERMISSIONS_FORM_DATA_KEY,
 } from './constants';
 
 import type {
@@ -19,6 +21,7 @@ import type {
   AccountMaintenance,
   Event,
   Notification,
+  PermissionType,
   Profile,
 } from '@linode/api-v4';
 import type {
@@ -194,6 +197,58 @@ export const saveCustomProfileData = (data: null | Profile): void => {
   if (data) {
     localStorage.setItem(
       LOCAL_STORAGE_PROFILE_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Retrieves the custom user account permissions form data from local storage.
+ */
+export const getCustomUserAccountPermissionsData = ():
+  | null
+  | PermissionType[] => {
+  const data = localStorage.getItem(
+    LOCAL_STORAGE_USER_ACCOUNT_PERMISSIONS_FORM_DATA_KEY
+  );
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves the custom user account permissions form data to local storage.
+ */
+export const saveCustomUserAccountPermissionsData = (
+  data: null | PermissionType[]
+): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_USER_ACCOUNT_PERMISSIONS_FORM_DATA_KEY,
+      JSON.stringify(data)
+    );
+  }
+};
+
+/**
+ * Retrieves the custom user entity permissions form data from local storage.
+ */
+export const getCustomUserEntityPermissionsData = ():
+  | null
+  | PermissionType[] => {
+  const data = localStorage.getItem(
+    LOCAL_STORAGE_USER_ENTITY_PERMISSIONS_FORM_DATA_KEY
+  );
+  return data ? JSON.parse(data) : null;
+};
+
+/**
+ * Saves the custom user entity permissions form data to local storage.
+ */
+export const saveCustomUserEntityPermissionsData = (
+  data: null | PermissionType[]
+): void => {
+  if (data) {
+    localStorage.setItem(
+      LOCAL_STORAGE_USER_ENTITY_PERMISSIONS_FORM_DATA_KEY,
       JSON.stringify(data)
     );
   }

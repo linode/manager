@@ -24,7 +24,7 @@ export const AdditionalOptions = () => {
     regions
   );
 
-  if (!(flags.aclpIntegration && isAclpSupportedRegionLinode)) {
+  if (!(flags.aclpBetaServices?.alerts && isAclpSupportedRegionLinode)) {
     return null;
   }
 

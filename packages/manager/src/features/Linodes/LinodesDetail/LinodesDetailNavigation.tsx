@@ -2,6 +2,7 @@ import {
   useLinodeQuery,
   usePreferences,
   useRegionsQuery,
+  useTypeQuery,
 } from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
@@ -23,7 +24,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
@@ -75,7 +75,7 @@ const LinodesDetailNavigation = () => {
   const tabs = [
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpBetaServices?.metrics &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
@@ -108,7 +108,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpIntegration &&
+        flags.aclpBetaServices?.alerts &&
         isAclpSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />

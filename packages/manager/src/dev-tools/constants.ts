@@ -16,6 +16,12 @@ export const LOCAL_STORAGE_PROFILE_FORM_DATA_KEY = 'msw-profile-form-data';
 
 export const LOCAL_STORAGE_EVENTS_FORM_DATA_KEY = 'msw-events-form-data';
 
+export const LOCAL_STORAGE_USER_ACCOUNT_PERMISSIONS_FORM_DATA_KEY =
+  'msw-user-account-permissions-form-data';
+
+export const LOCAL_STORAGE_USER_ENTITY_PERMISSIONS_FORM_DATA_KEY =
+  'msw-user-entity-permissions-form-data';
+
 export const LOCAL_STORAGE_MAINTENANCE_FORM_DATA_KEY =
   'msw-maintenance-form-data';
 

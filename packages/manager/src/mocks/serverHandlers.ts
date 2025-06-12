@@ -458,10 +458,10 @@ const iam = [
     return HttpResponse.json(userRolesFactory.build());
   }),
   http.get('*/iam/users/:username/permissions/:entity_type/:entity_id', () => {
-    return HttpResponse.json(userEntityPermissionsFactory.build());
+    return HttpResponse.json(userEntityPermissionsFactory);
   }),
   http.get('*/v4*/iam/users/:username/permissions/account', () => {
-    return HttpResponse.json(userAccountPermissionsFactory.build());
+    return HttpResponse.json(userAccountPermissionsFactory);
   }),
 ];
 
