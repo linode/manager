@@ -115,7 +115,7 @@ const getDevicesCellString = (inputs: DeviceLinkInputs) => {
   const { entities, isLinodeInterfacesEnabled } = inputs;
   const filteredEntities = isLinodeInterfacesEnabled
     ? entities
-    : entities.filter((entity) => entity.type !== 'interface');
+    : entities.filter((entity) => entity.type !== 'linode_interface');
 
   if (filteredEntities.length === 0) {
     return 'None assigned';
@@ -157,7 +157,7 @@ export const getDeviceLinks = (
 
 export const getDeviceLinkAndLabel = (entity: FirewallDeviceEntity) => {
   const { id, label, parent_entity, type } = entity;
-  const isInterfaceDevice = type === 'interface';
+  const isInterfaceDevice = type === 'linode_interface';
 
   const entityLabel =
     isInterfaceDevice && parent_entity ? parent_entity.label : label;

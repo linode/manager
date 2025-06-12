@@ -41,7 +41,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const deviceType = device?.entity.type;
 
   const entityLabelToUse =
-    deviceType === 'interface'
+    deviceType === 'linode_interface'
       ? `(ID: ${device?.entity.id})`
       : device?.entity.label;
 
@@ -85,7 +85,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
       });
     }
 
-    if (deviceType === 'interface' && device.entity.parent_entity) {
+    if (deviceType === 'linode_interface' && device.entity.parent_entity) {
       queryClient.invalidateQueries({
         queryKey: linodeQueries
           .linode(device.entity.parent_entity.id)

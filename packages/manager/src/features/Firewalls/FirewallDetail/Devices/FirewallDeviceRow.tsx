@@ -18,7 +18,7 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
   const { device, isLinodeRelatedDevice } = props;
   const { id, type } = device.entity;
 
-  const isInterfaceDevice = type === 'interface';
+  const isInterfaceDevice = type === 'linode_interface';
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
 

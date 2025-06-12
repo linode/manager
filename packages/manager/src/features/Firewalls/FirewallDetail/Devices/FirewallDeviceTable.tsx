@@ -48,7 +48,10 @@ export const FirewallDeviceTable = React.memo(
 
     const devicesWithEntityLabels = devices.map((device) => {
       // Linode Interface devices don't have a label, so we need to use their parent entity's label for sorting purposes
-      if (device.entity.type === 'interface' && device.entity.parent_entity) {
+      if (
+        device.entity.type === 'linode_interface' &&
+        device.entity.parent_entity
+      ) {
         return {
           ...device,
           entity: {

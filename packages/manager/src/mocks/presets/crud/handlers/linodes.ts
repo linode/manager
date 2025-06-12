@@ -337,7 +337,7 @@ export const createLinode = (mockState: MockState) => [
               entityId: vpcInterface.id,
               entityLabel: linode.label,
               firewallId: vpcIfacePayload.firewall_id,
-              interfaceType: 'interface',
+              interfaceType: 'linode_interface',
               mockState,
             });
           }
@@ -369,7 +369,7 @@ export const createLinode = (mockState: MockState) => [
             entityId: publicInterface.id,
             entityLabel: linode.label,
             firewallId: interfacePayload.firewall_id,
-            interfaceType: 'interface',
+            interfaceType: 'linode_interface',
             mockState,
           });
         }

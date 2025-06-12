@@ -1,4 +1,8 @@
-import { useLinodesQuery, useRegionsQuery } from '@linode/queries';
+import {
+  useLinodesQuery,
+  useRegionsQuery,
+  useSpecificTypes,
+} from '@linode/queries';
 import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -8,7 +12,6 @@ import { SelectableTableRow } from 'src/components/SelectableTableRow/Selectable
 import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { usePagination } from 'src/hooks/usePagination';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 
 import { TransferTable } from './TransferTable';
