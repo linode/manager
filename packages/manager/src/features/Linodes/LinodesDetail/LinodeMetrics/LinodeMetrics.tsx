@@ -17,7 +17,7 @@ interface Props {
 const LinodeMetrics = (props: Props) => {
   const { linodeCreated, linodeId, isAclpSupportedRegionLinode } = props;
 
-  const flags = useFlags();
+  const { aclpBetaServices = {} } = useFlags();
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
@@ -25,11 +25,11 @@ const LinodeMetrics = (props: Props) => {
 
   return (
     <Box>
-      {flags.aclpBetaServices?.metrics && isAclpSupportedRegionLinode && (
+      {aclpBetaServices['linode'] && isAclpSupportedRegionLinode && (
         <AclpPreferenceToggle type="metrics" />
       )}
 
-      {flags.aclpBetaServices?.metrics &&
+      {aclpBetaServices['linode'] &&
       isAclpSupportedRegionLinode &&
       isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View

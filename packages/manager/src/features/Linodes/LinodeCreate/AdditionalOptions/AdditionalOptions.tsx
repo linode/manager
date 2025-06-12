@@ -6,9 +6,9 @@ import { useFlags } from 'src/hooks/useFlags';
 import { Alerts } from './Alerts/Alerts';
 
 export const AdditionalOptions = () => {
-  const flags = useFlags();
+  const { aclpBetaServices = {} } = useFlags();
 
-  if (!flags.aclpBetaServices?.alerts) {
+  if (!aclpBetaServices['linode']) {
     return null;
   }
 

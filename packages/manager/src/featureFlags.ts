@@ -99,12 +99,6 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
-interface AclpBetaServices {
-  alerts: boolean;
-  dbaas: boolean;
-  metrics: boolean;
-}
-
 interface LimitsEvolution {
   enabled: boolean;
   requestForIncreaseDisabledForAll: boolean;
