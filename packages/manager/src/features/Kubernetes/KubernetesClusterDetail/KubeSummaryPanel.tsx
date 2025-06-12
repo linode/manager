@@ -1,4 +1,3 @@
-import { useAccount } from '@linode/queries';
 import {
   ActionsPanel,
   Box,
@@ -16,10 +15,7 @@ import { ConfirmationDialog } from 'src/components/ConfirmationDialog/Confirmati
 import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { KubeClusterSpecs } from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import {
-  getKubeControlPlaneACL,
-  useIsLkeEnterpriseEnabled,
-} from 'src/features/Kubernetes/kubeUtils';
+import { useIsLkeEnterpriseEnabled } from 'src/features/Kubernetes/kubeUtils';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesControlPlaneACLQuery,
@@ -43,9 +39,6 @@ interface Props {
 
 export const KubeSummaryPanel = React.memo((props: Props) => {
   const { cluster } = props;
-
-  const { data: account } = useAccount();
-  const { showControlPlaneACL } = getKubeControlPlaneACL(account);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -80,7 +73,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
     data: aclData,
     error: isErrorKubernetesACL,
     isLoading: isLoadingKubernetesACL,
-  } = useKubernetesControlPlaneACLQuery(cluster.id, !!showControlPlaneACL);
+  } = useKubernetesControlPlaneACLQuery(cluster.id);
 
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
@@ -149,7 +142,6 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
             isClusterReadOnly={isClusterReadOnly}
             isLoadingKubernetesACL={isLoadingKubernetesACL}
             setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
-            showControlPlaneACL={!!showControlPlaneACL}
           />
         }
         header={

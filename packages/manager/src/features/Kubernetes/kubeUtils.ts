@@ -212,17 +212,10 @@ export const getKubeControlPlaneACL = (
   account: Account | undefined,
   cluster?: KubernetesCluster | null
 ) => {
-  const showControlPlaneACL = account?.capabilities.includes(
-    'LKE Network Access Control List (IP ACL)'
-  );
-
-  const isClusterControlPlaneACLd = Boolean(
-    showControlPlaneACL && cluster?.control_plane.acl
-  );
+  const isClusterControlPlaneACLd = Boolean(cluster?.control_plane.acl);
 
   return {
     isClusterControlPlaneACLd,
-    showControlPlaneACL,
   };
 };
 
