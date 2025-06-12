@@ -1,8 +1,8 @@
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -13,7 +13,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
 import { useAccountRoles, useUserRoles } from 'src/queries/iam/iam';
 
@@ -63,15 +63,19 @@ const ALL_ROLES_OPTION: SelectOption = {
 };
 
 export const AssignedRolesTable = () => {
-  const { username } = useParams<{ username: string }>();
-  const history = useHistory();
+  const { username } = useParams({ from: '/iam/users/$username' });
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
-  const pagination = usePagination(1, ASSIGNED_ROLES_TABLE_PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users/$username/roles',
+    initialPage: 1,
+    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  });
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -163,9 +167,10 @@ export const AssignedRolesTable = () => {
     roleName: AccountAccessRole | EntityAccessRole
   ) => {
     const selectedRole = roleName;
-    history.push({
-      pathname: `/iam/users/${username}/entities`,
-      state: { selectedRole },
+    navigate({
+      to: '/iam/users/$username/entities',
+      params: { username },
+      search: { selectedRole },
     });
   };
 
