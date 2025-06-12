@@ -8,6 +8,7 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 import { StackScriptSelectionList } from './StackScriptSelectionList';
 
 const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn(),
   useNavigate: vi.fn(),
   useParams: vi.fn(),
   useSearch: vi.fn(),
@@ -17,6 +18,7 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useLocation: queryMocks.useLocation,
     useNavigate: queryMocks.useNavigate,
     useSearch: queryMocks.useSearch,
     useParams: queryMocks.useParams,
@@ -25,6 +27,9 @@ vi.mock('@tanstack/react-router', async () => {
 
 describe('StackScriptSelectionList', () => {
   beforeEach(() => {
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/linodes/create',
+    });
     queryMocks.useNavigate.mockReturnValue(vi.fn());
     queryMocks.useSearch.mockReturnValue({});
     queryMocks.useParams.mockReturnValue({});
