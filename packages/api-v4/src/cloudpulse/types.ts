@@ -359,3 +359,8 @@ export interface DeleteAlertPayload {
   alertId: number;
   serviceType: string;
 }
+
+export interface CloudPulseAlertsPayload {
+  system: number[];
+  user: number[];
+}

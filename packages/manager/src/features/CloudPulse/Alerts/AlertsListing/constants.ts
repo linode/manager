@@ -41,6 +41,7 @@ export const AlertContextualViewTableHeaderMap: TableColumnHeader[] = [
   { columnName: 'Alert Name', label: 'label' },
   { columnName: 'Metric Threshold', label: 'id' },
   { columnName: 'Alert Type', label: 'type' },
+  { columnName: 'Scope', label: 'scope' },
 ];
 
 export const alertLimitMessage =
@@ -49,3 +50,9 @@ export const metricLimitMessage =
   'You have reached the maximum number of metrics that can be evaluated by alerts created on this account.';
 export const alertToolTipText =
   'You have reached your limit of definitions for this account.';
+
+export const alertScopeLabelMap = {
+  account: 'Account',
+  region: 'Region',
+  entity: 'Entity',
+};

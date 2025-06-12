@@ -16,6 +16,7 @@ import type { Filter, Params, ResourcePage } from '../types';
 import type {
   Alert,
   AlertServiceType,
+  CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   EditAlertDefinitionPayload,
   NotificationChannel,
@@ -126,4 +127,17 @@ export const deleteAlertDefinition = (serviceType: string, alertId: number) =>
       `${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}/alert-definitions/${encodeURIComponent(alertId)}`,
     ),
     setMethod('DELETE'),
+  );
+
+export const updateServiceAlerts = (
+  serviceType: string,
+  entityId: string,
+  payload: CloudPulseAlertsPayload,
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/${serviceType}/instances/${encodeURIComponent(entityId)}`,
+    ),
+    setMethod('PUT'),
+    setData(payload),
   );
