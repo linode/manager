@@ -33,6 +33,7 @@ vi.mock('src/queries/cloudpulse/dashboards', async () => {
 });
 const mockDashboard = dashboardFactory.build();
 
+const message = 'Select a dashboard and apply filters to visualize metrics.';
 queryMocks.useCloudPulseDashboardsQuery.mockReturnValue({
   data: {
     data: mockDashboard,
@@ -57,11 +58,7 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       ''
     );
 
-    expect(
-      screen.getByText(
-        'Select a dashboard and apply filters to visualize metrics.'
-      )
-    ).toBeDefined();
+    expect(screen.getByText(message)).toBeDefined();
   });
 
   it('should render error placeholder if some dashboard is selected and filter config is not present', () => {
@@ -106,10 +103,6 @@ describe('CloudPulseDashboardFilterBuilder component tests', () => {
       dashboardLabel
     );
 
-    expect(
-      screen.getByText(
-        'Select a dashboard and apply filters to visualize metrics.'
-      )
-    ).toBeDefined();
+    expect(screen.getByText(message)).toBeDefined();
   });
 });

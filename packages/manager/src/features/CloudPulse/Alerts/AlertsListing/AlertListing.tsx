@@ -244,7 +244,10 @@ export const AlertListing = () => {
             placeholder={serviceFilters.length > 0 ? '' : 'Select a Service'}
             renderOption={(props, option, { selected }) => {
               const { key, ...rest } = props;
-              const ListItem = key === 'Select All ' ? StyledListItem : 'li';
+              const ListItem =
+                key === 'Select All ' || key === 'Deselect All '
+                  ? StyledListItem
+                  : 'li';
               return (
                 <ListItem {...rest} data-qa-option key={key}>
                   <Box flexGrow={1}>{option.label}</Box>{' '}
