@@ -6,10 +6,15 @@ import { useParams } from 'react-router-dom';
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { AclpPreferenceToggle } from '../AclpPreferenceToggle';
+import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
 
-const LinodeAlerts = () => {
+interface Props {
+  isAclpSupportedRegionLinode: boolean;
+}
+
+const LinodeAlerts = (props: Props) => {
+  const { isAclpSupportedRegionLinode } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
@@ -27,8 +32,13 @@ const LinodeAlerts = () => {
 
   return (
     <Box>
-      {flags.aclpIntegration ? <AclpPreferenceToggle type="alerts" /> : null}
-      {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
+      {flags.aclpBetaServices?.alerts && isAclpSupportedRegionLinode && (
+        <AclpPreferenceToggle type="alerts" />
+      )}
+
+      {flags.aclpBetaServices?.alerts &&
+      isAclpSupportedRegionLinode &&
+      isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId}

@@ -6,7 +6,7 @@ export const StyledPaper = styled(Paper)(({ theme }) => ({
       ? theme.tokens.color.Neutrals[5]
       : theme.tokens.color.Neutrals[100],
   marginTop: theme.tokens.spacing.S8,
-  padding: `${theme.tokens.spacing.S12} ${theme.tokens.spacing.S8}`,
+  padding: theme.tokens.spacing.S12,
 }));
 
 export const StyledTitle = styled(Typography, {

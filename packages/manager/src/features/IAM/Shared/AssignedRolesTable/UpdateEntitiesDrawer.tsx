@@ -1,13 +1,10 @@
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
-import {
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';
@@ -25,12 +22,11 @@ interface Props {
 export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
   const theme = useTheme();
 
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -89,7 +85,7 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
         role!.entity_type
       );
 
-      await updateUserPermissions({
+      await updateUserRoles({
         ...assignedRoles!,
         entity_access: entityAccess,
       });

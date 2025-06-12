@@ -1,11 +1,12 @@
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useParams, useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
@@ -15,9 +16,9 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
+import { useUserRoles } from 'src/queries/iam/iam';
 
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
@@ -35,10 +36,6 @@ import type { EntityType } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface LocationState {
-  selectedRole?: string;
-}
-
 const ALL_ENTITIES_OPTION: SelectOption = {
   label: 'All Entities',
   value: 'all',
@@ -47,17 +44,23 @@ const ALL_ENTITIES_OPTION: SelectOption = {
 type OrderByKeys = 'entity_name' | 'entity_type' | 'role_name';
 
 export const AssignedEntitiesTable = () => {
-  const { username } = useParams<{ username: string }>();
-  const location = useLocation();
-
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
   const theme = useTheme();
 
-  const locationState = location.state as LocationState;
+  const { selectedRole: selectedRoleSearchParam } = useSearch({
+    strict: false,
+  });
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('entity_name');
 
-  const pagination = usePagination(1, ENTITIES_TABLE_PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users/$username/entities',
+    initialPage: 1,
+    preferenceKey: ENTITIES_TABLE_PREFERENCE_KEY,
+  });
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -68,7 +71,7 @@ export const AssignedEntitiesTable = () => {
     }
   };
 
-  const [query, setQuery] = React.useState(locationState?.selectedRole ?? '');
+  const [query, setQuery] = React.useState(selectedRoleSearchParam ?? '');
 
   const [entityType, setEntityType] = React.useState<null | SelectOption>(
     ALL_ENTITIES_OPTION
@@ -91,7 +94,7 @@ export const AssignedEntitiesTable = () => {
     data: assignedRoles,
     error: assignedRolesError,
     isLoading: assignedRolesLoading,
-  } = useAccountUserPermissions(username ?? '');
+  } = useUserRoles(username ?? '');
 
   const { filterableOptions, roles } = React.useMemo(() => {
     if (!assignedRoles || !entities) {
@@ -198,7 +201,10 @@ export const AssignedEntitiesTable = () => {
                     <Typography>{el.role_name}</Typography>
                   </TableCell>
                   <TableCell actionCell>
-                    <ActionMenu actionsList={actions} ariaLabel="action menu" />
+                    <ActionMenu
+                      actionsList={actions}
+                      ariaLabel={`Action menu for entity ${el.entity_name}`}
+                    />
                   </TableCell>
                 </TableRow>
               );
@@ -301,7 +307,7 @@ export const AssignedEntitiesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRole}
       />
-      {filteredRoles.length > pagination.pageSize && (
+      {filteredRoles.length > PAGE_SIZES[0] && (
         <PaginationFooter
           count={filteredRoles.length}
           handlePageChange={pagination.handlePageChange}

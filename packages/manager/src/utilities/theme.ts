@@ -2,8 +2,6 @@ import { usePreferences } from '@linode/queries';
 import { dark, light } from '@linode/ui';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { useAuthentication } from 'src/hooks/useAuthentication';
-
 import type { ThemeName } from '@linode/ui';
 import type { Theme } from '@mui/material/styles';
 
@@ -50,13 +48,12 @@ export const getThemeFromPreferenceValue = (
 };
 
 export const useColorMode = () => {
-  const isAuthenticated = !!useAuthentication().token;
-
   const { data: themePreference } = usePreferences(
     (preferences) => preferences?.theme,
-    // Make sure we are authenticated before we fetch preferences.
-    // If we don't, we get an authentication loop.
-    isAuthenticated
+    // Disable this query so that it only reads from the React Query cache.
+    // We don't want it to fetch because this hook us mounted before the user is
+    // authenticated, which would result in a 401.
+    false
   );
 
   const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');

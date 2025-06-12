@@ -243,9 +243,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
-  },
+  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+    {
+      background: Table.Row.Background.Hover,
+    },
 };
 
 const MuiTableZebraStyles = {
@@ -397,11 +398,6 @@ export const lightTheme: ThemeOptions = {
           marginTop: Spacing.S4,
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
-          // Override padding when noOptions is present
-          '&:has(.MuiAutocomplete-noOptions)': {
-            paddingTop: Spacing.S0,
-            paddingBottom: Spacing.S0,
-          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
@@ -418,12 +414,8 @@ export const lightTheme: ThemeOptions = {
           boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          borderTop: 0,
-          border: '0px !important',
-          boxShadow: Alias.Elevation.S,
-          height: Spacing.S32,
-          display: 'flex',
-          alignItems: 'center',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
@@ -435,7 +427,6 @@ export const lightTheme: ThemeOptions = {
             transition: 'background-color 0.2s',
           },
           fontSize: '0.9rem',
-          padding: '10px !important',
           '& .fi': {
             width: Spacing.S28,
             height: Spacing.S20,
@@ -443,48 +434,37 @@ export const lightTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
           // To remove the double border of listbox and input
           '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"], &[data-popper-placement="top"]':
+              {
+                '.MuiAutocomplete-listbox': {
+                  padding: 0,
+                  '& .MuiAutocomplete-groupLabel': {
+                    color: Dropdown.Text.Default,
+                    font: Typography.Heading.Overline,
+                    textTransform: Typography.Heading.OverlineTextCase,
+                  },
+                },
+                '.MuiAutocomplete-option': {
+                  padding: `${Spacing.S6} ${Spacing.S12} !important`,
+                  svg: {
+                    height: Spacing.S16,
+                    width: Spacing.S16,
+                  },
+                },
+              },
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
           },
@@ -1263,51 +1243,38 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '&:active': {
-            color: theme.tokens.component.RadioButton.Active.Active.Border,
-          },
-          '&.Mui-checked': {
-            color: theme.tokens.component.RadioButton.Active.Default.Border,
-            '&:active': {
-              color: theme.tokens.component.RadioButton.Active.Active.Border,
-            },
-          },
-          '& .defaultFill': {
-            fill: theme.color.white,
-            transition: theme.transitions.create(['fill']),
-          },
           '& svg circle': {
-            fill: Color.Neutrals.White,
+            fill: theme.tokens.component.RadioButton.Inactive.Default
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Default.Border,
           },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              fill: Color.Neutrals[5],
-            },
-            '&:not(.Mui-checked) svg circle': {
-              fill: Color.Neutrals[20],
-            },
-            '&:not(.Mui-checked)': {
-              color:
-                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
-            },
-            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
-            pointerEvents: 'none',
+          '&.Mui-checked svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Default.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Default.Border,
           },
+          '&.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Disabled
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+          },
+          '&.Mui-checked.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Disabled.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Disabled.Border,
+          },
+          '&:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Hover.Border,
+          },
+          '&.Mui-checked:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Hover.Border,
+          },
+          padding: '10px 10px',
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
               fontSize: '16px',
             },
           },
-          '&:hover': {
-            '& .defaultFill': {
-              fill: theme.color.white,
-            },
-            color: theme.tokens.component.RadioButton.Active.Hover.Border,
-            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
-          },
-          color: theme.tokens.alias.Action.Neutral,
-          padding: '10px 10px',
-          transition: theme.transitions.create(['color']),
         }),
       },
     },
@@ -1594,8 +1561,16 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: Table.Row.Background.Hover,
+          '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+            {
+              backgroundColor: Table.Row.Background.Hover,
+            },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            cursor: 'not-allowed',
+            backgroundColor: 'inherit',
+            '& .MuiFormControlLabel-root.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
@@ -1604,7 +1579,6 @@ export const lightTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,

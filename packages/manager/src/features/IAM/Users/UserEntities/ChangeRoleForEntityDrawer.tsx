@@ -6,15 +6,15 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
 } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
@@ -41,26 +41,27 @@ export const ChangeRoleForEntityDrawer = ({
   role,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
 
-  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
-    useAccountPermissions();
+  const { data: accountRoles, isLoading: accountPermissionsLoading } =
+    useAccountRoles();
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
 
-    return getAllRoles(accountPermissions).filter(
+    return getAllRoles(accountRoles).filter(
       (el) => el.entity_type === role?.entity_type && el.access === role?.access
     );
-  }, [accountPermissions, role]);
+  }, [accountRoles, role]);
 
   const {
     control,
@@ -81,12 +82,12 @@ export const ChangeRoleForEntityDrawer = ({
 
   // Get the selected role based on the `selectedOptions`
   const selectedRole = React.useMemo(() => {
-    if (!selectedOptions || !accountPermissions) {
+    if (!selectedOptions || !accountRoles) {
       return null;
     }
 
-    return getRoleByName(accountPermissions, selectedOptions.value);
-  }, [selectedOptions, accountPermissions]);
+    return getRoleByName(accountRoles, selectedOptions.value);
+  }, [selectedOptions, accountRoles]);
 
   const onSubmit = async (data: { roleName: ExtendedEntityRole }) => {
     if (role?.role_name === data.roleName.label) {
@@ -107,7 +108,7 @@ export const ChangeRoleForEntityDrawer = ({
         newRole
       );
 
-      await updateUserPermissions({
+      await updateUserRoles({
         ...assignedRoles!,
         entity_access: updatedEntityRoles,
       });
@@ -137,7 +138,7 @@ export const ChangeRoleForEntityDrawer = ({
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
           Change the role for <strong>{role?.entity_name}</strong> from{' '}
           <strong>{role?.role_name}</strong> to:
         </Typography>
@@ -153,6 +154,7 @@ export const ChangeRoleForEntityDrawer = ({
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
+              sx={{ marginBottom: theme.spacingFunction(16) }}
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
               value={field.value || null}
             />

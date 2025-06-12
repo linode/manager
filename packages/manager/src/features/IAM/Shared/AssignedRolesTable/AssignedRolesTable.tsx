@@ -1,23 +1,21 @@
 import { Button, CircleProgress, Select, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { CollapsibleTable } from 'src/components/CollapsibleTable/CollapsibleTable';
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { Link } from 'src/components/Link';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
+import { PAGE_SIZES } from 'src/components/PaginationFooter/PaginationFooter.constants';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-} from 'src/queries/iam/iam';
+import { useAccountRoles, useUserRoles } from 'src/queries/iam/iam';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
@@ -65,15 +63,19 @@ const ALL_ROLES_OPTION: SelectOption = {
 };
 
 export const AssignedRolesTable = () => {
-  const { username } = useParams<{ username: string }>();
-  const history = useHistory();
+  const { username } = useParams({ from: '/iam/users/$username' });
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const [order, setOrder] = React.useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = React.useState<OrderByKeys>('name');
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
-  const pagination = usePagination(1, ASSIGNED_ROLES_TABLE_PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users/$username/roles',
+    initialPage: 1,
+    preferenceKey: ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  });
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -126,19 +128,20 @@ export const AssignedRolesTable = () => {
     setSelectedRole(role);
   };
 
-  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
-    useAccountPermissions();
+  const { data: accountRoles, isLoading: accountPermissionsLoading } =
+    useAccountRoles();
   const { data: entities, isLoading: entitiesLoading } = useAccountEntities();
-  const { data: assignedRoles, isLoading: assignedRolesLoading } =
-    useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles, isLoading: assignedRolesLoading } = useUserRoles(
+    username ?? ''
+  );
 
   const { filterableOptions, roles } = React.useMemo(() => {
-    if (!assignedRoles || !accountPermissions) {
+    if (!assignedRoles || !accountRoles) {
       return { filterableOptions: [], roles: [] };
     }
 
     const userRoles = combineRoles(assignedRoles);
-    let roles = mapRolesToPermissions(accountPermissions, userRoles);
+    let roles = mapRolesToPermissions(accountRoles, userRoles);
 
     const filterableOptions = [
       ALL_ROLES_OPTION,
@@ -152,7 +155,7 @@ export const AssignedRolesTable = () => {
     }
 
     return { filterableOptions, roles };
-  }, [assignedRoles, accountPermissions, entities]);
+  }, [assignedRoles, accountRoles, entities]);
 
   const [query, setQuery] = React.useState('');
 
@@ -164,9 +167,10 @@ export const AssignedRolesTable = () => {
     roleName: AccountAccessRole | EntityAccessRole
   ) => {
     const selectedRole = roleName;
-    history.push({
-      pathname: `/iam/users/${username}/entities`,
-      state: { selectedRole },
+    navigate({
+      to: '/iam/users/$username/entities',
+      params: { username },
+      search: { selectedRole },
     });
   };
 
@@ -407,7 +411,7 @@ export const AssignedRolesTable = () => {
         open={isRemoveAssignmentDialogOpen}
         role={selectedRoleDetails}
       />
-      {filteredAndSortedRolesCount > pagination.pageSize && (
+      {filteredAndSortedRolesCount > PAGE_SIZES[0] && (
         <PaginationFooter
           count={filteredAndSortedRolesCount}
           handlePageChange={pagination.handlePageChange}
