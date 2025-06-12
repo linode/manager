@@ -24,6 +24,17 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
+const restrictedLkeNotice = (
+  <Notice
+    text={getRestrictedResourceText({
+      action: 'edit',
+      resourceType: 'LKE Clusters',
+      isSingular: true,
+    })}
+    variant="warning"
+  />
+);
+
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
   const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
@@ -99,16 +110,7 @@ export const KubernetesClusterDetail = () => {
         clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         currentVersion={cluster?.k8s_version}
       />
-      {isLkeClusterRestricted && (
-        <Notice
-          text={getRestrictedResourceText({
-            action: 'edit',
-            resourceType: 'LKE Clusters',
-            isSingular: true,
-          })}
-          variant="warning"
-        />
-      )}
+      {isLkeClusterRestricted && restrictedLkeNotice}
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
