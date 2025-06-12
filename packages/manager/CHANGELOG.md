@@ -103,6 +103,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Fix inconsistent layout when entity names are long and previously assigned roles reappear when reopening the Assign New Roles Drawer ([#12356](https://github.com/linode/manager/pull/12356))
 - Fix delete button not disabled for subnets associated with a NodeBalancer on the VPC Subnet page ([#12365](https://github.com/linode/manager/pull/12365))
 - Update `interface` firewall entity type to `linode_interface` ([#12367](https://github.com/linode/manager/pull/12367))
+- UX description changes for VPC section on Create NodeBalancers page ([#12368](https://github.com/linode/manager/pull/12368))
 
 ## [2025-06-03] - v1.143.0
 
