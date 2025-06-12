@@ -1,3 +1,14 @@
+## [2025-06-17] - v0.68.0
+
+
+### Added:
+
+- Validation schema for database PrivateNetwork property via updatePrivateNetworkSchema ([#12354](https://github.com/linode/manager/pull/12354))
+
+### Upcoming Features:
+
+- Change references of `interface` to `linode_interface` for firewall validation ([#12367](https://github.com/linode/manager/pull/12367))
+
 ## [2025-06-03] - v0.67.0
 
 ### Added:

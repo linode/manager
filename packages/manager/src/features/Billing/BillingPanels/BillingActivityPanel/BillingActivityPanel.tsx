@@ -38,8 +38,8 @@ import {
   printPayment,
 } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import { useFlags } from 'src/hooks/useFlags';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -184,8 +184,20 @@ export const BillingActivityPanel = React.memo((props: Props) => {
   const { data: account } = useAccount();
   const { data: regions } = useRegionsQuery();
 
-  const pagination = usePagination(1, 'billing-activity');
-  const { handleOrderChange, order, orderBy } = useOrder();
+  const pagination = usePaginationV2({
+    currentRoute: '/account/billing',
+    preferenceKey: 'billing-activity-pagination',
+  });
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'amount',
+      },
+      from: '/account/billing',
+    },
+    preferenceKey: 'billing-activity-order',
+  });
 
   const isAkamaiCustomer = account?.billing_source === 'akamai';
   const { classes } = useStyles();

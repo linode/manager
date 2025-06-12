@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import {
   BillingActivityPanel,
@@ -57,7 +57,9 @@ vi.mock('@linode/api-v4/lib/account', async () => {
 
 describe('BillingActivityPanel', () => {
   it('renders the header and appropriate rows', async () => {
-    const { getByText } = renderWithTheme(<BillingActivityPanel />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <BillingActivityPanel />
+    );
     await waitFor(() => {
       getByText('Billing & Payment History');
       getByText('Description');
@@ -67,7 +69,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('renders a row for each payment and invoice', async () => {
-    const { getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
       <BillingActivityPanel />
     );
     await waitFor(() => {
@@ -79,9 +81,8 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by item type', async () => {
-    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
-      <BillingActivityPanel />
-    );
+    const { getByLabelText, queryByTestId, queryByText } =
+      await renderWithThemeAndRouter(<BillingActivityPanel />);
 
     const transactionTypeSelect = getByLabelText('Transaction Types');
 
@@ -103,9 +104,8 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should filter by transaction date', async () => {
-    const { getByLabelText, queryByTestId, queryByText } = renderWithTheme(
-      <BillingActivityPanel />
-    );
+    const { getByLabelText, queryByTestId, queryByText } =
+      await renderWithThemeAndRouter(<BillingActivityPanel />);
 
     await waitFor(() => {
       const transactionDateSelect = getByLabelText('Transaction Dates');
@@ -118,7 +118,9 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display transaction selection components with defaults', async () => {
-    const { getByLabelText } = renderWithTheme(<BillingActivityPanel />);
+    const { getByLabelText } = await renderWithThemeAndRouter(
+      <BillingActivityPanel />
+    );
     const transactionTypeSelect = getByLabelText('Transaction Types');
     expect(transactionTypeSelect).toHaveValue('All Transaction Types');
     const transactionDateSelect = getByLabelText('Transaction Dates');
@@ -126,7 +128,7 @@ describe('BillingActivityPanel', () => {
   });
 
   it('should display "Account active since"', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <BillingActivityPanel accountActiveSince="2018-01-01" />
     );
     await waitFor(() => {

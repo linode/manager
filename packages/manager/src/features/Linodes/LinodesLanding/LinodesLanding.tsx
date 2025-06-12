@@ -7,6 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import OrderBy from 'src/components/OrderBy';
 import { PlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
@@ -304,8 +305,12 @@ class ListLinodes extends React.Component<CombinedProps, State> {
           </React.Fragment>
         )}
         <PlatformMaintenanceBanner />
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner />
+        {this.props.flags.vmHostMaintenance?.enabled ? (
+          <MaintenanceBannerV2 />
+        ) : (
+          this.props.someLinodesHaveScheduledMaintenance && (
+            <MaintenanceBanner />
+          )
         )}
         <DocumentTitleSegment segment="Linodes" />
         <ProductInformationBanner bannerLocation="Linodes" />

@@ -262,7 +262,7 @@ export const ImagesLanding = () => {
 
   const {
     data: selectedImage,
-    isFetching: isFetchingSelectedImage,
+    isLoading: isFetchingSelectedImage,
     error: selectedImageError,
   } = useImageQuery(selectedImageId, !!selectedImageId);
   const { mutateAsync: deleteImage } = useDeleteImageMutation();

@@ -129,6 +129,7 @@ describe('VPC details page', () => {
       id: randomNumber(),
       label: randomLabel(),
       linodes: [],
+      nodebalancers: [],
     });
 
     const mockVPC = vpcFactory.build({

@@ -1,4 +1,4 @@
-import { useAccountBetasQuery } from '@linode/queries';
+import { useAccountBetasQuery, useBetasQuery } from '@linode/queries';
 import { Stack } from '@linode/ui';
 import { categorizeBetasByStatus } from '@linode/utilities';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -8,7 +8,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { BetaDetailsList } from 'src/features/Betas/BetaDetailsList';
-import { useBetasQuery } from 'src/queries/betas';
 
 import type { AccountBeta, Beta } from '@linode/api-v4';
 

@@ -17,6 +17,7 @@ const props = {
   handleUnassignLinodes: vi.fn(),
   isVPCLKEEnterpriseCluster: false,
   numLinodes: 1,
+  numNodebalancers: 1,
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   vpcId: 1,
 };
@@ -46,9 +47,26 @@ describe('SubnetActionMenu', () => {
     expect(tooltipText).toBeInTheDocument();
   });
 
+  it('should not allow the delete button to be clicked when isNodebalancerVPCEnabled is true', () => {
+    const screen = renderWithTheme(<SubnetActionMenu {...props} />, {
+      flags: { nodebalancerVpc: true },
+    });
+
+    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
+    fireEvent.click(actionMenu);
+
+    const deleteButton = screen.getByText('Delete');
+    fireEvent.click(deleteButton);
+    expect(props.handleDelete).not.toHaveBeenCalled();
+    const tooltipText = screen.getByLabelText(
+      'Resources assigned to a subnet must be unassigned before the subnet can be deleted.'
+    );
+    expect(tooltipText).toBeInTheDocument();
+  });
+
   it('should allow the delete button to be clicked', () => {
     const screen = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} />
+      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
     );
     const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);
@@ -64,7 +82,7 @@ describe('SubnetActionMenu', () => {
 
   it('should allow the edit button to be clicked', () => {
     const screen = renderWithTheme(
-      <SubnetActionMenu {...props} numLinodes={0} />
+      <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
     );
     const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
     fireEvent.click(actionMenu);

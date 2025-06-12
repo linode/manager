@@ -31,6 +31,13 @@ export const TableSortCell = (props: TableSortCellProps) => {
     ...rest
   } = props;
 
+  const ariaSort =
+    active && direction === 'asc'
+      ? 'ascending'
+      : active && direction === 'desc'
+        ? 'descending'
+        : 'none';
+
   const onHandleClick = () => {
     const { direction, handleClick, label } = props;
     const nextOrder = direction === 'asc' ? 'desc' : 'asc';
@@ -39,7 +46,14 @@ export const TableSortCell = (props: TableSortCellProps) => {
 
   return (
     <TableCell
+      aria-sort={ariaSort}
       onClick={onHandleClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onHandleClick();
+        }
+      }}
       role="columnheader"
       sortDirection={direction}
       sx={{

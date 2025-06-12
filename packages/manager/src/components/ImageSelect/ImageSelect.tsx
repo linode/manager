@@ -199,6 +199,7 @@ export const ImageSelect = (props: Props) => {
                     os={value.vendor ?? ''}
                     position="relative"
                     top={1}
+                    width="20px"
                   />
                 </InputAdornment>
               ) : null,

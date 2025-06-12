@@ -88,19 +88,52 @@ export const DismissibleBanner = (props: Props) => {
 
   return (
     <Notice bgcolor={(theme) => theme.palette.background.paper} {...rest}>
-      <Stack direction="row">
-        <Stack direction="column" flex={1} justifyContent="center">
-          {children}
-        </Stack>
+      <Stack direction="row" spacing={1}>
         <Stack
-          alignSelf="flex-start"
-          direction="row"
-          justifyContent="flex-end"
-          spacing={1}
+          flex={1}
+          justifyContent="space-between"
+          sx={{
+            alignItems: { sm: 'center' },
+            flexDirection: {
+              xs: 'column',
+              sm: 'row',
+            },
+          }}
         >
-          {actionButton}
-          {dismissible ? dismissibleButton : null}
+          <Stack direction="column" flex={1} justifyContent="center">
+            {children}
+          </Stack>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={(theme) => ({
+              alignItems: {
+                sm: 'center',
+              },
+              mt: {
+                xs: theme.spacingFunction(12),
+                sm: theme.spacingFunction(0),
+              },
+              ml: {
+                sm: theme.spacingFunction(24),
+              },
+            })}
+          >
+            {actionButton}
+          </Stack>
         </Stack>
+        {dismissible && (
+          <Stack
+            sx={{
+              alignSelf: {
+                sm: 'center',
+                xs: 'flex-start',
+              },
+            }}
+          >
+            {dismissibleButton}
+          </Stack>
+        )}
       </Stack>
     </Notice>
   );

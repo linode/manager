@@ -52,7 +52,9 @@ export const FirewallDeviceTable = React.memo(
 
     const linodeInterfaceDevices =
       type === 'linode'
-        ? allDevices?.filter((device) => device.entity.type === 'interface')
+        ? allDevices?.filter(
+            (device) => device.entity.type === 'linode_interface'
+          )
         : [];
 
     // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
@@ -66,7 +68,7 @@ export const FirewallDeviceTable = React.memo(
     );
 
     const updatedDevices = devices.map((device) => {
-      if (device.entity.type === 'interface') {
+      if (device.entity.type === 'linode_interface') {
         const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
         const associatedLinode = linodesWithInterfaces?.find(
           (linode) => linode.id === linodeId

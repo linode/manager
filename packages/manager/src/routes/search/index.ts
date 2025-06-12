@@ -3,15 +3,11 @@ import { createRoute } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { SearchRoute } from './SearchRoute';
 
-type SearchSearchParams = {
-  query: string;
-};
-
 const searchRoute = createRoute({
   component: SearchRoute,
   getParentRoute: () => rootRoute,
   path: 'search',
-  validateSearch: (search: SearchSearchParams) => search,
+  validateSearch: (params) => ({ query: String(params.query) }),
 });
 
 const searchLandingRoute = createRoute({

@@ -2,7 +2,6 @@ import { Notice, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing/constants';
@@ -56,7 +55,9 @@ export const PlanContainer = (props: PlanContainerProps) => {
     showLimits,
     wholePanelIsDisabled,
   } = props;
-  const location = useLocation();
+  // TODO: Tanstack Router: switch to mocking useLocation once fully migrated to Tanstack Router
+  // This works for both routers for now since the components re-rerenders on route change, but we should relay on a hook once ready.
+  const location = window.location;
   const flags = useFlags();
 
   // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow

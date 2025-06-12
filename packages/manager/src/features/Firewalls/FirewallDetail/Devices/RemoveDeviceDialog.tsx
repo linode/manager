@@ -41,7 +41,7 @@ export const RemoveDeviceDialog = React.memo((props: Props) => {
   const deviceType = device?.entity.type;
 
   const entityLabelToUse =
-    deviceType === 'interface'
+    deviceType === 'linode_interface'
       ? `(ID: ${device?.entity.id})`
       : device?.entity.label;
 

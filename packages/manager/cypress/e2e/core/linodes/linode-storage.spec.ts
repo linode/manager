@@ -171,12 +171,19 @@ describe('linode storage tab', () => {
       interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(diskName);
-      cy.findByText(diskName).should('be.visible');
+
       cy.wait('@addDisk').its('response.statusCode').should('eq', 200);
-      // Disk should show "Creating". We must wait for it to finish "Creating" before we try to delete the disk
-      cy.findByText('Creating', { exact: false }).should('be.visible');
-      // "Creating" should go away when the Disk is able to be deleted
-      cy.findByText('Creating', { exact: false }).should('not.exist');
+
+      cy.findByText(diskName)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          // Disk should show "Creating". We must wait for it to finish "Creating" before we try to delete the disk
+          cy.findByText('Creating', { exact: false }).should('be.visible');
+          // "Creating" should go away when the Disk is able to be deleted
+          cy.findByText('Creating', { exact: false }).should('not.exist');
+        });
+
       deleteDisk(diskName);
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.findByText('Deleting', { exact: false }).should('be.visible');

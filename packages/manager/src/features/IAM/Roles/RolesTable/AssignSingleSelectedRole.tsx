@@ -4,22 +4,19 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { AssignedPermissionsPanel } from 'src/features/IAM/Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { RoleView } from 'src/features/IAM/Shared/types';
 
-import type { IamAccountPermissions } from '@linode/api-v4';
+import type { RoleView } from 'src/features/IAM/Shared/types';
 import type { AssignNewRoleFormValues } from 'src/features/IAM/Shared/utilities';
 
 interface Props {
   hideDetails: boolean;
   index: number;
-  permissions: IamAccountPermissions;
   role: RoleView;
 }
 
 export const AssignSingleSelectedRole = ({
   hideDetails,
   index,
-  permissions,
   role,
 }: Props) => {
   const theme = useTheme();
@@ -32,31 +29,43 @@ export const AssignSingleSelectedRole = ({
         {index !== 0 && (
           <Divider
             sx={{
-              marginBottom: theme.tokens.spacing.S12,
+              marginBottom: theme.tokens.spacing.S6,
+              marginTop: theme.tokens.spacing.S12,
             }}
           />
         )}
 
-        <Controller
-          control={control}
-          name={`roles.${index}`}
-          render={({ field: { onChange, value } }) =>
-            !!role && (
+        {!!role && (
+          <Controller
+            control={control}
+            name={`roles.${index}.entities`}
+            render={({ field: { onChange, value }, fieldState }) => (
               <AssignedPermissionsPanel
+                errorText={fieldState.error?.message}
                 hideDetails={hideDetails}
                 mode="assign-role"
                 onChange={(updatedEntities) => {
-                  onChange({
-                    ...value,
-                    entities: updatedEntities
-                  });
+                  onChange(updatedEntities);
                 }}
                 role={role}
                 showName={true}
-                value={[]}
+                value={value || []}
               />
             )}
-        />
+            rules={{
+              validate: (value) => {
+                if (role.access === 'account_access') return true;
+                if (
+                  role.access === 'entity_access' &&
+                  (!value || value.length === 0)
+                ) {
+                  return 'Select entities.';
+                }
+                return true;
+              },
+            }}
+          />
+        )}
       </Box>
     </Box>
   );
