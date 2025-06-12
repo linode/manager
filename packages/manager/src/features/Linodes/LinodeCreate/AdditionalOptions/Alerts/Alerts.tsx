@@ -12,7 +12,7 @@ import type { LinodeCreateFormValues } from '../../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 export const Alerts = () => {
-  const flags = useFlags();
+  const { aclpBetaServices = {} } = useFlags();
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpAlertsBeta
   );
@@ -33,15 +33,15 @@ export const Alerts = () => {
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        flags.aclpBetaServices?.alerts && isAclpAlertsPreferenceBeta ? (
+        aclpBetaServices['linode'] && isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : undefined
       }
       subHeading="Receive notifications through system alerts when metric thresholds are exceeded."
       summaryProps={{ sx: { p: 0 } }}
     >
-      {flags.aclpBetaServices?.alerts && <AclpPreferenceToggle type="alerts" />}
-      {flags.aclpBetaServices?.alerts && isAclpAlertsPreferenceBeta ? (
+      {aclpBetaServices['linode'] && <AclpPreferenceToggle type="alerts" />}
+      {aclpBetaServices['linode'] && isAclpAlertsPreferenceBeta ? (
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}
           serviceType="linode"
