@@ -27,7 +27,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -55,7 +55,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -82,7 +82,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -112,7 +112,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: ['Linodes'],
+    monitors: { alerts: ['Linodes'], metrics: ['Linodes'] },
   },
   {
     capabilities: [
@@ -142,7 +142,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -171,7 +171,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -200,7 +200,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -229,7 +229,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -258,7 +258,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -286,7 +286,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -314,7 +314,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -343,7 +343,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -372,7 +372,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -400,7 +400,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -430,7 +430,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -458,7 +458,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -488,7 +488,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -516,7 +516,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -542,7 +542,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -573,7 +573,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -604,7 +604,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: ['Linodes'],
+    monitors: { alerts: ['Linodes'], metrics: [] },
   },
   {
     capabilities: [
@@ -631,7 +631,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -660,7 +660,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -690,7 +690,7 @@ export const regions: Region[] = [
     },
     site_type: 'core',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: ['Linodes', 'Distributed Plans'],
@@ -707,7 +707,7 @@ export const regions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: ['Linodes'],
@@ -724,6 +724,6 @@ export const regions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
 ];

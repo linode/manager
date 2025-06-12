@@ -66,7 +66,15 @@ const LinodesDetailNavigation = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const isAclpSupportedRegionLinode = isAclpSupportedRegion(
+  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion(
+    'metrics',
+    'Linodes',
+    linode?.region,
+    regions
+  );
+
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion(
+    'alerts',
     'Linodes',
     linode?.region,
     regions
@@ -76,7 +84,7 @@ const LinodesDetailNavigation = () => {
     {
       chip:
         flags.aclpBetaServices?.metrics &&
-        isAclpSupportedRegionLinode &&
+        isAclpMetricsSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -109,7 +117,7 @@ const LinodesDetailNavigation = () => {
     {
       chip:
         flags.aclpBetaServices?.alerts &&
-        isAclpSupportedRegionLinode &&
+        isAclpAlertsSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -180,7 +188,9 @@ const LinodesDetailNavigation = () => {
             <TabPanels>
               <SafeTabPanel index={idx++}>
                 <LinodeMetrics
-                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  isAclpMetricsSupportedRegionLinode={
+                    isAclpMetricsSupportedRegionLinode
+                  }
                   linodeCreated={linode?.created}
                   linodeId={id}
                 />
@@ -207,7 +217,9 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeAlerts
-                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  isAclpAlertsSupportedRegionLinode={
+                    isAclpAlertsSupportedRegionLinode
+                  }
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>

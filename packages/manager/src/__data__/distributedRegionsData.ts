@@ -21,7 +21,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -43,7 +43,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -65,7 +65,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -87,7 +87,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -109,7 +109,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -131,7 +131,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -153,7 +153,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -175,7 +175,7 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
   {
     capabilities: [
@@ -197,6 +197,6 @@ export const distributedRegions: Region[] = [
     },
     site_type: 'distributed',
     status: 'ok',
-    monitors: [],
+    monitors: { alerts: [], metrics: [] },
   },
 ];
