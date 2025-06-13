@@ -18,12 +18,12 @@ export const AdditionalOptions = () => {
     name: 'region',
   });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion(
-    'alerts',
-    'Linodes',
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    aclpMonitoringType: 'alerts',
+    featureCapability: 'Linodes',
+    regions,
     selectedRegionId,
-    regions
-  );
+  });
 
   if (!(flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode)) {
     return null;

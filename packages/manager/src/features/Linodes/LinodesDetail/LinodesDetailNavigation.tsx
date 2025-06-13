@@ -66,19 +66,19 @@ const LinodesDetailNavigation = () => {
 
   const { data: regions } = useRegionsQuery();
 
-  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion(
-    'metrics',
-    'Linodes',
-    linode?.region,
-    regions
-  );
+  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+    aclpMonitoringType: 'metrics',
+    featureCapability: 'Linodes',
+    regions,
+    selectedRegionId: linode?.region,
+  });
 
-  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion(
-    'alerts',
-    'Linodes',
-    linode?.region,
-    regions
-  );
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    aclpMonitoringType: 'alerts',
+    featureCapability: 'Linodes',
+    regions,
+    selectedRegionId: linode?.region,
+  });
 
   const tabs = [
     {
