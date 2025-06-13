@@ -1,5 +1,6 @@
 import { Box, Divider, Paper, Stack, Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 interface Props {
   attachments: string[];
