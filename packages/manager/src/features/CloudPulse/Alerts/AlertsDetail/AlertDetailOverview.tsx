@@ -37,7 +37,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
   } = alertDetails;
 
   const { data: serviceTypeList, isFetching } = useCloudPulseServiceTypes(true);
-  const { aclpBetaServices = {} } = useFlags();
+  const { aclpBetaServices } = useFlags();
 
   if (isFetching) {
     return <CircleProgress />;
@@ -65,7 +65,7 @@ export const AlertDetailOverview = React.memo((props: OverviewProps) => {
         <AlertDetailRow label="Severity" value={severityMap[severity]} />
         <AlertDetailRow
           label="Service"
-          showBetaChip={aclpBetaServices[serviceType]}
+          showBetaChip={aclpBetaServices?.[serviceType]?.alerts}
           value={getServiceTypeLabel(serviceType, serviceTypeList)}
         />
         <AlertDetailRow

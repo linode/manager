@@ -299,5 +299,8 @@ export interface AclpAlertServiceTypeConfig {
 }
 
 export interface AclpBetaServices {
-  [serviceType: string]: boolean;
+  [serviceType: string]: {
+    alerts: boolean;
+    metrics: boolean;
+  };
 }
