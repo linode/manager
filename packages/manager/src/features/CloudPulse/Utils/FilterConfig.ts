@@ -158,7 +158,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isMetricsFilter: false,
         name: 'Port',
         neededInViews: [CloudPulseAvailableViews.central],
-        placeholder: 'e.g. 80,443,3000',
+        placeholder: 'e.g., 80,443,3000',
         priority: 1,
       },
       name: 'Port',
