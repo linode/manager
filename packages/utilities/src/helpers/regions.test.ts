@@ -50,6 +50,7 @@ describe('getRegionsByRegionId', () => {
         resolvers: { ipv4: '', ipv6: '' },
         site_type: 'core',
         status: 'ok',
+        monitors: { alerts: ['Linodes'], metrics: [] },
       },
       'us-southeast': {
         capabilities: ['Object Storage'],
@@ -63,6 +64,7 @@ describe('getRegionsByRegionId', () => {
         resolvers: { ipv4: '', ipv6: '' },
         site_type: 'core',
         status: 'ok',
+        monitors: { alerts: [], metrics: [] },
       },
     };
 
