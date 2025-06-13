@@ -8,7 +8,7 @@ import { Alerts } from './Alerts/Alerts';
 export const AdditionalOptions = () => {
   const flags = useFlags();
 
-  if (!flags.aclpIntegration) {
+  if (!flags.aclpBetaServices?.alerts) {
     return null;
   }
 

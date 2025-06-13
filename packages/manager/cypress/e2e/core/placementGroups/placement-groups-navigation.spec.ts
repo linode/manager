@@ -35,7 +35,7 @@ describe('Placement Groups navigation', () => {
       .findByTitle('Create Placement Group')
       .should('be.visible')
       .click();
-    cy.url().should('endWith', '/placement-groups/create');
+    cy.url().should('endWith', '/placement-groups?action=create');
 
     ui.drawer
       .findByTitle('Create Placement Group')

@@ -21,6 +21,8 @@ import {
   getRuleString,
 } from './FirewallRow';
 
+import type { FirewallDeviceEntityType } from '@linode/api-v4';
+
 const queryMocks = vi.hoisted(() => ({
   useAccount: vi.fn().mockReturnValue({}),
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
@@ -110,19 +112,39 @@ describe('FirewallRow', () => {
       const device = firewallDeviceFactory.build();
       const links = getDeviceLinks({
         entities: [device.entity],
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { getByText } = renderWithTheme(links);
       expect(getByText(device.entity.label ?? ''));
+    });
+
+    it('should show the Linode label for a link for an interface device', () => {
+      const device = firewallDeviceFactory.build({
+        entity: {
+          id: 10,
+          label: null,
+          type: 'linode_interface' as FirewallDeviceEntityType,
+          url: '/linodes/11/interfaces/10',
+          parent_entity: {
+            id: 11,
+            label: 'test-linode-label',
+            type: 'linode' as FirewallDeviceEntityType,
+            url: '/linodes/11',
+            parent_entity: null,
+          },
+        },
+      });
+
+      const links = getDeviceLinks({
+        entities: [device.entity],
+      });
+      const { getByText } = renderWithTheme(links);
+      expect(getByText('test-linode-label')).toBeVisible();
     });
 
     it('should render up to three comma-separated links', () => {
       const devices = firewallDeviceFactory.buildList(3);
       const links = getDeviceLinks({
         entities: devices.map((device) => device.entity),
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
@@ -132,8 +154,6 @@ describe('FirewallRow', () => {
       const devices = firewallDeviceFactory.buildList(13);
       const links = getDeviceLinks({
         entities: devices.map((device) => device.entity),
-        isLoading: false,
-        linodesWithInterfaceDevices: undefined,
       });
       const { getByText, queryAllByTestId } = renderWithTheme(links);
       expect(queryAllByTestId('firewall-row-link')).toHaveLength(3);
