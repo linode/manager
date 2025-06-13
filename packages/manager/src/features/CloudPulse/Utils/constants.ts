@@ -49,7 +49,7 @@ export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
   'Ports must not have leading commas.';
 
 export const PORTS_LIMIT_ERROR_MESSAGE =
-  'Number of ports or port range endpoints exceeded. Max allowed is 15';
+  'Number of ports exceeded. Max allowed is 15';
 
 export const PORTS_DUPLICATE_PORT_ERROR_MESSAGE =
   'Duplicate ports are not allowed';
