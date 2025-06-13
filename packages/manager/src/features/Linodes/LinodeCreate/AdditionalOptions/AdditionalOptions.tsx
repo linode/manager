@@ -19,13 +19,18 @@ export const AdditionalOptions = () => {
   });
 
   const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
-    aclpMonitoringType: 'alerts',
-    featureCapability: 'Linodes',
+    type: 'alerts',
+    capability: 'Linodes',
     regions,
-    selectedRegionId,
+    regionId: selectedRegionId,
   });
 
-  if (!(flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode)) {
+  const isAlertsEnabled =
+    flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode;
+
+  const hideAdditionalOptions = !isAlertsEnabled;
+
+  if (hideAdditionalOptions) {
     return null;
   }
 

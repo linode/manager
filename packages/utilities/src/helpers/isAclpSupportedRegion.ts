@@ -2,40 +2,38 @@ import type { MonitoringCapabilities, Region } from '@linode/api-v4';
 
 interface IsAclpSupportedRegionParams {
   /**
-   * The type of monitoring to check (e.g., 'metrics', 'alerts')
+   * The capability to check ('Linodes', 'NodeBalancers', etc)
    */
-  aclpMonitoringType: keyof MonitoringCapabilities;
+  capability: MonitoringCapabilities[keyof MonitoringCapabilities][number];
   /**
-   * The specific capability to check (e.g., 'Linodes', 'NodeBalancers', etc)
+   * Region ID to check
    */
-  featureCapability: MonitoringCapabilities[keyof MonitoringCapabilities][number];
+  regionId: string | undefined;
   /**
-   * The list of all available regions from regions query.
+   * Available regions from the API
    */
   regions: Region[] | undefined;
   /**
-   * Region Id to check.
+   * The monitoring type ('metrics' or 'alerts')
    */
-  selectedRegionId: string | undefined;
+  type: keyof MonitoringCapabilities;
 }
 
 /**
- * Checks if the selected region is ACLP-supported for the given aclpMonitoringType, featureCapability,
+ * Checks if the selected region is ACLP-supported for the given type, capability,
  * and based on the /regions api endpoint.
  *
- * @param object - An object with aclpMonitoringType, featureCapability, selectedRegionId, and regions.
+ * @param object - An object with params: type, capability, regions, and regionId
  */
 export const isAclpSupportedRegion = ({
-  aclpMonitoringType,
-  featureCapability,
+  capability,
+  regionId,
   regions,
-  selectedRegionId,
-}: IsAclpSupportedRegionParams) => {
-  if (!selectedRegionId || !regions) return false;
+  type,
+}: IsAclpSupportedRegionParams): boolean => {
+  if (!regionId || !regions) return false;
 
-  const region = regions.find((region) => region.id === selectedRegionId);
+  const region = regions.find((region) => region.id === regionId);
 
-  return (
-    region?.monitors?.[aclpMonitoringType].includes(featureCapability) ?? false
-  );
+  return region?.monitors?.[type].includes(capability) ?? false;
 };
