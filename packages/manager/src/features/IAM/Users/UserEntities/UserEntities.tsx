@@ -6,8 +6,8 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
@@ -21,7 +21,7 @@ import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 export const UserEntities = () => {
   const theme = useTheme();
 
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
   const {
     data: assignedRoles,
     isLoading,

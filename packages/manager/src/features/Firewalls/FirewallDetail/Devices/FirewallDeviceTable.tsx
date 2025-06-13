@@ -1,7 +1,4 @@
-import {
-  useAllFirewallDevicesQuery,
-  useAllLinodesQuery,
-} from '@linode/queries';
+import { useAllFirewallDevicesQuery } from '@linode/queries';
 import * as React from 'react';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -17,7 +14,6 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
-import { getLinodeIdFromInterfaceDevice } from '../../shared';
 import { formattedTypes } from './constants';
 import { FirewallDeviceRow } from './FirewallDeviceRow';
 
@@ -46,38 +42,21 @@ export const FirewallDeviceTable = React.memo(
     const devices =
       allDevices?.filter((device) =>
         type === 'linode' && isLinodeInterfacesEnabled
-          ? device.entity.type !== 'nodebalancer' // include entities with type 'interface' in Linode table
+          ? device.entity.type !== 'nodebalancer' // include entities with type 'linode_interface' in Linode table
           : device.entity.type === type
       ) || [];
 
-    const linodeInterfaceDevices =
-      type === 'linode'
-        ? allDevices?.filter(
-            (device) => device.entity.type === 'linode_interface'
-          )
-        : [];
-
-    // only fire this query if we have linode interface devices. We fetch the Linodes those devices are attached to
-    // so that we can add a label to the devices for sorting and display purposes
-    const { data: linodesWithInterfaces } = useAllLinodesQuery(
-      {},
-      {},
-      isLinodeInterfacesEnabled &&
-        linodeInterfaceDevices &&
-        linodeInterfaceDevices.length > 0
-    );
-
-    const updatedDevices = devices.map((device) => {
-      if (device.entity.type === 'linode_interface') {
-        const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
-        const associatedLinode = linodesWithInterfaces?.find(
-          (linode) => linode.id === linodeId
-        );
+    const devicesWithEntityLabels = devices.map((device) => {
+      // Linode Interface devices don't have a label, so we need to use their parent entity's label for sorting purposes
+      if (
+        device.entity.type === 'linode_interface' &&
+        device.entity.parent_entity
+      ) {
         return {
           ...device,
           entity: {
             ...device.entity,
-            label: associatedLinode?.label ?? null,
+            label: device.entity.parent_entity.label,
           },
         };
       } else {
@@ -102,7 +81,7 @@ export const FirewallDeviceTable = React.memo(
       orderBy,
       sortedData: sortedDevices,
     } = useOrderV2({
-      data: updatedDevices,
+      data: devicesWithEntityLabels,
       initialRoute: {
         defaultOrder: {
           order: 'asc',

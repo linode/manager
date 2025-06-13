@@ -6,12 +6,13 @@ import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { AssignedRolesTable } from './AssignedRolesTable';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
@@ -33,6 +34,14 @@ vi.mock('src/queries/entities/entities', async () => {
   };
 });
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+  };
+});
+
 const mockEntities = [
   accountEntityFactory.build({
     id: 7,
@@ -46,12 +55,18 @@ const mockEntities = [
 ];
 
 describe('AssignedRolesTable', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should display no roles text if there are no roles assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
       data: {},
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -69,7 +84,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
@@ -97,7 +112,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -120,7 +135,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'account_linode_admin');
@@ -143,7 +158,7 @@ describe('AssignedRolesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
     await userEvent.type(autocomplete, 'Firewall Roles');

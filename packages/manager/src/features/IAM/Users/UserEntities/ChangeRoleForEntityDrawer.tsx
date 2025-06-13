@@ -11,9 +11,9 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 
@@ -41,7 +41,9 @@ export const ChangeRoleForEntityDrawer = ({
   role,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();

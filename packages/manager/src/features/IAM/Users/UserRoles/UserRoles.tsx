@@ -6,8 +6,8 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
@@ -19,7 +19,7 @@ import {
 import { NoAssignedRoles } from '../../Shared/NoAssignedRoles/NoAssignedRoles';
 
 export const UserRoles = () => {
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
   const theme = useTheme();
 
   const {

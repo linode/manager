@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ChangeRoleDrawer } from './ChangeRoleDrawer';
 
@@ -12,6 +12,7 @@ import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
@@ -26,10 +27,18 @@ vi.mock('@linode/queries', async () => {
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -73,22 +82,32 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('ChangeRoleDrawer', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should render', async () => {
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    await renderWithThemeAndRouter(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
   });
 
-  it('renders the correct text for account_access roles', () => {
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+  it('renders the correct text for account_access roles', async () => {
+    await renderWithThemeAndRouter(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     // Check that the correct text is displayed for account_access
     expect(screen.getByText('Select a role you want to assign.')).toBeVisible();
   });
 
-  it('renders the correct text for entity_access roles', () => {
-    renderWithTheme(
+  it('renders the correct text for entity_access roles', async () => {
+    await renderWithThemeAndRouter(
       <ChangeRoleDrawer
         {...props}
         mode="change-role"
@@ -124,7 +143,9 @@ describe('ChangeRoleDrawer', () => {
       data: accountEntityFactory.build(),
     });
 
-    renderWithTheme(<ChangeRoleDrawer {...props} mode="change-role" />);
+    await renderWithThemeAndRouter(
+      <ChangeRoleDrawer {...props} mode="change-role" />
+    );
 
     const autocomplete = screen.getByRole('combobox');
 
