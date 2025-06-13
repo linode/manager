@@ -95,7 +95,9 @@ export const AddInterfaceForm = (props: Props) => {
           )}
           <InterfaceType />
           {selectedInterfacePurpose === 'public' && <PublicInterface />}
-          {selectedInterfacePurpose === 'vlan' && <VLANInterface />}
+          {selectedInterfacePurpose === 'vlan' && (
+            <VLANInterface regionId={regionId} />
+          )}
           {selectedInterfacePurpose === 'vpc' && (
             <VPCInterface regionId={regionId} />
           )}
