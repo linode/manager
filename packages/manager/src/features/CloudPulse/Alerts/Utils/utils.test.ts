@@ -211,7 +211,7 @@ describe('getSchemaWithEntityIdValidation', () => {
   it('test convert secondsToOptions method', () => {
     expect(convertSecondsToOptions(300)).toEqual('5 min');
     expect(convertSecondsToOptions(60)).toEqual('1 min');
-    expect(convertSecondsToOptions(3600)).toEqual('1 hour');
+    expect(convertSecondsToOptions(3600)).toEqual('1 hr');
     expect(convertSecondsToOptions(900)).toEqual('15 min');
   });
 });
