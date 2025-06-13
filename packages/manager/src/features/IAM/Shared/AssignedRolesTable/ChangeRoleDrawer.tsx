@@ -18,7 +18,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { changeUserRole, getAllRoles, getRoleByName } from '../utilities';
+import {
+  changeUserRole,
+  getAllRoles,
+  getErrorMessage,
+  getRoleByName,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
@@ -110,9 +115,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
       handleClose();
     } catch (errors) {
-      for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
-      }
+      setError('root', {
+        message: getErrorMessage(errors),
+      });
     }
   };
 
