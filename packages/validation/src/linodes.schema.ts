@@ -824,5 +824,8 @@ export const CreateLinodeSchema = object({
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
-  maintenance_policy_id: number().notRequired().nullable(),
+  maintenance_policy: mixed()
+    .oneOf(['migrate', 'poweroffon'])
+    .notRequired()
+    .nullable(),
 });

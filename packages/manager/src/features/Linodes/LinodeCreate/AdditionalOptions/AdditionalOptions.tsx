@@ -1,14 +1,17 @@
-import { Paper, Typography } from '@linode/ui';
+import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
+import { MaintenancePolicy } from 'src/features/Linodes/LinodeCreate/AdditionalOptions/MaintenancePolicy';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { Alerts } from './Alerts/Alerts';
 
 export const AdditionalOptions = () => {
   const flags = useFlags();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  if (!flags.aclpBetaServices?.alerts) {
+  if (!flags.aclpBetaServices?.alerts && !isVMHostMaintenanceEnabled) {
     return null;
   }
 
@@ -20,7 +23,10 @@ export const AdditionalOptions = () => {
       >
         Additional Options
       </Typography>
-      <Alerts />
+      <Stack divider={<Divider />}>
+        {flags.aclpBetaServices?.alerts && <Alerts />}
+        {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
+      </Stack>
     </Paper>
   );
 };

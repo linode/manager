@@ -70,7 +70,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
  */
 export const getAccountSettings = () =>
   Request<AccountSettings>(
-    setURL(`${API_ROOT}/account/settings`),
+    setURL(`${BETA_API_ROOT}/account/settings`),
     setMethod('GET'),
   );
 
@@ -82,7 +82,7 @@ export const getAccountSettings = () =>
  */
 export const updateAccountSettings = (data: Partial<AccountSettings>) =>
   Request<AccountSettings>(
-    setURL(`${API_ROOT}/account/settings`),
+    setURL(`${BETA_API_ROOT}/account/settings`),
     setMethod('PUT'),
     setData(data, UpdateAccountSettingsSchema),
   );
