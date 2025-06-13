@@ -23,7 +23,7 @@ interface IsAclpSupportedRegionParams {
  * Checks if the selected region is ACLP-supported for the given aclpMonitoringType, featureCapability,
  * and based on the /regions api endpoint.
  *
- * @param object -  An object with aclpMonitoringType, featureCapability, selectedRegionId, and regions.
+ * @param object - An object with aclpMonitoringType, featureCapability, selectedRegionId, and regions.
  */
 export const isAclpSupportedRegion = ({
   aclpMonitoringType,
