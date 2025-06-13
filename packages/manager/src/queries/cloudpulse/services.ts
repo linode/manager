@@ -9,7 +9,7 @@ import type {
   JWETokenPayLoad,
   MetricDefinition,
   ResourcePage,
-  ServiceTypes,
+  Service,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Params } from '@linode/api-v4';
@@ -50,7 +50,7 @@ export const useCloudPulseServiceByServiceType = (
   serviceType: string,
   enabled: boolean = true
 ) => {
-  return useQuery<ServiceTypes, APIError[]>({
+  return useQuery<Service, APIError[]>({
     ...queryFactory.serviceByServiceType(serviceType),
     enabled,
   });

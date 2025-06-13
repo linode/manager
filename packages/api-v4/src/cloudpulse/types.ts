@@ -10,6 +10,7 @@ export type DimensionFilterOperatorType =
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -163,12 +164,14 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceTypes {
-  alert: {
-    evaluation_periods_seconds: number[];
-    polling_interval_seconds: number[];
-    scope: string[];
-  };
+export interface ServiceAlert {
+  evaluation_periods_seconds: number[];
+  polling_interval_seconds: number[];
+  scope: AlertDefinitionScope[];
+}
+
+export interface Service {
+  alert: ServiceAlert;
   is_beta: boolean;
   label: string;
   regions: string;
@@ -176,7 +179,7 @@ export interface ServiceTypes {
 }
 
 export interface ServiceTypesList {
-  data: ServiceTypes[];
+  data: Service[];
 }
 
 export interface CreateAlertDefinitionPayload {
@@ -239,6 +242,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -326,6 +330,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
