@@ -5,6 +5,7 @@
  */
 
 import { cloudPulseServiceMap } from 'support/constants/cloudpulse';
+import { mockDataPrefix } from 'support/constants/cypress';
 import { makeErrorResponse } from 'support/util/errors';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -139,7 +140,9 @@ export const mockCreateCloudPulseJWEToken = (
   serviceType: string,
   token?: string
 ): Cypress.Chainable<null> => {
-  const mockToken = token ?? randomString(62);
+  const mockToken =
+    token ??
+    mockDataPrefix['token'] + randomString(62 - mockDataPrefix['token'].length);
   return cy.intercept(
     'POST',
     apiMatcher(`/monitor/services/${serviceType}/token`),

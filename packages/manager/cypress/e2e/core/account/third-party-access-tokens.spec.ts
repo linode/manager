@@ -2,6 +2,7 @@ import { getProfile } from '@linode/api-v4/lib/profile';
 import { accessFactory, appTokenFactory } from '@src/factories';
 import 'cypress-file-upload';
 import { authenticate } from 'support/api/authentication';
+import { mockDataPrefix } from 'support/constants/cypress';
 import {
   mockGetAppTokens,
   mockGetPersonalAccessTokens,
@@ -21,7 +22,9 @@ describe('Third party access tokens', () => {
   beforeEach(() => {
     token = appTokenFactory.build({
       label: randomLabel(),
-      token: randomString(64),
+      token:
+        mockDataPrefix['token'] +
+        randomString(64 - mockDataPrefix['token'].length),
     });
 
     mockGetPersonalAccessTokens([]).as('getTokens');

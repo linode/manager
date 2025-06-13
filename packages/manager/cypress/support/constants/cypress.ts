@@ -16,3 +16,11 @@ export const entityTag = 'cy-test';
  * clean-up purposes.
  */
 export const entityPrefix = `${entityTag}-`;
+
+/**
+ * Prefix for fake mock data to avoid resembling real secrets.
+ */
+export const mockDataPrefix = {
+  secret: 'MockSecret_',
+  token: 'MockToken_',
+};
