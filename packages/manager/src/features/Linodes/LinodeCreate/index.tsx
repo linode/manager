@@ -134,7 +134,7 @@ export const LinodeCreate = () => {
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-      isAclpIntegration: flags.aclpIntegration,
+      isAclpIntegration: flags.aclpBetaServices?.alerts,
       isAclpAlertsPreferenceBeta,
     });
 
