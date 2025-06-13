@@ -2,12 +2,8 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import {
-  PORT,
-  PORTS_ERROR_MESSAGE,
-  PORTS_HELPER_TEXT,
-} from '../Utils/constants';
-import { arePortsValid } from '../Utils/utils';
+import { PORT, PORTS_HELPER_TEXT } from '../Utils/constants';
+import { arePortsValid, handleKeyDown, handlePaste } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
@@ -60,51 +56,6 @@ export const CloudPulsePortFilter = React.memo(
       undefined
     );
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      const allowedKeys = ['ArrowLeft', 'ArrowRight', 'Tab'];
-
-      if (allowedKeys.includes(e.key)) {
-        setErrorText(undefined);
-        return;
-      }
-
-      const selectionStart = (e.target as HTMLInputElement).selectionStart ?? 0;
-      const selectionEnd = (e.target as HTMLInputElement).selectionEnd ?? 0;
-      let newValue;
-
-      // Calculate new value based on key type
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        if (selectionStart > 0) {
-          newValue =
-            value.substring(0, selectionStart - 1) +
-            value.substring(selectionStart);
-        } else {
-          return;
-        }
-      } else {
-        if (/^[\d,]$/.test(e.key)) {
-          newValue =
-            value.substring(0, selectionStart) +
-            e.key +
-            value.substring(selectionEnd);
-        } else {
-          e.preventDefault();
-          setErrorText(PORTS_ERROR_MESSAGE);
-          return;
-        }
-      }
-
-      // Check if each segment (split by comma) is a valid port
-      const validationError = arePortsValid(newValue);
-      if (validationError !== undefined) {
-        e.preventDefault();
-        setErrorText(validationError);
-        return;
-      }
-
-      setErrorText(validationError);
-    };
-
     // Only call handlePortChange if the user has stopped typing for 0.5 seconds
     const debouncedPortChange = React.useMemo(
       () =>
@@ -142,7 +93,8 @@ export const CloudPulsePortFilter = React.memo(
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
-        onKeyDown={handleKeyDown}
+        onKeyDown={handleKeyDown(value, setErrorText)}
+        onPaste={handlePaste(value, setErrorText)}
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
         value={value}
       />
