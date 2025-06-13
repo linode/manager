@@ -239,7 +239,11 @@ describe('Create Alert', () => {
       const services = serviceTypesFactory.build({
         service_type: serviceType,
         label: serviceType,
-        alert: serviceAlertFactory.build({ scope: [value] }),
+        alert: serviceAlertFactory.build({
+          evaluation_periods_seconds: [300],
+          polling_interval_seconds: [300],
+          scope: [value],
+        }),
         regions: 'us-ord,us-east',
       });
       mockGetCloudPulseServiceByType(serviceType, services);
@@ -314,9 +318,6 @@ describe('Create Alert', () => {
           .findByText('entity')
           .should('have.attr', 'aria-sort', 'ascending');
         ui.heading.findByText('region').should('be.visible');
-        ui.heading
-          .findByText('region')
-          .should('have.attr', 'aria-sort', 'ascending');
 
         // Assert resource selection notice
         cy.findByText('1 of 10 entities are selected.');

@@ -4,7 +4,8 @@ import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
-  convertSecondsToHumanReadable,
+  convertSecondsToMinutes,
+  convertSecondsToOptions,
   filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -30,18 +31,14 @@ it('test getServiceTypeLabel method', () => {
   expect(getServiceTypeLabel('test', { data: services })).toBe('test');
   expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
-it('test convertSecondsToHumanReadable method', () => {
-  expect(convertSecondsToHumanReadable(0)).toBe('0 minutes');
-  expect(convertSecondsToHumanReadable(60)).toBe('1 minute');
-  expect(convertSecondsToHumanReadable(120)).toBe('2 minutes');
-  expect(convertSecondsToHumanReadable(65)).toBe('1 minute and 5 seconds');
-  expect(convertSecondsToHumanReadable(1)).toBe('1 second');
-  expect(convertSecondsToHumanReadable(59)).toBe('59 seconds');
-  expect(convertSecondsToHumanReadable(3600)).toBe('1 hour');
-  expect(convertSecondsToHumanReadable(3661)).toBe(
-    '1 hour and 1 minute and 1 second'
-  );
-  expect(convertSecondsToHumanReadable(9000)).toBe('2 hours and 30 minutes');
+
+it('test convertSecondsToMinutes method', () => {
+  expect(convertSecondsToMinutes(0)).toBe('0 minutes');
+  expect(convertSecondsToMinutes(60)).toBe('1 minute');
+  expect(convertSecondsToMinutes(120)).toBe('2 minutes');
+  expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
+  expect(convertSecondsToMinutes(1)).toBe('1 second');
+  expect(convertSecondsToMinutes(59)).toBe('59 seconds');
 });
 
 it('test filterAlertsByStatusAndType method', () => {
@@ -209,5 +206,12 @@ describe('getSchemaWithEntityIdValidation', () => {
       message:
         'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
     });
+  });
+
+  it('test convert secondsToOptions method', () => {
+    expect(convertSecondsToOptions(300)).toEqual('5 min');
+    expect(convertSecondsToOptions(60)).toEqual('1 min');
+    expect(convertSecondsToOptions(3600)).toEqual('1 hour');
+    expect(convertSecondsToOptions(900)).toEqual('15 min');
   });
 });
