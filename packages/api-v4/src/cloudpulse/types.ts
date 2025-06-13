@@ -371,3 +371,7 @@ export const capabilityServiceTypeMapping: Record<
   dbaas: 'Managed Databases',
   nodebalancers: 'NodeBalancers',
 };
+export interface CloudPulseAlertsPayload {
+  system: number[];
+  user: number[];
+}

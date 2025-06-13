@@ -4,7 +4,7 @@ import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
-  convertSecondsToMinutes,
+  convertSecondsToHumanReadable,
   filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -30,13 +30,18 @@ it('test getServiceTypeLabel method', () => {
   expect(getServiceTypeLabel('test', { data: services })).toBe('test');
   expect(getServiceTypeLabel('', { data: services })).toBe('');
 });
-it('test convertSecondsToMinutes method', () => {
-  expect(convertSecondsToMinutes(0)).toBe('0 minutes');
-  expect(convertSecondsToMinutes(60)).toBe('1 minute');
-  expect(convertSecondsToMinutes(120)).toBe('2 minutes');
-  expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
-  expect(convertSecondsToMinutes(1)).toBe('1 second');
-  expect(convertSecondsToMinutes(59)).toBe('59 seconds');
+it('test convertSecondsToHumanReadable method', () => {
+  expect(convertSecondsToHumanReadable(0)).toBe('0 minutes');
+  expect(convertSecondsToHumanReadable(60)).toBe('1 minute');
+  expect(convertSecondsToHumanReadable(120)).toBe('2 minutes');
+  expect(convertSecondsToHumanReadable(65)).toBe('1 minute and 5 seconds');
+  expect(convertSecondsToHumanReadable(1)).toBe('1 second');
+  expect(convertSecondsToHumanReadable(59)).toBe('59 seconds');
+  expect(convertSecondsToHumanReadable(3600)).toBe('1 hour');
+  expect(convertSecondsToHumanReadable(3661)).toBe(
+    '1 hour and 1 minute and 1 second'
+  );
+  expect(convertSecondsToHumanReadable(9000)).toBe('2 hours and 30 minutes');
 });
 
 it('test filterAlertsByStatusAndType method', () => {
@@ -47,6 +52,7 @@ it('test filterAlertsByStatusAndType method', () => {
     4
   );
 });
+
 it('test convertAlertsToTypeSet method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'user' });
 

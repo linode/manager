@@ -20,12 +20,12 @@ describe('Alert confirmation dialog', () => {
   it('should show confirmation dialog', () => {
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
-        alert={alert}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isEnabled={true}
         isOpen={true}
         message={messages.disableMessage}
+        primaryButtonLabel="Disable"
+        title={messages.disableTitle}
       />
     );
 
@@ -36,12 +36,12 @@ describe('Alert confirmation dialog', () => {
   it('should click confirm button', async () => {
     const { getByText } = renderWithTheme(
       <AlertConfirmationDialog
-        alert={alert}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isEnabled={true}
         isOpen={true}
         message={messages.disableMessage}
+        primaryButtonLabel="Disable"
+        title={messages.disableTitle}
       />
     );
 
@@ -49,17 +49,17 @@ describe('Alert confirmation dialog', () => {
 
     await userEvent.click(button);
 
-    expect(confirmFunction).toBeCalledWith(alert, true);
+    expect(confirmFunction).toBeCalled();
   });
   it('should show enable text', async () => {
     const { getByTestId, getByText } = renderWithTheme(
       <AlertConfirmationDialog
-        alert={alert}
         handleCancel={vi.fn()}
         handleConfirm={confirmFunction}
-        isEnabled={false}
         isOpen={true}
         message={messages.enableMessage}
+        primaryButtonLabel="Enable"
+        title={messages.enableTitle}
       />
     );
 

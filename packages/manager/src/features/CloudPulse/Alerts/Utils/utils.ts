@@ -205,24 +205,31 @@ export const getAlertBoxStyles = (theme: Theme) => ({
   padding: theme.spacing(3),
 });
 /**
- * Converts seconds into a human-readable minutes and seconds format.
- * @param seconds The seconds that need to be converted into minutes.
- * @returns A string representing the time in minutes and seconds.
+ * Converts seconds into a human-readable hours, minutes and seconds format.
+ * @param seconds The seconds that need to be converted into human readable time format.
+ * @returns A string representing the time in hours, minutes and seconds.
  */
-export const convertSecondsToMinutes = (seconds: number): string => {
+export const convertSecondsToHumanReadable = (seconds: number): string => {
   if (seconds <= 0) {
     return '0 minutes';
   }
-  const minutes = Math.floor(seconds / 60);
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
+
+  const hourString =
+    hours > 0 ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : '';
   const minuteString =
     minutes > 0 ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : '';
   const secondString =
     remainingSeconds > 0
       ? `${remainingSeconds} ${remainingSeconds === 1 ? 'second' : 'seconds'}`
       : '';
-  return [minuteString, secondString].filter(Boolean).join(' and ');
+
+  return [hourString, minuteString, secondString].filter(Boolean).join(' and ');
 };
+
 /**
  * @param props The props/parameters needed to determine the alert chip's border
  * @returns The border radius to be applied on chips based on the parameters
@@ -288,7 +295,7 @@ export const filterAlertsByStatusAndType = (
   return (
     alerts?.filter(({ label, status, type }) => {
       return (
-        status === 'enabled' &&
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );

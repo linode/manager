@@ -91,6 +91,7 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   created_by: 'system',
   description: 'Test description',
   entity_ids: ['1', '2', '3', '48', '50', '51'],
+  scope: 'entity',
   regions: regionFactory.buildList(3).map(({ id }) => id),
   has_more_resources: true,
   id: Factory.each((i) => i),
@@ -111,5 +112,4 @@ export const alertFactory = Factory.Sync.makeFactory<Alert>({
   type: 'system',
   updated: new Date().toISOString(),
   updated_by: 'system',
-  scope: 'entity',
 });
