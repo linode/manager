@@ -3,6 +3,7 @@ import {
   useAccountAgreements,
   useAccountSettings,
   useMutateAccountAgreements,
+  useNetworkTransferPricesQuery,
   useProfile,
 } from '@linode/queries';
 import {
@@ -20,7 +21,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 import { BucketRateLimitTable } from 'src/features/ObjectStorage/BucketLanding/BucketRateLimitTable';
 import { useObjectStorageRegions } from 'src/features/ObjectStorage/hooks/useObjectStorageRegions';
-import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,
