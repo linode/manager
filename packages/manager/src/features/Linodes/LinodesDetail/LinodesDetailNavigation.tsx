@@ -67,17 +67,17 @@ const LinodesDetailNavigation = () => {
   const { data: regions } = useRegionsQuery();
 
   const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
-    type: 'metrics',
     capability: 'Linodes',
-    regions,
     regionId: linode?.region,
+    regions,
+    type: 'metrics',
   });
 
   const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
-    type: 'alerts',
     capability: 'Linodes',
-    regions,
     regionId: linode?.region,
+    regions,
+    type: 'alerts',
   });
 
   const tabs = [

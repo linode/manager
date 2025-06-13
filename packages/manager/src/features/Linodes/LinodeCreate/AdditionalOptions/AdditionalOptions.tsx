@@ -19,10 +19,10 @@ export const AdditionalOptions = () => {
   });
 
   const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
-    type: 'alerts',
     capability: 'Linodes',
-    regions,
     regionId: selectedRegionId,
+    regions,
+    type: 'alerts',
   });
 
   const isAlertsEnabled =
