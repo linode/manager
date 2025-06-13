@@ -266,7 +266,11 @@ describe('Create Alert', () => {
       const services = serviceTypesFactory.build({
         service_type: serviceType,
         label: serviceType,
-        alert: serviceAlertFactory.build({ scope: [value] }),
+        alert: serviceAlertFactory.build({
+          evaluation_periods_seconds: [300],
+          polling_interval_seconds: [300],
+          scope: [value],
+        }),
         regions: 'us-ord,us-east',
       });
       mockGetCloudPulseServiceByType(serviceType, services);
