@@ -40,7 +40,7 @@ export const PORTS_HELPER_TEXT =
 export const PORTS_ERROR_MESSAGE =
   'Input must be an integer or a comma-separated list of integers.';
 
-export const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535';
+export const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535.';
 
 export const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Consecutive commas are not allowed.';
