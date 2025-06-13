@@ -50,12 +50,11 @@ export const AuthenticationSettings = () => {
         ? securityQuestionRef
         : null;
 
-    const isValidTargetRef =
+    if (
       targetRef &&
       targetRef.current &&
-      !targetRef.current.getAttribute('data-scrolled');
-
-    if (isValidTargetRef) {
+      !targetRef.current.getAttribute('data-scrolled')
+    ) {
       const currentTargetRef = targetRef.current;
 
       currentTargetRef.focus();

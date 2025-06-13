@@ -1,5 +1,6 @@
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
 import { TooltipIcon } from '../TooltipIcon';

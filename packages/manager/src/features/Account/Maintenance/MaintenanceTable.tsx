@@ -66,7 +66,7 @@ interface Props {
 }
 
 export const MaintenanceTable = ({ type }: Props) => {
-  const csvRef = React.useRef<any>();
+  const csvRef = React.useRef<any>(undefined);
   const { classes } = useStyles();
   const formattedDate = useFormattedDate();
   const flags = useFlags();

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { CheckoutSummary } from './CheckoutSummary';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof CheckoutSummary>;
 
@@ -24,7 +24,7 @@ const defaultArgs = {
 const meta: Meta<typeof CheckoutSummary> = {
   component: CheckoutSummary,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '2em' }}>
         <Story />
       </div>
