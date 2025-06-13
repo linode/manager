@@ -108,7 +108,7 @@ export const VLANSelect = (props: Props) => {
         option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
       helperText={helperText}
-      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
+      inputValue={selectedVLAN && !open ? selectedVLAN.label : inputValue}
       isOptionEqualToValue={(option1, option2) =>
         option1.label === option2.label
       }
@@ -120,7 +120,7 @@ export const VLANSelect = (props: Props) => {
         if (onBlur) {
           onBlur();
         }
-        if (inputValue !== value && onChange) {
+        if (inputValue !== value) {
           // if our inpupt value's changed but we don't explicitly select the new input value, keep the old value
           // if there is no pre-existing value selected, this clears the textfield
           setInputValue(value ?? '');
