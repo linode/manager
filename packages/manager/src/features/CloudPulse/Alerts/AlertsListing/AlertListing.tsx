@@ -56,7 +56,7 @@ export const AlertListing = () => {
     error: serviceTypesError,
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
-  const { aclpBetaServices = {} } = useFlags();
+  const { aclpBetaServices } = useFlags();
   const userAlerts = alerts?.filter(({ type }) => type === 'user') ?? [];
   const isAlertLimitReached = userAlerts.length >= maxAllowedAlerts;
 
@@ -251,7 +251,7 @@ export const AlertListing = () => {
               return (
                 <ListItem {...rest} data-qa-option key={key}>
                   <Box flexGrow={1}>{option.label}</Box>{' '}
-                  {aclpBetaServices[option.value] && <BetaChip />}
+                  {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
                   <SelectedIcon visible={selected} />
                 </ListItem>
               );

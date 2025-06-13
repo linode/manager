@@ -42,7 +42,7 @@ export const CloudPulseServiceSelect = (
     isLoading: serviceTypesLoading,
   } = useCloudPulseServiceTypes(true);
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-  const { aclpBetaServices = {} } = useFlags();
+  const { aclpBetaServices } = useFlags();
   const getServicesList = React.useMemo((): Item<
     string,
     AlertServiceType
@@ -93,7 +93,7 @@ export const CloudPulseServiceSelect = (
             return (
               <ListItem {...rest} data-qa-option key={key}>
                 <Box flexGrow={1}>{option.label}</Box>{' '}
-                {aclpBetaServices[option.value] && <BetaChip />}
+                {aclpBetaServices?.[option.value]?.alerts && <BetaChip />}
                 <SelectedIcon visible={selected} />
               </ListItem>
             );

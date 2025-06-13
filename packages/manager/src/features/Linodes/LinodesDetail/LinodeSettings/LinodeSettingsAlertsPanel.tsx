@@ -29,7 +29,7 @@ interface Props {
 export const LinodeSettingsAlertsPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { aclpBetaServices = {} } = useFlags();
+  const { aclpBetaServices } = useFlags();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -244,7 +244,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = aclpBetaServices['linode']
+  const alertsHeading = aclpBetaServices?.['linode']?.alerts
     ? 'Default Alerts'
     : 'Alerts';
 

@@ -48,7 +48,7 @@ export const CloudPulseDashboardSelect = React.memo(
       isLoading: serviceTypesLoading,
     } = useCloudPulseServiceTypes(true);
 
-    const { aclpBetaServices = {} } = useFlags();
+    const { aclpBetaServices } = useFlags();
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
     const serviceTypeMap: Map<string, string> = new Map(
       (serviceTypesList?.data || [])
@@ -129,7 +129,7 @@ export const CloudPulseDashboardSelect = React.memo(
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
               {serviceTypeMap.get(params.group) || params.group}{' '}
-              {aclpBetaServices[params.group] && <BetaChip />}
+              {aclpBetaServices?.[params.group]?.metrics && <BetaChip />}
             </Typography>
             {params.children}
           </Box>
