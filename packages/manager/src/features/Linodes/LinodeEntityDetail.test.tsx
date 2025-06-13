@@ -17,7 +17,10 @@ import {
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
 import { LinodeEntityDetail } from './LinodeEntityDetail';
@@ -86,7 +89,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { queryByTestId } = renderWithTheme(
+    const { queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
 
@@ -110,7 +113,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
 
@@ -126,7 +129,7 @@ describe('Linode Entity Detail', () => {
   });
 
   it('should not display the LKE section if the linode is not associated with an LKE cluster', async () => {
-    const { queryByTestId } = renderWithTheme(
+    const { queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={5} linode={linode} />
     );
 
@@ -151,7 +154,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={10} linode={mockLKELinode} />
     );
 
@@ -172,7 +175,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -196,7 +199,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { queryByTestId } = renderWithTheme(
+    const { queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -224,7 +227,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -257,7 +260,7 @@ describe('Linode Entity Detail', () => {
       })
     );
 
-    const { getByText, queryByTestId } = renderWithTheme(
+    const { getByText, queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -305,7 +308,7 @@ describe('Linode Entity Detail', () => {
       )
     );
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <LinodeEntityDetail
         handlers={handlers}
         id={mockLinode.id}
@@ -325,9 +328,9 @@ describe('Linode Entity Detail', () => {
     });
   });
 
-  it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', () => {
+  it('should not display the encryption status of the linode if the account lacks the capability or the feature flag is off', async () => {
     // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = renderWithTheme(
+    const { queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
@@ -335,14 +338,14 @@ describe('Linode Entity Detail', () => {
     expect(encryptionStatusFragment).not.toBeInTheDocument();
   });
 
-  it('should display the encryption status of the linode when Disk Encryption is enabled and the user has the account capability', () => {
+  it('should display the encryption status of the linode when Disk Encryption is enabled and the user has the account capability', async () => {
     mocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
       return {
         isDiskEncryptionFeatureEnabled: true,
       };
     });
 
-    const { queryByTestId } = renderWithTheme(
+    const { queryByTestId } = await renderWithThemeAndRouter(
       <LinodeEntityDetail handlers={handlers} id={10} linode={linode} />
     );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { accountFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { LinodeVolumes } from './LinodeVolumes';
 
@@ -12,7 +12,29 @@ const accountEndpoint = '*/v4/account';
 const linodeInstanceEndpoint = '*/linode/instances/:id';
 const linodeVolumesEndpoint = '*/linode/instances/:id/volumes';
 
-describe('LinodeVolumes', () => {
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
+describe('LinodeVolumes', async () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   const volumes = volumeFactory.buildList(3);
 
   it('should render', async () => {
@@ -25,7 +47,7 @@ describe('LinodeVolumes', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<LinodeVolumes />);
+    const { findByText } = await renderWithThemeAndRouter(<LinodeVolumes />);
 
     expect(await findByText('Volumes')).toBeVisible();
   });
@@ -51,7 +73,7 @@ describe('LinodeVolumes', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(<LinodeVolumes />, {
+    const { findByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
       flags: { blockStorageEncryption: true },
     });
 
@@ -78,7 +100,7 @@ describe('LinodeVolumes', () => {
       })
     );
 
-    const { queryByText } = renderWithTheme(<LinodeVolumes />, {
+    const { queryByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
       flags: { blockStorageEncryption: false },
     });
 
@@ -105,7 +127,7 @@ describe('LinodeVolumes', () => {
       })
     );
 
-    const { queryByText } = renderWithTheme(<LinodeVolumes />, {
+    const { queryByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
       flags: { blockStorageEncryption: true },
     });
 
