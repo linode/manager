@@ -8,6 +8,7 @@ import type {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
+import type { MaintenancePolicySlug } from 'src/account';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -42,7 +43,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy_id?: number;
+  maintenance_policy?: MaintenancePolicySlug;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -617,7 +618,7 @@ export interface CreateLinodeRequest {
    * Allows customers to specify which strategy this Linode should follow during
    * maintenance events.
    */
-  maintenance_policy_id?: null | number;
+  maintenance_policy?: MaintenancePolicySlug | null;
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */

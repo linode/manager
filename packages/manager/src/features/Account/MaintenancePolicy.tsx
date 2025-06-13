@@ -10,7 +10,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import type { AccountSettings } from '@linode/api-v4';
 
-type MaintenancePolicyValues = Pick<AccountSettings, 'maintenance_policy_id'>;
+type MaintenancePolicyValues = Pick<AccountSettings, 'maintenance_policy'>;
 
 export const MaintenancePolicy = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -21,7 +21,7 @@ export const MaintenancePolicy = () => {
   const flags = useFlags();
 
   const values: MaintenancePolicyValues = {
-    maintenance_policy_id: accountSettings?.maintenance_policy_id ?? 1,
+    maintenance_policy: accountSettings?.maintenance_policy ?? 'migrate',
   };
 
   const {
@@ -41,7 +41,7 @@ export const MaintenancePolicy = () => {
         variant: 'success',
       });
     } catch (error) {
-      setError('maintenance_policy_id', { message: error[0].reason });
+      setError('maintenance_policy', { message: error[0].reason });
     }
   };
 
@@ -65,12 +65,12 @@ export const MaintenancePolicy = () => {
           </Typography>
           <Controller
             control={control}
-            name="maintenance_policy_id"
+            name="maintenance_policy"
             render={({ field, fieldState }) => (
               <MaintenancePolicySelect
                 errorText={fieldState.error?.message}
                 hideDefaultChip
-                onChange={(policy) => field.onChange(policy.id)}
+                onChange={(policy) => field.onChange(policy.slug)}
                 value={field.value}
               />
             )}

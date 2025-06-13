@@ -2031,7 +2031,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
-      maintenance_policy_id: 1,
+      maintenance_policy: 'migrate',
       network_helper: true,
       object_storage: 'active',
     });

@@ -36,6 +36,7 @@ import type {
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
+  MaintenancePolicySlug,
   Profile,
   StackScript,
 } from '@linode/api-v4';
@@ -173,9 +174,9 @@ export const getLinodeCreatePayload = (
     'linodeInterfaces',
   ]);
 
-  // Convert null to undefined for maintenance_policy_id
-  if (values.maintenance_policy_id === null) {
-    values.maintenance_policy_id = undefined;
+  // Convert null to undefined for maintenance_policy
+  if (values.maintenance_policy === null) {
+    values.maintenance_policy = undefined;
   }
 
   if (values.metadata?.user_data) {
@@ -288,7 +289,7 @@ const defaultInterfaces: InterfacePayload[] = [
  * For example, we add `linode` so we can store the currently selected Linode
  * for the Backups and Clone tab.
  *
- * We omit `maintenance_policy_id` from CreateLinodeRequest because:
+ * We omit `maintenance_policy` from CreateLinodeRequest because:
  * 1. The API expects it to be either 1, 2, or undefined
  * 2. The form needs to handle null (no policy selected) and undefined (omit from API)
  * 3. The actual API payload is handled in getLinodeCreatePayload where we:
@@ -390,7 +391,7 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
-  let defaultMaintenancePolicy: null | number = null;
+  let defaultMaintenancePolicy: MaintenancePolicySlug | null = null;
 
   // Fetch account settings for interface generation if enabled
   if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
@@ -409,9 +410,9 @@ export const defaultValues = async (
       // If the Maintenance Policy feature is enabled, set the default policy if the user has one set
       if (
         flags.isVMHostMaintenanceEnabled &&
-        accountSettings.maintenance_policy_id
+        accountSettings.maintenance_policy
       ) {
-        defaultMaintenancePolicy = accountSettings.maintenance_policy_id;
+        defaultMaintenancePolicy = accountSettings.maintenance_policy;
       }
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
@@ -447,7 +448,7 @@ export const defaultValues = async (
     interfaces: defaultInterfaces,
     linode,
     linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
-    maintenance_policy_id: defaultMaintenancePolicy,
+    maintenance_policy: defaultMaintenancePolicy,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

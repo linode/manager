@@ -109,7 +109,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
-  maintenance_policy_id: number;
+  maintenance_policy: MaintenancePolicySlug;
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -593,13 +593,15 @@ export interface AccountMaintenance {
   when: string;
 }
 
+export type MaintenancePolicySlug = 'migrate' | 'poweroffon';
+
 export type MaintenancePolicy = {
   description: string;
-  id: number;
   is_default: boolean;
-  name: string;
+  label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
-  type: 'migrate' | 'power-off/on';
+  slug: MaintenancePolicySlug;
+  type: 'migrate' | 'power off/on';
 };
 
 export interface PayPalData {
