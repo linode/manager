@@ -13,6 +13,7 @@ const props: Props = {
   clusterLabel: 'a cluster',
   clusterRegionId: 'us-east',
   clusterTier: 'standard',
+  isLkeClusterRestricted: false,
   regionsData: [],
 };
 

@@ -35,6 +35,7 @@ export interface Linode {
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   group: string;
+  has_user_data: boolean;
   hypervisor: Hypervisor;
   id: number;
   image: null | string;
@@ -44,7 +45,7 @@ export interface Linode {
   label: string;
   lke_cluster_id: null | number;
   maintenance_policy_id?: MaintenancePolicyId;
-  placement_group?: LinodePlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
+  placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
   specs: LinodeSpecs;
