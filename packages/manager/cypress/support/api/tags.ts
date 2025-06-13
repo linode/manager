@@ -18,7 +18,6 @@ export const deleteAllTestTags = async (): Promise<void> => {
   for (const testTag of testTags) {
     // Accounts can have thousands of tags, so we want to send these requests
     // sequentially to avoid overloading the API.
-    // eslint-disable-next-line no-await-in-loop
     await deleteTag(testTag.label);
   }
 };

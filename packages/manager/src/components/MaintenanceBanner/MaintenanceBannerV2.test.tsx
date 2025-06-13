@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/prefer-screen-queries */
 import React from 'react';
 
 import { accountMaintenanceFactory } from 'src/factories';

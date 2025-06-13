@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/prefer-screen-queries */
 import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 

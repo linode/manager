@@ -72,7 +72,6 @@ export const cleanUp = (resources: CleanUpResource | CleanUpResource[]) => {
     for (const resource of resourcesArray) {
       const cleanFunction = cleanUpMap[resource];
       // Perform clean-up sequentially to avoid API rate limiting.
-      // eslint-disable-next-line no-await-in-loop
       await cleanFunction();
     }
   };
