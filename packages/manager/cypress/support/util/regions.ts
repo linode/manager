@@ -3,7 +3,7 @@ import { randomItem } from 'support/util/random';
 
 import { buildArray, shuffleArray } from './arrays';
 
-import type { Capabilities, Region } from '@linode/api-v4';
+import type { AccountAvailability, Capabilities, Region } from '@linode/api-v4';
 
 /**
  * Extended Region type to assist with Cloud Manager-specific label handling.
@@ -160,6 +160,15 @@ export const regions: ExtendedRegion[] = Cypress.env(
 ) as ExtendedRegion[];
 
 /**
+ * Region availability data for Cloud Manager regions.
+ *
+ * Retrieved via Linode APIv4 during Cypress start-up.
+ */
+export const availability: AccountAvailability[] = Cypress.env(
+  'cloudManagerAvailability'
+) as AccountAvailability[];
+
+/**
  * Linode region(s) exposed to Cypress for testing.
  *
  * This may be a subset of `regions` in order to test functionality for specific
@@ -249,7 +258,7 @@ interface ChooseRegionOptions {
 }
 
 /**
- * Returns `true` if the given Region has all of the given capabilities.
+ * Returns `true` if the given Region has all of the given capabilities and availability for each capability.
  *
  * @param region - Region to check capabilities.
  * @param capabilities - Capabilities to check.
@@ -260,9 +269,20 @@ const regionHasCapabilities = (
   region: Region,
   capabilities: Capabilities[]
 ): boolean => {
-  return capabilities.every((capability) =>
+  const hasCapability = capabilities.every((capability) =>
     region.capabilities.includes(capability)
   );
+
+  const isUnavailable = availability.some((regionAvailability) => {
+    return (
+      regionAvailability.region === region.id &&
+      capabilities.some((capability) =>
+        regionAvailability.unavailable.includes(capability)
+      )
+    );
+  });
+
+  return hasCapability && !isUnavailable;
 };
 
 /**
