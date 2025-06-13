@@ -332,7 +332,7 @@ const resolveSearchRegions = (
       throw new Error(
         `Override region ${overrideRegion.id} (${
           overrideRegion.label
-        }) does not support one or more capabilities: ${requiredCapabilities.join(
+        }) does not support or lacks availability for one or more capabilities: ${requiredCapabilities.join(
           ', '
         )}`
       );
