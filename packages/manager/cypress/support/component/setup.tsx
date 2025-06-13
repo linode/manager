@@ -110,3 +110,13 @@ declare global {
 
 Cypress.Commands.add('mount', mount);
 Cypress.Commands.add('mountWithTheme', mountWithTheme);
+Cypress.Commands.overwrite('log', (log, ...args) => {
+  if (Cypress.browser.isHeadless) {
+    return cy.task('log', args, { log: false }).then(() => {
+      return log(...args);
+    });
+  } else {
+    console.log(...args);
+    return log(...args);
+  }
+});

@@ -91,6 +91,13 @@ export default defineConfig({
 
     setupNodeEvents(cypressOn, config) {
       const on = cypressOnFix(cypressOn);
+      on('task', {
+        log(message) {
+          // eslint-disable-next-line no-console
+          console.log(message);
+          return null;
+        },
+      });
       return setupPlugins(on, config, [
         loadEnvironmentConfig,
         nodeVersionCheck,
