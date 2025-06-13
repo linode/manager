@@ -1,13 +1,10 @@
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
+import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
 import { deleteUserRole } from '../utilities';
 
@@ -22,18 +19,18 @@ interface Props {
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { enqueueSnackbar } = useSnackbar();
 
   const {
     error,
     isPending,
-    mutateAsync: updateUserPermissions,
+    mutateAsync: updateUserRoles,
     reset,
-  } = useAccountUserPermissionsMutation(username);
+  } = useUserRolesMutation(username);
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
   const onClose = () => {
     reset(); // resets the error state of the useMutation
@@ -50,7 +47,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
       initialRole,
     });
 
-    await updateUserPermissions(updatedUserRoles);
+    await updateUserRoles(updatedUserRoles);
 
     enqueueSnackbar(`Role ${role?.name} has been deleted successfully.`, {
       variant: 'success',

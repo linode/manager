@@ -35,6 +35,7 @@ import {
 } from 'src/utilities/linodes';
 
 import { Actions } from './Actions';
+import { AdditionalOptions } from './AdditionalOptions/AdditionalOptions';
 import { Addons } from './Addons/Addons';
 import { Details } from './Details/Details';
 import { LinodeCreateError } from './Error';
@@ -264,6 +265,7 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
+          <AdditionalOptions />
           <Addons />
           <EUAgreement />
           <Summary />
