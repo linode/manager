@@ -7,9 +7,8 @@ import {
   Typography,
 } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Link } from 'src/components/Link';
@@ -32,20 +31,17 @@ export const AuthenticationSettings = () => {
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
   const isThirdPartyAuthEnabled = authType !== 'password';
+  const { focusSecurityQuestions, focusTel } = useSearch({
+    strict: false,
+  });
 
-  const location = useLocation<{
-    focusSecurityQuestions: boolean;
-    focusTel: boolean;
-  }>();
   const phoneNumberRef = React.createRef<HTMLInputElement>();
   const securityQuestionRef = React.createRef<HTMLInputElement>();
 
   React.useEffect(() => {
-    if (!location.state) {
+    if (!focusSecurityQuestions && !focusTel) {
       return;
     }
-
-    const { focusSecurityQuestions, focusTel } = location.state;
 
     // Determine the target ref based on the location state values
     const targetRef = focusTel
@@ -74,7 +70,7 @@ export const AuthenticationSettings = () => {
         }
       }, 100);
     }
-  }, [phoneNumberRef, securityQuestionRef, location.state]);
+  }, [phoneNumberRef, securityQuestionRef, focusSecurityQuestions, focusTel]);
 
   if (profileError) {
     return <ErrorState errorText="Unable to load your profile" />;
@@ -129,12 +125,6 @@ export const AuthenticationSettings = () => {
     </>
   );
 };
-
-export const authenticationSettingsLazyRoute = createLazyRoute('/profile/auth')(
-  {
-    component: AuthenticationSettings,
-  }
-);
 
 export const StyledRootContainer = styled(Paper, {
   label: 'StyledRootContainer',
