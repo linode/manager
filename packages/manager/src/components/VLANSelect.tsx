@@ -68,6 +68,9 @@ export const VLANSelect = (props: Props) => {
       // If the value gets cleared, make sure the TextField's value also gets cleared.
       setInputValue('');
     }
+    if (value && !inputValue) {
+      setInputValue(value);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
@@ -121,7 +124,7 @@ export const VLANSelect = (props: Props) => {
           onBlur();
         }
         if (inputValue !== value) {
-          // if our inpupt value's changed but we don't explicitly select the new input value, keep the old value
+          // if our input value's changed but we didn't explicitly select the new input value, keep the old value
           // if there is no pre-existing value selected, this clears the textfield
           setInputValue(value ?? '');
         }
