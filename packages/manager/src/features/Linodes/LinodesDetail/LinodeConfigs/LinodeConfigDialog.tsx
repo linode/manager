@@ -40,7 +40,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';

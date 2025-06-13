@@ -2,7 +2,7 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { Button } from '../Button';
 import { Typography } from '../Typography';

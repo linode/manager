@@ -1,7 +1,7 @@
 import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 

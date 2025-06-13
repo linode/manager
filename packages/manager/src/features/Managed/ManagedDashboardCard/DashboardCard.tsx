@@ -1,7 +1,7 @@
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import {
   StyledHeaderGrid,

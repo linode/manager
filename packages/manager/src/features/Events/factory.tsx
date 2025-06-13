@@ -1,6 +1,6 @@
 import { Typography } from '@linode/ui';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import * as factories from './factories';
 

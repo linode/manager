@@ -1,6 +1,6 @@
 import { ListItem, Paper, Typography } from '@linode/ui';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';

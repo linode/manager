@@ -2,7 +2,7 @@ import { Button } from '@linode/ui';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Collapse from '@mui/material/Collapse';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import type { ButtonProps } from '@linode/ui';

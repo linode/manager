@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';

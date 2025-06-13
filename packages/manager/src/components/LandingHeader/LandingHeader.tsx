@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import BetaFeedbackIcon from 'src/assets/icons/icon-feedback.svg';
 import { Breadcrumb } from 'src/components/Breadcrumb/Breadcrumb';

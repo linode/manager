@@ -14,7 +14,7 @@ import {
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
 

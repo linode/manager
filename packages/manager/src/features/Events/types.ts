@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import type { Event, EventAction, EventStatus } from '@linode/api-v4';
 

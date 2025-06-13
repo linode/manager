@@ -1,7 +1,7 @@
 import _Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import {
   CheckboxCheckedIcon,

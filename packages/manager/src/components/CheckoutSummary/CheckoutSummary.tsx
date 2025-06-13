@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { SummaryItem } from './SummaryItem';
 

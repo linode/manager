@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { SupportLink } from 'src/components/SupportLink';
 

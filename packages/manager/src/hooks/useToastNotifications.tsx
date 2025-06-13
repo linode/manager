@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { toasts } from 'src/features/Events/asyncToasts';
 

@@ -1,7 +1,7 @@
 import { usePreferences } from '@linode/queries';
 import { Stack, Typography, VisibilityTooltip } from '@linode/ui';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { createMaskedText } from 'src/utilities/createMaskedText';
 

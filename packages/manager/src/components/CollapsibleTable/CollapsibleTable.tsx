@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';

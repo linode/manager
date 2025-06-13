@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { formatDuration } from '@linode/utilities';
 import { Duration } from 'luxon';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { ACTIONS_TO_INCLUDE_AS_PROGRESS_EVENTS } from 'src/features/Events/constants';
 import { isInProgressEvent } from 'src/queries/events/event.helpers';

@@ -2,7 +2,7 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 import _Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { omittedProps } from '../../utilities';
 import { Tooltip } from '../Tooltip';

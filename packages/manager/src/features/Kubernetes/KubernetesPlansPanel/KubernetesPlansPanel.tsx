@@ -1,6 +1,6 @@
 import { useRegionAvailabilityQuery } from '@linode/queries';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { TabbedPanel } from 'src/components/TabbedPanel/TabbedPanel';
 import { PlanInformation } from 'src/features/components/PlansPanel/PlanInformation';

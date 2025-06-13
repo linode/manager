@@ -2,7 +2,7 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';

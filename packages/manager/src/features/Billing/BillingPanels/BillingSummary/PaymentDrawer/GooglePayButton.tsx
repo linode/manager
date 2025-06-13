@@ -4,7 +4,7 @@ import { useScript } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';

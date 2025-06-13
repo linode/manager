@@ -1,7 +1,7 @@
 import { Box, Checkbox, Notice, Typography } from '@linode/ui';
 import { List, ListItem } from '@mui/material';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { checkboxTestId, descriptionTestId, headerTestId } from './constants';
 

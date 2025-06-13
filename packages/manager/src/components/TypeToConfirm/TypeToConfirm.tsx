@@ -1,7 +1,7 @@
 import { usePreferences } from '@linode/queries';
 import { Checkbox, FormControlLabel, TextField, Typography } from '@linode/ui';
 import * as React from 'react';
-import type { JSX } from "react";
+import type { JSX } from 'react';
 
 import { FormGroup } from 'src/components/FormGroup';
 import { Link } from 'src/components/Link';
