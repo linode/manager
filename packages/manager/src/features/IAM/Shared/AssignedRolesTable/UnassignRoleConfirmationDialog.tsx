@@ -6,7 +6,7 @@ import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
-import { deleteUserRole } from '../utilities';
+import { deleteUserRole, getErrorMessage } from '../utilities';
 
 import type { ExtendedRoleView } from '../types';
 
@@ -74,7 +74,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0].reason}
+      error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
       title={`Unassign the ${role?.name} role?`}

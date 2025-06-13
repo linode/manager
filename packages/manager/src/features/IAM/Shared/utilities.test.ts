@@ -2,11 +2,16 @@ import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 
 import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  LAST_ACCOUNT_ADMIN_ERROR,
+} from './constants';
+import {
   changeRoleForEntity,
   changeUserRole,
   deleteUserEntity,
   deleteUserRole,
   getAllRoles,
+  getErrorMessage,
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
@@ -815,5 +820,39 @@ describe('mapEntityTypesForSelect', () => {
         value: 'volume',
       },
     ]);
+  });
+});
+
+describe('getErrorMessage', () => {
+  it('should return LAST_ACCOUNT_ADMIN_ERROR if the error contains "Removing last account admin"', () => {
+    const errors = [
+      {
+        reason: 'Request made to janus is invalid',
+        field: 'Bad janus request',
+      },
+      {
+        reason:
+          'Can not remove account admin access from the last account admin on the account',
+        field: 'Removing last account admin',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(LAST_ACCOUNT_ADMIN_ERROR);
+  });
+
+  it('should return INTERNAL_ERROR_NO_CHANGES_SAVED if the error does not contain "Removing last account admin"', () => {
+    const errors = [
+      {
+        field: 'An unexpected error occurred.',
+        reason: 'An unexpected error occurred.',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(INTERNAL_ERROR_NO_CHANGES_SAVED);
+  });
+
+  it('should return undefined if there are no errors', () => {
+    const result = getErrorMessage(null);
+    expect(result).toBeUndefined();
   });
 });

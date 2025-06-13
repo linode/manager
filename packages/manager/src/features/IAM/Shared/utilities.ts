@@ -1,6 +1,10 @@
 import { capitalize, capitalizeAllWords } from '@linode/utilities';
 
-import { PAID_ENTITY_TYPES } from './constants';
+import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  LAST_ACCOUNT_ADMIN_ERROR,
+  PAID_ENTITY_TYPES,
+} from './constants';
 
 import type {
   EntitiesOption,
@@ -12,6 +16,7 @@ import type {
 import type {
   AccountAccessRole,
   AccountEntity,
+  APIError,
   EntityAccess,
   EntityAccessRole,
   EntityType,
@@ -514,4 +519,16 @@ export const mergeAssignedRolesIntoExistingRoles = (
     });
   });
   return selectedPlusExistingRoles;
+};
+
+export const getErrorMessage = (error: APIError[] | null) => {
+  const isLastAccountAdmin = error?.some(
+    (err) => err.field === 'Removing last account admin'
+  );
+
+  const errorMessage = isLastAccountAdmin
+    ? LAST_ACCOUNT_ADMIN_ERROR
+    : INTERNAL_ERROR_NO_CHANGES_SAVED;
+
+  return error ? errorMessage : undefined;
 };
