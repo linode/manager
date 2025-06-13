@@ -40,7 +40,7 @@ vi.mock('src/queries/object-storage/queries', async () => {
 });
 
 vi.mock('@linode/queries', async () => {
-  const actual = await vi.importActual('src/queries/object-storage/queries');
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useNetworkTransferPricesQuery: queryMocks.useNetworkTransferPricesQuery,
