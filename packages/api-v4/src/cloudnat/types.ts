@@ -28,7 +28,6 @@ export interface PaginatedCloudNATResponse {
   results: number;
 }
 
-// Enum of valid port sizes for min_ports_per_interface
 export const VALID_PORT_SIZES = [
   64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384,
 ] as const;
