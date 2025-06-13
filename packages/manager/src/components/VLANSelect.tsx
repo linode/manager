@@ -82,7 +82,6 @@ export const VLANSelect = (props: Props) => {
     useVLANsInfiniteQuery(apiFilter, open);
 
   const vlans = data?.pages.flatMap((page) => page.data) ?? [];
-  const originalVlanSize = vlans?.length ?? 0;
 
   const newVlanPlaceholder = {
     cidr_block: '',
@@ -100,8 +99,6 @@ export const VLANSelect = (props: Props) => {
   }
 
   const selectedVLAN = vlans?.find((option) => option.label === value) ?? null;
-
-  console.log('hmm', vlans?.length, vlans, originalVlanSize)
 
   return (
     <Autocomplete
@@ -123,17 +120,16 @@ export const VLANSelect = (props: Props) => {
         if (onBlur) {
           onBlur();
         }
-
-        console.log('onblur', value, newVlanPlaceholder)
-        if (!value) { // this doesn't work for many reasons, but saving thoughts for now
-          setInputValue('');
+        if (inputValue !== value && onChange) {
+          // if our inpupt value's changed but we don't explicitly select the new input value, keep the old value
+          // if there is no pre-existing value selected, this clears the textfield
+          setInputValue(value ?? '');
         }
       }}
       onChange={(event, value) => {
         if (onChange) {
           onChange(value?.label ?? null);
         }
-        console.log('on change', value, newVlanPlaceholder)
         if (value !== newVlanPlaceholder) {
           setInputValue('');
         }
