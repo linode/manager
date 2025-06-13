@@ -33,8 +33,9 @@ export const useAccountMaintenanceQuery = (params: Params, filter: Filter) => {
   });
 };
 
-export const useAccountMaintenancePoliciesQuery = () => {
-  return useQuery<MaintenancePolicy[], APIError[]>(
-    accountQueries.maintenance._ctx.policies,
-  );
+export const useAccountMaintenancePoliciesQuery = (enabled: boolean = true) => {
+  return useQuery<MaintenancePolicy[], APIError[]>({
+    ...accountQueries.maintenance._ctx.policies,
+    enabled,
+  });
 };

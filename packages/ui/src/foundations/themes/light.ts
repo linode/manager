@@ -330,7 +330,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: Color.Brand[80],
+              color: Alias.Action.Primary.Default,
             },
           },
           backgroundColor: 'transparent',
