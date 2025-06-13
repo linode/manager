@@ -1,5 +1,11 @@
-import { useLinodeQuery, usePreferences, useTypeQuery } from '@linode/queries';
+import {
+  useLinodeQuery,
+  usePreferences,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import {
@@ -18,9 +24,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
-import { useCloudPulseServiceByServiceType } from 'src/queries/cloudpulse/services';
-
-import { isAclpSupportedRegion } from '../utilities';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
@@ -61,18 +64,27 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
-  const { data: service } = useCloudPulseServiceByServiceType('linode');
+  const { data: regions } = useRegionsQuery();
 
-  const isAclpSupportedRegionLinode = isAclpSupportedRegion(
-    linode?.region,
-    service?.regions
-  );
+  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    regions,
+    type: 'metrics',
+  });
+
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    regions,
+    type: 'alerts',
+  });
 
   const tabs = [
     {
       chip:
         flags.aclpBetaServices?.metrics &&
-        isAclpSupportedRegionLinode &&
+        isAclpMetricsSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -105,7 +117,7 @@ const LinodesDetailNavigation = () => {
     {
       chip:
         flags.aclpBetaServices?.alerts &&
-        isAclpSupportedRegionLinode &&
+        isAclpAlertsSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -176,7 +188,9 @@ const LinodesDetailNavigation = () => {
             <TabPanels>
               <SafeTabPanel index={idx++}>
                 <LinodeMetrics
-                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  isAclpMetricsSupportedRegionLinode={
+                    isAclpMetricsSupportedRegionLinode
+                  }
                   linodeCreated={linode?.created}
                   linodeId={id}
                 />
@@ -203,7 +217,9 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeAlerts
-                  isAclpSupportedRegionLinode={isAclpSupportedRegionLinode}
+                  isAclpAlertsSupportedRegionLinode={
+                    isAclpAlertsSupportedRegionLinode
+                  }
                 />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
