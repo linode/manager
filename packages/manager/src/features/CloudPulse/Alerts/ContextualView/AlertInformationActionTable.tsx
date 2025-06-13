@@ -21,7 +21,12 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type { Alert, APIError, EntityAlertUpdatePayload } from '@linode/api-v4';
+import type {
+  Alert,
+  APIError,
+  CloudPulseAlertsPayload,
+  EntityAlertUpdatePayload,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -36,18 +41,27 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Id of the selected entity
+   * Only use in edit flow
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
+   * Only use in edit flow
    */
-  entityName: string;
+  entityName?: string;
 
   /**
    * Error received from API
    */
   error?: APIError[] | null;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param payload enabled alerts ids
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -67,10 +81,37 @@ export interface TableColumnHeader {
   label: string;
 }
 
+export interface AlertRowPropsOptions {
+  /**
+   * Enabled alerts payload
+   */
+  enabledAlerts: CloudPulseAlertsPayload;
+
+  /**
+   * Id of the entity
+   * Only use in edit flow.
+   */
+  entityId?: string;
+
+  /**
+   * Callback function to handle alert toggle
+   * Only use in create flow.
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+}
+
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
-  const { alerts, columns, entityId, entityName, error, orderByColumn } = props;
+  const {
+    alerts,
+    columns,
+    entityId,
+    entityName,
+    error,
+    orderByColumn,
+    onToggleAlert,
+  } = props;
 
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
@@ -79,16 +120,43 @@ export const AlertInformationActionTable = (
   const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [enabledAlerts, setEnabledAlerts] =
+    React.useState<CloudPulseAlertsPayload>({
+      system: [],
+      user: [],
+    });
 
   const { mutateAsync: addEntity } = useAddEntityToAlert();
 
   const { mutateAsync: removeEntity } = useRemoveEntityFromAlert();
+
+  const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
+    const { entityId, enabledAlerts, onToggleAlert } = options;
+
+    // Ensure that at least one of entityId or onToggleAlert is provided
+    if (!(entityId || onToggleAlert)) {
+      return null;
+    }
+
+    const isEditMode = !!entityId;
+
+    const handleToggle = isEditMode
+      ? handleToggleEditFlow
+      : handleToggleCreateFlow;
+    const status = isEditMode
+      ? alert.entity_ids.includes(entityId)
+      : enabledAlerts[alert.type].includes(alert.id);
+
+    return { handleToggle, status };
+  };
 
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
   const handleConfirm = React.useCallback(
     (alert: Alert, currentStatus: boolean) => {
+      if (entityId === undefined) return;
+
       const payload: EntityAlertUpdatePayload = {
         alert,
         entityId,
@@ -117,12 +185,31 @@ export const AlertInformationActionTable = (
     },
     [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
   );
-  const handleToggle = (alert: Alert) => {
+
+  const handleToggleEditFlow = (alert: Alert) => {
     setIsDialogOpen(true);
     setSelectedAlert(alert);
   };
 
-  const isEnabled = selectedAlert.entity_ids?.includes(entityId) ?? false;
+  const handleToggleCreateFlow = (alert: Alert) => {
+    if (!onToggleAlert) return;
+
+    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+      const newPayload = { ...prev };
+      const index = newPayload[alert.type].indexOf(alert.id);
+      // If the alert is already in the payload, remove it, otherwise add it
+      if (index !== -1) {
+        newPayload[alert.type].splice(index, 1);
+      } else {
+        newPayload[alert.type].push(alert.id);
+      }
+
+      onToggleAlert(newPayload);
+      return newPayload;
+    });
+  };
+
+  const isEnabled = selectedAlert.entity_ids?.includes(entityId ?? '') ?? false;
 
   return (
     <>
@@ -170,14 +257,24 @@ export const AlertInformationActionTable = (
                         length={paginatedAndOrderedAlerts.length}
                         loading={false}
                       />
-                      {paginatedAndOrderedAlerts?.map((alert) => (
-                        <AlertInformationActionRow
-                          alert={alert}
-                          handleToggle={handleToggle}
-                          key={alert.id}
-                          status={alert.entity_ids.includes(entityId)}
-                        />
-                      ))}
+                      {paginatedAndOrderedAlerts?.map((alert) => {
+                        const rowProps = getAlertRowProps(alert, {
+                          enabledAlerts,
+                          entityId,
+                          onToggleAlert,
+                        });
+
+                        if (!rowProps) return null;
+
+                        return (
+                          <AlertInformationActionRow
+                            alert={alert}
+                            handleToggle={rowProps.handleToggle}
+                            key={alert.id}
+                            status={rowProps.status}
+                          />
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </Grid>
