@@ -195,7 +195,7 @@ export const VPCPanel = (props: Props) => {
                             Auto-assign a /30 CIDR for this NodeBalancer
                           </Typography>
                           <TooltipIcon
-                            status="help"
+                            status="info"
                             text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
                             tooltipPosition="right"
                           />

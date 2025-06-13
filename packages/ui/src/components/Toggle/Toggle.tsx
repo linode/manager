@@ -37,7 +37,7 @@ export const Toggle = (props: ToggleProps) => {
         icon={<ToggleOffIcon />}
         {...rest}
       />
-      {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
+      {tooltipText && <TooltipIcon status="info" text={tooltipText} />}
     </React.Fragment>
   );
 };

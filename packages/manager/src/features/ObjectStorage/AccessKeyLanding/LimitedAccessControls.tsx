@@ -19,7 +19,7 @@ const LabelWithTooltip = ({
 }: LabelWithTooltipProps) => (
   <React.Fragment>
     <Typography component="span">{labelText}</Typography>
-    {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
+    {tooltipText && <TooltipIcon status="info" text={tooltipText} />}
   </React.Fragment>
 );
 
