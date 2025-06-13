@@ -1,10 +1,9 @@
+import { useUserRoles, useUserRolesMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
-
-import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
 import { toEntityAccess } from '../utilities';

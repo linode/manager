@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -11,11 +16,6 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
 import {

@@ -1,3 +1,4 @@
+import { useUserRoles } from '@linode/queries';
 import { Select, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useParams, useSearch } from '@tanstack/react-router';
@@ -18,7 +19,6 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useAccountEntities } from 'src/queries/entities/entities';
-import { useUserRoles } from 'src/queries/iam/iam';
 
 import { ENTITIES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
 import { RemoveAssignmentConfirmationDialog } from '../../Shared/RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';

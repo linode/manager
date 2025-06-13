@@ -1,3 +1,8 @@
+import {
+  iamQueries,
+  useAccountRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -11,8 +16,6 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import { useAccountRoles, useUserRolesMutation } from 'src/queries/iam/iam';
-import { iamQueries } from 'src/queries/iam/queries';
 
 import {
   INTERNAL_ERROR_UPDATE_PERMISSION,
