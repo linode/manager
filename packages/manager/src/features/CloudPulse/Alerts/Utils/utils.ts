@@ -256,10 +256,12 @@ export const convertAlertDefinitionValues = (
     severity,
     tags,
     trigger_conditions,
+    scope,
   }: Alert,
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
+    scope,
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
