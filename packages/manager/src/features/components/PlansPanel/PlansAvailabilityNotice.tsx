@@ -3,9 +3,9 @@ import { formatPlanTypes, getCapabilityFromPlanType } from '@linode/utilities';
 import * as React from 'react';
 
 import {
+  PlanNoticeTypography,
+  PlanTextTooltip,
   StyledFormattedRegionList,
-  StyledNoticeTypography,
-  StyledTextTooltip,
 } from './PlansAvailabilityNotice.styles';
 
 import type { LinodeTypeClass, Region } from '@linode/api-v4';
@@ -81,14 +81,14 @@ const PlansAvailabilityNoticeMessage = (
   if (!hasSelectedRegion) {
     return (
       <Notice dataTestId={`${planType}-notice-warning`} variant="warning">
-        <StyledNoticeTypography>
+        <PlanNoticeTypography>
           {formattedPlanType} Plans are currently available in&nbsp;
-          <StyledTextTooltip
+          <PlanTextTooltip
             displayText="select regions"
             tooltipText={<FormattedRegionList />}
           />
           .
-        </StyledNoticeTypography>
+        </PlanNoticeTypography>
       </Notice>
     );
   }
@@ -100,10 +100,10 @@ const PlansAvailabilityNoticeMessage = (
         dataTestId={`${planType}-notice-error`}
         variant="error"
       >
-        <StyledNoticeTypography>
+        <PlanNoticeTypography>
           {formattedPlanType} Plans are not currently available in this
           region.&nbsp;
-          <StyledTextTooltip
+          <PlanTextTooltip
             displayText="See global availability"
             tooltipText={
               regionList.length > 0 ? (
@@ -114,7 +114,7 @@ const PlansAvailabilityNoticeMessage = (
             }
           />
           .
-        </StyledNoticeTypography>
+        </PlanNoticeTypography>
       </Notice>
     );
   }

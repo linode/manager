@@ -1,5 +1,6 @@
 import { TooltipIcon } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { TableHead } from 'src/components/TableHead';
