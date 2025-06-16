@@ -11,6 +11,7 @@ import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
   NODE_TYPE,
+  PORT,
   REGION,
   RESOURCE_ID,
   RESOURCES,
@@ -20,6 +21,7 @@ import {
   getCustomSelectProperties,
   getFilters,
   getNodeTypeProperties,
+  getPortProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
@@ -133,6 +135,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
       [emitFilterChange, checkAndUpdateDependentFilters]
+    );
+
+    const handlePortChange = React.useCallback(
+      (port: string, label: string[], savePref: boolean = false) => {
+        emitFilterChangeByFilterKey(PORT, port, label, savePref, {
+          [PORT]: port,
+        });
+      },
+      [emitFilterChangeByFilterKey]
     );
 
     const handleNodeTypeChange = React.useCallback(
@@ -277,6 +288,16 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleNodeTypeChange
           );
+        } else if (config.configuration.filterKey === PORT) {
+          return getPortProperties(
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+            },
+            handlePortChange
+          );
         } else {
           return getCustomSelectProperties(
             {
@@ -295,6 +316,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleNodeTypeChange,
         handleTagsChange,
         handleRegionChange,
+        handlePortChange,
         handleResourceChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
