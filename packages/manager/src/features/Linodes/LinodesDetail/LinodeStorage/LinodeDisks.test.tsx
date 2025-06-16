@@ -28,8 +28,6 @@ describe('LinodeDisks', () => {
 
     // Verify all 5 disks returned by the API render
     for (const disk of disks) {
-      // This rule is *crazy*
-      // eslint-disable-next-line no-await-in-loop
       await findByText(disk.label);
     }
   });
