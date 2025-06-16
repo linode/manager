@@ -82,6 +82,7 @@ export const getRegionFromExtendedRegion = (
     resolvers: extendedRegion.resolvers,
     site_type: extendedRegion.site_type,
     status: extendedRegion.status,
+    monitors: extendedRegion.monitors,
   };
 };
 

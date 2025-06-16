@@ -1,23 +1,23 @@
+import {
+  iamQueries,
+  useAccountRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import { useAccountRoles, useUserRolesMutation } from 'src/queries/iam/iam';
-import { iamQueries } from 'src/queries/iam/queries';
 
-import {
-  INTERNAL_ERROR_UPDATE_PERMISSION,
-  NO_CHANGES_SAVED,
-} from '../../Shared/constants';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import {
   getAllRoles,
   mergeAssignedRolesIntoExistingRoles,
@@ -33,7 +33,9 @@ interface Props {
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
   const queryClient = useQueryClient();
 
   const { data: accountRoles } = useAccountRoles();
@@ -85,7 +87,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
       enqueueSnackbar(`Roles added.`, { variant: 'success' });
       handleClose();
     } catch (error) {
-      setError(error.field ?? 'root', { message: error[0].reason });
+      setError(error.field ?? 'root', {
+        message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+      });
     }
   };
 
@@ -107,13 +111,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
-            <Notice variant="error">
-              <Typography>
-                {INTERNAL_ERROR_UPDATE_PERMISSION}
-                <br />
-                {NO_CHANGES_SAVED}
-              </Typography>
-            </Notice>
+            <Notice text={formState.errors.root?.message} variant="error" />
           )}
 
           <Typography sx={{ marginBottom: 2.5 }}>
