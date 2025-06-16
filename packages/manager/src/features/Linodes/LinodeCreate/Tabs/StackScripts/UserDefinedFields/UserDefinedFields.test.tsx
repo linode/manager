@@ -54,7 +54,6 @@ describe('UserDefinedFields', () => {
       });
 
     for (const udf of stackscript.user_defined_fields) {
-      // eslint-disable-next-line no-await-in-loop
       await findByLabelText(udf.label, { exact: false });
     }
   });
