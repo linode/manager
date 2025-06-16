@@ -1,6 +1,7 @@
 import { styled, SvgIcon } from '@mui/material';
 import _Button from '@mui/material/Button';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import InfoOutline from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';

@@ -65,7 +65,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
     (subnet) => subnet.id === privateNetworkValues.subnet_id
   );
 
-  const prevRegionId = React.useRef<string | undefined>();
+  const prevRegionId = React.useRef<string | undefined>(undefined);
   const regionHasVPCs = Boolean(vpcs && vpcs.length > 0);
   const disableVPCSelectors =
     !!vpcsError || !regionSupportsVPCs || !regionHasVPCs;

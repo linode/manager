@@ -46,6 +46,7 @@ export interface Props {
   clusterId: number;
   clusterTier: KubernetesTier;
   encryptionStatus: EncryptionStatus | undefined;
+  isLkeClusterRestricted: boolean;
   nodes: PoolNodeResponse[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   poolId: number;
@@ -65,6 +66,7 @@ export const NodeTable = React.memo((props: Props) => {
     encryptionStatus,
     nodes,
     openRecycleNodeDialog,
+    isLkeClusterRestricted,
     poolId,
     regionSupportsDiskEncryption,
     statusFilter,
@@ -240,6 +242,7 @@ export const NodeTable = React.memo((props: Props) => {
                         instanceId={eachRow.instanceId}
                         instanceStatus={eachRow.instanceStatus}
                         ip={eachRow.ip}
+                        isLkeClusterRestricted={isLkeClusterRestricted}
                         key={`node-row-${eachRow.nodeId}`}
                         label={eachRow.label}
                         linodeError={error ?? undefined}
@@ -290,7 +293,12 @@ export const NodeTable = React.memo((props: Props) => {
                 <Typography>Pool ID {poolId}</Typography>
               )}
             </StyledPoolInfoBox>
-            <TagCell tags={tags} updateTags={updateTags} view="inline" />
+            <TagCell
+              disabled={isLkeClusterRestricted}
+              tags={tags}
+              updateTags={updateTags}
+              view="inline"
+            />
           </StyledTableFooter>
         </>
       )}

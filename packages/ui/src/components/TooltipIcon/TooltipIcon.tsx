@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import WarningSolid from '@mui/icons-material/Warning';
 import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import InfoOutlined from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';

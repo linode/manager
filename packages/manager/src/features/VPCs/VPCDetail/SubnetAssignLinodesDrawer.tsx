@@ -98,8 +98,8 @@ export const SubnetAssignLinodesDrawer = (
     unassignLinode,
     unassignLinodesErrors,
   } = useUnassignLinode();
-  const csvRef = React.useRef<any>();
-  const newInterface = React.useRef<Interface | LinodeInterface>();
+  const csvRef = React.useRef<any>(undefined);
+  const newInterface = React.useRef<Interface | LinodeInterface>(undefined);
   const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
   const theme = useTheme();
@@ -181,8 +181,7 @@ export const SubnetAssignLinodesDrawer = (
     return (
       // Use the first configuration's id or -1 if no configurations
       // Use selected configuration's id if available
-      (linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ??
-      -1
+      ((linodeConfigs.length > 1 ? selectedConfig?.id : linodeConfigs[0]?.id) ?? -1)
     );
   }
 
