@@ -53,6 +53,7 @@ export const AuthorizedKeys = () => {
       enqueueSnackbar('Authorized keys updated successfully.', {
         variant: 'success',
       });
+      form.reset();
     } catch (errors) {
       for (const error of errors) {
         if (error.reason.startsWith('SSH Key ')) {
