@@ -95,6 +95,7 @@ export const AuthorizedKeys = () => {
                 render={({ fieldState, field }) => (
                   <TextField
                     errorText={fieldState.error?.message}
+                    inputId={`ssh-public-key-${idx}`}
                     inputRef={field.ref}
                     label="SSH Public Key"
                     multiline
@@ -122,7 +123,7 @@ export const AuthorizedKeys = () => {
                         field.onChange(pastedItems[0]);
                       }
                     }}
-                    rows={1.5}
+                    rows={1}
                     value={field.value}
                   />
                 )}
