@@ -8,7 +8,7 @@ import {
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { metricOperatorTypeMap } from '../constants';
-import { convertSecondsToHumanReadable } from '../Utils/utils';
+import { convertSecondsToMinutes } from '../Utils/utils';
 import { AlertDetailCriteria } from './AlertDetailCriteria';
 
 describe('AlertDetailCriteria component tests', () => {
@@ -39,10 +39,10 @@ describe('AlertDetailCriteria component tests', () => {
     const { evaluation_period_seconds, polling_interval_seconds } =
       alertDetails.trigger_conditions;
     expect(
-      getByText(convertSecondsToHumanReadable(polling_interval_seconds))
+      getByText(convertSecondsToMinutes(polling_interval_seconds))
     ).toBeInTheDocument();
     expect(
-      getByText(convertSecondsToHumanReadable(evaluation_period_seconds))
+      getByText(convertSecondsToMinutes(evaluation_period_seconds))
     ).toBeInTheDocument();
   });
 

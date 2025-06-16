@@ -266,7 +266,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
               )
             }
           />
-          <Box alignContent="center" mt={5}>
+          <Box alignContent="flex-start" mt={6}>
             <ClearIconButton handleClick={onFilterDelete} />
           </Box>
         </Box>

@@ -204,22 +204,17 @@ export const getAlertBoxStyles = (theme: Theme) => ({
   backgroundColor: theme.tokens.alias.Background.Neutral,
   padding: theme.spacing(3),
 });
-/**
- * Converts seconds into a human-readable hours, minutes and seconds format.
- * @param seconds The seconds that need to be converted into human readable time format.
- * @returns A string representing the time in hours, minutes and seconds.
+/* Converts seconds into a human-readable minutes and seconds format.
+ * @param seconds The seconds that need to be converted into minutes.
+ * @returns A string representing the time in minutes and seconds.
  */
-export const convertSecondsToHumanReadable = (seconds: number): string => {
+export const convertSecondsToMinutes = (seconds: number): string => {
   if (seconds <= 0) {
     return '0 minutes';
   }
-
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
+  const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
 
-  const hourString =
-    hours > 0 ? `${hours} ${hours === 1 ? 'hour' : 'hours'}` : '';
   const minuteString =
     minutes > 0 ? `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}` : '';
   const secondString =
@@ -227,7 +222,7 @@ export const convertSecondsToHumanReadable = (seconds: number): string => {
       ? `${remainingSeconds} ${remainingSeconds === 1 ? 'second' : 'seconds'}`
       : '';
 
-  return [hourString, minuteString, secondString].filter(Boolean).join(' and ');
+  return [minuteString, secondString].filter(Boolean).join(' and ');
 };
 
 /**
@@ -295,7 +290,7 @@ export const filterAlertsByStatusAndType = (
   return (
     alerts?.filter(({ label, status, type }) => {
       return (
-        status === 'enabled' &&
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );
@@ -586,4 +581,19 @@ export const getSupportedRegions = (props: SupportedRegionsProps) => {
       resources?.some(({ region }) => region === id)
     ) ?? []
   );
+};
+
+/*
+ * Converts seconds into a relevant format of minutes or hours to be displayed in the Autocomplete Options.
+ * @param seconds The seconds that need to be converted into minutes or hours.
+ * @returns A string representing the time in minutes or hours.
+ */
+export const convertSecondsToOptions = (seconds: number): string => {
+  const minutes = seconds / 60;
+  if (minutes < 60) {
+    return `${minutes} min`;
+  } else {
+    const hours = minutes / 60;
+    return `${hours} hr`;
+  }
 };
