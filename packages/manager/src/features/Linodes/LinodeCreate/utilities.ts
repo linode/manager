@@ -170,12 +170,14 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  {
+  options: LinodeCreatePayloadOptions
+): CreateLinodeRequest => {
+  const {
     isShowingNewNetworkingUI,
     isAclpIntegration,
     isAclpAlertsPreferenceBeta,
-  }: LinodeCreatePayloadOptions
-): CreateLinodeRequest => {
+  } = options;
+
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
