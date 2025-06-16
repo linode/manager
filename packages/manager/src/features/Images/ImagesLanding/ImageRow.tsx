@@ -80,13 +80,20 @@ export const ImageRow = (props: Props) => {
               status !== 'creating' &&
               !image.capabilities.includes('distributed-sites') && (
                 <TooltipIcon
-                  icon={<UnlockIcon height="20px" width="20px" />}
+                  icon={<UnlockIcon height="18px" width="18px" />}
+                  sxTooltipIcon={{
+                    padding: 0,
+                    mr: '2px',
+                  }}
                   text="This image is not encrypted. You can recreate the image to enable encryption and then delete this image."
                 />
               )}
             {type === 'manual' && capabilities.includes('cloud-init') && (
               <TooltipIcon
                 icon={<CloudInitIcon />}
+                sxTooltipIcon={{
+                  padding: 0,
+                }}
                 text="This image supports our Metadata service via cloud-init."
               />
             )}

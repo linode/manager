@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import WarningSolid from '@mui/icons-material/Warning';
 import { SvgIcon, useTheme } from '@mui/material';
 import * as React from 'react';
 import type { JSX } from 'react';
 
 import InfoOutlined from '../../assets/icons/info-outlined.svg';
+import WarningOutlined from '../../assets/icons/warning.svg';
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
 import { Tooltip, tooltipClasses } from '../Tooltip';
@@ -113,9 +113,12 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const cdsIconProps = {
     rootStyle: {
-      color: theme.tokens.alias.Content.Icon.Primary.Default,
+      color: theme.tokens.alias.Content.Icon.Secondary.Default,
       height: labelTooltipIconSize === 'small' ? 16 : 20,
       width: labelTooltipIconSize === 'small' ? 16 : 20,
+      '&:hover': {
+        color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      },
     },
     viewBox: '0 0 20 20',
   };
@@ -132,7 +135,14 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       );
       break;
     case 'warning':
-      renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
+      renderIcon = (
+        <SvgIcon
+          component={WarningOutlined}
+          data-testid="tooltip-warning-icon"
+          sx={cdsIconProps.rootStyle}
+          viewBox={cdsIconProps.viewBox}
+        />
+      );
       break;
     default:
       renderIcon = icon ?? null;
@@ -150,7 +160,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       sx={{
         ...sxTooltipIcon,
-        '&:hover > svg': {
+        '&:hover': {
           color: theme.tokens.alias.Content.Icon.Primary.Hover,
         },
       }}
@@ -165,7 +175,12 @@ export const TooltipIcon = (props: TooltipIconProps) => {
           e.stopPropagation();
         }}
         size="large"
-        sx={sxTooltipIcon}
+        sx={{
+          ...sxTooltipIcon,
+          '&:hover *': {
+            color: theme.tokens.alias.Content.Icon.Primary.Hover,
+          },
+        }}
       >
         {renderIcon}
       </IconButton>
