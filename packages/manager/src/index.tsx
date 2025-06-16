@@ -16,8 +16,8 @@ import { storeFactory } from 'src/store';
 import { App } from './App';
 import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
-import { Logout } from './layouts/Logout';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
+import { Logout } from './OAuth/Logout';
 import { useOAuth } from './OAuth/utils';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
@@ -29,11 +29,13 @@ const CancelLanding = React.lazy(() =>
 );
 
 const LoginAsCustomerCallback = React.lazy(() =>
-  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
+  import('src/OAuth/LoginAsCustomerCallback').then((module) => ({
     default: module.LoginAsCustomerCallback,
   }))
 );
-const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+const OAuthCallbackPage = React.lazy(() =>
+  import('src/OAuth/OAuth').then((m) => ({ default: m.OAuthCallbackPage }))
+);
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();

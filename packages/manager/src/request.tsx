@@ -4,13 +4,11 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage } from './OAuth/utils';
-import { redirectToLogin } from './session';
+import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/utils';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';
-import type { Profile } from '@linode/api-v4';
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError, Profile } from '@linode/api-v4';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (

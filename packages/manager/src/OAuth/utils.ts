@@ -1,13 +1,18 @@
 /* eslint-disable no-console */
+import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
+import * as Sentry from '@sentry/react';
 import { useLocation } from 'react-router-dom';
+import { object, string } from 'yup';
 
-import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { redirectToLogin, revokeToken } from 'src/session';
+import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
+  authentication,
   clearUserInput,
   getEnvLocalStorageOverrides,
   storage,
 } from 'src/utilities/storage';
+
+import { generateCodeChallenge, generateCodeVerifier } from './pkce';
 
 interface TokensWithExpiry {
   /**
@@ -48,9 +53,14 @@ export function clearAuthDataFromLocalStorage() {
   storage.authentication.expire.clear();
 }
 
-export function clearNonceAndCodeVerifierFromLocalStorage() {
+function clearNonceAndCodeVerifierFromLocalStorage() {
   storage.authentication.nonce.clear();
   storage.authentication.codeVerifier.clear();
+}
+
+function clearAllAuthDataFromLocalStorage() {
+  clearNonceAndCodeVerifierFromLocalStorage();
+  clearAuthDataFromLocalStorage();
 }
 
 export function getIsLoggedInAsCustomer() {
@@ -81,25 +91,27 @@ export function useOAuth() {
   return { isPendingAuthentication };
 }
 
-function getSafeLoginURL() {
+function getLoginURL() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  let loginUrl = LOGIN_ROOT;
+  return localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+}
 
-  if (localStorageOverrides?.loginRoot) {
-    try {
-      loginUrl = new URL(localStorageOverrides.loginRoot).toString();
-    } catch (error) {
-      console.error('The currently selected Login URL is invalid.', error);
-    }
+function getClientId() {
+  const localStorageOverrides = getEnvLocalStorageOverrides();
+
+  const clientId = localStorageOverrides?.clientID ?? CLIENT_ID;
+
+  if (!clientId) {
+    throw new Error('No CLIENT_ID specified.');
   }
 
-  return loginUrl;
+  return clientId;
 }
 
 export async function logout() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
-  const loginUrl = getSafeLoginURL();
+  const loginUrl = getLoginURL();
   const clientId = localStorageOverrides?.clientID ?? CLIENT_ID;
   const token = storage.authentication.token.get();
 
@@ -120,4 +132,183 @@ export async function logout() {
   }
 
   window.location.assign(`${loginUrl}/logout`);
+}
+
+async function generateCodeVerifierAndChallenge() {
+  const codeVerifier = await generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  authentication.codeVerifier.set(codeVerifier);
+  return { codeVerifier, codeChallenge };
+}
+
+function generateNonce() {
+  const nonce = window.crypto.randomUUID();
+  authentication.nonce.set(nonce);
+  return { nonce };
+}
+
+async function generateOAuthAuthorizeEndpoint(
+  returnTo: string,
+  scope: string = '*'
+) {
+  // Generate and store the nonce and code challange for verifcation later
+  const { nonce } = generateNonce();
+  const { codeChallenge } = await generateCodeVerifierAndChallenge();
+
+  const query = new URLSearchParams({
+    client_id: getClientId(),
+    code_challenge: codeChallenge,
+    code_challenge_method: 'S256',
+    redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${returnTo}`,
+    response_type: 'code',
+    scope,
+    state: nonce,
+  });
+
+  return `${getLoginURL()}/oauth/authorize?${query.toString()}`;
+}
+
+export async function redirectToLogin(
+  returnToPath: string,
+  queryString: string = ''
+) {
+  const returnTo = `${returnToPath}${queryString}`;
+  const authorizeUrl = await generateOAuthAuthorizeEndpoint(returnTo);
+  window.location.assign(authorizeUrl);
+}
+
+export function revokeToken(clientId: string, token: string) {
+  return fetch(`${getLoginURL()}/oauth/revoke`, {
+    body: new URLSearchParams({ client_id: clientId, token }).toString(),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    },
+    method: 'POST',
+  });
+}
+
+export function clearStorageAndRedirectToLogout() {
+  clearAllAuthDataFromLocalStorage();
+  const loginUrl = getLoginURL();
+  window.location.assign(loginUrl + '/logout');
+}
+
+export const OAuthCallbackParamsSchema = object({
+  returnTo: string().default('/'),
+  code: string().required(),
+  state: string().required(), // aka "nonce"
+});
+
+export function getPKCETokenRequestFormData(
+  code: string,
+  nonce: string,
+  codeVerifier: string
+) {
+  const formData = new FormData();
+  formData.append('grant_type', 'authorization_code');
+  formData.append('client_id', getClientId());
+  formData.append('code', code);
+  formData.append('state', nonce);
+  formData.append('code_verifier', codeVerifier);
+  return formData;
+}
+
+interface OAuthCallbackOptions {
+  onSuccess: (returnTo: string) => void;
+}
+
+export async function handleOAuthCallback(options: OAuthCallbackOptions) {
+  try {
+    const {
+      code,
+      returnTo,
+      state: nonce,
+    } = OAuthCallbackParamsSchema.validateSync(
+      getQueryParamsFromQueryString(location.search)
+    );
+
+    const expireDate = new Date();
+    const codeVerifier = authentication.codeVerifier.get();
+
+    if (!codeVerifier) {
+      Sentry.captureException(
+        'No code codeVerifier found in local storage when running OAuth callback.'
+      );
+      clearStorageAndRedirectToLogout();
+      return;
+    }
+
+    authentication.codeVerifier.clear();
+
+    /**
+     * We need to validate that the nonce returned (comes from the location query param as the state param)
+     * matches the one we stored when authentication was started. This confirms the initiator
+     * and receiver are the same.
+     * Nonce should be set and equal to ours otherwise retry auth
+     */
+    const storedNonce = authentication.nonce.get();
+
+    if (!storedNonce) {
+      Sentry.captureException(
+        'No nonce found in local storage when running OAuth callback.'
+      );
+      clearStorageAndRedirectToLogout();
+      return;
+    }
+
+    authentication.nonce.clear();
+
+    if (storedNonce !== nonce) {
+      Sentry.captureException(
+        'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
+      );
+      clearStorageAndRedirectToLogout();
+      return;
+    }
+
+    const formData = getPKCETokenRequestFormData(code, nonce, codeVerifier);
+
+    try {
+      const response = await fetch(`${getLoginURL()}/oauth/token`, {
+        body: formData,
+        method: 'POST',
+      });
+
+      if (response.ok) {
+        const tokenParams = await response.json();
+
+        /**
+         * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
+         * the API returns the expiry time in seconds
+         */
+        expireDate.setTime(
+          expireDate.getTime() + +tokenParams.expires_in * 1000
+        );
+
+        setAuthDataInLocalStorage({
+          token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
+          scopes: tokenParams.scopes,
+          expires: expireDate.toString(),
+        });
+
+        options.onSuccess(returnTo);
+      } else {
+        Sentry.captureException("Request to /oauth/token was not 'ok'.", {
+          extra: { statusCode: response.status },
+        });
+        clearStorageAndRedirectToLogout();
+      }
+    } catch (error) {
+      Sentry.captureException(error, {
+        extra: { message: 'Request to /oauth/token failed.' },
+      });
+    }
+  } catch (error) {
+    Sentry.captureException(error, {
+      extra: {
+        message: 'Error when parsing search params on OAuth callback.',
+      },
+    });
+    clearStorageAndRedirectToLogout();
+  }
 }

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { act } from 'react';
 
 import { LOGIN_ROOT } from 'src/constants';
-import { OAuthCallbackPage } from 'src/layouts/OAuth';
+import { OAuthCallbackPage } from 'src/OAuth/OAuth';
 import * as utils from 'src/OAuth/utils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
