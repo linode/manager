@@ -35,18 +35,18 @@ export const WIDGETS = 'widgets';
 export const PORT = 'port';
 
 export const PORTS_HELPER_TEXT =
-  'Enter one or more ports (1-65535) comma-separated numbers.';
+  'Enter one or more port numbers (1-65535) separated by commas.';
 
 export const PORTS_ERROR_MESSAGE =
-  'Input must be an integer or a comma-separated list of integers.';
+  'Enter valid port numbers as integers separated by commas.';
 
-export const PORTS_RANGE_ERROR_MESSAGE = 'Must be 1-65535.';
+export const PORTS_RANGE_ERROR_MESSAGE =
+  'Port numbers must be between 1 and 65535.';
 
 export const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
-  'Consecutive commas are not allowed.';
+  'Use a single comma to separate port numbers.';
 
 export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
-  'Ports must not have leading commas.';
+  'First character must be an integer.';
 
-export const PORTS_LIMIT_ERROR_MESSAGE =
-  'Number of ports exceeded. Max allowed is 15.';
+export const PORTS_LIMIT_ERROR_MESSAGE = 'Enter a maximum of 15 port numbers';
