@@ -1,6 +1,13 @@
-import { grantsFactory, profileFactory } from '@linode/utilities';
+import {
+  accountAvailabilityFactory,
+  grantsFactory,
+  profileFactory,
+} from '@linode/utilities';
 import { accountUserFactory, kubernetesClusterFactory } from '@src/factories';
-import { mockGetUser } from 'support/intercepts/account';
+import {
+  mockGetAccountAvailability,
+  mockGetUser,
+} from 'support/intercepts/account';
 import { mockCreateCluster } from 'support/intercepts/lke';
 import {
   mockGetProfile,
@@ -9,6 +16,9 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
 import { chooseRegion } from 'support/util/regions';
+
+import type { AccountAvailability } from '@linode/api-v4';
+import type { ExtendedRegion } from 'support/util/regions';
 
 /**
  * Performs a click operation on Cypress subject a given number of times.
@@ -58,6 +68,20 @@ const minimumNodeNotice =
   'We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.';
 
 describe('LKE Create Cluster', () => {
+  let clusterRegion: ExtendedRegion;
+  let accountAvailability: AccountAvailability;
+
+  beforeEach(() => {
+    clusterRegion = chooseRegion({
+      capabilities: ['Kubernetes'],
+    });
+    accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   it('Simple Page Check', () => {
     const mockCluster = kubernetesClusterFactory.build({
       id: randomNumber(10000, 99999),
@@ -70,7 +94,7 @@ describe('LKE Create Cluster', () => {
     cy.findByLabelText('Cluster Label').click();
     cy.focused().type(mockCluster.label);
 
-    ui.regionSelect.find().click().type(`${chooseRegion().label}{enter}`);
+    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
     cy.findByLabelText('Kubernetes Version').should('be.visible').click();
     cy.findByText('1.32').should('be.visible').click();

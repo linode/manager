@@ -2,6 +2,7 @@
  * @file LKE creation end-to-end tests.
  */
 import {
+  accountAvailabilityFactory,
   accountBetaFactory,
   dedicatedTypeFactory,
   linodeTypeFactory,
@@ -21,7 +22,10 @@ import {
   latestEnterpriseTierKubernetesVersion,
   latestKubernetesVersion,
 } from 'support/constants/lke';
-import { mockGetAccount } from 'support/intercepts/account';
+import {
+  mockGetAccount,
+  mockGetAccountAvailability,
+} from 'support/intercepts/account';
 import { mockGetAccountBeta } from 'support/intercepts/betas';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeTypes } from 'support/intercepts/linodes';
@@ -215,6 +219,14 @@ describe('LKE Cluster Creation', () => {
     mockedLKEClusterTypes
   );
 
+  beforeEach(() => {
+    const accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   it('can create an LKE cluster', () => {
     mockCreateCluster(mockedLKECluster).as('createCluster');
     mockGetCluster(mockedLKECluster).as('getCluster');
@@ -389,6 +401,14 @@ describe('LKE Cluster Creation', () => {
 });
 
 describe('LKE Cluster Creation with APL enabled', () => {
+  beforeEach(() => {
+    const accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   it('can create an LKE cluster with APL flag enabled', () => {
     const clusterLabel = randomLabel();
     const mockedLKECluster = kubernetesClusterFactory.build({
@@ -475,7 +495,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       .click();
     cy.focused().type(`${clusterLabel}{enter}`);
 
-    ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
+    const region = clusterRegion.label;
+    ui.regionSelect.find().click().type(`${region}{enter}`);
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
     cy.findByTestId('apl-beta-chip').should('have.text', 'BETA');
@@ -544,6 +565,14 @@ describe('LKE Cluster Creation with APL enabled', () => {
 });
 
 describe('LKE Cluster Creation with DC-specific pricing', () => {
+  beforeEach(() => {
+    const accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   /*
    * - Confirms that DC-specific prices are present in the LKE create form.
    * - Confirms that pricing docs link is shown in "Region" section.
@@ -662,6 +691,14 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 });
 
 describe('LKE Cluster Creation with ACL', () => {
+  beforeEach(() => {
+    const accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   /**
    * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
    */
@@ -1306,6 +1343,14 @@ describe('LKE Cluster Creation with ACL', () => {
 });
 
 describe('LKE Cluster Creation with LKE-E', () => {
+  beforeEach(() => {
+    const accountAvailability = accountAvailabilityFactory.build({
+      region: clusterRegion.id,
+      unavailable: [],
+    });
+    mockGetAccountAvailability([accountAvailability]);
+  });
+
   /**
    * - Confirms LKE-E flow does not exist if account doesn't have the corresponding capability
    * @todo LKE-E: Remove this test once LKE-E is fully rolled out
