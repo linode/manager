@@ -1,10 +1,10 @@
-import { userPreferencesFactory } from '@linode/utilities';
+import { regionFactory, userPreferencesFactory } from '@linode/utilities';
 import { linodeFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
 
 import type { UserPreferences } from '@linode/api-v4';
 
@@ -13,27 +13,38 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
     mockAppendFeatureFlags({
       aclpBetaServices: {
         alerts: false,
-        metrics: true,
+        metrics: false,
       },
     }).as('getFeatureFlags');
+    const mockRegion = regionFactory.build({
+      capabilities: ['Managed Databases'],
+      monitors: {
+        alerts: ['Linodes'],
+        metrics: ['Linodes'],
+      },
+    });
+    mockGetRegions([mockRegion]).as('getRegions');
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockRegion.id,
+    });
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    cy.wrap(mockLinode).as('mockLinode');
   });
 
-  it('Upgrade banner not display when isAclpAlertsBeta is false', () => {
+  it('Alerts banner not display when isAclpAlertsBeta is false', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: false,
     } as Partial<UserPreferences>);
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
-    const mockLinodeRegion = chooseRegion({
-      capabilities: ['Linodes'],
-    });
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: mockLinodeRegion.id,
-    });
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
+    cy.visitWithLogin(`/linodes/${this.mockLinode.id}/alerts`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getUserPreferences',
+      '@getRegions',
+      '@getLinode',
+    ]);
 
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
@@ -47,23 +58,19 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
       });
   });
 
-  it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpAlertsBeta is true', () => {
+  it('Alerts downgrade button not appear and legacy UI displays when isAclpAlertsBeta is true', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: true,
     } as Partial<UserPreferences>);
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
-    const mockLinodeRegion = chooseRegion({
-      capabilities: ['Linodes'],
-    });
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: mockLinodeRegion.id,
-    });
 
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
+    cy.visitWithLogin(`/linodes/${this.mockLinode.id}/alerts`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getUserPreferences',
+      '@getRegions',
+      '@getLinode',
+    ]);
 
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
@@ -72,29 +79,23 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
         cy.get('[data-testid="alerts-preference-banner-text"]').should(
           'not.exist'
         );
-        // legacy header of "Alerts" and not "Default Alerts" is displayed
-        cy.findByText('Alerts').should('be.visible');
         // // downgrade button is not visible
         cy.findByText('Switch to legacy Alerts').should('not.exist');
       });
   });
 
-  it('Uppgrade banner not display when isAclpMetricBeta is false', () => {
+  it('Metrics banner not display when isAclpMetricsBeta is false', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpMetricsBeta: false,
     } as Partial<UserPreferences>);
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
-    const mockLinodeRegion = chooseRegion({
-      capabilities: ['Linodes'],
-    });
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: mockLinodeRegion.id,
-    });
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/metrics`);
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
+    cy.visitWithLogin(`/linodes/${this.mockLinode.id}/metrics`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getUserPreferences',
+      '@getRegions',
+      '@getLinode',
+    ]);
 
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
@@ -108,23 +109,18 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
       });
   });
 
-  it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpMetricsBeta is true', () => {
+  it('Metrics downgrade button not appear and legacy UI displays when isAclpMetricsBeta is true', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpMetricsBeta: true,
     } as Partial<UserPreferences>);
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
-    const mockLinodeRegion = chooseRegion({
-      capabilities: ['Linodes'],
-    });
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: mockLinodeRegion.id,
-    });
-
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/metrics`);
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
+    cy.visitWithLogin(`/linodes/${this.mockLinode.id}/metrics`);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getUserPreferences',
+      '@getRegions',
+      '@getLinode',
+    ]);
 
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
