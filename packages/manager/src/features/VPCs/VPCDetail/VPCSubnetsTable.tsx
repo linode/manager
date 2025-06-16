@@ -363,7 +363,10 @@ export const VPCSubnetsTable = (props: Props) => {
                   />
                 ))
               ) : (
-                <TableRowEmpty colSpan={6} message="No Linodes" />
+                <TableRowEmpty
+                  colSpan={flags.vpcIpv6 ? 8 : 6}
+                  message="No Linodes"
+                />
               )}
             </TableBody>
           </Table>
