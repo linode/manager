@@ -18,4 +18,5 @@ export const regionSelectGlobalOption: Region = {
   resolvers: { ipv4: '', ipv6: '' },
   site_type: 'core',
   status: 'ok',
+  monitors: { alerts: [], metrics: [] },
 };
