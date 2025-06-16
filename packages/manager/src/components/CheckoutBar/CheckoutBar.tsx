@@ -1,6 +1,7 @@
 import { Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { DisplayPrice } from 'src/components/DisplayPrice';
 
