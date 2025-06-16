@@ -11,7 +11,6 @@ export const serviceAlertFactory = Factory.Sync.makeFactory<ServiceAlert>({
 export const serviceTypesFactory = Factory.Sync.makeFactory<Service>({
   label: Factory.each((i) => `Factory ServiceType-${i}`),
   service_type: Factory.each((i) => `Factory ServiceType-${i}`),
-  is_beta: true,
   regions: regionFactory
     .buildList(3)
     .map(({ id }) => id)
