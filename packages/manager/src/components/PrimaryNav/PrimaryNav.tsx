@@ -33,6 +33,7 @@ import type { PrimaryLink as PrimaryLinkType } from './PrimaryLink';
 
 export type NavEntity =
   | 'Account'
+  | 'Akamai Cloud WAF'
   | 'Alerts'
   | 'Betas'
   | 'Cloud Load Balancers'
@@ -64,6 +65,7 @@ export type ProductFamily =
   | 'Monitor'
   | 'More'
   | 'Networking'
+  | 'Security'
   | 'Storage';
 
 export interface ProductFamilyLinkGroup<T> {
@@ -220,6 +222,16 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             },
           ],
           name: 'Databases',
+        },
+        {
+          icon: <Database />,
+          links: [
+            {
+              display: 'Akamai Cloud WAF',
+              href: '/waf',
+            },
+          ],
+          name: 'Security',
         },
         {
           icon: <Monitor />,

@@ -29,6 +29,7 @@ import { stackScriptsRouteTree } from './stackscripts';
 import { supportRouteTree } from './support';
 import { volumesRouteTree } from './volumes';
 import { vpcsRouteTree } from './vpcs';
+import { wafRouteTree } from './waf';
 
 const indexRoute = createRoute({
   beforeLoad: ({ context }) => {
@@ -65,6 +66,7 @@ export const routeTree = rootRoute.addChildren([
   supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
+  wafRouteTree,
 ]);
 
 export const router = createRouter({
@@ -111,6 +113,7 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   supportRouteTree,
   volumesRouteTree,
   vpcsRouteTree,
+  wafRouteTree,
 ]);
 export type MigrationRouteTree = typeof migrationRouteTree;
 export const migrationRouter = createRouter({
