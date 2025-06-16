@@ -11,7 +11,6 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Prompt } from 'src/components/Prompt/Prompt';
-import { useFlags } from 'src/hooks/useFlags';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -23,15 +22,14 @@ interface Props {
   /**
    * Optional Linode ID.
    * - If provided, the Alerts Panel will be in the edit flow mode.
-   * - If not provided, the Alerts Panel will be in the create flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode (read-only).
    */
   linodeId?: number;
 }
 
-export const LinodeSettingsAlertsPanel = (props: Props) => {
+export const AlertsPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const flags = useFlags();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -246,9 +244,6 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = flags.aclpBetaServices?.alerts
-    ? 'Default Alerts'
-    : 'Alerts';
 
   const hasUnsavedChanges = formik.dirty;
 
@@ -260,25 +255,22 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             actions={() => (
               <ActionsPanel
                 primaryButtonProps={{
-                  label: 'Go back and review changes',
-                  onClick: handleCancel,
+                  label: 'Confirm',
+                  onClick: handleConfirm,
                 }}
                 secondaryButtonProps={{
-                  buttonType: 'secondary',
-                  color: 'error',
-                  label: 'Leave and discard changes',
-                  onClick: handleConfirm,
+                  buttonType: 'outlined',
+                  label: 'Cancel',
+                  onClick: handleCancel,
                 }}
               />
             )}
             onClose={handleCancel}
             open={isModalOpen}
-            title="Unsaved Legacy Alerts changes"
+            title="Unsaved Changes"
           >
-            <Typography variant="subtitle1">
+            <Typography variant="body1">
               Are you sure you want to leave the page? You have unsaved changes.
-              If you navigate away from this page, your changes will be
-              discarded.
             </Typography>
           </ConfirmationDialog>
         )}
@@ -294,7 +286,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
             sx={(theme) => ({ mb: theme.spacingFunction(12) })}
             variant="h2"
           >
-            {alertsHeading}
+            Alerts
           </Typography>
         )}
         {generalError && <Notice variant="error">{generalError}</Notice>}
