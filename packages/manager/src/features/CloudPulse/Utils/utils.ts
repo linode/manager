@@ -293,7 +293,7 @@ export const handlePaste =
   (value: string, setErrorText: (error: string | undefined) => void) =>
   (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedData = e.clipboardData.getData('text');
-    if (!/^[0-9,]+$/.test(pastedData)) {
+    if (!/^[\d,]+$/.test(pastedData)) {
       e.preventDefault();
       setErrorText(PORTS_ERROR_MESSAGE);
       return;
