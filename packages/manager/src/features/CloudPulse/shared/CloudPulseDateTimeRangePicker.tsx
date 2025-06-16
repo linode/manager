@@ -1,10 +1,15 @@
 import { useProfile } from '@linode/queries';
+import { DateTimeRangePicker } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React from 'react';
 
-import { DateTimeRangePicker } from 'src/components/DatePicker/DateTimeRangePicker';
-
 import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
+
+interface DateChangeProps {
+  endDate: null | string;
+  selectedPreset: null | string;
+  startDate: null | string;
+}
 
 interface CloudPulseDateTimeRangePickerProps {
   defaultValue?: Partial<FilterValue>;
@@ -28,21 +33,16 @@ export const CloudPulseDateTimeRangePicker = React.memo(
       }
     }, []);
 
-    const handleDateChange = (params: {
-      end: null | string;
-      preset?: string;
-      start: null | string;
-      timezone?: null | string;
-    }) => {
-      const { end, preset, start } = params;
-      if (!end || !start || !preset) {
+    const handleDateChange = (params: DateChangeProps) => {
+      const { endDate, selectedPreset, startDate } = params;
+      if (!endDate || !startDate || !selectedPreset) {
         return;
       }
       handleStatsChange(
         {
-          end,
-          preset,
-          start,
+          end: endDate,
+          preset: selectedPreset,
+          start: startDate,
         },
         savePreferences
       );
@@ -57,8 +57,6 @@ export const CloudPulseDateTimeRangePicker = React.memo(
 
     return (
       <DateTimeRangePicker
-        disabledTimeZone
-        enablePresets
         endDateProps={{
           label: 'End Date',
           placeholder: 'Select End Date',
@@ -66,9 +64,10 @@ export const CloudPulseDateTimeRangePicker = React.memo(
           value: end,
         }}
         format="yyyy-MM-dd hh:mm a"
-        onChange={handleDateChange}
+        onApply={handleDateChange}
         presetsProps={{
           defaultValue: defaultSelected?.preset,
+          enablePresets: true,
         }}
         startDateProps={{
           label: 'Start Date',
