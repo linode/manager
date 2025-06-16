@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
+- Inability for restricted users to configure High Availability or IP ACLs on LKE clusters ([#11274](https://github.com/linode/manager/pull/11274))
 - Radio button size in plans table ([#12261](https://github.com/linode/manager/pull/12261))
 - Styling issues in `DomainRecords` and `forwardRef` console errors in Object Storage Access ([#12279](https://github.com/linode/manager/pull/12279))
 - Radio button styling inconsistencies across themes and states ([#12284](https://github.com/linode/manager/pull/12284))
