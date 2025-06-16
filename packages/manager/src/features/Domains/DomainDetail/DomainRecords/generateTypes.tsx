@@ -1,13 +1,13 @@
 import { Button } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { getNSRecords, getTimeColumn, typeEq } from './DomainRecordsUtils';
+import { TruncatedWithTooltip } from './TruncatedWithTooltip';
 
 import type { Props as DomainRecordsProps } from './DomainRecords';
 import type { Domain, DomainRecord } from '@linode/api-v4/lib/domains';
-
 export interface IType {
   columns: {
     render: (record: Domain | DomainRecord) => JSX.Element | null | string;
@@ -272,8 +272,18 @@ export const generateTypes = (
   /** CNAME Record */
   {
     columns: [
-      { render: (record: DomainRecord) => record.name, title: 'Hostname' },
-      { render: (record: DomainRecord) => record.target, title: 'Aliases to' },
+      {
+        render: (record: DomainRecord) => (
+          <TruncatedWithTooltip text={record.name} />
+        ),
+        title: 'Hostname',
+      },
+      {
+        render: (record: DomainRecord) => (
+          <TruncatedWithTooltip text={record.target} />
+        ),
+        title: 'Aliases to',
+      },
       {
         render: (record: DomainRecord) => getTimeColumn(record, 'ttl_sec'),
         title: 'TTL',

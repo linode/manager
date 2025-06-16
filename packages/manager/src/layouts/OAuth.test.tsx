@@ -1,8 +1,7 @@
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { createMemoryHistory } from 'history';
-import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { act } from 'react-dom/test-utils';
+import { act } from 'react';
 
 import { LOGIN_ROOT } from 'src/constants';
 import { OAuthCallbackPage } from 'src/layouts/OAuth';
@@ -77,7 +76,7 @@ describe('layouts/OAuth', () => {
 
     it('returns an empty object for an empty string', () => {
       const res = getQueryParamsFromQueryString<OAuthQueryParams>('');
-      expect(isEmpty(res)).toBe(true);
+      expect(res).toStrictEqual({});
     });
 
     it("doesn't truncate values that include =", () => {

@@ -1,11 +1,17 @@
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 
 import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  LAST_ACCOUNT_ADMIN_ERROR,
+} from './constants';
+import {
   changeRoleForEntity,
+  changeUserRole,
   deleteUserEntity,
   deleteUserRole,
   getAllRoles,
+  getErrorMessage,
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
@@ -13,7 +19,6 @@ import {
   mergeAssignedRolesIntoExistingRoles,
   partition,
   toEntityAccess,
-  updateUserRoles,
 } from './utilities';
 
 import type { EntitiesRole, ExtendedRoleView, RoleView } from './types';
@@ -23,7 +28,7 @@ import type { EntityAccess } from '@linode/api-v4';
 const accountAccess = 'account_access';
 const entityAccess = 'entity_access';
 
-const accountPermissions = accountPermissionsFactory.build({
+const accountPermissions = accountRolesFactory.build({
   account_access: [
     {
       roles: [
@@ -62,7 +67,7 @@ const accountPermissions = accountPermissionsFactory.build({
   ],
 });
 
-const userPermissions = userPermissionsFactory.build({
+const userPermissions = userRolesFactory.build({
   account_access: ['account_linode_admin', 'linode_creator'],
   entity_access: [
     {
@@ -196,7 +201,7 @@ describe('getRoleByName', () => {
   });
 });
 
-describe('updateUserRoles', () => {
+describe('changeUserRole', () => {
   it('should return an object of updated users roles with resource access', () => {
     const expectedRoles = {
       account_access: ['account_linode_admin', 'linode_creator'],
@@ -212,7 +217,7 @@ describe('updateUserRoles', () => {
     const initialRole = 'linode_contributor';
     const newRole = 'linode_admin';
     expect(
-      updateUserRoles({
+      changeUserRole({
         access: entityAccess,
         assignedRoles: userPermissions,
         initialRole,
@@ -243,7 +248,7 @@ describe('deleteUserRole', () => {
   it('should return an object of updated users roles with resource access', () => {
     const initialRole = 'linode_contributor';
 
-    const userPermissions = userPermissionsFactory.build();
+    const userPermissions = userRolesFactory.build();
 
     const expectedRoles = {
       account_access: [
@@ -344,7 +349,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
-    const userPermissions = userPermissionsFactory.build({
+    const userPermissions = userRolesFactory.build({
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [
         {
@@ -388,7 +393,7 @@ describe('changeRoleForEntity', () => {
   });
 
   it('should return an object of updated users roles with entity access', () => {
-    const userPermissions = userPermissionsFactory.build({
+    const userPermissions = userRolesFactory.build({
       account_access: ['account_linode_admin', 'linode_creator'],
       entity_access: [
         {
@@ -815,5 +820,39 @@ describe('mapEntityTypesForSelect', () => {
         value: 'volume',
       },
     ]);
+  });
+});
+
+describe('getErrorMessage', () => {
+  it('should return LAST_ACCOUNT_ADMIN_ERROR if the error contains "Removing last account admin"', () => {
+    const errors = [
+      {
+        reason: 'Request made to janus is invalid',
+        field: 'Bad janus request',
+      },
+      {
+        reason:
+          'Can not remove account admin access from the last account admin on the account',
+        field: 'Removing last account admin',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(LAST_ACCOUNT_ADMIN_ERROR);
+  });
+
+  it('should return INTERNAL_ERROR_NO_CHANGES_SAVED if the error does not contain "Removing last account admin"', () => {
+    const errors = [
+      {
+        field: 'An unexpected error occurred.',
+        reason: 'An unexpected error occurred.',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(INTERNAL_ERROR_NO_CHANGES_SAVED);
+  });
+
+  it('should return undefined if there are no errors', () => {
+    const result = getErrorMessage(null);
+    expect(result).toBeUndefined();
   });
 });

@@ -1,4 +1,4 @@
-import { useAccountUser } from '@linode/queries';
+import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
@@ -6,12 +6,10 @@ import {
   Typography,
   useTheme,
 } from '@linode/ui';
-import { isEmpty } from 'ramda';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import {
   ERROR_STATE_TEXT,
@@ -23,16 +21,17 @@ import { AssignedEntitiesTable } from './AssignedEntitiesTable';
 export const UserEntities = () => {
   const theme = useTheme();
 
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
   const {
     data: assignedRoles,
     isLoading,
     error: assignedRolesError,
-  } = useAccountUserPermissions(username ?? '');
+  } = useUserRoles(username ?? '');
+
   const { error } = useAccountUser(username ?? '');
 
   const hasAssignedRoles = assignedRoles
-    ? !isEmpty(assignedRoles.entity_access)
+    ? assignedRoles.entity_access.length > 0
     : false;
 
   if (isLoading) {

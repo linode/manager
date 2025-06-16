@@ -1,4 +1,8 @@
-import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import {
+  useLinodeQuery,
+  useLinodeUpdateMutation,
+  useTypeQuery,
+} from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useFormik } from 'formik';
@@ -8,7 +12,6 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -17,7 +20,12 @@ import type { Linode } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
-  linodeId: number;
+  /**
+   * Optional Linode ID.
+   * - If provided, the Alerts Panel will be in the edit flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode.
+   */
+  linodeId?: number;
 }
 
 export const LinodeSettingsAlertsPanel = (props: Props) => {
@@ -25,13 +33,16 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
   const flags = useFlags();
 
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined
+  );
 
   const {
     error,
     isPending,
     mutateAsync: updateLinode,
-  } = useLinodeUpdateMutation(linodeId);
+  } = useLinodeUpdateMutation(linodeId ?? -1);
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -40,15 +51,27 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
 
   const isBareMetalInstance = type?.class === 'metal';
 
+  const isCreateFlow = !linodeId;
+
+  const initialValues = isCreateFlow
+    ? {
+        cpu: 90,
+        io: 10000,
+        network_in: 10,
+        network_out: 10,
+        transfer_quota: 80,
+      }
+    : {
+        cpu: linode?.alerts.cpu ?? 0,
+        io: linode?.alerts.io ?? 0,
+        network_in: linode?.alerts.network_in ?? 0,
+        network_out: linode?.alerts.network_out ?? 0,
+        transfer_quota: linode?.alerts.transfer_quota ?? 0,
+      };
+
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
-    initialValues: {
-      cpu: linode?.alerts.cpu ?? 0,
-      io: linode?.alerts.io ?? 0,
-      network_in: linode?.alerts.network_in ?? 0,
-      network_out: linode?.alerts.network_out ?? 0,
-      transfer_quota: linode?.alerts.transfer_quota ?? 0,
-    },
+    initialValues,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
@@ -223,7 +246,9 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = flags.aclpIntegration ? 'Default Alerts' : 'Alerts';
+  const alertsHeading = flags.aclpBetaServices?.alerts
+    ? 'Default Alerts'
+    : 'Alerts';
 
   const hasUnsavedChanges = formik.dirty;
 
@@ -259,29 +284,37 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         )}
       </Prompt>
 
-      <Paper sx={(theme) => ({ pb: theme.spacingFunction(16) })}>
-        <Typography
-          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-          variant="h2"
-        >
-          {alertsHeading}
-        </Typography>
+      <Paper
+        sx={(theme) =>
+          isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
+        }
+      >
+        {!isCreateFlow && (
+          <Typography
+            sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+            variant="h2"
+          >
+            {alertsHeading}
+          </Typography>
+        )}
         {generalError && <Notice variant="error">{generalError}</Notice>}
         {alertSections.map((p, idx) => (
           <React.Fragment key={`alert-${idx}`}>
-            <AlertSection {...p} readOnly={isReadOnly} />
+            <AlertSection {...p} readOnly={isReadOnly || isCreateFlow} />
             {idx !== alertSections.length - 1 ? <Divider /> : null}
           </React.Fragment>
         ))}
-        <StyledActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'alerts-save',
-            disabled: isReadOnly || !formik.dirty,
-            label: 'Save',
-            loading: isPending,
-            onClick: () => formik.handleSubmit(),
-          }}
-        />
+        {!isCreateFlow && (
+          <StyledActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'alerts-save',
+              disabled: isReadOnly || !formik.dirty,
+              label: 'Save',
+              loading: isPending,
+              onClick: () => formik.handleSubmit(),
+            }}
+          />
+        )}
       </Paper>
     </>
   );
