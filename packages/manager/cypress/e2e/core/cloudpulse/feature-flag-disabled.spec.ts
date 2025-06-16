@@ -8,12 +8,13 @@ import { chooseRegion } from 'support/util/regions';
 
 import type { UserPreferences } from '@linode/api-v4';
 
-describe('ACLP Components UI when aclpIntegration feature flag disabled', () => {
-  // TODO: what is proper definition of a) downgrade banner  b) legacy metrics
-  // TODO: M3-10057 modify these tests when aclpIntegration ff removed
+describe('User preferences for alerts and metrics have no effect when aclpBetaServices alerts/metrics feature flag disabled', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
-      aclpIntegration: false,
+      aclpBetaServices: {
+        alerts: false,
+        metrics: true,
+      },
     }).as('getFeatureFlags');
   });
 
@@ -41,6 +42,8 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
         cy.get('[data-testid="alerts-preference-banner-text"]').should(
           'not.exist'
         );
+        // downgrade button is not visible
+        cy.findByText('Switch to legacy Alerts').should('not.exist');
       });
   });
 
@@ -78,7 +81,7 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
 
   it('Uppgrade banner not display when isAclpMetricBeta is false', () => {
     const userPreferences = userPreferencesFactory.build({
-      isAclpMetricBeta: false,
+      isAclpMetricsBeta: false,
     } as Partial<UserPreferences>);
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
     const mockLinodeRegion = chooseRegion({
@@ -90,48 +93,48 @@ describe('ACLP Components UI when aclpIntegration feature flag disabled', () => 
       region: mockLinodeRegion.id,
     });
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
-
-    cy.get('[data-reach-tab-panels]')
-      .should('be.visible')
-      .within(() => {
-        // upgrade banner does not display
-        cy.get('[data-testid="alerts-preference-banner-text"]').should(
-          'not.exist'
-        );
-      });
-  });
-
-  it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpMetricBeta is true', () => {
-    const userPreferences = userPreferencesFactory.build({
-      isAclpMetricBeta: true,
-    } as Partial<UserPreferences>);
-    mockGetUserPreferences(userPreferences).as('getUserPreferences');
-    const mockLinodeRegion = chooseRegion({
-      capabilities: ['Linodes'],
-    });
-    const mockLinode = linodeFactory.build({
-      id: randomNumber(),
-      label: randomLabel(),
-      region: mockLinodeRegion.id,
-    });
-
-    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-    cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/metrics`);
     cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
 
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
       .within(() => {
         // upgrade banner is not visible
-        cy.get('[data-testid="alerts-preference-banner-text"]').should(
+        cy.get('[data-testid="metrics-preference-banner-text"]').should(
           'not.exist'
         );
-        // legacy header of "Alerts" and not "Default Alerts" is displayed
-        cy.findByText('Alerts').should('be.visible');
         // downgrade button is not visible
-        cy.findByText('Switch to legacy Alerts').should('not.exist');
+        cy.findByText('Switch to legacy Metrics').should('not.exist');
+      });
+  });
+
+  it('ACLP alerts downgrade button not appear and legacy UI displays when isAclpMetricsBeta is true', () => {
+    const userPreferences = userPreferencesFactory.build({
+      isAclpMetricsBeta: true,
+    } as Partial<UserPreferences>);
+    mockGetUserPreferences(userPreferences).as('getUserPreferences');
+    const mockLinodeRegion = chooseRegion({
+      capabilities: ['Linodes'],
+    });
+    const mockLinode = linodeFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      region: mockLinodeRegion.id,
+    });
+
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
+    cy.visitWithLogin(`/linodes/${mockLinode.id}/metrics`);
+    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getLinode']);
+
+    cy.get('[data-reach-tab-panels]')
+      .should('be.visible')
+      .within(() => {
+        // upgrade banner is not visible
+        cy.get('[data-testid="metrics-preference-banner-text"]').should(
+          'not.exist'
+        );
+        // downgrade button is not visible
+        cy.findByText('Switch to legacy Metrics').should('not.exist');
       });
   });
 });
