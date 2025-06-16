@@ -14,13 +14,11 @@ const localStorageOverrides = getEnvLocalStorageOverrides();
 const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
 const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
-let codeVerifier: string = '';
-let codeChallenge: string = '';
-
-export async function generateCodeVerifierAndChallenge(): Promise<void> {
-  codeVerifier = await generateCodeVerifier();
-  codeChallenge = await generateCodeChallenge(codeVerifier);
+export async function generateCodeVerifierAndChallenge() {
+  const codeVerifier = await generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
   authentication.codeVerifier.set(codeVerifier);
+  return { codeVerifier, codeChallenge };
 }
 
 /**
@@ -35,7 +33,8 @@ export async function generateCodeVerifierAndChallenge(): Promise<void> {
 export const genOAuthEndpoint = (
   redirectUri: string,
   scope: string = '*',
-  nonce: string
+  nonce: string,
+  codeChallenge: string,
 ): string => {
   if (!clientID) {
     throw new Error('No CLIENT_ID specified.');
@@ -66,11 +65,12 @@ export const genOAuthEndpoint = (
  */
 export const prepareOAuthEndpoint = (
   redirectUri: string,
+  codeChallenge: string,
   scope: string = '*'
 ): string => {
   const nonce = window.crypto.randomUUID();
   authentication.nonce.set(nonce);
-  return genOAuthEndpoint(redirectUri, scope, nonce);
+  return genOAuthEndpoint(redirectUri, scope, nonce, codeChallenge);
 };
 
 /**
@@ -86,9 +86,9 @@ export const redirectToLogin = async (
   queryString: string = ''
 ) => {
   clearNonceAndCodeVerifierFromLocalStorage();
-  await generateCodeVerifierAndChallenge();
+  const { codeChallenge } = await generateCodeVerifierAndChallenge();
   const redirectUri = `${returnToPath}${queryString}`;
-  window.location.assign(prepareOAuthEndpoint(redirectUri));
+  window.location.assign(prepareOAuthEndpoint(redirectUri, codeChallenge));
 };
 
 export const revokeToken = (client_id: string, token: string) => {
