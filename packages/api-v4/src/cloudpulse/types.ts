@@ -354,3 +354,23 @@ export interface DeleteAlertPayload {
   alertId: number;
   serviceType: string;
 }
+
+/**
+ * Represents the payload for CloudPulse alerts, included only when the ACLP beta mode is enabled.
+ *
+ * In Beta mode, the `alerts` object contains enabled system and user alert IDs.
+ * - Legacy mode: `alerts` is not included (read-only mode).
+ * - Beta mode: `alerts` is passed and editable.
+ */
+export interface CloudPulseAlertsPayload {
+  /**
+   * Array of enabled system alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  system: number[];
+  /**
+   * Array of enabled user alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  user: number[];
+}
