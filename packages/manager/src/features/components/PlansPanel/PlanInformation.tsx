@@ -2,7 +2,6 @@ import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { StyledNoticeTypography } from 'src/features/components/PlansPanel/PlansAvailabilityNotice.styles';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { APLNotice } from './APLNotice';
@@ -17,6 +16,7 @@ import {
 } from './constants';
 import { MetalNotice } from './MetalNotice';
 import { PlansAvailabilityNotice } from './PlansAvailabilityNotice';
+import { PlanNoticeTypography } from './PlansAvailabilityNotice.styles';
 import { planTabInfoContent } from './utils';
 
 import type { Region } from '@linode/api-v4';
@@ -143,9 +143,9 @@ export const PlanInformation = (props: PlanInformationProps) => {
           })}
           variant="warning"
         >
-          <StyledNoticeTypography>
+          <PlanNoticeTypography>
             These plans have limited deployment availability.
-          </StyledNoticeTypography>
+          </PlanNoticeTypography>
         </Notice>
       )}
       <ClassDescriptionCopy planType={planType} />

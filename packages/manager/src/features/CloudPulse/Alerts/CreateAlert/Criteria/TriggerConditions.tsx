@@ -4,10 +4,7 @@ import * as React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import {
-  convertSecondsToHumanReadable,
-  getAlertBoxStyles,
-} from '../../Utils/utils';
+import { convertSecondsToOptions, getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type {
@@ -56,7 +53,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       .filter((value) => value >= maxScrapingInterval)
       .map((value) => ({
         value,
-        label: convertSecondsToHumanReadable(value),
+        label: convertSecondsToOptions(value),
       }));
   }, [serviceMetadata, maxScrapingInterval]);
 
@@ -66,7 +63,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
       .filter((value) => value >= maxScrapingInterval)
       .map((value) => ({
         value,
-        label: convertSecondsToHumanReadable(value),
+        label: convertSecondsToOptions(value),
       }));
   }, [serviceMetadata, maxScrapingInterval]);
 

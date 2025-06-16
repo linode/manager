@@ -12,7 +12,7 @@ const EvaluationPeriodTestId = 'evaluation-period';
 
 const PollingIntervalTestId = 'polling-interval';
 
-import { convertSecondsToHumanReadable } from '../../Utils/utils';
+import { convertSecondsToOptions } from '../../Utils/utils';
 
 import type { ServiceAlert } from '@linode/api-v4';
 
@@ -24,13 +24,13 @@ const mockServiceAlertMetadata: ServiceAlert = {
 
 const evaluationPeriodOptions =
   mockServiceAlertMetadata.evaluation_periods_seconds.map((value) => ({
-    label: convertSecondsToHumanReadable(value),
+    label: convertSecondsToOptions(value),
     value,
   }));
 
 const pollingIntervalOptions =
   mockServiceAlertMetadata.polling_interval_seconds.map((value) => ({
-    label: convertSecondsToHumanReadable(value),
+    label: convertSecondsToOptions(value),
     value,
   }));
 
