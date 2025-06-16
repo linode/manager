@@ -65,7 +65,7 @@ describe('TextField', () => {
     const { getByDisplayValue, getByTestId, getByText } = renderWithTheme(
       <TextField
         InputProps={{
-          startAdornment: <InputAdornment position="end">$</InputAdornment>,
+          startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }}
         label={'Money'}
         type={'number'}
