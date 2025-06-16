@@ -1,26 +1,22 @@
 import { linodeFactory } from '@linode/utilities';
-import {
-  mockGetCloudPulseDashboardByIdError,
-  mockGetCloudPulseServiceByServiceType,
-  mockGetCloudPulseServiceByServiceTypeError,
-} from 'support/intercepts/cloudpulse';
+import { regionFactory } from '@linode/utilities';
+import { mockGetCloudPulseDashboardByIdError } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
 import { mockGetLinodeStats } from 'support/intercepts/linodes';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
+import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import {
   assertBetaMetricsNotAvailable,
   generateMockLegacyStats,
 } from 'support/util/cloudpulse';
 import { randomLabel, randomNumber } from 'support/util/random';
-import { chooseRegion } from 'support/util/regions';
-
-import { serviceTypesFactory } from 'src/factories';
 
 import type { Stats } from '@linode/api-v4';
+
 /**
- * If region supports aclp:
+ * If feature flag and region supports aclp:
  *  If user preference enables aclp, then UI displays beta metrics w/ option to switch to legacy metrics
  *  If user preference disables aclp, then UI displays legacy metrics w/ option to switch to beta metrics
  *
@@ -29,33 +25,28 @@ import type { Stats } from '@linode/api-v4';
 describe('ACLP Components UI varies according to ACLP support by region and user preference', function () {
   beforeEach(function () {
     mockAppendFeatureFlags({
-      aclpIntegration: true,
+      aclpBetaServices: { metrics: true },
     }).as('getFeatureFlags');
   });
   describe('toggle user preference when region supports aclp', function () {
     beforeEach(function () {
-      const mockRegion = chooseRegion({
-        capabilities: ['Linodes'],
+      const mockRegion = regionFactory.build({
+        capabilities: ['Managed Databases'],
+        monitors: {
+          metrics: ['Linodes'],
+        },
       });
+      mockGetRegions([mockRegion]).as('getRegions');
       const mockLinode = linodeFactory.build({
         id: randomNumber(),
         label: randomLabel(),
         region: mockRegion.id,
       });
       cy.wrap(mockLinode.id).as('mockLinodeId');
-      // region support determined by /monitor/services/linodes
-      const mockService = serviceTypesFactory.build({
-        label: 'Linodes',
-        service_type: 'linode',
-        regions: mockRegion.id,
-      });
       mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-      mockGetCloudPulseServiceByServiceType('linode', mockService).as(
-        'getCloudPulseService'
-      );
 
       // linodeDashboardId is hardcoded in LinodeMetrics.tsx to 2
-      // error message is not displayed
+      // error param is not displayed
       const mockDashboardId = 2;
       cy.wrap(mockDashboardId).as('mockDashboardId');
       const mockDashboardError = 'mock dashboard error occurred';
@@ -73,8 +64,8 @@ describe('ACLP Components UI varies according to ACLP support by region and user
       cy.wait([
         '@getFeatureFlags',
         '@getUserPreferences',
+        '@getRegions',
         '@getLinode',
-        '@getCloudPulseService',
         '@getDashboardError',
       ]);
       // tab header is "Metrics Beta", not "Metrics"
@@ -125,7 +116,6 @@ describe('ACLP Components UI varies according to ACLP support by region and user
       cy.wait([
         '@getFeatureFlags',
         '@getLinode',
-        '@getCloudPulseService',
         '@getLinodeStats',
         '@getUserPreferences',
       ]);
@@ -175,9 +165,11 @@ describe('ACLP Components UI varies according to ACLP support by region and user
 
   describe('region does not support aclp', () => {
     beforeEach(() => {
-      const mockRegion = chooseRegion({
-        capabilities: ['Linodes'],
+      // does not support metrics bc missing monitors
+      const mockRegion = regionFactory.build({
+        capabilities: ['Managed Databases'],
       });
+      mockGetRegions([mockRegion]).as('getRegions');
       const mockLinode = linodeFactory.build({
         id: randomNumber(),
         label: randomLabel(),
@@ -185,10 +177,6 @@ describe('ACLP Components UI varies according to ACLP support by region and user
       });
       cy.wrap(mockLinode.id).as('mockLinodeId');
       mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
-      mockGetCloudPulseServiceByServiceTypeError('linode').as(
-        'getCloudPulseServiceError'
-      );
-
       const mockLegacyStats = generateMockLegacyStats();
       mockGetLinodeStats(mockLinode.id, mockLegacyStats).as('getLinodeStats');
     });

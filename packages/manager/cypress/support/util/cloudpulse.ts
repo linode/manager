@@ -60,8 +60,8 @@ export const assertBetaMetricsNotAvailable = () => {
   cy.wait([
     '@getFeatureFlags',
     '@getUserPreferences',
+    '@getRegions',
     '@getLinode',
-    '@getCloudPulseServiceError',
     '@getLinodeStats',
   ]);
   // tab header is "Metrics", not "Metrics Beta"
