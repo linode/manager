@@ -25,10 +25,10 @@ export const AdditionalOptions = () => {
     type: 'alerts',
   });
 
-  const isAlertsEnabled =
+  const showAlerts =
     flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode;
 
-  const hideAdditionalOptions = !isAlertsEnabled;
+  const hideAdditionalOptions = !showAlerts;
 
   if (hideAdditionalOptions) {
     return null;
