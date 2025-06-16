@@ -36,7 +36,7 @@ export const updateCloudNAT = (id: number, data: UpdateCloudNATRequest) =>
   }));
 
 export const deleteCloudNAT = (id: number) =>
-  Request<{}>(() => ({
+  Request<void>(() => ({
     url: `${API_ROOT}/networking/cloudnats/${id}`,
     method: 'DELETE',
   }));
