@@ -31,7 +31,7 @@ export const AuthorizedKeys = () => {
     defaultValues: values,
   });
 
-  const { append, remove, fields } = useFieldArray({
+  const { insert, append, remove, fields } = useFieldArray({
     control: form.control,
     name: 'authorized_keys',
   });
@@ -96,11 +96,32 @@ export const AuthorizedKeys = () => {
                   <TextField
                     errorText={fieldState.error?.message}
                     inputRef={field.ref}
-                    key={idx}
                     label="SSH Public Key"
                     multiline
                     noMarginTop
                     onChange={field.onChange}
+                    onPaste={(e) => {
+                      e.preventDefault();
+                      const pastedItems = e.clipboardData
+                        .getData('text')
+                        .split(',')
+                        .map((item) => item.trim());
+
+                      if (pastedItems.length > 1) {
+                        for (let i = 0; i < pastedItems.length; i++) {
+                          if (i === 0) {
+                            form.setValue(
+                              `authorized_keys.${idx}.key`,
+                              pastedItems[i]
+                            );
+                          } else {
+                            insert(idx + i, { key: pastedItems[i] });
+                          }
+                        }
+                      } else {
+                        field.onChange(pastedItems[0]);
+                      }
+                    }}
                     rows={1.5}
                     value={field.value}
                   />
