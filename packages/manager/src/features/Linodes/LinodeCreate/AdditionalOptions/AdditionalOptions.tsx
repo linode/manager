@@ -31,7 +31,7 @@ export const AdditionalOptions = () => {
   const showAlerts =
     flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode;
 
-  const hideAdditionalOptions = !showAlerts || !isVMHostMaintenanceEnabled;
+  const hideAdditionalOptions = !showAlerts && !isVMHostMaintenanceEnabled;
 
   if (hideAdditionalOptions) {
     return null;
