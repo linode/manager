@@ -10,7 +10,7 @@
  * @param formContainerRef A React ref to the form element (or a form container since we're not always semantically aligned on form markup) that contains a potential field error.
  */
 export const scrollErrorIntoViewV2 = (
-  formContainerRef: React.RefObject<HTMLElement>,
+  formContainerRef: React.RefObject<HTMLElement | null>,
 ) => {
   if (!formContainerRef.current) {
     return;
