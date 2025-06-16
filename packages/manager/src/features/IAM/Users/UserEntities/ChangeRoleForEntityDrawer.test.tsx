@@ -4,23 +4,32 @@ import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ChangeRoleForEntityDrawer } from './ChangeRoleForEntityDrawer';
 
 import type { EntitiesRole } from '../../Shared/types';
 
 const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
   useAccountRoles: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
     useUserRoles: queryMocks.useUserRoles,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -52,8 +61,14 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('ChangeRoleForEntityDrawer', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should render', async () => {
-    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
+    await renderWithThemeAndRouter(<ChangeRoleForEntityDrawer {...props} />);
 
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
@@ -80,7 +95,7 @@ describe('ChangeRoleForEntityDrawer', () => {
       data: accountRolesFactory.build(),
     });
 
-    renderWithTheme(<ChangeRoleForEntityDrawer {...props} />);
+    await renderWithThemeAndRouter(<ChangeRoleForEntityDrawer {...props} />);
 
     const autocomplete = screen.getByRole('combobox');
 

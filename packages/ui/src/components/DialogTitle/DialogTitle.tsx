@@ -2,6 +2,7 @@ import { CloseIcon, Typography } from '@linode/ui';
 import { Box, IconButton } from '@linode/ui';
 import _DialogTitle from '@mui/material/DialogTitle';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import type { SxProps, Theme } from '@mui/material';
 

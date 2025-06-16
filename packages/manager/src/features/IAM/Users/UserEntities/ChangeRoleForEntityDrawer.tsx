@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -6,18 +11,14 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import {
   changeRoleForEntity,
   getAllRoles,
@@ -41,7 +42,9 @@ export const ChangeRoleForEntityDrawer = ({
   role,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -114,7 +117,9 @@ export const ChangeRoleForEntityDrawer = ({
       handleClose();
     } catch (errors) {
       for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
+        setError(error?.field ?? 'root', {
+          message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+        });
       }
     }
   };
