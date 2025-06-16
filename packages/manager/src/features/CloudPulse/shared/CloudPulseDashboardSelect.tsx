@@ -1,6 +1,7 @@
-import { Autocomplete, Box, Typography } from '@linode/ui';
+import { Autocomplete, BetaChip, Box, Typography } from '@linode/ui';
 import React from 'react';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useCloudPulseDashboardsQuery } from 'src/queries/cloudpulse/dashboards';
 import { useCloudPulseServiceTypes } from 'src/queries/cloudpulse/services';
 
@@ -47,6 +48,7 @@ export const CloudPulseDashboardSelect = React.memo(
       isLoading: serviceTypesLoading,
     } = useCloudPulseServiceTypes(true);
 
+    const { aclpBetaServices } = useFlags();
     const serviceTypes: string[] = formattedServiceTypes(serviceTypesList);
     const serviceTypeMap: Map<string, string> = new Map(
       (serviceTypesList?.data || [])
@@ -126,7 +128,8 @@ export const CloudPulseDashboardSelect = React.memo(
         renderGroup={(params) => (
           <Box key={params.key}>
             <Typography sx={{ marginLeft: '3.5%' }} variant="h3">
-              {serviceTypeMap.get(params.group) || params.group}
+              {serviceTypeMap.get(params.group) || params.group}{' '}
+              {aclpBetaServices?.[params.group]?.metrics && <BetaChip />}
             </Typography>
             {params.children}
           </Box>

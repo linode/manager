@@ -2836,7 +2836,6 @@ export const handlers = [
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
       label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
-      is_beta: pickRandom([true, false]),
       alert:
         serviceType === 'dbaas'
           ? serviceAlertFactory.build({
