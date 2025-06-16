@@ -1,16 +1,32 @@
 import { usePreferences } from '@linode/queries';
-import { Accordion, BetaChip, Notice } from '@linode/ui';
+import { Accordion, BetaChip } from '@linode/ui';
 import * as React from 'react';
+import { useController, useFormContext } from 'react-hook-form';
 
+import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/LinodeSettingsAlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
+
+import type { LinodeCreateFormValues } from '../../utilities';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 export const Alerts = () => {
   const flags = useFlags();
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpAlertsBeta
   );
+
+  const { control } = useFormContext<LinodeCreateFormValues>();
+  const { field } = useController({
+    control,
+    name: 'alerts',
+    defaultValue: { system: [], user: [] },
+  });
+
+  const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
+    field.onChange(updatedAlerts);
+  };
 
   return (
     <Accordion
@@ -26,7 +42,10 @@ export const Alerts = () => {
     >
       {flags.aclpBetaServices?.alerts && <AclpPreferenceToggle type="alerts" />}
       {flags.aclpBetaServices?.alerts && isAclpAlertsPreferenceBeta ? (
-        <Notice variant="info">ACLP Alerts coming soon...</Notice>
+        <AlertReusableComponent
+          onToggleAlert={handleToggleAlert}
+          serviceType="linode"
+        />
       ) : (
         <LinodeSettingsAlertsPanel />
       )}
