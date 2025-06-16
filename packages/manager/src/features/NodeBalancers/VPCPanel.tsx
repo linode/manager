@@ -51,6 +51,7 @@ export const VPCPanel = (props: Props) => {
   const { data: region } = useRegionQuery(regionSelected);
 
   const regionSupportsVPC = region?.capabilities.includes('VPCs') || false;
+  const vpcSelectDisabled = !!regionSelected && !regionSupportsVPC;
 
   const {
     data: vpcs,
@@ -84,7 +85,7 @@ export const VPCPanel = (props: Props) => {
           </Typography>
           <Autocomplete
             data-testid="vpc-select"
-            disabled={disabled || !regionSupportsVPC}
+            disabled={disabled || vpcSelectDisabled}
             errorText={vpcError}
             helperText={
               regionSelected && !regionSupportsVPC
