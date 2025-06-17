@@ -53,7 +53,9 @@ export const AssignedEntities = ({
     (entity: CombinedEntity, index: number) => (
       <div
         key={entity.id}
-        ref={(el: HTMLDivElement) => (itemRefs.current[index] = el)}
+        ref={(el: HTMLDivElement) => {
+          (itemRefs.current[index] = el);
+        }}
         style={{ display: 'inline-block', marginRight: 8 }}
       >
         <Chip

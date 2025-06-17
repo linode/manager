@@ -70,6 +70,12 @@ interface ParsedLinodeCreateQueryParams {
   type: LinodeCreateType | undefined;
 }
 
+interface LinodeCreatePayloadOptions {
+  isAclpAlertsPreferenceBeta?: boolean;
+  isAclpIntegration?: boolean;
+  isShowingNewNetworkingUI: boolean;
+}
+
 /**
  * Hook that allows you to read and manage Linode Create flow query params.
  *
@@ -164,14 +170,24 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  isShowingNewNetworkingUI: boolean
+  options: LinodeCreatePayloadOptions
 ): CreateLinodeRequest => {
+  const {
+    isShowingNewNetworkingUI,
+    isAclpIntegration,
+    isAclpAlertsPreferenceBeta,
+  } = options;
+
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
   ]);
+
+  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+    values.alerts = undefined;
+  }
 
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -376,7 +392,8 @@ export const defaultValues = async (
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
 
-  if (isLinodeInterfacesEnabled) {
+  // only run if no Linode is preselected
+  if (isLinodeInterfacesEnabled && !linode) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
@@ -401,7 +418,9 @@ export const defaultValues = async (
     }
   }
 
-  const privateIp = linode?.ipv4.some(isPrivateIP) ?? false;
+  const privateIp =
+    linode?.interface_generation !== 'linode' &&
+    (linode?.ipv4.some(isPrivateIP) ?? false);
 
   const values: LinodeCreateFormValues = {
     backup_id: params.backupID,

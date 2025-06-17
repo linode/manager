@@ -38,6 +38,7 @@ const imagesRoute = createRoute({
   component: ImagesRoute,
   getParentRoute: () => rootRoute,
   path: 'images',
+  validateSearch: (search: ImagesSearchParams) => search,
 });
 
 const imagesIndexRoute = createRoute({

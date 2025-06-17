@@ -1,9 +1,9 @@
 import { useMakeDefaultPaymentMethodMutation } from '@linode/queries';
 import { Box, Chip, Paper } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
@@ -40,8 +40,8 @@ export const PaymentMethodRow = (props: Props) => {
   const theme = useTheme();
   const { isRestrictedUser, onDelete, paymentMethod } = props;
   const { is_default, type } = paymentMethod;
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const { mutateAsync: makePaymentMethodDefault } =
     useMakeDefaultPaymentMethodMutation(props.paymentMethod.id);
@@ -59,9 +59,9 @@ export const PaymentMethodRow = (props: Props) => {
     {
       disabled: isRestrictedUser,
       onClick: () => {
-        history.push({
-          pathname: '/account/billing/make-payment/',
-          state: { paymentMethod },
+        navigate({
+          to: '/account/billing/make-payment',
+          search: { paymentMethod },
         });
       },
       title: 'Make a Payment',

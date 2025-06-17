@@ -3,11 +3,6 @@ import { createRoute, redirect } from '@tanstack/react-router';
 import { rootRoute } from '../root';
 import { LongviewRoute } from './LongviewRoute';
 
-export type LongviewState = {
-  open?: boolean;
-  title?: string;
-};
-
 const longviewRoute = createRoute({
   component: LongviewRoute,
   getParentRoute: () => rootRoute,

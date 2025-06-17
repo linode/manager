@@ -1,5 +1,6 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
 
@@ -7,7 +8,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
+import { MaintenanceBannerV2 } from 'src/components/MaintenanceBanner/MaintenanceBannerV2';
 import OrderBy from 'src/components/OrderBy';
+import { PlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/PlatformMaintenanceBanner';
 import { PreferenceToggle } from 'src/components/PreferenceToggle/PreferenceToggle';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
 import { TransferDisplay } from 'src/components/TransferDisplay/TransferDisplay';
@@ -83,7 +86,7 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  LandingHeader?: React.ReactElement;
+  LandingHeader?: React.ReactElement<any>;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
@@ -302,8 +305,13 @@ class ListLinodes extends React.Component<CombinedProps, State> {
             />
           </React.Fragment>
         )}
-        {this.props.someLinodesHaveScheduledMaintenance && (
-          <MaintenanceBanner />
+        <PlatformMaintenanceBanner />
+        {this.props.flags.vmHostMaintenance?.enabled ? (
+          <MaintenanceBannerV2 />
+        ) : (
+          this.props.someLinodesHaveScheduledMaintenance && (
+            <MaintenanceBanner />
+          )
         )}
         <DocumentTitleSegment segment="Linodes" />
         <ProductInformationBanner bannerLocation="Linodes" />

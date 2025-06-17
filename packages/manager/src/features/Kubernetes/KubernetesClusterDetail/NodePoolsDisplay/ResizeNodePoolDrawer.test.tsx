@@ -13,8 +13,8 @@ const pool = nodePoolFactory.build({
 });
 const smallPool = nodePoolFactory.build({ count: 2 });
 
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual('src/queries/types');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useSpecificTypes: vi

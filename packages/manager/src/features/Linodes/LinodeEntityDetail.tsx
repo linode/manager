@@ -1,8 +1,8 @@
 import {
   useAllImagesQuery,
-  useLinodeFirewallsQuery,
   useLinodeVolumesQuery,
   useRegionsQuery,
+  useTypeQuery,
 } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
@@ -15,7 +15,6 @@ import { notificationCenterContext as _notificationContext } from 'src/features/
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useTypeQuery } from 'src/queries/types';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
@@ -64,18 +63,16 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const isLinodeInterface = linode.interface_generation === 'linode';
 
-  const { configs, interfaceWithVPC, isVPCOnlyLinode, vpcLinodeIsAssignedTo } =
-    useVPCInterface({
-      isLinodeInterface,
-      linodeId: linode.id,
-    });
-
-  const { data: attachedFirewallData } = useLinodeFirewallsQuery(
-    linode.id,
-    !isLinodeInterface
-  );
-
-  const attachedFirewalls = attachedFirewallData?.data ?? [];
+  const {
+    configs,
+    hasPublicLinodeInterface,
+    interfaceWithVPC,
+    isVPCOnlyLinode,
+    vpcLinodeIsAssignedTo,
+  } = useVPCInterface({
+    isLinodeInterface,
+    linodeId: linode.id,
+  });
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -129,9 +126,9 @@ export const LinodeEntityDetail = (props: Props) => {
         body={
           <LinodeEntityDetailBody
             encryptionStatus={linode.disk_encryption}
-            firewalls={attachedFirewalls}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
+            hasPublicLinodeInterface={hasPublicLinodeInterface}
             interfaceGeneration={linode.interface_generation}
             interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}

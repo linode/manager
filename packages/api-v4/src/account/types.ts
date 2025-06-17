@@ -285,6 +285,7 @@ export type NotificationType =
   | 'payment_due'
   | 'promotion'
   | 'reboot_scheduled'
+  | 'security_reboot_maintenance_scheduled'
   | 'tax_id_verifying'
   | 'ticket_abuse'
   | 'ticket_important'
@@ -569,11 +570,11 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   complete_time: string;
-  description: string;
+  description: 'emergency' | 'scheduled';
   entity: {
     id: number;
     label: string;
-    type: string;
+    type: 'linode' | 'volume';
     url: string;
   };
   maintenance_policy_set: MaintenancePolicyType;

@@ -5,14 +5,13 @@ import {
 } from '@linode/queries';
 import { Autocomplete, Chip, CloseIcon } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { concat } from 'ramda';
 import * as React from 'react';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import type { APIError } from '@linode/api-v4/lib/types';
 
-export interface Tag {
+export interface TagOption {
   label: string;
   value: string;
 }
@@ -47,7 +46,7 @@ export interface TagsInputProps {
   /**
    * Callback fired when the value changes.
    */
-  onChange: (selected: Tag[]) => void;
+  onChange: (selected: TagOption[]) => void;
   /**
    * An error to display beneath the input.
    */
@@ -55,7 +54,7 @@ export interface TagsInputProps {
   /**
    * The value of the input.
    */
-  value: Tag[];
+  value: TagOption[];
 }
 
 export const TagsInput = (props: TagsInputProps) => {
@@ -71,7 +70,7 @@ export const TagsInput = (props: TagsInputProps) => {
 
   const queryClient = useQueryClient();
 
-  const accountTagItems: Tag[] =
+  const accountTagItems: TagOption[] =
     accountTags?.map((tag) => ({
       label: tag.label,
       value: tag.label,
@@ -79,7 +78,7 @@ export const TagsInput = (props: TagsInputProps) => {
 
   const createTag = (inputValue: string) => {
     const newTag = { label: inputValue, value: inputValue };
-    const updatedSelectedTags = concat(value, [newTag]);
+    const updatedSelectedTags = [...value, newTag];
 
     const errors = [];
 
@@ -110,12 +109,12 @@ export const TagsInput = (props: TagsInputProps) => {
     }
   };
 
-  const handleRemoveOption = (tagToRemove: Tag) => {
+  const handleRemoveOption = (tagToRemove: TagOption) => {
     onChange(value.filter((t) => t.value !== tagToRemove.value));
   };
 
   const filterOptions = (
-    options: Tag[],
+    options: TagOption[],
     { inputValue }: { inputValue: string }
   ) => {
     const filtered = options.filter((o) =>

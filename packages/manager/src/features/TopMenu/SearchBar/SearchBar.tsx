@@ -9,6 +9,7 @@ import {
 import { getQueryParamsFromQueryString } from '@linode/utilities';
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import Search from 'src/assets/icons/search.svg';

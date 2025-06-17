@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 /**
  * Picks a random element from an array
  * @param items { T[] } an array of any kind
@@ -18,5 +20,7 @@ export const randomDate = (
   start: Date = new Date(),
   end: Date = new Date(2021, 10, 25),
 ) =>
-  // eslint-disable-next-line sonarjs/pseudo-random
-  new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  DateTime.fromMillis(
+    // eslint-disable-next-line sonarjs/pseudo-random
+    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
+  );

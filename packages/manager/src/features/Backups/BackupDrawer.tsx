@@ -1,6 +1,7 @@
 import {
   useAccountSettings,
   useAllLinodesQuery,
+  useAllTypes,
   useMutateAccountSettings,
 } from '@linode/queries';
 import {
@@ -25,7 +26,6 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import { useAllTypes } from 'src/queries/types';
 import { getTotalBackupsPrice } from 'src/utilities/pricing/backups';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 

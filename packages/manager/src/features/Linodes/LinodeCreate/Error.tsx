@@ -1,4 +1,4 @@
-import { Notice, Paper } from '@linode/ui';
+import { Notice } from '@linode/ui';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -20,14 +20,12 @@ export const LinodeCreateError = () => {
   }
 
   return (
-    <Paper sx={{ p: 0 }}>
-      <Notice spacingBottom={0} spacingTop={0} variant="error">
-        <ErrorMessage
-          entity={{ type: 'linode_id' }}
-          formPayloadValues={{ type: values.type }}
-          message={generalError}
-        />
-      </Notice>
-    </Paper>
+    <Notice spacingBottom={0} spacingTop={0} variant="error">
+      <ErrorMessage
+        entity={{ type: 'linode_id' }}
+        formPayloadValues={{ type: values.type }}
+        message={generalError}
+      />
+    </Notice>
   );
 };

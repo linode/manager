@@ -9,6 +9,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
+export type AlertDefinitionGroup = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -164,7 +165,14 @@ export interface CloudPulseMetricsList {
 }
 
 export interface ServiceTypes {
+  alert: {
+    evaluation_periods_seconds: number[];
+    polling_interval_seconds: number[];
+    scope: string[];
+  };
+  is_beta: boolean;
   label: string;
+  regions: string;
   service_type: string;
 }
 
@@ -232,7 +240,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
-  scope: AlertScopes;
+  scope: AlertDefinitionGroup;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -344,9 +352,22 @@ export interface DeleteAlertPayload {
   serviceType: string;
 }
 
-export type AlertScopes = 'account' | 'entity' | 'region';
-
+/**
+ * Represents the payload for CloudPulse alerts, included only when the ACLP beta mode is enabled.
+ *
+ * In Beta mode, the `alerts` object contains enabled system and user alert IDs.
+ * - Legacy mode: `alerts` is not included (read-only mode).
+ * - Beta mode: `alerts` is passed and editable.
+ */
 export interface CloudPulseAlertsPayload {
+  /**
+   * Array of enabled system alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
   system: number[];
+  /**
+   * Array of enabled user alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
   user: number[];
 }

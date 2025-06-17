@@ -1,16 +1,17 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
-import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { Box, CircleProgress, ErrorState, Notice, Stack } from '@linode/ui';
+import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
+import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
-  getKubeHighAvailability,
   useAPLAvailability,
+  useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -23,13 +24,23 @@ import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
+const restrictedLkeNotice = (
+  <Notice
+    text={getRestrictedResourceText({
+      action: 'edit',
+      resourceType: 'LKE Clusters',
+      isSingular: true,
+    })}
+    variant="warning"
+  />
+);
+
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterID } = useParams<{ clusterID: string }>();
-  const id = Number(clusterID);
+  const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
+  const id = Number(clusterId);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
-
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const {
@@ -47,6 +58,12 @@ export const KubernetesClusterDetail = () => {
 
   const { isClusterHighlyAvailable, showHighAvailability } =
     getKubeHighAvailability(account, cluster);
+
+  const isLkeClusterRestricted = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster?.id,
+  });
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
@@ -93,6 +110,7 @@ export const KubernetesClusterDetail = () => {
         clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
         currentVersion={cluster?.k8s_version}
       />
+      {isLkeClusterRestricted && restrictedLkeNotice}
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -136,6 +154,7 @@ export const KubernetesClusterDetail = () => {
             clusterLabel={cluster.label}
             clusterRegionId={cluster.region}
             clusterTier={cluster.tier ?? 'standard'}
+            isLkeClusterRestricted={isLkeClusterRestricted}
             regionsData={regionsData || []}
           />
         </Stack>
@@ -149,9 +168,3 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
-
-export const kubernetesClusterDetailLazyRoute = createLazyRoute(
-  '/kubernetes/clusters/$clusterID'
-)({
-  component: KubernetesClusterDetail,
-});

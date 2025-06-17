@@ -169,7 +169,7 @@ export const getQuotas = () => [
     '*/v4*/:service/quotas/:id',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | Quota>> => {
       const quota = mockQuotas[params.service as QuotaType].find(
-        ({ quota_id }) => quota_id === +params.id
+        ({ quota_id }) => quota_id === params.id
       );
 
       if (!quota) {
@@ -187,7 +187,7 @@ export const getQuotas = () => [
     }): Promise<StrictResponse<APIErrorResponse | QuotaUsage>> => {
       const service = params.service as QuotaType;
       const quota = mockQuotas[service].find(
-        ({ quota_id }) => quota_id === +params.id
+        ({ quota_id }) => quota_id === params.id
       );
 
       if (!quota) {

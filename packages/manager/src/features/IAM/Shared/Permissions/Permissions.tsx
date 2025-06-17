@@ -1,4 +1,4 @@
-import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
+import { StyledLinkButton, Typography } from '@linode/ui';
 import { debounce } from '@mui/material';
 import { Grid } from '@mui/material';
 import * as React from 'react';
@@ -8,9 +8,8 @@ import {
   StyledBox,
   StyledClampedContent,
   StyledContainer,
-  StyledGrid,
   StyledPermissionItem,
-  sxTooltipIcon,
+  StyledTitle,
 } from './Permissions.style';
 
 import type { PermissionType } from '@linode/api-v4/lib/iam/types';
@@ -20,7 +19,7 @@ type Props = {
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+export const Permissions = React.memo(({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
@@ -32,48 +31,31 @@ export const Permissions = ({ permissions }: Props) => {
   );
 
   React.useEffect(() => {
-    // Ensure calculateHiddenItems runs after layout stabilization on initial render
-    const rafId = requestAnimationFrame(() => calculateHiddenItems());
-
     window.addEventListener('resize', handleResize);
-
     return () => {
-      cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [calculateHiddenItems, handleResize]);
+  }, [handleResize]);
 
   // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
     <Grid container data-testid="parent" direction="column">
-      <StyledGrid container item md={1}>
-        <Typography
-          sx={(theme) => ({
-            font: theme.tokens.alias.Typography.Label.Bold.S,
-          })}
-        >
-          Permissions
-        </Typography>
-
-        <TooltipIcon
-          status="help"
-          sxTooltipIcon={sxTooltipIcon}
-          text="Link is coming..."
-        />
-      </StyledGrid>
+      <StyledTitle>Permissions</StyledTitle>
       {!permissions.length ? (
         <Typography>
           This role doesn’t include permissions. Refer to the role description
           to understand what access is granted by this role.
         </Typography>
       ) : (
-        <StyledContainer>
+        <StyledContainer data-testid="container">
           <StyledClampedContent ref={containerRef} showAll={showAll}>
             {permissions.map((permission: PermissionType, index: number) => (
               <StyledPermissionItem
                 data-testid="permission"
                 key={permission}
-                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
+                ref={(el: HTMLSpanElement) => {
+                  itemRefs.current[index] = el;
+                }}
               >
                 {permission}
               </StyledPermissionItem>
@@ -83,10 +65,13 @@ export const Permissions = ({ permissions }: Props) => {
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>
               <StyledLinkButton
-                onClick={() => setShowAll(!showAll)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAll(!showAll);
+                }}
                 type="button"
               >
-                {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
+                {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
               </StyledLinkButton>
             </StyledBox>
           )}
@@ -94,4 +79,4 @@ export const Permissions = ({ permissions }: Props) => {
       )}
     </Grid>
   );
-};
+});

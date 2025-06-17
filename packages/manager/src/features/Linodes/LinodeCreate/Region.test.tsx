@@ -85,7 +85,6 @@ describe('Region', () => {
 
     for (const region of regions) {
       expect(
-        // eslint-disable-next-line no-await-in-loop
         await findByText(`US, ${region.label} (${region.id})`)
       ).toBeVisible();
     }

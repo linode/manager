@@ -66,15 +66,17 @@ describe('getEventMessage', () => {
   });
 
   it('returns the correct message for a manual input event', () => {
-    const message = getEventMessage({
-      action: 'linode_create',
-      entity: {
-        id: 123,
-        label: 'test-linode',
-        type: 'linode',
-      },
-      status: 'failed',
-    });
+    const message = getEventMessage(
+      eventFactory.build({
+        action: 'linode_create',
+        entity: {
+          id: 123,
+          label: 'test-linode',
+          type: 'linode',
+        },
+        status: 'failed',
+      })
+    );
 
     const { container } = renderWithTheme(message);
 

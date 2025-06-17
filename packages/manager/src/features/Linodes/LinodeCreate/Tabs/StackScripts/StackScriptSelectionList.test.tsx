@@ -22,7 +22,6 @@ describe('StackScriptSelectionList', () => {
     });
 
     for (const stackscript of stackscripts) {
-      // eslint-disable-next-line no-await-in-loop
       const item = await findByText(stackscript.label, { exact: false });
 
       expect(item).toBeVisible();

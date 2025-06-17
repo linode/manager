@@ -29,7 +29,7 @@ import { compose, last, omit } from 'ramda';
 
 import type { FirewallRuleError } from './shared';
 import type { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
-import type { Draft } from 'immer';
+import type { Draft, Immutable } from 'immer';
 
 export type RuleStatus =
   | 'MODIFIED'
@@ -218,7 +218,7 @@ export const initRuleEditorState = (
   );
 };
 
-export const editorStateToRules = (state: RuleEditorState) => {
+export const editorStateToRules = (state: Immutable<RuleEditorState>) => {
   // Cast the results of the Immer state to a mutable data structure.
   return castDraft(
     state.map((revisionList) =>
@@ -275,7 +275,7 @@ export const prepareRules = compose(
   editorStateToRules
 );
 
-export const hasModified = (editorState: RuleEditorState): boolean => {
+export const hasModified = (editorState: Immutable<RuleEditorState>): boolean => {
   const rules = editorStateToRules(editorState);
   return rules.some(
     (thisRule, idx) =>

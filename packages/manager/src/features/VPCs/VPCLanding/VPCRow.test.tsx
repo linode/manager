@@ -17,7 +17,12 @@ describe('VPC Table Row', () => {
 
     const { getAllByText, getByText } = renderWithTheme(
       wrapWithTableBody(
-        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
+        <VPCRow
+          handleDeleteVPC={vi.fn()}
+          handleEditVPC={vi.fn()}
+          isNodebalancerVPCEnabled
+          vpc={vpc}
+        />
       )
     );
 
@@ -38,6 +43,7 @@ describe('VPC Table Row', () => {
         <VPCRow
           handleDeleteVPC={handleDelete}
           handleEditVPC={vi.fn()}
+          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -55,6 +61,7 @@ describe('VPC Table Row', () => {
         <VPCRow
           handleDeleteVPC={vi.fn()}
           handleEditVPC={handleEdit}
+          isNodebalancerVPCEnabled
           vpc={vpc}
         />
       )
@@ -71,7 +78,12 @@ describe('VPC Table Row', () => {
     });
     const { getAllByRole } = renderWithTheme(
       wrapWithTableBody(
-        <VPCRow handleDeleteVPC={vi.fn()} handleEditVPC={vi.fn()} vpc={vpc} />
+        <VPCRow
+          handleDeleteVPC={vi.fn()}
+          handleEditVPC={vi.fn()}
+          isNodebalancerVPCEnabled
+          vpc={vpc}
+        />
       )
     );
     const actionButtons = getAllByRole('button');

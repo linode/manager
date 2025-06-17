@@ -45,7 +45,7 @@ export interface Flags {
 To consume a feature flag from a function component, use the `useFlags` hook:
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 import { useFlags } from "src/hooks/useFlags";
 
 const ImagesPricingBanner = () => {
@@ -62,7 +62,7 @@ const ImagesPricingBanner = () => {
 For (older) class components, use the `withFeatureFlagConsumer` HOC:
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from "src/containers/withFeatureFlagConsumer.container";

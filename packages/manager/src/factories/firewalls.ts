@@ -1,15 +1,16 @@
+import {
+  type Firewall,
+  type FirewallDevice,
+  type FirewallDeviceEntityType,
+  type FirewallRules,
+  type FirewallRuleType,
+  type FirewallSettings,
+  type FirewallTemplate,
+  type FirewallTemplateRules,
+} from '@linode/api-v4/lib/firewalls/types';
 import { Factory } from '@linode/utilities';
 
-import type {
-  Firewall,
-  FirewallDevice,
-  FirewallDeviceEntityType,
-  FirewallRules,
-  FirewallRuleType,
-  FirewallSettings,
-  FirewallTemplate,
-  FirewallTemplateRules,
-} from '@linode/api-v4/lib/firewalls/types';
+import type { FirewallDeviceEntity } from '@linode/api-v4/lib/firewalls/types';
 
 export const firewallRuleFactory = Factory.Sync.makeFactory<FirewallRuleType>({
   action: 'DROP',
@@ -41,13 +42,14 @@ export const firewallTemplateRulesFactory =
   });
 
 export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
-  created: '2020-01-01 00:00:00',
+  created: '2020-01-01T00:00:00',
   entities: [
     {
       id: 1,
       label: 'my-linode',
       type: 'linode' as FirewallDeviceEntityType,
       url: '/test',
+      parent_entity: null,
     },
   ],
   id: Factory.each((id) => id),
@@ -55,8 +57,17 @@ export const firewallFactory = Factory.Sync.makeFactory<Firewall>({
   rules: firewallRulesFactory.build(),
   status: 'enabled',
   tags: [],
-  updated: '2020-01-01 00:00:00',
+  updated: '2020-01-01T00:00:00',
 });
+
+export const firewallEntityfactory =
+  Factory.Sync.makeFactory<FirewallDeviceEntity>({
+    id: 1,
+    label: 'my-linode',
+    type: 'linode' as FirewallDeviceEntityType,
+    url: '/test',
+    parent_entity: null,
+  });
 
 export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
   created: '2020-01-01',
@@ -65,6 +76,7 @@ export const firewallDeviceFactory = Factory.Sync.makeFactory<FirewallDevice>({
     label: 'entity',
     type: 'linode' as FirewallDeviceEntityType,
     url: '/linodes/1',
+    parent_entity: null,
   },
   id: Factory.each((i) => i),
   updated: '2020-01-01',

@@ -17,7 +17,6 @@ export async function reduceAsync<T, R>(
   let accumulator = initialValue;
 
   for (let i = 0; i < arr.length; i++) {
-    // eslint-disable-next-line no-await-in-loop
     accumulator = await fn(accumulator, arr[i], i, arr);
   }
 

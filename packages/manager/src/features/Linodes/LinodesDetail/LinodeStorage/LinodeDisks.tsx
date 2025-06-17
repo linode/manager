@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -23,6 +24,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import { TableSortCell } from 'src/components/TableSortCell';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
+import { addUsedDiskSpace } from '../utilities';
 import { CreateDiskDrawer } from './CreateDiskDrawer';
 import { DeleteDiskDialog } from './DeleteDiskDialog';
 import { LinodeDiskRow } from './LinodeDiskRow';
@@ -119,6 +121,10 @@ export const LinodeDisks = () => {
           Disks
         </Typography>
         <Stack direction="row" spacing={1}>
+          <DocsLink
+            href="https://techdocs.akamai.com/cloud-computing/docs/manage-disks-on-a-compute-instance#create-a-disk"
+            label="Creating Disks"
+          />
           <Button
             buttonType="primary"
             disabled={readOnly || !hasFreeDiskSpace}
@@ -237,8 +243,4 @@ export const LinodeDisks = () => {
       />
     </Box>
   );
-};
-
-export const addUsedDiskSpace = (disks: Disk[]) => {
-  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };

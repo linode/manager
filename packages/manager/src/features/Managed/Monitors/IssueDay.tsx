@@ -1,6 +1,7 @@
 import { Tooltip } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';

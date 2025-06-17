@@ -1,3 +1,19 @@
+## [2025-06-03] - v0.67.0
+
+### Added:
+
+- Method to retrieve dynamic validation for Create database schema  ([#12281](https://github.com/linode/manager/pull/12281))
+
+### Fixed:
+
+- Handling duplicate subnet-ids during Nodebalancer creation with VPC enabled ([#12181](https://github.com/linode/manager/pull/12181))
+
+## [2025-05-20] - v0.66.0
+
+### Upcoming Features:
+
+- Add new LKE-E schema for nodePoolBetaSchema ([#12188](https://github.com/linode/manager/pull/12188))
+
 ## [2025-05-06] - v0.65.0
 
 ### Added:

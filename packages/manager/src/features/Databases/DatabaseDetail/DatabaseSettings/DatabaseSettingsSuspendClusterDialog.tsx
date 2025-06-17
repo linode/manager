@@ -1,7 +1,7 @@
 import { ActionsPanel, Checkbox, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useSuspendDatabaseMutation } from 'src/queries/databases/databases';
@@ -31,7 +31,7 @@ export const DatabaseSettingsSuspendClusterDialog = (
 
   const defaultError = 'There was an error suspending this Database Cluster.';
   const [hasConfirmed, setHasConfirmed] = React.useState(false);
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const onSuspendCluster = async () => {
     try {
@@ -40,7 +40,9 @@ export const DatabaseSettingsSuspendClusterDialog = (
         variant: 'success',
       });
       onClose();
-      push('/databases');
+      navigate({
+        to: '/databases',
+      });
     } catch (error) {
       enqueueSnackbar('Failed to suspend Database Cluster. Please try again.', {
         variant: 'error',

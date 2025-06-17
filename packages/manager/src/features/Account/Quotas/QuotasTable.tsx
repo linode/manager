@@ -1,7 +1,8 @@
+import { quotaQueries, useQuotasQuery } from '@linode/queries';
 import { Dialog, ErrorState } from '@linode/ui';
 import { useQueries } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table/Table';
@@ -12,8 +13,6 @@ import { TableRow } from 'src/components/TableRow/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { usePagination } from 'src/hooks/usePagination';
-import { useQuotasQuery } from 'src/queries/quotas/quotas';
-import { quotaQueries } from 'src/queries/quotas/quotas';
 
 import { QuotasIncreaseForm } from './QuotasIncreaseForm';
 import { QuotasTableRow } from './QuotasTableRow';
@@ -32,7 +31,7 @@ interface QuotasTableProps {
 
 export const QuotasTable = (props: QuotasTableProps) => {
   const { selectedLocation, selectedService } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const pagination = usePagination(1, 'quotas-table');
   const hasSelectedLocation = Boolean(selectedLocation);
   const [supportModalOpen, setSupportModalOpen] = React.useState(false);
@@ -92,9 +91,12 @@ export const QuotasTable = (props: QuotasTableProps) => {
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
   ) => {
-    history.push({
-      pathname: `/support/tickets/${ticketId}`,
-      state: { attachmentErrors },
+    navigate({
+      to: `/support/tickets/${ticketId}`,
+      state: (prev) => ({
+        ...prev,
+        attachmentErrors,
+      }),
     });
     setSupportModalOpen(false);
   };
@@ -102,6 +104,7 @@ export const QuotasTable = (props: QuotasTableProps) => {
   return (
     <>
       <Table
+        data-testid="table-endpoint-quotas"
         sx={(theme) => ({
           marginTop: theme.spacingFunction(16),
           minWidth: theme.breakpoints.values.sm,

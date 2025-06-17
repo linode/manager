@@ -77,9 +77,16 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
     });
     const mockInterfaceDevice = firewallDeviceFactory.build({
       entity: {
-        type: 'interface',
+        type: 'linode_interface',
         id: mockLinodeInterface.id,
         url: `/v4/linode/instances/${mockNewInterfaceLinode.id}/interfaces/${mockLinodeInterface.id}`,
+        label: null,
+        parent_entity: {
+          label: mockNewInterfaceLinode.label,
+          id: mockNewInterfaceLinode.id,
+          type: 'linode',
+          url: `/v4/linode/instances/${mockNewInterfaceLinode.id}`,
+        },
       },
     });
 
@@ -223,9 +230,16 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
 
     const mockInterfaceDevice = firewallDeviceFactory.build({
       entity: {
-        type: 'interface',
+        type: 'linode_interface',
         id: mockVPCInterface.id,
         url: `/v4/linode/instances/${mockMultipleEligibleInterfacesLinode.id}/interfaces/${mockVPCInterface.id}`,
+        label: null,
+        parent_entity: {
+          label: mockMultipleEligibleInterfacesLinode.label,
+          id: mockMultipleEligibleInterfacesLinode.id,
+          type: 'linode',
+          url: `/v4/linode/instances/${mockMultipleEligibleInterfacesLinode.id}`,
+        },
       },
     });
 
@@ -353,9 +367,16 @@ describe('Can add Linode and Linode Interface devices to firewalls', () => {
     });
     const mockInterfaceDevice = firewallDeviceFactory.build({
       entity: {
-        type: 'interface',
+        type: 'linode_interface',
         id: mockPublicInterface.id,
         url: `/v4/linode/instances/${mockAlreadyAssignedLILinode.id}/interfaces/${mockPublicInterface.id}`,
+        label: null,
+        parent_entity: {
+          label: mockAlreadyAssignedLILinode.label,
+          id: mockAlreadyAssignedLILinode.id,
+          type: 'linode',
+          url: `/v4/linode/instances/${mockAlreadyAssignedLILinode.id}`,
+        },
       },
     });
 

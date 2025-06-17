@@ -1,3 +1,4 @@
+import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -35,6 +36,7 @@ export interface Linode {
   created: string;
   disk_encryption?: EncryptionStatus; // @TODO LDE: Remove optionality once LDE is fully rolled out
   group: string;
+  has_user_data: boolean;
   hypervisor: Hypervisor;
   id: number;
   image: null | string;
@@ -44,7 +46,7 @@ export interface Linode {
   label: string;
   lke_cluster_id: null | number;
   maintenance_policy_id?: MaintenancePolicyId;
-  placement_group?: LinodePlacementGroupPayload; // If not in a placement group, this will be excluded from the response.
+  placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
   specs: LinodeSpecs;
@@ -538,6 +540,10 @@ export interface CreateLinodePlacementGroupPayload {
 }
 
 export interface CreateLinodeRequest {
+  /**
+   * Beta Aclp alerts
+   */
+  alerts?: CloudPulseAlertsPayload | null;
   /**
    * A list of public SSH keys that will be automatically appended to the root user’s
    * `~/.ssh/authorized_keys`file when deploying from an Image.
