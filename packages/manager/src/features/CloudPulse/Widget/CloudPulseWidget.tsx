@@ -301,7 +301,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               padding: 1,
             }}
           >
-            <Typography marginLeft={1} variant="h2">
+            <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
               {convertStringToCamelCasesWithSpaces(widget.label)} (
               {scaledWidgetUnit.current}
               {unit.endsWith('ps') ? '/s' : ''})
@@ -309,6 +309,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             <Stack
               direction={{ sm: 'row' }}
               sx={{
+                flex: { sm: 3, xs: 0 },
+                justifyContent: 'end',
                 alignItems: 'center',
                 gap: 2,
                 maxHeight: `calc(${theme.spacing(10)} + 5px)`,

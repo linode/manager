@@ -5,7 +5,7 @@ import {
   getTicket,
   getTicketReplies,
   getTickets,
-} from '@linode/api-v4/lib/support';
+} from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   keepPreviousData,
@@ -15,18 +15,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { accountQueries } from '../account';
+
 import type {
   ReplyRequest,
   SupportReply,
   SupportTicket,
   TicketRequest,
 } from '@linode/api-v4';
-import type {
-  APIError,
-  Filter,
-  Params,
-  ResourcePage,
-} from '@linode/api-v4/lib/types';
+import type { APIError, Filter, Params, ResourcePage } from '@linode/api-v4';
 
 export const supportQueries = createQueryKeys('support', {
   ticket: (id: number) => ({
@@ -107,6 +104,13 @@ export const useSupportTicketCloseMutation = (id: number) => {
       });
       queryClient.invalidateQueries({
         queryKey: supportQueries.ticket(id).queryKey,
+      });
+      /**
+       * When a support ticket is closed, invalidate account notifications
+       * because, in some cases, closing a ticket can dismiss a notification.
+       */
+      queryClient.invalidateQueries({
+        queryKey: accountQueries.notifications.queryKey,
       });
     },
   });

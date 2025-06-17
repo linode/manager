@@ -4,18 +4,48 @@ import { getMockPresetGroups } from 'src/mocks/mockPreset';
 import { extraMockPresets } from 'src/mocks/presets';
 
 import { ExtraPresetAccount } from './ExtraPresetAccount';
+import { ExtraPresetEvents } from './ExtraPresetEvents';
+import { ExtraPresetMaintenance } from './ExtraPresetMaintenance';
+import { ExtraPresetNotifications } from './ExtraPresetNotifications';
 import { ExtraPresetOptionCheckbox } from './ExtraPresetOptionCheckbox';
 import { ExtraPresetOptionSelect } from './ExtraPresetOptionSelect';
 import { ExtraPresetProfile } from './ExtraPresetProfile';
+import { ExtraPresetUserAccountPermissions } from './ExtraPresetUserAccountPermissions';
+import { ExtraPresetUserEntityPermissions } from './ExtraPresetUserEntityPermissions';
 
-import type { Account, Profile } from '@linode/api-v4';
+import type {
+  Account,
+  AccountMaintenance,
+  Event,
+  Notification,
+  PermissionType,
+  Profile,
+} from '@linode/api-v4';
 
 export interface ExtraPresetOptionsProps {
   customAccountData?: Account | null;
+  customEventsData?: Event[] | null;
+  customMaintenanceData?: AccountMaintenance[] | null;
+  customNotificationsData?: Notification[] | null;
   customProfileData?: null | Profile;
+  customUserAccountPermissionsData?: null | PermissionType[];
+  customUserEntityPermissionsData?: null | PermissionType[];
   handlers: string[];
   onCustomAccountChange?: (data: Account | null | undefined) => void;
+  onCustomEventsChange?: (data: Event[] | null | undefined) => void;
+  onCustomMaintenanceChange?: (
+    data: AccountMaintenance[] | null | undefined
+  ) => void;
+  onCustomNotificationsChange?: (
+    data: Notification[] | null | undefined
+  ) => void;
   onCustomProfileChange?: (data: null | Profile | undefined) => void;
+  onCustomUserAccountPermissionsChange?: (
+    data: null | PermissionType[] | undefined
+  ) => void;
+  onCustomUserEntityPermissionsChange?: (
+    data: null | PermissionType[] | undefined
+  ) => void;
   onPresetCountChange: (e: React.ChangeEvent, presetId: string) => void;
   onSelectChange: (e: React.ChangeEvent, presetId: string) => void;
   onTogglePreset: (e: React.ChangeEvent, presetId: string) => void;
@@ -28,9 +58,19 @@ export interface ExtraPresetOptionsProps {
 export const ExtraPresetOptions = ({
   customAccountData,
   customProfileData,
+  customEventsData,
+  customMaintenanceData,
+  customNotificationsData,
+  customUserAccountPermissionsData,
+  customUserEntityPermissionsData,
   handlers,
   onCustomAccountChange,
   onCustomProfileChange,
+  onCustomEventsChange,
+  onCustomMaintenanceChange,
+  onCustomNotificationsChange,
+  onCustomUserAccountPermissionsChange,
+  onCustomUserEntityPermissionsChange,
   onPresetCountChange,
   onSelectChange,
   onTogglePreset,
@@ -85,6 +125,50 @@ export const ExtraPresetOptions = ({
                 customProfileData={customProfileData}
                 handlers={handlers}
                 onFormChange={onCustomProfileChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'userPermissions' && (
+              <>
+                <ExtraPresetUserAccountPermissions
+                  customUserAccountPermissionsData={
+                    customUserAccountPermissionsData
+                  }
+                  handlers={handlers}
+                  onFormChange={onCustomUserAccountPermissionsChange}
+                  onTogglePreset={onTogglePreset}
+                />
+                <ExtraPresetUserEntityPermissions
+                  customUserEntityPermissionsData={
+                    customUserEntityPermissionsData
+                  }
+                  handlers={handlers}
+                  onFormChange={onCustomUserEntityPermissionsChange}
+                  onTogglePreset={onTogglePreset}
+                />
+              </>
+            )}
+            {currentGroupType === 'events' && (
+              <ExtraPresetEvents
+                customEventsData={customEventsData}
+                handlers={handlers}
+                onFormChange={onCustomEventsChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'maintenance' && (
+              <ExtraPresetMaintenance
+                customMaintenanceData={customMaintenanceData}
+                handlers={handlers}
+                onFormChange={onCustomMaintenanceChange}
+                onTogglePreset={onTogglePreset}
+              />
+            )}
+            {currentGroupType === 'notifications' && (
+              <ExtraPresetNotifications
+                customNotificationsData={customNotificationsData}
+                handlers={handlers}
+                onFormChange={onCustomNotificationsChange}
                 onTogglePreset={onTogglePreset}
               />
             )}

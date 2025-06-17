@@ -14,8 +14,10 @@ export const placeholderMap: Record<string, string> = {
   firewall: 'Select Firewalls',
   image: 'Select Images',
   linode: 'Select Linodes',
+  lkecluster: 'Select Kubernetes Clusters',
   longview: 'Select Longviews',
   nodebalancer: 'Select Nodebalancers',
+  placement_group: 'Select Placement Groups',
   stackscript: 'Select Stackscripts',
   volume: 'Select Volumes',
   vpc: 'Select VPCs',
@@ -25,6 +27,15 @@ export const getCreateLinkForEntityType = (
   entityType: EntityType | EntityTypePermissions
 ): string => {
   // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
+
+  if (entityType === 'placement_group') {
+    return '/placement-groups/create';
+  }
+
+  if (entityType === 'lkecluster') {
+    return '/kubernetes/create';
+  }
+
   return `/${entityType}s/create`;
 };
 

@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery, useSpecificTypes } from '@linode/queries';
 import { CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import { useMediaQuery } from '@mui/material';
@@ -11,7 +11,6 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesTypesQuery,
 } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import {
   HA_PRICE_ERROR_MESSAGE,
@@ -88,7 +87,10 @@ export const KubeClusterSpecs = React.memo((props: Props) => {
   const highAvailabilityPrice = cluster.control_plane.high_availability
     ? getDCSpecificPriceByType({ regionId: region?.id, type: lkeHAType })
     : undefined;
-  const enterprisePrice = lkeEnterpriseType?.price.monthly ?? undefined;
+  const enterprisePrice =
+    cluster.tier === 'enterprise' && lkeEnterpriseType?.price.monthly
+      ? lkeEnterpriseType?.price.monthly
+      : undefined;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,

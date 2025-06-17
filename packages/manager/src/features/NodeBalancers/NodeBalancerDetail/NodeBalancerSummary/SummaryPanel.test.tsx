@@ -1,5 +1,6 @@
 import {
   nodeBalancerConfigFactory,
+  nodeBalancerConfigVPCFactory,
   nodeBalancerFactory,
 } from '@linode/utilities';
 import { waitFor } from '@testing-library/react';
@@ -15,6 +16,9 @@ const queryMocks = vi.hoisted(() => ({
   useAllNodeBalancerConfigsQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancerQuery: vi.fn().mockReturnValue({ data: undefined }),
   useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({ data: undefined }),
+  useNodeBalancerVPCConfigsBetaQuery: vi
+    .fn()
+    .mockReturnValue({ data: undefined }),
   useParams: vi.fn().mockReturnValue({}),
 }));
 
@@ -33,10 +37,13 @@ vi.mock('@linode/queries', async () => {
     useAllNodeBalancerConfigsQuery: queryMocks.useAllNodeBalancerConfigsQuery,
     useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
     useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
+    useNodeBalancerVPCConfigsBetaQuery:
+      queryMocks.useNodeBalancerVPCConfigsBetaQuery,
   };
 });
 
 const nodeBalancerDetails = 'NodeBalancer Details';
+const nbVpcConfig = nodeBalancerConfigVPCFactory.build();
 
 describe('SummaryPanel', () => {
   beforeEach(() => {
@@ -48,6 +55,11 @@ describe('SummaryPanel', () => {
     });
     queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
       data: { data: [firewallFactory.build({ label: 'mock-firewall-1' })] },
+    });
+    queryMocks.useNodeBalancerVPCConfigsBetaQuery.mockReturnValue({
+      data: {
+        data: [nbVpcConfig],
+      },
     });
     queryMocks.useParams.mockReturnValue({ id: 1 });
   });
@@ -75,7 +87,9 @@ describe('SummaryPanel', () => {
   });
 
   it('renders the panel if there is data to render', () => {
-    const { getByText, queryByText } = renderWithTheme(<SummaryPanel />);
+    const { getByText, queryByText } = renderWithTheme(<SummaryPanel />, {
+      flags: { nodebalancerVpc: true },
+    });
 
     // Main summary panel
     expect(getByText(nodeBalancerDetails)).toBeVisible();
@@ -99,6 +113,11 @@ describe('SummaryPanel', () => {
     // IP Address panel
     expect(getByText('IP Addresses')).toBeVisible();
     expect(getByText('0.0.0.0')).toBeVisible();
+
+    // VPC Details Panel
+    expect(getByText('VPC')).toBeVisible();
+    expect(getByText('Subnets:')).toBeVisible();
+    expect(getByText(`${nbVpcConfig.ipv4_range}`)).toBeVisible();
 
     // Tags panel
     expect(getByText('Tags')).toBeVisible();

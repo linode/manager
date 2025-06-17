@@ -1,4 +1,8 @@
-import { useGrants, useProfile } from '@linode/queries';
+import {
+  useGrants,
+  useProfile,
+  useUpdateDomainMutation,
+} from '@linode/queries';
 import {
   ActionsPanel,
   Drawer,
@@ -13,7 +17,6 @@ import * as React from 'react';
 
 import { MultipleIPInput } from 'src/components/MultipleIPInput/MultipleIPInput';
 import { TagsInput } from 'src/components/TagsInput/TagsInput';
-import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { handleFormikBlur } from 'src/utilities/formikTrimUtil';
 import { extendedIPToString, stringToExtendedIP } from 'src/utilities/ipUtils';

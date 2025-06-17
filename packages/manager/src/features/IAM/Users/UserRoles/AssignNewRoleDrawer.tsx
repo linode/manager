@@ -1,26 +1,30 @@
-import { ActionsPanel, Drawer, Typography } from '@linode/ui';
+import {
+  iamQueries,
+  useAccountRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { enqueueSnackbar } from 'notistack';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
-import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
 
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import {
   getAllRoles,
   mergeAssignedRolesIntoExistingRoles,
 } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
+import type { IamUserRoles } from '@linode/api-v4';
 
 interface Props {
   onClose: () => void;
@@ -29,11 +33,12 @@ interface Props {
 
 export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
+  const queryClient = useQueryClient();
 
-  const { data: accountPermissions } = useAccountPermissions();
-
-  const { data: existingRoles } = useAccountUserPermissions(username ?? '');
+  const { data: accountRoles } = useAccountRoles();
 
   const form = useForm<AssignNewRoleFormValues>({
     defaultValues: {
@@ -46,7 +51,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
     },
   });
 
-  const { control, handleSubmit, reset, watch } = form;
+  const { control, handleSubmit, reset, watch, formState, setError } = form;
   const { append, fields, remove } = useFieldArray({
     control,
     name: 'roles',
@@ -58,36 +63,58 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
   const roles = watch('roles');
 
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
-    return getAllRoles(accountPermissions);
-  }, [accountPermissions]);
+    return getAllRoles(accountRoles);
+  }, [accountRoles]);
 
-  const { mutateAsync: updateUserRolePermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles, isPending } =
+    useUserRolesMutation(username);
 
-  const onSubmit = handleSubmit(async (values: AssignNewRoleFormValues) => {
-    const mergedRoles = mergeAssignedRolesIntoExistingRoles(
-      values,
-      existingRoles
-    );
-    await updateUserRolePermissions(mergedRoles);
-    handleClose();
-  });
+  const onSubmit = async (values: AssignNewRoleFormValues) => {
+    try {
+      const queryKey = iamQueries.user(username)._ctx.roles.queryKey;
+      const currentRoles = queryClient.getQueryData<IamUserRoles>(queryKey);
+
+      const mergedRoles = mergeAssignedRolesIntoExistingRoles(
+        values,
+        structuredClone(currentRoles)
+      );
+
+      await updateUserRoles(mergedRoles);
+
+      enqueueSnackbar(`Roles added.`, { variant: 'success' });
+      handleClose();
+    } catch (error) {
+      setError(error.field ?? 'root', {
+        message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+      });
+    }
+  };
 
   const handleClose = () => {
     reset();
     onClose();
   };
 
+  useEffect(() => {
+    if (open) {
+      reset({
+        roles: [{ role: null, entities: null }],
+      });
+    }
+  }, [open, reset]);
   // TODO - add a link 'Learn more" - UIE-8534
   return (
-    <Drawer onClose={onClose} open={open} title="Assign New Roles">
-      {' '}
+    <Drawer onClose={handleClose} open={open} title="Assign New Roles">
       <FormProvider {...form}>
-        <form onSubmit={onSubmit}>
-          <Typography sx={{ marginBottom: 3 }}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          {formState.errors.root?.message && (
+            <Notice text={formState.errors.root?.message} variant="error" />
+          )}
+
+          <Typography sx={{ marginBottom: 2.5 }}>
             Select a role you want to assign to a user. Some roles require
             selecting entities they should apply to. Configure the first role
             and continue adding roles or save the assignment.
@@ -114,7 +141,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             fields.map((field, index) => (
               <AssignSingleRole
                 hideDetails={areDetailsHidden}
@@ -122,12 +149,12 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
                 key={field.id}
                 onRemove={() => remove(index)}
                 options={allRoles}
-                permissions={accountPermissions}
+                permissions={accountRoles}
               />
             ))}
 
           {/* If all roles are filled, allow them to add another */}
-          {roles.length > 0 && roles.every((field) => field.role) && (
+          {roles.length > 0 && roles.every((field) => field.role?.value) && (
             <StyledLinkButtonBox sx={{ marginTop: theme.tokens.spacing.S12 }}>
               <LinkButton onClick={() => append({ role: null })}>
                 Add another role
@@ -139,6 +166,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
               'data-testid': 'submit',
               label: 'Assign',
               type: 'submit',
+              loading: isPending || formState.isSubmitting,
             }}
             secondaryButtonProps={{
               'data-testid': 'cancel',

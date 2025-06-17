@@ -63,6 +63,7 @@ export const ConfigSelectDialogContent = (
         onChange={(_, item) => setSelectedConfigId(item.value)}
         options={configOptions}
         placeholder="Select Configuration Profile"
+        searchable
         value={
           configOptions.find((options) => options.value === selectedConfigId) ??
           null

@@ -12,6 +12,10 @@ describe('getCreateLinkForEntityType', () => {
     expect(getCreateLinkForEntityType('linode')).toBe('/linodes/create');
     expect(getCreateLinkForEntityType('volume')).toBe('/volumes/create');
     expect(getCreateLinkForEntityType('firewall')).toBe('/firewalls/create');
+    expect(getCreateLinkForEntityType('placement_group')).toBe(
+      '/placement-groups/create'
+    );
+    expect(getCreateLinkForEntityType('lkecluster')).toBe('/kubernetes/create');
   });
 });
 

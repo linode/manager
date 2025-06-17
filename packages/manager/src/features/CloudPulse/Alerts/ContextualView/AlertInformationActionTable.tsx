@@ -4,6 +4,7 @@ import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
+// eslint-disable-next-line no-restricted-imports
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -21,6 +22,11 @@ import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
+import type {
+  Alert,
+  APIError,
+  CloudPulseAlertsPayload,
+} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -35,18 +41,27 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Id of the selected entity
+   * Only use in edit flow
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
+   * Only use in edit flow
    */
-  entityName: string;
+  entityName?: string;
 
   /**
    * Error received from API
    */
   error?: APIError[] | null;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param payload enabled alerts ids
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -71,6 +86,25 @@ export interface TableColumnHeader {
   label: string;
 }
 
+export interface AlertRowPropsOptions {
+  /**
+   * Enabled alerts payload
+   */
+  enabledAlerts: CloudPulseAlertsPayload;
+
+  /**
+   * Id of the entity
+   * Only use in edit flow.
+   */
+  entityId?: string;
+
+  /**
+   * Callback function to handle alert toggle
+   * Only use in create flow.
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+}
+
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
@@ -81,7 +115,7 @@ export const AlertInformationActionTable = (
     entityName,
     error,
     orderByColumn,
-    serviceType,
+    onToggleAlert,
   } = props;
 
   const _error = error
@@ -104,6 +138,17 @@ export const AlertInformationActionTable = (
     system: [],
     user: [],
   });
+  
+  const isAnyAlertStateChanged = React.useMemo(() => {
+    const initial = initialAlertStatesRef.current;
+    const current = enabledAlerts;
+
+    if (!compareArrays(current.system, initial.system)) {
+      return true;
+    } else {
+      return !compareArrays(current.user, initial.user);
+    }
+  }, [enabledAlerts]);
 
   // Initialize alert states based on their current status
   React.useEffect(() => {
@@ -131,6 +176,26 @@ export const AlertInformationActionTable = (
     serviceType,
     entityId
   );
+
+  const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
+    const { entityId, enabledAlerts, onToggleAlert } = options;
+
+    // Ensure that at least one of entityId or onToggleAlert is provided
+    if (!(entityId || onToggleAlert)) {
+      return null;
+    }
+
+    const isEditMode = !!entityId;
+
+    const handleToggle = isEditMode
+      ? handleToggleEditFlow
+      : handleToggleCreateFlow;
+    const status = isEditMode
+      ? alert.entity_ids.includes(entityId)
+      : enabledAlerts[alert.type].includes(alert.id);
+
+    return { handleToggle, status };
+  };
 
   const handleCancel = () => {
     setIsDialogOpen(false);
@@ -161,7 +226,7 @@ export const AlertInformationActionTable = (
     [updateAlerts, enqueueSnackbar]
   );
 
-  const handleToggle = (alert: Alert) => {
+  const handleToggleEditFlow = (alert: Alert) => {
     setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
       const newPayload: CloudPulseAlertsPayload = { ...prev };
       const index = newPayload[alert.type].indexOf(alert.id);
@@ -177,16 +242,24 @@ export const AlertInformationActionTable = (
     });
   };
 
-  const isAnyAlertStateChanged = React.useMemo(() => {
-    const initial = initialAlertStatesRef.current;
-    const current = enabledAlerts;
+  const handleToggleCreateFlow = (alert: Alert) => {
+    if (!onToggleAlert) return;
 
-    if (!compareArrays(current.system, initial.system)) {
-      return true;
-    } else {
-      return !compareArrays(current.user, initial.user);
-    }
-  }, [enabledAlerts]);
+    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+      const newPayload: CloudPulseAlertsPayload = { ...prev };
+      const index = newPayload[alert.type].indexOf(alert.id);
+
+      // If the alert is already in the payload, remove it, otherwise add it
+      if (index !== -1) {
+        newPayload[alert.type].splice(index, 1);
+      } else {
+        newPayload[alert.type].push(alert.id);
+      }
+
+      onToggleAlert(newPayload);
+      return newPayload;
+    });
+  };
 
   return (
     <>
@@ -251,14 +324,20 @@ export const AlertInformationActionTable = (
                           loading={false}
                         />
                         {paginatedAndOrderedAlerts?.map((alert) => {
+                          const rowProps = getAlertRowProps(alert, {
+                            enabledAlerts,
+                            entityId,
+                            onToggleAlert,
+                          });
+  
+                          if (!rowProps) return null;
+  
                           return (
                             <AlertInformationActionRow
                               alert={alert}
-                              handleToggle={handleToggle}
+                              handleToggle={rowProps.handleToggle}
                               key={alert.id}
-                              status={enabledAlerts[alert.type].includes(
-                                alert.id
-                              )}
+                              status={rowProps.status}
                             />
                           );
                         })}

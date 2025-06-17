@@ -13,6 +13,6 @@ describe('RolesTableExpandedRow', () => {
   it('renders when used', () => {
     renderWithTheme(<RolesTableExpandedRow permissions={[]} />);
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(screen.getByText('Permissions')).toBeVisible();
   });
 });

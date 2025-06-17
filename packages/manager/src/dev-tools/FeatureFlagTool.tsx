@@ -21,9 +21,10 @@ const MOCK_FEATURE_FLAGS_STORAGE_KEY = 'devTools/mock-feature-flags';
 const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'aclp', label: 'CloudPulse' },
   { flag: 'aclpAlerting', label: 'CloudPulse Alerting' },
-  { flag: 'aclpIntegration', label: 'ACLP Integration' },
+  { flag: 'aclpBetaServices', label: 'ACLP Beta Services' },
   { flag: 'aclpLogs', label: 'ACLP Logs' },
   { flag: 'apl', label: 'Akamai App Platform' },
+  { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
@@ -41,6 +42,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'dbaasV2MonitorMetrics', label: 'Databases V2 Monitor' },
   { flag: 'databaseResize', label: 'Database Resize' },
   { flag: 'databaseAdvancedConfig', label: 'Database Advanced Config' },
+  { flag: 'databaseVpc', label: 'Database VPC' },
   { flag: 'apicliButtonCopy', label: 'APICLI Button Copy' },
   { flag: 'iam', label: 'Identity and Access Beta' },
   {

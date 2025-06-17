@@ -16,9 +16,28 @@ import {
 
 import { SupportTicketDetail } from './SupportTicketDetail';
 
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn(),
+  useParams: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('Support Ticket Detail', () => {
   beforeAll(() => {
     resizeScreenSize(breakpoints.values.lg);
+    queryMocks.useParams.mockReturnValue({ ticketId: '1' });
+    queryMocks.useLocation.mockReturnValue({
+      state: {},
+      pathname: '/support/tickets/1',
+    });
   });
 
   it('should display a loading spinner', () => {

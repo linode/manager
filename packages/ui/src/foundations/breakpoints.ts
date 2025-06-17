@@ -1,16 +1,11 @@
-import { createTheme } from '@mui/material';
+import { unstable_createBreakpoints } from '@mui/material';
 
-// This is a hack to create breakpoints outside of the theme itself.
-// This will likely have to change at some point 😖
-export const breakpoints = createTheme({
-  breakpoints: {
-    values: {
-      lg: 1280,
-      md: 960,
-      sm: 600,
-      xl: 1920,
-      xs: 0,
-    },
+export const breakpoints = unstable_createBreakpoints({
+  values: {
+    lg: 1280,
+    md: 960,
+    sm: 600,
+    xl: 1920,
+    xs: 0,
   },
-  name: 'light',
-}).breakpoints;
+});

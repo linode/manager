@@ -1,17 +1,17 @@
 import { useAccountUsers, useProfile } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Button, Paper, Stack, Typography } from '@linode/ui';
 import { useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { UserDeleteConfirmation } from '../../Shared/UserDeleteConfirmation';
 import { CreateUserDrawer } from './CreateUserDrawer';
@@ -21,27 +21,37 @@ import { UsersLandingTableHead } from './UsersLandingTableHead';
 
 import type { Filter } from '@linode/api-v4';
 
-const XS_TO_SM_BREAKPOINT = 475;
-
 export const UsersLanding = () => {
+  const navigate = useNavigate();
+  const { query } = useSearch({
+    from: '/iam',
+  });
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedUsername, setSelectedUsername] = React.useState('');
-
   const { data: profile } = useProfile();
   const theme = useTheme();
-  const pagination = usePagination(1, 'account-users');
-  const order = useOrder();
-
-  const location = useLocation();
-  const history = useHistory();
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/users',
+    initialPage: 1,
+    preferenceKey: 'iam-account-users-pagination',
+  });
+  const order = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'username',
+      },
+      from: '/iam/users',
+    },
+    preferenceKey: 'iam-account-users-order',
+  });
 
   const isProxyUser =
     profile?.user_type === 'child' || profile?.user_type === 'proxy';
 
   const queryParams = new URLSearchParams(location.search);
-  const query = queryParams.get('query') ?? '';
 
   const { error: searchError, filter } = getAPIFilterFromQuery(query, {
     searchableFieldsWithoutOperator: ['username', 'email'],
@@ -83,7 +93,10 @@ export const UsersLanding = () => {
     } else {
       queryParams.delete('query');
     }
-    history.push({ search: queryParams.toString() });
+    navigate({
+      to: '/iam/users',
+      search: { query: value },
+    });
   };
 
   const handleDelete = (username: string) => {
@@ -101,24 +114,18 @@ export const UsersLanding = () => {
           order={order}
         />
       )}
-      <Paper sx={(theme) => ({ marginTop: theme.spacing(2) })}>
-        <Box
-          sx={(theme) => ({
-            alignItems: 'center',
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: theme.spacing(2),
-            [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-              alignItems: 'flex-start',
-              flexDirection: 'column',
-            },
-          })}
+      <Paper sx={(theme) => ({ marginTop: theme.tokens.spacing.S16 })}>
+        <Stack
+          direction={isSmDown ? 'column' : 'row'}
+          justifyContent="space-between"
+          marginBottom={2}
+          spacing={2}
         >
           {isProxyUser ? (
             <Typography
               sx={(theme) => ({
                 [theme.breakpoints.down('md')]: {
-                  marginLeft: theme.spacing(1),
+                  marginLeft: theme.tokens.spacing.S8,
                 },
               })}
               variant="h3"
@@ -130,7 +137,7 @@ export const UsersLanding = () => {
               clearable
               containerProps={{
                 sx: {
-                  width: { md: '320px', xs: '100%' },
+                  width: '320px',
                 },
               }}
               debounceTime={250}
@@ -140,19 +147,16 @@ export const UsersLanding = () => {
               label="Filter"
               onSearch={handleSearch}
               placeholder="Filter"
-              value={query}
+              value={query ?? ''}
             />
           )}
           <Button
             buttonType="primary"
             disabled={isRestrictedUser}
             onClick={() => setIsCreateDrawerOpen(true)}
-            sx={(theme) => ({
-              [theme.breakpoints.down(XS_TO_SM_BREAKPOINT)]: {
-                marginTop: theme.spacing(1),
-                width: '100%',
-              },
-            })}
+            sx={{
+              maxWidth: '120px',
+            }}
             tooltipText={
               isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
@@ -161,7 +165,7 @@ export const UsersLanding = () => {
           >
             Add a User
           </Button>
-        </Box>
+        </Stack>
         <Table aria-label="List of Users" sx={{ tableLayout: 'fixed' }}>
           <UsersLandingTableHead order={order} />
           <TableBody>

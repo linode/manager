@@ -60,27 +60,49 @@ export interface MockPresetBaseline extends MockPresetBase {
  * Mock Preset Extra
  */
 export type MockPresetExtraGroup = {
-  id:
-    | 'Account'
-    | 'API'
-    | 'Capabilities'
-    | 'Limits'
-    | 'Managed'
-    | 'Profile'
-    | 'Regions';
-  type: 'account' | 'checkbox' | 'profile' | 'select';
+  id: MockPresetExtraGroupId;
+  type: MockPresetExtraGroupType;
 };
+
+export type MockPresetExtraGroupId =
+  | 'Account'
+  | 'API'
+  | 'Capabilities'
+  | 'Events'
+  | 'Limits'
+  | 'Maintenance'
+  | 'Managed'
+  | 'Notifications'
+  | 'Profile'
+  | 'Regions'
+  | 'User Permissions';
+
+export type MockPresetExtraGroupType =
+  | 'account'
+  | 'checkbox'
+  | 'events'
+  | 'maintenance'
+  | 'notifications'
+  | 'profile'
+  | 'select'
+  | 'userPermissions';
+
 export type MockPresetExtraId =
   | 'account:custom'
   | 'account:managed-disabled'
   | 'account:managed-enabled'
   | 'api:response-time'
+  | 'events:custom'
   | 'limits:linode-limits'
   | 'limits:lke-limits'
+  | 'maintenance:custom'
+  | 'notifications:custom'
   | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
-  | 'regions:legacy';
+  | 'regions:legacy'
+  | 'userAccountPermissions:custom'
+  | 'userEntityPermissions:custom';
 
 export interface MockPresetExtra extends MockPresetBase {
   canUpdateCount?: boolean;

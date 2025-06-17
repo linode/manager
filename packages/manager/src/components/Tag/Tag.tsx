@@ -1,6 +1,7 @@
 import { CloseIcon } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { StyledChip, StyledDeleteButton } from './Tag.styles';

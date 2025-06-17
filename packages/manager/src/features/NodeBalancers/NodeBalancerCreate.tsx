@@ -66,9 +66,9 @@ import {
 import { VPCPanel } from './VPCPanel';
 
 import type { NodeBalancerConfigFieldsWithStatus } from './types';
-import type { APIError, NodeBalancerVpcPayload } from '@linode/api-v4';
+import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 import type { Theme } from '@mui/material/styles';
-import type { Tag } from 'src/components/TagsInput/TagsInput';
+import type { TagOption } from 'src/components/TagsInput/TagsInput';
 
 interface NodeBalancerConfigFieldsWithStatusAndErrors
   extends NodeBalancerConfigFieldsWithStatus {
@@ -162,13 +162,13 @@ const NodeBalancerCreate = () => {
     globalGrantType: 'add_nodebalancers',
   });
 
-  const [isVpcSelected, setIsVpcSelected] = React.useState<boolean>(false);
+  const [vpcSelected, setVPCSelected] = React.useState<null | VPC>(null);
   const [vpcErrors, setVPCErrors] = React.useState<APIError[]>([]);
   const formContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     setVPCErrors([]);
-  }, [isVpcSelected]);
+  }, [vpcSelected]);
 
   const addNodeBalancer = () => {
     if (isRestricted) {
@@ -229,9 +229,13 @@ const NodeBalancerCreate = () => {
   const onNodeAddressChange = (
     configIdx: number,
     nodeIdx: number,
-    value: string
+    value: string,
+    subnetId?: number
   ) => {
     setNodeValue(configIdx, nodeIdx, 'address', value);
+    if (subnetId && isNodebalancerVPCEnabled) {
+      setNodeValue(configIdx, nodeIdx, 'subnet_id', subnetId);
+    }
   };
 
   const onNodePortChange = (
@@ -321,10 +325,10 @@ const NodeBalancerCreate = () => {
   };
 
   const onCreate = () => {
-    if (isVpcSelected && nodeBalancerFields?.vpcs === undefined) {
+    if (vpcSelected && nodeBalancerFields?.vpcs === undefined) {
       const subnetError = {
         field: 'vpc[0].subnet_id',
-        reason: 'Subnet is required',
+        reason: 'Select a Subnet within the chosen VPC.',
       };
       setVPCErrors((prev) => (prev ? [...prev, subnetError] : [subnetError]));
       scrollErrorIntoViewV2(formContainerRef);
@@ -337,13 +341,15 @@ const NodeBalancerCreate = () => {
       nodeBalancerRequestData?.vpcs &&
       nodeBalancerRequestData.vpcs.length > 0
     ) {
-      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map(
-        (vpc) => ({
-          ...vpc,
-          ipv4_range: vpc.ipv4_range.endsWith('/30')
-            ? vpc.ipv4_range
-            : `${vpc.ipv4_range}/30`,
-        })
+      nodeBalancerRequestData.vpcs = nodeBalancerRequestData.vpcs.map((vpc) =>
+        vpc.ipv4_range
+          ? {
+              ...vpc,
+              ipv4_range: vpc.ipv4_range.endsWith('/30')
+                ? vpc.ipv4_range
+                : `${vpc.ipv4_range}/30`,
+            }
+          : vpc
       );
     }
     nodeBalancerRequestData.configs = transformConfigsForRequest(
@@ -380,7 +386,7 @@ const NodeBalancerCreate = () => {
         const vpcErrors = errors
           .map((err) => {
             if (!err?.field) return null;
-            if (err?.field.includes('subnet_id')) {
+            if (err?.field.includes('vpcs[0].subnet_id')) {
               return {
                 field: 'vpcs.subnet_id',
                 reason: err.reason,
@@ -454,7 +460,7 @@ const NodeBalancerCreate = () => {
     }));
   };
 
-  const tagsChange = (tags: Tag[]) => {
+  const tagsChange = (tags: TagOption[]) => {
     setNodeBalancerFields((prev) => ({
       ...prev,
       tags: tags.map((tag) => tag.value),
@@ -493,7 +499,7 @@ const NodeBalancerCreate = () => {
       ...prev,
       region,
     }));
-    setIsVpcSelected(false);
+    setVPCSelected(null);
     resetNodeAddresses();
   };
 
@@ -512,31 +518,35 @@ const NodeBalancerCreate = () => {
         return { ...rest };
       });
     } else {
-      const vpcs = subnetIds.map((id) => ({ subnet_id: id, ipv4_range: '' }));
-      setNodeBalancerFields((prev) => ({
-        ...prev,
-        vpcs,
-      }));
+      const vpcs = subnetIds.map((id) => ({ subnet_id: id }));
+      setNodeBalancerFields((prev) => ({ ...prev, vpcs }));
     }
   };
 
-  const ipv4Change = (ipv4Range: string, index: number) => {
+  const ipv4Change = (ipv4Range: null | string, index: number) => {
     if (nodeBalancerFields?.vpcs?.[index].ipv4_range === ipv4Range) {
       return;
     }
-    if (ipv4Range === '') {
+    if (ipv4Range === null) {
+      // handling auto-assign ipv4 ranges for subnets
       setNodeBalancerFields((prev) => {
-        // eslint-disable-next-line no-unused-vars, sonarjs/no-unused-vars
-        const { vpcs: _, ...rest } = prev;
-        return { ...rest };
+        const { vpcs: vpcs, ...rest } = prev;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const updatedVpcs = vpcs?.map(({ subnet_id }) => ({
+          subnet_id,
+        }));
+        return { ...rest, vpcs: updatedVpcs };
       });
-    }
-    const vpcs = nodeBalancerFields?.vpcs;
-    if (vpcs) {
-      vpcs[index].ipv4_range = ipv4Range;
+    } else {
+      const updatedVpcs = nodeBalancerFields?.vpcs?.map((vpc, idx) => {
+        if (idx === index) {
+          return { ...vpc, ipv4_range: ipv4Range };
+        }
+        return vpc;
+      });
       setNodeBalancerFields((prev) => ({
         ...prev,
-        vpcs,
+        vpcs: updatedVpcs,
       }));
     }
   };
@@ -709,9 +719,10 @@ const NodeBalancerCreate = () => {
             errors={vpcErrors}
             ipv4Change={ipv4Change}
             regionSelected={nodeBalancerFields.region ?? ''}
-            setIsVpcSelected={setIsVpcSelected}
+            setVpcSelected={setVPCSelected}
             subnetChange={subnetChange}
-            subnets={nodeBalancerFields.vpcs}
+            subnetsSelected={nodeBalancerFields.vpcs}
+            vpcSelected={vpcSelected}
           />
         )}
       </Stack>
@@ -752,6 +763,8 @@ const NodeBalancerCreate = () => {
                 }
                 healthCheckType={nodeBalancerFields.configs[idx].check!}
                 nodeBalancerRegion={nodeBalancerFields.region}
+                nodeBalancerSubnetId={nodeBalancerFields?.vpcs?.[0].subnet_id}
+                nodeBalancerVpcId={vpcSelected?.id}
                 nodes={nodeBalancerFields.configs[idx].nodes}
                 onAlgorithmChange={onChange('algorithm')}
                 onCheckBodyChange={onChange('check_body')}
@@ -765,8 +778,8 @@ const NodeBalancerCreate = () => {
                   onChange('check')(value);
                   afterHealthCheckTypeUpdate(idx);
                 }}
-                onNodeAddressChange={(nodeIndex, value) =>
-                  onNodeAddressChange(idx, nodeIndex, value)
+                onNodeAddressChange={(nodeIndex, value, subnetId) =>
+                  onNodeAddressChange(idx, nodeIndex, value, subnetId)
                 }
                 onNodeLabelChange={(nodeIndex, value) =>
                   onNodeLabelChange(idx, nodeIndex, value)

@@ -11,8 +11,8 @@ export const routes = {
   profile: '/profile',
   support: '/support',
   supportTickets: '/support/tickets',
-  supportTicketsClosed: '/support/tickets?type=closed',
-  supportTicketsOpen: '/support/tickets?type=open',
+  supportTicketsClosed: '/support/tickets/closed',
+  supportTicketsOpen: '/support/tickets/open',
 };
 /**
  * due 2 rerender of the page that i could not deterministically check i added this wait

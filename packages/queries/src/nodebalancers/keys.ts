@@ -3,6 +3,7 @@ import {
   getNodeBalancerFirewalls,
   getNodeBalancers,
   getNodeBalancerStats,
+  getNodeBalancerVPCConfigsBeta,
 } from '@linode/api-v4';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
@@ -27,6 +28,10 @@ export const nodebalancerQueries = createQueryKeys('nodebalancers', {
       },
       stats: {
         queryFn: () => getNodeBalancerStats(id),
+        queryKey: null,
+      },
+      vpcsBeta: {
+        queryFn: () => getNodeBalancerVPCConfigsBeta(id),
         queryKey: null,
       },
     },

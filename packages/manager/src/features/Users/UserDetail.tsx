@@ -1,43 +1,41 @@
 import { useAccountUser, useProfile } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 import UserPermissions from './UserPermissions';
 import { UserProfile } from './UserProfile/UserProfile';
 
 export const UserDetail = () => {
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/account/users/$username',
+  });
+
   const location = useLocation();
-  const history = useHistory();
 
   const { data: profile } = useProfile();
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
 
   const queryClient = useQueryClient();
 
-  const tabs = [
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     {
-      routeName: `/account/users/${username}/profile`,
+      to: '/account/users/$username/profile',
       title: 'User Profile',
     },
     {
-      routeName: `/account/users/${username}/permissions`,
+      to: '/account/users/$username/permissions',
       title: 'User Permissions',
     },
-  ];
-
-  const currentTabIndex = tabs.findIndex((tab) =>
-    location.pathname.includes(tab.routeName)
-  );
+  ]);
 
   const isProxyUser = user?.user_type === 'proxy';
 
@@ -66,11 +64,8 @@ export const UserDetail = () => {
         removeCrumbX={4}
         title={username}
       />
-      <Tabs
-        index={currentTabIndex === -1 ? 0 : currentTabIndex}
-        onChange={(index) => history.push(tabs[index].routeName)}
-      >
-        {!isProxyUser && <TabLinkList tabs={tabs} />}
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        {!isProxyUser && <TanStackTabLinkList tabs={tabs} />}
         <TabPanels>
           <SafeTabPanel index={0}>
             <UserProfile />
@@ -87,7 +82,3 @@ export const UserDetail = () => {
     </>
   );
 };
-
-export const userDetailLazyRoute = createLazyRoute('/account/users/$username')({
-  component: UserDetail,
-});

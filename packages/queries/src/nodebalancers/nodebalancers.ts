@@ -31,6 +31,7 @@ import type {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerStats,
+  NodeBalancerVpcConfig,
   Params,
   PriceType,
   ResourcePage,
@@ -329,3 +330,12 @@ export const nodebalancerEventHandler = ({
     });
   }
 };
+
+export const useNodeBalancerVPCConfigsBetaQuery = (
+  nodebalancerId: number,
+  enabled = false,
+) =>
+  useQuery<ResourcePage<NodeBalancerVpcConfig>, APIError[]>({
+    ...nodebalancerQueries.nodebalancer(nodebalancerId)._ctx.vpcsBeta,
+    enabled,
+  });

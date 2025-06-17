@@ -6,6 +6,7 @@ import InfoOutline from '@mui/icons-material/InfoOutlined';
 import WarningSolid from '@mui/icons-material/Warning';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { omittedProps } from '../../utilities';
 import { IconButton } from '../IconButton';
@@ -40,6 +41,11 @@ export interface TooltipIconProps
    * @todo this seems like a flaw... passing an icon should not require `status` to be `other`
    */
   icon?: JSX.Element;
+  /**
+   * Size of the tooltip icon
+   * @default small
+   */
+  labelTooltipIconSize?: 'large' | 'small';
   /**
    * Enables a leaveDelay of 3000ms
    * @default false
@@ -100,6 +106,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     tooltipAnalyticsEvent,
     tooltipPosition,
     width,
+    labelTooltipIconSize,
   } = props;
 
   const handleOpenTooltip = () => {
@@ -112,18 +119,17 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const sxRootStyle = {
     '&&': {
-      fill: theme.tokens.color.Neutrals[50],
-      stroke: theme.tokens.color.Neutrals[50],
+      fill: theme.tokens.component.Label.InfoIcon,
+      stroke: theme.tokens.component.Label.InfoIcon,
       strokeWidth: 0,
     },
     '&:hover': {
-      color: theme.palette.primary.main,
-      fill: theme.palette.primary.main,
-      stroke: theme.palette.primary.main,
+      color: theme.tokens.alias.Content.Icon.Primary.Hover,
+      fill: theme.tokens.alias.Content.Icon.Primary.Hover,
+      stroke: theme.tokens.alias.Content.Icon.Primary.Hover,
     },
-    color: theme.tokens.color.Neutrals[50],
-    height: 20,
-    width: 20,
+    height: labelTooltipIconSize === 'small' ? 16 : 20,
+    width: labelTooltipIconSize === 'small' ? 16 : 20,
   };
 
   switch (status) {
@@ -134,7 +140,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = <HelpOutline sx={sxRootStyle} />;
       break;
     case 'info':
-      renderIcon = <InfoOutline style={{ color: theme.color.black }} />;
+      renderIcon = <InfoOutline sx={sxRootStyle} />;
       break;
     case 'other':
       renderIcon = icon ?? null;

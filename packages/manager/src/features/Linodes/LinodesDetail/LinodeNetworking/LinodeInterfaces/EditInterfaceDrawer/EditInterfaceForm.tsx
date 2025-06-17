@@ -33,7 +33,9 @@ export const EditInterfaceForm = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const firewall = linodeInterfaceFirewalls[0] as Firewall | undefined;
+  const firewall = (linodeInterfaceFirewalls.find(
+    (firewall) => firewall.status === 'enabled'
+  ) ?? linodeInterfaceFirewalls[0]) as Firewall | undefined;
 
   const { mutateAsync: updateInterface, data: updatedInterface } =
     useUpdateLinodeInterfaceMutation(linodeId, linodeInterface.id);

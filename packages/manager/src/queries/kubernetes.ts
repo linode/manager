@@ -506,10 +506,14 @@ export const useAllKubernetesNodePoolQuery = (
   });
 };
 
-export const useKubernetesDashboardQuery = (clusterId: number) => {
-  return useQuery<KubernetesDashboardResponse, APIError[]>(
-    kubernetesQueries.cluster(clusterId)._ctx.dashboard
-  );
+export const useKubernetesDashboardQuery = (
+  clusterId: number,
+  enabled: boolean = true
+) => {
+  return useQuery<KubernetesDashboardResponse, APIError[]>({
+    ...kubernetesQueries.cluster(clusterId)._ctx.dashboard,
+    enabled,
+  });
 };
 
 export const useKubernetesVersionQuery = () =>

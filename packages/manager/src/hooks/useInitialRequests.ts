@@ -2,10 +2,6 @@ import { accountQueries, profileQueries } from '@linode/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
 
-import { useAuthentication } from 'src/hooks/useAuthentication';
-import { usePendingUpload } from 'src/hooks/usePendingUpload';
-import { redirectToLogin } from 'src/session';
-
 /**
  * This hook is responsible for making Cloud Manager's initial requests.
  * It exposes a `isLoading` value so that we can render a loading page
@@ -14,31 +10,11 @@ import { redirectToLogin } from 'src/session';
 export const useInitialRequests = () => {
   const queryClient = useQueryClient();
 
-  const { token } = useAuthentication();
-  const isAuthenticated = Boolean(token);
-  const pendingUpload = usePendingUpload();
-
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (
-      !isAuthenticated &&
-      // Do not redirect to Login if there is a pending image upload.
-      !pendingUpload
-    ) {
-      redirectToLogin(location.pathname, location.search);
-    }
-
-    /**
-     * this is the case where we've just come back from login and need
-     * to show the children onMount
-     */
-    if (isAuthenticated) {
-      makeInitialRequests();
-    }
-
-    // We only want this useEffect running when `isAuthenticated` changes.
-  }, [isAuthenticated]);
+    makeInitialRequests();
+  }, []);
 
   /**
    * We make a series of requests for data on app load. The flow is:

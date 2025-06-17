@@ -1,3 +1,4 @@
+import { useTypeQuery } from '@linode/queries';
 import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
@@ -17,7 +18,6 @@ import {
 } from 'src/features/Linodes/transitions';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
-import { useTypeQuery } from 'src/queries/types';
 
 import { IPAddress } from '../IPAddress';
 import { RegionIndicator } from '../RegionIndicator';
@@ -72,7 +72,7 @@ export const LinodeRow = (props: Props) => {
       <>
         This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link to="/support/tickets?type=open">open support tickets.</Link>
+        <Link to="/support/tickets/open">open support tickets.</Link>
       </>
     );
   };

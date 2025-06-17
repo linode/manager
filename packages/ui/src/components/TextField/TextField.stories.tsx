@@ -98,6 +98,36 @@ export const WithTooltip: Story = {
   },
 };
 
+export const WithTooltipIconLeft: Story = {
+  args: {
+    label: 'Label',
+    labelTooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+    labelTooltipIconPosition: 'left',
+  },
+};
+
+export const WithTooltipSmall: Story = {
+  args: {
+    label: 'Label',
+    labelTooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+    labelTooltipIconSize: 'small',
+  },
+};
+
+export const WithTooltipLarge: Story = {
+  args: {
+    label: 'Label',
+    labelTooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+    labelTooltipIconSize: 'large',
+  },
+};
+
 export const WithAdornment: Story = {
   args: {
     InputProps: {

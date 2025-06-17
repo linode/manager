@@ -101,7 +101,6 @@ describe('Security', () => {
 
     // Make sure the restricted user's SSH keys are loaded
     for (const sshKey of sshKeys) {
-      // eslint-disable-next-line no-await-in-loop
       expect(await findByText(sshKey.label, { exact: false })).toBeVisible();
     }
 

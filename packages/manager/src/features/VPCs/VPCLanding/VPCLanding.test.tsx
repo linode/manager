@@ -44,6 +44,36 @@ describe('VPC Landing Table', () => {
     getAllByText('Linodes');
   });
 
+  it('should render vpc landing table with items with nodebalancerVpc flag enabled', async () => {
+    server.use(
+      http.get('*/vpcs', () => {
+        const vpcsWithSubnet = vpcFactory.buildList(3, {
+          subnets: subnetFactory.buildList(Math.floor(Math.random() * 10) + 1),
+        });
+        return HttpResponse.json(makeResourcePage(vpcsWithSubnet));
+      })
+    );
+
+    const { getAllByText, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCLanding />,
+      {
+        flags: { nodebalancerVpc: true },
+      }
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    // Static text and table column headers
+    getAllByText('Label');
+    getAllByText('Region');
+    getAllByText('VPC ID');
+    getAllByText('Subnets');
+    getAllByText('Resources');
+  });
+
   it('should render vpc landing with empty state', async () => {
     server.use(
       http.get('*/vpcs', () => {

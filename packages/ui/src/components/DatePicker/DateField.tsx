@@ -16,7 +16,7 @@ interface DateFieldProps
   extends Omit<MUIDateFieldProps<DateTime>, 'onChange' | 'value'> {
   errorText?: string;
   format?: 'dd-MM-yyyy' | 'MM/dd/yyyy' | 'yyyy-MM-dd';
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   label: string;
   onChange: (date: DateTime | null) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

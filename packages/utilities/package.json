@@ -21,7 +21,6 @@
     "typecheck": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "coverage": "vitest run --coverage && open coverage/index.html",
     "coverage:summary": "vitest run --coverage.enabled --reporter=junit --coverage.reporter=json-summary"
   },
@@ -34,18 +33,17 @@
   "dependencies": {
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
-    "ramda": "~0.25.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@linode/tsconfig": "workspace:*",
     "@testing-library/dom": "^10.1.0",
     "@testing-library/jest-dom": "~6.4.2",
     "@testing-library/react": "~16.0.0",
     "@types/luxon": "3.4.2",
-    "@types/ramda": "0.25.16",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
     "factory.ts": "^0.5.1"
   }
 }
