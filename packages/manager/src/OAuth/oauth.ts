@@ -3,7 +3,6 @@ import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 import { useLocation } from 'react-router-dom';
 
-import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
   clearUserInput,
   getEnvLocalStorageOverrides,
@@ -89,19 +88,26 @@ export function useOAuth() {
 function getLoginURL() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  return localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
+  return (
+    localStorageOverrides?.loginRoot ?? import.meta.env.REACT_APP_LOGIN_ROOT
+  );
 }
 
 function getClientId() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  const clientId = localStorageOverrides?.clientID ?? CLIENT_ID;
+  const clientId =
+    localStorageOverrides?.clientID ?? import.meta.env.REACT_APP_CLIENT_ID;
 
   if (!clientId) {
     throw new Error('No CLIENT_ID specified.');
   }
 
   return clientId;
+}
+
+function getAppRoot() {
+  return import.meta.env.REACT_APP_APP_ROOT;
 }
 
 export async function logout() {
@@ -135,16 +141,21 @@ async function generateCodeVerifierAndChallenge() {
   return { codeVerifier, codeChallenge };
 }
 
-function generateNonce() {
+export function generateNonce() {
   const nonce = window.crypto.randomUUID();
   storage.authentication.nonce.set(nonce);
   return { nonce };
 }
 
-async function generateOAuthAuthorizeEndpoint(
-  returnTo: string,
-  scope: string = '*'
-) {
+/**
+ * Generates an authorization URL for purposes of authorizating with the Login server. 
+ *
+ * @param returnTo the path in Cloud Manager to return to
+ * @returns a URL that we can send the user to in order to authorize with the login server.
+ *
+ * @example "https://login.fake.linode.com/oauth/authorize?client_id=9l424eefake9h4fead4d09&code_challenge=GDke2FgbFIlc1LICA5jXbUuvY1dThEDDtOI8roA17Io&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fcloud.fake.linode.com%2Foauth%2Fcallback%3FreturnTo%3D%2Flinodes&response_type=code&scope=*&state=99b64f1f-0174-4c7b-a3ab-d6807de5f524"
+ */
+export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
   // Generate and store the nonce and code challenge for verification later
   const { nonce } = generateNonce();
   const { codeChallenge } = await generateCodeVerifierAndChallenge();
@@ -153,9 +164,9 @@ async function generateOAuthAuthorizeEndpoint(
     client_id: getClientId(),
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
-    redirect_uri: `${APP_ROOT}/oauth/callback?returnTo=${returnTo}`,
+    redirect_uri: `${getAppRoot()}/oauth/callback?returnTo=${returnTo}`,
     response_type: 'code',
-    scope,
+    scope: '*',
     state: nonce,
   });
 
@@ -171,7 +182,7 @@ export async function redirectToLogin(
   window.location.assign(authorizeUrl);
 }
 
-export function revokeToken(clientId: string, token: string) {
+function revokeToken(clientId: string, token: string) {
   return fetch(`${getLoginURL()}/oauth/revoke`, {
     body: new URLSearchParams({ client_id: clientId, token }).toString(),
     headers: {
