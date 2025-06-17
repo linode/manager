@@ -1,9 +1,15 @@
+import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { storage } from 'src/utilities/storage';
 
 import {
   generateOAuthAuthorizeEndpoint,
   getIsLoggedInAsCustomer,
+  handleLoginAsCustomerCallback,
+  handleOAuthCallback,
+  logout,
 } from './oauth';
+
+import type { TokenResponse } from './types';
 
 describe('getIsLoggedInAsCustomer', () => {
   it('returns true if an Admin token is stored', () => {
@@ -95,5 +101,172 @@ describe('generateOAuthAuthorizeEndpoint', () => {
     const codeVerifierInStorage = storage.authentication.codeVerifier.get();
 
     expect(codeVerifierInStorage).toBeDefined();
+  });
+});
+
+describe('handleOAuthCallback', () => {
+  it('should throw if the callback search params are not valid', async () => {
+    await expect(handleOAuthCallback({ params: '' })).rejects.toThrowError(
+      'state is a required field'
+    );
+  });
+
+  it('should throw if there is no code verifier found in local storage', async () => {
+    await expect(
+      handleOAuthCallback({
+        params: 'state=fehgefhgkefghk&code=gyuwyutfetyfew',
+      })
+    ).rejects.toThrowError(
+      'No code codeVerifier found in local storage when running OAuth callback.'
+    );
+  });
+
+  it('should throw if there is no nonce found in local storage', async () => {
+    storage.authentication.codeVerifier.set('fakecodeverifier');
+
+    await expect(
+      handleOAuthCallback({
+        params: 'state=fehgefhgkefghk&code=gyuwyutfetyfew',
+      })
+    ).rejects.toThrowError(
+      'No nonce found in local storage when running OAuth callback.'
+    );
+  });
+
+  it('should throw the nonce in local storage does not match the "state" sent back by login', async () => {
+    storage.authentication.codeVerifier.set('fakecodeverifier');
+    storage.authentication.nonce.set('fakenonce');
+
+    await expect(
+      handleOAuthCallback({
+        params: 'state=incorrectnonce&code=gyuwyutfetyfew',
+      })
+    ).rejects.toThrowError(
+      'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
+    );
+  });
+
+  it('should throw if the request to /oauth/token was unsuccessful', async () => {
+    storage.authentication.codeVerifier.set('fakecodeverifier');
+    storage.authentication.nonce.set('fakenonce');
+
+    server.use(
+      http.get('*/oauth/token', () => {
+        return HttpResponse.json(
+          { error: 'Login server error.' },
+          { status: 500 }
+        );
+      })
+    );
+
+    await expect(
+      handleOAuthCallback({
+        params: 'state=fakenonce&code=gyuwyutfetyfew',
+      })
+    ).rejects.toThrowError('Request to /oauth/token was not ok.');
+  });
+
+  it('should store an auth token and call onSuccess if the request to /oauth/token was successful', async () => {
+    storage.authentication.codeVerifier.set('fakecodeverifier');
+    storage.authentication.nonce.set('fakenonce');
+    storage.authentication.token.clear();
+
+    const onSuccess = vi.fn();
+
+    const tokenResponse: TokenResponse = {
+      access_token: 'fakeaccesstoken',
+      expires_in: 7200,
+      refresh_token: null,
+      scopes: '*',
+      token_type: 'bearer',
+    };
+
+    server.use(
+      http.post('*/oauth/token', () => {
+        return HttpResponse.json(tokenResponse);
+      })
+    );
+
+    await handleOAuthCallback({
+      params: 'state=fakenonce&code=gyuwyutfetyfew&returnTo=/profile',
+      onSuccess,
+    });
+
+    expect(storage.authentication.token.get()).toEqual(
+      'Bearer fakeaccesstoken'
+    );
+
+    expect(onSuccess).toHaveBeenCalledWith({
+      returnTo: '/profile',
+      expiresIn: 7200,
+    });
+  });
+});
+
+describe('handleLoginAsCustomerCallback', () => {
+  it('should throw if the callback hash params are not valid', () => {
+    expect(() => handleLoginAsCustomerCallback({ params: '' })).toThrowError(
+      'token_type is a required field'
+    );
+
+    expect(() =>
+      handleLoginAsCustomerCallback({
+        params:
+          'access_token=fjhwehkfg&destination=dashboard&expires_in=invalidexpire&token_type=Admin',
+      })
+    ).toThrowError('expires_in must be a `number` type');
+  });
+
+  it('should set the token in local storage and call onSuccess if there are no errors', () => {
+    storage.authentication.token.clear();
+
+    const onSuccess = vi.fn();
+
+    handleLoginAsCustomerCallback({
+      params:
+        'access_token=fakeadmintoken&destination=dashboard&expires_in=100&token_type=Admin',
+      onSuccess,
+    });
+
+    expect(onSuccess).toHaveBeenCalled();
+    expect(storage.authentication.token.get()).toBe(`Admin fakeadmintoken`);
+  });
+});
+
+describe('logout', () => {
+  beforeAll(() => {
+    vi.stubEnv('REACT_APP_LOGIN_ROOT', 'https://login.fake.linode.com');
+    vi.stubEnv('REACT_APP_CLIENT_ID', '9l424eefake9h4fead4d09');
+  });
+
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('clears the auth token', async () => {
+    storage.authentication.token.set('Bearer faketoken');
+
+    await logout();
+
+    expect(storage.authentication.token.get()).toBeNull();
+  });
+
+  it('makes an API call to login to revoke the token', async () => {
+    storage.authentication.token.set('Bearer faketoken');
+
+    const onRevoke = vi.fn();
+
+    server.use(
+      http.post('*/oauth/revoke', async (data) => {
+        const payload = await data.request.text();
+        onRevoke(payload);
+      })
+    );
+
+    await logout();
+
+    expect(onRevoke).toHaveBeenCalledWith(
+      'client_id=9l424eefake9h4fead4d09&token=faketoken'
+    );
   });
 });

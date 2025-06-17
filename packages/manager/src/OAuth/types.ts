@@ -72,5 +72,9 @@ export interface AuthCallbackOptions {
   /**
    * `onSuccess` is invoked when a Cloud Manager session has successfully started
    */
-  onSuccess: (data: OAuthCallbackOnSuccessData) => void;
+  onSuccess?: (data: OAuthCallbackOnSuccessData) => void;
+  /**
+   * The raw search or has params sent by the login server
+   */
+  params: string;
 }

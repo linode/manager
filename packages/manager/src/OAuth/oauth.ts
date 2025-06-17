@@ -118,7 +118,7 @@ export async function logout() {
   clearUserInput();
   clearAuthDataFromLocalStorage();
 
-  if (clientId && token) {
+  if (token) {
     const tokenWithoutPrefix = token.split(' ')[1];
 
     try {
@@ -213,17 +213,18 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       returnTo,
       state: nonce,
     } = OAuthCallbackParamsSchema.validateSync(
-      getQueryParamsFromQueryString(location.search)
+      getQueryParamsFromQueryString(options.params)
     );
 
     const codeVerifier = storage.authentication.codeVerifier.get();
 
     if (!codeVerifier) {
-      Sentry.captureException(
+      const error = new Error(
         'No code codeVerifier found in local storage when running OAuth callback.'
       );
+      Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
-      return;
+      throw error;
     }
 
     storage.authentication.codeVerifier.clear();
@@ -236,7 +237,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       );
       Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
-      return;
+      throw error;
     }
 
     storage.authentication.nonce.clear();
@@ -252,7 +253,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       );
       Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
-      return;
+      throw error;
     }
 
     const formData = getPKCETokenRequestFormData(code, nonce, codeVerifier);
@@ -271,7 +272,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
           extra: { statusCode: response.status },
         });
         clearStorageAndRedirectToLogout();
-        return;
+        throw error;
       }
 
       const tokenParams: TokenResponse = await response.json();
@@ -286,7 +287,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
         expires: String(tokenExpiresAt),
       });
 
-      options.onSuccess({
+      options.onSuccess?.({
         returnTo,
         expiresIn: tokenParams.expires_in,
       });
@@ -295,6 +296,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
         extra: { message: 'Request to /oauth/token failed.' },
       });
       clearStorageAndRedirectToLogout();
+      throw error;
     }
   } catch (error) {
     Sentry.captureException(error, {
@@ -303,6 +305,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       },
     });
     clearStorageAndRedirectToLogout();
+    throw error;
   }
 }
 
@@ -314,7 +317,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
       expires_in: expiresIn,
       token_type: tokenType,
     } = LoginAsCustomerCallbackParamsSchema.validateSync(
-      getQueryParamsFromQueryString(location.hash.substring(1))
+      getQueryParamsFromQueryString(options.params)
     );
 
     // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
@@ -333,7 +336,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
      * All done, redirect to the destination from the hash params
      * NOTE: The destination does not include a leading slash
      */
-    options.onSuccess({
+    options.onSuccess?.({
       returnTo: `/${destination}`,
       expiresIn,
     });
@@ -344,5 +347,6 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
           'Unable to login as customer. Admin did not send expected params in location hash.',
       },
     });
+    throw error;
   }
 }

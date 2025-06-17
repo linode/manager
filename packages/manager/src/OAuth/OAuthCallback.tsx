@@ -14,6 +14,7 @@ import { handleOAuthCallback } from './oauth';
 export const OAuthCallback = (props: RouteComponentProps) => {
   React.useEffect(() => {
     handleOAuthCallback({
+      params: location.search,
       onSuccess({ returnTo }) {
         props.history.push(returnTo);
       },

@@ -20,6 +20,7 @@ export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
 
   useEffect(() => {
     handleLoginAsCustomerCallback({
+      params: location.hash.substring(1),
       onSuccess({ returnTo, expiresIn }) {
         props.history.push(returnTo);
 
