@@ -1,10 +1,9 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useTypeQuery } from 'src/queries/types';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import {
   PRICE_ERROR_TOOLTIP_TEXT,

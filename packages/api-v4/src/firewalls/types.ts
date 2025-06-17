@@ -2,7 +2,10 @@ export type FirewallStatus = 'deleted' | 'disabled' | 'enabled';
 
 export type FirewallRuleProtocol = 'ALL' | 'ICMP' | 'IPENCAP' | 'TCP' | 'UDP';
 
-export type FirewallDeviceEntityType = 'interface' | 'linode' | 'nodebalancer';
+export type FirewallDeviceEntityType =
+  | 'linode'
+  | 'linode_interface'
+  | 'nodebalancer';
 
 export type FirewallPolicyType = 'ACCEPT' | 'DROP';
 
@@ -48,6 +51,7 @@ export interface FirewallRuleType {
 export interface FirewallDeviceEntity {
   id: number;
   label: null | string;
+  parent_entity: FirewallDeviceEntity | null;
   type: FirewallDeviceEntityType;
   url: string;
 }
@@ -68,7 +72,7 @@ export interface FirewallTemplate {
 
 export interface CreateFirewallPayload {
   devices?: null | {
-    interfaces?: number[];
+    linode_interfaces?: number[];
     linodes?: number[];
     nodebalancers?: number[];
   };

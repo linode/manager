@@ -160,7 +160,6 @@ export const postRunCleanup: CypressPlugin = async (on) => {
       console.log(`- Cleaning up test ${resourceCleanUpItem.name}...`);
       try {
         // Perform clean-up sequentially.
-        // eslint-disable-next-line no-await-in-loop
         await resourceCleanUpItem.cleanUp();
       } catch (e) {
         console.error(
