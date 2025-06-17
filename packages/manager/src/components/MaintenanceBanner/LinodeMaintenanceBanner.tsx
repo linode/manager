@@ -1,6 +1,7 @@
 import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
@@ -19,6 +20,8 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
     linodeId !== undefined
   );
 
+  const location = useLocation();
+
   const linodeMaintenance = allMaintenance?.find(
     (maintenance) =>
       maintenance.entity.type === 'linode' &&
@@ -30,6 +33,10 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
   const maintenanceTypeLabel = linodeMaintenance?.type.split('_').join(' ');
 
   if (!linodeMaintenance) return null;
+
+  const hideAccountMaintenanceLink = location.pathname?.includes(
+    `/linodes/${linodeId}`
+  );
 
   return (
     <Notice variant="warning">
@@ -53,8 +60,12 @@ export const LinodeMaintenanceBanner = ({ linodeId }: Props) => {
             value={linodeMaintenance.start_time}
           />
         </strong>
-        . For more details, view{' '}
-        <Link to="/account/maintenance">Account Maintenance</Link>.
+        {!hideAccountMaintenanceLink && (
+          <>
+            . For more details, view{' '}
+            <Link to="/account/maintenance">Account Maintenance</Link>.
+          </>
+        )}
       </Typography>
     </Notice>
   );
