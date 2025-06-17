@@ -1,4 +1,4 @@
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 /**
  * Used to validate query params for the OAuth callback
@@ -21,6 +21,6 @@ export const OAuthCallbackParamsSchema = object({
 export const LoginAsCustomerCallbackParamsSchema = object({
   access_token: string().required(),
   destination: string().default('/'),
-  expires_in: string().required(),
+  expires_in: number().required(),
   token_type: string().required().oneOf(['Admin']),
 });

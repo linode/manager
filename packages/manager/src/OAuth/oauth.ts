@@ -220,9 +220,10 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
     const storedNonce = storage.authentication.nonce.get();
 
     if (!storedNonce) {
-      Sentry.captureException(
+      const error = new Error(
         'No nonce found in local storage when running OAuth callback.'
       );
+      Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
       return;
     }
@@ -235,9 +236,10 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
      * and receiver are the same.
      */
     if (storedNonce !== nonce) {
-      Sentry.captureException(
+      const error = new Error(
         'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
       );
+      Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
       return;
     }
@@ -270,7 +272,8 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
           expiresIn: tokenParams.expires_in,
         });
       } else {
-        Sentry.captureException("Request to /oauth/token was not 'ok'.", {
+        const error = new Error('Request to /oauth/token was not ok.');
+        Sentry.captureException(error, {
           extra: { statusCode: response.status },
         });
         clearStorageAndRedirectToLogout();
@@ -303,7 +306,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
     );
 
     // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
-    const tokenExpiresAt = Date.now() + +expiresIn * 1000;
+    const tokenExpiresAt = Date.now() + expiresIn * 1000;
 
     /**
      * We have all the information we need and can persist it to localStorage
@@ -320,7 +323,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
      */
     options.onSuccess({
       returnTo: `/${destination}`,
-      expiresIn: +expiresIn,
+      expiresIn,
     });
   } catch (error) {
     Sentry.captureException(error, {
