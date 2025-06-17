@@ -15,9 +15,9 @@ export const MAINTENANCE_POLICY_DESCRIPTIONS: Record<
   MaintenancePolicySlug,
   string
 > = {
-  migrate:
+  'linode/migrate':
     'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
-  power_off_on:
+  'linode/power_off_on':
     'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
 };
 

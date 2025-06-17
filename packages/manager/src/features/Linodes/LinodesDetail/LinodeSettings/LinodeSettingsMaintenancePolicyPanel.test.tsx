@@ -12,7 +12,10 @@ describe('LinodeSettingsMaintenancePolicyPanel', () => {
     server.use(
       http.get('*/linode/instances/1', () => {
         return HttpResponse.json(
-          linodeFactory.build({ id: 1, maintenance_policy: 'power_off_on' })
+          linodeFactory.build({
+            id: 1,
+            maintenance_policy: 'linode/power_off_on',
+          })
         );
       })
     );
@@ -40,7 +43,10 @@ describe('LinodeSettingsMaintenancePolicyPanel', () => {
     server.use(
       http.get('*/linode/instances/1', () => {
         return HttpResponse.json(
-          linodeFactory.build({ id: 1, maintenance_policy: 'power_off_on' })
+          linodeFactory.build({
+            id: 1,
+            maintenance_policy: 'linode/power_off_on',
+          })
         );
       })
     );

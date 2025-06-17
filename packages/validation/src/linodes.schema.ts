@@ -830,7 +830,7 @@ export const CreateLinodeSchema = object({
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
   maintenance_policy: mixed()
-    .oneOf(['migrate', 'power_off_on'])
+    .oneOf(['linode/migrate', 'linode/power_off_on'])
     .notRequired()
     .nullable(),
   alerts: AclpAlertsPayloadSchema.notRequired().default(undefined),

@@ -21,7 +21,7 @@ export const MaintenancePolicy = () => {
   const flags = useFlags();
 
   const values: MaintenancePolicyValues = {
-    maintenance_policy: accountSettings?.maintenance_policy ?? 'migrate',
+    maintenance_policy: accountSettings?.maintenance_policy ?? 'linode/migrate',
   };
 
   const {

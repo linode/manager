@@ -101,12 +101,15 @@ describe('MaintenancePolicySelect', () => {
     const policies = [
       maintenancePolicyFactory.build({
         label: 'Power Off / Power On',
-        slug: 'power_off_on',
+        slug: 'linode/power_off_on',
       }),
-      maintenancePolicyFactory.build({ label: 'Migrate', slug: 'migrate' }),
+      maintenancePolicyFactory.build({
+        label: 'Migrate',
+        slug: 'linode/migrate',
+      }),
     ];
     const accountSettings = accountSettingsFactory.build({
-      maintenance_policy: 'migrate',
+      maintenance_policy: 'linode/migrate',
     });
 
     server.use(
