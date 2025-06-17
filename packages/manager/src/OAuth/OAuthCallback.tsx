@@ -3,7 +3,7 @@ import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 
-import { handleOAuthCallback } from './utils';
+import { handleOAuthCallback } from './oauth';
 
 /**
  * Login will redirect back to Cloud Manager with a URL like:

@@ -4,7 +4,7 @@ import { AxiosHeaders } from 'axios';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
-import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/utils';
+import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
 import { getEnvLocalStorageOverrides, storage } from './utilities/storage';
 
 import type { ApplicationStore } from './store';

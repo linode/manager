@@ -18,7 +18,7 @@ import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 import { Logout } from './OAuth/Logout';
-import { useOAuth } from './OAuth/utils';
+import { useOAuth } from './OAuth/oauth';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 

@@ -1,7 +1,7 @@
 import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
-import { setAuthDataInLocalStorage } from './OAuth/utils';
+import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
 import { storage } from './utilities/storage';

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
-import { handleLoginAsCustomerCallback } from 'src/OAuth/utils';
+import { handleLoginAsCustomerCallback } from 'src/OAuth/oauth';
 
 /**
  * This component is similar to the OAuth comonent, in that it's main
