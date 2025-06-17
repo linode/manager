@@ -65,10 +65,9 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   >();
 
   // Filter alerts based on status, search text & selected type
-  const filteredAlerts = filterAlertsByStatusAndType(
-    alerts,
-    searchText,
-    selectedType
+  const filteredAlerts = React.useMemo(
+    () => filterAlertsByStatusAndType(alerts, searchText, selectedType),
+    [alerts, searchText, selectedType]
   );
 
   const history = useHistory();
