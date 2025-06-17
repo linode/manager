@@ -16,11 +16,11 @@ import { generateCodeChallenge, generateCodeVerifier } from './pkce';
 
 interface TokensWithExpiry {
   /**
-   * The expiry of the token
+   * The expiry timestamp for the the token
    *
-   * I don't know why someone decided to store this as a crazy string.
+   * This is a unix timestamp (milliseconds since the Unix epoch)
    *
-   * @example "Wed Jun 04 2025 23:29:48 GMT-0400 (Eastern Daylight Time)"
+   * @example "1750130180465"
    */
   expires: string;
   /**
@@ -110,9 +110,8 @@ function getClientId() {
 }
 
 export async function logout() {
-  const localStorageOverrides = getEnvLocalStorageOverrides();
   const loginUrl = getLoginURL();
-  const clientId = localStorageOverrides?.clientID ?? CLIENT_ID;
+  const clientId = getClientId();
   const token = storage.authentication.token.get();
 
   clearUserInput();
@@ -199,6 +198,43 @@ export const OAuthCallbackParamsSchema = object({
   state: string().required(), // aka "nonce"
 });
 
+export const LoginAsCustomerCallbackParamsSchema = object({
+  access_token: string().required(),
+  destination: string().default('/'),
+  expires_in: string().required(),
+  token_type: string().required().oneOf(['Admin']),
+});
+
+interface TokenResponse {
+  /**
+   * An accces token that you use as the Bearer token when making API requests
+   *
+   * @example "59340e48bb1f64970c0e1c15a3833c6adf8cf97f478252eee8764b152704d447"
+   */
+  access_token: string;
+  /**
+   * The lifetime of the access_token (in seconds)
+   *
+   * @example 7200
+   */
+  expires_in: number;
+  /**
+   * Currently not supported I guess.
+   */
+  refresh_token: null;
+  /**
+   * The scope of the access_token.
+   *
+   * @example "*"
+   */
+  scopes: string;
+  /**
+   * The type of the access token
+   * @example "bearer"
+   */
+  token_type: 'bearer';
+}
+
 export function getPKCETokenRequestFormData(
   code: string,
   nonce: string,
@@ -213,11 +249,11 @@ export function getPKCETokenRequestFormData(
   return formData;
 }
 
-interface OAuthCallbackOptions {
+interface AuthCallbackOptions {
   onSuccess: (returnTo: string) => void;
 }
 
-export async function handleOAuthCallback(options: OAuthCallbackOptions) {
+export async function handleOAuthCallback(options: AuthCallbackOptions) {
   try {
     const {
       code,
@@ -227,7 +263,6 @@ export async function handleOAuthCallback(options: OAuthCallbackOptions) {
       getQueryParamsFromQueryString(location.search)
     );
 
-    const expireDate = new Date();
     const codeVerifier = authentication.codeVerifier.get();
 
     if (!codeVerifier) {
@@ -268,6 +303,8 @@ export async function handleOAuthCallback(options: OAuthCallbackOptions) {
 
     const formData = getPKCETokenRequestFormData(code, nonce, codeVerifier);
 
+    const tokenCreatedAtDate = new Date();
+
     try {
       const response = await fetch(`${getLoginURL()}/oauth/token`, {
         body: formData,
@@ -275,20 +312,16 @@ export async function handleOAuthCallback(options: OAuthCallbackOptions) {
       });
 
       if (response.ok) {
-        const tokenParams = await response.json();
+        const tokenParams: TokenResponse = await response.json();
 
-        /**
-         * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
-         * the API returns the expiry time in seconds
-         */
-        expireDate.setTime(
-          expireDate.getTime() + +tokenParams.expires_in * 1000
-        );
+        // We multiply the expiration time by 1000 because JavaSript returns time in ms, while OAuth expresses the expiry time in seconds
+        const tokenExpiresAt =
+          tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
 
         setAuthDataInLocalStorage({
           token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
           scopes: tokenParams.scopes,
-          expires: expireDate.toString(),
+          expires: String(tokenExpiresAt),
         });
 
         options.onSuccess(returnTo);
@@ -310,5 +343,43 @@ export async function handleOAuthCallback(options: OAuthCallbackOptions) {
       },
     });
     clearStorageAndRedirectToLogout();
+  }
+}
+
+export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
+  try {
+    const {
+      access_token: accessToken,
+      destination,
+      expires_in: expiresIn,
+      token_type: tokenType,
+    } = LoginAsCustomerCallbackParamsSchema.validateSync(
+      getQueryParamsFromQueryString(location.hash.substring(1))
+    );
+
+    // We multiply the expiration time by 1000 because JavaSript returns time in ms, while OAuth expresses the expiry time in seconds
+    const tokenExpiresAt = Date.now() + +expiresIn * 1000;
+
+    /**
+     * We have all the information we need and can persist it to localStorage
+     */
+    setAuthDataInLocalStorage({
+      token: `${capitalize(tokenType)} ${accessToken}`,
+      scopes: '*',
+      expires: String(tokenExpiresAt),
+    });
+
+    /**
+     * All done, redirect to the destination from the hash params
+     * NOTE: the param does not include a leading slash
+     */
+    options.onSuccess(`/${destination}`);
+  } catch (error) {
+    Sentry.captureException(error, {
+      extra: {
+        message:
+          'Unable to login as customer. Admin did not send expected params in location hash.',
+      },
+    });
   }
 }
