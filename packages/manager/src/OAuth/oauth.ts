@@ -148,7 +148,7 @@ export function generateNonce() {
 }
 
 /**
- * Generates an authorization URL for purposes of authorizating with the Login server. 
+ * Generates an authorization URL for purposes of authorizating with the Login server.
  *
  * @param returnTo the path in Cloud Manager to return to
  * @returns a URL that we can send the user to in order to authorize with the login server.
@@ -265,30 +265,31 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
         method: 'POST',
       });
 
-      if (response.ok) {
-        const tokenParams: TokenResponse = await response.json();
-
-        // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
-        const tokenExpiresAt =
-          tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
-
-        setAuthDataInLocalStorage({
-          token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
-          scopes: tokenParams.scopes,
-          expires: String(tokenExpiresAt),
-        });
-
-        options.onSuccess({
-          returnTo,
-          expiresIn: tokenParams.expires_in,
-        });
-      } else {
+      if (!response.ok) {
         const error = new Error('Request to /oauth/token was not ok.');
         Sentry.captureException(error, {
           extra: { statusCode: response.status },
         });
         clearStorageAndRedirectToLogout();
+        return;
       }
+
+      const tokenParams: TokenResponse = await response.json();
+
+      // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
+      const tokenExpiresAt =
+        tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
+
+      setAuthDataInLocalStorage({
+        token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
+        scopes: tokenParams.scopes,
+        expires: String(tokenExpiresAt),
+      });
+
+      options.onSuccess({
+        returnTo,
+        expiresIn: tokenParams.expires_in,
+      });
     } catch (error) {
       Sentry.captureException(error, {
         extra: { message: 'Request to /oauth/token failed.' },
