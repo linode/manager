@@ -13,10 +13,11 @@ export const DisabledPlanSelectionTooltip = (
   return (
     <TooltipIcon
       data-qa-tooltip={tooltipCopy}
-      data-testid="disabled-plan-tooltip"
+      dataTestId="disabled-plan-tooltip"
       status="info"
       sxTooltipIcon={{
         top: -2,
+        left: -8,
       }}
       text={tooltipCopy}
       tooltipPosition="right"

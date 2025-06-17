@@ -38,6 +38,10 @@ export interface TooltipIconBaseProps
    */
   className?: string;
   /**
+   * An optional data-testid
+   */
+  dataTestId?: string;
+  /**
    * Size of the tooltip icon
    * @default small
    */
@@ -91,6 +95,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
   const theme = useTheme();
 
   const {
+    dataTestId,
     classes,
     leaveDelay,
     icon,
@@ -153,6 +158,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       classes={classes}
       componentsProps={props.componentsProps}
       data-qa-help-tooltip
+      data-testid={dataTestId}
       enterTouchDelay={0}
       leaveDelay={leaveDelay ? 3000 : undefined}
       leaveTouchDelay={5000}

@@ -1,4 +1,5 @@
 import { styled, SvgIcon } from '@mui/material';
+import { useTheme } from '@mui/material';
 import _Button from '@mui/material/Button';
 import * as React from 'react';
 import type { JSX } from 'react';
@@ -63,7 +64,7 @@ export interface ButtonProps extends _ButtonProps {
 
 const StyledButton = styled(_Button, {
   shouldForwardProp: omittedProps(['compactX', 'compactY', 'buttonType']),
-})<ButtonProps>(({ compactX, compactY }) => ({
+})<ButtonProps>(({ compactX, compactY, theme }) => ({
   ...(compactX && {
     minWidth: 50,
     paddingLeft: 0,
@@ -74,6 +75,9 @@ const StyledButton = styled(_Button, {
     paddingBottom: 0,
     paddingTop: 0,
   }),
+  '&:hover [data-testid="tooltip-info-icon"] *': {
+    color: theme.tokens.alias.Content.Icon.Primary.Hover,
+  },
 }));
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -95,6 +99,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const showTooltip = alwaysShowTooltip || (disabled && Boolean(tooltipText));
+    const theme = useTheme();
 
     const handleTooltipAnalytics = () => {
       if (tooltipAnalyticsEvent) {
@@ -128,7 +133,14 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <SvgIcon
               component={InfoOutline}
               data-testid="tooltip-info-icon"
-              sx={{ ...sxEndIcon, top: 1, position: 'relative' }}
+              sx={{
+                ...sxEndIcon,
+                top: 1,
+                position: 'relative',
+                '&[data-testid="tooltip-info-icon"] *': {
+                  color: theme.tokens.alias.Content.Icon.Secondary.Default,
+                },
+              }}
             />
           )) ||
           rest.endIcon
