@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { useFlags } from 'src/hooks/useFlags';
 

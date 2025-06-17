@@ -71,6 +71,12 @@ interface ParsedLinodeCreateQueryParams {
   type: LinodeCreateType | undefined;
 }
 
+interface LinodeCreatePayloadOptions {
+  isAclpAlertsPreferenceBeta?: boolean;
+  isAclpIntegration?: boolean;
+  isShowingNewNetworkingUI: boolean;
+}
+
 /**
  * Hook that allows you to read and manage Linode Create flow query params.
  *
@@ -165,8 +171,14 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  isShowingNewNetworkingUI: boolean
+  options: LinodeCreatePayloadOptions
 ): CreateLinodeRequest => {
+  const {
+    isShowingNewNetworkingUI,
+    isAclpIntegration,
+    isAclpAlertsPreferenceBeta,
+  } = options;
+
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
@@ -177,6 +189,10 @@ export const getLinodeCreatePayload = (
   // Convert null to undefined for maintenance_policy
   if (values.maintenance_policy === null) {
     values.maintenance_policy = undefined;
+  }
+
+  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+    values.alerts = undefined;
   }
 
   if (values.metadata?.user_data) {

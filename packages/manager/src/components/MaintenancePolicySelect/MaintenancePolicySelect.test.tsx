@@ -101,7 +101,7 @@ describe('MaintenancePolicySelect', () => {
     const policies = [
       maintenancePolicyFactory.build({
         label: 'Power Off / Power On',
-        slug: 'poweroffon',
+        slug: 'power_off_on',
       }),
       maintenancePolicyFactory.build({ label: 'Migrate', slug: 'migrate' }),
     ];

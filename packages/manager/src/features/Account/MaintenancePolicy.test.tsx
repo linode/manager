@@ -22,12 +22,12 @@ describe('MaintenancePolicy', () => {
     const policies = [
       maintenancePolicyFactory.build({
         label: 'Power Off / Power On',
-        slug: 'poweroffon',
+        slug: 'power_off_on',
       }),
       maintenancePolicyFactory.build({ label: 'Migrate', slug: 'migrate' }),
     ];
     const accountSettings = accountSettingsFactory.build({
-      maintenance_policy: 'poweroffon',
+      maintenance_policy: 'power_off_on',
     });
 
     server.use(

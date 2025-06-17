@@ -593,7 +593,7 @@ export interface AccountMaintenance {
   when: string;
 }
 
-export type MaintenancePolicySlug = 'migrate' | 'poweroffon';
+export type MaintenancePolicySlug = 'migrate' | 'power_off_on';
 
 export type MaintenancePolicy = {
   description: string;
@@ -601,7 +601,7 @@ export type MaintenancePolicy = {
   label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
   slug: MaintenancePolicySlug;
-  type: 'migrate' | 'power off/on';
+  type: 'migrate' | 'power_off_on';
 };
 
 export interface PayPalData {

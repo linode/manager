@@ -3,6 +3,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
   useMutateAccountAgreements,
+  usePreferences,
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
@@ -26,6 +27,7 @@ import {
   getRestrictedResourceText,
   useVMHostMaintenanceEnabled,
 } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import {
@@ -84,6 +86,12 @@ export const LinodeCreate = () => {
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
+  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpAlertsBeta
+  );
+
+  const flags = useFlags();
+
   const queryClient = useQueryClient();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -129,7 +137,11 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
+    const payload = getLinodeCreatePayload(values, {
+      isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+      isAclpIntegration: flags.aclpBetaServices?.alerts,
+      isAclpAlertsPreferenceBeta,
+    });
 
     try {
       const linode =
