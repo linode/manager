@@ -2,46 +2,31 @@
 import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 import { useLocation } from 'react-router-dom';
-import { object, string } from 'yup';
 
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
-  authentication,
   clearUserInput,
   getEnvLocalStorageOverrides,
   storage,
 } from 'src/utilities/storage';
 
 import { generateCodeChallenge, generateCodeVerifier } from './pkce';
+import {
+  LoginAsCustomerCallbackParamsSchema,
+  OAuthCallbackParamsSchema,
+} from './schemas';
 
-interface TokensWithExpiry {
-  /**
-   * The expiry timestamp for the the token
-   *
-   * This is a unix timestamp (milliseconds since the Unix epoch)
-   *
-   * @example "1750130180465"
-   */
-  expires: string;
-  /**
-   * The OAuth scopes
-   *
-   * @example "*"
-   */
-  scopes: string;
-  /**
-   * The token including the prefix
-   *
-   * @example "Bearer 12345" or "Admin 12345"
-   */
-  token: string;
-}
+import type {
+  AuthCallbackOptions,
+  TokenInfoToStore,
+  TokenResponse,
+} from './types';
 
 export function setAuthDataInLocalStorage({
   scopes,
   token,
   expires,
-}: TokensWithExpiry) {
+}: TokenInfoToStore) {
   storage.authentication.scopes.set(scopes);
   storage.authentication.token.set(token);
   storage.authentication.expire.set(expires);
@@ -61,6 +46,12 @@ function clearNonceAndCodeVerifierFromLocalStorage() {
 function clearAllAuthDataFromLocalStorage() {
   clearNonceAndCodeVerifierFromLocalStorage();
   clearAuthDataFromLocalStorage();
+}
+
+function clearStorageAndRedirectToLogout() {
+  clearAllAuthDataFromLocalStorage();
+  const loginUrl = getLoginURL();
+  window.location.assign(loginUrl + '/logout');
 }
 
 export function getIsLoggedInAsCustomer() {
@@ -136,13 +127,13 @@ export async function logout() {
 async function generateCodeVerifierAndChallenge() {
   const codeVerifier = await generateCodeVerifier();
   const codeChallenge = await generateCodeChallenge(codeVerifier);
-  authentication.codeVerifier.set(codeVerifier);
+  storage.authentication.codeVerifier.set(codeVerifier);
   return { codeVerifier, codeChallenge };
 }
 
 function generateNonce() {
   const nonce = window.crypto.randomUUID();
-  authentication.nonce.set(nonce);
+  storage.authentication.nonce.set(nonce);
   return { nonce };
 }
 
@@ -186,56 +177,7 @@ export function revokeToken(clientId: string, token: string) {
   });
 }
 
-export function clearStorageAndRedirectToLogout() {
-  clearAllAuthDataFromLocalStorage();
-  const loginUrl = getLoginURL();
-  window.location.assign(loginUrl + '/logout');
-}
-
-export const OAuthCallbackParamsSchema = object({
-  returnTo: string().default('/'),
-  code: string().required(),
-  state: string().required(), // aka "nonce"
-});
-
-export const LoginAsCustomerCallbackParamsSchema = object({
-  access_token: string().required(),
-  destination: string().default('/'),
-  expires_in: string().required(),
-  token_type: string().required().oneOf(['Admin']),
-});
-
-interface TokenResponse {
-  /**
-   * An accces token that you use as the Bearer token when making API requests
-   *
-   * @example "59340e48bb1f64970c0e1c15a3833c6adf8cf97f478252eee8764b152704d447"
-   */
-  access_token: string;
-  /**
-   * The lifetime of the access_token (in seconds)
-   *
-   * @example 7200
-   */
-  expires_in: number;
-  /**
-   * Currently not supported I guess.
-   */
-  refresh_token: null;
-  /**
-   * The scope of the access_token.
-   *
-   * @example "*"
-   */
-  scopes: string;
-  /**
-   * The type of the access token
-   * @example "bearer"
-   */
-  token_type: 'bearer';
-}
-
-export function getPKCETokenRequestFormData(
+function getPKCETokenRequestFormData(
   code: string,
   nonce: string,
   codeVerifier: string
@@ -249,10 +191,6 @@ export function getPKCETokenRequestFormData(
   return formData;
 }
 
-interface AuthCallbackOptions {
-  onSuccess: (returnTo: string, expiresInSeconds: number) => void;
-}
-
 export async function handleOAuthCallback(options: AuthCallbackOptions) {
   try {
     const {
@@ -263,7 +201,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       getQueryParamsFromQueryString(location.search)
     );
 
-    const codeVerifier = authentication.codeVerifier.get();
+    const codeVerifier = storage.authentication.codeVerifier.get();
 
     if (!codeVerifier) {
       Sentry.captureException(
@@ -273,15 +211,9 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       return;
     }
 
-    authentication.codeVerifier.clear();
+    storage.authentication.codeVerifier.clear();
 
-    /**
-     * We need to validate that the nonce returned (comes from the location query param as the state param)
-     * matches the one we stored when authentication was started. This confirms the initiator
-     * and receiver are the same.
-     * Nonce should be set and equal to ours otherwise retry auth
-     */
-    const storedNonce = authentication.nonce.get();
+    const storedNonce = storage.authentication.nonce.get();
 
     if (!storedNonce) {
       Sentry.captureException(
@@ -291,8 +223,13 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       return;
     }
 
-    authentication.nonce.clear();
+    storage.authentication.nonce.clear();
 
+    /**
+     * We need to validate that the nonce returned (comes from the location query param as the state param)
+     * matches the one we stored when authentication was started. This confirms the initiator
+     * and receiver are the same.
+     */
     if (storedNonce !== nonce) {
       Sentry.captureException(
         'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
@@ -324,7 +261,10 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
           expires: String(tokenExpiresAt),
         });
 
-        options.onSuccess(returnTo, tokenParams.expires_in);
+        options.onSuccess({
+          returnTo,
+          expiresIn: tokenParams.expires_in,
+        });
       } else {
         Sentry.captureException("Request to /oauth/token was not 'ok'.", {
           extra: { statusCode: response.status },
@@ -335,11 +275,12 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       Sentry.captureException(error, {
         extra: { message: 'Request to /oauth/token failed.' },
       });
+      clearStorageAndRedirectToLogout();
     }
   } catch (error) {
     Sentry.captureException(error, {
       extra: {
-        message: 'Error when parsing search params on OAuth callback.',
+        message: 'Error parsing search params on OAuth callback.',
       },
     });
     clearStorageAndRedirectToLogout();
@@ -371,9 +312,12 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
 
     /**
      * All done, redirect to the destination from the hash params
-     * NOTE: the param does not include a leading slash
+     * NOTE: The destination does not include a leading slash
      */
-    options.onSuccess(`/${destination}`, +expiresIn);
+    options.onSuccess({
+      returnTo: `/${destination}`,
+      expiresIn: +expiresIn,
+    });
   } catch (error) {
     Sentry.captureException(error, {
       extra: {

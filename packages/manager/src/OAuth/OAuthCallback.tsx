@@ -14,7 +14,7 @@ import { handleOAuthCallback } from './utils';
 export const OAuthCallback = (props: RouteComponentProps) => {
   React.useEffect(() => {
     handleOAuthCallback({
-      onSuccess(returnTo) {
+      onSuccess({ returnTo }) {
         props.history.push(returnTo);
       },
     });

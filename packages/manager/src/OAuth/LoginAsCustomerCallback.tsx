@@ -13,14 +13,14 @@ import { handleLoginAsCustomerCallback } from 'src/OAuth/utils';
  * if the user was navgiated from Login. Further, we are doing no nonce checking here.
  *
  * Admin will redirect to Cloud Manager with a URL like:
- * https://cloud.linode.com/admin/callback#access_token=fjhwehkfg&destination=dashboard&token_type=Admin
+ * https://cloud.linode.com/admin/callback#access_token=fjhwehkfg&destination=dashboard&expires_in=900&token_type=Admin
  */
 export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     handleLoginAsCustomerCallback({
-      onSuccess(returnTo, expiresIn) {
+      onSuccess({ returnTo, expiresIn }) {
         props.history.push(returnTo);
 
         setTimeout(
