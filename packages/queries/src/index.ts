@@ -4,6 +4,7 @@ export * from './betas';
 export * from './domains';
 export * from './eventHandlers';
 export * from './firewalls';
+export * from './iam';
 export * from './images';
 export * from './linodes';
 export * from './networking';

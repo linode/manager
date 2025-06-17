@@ -1,4 +1,9 @@
-import { useAccountUsers } from '@linode/queries';
+import {
+  useAccountRoles,
+  useAccountUsers,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -16,16 +21,8 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
-import {
-  INTERNAL_ERROR_UPDATE_PERMISSION,
-  NO_CHANGES_SAVED,
-} from '../../Shared/constants';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
@@ -109,7 +106,9 @@ export const AssignSelectedRolesDrawer = ({
 
       handleClose();
     } catch (error) {
-      setError(error.field ?? 'root', { message: error[0].reason });
+      setError(error.field ?? 'root', {
+        message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+      });
     }
   };
 
@@ -127,13 +126,7 @@ export const AssignSelectedRolesDrawer = ({
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
-            <Notice variant="error">
-              <Typography>
-                {INTERNAL_ERROR_UPDATE_PERMISSION}
-                <br />
-                {NO_CHANGES_SAVED}
-              </Typography>
-            </Notice>
+            <Notice text={formState.errors.root?.message} variant="error" />
           )}
           <Typography sx={{ marginBottom: 2.5 }}>
             Select the user you want to assign selected roles to. Some roles
