@@ -214,3 +214,5 @@ export const ALERT_SCOPE_TOOLTIP_TEXT =
   'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
+
+export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
