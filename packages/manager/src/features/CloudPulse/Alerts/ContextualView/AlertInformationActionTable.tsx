@@ -129,6 +129,8 @@ export const AlertInformationActionTable = (
   const isAccountOrRegionLevelAlert = (alert: Alert) =>
     alert.scope === 'region' || alert.scope === 'account';
 
+  const isEditMode = !!entityId;
+
   // Store initial alert states for comparison using a ref
   const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
     system: [],
@@ -186,14 +188,11 @@ export const AlertInformationActionTable = (
       return null;
     }
 
-    const isEditMode = !!entityId;
-
     const handleToggle = isEditMode
       ? handleToggleEditFlow
       : handleToggleCreateFlow;
-    const status = isEditMode
-      ? alert.entity_ids.includes(entityId)
-      : enabledAlerts[alert.type].includes(alert.id);
+
+    const status = enabledAlerts[alert.type].includes(alert.id);
 
     return { handleToggle, status };
   };
@@ -333,6 +332,11 @@ export const AlertInformationActionTable = (
 
                           if (!rowProps) return null;
 
+                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
+                          if (!isEditMode && alert.scope !== 'entity') {
+                            return null;
+                          }
+
                           return (
                             <AlertInformationActionRow
                               alert={alert}
@@ -354,23 +358,25 @@ export const AlertInformationActionTable = (
                     pageSize={pageSize}
                   />
                 </Box>
-                <Box>
-                  <Button
-                    buttonType="primary"
-                    data-qa-buttons="true"
-                    data-testid="save-alerts"
-                    disabled={!isAnyAlertStateChanged}
-                    onClick={() => {
-                      window.scrollTo({
-                        behavior: 'instant',
-                        top: 0,
-                      });
-                      setIsDialogOpen(true);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </Box>
+                {isEditMode && (
+                  <Box>
+                    <Button
+                      buttonType="primary"
+                      data-qa-buttons="true"
+                      data-testid="save-alerts"
+                      disabled={!isAnyAlertStateChanged}
+                      onClick={() => {
+                        window.scrollTo({
+                          behavior: 'instant',
+                          top: 0,
+                        });
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                )}
               </>
             )}
           </Paginate>
