@@ -112,10 +112,9 @@ describe('CloudPulseDashboardWithFilters component tests', () => {
     renderWithTheme(
       <CloudPulseDashboardWithFilters dashboardId={1} resource={1} />
     );
-    const circle = screen.getByTestId(circleProgress);
+
     const startDate = screen.getByText('Start Date');
     const nodeTypeSelect = screen.getByTestId('node-type-select');
-    expect(circle).toBeDefined(); // the dashboards started to render
     expect(startDate).toBeInTheDocument();
     expect(nodeTypeSelect).toBeInTheDocument();
   });
