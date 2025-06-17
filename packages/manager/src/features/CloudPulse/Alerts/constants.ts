@@ -205,3 +205,5 @@ export const UPDATE_ALERT_SUCCESS_MESSAGE =
 
 export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).';
+
+export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
