@@ -18,7 +18,6 @@ import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
 import { Logout } from './layouts/Logout';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
-import { useOAuth } from './OAuth/utils';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 
@@ -40,38 +39,6 @@ const store = storeFactory();
 
 setupInterceptors(store);
 
-const Routes = () => {
-  const { shouldRenderApp } = useOAuth();
-
-  if (!shouldRenderApp) {
-    return (
-      <React.Suspense fallback={<SplashScreen />}>
-        <Switch>
-          <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
-          <Route
-            component={LoginAsCustomerCallback}
-            exact
-            path="/admin/callback"
-          />
-          <Route component={Logout} exact path="/logout" />
-          <Route component={CancelLanding} exact path="/cancel" />
-        </Switch>
-      </React.Suspense>
-    );
-  }
-
-  return (
-    <React.Suspense fallback={<SplashScreen />}>
-      <Switch>
-        <Route component={Logout} exact path="/logout" />
-        <Route component={CancelLanding} exact path="/cancel" />
-        <Route component={Lish} path="/linodes/:linodeId/lish/:type" />
-        <Route component={App} />
-      </Switch>
-    </React.Suspense>
-  );
-};
-
 const Main = () => {
   if (!navigator.cookieEnabled) {
     return <CookieWarning />;
@@ -90,7 +57,29 @@ const Main = () => {
                 hideIconVariant={false}
                 maxSnack={3}
               >
-                <Routes />
+                <React.Suspense fallback={<SplashScreen />}>
+                  <Switch>
+                    <Route
+                      component={OAuthCallbackPage}
+                      exact
+                      path="/oauth/callback"
+                    />
+                    <Route
+                      component={LoginAsCustomerCallback}
+                      exact
+                      path="/admin/callback"
+                    />
+                    <Route component={Logout} exact path="/logout" />
+                    <Route component={CancelLanding} exact path="/cancel" />
+                    <Route component={Logout} exact path="/logout" />
+                    <Route component={CancelLanding} exact path="/cancel" />
+                    <Route
+                      component={Lish}
+                      path="/linodes/:linodeId/lish/:type"
+                    />
+                    <Route component={App} />
+                  </Switch>
+                </React.Suspense>
               </Snackbar>
             </Router>
           </React.Suspense>
