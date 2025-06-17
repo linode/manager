@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -11,13 +16,9 @@ import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import {
   changeRoleForEntity,
   getAllRoles,
@@ -116,7 +117,9 @@ export const ChangeRoleForEntityDrawer = ({
       handleClose();
     } catch (errors) {
       for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
+        setError(error?.field ?? 'root', {
+          message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+        });
       }
     }
   };

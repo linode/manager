@@ -58,8 +58,6 @@ export const attemptWithBackoff = async <T>(
     await timeout(initialDelay);
   }
 
-  // Disable ESLint rule because we do not want to parallelize the async operations.
-  /* eslint-disable no-await-in-loop */
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     const nextAttempt = attempt + 1;
     try {
