@@ -26,6 +26,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'apl', label: 'Akamai App Platform' },
   { flag: 'aplGeneralAvailability', label: 'Akamai App Platform GA' },
   { flag: 'blockStorageEncryption', label: 'Block Storage Encryption (BSE)' },
+  { flag: 'cloudNat', label: 'Cloud NAT' },
   { flag: 'disableLargestGbPlans', label: 'Disable Largest GB Plans' },
   { flag: 'gecko2', label: 'Gecko' },
   { flag: 'limitsEvolution', label: 'Limits Evolution' },
