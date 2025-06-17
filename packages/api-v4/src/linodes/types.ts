@@ -1,4 +1,3 @@
-import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
