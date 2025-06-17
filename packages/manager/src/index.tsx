@@ -41,9 +41,9 @@ const store = storeFactory();
 setupInterceptors(store);
 
 const Routes = () => {
-  const { isPendingAuthentication } = useOAuth();
+  const { shouldRenderApp } = useOAuth();
 
-  if (isPendingAuthentication) {
+  if (!shouldRenderApp) {
     return (
       <React.Suspense fallback={<SplashScreen />}>
         <Switch>

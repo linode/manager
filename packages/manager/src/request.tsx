@@ -13,7 +13,6 @@ import type { Profile } from '@linode/api-v4';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
   response
 ) => {

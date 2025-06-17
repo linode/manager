@@ -73,12 +73,16 @@ export function useOAuth() {
     window.location.pathname.includes('/oauth/callback') ||
     window.location.pathname.includes('/admin/callback');
 
+  // The app should render if there is a token stored and we're not
+  // activly authenticating.
+  const shouldRenderApp = token && !isPendingAuthentication;
+
   // If no token is stored and we are not in the process of authentication, redirect to login.
   if (!token && !isPendingAuthentication) {
     redirectToLogin(window.location.pathname, window.location.search);
   }
 
-  return { isPendingAuthentication };
+  return { shouldRenderApp };
 }
 
 function getSafeLoginURL() {
