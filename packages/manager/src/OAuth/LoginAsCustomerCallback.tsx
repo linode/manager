@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
@@ -15,10 +16,22 @@ import { handleLoginAsCustomerCallback } from 'src/OAuth/utils';
  * https://cloud.linode.com/admin/callback#access_token=fjhwehkfg&destination=dashboard&token_type=Admin
  */
 export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   useEffect(() => {
     handleLoginAsCustomerCallback({
-      onSuccess(returnTo) {
+      onSuccess(returnTo, expiresIn) {
         props.history.push(returnTo);
+
+        setTimeout(
+          () => {
+            enqueueSnackbar(
+              'Your Cloud Manager session will expire in 1 minute.',
+              { variant: 'info' }
+            );
+          },
+          (expiresIn - 60) * 1000
+        );
       },
     });
   }, []);

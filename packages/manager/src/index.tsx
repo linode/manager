@@ -33,8 +33,8 @@ const LoginAsCustomerCallback = React.lazy(() =>
     default: module.LoginAsCustomerCallback,
   }))
 );
-const OAuthCallbackPage = React.lazy(() =>
-  import('src/OAuth/OAuth').then((m) => ({ default: m.OAuthCallbackPage }))
+const OAuthCallback = React.lazy(() =>
+  import('src/OAuth/OAuthCallback').then((m) => ({ default: m.OAuthCallback }))
 );
 
 const queryClient = queryClientFactory('longLived');
@@ -49,7 +49,7 @@ const Routes = () => {
     return (
       <React.Suspense fallback={<SplashScreen />}>
         <Switch>
-          <Route component={OAuthCallbackPage} exact path="/oauth/callback" />
+          <Route component={OAuthCallback} exact path="/oauth/callback" />
           <Route
             component={LoginAsCustomerCallback}
             exact

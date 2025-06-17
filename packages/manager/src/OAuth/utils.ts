@@ -70,7 +70,7 @@ export function getIsLoggedInAsCustomer() {
     return false;
   }
 
-  return token.toLowerCase().includes('admin');
+  return token.toLowerCase().startsWith('admin');
 }
 
 export function useOAuth() {
@@ -150,7 +150,7 @@ async function generateOAuthAuthorizeEndpoint(
   returnTo: string,
   scope: string = '*'
 ) {
-  // Generate and store the nonce and code challange for verifcation later
+  // Generate and store the nonce and code challenge for verification later
   const { nonce } = generateNonce();
   const { codeChallenge } = await generateCodeVerifierAndChallenge();
 
@@ -250,7 +250,7 @@ export function getPKCETokenRequestFormData(
 }
 
 interface AuthCallbackOptions {
-  onSuccess: (returnTo: string) => void;
+  onSuccess: (returnTo: string, expiresInSeconds: number) => void;
 }
 
 export async function handleOAuthCallback(options: AuthCallbackOptions) {
@@ -314,7 +314,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
       if (response.ok) {
         const tokenParams: TokenResponse = await response.json();
 
-        // We multiply the expiration time by 1000 because JavaSript returns time in ms, while OAuth expresses the expiry time in seconds
+        // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
         const tokenExpiresAt =
           tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
 
@@ -324,7 +324,7 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
           expires: String(tokenExpiresAt),
         });
 
-        options.onSuccess(returnTo);
+        options.onSuccess(returnTo, tokenParams.expires_in);
       } else {
         Sentry.captureException("Request to /oauth/token was not 'ok'.", {
           extra: { statusCode: response.status },
@@ -357,7 +357,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
       getQueryParamsFromQueryString(location.hash.substring(1))
     );
 
-    // We multiply the expiration time by 1000 because JavaSript returns time in ms, while OAuth expresses the expiry time in seconds
+    // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
     const tokenExpiresAt = Date.now() + +expiresIn * 1000;
 
     /**
@@ -373,7 +373,7 @@ export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
      * All done, redirect to the destination from the hash params
      * NOTE: the param does not include a leading slash
      */
-    options.onSuccess(`/${destination}`);
+    options.onSuccess(`/${destination}`, +expiresIn);
   } catch (error) {
     Sentry.captureException(error, {
       extra: {

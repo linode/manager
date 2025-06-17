@@ -11,7 +11,7 @@ import { handleOAuthCallback } from './utils';
  *
  * We will handle taking the code, turning it into an access token, and start a Cloud Manager session.
  */
-export const OAuthCallbackPage = (props: RouteComponentProps) => {
+export const OAuthCallback = (props: RouteComponentProps) => {
   React.useEffect(() => {
     handleOAuthCallback({
       onSuccess(returnTo) {
