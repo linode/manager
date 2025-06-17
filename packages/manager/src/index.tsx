@@ -43,9 +43,9 @@ const store = storeFactory();
 setupInterceptors(store);
 
 const Routes = () => {
-  const { isPendingAuthentication } = useOAuth();
+  const { shouldRenderApp } = useOAuth();
 
-  if (isPendingAuthentication) {
+  if (!shouldRenderApp) {
     return (
       <React.Suspense fallback={<SplashScreen />}>
         <Switch>
@@ -57,6 +57,7 @@ const Routes = () => {
           />
           <Route component={Logout} exact path="/logout" />
           <Route component={CancelLanding} exact path="/cancel" />
+          <Route component={SplashScreen} />
         </Switch>
       </React.Suspense>
     );
