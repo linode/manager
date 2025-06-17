@@ -9,7 +9,7 @@ export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 export const MAINTENANCE_POLICY_DESCRIPTION =
   'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
 
-export const MAINTENANCE_POLICY_DESCRIPTIONS: Record<number, string> = {
+export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<number, string> = {
   1: 'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
   2: 'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
 };

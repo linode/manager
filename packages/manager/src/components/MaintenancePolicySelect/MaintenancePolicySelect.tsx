@@ -12,7 +12,7 @@ import {
 import React from 'react';
 
 import {
-  MAINTENANCE_POLICY_DESCRIPTIONS,
+  MAINTENANCE_POLICY_OPTION_DESCRIPTIONS,
   MIGRATE_TOOLTIP_TEXT,
   POWER_OFF_TOOLTIP_TEXT,
 } from './constants';
@@ -97,7 +97,7 @@ export const MaintenancePolicySelect = (props: Props) => {
                     font: theme.tokens.alias.Typography.Label.Regular.Xs,
                   })}
                 >
-                  {MAINTENANCE_POLICY_DESCRIPTIONS[policy.id] ??
+                  {MAINTENANCE_POLICY_OPTION_DESCRIPTIONS[policy.id] ??
                     policy.description}
                 </Typography>
                 {state.selected && <SelectedIcon visible />}

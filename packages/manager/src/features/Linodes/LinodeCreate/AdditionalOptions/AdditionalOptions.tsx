@@ -46,7 +46,7 @@ export const AdditionalOptions = () => {
         Additional Options
       </Typography>
       <Stack divider={<Divider />}>
-        {flags.aclpBetaServices?.alerts && <Alerts />}
+        {showAlerts && <Alerts />}
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
       </Stack>
     </Paper>
