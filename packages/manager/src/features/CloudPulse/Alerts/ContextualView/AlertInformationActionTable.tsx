@@ -22,11 +22,6 @@ import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
-import type {
-  Alert,
-  APIError,
-  CloudPulseAlertsPayload,
-} from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -115,6 +110,7 @@ export const AlertInformationActionTable = (
     entityName,
     error,
     orderByColumn,
+    serviceType,
     onToggleAlert,
   } = props;
 
@@ -138,7 +134,7 @@ export const AlertInformationActionTable = (
     system: [],
     user: [],
   });
-  
+
   const isAnyAlertStateChanged = React.useMemo(() => {
     const initial = initialAlertStatesRef.current;
     const current = enabledAlerts;
@@ -152,6 +148,11 @@ export const AlertInformationActionTable = (
 
   // Initialize alert states based on their current status
   React.useEffect(() => {
+    // Only run this effect for edit flow
+    if (!entityId) {
+      return;
+    }
+
     const initialStates: CloudPulseAlertsPayload = {
       system: [],
       user: [],
@@ -174,7 +175,7 @@ export const AlertInformationActionTable = (
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
-    entityId
+    entityId ?? ''
   );
 
   const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
@@ -329,9 +330,9 @@ export const AlertInformationActionTable = (
                             entityId,
                             onToggleAlert,
                           });
-  
+
                           if (!rowProps) return null;
-  
+
                           return (
                             <AlertInformationActionRow
                               alert={alert}
