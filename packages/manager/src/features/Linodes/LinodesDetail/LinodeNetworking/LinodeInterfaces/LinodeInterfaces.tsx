@@ -1,5 +1,5 @@
 import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React, { useState } from 'react';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
@@ -16,7 +16,9 @@ interface Props {
 
 export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
+  const { interfaceId } = useParams({
+    strict: false,
+  });
 
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -41,13 +43,13 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       to: '/linodes/$linodeId/networking/interfaces/$interfaceId',
       params: { linodeId, interfaceId },
       search: {
-        delete: false,
-        migrate: false,
-        rebuild: false,
-        rescue: false,
-        resize: false,
-        selectedImageId: '',
-        upgrade: false,
+        delete: undefined,
+        migrate: undefined,
+        rebuild: undefined,
+        rescue: undefined,
+        resize: undefined,
+        selectedImageId: undefined,
+        upgrade: undefined,
       },
     });
   };
@@ -97,20 +99,10 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
           navigate({
             to: '/linodes/$linodeId/networking/interfaces',
             params: { linodeId },
-            search: (prev) => ({
-              ...prev,
-              interfaceId: undefined,
-              delete: false,
-              migrate: false,
-              rebuild: false,
-              rescue: false,
-              resize: false,
-              selectedImageId: '',
-              upgrade: false,
-            }),
+            search: (prev) => prev,
           })
         }
-        open={match.routeId === '/linodes/$linodeId/networking/interfaces'}
+        open={Boolean(selectedInterfaceId && interfaceId)}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}

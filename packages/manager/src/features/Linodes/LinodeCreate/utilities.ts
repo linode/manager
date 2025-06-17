@@ -51,8 +51,6 @@ interface LinodeCreatePayloadOptions {
 }
 
 /**
-=======
->>>>>>> 31ce72d506 (utils and types)
  * Hook that allows you to read and manage Linode Create flow query params.
  *
  * We have this because react-router-dom's query strings are not typesafe.

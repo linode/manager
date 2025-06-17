@@ -373,8 +373,7 @@ describe('upgrade to new Linode Interface flow', () => {
       });
 
     // Confirm can navigate to Linode after success
-    cy.visitWithLogin(`/linodes/${mockLinode.id}`);
-    cy.url().should('endWith', `linodes/${mockLinode.id}`);
+    cy.url().should('endWith', `linodes/${mockLinode.id}/configurations`);
   });
 
   /*
