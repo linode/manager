@@ -93,6 +93,7 @@ export const CloudPulsePortFilter = React.memo(
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
+        optional
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
         value={value}
       />

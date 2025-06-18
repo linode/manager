@@ -232,6 +232,7 @@ export const getCustomSelectProperties = (
     name: label,
     options,
     placeholder,
+    isOptional,
   } = props.config.configuration;
   const {
     dashboard,
@@ -255,6 +256,7 @@ export const getCustomSelectProperties = (
     ),
     filterKey,
     filterType,
+    isOptional,
     handleSelectionChange: handleCustomSelectChange,
     isMultiSelect,
     label,

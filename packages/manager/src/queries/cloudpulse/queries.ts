@@ -7,7 +7,11 @@ import {
   getJWEToken,
   getMetricDefinitionsByServiceType,
 } from '@linode/api-v4';
-import { getAllLinodesRequest, volumeQueries } from '@linode/queries';
+import {
+  getAllLinodesRequest,
+  nodebalancerQueries,
+  volumeQueries,
+} from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { databaseQueries } from '../databases/databases';
@@ -114,6 +118,9 @@ export const queryFactory = createQueryKeys(key, {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
           queryKey: ['linodes', params, filters],
         };
+
+      case 'nodebalancers':
+        return nodebalancerQueries.nodebalancers._ctx.all;
 
       case 'volumes':
         return volumeQueries.lists._ctx.all(params, filters); // in this we don't need to define our own query factory, we will reuse existing implementation in volumes.ts
