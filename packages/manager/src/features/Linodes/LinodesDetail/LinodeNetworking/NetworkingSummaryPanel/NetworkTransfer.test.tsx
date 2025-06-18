@@ -35,7 +35,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );
@@ -95,7 +95,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );

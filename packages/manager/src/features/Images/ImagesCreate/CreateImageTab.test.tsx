@@ -56,10 +56,10 @@ describe('CreateImageTab', () => {
     const disk = linodeDiskFactory.build();
 
     server.use(
-      http.get('*/v4/linode/instances', () => {
+      http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
       }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
+      http.get('*/v4*/linode/instances/:id/disks', () => {
         return HttpResponse.json(makeResourcePage([disk]));
       })
     );
@@ -99,10 +99,10 @@ describe('CreateImageTab', () => {
     const image = imageFactory.build();
 
     server.use(
-      http.get('*/v4/linode/instances', () => {
+      http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
       }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
+      http.get('*/v4*/linode/instances/:id/disks', () => {
         return HttpResponse.json(makeResourcePage([disk]));
       }),
       http.post('*/v4/images', () => {
@@ -146,10 +146,10 @@ describe('CreateImageTab', () => {
     const linode = linodeFactory.build({ region: region.id });
 
     server.use(
-      http.get('*/v4/linode/instances', () => {
+      http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
       }),
-      http.get('*/v4/linode/instances/:id', () => {
+      http.get('*/v4*/linode/instances/:id', () => {
         return HttpResponse.json(linode);
       }),
       http.get('*/v4*/regions', () => {
@@ -182,13 +182,13 @@ describe('CreateImageTab', () => {
     const image = imageFactory.build();
 
     server.use(
-      http.get('*/v4/linode/instances', () => {
+      http.get('*/v4*/linode/instances', () => {
         return HttpResponse.json(makeResourcePage([linode]));
       }),
-      http.get('*/v4/linode/instances/:id', () => {
+      http.get('*/v4*/linode/instances/:id', () => {
         return HttpResponse.json(linode);
       }),
-      http.get('*/v4/linode/instances/:id/disks', () => {
+      http.get('*/v4*/linode/instances/:id/disks', () => {
         return HttpResponse.json(makeResourcePage([disk1, disk2]));
       }),
       http.post('*/v4/images', () => {
