@@ -36,7 +36,7 @@ export const StackScriptForm = (props: Props) => {
             errorText={fieldState.error?.message}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="end">{username} /</InputAdornment>
+                <InputAdornment position="start">{username} /</InputAdornment>
               ),
             }}
             inputRef={field.ref}

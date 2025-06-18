@@ -1,5 +1,5 @@
 import { useAllAccountAvailabilitiesQuery } from '@linode/queries';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, InputAdornment } from '@linode/ui';
 import PublicIcon from '@mui/icons-material/Public';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import * as React from 'react';
@@ -148,22 +148,27 @@ export const RegionSelect = <
         textFieldProps={{
           ...props.textFieldProps,
           InputProps: {
-            endAdornment:
-              isGeckoLAEnabled && selectedRegion && `(${selectedRegion?.id})`,
+            endAdornment: isGeckoLAEnabled && selectedRegion && (
+              <InputAdornment position="end">
+                ({selectedRegion?.id})
+              </InputAdornment>
+            ),
             required,
-            startAdornment:
-              selectedRegion &&
-              (selectedRegion.id === 'global' ? (
-                <PublicIcon
-                  sx={{
-                    height: '24px',
-                    mr: 1,
-                    width: '24px',
-                  }}
-                />
-              ) : (
-                <Flag country={selectedRegion?.country} mr={1} />
-              )),
+            startAdornment: selectedRegion && (
+              <InputAdornment position="start">
+                {selectedRegion.id === 'global' ? (
+                  <PublicIcon
+                    sx={{
+                      height: '24px',
+                      mr: 1,
+                      width: '24px',
+                    }}
+                  />
+                ) : (
+                  <Flag country={selectedRegion?.country} mr={1} />
+                )}
+              </InputAdornment>
+            ),
           },
           tooltipText,
         }}
