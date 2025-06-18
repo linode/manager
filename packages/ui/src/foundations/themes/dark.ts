@@ -865,15 +865,61 @@ export const darkTheme: ThemeOptions = {
     MuiSwitch: {
       styleOverrides: {
         root: {
-          '& .Mui-disabled': {
-            '& + .MuiSwitch-track': {
-              opacity: '.5 !important',
+          width: Spacing.S72,
+          height: Spacing.S48,
+        },
+        switchBase: {
+          padding: Spacing.S16,
+          '&:hover + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Inactive.Hover.Background,
+          },
+          '&.Mui-checked': {
+            '&:hover, &:focus': {
+              backgroundColor: 'transparent',
             },
-            opacity: 0.5,
+            '&:hover + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Hover.Background,
+            },
+            '.icon': {
+              marginLeft: Spacing.S4,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Default.Background,
+              opacity: 1,
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Disabled.Background,
+            },
+          },
+          '&.Mui-disabled': {
+            '& .square': {
+              fill: Component.Switch.Inactive.Disabled.Circle,
+              opacity: 0.5,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Inactive.Disabled.Background,
+              opacity: 1,
+            },
+          },
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+          },
+          '.icon': {
+            borderRadius: '50%',
+            height: Spacing.S20,
+            width: Spacing.S20,
+            top: -2,
+            left: -2,
+            position: 'relative',
+          },
+          '.square': {
+            fill: Component.Switch.Inactive.Default.Circle,
           },
         },
         track: {
-          backgroundColor: Color.Neutrals[80],
+          opacity: 1,
+          borderRadius: Spacing.S12,
+          backgroundColor: Component.Switch.Inactive.Default.Background,
         },
       },
     },
