@@ -61,6 +61,7 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 
 interface AclpFlag {
   beta: boolean;
+  bypassAccountCapabilities?: boolean;
   enabled: boolean;
 }
 
@@ -98,6 +99,12 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
+interface AclpBetaServices {
+  alerts: boolean;
+  dbaas: boolean;
+  metrics: boolean;
+}
+
 interface LimitsEvolution {
   enabled: boolean;
   requestForIncreaseDisabledForAll: boolean;
@@ -109,7 +116,7 @@ export interface Flags {
   aclp: AclpFlag;
   aclpAlerting: AclpAlerting;
   aclpAlertServiceTypeConfig: AclpAlertServiceTypeConfig[];
-  aclpIntegration: boolean;
+  aclpBetaServices: AclpBetaServices;
   aclpLogs: BetaFeatureFlag;
   aclpReadEndpoint: string;
   aclpResourceTypeMap: CloudPulseResourceTypeMapFlag[];

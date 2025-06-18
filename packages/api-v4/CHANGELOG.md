@@ -1,3 +1,24 @@
+## [2025-06-17] - v0.142.0
+
+
+### Added:
+
+- `has_user_data` to `Linode` type ([#12352](https://github.com/linode/manager/pull/12352))
+
+### Changed:
+
+- Make AccountMaintenance description field type more specific ([#12293](https://github.com/linode/manager/pull/12293))
+- Include `private_network` in BaseDatabase type ([#12324](https://github.com/linode/manager/pull/12324))
+- Make `placement_group` defined but nullable in `Linode` type ([#12352](https://github.com/linode/manager/pull/12352))
+- Make PrivateNetwork public_access property optional and UpdateDatabasePayload private_network property optional ([#12354](https://github.com/linode/manager/pull/12354))
+
+### Upcoming Features:
+
+- IAM RBAC: Add role and new entity types ([#12296](https://github.com/linode/manager/pull/12296))
+- Add ACLP `getCloudPulseServiceByServiceType` service and update `ServiceTypes` per API specs ([#12307](https://github.com/linode/manager/pull/12307))
+- IAM RBAC: implement the two new APIs and renamed old endpoints and queries to align terminology with the current focus on roles ([#12344](https://github.com/linode/manager/pull/12344))
+- Change references of `interface` to `linode_interface` for firewall types ([#12367](https://github.com/linode/manager/pull/12367))
+
 ## [2025-06-03] - v0.141.0
 
 ### Added:

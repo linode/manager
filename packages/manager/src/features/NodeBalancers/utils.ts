@@ -1,4 +1,5 @@
-import { filter, isNil } from 'ramda';
+import { isNullOrUndefined } from '@linode/utilities';
+import { filter } from 'ramda';
 
 import { useFlags } from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -26,7 +27,7 @@ export const createNewNodeBalancerConfigNode =
     label: '',
     mode: 'accept',
     modifyStatus: 'new',
-    port: 80,
+    port: '80',
     weight: 100,
   });
 
@@ -64,6 +65,7 @@ export const getNodeForRequest = (
    */
   mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
+  subnet_id: node?.subnet_id,
   weight: +node.weight!,
 });
 
@@ -73,12 +75,15 @@ export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
 });
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
-  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
+  const match =
+    /^((10.\d{1,3}|192\.168|172\.(1[6-9]|2\d|3[0-1]))\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
+      node.address
+    );
   if (match) {
     return {
       ...node,
       address: match![1],
-      port: match![2],
+      port: match![4],
     };
   }
   return node;
@@ -100,13 +105,13 @@ export const transformConfigsForRequest = (
       {
         algorithm: config.algorithm || undefined,
         check: config.check || undefined,
-        check_attempts: !isNil(config.check_attempts)
+        check_attempts: !isNullOrUndefined(config.check_attempts)
           ? +config.check_attempts
           : undefined,
         check_body: shouldIncludeCheckBody(config)
           ? config.check_body
           : undefined,
-        check_interval: !isNil(config.check_interval)
+        check_interval: !isNullOrUndefined(config.check_interval)
           ? +config.check_interval
           : undefined,
         // Passive checks must be false for UDP
@@ -114,7 +119,7 @@ export const transformConfigsForRequest = (
         check_path: shouldIncludeCheckPath(config)
           ? config.check_path
           : undefined,
-        check_timeout: !isNil(config.check_timeout)
+        check_timeout: !isNullOrUndefined(config.check_timeout)
           ? +config.check_timeout
           : undefined,
         cipher_suite: shouldIncludeCipherSuite(config)

@@ -1,8 +1,7 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -11,6 +10,7 @@ import {
   useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -25,8 +25,8 @@ import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterID } = useParams<{ clusterID: string }>();
-  const id = Number(clusterID);
+  const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
+  const id = Number(clusterId);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
@@ -44,11 +44,19 @@ export const KubernetesClusterDetail = () => {
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(id);
 
-  const { isClusterHighlyAvailable, showHighAvailability } =
-    getKubeHighAvailability(account, cluster);
+  const { isClusterHighlyAvailable } = getKubeHighAvailability(
+    account,
+    cluster
+  );
 
   const [updateError, setUpdateError] = React.useState<string | undefined>();
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
+
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster?.id,
+  });
 
   if (error) {
     return (
@@ -108,7 +116,7 @@ export const KubernetesClusterDetail = () => {
         docsLabel="Docs"
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         onButtonClick={
-          showHighAvailability && !isClusterHighlyAvailable
+          !isClusterHighlyAvailable && !isClusterReadOnly
             ? handleUpgradeToHA
             : undefined
         }
@@ -148,9 +156,3 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
-
-export const kubernetesClusterDetailLazyRoute = createLazyRoute(
-  '/kubernetes/clusters/$clusterID'
-)({
-  component: KubernetesClusterDetail,
-});

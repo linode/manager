@@ -1,4 +1,4 @@
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -7,11 +7,14 @@ import {
   databaseTypeFactory,
   vpcFactory,
 } from 'src/factories';
-import DatabaseCreate from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
+import { DatabaseCreate } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { DatabaseResize } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResize';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 const loadingTestId = 'circle-progress';
 
@@ -53,15 +56,11 @@ describe('database summary section', () => {
       })
     );
 
-    const { getByTestId, findByText } = renderWithTheme(<DatabaseCreate />, {
-      MemoryRouter: { initialEntries: ['/databases/create'] },
-      flags,
-    });
+    const { getByTestId, findAllByText, findByText } =
+      await renderWithThemeAndRouter(<DatabaseCreate />, {
+        flags,
+      });
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
-    const selectedPlan = await waitFor(
-      () => document.getElementById('g6-dedicated-2') as HTMLInputElement
-    );
-    await userEvent.click(selectedPlan);
 
     // Simulate Region Selection
     const regionSelect = getByTestId('region-select').querySelector(
@@ -74,6 +73,9 @@ describe('database summary section', () => {
     const regionOption = await findByText('US, Newark, NJ (us-east)');
     await userEvent.click(regionOption);
 
+    const selectedPlan = await findAllByText('Linode 2 GB');
+    await userEvent.click(selectedPlan[0]);
+
     // Simulate VPC Selection
     const vpcSelector = getByTestId('database-vpc-selector').querySelector(
       'input'
@@ -84,7 +86,8 @@ describe('database summary section', () => {
 
     // Check summary contents (ie. plan, nodes, VPC)
     const summary = getByTestId('currentSummary');
-    const selectedPlanText = 'Dedicated 4 GB $60/month';
+    const selectedPlanText =
+      'Linode 2 GB $60/month3 Nodes - HA $140/monthVPC 1 VPC';
     expect(summary).toHaveTextContent(selectedPlanText);
     const selectedNodesText = '3 Nodes - HA $140/month';
     expect(summary).toHaveTextContent(selectedNodesText);
@@ -97,7 +100,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,
@@ -121,7 +124,7 @@ describe('database summary section', () => {
       platform: 'rdbms-default',
       type: 'g6-nanode-1',
     });
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <DatabaseResize database={mockDatabase} />,
       {
         flags,

@@ -46,11 +46,6 @@ export interface RegionSelectProps<
   forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
   /**
-   * Ignores account availability information when rendering region options
-   * @default false
-   */
-  ignoreAccountAvailability?: boolean;
-  /**
    * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook
    */
   isGeckoLAEnabled: boolean;
@@ -84,11 +79,6 @@ export interface RegionMultiSelectProps
    */
   forcefullyShownRegionIds?: Set<string>;
   helperText?: string;
-  /**
-   * Ignores account availability information when rendering region options
-   * @default false
-   */
-  ignoreAccountAvailability?: boolean;
   isClearable?: boolean;
   /**
    * `isGeckoLAEnabled` flag from `useIsGeckoEnabled` hook

@@ -243,9 +243,10 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-    background: Table.Row.Background.Hover,
-  },
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
+    {
+      background: Table.Row.Background.Hover,
+    },
 };
 
 const MuiTableZebraStyles = {
@@ -355,8 +356,8 @@ export const lightTheme: ThemeOptions = {
           color: Select.Default.Icon,
           padding: 0,
           svg: {
-            height: '16px',
-            width: '16px',
+            height: Spacing.S16,
+            width: Spacing.S16,
           },
           visibility: 'visible',
         },
@@ -366,8 +367,10 @@ export const lightTheme: ThemeOptions = {
           marginRight: Spacing.S8,
         },
         groupLabel: {
-          font: Typography.Label.Bold.L,
-          padding: '8px',
+          marginTop: '0px !important',
+          top: 0,
+          backgroundColor: Dropdown.Background.Category,
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
         },
         input: {
           '&.MuiInputBase-input.MuiInput-input': {
@@ -375,24 +378,48 @@ export const lightTheme: ThemeOptions = {
           },
         },
         inputRoot: {
+          paddingLeft: `${Spacing.S12}`,
+          '& input::placeholder': {
+            color: Select.Default.Text,
+            opacity: 1,
+          },
           height: 'inherit',
           paddingBottom: 0,
+          '& .fi': {
+            width: Spacing.S28,
+            height: Spacing.S20,
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
+        },
+        paper: {
+          boxShadow: Alias.Elevation.S,
+          marginTop: Spacing.S4,
+          paddingTop: Spacing.S4,
+          paddingBottom: Spacing.S4,
         },
         listbox: {
-          backgroundColor: bg.white,
-          border: `1px solid ${primaryColors.main}`,
-          padding: '4px',
+          backgroundColor: Select.Default.Background,
+          paddingTop: Spacing.S4,
+          border: 'none',
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
         },
         loading: {
-          border: `1px solid ${primaryColors.main}`,
+          border: '0px !important',
+          boxShadow: Alias.Elevation.S,
         },
         noOptions: {
-          border: `1px solid ${primaryColors.main}`,
-          borderTop: 0,
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
-            backgroundColor: 'transparent',
+            backgroundColor: `${Dropdown.Background.Hover} !important`,
           },
           '&:hover': {
             backgroundColor: `${Dropdown.Background.Hover}`,
@@ -400,11 +427,36 @@ export const lightTheme: ThemeOptions = {
             transition: 'background-color 0.2s',
           },
           fontSize: '0.9rem',
-          padding: '10px !important',
+          '& .fi': {
+            width: Spacing.S28,
+            height: Spacing.S20,
+            borderRadius: '3px',
+            backgroundSize: 'cover',
+            boxShadow: 'none',
+          },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
           // To remove the double border of listbox and input
           '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"], &[data-popper-placement="top"]':
+              {
+                '.MuiAutocomplete-listbox': {
+                  padding: 0,
+                  '& .MuiAutocomplete-groupLabel': {
+                    color: Dropdown.Text.Default,
+                    font: Typography.Heading.Overline,
+                    textTransform: Typography.Heading.OverlineTextCase,
+                  },
+                },
+                '.MuiAutocomplete-option': {
+                  padding: `${Spacing.S6} ${Spacing.S12} !important`,
+                  svg: {
+                    height: Spacing.S16,
+                    width: Spacing.S16,
+                  },
+                },
+              },
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
@@ -431,8 +483,8 @@ export const lightTheme: ThemeOptions = {
         },
         tag: {
           '&:not(.MuiChip-root)': {
-            borderRadius: '4px',
-            padding: '4px',
+            borderRadius: Spacing.S4,
+            padding: Spacing.S4,
           },
           '.MuiChip-deleteIcon': {
             ':hover': {
@@ -443,12 +495,12 @@ export const lightTheme: ThemeOptions = {
             height: 'auto',
             borderRadius: '50%',
             color: Content.Text.Primary.Default,
-            fontSize: '16px',
-            margin: '0 4px',
+            fontSize: Spacing.S16,
+            margin: `0 ${Spacing.S4}`,
           },
 
           backgroundColor: bg.lightBlue1,
-          padding: '12px 2px',
+          padding: `${Spacing.S12} ${Spacing.S2}`,
         },
       },
     },
@@ -518,9 +570,8 @@ export const lightTheme: ThemeOptions = {
         },
         outlined: {
           '&:hover, &:focus': {
-            backgroundColor: Color.Neutrals[5],
-            border: `1px solid ${Border.Normal}`,
-            color: Color.Brand[80],
+            backgroundColor: Button.Secondary.Hover.Background,
+            color: Button.Secondary.Default.Text,
           },
           '&[aria-disabled="true"]': {
             backgroundColor: 'transparent',
@@ -555,18 +606,18 @@ export const lightTheme: ThemeOptions = {
           style: {
             '&:not([aria-disabled="true"]):hover, &:not([aria-disabled="true"]):focus':
               {
-                backgroundColor: Background.Negativesubtle,
-                border: `1px solid ${Border.Negative}`,
-                color: Content.Text.Negative,
+                backgroundColor: Button.Danger.Hover.Background,
+                border: `1px solid ${Button.Danger.Hover.Background}`,
+                color: Button.Danger.Hover.Text,
               },
             '&[aria-disabled="true"]': {
-              backgroundColor: 'transparent',
-              border: `1px solid ${Button.Secondary.Disabled.Border}`,
-              color: Button.Secondary.Disabled.Text,
+              backgroundColor: Button.Danger.Disabled.Background,
+              border: `1px solid ${Button.Danger.Disabled.Background}`,
+              color: Button.Danger.Disabled.Text,
             },
-            backgroundColor: 'transparent',
-            border: `1px solid ${Border.Negative}`,
-            color: Content.Text.Negative,
+            backgroundColor: Button.Danger.Default.Background,
+            border: `1px solid ${Button.Danger.Default.Background}`,
+            color: Button.Danger.Default.Text,
           },
         },
       ],
@@ -866,10 +917,11 @@ export const lightTheme: ThemeOptions = {
           '&$error': {
             color: Select.Error.HintText,
           },
-          fontWeight: 400,
+          fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
           textTransform: 'none',
+          marginTop: '4px',
         },
       },
     },
@@ -1191,51 +1243,38 @@ export const lightTheme: ThemeOptions = {
           color: primaryColors.main,
         },
         root: ({ theme }) => ({
-          '&:active': {
-            color: theme.tokens.component.RadioButton.Active.Active.Border,
-          },
-          '&.Mui-checked': {
-            color: theme.tokens.component.RadioButton.Active.Default.Border,
-            '&:active': {
-              color: theme.tokens.component.RadioButton.Active.Active.Border,
-            },
-          },
-          '& .defaultFill': {
-            fill: theme.color.white,
-            transition: theme.transitions.create(['fill']),
-          },
           '& svg circle': {
-            fill: Color.Neutrals.White,
+            fill: theme.tokens.component.RadioButton.Inactive.Default
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Default.Border,
           },
-          '&.Mui-disabled': {
-            '& .defaultFill': {
-              fill: Color.Neutrals[5],
-            },
-            '&:not(.Mui-checked) svg circle': {
-              fill: Color.Neutrals[20],
-            },
-            '&:not(.Mui-checked)': {
-              color:
-                theme.tokens.component.RadioButton.Inactive.Disabled.Border,
-            },
-            color: theme.tokens.component.RadioButton.Active.Disabled.Border,
-            pointerEvents: 'none',
+          '&.Mui-checked svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Default.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Default.Border,
           },
+          '&.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Disabled
+              .Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Disabled.Border,
+          },
+          '&.Mui-checked.Mui-disabled svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Disabled.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Disabled.Border,
+          },
+          '&:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Inactive.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Inactive.Hover.Border,
+          },
+          '&.Mui-checked:hover:not(.Mui-disabled) svg circle': {
+            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
+            stroke: theme.tokens.component.RadioButton.Active.Hover.Border,
+          },
+          padding: '10px 10px',
           '&.MuiRadio-sizeSmall': {
             '.MuiSvgIcon-fontSizeSmall': {
               fontSize: '16px',
             },
           },
-          '&:hover': {
-            '& .defaultFill': {
-              fill: theme.color.white,
-            },
-            color: theme.tokens.component.RadioButton.Active.Hover.Border,
-            fill: theme.tokens.component.RadioButton.Active.Hover.Background,
-          },
-          color: theme.tokens.alias.Action.Neutral,
-          padding: '10px 10px',
-          transition: theme.transitions.create(['color']),
         }),
       },
     },
@@ -1243,7 +1282,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         disabled: {},
         icon: {
-          color: `${Color.Neutrals[50]} !important`,
+          color: `${Select.Disabled.Icon} !important`,
           height: 28,
           marginRight: 4,
           marginTop: -2,
@@ -1522,8 +1561,16 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: Table.Row.Background.Hover,
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
+            {
+              backgroundColor: Table.Row.Background.Hover,
+            },
+          '&.MuiTableRow-hover:hover.disabled-row': {
+            cursor: 'not-allowed',
+            backgroundColor: 'inherit',
+            '& .MuiFormControlLabel-root.Mui-disabled': {
+              cursor: 'not-allowed',
+            },
           },
           // Disable hover for nested rows (VPC)
           '&.MuiTableRow-nested, &.MuiTableRow-nested.MuiTableRow-hover:hover':
@@ -1532,7 +1579,6 @@ export const lightTheme: ThemeOptions = {
             },
           '&.disabled-row .MuiTableCell-root': {
             // TODO: Use design tokens in future when ready
-            backgroundColor: Interaction.Background.Disabled,
             color: Content.Text.Primary.Disabled,
           },
           background: Table.Row.Background.Default,

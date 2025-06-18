@@ -1,7 +1,4 @@
-import {
-  useRegionsQuery,
-  useUpdateImageRegionsMutation,
-} from '@linode/queries';
+import { useUpdateImageRegionsMutation } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { ActionsPanel, Notice, Paper, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
@@ -13,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { RegionMultiSelect } from 'src/components/RegionSelect/RegionMultiSelect';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { useRegionsThatSupportImageStorage } from '../../utils';
 import { ImageRegionRow } from './ImageRegionRow';
 
 import type {
@@ -44,7 +42,7 @@ export const ManageImageReplicasForm = (props: Props) => {
   const imageRegionIds = image?.regions.map(({ region }) => region) ?? [];
 
   const { enqueueSnackbar } = useSnackbar();
-  const { data: regions } = useRegionsQuery();
+  const { regions } = useRegionsThatSupportImageStorage();
   const { mutateAsync } = useUpdateImageRegionsMutation(image?.id ?? '');
 
   const {
@@ -133,10 +131,9 @@ export const ManageImageReplicasForm = (props: Props) => {
         </Typography>
       </Notice>
       <RegionMultiSelect
-        currentCapability="Object Storage" // Images use Object Storage as the storage backend
+        currentCapability={undefined} // Images don't have a region capability yet
         disabledRegions={disabledRegions}
         errorText={errors.regions?.message}
-        ignoreAccountAvailability // Ignore the account capability because we are just using "Object Storage" for region compatibility
         isGeckoLAEnabled={isGeckoLAEnabled}
         label="Add Regions"
         onChange={(regionIds) =>
@@ -146,7 +143,7 @@ export const ManageImageReplicasForm = (props: Props) => {
           })
         }
         placeholder="Select regions or type to search"
-        regions={regions?.filter((r) => r.site_type === 'core') ?? []}
+        regions={regions}
         renderTags={() => null}
         selectedIds={values.regions}
       />

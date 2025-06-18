@@ -74,7 +74,8 @@ export type MockPresetExtraGroupId =
   | 'Managed'
   | 'Notifications'
   | 'Profile'
-  | 'Regions';
+  | 'Regions'
+  | 'User Permissions';
 
 export type MockPresetExtraGroupType =
   | 'account'
@@ -83,7 +84,8 @@ export type MockPresetExtraGroupType =
   | 'maintenance'
   | 'notifications'
   | 'profile'
-  | 'select';
+  | 'select'
+  | 'userPermissions';
 
 export type MockPresetExtraId =
   | 'account:custom'
@@ -98,7 +100,9 @@ export type MockPresetExtraId =
   | 'profile:custom'
   | 'regions:core-and-distributed'
   | 'regions:core-only'
-  | 'regions:legacy';
+  | 'regions:legacy'
+  | 'userAccountPermissions:custom'
+  | 'userEntityPermissions:custom';
 
 export interface MockPresetExtra extends MockPresetBase {
   canUpdateCount?: boolean;

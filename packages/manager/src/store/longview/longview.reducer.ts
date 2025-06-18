@@ -1,4 +1,3 @@
-import { clone } from 'ramda';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 
 import {
@@ -9,7 +8,7 @@ import {
 } from './longview.actions';
 
 import type { EntitiesAsObjectState } from '../types';
-import type { LongviewClient } from '@linode/api-v4/lib/longview';
+import type { LongviewClient } from '@linode/api-v4';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
 
@@ -95,7 +94,7 @@ const reducer = reducerWithInitialState(defaultState)
   .caseWithAction(
     deleteLongviewClient.done,
     (state, { payload: { params } }) => {
-      const dataCopy = clone(state.data);
+      const dataCopy = structuredClone(state.data);
 
       delete dataCopy[params.id];
 
@@ -129,7 +128,7 @@ const reducer = reducerWithInitialState(defaultState)
     updateLongviewClient.done,
     (state, { payload: { params, result } }) => {
       /** update in place */
-      const dataCopy = clone(state.data);
+      const dataCopy = structuredClone(state.data);
       dataCopy[params.id] = result;
 
       return {

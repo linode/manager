@@ -10,14 +10,13 @@ import { CookieWarning } from 'src/components/CookieWarning';
 import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import 'src/exceptionReporting';
 import { SplashScreen } from 'src/components/SplashScreen';
-import Logout from 'src/layouts/Logout';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
 import { App } from './App';
-import NullComponent from './components/NullComponent';
 import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
+import { Logout } from './layouts/Logout';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
@@ -28,8 +27,10 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
-const LoginAsCustomerCallback = React.lazy(
-  () => import('src/layouts/LoginAsCustomerCallback')
+const LoginAsCustomerCallback = React.lazy(() =>
+  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
+    default: module.LoginAsCustomerCallback,
+  }))
 );
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
@@ -50,36 +51,36 @@ const Main = () => {
           <CssBaseline enableColorScheme />
           <React.Suspense fallback={<SplashScreen />}>
             <Router>
-              <Switch>
-                <Route
-                  component={OAuthCallbackPage}
-                  exact
-                  path="/oauth/callback"
-                />
-                <Route
-                  component={LoginAsCustomerCallback}
-                  exact
-                  path="/admin/callback"
-                />
-                {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-                <Route component={NullComponent} exact path="/nullauth" />
-                <Route component={Logout} exact path="/logout" />
-                <Route component={CancelLanding} exact path="/cancel" />
-                <Snackbar
-                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                  autoHideDuration={4000}
-                  hideIconVariant={false}
-                  maxSnack={3}
-                >
+              <Snackbar
+                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                autoHideDuration={4000}
+                hideIconVariant={false}
+                maxSnack={3}
+              >
+                <React.Suspense fallback={<SplashScreen />}>
                   <Switch>
+                    <Route
+                      component={OAuthCallbackPage}
+                      exact
+                      path="/oauth/callback"
+                    />
+                    <Route
+                      component={LoginAsCustomerCallback}
+                      exact
+                      path="/admin/callback"
+                    />
+                    <Route component={Logout} exact path="/logout" />
+                    <Route component={CancelLanding} exact path="/cancel" />
+                    <Route component={Logout} exact path="/logout" />
+                    <Route component={CancelLanding} exact path="/cancel" />
                     <Route
                       component={Lish}
                       path="/linodes/:linodeId/lish/:type"
                     />
                     <Route component={App} />
                   </Switch>
-                </Snackbar>
-              </Switch>
+                </React.Suspense>
+              </Snackbar>
             </Router>
           </React.Suspense>
         </LinodeThemeWrapper>
