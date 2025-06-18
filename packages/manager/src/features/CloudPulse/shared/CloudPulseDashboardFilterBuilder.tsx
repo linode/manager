@@ -297,6 +297,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               isServiceAnalyticsIntegration,
               preferences,
+              dependentFilters: dependentFilterReference.current,
             },
             handlePortChange
           );

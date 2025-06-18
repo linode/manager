@@ -1,4 +1,5 @@
 import { formatPercentage } from '@linode/utilities';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -122,6 +123,9 @@ describe('Cloud pulse widgets', () => {
 
     // Verify widget title and unit
     expect(getByText('CPU Utilization (%)')).toBeInTheDocument();
+
+    // Verify tooltip icon
+    expect(screen.getByTestId('HelpOutlineIcon')).toBeInTheDocument();
 
     // Verify interval select
     expect(getByTestId('Data aggregation interval')).toBeInTheDocument();
