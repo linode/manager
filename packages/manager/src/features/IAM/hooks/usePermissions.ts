@@ -12,24 +12,25 @@ import type { AccessType, PermissionType } from '@linode/api-v4';
 export const usePermissions = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
-  entityId?: number
+  entityId?: number,
+  enabled: boolean = true
 ): { permissions: Record<PermissionType, boolean> } => {
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions } = useUserAccountPermissions(
-    isIAMEnabled && accessType === 'account'
+    isIAMEnabled && accessType === 'account' && enabled
   );
 
   const { data: userEntityPermisssions } = useUserEntityPermissions(
     accessType,
     entityId!,
-    isIAMEnabled
+    isIAMEnabled && enabled
   );
 
   const usersPermissions =
     accessType === 'account' ? userAccountPermissions : userEntityPermisssions;
 
-  const { data: grants } = useGrants(!isIAMEnabled);
+  const { data: grants } = useGrants(!isIAMEnabled && enabled);
 
   const permissionMap = isIAMEnabled
     ? toPermissionMap(permissionsToCheck, usersPermissions!)

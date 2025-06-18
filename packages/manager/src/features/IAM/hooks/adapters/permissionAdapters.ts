@@ -14,7 +14,7 @@ export const toPermissionMap = (
   );
 
   const permissionMap = {} as Record<PermissionType, boolean>;
-  permissionsToCheck.forEach(
+  permissionsToCheck?.forEach(
     (permission) =>
       (permissionMap[permission] = usersPermissionMap[permission] ?? false)
   );
@@ -33,21 +33,20 @@ export const fromGrants = (
 
   switch (accessType) {
     case 'account':
-      usersPermissionsMap = accountGrantsToPermissions(grants.global) as Record<
-        PermissionType,
-        boolean
-      >;
+      usersPermissionsMap = accountGrantsToPermissions(
+        grants?.global
+      ) as Record<PermissionType, boolean>;
       break;
     case 'firewall':
       // eslint-disable-next-line no-case-declarations
-      const firewall = grants.firewall.find((f) => f.id === entittyId);
+      const firewall = grants?.firewall.find((f) => f.id === entittyId);
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions
       ) as Record<PermissionType, boolean>;
       break;
     case 'linode':
       // eslint-disable-next-line no-case-declarations
-      const linode = grants.linode.find((f) => f.id === entittyId);
+      const linode = grants?.linode.find((f) => f.id === entittyId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions
       ) as Record<PermissionType, boolean>;
@@ -57,7 +56,7 @@ export const fromGrants = (
   }
 
   const permissionsMap = {} as Record<PermissionType, boolean>;
-  permissionsToCheck.forEach(
+  permissionsToCheck?.forEach(
     (permission) =>
       (permissionsMap[permission] = usersPermissionsMap[permission] ?? false)
   );
