@@ -200,7 +200,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   options={aggOptions}
                   placeholder="Select an Aggregation Type"
-                  sx={{ paddingTop: { sm: 1, xs: 0 } }}
+                  sx={{ paddingTop: { sm: 0.5, xs: 0 } }}
                   value={
                     aggOptions.find((option) => option.value === field.value) ??
                     null
@@ -234,7 +234,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   }}
                   options={metricOperatorOptions}
                   placeholder="Select an Operator"
-                  sx={{ paddingTop: { sm: 1, xs: 0 } }}
+                  sx={{ paddingTop: { sm: 0.5, xs: 0 } }}
                   value={
                     field.value !== null
                       ? metricOperatorOptions.find(
@@ -254,7 +254,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                 render={({ field, fieldState }) => (
                   <TextField
                     containerProps={{
-                      sx: { paddingTop: 1 },
+                      sx: { paddingTop: 0.5 },
                     }}
                     data-qa-metric-threshold={`${name}-threshold`}
                     data-qa-threshold="threshold"
@@ -284,7 +284,7 @@ export const Metric = (props: MetricCriteriaProps) => {
                   alignItems: 'flex-end',
                   display: 'flex',
                   height: '56px',
-                  marginTop: { lg: '5px', md: '5px', sm: '5px' },
+                  marginTop: { lg: '1px', md: '1px', sm: '1px' },
                 }}
                 variant="body1"
               >
