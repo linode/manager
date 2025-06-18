@@ -13,13 +13,13 @@ export const createCloudNATSchema = object({
     )
     .notRequired(),
 
+  default_ports_per_interface: number()
+    .oneOf(VALID_PORT_SIZES as unknown as number[], 'Invalid port size.')
+    .notRequired(),
+
   label: string()
     .required('Label is required.')
     .max(150, 'Label must be 150 characters or fewer.'),
-
-  min_ports_per_interface: number()
-    .oneOf(VALID_PORT_SIZES as unknown as number[], 'Invalid port size.')
-    .notRequired(),
 
   region: string().required('Region is required.'),
 });
