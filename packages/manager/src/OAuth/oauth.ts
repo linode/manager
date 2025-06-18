@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
-import { useLocation } from 'react-router-dom';
 
 import {
   clearUserInput,
@@ -61,28 +60,6 @@ export function getIsLoggedInAsCustomer() {
   }
 
   return token.toLowerCase().startsWith('admin');
-}
-
-export function useOAuth() {
-  const location = useLocation();
-  const token = storage.authentication.token.get();
-
-  const isAuthenticating =
-    location.pathname.includes('/oauth/callback') ||
-    location.pathname.includes('/admin/callback') ||
-    window.location.pathname.includes('/oauth/callback') ||
-    window.location.pathname.includes('/admin/callback');
-
-  // The app should render if there is a token stored and we're not
-  // activly authenticating.
-  const shouldRenderApp = token && !isAuthenticating;
-
-  // If no token is stored and we are not in the process of authentication, redirect to login.
-  if (!token && !isAuthenticating) {
-    redirectToLogin(window.location.pathname, window.location.search);
-  }
-
-  return { shouldRenderApp };
 }
 
 function getLoginURL() {

@@ -48,7 +48,7 @@ export const useCloudPulseServiceTypes = (enabled: boolean) => {
 
 export const useCloudPulseServiceByServiceType = (
   serviceType: string,
-  enabled: boolean = true
+  enabled: boolean = false
 ) => {
   return useQuery<ServiceTypes, APIError[]>({
     ...queryFactory.serviceByServiceType(serviceType),
