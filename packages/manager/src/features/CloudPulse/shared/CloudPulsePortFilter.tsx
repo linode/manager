@@ -95,6 +95,7 @@ export const CloudPulsePortFilter = React.memo(
         onChange={handleInputChange}
         onKeyDown={handleKeyDown(value, setErrorText)}
         onPaste={handlePaste(value, setErrorText)}
+        optional
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
         value={value}
       />

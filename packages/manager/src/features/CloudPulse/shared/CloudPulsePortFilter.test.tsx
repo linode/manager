@@ -10,6 +10,7 @@ import { CloudPulsePortFilter } from './CloudPulsePortFilter';
 
 import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
 
+const filterLabel = 'Port (optional)';
 const mockHandlePortChange = vi.fn();
 
 const defaultProps: CloudPulsePortFilterProps = {
@@ -27,7 +28,7 @@ describe('CloudPulsePortFilter', () => {
   it('should render with default props', () => {
     renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
 
-    expect(screen.getByLabelText('Port')).toBeVisible();
+    expect(screen.getByLabelText(filterLabel)).toBeVisible();
     expect(screen.getByText(PORTS_HELPER_TEXT)).toBeVisible();
     expect(screen.getByPlaceholderText('e.g., 80,443,3000')).toBeVisible();
   });
@@ -39,7 +40,7 @@ describe('CloudPulsePortFilter', () => {
     };
     renderWithTheme(<CloudPulsePortFilter {...propsWithDefault} />);
 
-    const input = screen.getByLabelText('Port');
+    const input = screen.getByLabelText('Port (optional)');
     expect(input).toHaveValue('80,443');
   });
 
@@ -47,7 +48,7 @@ describe('CloudPulsePortFilter', () => {
     const user = userEvent.setup();
     renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
 
-    const input = screen.getByLabelText('Port');
+    const input = screen.getByLabelText(filterLabel);
     await user.type(input, '80,443');
     expect(input).toHaveValue('80,443');
   });
@@ -56,7 +57,7 @@ describe('CloudPulsePortFilter', () => {
     const user = userEvent.setup();
     renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
 
-    const input = screen.getByLabelText('Port');
+    const input = screen.getByLabelText(filterLabel);
     await user.type(input, 'a');
     expect(screen.getByText(PORTS_ERROR_MESSAGE)).toBeVisible();
     expect(input).toHaveValue('');
@@ -66,7 +67,7 @@ describe('CloudPulsePortFilter', () => {
     const user = userEvent.setup();
     renderWithTheme(<CloudPulsePortFilter {...defaultProps} />);
 
-    const input = screen.getByLabelText('Port');
+    const input = screen.getByLabelText(filterLabel);
     await user.type(input, '8');
     expect(mockHandlePortChange).not.toHaveBeenCalled();
   });

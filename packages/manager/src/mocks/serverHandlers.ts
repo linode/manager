@@ -2824,6 +2824,12 @@ export const handlers = [
             polling_interval_seconds: [300],
           },
         }),
+        serviceTypesFactory.build({
+          label: 'Nodebalancers',
+          service_type: 'nodebalancers',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2885,6 +2891,16 @@ export const handlers = [
               y_label: 'system_cpu_utilization_ratio',
             }),
           ],
+        })
+      );
+    }
+
+    if (params.serviceType === 'nodebalancers') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 3,
+          label: 'Nodebalancer Dashboard',
+          service_type: 'nodebalancers',
         })
       );
     }
@@ -3029,8 +3045,15 @@ export const handlers = [
       label:
         params.id === '1'
           ? 'DBaaS Service I/O Statistics'
-          : 'Linode Service I/O Statistics',
-      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
+          : params.id === '3'
+            ? 'NodeBalancer Service I/O Statistics'
+            : 'Linode Service I/O Statistics',
+      service_type:
+        params.id === '1'
+          ? 'dbaas'
+          : params.id === '3'
+            ? 'nodebalancers'
+            : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [

@@ -152,14 +152,74 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   filters: [
     {
       configuration: {
+        filterKey: 'region',
+        filterType: 'string',
+        isFilterable: false,
+        isMetricsFilter: false,
+        name: 'Region',
+        priority: 1,
+        neededInViews: [CloudPulseAvailableViews.central],
+      },
+      name: 'Region',
+    },
+    {
+      configuration: {
+        dependency: ['region'],
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Nodebalancers',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Nodebalancers',
+        priority: 2,
+      },
+      name: 'Nodebalancers',
+    },
+    {
+      configuration: {
+        filterKey: 'protocol',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isMultiSelect: true,
+        name: 'Protocol',
+        isOptional: true,
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        options: [
+          {
+            id: 'tcp',
+            label: 'TCP',
+          },
+          {
+            id: 'udp',
+            label: 'UDP',
+          },
+        ],
+        placeholder: 'Select a Protocol',
+        priority: 3,
+        type: CloudPulseSelectTypes.static,
+      },
+      name: 'Protocol',
+    },
+    {
+      configuration: {
         filterKey: 'port',
         filterType: 'string',
         isFilterable: true,
         isMetricsFilter: false,
+        isOptional: true,
         name: 'Port',
-        neededInViews: [CloudPulseAvailableViews.central],
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
         placeholder: 'e.g., 80,443,3000',
-        priority: 1,
+        priority: 4,
       },
       name: 'Port',
     },

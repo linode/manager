@@ -83,6 +83,11 @@ export interface CloudPulseCustomSelectProps {
    */
   isMultiSelect?: boolean;
 
+  /**
+   * This property controls whether the filter is optional or not
+   */
+  isOptional?: boolean;
+
   label: string;
 
   /**
@@ -138,6 +143,7 @@ export const CloudPulseCustomSelect = React.memo(
       preferences,
       savePreferences,
       type,
+      isOptional,
     } = props;
 
     const [selectedResource, setResource] = React.useState<
@@ -159,7 +165,7 @@ export const CloudPulseCustomSelect = React.memo(
     });
 
     React.useEffect(() => {
-      if (!selectedResource) {
+      if (!isOptional && !selectedResource) {
         setResource(
           getInitialDefaultSelections({
             defaultValue,
@@ -246,6 +252,7 @@ export const CloudPulseCustomSelect = React.memo(
             placement: 'bottom',
           },
         }}
+        textFieldProps={{ optional: isOptional }}
         value={selectedResource ?? (isMultiSelect ? [] : null)}
       />
     );
