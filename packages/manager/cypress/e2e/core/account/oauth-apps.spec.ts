@@ -1,4 +1,5 @@
 import { oauthClientFactory } from '@src/factories';
+import { mockDataPrefix } from 'support/constants/cypress';
 import {
   mockCreateOAuthApp,
   mockDeleteOAuthApps,
@@ -146,12 +147,16 @@ describe('OAuth Apps', () => {
     const oauthApps = [
       oauthClientFactory.build({
         label: randomLabel(),
-        secret: randomHex(64),
+        secret:
+          mockDataPrefix['secret'] +
+          randomHex(64 - mockDataPrefix['secret'].length),
       }),
       oauthClientFactory.build({
         label: randomLabel(),
         public: true,
-        secret: randomHex(64),
+        secret:
+          mockDataPrefix['secret'] +
+          randomHex(64 - mockDataPrefix['secret'].length),
       }),
     ];
 
@@ -361,7 +366,9 @@ describe('OAuth Apps', () => {
   it('Resets an OAuth App', () => {
     const privateOauthApp = oauthClientFactory.build({
       label: randomLabel(5),
-      secret: randomHex(64),
+      secret:
+        mockDataPrefix['secret'] +
+        randomHex(64 - mockDataPrefix['secret'].length),
     });
 
     mockGetOAuthApps([privateOauthApp]).as('getOAuthApps');
