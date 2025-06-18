@@ -72,9 +72,9 @@ export const ControlPlaneACLPane = (props: ControlPlaneACLProps) => {
             control={
               <StyledACLToggle
                 checked={enableControlPlaneACL}
-                disabled={isEnterpriseCluster}
                 name="ipacl-checkbox"
                 onChange={() => setControlPlaneACL(!enableControlPlaneACL)}
+                toggleDisabled={isEnterpriseCluster}
               />
             }
             label="Enable Control Plane ACL"
