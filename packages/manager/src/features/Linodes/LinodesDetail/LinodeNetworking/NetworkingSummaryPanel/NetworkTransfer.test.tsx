@@ -86,7 +86,7 @@ describe('renders the component with the right data', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       }),
       http.get('*/v4/linode/types/:id', () => {

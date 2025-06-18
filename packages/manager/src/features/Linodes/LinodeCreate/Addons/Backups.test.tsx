@@ -67,7 +67,7 @@ describe('Linode Create Backups Addon', () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

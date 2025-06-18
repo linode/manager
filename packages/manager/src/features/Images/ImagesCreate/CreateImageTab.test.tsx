@@ -152,7 +152,7 @@ describe('CreateImageTab', () => {
       http.get('*/v4/linode/instances/:id', () => {
         return HttpResponse.json(linode);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
