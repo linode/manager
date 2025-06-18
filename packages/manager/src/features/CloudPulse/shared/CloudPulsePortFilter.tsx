@@ -19,6 +19,11 @@ export interface CloudPulsePortFilterProps {
   defaultValue?: FilterValue;
 
   /**
+   * The boolean to determine if the filter is disabled
+   */
+  disabled?: boolean;
+
+  /**
    * The function to handle the port change
    */
   handlePortChange: (port: string, label: string[], savePref?: boolean) => void;
@@ -47,6 +52,7 @@ export const CloudPulsePortFilter = React.memo(
       handlePortChange,
       savePreferences,
       defaultValue,
+      disabled,
     } = props;
 
     const [value, setValue] = React.useState<string>(
@@ -87,6 +93,7 @@ export const CloudPulsePortFilter = React.memo(
     return (
       <TextField
         autoComplete="off"
+        disabled={disabled}
         errorText={errorText}
         helperText={!errorText ? PORTS_HELPER_TEXT : undefined}
         label={label}

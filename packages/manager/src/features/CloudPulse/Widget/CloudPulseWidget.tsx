@@ -1,5 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Box, Paper, Typography } from '@linode/ui';
+import { Box, Paper, TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -302,9 +302,20 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              {convertStringToCamelCasesWithSpaces(widget.label)} (
-              {scaledWidgetUnit.current}
-              {unit.endsWith('ps') ? '/s' : ''})
+              <Stack alignItems="center" direction="row">
+                {convertStringToCamelCasesWithSpaces(widget.label)} (
+                {scaledWidgetUnit.current}
+                {unit.endsWith('ps') ? '/s' : ''})
+                <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{
+                    '& .MuiSvgIcon-root': {
+                      fill: theme.color.headline,
+                    },
+                  }}
+                  text="Some description"
+                />
+              </Stack>
             </Typography>
             <Stack
               direction={{ sm: 'row' }}

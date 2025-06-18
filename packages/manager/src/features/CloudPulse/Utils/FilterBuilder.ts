@@ -314,10 +314,20 @@ export const getPortProperties = (
   handlePortChange: (port: string, label: string[], savePref?: boolean) => void
 ): CloudPulsePortFilterProps => {
   const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const {
+    dashboard,
+    isServiceAnalyticsIntegration,
+    preferences,
+    dependentFilters,
+  } = props;
 
   return {
     dashboard,
+    disabled: shouldDisableFilterByFilterKey(
+      PORT,
+      dependentFilters ?? {},
+      dashboard
+    ),
     defaultValue: preferences?.[PORT],
     handlePortChange,
     label,
