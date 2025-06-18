@@ -2,6 +2,7 @@ import { updateUserRoles } from '@linode/api-v4';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { queryPresets } from '../base';
+import { useProfile } from '../profile';
 import { iamQueries } from './keys';
 
 import type {
@@ -42,22 +43,23 @@ export const useUserRolesMutation = (username: string) => {
   });
 };
 
-export const useUserAccountPermissions = (username?: string) => {
+export const useUserAccountPermissions = (enabled = true) => {
+  const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
-    ...iamQueries.user(username ?? '')._ctx.accountPermissions,
-    enabled: Boolean(username),
+    ...iamQueries.user(profile!.username)._ctx.accountPermissions,
+    enabled: profile?.restricted && enabled,
   });
 };
 
 export const useUserEntityPermissions = (
   entityType: AccessType,
   entityId: number,
-  username?: string,
 ) => {
+  const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries
-      .user(username ?? '')
+      .user(profile!.username)
       ._ctx.entityPermissions(entityType, entityId),
-    enabled: Boolean(username),
+    enabled: profile?.restricted && Boolean(entityType && entityId),
   });
 };
