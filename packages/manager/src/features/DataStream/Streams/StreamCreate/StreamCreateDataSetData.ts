@@ -1,8 +1,8 @@
-import { EventType } from './types';
+import { eventType } from './types';
 
 export const dataSets = [
   {
-    id: EventType.Configuration,
+    id: eventType.Configuration,
     name: 'Configuration',
     description: 'Resource creation, modification, and deletion.',
     details: {
@@ -11,7 +11,7 @@ export const dataSets = [
     },
   },
   {
-    id: EventType.Authentication,
+    id: eventType.Authentication,
     name: 'Authentication',
     description: 'Login and identity verification events.',
     details: {
@@ -20,7 +20,7 @@ export const dataSets = [
     },
   },
   {
-    id: EventType.Authorization,
+    id: eventType.Authorization,
     name: 'Authorization',
     description: 'User roles, permissions, and access control changes.',
     details: {

@@ -1,10 +1,9 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { UnassignRoleConfirmationDialog } from './UnassignRoleConfirmationDialog';
 
@@ -28,25 +27,26 @@ const props = {
   role: mockRole,
 };
 
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom');
+const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
-    useParams: () => ({ username: 'test_user' }),
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
-const queryMocks = vi.hoisted(() => ({
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
-}));
-
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -54,7 +54,7 @@ const mockDeleteUserRole = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
     ...(await vi.importActual<any>('@linode/api-v4')),
-    updateUserPermissions: (username: string, data: any) => {
+    updateUserRoles: (username: string, data: any) => {
       mockDeleteUserRole(data);
       return Promise.resolve(props);
     },
@@ -62,11 +62,15 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('UnassignRoleConfirmationDialog', () => {
-  it('should render', () => {
-    const { getAllByRole, getByText } = renderWithTheme(
-      <MemoryRouter>
-        <UnassignRoleConfirmationDialog {...props} />{' '}
-      </MemoryRouter>
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
+  it('should render', async () => {
+    const { getAllByRole, getByText } = await renderWithThemeAndRouter(
+      <UnassignRoleConfirmationDialog {...props} />
     );
 
     const headerText = getByText('Unassign the account_admin role?');
@@ -86,7 +90,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('calls the corresponding functions when buttons are clicked', async () => {
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <UnassignRoleConfirmationDialog {...props} />
     );
 
@@ -100,7 +104,7 @@ describe('UnassignRoleConfirmationDialog', () => {
   });
 
   it('should allow unassign `account_admin` role', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: {
         account_access: ['account_linode_admin', 'account_admin'],
         resource_access: [
@@ -113,11 +117,11 @@ describe('UnassignRoleConfirmationDialog', () => {
       },
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <UnassignRoleConfirmationDialog {...props} />
     );
 

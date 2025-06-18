@@ -3,8 +3,8 @@ import { accountQueries } from '@linode/queries';
 import { Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
+import { useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { DeletePaymentMethodDialog } from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
@@ -35,17 +35,17 @@ interface Props {
 const PaymentInformation = (props: Props) => {
   const { error, isAkamaiCustomer, loading, paymentMethods, profile } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
-
+  const navigate = useNavigate();
+  const match = useMatch({ strict: false });
   const [deleteDialogOpen, setDeleteDialogOpen] =
     React.useState<boolean>(false);
   const [deleteError, setDeleteError] = React.useState<string | undefined>();
   const [deleteLoading, setDeleteLoading] = React.useState<boolean>(false);
   const [deletePaymentMethodSelection, setDeletePaymentMethodSelection] =
     React.useState<PaymentMethod | undefined>();
-  const { replace } = useHistory();
   const queryClient = useQueryClient();
-  const drawerLink = '/account/billing/add-payment-method';
-  const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
+  const addPaymentMethodRouteMatch =
+    match.routeId === '/account/billing/add-payment-method';
 
   const isChildUser = profile?.user_type === 'child';
 
@@ -77,8 +77,8 @@ const PaymentInformation = (props: Props) => {
 
   const closeAddDrawer = React.useCallback(() => {
     setAddDrawerOpen(false);
-    replace('/account/billing');
-  }, [replace]);
+    navigate({ to: '/account/billing' });
+  }, [navigate]);
 
   const openDeleteDialog = (method: PaymentMethod) => {
     setDeleteError(undefined);
@@ -113,7 +113,9 @@ const PaymentInformation = (props: Props) => {
               disableFocusRipple
               disableRipple
               disableTouchRipple
-              onClick={() => replace(drawerLink)}
+              onClick={() =>
+                navigate({ to: '/account/billing/add-payment-method' })
+              }
               tooltipText={getRestrictedResourceText({
                 includeContactInfo: false,
                 isChildUser,

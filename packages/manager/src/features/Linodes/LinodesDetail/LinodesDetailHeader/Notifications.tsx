@@ -6,10 +6,12 @@ import {
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
+import { LinodeMaintenanceBanner } from 'src/components/MaintenanceBanner/LinodeMaintenanceBanner';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
 import { LinodePlatformMaintenanceBanner } from 'src/components/PlatformMaintenanceBanner/LinodePlatformMaintenanceBanner';
 import { ProductNotification } from 'src/components/ProductNotification/ProductNotification';
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
+import { useFlags } from 'src/hooks/useFlags';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { MigrationNotification } from './MigrationNotification';
@@ -21,6 +23,8 @@ const Notifications = () => {
   const { data: linode } = useLinodeQuery(Number(linodeId));
 
   const { data: notifications, refetch } = useNotificationsQuery();
+
+  const flags = useFlags();
 
   const linodeNotifications = notifications?.filter(
     (notification) =>
@@ -85,7 +89,9 @@ const Notifications = () => {
       {linode ? (
         <LinodePlatformMaintenanceBanner linodeId={linode?.id} />
       ) : null}
-      {maintenanceForThisLinode ? (
+      {flags.vmHostMaintenance?.enabled ? (
+        <LinodeMaintenanceBanner linodeId={linode?.id} />
+      ) : maintenanceForThisLinode ? (
         <MaintenanceBanner
           maintenanceStart={maintenanceForThisLinode.when}
           type={maintenanceForThisLinode.type}

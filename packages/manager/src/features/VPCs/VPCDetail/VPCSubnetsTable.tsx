@@ -331,6 +331,7 @@ export const VPCSubnetsTable = (props: Props) => {
               handleUnassignLinodes={handleSubnetUnassignLinodes}
               isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
               numLinodes={subnet.linodes.length}
+              numNodebalancers={subnet.nodebalancers.length}
               subnet={subnet}
               vpcId={vpcId}
             />
@@ -370,7 +371,7 @@ export const VPCSubnetsTable = (props: Props) => {
               )}
             </TableBody>
           </Table>
-          {isNodebalancerVPCEnabled && (
+          {isNodebalancerVPCEnabled && subnet.nodebalancers?.length > 0 && (
             <Table aria-label="NodeBalancers" size="small" striped={false}>
               <TableHead
                 style={{
@@ -380,17 +381,13 @@ export const VPCSubnetsTable = (props: Props) => {
                 {SubnetNodebalancerTableRowHead}
               </TableHead>
               <TableBody>
-                {subnet.nodebalancers?.length > 0 ? (
-                  subnet.nodebalancers.map((nb) => (
-                    <SubnetNodeBalancerRow
-                      ipv4={nb.ipv4_range}
-                      key={nb.id}
-                      nodeBalancerId={nb.id}
-                    />
-                  ))
-                ) : (
-                  <TableRowEmpty colSpan={6} message="No NodeBalancers" />
-                )}
+                {subnet.nodebalancers.map((nb) => (
+                  <SubnetNodeBalancerRow
+                    ipv4={nb.ipv4_range}
+                    key={nb.id}
+                    nodeBalancerId={nb.id}
+                  />
+                ))}
               </TableBody>
             </Table>
           )}

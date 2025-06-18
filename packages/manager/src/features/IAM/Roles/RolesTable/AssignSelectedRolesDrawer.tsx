@@ -1,4 +1,9 @@
-import { useAccountUsers } from '@linode/queries';
+import {
+  useAccountRoles,
+  useAccountUsers,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -16,16 +21,8 @@ import { Link } from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleSelectedRole } from 'src/features/IAM/Roles/RolesTable/AssignSingleSelectedRole';
-import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
 
-import {
-  INTERNAL_ERROR_UPDATE_PERMISSION,
-  NO_CHANGES_SAVED,
-} from '../../Shared/constants';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
 import { mergeAssignedRolesIntoExistingRoles } from '../../Shared/utilities';
 
 import type { AssignNewRoleFormValues } from '../../Shared/utilities';
@@ -57,9 +54,9 @@ export const AssignSelectedRolesDrawer = ({
     }));
   };
 
-  const { data: accountPermissions } = useAccountPermissions();
+  const { data: accountRoles } = useAccountRoles();
 
-  const { data: existingRoles } = useAccountUserPermissions(username ?? '');
+  const { data: existingRoles } = useUserRoles(username ?? '');
 
   const values = {
     roles: selectedRoles.map((r) => ({
@@ -83,8 +80,9 @@ export const AssignSelectedRolesDrawer = ({
 
   const [areDetailsHidden, setAreDetailsHidden] = useState(false);
 
-  const { mutateAsync: updateUserRolePermissions, isPending } =
-    useAccountUserPermissionsMutation(username ?? '');
+  const { mutateAsync: updateUserRoles, isPending } = useUserRolesMutation(
+    username ?? ''
+  );
 
   const onSubmit = async (values: AssignNewRoleFormValues) => {
     try {
@@ -93,7 +91,7 @@ export const AssignSelectedRolesDrawer = ({
         existingRoles
       );
 
-      await updateUserRolePermissions(mergedRoles);
+      await updateUserRoles(mergedRoles);
       const successMessage = (
         <Typography>
           Roles assigned. See user&apos;s{' '}
@@ -108,7 +106,9 @@ export const AssignSelectedRolesDrawer = ({
 
       handleClose();
     } catch (error) {
-      setError(error.field ?? 'root', { message: error[0].reason });
+      setError(error.field ?? 'root', {
+        message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+      });
     }
   };
 
@@ -126,13 +126,7 @@ export const AssignSelectedRolesDrawer = ({
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           {formState.errors.root?.message && (
-            <Notice variant="error">
-              <Typography>
-                {INTERNAL_ERROR_UPDATE_PERMISSION}
-                <br />
-                {NO_CHANGES_SAVED}
-              </Typography>
-            </Notice>
+            <Notice text={formState.errors.root?.message} variant="error" />
           )}
           <Typography sx={{ marginBottom: 2.5 }}>
             Select the user you want to assign selected roles to. Some roles
@@ -197,7 +191,7 @@ export const AssignSelectedRolesDrawer = ({
             )}
           </Grid>
 
-          {!!accountPermissions &&
+          {!!accountRoles &&
             selectedRoles.map((role, index) => (
               <AssignSingleSelectedRole
                 hideDetails={areDetailsHidden}

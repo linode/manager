@@ -203,6 +203,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
+  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
   '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
     {
       background: Table.Row.Background.Hover,
@@ -258,11 +259,6 @@ export const darkTheme: ThemeOptions = {
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
           backgroundColor: Component.Dropdown.Background.Default,
-          // Override padding when noOptions is present
-          '&:has(.MuiAutocomplete-noOptions)': {
-            paddingTop: Spacing.S0,
-            paddingBottom: Spacing.S0,
-          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
@@ -287,12 +283,8 @@ export const darkTheme: ThemeOptions = {
           },
         },
         noOptions: {
-          color: Select.Default.Icon,
-          border: '0px !important',
-          boxShadow: Alias.Elevation.S,
-          height: Spacing.S32,
-          display: 'flex',
-          alignItems: 'center',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
@@ -309,47 +301,37 @@ export const darkTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
+          // To remove the double border of listbox and input
           '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"], &[data-popper-placement="top"]':
+              {
+                '.MuiAutocomplete-listbox': {
+                  padding: 0,
+                  '& .MuiAutocomplete-groupLabel': {
+                    color: Dropdown.Text.Default,
+                    font: Typography.Heading.Overline,
+                    textTransform: Typography.Heading.OverlineTextCase,
+                  },
+                },
+                '.MuiAutocomplete-option': {
+                  padding: `${Spacing.S6} ${Spacing.S12} !important`,
+                  svg: {
+                    height: Spacing.S16,
+                    width: Spacing.S16,
+                  },
+                },
+              },
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
           },
@@ -884,15 +866,61 @@ export const darkTheme: ThemeOptions = {
     MuiSwitch: {
       styleOverrides: {
         root: {
-          '& .Mui-disabled': {
-            '& + .MuiSwitch-track': {
-              opacity: '.5 !important',
+          width: Spacing.S72,
+          height: Spacing.S48,
+        },
+        switchBase: {
+          padding: Spacing.S16,
+          '&:hover + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Inactive.Hover.Background,
+          },
+          '&.Mui-checked': {
+            '&:hover, &:focus': {
+              backgroundColor: 'transparent',
             },
-            opacity: 0.5,
+            '&:hover + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Hover.Background,
+            },
+            '.icon': {
+              marginLeft: Spacing.S4,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Default.Background,
+              opacity: 1,
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Disabled.Background,
+            },
+          },
+          '&.Mui-disabled': {
+            '& .square': {
+              fill: Component.Switch.Inactive.Disabled.Circle,
+              opacity: 0.5,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Inactive.Disabled.Background,
+              opacity: 1,
+            },
+          },
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+          },
+          '.icon': {
+            borderRadius: '50%',
+            height: Spacing.S20,
+            width: Spacing.S20,
+            top: -2,
+            left: -2,
+            position: 'relative',
+          },
+          '.square': {
+            fill: Component.Switch.Inactive.Default.Circle,
           },
         },
         track: {
-          backgroundColor: Color.Neutrals[80],
+          opacity: 1,
+          borderRadius: Spacing.S12,
+          backgroundColor: Component.Switch.Inactive.Default.Background,
         },
       },
     },
@@ -986,6 +1014,7 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
           '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
             {
               backgroundColor: Table.Row.Background.Hover,

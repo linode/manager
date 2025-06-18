@@ -14,6 +14,7 @@ import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/constants';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useKubernetesClusterMutation,
   useKubernetesTypesQuery,
@@ -68,6 +69,12 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
     (type) => type.id === 'lke-ha'
   );
 
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: clusterID,
+  });
+
   const onUpgrade = () => {
     setSubmitting(true);
     setError(undefined);
@@ -94,7 +101,7 @@ export const UpgradeKubernetesClusterToHADialog = React.memo((props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        disabled: !checked,
+        disabled: !checked || isClusterReadOnly,
         label: 'Upgrade to HA',
         loading: submitting,
         onClick: onUpgrade,
