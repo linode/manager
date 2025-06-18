@@ -8,6 +8,16 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CreateFirewallDrawer } from './CreateFirewallDrawer';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: { create_firewall: true },
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 const props = {
   createFlow: undefined,
   onClose: vi.fn(),
@@ -100,5 +110,25 @@ describe('Create Firewall Drawer', () => {
       queryByTestId('create-firewall-from-radio-group')
     ).not.toBeInTheDocument();
     expect(queryByLabelText('Firewall Template')).not.toBeInTheDocument();
+  });
+
+  it('enables the submit button if the user has create_firewall permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: { create_firewall: true },
+    });
+
+    renderWithTheme(<CreateFirewallDrawer {...props} />);
+    const submitButton = screen.getByTestId('submit');
+    expect(submitButton).toBeEnabled();
+  });
+
+  it('disables the submit button if the user does not have create_firewall permission', () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: { create_firewall: false },
+    });
+
+    renderWithTheme(<CreateFirewallDrawer {...props} />);
+    const submitButton = screen.getByTestId('submit');
+    expect(submitButton).toBeDisabled();
   });
 });
