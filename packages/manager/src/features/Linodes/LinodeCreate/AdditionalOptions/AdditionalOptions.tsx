@@ -26,7 +26,7 @@ export const AdditionalOptions = () => {
   });
 
   const showAlerts =
-    aclpBetaServices?.['linode']?.alerts && isAclpAlertsSupportedRegionLinode;
+    aclpBetaServices?.linode?.alerts && isAclpAlertsSupportedRegionLinode;
 
   const hideAdditionalOptions = !showAlerts;
 

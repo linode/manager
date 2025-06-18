@@ -32,11 +32,12 @@ const LinodeAlerts = (props: Props) => {
 
   return (
     <Box>
-      {aclpBetaServices?.['linode']?.alerts && isAclpAlertsSupportedRegionLinode && (
-        <AclpPreferenceToggle type="alerts" />
-      )}
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="alerts" />
+        )}
 
-      {aclpBetaServices?.['linode']?.alerts &&
+      {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
       isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
