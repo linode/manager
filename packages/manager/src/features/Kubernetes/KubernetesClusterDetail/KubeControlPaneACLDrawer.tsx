@@ -239,6 +239,7 @@ export const KubeControlPlaneACLDrawer = (
                       checked={
                         isEnterpriseCluster ? true : (field.value ?? false)
                       }
+                      disabled={isEnterpriseCluster}
                       name="ipacl-checkbox"
                       onBlur={field.onBlur}
                       onChange={() => {
@@ -269,7 +270,6 @@ export const KubeControlPlaneACLDrawer = (
                           );
                         }
                       }}
-                      toggleDisabled={isEnterpriseCluster}
                     />
                   }
                   label="Enable Control Plane ACL"

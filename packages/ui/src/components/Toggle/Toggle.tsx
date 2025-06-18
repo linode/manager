@@ -10,7 +10,6 @@ import { TooltipIcon } from '../TooltipIcon';
 import type { SwitchProps } from '@mui/material/Switch';
 
 export interface ToggleProps extends SwitchProps {
-  toggleDisabled?: boolean;
   /**
    * Content to display inside an optional tooltip.
    */
@@ -29,7 +28,7 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { toggleDisabled, tooltipText, size = 'medium', sx, ...rest } = props;
+  const { tooltipText, size = 'medium', sx, ...rest } = props;
 
   return (
     <Box
@@ -60,7 +59,6 @@ export const Toggle = (props: ToggleProps) => {
         checkedIcon={<ToggleOnIcon />}
         color="primary"
         data-qa-toggle={props.checked}
-        disabled={toggleDisabled}
         icon={<ToggleOffIcon />}
         sx={{
           ...(size === 'small' && {
