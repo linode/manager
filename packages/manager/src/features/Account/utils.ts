@@ -94,6 +94,23 @@ export const useIsTaxIdEnabled = (): {
 };
 
 /**
+ * Hook to determine if the VM Host Maintenance feature should be visible to the user.
+ * Based on the feature flag.
+ */
+export const useVMHostMaintenanceEnabled = () => {
+  const flags = useFlags();
+
+  if (!flags) {
+    return { isVMHostMaintenanceEnabled: false };
+  }
+
+  const isVMHostMaintenanceEnabled = Boolean(flags.vmHostMaintenance?.enabled);
+  const isVMHostMaintenanceInBeta = Boolean(flags.vmHostMaintenance?.beta);
+
+  return { isVMHostMaintenanceEnabled, isVMHostMaintenanceInBeta };
+};
+
+/**
  * Formats one or more actions into a readable string
  * @param action - A single action or array of actions
  *

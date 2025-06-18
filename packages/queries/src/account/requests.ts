@@ -2,6 +2,7 @@ import {
   getAccountAvailabilities,
   getAccountMaintenance,
   getInvoices,
+  getMaintenancePolicies,
   getNotifications,
   getPaymentMethods,
   getPayments,
@@ -13,6 +14,7 @@ import type {
   AccountMaintenance,
   Filter,
   Invoice,
+  MaintenancePolicy,
   Notification,
   Params,
   Payment,
@@ -59,4 +61,9 @@ export const getAllAccountPayments = async (
 export const getAllAccountAvailabilitiesRequest = () =>
   getAll<AccountAvailability>((params, filters) =>
     getAccountAvailabilities(params, filters),
+  )().then((data) => data.data);
+
+export const getAllMaintenancePolicies = () =>
+  getAll<MaintenancePolicy>((params, filters) =>
+    getMaintenancePolicies(params, filters),
   )().then((data) => data.data);

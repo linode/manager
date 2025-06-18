@@ -53,8 +53,8 @@ export const LabelTable = () => {
                       aria-label={`Remove ${key}: ${value}`}
                       disableRipple
                       onClick={() => handleRemoveLabel(key, i)}
-                      ref={node => {
-                        (deleteButtonRefs.current[i] = node);
+                      ref={(node) => {
+                        deleteButtonRefs.current[i] = node;
                       }}
                       size="medium"
                       sx={{ marginLeft: 'auto' }}

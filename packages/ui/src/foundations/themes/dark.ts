@@ -233,6 +233,20 @@ export const darkTheme: ThemeOptions = {
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '& svg': {
+            fill: Alias.Action.Primary.Default,
+          },
+          '&:hover': {
+            '& h3': {
+              color: Alias.Action.Primary.Default,
+            },
+          },
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {

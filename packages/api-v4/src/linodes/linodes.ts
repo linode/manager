@@ -3,7 +3,7 @@ import {
   UpdateLinodeSchema,
 } from '@linode/validation/lib/linodes.schema';
 
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -31,7 +31,7 @@ import type { CreateLinodeRequest, Linode, LinodeLishData } from './types';
  */
 export const getLinode = (linodeId: number) =>
   Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
+    setURL(`${BETA_API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('GET'),
   );
 
@@ -79,7 +79,7 @@ export const getLinodeVolumes = (
  */
 export const getLinodes = (params?: Params, filter?: Filter) =>
   Request<Page<Linode>>(
-    setURL(`${API_ROOT}/linode/instances`),
+    setURL(`${BETA_API_ROOT}/linode/instances`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params),
@@ -97,7 +97,7 @@ export const getLinodes = (params?: Params, filter?: Filter) =>
  */
 export const createLinode = (data: CreateLinodeRequest) =>
   Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances`),
+    setURL(`${BETA_API_ROOT}/linode/instances`),
     setMethod('POST'),
     setData(data, CreateLinodeSchema),
   );
@@ -113,7 +113,7 @@ export const createLinode = (data: CreateLinodeRequest) =>
  */
 export const updateLinode = (linodeId: number, values: DeepPartial<Linode>) =>
   Request<Linode>(
-    setURL(`${API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
+    setURL(`${BETA_API_ROOT}/linode/instances/${encodeURIComponent(linodeId)}`),
     setMethod('PUT'),
     setData(values, UpdateLinodeSchema),
   );

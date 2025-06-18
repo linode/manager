@@ -275,7 +275,9 @@ export const prepareRules = compose(
   editorStateToRules
 );
 
-export const hasModified = (editorState: Immutable<RuleEditorState>): boolean => {
+export const hasModified = (
+  editorState: Immutable<RuleEditorState>
+): boolean => {
   const rules = editorStateToRules(editorState);
   return rules.some(
     (thisRule, idx) =>
