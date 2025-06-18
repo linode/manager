@@ -1,15 +1,15 @@
 export interface CloudNAT {
-  addresses: string[];
-  default_ports_per_interface: number;
+  addresses: Array<{ address: string }>;
   id: number;
   label: string;
+  port_prefix_default_len: number;
   region: string;
 }
 
 export interface CreateCloudNATRequest {
   addresses?: Array<{ address: string }>;
-  default_ports_per_interface?: ValidPortSize;
   label: string;
+  port_prefix_default_len?: ValidPortSize;
   region: string;
 }
 

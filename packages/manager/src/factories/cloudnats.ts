@@ -10,8 +10,8 @@ export const cloudNATFactory = Factory.Sync.makeFactory<CloudNAT>({
   id: Factory.each((id) => id),
   label: Factory.each((id) => `cloud-nat-mock-${id}`),
   region: 'us-east',
-  addresses: Factory.each((id) => [`203.0.113.${id}`]),
-  default_ports_per_interface: 1024,
+  addresses: Factory.each((id) => [{ address: `203.0.113.${id}` }]),
+  port_prefix_default_len: 1024,
 });
 
 export const createCloudNATRequestFactory =
