@@ -90,10 +90,6 @@ describe('ACLP Components UI varies according to ACLP support by region and user
             .findByTitle('Switch to legacy Metrics')
             .should('be.visible')
             .should('be.enabled');
-          ui.button
-            .findByTitle('Switch to legacy Metrics')
-            .should('be.visible')
-            .should('be.enabled');
           // UI displays mock error msg
           cy.contains(
             `Error while loading Dashboard with Id - ${this.mockDashboardId}`
