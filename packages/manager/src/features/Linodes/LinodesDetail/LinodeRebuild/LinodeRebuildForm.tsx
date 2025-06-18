@@ -176,7 +176,7 @@ export const LinodeRebuildForm = (props: Props) => {
               isLKELinode={linode.lke_cluster_id !== null}
               linodeRegion={linode.region}
             />
-            <UserData disabled={isLinodeReadOnly} linodeId={linode.id} />
+            <UserData disabled={isLinodeReadOnly} linode={linode} />
             <Confirmation
               disabled={isLinodeReadOnly}
               linodeLabel={linode.label}

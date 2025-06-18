@@ -7,21 +7,19 @@ import { MaskableText } from 'src/components/MaskableText/MaskableText';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TextTooltip } from 'src/components/TextTooltip';
 
-import type {
-  AccountAccessRole,
-  EntityAccess,
-  EntityAccessRole,
-  IamUserPermissions,
-  User,
-} from '@linode/api-v4';
+import { getTotalAssignedRoles } from './utils';
+
+import type { IamUserRoles, User } from '@linode/api-v4';
 
 interface Props {
-  assignedRoles?: IamUserPermissions;
+  assignedRoles?: IamUserRoles;
   user: User;
 }
 
 export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
-  const assignRolesCount = assignedRoles ? getAssignRoles(assignedRoles) : 0;
+  const assignRolesCount = assignedRoles
+    ? getTotalAssignedRoles(assignedRoles)
+    : 0;
 
   const items = [
     {
@@ -135,20 +133,4 @@ export const UserDetailsPanel = ({ assignedRoles, user }: Props) => {
       </Grid>
     </Paper>
   );
-};
-
-const getAssignRoles = (assignedRoles: IamUserPermissions): number => {
-  const accountAccessRoles = assignedRoles.account_access || [];
-
-  const resourceAccessRoles = assignedRoles.entity_access
-    ? assignedRoles.entity_access
-        .map((resource: EntityAccess) => resource.roles)
-        .flat()
-    : [];
-
-  const combinedRoles: (AccountAccessRole | EntityAccessRole)[] = Array.from(
-    new Set([...accountAccessRoles, ...resourceAccessRoles])
-  );
-
-  return combinedRoles.length;
 };

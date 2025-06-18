@@ -38,7 +38,7 @@ export const accountMaintenanceFactory =
       ])
     ),
     description: Factory.each(() =>
-      pickRandom(['Emergency Maintenance', 'Scheduled Maintenance'])
+      pickRandom<AccountMaintenance['description']>(['emergency', 'scheduled'])
     ),
     source: Factory.each(() => pickRandom(['user', 'platform'])),
     status: Factory.each(() => pickRandom(['pending', 'started'])),

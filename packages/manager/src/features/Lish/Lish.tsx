@@ -8,10 +8,12 @@ import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
 import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { useInitialRequests } from 'src/hooks/useInitialRequests';
 
 import '../../assets/weblish/weblish.css';
 import '../../assets/weblish/xterm.css';
+
+import { storage } from 'src/utilities/storage';
+
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -88,8 +90,6 @@ export const ParsePotentialLishErrorString = (
 const Lish = () => {
   const history = useHistory();
 
-  const { isLoading: isMakingInitialRequests } = useInitialRequests();
-
   const { linodeId, type } = useParams<{ linodeId: string; type: string }>();
   const id = Number(linodeId);
 
@@ -106,8 +106,7 @@ const Lish = () => {
     refetch,
   } = useLinodeLishQuery(id);
 
-  const isLoading =
-    isLinodeLoading || isTokenLoading || isMakingInitialRequests;
+  const isLoading = isLinodeLoading || isTokenLoading;
 
   React.useEffect(() => {
     const interval = setInterval(checkAuthentication, AUTH_POLLING_INTERVAL);
@@ -118,7 +117,7 @@ const Lish = () => {
   }, []);
 
   const checkAuthentication = () => {
-    const token = window.localStorage.getItem('authentication/token');
+    const token = storage.authentication.token.get();
 
     if (!token) {
       window.close();

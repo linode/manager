@@ -5,7 +5,7 @@ import * as React from 'react';
 import { kubeLinodeFactory } from 'src/factories/kubernetesCluster';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { encryptionStatusTestId, NodeTable } from './NodeTable';
 
@@ -72,7 +72,7 @@ describe('NodeTable', () => {
       })
     );
 
-    const { findAllByText, findByText } = renderWithTheme(
+    const { findAllByText, findByText } = await renderWithThemeAndRouter(
       <NodeTable {...props} />
     );
 
@@ -86,8 +86,10 @@ describe('NodeTable', () => {
     );
   });
 
-  it('includes the Pool ID', () => {
-    const { getByText } = renderWithTheme(<NodeTable {...props} />);
+  it('includes the Pool ID', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <NodeTable {...props} />
+    );
     getByText('Pool ID 1');
   });
 
@@ -99,7 +101,9 @@ describe('NodeTable', () => {
       nodes: [],
     };
 
-    const { findByText } = renderWithTheme(<NodeTable {...clusterProps} />);
+    const { findByText } = await renderWithThemeAndRouter(
+      <NodeTable {...clusterProps} />
+    );
 
     expect(
       await findByText(
@@ -112,22 +116,26 @@ describe('NodeTable', () => {
     ).toBeVisible();
   });
 
-  it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', () => {
+  it('does not display the encryption status of the pool if the account lacks the capability or the feature flag is off', async () => {
     // situation where isDiskEncryptionFeatureEnabled === false
-    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
+    const { queryByTestId } = await renderWithThemeAndRouter(
+      <NodeTable {...props} />
+    );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).not.toBeInTheDocument();
   });
 
-  it('displays the encryption status of the pool if the feature flag is on and the account has the capability', () => {
+  it('displays the encryption status of the pool if the feature flag is on and the account has the capability', async () => {
     mocks.useIsDiskEncryptionFeatureEnabled.mockImplementationOnce(() => {
       return {
         isDiskEncryptionFeatureEnabled: true,
       };
     });
 
-    const { queryByTestId } = renderWithTheme(<NodeTable {...props} />);
+    const { queryByTestId } = await renderWithThemeAndRouter(
+      <NodeTable {...props} />
+    );
     const encryptionStatusFragment = queryByTestId(encryptionStatusTestId);
 
     expect(encryptionStatusFragment).toBeInTheDocument();

@@ -95,7 +95,7 @@ export const FirewallDetail = () => {
         acc.nodebalancerCount += 1;
       } else if (
         isLinodeInterfacesEnabled &&
-        device.entity.type === 'interface'
+        device.entity.type === 'linode_interface'
       ) {
         const linodeId = getLinodeIdFromInterfaceDevice(device.entity);
         if (!acc.seenLinodeIdsForInterfaces.has(linodeId)) {

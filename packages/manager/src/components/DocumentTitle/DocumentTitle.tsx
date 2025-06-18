@@ -7,7 +7,6 @@ the Linodes landing page. More context: https://github.com/linode/manager/pull/9
 */
 
 import { usePrevious } from '@linode/utilities';
-import { reverse } from 'ramda';
 import * as React from 'react';
 
 interface DocumentTitleSegmentsContext {
@@ -70,7 +69,7 @@ export const withDocumentTitleProvider =
     let titleSegments: string[] = [];
 
     const updateDocumentTitle = () => {
-      const newTitle = reverse(titleSegments).join(' | ');
+      const newTitle = [...titleSegments].reverse().join(' | ');
       document.title = newTitle;
     };
 

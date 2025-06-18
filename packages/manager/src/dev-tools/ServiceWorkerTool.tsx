@@ -16,6 +16,8 @@ import {
   getCustomMaintenanceData,
   getCustomNotificationsData,
   getCustomProfileData,
+  getCustomUserAccountPermissionsData,
+  getCustomUserEntityPermissionsData,
   getExtraPresets,
   getExtraPresetsMap,
   getSeeders,
@@ -27,6 +29,8 @@ import {
   saveCustomMaintenanceData,
   saveCustomNotificationsData,
   saveCustomProfileData,
+  saveCustomUserAccountPermissionsData,
+  saveCustomUserEntityPermissionsData,
   saveExtraPresets,
   saveExtraPresetsMap,
   saveMSWEnabled,
@@ -39,6 +43,7 @@ import type {
   AccountMaintenance,
   Event,
   Notification,
+  PermissionType,
   Profile,
 } from '@linode/api-v4';
 import type {
@@ -74,6 +79,16 @@ export const ServiceWorkerTool = () => {
   const [customProfileData, setCustomProfileData] = React.useState<
     null | Profile | undefined
   >(getCustomProfileData());
+  const [
+    customUserAccountPermissionsData,
+    setCustomUserAccountPermissionsData,
+  ] = React.useState<null | PermissionType[] | undefined>(
+    getCustomUserAccountPermissionsData()
+  );
+  const [customUserEntityPermissionsData, setCustomUserEntityPermissionsData] =
+    React.useState<null | PermissionType[] | undefined>(
+      getCustomUserEntityPermissionsData()
+    );
   const [customEventsData, setCustomEventsData] = React.useState<
     Event[] | null | undefined
   >(getCustomEventsData());
@@ -104,6 +119,10 @@ export const ServiceWorkerTool = () => {
   React.useEffect(() => {
     const currentAccountData = getCustomAccountData();
     const currentProfileData = getCustomProfileData();
+    const currentUserAccountPermissionsData =
+      getCustomUserAccountPermissionsData();
+    const currentUserEntityPermissionsData =
+      getCustomUserEntityPermissionsData();
     const currentEventsData = getCustomEventsData();
     const currentMaintenanceData = getCustomMaintenanceData();
     const currentNotificationsData = getCustomNotificationsData();
@@ -120,12 +139,21 @@ export const ServiceWorkerTool = () => {
       JSON.stringify(currentNotificationsData) !==
       JSON.stringify(customNotificationsData);
 
+    const hasCustomUserAccountPermissionsChanges = 
+      JSON.stringify(currentUserAccountPermissionsData) !==
+      JSON.stringify(customUserAccountPermissionsData);
+    const hasCustomUserEntityPermissionsChanges =
+      JSON.stringify(currentUserEntityPermissionsData) !==
+      JSON.stringify(customUserEntityPermissionsData);
+
     if (
       hasCustomAccountChanges ||
       hasCustomProfileChanges ||
       hasCustomEventsChanges ||
       hasCustomMaintenanceChanges ||
-      hasCustomNotificationsChanges
+      hasCustomNotificationsChanges ||
+      hasCustomUserAccountPermissionsChanges ||
+      hasCustomUserEntityPermissionsChanges
     ) {
       setSaveState((prev) => ({
         ...prev,
@@ -138,6 +166,8 @@ export const ServiceWorkerTool = () => {
     customMaintenanceData,
     customNotificationsData,
     customProfileData,
+    customUserAccountPermissionsData,
+    customUserEntityPermissionsData,
   ]);
 
   const globalHandlers = {
@@ -171,6 +201,18 @@ export const ServiceWorkerTool = () => {
       ) {
         saveCustomNotificationsData(customNotificationsData);
       }
+      if (
+        extraPresets.includes('userAccountPermissions:custom') &&
+        customUserAccountPermissionsData
+      ) {
+        saveCustomUserAccountPermissionsData(customUserAccountPermissionsData);
+      }
+      if (
+        extraPresets.includes('userEntityPermissions:custom') &&
+        customUserEntityPermissionsData
+      ) {
+        saveCustomUserEntityPermissionsData(customUserEntityPermissionsData);
+      }
 
       const promises = seeders.map((seederId) => {
         const seeder = dbSeeders.find((dbSeeder) => dbSeeder.id === seederId);
@@ -200,6 +242,10 @@ export const ServiceWorkerTool = () => {
       setCustomEventsData(getCustomEventsData());
       setCustomMaintenanceData(getCustomMaintenanceData());
       setCustomNotificationsData(getCustomNotificationsData());
+      setCustomUserAccountPermissionsData(
+        getCustomUserAccountPermissionsData()
+      );
+      setCustomUserEntityPermissionsData(getCustomUserEntityPermissionsData());
       setSaveState({
         hasSaved: false,
         hasUnsavedChanges: false,
@@ -219,6 +265,8 @@ export const ServiceWorkerTool = () => {
       setCustomEventsData(null);
       setCustomMaintenanceData(null);
       setCustomNotificationsData(null);
+      setCustomUserAccountPermissionsData(null);
+      setCustomUserEntityPermissionsData(null);
 
       saveBaselinePreset('baseline:static-mocking');
       saveExtraPresets([]);
@@ -230,6 +278,8 @@ export const ServiceWorkerTool = () => {
       saveCustomEventsData(null);
       saveCustomMaintenanceData(null);
       saveCustomNotificationsData(null);
+      saveCustomUserAccountPermissionsData(null);
+      saveCustomUserEntityPermissionsData(null);
 
       setSaveState({
         hasSaved: false,
@@ -445,12 +495,24 @@ export const ServiceWorkerTool = () => {
                   customMaintenanceData={customMaintenanceData}
                   customNotificationsData={customNotificationsData}
                   customProfileData={customProfileData}
+                  customUserAccountPermissionsData={
+                    customUserAccountPermissionsData
+                  }
+                  customUserEntityPermissionsData={
+                    customUserEntityPermissionsData
+                  }
                   handlers={extraPresets}
                   onCustomAccountChange={setCustomAccountData}
                   onCustomEventsChange={setCustomEventsData}
                   onCustomMaintenanceChange={setCustomMaintenanceData}
                   onCustomNotificationsChange={setCustomNotificationsData}
                   onCustomProfileChange={setCustomProfileData}
+                  onCustomUserAccountPermissionsChange={
+                    setCustomUserAccountPermissionsData
+                  }
+                  onCustomUserEntityPermissionsChange={
+                    setCustomUserEntityPermissionsData
+                  }
                   onPresetCountChange={presetHandlers.changeCount}
                   onSelectChange={presetHandlers.changeSelect}
                   onTogglePreset={presetHandlers.toggle}

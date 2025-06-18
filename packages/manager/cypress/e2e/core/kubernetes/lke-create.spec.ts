@@ -72,6 +72,7 @@ const nanodeNodeCount = 3;
 
 const clusterRegion = chooseRegion({
   capabilities: ['Kubernetes'],
+  exclude: ['au-mel', 'eu-west'], // Unavailable regions
 });
 const dedicatedCpuPool = nodePoolFactory.build({
   count: dedicatedNodeCount,
@@ -81,7 +82,7 @@ const dedicatedCpuPool = nodePoolFactory.build({
 const nanodeMemoryPool = nodePoolFactory.build({
   count: nanodeNodeCount,
   nodes: kubeLinodeFactory.buildList(nanodeNodeCount),
-  type: 'g6-nanode-1',
+  type: 'g6-standard-1',
 });
 const dedicatedType = dedicatedTypeFactory.build({
   disk: 81920,
@@ -98,16 +99,16 @@ const dedicatedType = dedicatedTypeFactory.build({
   vcpus: 2,
 }) as ExtendedType;
 const nanodeType = linodeTypeFactory.build({
-  disk: 25600,
-  id: 'g6-nanode-1',
+  disk: 51200,
+  id: 'g6-standard-1',
   label: 'Linode 2 GB',
   memory: 2048,
   price: {
-    hourly: 0.0075,
-    monthly: 5.0,
+    hourly: 0.0095,
+    monthly: 12.0,
   },
   region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-nanode-1'
+    (type) => type.id === 'g6-standard-1'
   )?.region_prices,
   vcpus: 1,
 }) as ExtendedType;
@@ -164,7 +165,7 @@ const clusterPlans: LkePlanDescription[] = [
     planName: 'Linode 2 GB',
     size: 24,
     tab: 'Shared CPU',
-    type: 'nanode',
+    type: 'standard',
   },
 ];
 const mockedLKEClusterTypes = [
@@ -191,6 +192,12 @@ describe('LKE Cluster Creation', () => {
    * - Confirms that new LKE cluster summary page shows expected node pools.
    * - Confirms that new LKE cluster is shown on LKE clusters landing page.
    */
+
+  // Test only available regions with standard pricing.
+  const clusterRegion = chooseRegion({
+    capabilities: ['Kubernetes'],
+    exclude: ['au-mel', 'eu-west', 'id-cgk', 'br-gru'],
+  });
   const clusterLabel = randomLabel();
   const clusterVersion = '1.31';
   const mockedLKECluster = kubernetesClusterFactory.build({
@@ -234,6 +241,8 @@ describe('LKE Cluster Creation', () => {
       .click();
 
     cy.url().should('endWith', '/kubernetes/create');
+
+    cy.wait(['@getLinodeTypes']);
 
     // Fill out LKE creation form label, region, and Kubernetes version fields.
     cy.get('[data-qa-textfield-label="Cluster Label"]')
@@ -326,7 +335,6 @@ describe('LKE Cluster Creation', () => {
       '@getClusterPools',
       '@createCluster',
       '@getLKEClusterTypes',
-      '@getLinodeTypes',
       '@getDashboardUrl',
       '@getControlPlaneACL',
       '@getApiEndpoints',
@@ -550,6 +558,8 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
       })
     );
     mockGetRegions([dcSpecificPricingRegion]).as('getRegions');
+    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
+
     const clusterLabel = randomLabel();
     const clusterPlans = new Array(2)
       .fill(null)
@@ -565,7 +575,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 
     cy.url().should('endWith', '/kubernetes/create');
 
-    mockGetLinodeTypes(dcPricingMockLinodeTypes).as('getLinodeTypes');
     cy.wait(['@getRegions', '@getLinodeTypes']);
 
     // Confirm that, without a region selected, no pricing information is displayed.
@@ -653,30 +662,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 });
 
 describe('LKE Cluster Creation with ACL', () => {
-  /**
-   * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
-   */
-  it('does not show the ACL flow without the LKE ACL capability', () => {
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: [],
-      })
-    ).as('getAccount');
-
-    cy.visitWithLogin('/kubernetes/clusters');
-
-    ui.button
-      .findByTitle('Create Cluster')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    cy.url().should('endWith', '/kubernetes/create');
-    cy.wait(['@getAccount']);
-
-    cy.contains('Control Plane ACL').should('not.exist');
-  });
-
   // setting up mocks
   const clusterLabel = randomLabel();
   const mockRegion = regionFactory.build({
@@ -704,14 +689,6 @@ describe('LKE Cluster Creation with ACL', () => {
 
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
-      mockGetAccount(
-        accountFactory.build({
-          capabilities: [
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
-        })
-      ).as('getAccount');
       mockGetRegions([mockRegion]).as('getRegions');
       mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
       mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
@@ -746,7 +723,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount', '@getRegions', '@getLinodeTypes']);
+      cy.wait(['@getRegions', '@getLinodeTypes']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -848,7 +825,6 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -980,11 +956,7 @@ describe('LKE Cluster Creation with ACL', () => {
       );
       mockGetAccount(
         accountFactory.build({
-          capabilities: [
-            'Kubernetes Enterprise',
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
+          capabilities: ['Kubernetes Enterprise'],
         })
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
@@ -1193,7 +1165,6 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -1358,6 +1329,13 @@ describe('LKE Cluster Creation with LKE-E', () => {
           enabled: true,
         },
       });
+      const monthlyClusterPrice = getTotalClusterPrice({
+        highAvailabilityPrice: 0,
+        enterprisePrice: 300,
+        pools: [nanodeMemoryPool, dedicatedCpuPool],
+        region: clusterRegion.id,
+        types: mockedLKEClusterTypes,
+      });
 
       mockGetControlPlaneACL(mockedEnterpriseCluster.id, mockACL).as(
         'getControlPlaneACL'
@@ -1370,11 +1348,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ).as('getAccountBeta');
       mockGetAccount(
         accountFactory.build({
-          capabilities: [
-            'Kubernetes Enterprise',
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
+          capabilities: ['Kubernetes Enterprise'],
         })
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
@@ -1418,7 +1392,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getKubernetesVersions', '@getTieredKubernetesVersions']);
+      cy.wait([
+        '@getKubernetesVersions',
+        '@getTieredKubernetesVersions',
+        '@getLinodeTypes',
+      ]);
 
       cy.findByLabelText('Cluster Label').should('be.visible').click();
       cy.focused().type(`${clusterLabel}{enter}`);
@@ -1551,10 +1529,11 @@ describe('LKE Cluster Creation with LKE-E', () => {
           cy.findByText('$300.00/month').should('be.visible');
 
           cy.findByText('Dedicated 4 GB Plan').should('be.visible');
-          cy.findByText('$144.00').should('be.visible');
           cy.findByText('Linode 2 GB Plan').should('be.visible');
-          cy.findByText('$15.00').should('be.visible');
-          cy.findByText('$459.00').should('be.visible');
+
+          cy.findByText(`$${monthlyClusterPrice.toFixed(2)}`).should(
+            'be.visible'
+          );
         });
 
       // Confirms ACL is enabled by default.
@@ -1589,7 +1568,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         '@getClusterPools',
         '@createCluster',
         '@getLKEEnterpriseClusterTypes',
-        '@getLinodeTypes',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
@@ -1604,7 +1582,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       cy.findByText(
         `Version ${latestEnterpriseTierKubernetesVersion.id}`
       ).should('be.visible');
-      cy.findByText('$459.00/month').should('be.visible');
+      cy.findByText(`$${monthlyClusterPrice}.00/month`).should('be.visible');
 
       clusterPlans.forEach((clusterPlan) => {
         // Confirm total number of nodes are shown for each pool

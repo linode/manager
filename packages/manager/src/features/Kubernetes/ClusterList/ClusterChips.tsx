@@ -1,6 +1,6 @@
 import { Chip, Stack } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
@@ -16,7 +16,7 @@ export const ClusterChips = (props: Props) => {
   const { cluster, sx } = props;
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
-  const { location } = useHistory();
+  const location = useLocation({ select: (location) => location.pathname });
 
   return (
     <Stack columnGap={0.5} flexDirection="row" sx={sx}>
@@ -32,9 +32,7 @@ export const ClusterChips = (props: Props) => {
       {cluster.control_plane.high_availability && (
         <Chip
           data-testid="ha-chip"
-          label={
-            location.pathname === '/kubernetes/clusters' ? 'HA' : 'HA CLUSTER'
-          }
+          label={location === '/kubernetes/clusters' ? 'HA' : 'HA CLUSTER'}
           size="small"
           sx={(theme) => ({ borderColor: theme.color.green })}
           variant="outlined"

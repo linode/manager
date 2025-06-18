@@ -4,11 +4,11 @@ import type {
   EntityAccess,
   EntityAccessRole,
   EntityType,
-  IamUserPermissions,
+  IamUserRoles,
 } from '@linode/api-v4';
 
 export const addEntityNamesToRoles = (
-  assignedRoles: IamUserPermissions,
+  assignedRoles: IamUserRoles,
   entities: Map<EntityType, Pick<AccountEntity, 'id' | 'label'>[]>
 ): EntitiesRole[] => {
   const entitiesRoles = assignedRoles.entity_access;

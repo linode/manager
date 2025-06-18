@@ -1,7 +1,7 @@
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { ContactInformation } from './ContactInformation';
 
@@ -38,14 +38,14 @@ vi.mock('@linode/queries', async () => {
 });
 
 describe('Edit Contact Information', () => {
-  it('should be disabled for all child users', () => {
+  it('should be disabled for all child users', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({
         user_type: 'child',
       }),
     });
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId } = await renderWithThemeAndRouter(
       <ContactInformation {...props} profile={queryMocks.useProfile().data} />
     );
 
@@ -55,7 +55,7 @@ describe('Edit Contact Information', () => {
     );
   });
 
-  it('should be disabled for restricted users', () => {
+  it('should be disabled for restricted users', async () => {
     queryMocks.useProfile.mockReturnValue({
       data: profileFactory.build({
         restricted: true,
@@ -71,7 +71,9 @@ describe('Edit Contact Information', () => {
       }),
     });
 
-    const { getByTestId } = renderWithTheme(<ContactInformation {...props} />);
+    const { getByTestId } = await renderWithThemeAndRouter(
+      <ContactInformation {...props} />
+    );
 
     expect(getByTestId(EDIT_BUTTON_ID)).toHaveAttribute(
       'aria-disabled',

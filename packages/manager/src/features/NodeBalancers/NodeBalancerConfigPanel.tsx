@@ -1,4 +1,9 @@
 import {
+  type NodeBalancerConfigNodeMode,
+  type NodeBalancerProxyProtocol,
+  type Protocol,
+} from '@linode/api-v4';
+import {
   ActionsPanel,
   Autocomplete,
   Button,
@@ -29,11 +34,6 @@ import {
 } from './utils';
 
 import type { NodeBalancerConfigPanelProps } from './types';
-import type {
-  NodeBalancerConfigNodeMode,
-  NodeBalancerProxyProtocol,
-  Protocol,
-} from '@linode/api-v4';
 
 const DATA_NODE = 'data-node-idx';
 
@@ -471,6 +471,8 @@ export const NodeBalancerConfigPanel = (
                 key={`nb-node-${nodeIdx}`}
                 node={node}
                 nodeBalancerRegion={props.nodeBalancerRegion}
+                nodeBalancerSubnetId={props.nodeBalancerSubnetId}
+                nodeBalancerVpcId={props.nodeBalancerVpcId}
                 onNodeAddressChange={props.onNodeAddressChange}
                 onNodeLabelChange={onNodeLabelChange}
                 onNodeModeChange={onNodeModeChange}

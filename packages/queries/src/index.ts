@@ -1,5 +1,6 @@
 export * from './account';
 export * from './base';
+export * from './betas';
 export * from './domains';
 export * from './eventHandlers';
 export * from './firewalls';
@@ -14,6 +15,7 @@ export * from './regions';
 export * from './stackscripts';
 export * from './support';
 export * from './tags';
+export * from './types';
 export * from './vlans';
 export * from './volumes';
 export * from './vpcs';
