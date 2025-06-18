@@ -243,7 +243,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
     {
       background: Table.Row.Background.Hover,
     },
@@ -1539,7 +1539,7 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
             {
               backgroundColor: Table.Row.Background.Hover,
             },
