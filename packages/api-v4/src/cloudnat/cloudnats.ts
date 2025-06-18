@@ -2,15 +2,15 @@ import Request from 'src/request';
 
 import { API_ROOT } from '../constants';
 
+import type { ResourcePage as Page } from '../types';
 import type {
   CloudNAT,
   CreateCloudNATRequest,
-  PaginatedCloudNATResponse,
   UpdateCloudNATRequest,
 } from './types';
 
 export const getCloudNATs = () =>
-  Request<PaginatedCloudNATResponse>(() => ({
+  Request<Page<CloudNAT>>(() => ({
     url: `${API_ROOT}/networking/cloudnats`,
     method: 'GET',
   }));

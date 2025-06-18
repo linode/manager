@@ -17,13 +17,6 @@ export interface UpdateCloudNATRequest {
   label?: string;
 }
 
-export interface PaginatedCloudNATResponse {
-  data: CloudNAT[];
-  page: number;
-  pages: number;
-  results: number;
-}
-
 export const VALID_PORT_SIZES = [
   64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384,
 ] as const;
