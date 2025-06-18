@@ -1,11 +1,18 @@
-import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
+import {
+  useImageQuery,
+  usePreferences,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
-import { formatStorageUnits } from '@linode/utilities';
+import { formatStorageUnits, isAclpSupportedRegion } from '@linode/utilities';
 import { useTheme } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { TextTooltip } from 'src/components/TextTooltip';
+import { useFlags } from 'src/hooks/useFlags';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
@@ -36,6 +43,7 @@ export const Summary = () => {
     clusterSize,
     linodeInterfaces,
     interfaceGeneration,
+    alerts,
   ] = useWatch({
     control,
     name: [
@@ -53,12 +61,25 @@ export const Summary = () => {
       'stackscript_data.cluster_size',
       'linodeInterfaces',
       'interface_generation',
+      'alerts',
     ],
   });
 
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
+
+  const flags = useFlags();
+  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpAlertsBeta
+  );
+
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId,
+    regions,
+    type: 'alerts',
+  });
 
   const region = regions?.find((r) => r.id === regionId);
 
@@ -80,6 +101,30 @@ export const Summary = () => {
     interfaceGeneration === 'linode'
       ? linodeInterfaces.some((i) => i.firewall_id)
       : firewallId;
+
+  const hasBetaAclpAlertsAssigned =
+    flags.aclpBetaServices?.alerts &&
+    isAclpAlertsSupportedRegionLinode &&
+    isAclpAlertsPreferenceBeta;
+
+  const totalBetaAclpAlertsAssignedCount =
+    (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);
+
+  const betaAclpAlertsAssignedList = [
+    ...(alerts?.system ?? []),
+    ...(alerts?.user ?? []),
+  ].join(', ');
+
+  const betaAclpAlertsAssignedDetails =
+    totalBetaAclpAlertsAssignedCount > 0 ? (
+      <TextTooltip
+        displayText={`+${totalBetaAclpAlertsAssignedCount}`}
+        minWidth={1}
+        tooltipText={betaAclpAlertsAssignedList}
+      />
+    ) : (
+      '0'
+    );
 
   const summaryItems = [
     {
@@ -143,6 +188,13 @@ export const Summary = () => {
         title: 'Encrypted',
       },
       show: diskEncryption === 'enabled' || region?.site_type === 'distributed',
+    },
+    {
+      item: {
+        title: 'Alerts Assigned',
+        details: betaAclpAlertsAssignedDetails,
+      },
+      show: hasBetaAclpAlertsAssigned,
     },
   ];
 
