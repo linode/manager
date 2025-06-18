@@ -111,7 +111,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   );
                 }}
                 options={getEvaluationPeriodOptions}
-                placeholder="Select an Evaluation period"
+                placeholder="Select an Evaluation Period"
                 textFieldProps={{
                   labelTooltipText:
                     'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
