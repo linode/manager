@@ -1,3 +1,4 @@
+import { BetaChip } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import React from 'react';
 
@@ -17,6 +18,12 @@ interface AlertDetailRowProps {
    * Defaults to 4. This controls the width of the label in the grid layout.
    */
   labelGridColumns?: number;
+
+  /**
+   * Whether to show a beta chip next to the value.
+   * Defaults to false. If true, a beta chip will be displayed.
+   */
+  showBetaChip?: boolean;
   /**
    * The status icon to be displayed in the row. It can represent states like "active", "inactive", etc.
    * Pass a valid status (e.g., 'active', 'inactive') to display the appropriate status icon.
@@ -40,6 +47,7 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
     status,
     value,
     valueGridColumns = 8,
+    showBetaChip,
   } = props;
 
   const theme = useTheme();
@@ -60,7 +68,9 @@ export const AlertDetailRow = React.memo((props: AlertDetailRowProps) => {
             status={status}
           />
         )}
-        <StyledAlertTypography>{value}</StyledAlertTypography>
+        <StyledAlertTypography>
+          {value} {showBetaChip && <BetaChip />}
+        </StyledAlertTypography>
       </GridLegacy>
     </GridLegacy>
   );
