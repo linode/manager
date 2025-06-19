@@ -185,7 +185,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: false,
         isMultiSelect: true,
-        name: 'Protocol',
+        name: 'Protocols',
         isOptional: true,
         neededInViews: [
           CloudPulseAvailableViews.central,
@@ -201,11 +201,11 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
             label: 'UDP',
           },
         ],
-        placeholder: 'Select a Protocol',
+        placeholder: 'Select Protocols',
         priority: 3,
         type: CloudPulseSelectTypes.static,
       },
-      name: 'Protocol',
+      name: 'Protocols',
     },
     {
       configuration: {
@@ -215,7 +215,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: false,
         isOptional: true,
-        name: 'Port',
+        name: 'Ports',
         neededInViews: [
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
@@ -223,7 +223,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         placeholder: 'e.g., 80,443,3000',
         priority: 4,
       },
-      name: 'Port',
+      name: 'Ports',
     },
   ],
   serviceType: 'nodebalancers',

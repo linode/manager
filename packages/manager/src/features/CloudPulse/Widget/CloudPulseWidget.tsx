@@ -311,6 +311,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                   sxTooltipIcon={{
                     '& .MuiSvgIcon-root': {
                       fill: theme.color.headline,
+                      stroke: theme.color.headline,
                     },
                   }}
                   text="Some description"

@@ -295,7 +295,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
               dashboard,
               isServiceAnalyticsIntegration,
               preferences,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters:
+                resource_ids?.length && resource_ids.length > 0
+                  ? { [RESOURCE_ID]: resource_ids }
+                  : dependentFilterReference.current,
             },
             handlePortChange
           );
@@ -304,7 +307,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             {
               config,
               dashboard,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters:
+                resource_ids?.length && resource_ids.length > 0
+                  ? { [RESOURCE_ID]: resource_ids }
+                  : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
             },
