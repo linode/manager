@@ -105,10 +105,18 @@ describe('generateOAuthAuthorizeEndpoint', () => {
 });
 
 describe('handleOAuthCallback', () => {
-  it('should throw if the callback search params are not valid', async () => {
+  it('should throw if the callback search params are empty', async () => {
     await expect(handleOAuthCallback({ params: '' })).rejects.toThrowError(
       'Error parsing search params on OAuth callback.'
     );
+  });
+
+  it('should throw if the callback search params are not valid (the "state" param is missing)', async () => {
+    await expect(
+      handleOAuthCallback({
+        params: '?returnTo=%2F&code=42ddf75dfa2cacbad897',
+      })
+    ).rejects.toThrowError('Error parsing search params on OAuth callback.');
   });
 
   it('should throw if there is no code verifier found in local storage', async () => {
@@ -136,7 +144,7 @@ describe('handleOAuthCallback', () => {
     );
   });
 
-  it('should throw the nonce in local storage does not match the "state" sent back by login', async () => {
+  it('should throw if the nonce in local storage does not match the "state" sent back by login', async () => {
     storage.authentication.codeVerifier.set('fakecodeverifier');
     storage.authentication.nonce.set('fakenonce');
 
@@ -211,9 +219,7 @@ describe('handleOAuthCallback', () => {
       params: 'state=fakenonce&code=gyuwyutfetyfew&returnTo=/profile',
     });
 
-    expect(storage.authentication.token.get()).toEqual(
-      'Bearer fakeaccesstoken'
-    );
+    expect(storage.authentication.token.get()).toBe('Bearer fakeaccesstoken');
 
     expect(result).toStrictEqual({
       returnTo: '/profile',
@@ -231,11 +237,22 @@ describe('handleLoginAsCustomerCallback', () => {
     );
   });
 
-  it('should throw if any of the callback hash params are invalid', async () => {
+  it('should throw if any of the callback hash params are invalid (expires_in is not a number)', async () => {
     await expect(
       handleLoginAsCustomerCallback({
         params:
           'access_token=fjhwehkfg&destination=dashboard&expires_in=invalidexpire&token_type=Admin',
+      })
+    ).rejects.toThrowError(
+      'Unable to login as customer. Admin did not send expected params in location hash.'
+    );
+  });
+
+  it('should throw if any of the callback hash params are invalid (access_token is missing in the params)', async () => {
+    await expect(
+      handleLoginAsCustomerCallback({
+        params:
+          'destination=dashboard&expires_in=invalidexpire&token_type=Admin',
       })
     ).rejects.toThrowError(
       'Unable to login as customer. Admin did not send expected params in location hash.'
