@@ -1,9 +1,10 @@
+import * as Sentry from '@sentry/react';
 import React from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
 
-import { handleOAuthCallback } from './oauth';
+import { clearStorageAndRedirectToLogout, handleOAuthCallback } from './oauth';
 
 /**
  * Login will redirect back to Cloud Manager with a URL like:
@@ -12,13 +13,21 @@ import { handleOAuthCallback } from './oauth';
  * We will handle taking the code, turning it into an access token, and start a Cloud Manager session.
  */
 export const OAuthCallback = (props: RouteComponentProps) => {
+  const authenticate = async () => {
+    try {
+      const { returnTo } = await handleOAuthCallback({
+        params: location.search,
+      });
+
+      props.history.push(returnTo);
+    } catch (error) {
+      Sentry.captureException(error);
+      clearStorageAndRedirectToLogout();
+    }
+  };
+
   React.useEffect(() => {
-    handleOAuthCallback({
-      params: location.search,
-      onSuccess({ returnTo }) {
-        props.history.push(returnTo);
-      },
-    });
+    authenticate();
   }, []);
 
   return <SplashScreen />;

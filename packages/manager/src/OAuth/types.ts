@@ -54,27 +54,27 @@ export interface TokenInfoToStore {
   token: string;
 }
 
-interface OAuthCallbackOnSuccessData {
-  /**
-   * The number of seconds untill the token expires
-   */
-  expiresIn: number;
-  /**
-   * The path to redirect to
-   */
-  returnTo: string;
-}
-
 /**
  * Options that can be provided to our OAuth Callback handler functions
  */
 export interface AuthCallbackOptions {
   /**
-   * `onSuccess` is invoked when a Cloud Manager session has successfully started
-   */
-  onSuccess?: (data: OAuthCallbackOnSuccessData) => void;
-  /**
    * The raw search or has params sent by the login server
    */
   params: string;
+}
+
+export class AuthenticationError extends Error {
+  public cause?: Error;
+  public extras?: Record<string, unknown>;
+  constructor(
+    message: string,
+    cause?: Error,
+    extras?: Record<string, unknown>
+  ) {
+    super(message);
+    this.cause = cause;
+    this.name = 'ReadError';
+    this.extras = extras;
+  }
 }

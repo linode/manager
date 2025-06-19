@@ -107,11 +107,13 @@ describe('generateOAuthAuthorizeEndpoint', () => {
 describe('handleOAuthCallback', () => {
   it('should throw if the callback search params are not valid', async () => {
     await expect(handleOAuthCallback({ params: '' })).rejects.toThrowError(
-      'state is a required field'
+      'Error parsing search params on OAuth callback.'
     );
   });
 
   it('should throw if there is no code verifier found in local storage', async () => {
+    storage.authentication.codeVerifier.clear();
+
     await expect(
       handleOAuthCallback({
         params: 'state=fehgefhgkefghk&code=gyuwyutfetyfew',
@@ -123,6 +125,7 @@ describe('handleOAuthCallback', () => {
 
   it('should throw if there is no nonce found in local storage', async () => {
     storage.authentication.codeVerifier.set('fakecodeverifier');
+    storage.authentication.nonce.clear();
 
     await expect(
       handleOAuthCallback({
@@ -142,7 +145,7 @@ describe('handleOAuthCallback', () => {
         params: 'state=incorrectnonce&code=gyuwyutfetyfew',
       })
     ).rejects.toThrowError(
-      'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
+      'Stored nonce is not the same nonce as the one sent by login.'
     );
   });
 
@@ -166,12 +169,10 @@ describe('handleOAuthCallback', () => {
     ).rejects.toThrowError('Request to /oauth/token was not ok.');
   });
 
-  it('should store an auth token and call onSuccess if the request to /oauth/token was successful', async () => {
+  it('should store an auth token and return data if the request to /oauth/token was successful', async () => {
     storage.authentication.codeVerifier.set('fakecodeverifier');
     storage.authentication.nonce.set('fakenonce');
     storage.authentication.token.clear();
-
-    const onSuccess = vi.fn();
 
     const tokenResponse: TokenResponse = {
       access_token: 'fakeaccesstoken',
@@ -187,16 +188,15 @@ describe('handleOAuthCallback', () => {
       })
     );
 
-    await handleOAuthCallback({
+    const result = await handleOAuthCallback({
       params: 'state=fakenonce&code=gyuwyutfetyfew&returnTo=/profile',
-      onSuccess,
     });
 
     expect(storage.authentication.token.get()).toEqual(
       'Bearer fakeaccesstoken'
     );
 
-    expect(onSuccess).toHaveBeenCalledWith({
+    expect(result).toStrictEqual({
       returnTo: '/profile',
       expiresIn: 7200,
     });
@@ -204,31 +204,34 @@ describe('handleOAuthCallback', () => {
 });
 
 describe('handleLoginAsCustomerCallback', () => {
-  it('should throw if the callback hash params are not valid', () => {
-    expect(() => handleLoginAsCustomerCallback({ params: '' })).toThrowError(
-      'token_type is a required field'
+  it('should throw if the callback hash params are empty', async () => {
+    await expect(
+      handleLoginAsCustomerCallback({ params: '' })
+    ).rejects.toThrowError(
+      'Unable to login as customer. Admin did not send expected params in location hash.'
     );
+  });
 
-    expect(() =>
+  it('should throw if any of the callback hash params are invalid', async () => {
+    await expect(
       handleLoginAsCustomerCallback({
         params:
           'access_token=fjhwehkfg&destination=dashboard&expires_in=invalidexpire&token_type=Admin',
       })
-    ).toThrowError('expires_in must be a `number` type');
+    ).rejects.toThrowError(
+      'Unable to login as customer. Admin did not send expected params in location hash.'
+    );
   });
 
-  it('should set the token in local storage and call onSuccess if there are no errors', () => {
+  it('should set the token in local storage and return data if there are no errors', async () => {
     storage.authentication.token.clear();
 
-    const onSuccess = vi.fn();
-
-    handleLoginAsCustomerCallback({
+    const result = await handleLoginAsCustomerCallback({
       params:
         'access_token=fakeadmintoken&destination=dashboard&expires_in=100&token_type=Admin',
-      onSuccess,
     });
 
-    expect(onSuccess).toHaveBeenCalled();
+    expect(result).toStrictEqual({ expiresIn: 100, returnTo: '/dashboard' });
     expect(storage.authentication.token.get()).toBe(`Admin fakeadmintoken`);
   });
 });

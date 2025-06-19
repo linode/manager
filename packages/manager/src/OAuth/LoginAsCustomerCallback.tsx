@@ -1,9 +1,13 @@
+import * as Sentry from '@sentry/react';
 import { useSnackbar } from 'notistack';
 import React, { useEffect } from 'react';
 import type { RouteComponentProps } from 'react-router-dom';
 
 import { SplashScreen } from 'src/components/SplashScreen';
-import { handleLoginAsCustomerCallback } from 'src/OAuth/oauth';
+import {
+  clearStorageAndRedirectToLogout,
+  handleLoginAsCustomerCallback,
+} from 'src/OAuth/oauth';
 
 /**
  * This component is similar to the OAuth comonent, in that it's main
@@ -18,23 +22,33 @@ import { handleLoginAsCustomerCallback } from 'src/OAuth/oauth';
 export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    handleLoginAsCustomerCallback({
-      params: location.hash.substring(1),
-      onSuccess({ returnTo, expiresIn }) {
-        props.history.push(returnTo);
+  const authenticate = async () => {
+    try {
+      const { returnTo, expiresIn } = await handleLoginAsCustomerCallback({
+        params: location.hash.substring(1),
+      });
 
-        setTimeout(
-          () => {
-            enqueueSnackbar(
-              'Your Cloud Manager session will expire in 1 minute.',
-              { variant: 'info' }
-            );
-          },
-          (expiresIn - 60) * 1000
-        );
-      },
-    });
+      props.history.push(returnTo);
+
+      setTimeout(
+        () => {
+          enqueueSnackbar(
+            'Your Cloud Manager session will expire in 1 minute.',
+            {
+              variant: 'info',
+            }
+          );
+        },
+        (expiresIn - 60) * 1000
+      );
+    } catch (error) {
+      Sentry.captureException(error);
+      clearStorageAndRedirectToLogout();
+    }
+  };
+
+  useEffect(() => {
+    authenticate();
   }, []);
 
   return <SplashScreen />;

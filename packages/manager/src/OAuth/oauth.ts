@@ -1,5 +1,8 @@
-/* eslint-disable no-console */
-import { capitalize, getQueryParamsFromQueryString } from '@linode/utilities';
+import {
+  capitalize,
+  getQueryParamsFromQueryString,
+  tryCatch,
+} from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 
 import {
@@ -13,6 +16,7 @@ import {
   LoginAsCustomerCallbackParamsSchema,
   OAuthCallbackParamsSchema,
 } from './schemas';
+import { AuthenticationError } from './types';
 
 import type {
   AuthCallbackOptions,
@@ -46,7 +50,7 @@ function clearAllAuthDataFromLocalStorage() {
   clearAuthDataFromLocalStorage();
 }
 
-function clearStorageAndRedirectToLogout() {
+export function clearStorageAndRedirectToLogout() {
   clearAllAuthDataFromLocalStorage();
   const loginUrl = getLoginURL();
   window.location.assign(loginUrl + '/logout');
@@ -99,12 +103,31 @@ export async function logout() {
     const tokenWithoutPrefix = token.split(' ')[1];
 
     try {
-      await revokeToken(clientId, tokenWithoutPrefix);
-    } catch (error) {
-      console.error(
-        `Unable to revoke OAuth token by calling POST ${loginUrl}/oauth/revoke.`,
-        error
+      const response = await fetch(`${getLoginURL()}/oauth/revoke`, {
+        body: new URLSearchParams({
+          client_id: clientId,
+          token: tokenWithoutPrefix,
+        }).toString(),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        const error = new AuthenticationError(
+          'Request to /oauth/revoke was not ok.'
+        );
+        Sentry.captureException(error, {
+          extra: { statusCode: response.status },
+        });
+      }
+    } catch (fetchError) {
+      const error = new AuthenticationError(
+        `Unable to revoke OAuth token because POST /oauth/revoke failed.`,
+        fetchError
       );
+      Sentry.captureException(error);
     }
   }
 
@@ -160,16 +183,6 @@ export async function redirectToLogin() {
   window.location.assign(authorizeUrl);
 }
 
-function revokeToken(clientId: string, token: string) {
-  return fetch(`${getLoginURL()}/oauth/revoke`, {
-    body: new URLSearchParams({ client_id: clientId, token }).toString(),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-    },
-    method: 'POST',
-  });
-}
-
 function getPKCETokenRequestFormData(
   code: string,
   nonce: string,
@@ -184,147 +197,142 @@ function getPKCETokenRequestFormData(
   return formData;
 }
 
+/**
+ * Handles an OAuth callback to a URL like:
+ * https://cloud.linode.com/oauth/callback?returnTo=%2F&state=066a6ad9-b19a-43bb-b99a-ef0b5d4fc58d&code=42ddf75dfa2cacbad897
+ *
+ * @throws {AuthenticationError} if anything went wrong when starting session
+ * @returns Some information about the new session because authentication was successfull
+ */
 export async function handleOAuthCallback(options: AuthCallbackOptions) {
-  try {
-    const {
-      code,
-      returnTo,
-      state: nonce,
-    } = OAuthCallbackParamsSchema.validateSync(
+  const { data: params, error: parseParamsError } = await tryCatch(
+    OAuthCallbackParamsSchema.validate(
       getQueryParamsFromQueryString(options.params)
+    )
+  );
+
+  if (parseParamsError) {
+    throw new AuthenticationError(
+      'Error parsing search params on OAuth callback.',
+      parseParamsError
     );
-
-    const codeVerifier = storage.authentication.codeVerifier.get();
-
-    if (!codeVerifier) {
-      const error = new Error(
-        'No code codeVerifier found in local storage when running OAuth callback.'
-      );
-      Sentry.captureException(error);
-      clearStorageAndRedirectToLogout();
-      throw error;
-    }
-
-    storage.authentication.codeVerifier.clear();
-
-    const storedNonce = storage.authentication.nonce.get();
-
-    if (!storedNonce) {
-      const error = new Error(
-        'No nonce found in local storage when running OAuth callback.'
-      );
-      Sentry.captureException(error);
-      clearStorageAndRedirectToLogout();
-      throw error;
-    }
-
-    storage.authentication.nonce.clear();
-
-    /**
-     * We need to validate that the nonce returned (comes from the location query param as the state param)
-     * matches the one we stored when authentication was started. This confirms the initiator
-     * and receiver are the same.
-     */
-    if (storedNonce !== nonce) {
-      const error = new Error(
-        'Stored nonce is not the same nonce as the one sent by login. This may indicate an attack of some kind.'
-      );
-      Sentry.captureException(error);
-      clearStorageAndRedirectToLogout();
-      throw error;
-    }
-
-    const formData = getPKCETokenRequestFormData(code, nonce, codeVerifier);
-
-    const tokenCreatedAtDate = new Date();
-
-    try {
-      const response = await fetch(`${getLoginURL()}/oauth/token`, {
-        body: formData,
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        const error = new Error('Request to /oauth/token was not ok.');
-        Sentry.captureException(error, {
-          extra: { statusCode: response.status },
-        });
-        clearStorageAndRedirectToLogout();
-        throw error;
-      }
-
-      const tokenParams: TokenResponse = await response.json();
-
-      // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
-      const tokenExpiresAt =
-        tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
-
-      setAuthDataInLocalStorage({
-        token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
-        scopes: tokenParams.scopes,
-        expires: String(tokenExpiresAt),
-      });
-
-      options.onSuccess?.({
-        returnTo,
-        expiresIn: tokenParams.expires_in,
-      });
-    } catch (error) {
-      Sentry.captureException(error, {
-        extra: { message: 'Request to /oauth/token failed.' },
-      });
-      clearStorageAndRedirectToLogout();
-      throw error;
-    }
-  } catch (error) {
-    Sentry.captureException(error, {
-      extra: {
-        message: 'Error parsing search params on OAuth callback.',
-      },
-    });
-    clearStorageAndRedirectToLogout();
-    throw error;
   }
+
+  const codeVerifier = storage.authentication.codeVerifier.get();
+
+  if (!codeVerifier) {
+    throw new AuthenticationError(
+      'No code codeVerifier found in local storage when running OAuth callback.'
+    );
+  }
+
+  storage.authentication.codeVerifier.clear();
+
+  const storedNonce = storage.authentication.nonce.get();
+
+  if (!storedNonce) {
+    throw new AuthenticationError(
+      'No nonce found in local storage when running OAuth callback.'
+    );
+  }
+
+  storage.authentication.nonce.clear();
+
+  /**
+   * We need to validate that the nonce returned (comes from the location query param as the state param)
+   * matches the one we stored when authentication was started. This confirms the initiator
+   * and receiver are the same.
+   */
+  if (storedNonce !== params.state) {
+    throw new AuthenticationError(
+      'Stored nonce is not the same nonce as the one sent by login.'
+    );
+  }
+
+  const formData = getPKCETokenRequestFormData(
+    params.code,
+    params.state,
+    codeVerifier
+  );
+
+  const tokenCreatedAtDate = new Date();
+
+  const { data: response, error: tokenError } = await tryCatch(
+    fetch(`${getLoginURL()}/oauth/token`, {
+      body: formData,
+      method: 'POST',
+    })
+  );
+
+  if (tokenError) {
+    throw new AuthenticationError(
+      'Request to /oauth/token failed.',
+      tokenError
+    );
+  }
+
+  if (!response.ok) {
+    throw new AuthenticationError(
+      'Request to /oauth/token was not ok.',
+      undefined,
+      { statusCode: response.status }
+    );
+  }
+
+  const tokenParams: TokenResponse = await response.json();
+
+  // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
+  const tokenExpiresAt =
+    tokenCreatedAtDate.getTime() + tokenParams.expires_in * 1000;
+
+  setAuthDataInLocalStorage({
+    token: `${capitalize(tokenParams.token_type)} ${tokenParams.access_token}`,
+    scopes: tokenParams.scopes,
+    expires: String(tokenExpiresAt),
+  });
+
+  return {
+    returnTo: params.returnTo,
+    expiresIn: tokenParams.expires_in,
+  };
 }
 
-export function handleLoginAsCustomerCallback(options: AuthCallbackOptions) {
-  try {
-    const {
-      access_token: accessToken,
-      destination,
-      expires_in: expiresIn,
-      token_type: tokenType,
-    } = LoginAsCustomerCallbackParamsSchema.validateSync(
+/**
+ * Handles a "Login as Customer" callback to a URL like:
+ * https://cloud.linode.com/admin/callback#access_token=fjhwehkfg&destination=dashboard&expires_in=900&token_type=Admin
+ *
+ * @throws {AuthenticationError} if anything went wrong when starting session
+ * @returns Some information about the new session because authentication was successfull
+ */
+export async function handleLoginAsCustomerCallback(
+  options: AuthCallbackOptions
+) {
+  const { data: params, error } = await tryCatch(
+    LoginAsCustomerCallbackParamsSchema.validate(
       getQueryParamsFromQueryString(options.params)
+    )
+  );
+
+  if (error) {
+    throw new AuthenticationError(
+      'Unable to login as customer. Admin did not send expected params in location hash.'
     );
-
-    // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
-    const tokenExpiresAt = Date.now() + expiresIn * 1000;
-
-    /**
-     * We have all the information we need and can persist it to localStorage
-     */
-    setAuthDataInLocalStorage({
-      token: `${capitalize(tokenType)} ${accessToken}`,
-      scopes: '*',
-      expires: String(tokenExpiresAt),
-    });
-
-    /**
-     * All done, redirect to the destination from the hash params
-     * NOTE: The destination does not include a leading slash
-     */
-    options.onSuccess?.({
-      returnTo: `/${destination}`,
-      expiresIn,
-    });
-  } catch (error) {
-    Sentry.captureException(error, {
-      extra: {
-        message:
-          'Unable to login as customer. Admin did not send expected params in location hash.',
-      },
-    });
-    throw error;
   }
+
+  // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
+  const tokenExpiresAt = Date.now() + params.expires_in * 1000;
+
+  /**
+   * We have all the information we need and can persist it to localStorage
+   */
+  setAuthDataInLocalStorage({
+    token: `${capitalize(params.token_type)} ${params.access_token}`,
+    scopes: '*',
+    expires: String(tokenExpiresAt),
+  });
+
+  return {
+    returnTo: `/${params.destination}`, // The destination does not include a leading slash
+    expiresIn: params.expires_in,
+  };
 }
