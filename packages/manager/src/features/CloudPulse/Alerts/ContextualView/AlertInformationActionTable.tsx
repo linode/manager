@@ -36,18 +36,27 @@ export interface AlertInformationActionTableProps {
 
   /**
    * Id of the selected entity
+   * Only use in edit flow
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
+   * Only use in edit flow
    */
-  entityName: string;
+  entityName?: string;
 
   /**
    * Error received from API
    */
   error?: APIError[] | null;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param payload enabled alerts ids
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
    * Column name by which columns will be ordered by default
@@ -72,6 +81,25 @@ export interface TableColumnHeader {
   label: string;
 }
 
+export interface AlertRowPropsOptions {
+  /**
+   * Enabled alerts payload
+   */
+  enabledAlerts: CloudPulseAlertsPayload;
+
+  /**
+   * Id of the entity
+   * Only use in edit flow.
+   */
+  entityId?: string;
+
+  /**
+   * Callback function to handle alert toggle
+   * Only use in create flow.
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
+}
+
 export const AlertInformationActionTable = (
   props: AlertInformationActionTableProps
 ) => {
@@ -83,6 +111,7 @@ export const AlertInformationActionTable = (
     error,
     orderByColumn,
     serviceType,
+    onToggleAlert,
   } = props;
 
   const _error = error
@@ -100,14 +129,32 @@ export const AlertInformationActionTable = (
   const isAccountOrRegionLevelAlert = (alert: Alert) =>
     alert.scope === 'region' || alert.scope === 'account';
 
+  const isEditMode = !!entityId;
+
   // Store initial alert states for comparison using a ref
   const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
     system: [],
     user: [],
   });
 
+  const isAnyAlertStateChanged = React.useMemo(() => {
+    const initial = initialAlertStatesRef.current;
+    const current = enabledAlerts;
+
+    if (!compareArrays(current.system, initial.system)) {
+      return true;
+    } else {
+      return !compareArrays(current.user, initial.user);
+    }
+  }, [enabledAlerts]);
+
   // Initialize alert states based on their current status
   React.useEffect(() => {
+    // Only run this effect for edit flow
+    if (!entityId) {
+      return;
+    }
+
     const initialStates: CloudPulseAlertsPayload = {
       system: [],
       user: [],
@@ -130,8 +177,25 @@ export const AlertInformationActionTable = (
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
-    entityId
+    entityId ?? ''
   );
+
+  const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
+    const { entityId, enabledAlerts, onToggleAlert } = options;
+
+    // Ensure that at least one of entityId or onToggleAlert is provided
+    if (!(entityId || onToggleAlert)) {
+      return null;
+    }
+
+    const handleToggle = isEditMode
+      ? handleToggleEditFlow
+      : handleToggleCreateFlow;
+
+    const status = enabledAlerts[alert.type].includes(alert.id);
+
+    return { handleToggle, status };
+  };
 
   const handleCancel = () => {
     setIsDialogOpen(false);
@@ -162,7 +226,7 @@ export const AlertInformationActionTable = (
     [updateAlerts, enqueueSnackbar]
   );
 
-  const handleToggle = (alert: Alert) => {
+  const handleToggleEditFlow = (alert: Alert) => {
     setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
       const newPayload: CloudPulseAlertsPayload = { ...prev };
       const index = newPayload[alert.type].indexOf(alert.id);
@@ -178,16 +242,24 @@ export const AlertInformationActionTable = (
     });
   };
 
-  const isAnyAlertStateChanged = React.useMemo(() => {
-    const initial = initialAlertStatesRef.current;
-    const current = enabledAlerts;
+  const handleToggleCreateFlow = (alert: Alert) => {
+    if (!onToggleAlert) return;
 
-    if (!compareArrays(current.system, initial.system)) {
-      return true;
-    } else {
-      return !compareArrays(current.user, initial.user);
-    }
-  }, [enabledAlerts]);
+    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+      const newPayload: CloudPulseAlertsPayload = { ...prev };
+      const index = newPayload[alert.type].indexOf(alert.id);
+
+      // If the alert is already in the payload, remove it, otherwise add it
+      if (index !== -1) {
+        newPayload[alert.type].splice(index, 1);
+      } else {
+        newPayload[alert.type].push(alert.id);
+      }
+
+      onToggleAlert(newPayload);
+      return newPayload;
+    });
+  };
 
   return (
     <>
@@ -252,14 +324,25 @@ export const AlertInformationActionTable = (
                           loading={false}
                         />
                         {paginatedAndOrderedAlerts?.map((alert) => {
+                          const rowProps = getAlertRowProps(alert, {
+                            enabledAlerts,
+                            entityId,
+                            onToggleAlert,
+                          });
+
+                          if (!rowProps) return null;
+
+                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
+                          if (!isEditMode && alert.scope !== 'entity') {
+                            return null;
+                          }
+
                           return (
                             <AlertInformationActionRow
                               alert={alert}
-                              handleToggle={handleToggle}
+                              handleToggle={rowProps.handleToggle}
                               key={alert.id}
-                              status={enabledAlerts[alert.type].includes(
-                                alert.id
-                              )}
+                              status={rowProps.status}
                             />
                           );
                         })}
@@ -275,23 +358,25 @@ export const AlertInformationActionTable = (
                     pageSize={pageSize}
                   />
                 </Box>
-                <Box>
-                  <Button
-                    buttonType="primary"
-                    data-qa-buttons="true"
-                    data-testid="save-alerts"
-                    disabled={!isAnyAlertStateChanged}
-                    onClick={() => {
-                      window.scrollTo({
-                        behavior: 'instant',
-                        top: 0,
-                      });
-                      setIsDialogOpen(true);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </Box>
+                {isEditMode && (
+                  <Box>
+                    <Button
+                      buttonType="primary"
+                      data-qa-buttons="true"
+                      data-testid="save-alerts"
+                      disabled={!isAnyAlertStateChanged}
+                      onClick={() => {
+                        window.scrollTo({
+                          behavior: 'instant',
+                          top: 0,
+                        });
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                )}
               </>
             )}
           </Paginate>

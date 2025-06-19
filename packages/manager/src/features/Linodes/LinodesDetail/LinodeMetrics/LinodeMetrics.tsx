@@ -9,13 +9,13 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import LinodeSummary from './LinodeSummary/LinodeSummary';
 
 interface Props {
-  isAclpSupportedRegionLinode: boolean;
+  isAclpMetricsSupportedRegionLinode: boolean;
   linodeCreated: string;
   linodeId: number;
 }
 
 const LinodeMetrics = (props: Props) => {
-  const { linodeCreated, linodeId, isAclpSupportedRegionLinode } = props;
+  const { linodeCreated, linodeId, isAclpMetricsSupportedRegionLinode } = props;
 
   const { aclpBetaServices } = useFlags();
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
@@ -25,12 +25,13 @@ const LinodeMetrics = (props: Props) => {
 
   return (
     <Box>
-      {aclpBetaServices?.['linode']?.metrics && isAclpSupportedRegionLinode && (
-        <AclpPreferenceToggle type="metrics" />
-      )}
+      {aclpBetaServices?.linode?.metrics &&
+        isAclpMetricsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="metrics" />
+        )}
 
-      {aclpBetaServices?.['linode']?.metrics &&
-      isAclpSupportedRegionLinode &&
+      {aclpBetaServices?.linode?.metrics &&
+      isAclpMetricsSupportedRegionLinode &&
       isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View
         <CloudPulseDashboardWithFilters
