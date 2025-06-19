@@ -11,7 +11,7 @@ import { Alerts } from './Alerts/Alerts';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 export const AdditionalOptions = () => {
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: regions } = useRegionsQuery();
 
   const selectedRegionId = useWatch<CreateLinodeRequest, 'region'>({
@@ -26,7 +26,7 @@ export const AdditionalOptions = () => {
   });
 
   const showAlerts =
-    flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode;
+    aclpBetaServices?.linode?.alerts && isAclpAlertsSupportedRegionLinode;
 
   const hideAdditionalOptions = !showAlerts;
 
