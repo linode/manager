@@ -278,11 +278,8 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
   }
 
   if (!response.ok) {
-    throw new AuthenticationError(
-      'Request to POST /oauth/token was not ok.',
-      undefined,
-      { statusCode: response.status }
-    );
+    Sentry.setExtra('stauts_code', response.status);
+    throw new AuthenticationError('Request to POST /oauth/token was not ok.');
   }
 
   const { data: tokenParams, error: parseJSONError } =
