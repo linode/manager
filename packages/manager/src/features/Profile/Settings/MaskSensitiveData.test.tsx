@@ -25,9 +25,9 @@ describe('MaskSensitiveData', () => {
 
     await waitFor(() => {
       expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('checkbox')).toBeChecked();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
     expect(getByText('Sensitive data is masked')).toBeVisible();
   });
 

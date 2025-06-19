@@ -26,6 +26,15 @@ const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
 // All errors returned by the actual Linode API are in this shape.
 export type LinodeError = { errors: APIError[] };
 
+/**
+ * Exists to prevent the async `redirectToLogin` function from being called many times
+ * when many 401 API errors are handled at the same time.
+ *
+ * Without this, `redirectToLogin` may be invoked many times before navigation to login actually happens,
+ * which results in the nonce and code verifier being re-generated, leading to authentication race conditions.
+ */
+let isRedirectingToLogin = false;
+
 export const handleError = (
   error: AxiosError<LinodeError>,
   store: ApplicationStore
@@ -33,8 +42,10 @@ export const handleError = (
   if (
     error.response &&
     error.response.status === 401 &&
-    !store.getState().pendingUpload
+    !store.getState().pendingUpload &&
+    !isRedirectingToLogin
   ) {
+    isRedirectingToLogin = true;
     clearAuthDataFromLocalStorage();
     redirectToLogin(window.location.pathname, window.location.search);
   }

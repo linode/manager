@@ -1,3 +1,14 @@
+## [2025-06-17] - v0.4.0
+
+
+### Added:
+
+- Unit test for `getAll` ([#12313](https://github.com/linode/manager/pull/12313))
+
+### Removed:
+
+- Ramda dependency ([#12313](https://github.com/linode/manager/pull/12313))
+
 ## [2025-04-22] - v0.3.0
 
 ### Added:

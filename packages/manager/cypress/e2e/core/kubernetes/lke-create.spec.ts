@@ -662,30 +662,6 @@ describe('LKE Cluster Creation with DC-specific pricing', () => {
 });
 
 describe('LKE Cluster Creation with ACL', () => {
-  /**
-   * - Confirms ACL flow does not exist if account doesn't have the corresponding capability
-   */
-  it('does not show the ACL flow without the LKE ACL capability', () => {
-    mockGetAccount(
-      accountFactory.build({
-        capabilities: [],
-      })
-    ).as('getAccount');
-
-    cy.visitWithLogin('/kubernetes/clusters');
-
-    ui.button
-      .findByTitle('Create Cluster')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    cy.url().should('endWith', '/kubernetes/create');
-    cy.wait(['@getAccount']);
-
-    cy.contains('Control Plane ACL').should('not.exist');
-  });
-
   // setting up mocks
   const clusterLabel = randomLabel();
   const mockRegion = regionFactory.build({
@@ -713,14 +689,6 @@ describe('LKE Cluster Creation with ACL', () => {
 
   describe('with LKE IPACL account capability', () => {
     beforeEach(() => {
-      mockGetAccount(
-        accountFactory.build({
-          capabilities: [
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
-        })
-      ).as('getAccount');
       mockGetRegions([mockRegion]).as('getRegions');
       mockGetLinodeTypes(mockLinodeTypes).as('getLinodeTypes');
       mockGetRegionAvailability(mockRegion.id, []).as('getRegionAvailability');
@@ -755,7 +723,7 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount', '@getRegions', '@getLinodeTypes']);
+      cy.wait(['@getRegions', '@getLinodeTypes']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -857,7 +825,6 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -989,11 +956,7 @@ describe('LKE Cluster Creation with ACL', () => {
       );
       mockGetAccount(
         accountFactory.build({
-          capabilities: [
-            'Kubernetes Enterprise',
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
+          capabilities: ['Kubernetes Enterprise'],
         })
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
@@ -1202,7 +1165,6 @@ describe('LKE Cluster Creation with ACL', () => {
         .click();
 
       cy.url().should('endWith', '/kubernetes/create');
-      cy.wait(['@getAccount']);
 
       // Fill out LKE creation form label, region, and Kubernetes version fields.
       cy.findByLabelText('Cluster Label').should('be.visible').click();
@@ -1386,11 +1348,7 @@ describe('LKE Cluster Creation with LKE-E', () => {
       ).as('getAccountBeta');
       mockGetAccount(
         accountFactory.build({
-          capabilities: [
-            'Kubernetes Enterprise',
-            'LKE HA Control Planes',
-            'LKE Network Access Control List (IP ACL)',
-          ],
+          capabilities: ['Kubernetes Enterprise'],
         })
       ).as('getAccount');
       mockGetTieredKubernetesVersions('enterprise', [
