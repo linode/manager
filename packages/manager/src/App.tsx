@@ -19,10 +19,7 @@ import { useEventsPoller } from './queries/events/events';
 // import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
-// Ensure component's display name is 'App'
-export const App = () => <BaseApp />;
-
-const BaseApp = withDocumentTitleProvider(
+export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     const { isLoading } = useInitialRequests();
 
