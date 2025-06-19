@@ -42,6 +42,8 @@ export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
         (expiresIn - 60) * 1000
       );
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
     }

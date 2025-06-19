@@ -21,6 +21,8 @@ export const OAuthCallback = (props: RouteComponentProps) => {
 
       props.history.push(returnTo);
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       Sentry.captureException(error);
       clearStorageAndRedirectToLogout();
     }

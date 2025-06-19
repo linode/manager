@@ -64,6 +64,11 @@ export interface AuthCallbackOptions {
   params: string;
 }
 
+/**
+ * A custom error type for distinguishing auth-related errors.
+ *
+ * This helps identify them in tooling like Sentry.
+ */
 export class AuthenticationError extends Error {
   public cause?: Error;
   public extras?: Record<string, unknown>;
@@ -74,7 +79,7 @@ export class AuthenticationError extends Error {
   ) {
     super(message);
     this.cause = cause;
-    this.name = 'ReadError';
+    this.name = 'AuthenticationError';
     this.extras = extras;
   }
 }
