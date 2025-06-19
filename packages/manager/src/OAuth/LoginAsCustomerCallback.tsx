@@ -25,7 +25,7 @@ export const LoginAsCustomerCallback = (props: RouteComponentProps) => {
   const authenticate = async () => {
     try {
       const { returnTo, expiresIn } = await handleLoginAsCustomerCallback({
-        params: location.hash.substring(1),
+        params: location.hash.substring(1), // substring is called to remove the leading "#" from the hash params
       });
 
       props.history.push(returnTo);

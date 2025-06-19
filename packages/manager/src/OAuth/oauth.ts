@@ -56,16 +56,6 @@ export function clearStorageAndRedirectToLogout() {
   window.location.assign(loginUrl + '/logout');
 }
 
-export function getIsLoggedInAsCustomer() {
-  const token = storage.authentication.token.get();
-
-  if (!token) {
-    return false;
-  }
-
-  return token.toLowerCase().startsWith('admin');
-}
-
 function getLoginURL() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
@@ -91,6 +81,47 @@ function getAppRoot() {
   return import.meta.env.REACT_APP_APP_ROOT;
 }
 
+export function getIsLoggedInAsCustomer() {
+  const token = storage.authentication.token.get();
+
+  if (!token) {
+    return false;
+  }
+
+  return token.toLowerCase().startsWith('admin');
+}
+
+async function generateCodeVerifierAndChallenge() {
+  const codeVerifier = await generateCodeVerifier();
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
+  storage.authentication.codeVerifier.set(codeVerifier);
+  return { codeVerifier, codeChallenge };
+}
+
+function generateNonce() {
+  const nonce = window.crypto.randomUUID();
+  storage.authentication.nonce.set(nonce);
+  return { nonce };
+}
+
+function getPKCETokenRequestFormData(
+  code: string,
+  nonce: string,
+  codeVerifier: string
+) {
+  const formData = new FormData();
+  formData.append('grant_type', 'authorization_code');
+  formData.append('client_id', getClientId());
+  formData.append('code', code);
+  formData.append('state', nonce);
+  formData.append('code_verifier', codeVerifier);
+  return formData;
+}
+
+/**
+ * Attempts to revoke the user's current token, then redirects the user to the
+ * "logout" page of the Login server (https://login.linode.com/logout).
+ */
 export async function logout() {
   const loginUrl = getLoginURL();
   const clientId = getClientId();
@@ -134,25 +165,11 @@ export async function logout() {
   window.location.assign(`${loginUrl}/logout`);
 }
 
-async function generateCodeVerifierAndChallenge() {
-  const codeVerifier = await generateCodeVerifier();
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
-  storage.authentication.codeVerifier.set(codeVerifier);
-  return { codeVerifier, codeChallenge };
-}
-
-function generateNonce() {
-  const nonce = window.crypto.randomUUID();
-  storage.authentication.nonce.set(nonce);
-  return { nonce };
-}
-
 /**
  * Generates an authorization URL for purposes of authorizating with the Login server
  *
  * @param returnTo the path in Cloud Manager to return to
  * @returns a URL that we will redirect the user to in order to authenticate
- *
  * @example "https://login.fake.linode.com/oauth/authorize?client_id=9l424eefake9h4fead4d09&code_challenge=GDke2FgbFIlc1LICA5jXbUuvY1dThEDDtOI8roA17Io&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fcloud.fake.linode.com%2Foauth%2Fcallback%3FreturnTo%3D%2Flinodes&response_type=code&scope=*&state=99b64f1f-0174-4c7b-a3ab-d6807de5f524"
  */
 export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
@@ -173,6 +190,9 @@ export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
   return `${getLoginURL()}/oauth/authorize?${query.toString()}`;
 }
 
+/**
+ * Generates prerequisite data needed for authentication then redirects the user to the login server to authenticate.
+ */
 export async function redirectToLogin() {
   // Retain the user's current path and search params so that login redirects
   // the user back to where they left off.
@@ -181,20 +201,6 @@ export async function redirectToLogin() {
   const authorizeUrl = await generateOAuthAuthorizeEndpoint(returnTo);
 
   window.location.assign(authorizeUrl);
-}
-
-function getPKCETokenRequestFormData(
-  code: string,
-  nonce: string,
-  codeVerifier: string
-) {
-  const formData = new FormData();
-  formData.append('grant_type', 'authorization_code');
-  formData.append('client_id', getClientId());
-  formData.append('code', code);
-  formData.append('state', nonce);
-  formData.append('code_verifier', codeVerifier);
-  return formData;
 }
 
 /**
