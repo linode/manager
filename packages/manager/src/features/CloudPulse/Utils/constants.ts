@@ -33,6 +33,6 @@ export const RESOURCE_ID = 'resource_id';
 export const WIDGETS = 'widgets';
 
 export const NO_REGION_MESSAGE: Record<string, string> = {
-  dbaas: 'No Database Clusters configured in regions.',
-  linode: 'No Linodes configured in regions.',
+  dbaas: 'No database clusters configured in any regions.',
+  linode: 'No linodes configured in any regions.',
 };
