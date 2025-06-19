@@ -147,7 +147,7 @@ export async function logout() {
 
       if (!response.ok) {
         const error = new AuthenticationError(
-          'Request to /oauth/revoke was not ok.'
+          'Request to POST /oauth/revoke was not ok.'
         );
         Sentry.captureException(error, {
           extra: { statusCode: response.status },
@@ -272,20 +272,28 @@ export async function handleOAuthCallback(options: AuthCallbackOptions) {
 
   if (tokenError) {
     throw new AuthenticationError(
-      'Request to /oauth/token failed.',
+      'Request to POST /oauth/token failed.',
       tokenError
     );
   }
 
   if (!response.ok) {
     throw new AuthenticationError(
-      'Request to /oauth/token was not ok.',
+      'Request to POST /oauth/token was not ok.',
       undefined,
       { statusCode: response.status }
     );
   }
 
-  const tokenParams: TokenResponse = await response.json();
+  const { data: tokenParams, error: parseJSONError } =
+    await tryCatch<TokenResponse>(response.json());
+
+  if (parseJSONError) {
+    throw new AuthenticationError(
+      'Unable to parse the response of POST /oauth/token as JSON.',
+      parseJSONError
+    );
+  }
 
   // We multiply the expiration time by 1000 because JS returns time in ms, while OAuth expresses the expiry time in seconds
   const tokenExpiresAt =
@@ -338,7 +346,7 @@ export async function handleLoginAsCustomerCallback(
   });
 
   return {
-    returnTo: `/${params.destination}`, // The destination does not include a leading slash
+    returnTo: `/${params.destination}`, // The destination from admin does not include a leading slash
     expiresIn: params.expires_in,
   };
 }

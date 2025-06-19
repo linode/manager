@@ -154,7 +154,7 @@ describe('handleOAuthCallback', () => {
     storage.authentication.nonce.set('fakenonce');
 
     server.use(
-      http.get('*/oauth/token', () => {
+      http.post('*/oauth/token', () => {
         return HttpResponse.json(
           { error: 'Login server error.' },
           { status: 500 }
@@ -166,7 +166,26 @@ describe('handleOAuthCallback', () => {
       handleOAuthCallback({
         params: 'state=fakenonce&code=gyuwyutfetyfew',
       })
-    ).rejects.toThrowError('Request to /oauth/token was not ok.');
+    ).rejects.toThrowError('Request to POST /oauth/token was not ok.');
+  });
+
+  it('should throw if the /oauth/token response is not valid JSON', async () => {
+    storage.authentication.codeVerifier.set('fakecodeverifier');
+    storage.authentication.nonce.set('fakenonce');
+
+    server.use(
+      http.post('*/oauth/token', () => {
+        return HttpResponse.xml(`<user name="John" />`);
+      })
+    );
+
+    await expect(
+      handleOAuthCallback({
+        params: 'state=fakenonce&code=gyuwyutfetyfew',
+      })
+    ).rejects.toThrowError(
+      'Unable to parse the response of POST /oauth/token as JSON.'
+    );
   });
 
   it('should store an auth token and return data if the request to /oauth/token was successful', async () => {
