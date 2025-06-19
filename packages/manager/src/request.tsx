@@ -45,7 +45,7 @@ export const handleError = (
   ) {
     isRedirectingToLogin = true;
     clearAuthDataFromLocalStorage();
-    redirectToLogin(window.location.pathname, window.location.search);
+    redirectToLogin();
   }
 
   const status: number = error.response?.status ?? 0;

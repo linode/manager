@@ -118,17 +118,17 @@ async function generateCodeVerifierAndChallenge() {
   return { codeVerifier, codeChallenge };
 }
 
-export function generateNonce() {
+function generateNonce() {
   const nonce = window.crypto.randomUUID();
   storage.authentication.nonce.set(nonce);
   return { nonce };
 }
 
 /**
- * Generates an authorization URL for purposes of authorizating with the Login server.
+ * Generates an authorization URL for purposes of authorizating with the Login server
  *
  * @param returnTo the path in Cloud Manager to return to
- * @returns a URL that we can send the user to in order to authorize with the login server.
+ * @returns a URL that we will redirect the user to in order to authenticate
  *
  * @example "https://login.fake.linode.com/oauth/authorize?client_id=9l424eefake9h4fead4d09&code_challenge=GDke2FgbFIlc1LICA5jXbUuvY1dThEDDtOI8roA17Io&code_challenge_method=S256&redirect_uri=https%3A%2F%2Fcloud.fake.linode.com%2Foauth%2Fcallback%3FreturnTo%3D%2Flinodes&response_type=code&scope=*&state=99b64f1f-0174-4c7b-a3ab-d6807de5f524"
  */
@@ -150,12 +150,13 @@ export async function generateOAuthAuthorizeEndpoint(returnTo: string) {
   return `${getLoginURL()}/oauth/authorize?${query.toString()}`;
 }
 
-export async function redirectToLogin(
-  returnToPath: string,
-  queryString: string = ''
-) {
-  const returnTo = `${returnToPath}${queryString}`;
+export async function redirectToLogin() {
+  // Retain the user's current path and search params so that login redirects
+  // the user back to where they left off.
+  const returnTo = `${window.location.pathname}${window.location.search}`;
+
   const authorizeUrl = await generateOAuthAuthorizeEndpoint(returnTo);
+
   window.location.assign(authorizeUrl);
 }
 
