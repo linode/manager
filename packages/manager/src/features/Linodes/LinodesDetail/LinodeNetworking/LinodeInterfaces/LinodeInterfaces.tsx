@@ -102,7 +102,7 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
             search: (prev) => prev,
           })
         }
-        open={Boolean(selectedInterfaceId && interfaceId)}
+        open={Boolean(interfaceId)}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}

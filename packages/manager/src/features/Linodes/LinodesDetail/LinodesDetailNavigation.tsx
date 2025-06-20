@@ -135,11 +135,7 @@ const LinodesDetailNavigation = () => {
   return (
     <>
       <DocumentTitleSegment
-        // TODO: Tanstack Router - Add the tab title here somehow
-        // segment={`${linode?.label} - ${
-        //   tabs[getIndex()]?.title ?? 'Detail View'
-        // }`}
-        segment={`${linode?.label} - Detail View`}
+        segment={`${linode?.label} - ${tabs[tabIndex]?.title} - Detail View`}
       />
       <SMTPRestrictionText
         linode={linode}
