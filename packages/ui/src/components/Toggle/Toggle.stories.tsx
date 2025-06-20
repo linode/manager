@@ -53,8 +53,8 @@ export const Disabled: StoryObj<ToggleProps> = {
         <Toggle
           {...args}
           checked={checked}
+          disabled
           onChange={onChange}
-          toggleDisabled
           tooltipText={EXAMPLE_TEXT}
         />
       )}

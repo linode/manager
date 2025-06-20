@@ -69,7 +69,7 @@ describe('Region', () => {
     const regions = regionFactory.buildList(5, { capabilities: ['Linodes'] });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage(regions));
       })
     );
@@ -104,7 +104,7 @@ describe('Region', () => {
       http.get('*/v4/linode/types/:id', () => {
         return HttpResponse.json(type);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([regionA, regionB]));
       })
     );
@@ -142,7 +142,7 @@ describe('Region', () => {
     const linode = linodeFactory.build({ region: regionA.id });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([regionA, regionB]));
       })
     );
@@ -190,7 +190,7 @@ describe('Region', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(
           makeResourcePage([coreRegion, distributedRegion])
         );
