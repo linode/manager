@@ -70,6 +70,12 @@ interface ParsedLinodeCreateQueryParams {
   type: LinodeCreateType | undefined;
 }
 
+interface LinodeCreatePayloadOptions {
+  isAclpAlertsPreferenceBeta?: boolean;
+  isAclpIntegration?: boolean;
+  isShowingNewNetworkingUI: boolean;
+}
+
 /**
  * Hook that allows you to read and manage Linode Create flow query params.
  *
@@ -164,14 +170,29 @@ export const tabs: LinodeCreateType[] = [
  */
 export const getLinodeCreatePayload = (
   formValues: LinodeCreateFormValues,
-  isShowingNewNetworkingUI: boolean
+  options: LinodeCreatePayloadOptions
 ): CreateLinodeRequest => {
+  const {
+    isShowingNewNetworkingUI,
+    isAclpIntegration,
+    isAclpAlertsPreferenceBeta,
+  } = options;
+
   const values: CreateLinodeRequest = omitProps(formValues, [
     'linode',
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
   ]);
+
+  // Convert null to undefined for maintenance_policy_id
+  if (values.maintenance_policy_id === null) {
+    values.maintenance_policy_id = undefined;
+  }
+
+  if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
+    values.alerts = undefined;
+  }
 
   if (values.metadata?.user_data) {
     values.metadata.user_data = utoa(values.metadata.user_data);
@@ -283,6 +304,13 @@ const defaultInterfaces: InterfacePayload[] = [
  * For example, we add `linode` so we can store the currently selected Linode
  * for the Backups and Clone tab.
  *
+ * We omit `maintenance_policy_id` from CreateLinodeRequest because:
+ * 1. The API expects it to be either 1, 2, or undefined
+ * 2. The form needs to handle null (no policy selected) and undefined (omit from API)
+ * 3. The actual API payload is handled in getLinodeCreatePayload where we:
+ *    - Delete the field if region doesn't support it
+ *    - Convert null to undefined if region supports it
+ *
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
@@ -341,7 +369,10 @@ export interface LinodeCreateFormContext {
 export const defaultValues = async (
   params: ParsedLinodeCreateQueryParams,
   queryClient: QueryClient,
-  isLinodeInterfacesEnabled: boolean
+  flags: {
+    isLinodeInterfacesEnabled: boolean;
+    isVMHostMaintenanceEnabled: boolean;
+  }
 ): Promise<LinodeCreateFormValues> => {
   const stackscriptId = params.stackScriptID ?? params.appID;
 
@@ -375,16 +406,29 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
+  let defaultMaintenancePolicy: null | number = null;
 
-  // only run if no Linode is preselected
-  if (isLinodeInterfacesEnabled && !linode) {
+  // Fetch account settings for interface generation if enabled
+  if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
     try {
       const accountSettings = await queryClient.ensureQueryData(
         accountQueries.settings
       );
-      interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
-        accountSettings.interfaces_for_new_linodes
-      );
+
+      // Don't set the interface generation when cloning. The API can figure that out
+      if (flags.isLinodeInterfacesEnabled && params.type !== 'Clone Linode') {
+        interfaceGeneration = getDefaultInterfaceGenerationFromAccountSetting(
+          accountSettings.interfaces_for_new_linodes
+        );
+      }
+
+      // If the Maintenance Policy feature is enabled, set the default policy if the user has one set
+      if (
+        flags.isVMHostMaintenanceEnabled &&
+        accountSettings.maintenance_policy_id
+      ) {
+        defaultMaintenancePolicy = accountSettings.maintenance_policy_id;
+      }
     } catch (error) {
       // silently fail because the user may be a restricted user that can't access this endpoint
     }
@@ -392,7 +436,8 @@ export const defaultValues = async (
 
   let firewallSettings: FirewallSettings | null = null;
 
-  if (isLinodeInterfacesEnabled) {
+  // Fetch firewall settings separately since it's a different endpoint
+  if (flags.isLinodeInterfacesEnabled) {
     try {
       firewallSettings = await queryClient.ensureQueryData(
         firewallQueries.settings
@@ -418,6 +463,7 @@ export const defaultValues = async (
     interfaces: defaultInterfaces,
     linode,
     linodeInterfaces: [getDefaultInterfacePayload('public', firewallSettings)],
+    maintenance_policy_id: defaultMaintenancePolicy,
     private_ip: privateIp,
     region: linode ? linode.region : '',
     stackscript_data: stackscript?.user_defined_fields

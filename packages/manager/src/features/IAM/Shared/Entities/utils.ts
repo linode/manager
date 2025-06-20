@@ -33,7 +33,7 @@ export const getCreateLinkForEntityType = (
   }
 
   if (entityType === 'lkecluster') {
-    return '/kubernetes/clusters';
+    return '/kubernetes/create';
   }
 
   return `/${entityType}s/create`;

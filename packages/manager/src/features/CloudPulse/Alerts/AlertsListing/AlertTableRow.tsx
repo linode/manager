@@ -1,11 +1,12 @@
 import { useProfile } from '@linode/queries';
-import { Box } from '@linode/ui';
+import { BetaChip, Box } from '@linode/ui';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { useFlags } from 'src/hooks/useFlags';
 import { formatDate } from 'src/utilities/formatDate';
 
 import { alertStatuses, alertStatusToIconStatusMap } from '../constants';
@@ -44,6 +45,8 @@ export const AlertTableRow = (props: Props) => {
     updated_by,
   } = alert;
 
+  const { aclpBetaServices } = useFlags();
+
   return (
     <TableRow data-qa-alert-cell={id} key={`alert-row-${id}`}>
       <TableCell>
@@ -64,7 +67,8 @@ export const AlertTableRow = (props: Props) => {
         </Box>
       </TableCell>
       <TableCell>
-        {services.find((service) => service.value === service_type)?.label}
+        {services.find((service) => service.value === service_type)?.label}{' '}
+        {aclpBetaServices?.[service_type]?.alerts && <BetaChip />}
       </TableCell>
       <TableCell data-testid={`created-by-${id}`}>{created_by}</TableCell>
       <TableCell data-testid={`updated-${id}`}>

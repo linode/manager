@@ -2,14 +2,14 @@ import * as React from 'react';
 
 import { DisplayPrice } from './DisplayPrice';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 type Story = StoryObj<typeof DisplayPrice>;
 
 const meta: Meta<typeof DisplayPrice> = {
   component: DisplayPrice,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '2em' }}>
         <Story />
       </div>

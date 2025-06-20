@@ -55,7 +55,7 @@ export const GroupedAlertsTable = ({
   const theme = useTheme();
   // Create a Map to store refs for each tag
   const tagRefs = React.useRef<
-    Map<string, React.RefObject<HTMLTableRowElement>>
+    Map<string, React.RefObject<HTMLTableRowElement | null>>
   >(new Map(groupedAlerts.map(([tag]) => [tag, React.createRef()])));
 
   const scrollToTagWithAnimation = React.useCallback(

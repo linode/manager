@@ -1,7 +1,10 @@
+import { SvgIcon } from '@mui/material';
 import Switch from '@mui/material/Switch';
 import * as React from 'react';
+import type { JSX } from 'react';
 
-import { ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
+import { CheckMarkIcon, ToggleOffIcon, ToggleOnIcon } from '../../assets/icons';
+import { Box } from '../Box';
 import { TooltipIcon } from '../TooltipIcon';
 
 import type { SwitchProps } from '@mui/material/Switch';
@@ -25,18 +28,58 @@ export interface ToggleProps extends SwitchProps {
  * > **Note:** Do not use toggles in long forms where other types of form fields are present, and users will need to click a Submit button for other changes to take effect. This scenario confuses users because they can’t be sure whether their toggle choice will take immediate effect.
  */
 export const Toggle = (props: ToggleProps) => {
-  const { tooltipText, ...rest } = props;
+  const { tooltipText, size = 'medium', sx, ...rest } = props;
 
   return (
-    <React.Fragment>
+    <Box
+      sx={{
+        position: 'relative',
+        display: 'inline-flex',
+      }}
+    >
+      <SvgIcon
+        component={CheckMarkIcon}
+        height="16px"
+        sx={{
+          position: 'absolute',
+          top: size === 'medium' ? '18px' : '15.5px',
+          left: size === 'medium' ? '20px' : tooltipText ? '18px' : '25px',
+          fill: 'white',
+          zIndex: 1,
+          pointerEvents: 'none',
+          opacity: props.checked ? 1 : 0,
+          transition: 'opacity 0.2s ease',
+        }}
+        viewBox="0 0 20 20"
+        width="16px"
+      />
+
       <Switch
+        {...rest}
         checkedIcon={<ToggleOnIcon />}
         color="primary"
         data-qa-toggle={props.checked}
         icon={<ToggleOffIcon />}
-        {...rest}
+        sx={{
+          ...(size === 'small' && {
+            '&& .icon': {
+              height: 16,
+              width: 16,
+            },
+            '.MuiSwitch-track': {
+              opacity: '1 !important',
+              height: 20,
+              width: 40,
+              borderRadius: 10,
+            },
+            '& .Mui-checked .icon': {
+              left: '-6px',
+            },
+          }),
+          ...sx,
+        }}
       />
       {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
-    </React.Fragment>
+    </Box>
   );
 };
