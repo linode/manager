@@ -87,11 +87,10 @@ export const ConfigNodeIPSelect = React.memo((props: Props) => {
 
   const noOptionsText = useMemo(() => {
     if (!vpcId) {
-      return 'No options - please ensure you have at least 1 Linode with a private IP located in the selected region.';
+      return 'Please ensure you have at least 1 Linode with a private IP located in the selected region.';
     } else if (vpcId && !subnetId) {
-      return 'No options - please ensure you have selected a Subnet from the selected VPC';
-    } else
-      return 'No options - please ensure you have at least 1 Linode in the selected VPC.';
+      return 'Select a subnet within the chosen VPC.';
+    } else return 'The selected subnet must have at least one Linode.';
   }, [vpcId, subnetId]);
 
   return (
