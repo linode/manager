@@ -141,10 +141,10 @@ export const AlertInformationActionTable = (
     const initial = initialAlertStatesRef.current;
     const current = enabledAlerts;
 
-    if (!compareArrays(current.system, initial.system)) {
+    if (!compareArrays(current.system ?? [], initial.system ?? [])) {
       return true;
     } else {
-      return !compareArrays(current.user, initial.user);
+      return !compareArrays(current.user ?? [], initial.user ?? []);
     }
   }, [enabledAlerts]);
 
@@ -161,17 +161,17 @@ export const AlertInformationActionTable = (
     };
     alerts.forEach((alert) => {
       if (isAccountOrRegionLevelAlert(alert)) {
-        initialStates[alert.type].push(alert.id);
+        initialStates[alert.type]?.push(alert.id);
       } else {
         if (alert.entity_ids.includes(entityId)) {
-          initialStates[alert.type].push(alert.id);
+          initialStates[alert.type]?.push(alert.id);
         }
       }
     });
     setEnabledAlerts(initialStates);
     initialAlertStatesRef.current = {
-      system: [...initialStates.system],
-      user: [...initialStates.user],
+      system: [...(initialStates.system ?? [])],
+      user: [...(initialStates.user ?? [])],
     };
   }, [alerts, entityId]);
 
@@ -192,7 +192,7 @@ export const AlertInformationActionTable = (
       ? handleToggleEditFlow
       : handleToggleCreateFlow;
 
-    const status = enabledAlerts[alert.type].includes(alert.id);
+    const status = enabledAlerts[alert.type]?.includes(alert.id);
 
     return { handleToggle, status };
   };
@@ -229,13 +229,13 @@ export const AlertInformationActionTable = (
   const handleToggleEditFlow = (alert: Alert) => {
     setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
       const newPayload: CloudPulseAlertsPayload = { ...prev };
-      const index = newPayload[alert.type].indexOf(alert.id);
+      const index = newPayload[alert.type]?.indexOf(alert.id);
 
       // If the alert is already in the payload, remove it, otherwise add it
       if (index !== -1) {
-        newPayload[alert.type].splice(index, 1);
+        newPayload[alert.type]?.splice(index ?? 0, 1);
       } else {
-        newPayload[alert.type].push(alert.id);
+        newPayload[alert.type]?.push(alert.id);
       }
 
       return newPayload;
@@ -247,13 +247,13 @@ export const AlertInformationActionTable = (
 
     setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
       const newPayload: CloudPulseAlertsPayload = { ...prev };
-      const index = newPayload[alert.type].indexOf(alert.id);
+      const index = newPayload[alert.type]?.indexOf(alert.id);
 
       // If the alert is already in the payload, remove it, otherwise add it
       if (index !== -1) {
-        newPayload[alert.type].splice(index, 1);
+        newPayload[alert.type]?.splice(index ?? 0, 1);
       } else {
-        newPayload[alert.type].push(alert.id);
+        newPayload[alert.type]?.push(alert.id);
       }
 
       onToggleAlert(newPayload);
