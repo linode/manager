@@ -61,6 +61,7 @@ interface GeckoFeatureFlag extends BaseFeatureFlag {
 
 interface AclpFlag {
   beta: boolean;
+  bypassAccountCapabilities?: boolean;
   enabled: boolean;
 }
 
@@ -116,12 +117,14 @@ export interface Flags {
   apicliButtonCopy: string;
   apiMaintenance: APIMaintenance;
   apl: boolean;
+  aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
   databases: boolean;
+  databaseVpc: boolean;
   dbaasV2: BetaFeatureFlag;
   dbaasV2MonitorMetrics: BetaFeatureFlag;
   disableLargestGbPlans: boolean;

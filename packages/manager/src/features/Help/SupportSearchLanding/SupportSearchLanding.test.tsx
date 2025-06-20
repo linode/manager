@@ -3,7 +3,6 @@ import { screen } from '@testing-library/react';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import SupportSearchLanding from './SupportSearchLanding';
@@ -12,8 +11,24 @@ const props = {
   searchAlgolia: vi.fn(),
   searchEnabled: true,
   searchResults: [[], []],
-  ...reactRouterProps,
+  location: {
+    search: '?query=test',
+  },
 };
+
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useLocation: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useLocation: queryMocks.useLocation,
+  };
+});
 
 const propsWithMultiWordURLQuery = assocPath(
   ['location', 'search'],
@@ -22,6 +37,15 @@ const propsWithMultiWordURLQuery = assocPath(
 );
 
 describe('SupportSearchLanding Component', () => {
+  beforeEach(() => {
+    queryMocks.useLocation.mockReturnValue({
+      search: '?query=test',
+      state: {
+        supportTicketFormFields: {},
+      },
+    });
+  });
+
   it('should render', () => {
     renderWithTheme(<SupportSearchLanding {...props} />);
     expect(screen.getByTestId('support-search-landing')).toBeInTheDocument();

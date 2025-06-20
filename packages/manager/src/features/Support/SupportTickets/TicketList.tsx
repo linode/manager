@@ -12,8 +12,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TicketRow } from './TicketRow';
 import { getStatusFilter, useTicketSeverityCapability } from './ticketUtils';
@@ -32,15 +32,27 @@ export const TicketList = (props: Props) => {
 
   const hasSeverityCapability = useTicketSeverityCapability();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    currentRoute:
+      filterStatus === 'open'
+        ? '/support/tickets/open'
+        : '/support/tickets/closed',
+    preferenceKey,
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'opened',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'opened',
+      },
+      from:
+        filterStatus === 'open'
+          ? '/support/tickets/open'
+          : '/support/tickets/closed',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
   const filter = {
     ['+order']: order,

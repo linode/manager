@@ -39,12 +39,11 @@ const SupportLink = (props: SupportLinkProps) => {
     <Link
       onClick={onClick}
       to={{
-        pathname: '/support/tickets',
+        pathname: '/support/tickets/open?dialogOpen=true',
         state: {
           description,
           entity,
           formPayloadValues,
-          open: true,
           ticketType,
           title,
         },

@@ -130,8 +130,11 @@ const renderMaintenanceFields = (
       onChange={onChange}
       value={maintenance.status}
     >
+      <option value="canceled">Canceled</option>
       <option value="completed">Completed</option>
+      <option value="in-progress">In Progress</option>
       <option value="pending">Pending</option>
+      <option value="scheduled">Scheduled</option>
       <option value="started">Started</option>
     </select>
   </label>,
@@ -158,7 +161,24 @@ const renderMaintenanceFields = (
 
 const maintenanceTemplates = {
   Default: () => accountMaintenanceFactory.build(),
+  Canceled: () => accountMaintenanceFactory.build({ status: 'canceled' }),
   Completed: () => accountMaintenanceFactory.build({ status: 'completed' }),
+  'In Progress': () =>
+    accountMaintenanceFactory.build({ status: 'in-progress' }),
   Pending: () => accountMaintenanceFactory.build({ status: 'pending' }),
+  Scheduled: () => accountMaintenanceFactory.build({ status: 'scheduled' }),
   Started: () => accountMaintenanceFactory.build({ status: 'started' }),
+  'Platform Maintenance': () =>
+    accountMaintenanceFactory.build({
+      entity: {
+        type: 'linode',
+        id: 1,
+        label: 'linode-1',
+        url: '/v4/linode/instances/1',
+      },
+      status: 'scheduled',
+      type: 'reboot',
+      reason:
+        "In this case we must apply a critical security update to your Linode's host.",
+    }),
 } as const;

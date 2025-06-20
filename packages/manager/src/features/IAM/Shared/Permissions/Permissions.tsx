@@ -42,6 +42,7 @@ export const Permissions = ({ permissions }: Props) => {
     };
   }, [calculateHiddenItems, handleResize]);
 
+  // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
     <Grid container data-testid="parent" direction="column">
       <StyledTitle>Permissions</StyledTitle>

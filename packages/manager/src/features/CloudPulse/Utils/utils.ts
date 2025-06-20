@@ -32,11 +32,13 @@ export const useIsACLPEnabled = (): {
     return { isACLPEnabled: false };
   }
 
-  const isACLPEnabled = isFeatureEnabledV2(
-    'Akamai Cloud Pulse',
-    Boolean(flags.aclp?.enabled),
-    account?.capabilities ?? []
-  );
+  const isACLPEnabled =
+    (flags.aclp?.enabled && flags.aclp?.bypassAccountCapabilities) ||
+    isFeatureEnabledV2(
+      'Akamai Cloud Pulse',
+      Boolean(flags.aclp?.enabled),
+      account?.capabilities ?? []
+    );
 
   return { isACLPEnabled };
 };

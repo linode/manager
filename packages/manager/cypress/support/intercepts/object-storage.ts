@@ -10,6 +10,7 @@ import { makeResponse } from 'support/util/response';
 
 import { objectStorageBucketFactoryGen2 } from 'src/factories';
 
+import type { Quota, QuotaUsage } from '@linode/api-v4';
 import type {
   CreateObjectStorageBucketPayload,
   ObjectStorageBucket,
@@ -19,7 +20,6 @@ import type {
   ObjectStorageKey,
   PriceType,
 } from '@linode/api-v4';
-
 /**
  * Intercepts GET requests to fetch buckets.
  *
@@ -107,7 +107,6 @@ export const mockGetBucketsForRegionError = (
   errorMessage: string = 'An unknown error occurred.',
   statusCode: number = 500
 ): Cypress.Chainable<null> => {
-  console.log('mockGetBucketsForRegionError', regionId);
   return cy.intercept(
     'GET',
     apiMatcher(`object-storage/buckets/${regionId}*`),
@@ -599,5 +598,58 @@ export const mockGetBucketAccess = (
     'GET',
     apiMatcher(`object-storage/buckets/${cluster}/${label}/access`),
     makeResponse(bucketAccess)
+  );
+};
+
+/**
+ * Intercepts GET request to get object storage quotas and mocks response.
+ *
+ * @param endpoint - Endpoint which is included in request's X-Filter header
+ * @param quotas - Object Storage quotas for which to mock response
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetObjectStorageQuotas = (
+  endpoint: string,
+  quotas: Quota[]
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('object-storage/quotas*'), (req) => {
+    if (req.headers['x-filter'].includes(`{"s3_endpoint":"${endpoint}"}`)) {
+      req.reply(paginateResponse(quotas));
+    } else {
+      req.continue();
+    }
+  });
+};
+
+export const mockGetObjectStorageQuotaError = (
+  errorMessage: string,
+  status: number = 500
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('object-storage/quotas*'),
+    makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
+ * Intercepts GET request to get object storage quota usages and mocks response.
+ *
+ * @param id - Endpoint which is used as quota identifier
+ * @param resource - Resource metric, bytes|buckets|objects
+ * @param quotaUsage - Mocked QuotaUsage object
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetObjectStorageQuotaUsages = (
+  id: string,
+  resource: string,
+  quotaUsage: QuotaUsage
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`object-storage/quotas/obj-${resource}-${id}/usage*`),
+    makeResponse(quotaUsage)
   );
 };

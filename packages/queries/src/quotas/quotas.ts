@@ -43,7 +43,7 @@ export const useAllQuotasQuery = (
 
 export const useQuotaUsageQuery = (
   service: QuotaType,
-  id: number,
+  id: string,
   enabled = true,
 ) =>
   useQuery<QuotaUsage, APIError[]>({

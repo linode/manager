@@ -236,6 +236,7 @@ export interface AssignNewRoleFormValues {
     entities?: EntitiesOption[] | null;
     role: null | RolesType;
   }[];
+  username?: null | string;
 }
 
 export interface UpdateEntitiesFormValues {
@@ -507,7 +508,7 @@ export const mergeAssignedRolesIntoExistingRoles = (
         selectedPlusExistingRoles.entity_access.push({
           id: e.value,
           roles: [r.role?.value as EntityAccessRole],
-          type: r.role?.value.split('_')[0] as EntityTypePermissions, // TODO - this needs to be cleaned up
+          type: r.role?.entity_type as EntityTypePermissions,
         });
       }
     });

@@ -36,17 +36,26 @@ const useStyles = makeStyles()((theme: Theme) => ({
 }));
 
 export type AccessOption = 'none' | 'specific';
+export type AccessVariant = 'networking' | 'standard';
 
-interface Props {
+export interface AccessProps {
   disabled?: boolean;
   errors?: APIError[];
   ips: ExtendedIP[];
   onBlur: (ips: ExtendedIP[]) => void;
   onChange: (ips: ExtendedIP[]) => void;
+  variant?: AccessVariant;
 }
 
-export const DatabaseCreateAccessControls = (props: Props) => {
-  const { disabled = false, errors, ips, onBlur, onChange } = props;
+export const DatabaseCreateAccessControls = (props: AccessProps) => {
+  const {
+    disabled = false,
+    errors,
+    ips,
+    onBlur,
+    onChange,
+    variant = 'standard',
+  } = props;
   const { classes } = useStyles();
   const [accessOption, setAccessOption] = useState<AccessOption>('specific');
 
@@ -59,7 +68,10 @@ export const DatabaseCreateAccessControls = (props: Props) => {
 
   return (
     <Grid>
-      <Typography className={classes.header} variant="h2">
+      <Typography
+        className={classes.header}
+        variant={variant === 'networking' ? 'h3' : 'h2'}
+      >
         Manage Access
       </Typography>
       <Typography>

@@ -40,9 +40,7 @@ export const AssignedPermissionsPanel = ({
   return (
     <StyledPaper sx={{ ...sx }}>
       {hideDetails && showName && (
-        <>
-          <StyledTitle showName={showName}>{role.name}</StyledTitle>
-        </>
+        <StyledTitle showName={showName}>{role.name}</StyledTitle>
       )}
       {!hideDetails && (
         <>

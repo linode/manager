@@ -17,10 +17,9 @@ import { plansNoticesUtils, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -35,6 +34,7 @@ import {
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
+  useKubernetesBetaEndpoint,
   useLkeStandardOrEnterpriseVersions,
 } from 'src/features/Kubernetes/kubeUtils';
 import { useFlags } from 'src/hooks/useFlags';
@@ -86,6 +86,7 @@ import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
   const flags = useFlags();
+  const navigate = useNavigate();
   const { isGeckoLAEnabled } = useIsGeckoEnabled(
     flags.gecko2?.enabled,
     flags.gecko2?.la
@@ -104,13 +105,13 @@ export const CreateCluster = () => {
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const [highAvailability, setHighAvailability] = React.useState<boolean>();
   const [controlPlaneACL, setControlPlaneACL] = React.useState<boolean>(false);
-  const [apl_enabled, setApl_enabled] = React.useState<boolean>(false);
+  const [aplEnabled, setAplEnabled] = React.useState<boolean>(false);
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const history = useHistory();
   const { data: account } = useAccount();
   const { showAPL } = useAPLAvailability();
+  const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
   const { showHighAvailability } = getKubeHighAvailability(account);
   const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
@@ -223,7 +224,6 @@ export const CreateCluster = () => {
       return;
     }
 
-    const { push } = history;
     setErrors(undefined);
     setSubmitting(true);
 
@@ -272,17 +272,16 @@ export const CreateCluster = () => {
     };
 
     if (isAPLSupported) {
-      payload = { ...payload, apl_enabled };
+      payload = { ...payload, apl_enabled: aplEnabled };
     }
 
     if (isLkeEnterpriseLAFeatureEnabled) {
       payload = { ...payload, tier: selectedTier };
     }
 
-    const createClusterFn =
-      isAPLSupported || isLkeEnterpriseLAFeatureEnabled
-        ? createKubernetesClusterBeta
-        : createKubernetesCluster;
+    const createClusterFn = isUsingBetaEndpoint
+      ? createKubernetesClusterBeta
+      : createKubernetesCluster;
 
     // Since ACL is enabled by default for LKE-E clusters, run validation on the ACL IP Address fields if the acknowledgement is not explicitly checked.
     if (selectedTier === 'enterprise' && !isACLAcknowledgementChecked) {
@@ -301,7 +300,10 @@ export const CreateCluster = () => {
 
     createClusterFn(payload)
       .then((cluster) => {
-        push(`/kubernetes/clusters/${cluster.id}`);
+        navigate({
+          to: '/kubernetes/clusters/$clusterId/summary',
+          params: { clusterId: cluster.id },
+        });
         if (hasAgreed) {
           updateAccountAgreements({
             eu_model: true,
@@ -498,7 +500,7 @@ export const CreateCluster = () => {
                   <Stack>
                     <ApplicationPlatform
                       isSectionDisabled={!isAPLSupported}
-                      setAPL={setApl_enabled}
+                      setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
                     />
                   </Stack>
@@ -519,7 +521,7 @@ export const CreateCluster = () => {
                       ? UNKNOWN_PRICE
                       : highAvailabilityPrice
                   }
-                  isAPLEnabled={apl_enabled}
+                  isAPLEnabled={aplEnabled}
                   isErrorKubernetesTypes={isErrorKubernetesTypes}
                   isLoadingKubernetesTypes={isLoadingKubernetesTypes}
                   selectedRegionId={selectedRegion?.id}
@@ -568,7 +570,7 @@ export const CreateCluster = () => {
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
               hasSelectedRegion={hasSelectedRegion}
-              isAPLEnabled={apl_enabled}
+              isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
               regionsData={regionsData}
@@ -633,7 +635,3 @@ export const CreateCluster = () => {
     </>
   );
 };
-
-export const createClusterLazyRoute = createLazyRoute('/kubernetes/create')({
-  component: CreateCluster,
-});

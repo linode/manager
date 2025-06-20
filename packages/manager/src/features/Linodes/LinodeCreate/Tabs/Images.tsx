@@ -97,7 +97,6 @@ export const Images = () => {
             onBlur={field.onBlur}
             onChange={onChange}
             siteType={selectedRegion?.site_type}
-            sx={{ width: '416px' }}
             value={field.value ?? null}
             variant="private"
           />

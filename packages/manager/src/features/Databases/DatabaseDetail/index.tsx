@@ -1,18 +1,18 @@
 import { BetaChip, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { useEditableLabelState } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useTabs } from 'src/hooks/useTabs';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
@@ -22,33 +22,36 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/DatabaseAdvancedConfiguration';
 
-import type { Engine } from '@linode/api-v4/lib/databases/types';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { Tab } from 'src/components/Tabs/TabLinkList';
 
-const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
-const DatabaseBackups = React.lazy(
-  () => import('./DatabaseBackups/DatabaseBackups')
+const DatabaseSummary = React.lazy(() =>
+  import('./DatabaseSummary/DatabaseSummary').then((module) => ({
+    default: module.DatabaseSummary,
+  }))
+);
+const DatabaseBackups = React.lazy(() =>
+  import('./DatabaseBackups/DatabaseBackups').then((module) => ({
+    default: module.DatabaseBackups,
+  }))
 );
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 const DatabaseResize = React.lazy(() =>
-  import('./DatabaseResize/DatabaseResize').then(({ DatabaseResize }) => ({
-    default: DatabaseResize,
+  import('./DatabaseResize/DatabaseResize').then((module) => ({
+    default: module.DatabaseResize,
   }))
 );
 const DatabaseMonitor = React.lazy(() =>
-  import('./DatabaseMonitor/DatabaseMonitor').then(({ DatabaseMonitor }) => ({
-    default: DatabaseMonitor,
+  import('./DatabaseMonitor/DatabaseMonitor').then((module) => ({
+    default: module.DatabaseMonitor,
   }))
 );
+
 export const DatabaseDetail = () => {
-  const history = useHistory();
   const flags = useFlags();
 
-  const { databaseId, engine } = useParams<{
-    databaseId: string;
-    engine: Engine;
-  }>();
+  const { databaseId, engine } = useParams({
+    from: '/databases/$engine/$databaseId',
+  });
 
   const id = Number(databaseId);
 
@@ -68,6 +71,42 @@ export const DatabaseDetail = () => {
   const { editableLabelError, resetEditableLabel, setEditableLabelError } =
     useEditableLabelState();
 
+  const isDefault = database?.platform === 'rdbms-default';
+  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
+  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
+
+  const { tabs, tabIndex, handleTabChange, getTabIndex } = useTabs([
+    {
+      to: `/databases/$engine/$databaseId/summary`,
+      title: 'Summary',
+    },
+    {
+      to: `/databases/$engine/$databaseId/metrics`,
+      title: 'Metrics',
+      hide: !isMonitorEnabled,
+      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
+    },
+    {
+      to: `/databases/$engine/$databaseId/backups`,
+      title: 'Backups',
+    },
+    {
+      to: `/databases/$engine/$databaseId/resize`,
+      title: 'Resize',
+      hide: !flags.databaseResize,
+    },
+    {
+      to: `/databases/$engine/$databaseId/settings`,
+      title: 'Settings',
+    },
+
+    {
+      to: `/databases/$engine/$databaseId/configs`,
+      title: 'Advanced Configuration',
+      hide: !isAdvancedConfigEnabled,
+    },
+  ]);
+
   if (error) {
     return (
       <ErrorState
@@ -85,70 +124,6 @@ export const DatabaseDetail = () => {
   if (!database) {
     return null;
   }
-
-  const isDefault = database.platform === 'rdbms-default';
-  const isMonitorEnabled = isDefault && flags.dbaasV2MonitorMetrics?.enabled;
-  const isAdvancedConfigEnabled = isDefault && flags.databaseAdvancedConfig;
-
-  const tabs: Tab[] = [
-    {
-      routeName: `/databases/${engine}/${id}/summary`,
-      title: 'Summary',
-    },
-    {
-      routeName: `/databases/${engine}/${id}/backups`,
-      title: 'Backups',
-    },
-    {
-      routeName: `/databases/${engine}/${id}/settings`,
-      title: 'Settings',
-    },
-  ];
-
-  const resizeIndex = isMonitorEnabled ? 3 : 2;
-  const backupsIndex = isMonitorEnabled ? 2 : 1;
-  const settingsIndex = isMonitorEnabled ? 4 : 3;
-
-  if (isMonitorEnabled) {
-    tabs.splice(1, 0, {
-      chip: flags.dbaasV2MonitorMetrics?.beta ? <BetaChip /> : null,
-      routeName: `/databases/${engine}/${id}/metrics`,
-      title: 'Metrics',
-    });
-  }
-
-  if (flags.databaseResize) {
-    tabs.splice(resizeIndex, 0, {
-      routeName: `/databases/${engine}/${id}/resize`,
-      title: 'Resize',
-    });
-  }
-
-  if (isAdvancedConfigEnabled) {
-    tabs.splice(5, 0, {
-      routeName: `/databases/${engine}/${id}/configs`,
-      title: 'Advanced Configuration',
-    });
-  }
-
-  const getTabIndex = () => {
-    const tabChoice = tabs.findIndex((tab) =>
-      Boolean(matchPath(tab.routeName, { path: location.pathname }))
-    );
-
-    // Redirect to the landing page if the path does not exist
-    if (tabChoice < 0) {
-      history.push(`/databases/${engine}/${id}`);
-
-      return 0;
-    }
-
-    return tabChoice;
-  };
-
-  const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
 
   const handleSubmitLabelChange = (newLabel: string) => {
     // @TODO Update this to only send the label when the API supports it
@@ -173,7 +148,7 @@ export const DatabaseDetail = () => {
     <>
       <DocumentTitleSegment
         segment={`${database?.label} - ${
-          tabs[getTabIndex()]?.title ?? 'Detail View'
+          tabs[tabIndex]?.title ?? 'Detail View'
         }`}
       />
       <LandingHeader
@@ -198,8 +173,8 @@ export const DatabaseDetail = () => {
         spacingBottom={4}
         title={database.label}
       />
-      <Tabs index={getTabIndex()} onChange={handleTabChange}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
         {isDatabasesGrantReadOnly && (
           <Notice
             text={
@@ -210,36 +185,48 @@ export const DatabaseDetail = () => {
         )}
 
         <TabPanels>
-          <SafeTabPanel index={0}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/summary')}
+          >
             <DatabaseSummary
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
           {isMonitorEnabled ? (
-            <SafeTabPanel index={1}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/metrics')}
+            >
               <DatabaseMonitor database={database} />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={backupsIndex}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/backups')}
+          >
             <DatabaseBackups disabled={isDatabasesGrantReadOnly} />
           </SafeTabPanel>
           {flags.databaseResize ? (
-            <SafeTabPanel index={resizeIndex}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/resize')}
+            >
               <DatabaseResize
                 database={database}
                 disabled={isDatabasesGrantReadOnly}
               />
             </SafeTabPanel>
           ) : null}
-          <SafeTabPanel index={settingsIndex}>
+          <SafeTabPanel
+            index={getTabIndex('/databases/$engine/$databaseId/settings')}
+          >
             <DatabaseSettings
               database={database}
               disabled={isDatabasesGrantReadOnly}
             />
           </SafeTabPanel>
           {isAdvancedConfigEnabled && (
-            <SafeTabPanel index={tabs.length - 1}>
+            <SafeTabPanel
+              index={getTabIndex('/databases/$engine/$databaseId/configs')}
+            >
               <DatabaseAdvancedConfiguration database={database} />
             </SafeTabPanel>
           )}
@@ -249,11 +236,3 @@ export const DatabaseDetail = () => {
     </>
   );
 };
-
-export const databaseDetailLazyRoute = createLazyRoute(
-  '/databases/$engine/$databaseId'
-)({
-  component: DatabaseDetail,
-});
-
-export default DatabaseDetail;
