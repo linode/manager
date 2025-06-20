@@ -9,6 +9,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -238,6 +239,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -361,10 +363,10 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system: number[];
+  system?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user: number[];
+  user?: number[];
 }

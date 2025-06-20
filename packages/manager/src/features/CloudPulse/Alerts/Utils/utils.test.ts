@@ -47,6 +47,7 @@ it('test filterAlertsByStatusAndType method', () => {
     4
   );
 });
+
 it('test convertAlertsToTypeSet method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'user' });
 
