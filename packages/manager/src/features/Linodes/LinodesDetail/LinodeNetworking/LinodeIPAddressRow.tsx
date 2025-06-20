@@ -15,6 +15,7 @@ import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
+import { disableIPRow } from './utilities';
 
 import type { IPAddress, IPRange } from '@linode/api-v4';
 import type { IPv6 } from 'ipaddr.js';
@@ -29,6 +30,7 @@ export interface IPAddressRowHandlers {
 }
 
 interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
+  hasLinodeInterfaces?: boolean;
   hasPublicLinodeInterface?: boolean;
   isLinodeInterface: boolean;
   isVPCOnlyLinode: boolean;
@@ -45,6 +47,7 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
+    hasLinodeInterfaces,
     hasPublicLinodeInterface,
     isLinodeInterface,
     isVPCOnlyLinode,
@@ -62,24 +65,32 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
+  const disabled = disableIPRow({
+    hasLinodeInterfaces,
+    hasPublicLinodeInterface,
+    isLinodeInterface,
+    ipType: type,
+    isVPCOnlyLinode,
+  });
+
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'Public – IPv4';
 
   return (
     <StyledTableRow
       data-qa-ip={address}
-      disabled={isVPCOnlyLinode}
+      disabled={disabled}
       key={`${address}-${type}`}
     >
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         <CopyTooltip
           copyableText
-          disabled={isVPCOnlyLinode}
+          disabled={disabled}
           masked={Boolean(maskSensitiveDataPreference)}
           maskedTextLength={type.includes('IPv6') ? 'ipv6' : 'ipv4'}
           text={address}
         />
-        {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
+        {!disabled && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         {type}
@@ -101,24 +112,24 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
       <TableCell actionCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
+            disabledFromInterfaces={disabled}
             hasPublicLinodeInterface={hasPublicLinodeInterface}
             ipAddress={_ip}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
-            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
             readOnly={readOnly}
           />
         ) : _range ? (
           <LinodeNetworkingActionMenu
+            disabledFromInterfaces={disabled}
             hasPublicLinodeInterface={hasPublicLinodeInterface}
             ipAddress={_range}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
-            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={() => handleOpenEditRDNSForRange(_range)}
             onRemove={openRemoveIPRangeDialog}
             readOnly={readOnly}
