@@ -428,7 +428,7 @@ it('test getCustomSelectProperties method', () => {
 
 it('test getPortFilterProperties method', () => {
   const portFilterConfig = nodeBalancerConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Port'
+    (filterObj) => filterObj.name === 'Ports'
   );
 
   expect(portFilterConfig).toBeDefined();
