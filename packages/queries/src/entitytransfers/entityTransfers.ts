@@ -14,7 +14,7 @@ import type {
 } from '@linode/api-v4/lib/entity-transfers';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
-export const queryKey = 'entity-transfers';
+export const entityTransfersQueryKey = 'entity-transfers';
 
 interface EntityTransfersData {
   entityTransfers: Record<string, EntityTransfer>;
@@ -46,7 +46,7 @@ export const useEntityTransfersQuery = (
 
   return useQuery<EntityTransfersData, APIError[]>({
     queryFn: () => getAllEntityTransfersRequest(params, filter),
-    queryKey: [queryKey, params, filter],
+    queryKey: [entityTransfersQueryKey, params, filter],
     ...queryPresets.longLived,
     enabled: !profile?.restricted,
   });
@@ -55,7 +55,7 @@ export const useEntityTransfersQuery = (
 export const useTransferQuery = (token: string, enabled: boolean = true) => {
   return useQuery<EntityTransfer, APIError[]>({
     queryFn: () => getEntityTransfer(token),
-    queryKey: [queryKey, token],
+    queryKey: [entityTransfersQueryKey, token],
     ...queryPresets.shortLived,
     enabled,
     retry: false,
@@ -68,6 +68,6 @@ export const useCreateTransfer = () => {
     mutationFn: (createData) => {
       return createEntityTransfer(createData);
     },
-    ...creationHandlers([queryKey], 'token', queryClient),
+    ...creationHandlers([entityTransfersQueryKey], 'token', queryClient),
   });
 };
