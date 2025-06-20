@@ -2,6 +2,7 @@ import { useAccountUsers, useProfile } from '@linode/queries';
 import { Box, Button, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -9,11 +10,11 @@ import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFoot
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { PARENT_USER } from 'src/features/Account/constants';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
-import CreateUserDrawer from './CreateUserDrawer';
+import { CreateUserDrawer } from './CreateUserDrawer';
 import { UserDeleteConfirmationDialog } from './UserDeleteConfirmationDialog';
 import { UsersLandingProxyTableHead } from './UsersLandingProxyTableHead';
 import { UsersLandingTableBody } from './UsersLandingTableBody';
@@ -23,6 +24,7 @@ import type { Filter } from '@linode/api-v4';
 
 export const UsersLanding = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] =
     React.useState<boolean>(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
@@ -31,8 +33,21 @@ export const UsersLanding = () => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesLgUp = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const pagination = usePagination(1, 'account-users');
-  const order = useOrder();
+  const pagination = usePaginationV2({
+    initialPage: 1,
+    currentRoute: '/account/users',
+    preferenceKey: 'account-users-pagination',
+  });
+  const order = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'username',
+      },
+      from: '/account/users',
+    },
+    preferenceKey: 'account-users-order',
+  });
 
   const showProxyUserTable =
     profile?.user_type === 'child' || profile?.user_type === 'proxy';
@@ -184,6 +199,7 @@ export const UsersLanding = () => {
         pageSize={pagination.pageSize}
       />
       <CreateUserDrawer
+        navigate={navigate}
         onClose={() => setIsCreateDrawerOpen(false)}
         open={isCreateDrawerOpen}
         refetch={refetch}

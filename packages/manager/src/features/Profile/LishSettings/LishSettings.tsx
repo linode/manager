@@ -12,7 +12,6 @@ import {
 } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
-import { createLazyRoute } from '@tanstack/react-router';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 
@@ -223,7 +222,3 @@ export const LishSettings = () => {
     </>
   );
 };
-
-export const lishSettingsLazyRoute = createLazyRoute('/profile/lish')({
-  component: LishSettings,
-});

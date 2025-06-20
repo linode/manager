@@ -4,7 +4,7 @@ import React from 'react';
 import { oauthClientFactory } from 'src/factories/accountOAuth';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import OAuthClients from './OAuthClients';
 
@@ -18,7 +18,9 @@ describe('Maintenance Table Row', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<OAuthClients />);
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      <OAuthClients />
+    );
 
     await waitForElementToBeRemoved(getByTestId('table-row-loading'));
 

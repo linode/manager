@@ -1,10 +1,9 @@
-import { useAccountUser } from '@linode/queries';
+import { useAccountUser, useUserRoles } from '@linode/queries';
 import { CircleProgress, ErrorState, NotFound, Stack } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useAccountUserPermissions } from 'src/queries/iam/iam';
 
 import { DeleteUserPanel } from './DeleteUserPanel';
 import { UserDetailsPanel } from './UserDetailsPanel';
@@ -12,10 +11,10 @@ import { UserEmailPanel } from './UserEmailPanel';
 import { UsernamePanel } from './UsernamePanel';
 
 export const UserProfile = () => {
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { data: user, error, isLoading } = useAccountUser(username ?? '');
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
   if (isLoading) {
     return <CircleProgress />;

@@ -1,9 +1,9 @@
+import { useNetworkTransferPricesQuery } from '@linode/queries';
 import { Box, CircleProgress, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
 import { TextTooltip } from 'src/components/TextTooltip';
-import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import { useObjectStorageTypesQuery } from 'src/queries/object-storage/queries';
 import { UNKNOWN_PRICE } from 'src/utilities/pricing/constants';
 import { getDCSpecificPriceByType } from 'src/utilities/pricing/dynamicPricing';

@@ -1,4 +1,8 @@
-import { useAccountAgreements, useProfile } from '@linode/queries';
+import {
+  useAccountAgreements,
+  useProfile,
+  useSpecificTypes,
+} from '@linode/queries';
 import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -6,7 +10,6 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
@@ -35,7 +38,6 @@ export interface Props {
   region: string | undefined;
   regionsData: Region[];
   removePool: (poolIdx: number) => void;
-  showHighAvailability: boolean | undefined;
   submitting: boolean;
   toggleHasAgreed: () => void;
   updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
@@ -52,7 +54,6 @@ export const KubeCheckoutBar = (props: Props) => {
     region,
     regionsData,
     removePool,
-    showHighAvailability,
     submitting,
     toggleHasAgreed,
     updatePool,
@@ -79,9 +80,7 @@ export const KubeCheckoutBar = (props: Props) => {
   const gdprConditions = !hasAgreed && showGDPRCheckbox;
 
   const haConditions =
-    highAvailability === undefined &&
-    showHighAvailability &&
-    highAvailabilityPrice !== undefined;
+    highAvailability === undefined && highAvailabilityPrice !== undefined;
 
   const disableCheckout = Boolean(
     needsAPool ||

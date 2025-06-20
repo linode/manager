@@ -23,37 +23,15 @@ describe('LinodeRow', () => {
     const linode = linodeFactory.build();
     const renderedLinode = (
       <LinodeRow
-        alerts={linode.alerts}
-        backups={linode.backups}
-        capabilities={linode.capabilities}
-        created={linode.created}
-        group={linode.group}
         handlers={{
           onOpenDeleteDialog: () => {},
           onOpenMigrateDialog: () => {},
-          onOpenPowerDialog: (action) => {},
+          onOpenPowerDialog: () => {},
           onOpenRebuildDialog: () => {},
           onOpenRescueDialog: () => {},
           onOpenResizeDialog: () => {},
         }}
-        hypervisor={linode.hypervisor}
-        id={linode.id}
-        image={linode.image}
-        interface_generation="legacy_config"
-        ipv4={linode.ipv4}
-        ipv6={linode.ipv6 || ''}
-        key={`linode-row-${1}`}
-        label={linode.label}
-        lke_cluster_id={linode.lke_cluster_id}
-        placement_group={linode.placement_group}
-        region={linode.region}
-        site_type={linode.site_type}
-        specs={linode.specs}
-        status={linode.status}
-        tags={linode.tags}
-        type={linode.type}
-        updated={linode.updated}
-        watchdog_enabled={linode.watchdog_enabled}
+        {...linode}
       />
     );
 

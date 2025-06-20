@@ -26,6 +26,7 @@ export interface NodeRow {
 }
 
 interface NodeRowProps extends NodeRow {
+  isLkeClusterRestricted: boolean;
   linodeError?: APIError[];
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
   typeLabel: string;
@@ -36,6 +37,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     instanceId,
     instanceStatus,
     ip,
+    isLkeClusterRestricted,
     label,
     linodeError,
     nodeId,
@@ -136,6 +138,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
       <TableCell>
         <NodeActionMenu
           instanceLabel={label}
+          isLkeClusterRestricted={isLkeClusterRestricted}
           nodeId={nodeId}
           openRecycleNodeDialog={openRecycleNodeDialog}
         />

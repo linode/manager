@@ -43,10 +43,13 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
+export const clearStorage = (key: string) => {
+  delete localStorageCache[key];
+  window.localStorage.removeItem(key);
+};
+
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
-const TYPE_TO_CONFIRM = 'typeToConfirm';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const CODE_VERIFIER = 'authentication/code-verifier';
@@ -63,7 +66,8 @@ export type PageSize = number;
 export type RegionFilter = 'all' | RegionSite;
 
 interface AuthGetAndSet {
-  get: () => any;
+  clear: () => void;
+  get: () => string | undefined;
   set: (value: string) => void;
 }
 
@@ -103,10 +107,6 @@ export interface Storage {
     scopes: AuthGetAndSet;
     token: AuthGetAndSet;
   };
-  BackupsCtaDismissed: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
   devToolsEnv: {
     get: () => DevToolsEnv | null;
     set: (devToolsEnv: DevToolsEnv) => void;
@@ -139,37 +139,34 @@ export interface Storage {
     get: () => TicketReply;
     set: (v: TicketReply) => void;
   };
-  typeToConfirm: {
-    get: () => boolean;
-    set: (v: 'false' | 'true') => void;
-  };
 }
 
 export const storage: Storage = {
-  BackupsCtaDismissed: {
-    get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
-  },
   authentication: {
     codeVerifier: {
       get: () => getStorage(CODE_VERIFIER),
       set: (v) => setStorage(CODE_VERIFIER, v),
+      clear: () => clearStorage(CODE_VERIFIER),
     },
     expire: {
       get: () => getStorage(EXPIRE),
       set: (v) => setStorage(EXPIRE, v),
+      clear: () => clearStorage(EXPIRE),
     },
     nonce: {
       get: () => getStorage(NONCE),
       set: (v) => setStorage(NONCE, v),
+      clear: () => clearStorage(NONCE),
     },
     scopes: {
       get: () => getStorage(SCOPES),
       set: (v) => setStorage(SCOPES, v),
+      clear: () => clearStorage(SCOPES),
     },
     token: {
       get: () => getStorage(TOKEN),
       set: (v) => setStorage(TOKEN, v),
+      clear: () => clearStorage(TOKEN),
     },
   },
   devToolsEnv: {
@@ -226,14 +223,9 @@ export const storage: Storage = {
     get: () => getStorage(TICKET, { text: '' }),
     set: (v) => setStorage(TICKET, JSON.stringify(v)),
   },
-  typeToConfirm: {
-    get: () => getStorage(TYPE_TO_CONFIRM),
-    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
-  },
 };
 
 export const {
-  BackupsCtaDismissed,
   authentication,
   stackScriptInProgress,
   supportTicket,
@@ -260,4 +252,18 @@ export const isDevToolsEnvValid = (value: any) => {
     typeof value?.clientID === 'string' &&
     typeof value?.label === 'string'
   );
+};
+
+export const clearUserInput = () => {
+  supportTicket.set(supportTicketStorageDefaults);
+  ticketReply.set({ text: '', ticketId: -1 });
+  stackScriptInProgress.set({
+    description: '',
+    id: '',
+    images: [],
+    label: '',
+    rev_note: '',
+    script: '',
+    updated: '',
+  });
 };

@@ -3,6 +3,7 @@ export { default as CheckIcon } from './check.svg';
 export { default as CheckboxIcon } from './checkbox.svg';
 export { default as CheckboxCheckedIcon } from './checkboxChecked.svg';
 export { default as CheckboxIndeterminateIcon } from './checkboxIndeterminate.svg';
+export { default as CheckMarkIcon } from './checkmark.svg';
 export { default as ChevronDownIcon } from './chevron-down.svg';
 export { default as ChevronUpIcon } from './chevron-up.svg';
 export { default as CloseIcon } from './close.svg';

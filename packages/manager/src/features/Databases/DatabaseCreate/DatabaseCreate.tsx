@@ -199,7 +199,7 @@ export const DatabaseCreate = () => {
     },
     validateOnChange: false,
     validationSchema: getDynamicDatabaseSchema(isVPCSelected),
-  });
+  }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
   React.useEffect(() => {
     if (setFieldValue) {

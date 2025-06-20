@@ -3,25 +3,26 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
-import { accountPermissionsFactory } from 'src/factories/accountPermissions';
-import { userPermissionsFactory } from 'src/factories/userPermissions';
+import { accountRolesFactory } from 'src/factories/accountRoles';
+import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { AssignedRolesTable } from './AssignedRolesTable';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
   };
 });
 
@@ -30,6 +31,14 @@ vi.mock('src/queries/entities/entities', async () => {
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -46,35 +55,43 @@ const mockEntities = [
 ];
 
 describe('AssignedRolesTable', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
   it('should display no roles text if there are no roles assigned to user', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: {},
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
 
   it('should display roles and menu when data is available', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     expect(screen.getByText('account_linode_admin')).toBeVisible();
     expect(screen.getAllByText('All Linodes')[0]).toBeVisible();
 
-    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    const actionMenuButton = screen.getAllByLabelText(
+      'Action menu for role account_linode_admin'
+    )[0];
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
@@ -83,19 +100,19 @@ describe('AssignedRolesTable', () => {
   });
 
   it('should display empty state when no roles match filters', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -106,19 +123,19 @@ describe('AssignedRolesTable', () => {
   });
 
   it('should filter roles based on search query', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'account_linode_admin');
@@ -129,19 +146,19 @@ describe('AssignedRolesTable', () => {
   });
 
   it('should filter roles based on selected resource type', async () => {
-    queryMocks.useAccountUserPermissions.mockReturnValue({
-      data: userPermissionsFactory.build(),
+    queryMocks.useUserRoles.mockReturnValue({
+      data: userRolesFactory.build(),
     });
 
-    queryMocks.useAccountPermissions.mockReturnValue({
-      data: accountPermissionsFactory.build(),
+    queryMocks.useAccountRoles.mockReturnValue({
+      data: accountRolesFactory.build(),
     });
 
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedRolesTable />);
+    await renderWithThemeAndRouter(<AssignedRolesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Assigned Roles');
     await userEvent.type(autocomplete, 'Firewall Roles');

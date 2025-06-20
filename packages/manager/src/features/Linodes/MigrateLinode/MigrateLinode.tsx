@@ -7,6 +7,7 @@ import {
   useMutateAccountAgreements,
   useProfile,
   useRegionsQuery,
+  useTypeQuery,
 } from '@linode/queries';
 import {
   Box,
@@ -36,7 +37,6 @@ import {
   useEventsPollingActions,
   useInProgressEvents,
 } from 'src/queries/events/events';
-import { useTypeQuery } from 'src/queries/types';
 import { sendMigrationInitiatedEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { formatDate } from 'src/utilities/formatDate';
 import { getGDPRDetails } from 'src/utilities/formatRegion';

@@ -1,3 +1,14 @@
+## [2025-06-17] - v0.14.0
+
+
+### Changed:
+
+- Add `Select` design tokens and update styles to match Akamai Design System ([#12124](https://github.com/linode/manager/pull/12124))
+
+### Fixed:
+
+- Update destructive (danger) and secondary (outlined) button styling ([#12299](https://github.com/linode/manager/pull/12299))
+
 ## [2025-06-03] - v0.13.0
 
 ### Changed:

@@ -84,7 +84,6 @@ export const baseConfig = [
       'comma-dangle': 'off',
       curly: 'warn',
       eqeqeq: 'warn',
-      'no-await-in-loop': 'error',
       'no-bitwise': 'error',
       'no-caller': 'error',
       'no-case-declarations': 'warn',
@@ -355,7 +354,10 @@ export const baseConfig = [
               ],
             ];
           }
-          if (rule === 'prefer-explicit-assert') {
+          if (
+            rule === 'prefer-explicit-assert' ||
+            rule === 'prefer-screen-queries'
+          ) {
             return [`testing-library/${rule}`, 'off'];
           }
           // All other rules just get set to warn
@@ -403,13 +405,17 @@ export const baseConfig = [
   {
     files: [
       // for each new features added to the migration router, add its directory here
+      'src/features/Account/**/*',
+      'src/features/Billing/**/*',
       'src/features/Betas/**/*',
       'src/features/CloudPulse/**/*',
       'src/features/Databases/**/*',
       'src/features/Domains/**/*',
       'src/features/DataStream/**/*',
+      'src/features/Events/**/*',
       'src/features/Firewalls/**/*',
       'src/features/Help/**/*',
+      'src/features/IAM/**/*',
       'src/features/Images/**/*',
       'src/features/Kubernetes/**/*',
       'src/features/Longview/**/*',
@@ -417,11 +423,13 @@ export const baseConfig = [
       'src/features/NodeBalancers/**/*',
       'src/features/ObjectStorage/**/*',
       'src/features/PlacementGroups/**/*',
+      'src/features/Profile/**/*',
       'src/features/Search/**/*',
       'src/features/TopMenu/SearchBar/**/*',
       'src/components/Tag/**/*',
       'src/features/StackScripts/**/*',
       'src/features/Support/**/*',
+      'src/features/Users/**/*',
       'src/features/Volumes/**/*',
       'src/features/VPCs/**/*',
     ],

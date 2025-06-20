@@ -1,7 +1,6 @@
 import { useSSHKeysQuery } from '@linode/queries';
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -142,7 +141,3 @@ export const SSHKeys = () => {
     </Stack>
   );
 };
-
-export const SSHKeysLazyRoute = createLazyRoute('/profile/keys')({
-  component: SSHKeys,
-});

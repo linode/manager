@@ -25,9 +25,9 @@ describe('Notifications', () => {
 
     await waitFor(() => {
       expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('checkbox')).toBeChecked();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
     expect(
       getByText('Email alerts for account activity are enabled')
     ).toBeVisible();

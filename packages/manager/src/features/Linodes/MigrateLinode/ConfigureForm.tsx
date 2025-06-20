@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
@@ -6,11 +6,10 @@ import * as React from 'react';
 import { Flag } from 'src/components/Flag';
 import { PlacementGroupsSelect } from 'src/components/PlacementGroupsSelect/PlacementGroupsSelect';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
-import { MTC } from 'src/features/components/PlansPanel/constants';
+import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/constants';
 import { NO_PLACEMENT_GROUPS_IN_SELECTED_REGION_MESSAGE } from 'src/features/PlacementGroups/constants';
 import { useIsPlacementGroupsEnabled } from 'src/features/PlacementGroups/utils';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 import { getRegionCountryGroup } from 'src/utilities/formatRegion';
 import { getLinodeBackupPrice } from 'src/utilities/pricing/backups';
 import { PRICES_RELOAD_ERROR_NOTICE_TEXT } from 'src/utilities/pricing/constants';
@@ -158,9 +157,7 @@ export const ConfigureForm = React.memo((props: Props) => {
 
       // If mtc2025 flag is enabled, apply MTC region filtering.
       if (flags.mtc2025) {
-        const isMtcRegion = MTC['availability_regions'].includes(
-          eachRegion.id as (typeof MTC)['availability_regions'][number]
-        );
+        const isMtcRegion = MTC_SUPPORTED_REGIONS.includes(eachRegion.id);
 
         // For MTC Linodes, only show MTC regions.
         // For non-MTC Linodes, exclude MTC regions.

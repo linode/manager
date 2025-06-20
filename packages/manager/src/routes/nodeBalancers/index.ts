@@ -55,8 +55,8 @@ const nodeBalancerDetailConfigurationsRoute = createRoute({
 );
 
 const nodeBalancerDetailConfigurationRoute = createRoute({
-  getParentRoute: () => nodeBalancersRoute,
-  path: '$id/configurations/$configId',
+  getParentRoute: () => nodeBalancerDetailConfigurationsRoute,
+  path: '$configId',
 }).lazy(() =>
   import('./nodeBalancersLazyRoutes').then((m) => m.nodeBalancerDetailLazyRoute)
 );

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { UpdateEntitiesDrawer } from './UpdateEntitiesDrawer';
 
@@ -12,16 +12,25 @@ import type { ExtendedRoleView } from '../types';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
-  useAccountPermissions: vi.fn().mockReturnValue({}),
-  useAccountUserPermissions: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
+  useAccountRoles: vi.fn().mockReturnValue({}),
+  useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
-    useAccountPermissions: queryMocks.useAccountPermissions,
-    useAccountUserPermissions: queryMocks.useAccountUserPermissions,
+    useAccountRoles: queryMocks.useAccountRoles,
+    useUserRoles: queryMocks.useUserRoles,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
   };
 });
 
@@ -39,7 +48,7 @@ const mockEntities = [
 ];
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
@@ -67,7 +76,7 @@ const mockUpdateUserRole = vi.fn();
 vi.mock('@linode/api-v4', async () => {
   return {
     ...(await vi.importActual<any>('@linode/api-v4')),
-    updateUserPermissions: (username: string, data: any) => {
+    updateUserRoles: (username: string, data: any) => {
       mockUpdateUserRole(data);
       return Promise.resolve(props);
     },
@@ -75,8 +84,14 @@ vi.mock('@linode/api-v4', async () => {
 });
 
 describe('UpdateEntitiesDrawer', () => {
-  it('should render correctly', () => {
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+  });
+
+  it('should render correctly', async () => {
+    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the title renders
     expect(screen.getByText('Update List of Entities')).toBeVisible();
@@ -90,8 +105,8 @@ describe('UpdateEntitiesDrawer', () => {
     expect(screen.getByText(mockRole.name)).toBeVisible();
   });
 
-  it('should prefill the form with assigned entities', () => {
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+  it('should prefill the form with assigned entities', async () => {
+    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
 
     // Verify the prefilled entities
     expect(screen.getByText('Linode 1')).toBeVisible();
@@ -101,7 +116,7 @@ describe('UpdateEntitiesDrawer', () => {
     queryMocks.useAccountEntities.mockReturnValue({
       data: makeResourcePage(mockEntities),
     });
-    queryMocks.useAccountUserPermissions.mockReturnValue({
+    queryMocks.useUserRoles.mockReturnValue({
       data: {
         account_access: ['account_linode_admin', 'account_admin'],
         entity_access: [
@@ -114,7 +129,7 @@ describe('UpdateEntitiesDrawer', () => {
       },
     });
 
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
 
     const autocomplete = screen.getByRole('combobox');
 
@@ -160,7 +175,7 @@ describe('UpdateEntitiesDrawer', () => {
   });
 
   it('should close the drawer when cancel is clicked', async () => {
-    renderWithTheme(<UpdateEntitiesDrawer {...props} />);
+    await renderWithThemeAndRouter(<UpdateEntitiesDrawer {...props} />);
 
     // Click the cancel button
     const cancelButton = screen.getByTestId('cancel');

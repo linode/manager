@@ -7,17 +7,18 @@ import {
   TextField,
   Toggle,
 } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { withRouter } from 'react-router-dom';
-import type { RouteComponentProps } from 'react-router-dom';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import type { User } from '@linode/api-v4/lib/account';
 import type { APIError } from '@linode/api-v4/lib/types';
+import type { UseNavigateResult } from '@tanstack/react-router';
 
-interface Props {
+interface CreateUserDrawerProps {
+  navigate: UseNavigateResult<'/account/users'>;
   onClose: () => void;
   open: boolean;
   refetch: () => void;
@@ -31,9 +32,19 @@ interface State {
   username: string;
 }
 
-interface CreateUserDrawerProps extends Props, RouteComponentProps<{}> {}
+const withNavigation = (
+  WrappedComponent: React.ComponentType<CreateUserDrawerProps>
+) => {
+  return (props: CreateUserDrawerProps) => {
+    const navigate = useNavigate();
+    return <WrappedComponent {...props} navigate={navigate} />;
+  };
+};
 
-class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
+class CreateUserDrawerComponent extends React.Component<
+  CreateUserDrawerProps,
+  State
+> {
   state: State = {
     email: '',
     errors: [],
@@ -77,11 +88,7 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
   };
 
   onSubmit = () => {
-    const {
-      history: { push },
-      onClose,
-      refetch,
-    } = this.props;
+    const { onClose, refetch, navigate } = this.props;
     const { email, restricted, username } = this.state;
     this.setState({ errors: [], submitting: true });
     createUser({ email, restricted, username })
@@ -89,8 +96,9 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
         this.setState({ submitting: false });
         onClose();
         if (user.restricted) {
-          push(`/account/users/${username}/permissions`, {
-            newUsername: user.username,
+          navigate({
+            to: '/account/users/$username/permissions',
+            params: { username: user.username },
           });
         }
         refetch();
@@ -178,4 +186,4 @@ class CreateUserDrawer extends React.Component<CreateUserDrawerProps, State> {
   }
 }
 
-export default withRouter(CreateUserDrawer);
+export const CreateUserDrawer = withNavigation(CreateUserDrawerComponent);

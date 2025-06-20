@@ -11,7 +11,7 @@ import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
 import type { EnhancedAutocompleteProps } from './Autocomplete';
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const LABEL = 'Select a Linode';
 
@@ -114,7 +114,7 @@ const meta: Meta<EnhancedAutocompleteProps<OptionType>> = {
   },
   component: Autocomplete,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ marginLeft: '2em', minHeight: 270 }}>
         <Story />
       </div>

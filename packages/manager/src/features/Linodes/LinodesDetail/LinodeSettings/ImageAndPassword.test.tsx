@@ -62,7 +62,6 @@ describe('ImageAndPassword', () => {
     });
 
     for (const user of users) {
-      // eslint-disable-next-line no-await-in-loop
       const username = await findByText(user.username);
       const tableRow = username.closest('tr');
 

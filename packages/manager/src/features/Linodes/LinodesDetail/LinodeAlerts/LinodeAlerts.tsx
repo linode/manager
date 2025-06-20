@@ -6,14 +6,19 @@ import { useParams } from 'react-router-dom';
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { AclpPreferenceToggle } from '../AclpPreferenceToggle';
+import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
 
-const LinodeAlerts = () => {
+interface Props {
+  isAclpAlertsSupportedRegionLinode: boolean;
+}
+
+const LinodeAlerts = (props: Props) => {
+  const { isAclpAlertsSupportedRegionLinode } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
@@ -27,8 +32,14 @@ const LinodeAlerts = () => {
 
   return (
     <Box>
-      {flags.aclpIntegration ? <AclpPreferenceToggle type="alerts" /> : null}
-      {flags.aclpIntegration && isAclpAlertsPreferenceBeta ? (
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="alerts" />
+        )}
+
+      {aclpBetaServices?.linode?.alerts &&
+      isAclpAlertsSupportedRegionLinode &&
+      isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId}

@@ -10,6 +10,7 @@ import {
 } from '@paypal/react-paypal-js';
 import { useQueryClient } from '@tanstack/react-query';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { reportException } from 'src/exceptionReporting';
@@ -128,7 +129,7 @@ export const PayPalButton = (props: Props) => {
    * Needed to pass dynamic amount to PayPal without re-render
    * https://github.com/paypal/react-paypal-js/issues/161
    */
-  const stateRef = React.useRef<TransactionInfo>();
+  const stateRef = React.useRef<TransactionInfo>(undefined);
 
   const [transaction, setTransaction] = React.useState<TransactionInfo>({
     amount: usd,

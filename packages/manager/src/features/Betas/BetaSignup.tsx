@@ -1,4 +1,4 @@
-import { useCreateAccountBetaMutation } from '@linode/queries';
+import { useBetaQuery, useCreateAccountBetaMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Checkbox,
@@ -18,7 +18,6 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader/LandingHeader';
 import { Markdown } from 'src/components/Markdown/Markdown';
-import { useBetaQuery } from 'src/queries/betas';
 
 export const BetaSignup = () => {
   const betaAgreement = `### Early Adopter Testing Program

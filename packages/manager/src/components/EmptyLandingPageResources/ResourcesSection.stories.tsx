@@ -10,7 +10,7 @@ import {
 
 import { ResourcesSection } from './ResourcesSection';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta: Meta<typeof ResourcesSection> = {
   args: {
@@ -31,7 +31,7 @@ const meta: Meta<typeof ResourcesSection> = {
   },
   component: ResourcesSection,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '1em' }}>
         <Story />
       </div>

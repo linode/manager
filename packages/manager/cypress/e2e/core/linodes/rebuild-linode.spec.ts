@@ -360,7 +360,7 @@ describe('rebuild linode', () => {
     });
     const linode = linodeFactory.build({
       region: region.id,
-      // has_user_data: true - add this when we add the type to make this test more realistic
+      has_user_data: true,
     });
     const image = imageFactory.build({
       capabilities: ['cloud-init'],
@@ -386,8 +386,10 @@ describe('rebuild linode', () => {
       // Type a root password
       assertPasswordComplexity(rootPassword, 'Good');
 
-      // Open the User Data accordion
-      ui.accordionHeading.findByTitle('Add User Data').scrollIntoView().click();
+      // Verify a "info" notice shows because this Linode has existing user data
+      cy.findByText(
+        'Adding new user data is recommended as part of the rebuild process.'
+      ).should('be.visible');
 
       // Verify the reuse checkbox is not checked by default and check it
       cy.findByLabelText(

@@ -31,6 +31,7 @@ const props: Props = {
   clusterId: 1,
   clusterTier: 'standard',
   encryptionStatus: 'enabled',
+  isLkeClusterRestricted: false,
   nodes: mockKubeNodes,
   openRecycleNodeDialog: vi.fn(),
   poolId: 1,
