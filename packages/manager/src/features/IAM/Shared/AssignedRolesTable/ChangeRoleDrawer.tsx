@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -6,19 +11,19 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountPermissions,
-  useAccountUserPermissions,
-  useAccountUserPermissionsMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { getAllRoles, getRoleByName, updateUserRoles } from '../utilities';
+import {
+  changeUserRole,
+  getAllRoles,
+  getErrorMessage,
+  getRoleByName,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
@@ -32,15 +37,14 @@ interface Props {
 
 export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
-  const { data: accountPermissions, isLoading: accountPermissionsLoading } =
-    useAccountPermissions();
+  const { data: accountRoles, isLoading: accountPermissionsLoading } =
+    useAccountRoles();
 
-  const { data: assignedRoles } = useAccountUserPermissions(username ?? '');
+  const { data: assignedRoles } = useUserRoles(username ?? '');
 
-  const { mutateAsync: updateUserPermissions } =
-    useAccountUserPermissionsMutation(username);
+  const { mutateAsync: updateUserRoles } = useUserRolesMutation(username);
 
   const formattedAssignedEntities: EntitiesOption[] = React.useMemo(() => {
     if (!role || !role.entity_names || !role.entity_ids) {
@@ -55,14 +59,14 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
   // filtered roles by entity_type and access
   const allRoles = React.useMemo(() => {
-    if (!accountPermissions) {
+    if (!accountRoles) {
       return [];
     }
 
-    return getAllRoles(accountPermissions).filter(
+    return getAllRoles(accountRoles).filter(
       (el) => el.entity_type === role?.entity_type && el.access === role?.access
     );
-  }, [accountPermissions, role]);
+  }, [accountRoles, role]);
 
   const {
     control,
@@ -83,12 +87,12 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
   // Get the selected role based on the `selectedOptions`
   const selectedRole = React.useMemo(() => {
-    if (!selectedOptions || !accountPermissions) {
+    if (!selectedOptions || !accountRoles) {
       return null;
     }
 
-    return getRoleByName(accountPermissions, selectedOptions.value);
-  }, [selectedOptions, accountPermissions]);
+    return getRoleByName(accountRoles, selectedOptions.value);
+  }, [selectedOptions, accountRoles]);
 
   const onSubmit = async (data: { roleName: RolesType }) => {
     if (role?.name === data.roleName.label) {
@@ -100,20 +104,20 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
       const newRole = data.roleName.label;
       const access = data.roleName.access;
 
-      const updatedUserRoles = updateUserRoles({
+      const updatedUserRoles = changeUserRole({
         access,
         assignedRoles,
         initialRole,
         newRole,
       });
 
-      await updateUserPermissions(updatedUserRoles);
+      await updateUserRoles(updatedUserRoles);
 
       handleClose();
     } catch (errors) {
-      for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
-      }
+      setError('root', {
+        message: getErrorMessage(errors),
+      });
     }
   };
 
@@ -137,7 +141,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
           <Link to=""> Learn more about roles and permissions.</Link>
         </Typography>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
           Change from role <strong>{role?.name}</strong> to:
         </Typography>
 
@@ -152,6 +156,7 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
+              sx={{ marginBottom: theme.spacingFunction(16) }}
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
               value={field.value || null}
             />

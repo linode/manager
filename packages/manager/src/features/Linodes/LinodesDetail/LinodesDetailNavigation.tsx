@@ -1,5 +1,11 @@
-import { useLinodeQuery, usePreferences } from '@linode/queries';
+import {
+  useLinodeQuery,
+  usePreferences,
+  useRegionsQuery,
+  useTypeQuery,
+} from '@linode/queries';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
+import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
 import {
@@ -18,7 +24,6 @@ import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
-import { useTypeQuery } from 'src/queries/types';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
@@ -45,7 +50,7 @@ const LinodesDetailNavigation = () => {
   const { data: linode, error } = useLinodeQuery(id);
   const { url } = useRouteMatch();
   const history = useHistory();
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: aclpPreferences } = usePreferences((preferences) => ({
     isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
     isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
@@ -59,10 +64,27 @@ const LinodesDetailNavigation = () => {
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = type?.class === 'metal';
 
+  const { data: regions } = useRegionsQuery();
+
+  const isAclpMetricsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    regions,
+    type: 'metrics',
+  });
+
+  const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
+    capability: 'Linodes',
+    regionId: linode?.region,
+    regions,
+    type: 'alerts',
+  });
+
   const tabs = [
     {
       chip:
-        flags.aclpIntegration &&
+        aclpBetaServices?.linode?.metrics &&
+        isAclpMetricsSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
@@ -94,7 +116,9 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpIntegration && aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode &&
+        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : null,
       routeName: `${url}/alerts`,
@@ -163,7 +187,13 @@ const LinodesDetailNavigation = () => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeMetrics linodeCreated={linode?.created} linodeId={id} />
+                <LinodeMetrics
+                  isAclpMetricsSupportedRegionLinode={
+                    isAclpMetricsSupportedRegionLinode
+                  }
+                  linodeCreated={linode?.created}
+                  linodeId={id}
+                />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
@@ -186,7 +216,11 @@ const LinodesDetailNavigation = () => {
                 <LinodeActivity />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
-                <LinodeAlerts />
+                <LinodeAlerts
+                  isAclpAlertsSupportedRegionLinode={
+                    isAclpAlertsSupportedRegionLinode
+                  }
+                />
               </SafeTabPanel>
               <SafeTabPanel index={idx++}>
                 <LinodeSettings />

@@ -25,15 +25,8 @@ vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
-  };
-});
-
-vi.mock('src/queries/types', async () => {
-  const actual = await vi.importActual('src/queries/types');
-  return {
-    ...actual,
     useAllTypes: queryMocks.useAllTypes,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
     useTypeQuery: queryMocks.useTypeQuery,
   };
 });
@@ -157,7 +150,6 @@ describe('BackupDrawer', () => {
         <BackupDrawer onClose={vi.fn()} open={true} />
       );
       // Confirm that Linodes without backups are listed in table.
-      /* eslint-disable no-await-in-loop */
       for (const mockLinode of mockLinodesWithoutBackups) {
         expect(await findByText(mockLinode.label)).toBeVisible();
       }

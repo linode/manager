@@ -4,6 +4,7 @@ import { Hidden } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { Link } from 'src/components/Link';
@@ -341,7 +342,7 @@ const getIPRangesCellContents = (
 
 export const SubnetLinodeTableRowHead = (
   <TableRow>
-    <TableCell>Linode</TableCell>
+    <TableCell sx={{ width: '24%' }}>Linode</TableCell>
     <TableCell sx={{ width: '14%' }}>Status</TableCell>
     <Hidden smDown>
       <TableCell>VPC IPv4</TableCell>

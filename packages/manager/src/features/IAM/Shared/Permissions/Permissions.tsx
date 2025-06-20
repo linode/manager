@@ -19,7 +19,7 @@ type Props = {
   permissions: PermissionType[];
 };
 
-export const Permissions = ({ permissions }: Props) => {
+export const Permissions = React.memo(({ permissions }: Props) => {
   const [showAll, setShowAll] = React.useState(false);
 
   const { calculateHiddenItems, containerRef, itemRefs, numHiddenItems } =
@@ -31,16 +31,11 @@ export const Permissions = ({ permissions }: Props) => {
   );
 
   React.useEffect(() => {
-    // Ensure calculateHiddenItems runs after layout stabilization on initial render
-    const rafId = requestAnimationFrame(() => calculateHiddenItems());
-
     window.addEventListener('resize', handleResize);
-
     return () => {
-      cancelAnimationFrame(rafId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [calculateHiddenItems, handleResize]);
+  }, [handleResize]);
 
   // TODO: update the link for TooltipIcon when it's ready - UIE-8534
   return (
@@ -52,13 +47,15 @@ export const Permissions = ({ permissions }: Props) => {
           to understand what access is granted by this role.
         </Typography>
       ) : (
-        <StyledContainer>
+        <StyledContainer data-testid="container">
           <StyledClampedContent ref={containerRef} showAll={showAll}>
             {permissions.map((permission: PermissionType, index: number) => (
               <StyledPermissionItem
                 data-testid="permission"
                 key={permission}
-                ref={(el: HTMLSpanElement) => (itemRefs.current[index] = el)}
+                ref={(el: HTMLSpanElement) => {
+                  itemRefs.current[index] = el;
+                }}
               >
                 {permission}
               </StyledPermissionItem>
@@ -68,10 +65,13 @@ export const Permissions = ({ permissions }: Props) => {
           {(numHiddenItems > 0 || showAll) && (
             <StyledBox>
               <StyledLinkButton
-                onClick={() => setShowAll(!showAll)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowAll(!showAll);
+                }}
                 type="button"
               >
-                {showAll ? 'Hide' : ` Expand (+${numHiddenItems})`}
+                {showAll ? 'Hide' : `Expand (+${numHiddenItems})`}
               </StyledLinkButton>
             </StyledBox>
           )}
@@ -79,4 +79,4 @@ export const Permissions = ({ permissions }: Props) => {
       )}
     </Grid>
   );
-};
+});

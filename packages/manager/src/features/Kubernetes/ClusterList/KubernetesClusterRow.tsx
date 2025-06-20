@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useRegionsQuery, useSpecificTypes } from '@linode/queries';
 import { Chip, Stack } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import React from 'react';
@@ -9,7 +9,6 @@ import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useSpecificTypes } from 'src/queries/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 
 import {
