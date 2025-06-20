@@ -1,11 +1,5 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import {
-  Box,
-  Button,
-  CircleProgress,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { Button } from 'akamai-cds-react-components';
