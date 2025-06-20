@@ -1,12 +1,12 @@
+import { useUserRoles, useUserRolesMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useTheme } from '@mui/material';
 import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
-import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
-
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
+import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../constants';
 import { toEntityAccess } from '../utilities';
 
 import type { EntitiesOption, ExtendedRoleView } from '../types';
@@ -93,7 +93,9 @@ export const UpdateEntitiesDrawer = ({ onClose, open, role }: Props) => {
       handleClose();
     } catch (errors) {
       for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
+        setError(error?.field ?? 'root', {
+          message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+        });
       }
     }
   };

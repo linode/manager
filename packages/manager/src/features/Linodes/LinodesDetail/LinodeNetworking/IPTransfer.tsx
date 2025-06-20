@@ -18,6 +18,7 @@ import { usePrevious } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 

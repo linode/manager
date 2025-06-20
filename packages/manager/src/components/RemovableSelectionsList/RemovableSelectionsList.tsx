@@ -1,5 +1,6 @@
 import { Box, CloseIcon, IconButton } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import {
   SelectedOptionsHeader,

@@ -1,3 +1,4 @@
+import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -8,7 +9,6 @@ import type {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
-import type { MaintenancePolicyId } from 'src/account';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -43,7 +43,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy_id?: MaintenancePolicyId;
+  maintenance_policy_id?: number;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -538,6 +538,10 @@ export interface CreateLinodePlacementGroupPayload {
 }
 
 export interface CreateLinodeRequest {
+  /**
+   * Beta Aclp alerts
+   */
+  alerts?: CloudPulseAlertsPayload | null;
   /**
    * A list of public SSH keys that will be automatically appended to the root user’s
    * `~/.ssh/authorized_keys`file when deploying from an Image.
