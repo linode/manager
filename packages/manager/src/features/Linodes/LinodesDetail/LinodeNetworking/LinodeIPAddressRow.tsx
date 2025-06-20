@@ -15,8 +15,8 @@ import { TableCell } from 'src/components/TableCell';
 import { StyledTableRow } from 'src/features/Linodes/LinodeEntityDetail.styles';
 
 import { LinodeNetworkingActionMenu } from './LinodeNetworkingActionMenu';
+import { disableIPRow } from './utilities';
 
-import type { IPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4';
 import type { IPv6 } from 'ipaddr.js';
 import type { IPDisplay } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeIPAddresses';
@@ -229,36 +229,4 @@ export const listIPv6InRange = (
       return false;
     }
   });
-};
-
-export const disableIPRow = (inputs: {
-  hasLinodeInterfaces: boolean | undefined;
-  hasPublicLinodeInterface: boolean | undefined;
-  ipType: IPTypes;
-  isLinodeInterface: boolean;
-  isVPCOnlyLinode: boolean;
-}) => {
-  const {
-    isLinodeInterface,
-    hasLinodeInterfaces,
-    hasPublicLinodeInterface,
-    isVPCOnlyLinode,
-    ipType,
-  } = inputs;
-
-  if (isLinodeInterface) {
-    if (
-      (!hasPublicLinodeInterface && isVPCOnlyLinode) ||
-      !hasLinodeInterfaces
-    ) {
-      return ipType === 'Public – IPv4' || ipType === 'Public – IPv6 – SLAAC';
-    }
-
-    if (!hasPublicLinodeInterface) {
-      return ipType === 'Public – IPv6 – SLAAC';
-    }
-  }
-
-  // IPv4 will always be disabled if Linode is VPC only Linode
-  return isVPCOnlyLinode && ipType === 'Public – IPv4';
 };
