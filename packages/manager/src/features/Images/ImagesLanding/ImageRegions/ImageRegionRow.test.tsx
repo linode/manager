@@ -13,7 +13,7 @@ describe('ImageRegionRow', () => {
     const region = regionFactory.build({ id: 'us-east', label: 'Newark, NJ' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

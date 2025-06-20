@@ -9,7 +9,6 @@ import {
   getChildAccounts,
   getClientToken,
   getGrants,
-  getMaintenancePolicies,
   getNetworkUtilization,
   getOAuthClients,
   getUser,
@@ -22,6 +21,7 @@ import {
   getAllAccountInvoices,
   getAllAccountMaintenance,
   getAllAccountPayments,
+  getAllMaintenancePolicies,
   getAllNotifications,
   getAllPaymentMethodsRequest,
 } from './requests';
@@ -89,7 +89,7 @@ export const accountQueries = createQueryKeys('account', {
         queryKey: [params, filter],
       }),
       policies: {
-        queryFn: getMaintenancePolicies,
+        queryFn: getAllMaintenancePolicies,
         queryKey: null,
       },
     },
