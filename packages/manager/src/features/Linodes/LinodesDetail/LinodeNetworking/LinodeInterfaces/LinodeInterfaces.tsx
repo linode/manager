@@ -7,6 +7,7 @@ import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
 import { EditInterfaceDrawerContents } from './EditInterfaceDrawer/EditInterfaceDrawerContent';
 import { InterfaceDetailsDrawer } from './InterfaceDetailsDrawer/InterfaceDetailsDrawer';
 import { InterfaceSettingsForm } from './InterfaceSettingsForm';
+import { HistoryDialog } from './LinodeInterfacesHistory/HistoryDialog';
 import { LinodeInterfacesTable } from './LinodeInterfacesTable';
 
 interface Props {
@@ -40,6 +41,10 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
     history.replace(`${location.pathname}/interfaces/${interfaceId}`);
   };
 
+  const onShowHistory = () => {
+    history.replace(`${location.pathname}/history`);
+  };
+
   return (
     <Box>
       <Paper
@@ -54,7 +59,13 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       >
         <Typography variant="h3">Network Interfaces</Typography>
         <Stack direction="row" spacing={1}>
-          <Button onClick={() => setIsSettingsDrawerOpen(true)}>
+          <Button buttonType="secondary" onClick={onShowHistory}>
+            Interface History
+          </Button>
+          <Button
+            buttonType="outlined"
+            onClick={() => setIsSettingsDrawerOpen(true)}
+          >
             Interface Settings
           </Button>
           <Button buttonType="primary" onClick={() => setIsAddDrawerOpen(true)}>
@@ -83,6 +94,11 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
         linodeId={linodeId}
         onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
         open={location.pathname.includes('networking/interfaces')}
+      />
+      <HistoryDialog
+        linodeId={linodeId}
+        onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
+        open={location.pathname.includes('networking/history')}
       />
       <Drawer
         onClose={() => setIsEditDrawerOpen(false)}
