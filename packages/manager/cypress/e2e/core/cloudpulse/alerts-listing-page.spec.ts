@@ -35,7 +35,13 @@ const alertDefinitionsUrl = '/alerts/definitions';
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+const flags: Partial<Flags> = {
+  aclp: { beta: true, enabled: true },
+  aclpBetaServices: {
+    dbaas: { metrics: true, alerts: true },
+    linode: { metrics: true, alerts: true },
+  },
+};
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
@@ -167,7 +173,7 @@ const validateAlertDetails = (alert: Alert) => {
   cy.get(`[data-qa-alert-cell="${id}"]`).within(() => {
     cy.findByText(cloudPulseServiceMap[service_type])
       .should('be.visible')
-      .and('have.text', cloudPulseServiceMap[service_type]);
+      .and('have.text', `${cloudPulseServiceMap[service_type]} beta`);
 
     cy.findByText(alertStatuses[status])
       .should('be.visible')
