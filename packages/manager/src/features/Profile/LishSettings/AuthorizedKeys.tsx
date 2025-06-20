@@ -21,6 +21,8 @@ export const AuthorizedKeys = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const values = {
+    // I'm mapping the keys from a string to an object because react-hook-form's
+    // `useFieldArray` helper only works on arrays of objects.
     authorized_keys: profile?.authorized_keys?.map((key) => ({ key })) ?? [
       { key: '' },
     ],
@@ -103,6 +105,7 @@ export const AuthorizedKeys = () => {
                     noMarginTop
                     onChange={field.onChange}
                     onPaste={(e) => {
+                      // Allows pasting comma seperated lists of ssh keys
                       e.preventDefault();
                       const pastedItems = e.clipboardData
                         .getData('text')
