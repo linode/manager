@@ -58,7 +58,7 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
       });
   });
 
-  it('Alerts downgrade button not appear and legacy UI displays when isAclpAlertsBeta is true', function () {
+  it('Alerts downgrade button does not appear and legacy UI displays when isAclpAlertsBeta is true', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: true,
     } as Partial<UserPreferences>);
