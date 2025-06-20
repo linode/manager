@@ -18,7 +18,7 @@ const LinodeAlerts = (props: Props) => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
@@ -32,11 +32,12 @@ const LinodeAlerts = (props: Props) => {
 
   return (
     <Box>
-      {flags.aclpBetaServices?.alerts && isAclpAlertsSupportedRegionLinode && (
-        <AclpPreferenceToggle type="alerts" />
-      )}
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="alerts" />
+        )}
 
-      {flags.aclpBetaServices?.alerts &&
+      {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
       isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View

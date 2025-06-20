@@ -44,7 +44,7 @@ const LinodesDetailNavigation = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: aclpPreferences } = usePreferences((preferences) => ({
     isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
     isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
@@ -77,7 +77,7 @@ const LinodesDetailNavigation = () => {
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
       chip:
-        flags.aclpBetaServices?.metrics &&
+        aclpBetaServices?.linode?.metrics &&
         isAclpMetricsSupportedRegionLinode &&
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
@@ -110,7 +110,7 @@ const LinodesDetailNavigation = () => {
     },
     {
       chip:
-        flags.aclpBetaServices?.alerts &&
+        aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode &&
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
