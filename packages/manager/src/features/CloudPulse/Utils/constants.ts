@@ -50,3 +50,7 @@ export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
 export const PORTS_LIMIT_ERROR_MESSAGE = 'Enter a maximum of 15 port numbers';
+export const NO_REGION_MESSAGE: Record<string, string> = {
+  dbaas: 'No database clusters configured in any regions.',
+  linode: 'No linodes configured in any regions.',
+};
