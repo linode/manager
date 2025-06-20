@@ -9,7 +9,7 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertDefinitionGroup = 'account' | 'entity' | 'region';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
@@ -239,7 +239,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
-  scope: AlertDefinitionGroup;
+  scope: AlertDefinitionScope;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
