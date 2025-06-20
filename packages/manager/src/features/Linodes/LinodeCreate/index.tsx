@@ -3,6 +3,7 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
   useMutateAccountAgreements,
+  usePreferences,
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
@@ -23,6 +24,7 @@ import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import {
@@ -80,6 +82,12 @@ export const LinodeCreate = () => {
   const { data: profile } = useProfile();
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
 
+  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpAlertsBeta
+  );
+
+  const { aclpBetaServices } = useFlags();
+
   const queryClient = useQueryClient();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
@@ -124,7 +132,11 @@ export const LinodeCreate = () => {
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
-    const payload = getLinodeCreatePayload(values, isLinodeInterfacesEnabled);
+    const payload = getLinodeCreatePayload(values, {
+      isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+      isAclpIntegration: aclpBetaServices?.linode?.alerts,
+      isAclpAlertsPreferenceBeta,
+    });
 
     try {
       const linode =
