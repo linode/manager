@@ -1,5 +1,6 @@
 export * from './account.schema';
 export * from './buckets.schema';
+export * from './cloudnats.schema';
 export * from './cloudpulse.schema';
 export * from './databases.schema';
 export * from './domains.schema';
