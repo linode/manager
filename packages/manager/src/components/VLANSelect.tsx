@@ -68,6 +68,9 @@ export const VLANSelect = (props: Props) => {
       // If the value gets cleared, make sure the TextField's value also gets cleared.
       setInputValue('');
     }
+    if (value && !inputValue) {
+      setInputValue(value);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
@@ -108,27 +111,24 @@ export const VLANSelect = (props: Props) => {
         option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
       helperText={helperText}
-      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
-      isOptionEqualToValue={(option1, options2) =>
-        option1.label === options2.label
+      inputValue={selectedVLAN && !open ? selectedVLAN.label : inputValue}
+      isOptionEqualToValue={(option1, option2) =>
+        option1.label === option2.label
       }
       label="VLAN"
-      ListboxProps={{
-        onScroll: (event: React.SyntheticEvent) => {
-          const listboxNode = event.currentTarget;
-          if (
-            listboxNode.scrollTop + listboxNode.clientHeight >=
-              listboxNode.scrollHeight &&
-            hasNextPage
-          ) {
-            fetchNextPage();
-          }
-        },
-      }}
       loading={isFetching}
       noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
-      onBlur={onBlur}
+      onBlur={() => {
+        if (onBlur) {
+          onBlur();
+        }
+        if (inputValue !== value) {
+          // if our input value's changed but we didn't explicitly select the new input value, keep the old value
+          // if there is no pre-existing value selected, this clears the textfield
+          setInputValue(value ?? '');
+        }
+      }}
       onChange={(event, value) => {
         if (onChange) {
           onChange(value?.label ?? null);
@@ -151,6 +151,20 @@ export const VLANSelect = (props: Props) => {
       open={open}
       options={vlans}
       placeholder="Create or select a VLAN"
+      slotProps={{
+        listbox: {
+          onScroll: (event: React.SyntheticEvent) => {
+            const listboxNode = event.currentTarget;
+            if (
+              listboxNode.scrollTop + listboxNode.clientHeight >=
+                listboxNode.scrollHeight &&
+              hasNextPage
+            ) {
+              fetchNextPage();
+            }
+          },
+        },
+      }}
       sx={sx}
       value={selectedVLAN}
     />
