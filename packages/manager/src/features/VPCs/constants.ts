@@ -23,9 +23,6 @@ export const REGIONAL_LINODE_MESSAGE =
 export const MULTIPLE_CONFIGURATIONS_MESSAGE =
   'This Linode has multiple configurations. Select which configuration you would like added to the subnet.';
 
-export const NB_AUTO_ASSIGN_CIDR_TOOLTIP =
-  "Automatically allocates a /30 CIDR for the NodeBalancer's backend interface. If the range doesn't have enough available IPs, the creation fails.";
-
 export const VPC_AUTO_ASSIGN_IPV4_TOOLTIP =
   'Automatically assign an IPv4 address as the private IP address for this Linode in the VPC.';
 

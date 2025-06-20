@@ -10,9 +10,10 @@ export interface Referrals {
 }
 
 export type TPAProvider = 'github' | 'google' | 'password';
+
 export interface Profile {
   authentication_type: TPAProvider;
-  authorized_keys: string[];
+  authorized_keys: null | string[];
   email: string;
   email_notifications: boolean;
   ip_whitelist_enabled: boolean;
