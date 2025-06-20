@@ -14,7 +14,7 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
 
-import type { Linode } from '@linode/api-v4';
+import type { LinodeWithLegacyAlerts } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
@@ -34,7 +34,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
     linodeId !== undefined
-  );
+  ) as { data: LinodeWithLegacyAlerts };
 
   const {
     error,
@@ -67,7 +67,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         transfer_quota: linode?.alerts.transfer_quota ?? 0,
       };
 
-  const formik = useFormik<Linode['alerts']>({
+  const formik = useFormik<LinodeWithLegacyAlerts['alerts']>({
     enableReinitialize: true,
     initialValues,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {

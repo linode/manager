@@ -544,7 +544,7 @@ export interface CreateLinodeRequest {
    */
   alerts?: CloudPulseAlertsPayload | null;
   /**
-   * A list of public SSH keys that will be automatically appended to the root user’s
+   * A list of public SSH keys that will be automatically appended to the root user's
    * `~/.ssh/authorized_keys`file when deploying from an Image.
    */
   authorized_keys?: null | string[];
@@ -555,7 +555,7 @@ export interface CreateLinodeRequest {
    */
   authorized_users?: null | string[];
   /**
-   * A Backup ID from another Linode’s available backups.
+   * A Backup ID from another Linode's available backups.
    *
    * Your User must have read_write access to that Linode,
    * the Backup must have a status of successful,
@@ -606,7 +606,7 @@ export interface CreateLinodeRequest {
    */
   interface_generation?: InterfaceGenerationType | null;
   /**
-   * An array of Network Interfaces to add to this Linode’s Configuration Profile.
+   * An array of Network Interfaces to add to this Linode's Configuration Profile.
    */
   interfaces?: CreateLinodeInterfacePayload[] | InterfacePayload[];
   /**
@@ -615,7 +615,7 @@ export interface CreateLinodeRequest {
    */
   ipv4?: string[];
   /**
-   * The Linode’s label is for display purposes only.
+   * The Linode's label is for display purposes only.
    * If no label is provided for a Linode, a default will be assigned.
    */
   label?: null | string;
@@ -647,7 +647,7 @@ export interface CreateLinodeRequest {
    */
   region: string;
   /**
-   * This sets the root user’s password on a newly-created Linode Disk when deploying from an Image.
+   * This sets the root user's password on a newly-created Linode Disk when deploying from an Image.
    */
   root_pass?: string;
   /**
@@ -738,4 +738,12 @@ export interface LinodeLishData {
   monitor_url: string;
   weblish_url: string;
   ws_protocols: string[];
+}
+
+export interface LinodeWithCloudPulseAlerts extends Omit<Linode, 'alerts'> {
+  alerts: CloudPulseAlertsPayload;
+}
+
+export interface LinodeWithLegacyAlerts extends Omit<Linode, 'alerts'> {
+  alerts: LinodeAlerts;
 }
