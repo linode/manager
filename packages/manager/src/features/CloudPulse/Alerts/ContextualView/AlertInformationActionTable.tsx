@@ -232,8 +232,8 @@ export const AlertInformationActionTable = (
       const index = newPayload[alert.type]?.indexOf(alert.id);
 
       // If the alert is already in the payload, remove it, otherwise add it
-      if (index !== -1) {
-        newPayload[alert.type]?.splice(index ?? 0, 1);
+      if (index !== undefined && index !== -1) {
+        newPayload[alert.type]?.splice(index, 1);
       } else {
         newPayload[alert.type]?.push(alert.id);
       }
@@ -250,8 +250,8 @@ export const AlertInformationActionTable = (
       const index = newPayload[alert.type]?.indexOf(alert.id);
 
       // If the alert is already in the payload, remove it, otherwise add it
-      if (index !== -1) {
-        newPayload[alert.type]?.splice(index ?? 0, 1);
+      if (index !== undefined && index !== -1) {
+        newPayload[alert.type]?.splice(index, 1);
       } else {
         newPayload[alert.type]?.push(alert.id);
       }
