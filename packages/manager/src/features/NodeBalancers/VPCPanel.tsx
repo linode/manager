@@ -15,12 +15,10 @@ import {
 import { useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
+import { Code } from 'src/components/Code/Code';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import {
-  NB_AUTO_ASSIGN_CIDR_TOOLTIP,
-  NODEBALANCER_REGION_CAVEAT_HELPER_TEXT,
-} from '../VPCs/constants';
+import { NODEBALANCER_REGION_CAVEAT_HELPER_TEXT } from '../VPCs/constants';
 
 import type { APIError, NodeBalancerVpcPayload, VPC } from '@linode/api-v4';
 
@@ -53,6 +51,7 @@ export const VPCPanel = (props: Props) => {
   const { data: region } = useRegionQuery(regionSelected);
 
   const regionSupportsVPC = region?.capabilities.includes('VPCs') || false;
+  const vpcSelectDisabled = !!regionSelected && !regionSupportsVPC;
 
   const {
     data: vpcs,
@@ -81,12 +80,12 @@ export const VPCPanel = (props: Props) => {
         <Typography variant="h2">VPC</Typography>
         <Stack spacing={1.5}>
           <Typography>
-            Select a VPC if your NodeBalancer will use backend nodes within a
-            VPC.
+            Complete this section to allow this NodeBalancer to communicate with
+            backend nodes in a VPC.
           </Typography>
           <Autocomplete
             data-testid="vpc-select"
-            disabled={disabled}
+            disabled={disabled || vpcSelectDisabled}
             errorText={vpcError}
             helperText={
               regionSelected && !regionSupportsVPC
@@ -126,9 +125,7 @@ export const VPCPanel = (props: Props) => {
               <Notice
                 spacingBottom={16}
                 spacingTop={8}
-                text={
-                  'Once a NodeBalancer is created, its VPC configuration cannot be changed.'
-                }
+                text={"The VPC can't be changed after NodeBalancer creation."}
                 variant="warning"
               />
               <Autocomplete
@@ -147,8 +144,7 @@ export const VPCPanel = (props: Props) => {
                 textFieldProps={{
                   helperText: (
                     <Typography mb={2}>
-                      Select a subnet in which to allocate the VPC CIDR for the
-                      NodeBalancer.
+                      The VPC subnet for this NodeBalancer.
                     </Typography>
                   ),
                   helperTextPosition: 'top',
@@ -192,11 +188,25 @@ export const VPCPanel = (props: Props) => {
                           flexDirection="row"
                         >
                           <Typography noWrap={!isSmallBp}>
-                            Auto-assign a /30 CIDR for this NodeBalancer
+                            Auto-assign IPs for this NodeBalancer
                           </Typography>
                           <TooltipIcon
                             status="info"
-                            text={NB_AUTO_ASSIGN_CIDR_TOOLTIP}
+                            text={
+                              <Typography
+                                component={'span'}
+                                sx={{ whiteSpace: 'pre-line' }}
+                              >
+                                When enabled, the system automatically allocates
+                                a <Code>/30</Code> CIDR from the specified
+                                Subnet for the NodeBalancer&apos;s backend nodes
+                                in the VPC.
+                                <br />
+                                <br /> Disable this option to assign a{' '}
+                                <Code>/30</Code> IPv4 CIDR subnet range for this
+                                NodeBalancer.
+                              </Typography>
+                            }
                             tooltipPosition="right"
                           />
                         </Box>
@@ -217,8 +227,6 @@ export const VPCPanel = (props: Props) => {
                         onChange={(e) =>
                           ipv4Change(e.target.value ?? '', index)
                         }
-                        // eslint-disable-next-line sonarjs/no-hardcoded-ip
-                        placeholder="10.0.0.24"
                         required
                         slotProps={{
                           input: {
