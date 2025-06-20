@@ -53,8 +53,8 @@ describe('Delete database clusters', () => {
           cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
-          ui.button
-            .findByAttribute('data-qa-settings-button', 'Delete Cluster')
+          ui.cdsButton
+            .findButtonByTitle('Delete Cluster')
             .should('be.visible')
             .click();
 
@@ -116,8 +116,8 @@ describe('Delete database clusters', () => {
           cy.wait(['@getAccount', '@getDatabase', '@getDatabaseTypes']);
 
           // Click "Delete Cluster" button.
-          ui.button
-            .findByAttribute('data-qa-settings-button', 'Delete Cluster')
+          ui.cdsButton
+            .findButtonByTitle('Delete Cluster')
             .should('be.visible')
             .click();
 

@@ -1,13 +1,8 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import {
-  Box,
-  Button,
-  CircleProgress,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { downloadFile } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
+import { Button } from 'akamai-cds-react-components';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -155,8 +150,10 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     return (
       <Button
         className={classes.showBtn}
+        data-testid="show-hide-credentials"
         disabled={disableShowBtn}
         onClick={handleClick}
+        variant="link"
       >
         {btnText}
       </Button>
@@ -167,15 +164,17 @@ export const DatabaseSummaryConnectionDetails = (props: Props) => {
     <>
       <Button
         className={classes.caCertBtn}
+        data-testid="download-ca-certificate"
         disabled={disableDownloadCACertificateBtn}
-        loading={isCACertDownloading}
         onClick={handleDownloadCACertificate}
+        processing={isCACertDownloading}
+        variant="link"
       >
         <DownloadIcon />
         Download CA Certificate
       </Button>
       {disableDownloadCACertificateBtn && (
-        <span className="tooltipIcon">
+        <span className={classes.tooltipIcon}>
           <TooltipIcon
             status="help"
             sxTooltipIcon={sxTooltipIcon}
