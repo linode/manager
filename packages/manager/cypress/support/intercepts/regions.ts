@@ -70,6 +70,17 @@ export const mockGetRegion = (
 };
 
 /**
+ * Intercepts GET request to fetch regions availability.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetRegionAvailability = (
+  regionId: Region['id']
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`regions/${regionId}/availability`));
+};
+
+/**
  * Intercepts GET request to fetch regions availability and mocks response.
  *
  * @returns Cypress chainable.
