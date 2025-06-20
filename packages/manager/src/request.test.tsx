@@ -38,14 +38,6 @@ const error400: AxiosError<LinodeError> = {
   },
 };
 
-const error401: AxiosError<LinodeError> = {
-  ...baseErrorWithJson,
-  response: {
-    ...mockAxiosError.response,
-    status: 401,
-  },
-};
-
 describe('Expiring Tokens', () => {
   it('should just promise reject if a non-401 error', () => {
     setAuthDataInLocalStorage({
