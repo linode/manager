@@ -305,7 +305,7 @@ export const PaymentDrawer = (props: Props) => {
             <Grid className={classes.button}>
               {paymentTooLow || selectedCardExpired ? (
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{ padding: `0px 8px` }}
                   text={
                     paymentTooLow

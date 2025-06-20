@@ -243,10 +243,9 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
-    {
-      background: Table.Row.Background.Hover,
-    },
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
 };
 
 const MuiTableZebraStyles = {
@@ -626,6 +625,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&[aria-disabled="true"]': {
+            '&[aria-describedby="button-tooltip"] svg': {
+              color: Alias.Content.Icon.Primary.Default,
+            },
             '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,
             },
@@ -1538,10 +1540,9 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
-            {
-              backgroundColor: Table.Row.Background.Hover,
-            },
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
           '&.MuiTableRow-hover:hover.disabled-row': {
             cursor: 'not-allowed',
             backgroundColor: 'inherit',
