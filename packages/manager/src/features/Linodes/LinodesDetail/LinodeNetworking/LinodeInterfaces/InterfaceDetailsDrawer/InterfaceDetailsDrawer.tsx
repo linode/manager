@@ -1,7 +1,7 @@
 import { useLinodeInterfaceQuery } from '@linode/queries';
 import { Box, Button, Drawer } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { InterfaceDetailsContent } from './InterfaceDetailsContent';
 

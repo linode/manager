@@ -1,7 +1,7 @@
 import { useDeleteLinodeMutation, useLinodeQuery } from '@linode/queries';
 import { Accordion, Button, Notice, Typography } from '@linode/ui';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
 import { useEventsPollingActions } from 'src/queries/events/events';
@@ -22,14 +22,16 @@ export const LinodeSettingsDeletePanel = (props: Props) => {
 
   const { checkForNewEvents } = useEventsPollingActions();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [open, setOpen] = React.useState<boolean>(false);
 
   const onDelete = async () => {
     await deleteLinode();
     checkForNewEvents();
-    history.push('/linodes');
+    navigate({
+      to: '/linodes',
+    });
   };
 
   return (

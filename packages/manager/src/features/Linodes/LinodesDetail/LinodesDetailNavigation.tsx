@@ -7,23 +7,19 @@ import {
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { SMTPRestrictionText } from 'src/features/Linodes/SMTPRestrictionText';
 import { useFlags } from 'src/hooks/useFlags';
+import { useTabs } from 'src/hooks/useTabs';
 
 const LinodeMetrics = React.lazy(() => import('./LinodeMetrics/LinodeMetrics'));
 const LinodeNetworking = React.lazy(() =>
@@ -45,11 +41,9 @@ const LinodeSettings = React.lazy(
 );
 
 const LinodesDetailNavigation = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
-  const { url } = useRouteMatch();
-  const history = useHistory();
   const { aclpBetaServices } = useFlags();
   const { data: aclpPreferences } = usePreferences((preferences) => ({
     isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
@@ -80,7 +74,7 @@ const LinodesDetailNavigation = () => {
     type: 'alerts',
   });
 
-  const tabs = [
+  const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
       chip:
         aclpBetaServices?.linode?.metrics &&
@@ -88,30 +82,30 @@ const LinodesDetailNavigation = () => {
         aclpPreferences?.isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
-      routeName: `${url}/metrics`,
+      to: '/linodes/$linodeId/metrics',
       title: 'Metrics',
     },
     {
-      routeName: `${url}/networking`,
+      to: '/linodes/$linodeId/networking',
       title: 'Network',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/storage`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/storage',
       title: 'Storage',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/configurations`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/configurations',
       title: 'Configurations',
     },
     {
-      hidden: isBareMetalInstance,
-      routeName: `${url}/backup`,
+      hide: isBareMetalInstance,
+      to: '/linodes/$linodeId/backup',
       title: 'Backups',
     },
     {
-      routeName: `${url}/activity`,
+      to: '/linodes/$linodeId/activity',
       title: 'Activity Feed',
     },
     {
@@ -121,34 +115,14 @@ const LinodesDetailNavigation = () => {
         aclpPreferences?.isAclpAlertsPreferenceBeta ? (
           <BetaChip />
         ) : null,
-      routeName: `${url}/alerts`,
+      to: '/linodes/$linodeId/alerts',
       title: 'Alerts',
     },
     {
-      routeName: `${url}/settings`,
+      to: '/linodes/$linodeId/settings',
       title: 'Settings',
     },
-  ].filter((thisTab) => !thisTab.hidden);
-
-  const matches = (p: string) => {
-    return (
-      Boolean(matchPath(p, { path: location.pathname })) ||
-      location.pathname.includes(p)
-    );
-  };
-
-  const getIndex = () => {
-    return Math.max(
-      tabs.findIndex((tab) => matches(tab.routeName)),
-      0
-    );
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  let idx = 0;
+  ]);
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -161,9 +135,7 @@ const LinodesDetailNavigation = () => {
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linode?.label} - ${
-          tabs[getIndex()]?.title ?? 'Detail View'
-        }`}
+        segment={`${linode?.label} - ${tabs[tabIndex]?.title} - Detail View`}
       />
       <SMTPRestrictionText
         linode={linode}
@@ -182,11 +154,11 @@ const LinodesDetailNavigation = () => {
         }
       </SMTPRestrictionText>
       <div style={{ marginTop: 8 }}>
-        <Tabs index={getIndex()} onChange={navToURL}>
-          <TabLinkList tabs={tabs} />
+        <Tabs index={tabIndex} onChange={handleTabChange}>
+          <TanStackTabLinkList tabs={tabs} />
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <SafeTabPanel index={idx++}>
+              <SafeTabPanel index={getTabIndex('/linodes/$linodeId/metrics')}>
                 <LinodeMetrics
                   isAclpMetricsSupportedRegionLinode={
                     isAclpMetricsSupportedRegionLinode
@@ -195,34 +167,42 @@ const LinodesDetailNavigation = () => {
                   linodeId={id}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
+              <SafeTabPanel
+                index={getTabIndex('/linodes/$linodeId/networking')}
+              >
                 <LinodeNetworking />
               </SafeTabPanel>
               {isBareMetalInstance ? null : (
                 <>
-                  <SafeTabPanel index={idx++}>
+                  <SafeTabPanel
+                    index={getTabIndex('/linodes/$linodeId/storage')}
+                  >
                     <LinodeStorage />
                   </SafeTabPanel>
-                  <SafeTabPanel index={idx++}>
+                  <SafeTabPanel
+                    index={getTabIndex('/linodes/$linodeId/configurations')}
+                  >
                     <LinodeConfigurations />
                   </SafeTabPanel>
 
-                  <SafeTabPanel index={idx++}>
+                  <SafeTabPanel
+                    index={getTabIndex('/linodes/$linodeId/backup')}
+                  >
                     <LinodeBackup />
                   </SafeTabPanel>
                 </>
               )}
-              <SafeTabPanel index={idx++}>
+              <SafeTabPanel index={getTabIndex('/linodes/$linodeId/activity')}>
                 <LinodeActivity />
               </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
+              <SafeTabPanel index={getTabIndex('/linodes/$linodeId/alerts')}>
                 <LinodeAlerts
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={idx++}>
+              <SafeTabPanel index={getTabIndex('/linodes/$linodeId/settings')}>
                 <LinodeSettings />
               </SafeTabPanel>
             </TabPanels>

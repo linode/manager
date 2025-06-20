@@ -15,6 +15,22 @@ const defaultProps: ApiAwarenessModalProps = {
   payLoad: { region: '', type: '' },
 };
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 const renderComponent = (overrideProps?: Partial<ApiAwarenessModalProps>) => {
   const props = {
     ...defaultProps,
@@ -27,6 +43,12 @@ const renderComponent = (overrideProps?: Partial<ApiAwarenessModalProps>) => {
 };
 
 describe('ApiAwarenessModal', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('Should not render ApiAwarenessModal component', () => {
     renderComponent();
     expect(screen.queryByText('Create Linode')).not.toBeInTheDocument();

@@ -2,8 +2,8 @@ import { Box } from '@linode/ui';
 import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -24,7 +24,7 @@ interface Props {
 
 export const ConfigActionMenu = (props: Props) => {
   const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -46,9 +46,13 @@ export const ConfigActionMenu = (props: Props) => {
     {
       disabled: readOnly,
       onClick: () => {
-        history.push(
-          `/linodes/${linodeId}/clone/configs?selectedConfig=${config.id}`
-        );
+        navigate({
+          to: `/linodes/${linodeId}/clone/configs`,
+          search: (prev) => ({
+            ...prev,
+            selectedConfig: config.id,
+          }),
+        });
       },
       title: 'Clone',
     },

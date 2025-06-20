@@ -1,8 +1,8 @@
 import { useLinodeFirewallsQuery } from '@linode/queries';
 import { Box, Chip, Tooltip, TooltipIcon, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -36,8 +36,7 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
   const { cluster, linodeId, linodeLkeClusterId, interfaceGeneration, region } =
     props;
 
-  const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -59,7 +58,10 @@ export const LinodeEntityDetailRowConfigFirewall = (props: Props) => {
   );
 
   const openUpgradeInterfacesDialog = () => {
-    history.replace(`${location.pathname}/upgrade-interfaces`);
+    navigate({
+      to: '/linodes/$linodeId/configurations/upgrade-interfaces',
+      params: { linodeId },
+    });
   };
 
   if (!isLinodeInterfacesEnabled && !linodeLkeClusterId && !attachedFirewall) {
