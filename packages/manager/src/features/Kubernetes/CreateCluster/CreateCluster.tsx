@@ -1,5 +1,4 @@
 import {
-  useAccount,
   useAllTypes,
   useMutateAccountAgreements,
   useRegionsQuery,
@@ -30,8 +29,6 @@ import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import {
-  getKubeControlPlaneACL,
-  getKubeHighAvailability,
   getLatestVersion,
   useAPLAvailability,
   useIsLkeEnterpriseEnabled,
@@ -109,11 +106,8 @@ export const CreateCluster = () => {
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
-  const { data: account } = useAccount();
   const { showAPL } = useAPLAvailability();
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
-  const { showHighAvailability } = getKubeHighAvailability(account);
-  const { showControlPlaneACL } = getKubeControlPlaneACL(account);
   const [ipV4Addr, setIPv4Addr] = React.useState<ExtendedIP[]>([
     stringToExtendedIP(''),
   ]);
@@ -513,7 +507,7 @@ export const CreateCluster = () => {
                 marginTop: showAPL ? 1 : 4,
               }}
             />
-            {showHighAvailability && selectedTier !== 'enterprise' && (
+            {selectedTier !== 'enterprise' && (
               <Box data-testid="ha-control-plane">
                 <HAControlPlane
                   highAvailabilityPrice={
@@ -530,41 +524,40 @@ export const CreateCluster = () => {
               </Box>
             )}
             {selectedTier === 'enterprise' && <ClusterNetworkingPanel />}
-            {showControlPlaneACL && (
-              <>
-                <Divider
-                  sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
-                />
-                <ControlPlaneACLPane
-                  enableControlPlaneACL={controlPlaneACL}
-                  errorText={errorMap.control_plane}
-                  handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
-                    const validatedIPs = validateIPs(newIpV4Addr, {
-                      allowEmptyAddress: true,
-                      errorMessage: 'Must be a valid IPv4 address.',
-                    });
-                    setIPv4Addr(validatedIPs);
-                  }}
-                  handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
-                    const validatedIPs = validateIPs(newIpV6Addr, {
-                      allowEmptyAddress: true,
-                      errorMessage: 'Must be a valid IPv6 address.',
-                    });
-                    setIPv6Addr(validatedIPs);
-                  }}
-                  handleIsAcknowledgementChecked={(isChecked: boolean) => {
-                    setIsACLAcknowledgementChecked(isChecked);
-                    setIPv4Addr([stringToExtendedIP('')]);
-                    setIPv6Addr([stringToExtendedIP('')]);
-                  }}
-                  ipV4Addr={ipV4Addr}
-                  ipV6Addr={ipV6Addr}
-                  isAcknowledgementChecked={isACLAcknowledgementChecked}
-                  selectedTier={selectedTier}
-                  setControlPlaneACL={setControlPlaneACL}
-                />
-              </>
-            )}
+            <>
+              <Divider
+                sx={{ marginTop: selectedTier === 'enterprise' ? 4 : 1 }}
+              />
+              <ControlPlaneACLPane
+                enableControlPlaneACL={controlPlaneACL}
+                errorText={errorMap.control_plane}
+                handleIPv4Change={(newIpV4Addr: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(newIpV4Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv4 address.',
+                  });
+                  setIPv4Addr(validatedIPs);
+                }}
+                handleIPv6Change={(newIpV6Addr: ExtendedIP[]) => {
+                  const validatedIPs = validateIPs(newIpV6Addr, {
+                    allowEmptyAddress: true,
+                    errorMessage: 'Must be a valid IPv6 address.',
+                  });
+                  setIPv6Addr(validatedIPs);
+                }}
+                handleIsAcknowledgementChecked={(isChecked: boolean) => {
+                  setIsACLAcknowledgementChecked(isChecked);
+                  setIPv4Addr([stringToExtendedIP('')]);
+                  setIPv6Addr([stringToExtendedIP('')]);
+                }}
+                ipV4Addr={ipV4Addr}
+                ipV6Addr={ipV6Addr}
+                isAcknowledgementChecked={isACLAcknowledgementChecked}
+                selectedTier={selectedTier}
+                setControlPlaneACL={setControlPlaneACL}
+              />
+            </>
+
             <Divider sx={{ marginBottom: 4 }} />
             <NodePoolPanel
               addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
@@ -613,7 +606,6 @@ export const CreateCluster = () => {
             region={selectedRegion?.id}
             regionsData={regionsData}
             removePool={removePool}
-            showHighAvailability={showHighAvailability}
             submitting={submitting}
             toggleHasAgreed={toggleHasAgreed}
             updateFor={[

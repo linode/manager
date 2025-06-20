@@ -203,6 +203,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
+  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
   '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
     {
       background: Table.Row.Background.Hover,
@@ -232,6 +233,20 @@ export const darkTheme: ThemeOptions = {
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '& svg': {
+            fill: Alias.Action.Primary.Default,
+          },
+          '&:hover': {
+            '& h3': {
+              color: Alias.Action.Primary.Default,
+            },
+          },
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
@@ -1013,6 +1028,7 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
           '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
             {
               backgroundColor: Table.Row.Background.Hover,
