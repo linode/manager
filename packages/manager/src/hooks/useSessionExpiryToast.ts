@@ -11,12 +11,15 @@ export const useSessionExpiryToast = () => {
     const expiresAt = storage.authentication.expire.get();
 
     if (!token || !expiresAt || !token.toLowerCase().startsWith('admin')) {
+      // Early return if a token is not in storage.
+      // Also, for now, only show this toast when logged in as a customer.
+      // We can consider doing this for all users.
       return;
     }
 
     const millisecondsUntilTokenExpires = +expiresAt - Date.now();
 
-    // Show an expiry toast 1 minute before token expires
+    // Show an expiry toast 1 minute before token expires.
     const showToastIn = millisecondsUntilTokenExpires - 60 * 1000;
 
     if (showToastIn <= 0) {
