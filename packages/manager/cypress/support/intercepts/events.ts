@@ -83,3 +83,11 @@ export const mockGetNotifications = (
     paginateResponse(notifications)
   );
 };
+
+/* Intercepts GET request to get progress events.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptEvents = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher(`account/events*`));
+};
