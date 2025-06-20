@@ -2,8 +2,8 @@ import { Factory } from '@linode/utilities';
 
 import type {
   CloudNAT,
-  CreateCloudNATRequest,
-  UpdateCloudNATRequest,
+  CreateCloudNATPayload,
+  UpdateCloudNATPayload,
 } from '@linode/api-v4/lib/networking/types';
 
 export const cloudNATFactory = Factory.Sync.makeFactory<CloudNAT>({
@@ -14,13 +14,13 @@ export const cloudNATFactory = Factory.Sync.makeFactory<CloudNAT>({
   port_prefix_default_len: 1024,
 });
 
-export const createCloudNATRequestFactory =
-  Factory.Sync.makeFactory<CreateCloudNATRequest>({
+export const createCloudNATPayloadFactory =
+  Factory.Sync.makeFactory<CreateCloudNATPayload>({
     label: Factory.each((id) => `cloud-nat-mock-${id}`),
     region: 'us-east',
   });
 
-export const updateCloudNATRequestFactory =
-  Factory.Sync.makeFactory<UpdateCloudNATRequest>({
+export const updateCloudNATPayloadFactory =
+  Factory.Sync.makeFactory<UpdateCloudNATPayload>({
     label: Factory.each((id) => `updated-cloud-nat-mock-${id}`),
   });

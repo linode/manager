@@ -5,25 +5,27 @@ import {
   getCloudNATs,
   updateCloudNAT,
 } from '@linode/api-v4';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import type { UpdateCloudNATRequest } from '@linode/api-v4';
+import type { UpdateCloudNATPayload } from '@linode/api-v4';
 
-export const cloudnatQueries = {
-  all: () => ['cloudnats'],
-  one: (id: number) => ['cloudnat', id],
-};
-
-export const useCloudNATsQuery = () =>
-  useQuery({
-    queryKey: cloudnatQueries.all(),
+export const cloudnatQueries = createQueryKeys('cloudnats', {
+  all: {
     queryFn: getCloudNATs,
-  });
+    queryKey: null,
+  },
+  one: (id: number) => ({
+    queryFn: () => getCloudNAT(id),
+    queryKey: [id],
+  }),
+});
+
+export const useCloudNATsQuery = () => useQuery(cloudnatQueries.all);
 
 export const useCloudNATQuery = (id: number) =>
   useQuery({
-    queryKey: cloudnatQueries.one(id),
-    queryFn: () => getCloudNAT(id),
+    ...cloudnatQueries.one(id),
     enabled: Boolean(id),
   });
 
@@ -31,24 +33,32 @@ export const useCreateCloudNATMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createCloudNAT,
-    onSuccess: () =>
+    onSuccess: (cloudNAT) => {
       queryClient.invalidateQueries({
-        queryKey: cloudnatQueries.all(),
-      }),
+        queryKey: cloudnatQueries.all.queryKey,
+      });
+
+      queryClient.setQueryData(
+        cloudnatQueries.one(cloudNAT.id).queryKey,
+        cloudNAT,
+      );
+    },
   });
 };
 
 export const useUpdateCloudNATMutation = (id: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: UpdateCloudNATRequest) => updateCloudNAT(id, data),
-    onSuccess: () => {
+    mutationFn: (data: UpdateCloudNATPayload) => updateCloudNAT(id, data),
+    onSuccess: (updatedCloudNAT) => {
       queryClient.invalidateQueries({
-        queryKey: cloudnatQueries.all(),
+        queryKey: cloudnatQueries.all.queryKey,
       });
-      queryClient.invalidateQueries({
-        queryKey: cloudnatQueries.one(id),
-      });
+
+      queryClient.setQueryData(
+        cloudnatQueries.one(id).queryKey,
+        updatedCloudNAT,
+      );
     },
   });
 };
@@ -59,7 +69,7 @@ export const useDeleteCloudNATMutation = () => {
     mutationFn: deleteCloudNAT,
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: cloudnatQueries.all(),
+        queryKey: cloudnatQueries.all.queryKey,
       }),
   });
 };

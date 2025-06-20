@@ -1,19 +1,23 @@
+interface CloudNATIPAddress {
+  address: string;
+}
+
 export interface CloudNAT {
-  addresses: Array<{ address: string }>;
+  addresses: CloudNATIPAddress[];
   id: number;
   label: string;
   port_prefix_default_len: number;
   region: string;
 }
 
-export interface CreateCloudNATRequest {
+export interface CreateCloudNATPayload {
   addresses?: Array<{ address: string }>;
   label: string;
   port_prefix_default_len?: ValidPortSize;
   region: string;
 }
 
-export interface UpdateCloudNATRequest {
+export interface UpdateCloudNATPayload {
   label?: string;
 }
 
