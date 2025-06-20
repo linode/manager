@@ -8,7 +8,7 @@ import { randomLabel, randomNumber } from 'support/util/random';
 
 import type { UserPreferences } from '@linode/api-v4';
 
-describe('User preferences for alerts and metrics have no effect when aclpBetaServices alerts/metrics feature flag disabled', () => {
+describe('User preferences for alerts and metrics have no effect when aclpBetaServices alerts/metrics feature flag is disabled', () => {
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpBetaServices: {
