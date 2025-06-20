@@ -1,3 +1,4 @@
+import { isNumeric } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
@@ -10,10 +11,20 @@ export const useSessionExpiryToast = () => {
     const token = storage.authentication.token.get();
     const expiresAt = storage.authentication.expire.get();
 
-    if (!token || !expiresAt || !token.toLowerCase().startsWith('admin')) {
+    if (!token || !expiresAt) {
       // Early return if no token is stored.
-      // Also, for now, only show this toast when logged in as a customer.
+      return;
+    }
+
+    if (!token.toLowerCase().startsWith('admin')) {
+      // For now, only show this toast when logged in as a customer.
       // We can consider doing this for all users.
+      return;
+    }
+
+    // This value use to be a string representation of the date but now it is
+    // a unix timestamp. Early return if it is the old format.
+    if (!isNumeric(expiresAt)) {
       return;
     }
 
