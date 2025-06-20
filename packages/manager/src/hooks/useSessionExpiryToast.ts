@@ -11,7 +11,7 @@ export const useSessionExpiryToast = () => {
     const expiresAt = storage.authentication.expire.get();
 
     if (!token || !expiresAt || !token.toLowerCase().startsWith('admin')) {
-      // Early return if a token is not in storage.
+      // Early return if no token is stored.
       // Also, for now, only show this toast when logged in as a customer.
       // We can consider doing this for all users.
       return;
