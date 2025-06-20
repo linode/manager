@@ -8,6 +8,7 @@ export * from './iam';
 export * from './images';
 export * from './linodes';
 export * from './networking';
+export * from './networktransfer';
 export * from './nodebalancers';
 export * from './placementGroups';
 export * from './profile';

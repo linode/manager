@@ -69,7 +69,7 @@ export const Summary = () => {
   const { data: type } = useTypeQuery(typeId ?? '', Boolean(typeId));
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpAlertsBeta
   );
@@ -103,7 +103,7 @@ export const Summary = () => {
       : firewallId;
 
   const hasBetaAclpAlertsAssigned =
-    flags.aclpBetaServices?.alerts &&
+    aclpBetaServices?.linode?.alerts &&
     isAclpAlertsSupportedRegionLinode &&
     isAclpAlertsPreferenceBeta;
 
