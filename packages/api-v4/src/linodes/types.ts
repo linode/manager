@@ -29,7 +29,7 @@ export interface LinodeSpecs {
 }
 
 export interface Linode {
-  alerts: CloudPulseAlertsPayload | LinodeAlerts;
+  alerts: LinodeAlerts;
   backups: LinodeBackups;
   capabilities: LinodeCapabilities[];
   created: string;
@@ -56,12 +56,12 @@ export interface Linode {
   watchdog_enabled: boolean;
 }
 
-export interface LinodeAlerts {
-  cpu: number;
-  io: number;
-  network_in: number;
-  network_out: number;
-  transfer_quota: number;
+export interface LinodeAlerts extends CloudPulseAlertsPayload {
+  cpu?: number;
+  io?: number;
+  network_in?: number;
+  network_out?: number;
+  transfer_quota?: number;
 }
 
 export interface LinodeBackups {
