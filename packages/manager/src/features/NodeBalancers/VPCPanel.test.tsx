@@ -181,7 +181,7 @@ describe('VPCPanel', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByLabelText('Auto-assign a /30 CIDR for this NodeBalancer')
+        screen.getByLabelText('Auto-assign IPs for this NodeBalancer')
       ).toBeChecked();
     });
   });
@@ -231,7 +231,7 @@ describe('VPCPanel', () => {
     );
 
     const checkbox = screen.getByLabelText(
-      'Auto-assign a /30 CIDR for this NodeBalancer'
+      'Auto-assign IPs for this NodeBalancer'
     );
 
     await userEvent.click(checkbox);

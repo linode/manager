@@ -1,3 +1,11 @@
+## [2025-06-17] - v0.7.0
+
+
+### Added:
+
+- Created `types/` directory and migrated relevant query keys and hooks ([#12330](https://github.com/linode/manager/pull/12330))
+- Created `betas/` directory and migrated relevant query keys and hooks ([#12358](https://github.com/linode/manager/pull/12358))
+
 ## [2025-06-03] - v0.6.0
 
 ### Added:

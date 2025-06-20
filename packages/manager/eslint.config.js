@@ -86,7 +86,6 @@ export const baseConfig = [
       'comma-dangle': 'off',
       curly: 'warn',
       eqeqeq: 'warn',
-      'no-await-in-loop': 'error',
       'no-bitwise': 'error',
       'no-caller': 'error',
       'no-case-declarations': 'warn',
@@ -369,7 +368,10 @@ export const baseConfig = [
               ],
             ];
           }
-          if (rule === 'prefer-explicit-assert') {
+          if (
+            rule === 'prefer-explicit-assert' ||
+            rule === 'prefer-screen-queries'
+          ) {
             return [`testing-library/${rule}`, 'off'];
           }
           // All other rules just get set to warn

@@ -1,3 +1,4 @@
+import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
 import type { Region, RegionSite } from '../regions';
@@ -9,7 +10,6 @@ import type {
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
 import type { MaintenancePolicyId } from 'src/account';
-import type { CloudPulseAlertsPayload } from 'src/cloudpulse';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
 
@@ -29,7 +29,7 @@ export interface LinodeSpecs {
 }
 
 export interface Linode {
-  alerts: CloudPulseAlertsPayload | LinodeAlerts;
+  alerts: LinodeAlerts;
   backups: LinodeBackups;
   capabilities: LinodeCapabilities[];
   created: string;
@@ -56,12 +56,12 @@ export interface Linode {
   watchdog_enabled: boolean;
 }
 
-export interface LinodeAlerts {
-  cpu: number;
-  io: number;
-  network_in: number;
-  network_out: number;
-  transfer_quota: number;
+export interface LinodeAlerts extends CloudPulseAlertsPayload {
+  cpu?: number;
+  io?: number;
+  network_in?: number;
+  network_out?: number;
+  transfer_quota?: number;
 }
 
 export interface LinodeBackups {
@@ -539,6 +539,10 @@ export interface CreateLinodePlacementGroupPayload {
 }
 
 export interface CreateLinodeRequest {
+  /**
+   * Beta Aclp alerts
+   */
+  alerts?: CloudPulseAlertsPayload | null;
   /**
    * A list of public SSH keys that will be automatically appended to the root user’s
    * `~/.ssh/authorized_keys`file when deploying from an Image.
