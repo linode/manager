@@ -79,10 +79,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
-  const { hasPublicLinodeInterface, isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface,
-    linodeId: linodeID,
-  });
+  const { hasLinodeInterfaces, hasPublicLinodeInterface, isVPCOnlyLinode } =
+    useVPCInterface({
+      isLinodeInterface,
+      linodeId: linodeID,
+    });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -247,20 +248,21 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {orderedData.map((ipDisplay) => (
-                  <LinodeIPAddressRow
-                    {...ipDisplay}
-                    {...handlers}
-                    hasPublicLinodeInterface={hasPublicLinodeInterface}
-                    isLinodeInterface={isLinodeInterface}
-                    isVPCOnlyLinode={
-                      isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
-                    }
-                    key={`${ipDisplay.address}-${ipDisplay.type}`}
-                    linodeId={linodeID}
-                    readOnly={isLinodesGrantReadOnly}
-                  />
-                ))}
+                {orderedData.map((ipDisplay) => {
+                  return (
+                    <LinodeIPAddressRow
+                      {...ipDisplay}
+                      {...handlers}
+                      hasLinodeInterfaces={hasLinodeInterfaces}
+                      hasPublicLinodeInterface={hasPublicLinodeInterface}
+                      isLinodeInterface={isLinodeInterface}
+                      isVPCOnlyLinode={isVPCOnlyLinode}
+                      key={`${ipDisplay.address}-${ipDisplay.type}`}
+                      linodeId={linodeID}
+                      readOnly={isLinodesGrantReadOnly}
+                    />
+                  );
+                })}
               </TableBody>
             </Table>
           );

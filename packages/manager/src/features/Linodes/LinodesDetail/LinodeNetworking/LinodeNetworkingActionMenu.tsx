@@ -13,12 +13,12 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
+  disabledFromInterfaces: boolean;
   hasPublicLinodeInterface?: boolean;
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
   isOnlyPublicIP: boolean;
-  isVPCOnlyLinode: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   readOnly: boolean;
@@ -33,7 +33,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ipType,
     isOnlyPublicIP,
     isLinodeInterface,
-    isVPCOnlyLinode,
+    disabledFromInterfaces,
     onEdit,
     onRemove,
     readOnly,
@@ -84,7 +84,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     deletableIPTypes.includes(ipType) &&
     !isLinodeInterface
       ? {
-          disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
+          disabled: readOnly || isOnlyPublicIP || disabledFromInterfaces,
           id: 'delete',
           onClick: () => {
             onRemove(ipAddress);
@@ -92,7 +92,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           title: 'Delete',
           tooltip: readOnly
             ? readOnlyTooltip
-            : isVPCOnlyLinode
+            : disabledFromInterfaces
               ? isPublicIPNotAssignedCopy
               : isOnlyPublicIP
                 ? isOnlyPublicIPTooltip
@@ -101,7 +101,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          disabled: readOnly || isVPCOnlyLinode,
+          disabled: readOnly || disabledFromInterfaces,
           id: 'edit-rdns',
           onClick: () => {
             onEdit(ipAddress);
@@ -109,7 +109,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           title: 'Edit RDNS',
           tooltip: readOnly
             ? readOnlyTooltip
-            : isVPCOnlyLinode
+            : disabledFromInterfaces
               ? isPublicIPNotAssignedCopy
               : undefined,
         }
