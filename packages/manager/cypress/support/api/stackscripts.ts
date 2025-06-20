@@ -1,5 +1,6 @@
 import { deleteStackScript, getStackScripts } from '@linode/api-v4';
 import { pageSize } from 'support/constants/api';
+import { entityPrefix } from 'support/constants/cypress';
 import { depaginate } from 'support/util/paginate';
 
 import { isTestLabel } from './common';
@@ -11,7 +12,7 @@ const userStackScriptFilter: Filter = {
   '+and': [
     {
       label: {
-        '+contains': 'cy-test-',
+        '+contains': entityPrefix,
       },
     },
     {
