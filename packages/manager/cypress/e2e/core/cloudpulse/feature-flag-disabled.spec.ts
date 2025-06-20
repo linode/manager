@@ -33,7 +33,7 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
     cy.wrap(mockLinode).as('mockLinode');
   });
 
-  it('Alerts banner not display when isAclpAlertsBeta is false', function () {
+  it('Alerts banner does not display when isAclpAlertsBeta is false', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpAlertsBeta: false,
     } as Partial<UserPreferences>);
