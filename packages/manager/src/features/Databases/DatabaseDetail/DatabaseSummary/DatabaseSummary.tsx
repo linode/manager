@@ -38,5 +38,3 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
     </Paper>
   );
 };
-
-export default DatabaseSummary;

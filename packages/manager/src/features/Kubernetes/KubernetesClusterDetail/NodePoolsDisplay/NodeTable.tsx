@@ -8,7 +8,6 @@ import EmptyStateCloud from 'src/assets/icons/empty-state-cloud.svg';
 import Lock from 'src/assets/icons/lock.svg';
 import Unlock from 'src/assets/icons/unlock.svg';
 import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -19,6 +18,7 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { TagCell } from 'src/components/TagCell/TagCell';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -110,9 +110,9 @@ export const NodeTable = React.memo((props: Props) => {
       })
     : null;
 
-  // It takes ~5 minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
+  // It takes anywhere between 5-20+ minutes for LKE-E cluster nodes to be provisioned and we want to explain this to the user
   // since nodes are not returned right away unlike standard LKE
-  const isEnterpriseClusterWithin10MinsOfCreation = () => {
+  const isEnterpriseClusterWithin20MinsOfCreation = () => {
     if (clusterTier !== 'enterprise') {
       return false;
     }
@@ -121,7 +121,7 @@ export const NodeTable = React.memo((props: Props) => {
 
     const interval = Interval.fromDateTimes(
       createdTime,
-      createdTime.plus({ minutes: 10 })
+      createdTime.plus({ minutes: 20 })
     );
 
     const currentTime = DateTime.fromISO(DateTime.now().toISO(), {
@@ -131,160 +131,166 @@ export const NodeTable = React.memo((props: Props) => {
     return interval.contains(currentTime);
   };
 
+  const { handleOrderChange, order, orderBy, sortedData } = useOrderV2({
+    data: filteredRowData || rowData,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/kubernetes/clusters/$clusterId/summary',
+    },
+    preferenceKey: 'node-pool-order',
+  });
+
   return (
-    <OrderBy data={filteredRowData || rowData} order="asc" orderBy="label">
-      {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-        <Paginate data={orderedData}>
-          {({
-            count,
-            data: paginatedAndOrderedData,
-            handlePageChange,
-            handlePageSizeChange,
-            page,
-            pageSize,
-          }) => (
-            <>
-              <Table aria-label="List of Your Cluster Nodes">
-                <TableHead>
+    <Paginate data={sortedData ?? []}>
+      {({
+        count,
+        data: paginatedAndOrderedData,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize,
+      }) => (
+        <>
+          <Table aria-label="List of Your Cluster Nodes">
+            <TableHead>
+              <TableRow>
+                <TableSortCell
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'label'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '35%',
+                  })}
+                >
+                  Linode
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'instanceStatus'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'instanceStatus'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '25%',
+                  })}
+                >
+                  Status
+                </TableSortCell>
+                <TableSortCell
+                  active={orderBy === 'ip'}
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  label={'ip'}
+                  sx={(theme) => ({
+                    ...theme.applyTableHeaderStyles,
+                    width: '35%',
+                  })}
+                >
+                  IP Address
+                </TableSortCell>
+                <TableCell />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowData.length === 0 &&
+                isEnterpriseClusterWithin20MinsOfCreation() && (
                   <TableRow>
-                    <TableSortCell
-                      active={orderBy === 'label'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'label'}
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '35%',
-                      })}
-                    >
-                      Linode
-                    </TableSortCell>
-                    <TableSortCell
-                      active={orderBy === 'instanceStatus'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'instanceStatus'}
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '25%',
-                      })}
-                    >
-                      Status
-                    </TableSortCell>
-                    <TableSortCell
-                      active={orderBy === 'ip'}
-                      direction={order}
-                      handleClick={handleOrderChange}
-                      label={'ip'}
-                      sx={(theme) => ({
-                        ...theme.applyTableHeaderStyles,
-                        width: '35%',
-                      })}
-                    >
-                      IP Address
-                    </TableSortCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rowData.length === 0 &&
-                    isEnterpriseClusterWithin10MinsOfCreation() && (
-                      <TableRow>
-                        <TableCell colSpan={4}>
-                          <ErrorState
-                            compact
-                            CustomIcon={EmptyStateCloud}
-                            errorText={
-                              <Box>
-                                <Typography
-                                  data-qa-error-msg
-                                  style={{ textAlign: 'center' }}
-                                  variant="h3"
-                                >
-                                  Worker nodes will appear once cluster
-                                  provisioning is complete.
-                                </Typography>
-                                <Typography>
-                                  Provisioning can take up to 10 minutes.
-                                </Typography>
-                              </Box>
-                            }
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  {(rowData.length > 0 ||
-                    !isEnterpriseClusterWithin10MinsOfCreation()) && (
-                    <TableContentWrapper
-                      length={paginatedAndOrderedData.length}
-                      loading={isLoading}
-                      loadingProps={{ columns: 4 }}
-                    >
-                      {paginatedAndOrderedData.map((eachRow) => {
-                        return (
-                          <_NodeRow
-                            instanceId={eachRow.instanceId}
-                            instanceStatus={eachRow.instanceStatus}
-                            ip={eachRow.ip}
-                            key={`node-row-${eachRow.nodeId}`}
-                            label={eachRow.label}
-                            linodeError={error ?? undefined}
-                            nodeId={eachRow.nodeId}
-                            nodeStatus={eachRow.nodeStatus}
-                            openRecycleNodeDialog={openRecycleNodeDialog}
-                            typeLabel={typeLabel}
-                          />
-                        );
-                      })}
-                    </TableContentWrapper>
-                  )}
-                </TableBody>
-              </Table>
-              <PaginationFooter
-                count={count}
-                eventCategory="Node Table"
-                handlePageChange={handlePageChange}
-                handleSizeChange={handlePageSizeChange}
-                page={page}
-                pageSize={pageSize}
-                /**
-                 * M3-9360: Since this table is in an accordion, the position needs to be relative
-                 * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
-                 **/
-                sx={{ position: 'relative' }}
-              />
-              <StyledTableFooter>
-                <StyledPoolInfoBox>
-                  {isDiskEncryptionFeatureEnabled &&
-                  encryptionStatus !== undefined ? (
-                    <Box
-                      alignItems="center"
-                      data-testid={encryptionStatusTestId}
-                      display="flex"
-                    >
-                      <Typography sx={{ textWrap: 'nowrap' }}>
-                        Pool ID {poolId}
-                      </Typography>
-                      <StyledVerticalDivider />
-                      <EncryptedStatus
-                        encryptionStatus={encryptionStatus}
-                        regionSupportsDiskEncryption={
-                          regionSupportsDiskEncryption
+                    <TableCell colSpan={4}>
+                      <ErrorState
+                        compact
+                        CustomIcon={EmptyStateCloud}
+                        errorText={
+                          <Box>
+                            <Typography
+                              data-qa-error-msg
+                              style={{ textAlign: 'center' }}
+                              variant="h3"
+                            >
+                              Worker nodes will appear once cluster provisioning
+                              is complete.
+                            </Typography>
+                            <Typography>
+                              Provisioning can take up to ~20 minutes.
+                            </Typography>
+                          </Box>
                         }
-                        tooltipText={undefined}
                       />
-                    </Box>
-                  ) : (
-                    <Typography>Pool ID {poolId}</Typography>
-                  )}
-                </StyledPoolInfoBox>
-                <TagCell tags={tags} updateTags={updateTags} view="inline" />
-              </StyledTableFooter>
-            </>
-          )}
-        </Paginate>
+                    </TableCell>
+                  </TableRow>
+                )}
+              {(rowData.length > 0 ||
+                !isEnterpriseClusterWithin20MinsOfCreation()) && (
+                <TableContentWrapper
+                  length={paginatedAndOrderedData.length}
+                  loading={isLoading}
+                  loadingProps={{ columns: 4 }}
+                >
+                  {paginatedAndOrderedData.map((eachRow) => {
+                    return (
+                      <_NodeRow
+                        instanceId={eachRow.instanceId}
+                        instanceStatus={eachRow.instanceStatus}
+                        ip={eachRow.ip}
+                        key={`node-row-${eachRow.nodeId}`}
+                        label={eachRow.label}
+                        linodeError={error ?? undefined}
+                        nodeId={eachRow.nodeId}
+                        nodeStatus={eachRow.nodeStatus}
+                        openRecycleNodeDialog={openRecycleNodeDialog}
+                        typeLabel={typeLabel}
+                      />
+                    );
+                  })}
+                </TableContentWrapper>
+              )}
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={count}
+            eventCategory="Node Table"
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+            page={page}
+            pageSize={pageSize}
+            /**
+             * M3-9360: Since this table is in an accordion, the position needs to be relative
+             * to prevent an overflow-y issue with the absolutely positioned visually-hidden footer label
+             **/
+            sx={{ position: 'relative' }}
+          />
+          <StyledTableFooter>
+            <StyledPoolInfoBox>
+              {isDiskEncryptionFeatureEnabled &&
+              encryptionStatus !== undefined ? (
+                <Box
+                  alignItems="center"
+                  data-testid={encryptionStatusTestId}
+                  display="flex"
+                >
+                  <Typography sx={{ textWrap: 'nowrap' }}>
+                    Pool ID {poolId}
+                  </Typography>
+                  <StyledVerticalDivider />
+                  <EncryptedStatus
+                    encryptionStatus={encryptionStatus}
+                    regionSupportsDiskEncryption={regionSupportsDiskEncryption}
+                    tooltipText={undefined}
+                  />
+                </Box>
+              ) : (
+                <Typography>Pool ID {poolId}</Typography>
+              )}
+            </StyledPoolInfoBox>
+            <TagCell tags={tags} updateTags={updateTags} view="inline" />
+          </StyledTableFooter>
+        </>
       )}
-    </OrderBy>
+    </Paginate>
   );
 });
 

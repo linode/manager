@@ -1,9 +1,5 @@
 import { useAccount, useAccountBetaQuery } from '@linode/queries';
-import {
-  getBetaStatus,
-  isFeatureEnabledV2,
-  sortByVersion,
-} from '@linode/utilities';
+import { getBetaStatus, isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 import {
@@ -21,11 +17,78 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { ExtendedType } from 'src/utilities/extendType';
 
+type SortOrder = 'asc' | 'desc';
 interface ClusterData {
   CPU: number;
   RAM: number;
   Storage: number;
 }
+
+/**
+ * Compares two semantic version strings based on the specified order, including with special handling of LKE-Enterprise tier versions.
+ *
+ * This function splits each version string into its constituent parts (major, minor, patch),
+ * compares them numerically, and returns a positive number, zero, or a negative number
+ * based on the specified sorting order. If components are missing in either version,
+ * they are treated as zero.
+ *
+ * @param {string} a - The first version string to compare.
+ * @param {string} b - The second version string to compare.
+ * @param {SortOrder} order - The intended sort direction of the output; 'asc' means lower versions come first, 'desc' means higher versions come first.
+ * @returns {number} Returns a positive number if version `a` is greater than `b` according to the sort order,
+ *                   zero if they are equal, and a negative number if `b` is greater than `a`.
+ * * @example
+ * // returns a positive number
+ * sortByVersion('1.2.3', '1.2.2', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.2+lke2', 'asc');
+ *
+ * @example
+ * // returns zero
+ * sortByVersion('1.2.3', '1.2.3', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.3+lke1', 'asc');
+ *
+ * @example
+ * // returns a negative number
+ * sortByVersion('1.2.3', '1.2.4', 'asc');
+ * sortByVersion('v1.2.3+lke1', 'v1.2.4+lke1', 'asc');
+ */
+export const compareByKubernetesVersion = (
+  a: string,
+  b: string,
+  order: SortOrder
+): number => {
+  // For LKE-E versions, remove the 'v' prefix and split the core version (X.X.X) from the enterprise release version (+lkeX).
+  const aStrippedVersion = a.replace('v', '');
+  const bStrippedVersion = b.replace('v', '');
+  const [aCoreVersion, aEnterpriseVersion] = aStrippedVersion.split('+');
+  const [bCoreVersion, bEnterpriseVersion] = bStrippedVersion.split('+');
+
+  const aParts = aCoreVersion.split('.');
+  const bParts = bCoreVersion.split('.');
+  // For LKE-E versions, extract the number from the +lke suffix.
+  const aEnterpriseVersionNum =
+    Number(aEnterpriseVersion?.replace(/\D+/g, '')) || 0;
+  const bEnterpriseVersionNum =
+    Number(bEnterpriseVersion?.replace(/\D+/g, '')) || 0;
+
+  const result = (() => {
+    for (let i = 0; i < Math.max(aParts.length, bParts.length); i += 1) {
+      // If one version has a part and another doesn't (e.g. 3.1 vs 3.1.1),
+      // treat the missing part as 0.
+      const aNumber = Number(aParts[i]) || 0;
+      const bNumber = Number(bParts[i]) || 0;
+      const diff = aNumber - bNumber;
+
+      if (diff !== 0) {
+        return diff;
+      }
+    }
+    // If diff is 0, the core versions are the same, so compare the enterprise release version numbers.
+    return aEnterpriseVersionNum - bEnterpriseVersionNum;
+  })();
+
+  return order === 'asc' ? result : -result;
+};
 
 export const getTotalClusterMemoryCPUAndStorage = (
   pools: KubeNodePoolResponse[],
@@ -124,16 +187,30 @@ export const getKubeHighAvailability = (
 
 export const useAPLAvailability = () => {
   const flags = useFlags();
+  const isAPLEnabled = Boolean(flags.apl);
+  const isAPLGeneralAvailability = Boolean(flags.aplGeneralAvailability);
 
-  // Only fetch the account beta if the APL flag is enabled
+  // Only fetch the account beta if:
+  // 1. the APL flag is enabled
+  // 2. we're not in GA
   const { data: beta, isLoading } = useAccountBetaQuery(
     'apl',
-    Boolean(flags.apl)
+    isAPLEnabled && !isAPLGeneralAvailability
   );
 
-  const showAPL = beta !== undefined && getBetaStatus(beta) === 'active';
+  // In order to show the APL panel, we either:
+  // 1. Confirm the user is in the beta group (and the APL flag is enabled)
+  // or
+  // 2. Are in GA (which supersedes the beta group check and the APL flag)
+  const showAPL =
+    (beta !== undefined && getBetaStatus(beta) === 'active') ||
+    isAPLGeneralAvailability;
 
-  return { isLoading: flags.apl && isLoading, showAPL };
+  return {
+    isLoading: isAPLEnabled && isLoading,
+    showAPL,
+    isAPLGeneralAvailability,
+  };
 };
 
 export const getKubeControlPlaneACL = (
@@ -179,7 +256,7 @@ export const getLatestVersion = (
   versions: { label: string; value: string }[]
 ): { label: string; value: string } => {
   const sortedVersions = versions.sort((a, b) => {
-    return sortByVersion(a.value, b.value, 'asc');
+    return compareByKubernetesVersion(a.value, b.value, 'asc');
   });
 
   const latestVersion = sortedVersions.pop();
@@ -271,9 +348,17 @@ export const useLkeStandardOrEnterpriseVersions = (
 };
 
 export const useKubernetesBetaEndpoint = () => {
-  const { isLoading: isAPLAvailabilityLoading, showAPL } = useAPLAvailability();
+  const {
+    isLoading: isAPLAvailabilityLoading,
+    showAPL,
+    isAPLGeneralAvailability,
+  } = useAPLAvailability();
   const { isLkeEnterpriseLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
-  const isUsingBetaEndpoint = showAPL || isLkeEnterpriseLAFeatureEnabled;
+  // Use beta endpoint if either:
+  // 1. LKE Enterprise is enabled
+  // 2. APL is supported but not in GA
+  const isUsingBetaEndpoint =
+    (showAPL && !isAPLGeneralAvailability) || isLkeEnterpriseLAFeatureEnabled;
 
   return {
     isAPLAvailabilityLoading,

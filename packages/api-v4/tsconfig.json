@@ -1,18 +1,8 @@
 {
+  "extends": ["@linode/tsconfig/package", "@linode/tsconfig/emit-types"],
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "emitDeclarationOnly": true,
-    "declaration": true,
     "outDir": "./lib",
-    "esModuleInterop": true,
-    "moduleResolution": "bundler",
-    "skipLibCheck": true,
-    "strict": true,
     "baseUrl": ".",
-    "noUnusedLocals": true,
-    "declarationMap": true,
-    "incremental": true
   },
   "include": [
     "src"

@@ -81,7 +81,7 @@ const dedicatedCpuPool = nodePoolFactory.build({
 const nanodeMemoryPool = nodePoolFactory.build({
   count: nanodeNodeCount,
   nodes: kubeLinodeFactory.buildList(nanodeNodeCount),
-  type: 'g6-nanode-1',
+  type: 'g6-standard-1',
 });
 const dedicatedType = dedicatedTypeFactory.build({
   disk: 81920,
@@ -98,16 +98,16 @@ const dedicatedType = dedicatedTypeFactory.build({
   vcpus: 2,
 }) as ExtendedType;
 const nanodeType = linodeTypeFactory.build({
-  disk: 25600,
-  id: 'g6-nanode-1',
+  disk: 51200,
+  id: 'g6-standard-1',
   label: 'Linode 2 GB',
   memory: 2048,
   price: {
-    hourly: 0.0075,
+    hourly: 0.0095,
     monthly: 5.0,
   },
   region_prices: dcPricingMockLinodeTypes.find(
-    (type) => type.id === 'g6-nanode-1'
+    (type) => type.id === 'g6-standard-1'
   )?.region_prices,
   vcpus: 1,
 }) as ExtendedType;
@@ -164,7 +164,7 @@ const clusterPlans: LkePlanDescription[] = [
     planName: 'Linode 2 GB',
     size: 24,
     tab: 'Shared CPU',
-    type: 'nanode',
+    type: 'standard',
   },
 ];
 const mockedLKEClusterTypes = [
@@ -426,9 +426,8 @@ describe('LKE Cluster Creation with APL enabled', () => {
       nanodeType,
     ];
     mockAppendFeatureFlags({
-      apl: {
-        enabled: true,
-      },
+      apl: true,
+      aplGeneralAvailability: false,
     }).as('getFeatureFlags');
     mockGetAccountBeta({
       description:
@@ -958,7 +957,7 @@ describe('LKE Cluster Creation with ACL', () => {
      * - Confirms at least one IP must be provided for ACL unless acknowledgement is checked
      * - Confirms the cluster details page shows ACL is enabled
      */
-    it('creates an LKE cluster with ACL enabled by default and handles IP address validation', () => {
+    it('creates an LKE-E cluster with ACL enabled by default and handles IP address validation', () => {
       const clusterLabel = randomLabel();
       const mockedEnterpriseCluster = kubernetesClusterFactory.build({
         k8s_version: latestEnterpriseTierKubernetesVersion.id,
@@ -1012,7 +1011,6 @@ describe('LKE Cluster Creation with ACL', () => {
         mockedEnterpriseCluster.id,
         mockedEnterpriseClusterPools
       ).as('getClusterPools');
-      mockGetDashboardUrl(mockedEnterpriseCluster.id).as('getDashboardUrl');
       mockGetApiEndpoints(mockedEnterpriseCluster.id).as('getApiEndpoints');
 
       cy.visitWithLogin('/kubernetes/clusters');
@@ -1152,7 +1150,6 @@ describe('LKE Cluster Creation with ACL', () => {
         '@createCluster',
         '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
-        '@getDashboardUrl',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);
@@ -1409,7 +1406,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         mockedEnterpriseCluster.id,
         mockedEnterpriseClusterPools
       ).as('getClusterPools');
-      mockGetDashboardUrl(mockedEnterpriseCluster.id).as('getDashboardUrl');
       mockGetApiEndpoints(mockedEnterpriseCluster.id).as('getApiEndpoints');
 
       cy.visitWithLogin('/kubernetes/clusters');
@@ -1594,7 +1590,6 @@ describe('LKE Cluster Creation with LKE-E', () => {
         '@createCluster',
         '@getLKEEnterpriseClusterTypes',
         '@getLinodeTypes',
-        '@getDashboardUrl',
         '@getApiEndpoints',
         '@getControlPlaneACL',
       ]);

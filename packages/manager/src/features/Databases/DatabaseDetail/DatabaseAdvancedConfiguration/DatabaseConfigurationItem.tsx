@@ -154,6 +154,7 @@ export const DatabaseConfigurationItem = (props: Props) => {
         <Button
           onClick={() => onRemove(configItem?.label)}
           size="large"
+          style={{ paddingLeft: 12, paddingRight: 12 }}
           variant="icon"
         >
           <CloseIcon />

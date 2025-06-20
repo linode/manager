@@ -1,16 +1,15 @@
 import { useAccount, useRegionsQuery } from '@linode/queries';
 import { Box, CircleProgress, ErrorState, Stack } from '@linode/ui';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import {
-  getKubeHighAvailability,
   useAPLAvailability,
+  useKubernetesBetaEndpoint,
 } from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import {
   useKubernetesClusterMutation,
   useKubernetesClusterQuery,
@@ -25,11 +24,10 @@ import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 export const KubernetesClusterDetail = () => {
   const { data: account } = useAccount();
-  const { clusterID } = useParams<{ clusterID: string }>();
-  const id = Number(clusterID);
+  const { clusterId } = useParams({ from: '/kubernetes/clusters/$clusterId' });
+  const id = Number(clusterId);
   const location = useLocation();
   const { showAPL } = useAPLAvailability();
-
   const { isUsingBetaEndpoint } = useKubernetesBetaEndpoint();
 
   const {
@@ -149,9 +147,3 @@ export const KubernetesClusterDetail = () => {
     </>
   );
 };
-
-export const kubernetesClusterDetailLazyRoute = createLazyRoute(
-  '/kubernetes/clusters/$clusterID'
-)({
-  component: KubernetesClusterDetail,
-});

@@ -135,7 +135,7 @@ export interface NodeBalancerStats {
 }
 
 export interface NodeBalancerVpcPayload {
-  ipv4_range: string;
+  ipv4_range?: string;
   ipv6_range?: string;
   subnet_id: number;
 }

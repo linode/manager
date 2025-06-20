@@ -173,7 +173,7 @@ describe('Account Linode Managed', () => {
 
     // Navigate to the 'Open a Support Ticket' page.
     cy.findByText('Support Ticket').should('be.visible').click();
-    cy.url().should('endWith', '/support/tickets');
+    cy.url().should('endWith', '/support/tickets/open?dialogOpen=true');
 
     // Confirm that title and category are related to cancelling Linode Managed.
     cy.findByLabelText('Title (required)').should(
