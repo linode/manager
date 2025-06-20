@@ -84,7 +84,7 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
       });
   });
 
-  it('Metrics banner not display when isAclpMetricsBeta is false', function () {
+  it('Metrics banner does not display when isAclpMetricsBeta is false', function () {
     const userPreferences = userPreferencesFactory.build({
       isAclpMetricsBeta: false,
     } as Partial<UserPreferences>);
