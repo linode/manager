@@ -79,7 +79,7 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
         cy.get('[data-testid="alerts-preference-banner-text"]').should(
           'not.exist'
         );
-        // // downgrade button is not visible
+        // downgrade button is not visible
         cy.findByText('Switch to legacy Alerts').should('not.exist');
       });
   });
