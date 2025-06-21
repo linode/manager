@@ -21,8 +21,8 @@ describe('Event fetching and polling', () => {
 
     mockGetEvents([]).as('getEvents');
 
-    cy.clock(mockNow.toJSDate());
     cy.visitWithLogin('/');
+    cy.clock(mockNow.toJSDate());
     cy.wait('@getEvents').then((xhr) => {
       const filters = xhr.request.headers['x-filter'];
       const lastWeekTimestamp = mockNow
@@ -122,10 +122,10 @@ describe('Event fetching and polling', () => {
 
     mockGetEvents([mockEvent]).as('getEventsInitialFetches');
 
+    cy.visitWithLogin('/');
     // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
     // a `should(() => {})` callback because Cypress commands are disallowed there.
     cy.clock(mockNow.toJSDate()).then((clock) => {
-      cy.visitWithLogin('/');
 
       // Confirm that Cloud manager polls the requests endpoint no more than
       // once every 16 seconds.
@@ -191,10 +191,11 @@ describe('Event fetching and polling', () => {
     // initial polling request.
     mockGetEvents(mockEvents).as('getEventsInitialFetches');
 
+    cy.visitWithLogin('/');
+
     // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
     // a `should(() => {})` callback because Cypress commands are disallowed there.
     cy.clock(Date.now()).then((clock) => {
-      cy.visitWithLogin('/');
 
       // Confirm that Cloud manager polls the requests endpoint no more than once
       // every 2 seconds.

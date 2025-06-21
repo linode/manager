@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { timezones } from 'src/assets/timezones/timezones';
-import { getIsLoggedInAsCustomer } from 'src/OAuth/utils';
+import { getIsLoggedInAsCustomer } from 'src/OAuth/oauth';
 
 import type { Profile } from '@linode/api-v4';
 

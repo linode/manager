@@ -1,20 +1,47 @@
 import { loginBaseUrl } from 'support/constants/login';
 import { mockApiRequestWithError } from 'support/intercepts/general';
+import { mockGetSSHKeysError } from 'support/intercepts/profile';
+import { ui } from 'support/ui';
+import { getOrigin } from 'support/util/local-storage';
+
+const tokenLocalStorageKey = 'authentication/token';
 
 describe('account login redirect', () => {
   /**
-   * The API will return 401 with the body below for all the endpoints.
+   * The API will return 401 with the body below for all the endpoints if
+   * - Their token is expired
+   * - Their token is non-existant
+   * - Their token is invalid
    *
-   * { "errors": [ { "reason": "Your account must be authorized to use this endpoint" } ] }
+   * { "errors": [ { "reason": "Invalid Token" } ] }
    */
-  it('should redirect to the login page when the user is not authorized', () => {
-    const errorReason = 'Your account must be authorized to use this endpoint';
-
-    mockApiRequestWithError(401, errorReason);
+  it('should redirect to the login page when the API responds with a 401', () => {
+    mockApiRequestWithError(401, 'Invalid Token');
 
     cy.visitWithLogin('/linodes/create');
 
     cy.url().should('contain', `${loginBaseUrl}/login?`, { exact: false });
+  });
+
+  it('should remove the authentication token from local storage when the API responds with a 401', () => {
+    cy.visitWithLogin('/profile');
+
+    cy.getAllLocalStorage().then((localStorageData) => {
+      const origin = getOrigin();
+      expect(localStorageData[origin][tokenLocalStorageKey]).to.exist;
+      expect(localStorageData[origin][tokenLocalStorageKey]).to.be.a('string');
+    });
+
+    mockGetSSHKeysError('Invalid Token', 401);
+
+    ui.tabList.findTabByTitle('SSH Keys').click();
+
+    cy.url().should('contain', `${loginBaseUrl}/login?`, { exact: false });
+
+    cy.getAllLocalStorage().then((localStorageData) => {
+      const origin = getOrigin();
+      expect(localStorageData[origin][tokenLocalStorageKey]).to.be.undefined;
+    });
   });
 
   /**
@@ -24,7 +51,7 @@ describe('account login redirect', () => {
     cy.visitWithLogin('/linodes/create?type=Images');
     cy.url().should('contain', '/linodes/create');
 
-    cy.clearLocalStorage('authentication/token');
+    cy.clearLocalStorage(tokenLocalStorageKey);
     cy.reload();
     cy.url().should(
       'contain',

@@ -12,6 +12,7 @@ export * from './deepStringTransform';
 export * from './doesRegionSupportFeature';
 export * from './downloadFile';
 export * from './env';
+export * from './errors';
 export * from './escapeRegExp';
 export * from './evenizeNumber';
 export * from './formatDuration';
