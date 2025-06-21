@@ -105,6 +105,13 @@ describe('generateOAuthAuthorizeEndpoint', () => {
 });
 
 describe('handleOAuthCallback', () => {
+  beforeAll(() => {
+    vi.stubEnv('REACT_APP_CLIENT_ID', 'fgejgjefejhg');
+  });
+  afterAll(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('should throw if the callback search params are empty', async () => {
     await expect(handleOAuthCallback({ params: '' })).rejects.toThrowError(
       'Error parsing search params on OAuth callback.'
@@ -175,6 +182,7 @@ describe('handleOAuthCallback', () => {
         params: 'state=fakenonce&code=gyuwyutfetyfew',
       })
     ).rejects.toThrowError('Request to POST /oauth/token was not ok.');
+
   });
 
   it('should throw if the /oauth/token response is not valid JSON', async () => {
