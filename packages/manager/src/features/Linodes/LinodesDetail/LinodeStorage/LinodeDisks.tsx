@@ -115,6 +115,7 @@ export const LinodeDisks = () => {
       from: '/linodes/$linodeId/storage',
     },
     preferenceKey: 'linode-disks',
+    prefix: 'linode-disks',
   });
 
   return (

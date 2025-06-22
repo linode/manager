@@ -57,6 +57,7 @@ export const LinodeVolumes = () => {
       from: '/linodes/$linodeId/storage',
     },
     preferenceKey: `${preferenceKey}-order`,
+    prefix: preferenceKey,
   });
 
   const filter = {
