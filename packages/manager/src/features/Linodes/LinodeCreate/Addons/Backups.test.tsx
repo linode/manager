@@ -64,7 +64,7 @@ describe('Linode Create Backups Addon', () => {
 
   it('should render special copy, be checked, and be disabled if account backups are enabled', async () => {
     server.use(
-      http.get('*/v4/account/settings', () => {
+      http.get('*/v4*/account/settings', () => {
         return HttpResponse.json(
           accountSettingsFactory.build({ backups_enabled: true })
         );
@@ -89,7 +89,7 @@ describe('Linode Create Backups Addon', () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

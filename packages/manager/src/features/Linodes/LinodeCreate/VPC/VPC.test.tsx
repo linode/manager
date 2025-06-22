@@ -57,7 +57,7 @@ describe('VPC', () => {
     const region = regionFactory.build({ capabilities: [] });
 
     server.use(
-      http.get(`*/v4/regions/${region.id}`, () => {
+      http.get(`*/v4*/regions/${region.id}`, () => {
         return HttpResponse.json(region);
       })
     );

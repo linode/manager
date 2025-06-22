@@ -58,7 +58,7 @@ describe('VLAN', () => {
     const region = regionFactory.build({ capabilities: ['Vlans'] });
 
     server.use(
-      http.get(`*/v4/regions/${region.id}`, () => {
+      http.get(`*/v4*/regions/${region.id}`, () => {
         return HttpResponse.json(region);
       })
     );
