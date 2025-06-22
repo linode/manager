@@ -149,7 +149,6 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                               color: theme.tokens.alias.Content.Text,
                               font: theme.font.bold,
                               fontSize: theme.tokens.font.FontSize.Xxxs,
-                              mx: 1,
                               textTransform: 'uppercase',
                               userSelect: 'none',
                               whiteSpace: 'nowrap',

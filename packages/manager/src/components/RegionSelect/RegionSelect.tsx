@@ -160,12 +160,11 @@ export const RegionSelect = <
                   <PublicIcon
                     sx={{
                       height: '24px',
-                      mr: 1,
                       width: '24px',
                     }}
                   />
                 ) : (
-                  <Flag country={selectedRegion?.country} mr={1} />
+                  <Flag country={selectedRegion?.country} />
                 )}
               </InputAdornment>
             ),

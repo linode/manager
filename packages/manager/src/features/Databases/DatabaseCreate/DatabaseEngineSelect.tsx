@@ -78,9 +78,7 @@ export const DatabaseEngineSelect = (props: Props) => {
         InputProps: {
           startAdornment: (
             <InputAdornment position="start">
-              <Box
-                sx={{ pr: 1, pt: 0.7, svg: { height: '20px', width: '20px' } }}
-              >
+              <Box sx={{ pt: 0.7, svg: { height: '20px', width: '20px' } }}>
                 {selectedEngine?.flag}
               </Box>
             </InputAdornment>
