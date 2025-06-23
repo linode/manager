@@ -1,2 +1,2 @@
-export * from './entitytransfers';
+export * from './entityTransfers';
 export * from './requests';
