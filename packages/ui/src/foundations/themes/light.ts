@@ -330,7 +330,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: Color.Brand[80],
+              color: Alias.Action.Primary.Default,
             },
           },
           backgroundColor: 'transparent',
@@ -1018,7 +1018,6 @@ export const lightTheme: ThemeOptions = {
           height: Spacing.S16,
           padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
           textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         },
         inputMultiline: {
           minHeight: '100px',

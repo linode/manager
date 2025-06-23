@@ -21,7 +21,7 @@ describe('NetworkInterfaces', () => {
     });
 
     server.use(
-      http.get('*/v4/account/settings', () =>
+      http.get('*/v4*/account/settings', () =>
         HttpResponse.json(accountSettings)
       )
     );

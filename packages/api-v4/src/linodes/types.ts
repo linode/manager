@@ -8,7 +8,6 @@ import type {
   UpdateLinodeInterfaceSettingsSchema,
   UpgradeToLinodeInterfaceSchema,
 } from '@linode/validation';
-import type { MaintenancePolicyId } from 'src/account';
 import type { CloudPulseAlertsPayload } from 'src/cloudpulse';
 import type { VPCIP } from 'src/vpcs';
 import type { InferType } from 'yup';
@@ -44,7 +43,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy_id?: MaintenancePolicyId;
+  maintenance_policy_id?: number;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
