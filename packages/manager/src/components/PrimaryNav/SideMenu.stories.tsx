@@ -1,7 +1,7 @@
 import { Box, IconButton } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useArgs } from '@storybook/preview-api';
+import { useArgs } from 'storybook/preview-api';
 import * as React from 'react';
 
 import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
@@ -9,7 +9,7 @@ import { TopMenuTooltip } from 'src/features/TopMenu/TopMenuTooltip';
 import { SideMenu } from './SideMenu';
 
 import type { SideMenuProps } from './SideMenu';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<SideMenuProps> = {
   render: (args) => {

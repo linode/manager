@@ -1,6 +1,6 @@
 import { MaintenancePolicySelect } from './MaintenancePolicySelect';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof MaintenancePolicySelect> = {
   title: 'Components/Selects/MaintenancePolicySelect',

@@ -6,7 +6,6 @@ import {
   Description,
   Primary,
   Controls,
-  DocsContainerProps,
 } from '@storybook/addon-docs/blocks';
 import {
   wrapWithTheme,
@@ -14,42 +13,22 @@ import {
 } from '../src/utilities/testHelpers';
 import { themes } from 'storybook/theming';
 import { storybookWorker } from '../src/mocks/mswWorkers';
+import { useDarkMode,  } from '@vueless/storybook-dark-mode';
 import { DocsContainer as BaseContainer } from '@storybook/addon-docs/blocks';
-import { DARK_MODE_EVENT_NAME, useDarkMode } from '@vueless/storybook-dark-mode';
-
 
 import '../src/index.css';
 // TODO: M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
 import '@reach/tabs/styles.css';
-import { PropsWithChildren } from 'react';
 
 MINIMAL_VIEWPORTS.mobile1.styles = {
   height: '667px',
   width: '375px',
 };
 
-import { addons } from 'storybook/preview-api';
-import React from 'react';
+export const DocsContainer = ({ children, context, ...rest }) => {
+  const isDark = useDarkMode();
 
-const channel = addons.getChannel();
-
-function useDocsDarkMode() {
-  const [isDark, setDark] = React.useState(channel.last(DARK_MODE_EVENT_NAME));
-  
-
-  React.useEffect(() => {
-    channel.on(DARK_MODE_EVENT_NAME, setDark);
-    return () => channel.off(DARK_MODE_EVENT_NAME, setDark);
-  }, [channel, setDark]);
-
-  return isDark;
-}
-
-export const DocsContainer = ({ children, context, theme }: PropsWithChildren<DocsContainerProps>) => {
-  const isDark = useDocsDarkMode();
-
-  console.log(isDark)
-
+  console.log(context, rest)
 
   return (
     <BaseContainer
@@ -107,6 +86,7 @@ const preview: Preview = {
     darkMode: {
       dark: { ...themes.dark },
       light: { ...themes.normal },
+      stylePreview: true
     },
     controls: {
       expanded: true,

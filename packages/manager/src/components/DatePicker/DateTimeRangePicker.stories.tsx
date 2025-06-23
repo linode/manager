@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
+import { action } from 'storybook/actions';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { DateTimeRangePicker } from './DateTimeRangePicker';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof DateTimeRangePicker>;
 

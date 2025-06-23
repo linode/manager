@@ -3,7 +3,7 @@ import React from 'react';
 import { ColorPicker } from 'src/components/ColorPicker/ColorPicker';
 
 import type { ColorPickerProps } from './ColorPicker';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<ColorPickerProps> = {
   args: {

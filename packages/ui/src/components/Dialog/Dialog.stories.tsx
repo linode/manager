@@ -1,11 +1,11 @@
 import { Button, Typography } from '@linode/ui';
-import { action } from '@storybook/addon-actions';
-import { useArgs } from '@storybook/preview-api';
+import { action } from 'storybook/actions';
+import { useArgs } from 'storybook/preview-api';
 import React from 'react';
 
 import { Dialog } from './Dialog';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Dialog> = {
   argTypes: {

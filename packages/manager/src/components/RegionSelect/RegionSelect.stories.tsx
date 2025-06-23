@@ -1,12 +1,12 @@
 import { Box } from '@linode/ui';
 import { regions } from '@linode/utilities';
-import { useArgs } from '@storybook/preview-api';
+import { useArgs } from 'storybook/preview-api';
 import React from 'react';
 
 import { RegionSelect } from './RegionSelect';
 
 import type { RegionSelectProps } from './RegionSelect.types';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<RegionSelectProps> = {
   render: (args) => {
