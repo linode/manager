@@ -11,7 +11,7 @@ interface Props {
   value: string;
 }
 
-export const NodePoolsUpdateStrategySelect = (props: Props) => {
+export const NodePoolUpdateStrategySelect = (props: Props) => {
   const { onChange, value } = props;
   return (
     <Autocomplete

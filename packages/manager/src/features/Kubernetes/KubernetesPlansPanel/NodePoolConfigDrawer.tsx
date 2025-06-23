@@ -9,7 +9,7 @@ import {
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
 import { DEFAULT_PLAN_COUNT } from '../CreateCluster/NodePoolPanel';
-import { NodePoolsUpdateStrategySelect } from '../NodePoolsUpdateStrategySelect';
+import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
 import type {
   KubeNodePoolResponse,
@@ -125,17 +125,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
               />
             )}
           />
-          <Controller
-            control={control}
-            name="update_strategy"
-            render={({ field }) => (
-              <NodePoolsUpdateStrategySelect
-                onChange={field.onChange}
-                value={field.value}
-              />
-            )}
-          />
-
+          {selectedTier === 'enterprise' && <NodePoolConfigOptions />}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': isAddMode ? 'add' : 'update',
