@@ -35,7 +35,7 @@ const config: StorybookConfig = {
           ? !/node_modules\/(?!@mui)/.test(prop.parent.fileName)
           : true,
     },
-    reactDocgen: false,
+    reactDocgen: 'react-docgen-typescript',
   },
   docs: {
     defaultName: 'Documentation',
