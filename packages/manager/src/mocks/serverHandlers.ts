@@ -2895,7 +2895,7 @@ export const handlers = [
       );
     }
 
-    if (params.serviceType === 'nodebalancers') {
+    if (params.serviceType === 'nodebalancer') {
       response.data.push(
         dashboardFactory.build({
           id: 3,
@@ -3052,7 +3052,7 @@ export const handlers = [
         params.id === '1'
           ? 'dbaas'
           : params.id === '3'
-            ? 'nodebalancers'
+            ? 'nodebalancer'
             : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,

@@ -234,5 +234,5 @@ export const FILTER_CONFIG: Readonly<
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
   ['linode', LINODE_CONFIG],
-  ['nodebalancers', NODEBALANCER_CONFIG],
+  ['nodebalancer', NODEBALANCER_CONFIG],
 ]);

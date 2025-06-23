@@ -26,7 +26,7 @@ const linodeConfig = FILTER_CONFIG.get('linode');
 
 const dbaasConfig = FILTER_CONFIG.get('dbaas');
 
-const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancers');
+const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancer');
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
 
