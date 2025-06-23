@@ -618,6 +618,9 @@ importers:
       '@storybook/addon-actions':
         specifier: ^9.0.8
         version: 9.0.8
+      '@storybook/react-vite':
+        specifier: ^9.0.12
+        version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.40.1)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.7.3)(vite@6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0
@@ -684,6 +687,9 @@ importers:
       '@storybook/addon-actions':
         specifier: ^9.0.8
         version: 9.0.8
+      '@storybook/react-vite':
+        specifier: ^9.0.12
+        version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.40.1)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.7.3)(vite@6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
       '@testing-library/dom':
         specifier: ^10.1.0
         version: 10.4.0

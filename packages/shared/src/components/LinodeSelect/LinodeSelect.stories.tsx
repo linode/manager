@@ -1,5 +1,5 @@
-import { action } from 'storybook/actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { LinodeSelect } from './LinodeSelect';
 
