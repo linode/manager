@@ -26,30 +26,30 @@ const mockAccountAcceessRole: ExtendedRole = {
   description:
     'Access to perform any supported action on all linode instances in the account',
   entity_type: 'account',
-  name: 'account_retail_owner',
+  name: 'account_admin',
   permissions: ['cancel_account'],
 };
 
 const mockEntitiesAcceessRole: ExtendedRole = {
   access: 'entity_access',
-  description: 'Access to administer a image instance',
-  entity_type: 'image',
-  name: 'image_admin',
+  description: 'Access to administer a linode instance',
+  entity_type: 'linode',
+  name: 'linode_admin',
   permissions: [
-    'create_image',
-    'upload_image',
-    'list_images',
-    'view_image',
-    'update_image',
-    'delete_image',
+    'create_linode',
+    'boot_linode',
+    'rescue_linode',
+    'view_linode',
+    'update_linode',
+    'delete_linode',
   ],
 };
 
 const mockEntities = [
   accountEntityFactory.build({
     id: 1,
-    label: 'image-1',
-    type: 'image',
+    label: 'linode-1',
+    type: 'linode',
   }),
 ];
 
@@ -95,15 +95,15 @@ describe('AssignedPermissionsPanel', () => {
     expect(permissions).toHaveLength(6);
 
     expect(
-      screen.getByText('Access to administer a image instance')
+      screen.getByText('Access to administer a linode instance')
     ).toBeVisible();
-    expect(screen.getByText('create_image')).toBeVisible();
+    expect(screen.getByText('create_linode')).toBeVisible();
     expect(screen.getByText('Entities')).toBeVisible();
 
     const autocomplete = screen.getAllByRole('combobox');
     expect(autocomplete).toHaveLength(1);
     expect(autocomplete[0]).toBeInTheDocument();
-    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Images');
+    expect(autocomplete[0]).toHaveAttribute('placeholder', 'Select Linodes');
   });
 
   it('renders the Autocomplete when the access is an entity', () => {
@@ -118,7 +118,7 @@ describe('AssignedPermissionsPanel', () => {
     const autocomplete = screen.getAllByRole('combobox')[0];
     fireEvent.focus(autocomplete);
     fireEvent.mouseDown(autocomplete);
-    expect(screen.getByText('image-1')).toBeVisible();
+    expect(screen.getByText('linode-1')).toBeVisible();
   });
 
   it('shows all permissions', () => {
