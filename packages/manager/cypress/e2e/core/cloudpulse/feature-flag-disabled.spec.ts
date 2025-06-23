@@ -12,8 +12,10 @@ describe('User preferences for alerts and metrics have no effect when aclpBetaSe
   beforeEach(() => {
     mockAppendFeatureFlags({
       aclpBetaServices: {
-        alerts: false,
-        metrics: false,
+        linode: {
+          alerts: false,
+          metrics: false,
+        },
       },
     }).as('getFeatureFlags');
     const mockRegion = regionFactory.build({
