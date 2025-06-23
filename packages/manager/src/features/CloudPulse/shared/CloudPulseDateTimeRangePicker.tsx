@@ -9,6 +9,7 @@ interface DateChangeProps {
   endDate: null | string;
   selectedPreset: null | string;
   startDate: null | string;
+  timeZone: null | string;
 }
 
 interface CloudPulseDateTimeRangePickerProps {
@@ -25,8 +26,12 @@ export const CloudPulseDateTimeRangePicker = React.memo(
   (props: CloudPulseDateTimeRangePickerProps) => {
     const { defaultValue, handleStatsChange, savePreferences } = props;
     const { data: profile } = useProfile();
-    const timezone = profile?.timezone ?? DateTime.local().zoneName;
     const defaultSelected = defaultValue as DateTimeWithPreset;
+
+    const timezone =
+      defaultSelected?.timeZone ??
+      profile?.timezone ??
+      DateTime.local().zoneName;
     React.useEffect(() => {
       if (defaultSelected) {
         handleStatsChange(defaultSelected);
@@ -34,15 +39,17 @@ export const CloudPulseDateTimeRangePicker = React.memo(
     }, []);
 
     const handleDateChange = (params: DateChangeProps) => {
-      const { endDate, selectedPreset, startDate } = params;
-      if (!endDate || !startDate || !selectedPreset) {
+      const { endDate, selectedPreset, startDate, timeZone } = params;
+      if (!endDate || !startDate || !selectedPreset || !timeZone) {
         return;
       }
+
       handleStatsChange(
         {
           end: endDate,
           preset: selectedPreset,
           start: startDate,
+          timeZone,
         },
         savePreferences
       );
@@ -78,6 +85,9 @@ export const CloudPulseDateTimeRangePicker = React.memo(
         }}
         sx={{
           minWidth: '226px',
+        }}
+        timeZoneProps={{
+          defaultValue: timezone,
         }}
       />
     );
