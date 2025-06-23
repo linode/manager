@@ -41,6 +41,30 @@ const statusTooltipIcons = {
   pending: <MaintenancePending />,
 };
 
+interface MaintenanceTextProps {
+  isOpened?: boolean;
+  maintenanceStartTime: string;
+}
+
+const MaintenanceText = ({
+  isOpened = false,
+  maintenanceStartTime,
+}: MaintenanceTextProps) => {
+  return (
+    <>
+      This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
+      {maintenanceStartTime}
+      {!isOpened && (
+        <>
+          . For more information, see your{' '}
+          <Link to="/support/tickets/open">open support tickets.</Link>
+        </>
+      )}
+      .
+    </>
+  );
+};
+
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
 }
@@ -73,18 +97,8 @@ export const LinodeRow = (props: Props) => {
   const loading = linodeInTransition(status, recentEvent);
 
   const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenance?.when
+    maintenance?.start_time || maintenance?.when
   );
-
-  const MaintenanceText = () => {
-    return (
-      <>
-        This Linode&rsquo;s maintenance window opens at{' '}
-        {parsedMaintenanceStartTime}. For more information, see your{' '}
-        <Link to="/support/tickets/open">open support tickets.</Link>
-      </>
-    );
-  };
 
   const iconStatus = getLinodeIconStatus(status);
 
@@ -133,7 +147,12 @@ export const LinodeRow = (props: Props) => {
                 icon={statusTooltipIcons.active}
                 status="other"
                 sx={{ tooltip: { maxWidth: 300 } }}
-                text={<MaintenanceText />}
+                text={
+                  <MaintenanceText
+                    isOpened={false}
+                    maintenanceStartTime={parsedMaintenanceStartTime}
+                  />
+                }
                 tooltipPosition="top"
               />
             </>
@@ -157,7 +176,12 @@ export const LinodeRow = (props: Props) => {
                 }
                 status="other"
                 sx={{ tooltip: { maxWidth: 300 } }}
-                text={<MaintenanceText />}
+                text={
+                  <MaintenanceText
+                    isOpened
+                    maintenanceStartTime={parsedMaintenanceStartTime}
+                  />
+                }
                 tooltipPosition="top"
               />
             )}

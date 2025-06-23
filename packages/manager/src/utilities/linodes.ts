@@ -6,6 +6,7 @@ import { useFlags } from 'src/hooks/useFlags';
 import type { AccountMaintenance, Linode } from '@linode/api-v4';
 
 export interface LinodeMaintenance {
+  start_time: null | string;
   status?:
     | 'canceled'
     | 'completed'
@@ -36,6 +37,7 @@ export const addMaintenanceToLinodes = (
       ? {
           ...thisLinode,
           maintenance: {
+            start_time: foundMaintenance.start_time,
             status: foundMaintenance.status,
             when: foundMaintenance.when,
           },
