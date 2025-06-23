@@ -117,25 +117,32 @@ export const LinodeRow = (props: Props) => {
         noWrap
         statusCell
       >
-        {loading ? (
-          <>
-            <StatusIcon status={iconStatus} />
-            <StyledButton onClick={notificationContext.openMenu}>
-              <ProgressDisplay
-                progress={getProgressOrDefault(recentEvent)}
-                sx={{ display: 'inline-block' }}
-                text={transitionText(status, id, recentEvent)}
+        {!maintenance ? (
+          loading ? (
+            <>
+              <StatusIcon status={iconStatus} />
+              <StyledButton onClick={notificationContext.openMenu}>
+                <ProgressDisplay
+                  progress={getProgressOrDefault(recentEvent)}
+                  sx={{ display: 'inline-block' }}
+                  text={transitionText(status, id, recentEvent)}
+                />
+              </StyledButton>
+              <TooltipIcon
+                className="ui-TooltipIcon ui-TooltipIcon-isActive"
+                icon={statusTooltipIcons.active}
+                status="other"
+                sx={{ tooltip: { maxWidth: 300 } }}
+                text={<MaintenanceText />}
+                tooltipPosition="top"
               />
-            </StyledButton>
-            <TooltipIcon
-              className="ui-TooltipIcon ui-TooltipIcon-isActive"
-              icon={statusTooltipIcons.active}
-              status="other"
-              sx={{ tooltip: { maxWidth: 300 } }}
-              text={<MaintenanceText />}
-              tooltipPosition="top"
-            />
-          </>
+            </>
+          ) : (
+            <>
+              <StatusIcon status={iconStatus} />
+              {getFormattedStatus(status)}
+            </>
+          )
         ) : (
           <>
             <StatusIcon status={iconStatus} />
