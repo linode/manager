@@ -504,7 +504,11 @@ export const constructAdditionalRequestFilters = (
       // push to the filters
       filters.push({
         dimension_label: filter.filterKey,
-        operator: Array.isArray(filter.filterValue) ? 'in' : 'eq',
+        operator:
+          Array.isArray(filter.filterValue) ||
+          typeof filter.filterValue === 'string'
+            ? 'in'
+            : 'eq',
         value: Array.isArray(filter.filterValue)
           ? filter.filterValue.join(',')
           : String(filter.filterValue),

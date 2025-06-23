@@ -49,8 +49,6 @@ export const CloudPulseAggregateFunction = React.memo(
         (obj) => obj.label === defaultAggregateFunction
       ) || availableAggregateFunc[0];
 
-    const isDisabled = availableAggregateFunc.length === 1;
-
     const [selectedAggregateFunction, setSelectedAggregateFunction] =
       React.useState<AggregateFunction>(defaultValue);
 
@@ -59,7 +57,6 @@ export const CloudPulseAggregateFunction = React.memo(
         <Autocomplete
           autoHighlight
           disableClearable
-          disabled={isDisabled}
           getOptionLabel={(option) => {
             return convertStringToCamelCasesWithSpaces(option.label); // options needed to be display in Caps first
           }}
