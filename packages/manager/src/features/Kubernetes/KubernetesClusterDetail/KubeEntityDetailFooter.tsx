@@ -22,6 +22,7 @@ import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 
 interface FooterProps {
   aclData: KubernetesControlPlaneACLPayload | undefined;
+  areClusterLinodesReadOnly: boolean;
   clusterCreated: string;
   clusterId: number;
   clusterLabel: string;
@@ -30,7 +31,6 @@ interface FooterProps {
   isClusterReadOnly: boolean;
   isLoadingKubernetesACL: boolean;
   setControlPlaneACLDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  showControlPlaneACL: boolean;
 }
 
 export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -39,6 +39,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
   const { data: profile } = useProfile();
   const {
     aclData,
+    areClusterLinodesReadOnly,
     clusterCreated,
     clusterId,
     clusterLabel,
@@ -47,7 +48,6 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
     isClusterReadOnly,
     isLoadingKubernetesACL,
     setControlPlaneACLDrawerOpen,
-    showControlPlaneACL,
   } = props;
 
   const enabledACL = aclData?.acl.enabled ?? false;
@@ -118,29 +118,27 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
             <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
             {clusterId}
           </StyledListItem>
-          {showControlPlaneACL && (
-            <StyledListItem
-              sx={{
-                alignItems: 'center',
-              }}
-            >
-              <StyledLabelBox component="span">
-                Control Plane ACL:{' '}
-              </StyledLabelBox>{' '}
-              {isLoadingKubernetesACL ? (
-                <Box component="span" sx={{ paddingLeft: 1 }}>
-                  <CircleProgress noPadding size="sm" />
-                </Box>
-              ) : (
-                <StyledLinkButton
-                  disabled={isClusterReadOnly}
-                  onClick={() => setControlPlaneACLDrawerOpen(true)}
-                >
-                  {buttonCopyACL}
-                </StyledLinkButton>
-              )}
-            </StyledListItem>
-          )}
+          <StyledListItem
+            sx={{
+              alignItems: 'center',
+            }}
+          >
+            <StyledLabelBox component="span">
+              Control Plane ACL:{' '}
+            </StyledLabelBox>{' '}
+            {isLoadingKubernetesACL ? (
+              <Box component="span" sx={{ paddingLeft: 1 }}>
+                <CircleProgress noPadding size="sm" />
+              </Box>
+            ) : (
+              <StyledLinkButton
+                disabled={isClusterReadOnly}
+                onClick={() => setControlPlaneACLDrawerOpen(true)}
+              >
+                {buttonCopyACL}
+              </StyledLinkButton>
+            )}
+          </StyledListItem>
         </StyledBox>
         <StyledBox>
           <StyledListItem
@@ -176,7 +174,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
         }}
       >
         <TagCell
-          disabled={isClusterReadOnly}
+          disabled={areClusterLinodesReadOnly}
           entityLabel={clusterLabel}
           sx={{
             width: '100%',
