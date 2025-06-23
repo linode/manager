@@ -19,7 +19,10 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
-import { ASSIGNED_ROLES_TABLE_PREFERENCE_KEY } from '../constants';
+import {
+  ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  ROLES_LEARN_MORE_LINK,
+} from '../constants';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -242,7 +245,7 @@ export const AssignedRolesTable = () => {
             </TableCell>
           </>
         );
-        // TODO: update the link for 'Learn more' in the description when it's ready - UIE-8534
+
         const InnerTable = (
           <Grid
             sx={{
@@ -266,7 +269,7 @@ export const AssignedRolesTable = () => {
               ) : (
                 <>
                   {getFacadeRoleDescription(role)}{' '}
-                  <Link to="#">Learn more.</Link>
+                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more.</Link>
                 </>
               )}
             </Typography>

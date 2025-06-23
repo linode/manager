@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 
+import { ROLES_LEARN_MORE_LINK } from '../constants';
 import { Entities } from '../Entities/Entities';
 import { Permissions } from '../Permissions/Permissions';
 import { type ExtendedRole, getFacadeRoleDescription } from '../utilities';
@@ -36,7 +37,6 @@ export const AssignedPermissionsPanel = ({
   sx,
   value,
 }: Props) => {
-  // TODO: update the link for the description when it's ready - UIE-8534
   return (
     <StyledPaper sx={{ ...sx }}>
       {hideDetails && showName && (
@@ -52,7 +52,8 @@ export const AssignedPermissionsPanel = ({
               role.description
             ) : (
               <>
-                {getFacadeRoleDescription(role)} <Link to="#">Learn more.</Link>
+                {getFacadeRoleDescription(role)}{' '}
+                <Link to={ROLES_LEARN_MORE_LINK}>Learn more.</Link>
               </>
             )}
           </StyledDescription>

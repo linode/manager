@@ -17,7 +17,10 @@ import { LinkButton } from 'src/components/LinkButton';
 import { StyledLinkButtonBox } from 'src/components/SelectFirewallPanel/SelectFirewallPanel';
 import { AssignSingleRole } from 'src/features/IAM/Users/UserRoles/AssignSingleRole';
 
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
+import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  ROLES_LEARN_MORE_LINK,
+} from '../../Shared/constants';
 import {
   getAllRoles,
   mergeAssignedRolesIntoExistingRoles,
@@ -105,7 +108,7 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
       });
     }
   }, [open, reset]);
-  // TODO - add a link 'Learn more" - UIE-8534
+
   return (
     <Drawer onClose={handleClose} open={open} title="Assign New Roles">
       <FormProvider {...form}>
@@ -117,8 +120,10 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
           <Typography sx={{ marginBottom: 2.5 }}>
             Select a role you want to assign to a user. Some roles require
             selecting entities they should apply to. Configure the first role
-            and continue adding roles or save the assignment.
-            <Link to=""> Learn more about roles and permissions.</Link>
+            and continue adding roles or save the assignment.{' '}
+            <Link to={ROLES_LEARN_MORE_LINK}>
+              Learn more about roles and permissions.
+            </Link>
           </Typography>
           <Grid
             container
