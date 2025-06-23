@@ -64,13 +64,13 @@ export interface BodyProps {
   encryptionStatus: EncryptionStatus | undefined;
   gbRAM: number;
   gbStorage: number;
-  hasPublicLinodeInterface: boolean | undefined;
   interfaceGeneration: InterfaceGenerationType | undefined;
   interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
-  isVPCOnlyLinode: boolean;
+  isUnreachablePublicIPv4: boolean;
+  isUnreachablePublicIPv6: boolean;
   linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
@@ -88,13 +88,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     encryptionStatus,
     gbRAM,
     gbStorage,
-    hasPublicLinodeInterface,
+    isUnreachablePublicIPv4,
     interfaceGeneration,
     interfaceWithVPC,
     ipv4,
     ipv6,
     isLKELinode,
-    isVPCOnlyLinode,
+    isUnreachablePublicIPv6,
     linodeCapabilities,
     linodeId,
     linodeIsInDistributedRegion,
@@ -279,9 +279,9 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 ) : undefined
               }
               gridSize={{ lg: 5, xs: 12 }}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
               isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={isVPCOnlyLinode}
+              isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+              isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               rows={[
                 {
                   isMasked: maskSensitiveDataPreference,
@@ -299,9 +299,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             />
             <AccessTable
               gridSize={{ lg: 7, xs: 12 }}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
               isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   heading: 'SSH Access',

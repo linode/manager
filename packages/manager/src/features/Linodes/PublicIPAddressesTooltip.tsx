@@ -15,15 +15,16 @@ const sxTooltipIcon = {
 };
 
 export const PublicIPAddressesTooltip = ({
-  hasPublicLinodeInterface,
+  isUnreachablePublicIPv6,
   isLinodeInterface,
 }: {
-  hasPublicLinodeInterface: boolean | undefined;
   isLinodeInterface: boolean;
+  isUnreachablePublicIPv6: boolean | undefined;
 }) => {
-  const linodeInterfaceCopy = hasPublicLinodeInterface
-    ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
-    : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
+  const linodeInterfaceCopy =
+    isLinodeInterface && isUnreachablePublicIPv6
+      ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
+      : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
   return (
     <TooltipIcon
       status="help"

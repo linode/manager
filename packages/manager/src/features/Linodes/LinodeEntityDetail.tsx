@@ -12,8 +12,8 @@ import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
+import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
@@ -63,13 +63,14 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const isLinodeInterface = linode.interface_generation === 'linode';
 
+  // useDetermineUnreachableIPs
   const {
     configs,
-    hasPublicLinodeInterface,
+    isUnreachablePublicIPv4,
+    isUnreachablePublicIPv6,
     interfaceWithVPC,
-    isVPCOnlyLinode,
     vpcLinodeIsAssignedTo,
-  } = useVPCInterface({
+  } = useDetermineUnreachableIPs({
     isLinodeInterface,
     linodeId: linode.id,
   });
@@ -128,13 +129,13 @@ export const LinodeEntityDetail = (props: Props) => {
             encryptionStatus={linode.disk_encryption}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
-            hasPublicLinodeInterface={hasPublicLinodeInterface}
             interfaceGeneration={linode.interface_generation}
             interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}
-            isVPCOnlyLinode={isVPCOnlyLinode}
+            isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+            isUnreachablePublicIPv6={isUnreachablePublicIPv6}
             linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeIsInDistributedRegion={linodeIsInDistributedRegion}
