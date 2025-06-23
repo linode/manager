@@ -1,5 +1,8 @@
+import { act, renderHook } from '@testing-library/react';
+
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
+import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
@@ -199,5 +202,75 @@ describe('getSchemaWithEntityIdValidation', () => {
       message:
         'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
     });
+  });
+});
+
+describe('useContextualAlertsState', () => {
+  it('should return empty initial state when no entityId provided', () => {
+    const alerts = alertFactory.buildList(3);
+    const { result } = renderHook(() => useContextualAlertsState(alerts));
+    expect(result.current.initialState).toEqual({ system: [], user: [] });
+  });
+
+  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({
+        id: 1,
+        label: 'alert1',
+        type: 'system',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+      alertFactory.build({
+        id: 2,
+        label: 'alert2',
+        type: 'user',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+      alertFactory.build({
+        id: 3,
+        label: 'alert3',
+        type: 'system',
+        entity_ids: ['456'],
+        scope: 'region',
+      }),
+    ];
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId)
+    );
+
+    expect(result.current.initialState.system).toContain(1);
+    expect(result.current.initialState.system).toContain(3);
+    expect(result.current.initialState.user).toContain(2);
+  });
+
+  it('should detect unsaved changes when alerts are modified', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({
+        label: 'alert1',
+        type: 'system',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+    ];
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId)
+    );
+
+    expect(result.current.hasUnsavedChanges).toBe(false);
+
+    act(() => {
+      result.current.setEnabledAlerts((prev) => ({
+        ...prev,
+        system: [...(prev.system ?? []), 999],
+      }));
+    });
+
+    expect(result.current.hasUnsavedChanges).toBe(true);
   });
 });
