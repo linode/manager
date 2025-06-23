@@ -1,11 +1,16 @@
 import { useAccount } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
+import React from 'react';
 
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
+import { compareArrays } from './FilterBuilder';
+
 import type {
+  Alert,
   APIError,
+  CloudPulseAlertsPayload,
   Dashboard,
   ResourcePage,
   ServiceTypes,
@@ -41,6 +46,63 @@ export const useIsACLPEnabled = (): {
     );
 
   return { isACLPEnabled };
+};
+
+/**
+ * @param alerts List of alerts to be displayed
+ * @param entityId Id of the selected entity
+ * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState
+ */
+export const useContextualAlertsState = (
+  alerts: Alert[],
+  entityId?: string
+) => {
+  const calculateInitialState = React.useCallback(
+    (alerts: Alert[], entityId?: string): CloudPulseAlertsPayload => {
+      const initialStates: CloudPulseAlertsPayload = {
+        system: [],
+        user: [],
+      };
+
+      if (entityId) {
+        alerts.forEach((alert) => {
+          const isAccountOrRegion =
+            alert.scope === 'region' || alert.scope === 'account';
+          const shouldInclude = entityId
+            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+            : false;
+
+          if (shouldInclude) {
+            initialStates[alert.type]?.push(alert.id);
+          }
+        });
+      }
+      return initialStates;
+    },
+    []
+  );
+
+  const initialState = React.useMemo(
+    () => calculateInitialState(alerts, entityId),
+    [alerts, entityId, calculateInitialState]
+  );
+
+  const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
+
+  // Check if the enabled alerts have changed from the initial state
+  const hasUnsavedChanges = React.useMemo(() => {
+    return (
+      !compareArrays(enabledAlerts.system ?? [], initialState.system ?? []) ||
+      !compareArrays(enabledAlerts.user ?? [], initialState.user ?? [])
+    );
+  }, [enabledAlerts, initialState]);
+
+  return {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    initialState,
+  };
 };
 
 /**
