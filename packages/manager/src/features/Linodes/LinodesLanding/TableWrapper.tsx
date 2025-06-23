@@ -8,6 +8,7 @@ import { SortableTableHead } from './SortableTableHead';
 
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { TableProps } from 'src/components/Table';
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 interface Props {
   children: React.ReactNode;
@@ -34,7 +35,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
     toggleLinodeView,
   } = props;
 
-  const { data: isTableStripingEnabled } = usePreferences(
+  const { data: tableStripingPreference } = usePreferences(
     (preferences) => preferences?.isTableStripingEnabled
   );
 
@@ -46,7 +47,10 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           colCount={5}
           rowCount={dataLength}
           stickyHeader
-          striped={!linodesAreGrouped && isTableStripingEnabled}
+          striped={
+            !linodesAreGrouped &&
+            getIsTableStripingEnabled(tableStripingPreference)
+          }
           tableClass={linodesAreGrouped ? 'MuiTable-groupByTag' : ''}
           {...tableProps}
         >
