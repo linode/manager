@@ -14,7 +14,7 @@ import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
 
-import type { Linode } from '@linode/api-v4';
+import type { LinodeAlerts } from '@linode/api-v4';
 
 interface Props {
   isReadOnly?: boolean;
@@ -67,7 +67,7 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
         transfer_quota: linode?.alerts.transfer_quota ?? 0,
       };
 
-  const formik = useFormik<Linode['alerts']>({
+  const formik = useFormik<LinodeAlerts>({
     enableReinitialize: true,
     initialValues,
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
@@ -123,11 +123,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'cpu_usage_state',
-      state: formik.values.cpu > 0,
+      state: (formik.values.cpu ?? 0) > 0,
       textInputLabel: 'cpu_usage_threshold',
       textTitle: 'Usage Threshold',
       title: 'CPU Usage',
-      value: formik.values.cpu,
+      value: formik.values.cpu ?? 0,
     },
     {
       copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
@@ -148,11 +148,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'disk_io_state',
-      state: formik.values.io > 0,
+      state: (formik.values.io ?? 0) > 0,
       textInputLabel: 'disk_io_threshold',
       textTitle: 'I/O Threshold',
       title: 'Disk I/O Rate',
-      value: formik.values.io,
+      value: formik.values.io ?? 0,
     },
     {
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
@@ -177,11 +177,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'incoming_traffic_state',
-      state: formik.values.network_in > 0,
+      state: (formik.values.network_in ?? 0) > 0,
       textInputLabel: 'incoming_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Incoming Traffic',
-      value: formik.values.network_in,
+      value: formik.values.network_in ?? 0,
     },
     {
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
@@ -206,11 +206,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'outbound_traffic_state',
-      state: formik.values.network_out > 0,
+      state: (formik.values.network_out ?? 0) > 0,
       textInputLabel: 'outbound_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Outbound Traffic',
-      value: formik.values.network_out,
+      value: formik.values.network_out ?? 0,
     },
     {
       copy: `Percentage of network transfer quota used being greater than this value will trigger
@@ -235,16 +235,16 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'transfer_quota_state',
-      state: formik.values.transfer_quota > 0,
+      state: (formik.values.transfer_quota ?? 0) > 0,
       textInputLabel: 'transfer_quota_threshold',
       textTitle: 'Quota Threshold',
       title: 'Transfer Quota',
-      value: formik.values.transfer_quota,
+      value: formik.values.transfer_quota ?? 0,
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = aclpBetaServices?.['linode']?.alerts
+  const alertsHeading = aclpBetaServices?.linode?.alerts
     ? 'Default Alerts'
     : 'Alerts';
 

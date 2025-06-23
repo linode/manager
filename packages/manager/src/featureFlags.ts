@@ -70,6 +70,11 @@ interface LkeEnterpriseFlag extends BaseFeatureFlag {
   la: boolean;
 }
 
+interface CloudNatFlag extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
@@ -120,6 +125,7 @@ export interface Flags {
   aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;

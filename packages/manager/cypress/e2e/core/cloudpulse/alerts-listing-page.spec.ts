@@ -33,7 +33,13 @@ const alertDefinitionsUrl = '/alerts/definitions';
 const mockProfile = profileFactory.build({
   timezone: 'gmt',
 });
-const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
+const flags: Partial<Flags> = {
+  aclp: { beta: true, enabled: true },
+  aclpBetaServices: {
+    dbaas: { metrics: true, alerts: true },
+    linode: { metrics: true, alerts: true },
+  },
+};
 const mockAccount = accountFactory.build();
 const now = new Date();
 const mockAlerts = [
