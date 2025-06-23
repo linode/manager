@@ -15,7 +15,7 @@ import type { Interface } from '@linode/api-v4/lib/linodes/types';
  * whether to use config profile related queries or Linode Interface related queries
  * based on the types of interfaces this Linode is using
  */
-export const useDetermineReachableIPs = (inputs: {
+export const useDetermineUnreachableIPs = (inputs: {
   isLinodeInterface: boolean;
   linodeId: number;
 }) => {
@@ -26,14 +26,14 @@ export const useDetermineReachableIPs = (inputs: {
     isUnreachablePublicIPv4LinodeInterface,
     isUnreachablePublicIPv6LinodeInterface,
     vpcLinodeIsAssignedTo: vpcLinodeIsAssignedToInterface,
-  } = useDetermineReachableIPsLinodeInterface(linodeId, isLinodeInterface);
+  } = useDetermineUnreachableIPsLinodeInterface(linodeId, isLinodeInterface);
   const {
-    configInterfaceWithVPC,
+    interfaceWithVPC: configInterfaceWithVPC,
     configs,
     isUnreachablePublicIPv6ConfigInterface,
     isUnreachablePublicIPv4ConfigInterface,
     vpcLinodeIsAssignedTo: vpcLinodeIsAssignedToConfig,
-  } = useDetermineReachableIPsConfigInterface(linodeId, !isLinodeInterface);
+  } = useDetermineUnreachableIPsConfigInterface(linodeId, !isLinodeInterface);
 
   const isUnreachablePublicIPv4 =
     isUnreachablePublicIPv4ConfigInterface ||
@@ -58,7 +58,7 @@ export const useDetermineReachableIPs = (inputs: {
  * Returns the active VPC Linode interface (an VPC interface that is the default route for IPv4),
  * the VPC of that interface, and if this Linode is a VPC only Linode
  */
-export const useDetermineReachableIPsLinodeInterface = (
+export const useDetermineUnreachableIPsLinodeInterface = (
   linodeId: number,
   enabled: boolean = true
 ) => {
@@ -97,7 +97,9 @@ export const useDetermineReachableIPsLinodeInterface = (
   const isUnreachablePublicIPv4LinodeInterface =
     isVPCOnlyLinodeInterface ||
     !hasLinodeInterfaces ||
-    interfaces?.interfaces.every((iface) => iface.vlan);
+    Boolean(
+      hasLinodeInterfaces && interfaces?.interfaces.every((iface) => iface.vlan)
+    );
 
   return {
     isUnreachablePublicIPv4LinodeInterface,
@@ -110,22 +112,22 @@ export const useDetermineReachableIPsLinodeInterface = (
 /**
  *
  */
-export const useDetermineReachableIPsConfigInterface = (
+export const useDetermineUnreachableIPsConfigInterface = (
   linodeId: number,
   enabled: boolean = true
 ) => {
   const { data: configs } = useAllLinodeConfigsQuery(linodeId, enabled);
-  let configInterfaceWithVPC: Interface | undefined;
+  let interfaceWithVPC: Interface | undefined;
 
   const configWithVPCInterface = configs?.find((config) => {
     const interfaces = config.interfaces;
 
-    const interfaceWithVPC = interfaces?.find(
+    const _interfaceWithVPC = interfaces?.find(
       (_interface) => _interface.purpose === 'vpc'
     );
 
-    if (interfaceWithVPC) {
-      configInterfaceWithVPC = interfaceWithVPC;
+    if (_interfaceWithVPC) {
+      interfaceWithVPC = _interfaceWithVPC;
     }
 
     return config;
@@ -140,7 +142,7 @@ export const useDetermineReachableIPsConfigInterface = (
     configWithVPCInterface?.interfaces.length > 0;
 
   const vpcInterfaceIndex = configWithVPCInterface?.interfaces?.findIndex(
-    (_interface) => _interface.id === configInterfaceWithVPC?.id
+    (_interface) => _interface.id === interfaceWithVPC?.id
   );
 
   const hasPublicConfigInterface = Boolean(
@@ -150,30 +152,34 @@ export const useDetermineReachableIPsConfigInterface = (
   );
 
   const { data: vpcLinodeIsAssignedTo } = useVPCQuery(
-    configInterfaceWithVPC?.vpc_id ?? -1,
-    Boolean(configInterfaceWithVPC) && enabled
+    interfaceWithVPC?.vpc_id ?? -1,
+    Boolean(interfaceWithVPC) && enabled
   );
 
   // A VPC-only Linode is a Linode that has at least one primary VPC interface (either explicit or implicit) and purpose vpc and no ipv4.nat_1_1 value
   const isVPCOnlyLinode = Boolean(
-    (configInterfaceWithVPC?.primary ||
+    (interfaceWithVPC?.primary ||
       primaryInterfaceIndex === vpcInterfaceIndex) &&
-      !configInterfaceWithVPC?.ipv4?.nat_1_1
+      !interfaceWithVPC?.ipv4?.nat_1_1
   );
 
   // For legacy config interfaces, if a Linode has no interfaces, the API automatically provides public connectivity.
   // IPv6 is unreachable if the Linode has interfaces, but none of these interfaces is a public interface
-  const isUnreachablePublicIPv6ConfigInterface =
-    hasConfigInterfaces && !hasPublicConfigInterface;
+  const isUnreachablePublicIPv6ConfigInterface = Boolean(
+    hasConfigInterfaces && !hasPublicConfigInterface
+  );
 
   const isUnreachablePublicIPv4ConfigInterface =
     isVPCOnlyLinode ||
-    configWithVPCInterface?.interfaces?.every(
-      (iface) => iface.purpose === 'vlan'
+    Boolean(
+      hasConfigInterfaces &&
+        configWithVPCInterface?.interfaces?.every(
+          (iface) => iface.purpose === 'vlan'
+        )
     );
 
   return {
-    configInterfaceWithVPC,
+    interfaceWithVPC,
     configs,
     isUnreachablePublicIPv6ConfigInterface,
     isUnreachablePublicIPv4ConfigInterface,

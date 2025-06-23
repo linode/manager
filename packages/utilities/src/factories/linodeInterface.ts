@@ -80,6 +80,7 @@ export const linodeInterfaceFactoryPublic =
     created: '2025-03-19T03:58:04',
     default_route: {
       ipv4: true,
+      ipv6: true,
     },
     id: Factory.each((i) => i),
     mac_address: 'a4:ac:39:b7:6e:42',
