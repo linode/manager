@@ -19,6 +19,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
@@ -114,6 +115,8 @@ export const AlertInformationActionTable = (
     onToggleAlert,
   } = props;
 
+  const alertsTableRef = React.useRef<HTMLTableElement>(null);
+
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
     : undefined;
@@ -192,11 +195,22 @@ export const AlertInformationActionTable = (
     [onToggleAlert, setEnabledAlerts]
   );
 
+  const handleCustomPageChange = React.useCallback(
+    (page: number, handlePageChange: (page: number) => void) => {
+      handlePageChange(page);
+      handlePageChange(page);
+      requestAnimationFrame(() => {
+        scrollToElement(alertsTableRef.current);
+      });
+    },
+    []
+  );
+
   return (
     <>
       <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
+          <Paginate data={orderedData} shouldScroll={false}>
             {({
               count,
               data: paginatedAndOrderedAlerts,
@@ -212,6 +226,7 @@ export const AlertInformationActionTable = (
                       colCount={columns.length + 1}
                       data-qa="alert-table"
                       data-testid="alert-table"
+                      ref={alertsTableRef}
                       size="small"
                     >
                       <TableHead>
@@ -283,7 +298,9 @@ export const AlertInformationActionTable = (
                   <PaginationFooter
                     count={count}
                     eventCategory="Alert Definitions Table"
-                    handlePageChange={handlePageChange}
+                    handlePageChange={(page: number) =>
+                      handleCustomPageChange(page, handlePageChange)
+                    }
                     handleSizeChange={handlePageSizeChange}
                     page={page}
                     pageSize={pageSize}
