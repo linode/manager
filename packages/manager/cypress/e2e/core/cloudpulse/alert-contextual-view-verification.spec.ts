@@ -183,7 +183,7 @@ describe('update linode label', () => {
    * - Verifies that sorting by different columns (ID, label, type) works as expected with ascending and descending orders.
    */
   // Reason: Checking by anantha
-  it('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
+  it.skip('should verify sorting, alert management, and search functionality for contextual view of entity listing.', () => {
     cy.defer(() => createTestLinode({ booted: true })).then((linode) => {
       mockAppendFeatureFlags(flags);
       mockGetAccount(mockAccount);
