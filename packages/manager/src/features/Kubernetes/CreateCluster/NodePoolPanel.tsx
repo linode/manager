@@ -12,16 +12,14 @@ import {
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
+import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
   KubeNodePoolResponse,
   KubernetesTier,
   LinodeTypeClass,
   Region,
 } from '@linode/api-v4';
-import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
-
-export const DEFAULT_PLAN_COUNT = 3;
 
 export interface NodePoolPanelProps {
   addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
@@ -31,7 +29,11 @@ export interface NodePoolPanelProps {
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
   isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
-  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
+  onConfigure: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
   selectedTier: KubernetesTier;

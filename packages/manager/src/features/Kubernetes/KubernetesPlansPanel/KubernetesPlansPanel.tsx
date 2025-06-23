@@ -16,16 +16,14 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
+import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
 import type {
   CreateNodePoolData,
   KubernetesTier,
   Region,
 } from '@linode/api-v4';
 import type { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
-import type {
-  PlanSelectionType,
-  PlanWithAvailability,
-} from 'src/features/components/PlansPanel/types';
+import type { PlanSelectionType } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
@@ -42,7 +40,11 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
-  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
+  onConfigure?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;

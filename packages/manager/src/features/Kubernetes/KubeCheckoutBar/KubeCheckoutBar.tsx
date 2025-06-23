@@ -10,7 +10,6 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
 import { RenderGuard } from 'src/components/RenderGuard';
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import { extendTypesQueryResult } from 'src/utilities/extendType';
 import { getGDPRDetails } from 'src/utilities/formatRegion';
 import {
@@ -27,12 +26,17 @@ import { nodeWarning } from '../constants';
 import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
+import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
   enterprisePrice?: number;
-  handleConfig: (isOpen: boolean, plan?: PlanWithAvailability) => void;
+  handleConfig: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;

@@ -24,6 +24,7 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
+import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
 import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
@@ -33,7 +34,11 @@ export interface KubernetesPlanSelectionProps {
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
-  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
+  onConfigure?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
   selectedId?: string;
@@ -121,7 +126,9 @@ export const KubernetesPlanSelection = (
             aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
             disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
-            onClick={() => (onConfigure ? onConfigure(true, plan) : null)}
+            onClick={() =>
+              onConfigure ? onConfigure('add', true, plan.id) : null
+            }
             sx={{ marginLeft: '10px', minWidth: '85px' }}
           >
             Configure
@@ -207,7 +214,9 @@ export const KubernetesPlanSelection = (
                   }
                   buttonType="primary"
                   disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
-                  onClick={() => (onConfigure ? onConfigure(true, plan) : null)}
+                  onClick={() =>
+                    onConfigure ? onConfigure('add', true, plan.id) : null
+                  }
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
                   Configure

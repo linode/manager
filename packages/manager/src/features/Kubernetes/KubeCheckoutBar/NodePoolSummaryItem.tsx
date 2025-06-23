@@ -23,13 +23,17 @@ import {
   StyledPriceBox,
 } from './KubeCheckoutSummary.styles';
 
+import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type { KubernetesTier } from '@linode/api-v4';
-import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface Props {
   clusterTier?: KubernetesTier;
-  handleConfig: (isOpen: boolean, plan?: PlanWithAvailability) => void;
+  handleConfig: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   nodeCount: number;
   onRemove: () => void;
   poolType: ExtendedType | null;
@@ -39,7 +43,7 @@ export interface Props {
 
 export const NodePoolSummaryItem = React.memo((props: Props) => {
   const {
-    // handleConfig,
+    handleConfig,
     nodeCount,
     onRemove,
     poolType,
@@ -94,7 +98,7 @@ export const NodePoolSummaryItem = React.memo((props: Props) => {
         </StyledPriceBox>
         <StyledLinkButtonBox>
           <StyledLinkButton
-            onClick={() => {}} //handleConfig(true, poolType)} //TODO: fix this type
+            onClick={() => handleConfig('edit', true, poolType.id)}
             sx={{ paddingLeft: 0 }}
           >
             Edit Configuration

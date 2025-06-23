@@ -55,6 +55,7 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import {
   CLUSTER_VERSIONS_DOCS_LINK,
+  DEFAULT_PLAN_COUNT,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
@@ -70,8 +71,9 @@ import {
   useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
-import { DEFAULT_PLAN_COUNT, NodePoolPanel } from './NodePoolPanel';
+import { NodePoolPanel } from './NodePoolPanel';
 
+import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
   CreateKubeClusterPayload,
   CreateNodePoolData,
@@ -80,7 +82,6 @@ import type {
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
-import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 export const CreateCluster = () => {
@@ -120,7 +121,10 @@ export const CreateCluster = () => {
     React.useState<KubernetesTier>('standard');
   const [isACLAcknowledgementChecked, setIsACLAcknowledgementChecked] =
     React.useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isNodePoolConfigDrawerOpen, setIsNodePoolConfigDrawerOpen] =
+    React.useState(false);
+  const [nodePoolConfigDrawerMode, setNodePoolConfigDrawerMode] =
+    React.useState<NodePoolConfigDrawerMode>('add');
   // const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
   //   new Map()
   // );
@@ -220,11 +224,13 @@ export const CreateCluster = () => {
   }, [versionData]);
 
   const handleOpenNodePoolConfigDrawer = (
+    drawerMode: NodePoolConfigDrawerMode,
     isOpen: boolean,
-    plan?: PlanWithAvailability
+    planLabel?: string
   ) => {
-    setIsDrawerOpen(isOpen);
-    setSelectedType(plan?.id);
+    setNodePoolConfigDrawerMode(drawerMode);
+    setIsNodePoolConfigDrawerOpen(isOpen);
+    setSelectedType(planLabel);
   };
 
   // const updatePlanCount = (planId: string, newCount: number) => {
@@ -657,9 +663,9 @@ export const CreateCluster = () => {
           (planId) => DEFAULT_PLAN_COUNT
           // typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
         }
-        mode="add"
-        onClose={() => setIsDrawerOpen(false)}
-        open={isDrawerOpen}
+        mode={nodePoolConfigDrawerMode}
+        onClose={() => setIsNodePoolConfigDrawerOpen(false)}
+        open={isNodePoolConfigDrawerOpen}
         planId={selectedType}
         selectedTier={selectedTier}
         updatePool={updatePool}

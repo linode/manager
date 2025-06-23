@@ -1,14 +1,16 @@
+import { useSpecificTypes } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
+import { extendType } from 'src/utilities/extendType';
 
 import {
+  DEFAULT_PLAN_COUNT,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
-import { DEFAULT_PLAN_COUNT } from '../CreateCluster/NodePoolPanel';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
 import type {
@@ -18,10 +20,12 @@ import type {
 } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
+export type NodePoolConfigDrawerMode = 'add' | 'edit';
+
 export interface Props {
   addPool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
   getTypeCount: (planId: string) => number;
-  mode: 'add' | 'edit';
+  mode: NodePoolConfigDrawerMode;
   // nodePool: KubeNodePoolResponseBeta | undefined;
   onClose: () => void;
   open: boolean;
@@ -49,10 +53,15 @@ export const NodePoolConfigDrawer = (props: Props) => {
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
-      defaultValues: { nodeCount: DEFAULT_PLAN_COUNT },
+      defaultValues: {
+        nodeCount: planId ? getTypeCount(planId) : DEFAULT_PLAN_COUNT,
+      },
     });
 
-  const count = planId ? getTypeCount(planId) : 0;
+  const typesQuery = useSpecificTypes(planId ? [planId] : []);
+  const planType = typesQuery[0]?.data
+    ? extendType(typesQuery[0].data)
+    : undefined;
 
   const isAddMode = mode === 'add';
 
@@ -61,7 +70,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
       return;
     }
     // If the plan has been added to the cluster, set the existing node count for editing.
-    setValue('nodeCount', count);
+    // setValue('nodeCount', getTypeCount(planId));
   }, [planId, open]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
@@ -88,7 +97,11 @@ export const NodePoolConfigDrawer = (props: Props) => {
   };
 
   return (
-    <Drawer onClose={handleClose} open={open} title={`Configure Node Pool`}>
+    <Drawer
+      onClose={handleClose}
+      open={open}
+      title={`Configure Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
+    >
       {formState.errors.root?.message ? (
         <Notice
           spacingBottom={16}

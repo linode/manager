@@ -9,6 +9,7 @@ import { PLAN_SELECTION_NO_REGION_SELECTED_MESSAGE } from 'src/utilities/pricing
 import { KubernetesPlanSelection } from './KubernetesPlanSelection';
 import { KubernetesPlanSelectionTable } from './KubernetesPlanSelectionTable';
 
+import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
 import type { KubernetesTier, LinodeTypeClass } from '@linode/api-v4';
 import type {
   PlanSelectionDividers,
@@ -21,7 +22,11 @@ export interface KubernetesPlanContainerProps {
   getTypeCount: (planId: string) => number;
   hasMajorityOfPlansDisabled: boolean;
   onAdd?: (key: string, value: number) => void;
-  onConfigure?: (isDrawerOpen: boolean, plan: PlanWithAvailability) => void;
+  onConfigure?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   onSelect: (key: string) => void;
   plans: PlanWithAvailability[];
   planType?: LinodeTypeClass;
