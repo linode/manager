@@ -139,8 +139,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
             ? 'to assign.'
             : 'the entities to be attached to.'}{' '}
           <Link to={ROLES_LEARN_MORE_LINK}>
-            Learn more about roles and permissions.
+            Learn more about roles and permissions
           </Link>
+          .
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>

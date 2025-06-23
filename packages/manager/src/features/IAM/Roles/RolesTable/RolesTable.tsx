@@ -276,7 +276,7 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     ) : (
                       <Typography>
                         {getFacadeRoleDescription(roleRow)}{' '}
-                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more.</Link>
+                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
                       </Typography>
                     )}
                   </TableCell>

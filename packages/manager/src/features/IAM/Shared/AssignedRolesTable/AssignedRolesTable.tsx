@@ -269,7 +269,7 @@ export const AssignedRolesTable = () => {
               ) : (
                 <>
                   {getFacadeRoleDescription(role)}{' '}
-                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more.</Link>
+                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
                 </>
               )}
             </Typography>

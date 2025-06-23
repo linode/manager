@@ -122,8 +122,9 @@ export const AssignNewRoleDrawer = ({ onClose, open }: Props) => {
             selecting entities they should apply to. Configure the first role
             and continue adding roles or save the assignment.{' '}
             <Link to={ROLES_LEARN_MORE_LINK}>
-              Learn more about roles and permissions.
+              Learn more about roles and permissions
             </Link>
+            .
           </Typography>
           <Grid
             container
