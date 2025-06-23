@@ -119,7 +119,7 @@ export const queryFactory = createQueryKeys(key, {
           queryKey: ['linodes', params, filters],
         };
 
-      case 'nodebalancers':
+      case 'nodebalancer':
         return nodebalancerQueries.nodebalancers._ctx.all;
 
       case 'volumes':
