@@ -109,7 +109,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
-  maintenance_policy_id: MaintenancePolicyId;
+  maintenance_policy_id: number;
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -523,7 +523,7 @@ export interface Event {
   duration: null | number;
   entity: Entity | null;
   id: number;
-  maintenance_policy_set?: MaintenancePolicyType | null; // @TODO VM & Host Maintenance: verify new fields
+  maintenance_policy_set?: null | string; // @TODO VM & Host Maintenance: verify new fields
   message: null | string;
   not_before?: null | string; // @TODO VM & Host Maintenance: verify new fields
   percent_complete: null | number;
@@ -577,7 +577,7 @@ export interface AccountMaintenance {
     type: 'linode' | 'volume';
     url: string;
   };
-  maintenance_policy_set: MaintenancePolicyType;
+  maintenance_policy_set: string;
   not_before: string;
   reason: string;
   source: 'platform' | 'user';
@@ -593,21 +593,13 @@ export interface AccountMaintenance {
   when: string;
 }
 
-export const maintenancePolicies = [
-  { id: 1, type: 'migrate' },
-  { id: 2, type: 'power on/off' },
-] as const;
-
-export type MaintenancePolicyId = (typeof maintenancePolicies)[number]['id'];
-
-export type MaintenancePolicyType =
-  (typeof maintenancePolicies)[number]['type'];
-
-export type MaintenancePolicy = (typeof maintenancePolicies)[number] & {
+export type MaintenancePolicy = {
   description: string;
+  id: number;
   is_default: boolean;
   name: string;
   notification_period_sec: number;
+  type: 'migrate' | 'power-off/on';
 };
 
 export interface PayPalData {

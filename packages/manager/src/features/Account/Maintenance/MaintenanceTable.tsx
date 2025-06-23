@@ -29,7 +29,7 @@ import {
   IN_PROGRESS_MAINTENANCE_FILTER,
   maintenanceDateColumnMap,
   PENDING_MAINTENANCE_FILTER,
-  SCHEDULED_MAINTENANCE_FILTER,
+  UPCOMING_MAINTENANCE_FILTER,
 } from './utilities';
 
 import type { AccountMaintenance, Filter } from '@linode/api-v4';
@@ -59,7 +59,7 @@ export type MaintenanceTableType =
   | 'completed'
   | 'in progress'
   | 'pending' // TODO VM & Host Maintenance: Remove pending type after GA
-  | 'scheduled';
+  | 'upcoming';
 
 interface Props {
   type: MaintenanceTableType;
@@ -95,7 +95,7 @@ export const MaintenanceTable = ({ type }: Props) => {
   const filters: Record<Props['type'], Filter> = {
     completed: COMPLETED_MAINTENANCE_FILTER,
     'in progress': IN_PROGRESS_MAINTENANCE_FILTER,
-    scheduled: SCHEDULED_MAINTENANCE_FILTER,
+    upcoming: UPCOMING_MAINTENANCE_FILTER,
     pending: PENDING_MAINTENANCE_FILTER,
   };
 
@@ -208,7 +208,7 @@ export const MaintenanceTable = ({ type }: Props) => {
                 >
                   Label
                 </TableCell>
-                {(type === 'scheduled' || type === 'completed') && (
+                {(type === 'upcoming' || type === 'completed') && (
                   <Hidden mdDown>
                     <TableSortCell
                       active={orderBy === 'when'}
@@ -272,7 +272,7 @@ export const MaintenanceTable = ({ type }: Props) => {
               </TableSortCell>
             </Hidden>
             {(!flags.vmHostMaintenance?.enabled ||
-              type === 'scheduled' ||
+              type === 'upcoming' ||
               type === 'completed') && (
               <TableSortCell
                 active={orderBy === 'status'}
