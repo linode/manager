@@ -117,8 +117,6 @@ export const CloudPulseIntervalSelect = React.memo(
       });
     }
 
-    const isDisabled = availableIntervalOptions.length === 1;
-
     const [selectedInterval, setSelectedInterval] =
       React.useState(defaultValue);
 
@@ -127,7 +125,6 @@ export const CloudPulseIntervalSelect = React.memo(
         <Autocomplete
           autoHighlight
           disableClearable
-          disabled={isDisabled}
           isOptionEqualToValue={(option, value) => {
             return (
               option?.value === value?.value && option?.unit === value?.unit
