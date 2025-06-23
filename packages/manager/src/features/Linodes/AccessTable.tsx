@@ -64,8 +64,8 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
         {title}{' '}
         {isDisabled && (
           <PublicIPAddressesTooltip
+            hasPublicInterface={!isUnreachablePublicIPv6}
             isLinodeInterface={isLinodeInterface}
-            isUnreachablePublicIPv6={isUnreachablePublicIPv6}
           />
         )}
       </StyledColumnLabelGrid>

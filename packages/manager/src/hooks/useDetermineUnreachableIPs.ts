@@ -36,12 +36,12 @@ export const useDetermineUnreachableIPs = (inputs: {
     vpcLinodeIsAssignedTo: vpcLinodeIsAssignedToConfig,
   } = useDetermineUnreachableIPsConfigInterface(linodeId, !isLinodeInterface);
 
-  const isUnreachablePublicIPv4 =
-    isUnreachablePublicIPv4ConfigInterface ||
-    isUnreachablePublicIPv4LinodeInterface;
-  const isUnreachablePublicIPv6 =
-    isUnreachablePublicIPv6ConfigInterface ||
-    isUnreachablePublicIPv6LinodeInterface;
+  const isUnreachablePublicIPv4 = isLinodeInterface
+    ? isUnreachablePublicIPv4LinodeInterface
+    : isUnreachablePublicIPv4ConfigInterface;
+  const isUnreachablePublicIPv6 = isLinodeInterface
+    ? isUnreachablePublicIPv6LinodeInterface
+    : isUnreachablePublicIPv6ConfigInterface;
   const vpcLinodeIsAssignedTo =
     vpcLinodeIsAssignedToConfig ?? vpcLinodeIsAssignedToInterface;
 
@@ -112,7 +112,7 @@ export const useDetermineUnreachableIPsLinodeInterface = (
 
 /**
  * Legacy Config Interface equivalent to useDetermineUnreachableIPsLinodeInterface
- * Returns whether the public IPv4/IPv6 are reachable, the VPC config interface, and the 
+ * Returns whether the public IPv4/IPv6 are reachable, the VPC config interface, and the
  * VPC associated with that interface
  */
 export const useDetermineUnreachableIPsConfigInterface = (
