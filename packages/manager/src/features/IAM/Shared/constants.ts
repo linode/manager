@@ -9,7 +9,8 @@ export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity acces
 
 export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were saved.`;
 
-export const LAST_ACCOUNT_ADMIN_ERROR = `Failed to unassign the role. You need to have at least one user with the account_admin role on your acount.`;
+export const LAST_ACCOUNT_ADMIN_ERROR =
+  'Failed to unassign the role. You need to have at least one user with the account_admin role on your account.';
 
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
