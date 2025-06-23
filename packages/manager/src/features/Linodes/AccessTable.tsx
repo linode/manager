@@ -16,6 +16,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import type { MaskableTextLength } from 'src/components/MaskableText/MaskableText';
 
 interface AccessTableRow {
+  disabled?: boolean;
   heading?: string;
   isMasked?: boolean;
   maskedTextLength?: MaskableTextLength;
@@ -48,9 +49,8 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
     title,
   } = props;
 
-  const isDisabled = Boolean(
-    isUnreachablePublicIPv4 && title.includes('Public IP Address')
-  );
+  const showDisabledPublicIPTooltip =
+    isUnreachablePublicIPv4 || isUnreachablePublicIPv6;
 
   return (
     <Grid
@@ -62,7 +62,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
     >
       <StyledColumnLabelGrid>
         {title}{' '}
-        {isDisabled && (
+        {showDisabledPublicIPTooltip && (
           <PublicIPAddressesTooltip
             hasPublicInterface={!isUnreachablePublicIPv6}
             isLinodeInterface={isLinodeInterface}
@@ -76,7 +76,7 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
               return thisRow.text ? (
                 <AccessRow
                   heading={thisRow.heading}
-                  isDisabled={isDisabled}
+                  isDisabled={Boolean(thisRow.disabled)}
                   key={thisRow.text}
                   text={thisRow.text}
                 />

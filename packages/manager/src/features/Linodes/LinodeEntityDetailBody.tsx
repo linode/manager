@@ -287,11 +287,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                   isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv4',
                   text: firstAddress,
+                  disabled: isUnreachablePublicIPv4,
                 },
                 {
                   isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv6',
                   text: secondAddress,
+                  disabled: isUnreachablePublicIPv6,
                 },
               ]}
               sx={{ padding: 0 }}
@@ -299,7 +301,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             />
             <AccessTable
               gridSize={{ lg: 7, xs: 12 }}
-              isLinodeInterface={isLinodeInterface}
               rows={[
                 {
                   heading: 'SSH Access',

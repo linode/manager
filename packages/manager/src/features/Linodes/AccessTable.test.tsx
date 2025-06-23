@@ -62,7 +62,10 @@ describe('AccessTable', () => {
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
         isUnreachablePublicIPv4={true}
-        rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
+        rows={[
+          { text: linode.ipv4[0], disabled: true },
+          { text: linode.ipv4[1], disabled: true },
+        ]}
         title={'Public IP Addresses'}
       />
     );
