@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  node-fetch: ^2.6.7
   semver: ^7.5.2
   yaml: ^2.3.0
 
@@ -615,9 +614,6 @@ importers:
       '@linode/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@storybook/addon-actions':
-        specifier: ^9.0.8
-        version: 9.0.8
       '@storybook/react-vite':
         specifier: ^9.0.12
         version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.40.1)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.7.3)(vite@6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
@@ -687,9 +683,6 @@ importers:
       '@linode/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
-      '@storybook/addon-actions':
-        specifier: ^9.0.8
-        version: 9.0.8
       '@storybook/react-vite':
         specifier: ^9.0.12
         version: 9.0.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(rollup@4.40.1)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3))(typescript@5.7.3)(vite@6.3.4(@types/node@20.17.6)(jiti@2.4.2)(terser@5.36.0)(tsx@4.19.3)(yaml@2.6.1))
@@ -1848,9 +1841,6 @@ packages:
     resolution: {integrity: sha512-xdJPYNxYU6A3DA48h6y0o3XziCp4YDGXcFKkc5Ce1GPFCa7ebFFh2trHqzevoFSGdQxWc5M3W0A4dhQtkpT4Ww==}
     peerDependencies:
       storybook: ^9.0.12
-
-  '@storybook/addon-actions@9.0.8':
-    resolution: {integrity: sha512-LFePu7PPnWN0Il/uoUpmA5T0J0C7d6haJIbg0pXrjxW2MQVSYXE4S4LSUz8fOImltBDV3xAl6tLPYHFj6VcrOA==}
 
   '@storybook/addon-docs@9.0.12':
     resolution: {integrity: sha512-bAuFy4BWGEBIC0EAS4N+V8mHj7NZiSdDnJUSr4Al3znEVzNHLpQAMRznkga2Ok8x+gwcyBG7W47dLbDXVqLZDg==}
@@ -7081,8 +7071,6 @@ snapshots:
       '@storybook/global': 5.0.0
       axe-core: 4.10.2
       storybook: 9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3)
-
-  '@storybook/addon-actions@9.0.8': {}
 
   '@storybook/addon-docs@9.0.12(@types/react@19.1.6)(storybook@9.0.12(@testing-library/dom@10.4.0)(prettier@3.5.3))':
     dependencies:

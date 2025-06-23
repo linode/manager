@@ -45,7 +45,6 @@
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",
-    "@storybook/addon-actions": "^9.0.8",
     "@storybook/react-vite": "^9.0.12",
     "storybook": "^9.0.12",
     "@testing-library/dom": "^10.1.0",
