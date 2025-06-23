@@ -1,4 +1,4 @@
-import { Box, TextField } from '@linode/ui';
+import { Box, InputAdornment, TextField } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -40,12 +40,14 @@ export const CopyableTextField = (props: CopyableTextFieldProps) => {
       disabled
       InputProps={{
         endAdornment: hideIcons ? undefined : (
-          <StyledIconBox>
-            {showDownloadIcon && (
-              <DownloadTooltip fileName={fileName} text={`${value}`} />
-            )}
-            <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
-          </StyledIconBox>
+          <InputAdornment position="end">
+            <StyledIconBox>
+              {showDownloadIcon && (
+                <DownloadTooltip fileName={fileName} text={`${value}`} />
+              )}
+              <CopyTooltip text={`${value}`} {...CopyTooltipProps} />
+            </StyledIconBox>
+          </InputAdornment>
         ),
       }}
     />
