@@ -58,7 +58,7 @@ const useStyles = makeStyles()(() => ({
 export type MaintenanceTableType =
   | 'completed'
   | 'in progress'
-  | 'pending' // TODO VM & Host Maintenance: Remove pending type after GA
+  | 'pending'
   | 'upcoming';
 
 interface Props {

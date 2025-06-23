@@ -668,6 +668,20 @@ export const darkTheme: ThemeOptions = {
           '&:hover': {
             color: Content.Icon.Primary.Hover,
           },
+          // "ui/src/components/TooltipIcon" Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Content.Icon.Negative,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
+          },
         },
       },
     },

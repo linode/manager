@@ -4,7 +4,10 @@ import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 
+import MaintenanceScheduled from 'src/assets/icons/calendar-schedule.svg';
+import MaintenancePending from 'src/assets/icons/calendar.svg';
 import Flag from 'src/assets/icons/flag.svg';
+import MaintenanceActive from 'src/assets/icons/load-failure.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -31,6 +34,12 @@ import {
 import type { LinodeHandlers } from '../LinodesLanding';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
+
+const statusTooltipIcons = {
+  scheduled: <MaintenanceScheduled />,
+  active: <MaintenanceActive />,
+  pending: <MaintenancePending />,
+};
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
@@ -105,36 +114,47 @@ export const LinodeRow = (props: Props) => {
       <StyledMaintenanceTableCell
         data-qa-status
         maintenance={Boolean(maintenance)}
+        noWrap
         statusCell
       >
-        {!maintenance ? (
-          loading ? (
-            <>
-              <StatusIcon status={iconStatus} />
-              <StyledButton onClick={notificationContext.openMenu}>
-                <ProgressDisplay
-                  progress={getProgressOrDefault(recentEvent)}
-                  sx={{ display: 'inline-block' }}
-                  text={transitionText(status, id, recentEvent)}
-                />
-              </StyledButton>
-            </>
-          ) : (
-            <>
-              <StatusIcon status={iconStatus} />
-              {getFormattedStatus(status)}
-            </>
-          )
-        ) : (
-          <div style={{ alignItems: 'center', display: 'flex' }}>
-            <strong>Maintenance Scheduled</strong>
+        {loading ? (
+          <>
+            <StatusIcon status={iconStatus} />
+            <StyledButton onClick={notificationContext.openMenu}>
+              <ProgressDisplay
+                progress={getProgressOrDefault(recentEvent)}
+                sx={{ display: 'inline-block' }}
+                text={transitionText(status, id, recentEvent)}
+              />
+            </StyledButton>
             <TooltipIcon
-              status="help"
+              className="ui-TooltipIcon ui-TooltipIcon-isActive"
+              icon={statusTooltipIcons.active}
+              status="other"
               sx={{ tooltip: { maxWidth: 300 } }}
               text={<MaintenanceText />}
               tooltipPosition="top"
             />
-          </div>
+          </>
+        ) : (
+          <>
+            <StatusIcon status={iconStatus} />
+            {getFormattedStatus(status)}
+            {maintenance && (
+              <TooltipIcon
+                className="ui-TooltipIcon"
+                icon={
+                  maintenance.status === 'pending'
+                    ? statusTooltipIcons.pending
+                    : statusTooltipIcons.scheduled
+                }
+                status="other"
+                sx={{ tooltip: { maxWidth: 300 } }}
+                text={<MaintenanceText />}
+                tooltipPosition="top"
+              />
+            )}
+          </>
         )}
       </StyledMaintenanceTableCell>
       <Hidden smDown>
