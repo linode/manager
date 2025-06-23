@@ -1,6 +1,6 @@
 import { Chip } from '@linode/ui';
-import { action } from 'storybook/actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { Breadcrumb } from './Breadcrumb';
 

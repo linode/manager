@@ -1,6 +1,6 @@
 import { linodeFactory } from '@linode/utilities';
-import { action } from 'storybook/actions';
 import * as React from 'react';
+import { action } from 'storybook/actions';
 
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 

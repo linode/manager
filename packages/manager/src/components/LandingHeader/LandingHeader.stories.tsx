@@ -1,6 +1,6 @@
 import { Button } from '@linode/ui';
-import { action } from 'storybook/actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { LandingHeader } from './LandingHeader';
 

@@ -1,6 +1,6 @@
+import React from 'react';
 import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
-import React from 'react';
 
 import { ActionsPanel } from '../ActionsPanel';
 import { Button } from '../Button';

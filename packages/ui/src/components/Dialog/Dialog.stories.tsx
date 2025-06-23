@@ -1,7 +1,7 @@
 import { Button, Typography } from '@linode/ui';
+import React from 'react';
 import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
-import React from 'react';
 
 import { Dialog } from './Dialog';
 

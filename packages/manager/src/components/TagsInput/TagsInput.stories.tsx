@@ -1,6 +1,6 @@
 import { Box } from '@linode/ui';
-import { useArgs } from 'storybook/preview-api';
 import React from 'react';
+import { useArgs } from 'storybook/preview-api';
 
 import { TagsInput } from './TagsInput';
 

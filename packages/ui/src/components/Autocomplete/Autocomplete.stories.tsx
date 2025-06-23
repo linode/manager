@@ -1,7 +1,7 @@
 import { CloseIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { action } from 'storybook/actions';
 import React, { useState } from 'react';
+import { action } from 'storybook/actions';
 
 import { IconButton } from '../IconButton';
 import { List } from '../List';

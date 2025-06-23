@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { action } from 'storybook/actions';
 import { useArgs } from 'storybook/preview-api';
-import * as React from 'react';
 
 import { EditableText } from './EditableText';
 

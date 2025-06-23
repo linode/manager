@@ -1,6 +1,6 @@
-import { action } from 'storybook/actions';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import { action } from 'storybook/actions';
 
 import { DateTimeRangePicker } from './DateTimeRangePicker';
 

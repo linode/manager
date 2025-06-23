@@ -1,6 +1,6 @@
 import { ActionsPanel } from '@linode/ui';
-import { action } from 'storybook/actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 
