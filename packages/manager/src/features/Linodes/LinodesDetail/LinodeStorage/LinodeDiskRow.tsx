@@ -83,7 +83,7 @@ export const LinodeDiskRow = React.memo((props: Props) => {
           <DateTimeDisplay value={disk.created} />
         </TableCell>
       </Hidden>
-      <TableCell>
+      <TableCell actionCell>
         <LinodeDiskActionMenu
           disk={disk}
           linodeId={linodeId}

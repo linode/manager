@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { usePreferences } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
-import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
@@ -12,9 +11,9 @@ import { TableRow } from 'src/components/TableRow';
 import { transitionText } from 'src/features/Linodes/transitions';
 import { useInProgressEvents } from 'src/queries/events/events';
 
-import NodeActionMenu from './NodeActionMenu';
+import { NodeActionMenu } from './NodeActionMenu';
 
-import type { APIError } from '@linode/api-v4/lib/types';
+import type { APIError } from '@linode/api-v4';
 
 export interface NodeRow {
   instanceId?: number;
@@ -79,24 +78,12 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
 
   return (
     <TableRow data-qa-node-row={nodeId}>
-      <TableCell>
-        <Grid
-          container
-          sx={{
-            alignItems: 'center',
-          }}
-          wrap="nowrap"
-        >
-          <Grid>
-            <Typography>
-              {linodeLink ? (
-                <Link to={linodeLink}>{displayLabel}</Link>
-              ) : (
-                displayLabel
-              )}
-            </Typography>
-          </Grid>
-        </Grid>
+      <TableCell noWrap>
+        {linodeLink ? (
+          <Link to={linodeLink}>{displayLabel}</Link>
+        ) : (
+          displayLabel
+        )}
       </TableCell>
       <TableCell statusCell={!linodeError}>
         {linodeError ? (
@@ -135,7 +122,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
           </Box>
         ) : null}
       </TableCell>
-      <TableCell>
+      <TableCell actionCell>
         <NodeActionMenu
           instanceLabel={label}
           isLkeClusterRestricted={isLkeClusterRestricted}
