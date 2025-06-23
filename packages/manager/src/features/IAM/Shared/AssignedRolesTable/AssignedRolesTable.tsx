@@ -48,9 +48,9 @@ import type {
   RoleView,
 } from '../types';
 import type {
-  AccountAccessRole,
-  EntityAccessRole,
-  EntityTypePermissions,
+  AccessType,
+  AccountRoleType,
+  EntityRoleType,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -163,9 +163,7 @@ export const AssignedRolesTable = () => {
     ALL_ROLES_OPTION
   );
 
-  const handleViewEntities = (
-    roleName: AccountAccessRole | EntityAccessRole
-  ) => {
+  const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
     navigate({
       to: '/iam/users/$username/entities',
@@ -176,7 +174,7 @@ export const AssignedRolesTable = () => {
 
   const filteredAndSortedRoles = React.useMemo(() => {
     const rolesToFilter = getFilteredRoles({
-      entityType: entityType?.value as 'all' | EntityTypePermissions,
+      entityType: entityType?.value as 'all' | AccessType,
       getSearchableFields,
       query,
       roles,
@@ -321,7 +319,7 @@ export const AssignedRolesTable = () => {
       id: selectedRole.id,
       entity_id: selectedEntity.id,
       entity_name: selectedEntity.name,
-      role_name: selectedRole.name as EntityAccessRole,
+      role_name: selectedRole.name as EntityRoleType,
       access: 'entity_access',
     };
   }
