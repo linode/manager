@@ -148,7 +148,7 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
-  capability: capabilityServiceTypeMapping['nodebalancers'],
+  capability: capabilityServiceTypeMapping['nodebalancer'],
   filters: [
     {
       configuration: {
@@ -226,7 +226,7 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
       name: 'Ports',
     },
   ],
-  serviceType: 'nodebalancers',
+  serviceType: 'nodebalancer',
 };
 
 export const FILTER_CONFIG: Readonly<

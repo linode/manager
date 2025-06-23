@@ -2826,7 +2826,7 @@ export const handlers = [
         }),
         serviceTypesFactory.build({
           label: 'Nodebalancers',
-          service_type: 'nodebalancers',
+          service_type: 'nodebalancer',
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
@@ -2900,7 +2900,7 @@ export const handlers = [
         dashboardFactory.build({
           id: 3,
           label: 'Nodebalancer Dashboard',
-          service_type: 'nodebalancers',
+          service_type: 'nodebalancer',
         })
       );
     }
