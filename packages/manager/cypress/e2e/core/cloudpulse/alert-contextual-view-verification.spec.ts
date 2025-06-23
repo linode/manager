@@ -204,6 +204,7 @@ describe('update linode label', () => {
       cy.visitWithLogin(`/linodes/${linode.id}/alerts`);
 
       // Navigation to Alerts beta
+      ui.button.findByTitle('Try Alerts (Beta)').should('be.visible').click();
 
       cy.get('[data-qa-notice="true"]')
         .should('be.visible')
