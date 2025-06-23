@@ -12,7 +12,7 @@ import type { CombinedRoles } from './utils';
 import type { AccountEntity, EntityType } from '@linode/api-v4';
 
 const userPermissions = userRolesFactory.build({
-  account_access: ['account_linode_admin', 'linode_creator'],
+  account_access: ['account_linode_admin', 'account_linode_creator'],
   entity_access: [
     {
       id: 12345678,
@@ -30,7 +30,7 @@ describe('combineRoles', () => {
   it('should return an object of users roles', () => {
     const expectedRoles = [
       { id: null, name: 'account_linode_admin' },
-      { id: null, name: 'linode_creator' },
+      { id: null, name: 'account_linode_creator' },
       { id: [12345678], name: 'linode_contributor' },
     ];
 
@@ -41,7 +41,7 @@ describe('combineRoles', () => {
 describe('mapRolesToPermissions', () => {
   it('should return an object of users roles', () => {
     const userRoles: CombinedRoles[] = [
-      { id: null, name: 'firewall_creator' },
+      { id: null, name: 'account_firewall_creator' },
       { id: [12345678], name: 'image_viewer' },
     ];
 
@@ -51,8 +51,8 @@ describe('mapRolesToPermissions', () => {
         description: 'Access to create a firewall instance',
         entity_ids: null,
         entity_type: 'firewall',
-        id: 'firewall_creator',
-        name: 'firewall_creator',
+        id: 'account_firewall_creator',
+        name: 'account_firewall_creator',
         permissions: ['create_firewall', 'list_firewalls'],
       },
       {
