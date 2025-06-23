@@ -1,6 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
-import { Box, FormControlLabel, styled, TextField } from '@linode/ui';
+import { Box, FormControlLabel, Notice, styled, TextField } from '@linode/ui';
 import { Radio, RadioGroup, Typography } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
@@ -48,19 +48,21 @@ export const VPCTopSectionContent = (props: Props) => {
 
   const [cidrOption, setCIDROption] = React.useState('ipv4');
 
-  const { control } = useFormContext<CreateVPCPayload>();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<CreateVPCPayload>();
   const { append, fields, remove } = useFieldArray({
     control,
     name: 'ipv6',
   });
 
   const { data: account } = useAccount();
-
-  // const isDualStackEnabled = isFeatureEnabledV2(
-  //   'VPC Dual Stack',
-  //   Boolean(flags.vpcIpv6),
-  //   account?.capabilities ?? []
-  // );
+  const isDualStackEnabled = isFeatureEnabledV2(
+    'VPC Dual Stack',
+    Boolean(flags.vpcIpv6),
+    account?.capabilities ?? []
+  );
 
   const isTrustedCustomer = isFeatureEnabledV2(
     'VPC IPv6 Large Prefixes',
@@ -137,7 +139,7 @@ export const VPCTopSectionContent = (props: Props) => {
           />
         )}
       />
-      {flags.vpcIpv6 && (
+      {isDualStackEnabled && (
         <Box marginTop={2}>
           <FormLabel>VPC Stack Type </FormLabel>
           <RadioGroup sx={{ display: 'block' }}>
@@ -184,7 +186,7 @@ export const VPCTopSectionContent = (props: Props) => {
           </RadioGroup>
         </Box>
       )}
-      {flags.vpcIpv6 && (
+      {isDualStackEnabled && (
         <>
           <StyledFormLabel>IPv4 CIDR</StyledFormLabel>
           <Typography>
@@ -192,7 +194,7 @@ export const VPCTopSectionContent = (props: Props) => {
           </Typography>
         </>
       )}
-      {flags.vpcIpv6 && cidrOption === 'dualstack' && (
+      {cidrOption === 'dualstack' && (
         <Controller
           control={control}
           name="ipv6"
@@ -209,6 +211,13 @@ export const VPCTopSectionContent = (props: Props) => {
               <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
                 IPv6 CIDR
               </StyledFormLabel>
+              {errors.ipv6 && (
+                <Notice
+                  sx={{ marginTop: 1 }}
+                  text={errors.ipv6[0]?.range?.message}
+                  variant="error"
+                />
+              )}
               <FormControlLabel control={<Radio />} label="/52" value="/52" />
               {isTrustedCustomer && (
                 <FormControlLabel control={<Radio />} label="/48" value="/48" />
