@@ -90,7 +90,7 @@ export const LinodeCreate = () => {
     (preferences) => preferences?.isAclpAlertsBeta
   );
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
 
   const queryClient = useQueryClient();
   const history = useHistory();
@@ -139,7 +139,7 @@ export const LinodeCreate = () => {
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-      isAclpIntegration: flags.aclpBetaServices?.alerts,
+      isAclpIntegration: aclpBetaServices?.linode?.alerts,
       isAclpAlertsPreferenceBeta,
     });
 

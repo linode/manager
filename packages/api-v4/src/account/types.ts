@@ -597,6 +597,7 @@ export type MaintenancePolicySlug = 'linode/migrate' | 'linode/power_off_on';
 
 export type MaintenancePolicy = {
   description: string;
+  id: number;
   is_default: boolean;
   label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;

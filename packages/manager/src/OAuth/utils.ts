@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
-import { useLocation } from 'react-router-dom';
-
 import { CLIENT_ID, LOGIN_ROOT } from 'src/constants';
-import { redirectToLogin, revokeToken } from 'src/session';
+import { revokeToken } from 'src/session';
 import {
   clearUserInput,
   getEnvLocalStorageOverrides,
@@ -61,24 +59,6 @@ export function getIsLoggedInAsCustomer() {
   }
 
   return token.toLowerCase().includes('admin');
-}
-
-export function useOAuth() {
-  const location = useLocation();
-  const token = storage.authentication.token.get();
-
-  const isPendingAuthentication =
-    location.pathname.includes('/oauth/callback') ||
-    location.pathname.includes('/admin/callback') ||
-    window.location.pathname.includes('/oauth/callback') ||
-    window.location.pathname.includes('/admin/callback');
-
-  // If no token is stored and we are not in the process of authentication, redirect to login.
-  if (!token && !isPendingAuthentication) {
-    redirectToLogin(window.location.pathname, window.location.search);
-  }
-
-  return { isPendingAuthentication };
 }
 
 function getSafeLoginURL() {
