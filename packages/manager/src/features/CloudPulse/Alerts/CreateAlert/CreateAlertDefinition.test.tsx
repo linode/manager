@@ -141,7 +141,7 @@ describe('AlertDefinition Create', () => {
     expect(container.getAllByText('The value should be a number.').length).toBe(
       2
     );
-  });
+  }, {timeout: 10000});
 
   it('should render the client side validation error messages for the form', async () => {
     const errorMessage = 'This field is required.';

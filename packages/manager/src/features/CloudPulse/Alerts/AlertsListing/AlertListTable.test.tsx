@@ -220,7 +220,7 @@ describe('Alert List Table test', () => {
 
   it('should show success snackbar when deleting alert succeeds', async () => {
     const alert = alertFactory.build({ type: 'user' });
-    await renderWithThemeAndRouter(
+    renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -247,11 +247,11 @@ describe('Alert List Table test', () => {
     queryMocks.useDeleteAlertDefinitionMutation.mockReturnValue({
       mutateAsync: vi
         .fn()
-        .mockRejectedValue([{ reason: 'Deleting alert failed' }]),
+        .mockRejectedValue([{ reason: 'Deleting alert failed.' }]),
     });
 
     const alert = alertFactory.build({ type: 'user' });
-    await renderWithThemeAndRouter(
+    renderWithThemeAndRouter(
       <AlertsListTable
         alerts={[alert]}
         isLoading={false}
@@ -271,6 +271,6 @@ describe('Alert List Table test', () => {
     await userEvent.type(textInput, alert.label);
     await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
 
-    expect(screen.getByText('Deleting alert failed')).toBeVisible();
+    expect(screen.getByText('Deleting alert failed.')).toBeVisible();
   });
 });
