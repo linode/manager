@@ -2,6 +2,7 @@ import { linodeFactory, regionFactory } from '@linode/utilities';
 import { grantsFactory, profileFactory } from '@linode/utilities';
 import { subnetFactory, vpcFactory } from '@src/factories';
 import { mockGetUser } from 'support/intercepts/account';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 /**
  * @file Integration tests for VPC create flow.
  */
@@ -48,6 +49,13 @@ describe('VPC create flow', () => {
    * - Confirms that UI handles API errors gracefully.
    * - Confirms that UI redirects to created VPC page after creating a VPC.
    */
+  beforeEach(() => {
+    // TODO - Remove mock once `nodebalancerVpc` feature flag is removed.
+    mockAppendFeatureFlags({
+      nodebalancerVpc: false,
+    }).as('getFeatureFlags');
+  });
+
   it('can create a VPC', () => {
     const mockVPCRegion = extendRegion(
       regionFactory.build({
@@ -83,7 +91,7 @@ describe('VPC create flow', () => {
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait('@getRegions');
+    cy.wait(['@getRegions', '@getFeatureFlags']);
 
     ui.regionSelect.find().click();
     cy.focused().type(`${mockVPCRegion.label}{enter}`);
@@ -281,7 +289,7 @@ describe('VPC create flow', () => {
     mockGetRegions([mockVPCRegion]).as('getRegions');
 
     cy.visitWithLogin('/vpcs/create');
-    cy.wait('@getRegions');
+    cy.wait(['@getRegions', '@getFeatureFlags']);
 
     ui.regionSelect.find().click().type(`${mockVPCRegion.label}{enter}`);
 
