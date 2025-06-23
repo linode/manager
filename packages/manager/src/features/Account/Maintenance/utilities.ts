@@ -8,7 +8,7 @@ export const IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['in-progress', 'started'] },
 });
 
-export const SCHEDULED_MAINTENANCE_FILTER = Object.freeze({
+export const UPCOMING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'scheduled'] },
 });
 
@@ -30,6 +30,6 @@ export const maintenanceDateColumnMap: Record<
 > = {
   completed: ['complete_time', 'End Date'],
   'in progress': ['start_time', 'Start Date'],
-  scheduled: ['start_time', 'Start Date'],
+  upcoming: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
 };

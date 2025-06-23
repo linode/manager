@@ -54,7 +54,7 @@ export const AssignedEntities = ({
       <div
         key={entity.id}
         ref={(el: HTMLDivElement) => {
-          (itemRefs.current[index] = el);
+          itemRefs.current[index] = el;
         }}
         style={{ display: 'inline-block', marginRight: 8 }}
       >
