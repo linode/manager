@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useCreateSupportTicketMutation, useProfile } from '@linode/queries';
-import { Select } from '@linode/ui';
+import { InputAdornment, Select } from '@linode/ui';
 import {
   Accordion,
   ActionsPanel,
@@ -142,21 +142,22 @@ export const QuotasIncreaseForm = (props: QuotasIncreaseFormProps) => {
                   slotProps={{
                     input: {
                       endAdornment: (
-                        <Typography
-                          component="span"
-                          sx={(theme) => ({
-                            color: theme.tokens.alias.Content.Text,
-                            font: theme.font.bold,
-                            fontSize: theme.tokens.font.FontSize.Xxxs,
-                            mx: 1,
-                            textTransform: 'uppercase',
-                            userSelect: 'none',
-                            whiteSpace: 'nowrap',
-                          })}
-                        >
-                          {convertedResourceMetrics?.metric ??
-                            quota.resource_metric}
-                        </Typography>
+                        <InputAdornment position="end">
+                          <Typography
+                            component="span"
+                            sx={(theme) => ({
+                              color: theme.tokens.alias.Content.Text,
+                              font: theme.font.bold,
+                              fontSize: theme.tokens.font.FontSize.Xxxs,
+                              textTransform: 'uppercase',
+                              userSelect: 'none',
+                              whiteSpace: 'nowrap',
+                            })}
+                          >
+                            {convertedResourceMetrics?.metric ??
+                              quota.resource_metric}
+                          </Typography>
+                        </InputAdornment>
                       ),
                     },
                   }}
