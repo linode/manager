@@ -11,7 +11,7 @@ export interface CloudNAT {
 }
 
 export interface CreateCloudNATPayload {
-  addresses?: Array<{ address: string }>;
+  addresses?: CloudNATIPAddress[];
   label: string;
   port_prefix_default_len?: ValidPortSize;
   region: string;

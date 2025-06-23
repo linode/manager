@@ -21,7 +21,7 @@ export const cloudnatQueries = createQueryKeys('cloudnats', {
   }),
 });
 
-export const useCloudNATsQuery = () => useQuery(cloudnatQueries.all);
+export const useAllCloudNATsQuery = () => useQuery(cloudnatQueries.all);
 
 export const useCloudNATQuery = (id: number) =>
   useQuery({
@@ -67,9 +67,14 @@ export const useDeleteCloudNATMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteCloudNAT,
-    onSuccess: () =>
+    onSuccess: (_, id) => {
       queryClient.invalidateQueries({
         queryKey: cloudnatQueries.all.queryKey,
-      }),
+      });
+
+      queryClient.removeQueries({
+        queryKey: cloudnatQueries.one(id).queryKey,
+      });
+    },
   });
 };
