@@ -3,12 +3,12 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 import { SortableTableHead } from './SortableTableHead';
 
 import type { OrderByProps } from 'src/components/OrderBy';
 import type { TableProps } from 'src/components/Table';
-import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 interface Props {
   children: React.ReactNode;
