@@ -73,7 +73,7 @@ describe('ChangeRoleForEntityDrawer', () => {
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
     expect(
-      screen.getByText('Select a role you want the entity to be attached to.')
+      screen.getByText(/Select a role you want the entity to be attached to/i)
     ).toBeVisible();
   });
 
