@@ -58,8 +58,7 @@ const MaintenanceText = ({
     <>
       This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
       {maintenanceStartTime}
-      {!isOpened && <>. For more information, see your open support tickets.</>}
-      .
+      {!isOpened && <>. For more information, see your open support tickets</>}.
     </>
   );
 };
