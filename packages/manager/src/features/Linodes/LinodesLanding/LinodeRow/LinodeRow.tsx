@@ -98,7 +98,7 @@ export const LinodeRow = (props: Props) => {
 
   const isBareMetalInstance = linodeType?.class === 'metal';
 
-  const loading = linodeInTransition(status, recentEvent);
+  const isTransitioning = linodeInTransition(status, recentEvent);
 
   const parsedMaintenanceStartTime = parseMaintenanceStartTime(
     maintenance?.start_time || maintenance?.when
@@ -115,6 +115,12 @@ export const LinodeRow = (props: Props) => {
   const handleMouseLeave = React.useCallback(() => {
     setIsHovered(false);
   }, []);
+
+  const isPendingOrScheduled =
+    maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
+
+  const isInProgress =
+    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
 
   return (
     <TableRow
@@ -135,61 +141,50 @@ export const LinodeRow = (props: Props) => {
         noWrap
         statusCell
       >
-        {!maintenance ? (
-          loading ? (
-            <>
-              <StatusIcon status={iconStatus} />
-              <StyledButton onClick={notificationContext.openMenu}>
-                <ProgressDisplay
-                  progress={getProgressOrDefault(recentEvent)}
-                  sx={{ display: 'inline-block' }}
-                  text={transitionText(status, id, recentEvent)}
-                />
-              </StyledButton>
-              <TooltipIcon
-                className="ui-TooltipIcon ui-TooltipIcon-isActive"
-                icon={statusTooltipIcons.active}
-                status="other"
-                sx={{ tooltip: { maxWidth: 300 } }}
-                text={
-                  <MaintenanceText
-                    isOpened={false}
-                    maintenanceStartTime={parsedMaintenanceStartTime}
-                  />
-                }
-                tooltipPosition="top"
+        <StatusIcon status={iconStatus} />
+        {!isTransitioning && getFormattedStatus(status)}
+        {isTransitioning && (
+          <StyledButton onClick={notificationContext.openMenu}>
+            <ProgressDisplay
+              progress={getProgressOrDefault(recentEvent)}
+              sx={{ display: 'inline-block' }}
+              text={transitionText(status, id, recentEvent)}
+            />
+          </StyledButton>
+        )}
+        {isInProgress && (
+          <TooltipIcon
+            className="ui-TooltipIcon ui-TooltipIcon-isActive"
+            icon={statusTooltipIcons.active}
+            status="other"
+            sx={{ tooltip: { maxWidth: 300 } }}
+            text={
+              <MaintenanceText
+                isOpened={false}
+                maintenanceStartTime={parsedMaintenanceStartTime}
               />
-            </>
-          ) : (
-            <>
-              <StatusIcon status={iconStatus} />
-              {getFormattedStatus(status)}
-            </>
-          )
-        ) : (
-          <>
-            <StatusIcon status={iconStatus} />
-            {getFormattedStatus(status)}
-            {maintenance && (
-              <TooltipIcon
-                className="ui-TooltipIcon"
-                icon={
-                  maintenance.status === 'pending'
-                    ? statusTooltipIcons.pending
-                    : statusTooltipIcons.scheduled
-                }
-                status="other"
-                sx={{ tooltip: { maxWidth: 300 } }}
-                text={
-                  <MaintenanceText
-                    isOpened
-                    maintenanceStartTime={parsedMaintenanceStartTime}
-                  />
-                }
-                tooltipPosition="top"
+            }
+            tooltipPosition="top"
+          />
+        )}
+        {isPendingOrScheduled && (
+          <TooltipIcon
+            className="ui-TooltipIcon"
+            icon={
+              maintenance.status === 'pending'
+                ? statusTooltipIcons.pending
+                : statusTooltipIcons.scheduled
+            }
+            status="other"
+            sx={{ tooltip: { maxWidth: 300 } }}
+            text={
+              <MaintenanceText
+                isOpened
+                maintenanceStartTime={parsedMaintenanceStartTime}
               />
-            )}
-          </>
+            }
+            tooltipPosition="top"
+          />
         )}
       </StyledMaintenanceTableCell>
       <Hidden smDown>
