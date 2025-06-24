@@ -62,6 +62,7 @@ const initialValues: CreateAlertDefinitionForm = {
   severity: null,
   tags: [''],
   trigger_conditions: triggerConditionInitialValues,
+  scope: 'entity',
 };
 
 const overrides = [

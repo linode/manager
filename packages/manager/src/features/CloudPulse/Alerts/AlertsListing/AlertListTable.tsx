@@ -132,6 +132,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
+        scope: alert.scope,
       })
         .then(() => {
           // Handle success
