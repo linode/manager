@@ -3,7 +3,13 @@ import {
   useStackScriptsInfiniteQuery,
 } from '@linode/queries';
 import { getAPIFilterFromQuery } from '@linode/search';
-import { CircleProgress, ErrorState, Stack, TooltipIcon } from '@linode/ui';
+import {
+  CircleProgress,
+  ErrorState,
+  InputAdornment,
+  Stack,
+  TooltipIcon,
+} from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import {
   useMatch,
@@ -131,11 +137,13 @@ export const StackScriptLandingTable = (props: Props) => {
           searchParseError
             ? {
                 endAdornment: (
-                  <TooltipIcon
-                    status="warning"
-                    sxTooltipIcon={{ p: 0.75 }}
-                    text={searchParseError.message}
-                  />
+                  <InputAdornment position="end">
+                    <TooltipIcon
+                      status="warning"
+                      sxTooltipIcon={{ p: 0.75 }}
+                      text={searchParseError.message}
+                    />
+                  </InputAdornment>
                 ),
               }
             : {}
