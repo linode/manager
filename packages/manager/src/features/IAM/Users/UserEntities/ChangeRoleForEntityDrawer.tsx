@@ -18,7 +18,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'src/components/Link';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { INTERNAL_ERROR_NO_CHANGES_SAVED } from '../../Shared/constants';
+import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  ROLES_LEARN_MORE_LINK,
+} from '../../Shared/constants';
 import {
   changeRoleForEntity,
   getAllRoles,
@@ -129,7 +132,6 @@ export const ChangeRoleForEntityDrawer = ({
     onClose();
   };
 
-  // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
@@ -137,8 +139,11 @@ export const ChangeRoleForEntityDrawer = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want the entity to be attached to.
-          <Link to=""> Learn more about roles and permissions.</Link>
+          Select a role you want the entity to be attached to.{' '}
+          <Link to={ROLES_LEARN_MORE_LINK}>
+            Learn more about roles and permissions
+          </Link>
+          .
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>

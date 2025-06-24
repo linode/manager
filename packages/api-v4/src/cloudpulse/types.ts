@@ -9,8 +9,8 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -164,19 +164,21 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceTypes {
-  alert: {
-    evaluation_periods_seconds: number[];
-    polling_interval_seconds: number[];
-    scope: string[];
-  };
+export interface ServiceAlert {
+  evaluation_periods_seconds: number[];
+  polling_interval_seconds: number[];
+  scope: AlertDefinitionScope[];
+}
+
+export interface Service {
+  alert: ServiceAlert;
   label: string;
   regions: string;
   service_type: string;
 }
 
 export interface ServiceTypesList {
-  data: ServiceTypes[];
+  data: Service[];
 }
 
 export interface CreateAlertDefinitionPayload {
@@ -327,6 +329,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
