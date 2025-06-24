@@ -174,6 +174,8 @@ export const DateTimeRangePicker = ({
   };
 
   const handleDateSelection = (date: DateTime) => {
+    setSelectedPreset('reset'); // Reset preset selection on manual date selection
+
     if (focusedField === 'start') {
       setStartDate(date);
 
