@@ -109,7 +109,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
-  maintenance_policy_id: number;
+  maintenance_policy: 'linode/migrate' | 'linode/power_off_on';
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -514,25 +514,25 @@ export type EventSource = 'platform' | 'user';
 
 export interface Event {
   action: EventAction;
-  complete_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  complete_time?: null | string;
   created: string;
-  description?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  description?: null | string;
   /*
     NOTE: events before the duration key was added will have a duration of 0
   */
   duration: null | number;
   entity: Entity | null;
   id: number;
-  maintenance_policy_set?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  maintenance_policy_set?: 'linode/migrate' | 'linode/power_off_on' | null;
   message: null | string;
-  not_before?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  not_before?: null | string;
   percent_complete: null | number;
   rate: null | string;
   read: boolean;
   secondary_entity: Entity | null;
   seen: boolean;
-  source?: EventSource | null; // @TODO VM & Host Maintenance: verify new fields
-  start_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  source?: EventSource | null;
+  start_time?: null | string;
   status: EventStatus;
   time_remaining: null | string;
   username: null | string;
@@ -595,11 +595,11 @@ export interface AccountMaintenance {
 
 export type MaintenancePolicy = {
   description: string;
-  id: number;
   is_default: boolean;
-  name: string;
+  label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
-  type: 'migrate' | 'power-off/on';
+  slug: 'linode/migrate' | 'linode/power_off_on';
+  type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on';
 };
 
 export interface PayPalData {

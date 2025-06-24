@@ -829,6 +829,9 @@ export const CreateLinodeSchema = object({
   firewall_id: number().nullable().notRequired(),
   placement_group: PlacementGroupPayloadSchema.notRequired().default(undefined),
   disk_encryption: DiskEncryptionSchema,
-  maintenance_policy_id: number().notRequired().nullable(),
+  maintenance_policy: string()
+    .oneOf(['linode/migrate', 'linode/power_off_on'])
+    .notRequired()
+    .nullable(),
   alerts: AclpAlertsPayloadSchema.notRequired().default(undefined),
 });

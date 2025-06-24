@@ -125,11 +125,11 @@ export const Region = React.memo(() => {
     }
 
     if (
-      values.maintenance_policy_id &&
+      values.maintenance_policy &&
       !region.capabilities.includes('Maintenance Policy')
     ) {
-      // Clear maintenance_policy_id if the selected region doesn't support it
-      setValue('maintenance_policy_id', undefined);
+      // Clear maintenance_policy if the selected region doesn't support it
+      setValue('maintenance_policy', null);
     }
 
     if (values.placement_group?.id) {

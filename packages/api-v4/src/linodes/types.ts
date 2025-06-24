@@ -43,7 +43,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy_id?: number;
+  maintenance_policy?: 'linode/migrate' | 'linode/power_off_on';
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -622,7 +622,7 @@ export interface CreateLinodeRequest {
    * Allows customers to specify which strategy this Linode should follow during
    * maintenance events.
    */
-  maintenance_policy_id?: null | number;
+  maintenance_policy?: 'linode/migrate' | 'linode/power_off_on' | null;
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */
