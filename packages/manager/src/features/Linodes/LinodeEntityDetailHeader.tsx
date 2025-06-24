@@ -1,10 +1,17 @@
 import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
 import { Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import {
+  LoadFailureIcon as MaintenanceActiveIcon,
+  CalendarIcon as MaintenancePendingIcon,
+  CalendarScheduledIcon as MaintenanceScheduledIcon,
+} from '@linode/ui';
+import { capitalize } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
+import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
@@ -14,12 +21,16 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEve
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
-import { getLinodeIconStatus } from './LinodesLanding/utils';
+import {
+  getLinodeIconStatus,
+  parseMaintenanceStartTime,
+} from './LinodesLanding/utils';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Config, LinodeBackups } from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
+import type { LinodeMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -46,6 +57,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
+  maintenance?: LinodeMaintenance | null;
   openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
@@ -56,6 +68,36 @@ export interface HeaderProps {
 interface LinodeEntityDetailHeaderProps extends HeaderProps {
   handlers: LinodeHandlers;
 }
+
+const statusTooltipIcons = {
+  scheduled: <MaintenanceScheduledIcon />,
+  active: <MaintenanceActiveIcon />,
+  pending: <MaintenancePendingIcon />,
+};
+
+interface MaintenanceTextProps {
+  isOpened?: boolean;
+  maintenanceStartTime: string;
+}
+
+const MaintenanceText = ({
+  isOpened = false,
+  maintenanceStartTime,
+}: MaintenanceTextProps) => {
+  return (
+    <>
+      This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
+      {maintenanceStartTime}
+      {!isOpened && (
+        <>
+          . For more information, see your{' '}
+          <Link to="/support/tickets/open">open support tickets.</Link>
+        </>
+      )}
+      .
+    </>
+  );
+};
 
 export const LinodeEntityDetailHeader = (
   props: LinodeEntityDetailHeaderProps
@@ -71,6 +113,7 @@ export const LinodeEntityDetailHeader = (
     linodeLabel,
     linodeRegionDisplay,
     linodeStatus,
+    maintenance,
     openNotificationMenu,
     progress,
     transitionText,
@@ -145,6 +188,10 @@ export const LinodeEntityDetailHeader = (
     display: 'flex',
   };
 
+  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
+    maintenance?.start_time || maintenance?.when
+  );
+
   return (
     <EntityHeader
       isSummaryView={isSummaryView}
@@ -158,7 +205,7 @@ export const LinodeEntityDetailHeader = (
           data-qa-linode-status
           direction="row"
           spacing={1.5}
-          sx={{ paddingX: 2 }}
+          sx={{ paddingLeft: 2 }}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
           <Typography sx={(theme) => ({ font: theme.font.bold })}>
@@ -168,9 +215,57 @@ export const LinodeEntityDetailHeader = (
         {isRebootNeeded && (
           <TooltipIcon
             status="help"
-            sxTooltipIcon={{ padding: 0 }}
+            sxTooltipIcon={(theme) => ({
+              paddingLeft: theme.spacingFunction(6),
+            })}
             text={VPC_REBOOT_MESSAGE}
           />
+        )}
+        {maintenance && (
+          <Box
+            sx={(theme) => ({
+              display: 'flex',
+              alignItems: 'center',
+              borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
+              paddingLeft: theme.spacingFunction(16),
+            })}
+          >
+            <Typography>
+              <Box
+                component="span"
+                sx={(theme) => ({
+                  font: theme.tokens.alias.Typography.Label.Bold.S,
+                })}
+              >
+                Maintenance:
+              </Box>{' '}
+              <Box
+                component="span"
+                sx={(theme) => ({
+                  color: theme.tokens.alias.Content.Text.Secondary.Default,
+                })}
+              >
+                {maintenance.status && capitalize(maintenance.status)}
+              </Box>
+            </Typography>
+            <TooltipIcon
+              className="ui-TooltipIcon"
+              icon={
+                maintenance.status === 'pending'
+                  ? statusTooltipIcons.pending
+                  : statusTooltipIcons.scheduled
+              }
+              status="other"
+              sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
+              text={
+                <MaintenanceText
+                  isOpened
+                  maintenanceStartTime={parsedMaintenanceStartTime}
+                />
+              }
+              tooltipPosition="top"
+            />
+          </Box>
         )}
         {hasSecondaryStatus && (
           <Button
