@@ -1,4 +1,3 @@
-import { Box } from '@linode/ui';
 import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -97,7 +96,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
 
   return (
-    <Box alignItems="center" display="flex" justifyContent="flex-end">
+    <>
       {!matchesSmDown &&
         inlineActions.map((action) => (
           <InlineMenuAction
@@ -122,6 +121,6 @@ export const LinodeDiskActionMenu = (props: Props) => {
         actionsList={menuActions}
         ariaLabel={`Action menu for Disk ${disk.label}`}
       />
-    </Box>
+    </>
   );
 };

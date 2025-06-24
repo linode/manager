@@ -1,11 +1,7 @@
 import { groupAccountEntitiesByType } from '../utilities';
 
 import type { EntitiesOption } from '../types';
-import type {
-  AccountEntity,
-  EntityType,
-  EntityTypePermissions,
-} from '@linode/api-v4';
+import type { AccessType, AccountEntity, EntityType } from '@linode/api-v4';
 
 export const placeholderMap: Record<string, string> = {
   account: 'Select Account',
@@ -23,9 +19,7 @@ export const placeholderMap: Record<string, string> = {
   vpc: 'Select VPCs',
 };
 
-export const getCreateLinkForEntityType = (
-  entityType: EntityType | EntityTypePermissions
-): string => {
+export const getCreateLinkForEntityType = (entityType: AccessType): string => {
   // TODO - find the exceptions to this rule - most use the route of /{entityType}s/create (note the "s")
 
   if (entityType === 'placement_group') {
@@ -40,7 +34,7 @@ export const getCreateLinkForEntityType = (
 };
 
 export const getPlaceholder = (
-  type: EntityType | EntityTypePermissions,
+  type: AccessType,
   currentValueLength: number,
   possibleEntitiesLength: number
 ): string => {
@@ -67,7 +61,7 @@ export const mapEntitiesToOptions = (
 };
 
 export const getEntitiesByType = (
-  roleEntityType: EntityType | EntityTypePermissions,
+  roleEntityType: AccessType,
   entities: AccountEntity[]
 ): Pick<AccountEntity, 'id' | 'label'>[] | undefined => {
   const entitiesMap = groupAccountEntitiesByType(entities);
