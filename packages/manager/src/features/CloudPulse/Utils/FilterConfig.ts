@@ -179,7 +179,6 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['resource_id'],
         filterKey: 'protocol',
         filterType: 'string',
         isFilterable: true,
@@ -209,7 +208,6 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        dependency: ['resource_id'],
         filterKey: 'port',
         filterType: 'string',
         isFilterable: true,
