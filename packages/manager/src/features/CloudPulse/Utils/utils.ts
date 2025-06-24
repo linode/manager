@@ -15,6 +15,7 @@ import {
 import type {
   APIError,
   Dashboard,
+  DimensionFilterOperatorType,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -231,14 +232,17 @@ export const arePortsValid = (ports: string): string | undefined => {
  * @description Handles the keydown event for the port input
  */
 export const handleKeyDown =
-  (value: string, setErrorText: (error: string | undefined) => void) =>
+  (
+    value: string,
+    setErrorText: (error: string | undefined) => void,
+    dimensionOperator: DimensionFilterOperatorType | undefined = undefined
+  ) =>
   (e: React.KeyboardEvent<HTMLInputElement>) => {
     const allowedKeys = ['ArrowLeft', 'ArrowRight', 'Tab', 'Control', 'Meta'];
 
     // Allow copy/paste/select keyboard shortcuts
     const isCtrlCmd = e.ctrlKey || e.metaKey;
     const copyPasteKeys = ['a', 'c', 'v', 'x', 'z', 'y'];
-
     if (
       allowedKeys.includes(e.key) ||
       (isCtrlCmd && copyPasteKeys.includes(e.key.toLowerCase()))
@@ -273,6 +277,11 @@ export const handleKeyDown =
       }
     }
 
+    if (dimensionOperator && dimensionOperator !== 'in' && e.key === ',') {
+      e.preventDefault();
+      setErrorText('Commas are not allowed.');
+      return;
+    }
     // Check if each segment (split by comma) is a valid port
     const validationError = arePortsValid(newValue);
     if (validationError !== undefined) {

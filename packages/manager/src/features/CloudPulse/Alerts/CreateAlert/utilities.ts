@@ -103,10 +103,15 @@ const filterDimensionFilterFormValues = (
   formValues: DimensionFilterForm[]
 ): DimensionFilter[] => {
   return formValues.map((dimensionFilter) => {
+    const dimensionFilterValue =
+      dimensionFilter.value && dimensionFilter.value?.trim().endsWith(',')
+        ? dimensionFilter.value?.trim().slice(0, -1)
+        : dimensionFilter.value?.trim();
+
     return {
       dimension_label: dimensionFilter.dimension_label ?? '',
       operator: dimensionFilter.operator ?? 'eq',
-      value: dimensionFilter.value ?? '',
+      value: dimensionFilterValue ?? '',
     };
   });
 };
