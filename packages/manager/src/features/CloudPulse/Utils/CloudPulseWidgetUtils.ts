@@ -270,7 +270,7 @@ export const getCloudPulseMetricRequest = (
 
   return {
     absolute_time_duration:
-      preset !== 'Reset'
+      preset !== 'reset' && preset !== 'this month' && preset !== 'last month'
         ? undefined
         : { end: duration.end, start: duration.start },
     entity_ids: resources
@@ -373,17 +373,17 @@ export const getTimeDurationFromPreset = (
   preset?: string
 ): TimeDuration | undefined => {
   switch (preset) {
-    case 'Last 7 days':
+    case 'last 7 days':
       return { unit: 'days', value: 7 };
-    case 'Last 30 days':
+    case 'last 12 hours':
+      return { unit: 'hr', value: 12 };
+    case 'last 30 days':
       return { unit: 'days', value: 30 };
-    case 'Last 60 days':
-      return { unit: 'days', value: 60 };
-    case 'Last 90 days':
-      return { unit: 'days', value: 90 };
-    case 'Last day':
+    case 'last 30 minutes':
+      return { unit: 'days', value: 7 };
+    case 'last day':
       return { unit: 'days', value: 1 };
-    case 'Last hour': {
+    case 'last hour': {
       return { unit: 'hr', value: 1 };
     }
     default:
