@@ -672,7 +672,10 @@ export const darkTheme: ThemeOptions = {
           '&.ui-TooltipIcon': {
             '&.ui-TooltipIcon-isActive': {
               '&.MuiIconButton-root': {
-                color: Content.Icon.Negative,
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
               },
             },
             '&.MuiIconButton-root': {
