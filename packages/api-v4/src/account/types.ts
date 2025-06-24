@@ -109,7 +109,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
-  maintenance_policy: 'linode/migrate' | 'linode/power_off_on';
+  maintenance_policy: MaintenancePolicySlug;
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -523,7 +523,7 @@ export interface Event {
   duration: null | number;
   entity: Entity | null;
   id: number;
-  maintenance_policy_set?: 'linode/migrate' | 'linode/power_off_on' | null;
+  maintenance_policy_set?: MaintenancePolicySlug | null;
   message: null | string;
   not_before?: null | string;
   percent_complete: null | number;
@@ -577,7 +577,7 @@ export interface AccountMaintenance {
     type: 'linode' | 'volume';
     url: string;
   };
-  maintenance_policy_set: string;
+  maintenance_policy_set: MaintenancePolicySlug;
   not_before: string;
   reason: string;
   source: 'platform' | 'user';
@@ -593,12 +593,14 @@ export interface AccountMaintenance {
   when: string;
 }
 
+export type MaintenancePolicySlug = 'linode/migrate' | 'linode/power_off_on';
+
 export type MaintenancePolicy = {
   description: string;
   is_default: boolean;
   label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
-  slug: 'linode/migrate' | 'linode/power_off_on';
+  slug: MaintenancePolicySlug;
   type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on';
 };
 
