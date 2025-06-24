@@ -35,6 +35,10 @@ const meta: Meta<typeof DateTimeRangePicker> = {
       control: 'object',
       description: 'Props for start date input field.',
     },
+    timeZoneProps: {
+      control: 'object',
+      description: 'Props for timezone selection.',
+    },
   },
   component: DateTimeRangePicker,
   parameters: {
@@ -92,7 +96,7 @@ export const Default: Story = {
 export const WithPresets: Story = {
   args: {
     presetsProps: {
-      defaultValue: 'Last 30 days',
+      defaultValue: 'last 30 days',
       enablePresets: true,
     },
   },
