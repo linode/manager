@@ -648,6 +648,9 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
           '&:active': {
             color: `${Component.Checkbox.Empty.Active.Border} !important`,
           },
@@ -661,6 +664,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
             color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           // Unchecked & Disabled
           '&.Mui-disabled': {
@@ -677,6 +685,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
