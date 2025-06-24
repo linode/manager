@@ -21,7 +21,7 @@ export const cloudnatQueries = createQueryKeys('cloudnats', {
     queryFn: () => getCloudNATs(params, filter),
     queryKey: [params, filter],
   }),
-  one: (id: number) => ({
+  cloudnat: (id: number) => ({
     queryFn: () => getCloudNAT(id),
     queryKey: [id],
   }),
@@ -42,7 +42,7 @@ export const useCloudNATsQuery = (
 
 export const useCloudNATQuery = (id: number) =>
   useQuery({
-    ...cloudnatQueries.one(id),
+    ...cloudnatQueries.cloudnat(id),
     enabled: Boolean(id),
   });
 
@@ -57,7 +57,7 @@ export const useCreateCloudNATMutation = () => {
       });
 
       queryClient.setQueryData(
-        cloudnatQueries.one(cloudNAT.id).queryKey,
+        cloudnatQueries.cloudnat(cloudNAT.id).queryKey,
         cloudNAT,
       );
     },
@@ -75,7 +75,7 @@ export const useUpdateCloudNATMutation = (id: number) => {
       });
 
       queryClient.setQueryData(
-        cloudnatQueries.one(id).queryKey,
+        cloudnatQueries.cloudnat(id).queryKey,
         updatedCloudNAT,
       );
     },
@@ -93,7 +93,7 @@ export const useDeleteCloudNATMutation = (id: number) => {
       });
 
       queryClient.removeQueries({
-        queryKey: cloudnatQueries.one(id).queryKey,
+        queryKey: cloudnatQueries.cloudnat(id).queryKey,
       });
     },
   });

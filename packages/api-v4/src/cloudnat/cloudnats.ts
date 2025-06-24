@@ -1,3 +1,5 @@
+import { createCloudNATSchema } from '@linode/validation';
+
 import { API_ROOT } from '../constants';
 import Request, {
   setData,
@@ -32,14 +34,14 @@ export const createCloudNAT = (data: CreateCloudNATPayload) =>
   Request<CloudNAT>(
     setURL(`${API_ROOT}/networking/cloudnats`),
     setMethod('POST'),
-    setData(data),
+    setData(data, createCloudNATSchema),
   );
 
 export const updateCloudNAT = (id: number, data: UpdateCloudNATPayload) =>
   Request<CloudNAT>(
     setURL(`${API_ROOT}/networking/cloudnats/${id}`),
     setMethod('PUT'),
-    setData(data),
+    setData(data, createCloudNATSchema),
   );
 
 export const deleteCloudNAT = (id: number) =>
