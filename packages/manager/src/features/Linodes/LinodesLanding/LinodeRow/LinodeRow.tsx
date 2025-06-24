@@ -1,13 +1,17 @@
 import { useTypeQuery } from '@linode/queries';
-import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
+import {
+  LoadFailureIcon as MaintenanceActiveIcon,
+  CalendarIcon as MaintenancePendingIcon,
+  CalendarScheduledIcon as MaintenanceScheduledIcon,
+  Tooltip,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 
-import MaintenanceScheduled from 'src/assets/icons/calendar-schedule.svg';
-import MaintenancePending from 'src/assets/icons/calendar.svg';
 import Flag from 'src/assets/icons/flag.svg';
-import MaintenanceActive from 'src/assets/icons/load-failure.svg';
 import { BackupStatus } from 'src/components/BackupStatus/BackupStatus';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
@@ -36,9 +40,9 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 const statusTooltipIcons = {
-  scheduled: <MaintenanceScheduled />,
-  active: <MaintenanceActive />,
-  pending: <MaintenancePending />,
+  scheduled: <MaintenanceScheduledIcon />,
+  active: <MaintenanceActiveIcon />,
+  pending: <MaintenancePendingIcon />,
 };
 
 interface MaintenanceTextProps {
