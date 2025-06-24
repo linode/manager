@@ -78,7 +78,8 @@ describe('usePermissions', () => {
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
     expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
       'account',
-      undefined
+      undefined,
+      true
     );
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
   });
@@ -95,7 +96,8 @@ describe('usePermissions', () => {
 
     expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
       'linode',
-      123
+      123,
+      true
     );
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
     expect(queryMocks.useGrants).toHaveBeenCalledWith(false);
@@ -121,7 +123,8 @@ describe('usePermissions', () => {
     expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
     expect(queryMocks.useUserEntityPermissions).toHaveBeenCalledWith(
       'account',
-      undefined
+      undefined,
+      false
     );
   });
 });

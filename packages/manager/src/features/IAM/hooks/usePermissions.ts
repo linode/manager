@@ -17,12 +17,13 @@ export const usePermissions = (
   const { isIAMEnabled } = useIsIAMEnabled();
 
   const { data: userAccountPermissions } = useUserAccountPermissions(
-    accessType === 'account'
+    isIAMEnabled && accessType === 'account'
   );
 
   const { data: userEntityPermisssions } = useUserEntityPermissions(
     accessType,
-    entityId!
+    entityId!,
+    isIAMEnabled
   );
 
   const usersPermissions =

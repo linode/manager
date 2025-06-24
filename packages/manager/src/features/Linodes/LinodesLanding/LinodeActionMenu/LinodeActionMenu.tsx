@@ -8,8 +8,8 @@ import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { isMTCPlan } from 'src/features/components/PlansPanel/utils';
-import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,
@@ -54,29 +54,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const isVisible = inListView || matchesSmDown;
 
-  const { permissions: accountPermissions } = usePermissions('account', [
-    'create_linode',
-  ]);
+  const isLinodeReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'linode',
+    id: linodeId,
+  });
 
-  const { permissions } = usePermissions(
-    'linode',
-    [
-      'boot_linode',
-      'clone_linode',
-      'delete_linode',
-      'generate_linode_lish_token',
-      'migrate_linode',
-      'reboot_linode',
-      'rebuild_linode',
-      'rescue_linode',
-      'resize_linode',
-      'shutdown_linode',
-      'update_linode',
-    ],
-    linodeId
-  );
   const maintenanceTooltipText =
-    hasHostMaintenance && !permissions.update_linode
+    hasHostMaintenance && !isLinodeReadOnly
       ? 'This action is unavailable while your Linode is undergoing host maintenance.'
       : undefined;
 
@@ -103,18 +88,16 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     {
       condition: isVisible,
       disabled:
-        !['offline', 'running'].includes(linodeStatus) ||
-        !permissions.shutdown_linode ||
-        !permissions.boot_linode,
-      isReadOnly: !permissions.shutdown_linode || !permissions.boot_linode,
+        !['offline', 'running'].includes(linodeStatus) || isLinodeReadOnly,
+      isReadOnly: isLinodeReadOnly,
       onClick: handlePowerAction,
       title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
       tooltipAction: 'modify',
     },
     {
       condition: isVisible,
-      disabled: linodeStatus !== 'running' || !permissions.reboot_linode,
-      isReadOnly: !permissions.reboot_linode,
+      disabled: linodeStatus !== 'running' || isLinodeReadOnly,
+      isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Reboot Linode');
         props.onOpenPowerDialog('Reboot');
@@ -122,14 +105,14 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       title: 'Reboot',
       tooltipAction: 'reboot',
       tooltipText:
-        !permissions.reboot_linode && linodeStatus !== 'running'
+        !isLinodeReadOnly && linodeStatus !== 'running'
           ? 'This action is unavailable while your Linode is offline.'
           : undefined,
     },
     {
       condition: isVisible,
-      disabled: !permissions.update_linode,
-      isReadOnly: !permissions.update_linode,
+      disabled: isLinodeReadOnly,
+      isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Launch Console');
         lishLaunch(linodeId);
@@ -140,10 +123,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     {
       condition: !isBareMetalInstance,
       disabled:
-        !permissions.clone_linode ||
-        hasHostMaintenance ||
-        linodeIsInDistributedRegion,
-      isReadOnly: !permissions.clone_linode,
+        isLinodeReadOnly || hasHostMaintenance || linodeIsInDistributedRegion,
+      isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
         history.push({
@@ -165,8 +146,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: !permissions.resize_linode || hasHostMaintenance || isMTCLinode,
-      isReadOnly: !permissions.resize_linode,
+      disabled: isLinodeReadOnly || hasHostMaintenance || isMTCLinode,
+      isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenResizeDialog,
       title: 'Resize',
       tooltipAction: 'resize',
@@ -176,8 +157,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.rebuild_linode || hasHostMaintenance,
-      isReadOnly: !permissions.rebuild_linode,
+      disabled: isLinodeReadOnly || hasHostMaintenance,
+      isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenRebuildDialog,
       title: 'Rebuild',
       tooltipAction: 'rebuild',
@@ -185,8 +166,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.rescue_linode || hasHostMaintenance,
-      isReadOnly: !permissions.rescue_linode,
+      disabled: isLinodeReadOnly || hasHostMaintenance,
+      isReadOnly: isLinodeReadOnly,
       onClick: props.onOpenRescueDialog,
       title: 'Rescue',
       tooltipAction: 'rescue',
@@ -194,8 +175,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: !isBareMetalInstance,
-      disabled: !permissions.migrate_linode || hasHostMaintenance,
-      isReadOnly: !permissions.migrate_linode,
+      disabled: isLinodeReadOnly || hasHostMaintenance,
+      isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendMigrationNavigationEvent('/linodes');
         sendLinodeActionMenuItemEvent('Migrate');
@@ -207,8 +188,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
     {
       condition: true,
-      disabled: !permissions.delete_linode || hasHostMaintenance,
-      isReadOnly: !permissions.delete_linode,
+      disabled: isLinodeReadOnly || hasHostMaintenance,
+      isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Delete Linode');
         props.onOpenDeleteDialog();
@@ -219,10 +200,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
     },
   ];
 
-  const actions = createActionMenuItems(
-    actionConfigs,
-    !accountPermissions.create_linode
-  );
+  const actions = createActionMenuItems(actionConfigs, isLinodeReadOnly);
 
   return (
     <ActionMenu

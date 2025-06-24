@@ -54,12 +54,13 @@ export const useUserAccountPermissions = (enabled = true) => {
 export const useUserEntityPermissions = (
   entityType: AccessType,
   entityId: number,
+  enabled = true,
 ) => {
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries
       .user(profile!.username)
       ._ctx.entityPermissions(entityType, entityId),
-    enabled: profile?.restricted && Boolean(entityType && entityId),
+    enabled: profile?.restricted && Boolean(entityType && entityId) && enabled,
   });
 };
