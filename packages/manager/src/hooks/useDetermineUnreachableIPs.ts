@@ -56,17 +56,14 @@ export const useDetermineUnreachableIPs = (inputs: {
 
 /**
  * Linode Interface equivalent to useDetermineReachableIPsConfigInterface
- * Returns whether the public IPv4/IPv6 are reachable, the active VPC Linode interface (an VPC
- * interface that is the default route for IPv4), and the VPC of that interface
+ * Returns whether the public IPv4/IPv6 are reachable, the VPC Linode interface,
+ * and the VPC of that interface
  */
 export const useDetermineUnreachableIPsLinodeInterface = (
   linodeId: number,
   enabled: boolean = true
 ) => {
   const { data: interfaces } = useLinodeInterfacesQuery(linodeId, enabled);
-
-  const hasLinodeInterfaces =
-    interfaces?.interfaces && interfaces.interfaces.length > 0;
 
   const vpcInterfaces = interfaces?.interfaces.filter((iface) => iface.vpc);
 
@@ -90,17 +87,14 @@ export const useDetermineUnreachableIPsLinodeInterface = (
       )
   );
 
+  const isUnreachablePublicIPv4LinodeInterface =
+    isVPCOnlyLinodeInterface ||
+    !interfaces?.interfaces.some((iface) => iface.default_route.ipv4);
+
   // public IPv6 is (currently) not reachable if Linode has no public interfaces
   const isUnreachablePublicIPv6LinodeInterface = !interfaces?.interfaces.some(
     (iface) => iface.public
   );
-
-  const isUnreachablePublicIPv4LinodeInterface =
-    isVPCOnlyLinodeInterface ||
-    !hasLinodeInterfaces ||
-    Boolean(
-      hasLinodeInterfaces && interfaces?.interfaces.every((iface) => iface.vlan)
-    );
 
   return {
     isUnreachablePublicIPv4LinodeInterface,
@@ -160,16 +154,13 @@ export const useDetermineUnreachableIPsConfigInterface = (
     configWithVPCInterface?.interfaces &&
     configWithVPCInterface?.interfaces.length > 0;
 
-  const hasPublicConfigInterface = Boolean(
-    configWithVPCInterface?.interfaces?.some(
-      (_interface) => _interface.purpose === 'public'
-    )
-  );
-
   // For legacy config interfaces, if a Linode has no interfaces, the API automatically provides public connectivity.
   // IPv6 is unreachable if the Linode has interfaces, but none of these interfaces is a public interface
   const isUnreachablePublicIPv6ConfigInterface = Boolean(
-    hasConfigInterfaces && !hasPublicConfigInterface
+    hasConfigInterfaces &&
+      !configWithVPCInterface?.interfaces?.some(
+        (_interface) => _interface.purpose === 'public'
+      )
   );
 
   const isUnreachablePublicIPv4ConfigInterface =

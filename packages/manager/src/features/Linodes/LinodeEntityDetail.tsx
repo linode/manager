@@ -63,7 +63,6 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const isLinodeInterface = linode.interface_generation === 'linode';
 
-  // useDetermineUnreachableIPs
   const {
     configs,
     isUnreachablePublicIPv4,

@@ -165,7 +165,7 @@ describe('useDetermineUnreachableIPsLinodeInterface', () => {
     });
   });
 
-  it('shows public IPs are reachable if Linode is not a "VPC only Linode" (default route not VPC interface) and has public interface', async () => {
+  it('shows public IPs are reachable if Linode is not a "VPC only Linode" and has public interface', async () => {
     server.use(
       http.get('*/linode/instances/:linodeId/interfaces', () => {
         return HttpResponse.json({
