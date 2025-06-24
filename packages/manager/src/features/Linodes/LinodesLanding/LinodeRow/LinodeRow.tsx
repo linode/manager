@@ -160,7 +160,7 @@ export const LinodeRow = (props: Props) => {
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
               <MaintenanceText
-                isOpened={false}
+                isOpened
                 maintenanceStartTime={parsedMaintenanceStartTime}
               />
             }
@@ -179,7 +179,7 @@ export const LinodeRow = (props: Props) => {
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
               <MaintenanceText
-                isOpened
+                isOpened={false}
                 maintenanceStartTime={parsedMaintenanceStartTime}
               />
             }
