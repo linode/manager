@@ -168,6 +168,7 @@ export const LinodeEntityDetail = (props: Props) => {
             isSummaryView={isSummaryView}
             linodeId={linode.id}
             linodeLabel={linode.label}
+            linodeMaintenancePolicy={linode.maintenance_policy_id}
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
             maintenance={linode.maintenance}

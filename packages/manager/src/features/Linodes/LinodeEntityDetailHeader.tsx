@@ -13,6 +13,7 @@ import * as React from 'react';
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -58,6 +59,7 @@ export interface HeaderProps {
   isSummaryView?: boolean;
   linodeId: number;
   linodeLabel: string;
+  linodeMaintenancePolicy: number | undefined;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
   maintenance?: LinodeMaintenance | null;
@@ -116,6 +118,7 @@ export const LinodeEntityDetailHeader = (
     linodeLabel,
     linodeRegionDisplay,
     linodeStatus,
+    linodeMaintenancePolicy,
     maintenance,
     openNotificationMenu,
     progress,
@@ -126,11 +129,18 @@ export const LinodeEntityDetailHeader = (
 
   const { data: events } = useInProgressEvents();
 
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
+
   const recentEvent = events?.find(
     (e) => e.entity?.type === 'linode' && e.entity.id === linodeId
   );
 
-  const loading = linodeInTransition(linodeStatus, recentEvent);
+  const isTransitioning = linodeInTransition(linodeStatus, recentEvent);
+  const isPendingOrScheduled =
+    maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
+
+  const isInProgress =
+    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -232,71 +242,99 @@ export const LinodeEntityDetailHeader = (
             text={VPC_REBOOT_MESSAGE}
           />
         )}
-        {maintenance && (
-          <Box
-            sx={(theme) => ({
-              display: 'flex',
-              alignItems: 'center',
-              borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
-              paddingLeft: theme.spacingFunction(16),
-            })}
-          >
-            <Typography>
-              <Box
+        {isVMHostMaintenanceEnabled && (
+          <>
+            <Box
+              sx={(theme) => ({
+                display: 'flex',
+                alignItems: 'center',
+                borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
+                paddingLeft: theme.spacingFunction(16),
+                gap: theme.spacingFunction(4),
+              })}
+            >
+              <Typography
                 component="span"
                 sx={(theme) => ({
                   font: theme.tokens.alias.Typography.Label.Bold.S,
                 })}
               >
-                Maintenance:
-              </Box>{' '}
-              <Box
+                Maintenance Policy:
+              </Typography>
+              {isInProgress && (
+                <StyledAutorenewIcon
+                  sx={(theme) => ({
+                    height: '20px',
+                    width: '20px',
+                    fill: theme.tokens.alias.Content.Icon.Informative,
+                  })}
+                />
+              )}
+              <Typography
                 component="span"
                 sx={(theme) => ({
                   color: theme.tokens.alias.Content.Text.Secondary.Default,
                 })}
               >
-                {maintenance.status && capitalize(maintenance.status)}
-              </Box>
-            </Typography>
-            <TooltipIcon
-              className="ui-TooltipIcon"
-              icon={
-                maintenance.status === 'pending'
-                  ? statusTooltipIcons.pending
-                  : statusTooltipIcons.scheduled
-              }
-              status="other"
-              sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
-              text={
-                <MaintenanceText
-                  isOpened
-                  maintenanceStartTime={parsedMaintenanceStartTime}
+                {linodeMaintenancePolicy ?? 'Unassigned'}
+              </Typography>
+              {!linodeMaintenancePolicy && (
+                <TooltipIcon
+                  className="ui-TooltipIcon"
+                  status="info"
+                  sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
+                  text={`This Linode's maintenance policy is not assigned. Update the default policy in the Linode settings.`}
+                  tooltipPosition="top"
                 />
-              }
-              tooltipPosition="top"
-            />
-            <StyledAutorenewIcon
-              sx={(theme) => ({
-                height: '20px',
-                width: '20px',
-                fill: theme.tokens.alias.Content.Icon.Informative,
-              })}
-            />
-            <TooltipIcon
-              className="ui-TooltipIcon ui-TooltipIcon-isActive"
-              icon={statusTooltipIcons.active}
-              status="other"
-              sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
-              text={
-                <MaintenanceText
-                  isOpened={false}
-                  maintenanceStartTime={parsedMaintenanceStartTime}
+              )}
+              {isPendingOrScheduled && (
+                <Typography
+                  component="span"
+                  sx={(theme) => ({
+                    color: theme.tokens.alias.Content.Text.Secondary.Default,
+                  })}
+                >
+                  - {capitalize(maintenance?.status ?? '')}
+                </Typography>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {isPendingOrScheduled && (
+                <TooltipIcon
+                  className="ui-TooltipIcon"
+                  icon={
+                    maintenance.status === 'pending'
+                      ? statusTooltipIcons.pending
+                      : statusTooltipIcons.scheduled
+                  }
+                  status="other"
+                  sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
+                  text={
+                    <MaintenanceText
+                      isOpened
+                      maintenanceStartTime={parsedMaintenanceStartTime}
+                    />
+                  }
+                  tooltipPosition="top"
                 />
-              }
-              tooltipPosition="top"
-            />
-          </Box>
+              )}
+              {isTransitioning && (
+                <TooltipIcon
+                  className="ui-TooltipIcon ui-TooltipIcon-isActive"
+                  icon={statusTooltipIcons.active}
+                  status="other"
+                  sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
+                  text={
+                    <MaintenanceText
+                      isOpened={false}
+                      maintenanceStartTime={parsedMaintenanceStartTime}
+                    />
+                  }
+                  tooltipPosition="top"
+                />
+              )}
+            </Box>
+          </>
         )}
         {hasSecondaryStatus && (
           <Button
