@@ -1047,9 +1047,10 @@ describe('LKE cluster updates', () => {
               cy.findByLabelText('Add 1').should('be.visible').click();
             });
 
+          ui.button.findByTitle('Add pool').scrollIntoView();
+
           ui.button
             .findByTitle('Add pool')
-            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();
