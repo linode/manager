@@ -10,11 +10,11 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
 
 interface Props {
-  isAclpSupportedRegionLinode: boolean;
+  isAclpAlertsSupportedRegionLinode: boolean;
 }
 
 const LinodeAlerts = (props: Props) => {
-  const { isAclpSupportedRegionLinode } = props;
+  const { isAclpAlertsSupportedRegionLinode } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
@@ -32,12 +32,13 @@ const LinodeAlerts = (props: Props) => {
 
   return (
     <Box>
-      {aclpBetaServices?.['linode']?.alerts && isAclpSupportedRegionLinode && (
-        <AclpPreferenceToggle type="alerts" />
-      )}
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="alerts" />
+        )}
 
-      {aclpBetaServices?.['linode']?.alerts &&
-      isAclpSupportedRegionLinode &&
+      {aclpBetaServices?.linode?.alerts &&
+      isAclpAlertsSupportedRegionLinode &&
       isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent

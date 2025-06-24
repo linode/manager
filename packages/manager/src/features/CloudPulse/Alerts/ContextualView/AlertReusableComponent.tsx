@@ -22,18 +22,28 @@ import {
 } from '../Utils/utils';
 import { AlertInformationActionTable } from './AlertInformationActionTable';
 
-import type { AlertDefinitionType } from '@linode/api-v4';
+import type {
+  AlertDefinitionType,
+  CloudPulseAlertsPayload,
+} from '@linode/api-v4';
 
 interface AlertReusableComponentProps {
   /**
    * Id for the selected entity
    */
-  entityId: string;
+  entityId?: string;
 
   /**
    * Name of the selected entity
    */
-  entityName: string;
+  entityName?: string;
+
+  /**
+   * Called when an alert is toggled on or off.
+   * Only use in create flow.
+   * @param payload enabled alerts ids
+   */
+  onToggleAlert?: (payload: CloudPulseAlertsPayload) => void;
 
   /**
    * Service type of selected entity
@@ -42,7 +52,7 @@ interface AlertReusableComponentProps {
 }
 
 export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
-  const { entityId, entityName, serviceType } = props;
+  const { entityId, entityName, onToggleAlert, serviceType } = props;
   const {
     data: alerts,
     error,
@@ -69,6 +79,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
   if (isLoading) {
     return <CircleProgress />;
   }
+
   return (
     <Paper>
       <Stack gap={3}>
@@ -121,6 +132,7 @@ export const AlertReusableComponent = (props: AlertReusableComponentProps) => {
             entityId={entityId}
             entityName={entityName}
             error={error}
+            onToggleAlert={onToggleAlert}
             orderByColumn="Alert Name"
             serviceType={serviceType}
           />
