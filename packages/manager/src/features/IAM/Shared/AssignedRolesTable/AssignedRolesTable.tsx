@@ -19,7 +19,10 @@ import { useAccountEntities } from 'src/queries/entities/entities';
 
 import { AssignedEntities } from '../../Users/UserRoles/AssignedEntities';
 import { AssignNewRoleDrawer } from '../../Users/UserRoles/AssignNewRoleDrawer';
-import { ASSIGNED_ROLES_TABLE_PREFERENCE_KEY } from '../constants';
+import {
+  ASSIGNED_ROLES_TABLE_PREFERENCE_KEY,
+  ROLES_LEARN_MORE_LINK,
+} from '../constants';
 import { Permissions } from '../Permissions/Permissions';
 import { RemoveAssignmentConfirmationDialog } from '../RemoveAssignmentConfirmationDialog/RemoveAssignmentConfirmationDialog';
 import {
@@ -48,9 +51,9 @@ import type {
   RoleView,
 } from '../types';
 import type {
-  AccountAccessRole,
-  EntityAccessRole,
-  EntityTypePermissions,
+  AccessType,
+  AccountRoleType,
+  EntityRoleType,
 } from '@linode/api-v4';
 import type { SelectOption } from '@linode/ui';
 import type { TableItem } from 'src/components/CollapsibleTable/CollapsibleTable';
@@ -163,9 +166,7 @@ export const AssignedRolesTable = () => {
     ALL_ROLES_OPTION
   );
 
-  const handleViewEntities = (
-    roleName: AccountAccessRole | EntityAccessRole
-  ) => {
+  const handleViewEntities = (roleName: AccountRoleType | EntityRoleType) => {
     const selectedRole = roleName;
     navigate({
       to: '/iam/users/$username/entities',
@@ -176,7 +177,7 @@ export const AssignedRolesTable = () => {
 
   const filteredAndSortedRoles = React.useMemo(() => {
     const rolesToFilter = getFilteredRoles({
-      entityType: entityType?.value as 'all' | EntityTypePermissions,
+      entityType: entityType?.value as 'all' | AccessType,
       getSearchableFields,
       query,
       roles,
@@ -242,7 +243,7 @@ export const AssignedRolesTable = () => {
             </TableCell>
           </>
         );
-        // TODO: update the link for 'Learn more' in the description when it's ready - UIE-8534
+
         const InnerTable = (
           <Grid
             sx={{
@@ -266,7 +267,7 @@ export const AssignedRolesTable = () => {
               ) : (
                 <>
                   {getFacadeRoleDescription(role)}{' '}
-                  <Link to="#">Learn more.</Link>
+                  <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
                 </>
               )}
             </Typography>
@@ -321,7 +322,7 @@ export const AssignedRolesTable = () => {
       id: selectedRole.id,
       entity_id: selectedEntity.id,
       entity_name: selectedEntity.name,
-      role_name: selectedRole.name as EntityAccessRole,
+      role_name: selectedRole.name as EntityRoleType,
       access: 'entity_access',
     };
   }
