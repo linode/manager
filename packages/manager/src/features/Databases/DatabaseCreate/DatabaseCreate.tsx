@@ -1,4 +1,9 @@
-import { useRegionsQuery } from '@linode/queries';
+import {
+  useCreateDatabaseMutation,
+  useDatabaseEnginesQuery,
+  useDatabaseTypesQuery,
+  useRegionsQuery,
+} from '@linode/queries';
 import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
 import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
 import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
@@ -25,11 +30,6 @@ import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/Fire
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import {
-  useCreateDatabaseMutation,
-  useDatabaseEnginesQuery,
-  useDatabaseTypesQuery,
-} from 'src/queries/databases/databases';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 

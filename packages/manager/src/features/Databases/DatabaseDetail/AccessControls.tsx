@@ -1,3 +1,4 @@
+import { useDatabaseMutation } from '@linode/queries';
 import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { JSX } from 'react';
@@ -9,7 +10,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 

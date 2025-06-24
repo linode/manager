@@ -1,3 +1,4 @@
+import { useDatabaseEnginesQuery } from '@linode/queries';
 import { StyledLinkButton, TooltipIcon, Typography } from '@linode/ui';
 import { GridLegacy, styled } from '@mui/material';
 import * as React from 'react';
@@ -7,7 +8,6 @@ import {
   hasPendingUpdates,
   upgradableVersions,
 } from 'src/features/Databases/utilities';
-import { useDatabaseEnginesQuery } from 'src/queries/databases/databases';
 
 import type { Engine, PendingUpdates } from '@linode/api-v4';
 

@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useDatabaseEngineConfig, useDatabaseMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Button,
@@ -18,10 +19,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import {
-  useDatabaseEngineConfig,
-  useDatabaseMutation,
-} from 'src/queries/databases/databases';
 
 import {
   ADVANCED_CONFIG_INFO,

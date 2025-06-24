@@ -1,4 +1,5 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
+import { useDatabaseCredentialsQuery } from '@linode/queries';
 import {
   Box,
   Button,
@@ -16,7 +17,6 @@ import { CopyTooltip } from 'src/components/CopyTooltip/CopyTooltip';
 import { Link } from 'src/components/Link';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useFlags } from 'src/hooks/useFlags';
-import { useDatabaseCredentialsQuery } from 'src/queries/databases/databases';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { getReadOnlyHost, isDefaultDatabase } from '../../utilities';
