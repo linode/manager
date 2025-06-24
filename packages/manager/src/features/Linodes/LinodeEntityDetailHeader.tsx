@@ -16,7 +16,9 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+import { useInProgressEvents } from 'src/queries/events/events';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
@@ -25,6 +27,7 @@ import {
   getLinodeIconStatus,
   parseMaintenanceStartTime,
 } from './LinodesLanding/utils';
+import { linodeInTransition } from './transitions';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { Config, LinodeBackups } from '@linode/api-v4';
@@ -120,6 +123,14 @@ export const LinodeEntityDetailHeader = (
     type,
     variant,
   } = props;
+
+  const { data: events } = useInProgressEvents();
+
+  const recentEvent = events?.find(
+    (e) => e.entity?.type === 'linode' && e.entity.id === linodeId
+  );
+
+  const loading = linodeInTransition(linodeStatus, recentEvent);
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -260,6 +271,26 @@ export const LinodeEntityDetailHeader = (
               text={
                 <MaintenanceText
                   isOpened
+                  maintenanceStartTime={parsedMaintenanceStartTime}
+                />
+              }
+              tooltipPosition="top"
+            />
+            <StyledAutorenewIcon
+              sx={(theme) => ({
+                height: '20px',
+                width: '20px',
+                fill: theme.tokens.alias.Content.Icon.Informative,
+              })}
+            />
+            <TooltipIcon
+              className="ui-TooltipIcon ui-TooltipIcon-isActive"
+              icon={statusTooltipIcons.active}
+              status="other"
+              sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
+              text={
+                <MaintenanceText
+                  isOpened={false}
                   maintenanceStartTime={parsedMaintenanceStartTime}
                 />
               }
