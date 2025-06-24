@@ -57,10 +57,8 @@ export const Region = React.memo(() => {
     name: 'region',
   });
 
-  const [selectedLinode, selectedImage] = useWatch({
-    control,
-    name: ['linode', 'image'],
-  });
+  const selectedLinode = useWatch({ control, name: 'linode' });
+  const selectedImage = useWatch({ control, name: 'image' });
 
   const { data: image } = useImageQuery(
     selectedImage ?? '',

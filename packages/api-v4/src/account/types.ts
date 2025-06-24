@@ -523,7 +523,7 @@ export interface Event {
   duration: null | number;
   entity: Entity | null;
   id: number;
-  maintenance_policy_set?: 'linode/migrate' | 'linode/power_off_on';
+  maintenance_policy_set?: MaintenancePolicySlug;
   message: null | string;
   not_before?: null | string;
   percent_complete: null | number;
