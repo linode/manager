@@ -165,7 +165,7 @@ export const CloudPulseCustomSelect = React.memo(
     });
 
     React.useEffect(() => {
-      if (!isOptional && !selectedResource) {
+      if (!selectedResource) {
         setResource(
           getInitialDefaultSelections({
             defaultValue,
@@ -175,6 +175,7 @@ export const CloudPulseCustomSelect = React.memo(
             options: options || queriedResources || [],
             preferences,
             savePreferences: savePreferences ?? false,
+            isOptional,
           })
         );
       }
