@@ -131,10 +131,15 @@ const addConfigsToUI = (
 
           cy.contains(flatKey).should('be.visible').click();
 
-          ui.button.findByTitle('Add').click();
+          ui.cdsButton.findButtonByTitle('Add').click();
+
+          // ui.cdsButton.findButtonByTitle('Add').then((btn) => {
+          //   btn[0].click(); // Native DOM click
+          // });
 
           // Type value for non-boolean configs
           if (value.type !== 'boolean') {
+            cy.get(`[name="${flatKey}"]`).scrollIntoView();
             cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
             cy.get(`[name="${flatKey}"]`).type(additionalConfigs[flatKey]);
           }
@@ -208,18 +213,15 @@ describe('Update database clusters', () => {
             cy.findByText(defaultConfig).should('be.visible');
           });
 
-          // Confirms all teh buttons are in the initial state - enabled/disabled
-          ui.button
-            .findByTitle('Configure')
+          ui.cdsButton
+            .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
 
           ui.drawer.findByTitle('Advanced Configuration').should('be.visible');
-          ui.button
-            .findByTitle('Add')
-            .should('be.visible')
-            .should('be.disabled');
+
+          ui.cdsButton.findButtonByTitle('Add').should('be.disabled');
           ui.button
             .findByTitle('Save')
             .scrollIntoView()
@@ -233,11 +235,12 @@ describe('Update database clusters', () => {
             .should('be.enabled')
             .click();
 
-          ui.button
-            .findByTitle('Configure')
+          ui.cdsButton
+            .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
+
           ui.drawer.findByTitle('Advanced Configuration').should('be.visible');
           cy.get('[aria-label="Close drawer"]')
             .should('be.visible')
@@ -289,8 +292,8 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
-          ui.button
-            .findByTitle('Configure')
+          ui.cdsButton
+            .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -377,8 +380,8 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
-          ui.button
-            .findByTitle('Configure')
+          ui.cdsButton
+            .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -462,8 +465,8 @@ describe('Update database clusters', () => {
           cy.wait(['@getDatabase', '@getDatabaseTypes']);
 
           // Expand configure drawer to add configs
-          ui.button
-            .findByTitle('Configure')
+          ui.cdsButton
+            .findButtonByTitle('Configure')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -495,9 +498,12 @@ describe('Update database clusters', () => {
 
                   cy.contains(flatKey).should('be.visible').click();
 
-                  ui.button.findByTitle('Add').click();
+                  ui.cdsButton.findButtonByTitle('Add').then((btn) => {
+                    btn[0].click(); // Native DOM click
+                  });
 
                   // Validate value for inline minimum limit
+                  cy.get(`[name="${flatKey}"]`).scrollIntoView();
                   cy.get(`[name="${flatKey}"]`).should('be.visible').clear();
                   cy.get(`[name="${flatKey}"]`).type(`${value.minimum - 1}`);
                   cy.get(`[name="${flatKey}"]`).blur();
