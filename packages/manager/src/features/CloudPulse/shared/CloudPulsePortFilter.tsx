@@ -2,7 +2,7 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { PORT, PORTS_HELPER_TEXT } from '../Utils/constants';
+import { PORTS_HELPER_TEXT } from '../Utils/constants';
 import { arePortsValid, handleKeyDown, handlePaste } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
@@ -60,7 +60,7 @@ export const CloudPulsePortFilter = React.memo(
     const debouncedPortChange = React.useMemo(
       () =>
         debounce(500, (value: string) => {
-          handlePortChange(value, [PORT], savePreferences);
+          handlePortChange(value, [value], savePreferences);
         }),
       [handlePortChange, savePreferences]
     );
@@ -80,7 +80,7 @@ export const CloudPulsePortFilter = React.memo(
       if (validationError === undefined) {
         // Cancel any pending debouncedPortChange calls
         debouncedPortChange.cancel();
-        handlePortChange(e.target.value, [PORT], savePreferences);
+        handlePortChange(e.target.value, [e.target.value], savePreferences);
       }
     };
 
