@@ -8,8 +8,9 @@ import {
   mockGetRegions,
 } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { getAlertsforRegion } from 'support/util/alerts';
-import { randomString } from 'support/util/random';
+import { randomLabel, randomString } from 'support/util/random';
+
+import { alertFactory } from 'src/factories';
 
 describe('Create flow when beta alerts enabled by region and feature flag', function () {
   beforeEach(() => {
@@ -177,8 +178,38 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
 
   it('beta create flow', function () {
     mockGetUserPreferences({ isAclpAlertsBeta: true }).as('getUserPreferences');
-    const { alertDetails } = getAlertsforRegion(this.mockRegions);
-    mockGetAlertDefinition('linode', [alertDetails]).as('getAlertDefinitions');
+    const alertDefinitions = [
+      alertFactory.build({
+        description: randomLabel(),
+        entity_ids: ['1', '2', '3'],
+        label: randomLabel(),
+        service_type: 'linode',
+        severity: 1,
+        status: 'enabled',
+        type: 'system',
+      }),
+      alertFactory.build({
+        description: randomLabel(),
+        entity_ids: ['1', '2', '3'],
+        label: randomLabel(),
+        service_type: 'linode',
+        severity: 1,
+        status: 'enabled',
+        type: 'system',
+      }),
+      alertFactory.build({
+        description: randomLabel(),
+        entity_ids: ['1', '2', '3'],
+        label: randomLabel(),
+        service_type: 'linode',
+        severity: 1,
+        status: 'enabled',
+        type: 'user',
+      }),
+    ];
+    mockGetAlertDefinition('linode', alertDefinitions).as(
+      'getAlertDefinitions'
+    );
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getRegions']);
@@ -199,43 +230,50 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         ui.accordion.findByTitle('Alerts').within(() => {
           cy.get('table[data-testid="alert-table"]')
             .should('be.visible')
-            .find('tbody')
-            .within(() => {
-              cy.get('tr').should('have.length', 1);
-              cy.get('tr')
-                .first()
-                .within(() => {
-                  cy.get('td')
-                    .eq(0)
-                    .within(() => {
-                      ui.toggle
-                        .find()
-                        .should('have.attr', 'data-qa-toggle', 'false')
-                        .should('be.visible');
-                    });
-                  cy.get('td')
-                    .eq(1)
-                    .within(() => {
-                      cy.findByText(alertDetails.label).should('be.visible');
-                    });
-                  cy.get('td')
-                    .eq(2)
-                    .within(() => {
-                      const rule = alertDetails.rule_criteria.rules[0];
-                      const str = `${rule.label} = ${rule.threshold} ${rule.unit}`;
-                      cy.findByText(str).should('be.visible');
-                    });
-                  cy.get('td')
-                    .eq(3)
-                    .within(() => {
-                      cy.findByText('User').should('be.visible');
-                    });
-                });
+            .get('tbody > tr')
+            .should('have.length', 3)
+            .each((row, index) => {
+              // match alert definitions to table cell contents
+              cy.wrap(row).within(() => {
+                cy.get('td')
+                  .eq(0)
+                  .within(() => {
+                    ui.toggle
+                      .find()
+                      .should('have.attr', 'data-qa-toggle', 'false')
+                      .should('be.visible')
+                      .should('be.enabled')
+                      .click();
+                    ui.toggle
+                      .find()
+                      .should('have.attr', 'data-qa-toggle', 'true');
+                  });
+                cy.get('td')
+                  .eq(1)
+                  .within(() => {
+                    cy.findByText(alertDefinitions[index].label).should(
+                      'be.visible'
+                    );
+                  });
+                cy.get('td')
+                  .eq(2)
+                  .within(() => {
+                    const rule = alertDefinitions[index].rule_criteria.rules[0];
+                    const str = `${rule.label} = ${rule.threshold} ${rule.unit}`;
+                    cy.findByText(str).should('be.visible');
+                  });
+                cy.get('td')
+                  .eq(3)
+                  .within(() => {
+                    cy.findByText(alertDefinitions[index].type, {
+                      exact: false,
+                    }).should('be.visible');
+                  });
+              });
             });
         });
       });
     cy.wait(['@getAlertDefinitions']);
-    // TODO: validate create modal
     // enter plan and password form fields to enable "View Code Snippets" button
     cy.get('[data-qa-tp="Linode Plan"]').scrollIntoView();
     cy.get('[data-qa-tp="Linode Plan"]')
@@ -270,8 +308,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .click();
     cy.wait('@createLinode').then((intercept) => {
       const alerts = intercept.request.body['alerts'];
-      expect(alerts.system.length).to.equal(0);
-      expect(alerts.user.length).to.equal(0);
+      expect(alerts.system.length).to.equal(2);
+      expect(alerts.system[0]).to.eq(alertDefinitions[0].id);
+      expect(alerts.system[1]).to.eq(alertDefinitions[1].id);
+      expect(alerts.user.length).to.equal(1);
+      expect(alerts.user[0]).to.eq(alertDefinitions[2].id);
     });
   });
 

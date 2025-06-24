@@ -22,15 +22,17 @@ import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
-import { getAlertsforRegion } from 'support/util/alerts';
 
 import {
   accountFactory,
   alertFactory,
+  alertRulesFactory,
+  databaseFactory,
   notificationChannelFactory,
 } from 'src/factories';
 import { formatDate } from 'src/utilities/formatDate';
 
+import type { Database } from '@linode/api-v4';
 import type { Flags } from 'src/featureFlags';
 
 const flags: Partial<Flags> = { aclp: { beta: true, enabled: true } };
@@ -49,8 +51,26 @@ const regions = [
     label: 'Newark',
   }),
 ];
-const { databases, alertDetails } = getAlertsforRegion(regions);
 
+const databases: Database[] = databaseFactory.buildList(5).map((db, index) => ({
+  ...db,
+  engine: 'mysql',
+  region: regions[index % regions.length].id,
+  type: 'MySQL',
+}));
+
+const alertDetails = alertFactory.build({
+  entity_ids: databases.slice(0, 4).map((db) => db.id.toString()),
+  rule_criteria: { rules: alertRulesFactory.buildList(2) },
+  service_type: 'dbaas',
+  severity: 1,
+  status: 'enabled',
+  type: 'user',
+  created_by: 'user1',
+  updated_by: 'user2',
+  created: '2023-10-01T12:00:00Z',
+  updated: new Date().toISOString(),
+});
 const {
   created_by,
   description,
