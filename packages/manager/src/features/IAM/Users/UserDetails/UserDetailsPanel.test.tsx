@@ -35,23 +35,23 @@ describe('UserDetailsPanel', () => {
     expect(getAllByText('0')[0]).toBeVisible();
   });
 
-  it("renders '5' if the user has 5 different roles", async () => {
+  it("renders '7' if the user has 7 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserRoles = {
       account_access: [
         'account_linode_admin',
-        'linode_creator',
-        'firewall_creator',
+        'account_linode_creator',
+        'account_firewall_creator',
       ],
       entity_access: [
         {
           id: 12345678,
-          roles: ['linode_contributor', 'linode_creator'],
+          roles: ['linode_contributor', 'linode_viewer'],
           type: 'linode',
         },
         {
           id: 45678901,
-          roles: ['firewall_admin', 'firewall_creator'],
+          roles: ['firewall_admin', 'firewall_viewer'],
           type: 'firewall',
         },
       ],
@@ -62,21 +62,17 @@ describe('UserDetailsPanel', () => {
     );
 
     expect(getByText('Assigned Roles')).toBeVisible();
-    expect(getByText('5')).toBeVisible();
+    expect(getByText('7')).toBeVisible();
   });
 
-  it("renders '3' if the user has 3 different roles", async () => {
+  it("renders '4' if the user has 4 different roles", async () => {
     const user = accountUserFactory.build({ restricted: false });
     const assignedRoles: IamUserRoles = {
-      account_access: [
-        'account_linode_admin',
-        'linode_creator',
-        'linode_contributor',
-      ],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 12345678,
-          roles: ['linode_contributor', 'linode_creator'],
+          roles: ['linode_contributor', 'linode_viewer'],
           type: 'linode',
         },
       ],
@@ -87,7 +83,7 @@ describe('UserDetailsPanel', () => {
     );
 
     expect(getByText('Assigned Roles')).toBeVisible();
-    expect(getByText('3')).toBeVisible();
+    expect(getByText('4')).toBeVisible();
   });
 
   it("renders the user's phone number", async () => {
