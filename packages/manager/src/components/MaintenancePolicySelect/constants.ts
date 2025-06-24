@@ -1,3 +1,5 @@
+import type { MaintenancePolicySlug } from '@linode/api-v4';
+
 export const MIGRATE_TOOLTIP_TEXT =
   'Migrates the Linode to a new host while it is still running. During the migration, the instance remains fully operational, though there is a temporary performance impact. For most maintenance events and Linode types, no reboot is required after the migration completes. If a reboot is required, it is automatically performed.';
 
@@ -10,7 +12,7 @@ export const MAINTENANCE_POLICY_DESCRIPTION =
   'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
 
 export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<
-  'linode/migrate' | 'linode/power_off_on',
+  MaintenancePolicySlug,
   string
 > = {
   'linode/migrate':

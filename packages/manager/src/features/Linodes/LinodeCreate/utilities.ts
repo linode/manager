@@ -309,7 +309,7 @@ const defaultInterfaces: InterfacePayload[] = [
  * for the Backups and Clone tab.
  *
  * We omit `maintenance_policy` from CreateLinodeRequest because:
- * 1. The API expects it to be either 1, 2, or undefined
+ * 1. The API expects it to be either 'linode/migrate', 'linode/power_off_on' or undefined
  * 2. The form needs to handle null (no policy selected) and undefined (omit from API)
  * 3. The actual API payload is handled in getLinodeCreatePayload where we:
  *    - Delete the field if region doesn't support it

@@ -504,8 +504,10 @@ export const EventActionKeys = [
 export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
+  | 'canceled'
   | 'failed'
   | 'finished'
+  | 'in-progress'
   | 'notification'
   | 'scheduled'
   | 'started';
@@ -589,10 +591,17 @@ export interface AccountMaintenance {
     | 'pending'
     | 'scheduled'
     | 'started';
-  type: 'cold_migration' | 'live_migration' | 'reboot' | 'volume_migration';
+  type:
+    | 'cold_migration'
+    | 'live_migration'
+    | 'migrate'
+    | 'power_off_on'
+    | 'reboot'
+    | 'volume_migration';
   when: string;
 }
 
+// Note: In the future there will be more slugs, ie: 'private/1234'.
 export type MaintenancePolicySlug = 'linode/migrate' | 'linode/power_off_on';
 
 export type MaintenancePolicy = {
@@ -601,7 +610,7 @@ export type MaintenancePolicy = {
   label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
   slug: MaintenancePolicySlug;
-  type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on';
+  type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on'; // Should not be needed for UX. Mainly for FleetOps.
 };
 
 export interface PayPalData {
