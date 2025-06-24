@@ -1,3 +1,4 @@
+import type { MaintenancePolicySlug } from '../account/types';
 import type { CloudPulseAlertsPayload } from '../cloudpulse/types';
 import type { IPAddress, IPRange } from '../networking/types';
 import type { LinodePlacementGroupPayload } from '../placement-groups/types';
@@ -43,7 +44,7 @@ export interface Linode {
   ipv6: null | string;
   label: string;
   lke_cluster_id: null | number;
-  maintenance_policy?: 'linode/migrate' | 'linode/power_off_on';
+  maintenance_policy?: MaintenancePolicySlug;
   placement_group: LinodePlacementGroupPayload | null;
   region: string;
   site_type: RegionSite;
@@ -543,7 +544,7 @@ export interface CreateLinodeRequest {
    */
   alerts?: CloudPulseAlertsPayload | null;
   /**
-   * A list of public SSH keys that will be automatically appended to the root user’s
+   * A list of public SSH keys that will be automatically appended to the root user's
    * `~/.ssh/authorized_keys`file when deploying from an Image.
    */
   authorized_keys?: null | string[];
@@ -554,7 +555,7 @@ export interface CreateLinodeRequest {
    */
   authorized_users?: null | string[];
   /**
-   * A Backup ID from another Linode’s available backups.
+   * A Backup ID from another Linode's available backups.
    *
    * Your User must have read_write access to that Linode,
    * the Backup must have a status of successful,
@@ -605,7 +606,7 @@ export interface CreateLinodeRequest {
    */
   interface_generation?: InterfaceGenerationType | null;
   /**
-   * An array of Network Interfaces to add to this Linode’s Configuration Profile.
+   * An array of Network Interfaces to add to this Linode's Configuration Profile.
    */
   interfaces?: CreateLinodeInterfacePayload[] | InterfacePayload[];
   /**
@@ -614,7 +615,7 @@ export interface CreateLinodeRequest {
    */
   ipv4?: string[];
   /**
-   * The Linode’s label is for display purposes only.
+   * The Linode's label is for display purposes only.
    * If no label is provided for a Linode, a default will be assigned.
    */
   label?: null | string;
@@ -622,7 +623,7 @@ export interface CreateLinodeRequest {
    * Allows customers to specify which strategy this Linode should follow during
    * maintenance events.
    */
-  maintenance_policy?: 'linode/migrate' | 'linode/power_off_on' | null;
+  maintenance_policy?: MaintenancePolicySlug;
   /**
    * An object containing user-defined data relevant to the creation of Linodes.
    */
@@ -646,7 +647,7 @@ export interface CreateLinodeRequest {
    */
   region: string;
   /**
-   * This sets the root user’s password on a newly-created Linode Disk when deploying from an Image.
+   * This sets the root user's password on a newly-created Linode Disk when deploying from an Image.
    */
   root_pass?: string;
   /**

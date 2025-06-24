@@ -36,6 +36,7 @@ import type {
   InterfaceGenerationType,
   InterfacePayload,
   Linode,
+  MaintenancePolicySlug,
   Profile,
   StackScript,
 } from '@linode/api-v4';
@@ -183,11 +184,14 @@ export const getLinodeCreatePayload = (
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
+    'maintenance_policy', // Exclude maintenance_policy since it has a different type in formValues (includes null).
   ]);
 
   // Convert null to undefined for maintenance_policy
-  if (values.maintenance_policy === null) {
-    values.maintenance_policy = null;
+  if (formValues.maintenance_policy === null) {
+    values.maintenance_policy = undefined;
+  } else {
+    values.maintenance_policy = formValues.maintenance_policy;
   }
 
   if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
@@ -314,7 +318,8 @@ const defaultInterfaces: InterfacePayload[] = [
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
-export interface LinodeCreateFormValues extends CreateLinodeRequest {
+export interface LinodeCreateFormValues
+  extends Omit<CreateLinodeRequest, 'maintenance_policy'> {
   /**
    * Manually override firewall policy for sensitive users
    */
@@ -342,6 +347,12 @@ export interface LinodeCreateFormValues extends CreateLinodeRequest {
    * Form state for the new Linode interface
    */
   linodeInterfaces: LinodeCreateInterface[];
+  /**
+   * Override maintenance_policy to include null for form handling
+   * null = "user explicitly selected 'no policy'"
+   * undefined = "field not set, omit from API"
+   */
+  maintenance_policy?: MaintenancePolicySlug | null;
 }
 
 export interface LinodeCreateFormContext {
@@ -406,10 +417,7 @@ export const defaultValues = async (
 
   let interfaceGeneration: LinodeCreateFormValues['interface_generation'] =
     undefined;
-  let defaultMaintenancePolicy:
-    | 'linode/migrate'
-    | 'linode/power_off_on'
-    | null = null;
+  let defaultMaintenancePolicy: MaintenancePolicySlug | undefined = undefined;
 
   // Fetch account settings for interface generation if enabled
   if (flags.isLinodeInterfacesEnabled || flags.isVMHostMaintenanceEnabled) {
