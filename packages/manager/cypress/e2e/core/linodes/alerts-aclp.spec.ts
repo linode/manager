@@ -158,6 +158,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .should('be.visible')
       .within(() => {
         cy.get('pre code').should('be.visible');
+        // 'alert' is not present anywhere in snippet
+        cy.contains('alert').should('not.exist');
         ui.button
           .findByTitle('Close')
           .should('be.visible')
@@ -294,6 +296,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .should('be.visible')
       .within(() => {
         cy.get('pre code').should('be.visible');
+        // 'alert' is not present anywhere in snippet
+        cy.contains('alert').should('not.exist');
         ui.button
           .findByTitle('Close')
           .should('be.visible')
