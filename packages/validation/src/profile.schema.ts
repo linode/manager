@@ -1,6 +1,12 @@
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
 import { array, boolean, number, object, string } from 'yup';
 
+// Using the same regex as the API to ensure consistent email validation across UI and backend.
+const EMAIL_VALIDATION_REGEX = new RegExp(
+  // eslint-disable-next-line sonarjs/regex-complexity
+  /^(?!-.*|.*(\.{2}|@-))[a-zA-Z0-9_.+"-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]*[a-zA-Z0-9]$/,
+);
+
 export const createPersonalAccessTokenSchema = object({
   scopes: string(),
   expiry: string(),
@@ -27,7 +33,9 @@ export const updateSSHKeySchema = object({
 });
 
 export const updateProfileSchema = object({
-  email: string().email(),
+  email: string()
+    .email()
+    .matches(EMAIL_VALIDATION_REGEX, `Invalid email address. `),
   timezone: string(),
   email_notifications: boolean(),
   authorized_keys: array().of(string()),
