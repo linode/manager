@@ -13,7 +13,7 @@ import type {
   CloudPulseAlertsPayload,
   Dashboard,
   ResourcePage,
-  ServiceTypes,
+  Service,
   ServiceTypesList,
   TimeDuration,
 } from '@linode/api-v4';
@@ -190,7 +190,7 @@ export const formattedServiceTypes = (
   if (rawServiceTypes === undefined || rawServiceTypes.data.length === 0) {
     return [];
   }
-  return rawServiceTypes.data.map((obj: ServiceTypes) => obj.service_type);
+  return rawServiceTypes.data.map((obj: Service) => obj.service_type);
 };
 
 /**

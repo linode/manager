@@ -5,10 +5,10 @@ import * as React from 'react';
 import { useCalculateHiddenItems } from '../../hooks/useCalculateHiddenItems';
 
 import type { CombinedEntity, ExtendedRoleView } from '../../Shared/types';
-import type { AccountAccessRole, EntityAccessRole } from '@linode/api-v4';
+import type { AccountRoleType, EntityRoleType } from '@linode/api-v4';
 
 interface Props {
-  onButtonClick: (roleName: AccountAccessRole | EntityAccessRole) => void;
+  onButtonClick: (roleName: AccountRoleType | EntityRoleType) => void;
   onRemoveAssignment: (entity: CombinedEntity, role: ExtendedRoleView) => void;
   role: ExtendedRoleView;
 }
@@ -117,7 +117,7 @@ export const AssignedEntities = ({
         >
           <Tooltip placement="top" title="Click to View All Entities">
             <Button
-              onClick={() => onButtonClick(role.name as EntityAccessRole)}
+              onClick={() => onButtonClick(role.name as EntityRoleType)}
               sx={{
                 color: theme.tokens.alias.Content.Text.Primary.Default,
                 font: theme.tokens.alias.Typography.Label.Regular.Xs,

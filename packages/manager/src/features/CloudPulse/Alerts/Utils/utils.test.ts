@@ -70,6 +70,7 @@ it('should correctly convert an alert definition values to the required format',
     severity,
     tags,
     trigger_conditions,
+    scope,
   } = alert;
   const expected: EditAlertPayloadWithService = {
     alertId: id,
@@ -88,6 +89,7 @@ it('should correctly convert an alert definition values to the required format',
     severity,
     tags,
     trigger_conditions,
+    scope,
   };
 
   expect(convertAlertDefinitionValues(alert, serviceType)).toEqual(expected);

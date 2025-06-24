@@ -1,8 +1,7 @@
 import type {
-  AccountAccessRole,
-  EntityAccessRole,
-  EntityType,
-  EntityTypePermissions,
+  AccessType,
+  AccountRoleType,
+  EntityRoleType,
   IamAccessType,
   PermissionType,
 } from '@linode/api-v4';
@@ -16,9 +15,9 @@ export interface RoleView {
   access: 'account_access' | 'entity_access';
   description: string;
   entity_ids: null | number[];
-  entity_type: EntityTypePermissions;
-  id: AccountAccessRole | EntityAccessRole;
-  name: AccountAccessRole | EntityAccessRole;
+  entity_type: AccessType;
+  id: AccountRoleType | EntityRoleType;
+  name: AccountRoleType | EntityRoleType;
   permissions: PermissionType[];
 }
 export interface ExtendedRoleView extends RoleView {
@@ -29,9 +28,9 @@ export interface EntitiesRole {
   access: IamAccessType;
   entity_id: number;
   entity_name: string;
-  entity_type: EntityType | EntityTypePermissions;
+  entity_type: AccessType;
   id: string;
-  role_name: EntityAccessRole;
+  role_name: EntityRoleType;
 }
 
 export interface CombinedEntity {
@@ -51,7 +50,7 @@ export type DrawerModes =
   | 'change-role-for-entity';
 
 export interface FilteredRolesOptions {
-  entityType?: 'all' | EntityType | EntityTypePermissions;
+  entityType?: 'all' | AccessType;
   getSearchableFields: (role: EntitiesRole | ExtendedRoleView) => string[];
   query: string;
   roles: EntitiesRole[] | RoleView[];

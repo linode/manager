@@ -2,6 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
+  AlertDefinitionScope,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -123,6 +124,12 @@ export const pollingIntervalOptions = {
   ],
 };
 
+export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
+  { label: 'Account', value: 'account' },
+  { label: 'Region', value: 'region' },
+  { label: 'Entity', value: 'entity' },
+];
+
 export const severityMap: Record<AlertSeverityType, string> = {
   0: 'Severe',
   1: 'Medium',
@@ -205,5 +212,10 @@ export const UPDATE_ALERT_SUCCESS_MESSAGE =
 
 export const ALERT_SCOPE_TOOLTIP_CONTEXTUAL =
   'Indicates whether the alert applies to all Linodes in the account, Linodes in specific regions, or just this Linode (entity).';
+
+export const ALERT_SCOPE_TOOLTIP_TEXT =
+  'The set of entities to which the alert applies: account-wide, specific regions, or individual entities.';
+
+export type AlertFormMode = 'create' | 'edit' | 'view';
 
 export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
