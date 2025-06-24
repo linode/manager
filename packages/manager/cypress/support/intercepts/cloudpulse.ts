@@ -17,7 +17,7 @@ import type {
   Dashboard,
   MetricDefinition,
   NotificationChannel,
-  ServiceTypes,
+  ServiceType,
 } from '@linode/api-v4';
 
 /**
@@ -71,7 +71,7 @@ export const mockGetCloudPulseServices = (
  */
 export const mockGetCloudPulseServiceByServiceType = (
   serviceType: string,
-  service: ServiceTypes
+  service: ServiceType
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
