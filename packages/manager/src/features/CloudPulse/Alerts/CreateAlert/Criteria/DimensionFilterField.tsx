@@ -227,12 +227,16 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   disabled={!dimensionFieldWatcher}
                   errorText={errorText ?? fieldState.error?.message}
                   label="Value"
-                  onBlur={field.onBlur}
+                  onBlur={() => {
+                    setErrorText(undefined);
+                    field.onBlur();
+                  }}
                   onChange={(event) => {
                     const newValue = event.target.value;
                     setStateValue(newValue);
                     field.onChange(newValue);
                   }}
+                  onDrop={(e) => e.preventDefault()}
                   onKeyDown={
                     dimensionFieldWatcher === 'port'
                       ? handleKeyDown(
