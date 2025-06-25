@@ -20,6 +20,8 @@ export type TooltipIconStatus =
   | 'help'
   | 'info'
   | 'other'
+  | 'pending'
+  | 'scheduled'
   | 'success'
   | 'warning';
 
@@ -101,6 +103,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
     leaveDelay,
     status,
     sx,
+    className,
     sxTooltipIcon,
     text,
     tooltipAnalyticsEvent,
@@ -134,7 +137,11 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   switch (status) {
     case 'error':
-      renderIcon = <ErrorOutline style={{ color: theme.color.red }} />;
+      renderIcon = (
+        <ErrorOutline
+          sx={{ color: theme.tokens.alias.Content.Icon.Negative }}
+        />
+      );
       break;
     case 'help':
       renderIcon = <HelpOutline sx={sxRootStyle} />;
@@ -146,10 +153,16 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       renderIcon = icon ?? null;
       break;
     case 'success':
-      renderIcon = <SuccessOutline style={{ color: theme.color.blue }} />;
+      renderIcon = (
+        <SuccessOutline
+          sx={{ color: theme.tokens.alias.Content.Icon.Positive }}
+        />
+      );
       break;
     case 'warning':
-      renderIcon = <WarningSolid style={{ color: theme.color.orange }} />;
+      renderIcon = (
+        <WarningSolid sx={{ color: theme.tokens.alias.Content.Icon.Warning }} />
+      );
       break;
     default:
       renderIcon = null;
@@ -170,6 +183,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       width={width}
     >
       <IconButton
+        className={className}
         data-qa-help-button
         onClick={(e) => {
           // This prevents unwanted behavior when clicking a tooltip icon.

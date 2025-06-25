@@ -1,12 +1,29 @@
 import { profileFactory } from '@linode/utilities';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountUserFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  renderWithTheme,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { UserEmailPanel } from './UserEmailPanel';
 
+const queryMocks = vi.hoisted(() => ({
+  useProfile: vi.fn().mockReturnValue({}),
+}));
+
+// Mock useProfile
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useProfile: queryMocks.useProfile,
+  };
+});
 describe('UserEmailPanel', () => {
   it("initializes the form with the user's email", async () => {
     const user = accountUserFactory.build();
@@ -68,5 +85,27 @@ describe('UserEmailPanel', () => {
 
     // Verify save button is disabled
     expect(getByText('Save').closest('button')).toBeDisabled();
+  });
+
+  it('shows validation error for invalid email address', async () => {
+    queryMocks.useProfile.mockReturnValue({
+      data: profileFactory.build({ username: 'user-1' }),
+    });
+    const user = accountUserFactory.build({
+      username: 'user-1',
+    });
+
+    await renderWithThemeAndRouter(<UserEmailPanel user={user} />);
+
+    const emailInput = screen.getByLabelText('Email');
+
+    await userEvent.clear(emailInput);
+    await userEvent.type(emailInput, 'user#@example.com');
+
+    const saveButton = screen.getByText('Save').closest('button');
+    await userEvent.click(saveButton!);
+
+    const errorText = screen.getByText(/invalid email address/i);
+    expect(errorText).toBeInTheDocument();
   });
 });
