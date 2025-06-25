@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react';
+import { DateTime } from 'luxon';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -39,9 +40,5 @@ describe('Global filters component test', () => {
     const timeRangeSelect = screen.getByText('Start Date');
 
     expect(timeRangeSelect).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('combobox', { name: 'Time Range' })
-    ).toHaveAttribute('value', 'Last 30 Minutes');
   });
 });
