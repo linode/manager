@@ -116,7 +116,6 @@ export const CloudPulseIntervalSelect = React.memo(
         value: defaultValue.value,
       });
     }
-
     const [selectedInterval, setSelectedInterval] =
       React.useState(defaultValue);
 
