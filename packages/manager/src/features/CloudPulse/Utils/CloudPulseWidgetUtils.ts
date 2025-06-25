@@ -380,7 +380,7 @@ export const getTimeDurationFromPreset = (
     case 'last 30 days':
       return { unit: 'days', value: 30 };
     case 'last 30 minutes':
-      return { unit: 'days', value: 7 };
+      return { unit: 'min', value: 30 };
     case 'last day':
       return { unit: 'days', value: 1 };
     case 'last hour': {

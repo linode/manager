@@ -9,10 +9,7 @@ import { CloudPulseDashboardFilterBuilder } from '../shared/CloudPulseDashboardF
 import { CloudPulseDashboardSelect } from '../shared/CloudPulseDashboardSelect';
 import { CloudPulseDateTimeRangePicker } from '../shared/CloudPulseDateTimeRangePicker';
 import { CloudPulseErrorPlaceholder } from '../shared/CloudPulseErrorPlaceholder';
-import {
-  convertToGmt,
-  defaultTimeDuration,
-} from '../Utils/CloudPulseDateTimePickerUtils';
+import { convertToGmt } from '../Utils/CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import {
   checkIfFilterBuilderNeeded,
@@ -46,9 +43,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       label: {},
     });
 
-    const [timeDuration, setTimeDuration] = React.useState<DateTimeWithPreset>(
-      defaultTimeDuration()
-    );
+    const [timeDuration, setTimeDuration] =
+      React.useState<DateTimeWithPreset>();
 
     const [showAppliedFilters, setShowAppliedFilters] =
       React.useState<boolean>(false);

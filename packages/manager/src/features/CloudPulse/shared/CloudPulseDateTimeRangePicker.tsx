@@ -3,6 +3,8 @@ import { DateTimeRangePicker } from '@linode/ui';
 import { DateTime } from 'luxon';
 import React from 'react';
 
+import { defaultTimeDuration } from '../Utils/CloudPulseDateTimePickerUtils';
+
 import type { DateTimeWithPreset, FilterValue } from '@linode/api-v4';
 
 interface DateChangeProps {
@@ -26,12 +28,17 @@ export const CloudPulseDateTimeRangePicker = React.memo(
   (props: CloudPulseDateTimeRangePickerProps) => {
     const { defaultValue, handleStatsChange, savePreferences } = props;
     const { data: profile } = useProfile();
-    const defaultSelected = defaultValue as DateTimeWithPreset;
+    let defaultSelected = defaultValue as DateTimeWithPreset;
 
     const timezone =
       defaultSelected?.timeZone ??
       profile?.timezone ??
       DateTime.local().zoneName;
+
+    if (!defaultSelected) {
+      defaultSelected = defaultTimeDuration(timezone);
+    }
+
     React.useEffect(() => {
       if (defaultSelected) {
         handleStatsChange(defaultSelected);
