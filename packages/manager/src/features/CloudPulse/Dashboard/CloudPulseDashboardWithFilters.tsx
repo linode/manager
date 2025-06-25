@@ -79,8 +79,8 @@ export const CloudPulseDashboardWithFilters = React.memo(
       (timeDuration: DateTimeWithPreset) => {
         setTimeDuration({
           ...timeDuration,
-          end: convertToGmt(timeDuration.end),
-          start: convertToGmt(timeDuration.start),
+          end: convertToGmt(timeDuration.end, timeDuration.timeZone),
+          start: convertToGmt(timeDuration.start, timeDuration.timeZone),
         });
       },
       []
