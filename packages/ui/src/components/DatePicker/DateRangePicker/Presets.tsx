@@ -109,6 +109,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         const { endDate, startDate } = preset.getRange();
         return (
           <StyledActionButton
+            data-qa-preset={`${preset.label}`}
             key={preset.label}
             onClick={() => {
               onPresetSelect(startDate, endDate, preset.label);
