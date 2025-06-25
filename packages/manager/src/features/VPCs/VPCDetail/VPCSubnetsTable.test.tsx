@@ -51,7 +51,7 @@ describe('VPC Subnets table', () => {
     );
 
     const {
-      getAllByRole,
+      getByLabelText,
       getAllByText,
       getByPlaceholderText,
       getByText,
@@ -78,7 +78,9 @@ describe('VPC Subnets table', () => {
     getByText('Linodes');
     getByText(subnet.linodes.length);
 
-    const actionMenuButton = getAllByRole('button')[4];
+    const actionMenuButton = getByLabelText(
+      `Action menu for Subnet ${subnet.label}`
+    );
     await userEvent.click(actionMenuButton);
 
     getByText('Assign Linodes');
@@ -105,7 +107,7 @@ describe('VPC Subnets table', () => {
     );
 
     const {
-      getAllByRole,
+      getByLabelText,
       getAllByText,
       getByPlaceholderText,
       getByText,
@@ -135,7 +137,9 @@ describe('VPC Subnets table', () => {
     getByText('Resources');
     getByText(subnet.linodes.length + subnet.nodebalancers.length);
 
-    const actionMenuButton = getAllByRole('button')[4];
+    const actionMenuButton = getByLabelText(
+      `Action menu for Subnet ${subnet.label}`
+    );
     await userEvent.click(actionMenuButton);
 
     getByText('Assign Linodes');
@@ -155,7 +159,7 @@ describe('VPC Subnets table', () => {
       })
     );
 
-    const { getAllByRole, getByText, queryByTestId } =
+    const { getByLabelText, getByText, queryByTestId } =
       await renderWithThemeAndRouter(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
@@ -166,7 +170,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[3];
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
     getByText('No Linodes');
   });
@@ -183,7 +187,7 @@ describe('VPC Subnets table', () => {
         return HttpResponse.json(firewallSettingsFactory.build());
       })
     );
-    const { getAllByRole, getByText, queryByTestId } =
+    const { getByLabelText, getByText, queryByTestId } =
       await renderWithThemeAndRouter(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
@@ -194,7 +198,7 @@ describe('VPC Subnets table', () => {
 
     await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
-    const expandTableButton = getAllByRole('button')[3];
+    const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
 
     getByText('Linode');
@@ -217,7 +221,7 @@ describe('VPC Subnets table', () => {
         })
       );
 
-      const { getAllByRole, findByText, queryByTestId } =
+      const { getByLabelText, findByText, queryByTestId } =
         await renderWithThemeAndRouter(
           <VPCSubnetsTable
             isVPCLKEEnterpriseCluster={false}
@@ -229,7 +233,7 @@ describe('VPC Subnets table', () => {
 
       await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
-      const expandTableButton = getAllByRole('button')[3];
+      const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
       await userEvent.click(expandTableButton);
 
       await findByText('NodeBalancer');
