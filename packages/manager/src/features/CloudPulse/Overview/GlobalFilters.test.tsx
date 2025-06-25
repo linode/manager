@@ -1,5 +1,4 @@
 import { screen } from '@testing-library/react';
-import { DateTime } from 'luxon';
 import React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';

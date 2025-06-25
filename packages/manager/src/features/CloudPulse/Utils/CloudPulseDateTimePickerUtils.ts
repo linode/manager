@@ -2,8 +2,10 @@ import { DateTime } from 'luxon';
 
 import type { DateTimeWithPreset } from '@linode/api-v4';
 
-export const defaultTimeDuration = (timezone: string): DateTimeWithPreset => {
-  const date = DateTime.now().set({ second: 0 }).setZone(timezone);
+export const defaultTimeDuration = (timezone?: string): DateTimeWithPreset => {
+  const date = DateTime.now()
+    .set({ second: 0 })
+    .setZone(timezone ?? DateTime.local().zoneName);
 
   return {
     end: date.toISO() ?? '',
