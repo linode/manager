@@ -1,5 +1,4 @@
 import { linodeFactory } from '@linode/utilities';
-import { fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -23,14 +22,14 @@ const props = {
 };
 
 describe('SubnetActionMenu', () => {
-  it('should render the subnet action menu', () => {
+  it('should render the subnet action menu', async () => {
     const { getByLabelText, getByText } = renderWithTheme(
       <SubnetLinodeActionMenu {...props} />
     );
     const actionMenu = getByLabelText(
       `Action menu for Linodes in Subnet subnet-1`
     );
-    fireEvent.click(actionMenu);
+    await userEvent.click(actionMenu);
     getByText('Reboot Linode');
     getByText('Power Off');
     getByText('Unassign Linode');
