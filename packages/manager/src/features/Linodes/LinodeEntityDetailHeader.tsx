@@ -245,7 +245,7 @@ export const LinodeEntityDetailHeader = (
                 })}
               >
                 {linodeMaintenancePolicySet === 'linode/migrate'
-                  ? 'Migrate'
+                  ? 'Migrating'
                   : 'Power Off / Power On'}
               </Typography>
               {!linodeMaintenancePolicySet && (
@@ -274,7 +274,7 @@ export const LinodeEntityDetailHeader = (
                 <TooltipIcon
                   className="ui-TooltipIcon"
                   icon={
-                    maintenance.status === 'pending'
+                    maintenance?.status === 'pending'
                       ? statusTooltipIcons.pending
                       : statusTooltipIcons.scheduled
                   }
