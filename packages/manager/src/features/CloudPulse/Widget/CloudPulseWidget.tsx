@@ -1,5 +1,5 @@
 import { useProfile } from '@linode/queries';
-import { Box, Paper, TooltipIcon, Typography } from '@linode/ui';
+import { Box, Paper, Typography } from '@linode/ui';
 import { GridLegacy, Stack, useTheme } from '@mui/material';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -305,8 +305,8 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
               <Stack alignItems="center" direction="row">
                 {convertStringToCamelCasesWithSpaces(widget.label)} (
                 {scaledWidgetUnit.current}
-                {unit.endsWith('ps') ? '/s' : ''})
-                <TooltipIcon
+                {unit.endsWith('ps') ? '/s' : ''}){/* TODO: Add tooltip */}
+                {/* <TooltipIcon
                   status="help"
                   sxTooltipIcon={{
                     '& .MuiSvgIcon-root': {
@@ -314,7 +314,7 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
                     },
                   }}
                   text="Some description"
-                />
+                /> */}
               </Stack>
             </Typography>
             <Stack

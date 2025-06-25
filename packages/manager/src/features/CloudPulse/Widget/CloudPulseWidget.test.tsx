@@ -124,9 +124,6 @@ describe('Cloud pulse widgets', () => {
     // Verify widget title and unit
     expect(getByText('CPU Utilization (%)')).toBeInTheDocument();
 
-    // Verify tooltip icon
-    expect(screen.getByTestId('HelpOutlineIcon')).toBeVisible();
-
     // Verify interval select
     expect(getByTestId('Data aggregation interval')).toBeInTheDocument();
 
