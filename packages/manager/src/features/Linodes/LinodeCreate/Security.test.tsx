@@ -141,7 +141,7 @@ describe('Security', () => {
       http.get('*/v4/account', () => {
         return HttpResponse.json(account);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
@@ -170,7 +170,7 @@ describe('Security', () => {
       http.get('*/v4/account', () => {
         return HttpResponse.json(account);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
