@@ -16,6 +16,7 @@ import CopyIcon from 'src/assets/icons/copy.svg';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import ResetIcon from 'src/assets/icons/reset.svg';
 import { MaskableText } from 'src/components/MaskableText/MaskableText';
+import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import {
   useAllKubernetesClusterAPIEndpointsQuery,
   useKubernetesKubeConfigQuery,
@@ -36,9 +37,9 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     '& g': {
-      stroke: theme.palette.text.secondary,
+      stroke: theme.tokens.color.Neutrals[20],
     },
-    color: theme.palette.text.secondary,
+    color: theme.tokens.color.Neutrals[20],
     pointer: 'default',
     pointerEvents: 'none',
   },
@@ -153,6 +154,12 @@ export const KubeConfigDisplay = (props: Props) => {
     isLoading: endpointsLoading,
   } = useAllKubernetesClusterAPIEndpointsQuery(clusterId);
 
+  const isClusterReadOnly = useIsResourceRestricted({
+    grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: clusterId,
+  });
+
   const downloadKubeConfig = async () => {
     try {
       const queryResult = await getKubeConfig();
@@ -221,27 +228,50 @@ export const KubeConfigDisplay = (props: Props) => {
           <StyledLinkButton
             aria-label={`Download kubeconfig for ${clusterLabel}`}
             className={classes.kubeconfigElement}
+            disabled={isClusterReadOnly}
             onClick={downloadKubeConfig}
           >
             <DownloadIcon
-              className={classes.kubeconfigIcons}
+              className={cx({
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigIcons]: true,
+              })}
               style={{ marginLeft: 0 }}
             />
-            <Typography className={classes.kubeconfigFileText}>
+            <Typography
+              className={cx({
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigFileText]: !isClusterReadOnly,
+              })}
+            >
               {`${clusterLabel}-kubeconfig.yaml`}
             </Typography>
           </StyledLinkButton>
           <StyledLinkButton
             aria-label="View kubeconfig details"
             className={classes.kubeconfigElement}
+            disabled={isClusterReadOnly}
             onClick={handleOpenDrawer}
           >
-            <DetailsIcon className={classes.kubeconfigIcons} />
-            <Typography className={classes.kubeconfigFileText}>View</Typography>
+            <DetailsIcon
+              className={cx({
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigIcons]: true,
+              })}
+            />
+            <Typography
+              className={cx({
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigFileText]: !isClusterReadOnly,
+              })}
+            >
+              View
+            </Typography>
           </StyledLinkButton>
           <StyledLinkButton
             aria-label="Copy kubeconfig token"
             className={classes.kubeconfigElement}
+            disabled={isClusterReadOnly}
             onClick={onCopyToken}
           >
             {isCopyTokenLoading ? (
@@ -251,25 +281,39 @@ export const KubeConfigDisplay = (props: Props) => {
                 size="xs"
               />
             ) : (
-              <CopyIcon className={classes.kubeconfigIcons} />
+              <CopyIcon
+                className={cx({
+                  [classes.disabled]:
+                    isResettingKubeConfig || isClusterReadOnly,
+                  [classes.kubeconfigIcons]: true,
+                })}
+              />
             )}
-            <Box className={classes.kubeconfigFileText}>Copy Token</Box>
+            <Box
+              className={cx({
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigFileText]: !isClusterReadOnly,
+              })}
+            >
+              Copy Token
+            </Box>
           </StyledLinkButton>
           <StyledLinkButton
             aria-label="Reset kubeconfig"
             className={classes.kubeconfigElement}
+            disabled={isClusterReadOnly}
             onClick={() => setResetKubeConfigDialogOpen(true)}
           >
             <ResetIcon
               className={cx({
-                [classes.disabled]: isResettingKubeConfig,
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
                 [classes.kubeconfigIcons]: true,
               })}
             />
             <Typography
               className={cx({
-                [classes.disabled]: isResettingKubeConfig,
-                [classes.kubeconfigFileText]: true,
+                [classes.disabled]: isResettingKubeConfig || isClusterReadOnly,
+                [classes.kubeconfigFileText]: !isClusterReadOnly,
               })}
             >
               Reset

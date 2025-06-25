@@ -61,17 +61,17 @@ export const KubernetesClusterDetail = () => {
     cluster
   );
 
-  const isLkeClusterRestricted = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'lkecluster',
-    id: cluster?.id,
-  });
-
   const [updateError, setUpdateError] = React.useState<string | undefined>();
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
   const isClusterReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
+    grantType: 'lkecluster',
+    id: cluster?.id,
+  });
+
+  const isClusterReadWrite = useIsResourceRestricted({
+    grantLevel: 'read_write',
     grantType: 'lkecluster',
     id: cluster?.id,
   });
@@ -113,12 +113,14 @@ export const KubernetesClusterDetail = () => {
       <DocumentTitleSegment
         segment={`${cluster?.label} | Kubernetes Cluster`}
       />
-      <UpgradeKubernetesVersionBanner
-        clusterID={cluster?.id}
-        clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
-        currentVersion={cluster?.k8s_version}
-      />
-      {isLkeClusterRestricted && restrictedLkeNotice}
+      {isClusterReadWrite && (
+        <UpgradeKubernetesVersionBanner
+          clusterID={cluster?.id}
+          clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
+          currentVersion={cluster?.k8s_version}
+        />
+      )}
+      {isClusterReadOnly && restrictedLkeNotice}
       <LandingHeader
         breadcrumbProps={{
           breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
@@ -162,7 +164,7 @@ export const KubernetesClusterDetail = () => {
             clusterLabel={cluster.label}
             clusterRegionId={cluster.region}
             clusterTier={cluster.tier ?? 'standard'}
-            isLkeClusterRestricted={isLkeClusterRestricted}
+            isLkeClusterRestricted={isClusterReadOnly}
             regionsData={regionsData || []}
           />
         </Stack>
