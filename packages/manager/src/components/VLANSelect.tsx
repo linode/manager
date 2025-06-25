@@ -120,13 +120,20 @@ export const VLANSelect = (props: Props) => {
       noMarginTop
       noOptionsText="You have no VLANs in this region. Type to create one."
       onBlur={() => {
+        if (inputValue !== value) {
+          if (vlans.length === 1 && onChange) {
+            // if input value has changed and there is only one option, select that input value
+            // this handles the case where users expect the new VLAN to be selected onBlur if the only option that exists is to create it
+            onChange(inputValue);
+          } else {
+            // otherwise, if there are multiple options: if we didn't explicitly select the new input value, keep the old value
+            // if there is no pre-existing value selected, this clears the textfield
+            setInputValue(value ?? '');
+          }
+        }
+
         if (onBlur) {
           onBlur();
-        }
-        if (inputValue !== value) {
-          // if our input value's changed but we didn't explicitly select the new input value, keep the old value
-          // if there is no pre-existing value selected, this clears the textfield
-          setInputValue(value ?? '');
         }
       }}
       onChange={(event, value) => {
