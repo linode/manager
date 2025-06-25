@@ -68,7 +68,6 @@ describe('VPC Top Section form content', () => {
     const radioInputs = getAllByRole('radio');
     expect(radioInputs[0]).toBeChecked(); // IPv4
     expect(radioInputs[1]).not.toBeChecked(); // Dual Stack
-    getByText('IPv4 CIDR');
     expect(queryByText('IPv6 CIDR')).not.toBeInTheDocument();
   });
 
@@ -101,7 +100,6 @@ describe('VPC Top Section form content', () => {
 
     const radioInputs = getAllByRole('radio');
     await userEvent.click(radioInputs[1]);
-    getByText('IPv4 CIDR');
     getByText('IPv6 CIDR');
   });
 });

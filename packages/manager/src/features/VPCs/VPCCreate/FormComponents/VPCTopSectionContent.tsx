@@ -1,7 +1,15 @@
 import { useAccount } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
-import { Box, FormControlLabel, Notice, styled, TextField } from '@linode/ui';
-import { Radio, RadioGroup, Typography } from '@linode/ui';
+import {
+  Box,
+  FormControlLabel,
+  Notice,
+  styled,
+  TextField,
+  TooltipIcon,
+  Typography,
+} from '@linode/ui';
+import { Radio, RadioGroup } from '@linode/ui';
 import {
   getQueryParamsFromQueryString,
   isFeatureEnabledV2,
@@ -158,6 +166,7 @@ export const VPCTopSectionContent = (props: Props) => {
                 }}
                 renderIcon={() => <Radio checked={cidrOption === 'ipv4'} />}
                 subheadings={[]}
+                sxCardBase={{ gap: 0 }}
                 sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
               />
               <SelectionCard
@@ -179,20 +188,28 @@ export const VPCTopSectionContent = (props: Props) => {
                 renderIcon={() => (
                   <Radio checked={cidrOption === 'dualstack'} />
                 )}
+                renderVariant={() => (
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      padding: '8px',
+                    }}
+                    text={
+                      <Typography>
+                        /52 is a default that impacts subnetting. If you need a
+                        larger space, open a support ticket.
+                      </Typography>
+                    }
+                    width={250}
+                  />
+                )}
                 subheadings={[]}
+                sxCardBase={{ gap: 0 }}
                 sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
               />
             </Grid>
           </RadioGroup>
         </Box>
-      )}
-      {isDualStackEnabled && (
-        <>
-          <StyledFormLabel>IPv4 CIDR</StyledFormLabel>
-          <Typography>
-            Lorum you will have full access to the full RFC 1918 range.
-          </Typography>
-        </>
       )}
       {cidrOption === 'dualstack' && (
         <Controller
@@ -208,9 +225,11 @@ export const VPCTopSectionContent = (props: Props) => {
               }}
               value={fields[0].range}
             >
-              <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
-                IPv6 CIDR
-              </StyledFormLabel>
+              {isTrustedCustomer && (
+                <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
+                  IPv6 CIDR
+                </StyledFormLabel>
+              )}
               {errors.ipv6 && (
                 <Notice
                   sx={{ marginTop: 1 }}
@@ -218,9 +237,19 @@ export const VPCTopSectionContent = (props: Props) => {
                   variant="error"
                 />
               )}
-              <FormControlLabel control={<Radio />} label="/52" value="/52" />
               {isTrustedCustomer && (
-                <FormControlLabel control={<Radio />} label="/48" value="/48" />
+                <>
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="/52"
+                    value="/52"
+                  />
+                  <FormControlLabel
+                    control={<Radio />}
+                    label="/48"
+                    value="/48"
+                  />
+                </>
               )}
             </RadioGroup>
           )}
