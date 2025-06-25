@@ -68,9 +68,6 @@ export const VLANSelect = (props: Props) => {
       // If the value gets cleared, make sure the TextField's value also gets cleared.
       setInputValue('');
     }
-    if (value && !inputValue) {
-      setInputValue(value);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
@@ -111,7 +108,7 @@ export const VLANSelect = (props: Props) => {
         option === newVlanPlaceholder ? `Create "${inputValue}"` : option.label
       }
       helperText={helperText}
-      inputValue={selectedVLAN && !open ? selectedVLAN.label : inputValue}
+      inputValue={selectedVLAN ? selectedVLAN.label : inputValue}
       isOptionEqualToValue={(option1, option2) =>
         option1.label === option2.label
       }
@@ -123,7 +120,7 @@ export const VLANSelect = (props: Props) => {
         if (onBlur) {
           onBlur();
         }
-        if (onChange && inputValue !== value) {
+        if (onChange && inputValue && inputValue !== value) {
           // if input value has changed, select that value. This handles the case where users
           // expect the new VLAN to be selected onBlur if the only option that exists is to create it
           onChange(inputValue);
