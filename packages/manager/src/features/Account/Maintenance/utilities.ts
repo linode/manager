@@ -16,6 +16,10 @@ export const PENDING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'started', 'scheduled'] },
 });
 
+export const PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
+  status: { '+or': ['pending', 'started', 'scheduled', 'in-progress'] },
+});
+
 export const PLATFORM_MAINTENANCE_TYPE =
   'security_reboot_maintenance_scheduled';
 
