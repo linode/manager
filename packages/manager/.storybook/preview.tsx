@@ -26,6 +26,8 @@ import '@reach/tabs/styles.css'; // @todo M3-6705 Remove this when replacing @re
 
 const channel = addons.getChannel();
 
+storybookWorker.start({ onUnhandledRequest: 'bypass' });
+
 /**
  * This exists as a workaround to get dark mode working in "docs" pages.
  * See https://github.com/hipstersmoothie/storybook-dark-mode/issues/282#issuecomment-2246463856
@@ -67,11 +69,6 @@ const preview: Preview = {
           })
         : wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
-  ],
-  loaders: [
-    async () => ({
-      msw: await storybookWorker?.start(),
-    }),
   ],
   parameters: {
     options: {
