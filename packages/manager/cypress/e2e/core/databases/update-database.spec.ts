@@ -260,7 +260,7 @@ const validateSuspendResume = (
   cy.findByText(hostnameRegex).should('be.visible');
 
   // DBaaS passwords cannot be revealed when database/cluster is suspended or resuming.
-  ui.button.findByTitle('Show').should('be.visible').should('be.enabled');
+  ui.cdsButton.findButtonByTitle('Show').should('be.enabled');
 
   // Navigate to "Settings" tab.
   ui.tabList.findTabByTitle('Settings').click();
@@ -545,6 +545,14 @@ describe('Update database clusters', () => {
           // Navigate to "Settings" tab.
           ui.tabList.findTabByTitle('Settings').click();
 
+          cy.get('[data-testid="settings-button-Suspend Cluster"]').within(
+            () => {
+              ui.cdsButton
+                .findButtonByTitle('Suspend Cluster')
+                .should('be.disabled');
+            }
+          );
+
           // Reset root password.
           resetRootPassword();
           cy.wait('@resetRootPassword');
@@ -577,10 +585,6 @@ describe('Update database clusters', () => {
           cy.wait('@updateDatabaseMaintenance');
           ui.toast.assertMessage(
             'Maintenance Window settings saved successfully.'
-          );
-
-          cy.get('[data-qa-settings-button="Suspend Cluster"]').should(
-            'be.disabled'
           );
 
           // Navigate to "Networking" tab.
@@ -673,7 +677,15 @@ describe('Update database clusters', () => {
           ui.tabList.findTabByTitle('Settings').click();
 
           // Suspend an active cluster
-          cy.get('[data-qa-settings-button="Suspend Cluster"]').click();
+          cy.get('[data-testid="settings-button-Suspend Cluster"]').within(
+            () => {
+              ui.cdsButton
+                .findButtonByTitle('Suspend Cluster')
+                .should('be.visible')
+                .should('be.enabled')
+                .click();
+            }
+          );
           suspendCluster(initialLabel);
           cy.wait('@suspendDatabase');
 
