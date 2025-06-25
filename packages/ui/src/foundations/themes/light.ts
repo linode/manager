@@ -976,6 +976,24 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
             color: Content.Icon.Primary.Hover,
           },
+          // TooltipIcon Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+              padding: `0 ${Spacing.S6}`,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
+          },
         },
       },
     },
