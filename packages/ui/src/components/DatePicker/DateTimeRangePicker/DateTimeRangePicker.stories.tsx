@@ -3,7 +3,7 @@ import React from 'react';
 import { DateTimeRangePicker } from './DateTimeRangePicker';
 
 import type { DateTimeRangePickerProps } from './DateTimeRangePicker';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DateTimeRangePicker> = {
   argTypes: {

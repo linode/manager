@@ -3,7 +3,7 @@ import React from 'react';
 
 import { CheckoutSummary } from './CheckoutSummary';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof CheckoutSummary>;
 

@@ -1,11 +1,11 @@
 import { Box } from '@linode/ui';
-import { useArgs } from '@storybook/preview-api';
 import React from 'react';
+import { useArgs } from 'storybook/preview-api';
 
 import { TagCell } from './TagCell/TagCell';
 
 import type { TagCellProps } from './TagCell/TagCell';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const _tags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 

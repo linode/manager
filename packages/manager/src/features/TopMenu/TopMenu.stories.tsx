@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TopMenu } from './TopMenu';
 
 import type { TopMenuProps } from './TopMenu';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TopMenuProps> = {
   render: (args) => <TopMenu {...args} />,
