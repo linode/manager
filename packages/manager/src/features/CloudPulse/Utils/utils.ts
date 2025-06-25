@@ -181,7 +181,7 @@ export const isValidPort = (port: string): string | undefined => {
   }
 
   // Check for leading zeros
-  if (!port || port.startsWith('0')) {
+  if (port.startsWith('0')) {
     return PORTS_RANGE_ERROR_MESSAGE;
   }
 
