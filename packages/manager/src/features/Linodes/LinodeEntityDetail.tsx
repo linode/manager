@@ -173,7 +173,7 @@ export const LinodeEntityDetail = (props: Props) => {
             }
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
-            maintenance={linode.maintenance}
+            maintenance={linode.maintenance ?? null}
             openNotificationMenu={notificationContext.openMenu}
             progress={progress}
             transitionText={transitionText}

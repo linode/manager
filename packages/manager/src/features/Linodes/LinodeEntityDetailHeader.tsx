@@ -1,14 +1,7 @@
-import { Box, Button, rotate360, Stack, TooltipIcon } from '@linode/ui';
+import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
 import { Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import {
-  LoadFailureIcon as MaintenanceActiveIcon,
-  CalendarIcon as MaintenancePendingIcon,
-  CalendarScheduledIcon as MaintenanceScheduledIcon,
-} from '@linode/ui';
-import { capitalize } from '@linode/utilities';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
@@ -22,11 +15,8 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEve
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
-import { LinodeMaintenanceText } from './LinodeMaintenanceText';
-import {
-  getLinodeIconStatus,
-  parseMaintenanceStartTime,
-} from './LinodesLanding/utils';
+import { LinodeEntityDetailHeaderMaintenancePolicy } from './LinodeEntityDetailHeaderMaintenancePolicy';
+import { getLinodeIconStatus } from './LinodesLanding/utils';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type {
@@ -64,7 +54,7 @@ export interface HeaderProps {
   linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
-  maintenance?: LinodeMaintenance | null;
+  maintenance: LinodeMaintenance | null;
   openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
@@ -75,12 +65,6 @@ export interface HeaderProps {
 interface LinodeEntityDetailHeaderProps extends HeaderProps {
   handlers: LinodeHandlers;
 }
-
-const statusTooltipIcons = {
-  scheduled: <MaintenanceScheduledIcon />,
-  active: <MaintenanceActiveIcon />,
-  pending: <MaintenancePendingIcon />,
-};
 
 export const LinodeEntityDetailHeader = (
   props: LinodeEntityDetailHeaderProps
@@ -106,12 +90,6 @@ export const LinodeEntityDetailHeader = (
   } = props;
 
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
-
-  const isPendingOrScheduled =
-    maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
-
-  const isInProgress =
-    maintenance?.status === 'started' || maintenance?.status === 'in-progress';
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -180,10 +158,6 @@ export const LinodeEntityDetailHeader = (
     display: 'flex',
   };
 
-  const parsedMaintenanceStartTime = parseMaintenanceStartTime(
-    maintenance?.start_time || maintenance?.when
-  );
-
   return (
     <EntityHeader
       isSummaryView={isSummaryView}
@@ -214,93 +188,10 @@ export const LinodeEntityDetailHeader = (
           />
         )}
         {isVMHostMaintenanceEnabled && (
-          <Box
-            sx={(theme) => ({
-              borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
-              paddingLeft: theme.spacingFunction(16),
-              marginLeft: theme.spacingFunction(8),
-              display: 'flex',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: theme.spacingFunction(8),
-            })}
-          >
-            <StyledMaintenanceBox>
-              <Typography
-                sx={(theme) => ({
-                  font: theme.tokens.alias.Typography.Label.Bold.S,
-                })}
-              >
-                Maintenance Policy:
-              </Typography>
-              {isInProgress && <StyledAutorenewIcon />}
-            </StyledMaintenanceBox>
-            <StyledMaintenanceBox>
-              <Typography
-                sx={(theme) => ({
-                  color: theme.tokens.alias.Content.Text.Secondary.Default,
-                })}
-              >
-                {linodeMaintenancePolicySet === 'linode/migrate'
-                  ? 'Migrating'
-                  : 'Power Off / Power On'}
-              </Typography>
-              {isInProgress && (
-                <TooltipIcon
-                  className="ui-TooltipIcon ui-TooltipIcon-isActive"
-                  icon={statusTooltipIcons.active}
-                  status="other"
-                  sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
-                  sxTooltipIcon={{
-                    '&&.ui-TooltipIcon': {
-                      padding: 0,
-                    },
-                  }}
-                  text={
-                    <LinodeMaintenanceText
-                      isOpened={false}
-                      maintenanceStartTime={parsedMaintenanceStartTime}
-                    />
-                  }
-                  tooltipPosition="top"
-                />
-              )}
-            </StyledMaintenanceBox>
-            {isPendingOrScheduled && (
-              <StyledMaintenanceBox>
-                <Typography
-                  component="span"
-                  sx={(theme) => ({
-                    color: theme.tokens.alias.Content.Text.Secondary.Default,
-                  })}
-                >
-                  - {capitalize(maintenance?.status ?? '')}
-                </Typography>
-                <TooltipIcon
-                  className="ui-TooltipIcon"
-                  icon={
-                    maintenance?.status === 'pending'
-                      ? statusTooltipIcons.pending
-                      : statusTooltipIcons.scheduled
-                  }
-                  status="other"
-                  sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
-                  sxTooltipIcon={{
-                    '&&.ui-TooltipIcon': {
-                      padding: 0,
-                    },
-                  }}
-                  text={
-                    <LinodeMaintenanceText
-                      isOpened
-                      maintenanceStartTime={parsedMaintenanceStartTime}
-                    />
-                  }
-                  tooltipPosition="top"
-                />
-              </StyledMaintenanceBox>
-            )}
-          </Box>
+          <LinodeEntityDetailHeaderMaintenancePolicy
+            linodeMaintenancePolicySet={linodeMaintenancePolicySet}
+            maintenance={maintenance}
+          />
         )}
         {hasSecondaryStatus && (
           <Button
@@ -360,16 +251,3 @@ export const LinodeEntityDetailHeader = (
     </EntityHeader>
   );
 };
-
-const StyledAutorenewIcon = styled(AutorenewIcon)(({ theme }) => ({
-  animation: `${rotate360} 2s linear infinite`,
-  height: '20px',
-  width: '20px',
-  fill: theme.tokens.alias.Content.Icon.Informative,
-}));
-
-const StyledMaintenanceBox = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacingFunction(8),
-}));

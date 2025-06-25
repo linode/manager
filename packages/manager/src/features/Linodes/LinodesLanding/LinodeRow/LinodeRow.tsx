@@ -1,12 +1,5 @@
 import { useTypeQuery } from '@linode/queries';
-import {
-  LoadFailureIcon as MaintenanceActiveIcon,
-  CalendarIcon as MaintenancePendingIcon,
-  CalendarScheduledIcon as MaintenanceScheduledIcon,
-  Tooltip,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
@@ -17,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
@@ -39,12 +33,6 @@ import {
 import type { LinodeHandlers } from '../LinodesLanding';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-
-const statusTooltipIcons = {
-  scheduled: <MaintenanceScheduledIcon />,
-  active: <MaintenanceActiveIcon />,
-  pending: <MaintenancePendingIcon />,
-};
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
@@ -155,7 +143,7 @@ export const LinodeRow = (props: Props) => {
             status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
-              maintenance.status === 'pending' ? (
+              maintenance?.status === 'pending' ? (
                 "This Linode's maintenance window is pending."
               ) : (
                 <LinodeMaintenanceText
