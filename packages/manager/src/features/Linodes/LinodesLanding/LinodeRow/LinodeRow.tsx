@@ -172,10 +172,14 @@ export const LinodeRow = (props: Props) => {
             status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
-              <MaintenanceText
-                isOpened={false}
-                maintenanceStartTime={parsedMaintenanceStartTime}
-              />
+              maintenance.status === 'pending' ? (
+                "This Linode's maintenance window is pending."
+              ) : (
+                <MaintenanceText
+                  isOpened={false}
+                  maintenanceStartTime={parsedMaintenanceStartTime}
+                />
+              )
             }
             tooltipPosition="top"
           />
