@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { vpcFactory } from 'src/factories/vpcs';
@@ -35,10 +35,10 @@ describe('VPC Table Row', () => {
     getByText('Delete');
   });
 
-  it('should have a delete button that calls the provided callback when clicked', () => {
+  it('should have a delete button that calls the provided callback when clicked', async () => {
     const vpc = vpcFactory.build();
     const handleDelete = vi.fn();
-    const { getAllByRole } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={handleDelete}
@@ -48,15 +48,15 @@ describe('VPC Table Row', () => {
         />
       )
     );
-    const deleteBtn = getAllByRole('button')[1];
-    fireEvent.click(deleteBtn);
+    const deleteBtn = getByTestId('Delete');
+    await userEvent.click(deleteBtn);
     expect(handleDelete).toHaveBeenCalled();
   });
 
-  it('should have an edit button that calls the provided callback when clicked', () => {
+  it('should have an edit button that calls the provided callback when clicked', async () => {
     const vpc = vpcFactory.build();
     const handleEdit = vi.fn();
-    const { getAllByRole } = renderWithTheme(
+    const { getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <VPCRow
           handleDeleteVPC={vi.fn()}
@@ -66,8 +66,8 @@ describe('VPC Table Row', () => {
         />
       )
     );
-    const editButton = getAllByRole('button')[0];
-    fireEvent.click(editButton);
+    const editButton = getByTestId('Edit');
+    await userEvent.click(editButton);
     expect(handleEdit).toHaveBeenCalled();
   });
 
