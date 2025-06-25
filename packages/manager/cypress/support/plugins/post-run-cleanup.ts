@@ -38,7 +38,7 @@ import type {
  */
 
 // Test resource label/name prefix.
-const TEST_TAG_PREFIX = 'cy-test-';
+const TEST_TAG_PREFIX = process.env['CY_TEST_RESOURCE_PREFIX'] || 'cy-test-';
 
 // Desired number of items per page of a paginated API request.
 const PAGE_SIZE = 500;
