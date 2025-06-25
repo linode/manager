@@ -246,7 +246,7 @@ export const createLinode = (mockState: MockState) => [
       created: DateTime.now().toISO(),
       status: 'provisioning',
       ...(regionSupportsMaintenancePolicy
-        ? { maintenance_policy_id: payload.maintenance_policy_id ?? 1 }
+        ? { maintenance_policy: payload.maintenance_policy ?? 'linode/migrate' }
         : {}),
       ...payloadCopy,
     });

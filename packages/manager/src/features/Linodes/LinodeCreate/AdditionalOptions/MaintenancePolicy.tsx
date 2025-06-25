@@ -56,12 +56,12 @@ export const MaintenancePolicy = () => {
       )}
       <Controller
         control={control}
-        name="maintenance_policy_id"
+        name="maintenance_policy"
         render={({ field, fieldState }) => (
           <MaintenancePolicySelect
             disabled={!selectedRegion || !regionSupportsMaintenancePolicy}
             errorText={fieldState.error?.message}
-            onChange={(policy) => field.onChange(policy.id)}
+            onChange={(policy) => field.onChange(policy.slug)}
             textFieldProps={{
               helperText: !region
                 ? 'Select a region to see available maintenance policies.'
