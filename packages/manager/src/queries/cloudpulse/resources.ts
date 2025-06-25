@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { queryFactory } from './queries';
 
 import type { Filter, Params } from '@linode/api-v4';
-import type { CloudPulseResources } from 'src/features/CloudPulse/shared/CloudPulseResourcesSelect';
+
+interface CloudPulseResources {
+  id: string;
+  label: string;
+  region?: string;
+  tags?: string[];
+}
 
 export const useResourcesQuery = (
   enabled = false,

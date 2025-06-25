@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
 import type { Filter, Params } from '@linode/api-v4';
-import type { CloudPulseServiceTypeFiltersOptions } from 'src/features/CloudPulse/Utils/models';
-import type { QueryFunctionAndKey } from 'src/features/CloudPulse/Utils/models';
+import type { CloudPulseServiceTypeFiltersOptions } from '@linode/utilities';
+import type { QueryFunctionAndKey } from '@linode/utilities';
 import type {
   QueryFunctionNonArrayType,
   QueryFunctionType,
-} from 'src/features/CloudPulse/Utils/models';
+} from '@linode/utilities';
 
 /**
  * Interface that has the parameters required for making custom filter query call

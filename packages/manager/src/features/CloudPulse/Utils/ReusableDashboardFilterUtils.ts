@@ -1,6 +1,7 @@
+import { CloudPulseAvailableViews } from '@linode/utilities';
+
 import { defaultTimeDuration } from './CloudPulseDateTimePickerUtils';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseAvailableViews } from './models';
 
 import type { DashboardProperties } from '../Dashboard/CloudPulseDashboard';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
