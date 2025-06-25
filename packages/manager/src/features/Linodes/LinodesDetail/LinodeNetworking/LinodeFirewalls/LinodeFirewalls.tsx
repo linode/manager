@@ -1,4 +1,8 @@
-import { useLinodeFirewallsQuery } from '@linode/queries';
+import {
+  useLinodeFirewallsQuery,
+  useProfile,
+  useUserEntityPermissions,
+} from '@linode/queries';
 import { Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
 import React from 'react';
 
@@ -15,7 +19,7 @@ import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Device
 import { AddFirewallForm } from './AddFirewallForm';
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
 
-import type { Firewall, FirewallDevice } from '@linode/api-v4';
+import type { Firewall, FirewallDevice, PermissionType } from '@linode/api-v4';
 
 interface LinodeFirewallsProps {
   linodeID: number;
@@ -23,6 +27,25 @@ interface LinodeFirewallsProps {
 
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
+  const { data: profile } = useProfile();
+
+  const { data: userEntityPermissions } = useUserEntityPermissions(
+    'linode',
+    linodeID,
+    profile?.username ?? ''
+  );
+  // TODO: Switch to using the RBAC hook when it's ready UIE-8946
+  const userCanApplyFirewalls = userEntityPermissions?.includes(
+    'apply_linode_firewalls' as PermissionType
+  );
+
+  // const { permissions } = usePermissions(
+  //   'linode',
+  //   [
+  // 'apply_linode_firewalls'
+  //   ],
+  //   linodeID
+  // );
 
   const {
     data: attachedFirewallData,
@@ -86,9 +109,16 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         </Typography>
         <Button
           buttonType="primary"
-          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
+          disabled={
+            (attachedFirewallData && attachedFirewallData.results >= 1) ||
+            !userCanApplyFirewalls
+          }
           onClick={() => setIsAddFirewalDrawerOpen(true)}
-          tooltipText="Linodes can only have one Firewall assigned."
+          tooltipText={
+            !userCanApplyFirewalls
+              ? `You don't have permissions to add Firewall.`
+              : 'Linodes can only have one Firewall assigned.'
+          }
         >
           Add Firewall
         </Button>

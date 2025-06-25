@@ -263,6 +263,7 @@ export type LinodeContributor =
   | 'resize_linode_disk'
   | 'restore_linode_backup'
   | 'shutdown_linode'
+  | 'update_ip_rdns'
   | 'update_linode'
   | 'update_linode_config_profile'
   | 'update_linode_config_profile_interface'
