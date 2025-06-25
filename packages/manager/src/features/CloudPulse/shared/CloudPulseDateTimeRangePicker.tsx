@@ -14,7 +14,7 @@ interface DateChangeProps {
   timeZone: null | string;
 }
 
-interface CloudPulseDateTimeRangePickerProps {
+export interface CloudPulseDateTimeRangePickerProps {
   defaultValue?: Partial<FilterValue>;
 
   handleStatsChange: (
