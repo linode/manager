@@ -11,7 +11,6 @@ import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
@@ -19,19 +18,22 @@ import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/L
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { StyledAutorenewIcon } from 'src/features/TopMenu/NotificationMenu/NotificationMenu';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useInProgressEvents } from 'src/queries/events/events';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
+import { LinodeMaintenanceText } from './LinodeMaintenanceText';
 import {
   getLinodeIconStatus,
   parseMaintenanceStartTime,
 } from './LinodesLanding/utils';
-import { linodeInTransition } from './transitions';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Config, LinodeBackups } from '@linode/api-v4';
+import type {
+  Config,
+  LinodeBackups,
+  MaintenancePolicySlug,
+} from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
 import type { LinodeMaintenance } from 'src/utilities/linodes';
@@ -59,7 +61,7 @@ export interface HeaderProps {
   isSummaryView?: boolean;
   linodeId: number;
   linodeLabel: string;
-  linodeMaintenancePolicy: number | undefined;
+  linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
   maintenance?: LinodeMaintenance | null;
@@ -80,30 +82,6 @@ const statusTooltipIcons = {
   pending: <MaintenancePendingIcon />,
 };
 
-interface MaintenanceTextProps {
-  isOpened?: boolean;
-  maintenanceStartTime: string;
-}
-
-const MaintenanceText = ({
-  isOpened = false,
-  maintenanceStartTime,
-}: MaintenanceTextProps) => {
-  return (
-    <>
-      This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
-      {maintenanceStartTime}
-      {!isOpened && (
-        <>
-          . For more information, see your{' '}
-          <Link to="/support/tickets/open">open support tickets.</Link>
-        </>
-      )}
-      .
-    </>
-  );
-};
-
 export const LinodeEntityDetailHeader = (
   props: LinodeEntityDetailHeaderProps
 ) => {
@@ -118,7 +96,7 @@ export const LinodeEntityDetailHeader = (
     linodeLabel,
     linodeRegionDisplay,
     linodeStatus,
-    linodeMaintenancePolicy,
+    linodeMaintenancePolicySet,
     maintenance,
     openNotificationMenu,
     progress,
@@ -127,15 +105,8 @@ export const LinodeEntityDetailHeader = (
     variant,
   } = props;
 
-  const { data: events } = useInProgressEvents();
-
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const recentEvent = events?.find(
-    (e) => e.entity?.type === 'linode' && e.entity.id === linodeId
-  );
-
-  const isTransitioning = linodeInTransition(linodeStatus, recentEvent);
   const isPendingOrScheduled =
     maintenance?.status === 'pending' || maintenance?.status === 'scheduled';
 
@@ -246,11 +217,8 @@ export const LinodeEntityDetailHeader = (
           <>
             <Box
               sx={(theme) => ({
-                display: 'flex',
-                alignItems: 'center',
                 borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
                 paddingLeft: theme.spacingFunction(16),
-                gap: theme.spacingFunction(4),
               })}
             >
               <Typography
@@ -259,7 +227,7 @@ export const LinodeEntityDetailHeader = (
                   font: theme.tokens.alias.Typography.Label.Bold.S,
                 })}
               >
-                Maintenance Policy:
+                Maintenance Policy:{' '}
               </Typography>
               {isInProgress && (
                 <StyledAutorenewIcon
@@ -276,9 +244,11 @@ export const LinodeEntityDetailHeader = (
                   color: theme.tokens.alias.Content.Text.Secondary.Default,
                 })}
               >
-                {linodeMaintenancePolicy ?? 'Unassigned'}
+                {linodeMaintenancePolicySet === 'linode/migrate'
+                  ? 'Migrate'
+                  : 'Power Off / Power On'}
               </Typography>
-              {!linodeMaintenancePolicy && (
+              {!linodeMaintenancePolicySet && (
                 <TooltipIcon
                   className="ui-TooltipIcon"
                   status="info"
@@ -294,6 +264,7 @@ export const LinodeEntityDetailHeader = (
                     color: theme.tokens.alias.Content.Text.Secondary.Default,
                   })}
                 >
+                  {' '}
                   - {capitalize(maintenance?.status ?? '')}
                 </Typography>
               )}
@@ -310,7 +281,7 @@ export const LinodeEntityDetailHeader = (
                   status="other"
                   sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
                   text={
-                    <MaintenanceText
+                    <LinodeMaintenanceText
                       isOpened
                       maintenanceStartTime={parsedMaintenanceStartTime}
                     />
@@ -318,14 +289,14 @@ export const LinodeEntityDetailHeader = (
                   tooltipPosition="top"
                 />
               )}
-              {isTransitioning && (
+              {isInProgress && (
                 <TooltipIcon
                   className="ui-TooltipIcon ui-TooltipIcon-isActive"
                   icon={statusTooltipIcons.active}
                   status="other"
                   sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
                   text={
-                    <MaintenanceText
+                    <LinodeMaintenanceText
                       isOpened={false}
                       maintenanceStartTime={parsedMaintenanceStartTime}
                     />
