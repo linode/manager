@@ -76,6 +76,8 @@ export const CloudPulsePortFilter = React.memo(
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      // Clear the error text when the user blurs the input
+      setErrorText(undefined);
       const validationError = arePortsValid(e.target.value);
       if (validationError === undefined) {
         // Cancel any pending debouncedPortChange calls
@@ -93,6 +95,7 @@ export const CloudPulsePortFilter = React.memo(
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
+        onDrop={(e) => e.preventDefault()}
         onKeyDown={handleKeyDown(value, setErrorText)}
         onPaste={handlePaste(value, setErrorText)}
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
