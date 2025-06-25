@@ -31,10 +31,7 @@ describe('VPC Landing Table', () => {
       <VPCLanding />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     // Static text and table column headers
     getAllByText('Label');
@@ -61,10 +58,7 @@ describe('VPC Landing Table', () => {
       }
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     // Static text and table column headers
     getAllByText('Label');
@@ -85,10 +79,7 @@ describe('VPC Landing Table', () => {
       <VPCLanding />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     expect(
       getByText('Create a private and isolated network')

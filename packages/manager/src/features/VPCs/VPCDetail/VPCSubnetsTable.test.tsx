@@ -64,10 +64,7 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     getByPlaceholderText('Filter Subnets by label or id');
     getByText('Subnet');
@@ -124,10 +121,7 @@ describe('VPC Subnets table', () => {
       }
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     getByPlaceholderText('Filter Subnets by label or id');
     getByText('Subnet');
@@ -170,10 +164,7 @@ describe('VPC Subnets table', () => {
         />
       );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     const expandTableButton = getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
@@ -201,10 +192,7 @@ describe('VPC Subnets table', () => {
         />
       );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     const expandTableButton = getAllByRole('button')[3];
     await userEvent.click(expandTableButton);
@@ -239,10 +227,7 @@ describe('VPC Subnets table', () => {
           { flags: { nodebalancerVpc: true } }
         );
 
-      const loadingState = queryByTestId(loadingTestId);
-      if (loadingState) {
-        await waitForElementToBeRemoved(loadingState);
-      }
+      await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
       const expandTableButton = getAllByRole('button')[3];
       await userEvent.click(expandTableButton);
@@ -268,10 +253,7 @@ describe('VPC Subnets table', () => {
       />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     const createButton = getByRole('button', {
       name: 'Create Subnet',

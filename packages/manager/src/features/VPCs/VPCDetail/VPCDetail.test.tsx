@@ -54,10 +54,7 @@ describe('VPC Detail Summary section', () => {
       <VPCDetail />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     getAllByText('Subnets');
     getAllByText('Linodes');
@@ -91,10 +88,7 @@ describe('VPC Detail Summary section', () => {
       }
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     getAllByText('Subnets');
     getAllByText('Resources');
@@ -127,10 +121,7 @@ describe('VPC Detail Summary section', () => {
       <VPCDetail />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     getByText('Description');
     getByText(vpcFactory1.description);
@@ -147,10 +138,7 @@ describe('VPC Detail Summary section', () => {
       <VPCDetail />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
@@ -169,10 +157,7 @@ describe('VPC Detail Summary section', () => {
       <VPCDetail />
     );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     const readMoreButton = getAllByRole('button')[2];
     expect(readMoreButton.innerHTML).toBe('Read More');
@@ -195,10 +180,7 @@ describe('VPC Detail Summary section', () => {
     const { getByRole, getByText, queryByTestId } =
       await renderWithThemeAndRouter(<VPCDetail />);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+    await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
     expect(
       getByText(
