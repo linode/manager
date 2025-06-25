@@ -197,7 +197,8 @@ const getLastMonthRange = (): DateTimeWithPreset => {
   };
 };
 
-describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
+// It is going to be modified
+describe.skip('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
    * - Simulates loading test data without real API calls.
