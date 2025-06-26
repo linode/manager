@@ -75,7 +75,7 @@ export const AttachFileListItem = (props: Props) => {
               </InputAdornment>
             ),
             startAdornment: (
-              <InputAdornment position="end">
+              <InputAdornment position="start">
                 <CloudUpload />
               </InputAdornment>
             ),

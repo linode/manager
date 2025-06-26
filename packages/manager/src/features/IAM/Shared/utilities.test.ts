@@ -68,7 +68,7 @@ const accountPermissions = accountRolesFactory.build({
 });
 
 const userPermissions = userRolesFactory.build({
-  account_access: ['account_linode_admin', 'linode_creator'],
+  account_access: ['account_linode_admin', 'account_linode_creator'],
   entity_access: [
     {
       id: 12345678,
@@ -130,7 +130,11 @@ const mockAssignRolesFormValues: AssignNewRoleFormValues = {
 };
 
 const mockMergedRoles = {
-  account_access: ['account_linode_admin', 'linode_creator', 'account_viewer'],
+  account_access: [
+    'account_linode_admin',
+    'account_linode_creator',
+    'account_viewer',
+  ],
   entity_access: [
     {
       id: 12345678,
@@ -204,7 +208,7 @@ describe('getRoleByName', () => {
 describe('changeUserRole', () => {
   it('should return an object of updated users roles with resource access', () => {
     const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 12345678,
@@ -232,7 +236,7 @@ describe('deleteUserRole', () => {
     const initialRole = 'linode_contributor';
 
     const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [],
     };
 
@@ -253,8 +257,8 @@ describe('deleteUserRole', () => {
     const expectedRoles = {
       account_access: [
         'account_linode_admin',
-        'linode_creator',
-        'firewall_creator',
+        'account_linode_creator',
+        'account_firewall_creator',
         'account_admin',
         'account_viewer',
       ],
@@ -285,7 +289,7 @@ describe('deleteUserRole', () => {
     const initialRole = 'account_linode_admin';
 
     const expectedRoles = {
-      account_access: ['linode_creator'],
+      account_access: ['account_linode_creator'],
       entity_access: [
         {
           id: 12345678,
@@ -350,7 +354,7 @@ describe('changeRoleForEntity', () => {
 
   it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
     const userPermissions = userRolesFactory.build({
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 2,
@@ -394,7 +398,7 @@ describe('changeRoleForEntity', () => {
 
   it('should return an object of updated users roles with entity access', () => {
     const userPermissions = userRolesFactory.build({
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 2,
@@ -653,17 +657,17 @@ describe('getFacadeRoleDescription', () => {
   it('returns description for account_access with non-paid entity types', () => {
     const role: ExtendedRoleView = {
       access: 'account_access',
-      description: 'stackscript creator',
+      description: 'firewall creator',
       entity_ids: null,
-      entity_type: 'stackscript',
-      id: 'stackscript_creator',
-      name: 'stackscript_creator',
+      entity_type: 'firewall',
+      id: 'account_firewall_creator',
+      name: 'account_firewall_creator',
       permissions: [],
     };
 
     const result = getFacadeRoleDescription(role);
     expect(result).toBe(
-      `This role grants the same access as the legacy "Can add StackScripts to this account" global permissions.`
+      `This role grants the same access as the legacy "Can add Firewalls to this account" global permissions.`
     );
   });
 
@@ -673,8 +677,8 @@ describe('getFacadeRoleDescription', () => {
       description: 'linode creator',
       entity_ids: null,
       entity_type: 'linode',
-      id: 'linode_creator',
-      name: 'linode_creator',
+      id: 'account_linode_creator',
+      name: 'account_linode_creator',
       permissions: [],
     };
 
@@ -803,12 +807,16 @@ describe('mapEntityTypesForSelect', () => {
     const mockRole: RoleView[] = [
       {
         access: 'account_access',
-        description: 'Account volume admin',
+        description: 'Account linode admin',
         entity_ids: [1],
-        entity_type: 'volume',
-        id: 'account_volume_admin',
-        name: 'account_volume_admin',
-        permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+        entity_type: 'linode',
+        id: 'account_linode_admin',
+        name: 'account_linode_admin',
+        permissions: [
+          'apply_linode_firewalls',
+          'delete_linode',
+          'clone_linode',
+        ],
       },
     ];
 
@@ -816,8 +824,8 @@ describe('mapEntityTypesForSelect', () => {
 
     expect(result).toEqual([
       {
-        label: 'Volume Roles',
-        value: 'volume',
+        label: 'Linode Roles',
+        value: 'linode',
       },
     ]);
   });
