@@ -188,7 +188,10 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                     Kubernetes Dashboard
                   </StyledActionButton>
                 )}
-                <StyledActionButton onClick={() => setIsDeleteDialogOpen(true)}>
+                <StyledActionButton
+                  disabled={isClusterReadOnly}
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
                   Delete Cluster
                 </StyledActionButton>
               </Hidden>
