@@ -17,7 +17,6 @@ import {
   POWER_OFF_TOOLTIP_TEXT,
 } from './constants';
 import { DefaultPolicyChip } from './DefaultPolicyChip';
-import { getPolicyLabel } from './utils';
 
 import type { MaintenancePolicy } from '@linode/api-v4';
 import type { TextFieldProps } from '@linode/ui';
@@ -28,7 +27,7 @@ interface Props {
   hideDefaultChip?: boolean;
   onChange: (policy: MaintenancePolicy) => void;
   textFieldProps?: Partial<TextFieldProps>;
-  value?: null | number;
+  value?: 'linode/migrate' | 'linode/power_off_on' | null;
 }
 
 export const MaintenancePolicySelect = (props: Props) => {
@@ -44,20 +43,15 @@ export const MaintenancePolicySelect = (props: Props) => {
   const { data: policies, isFetching } = useAccountMaintenancePoliciesQuery();
   const { data: accountSettings } = useAccountSettings();
 
-  const options =
-    policies?.map((policy) => ({
-      ...policy,
-      name: getPolicyLabel(policy),
-      label: getPolicyLabel(policy),
-    })) ?? [];
+  const options = policies ?? [];
 
   const defaultPolicyId =
-    accountSettings?.maintenance_policy_id ??
-    policies?.find((p) => p.is_default)?.id;
+    accountSettings?.maintenance_policy ??
+    policies?.find((p) => p.is_default)?.slug;
 
   const selectedOption =
     (value
-      ? options.find((o) => o.id === value)
+      ? options.find((o) => o.slug === value)
       : options.find((o) => o.is_default)) ?? null;
 
   return (
@@ -86,8 +80,8 @@ export const MaintenancePolicySelect = (props: Props) => {
                 justifyContent="space-between"
                 width="100%"
               >
-                <Typography>{policy.name.replace('Default ', '')}</Typography>
-                {!hideDefaultChip && defaultPolicyId === policy.id && (
+                <Typography>{policy.label}</Typography>
+                {!hideDefaultChip && defaultPolicyId === policy.slug && (
                   <DefaultPolicyChip />
                 )}
               </Stack>
@@ -97,7 +91,7 @@ export const MaintenancePolicySelect = (props: Props) => {
                     font: theme.tokens.alias.Typography.Label.Regular.Xs,
                   })}
                 >
-                  {MAINTENANCE_POLICY_OPTION_DESCRIPTIONS[policy.id] ??
+                  {MAINTENANCE_POLICY_OPTION_DESCRIPTIONS[policy.slug] ??
                     policy.description}
                 </Typography>
                 {state.selected && <SelectedIcon visible />}
@@ -109,7 +103,7 @@ export const MaintenancePolicySelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           endAdornment: !hideDefaultChip &&
-            selectedOption?.id === defaultPolicyId && (
+            selectedOption?.slug === defaultPolicyId && (
               <InputAdornment position="end">
                 <DefaultPolicyChip />
               </InputAdornment>
