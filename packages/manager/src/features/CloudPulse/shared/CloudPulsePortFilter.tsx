@@ -2,7 +2,7 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { PORT, PORTS_HELPER_TEXT } from '../Utils/constants';
+import { PORTS_HELPER_TEXT } from '../Utils/constants';
 import { arePortsValid, handleKeyDown, handlePaste } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
@@ -17,6 +17,11 @@ export interface CloudPulsePortFilterProps {
    * The last saved value for the port filter from preferences
    */
   defaultValue?: FilterValue;
+
+  /**
+   * The boolean to determine if the filter is disabled
+   */
+  disabled?: boolean;
 
   /**
    * The function to handle the port change
@@ -47,6 +52,7 @@ export const CloudPulsePortFilter = React.memo(
       handlePortChange,
       savePreferences,
       defaultValue,
+      disabled,
     } = props;
 
     const [value, setValue] = React.useState<string>(
@@ -60,7 +66,7 @@ export const CloudPulsePortFilter = React.memo(
     const debouncedPortChange = React.useMemo(
       () =>
         debounce(500, (value: string) => {
-          handlePortChange(value, [PORT], savePreferences);
+          handlePortChange(value, [value], savePreferences);
         }),
       [handlePortChange, savePreferences]
     );
@@ -80,13 +86,14 @@ export const CloudPulsePortFilter = React.memo(
       if (validationError === undefined) {
         // Cancel any pending debouncedPortChange calls
         debouncedPortChange.cancel();
-        handlePortChange(e.target.value, [PORT], savePreferences);
+        handlePortChange(e.target.value, [e.target.value], savePreferences);
       }
     };
 
     return (
       <TextField
         autoComplete="off"
+        disabled={disabled}
         errorText={errorText}
         helperText={!errorText ? PORTS_HELPER_TEXT : undefined}
         label={label}
@@ -95,6 +102,7 @@ export const CloudPulsePortFilter = React.memo(
         onChange={handleInputChange}
         onKeyDown={handleKeyDown(value, setErrorText)}
         onPaste={handlePaste(value, setErrorText)}
+        optional
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
         value={value}
       />

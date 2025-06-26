@@ -232,6 +232,7 @@ export const getCustomSelectProperties = (
     name: label,
     options,
     placeholder,
+    isOptional,
   } = props.config.configuration;
   const {
     dashboard,
@@ -255,6 +256,7 @@ export const getCustomSelectProperties = (
     ),
     filterKey,
     filterType,
+    isOptional,
     handleSelectionChange: handleCustomSelectChange,
     isMultiSelect,
     label,
@@ -312,10 +314,20 @@ export const getPortProperties = (
   handlePortChange: (port: string, label: string[], savePref?: boolean) => void
 ): CloudPulsePortFilterProps => {
   const { name: label, placeholder } = props.config.configuration;
-  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+  const {
+    dashboard,
+    isServiceAnalyticsIntegration,
+    preferences,
+    dependentFilters,
+  } = props;
 
   return {
     dashboard,
+    disabled: shouldDisableFilterByFilterKey(
+      PORT,
+      dependentFilters ?? {},
+      dashboard
+    ),
     defaultValue: preferences?.[PORT],
     handlePortChange,
     label,
