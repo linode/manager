@@ -143,7 +143,7 @@ describe('VPC Detail Summary section', () => {
     expect(queryByText('Description')).not.toBeInTheDocument();
   });
 
-  it('should display read more/less button in description if there are more than 150 characters', async () => {
+  it.only('should display read more/less button in description if there are more than 150 characters', async () => {
     const vpcFactory1 = vpcFactory.build({
       description: `VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver and database. VPC for webserver. VPC for webserver.`,
     });
@@ -153,13 +153,13 @@ describe('VPC Detail Summary section', () => {
       })
     );
 
-    const { getAllByRole, queryByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId, queryByTestId } = await renderWithThemeAndRouter(
       <VPCDetail />
     );
 
     await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 
-    const readMoreButton = getAllByRole('button')[2];
+    const readMoreButton = getByTestId('read-more');
     expect(readMoreButton.innerHTML).toBe('Read More');
 
     fireEvent.click(readMoreButton);

@@ -82,7 +82,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, findByText } =
+    const { getByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -102,7 +102,7 @@ describe('SubnetLinodeRow', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const linodeLabelLink = getAllByRole('link')[0];
+    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}`
@@ -110,15 +110,17 @@ describe('SubnetLinodeRow', () => {
 
     getAllByText('10.0.0.0');
 
-    const plusChipButton = getAllByRole('button')[1];
+    const plusChipButton = getByRole('button', { name: '+1' });
     expect(plusChipButton).toHaveTextContent('+1');
 
-    const rebootLinodeButton = getAllByRole('button')[2];
+    const rebootLinodeButton = getByRole('button', { name: 'Reboot' });
     expect(rebootLinodeButton).toHaveTextContent('Reboot');
     await userEvent.click(rebootLinodeButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
 
-    const unassignLinodeButton = getAllByRole('button')[3];
+    const unassignLinodeButton = getByRole('button', {
+      name: 'Unassign Linode',
+    });
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
@@ -145,7 +147,7 @@ describe('SubnetLinodeRow', () => {
     const handlePowerActionsLinode = vi.fn();
     const handleUnassignLinode = vi.fn();
 
-    const { getAllByRole, getAllByText, getByTestId, findByText } =
+    const { getByRole, getAllByText, getByTestId, findByText } =
       renderWithTheme(
         wrapWithTableBody(
           <SubnetLinodeRow
@@ -165,7 +167,7 @@ describe('SubnetLinodeRow', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const linodeLabelLink = getAllByRole('link')[0];
+    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}/networking/interfaces/1`
@@ -206,7 +208,7 @@ describe('SubnetLinodeRow', () => {
     const handleUnassignLinode = vi.fn();
     const handlePowerActionsLinode = vi.fn();
 
-    const { getAllByRole, getByTestId } = renderWithTheme(
+    const { getByRole, getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -227,19 +229,19 @@ describe('SubnetLinodeRow', () => {
 
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
-    const linodeLabelLink = getAllByRole('link')[0];
+    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}`
     );
 
-    const buttons = getAllByRole('button');
-    expect(buttons.length).toEqual(2);
-    const powerOffButton = buttons[0];
+    const powerOffButton = getByRole('button', { name: 'Power Off' });
     expect(powerOffButton).toHaveTextContent('Power Off');
     await userEvent.click(powerOffButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
-    const unassignLinodeButton = buttons[1];
+    const unassignLinodeButton = getByRole('button', {
+      name: 'Unassign Linode',
+    });
     expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();

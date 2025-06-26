@@ -38,7 +38,7 @@ describe('Subnet Assign Linodes Drawer', () => {
   );
 
   it('should render a subnet assign linodes drawer', () => {
-    const { getByTestId, getByText, queryAllByText } = renderWithTheme(
+    const { getByTestId, getByText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
@@ -52,7 +52,7 @@ describe('Subnet Assign Linodes Drawer', () => {
       `Select the Linodes you would like to assign to this subnet. Only Linodes in this VPC's region are displayed.`
     );
     expect(helperText).toBeVisible();
-    const linodeSelect = queryAllByText('Linode')[0];
+    const linodeSelect = getByTestId('add-linode-autocomplete');
     expect(linodeSelect).toBeVisible();
 
     const assignButton = getByText('Assign Linode');
