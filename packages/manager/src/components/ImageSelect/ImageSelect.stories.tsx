@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ImageSelect } from './ImageSelect';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof ImageSelect> = {
   render: (args) => <ImageSelect {...args} />,
