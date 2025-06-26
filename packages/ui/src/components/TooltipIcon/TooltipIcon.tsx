@@ -96,6 +96,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
 
   const {
     dataTestId,
+    className,
     classes,
     leaveDelay,
     icon,
@@ -174,6 +175,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
       width={width}
     >
       <IconButton
+        className={className}
         data-qa-help-button
         onClick={(e) => {
           // This prevents unwanted behavior when clicking a tooltip icon.
