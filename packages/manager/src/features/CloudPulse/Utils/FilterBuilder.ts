@@ -502,9 +502,7 @@ export const constructAdditionalRequestFilters = (
   for (const filter of additionalFilters) {
     if (
       filter &&
-      (Array.isArray(filter.filterValue)
-        ? filter.filterValue.length > 0
-        : filter.filterValue !== undefined)
+      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0)
     ) {
       // push to the filters
       filters.push({
