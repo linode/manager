@@ -4,7 +4,7 @@ import Chat from 'src/assets/icons/chat.svg';
 import { Tile } from 'src/components/Tile/Tile';
 
 import type { TileProps } from './Tile';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TileProps> = {
   render: (args) => <Tile {...args} />,

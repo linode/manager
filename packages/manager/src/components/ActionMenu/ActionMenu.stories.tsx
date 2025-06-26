@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { ActionMenu } from './ActionMenu';
 
 import type { Action, ActionMenuProps } from './ActionMenu';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const standardActions = [
   {
