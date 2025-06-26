@@ -9,12 +9,11 @@ import {
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -93,7 +92,6 @@ export const LinodeCreate = () => {
   const { aclpBetaServices } = useFlags();
 
   const queryClient = useQueryClient();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
@@ -108,6 +106,7 @@ export const LinodeCreate = () => {
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
+  const navigate = useNavigate();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
@@ -152,7 +151,11 @@ export const LinodeCreate = () => {
             })
           : await createLinode(payload);
 
-      history.push(`/linodes/${linode.id}`);
+      navigate({
+        to: `/linodes/$linodeId`,
+        params: { linodeId: linode.id },
+        search: undefined,
+      });
 
       enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
         variant: 'success',
@@ -294,7 +297,3 @@ export const LinodeCreate = () => {
     </FormProvider>
   );
 };
-
-export const linodeCreateLazyRoute = createLazyRoute('/linodes/create')({
-  component: LinodeCreate,
-});

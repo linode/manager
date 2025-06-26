@@ -19,8 +19,8 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { sendLinodePowerOffEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { isPrivateIP } from 'src/utilities/ipUtils';
 
@@ -34,7 +34,7 @@ import { SelectLinodeCard } from './SelectLinodeCard';
 import type { LinodeCreateFormValues } from '../utilities';
 import type { Linode } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { UseOrder } from 'src/hooks/useOrder';
+import type { Order } from 'src/hooks/useOrderV2';
 
 interface Props {
   /**
@@ -77,13 +77,27 @@ export const LinodeSelectTable = (props: Props) => {
   const [query, setQuery] = useState(field.value?.label ?? '');
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
-  const pagination = usePagination();
-  const order = useOrder();
+  const pagination = usePaginationV2({
+    currentRoute: '/linodes/create',
+    initialPage: 1,
+    preferenceKey: 'linode-clone-select-table',
+  });
+  const { order, orderBy, handleOrderChange } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+      from: '/linodes/create',
+    },
+    preferenceKey: 'linode-clone-select-table',
+  });
 
   const { filter, filterError } = getLinodeXFilter(
-    preselectedLinodeId,
+    preselectedLinodeId ? Number(preselectedLinodeId) : undefined,
     query,
-    order
+    order,
+    orderBy
   );
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
@@ -155,9 +169,9 @@ export const LinodeSelectTable = (props: Props) => {
             <TableHead>
               <TableRow>
                 <TableSortCell
-                  active={order.orderBy === 'label'}
-                  direction={order.order}
-                  handleClick={order.handleOrderChange}
+                  active={orderBy === 'label'}
+                  direction={order}
+                  handleClick={handleOrderChange}
                   label="label"
                 >
                   Linode
@@ -166,9 +180,9 @@ export const LinodeSelectTable = (props: Props) => {
                 <TableCell>Image</TableCell>
                 <TableCell>Plan</TableCell>
                 <TableSortCell
-                  active={order.orderBy === 'region'}
-                  direction={order.order}
-                  handleClick={order.handleOrderChange}
+                  active={orderBy === 'region'}
+                  direction={order}
+                  handleClick={handleOrderChange}
                   label="region"
                 >
                   Region
@@ -239,16 +253,11 @@ export const LinodeSelectTable = (props: Props) => {
 };
 
 export const getLinodeXFilter = (
-  preselectedLinodeId: number | undefined,
+  _preselectedLinodeId: number | undefined,
   query: string,
-  order?: UseOrder
+  order?: Order,
+  orderBy?: string
 ) => {
-  if (preselectedLinodeId) {
-    return {
-      id: preselectedLinodeId,
-    };
-  }
-
   const { error: filterError, filter: apiFilter } = getAPIFilterFromQuery(
     query,
     {
@@ -264,7 +273,7 @@ export const getLinodeXFilter = (
 
   if (order) {
     return {
-      filter: { ...filter, '+order': order.order, '+order_by': order.orderBy },
+      filter: { ...filter, '+order': order, '+order_by': orderBy },
       filterError,
     };
   }

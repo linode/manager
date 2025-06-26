@@ -3,7 +3,7 @@ import React from 'react';
 import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { VolumesUpgradeBanner } from './VolumesUpgradeBanner';
 
@@ -24,7 +24,7 @@ describe('VolumesUpgradeBanner', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
+    const { findByText } = await renderWithThemeAndRouter(
       <VolumesUpgradeBanner linodeId={1} />
     );
 
@@ -56,7 +56,7 @@ describe('VolumesUpgradeBanner', () => {
       })
     );
 
-    const { findByText } = renderWithTheme(
+    const { findByText } = await renderWithThemeAndRouter(
       <VolumesUpgradeBanner linodeId={1} />
     );
 
