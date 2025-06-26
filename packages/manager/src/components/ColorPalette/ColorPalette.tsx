@@ -14,17 +14,10 @@ interface Color {
 
 const useStyles = makeStyles()((theme: Theme) => ({
   alias: {
-    color: theme.tokens.color.Neutrals[90],
     font: FontTypography.Code,
   },
   color: {
-    color: theme.tokens.color.Neutrals[60],
     font: FontTypography.Code,
-  },
-  root: {
-    '& h2': {
-      color: theme.tokens.color.Neutrals[90],
-    },
   },
   swatch: {
     border: `1px solid ${theme.tokens.color.Neutrals[60]}`,
@@ -198,7 +191,7 @@ export const ColorPalette = () => {
   };
 
   return (
-    <Grid className={classes.root} container spacing={2}>
+    <Grid container spacing={2}>
       {renderColor('Primary Colors', primaryColors)}
       {renderColor('Etc.', etc)}
       {renderColor('Background Colors', bgColors)}
