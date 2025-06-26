@@ -7,21 +7,14 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DisplayAlertRegions } from './DisplayAlertRegions';
 
-const regions = regionFactory.buildList(10).map(({ id, label }) => ({
-  id,
-  label,
-  checked: false,
-  count: Math.random(),
-}));
+const regions = regionFactory.buildList(10);
 
 const handleChange = vi.fn();
-const handleSelectAll = vi.fn();
 
 describe('DisplayAlertRegions', () => {
   it('should render the regions table', () => {
     renderWithTheme(
       <DisplayAlertRegions
-        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
       />
@@ -37,7 +30,6 @@ describe('DisplayAlertRegions', () => {
   it('should display checkbox and label', () => {
     renderWithTheme(
       <DisplayAlertRegions
-        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
       />
@@ -56,7 +48,6 @@ describe('DisplayAlertRegions', () => {
   it('should select checkbox when clicked', async () => {
     renderWithTheme(
       <DisplayAlertRegions
-        handleSelectAll={handleSelectAll}
         handleSelectionChange={handleChange}
         regions={regions}
       />
