@@ -1,7 +1,11 @@
+import { useTheme } from '@linode/ui';
+import { useMediaQuery } from '@mui/material';
 import * as React from 'react';
 import { useState } from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
+import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { useIsIAMEnabled } from 'src/features/IAM/hooks/useIsIAMEnabled';
 import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -11,6 +15,7 @@ import {
 } from './constants';
 
 import type { FirewallStatus } from '@linode/api-v4/lib/firewalls';
+import type { Theme } from '@mui/material';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface ActionHandlers {
@@ -28,6 +33,9 @@ interface Props extends ActionHandlers {
 }
 
 export const FirewallActionMenu = React.memo((props: Props) => {
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
+  const { isIAMEnabled } = useIsIAMEnabled();
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -83,15 +91,30 @@ export const FirewallActionMenu = React.memo((props: Props) => {
     request();
   };
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
   return (
-    <ActionMenu
-      actionsList={actions}
-      ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
-      onOpen={handleOpen}
-    />
+    <>
+      {!isIAMEnabled &&
+        !matchesSmDown &&
+        actions.map((action) => {
+          return (
+            <InlineMenuAction
+              actionText={action.title}
+              aria-label={`${action.title} ${props.firewallLabel}`}
+              disabled={action.disabled}
+              key={action.title}
+              onClick={action.onClick}
+              tooltip={action.tooltip}
+            />
+          );
+        })}
+      {isIAMEnabled ||
+        (matchesSmDown && (
+          <ActionMenu
+            actionsList={actions}
+            ariaLabel={`Action menu for Firewall ${props.firewallLabel}`}
+            onOpen={() => setIsOpen(true)}
+          />
+        ))}
+    </>
   );
 });
