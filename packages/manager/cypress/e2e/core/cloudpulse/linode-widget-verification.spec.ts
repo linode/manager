@@ -157,7 +157,7 @@ const getWidgetLegendRowValuesFromResponse = (
 };
 
 // Tests will be modified
-describe.skip('Integration Tests for Linode Dashboard ', () => {
+describe('Integration Tests for Linode Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
@@ -191,14 +191,16 @@ describe.skip('Integration Tests for Linode Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type(timeDurationToSelect);
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
 
-    ui.autocompletePopper
-      .findByTitle(timeDurationToSelect)
+    ui.button.findByTitle('last day').click();
+
+    // Click the "Apply" button to confirm the end date and time
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     //  Select a region from the dropdown.
@@ -401,8 +403,8 @@ describe.skip('Integration Tests for Linode Dashboard ', () => {
           );
         }
         expect(metric[0].name).to.equal(metricData.name);
-        expect(timeRange).to.have.property('unit', 'hr');
-        expect(timeRange).to.have.property('value', 24);
+        expect(timeRange).to.have.property('unit', 'days');
+        expect(timeRange).to.have.property('value', 1);
       });
   });
 

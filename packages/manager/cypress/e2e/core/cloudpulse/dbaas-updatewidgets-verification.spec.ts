@@ -98,7 +98,7 @@ const databaseMock: Database = databaseFactory.build({
 });
 
 // It will be fixed
-describe.skip('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
+describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   const now = new Date();
   const end = new Date(now.getTime() + 5.5 * 60 * 60 * 1000); // Adjust to IST
   const start = new Date(end.getTime() - 24 * 60 * 60 * 1000);
@@ -125,8 +125,9 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
         node_type: 'secondary',
         dateTimeDuration: {
           end: end.toISOString(),
-          preset: '24hours',
+          preset: 'last day',
           start: start.toISOString(),
+          timeZone: 'Etc/GMT',
         },
         widgets: {
           'Disk I/O': {
@@ -191,8 +192,8 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
         }
         expect(metric[0].name).to.equal(metricData.name);
         expect(metric[0].aggregate_function).to.equal('min');
-        expect(timeRange).to.have.property('unit', 'hr');
-        expect(timeRange).to.have.property('value', 24);
+        expect(timeRange).to.have.property('unit', 'days');
+        expect(timeRange).to.have.property('value', 1);
         expect(entity_ids).to.deep.equal([1]);
         const filtersStr = JSON.stringify(filters);
         expect(filtersStr).to.include('"dimension_label":"node_type"');
@@ -213,14 +214,16 @@ describe.skip('Integration tests for verifying Cloudpulse custom and preset conf
     cy.wait('@fetchPreferences');
     // validate the API calls are going with intended payload
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type('Last 7 Days');
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
 
-    ui.autocompletePopper
-      .findByTitle('Last 7 Days')
+    ui.button.findByTitle('last 7 days').click();
+
+    // Click the "Apply" button to confirm the end date and time
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // Select a Database Engine from the autocomplete input.
