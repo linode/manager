@@ -7,6 +7,7 @@ export * from './accountPayment';
 export * from './accountSettings';
 export * from './accountUsers';
 export * from './billing';
+export * from './cloudnats';
 export * from './cloudpulse/alerts';
 export * from './cloudpulse/channels';
 export * from './cloudpulse/services';
