@@ -234,7 +234,7 @@ export interface Alert {
   created: string;
   created_by: string;
   description: string;
-  entity_ids?: string[];
+  entity_ids: string[];
   has_more_resources: boolean;
   id: number;
   label: string;
