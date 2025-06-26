@@ -10,15 +10,15 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
 
 interface Props {
-  isAclpSupportedRegionLinode: boolean;
+  isAclpAlertsSupportedRegionLinode: boolean;
 }
 
 const LinodeAlerts = (props: Props) => {
-  const { isAclpSupportedRegionLinode } = props;
+  const { isAclpAlertsSupportedRegionLinode } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
@@ -30,20 +30,23 @@ const LinodeAlerts = (props: Props) => {
     grants?.linode.find((grant) => grant.id === id)?.permissions ===
       'read_only';
 
-  const haspermission = true;
   return (
     <Box>
-      {haspermission && <AclpPreferenceToggle type="alerts" />}
+      {aclpBetaServices?.linode?.alerts &&
+        isAclpAlertsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="alerts" />
+        )}
 
-      {haspermission && (
+      {aclpBetaServices?.linode?.alerts &&
+      isAclpAlertsSupportedRegionLinode &&
+      isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId}
           entityName={linode?.label ?? ''}
           serviceType="linode"
         />
-      )}
-      {!haspermission && (
+      ) : (
         // Legacy Alerts View
         <LinodeSettingsAlertsPanel isReadOnly={isReadOnly} linodeId={id} />
       )}
