@@ -349,7 +349,7 @@ describe('Linode Config management', () => {
         'Waiting for 2 Linodes to be created'
       ).then(([sourceLinode, destLinode]: [Linode, Linode]) => {
         const kernel = findKernelById(kernels, 'linode/latest-64bit');
-        const sharedConfigLabel = 'cy-test-sharable-config';
+        const sharedConfigLabel = `${randomLabel()}-shareable`;
 
         cy.visitWithLogin(`/linodes/${sourceLinode.id}/configurations`);
 

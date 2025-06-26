@@ -12,7 +12,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 import { storage } from 'src/utilities/storage';
 
-import { PENDING_MAINTENANCE_FILTER } from '../Account/Maintenance/utilities';
+import { PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER } from '../Account/Maintenance/utilities';
 import { regionFilterOptions } from './LinodesLanding/RegionTypeFilter';
 import { statusToPriority } from './LinodesLanding/utils';
 import { linodesInTransition } from './transitions';
@@ -36,7 +36,7 @@ export const LinodesLandingWrapper = React.memo(() => {
   });
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
-    PENDING_MAINTENANCE_FILTER
+    PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER
   );
   const flags = useFlags();
 

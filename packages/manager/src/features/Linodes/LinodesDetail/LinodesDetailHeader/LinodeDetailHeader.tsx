@@ -1,4 +1,5 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
+import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
 import { scrollErrorIntoView, useEditableLabelState } from '@linode/utilities';
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
@@ -6,6 +7,7 @@ import * as React from 'react';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { ProductInformationBanner } from 'src/components/ProductInformationBanner/ProductInformationBanner';
+import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { LinodeEntityDetail } from 'src/features/Linodes/LinodeEntityDetail';
 import { MigrateLinode } from 'src/features/Linodes/MigrateLinode/MigrateLinode';
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
@@ -15,6 +17,7 @@ import {
   sendUpdateLinodeLabelEvent,
 } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { addMaintenanceToLinodes } from 'src/utilities/linodes';
 
 import { DeleteLinodeDialog } from '../../LinodesLanding/DeleteLinodeDialog';
 import { EnableBackupsDialog } from '../LinodeBackup/EnableBackupsDialog';
@@ -43,6 +46,11 @@ export const LinodeDetailHeader = () => {
   const matchedLinodeId = Number(linodeId ?? 0);
 
   const { data: linode, error, isLoading } = useLinodeQuery(matchedLinodeId);
+
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    PENDING_MAINTENANCE_FILTER
+  );
 
   const { mutateAsync: updateLinode } =
     useLinodeUpdateMutation(matchedLinodeId);
@@ -161,6 +169,12 @@ export const LinodeDetailHeader = () => {
     return null;
   }
 
+  // Combine linode with maintenance data
+  const linodeWithMaintenance = addMaintenanceToLinodes(
+    accountMaintenanceData ?? [],
+    [linode]
+  )[0];
+
   return (
     <>
       <HostMaintenance linodeStatus={linode.status} />
@@ -189,7 +203,7 @@ export const LinodeDetailHeader = () => {
       <LinodeEntityDetail
         handlers={handlers}
         id={matchedLinodeId}
-        linode={linode}
+        linode={linodeWithMaintenance}
       />
       <PowerActionsDialog
         action={powerAction}
