@@ -254,6 +254,9 @@ export const DatabaseCreate = () => {
   };
 
   const handleTabChange = (index: number) => {
+    if (selectedTab === index) {
+      return;
+    }
     setSelectedTab(index);
     setFieldValue('type', undefined);
     setFieldValue('cluster_size', 3);
@@ -285,6 +288,14 @@ export const DatabaseCreate = () => {
       });
     } else {
       resetForm();
+    }
+  };
+
+  const handleClearPlanSelection = () => {
+    if (flags.databasePremium) {
+      handleResetForm({
+        type: undefined,
+      });
     }
   };
 
@@ -341,6 +352,7 @@ export const DatabaseCreate = () => {
               handleTabChange={handleTabChange}
               header="Choose a Plan"
               isCreate
+              onPlanSelectionInvalidated={handleClearPlanSelection}
               onSelect={(selected: string) => {
                 setFieldValue('type', selected);
               }}

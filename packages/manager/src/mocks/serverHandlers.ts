@@ -119,6 +119,8 @@ import { LinodeKernelFactory } from 'src/factories/linodeKernel';
 import { quotaFactory } from 'src/factories/quotas';
 import { getStorage } from 'src/utilities/storage';
 
+import type { PathParams } from 'msw';
+
 const getRandomWholeNumber = (min: number, max: number) =>
   Math.floor(Math.random() * (max - min + 1) + min);
 
@@ -140,6 +142,7 @@ import type {
   CreateAlertDefinitionPayload,
   CreateObjectStorageKeyPayload,
   Dashboard,
+  Database,
   FirewallStatus,
   NotificationType,
   ObjectStorageEndpointTypes,
@@ -163,6 +166,37 @@ export const makeResourcePage = <T>(
   pages: override.pages ?? 1,
   results: override.results ?? e.length,
 });
+
+const makeMockDatabase = (params: PathParams): Database => {
+  const isDefault = Number(params.id) % 2 !== 0;
+  const db: Record<string, boolean | number | string | undefined> = {
+    engine: params.engine as 'mysql',
+    id: Number(params.id),
+    label: `database-${params.id}`,
+    platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
+  };
+  if (!isDefault) {
+    db.replication_commit_type =
+      params.engine === 'postgresql' ? 'local' : undefined;
+
+    db.replication_type =
+      params.engine === 'mysql'
+        ? pickRandom(possibleMySQLReplicationTypes)
+        : undefined;
+
+    db.replication_type =
+      params.engine === 'postgresql'
+        ? pickRandom(possiblePostgresReplicationTypes)
+        : undefined;
+
+    db.ssl_connection = true;
+  }
+  const database = databaseFactory.build(db);
+  if (database.platform !== 'rdbms-default') {
+    delete database.private_network;
+  }
+  return database;
+};
 
 const statusPage = [
   http.get('*/api/v2/incidents*', () => {
@@ -279,8 +313,21 @@ const databases = [
     const dedicatedTypes = databaseTypeFactory.buildList(7, {
       class: 'dedicated',
     });
+
+    const planSizes = [4, 8, 16, 32, 64, 96, 128, 256];
+    const premiumPlans = planSizes.map((size) => {
+      return databaseTypeFactory.build({
+        class: 'premium',
+        id: `premium-${size}`,
+        label: `DBaaS - Premium ${size} GB`,
+        memory: size * 1024,
+      });
+    });
+
+    const premiumTypes = [...premiumPlans];
+
     return HttpResponse.json(
-      makeResourcePage([...standardTypes, ...dedicatedTypes])
+      makeResourcePage([...standardTypes, ...dedicatedTypes, ...premiumTypes])
     );
   }),
 
@@ -296,28 +343,12 @@ const databases = [
   }),
 
   http.get('*/databases/:engine/instances/:id', ({ params }) => {
-    const isDefault = Number(params.id) % 2 !== 0;
-    const db: Record<string, boolean | number | string | undefined> = {
-      engine: params.engine as 'mysql',
-      id: Number(params.id),
-      label: `database-${params.id}`,
-      platform: isDefault ? 'rdbms-default' : 'rdbms-legacy',
-    };
-    if (!isDefault) {
-      db.replication_commit_type =
-        params.engine === 'postgresql' ? 'local' : undefined;
-      db.replication_type =
-        params.engine === 'mysql'
-          ? pickRandom(possibleMySQLReplicationTypes)
-          : params.engine === 'postgresql'
-            ? pickRandom(possiblePostgresReplicationTypes)
-            : (undefined as any);
-      db.ssl_connection = true;
-    }
-    const database = databaseFactory.build(db);
-    if (database.platform !== 'rdbms-default') {
-      delete database.private_network;
-    }
+    const database = makeMockDatabase(params);
+    return HttpResponse.json(database);
+  }),
+
+  http.put('*/databases/:engine/instances/:id', ({ params }) => {
+    const database = makeMockDatabase(params);
     return HttpResponse.json(database);
   }),
 
@@ -2424,6 +2455,11 @@ export const handlers = [
       regionAvailabilityFactory.build({
         plan: 'g6-standard-7',
         region: selectedRegion,
+      }),
+      regionAvailabilityFactory.build({
+        plan: 'premium-32',
+        region: selectedRegion,
+        available: false, // Mock for when a premium plan is not available or sold out in a region.
       }),
       // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
       // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
