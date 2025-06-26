@@ -139,7 +139,10 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
 
     const handlePortChange = React.useCallback(
       (port: string, label: string[], savePref: boolean = false) => {
-        const portList = port.replace(/,$/, '').split(',');
+        const portList = port
+          .replace(/,$/, '')
+          .split(',')
+          .filter((p) => p !== '');
         emitFilterChangeByFilterKey(PORT, portList, label, savePref, {
           [PORT]: port,
         });
