@@ -2,24 +2,21 @@ import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { FormControlLabel, Paper, Toggle, Typography } from '@linode/ui';
 import React from 'react';
 
-export const EnableTableStriping = () => {
-  const { data: isTableStripingEnabled, isLoading } = usePreferences(
+import { getIsTableStripingEnabled } from './TableStriping.utils';
+
+export const TableStriping = () => {
+  const { data: tableStripingPreference, isLoading } = usePreferences(
     (preferences) => preferences?.isTableStripingEnabled
   );
 
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  React.useEffect(() => {
-    // Setting the default value to true
-    if (isTableStripingEnabled === undefined) {
-      updatePreferences({ isTableStripingEnabled: true });
-    }
-  }, [isTableStripingEnabled, updatePreferences]);
+  const isEnabled = getIsTableStripingEnabled(tableStripingPreference);
 
   return (
     <Paper>
       <Typography marginBottom={1} variant="h2">
-        Enable Table Striping
+        Table Striping
       </Typography>
       <Typography marginBottom={1} variant="body1">
         Enable table striping for better readability.
@@ -27,16 +24,14 @@ export const EnableTableStriping = () => {
       <FormControlLabel
         control={
           <Toggle
-            checked={Boolean(isTableStripingEnabled)}
+            checked={isEnabled}
             onChange={(_, checked) =>
               updatePreferences({ isTableStripingEnabled: checked })
             }
           />
         }
         disabled={isLoading}
-        label={`Table striping is ${
-          isTableStripingEnabled ? 'enabled' : 'disabled'
-        }`}
+        label={`Table striping is ${isEnabled ? 'enabled' : 'disabled'}`}
       />
     </Paper>
   );

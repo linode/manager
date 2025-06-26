@@ -35,5 +35,5 @@ export const isAclpSupportedRegion = ({
 
   const region = regions.find((region) => region.id === regionId);
 
-  return region?.monitors?.[type].includes(capability) ?? false;
+  return region?.monitors?.[type]?.includes(capability) ?? false;
 };
