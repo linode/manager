@@ -35,12 +35,7 @@ interface DisplayAlertRegionProps {
 
 export const DisplayAlertRegions = React.memo(
   (props: DisplayAlertRegionProps) => {
-    const {
-      regions,
-      handleSelectionChange,
-
-      mode,
-    } = props;
+    const { regions, handleSelectionChange, mode } = props;
 
     return (
       <Paginate data={regions ?? []}>
