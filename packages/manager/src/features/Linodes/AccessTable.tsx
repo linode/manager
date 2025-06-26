@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { TableBody } from 'src/components/TableBody';
 import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';

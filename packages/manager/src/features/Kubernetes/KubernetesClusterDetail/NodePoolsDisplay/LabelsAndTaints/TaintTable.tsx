@@ -63,7 +63,9 @@ export const TaintTable = () => {
                       aria-label={`Remove ${taint.key}: ${taint.value}`}
                       disableRipple
                       onClick={() => handleRemoveTaint(taint, i)}
-                      ref={(node) => (deleteButtonRefs.current[i] = node)}
+                      ref={(node) => {
+                        deleteButtonRefs.current[i] = node;
+                      }}
                       size="medium"
                       sx={{ marginLeft: 'auto' }}
                     >
