@@ -129,10 +129,10 @@ export const NewDetailTemplateA = () => {
     <div
       style={{
         width: '100%',
-        padding: 20,
-        maxWidth: 1200,
+        padding: 16,
         margin: '0 auto',
         fontFamily: 'system-ui, -apple-system, sans-serif',
+        background: 'white',
       }}
     >
       <h2
@@ -157,10 +157,13 @@ export const NewDetailTemplateA = () => {
         >
           <div
             style={{
-              flex: 2,
+              // flex: 2,
               display: 'flex',
               flexDirection: 'column',
               gap: 0,
+              flexGrow: 0,
+              flexShrink: 1,
+              flexBasis: '66%',
             }}
           >
             <SectionTitle
@@ -201,10 +204,13 @@ export const NewDetailTemplateA = () => {
 
           <div
             style={{
-              flex: 1,
+              // flex: 1,
               display: 'flex',
               flexDirection: 'column',
               gap: 0,
+              flexGrow: 0,
+              flexShrink: 1,
+              flexBasis: 'calc(33% - 30px)',
             }}
           >
             <SectionTitle
