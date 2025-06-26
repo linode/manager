@@ -81,6 +81,11 @@ const distributeItemsSequentially = (items, columns) => {
 export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
   const theme = useTheme();
   const isDlFullSmall = useMediaQuery(theme.breakpoints.only('dl_fullSmall'));
+  const isDlTabletSmall = useMediaQuery(
+    theme.breakpoints.only('dl_tabletSmall')
+  );
+
+  const shouldUseGap4 = isDlFullSmall || isDlTabletSmall;
 
   const {
     isMobile,
@@ -164,13 +169,15 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
       <Grid
         container
         id="top-level-container"
-        spacing={isDlFullSmall ? 4 : 7}
+        spacing={shouldUseGap4 ? 4 : 7}
         sx={{ margin: 0 }}
       >
         <Grid
           item
           size={{
             xs: 12,
+            dl_tabletSmall: 12,
+            dl_tabletLarge: 8,
             dl_fullSmall: 12,
             dl_fullLarge: 8,
           }}
@@ -181,12 +188,18 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
             backgroundColor="#e53e3e"
             color="#ffffff"
           />
-          <Grid container spacing={isDlFullSmall ? 4 : 7}>
+          <Grid container spacing={shouldUseGap4 ? 4 : 7}>
             {distributedReverseGridItems.map((columnItems, colIndex) => (
               <Grid
                 key={colIndex}
                 item
-                size={{ xs: 12, dl_fullSmall: 6, dl_fullLarge: 6 }}
+                size={{
+                  xs: 12,
+                  dl_tabletSmall: 6,
+                  dl_tabletLarge: 6,
+                  dl_fullSmall: 6,
+                  dl_fullLarge: 6,
+                }}
               >
                 {columnItems.map((item, idx) => (
                   <DataItem
@@ -206,6 +219,8 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           item
           size={{
             xs: 12,
+            dl_tabletSmall: 12,
+            dl_tabletLarge: 4,
             dl_fullSmall: 12,
             dl_fullLarge: 4,
           }}
@@ -216,10 +231,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           <Box
             sx={{
               display: 'grid',
-              columnGap: isDlFullSmall ? 4 : 7,
+              columnGap: shouldUseGap4 ? 4 : 7,
               gridTemplateColumns: {
                 xs: '1fr',
-
+                dl_tabletSmall: '1fr 1fr',
+                dl_tabletLarge: '1fr',
                 dl_fullSmall: '1fr 1fr',
                 dl_fullLarge: '1fr',
               },
