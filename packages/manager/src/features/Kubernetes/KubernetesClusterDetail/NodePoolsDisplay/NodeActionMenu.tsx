@@ -58,5 +58,3 @@ export const NodeActionMenu = (props: Props) => {
     </Box>
   );
 };
-
-export default React.memo(NodeActionMenu);

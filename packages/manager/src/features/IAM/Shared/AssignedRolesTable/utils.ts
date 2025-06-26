@@ -2,9 +2,9 @@ import { mapAccountPermissionsToRoles } from '../utilities';
 
 import type { ExtendedRoleView, RoleView } from '../types';
 import type {
-  AccountAccessRole,
   AccountEntity,
-  EntityAccessRole,
+  AccountRoleType,
+  EntityRoleType,
   EntityType,
   IamAccountRoles,
   IamUserRoles,
@@ -12,7 +12,7 @@ import type {
 
 export interface CombinedRoles {
   id: null | number[];
-  name: AccountAccessRole | EntityAccessRole;
+  name: AccountRoleType | EntityRoleType;
 }
 
 export const getSearchableFields = (role: ExtendedRoleView): string[] => {
@@ -71,11 +71,11 @@ export const addEntitiesNamesToRoles = (
  */
 export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
   const combinedRoles: CombinedRoles[] = [];
-  const roleMap: Map<AccountAccessRole | EntityAccessRole, null | number[]> =
+  const roleMap: Map<AccountRoleType | EntityRoleType, null | number[]> =
     new Map();
 
   // Add account access roles with resource_id set to null
-  data.account_access.forEach((role: AccountAccessRole) => {
+  data.account_access.forEach((role: AccountRoleType) => {
     if (!roleMap.has(role)) {
       roleMap.set(role, null);
     }
@@ -83,8 +83,8 @@ export const combineRoles = (data: IamUserRoles): CombinedRoles[] => {
 
   // Add resource access roles with their respective resource_id
   data.entity_access.forEach(
-    (resource: { id: number; roles: EntityAccessRole[] }) => {
-      resource.roles?.forEach((role: EntityAccessRole) => {
+    (resource: { id: number; roles: EntityRoleType[] }) => {
+      resource.roles?.forEach((role: EntityRoleType) => {
         if (roleMap.has(role)) {
           const existingResourceIds = roleMap.get(role);
           if (existingResourceIds && existingResourceIds !== null) {

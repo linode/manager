@@ -88,7 +88,7 @@ const SupportSearchLanding = (props: AlgoliaProps) => {
           InputProps={{
             className: classes.searchBar,
             startAdornment: (
-              <InputAdornment className={classes.searchIcon} position="end">
+              <InputAdornment className={classes.searchIcon} position="start">
                 <Search />
               </InputAdornment>
             ),

@@ -164,7 +164,7 @@ describe('AssignedRolesTable', () => {
     await userEvent.type(autocomplete, 'Firewall Roles');
 
     await waitFor(() => {
-      expect(screen.queryByText('firewall_creator')).toBeVisible();
+      expect(screen.queryByText('account_firewall_creator')).toBeVisible();
     });
   });
 });

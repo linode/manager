@@ -4,7 +4,7 @@ import { FormControlLabel } from '../FormControlLabel';
 import { Toggle } from './Toggle';
 
 import type { ToggleProps } from './Toggle';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const EXAMPLE_TEXT = "This is some example text for the toggle's tooltip";
 

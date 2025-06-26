@@ -3,7 +3,7 @@ import React from 'react';
 import { Typography } from '../Typography';
 import { Tooltip } from './Tooltip';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof Tooltip> = {
   component: Tooltip,

@@ -8,12 +8,16 @@ export const IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['in-progress', 'started'] },
 });
 
-export const SCHEDULED_MAINTENANCE_FILTER = Object.freeze({
+export const UPCOMING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'scheduled'] },
 });
 
 export const PENDING_MAINTENANCE_FILTER = Object.freeze({
   status: { '+or': ['pending', 'started', 'scheduled'] },
+});
+
+export const PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
+  status: { '+or': ['pending', 'started', 'scheduled', 'in-progress'] },
 });
 
 export const PLATFORM_MAINTENANCE_TYPE =
@@ -30,6 +34,6 @@ export const maintenanceDateColumnMap: Record<
 > = {
   completed: ['complete_time', 'End Date'],
   'in progress': ['start_time', 'Start Date'],
-  scheduled: ['start_time', 'Start Date'],
+  upcoming: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
 };
