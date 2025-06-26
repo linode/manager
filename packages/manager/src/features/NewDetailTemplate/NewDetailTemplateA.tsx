@@ -1,6 +1,9 @@
 // @ts-nocheck
 import React from 'react';
-import { useTheme, useMediaQuery, Grid } from '@mui/material';
+
+import { Grid, Box, useMediaQuery } from '@mui/material';
+import { useDetailsLayoutBreakpoints } from '@linode/ui';
+import { useTheme } from '@mui/material/styles';
 
 const DataItem = ({ label, value, color, backgroundColor }) => (
   <div
@@ -38,7 +41,6 @@ const DataItem = ({ label, value, color, backgroundColor }) => (
   </div>
 );
 
-// Section Title component for headers
 const SectionTitle = ({ title, backgroundColor, color }) => (
   <div
     style={{
@@ -76,11 +78,22 @@ const distributeItemsSequentially = (items, columns) => {
   return result;
 };
 
-export const NewDetailTemplateA = () => {
+export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
   const theme = useTheme();
+  const isDlFullSmall = useMediaQuery(theme.breakpoints.only('dl_fullSmall'));
 
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
+  const {
+    isMobile,
+    isTabletSmall,
+    isTabletLarge,
+    isTablet,
+    isDesktop,
+    isCollapsedSmall,
+    isCollapsedLarge,
+    isFullSmall,
+    isFullLarge,
+    getLayoutState,
+  } = useDetailsLayoutBreakpoints(menuIsCollapsed);
 
   let columns = 1;
   if (isDesktop) columns = 3;
@@ -147,44 +160,71 @@ export const NewDetailTemplateA = () => {
         Reverse Layout (2-col left, single right)
       </h2>
 
-      {isDesktop ? (
+      {/* {isDesktop ? ( */}
+      <Grid
+        container
+        id="top-level-container"
+        spacing={isDlFullSmall ? 4 : 7}
+        sx={{ margin: 0 }}
+      >
         <Grid
-          container
-          id="top-level-container"
-          spacing={7}
-          sx={{
-            margin: 0,
+          item
+          size={{
+            xs: 12,
+            dl_fullSmall: 12,
+            dl_fullLarge: 8,
           }}
+          id="red-section"
         >
-          <Grid item size={{ sm: 12, lg: 8 }} id="red-section">
-            <SectionTitle
-              title="SUMMARY"
-              backgroundColor="#e53e3e"
-              color="#ffffff"
-            />
-            <Grid container spacing={7}>
-              {distributedReverseGridItems.map((columnItems, colIndex) => (
-                <Grid key={colIndex} item size={{ lg: 6 }}>
-                  {columnItems.map((item, idx) => (
-                    <DataItem
-                      key={`reverse-grid-${colIndex}-${idx}`}
-                      label={item.label}
-                      value={item.value}
-                      color="#ffffff"
-                      backgroundColor="#e53e3e"
-                    />
-                  ))}
-                </Grid>
-              ))}
-            </Grid>
+          <SectionTitle
+            title="SUMMARY"
+            backgroundColor="#e53e3e"
+            color="#ffffff"
+          />
+          <Grid container spacing={isDlFullSmall ? 4 : 7}>
+            {distributedReverseGridItems.map((columnItems, colIndex) => (
+              <Grid
+                key={colIndex}
+                item
+                size={{ xs: 12, dl_fullSmall: 6, dl_fullLarge: 6 }}
+              >
+                {columnItems.map((item, idx) => (
+                  <DataItem
+                    key={`reverse-grid-${colIndex}-${idx}`}
+                    label={item.label}
+                    value={item.value}
+                    color="#ffffff"
+                    backgroundColor="#e53e3e"
+                  />
+                ))}
+              </Grid>
+            ))}
           </Grid>
+        </Grid>
 
-          <Grid item size={{ sm: 12, lg: 4 }} id="blue-section">
-            <SectionTitle
-              title="VPC"
-              backgroundColor="#3182ce"
-              color="#ffffff"
-            />
+        <Grid
+          item
+          size={{
+            xs: 12,
+            dl_fullSmall: 12,
+            dl_fullLarge: 4,
+          }}
+          id="blue-section"
+        >
+          <SectionTitle title="VPC" backgroundColor="#3182ce" color="#ffffff" />
+
+          <Box
+            sx={{
+              display: 'grid',
+              columnGap: isDlFullSmall ? 4 : 7,
+              gridTemplateColumns: {
+                xs: '1fr',
+
+                dl_fullSmall: '1fr 1fr',
+                dl_fullLarge: '1fr',
+              },
+            }}
+          >
             {reverseSidebarItems.map((item, idx) => (
               <DataItem
                 key={`reverse-sidebar-${idx}`}
@@ -194,97 +234,9 @@ export const NewDetailTemplateA = () => {
                 backgroundColor="#3182ce"
               />
             ))}
-          </Grid>
+          </Box>
         </Grid>
-      ) : (
-        <div>
-          <div>
-            <SectionTitle
-              title="SUMMARY"
-              backgroundColor="#e53e3e"
-              color="#ffffff"
-            />
-            <div
-              style={{
-                display: 'flex',
-                gap: 16,
-                flexDirection: isTablet ? 'row' : 'column',
-                marginBottom: 24,
-              }}
-            >
-              {distributedReverseGridItems.map((columnItems, colIndex) => (
-                <div
-                  key={colIndex}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 0,
-                  }}
-                >
-                  {columnItems.map((item, idx) => (
-                    <DataItem
-                      key={`reverse-grid-${colIndex}-${idx}`}
-                      label={item.label}
-                      value={item.value}
-                      color="#ffffff"
-                      backgroundColor="#e53e3e"
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <SectionTitle
-              title="VPC"
-              backgroundColor="#3182ce"
-              color="#ffffff"
-            />
-            {isTablet ? (
-              <div style={{ display: 'flex', gap: 16 }}>
-                <div style={{ flex: 1 }}>
-                  {reverseSidebarItems
-                    .filter((_, idx) => idx % 2 === 0)
-                    .map((item, idx) => (
-                      <DataItem
-                        key={`reverse-sidebar-left-${idx}`}
-                        label={item.label}
-                        value={item.value}
-                        color="#ffffff"
-                        backgroundColor="#3182ce"
-                      />
-                    ))}
-                </div>
-                <div style={{ flex: 1 }}>
-                  {sidebarItems
-                    .filter((_, idx) => idx % 2 === 1)
-                    .map((item, idx) => (
-                      <DataItem
-                        key={`reverse-sidebar-right-${idx}`}
-                        label={item.label}
-                        value={item.value}
-                        color="#ffffff"
-                        backgroundColor="#3182ce"
-                      />
-                    ))}
-                </div>
-              </div>
-            ) : (
-              reverseSidebarItems.map((item, idx) => (
-                <DataItem
-                  key={`reverse-sidebar-${idx}`}
-                  label={item.label}
-                  value={item.value}
-                  color="#ffffff"
-                  backgroundColor="#3182ce"
-                />
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      </Grid>
     </div>
   );
 };
