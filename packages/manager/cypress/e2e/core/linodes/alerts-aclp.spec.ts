@@ -91,7 +91,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     // alert items are hardcoded in LinodeSettingsAlertsPanel.tsx
     cy.get('[data-qa-alerts-panel="true"]').each((panel) => {
       cy.wrap(panel).within(() => {
-        // toggles are checked and enabled
         ui.toggle
           .find()
           .should('have.attr', 'data-qa-toggle', 'true')
