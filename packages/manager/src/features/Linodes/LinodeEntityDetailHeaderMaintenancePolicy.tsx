@@ -1,18 +1,10 @@
-import {
-  Box,
-  Hidden,
-  LoadFailureIcon as MaintenanceActiveIcon,
-  CalendarIcon as MaintenancePendingIcon,
-  CalendarScheduledIcon as MaintenanceScheduledIcon,
-  rotate360,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Box, Hidden, rotate360, TooltipIcon, Typography } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
+import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy.utils';
 import { LinodeMaintenanceText } from 'src/features/Linodes/LinodeMaintenanceText';
 
 import { parseMaintenanceStartTime } from './LinodesLanding/utils';
@@ -24,12 +16,6 @@ interface LinodeEntityDetailHeaderMaintenancePolicyProps {
   linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
   maintenance: LinodeMaintenance | null;
 }
-
-export const statusTooltipIcons = {
-  scheduled: <MaintenanceScheduledIcon />,
-  active: <MaintenanceActiveIcon />,
-  pending: <MaintenancePendingIcon />,
-};
 
 export const LinodeEntityDetailHeaderMaintenancePolicy = (
   props: LinodeEntityDetailHeaderMaintenancePolicyProps
