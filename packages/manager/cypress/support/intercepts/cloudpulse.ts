@@ -17,6 +17,7 @@ import type {
   Dashboard,
   MetricDefinition,
   NotificationChannel,
+  ServiceType,
 } from '@linode/api-v4';
 
 /**
@@ -58,6 +59,44 @@ export const mockGetCloudPulseServices = (
     'GET',
     apiMatcher('/monitor/services'),
     paginateResponse(services)
+  );
+};
+
+/**
+ * Mocks the API response for the '/monitor/services/:serviceType' endpoint with the provided service types.
+ * This function intercepts the GET request for the specified API and returns a mocked response
+ * with service types
+ * @param {string } serviceType - A single service type (e.g., 'linode')
+ * @returns {Cypress.Chainable<null>} - Returns a Cypress chainable object to continue the test.
+ */
+export const mockGetCloudPulseServiceByServiceType = (
+  serviceType: string,
+  service: ServiceType
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/services/${serviceType}`),
+    makeResponse(service)
+  );
+};
+
+/**
+ * Mocks an error response for for the '/monitor/services/:serviceType' endpoint with the provided service types.
+ *
+ * This function intercepts the `GET` request made to the CloudPulse API and
+ * simulates an error response
+ *
+ * @param {string} serviceType - The service type for which the metric definitions are being mocked (linode or dbaas).
+ *
+ * @returns {Cypress.Chainable<null>} - A Cypress chainable object, indicating that the interception is part of a Cypress test chain.
+ */
+export const mockGetCloudPulseServiceByServiceTypeError = (
+  serviceType: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`/monitor/services/${serviceType}`),
+    makeErrorResponse('error occurred', 404)
   );
 };
 

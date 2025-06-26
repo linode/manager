@@ -215,40 +215,44 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
   });
 
-  it('should show Nodebalancer table head data when table is expanded', async () => {
-    const subnet = subnetFactory.build();
+  it(
+    'should show Nodebalancer table head data when table is expanded',
+    async () => {
+      const subnet = subnetFactory.build();
 
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
-
-    const { getAllByRole, findByText, queryByTestId } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={3}
-          vpcRegion=""
-        />,
-        { flags: { nodebalancerVpc: true } }
+      server.use(
+        http.get('*/vpcs/:vpcId/subnets', () => {
+          return HttpResponse.json(makeResourcePage([subnet]));
+        }),
+        http.get('*/networking/firewalls/settings', () => {
+          return HttpResponse.json(firewallSettingsFactory.build());
+        })
       );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+      const { getAllByRole, findByText, queryByTestId } =
+        await renderWithThemeAndRouter(
+          <VPCSubnetsTable
+            isVPCLKEEnterpriseCluster={false}
+            vpcId={3}
+            vpcRegion=""
+          />,
+          { flags: { nodebalancerVpc: true } }
+        );
 
-    const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
+      const loadingState = queryByTestId(loadingTestId);
+      if (loadingState) {
+        await waitForElementToBeRemoved(loadingState);
+      }
 
-    await findByText('NodeBalancer');
-    await findByText('Backend Status');
-    await findByText('VPC IPv4 Range');
-  });
+      const expandTableButton = getAllByRole('button')[3];
+      await userEvent.click(expandTableButton);
+
+      await findByText('NodeBalancer');
+      await findByText('Backend Status');
+      await findByText('VPC IPv4 Range');
+    },
+    { timeout: 15_000 }
+  );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
     server.use(

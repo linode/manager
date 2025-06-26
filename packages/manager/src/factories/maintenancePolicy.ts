@@ -4,10 +4,16 @@ import type { MaintenancePolicy } from '@linode/api-v4';
 
 export const maintenancePolicyFactory =
   Factory.Sync.makeFactory<MaintenancePolicy>({
-    id: Factory.each((id) => id),
-    name: 'Power Off / Power On',
+    slug: Factory.each((id) =>
+      id === 1 ? 'linode/migrate' : 'linode/power_off_on'
+    ),
+    label: Factory.each((id) =>
+      id === 1 ? 'Migrate' : 'Power Off / Power On'
+    ),
     description: 'This is a maintenance policy description.',
     is_default: false,
     notification_period_sec: 86400,
-    type: 'power-off/on',
+    type: Factory.each((id) =>
+      id === 1 ? 'linode_migrate' : 'linode_power_off_on'
+    ),
   });

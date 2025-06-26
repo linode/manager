@@ -4,10 +4,10 @@ import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
-import { EnableTableStriping } from './EnableTableStriping';
 import { MaskSensitiveData } from './MaskSensitiveData';
 import { Notifications } from './Notifications';
 import { PreferenceEditor } from './PreferenceEditor';
+import { TableStriping } from './TableStriping';
 import { Theme } from './Theme';
 import { TypeToConfirm } from './TypeToConfirm';
 
@@ -32,7 +32,7 @@ export const ProfileSettings = () => {
         <Theme />
         <TypeToConfirm />
         <MaskSensitiveData />
-        <EnableTableStriping />
+        <TableStriping />
       </Stack>
       <PreferenceEditor
         onClose={handleClosePreferenceEditor}
