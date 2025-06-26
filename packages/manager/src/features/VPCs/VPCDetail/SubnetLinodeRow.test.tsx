@@ -4,7 +4,7 @@ import {
   linodeFactory,
   linodeInterfaceFactoryVPC,
 } from '@linode/utilities';
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -14,8 +14,6 @@ import {
   subnetFactory,
 } from 'src/factories';
 import { linodeConfigFactory } from 'src/factories/linodeConfigs';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -27,8 +25,32 @@ import { SubnetLinodeRow } from './SubnetLinodeRow';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+  useLinodeFirewallsQuery: vi.fn().mockReturnValue({}),
+  useLinodeConfigQuery: vi.fn().mockReturnValue({}),
+  useLinodeInterfaceQuery: vi.fn().mockReturnValue({}),
+  useLinodeInterfaceFirewallsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+    useLinodeFirewallsQuery: queryMocks.useLinodeFirewallsQuery,
+    useLinodeConfigQuery: queryMocks.useLinodeConfigQuery,
+    useLinodeInterfaceQuery: queryMocks.useLinodeInterfaceQuery,
+    useLinodeInterfaceFirewallsQuery:
+      queryMocks.useLinodeInterfaceFirewallsQuery,
+  };
+});
+
 const loadingTestId = 'circle-progress';
 const mockFirewall0 = 'mock-firewall-0';
+const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+const handlePowerActionsLinode = vi.fn();
+const handleUnassignLinode = vi.fn();
 
 const publicInterface = linodeConfigInterfaceFactory.build({
   active: true,
@@ -51,58 +73,64 @@ const configurationProfile = linodeConfigFactory.build({
 });
 
 describe('SubnetLinodeRow', () => {
-  const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+  beforeEach(() => {
+    vi.clearAllMocks();
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linodeFactory1,
+    });
+    queryMocks.useLinodeFirewallsQuery.mockReturnValue({
+      data: {
+        data: firewallFactory.buildList(1, { label: mockFirewall0 }),
+      },
+    });
+  });
 
-  server.use(
-    http.get('*/linodes/instances/:linodeId', () => {
-      return HttpResponse.json(linodeFactory1);
-    }),
-    http.get('*/linode/instances/:id/firewalls', () => {
-      return HttpResponse.json(
-        makeResourcePage(firewallFactory.buildList(1, { label: mockFirewall0 }))
-      );
-    })
-  );
+  it('renders the loading state', () => {
+    queryMocks.useLinodeQuery.mockReturnValue({
+      isLoading: true,
+    });
 
-  const linodeFactory2 = linodeFactory.build({ id: 2, label: 'linode-2' });
+    const { getByTestId } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={0}
+          subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
+        />
+      )
+    );
 
-  const handleUnassignLinode = vi.fn();
+    // Loading state should render
+    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+  });
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
-    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const config = linodeConfigFactory.build({
       interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
     });
-    server.use(
-      http.get('*/instances/*/configs/:configId', async () => {
-        return HttpResponse.json(config);
-      })
+    queryMocks.useLinodeConfigQuery.mockReturnValue({
+      data: config,
+    });
+
+    const { getByRole, getAllByText, findByText } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+        />
+      )
     );
 
-    const handlePowerActionsLinode = vi.fn();
-    const handleUnassignLinode = vi.fn();
-
-    const { getByRole, getAllByText, getByTestId, findByText } =
-      renderWithTheme(
-        wrapWithTableBody(
-          <SubnetLinodeRow
-            handlePowerActionsLinode={handlePowerActionsLinode}
-            handleUnassignLinode={handleUnassignLinode}
-            isVPCLKEEnterpriseCluster={false}
-            linodeId={linodeFactory1.id}
-            subnet={subnetFactory.build()}
-            subnetId={1}
-            subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-          />
-        )
-      );
-
-    // Loading states should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
+    const linodeLabelLink = getByRole('link', { name: 'linode-1' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}`
@@ -129,45 +157,31 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display the ip, range, and firewall for a Linode using Linode Interfaces', async () => {
-    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
-    server.use(
-      http.get('*/instances/*/interfaces/:interfaceId', async () => {
-        const vpcLinodeInterface = linodeInterfaceFactoryVPC.build();
-        return HttpResponse.json(vpcLinodeInterface);
-      }),
-      http.get('*/instances/*/interfaces/:interfaceId/firewalls', async () => {
-        return HttpResponse.json(
-          makeResourcePage(
-            firewallFactory.buildList(1, { label: mockFirewall0 })
-          )
-        );
-      })
+    const vpcLinodeInterface = linodeInterfaceFactoryVPC.build();
+    queryMocks.useLinodeInterfaceQuery.mockReturnValue({
+      data: vpcLinodeInterface,
+    });
+    queryMocks.useLinodeInterfaceFirewallsQuery.mockReturnValue({
+      data: {
+        data: firewallFactory.buildList(1, { label: mockFirewall0 }),
+      },
+    });
+
+    const { getByRole, getAllByText, findByText } = renderWithTheme(
+      wrapWithTableBody(
+        <SubnetLinodeRow
+          handlePowerActionsLinode={handlePowerActionsLinode}
+          handleUnassignLinode={handleUnassignLinode}
+          isVPCLKEEnterpriseCluster={false}
+          linodeId={linodeFactory1.id}
+          subnet={subnetFactory.build()}
+          subnetId={1}
+          subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
+        />
+      )
     );
 
-    const handlePowerActionsLinode = vi.fn();
-    const handleUnassignLinode = vi.fn();
-
-    const { getByRole, getAllByText, getByTestId, findByText } =
-      renderWithTheme(
-        wrapWithTableBody(
-          <SubnetLinodeRow
-            handlePowerActionsLinode={handlePowerActionsLinode}
-            handleUnassignLinode={handleUnassignLinode}
-            isVPCLKEEnterpriseCluster={false}
-            linodeId={linodeFactory1.id}
-            subnet={subnetFactory.build()}
-            subnetId={1}
-            subnetInterfaces={[{ active: true, config_id: null, id: 1 }]}
-          />
-        )
-      );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
+    const linodeLabelLink = getByRole('link', { name: 'linode-1' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}/networking/interfaces/1`
@@ -180,7 +194,6 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
-    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       ip_ranges: [],
@@ -189,26 +202,11 @@ describe('SubnetLinodeRow', () => {
     const config = linodeConfigFactory.build({
       interfaces: [vpcInterface],
     });
-    server.use(
-      http.get('*/linodes/instances/:linodeId', () => {
-        return HttpResponse.json(linodeFactory1);
-      }),
-      http.get('*/linode/instances/:id/firewalls', () => {
-        return HttpResponse.json(
-          makeResourcePage(
-            firewallFactory.buildList(1, { label: mockFirewall0 })
-          )
-        );
-      }),
-      http.get('*/instances/*/configs/:configId', async () => {
-        return HttpResponse.json(config);
-      })
-    );
+    queryMocks.useLinodeConfigQuery.mockReturnValue({
+      data: config,
+    });
 
-    const handleUnassignLinode = vi.fn();
-    const handlePowerActionsLinode = vi.fn();
-
-    const { getByRole, getByTestId } = renderWithTheme(
+    const { getByRole } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -224,12 +222,7 @@ describe('SubnetLinodeRow', () => {
       )
     );
 
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
-
-    const linodeLabelLink = getByRole('link', { name: 'linode-detail' });
+    const linodeLabelLink = getByRole('link', { name: 'linode-1' });
     expect(linodeLabelLink).toHaveAttribute(
       'href',
       `/linodes/${linodeFactory1.id}`
@@ -267,11 +260,9 @@ describe('SubnetLinodeRow', () => {
       ],
     });
 
-    server.use(
-      http.get('*/instances/*/configs/*', async () => {
-        return HttpResponse.json(configurationProfile);
-      })
-    );
+    queryMocks.useLinodeConfigQuery.mockReturnValue({
+      data: configurationProfile,
+    });
 
     const { getByTestId } = renderWithTheme(
       wrapWithTableBody(
@@ -279,17 +270,13 @@ describe('SubnetLinodeRow', () => {
           handlePowerActionsLinode={vi.fn()}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory2.id}
+          linodeId={linodeFactory1.id}
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const warningIcon = getByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG);
 
@@ -299,23 +286,11 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should hide in-line action buttons for LKE-E Linodes', async () => {
-    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    queryMocks.useLinodeConfigQuery.mockReturnValue({
+      data: configurationProfile,
+    });
 
-    server.use(
-      http.get('*/linodes/instances/:linodeId', () => {
-        return HttpResponse.json(linodeFactory1);
-      })
-    );
-    server.use(
-      http.get('*/instances/*/configs/*', async () => {
-        return HttpResponse.json(configurationProfile);
-      })
-    );
-
-    const handleUnassignLinode = vi.fn();
-    const handlePowerActionsLinode = vi.fn();
-
-    const { getByTestId, queryByRole } = renderWithTheme(
+    const { queryByRole } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -328,10 +303,6 @@ describe('SubnetLinodeRow', () => {
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const powerOffButton = queryByRole('button', {
       name: 'Power Off',
@@ -350,23 +321,19 @@ describe('SubnetLinodeRow', () => {
       linodes: [subnetAssignedLinodeDataFactory.build()],
     });
 
-    const { getByTestId, queryByTestId } = renderWithTheme(
+    const { queryByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={vi.fn()}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={true}
-          linodeId={linodeFactory2.id}
+          linodeId={linodeFactory1.id}
           subnet={subnet}
           subnetId={subnet.id}
           subnetInterfaces={[{ active: true, config_id: 1, id: 1 }]}
         />
       )
     );
-
-    // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     const warningIcon = queryByTestId(WARNING_ICON_UNRECOMMENDED_CONFIG);
 
