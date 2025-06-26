@@ -1,5 +1,4 @@
 import { Box, Hidden, rotate360, TooltipIcon, Typography } from '@linode/ui';
-import { capitalize } from '@linode/utilities';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -90,14 +89,6 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
       </StyledMaintenanceBox>
       {isPendingOrScheduled && (
         <StyledMaintenanceBox>
-          <Typography
-            component="span"
-            sx={(theme) => ({
-              color: theme.tokens.alias.Content.Text.Secondary.Default,
-            })}
-          >
-            - {capitalize(maintenance?.status ?? '')}
-          </Typography>
           <TooltipIcon
             className="ui-TooltipIcon"
             icon={
