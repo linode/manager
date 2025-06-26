@@ -475,6 +475,22 @@ it('test constructAdditionalRequestFilters method', () => {
   expect(result.length).toEqual(0);
 });
 
+it('test constructAdditionalRequestFilters method with empty filter value', () => {
+  const result = constructAdditionalRequestFilters([
+    {
+      filterKey: 'protocol',
+      filterValue: [],
+    },
+    {
+      filterKey: 'port',
+      filterValue: [],
+    },
+  ]);
+
+  expect(result).toBeDefined();
+  expect(result.length).toEqual(0);
+});
+
 it('returns true for identical primitive values', () => {
   expect(deepEqual(1, 1)).toBe(true);
   expect(deepEqual('test', 'test')).toBe(true);

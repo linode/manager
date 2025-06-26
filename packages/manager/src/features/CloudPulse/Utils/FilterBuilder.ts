@@ -500,7 +500,10 @@ export const constructAdditionalRequestFilters = (
 ): Filters[] => {
   const filters: Filters[] = [];
   for (const filter of additionalFilters) {
-    if (filter) {
+    if (
+      filter &&
+      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0)
+    ) {
       // push to the filters
       filters.push({
         dimension_label: filter.filterKey,
