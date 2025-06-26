@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Accordion } from './Accordion';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * Pretend this is `react-router-dom`'s Link component.

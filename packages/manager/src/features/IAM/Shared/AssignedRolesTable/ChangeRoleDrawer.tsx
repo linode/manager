@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -6,19 +11,20 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../AssignedPermissionsPanel/AssignedPermissionsPanel';
-import { changeUserRole, getAllRoles, getRoleByName } from '../utilities';
+import { ROLES_LEARN_MORE_LINK } from '../constants';
+import {
+  changeUserRole,
+  getAllRoles,
+  getErrorMessage,
+  getRoleByName,
+} from '../utilities';
 
 import type { DrawerModes, EntitiesOption, ExtendedRoleView } from '../types';
 import type { RolesType } from '../utilities';
@@ -32,7 +38,7 @@ interface Props {
 
 export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -110,9 +116,9 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
 
       handleClose();
     } catch (errors) {
-      for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
-      }
+      setError('root', {
+        message: getErrorMessage(errors),
+      });
     }
   };
 
@@ -121,7 +127,6 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
     onClose();
   };
 
-  // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
@@ -132,8 +137,11 @@ export const ChangeRoleDrawer = ({ mode, onClose, open, role }: Props) => {
           Select a role you want{' '}
           {role?.access === 'account_access'
             ? 'to assign.'
-            : 'the entities to be attached to.'}
-          <Link to=""> Learn more about roles and permissions.</Link>
+            : 'the entities to be attached to.'}{' '}
+          <Link to={ROLES_LEARN_MORE_LINK}>
+            Learn more about roles and permissions
+          </Link>
+          .
         </Typography>
 
         <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>

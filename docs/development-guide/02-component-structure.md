@@ -17,7 +17,7 @@ Here is a minimal code example demonstrating the basic structure of a component 
 ```tsx
 import { omittedProps } from "@linode/ui";
 import { styled } from "@mui/material/styles";
-import * as React from "react";
+import * as React from 'react';
 
 // If not exported, it can just be named `Props`
 export interface SayHelloProps {

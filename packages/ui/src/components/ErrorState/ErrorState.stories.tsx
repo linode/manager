@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ErrorState } from './ErrorState';
 
 import type { ErrorStateProps } from './ErrorState';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<ErrorStateProps> = {
   args: {

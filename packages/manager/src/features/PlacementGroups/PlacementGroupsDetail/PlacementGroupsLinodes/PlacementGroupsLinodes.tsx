@@ -1,7 +1,7 @@
 import { useAllLinodesQuery, useLinodeQuery } from '@linode/queries';
 import { Button, ErrorState, Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
@@ -33,8 +33,6 @@ interface Props {
 export const PlacementGroupsLinodes = (props: Props) => {
   const { isLinodeReadOnly, placementGroup, region } = props;
   const navigate = useNavigate();
-  const params = useParams({ strict: false });
-
   const search = useSearch({
     from: PLACEMENT_GROUPS_DETAILS_ROUTE,
   });
@@ -85,7 +83,7 @@ export const PlacementGroupsLinodes = (props: Props) => {
     data: selectedLinode,
     isFetching: isFetchingLinode,
     error: selectedLinodeError,
-  } = useLinodeQuery(Number(params.linodeId), !!params.linodeId);
+  } = useLinodeQuery(search.linodeId ?? -1, !!search.linodeId);
 
   if (!placementGroup) {
     return <ErrorState errorText={PLACEMENT_GROUP_LINODES_ERROR_MESSAGE} />;
@@ -98,6 +96,8 @@ export const PlacementGroupsLinodes = (props: Props) => {
         ...prev,
         page: undefined,
         query: searchString || undefined,
+        linodeId: undefined,
+        action: undefined,
       }),
       to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
@@ -110,28 +110,36 @@ export const PlacementGroupsLinodes = (props: Props) => {
 
   const handleAssignLinodesDrawer = () => {
     navigate({
-      params: { action: 'assign', id: placementGroup.id },
-      search: (prev) => prev,
-      to: '/placement-groups/$id/linodes/$action',
+      search: (prev) => ({
+        ...prev,
+        action: 'assign',
+        linodeId: undefined,
+      }),
+      params: { id: placementGroup.id },
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
 
   const handleUnassignLinodeModal = (linode: Linode) => {
     navigate({
-      params: {
+      search: (prev) => ({
+        ...prev,
         action: 'unassign',
-        id: placementGroup.id,
         linodeId: linode.id,
-      },
-      search: (prev) => prev,
-      to: '/placement-groups/$id/linodes/$action/$linodeId',
+      }),
+      params: { id: placementGroup.id },
+      to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
 
   const handleCloseDrawer = () => {
     navigate({
       params: { id: placementGroup.id },
-      search: (prev) => prev,
+      search: (prev) => ({
+        ...prev,
+        action: undefined,
+        linodeId: undefined,
+      }),
       to: PLACEMENT_GROUPS_DETAILS_ROUTE,
     });
   };
@@ -195,14 +203,14 @@ export const PlacementGroupsLinodes = (props: Props) => {
       />
       <PlacementGroupsAssignLinodesDrawer
         onClose={handleCloseDrawer}
-        open={params.action === 'assign'}
+        open={search.action === 'assign'}
         region={region}
         selectedPlacementGroup={placementGroup}
       />
       <PlacementGroupsUnassignModal
         isFetching={isFetchingLinode}
         onClose={handleCloseDrawer}
-        open={params.action === 'unassign'}
+        open={search.action === 'unassign'}
         selectedLinode={selectedLinode}
         selectedLinodeError={selectedLinodeError}
       />

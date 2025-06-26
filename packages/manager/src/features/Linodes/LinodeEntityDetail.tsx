@@ -26,13 +26,13 @@ import {
 } from './transitions';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
-  linode: Linode;
+  linode: LinodeWithMaintenance;
   variant?: TypographyProps['variant'];
 }
 
@@ -168,8 +168,12 @@ export const LinodeEntityDetail = (props: Props) => {
             isSummaryView={isSummaryView}
             linodeId={linode.id}
             linodeLabel={linode.label}
+            linodeMaintenancePolicySet={
+              linode.maintenance?.maintenance_policy_set
+            }
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
+            maintenance={linode.maintenance ?? null}
             openNotificationMenu={notificationContext.openMenu}
             progress={progress}
             transitionText={transitionText}

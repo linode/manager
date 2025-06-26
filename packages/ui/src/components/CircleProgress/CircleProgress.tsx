@@ -1,6 +1,7 @@
 import _CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { omittedProps } from '../../utilities';
 import { Box } from '../Box';

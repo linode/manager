@@ -3,7 +3,7 @@ import React from 'react';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import { Link } from 'src/components/Link';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { LinkProps } from 'src/components/Link';
 
 /**

@@ -1,14 +1,14 @@
 import { Box, Button } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { action } from '@storybook/addon-actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 
 import { Link } from '../Link';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const sxBoxFlex = {
   alignItems: 'center',

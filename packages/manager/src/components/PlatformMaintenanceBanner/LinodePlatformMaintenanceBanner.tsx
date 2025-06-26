@@ -2,6 +2,7 @@ import { useLinodeQuery } from '@linode/queries';
 import { Notice } from '@linode/ui';
 import { Box, Button, Stack, Typography } from '@linode/ui';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { PowerActionsDialog } from 'src/features/Linodes/PowerActionsDialogOrDrawer';
 import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
@@ -15,6 +16,7 @@ export const LinodePlatformMaintenanceBanner = (props: {
   linodeId: Linode['id'];
 }) => {
   const { linodeId } = props;
+  const location = useLocation();
 
   const { linodesWithPlatformMaintenance, platformMaintenanceByLinode } =
     usePlatformMaintenance();
@@ -46,6 +48,8 @@ export const LinodePlatformMaintenanceBanner = (props: {
 
   const startTime = getMaintenanceStartTime(earliestMaintenance);
 
+  const hideLinodeLink = location.pathname === `/linodes/${linodeId}`;
+
   return (
     <>
       <Notice forceImportantIconVerticalCenter variant="warning">
@@ -53,9 +57,13 @@ export const LinodePlatformMaintenanceBanner = (props: {
           <Box flex={1}>
             <Typography>
               Linode{' '}
-              <Link to={`/linodes/${linodeId}`}>
-                {linode?.label ?? linodeId}
-              </Link>{' '}
+              {hideLinodeLink ? (
+                `${linode?.label ?? linodeId}`
+              ) : (
+                <Link to={`/linodes/${linodeId}`}>
+                  {linode?.label ?? linodeId}
+                </Link>
+              )}{' '}
               needs to be rebooted for critical platform maintenance.{' '}
               {startTime && (
                 <>

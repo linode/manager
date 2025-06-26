@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { ImageUploader } from './ImageUploader';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * This component enables users to attach and upload custom Images.

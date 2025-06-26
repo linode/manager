@@ -28,7 +28,7 @@ export const linkIsActive = (
  * It is used to determine if the side menu should be sticky.
  */
 export const useIsPageScrollable = (
-  contentRef: React.RefObject<HTMLElement>
+  contentRef: React.RefObject<HTMLElement | null>
 ): { isPageScrollable: boolean } => {
   const [isPageScrollable, setIsPageScrollable] = React.useState(false);
 

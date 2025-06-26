@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
 import * as React from 'react';
+import { action } from 'storybook/actions';
 
 import { DateTimePicker } from './DateTimePicker';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { DateTime } from 'luxon';
 
 type Story = StoryObj<typeof DateTimePicker>;

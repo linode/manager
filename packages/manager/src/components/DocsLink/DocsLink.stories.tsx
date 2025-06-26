@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { DocsLink } from './DocsLink';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { DocsLinkProps } from 'src/components/DocsLink/DocsLink';
 
 export const Default: StoryObj<DocsLinkProps> = {

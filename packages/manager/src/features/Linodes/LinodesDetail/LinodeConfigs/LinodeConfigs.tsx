@@ -69,7 +69,7 @@ const LinodeConfigs = () => {
 
   const isLegacyConfigInterface = linode?.interface_generation !== 'linode';
 
-  const configsPanel = React.useRef();
+  const configsPanel = React.useRef(undefined);
 
   const { data: grants } = useGrants();
 

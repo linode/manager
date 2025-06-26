@@ -3,7 +3,7 @@ import React from 'react';
 import { BarPercent } from './BarPercent';
 
 import type { BarPercentProps } from './BarPercent';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /** Default BarPercent */
 export const Default: StoryObj<BarPercentProps> = {

@@ -31,3 +31,8 @@ export const RELATIVE_TIME_DURATION = 'relative_time_duration';
 export const RESOURCE_ID = 'resource_id';
 
 export const WIDGETS = 'widgets';
+
+export const NO_REGION_MESSAGE: Record<string, string> = {
+  dbaas: 'No database clusters configured in any regions.',
+  linode: 'No linodes configured in any regions.',
+};

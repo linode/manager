@@ -85,7 +85,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                   );
                 }}
                 options={getEvaluationPeriodOptions()}
-                placeholder="Select an Evaluation period"
+                placeholder="Select an Evaluation Period"
                 textFieldProps={{
                   labelTooltipText:
                     'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
@@ -149,7 +149,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           xs={12}
         >
           <Typography
-            marginTop={{ sm: '32px', xs: '0px' }}
+            marginTop={{ sm: '28px', xs: '0px' }}
             maxWidth={{ lg: '270px', md: '220px' }}
             mt={3}
             variant="body1"
@@ -181,7 +181,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }
                 sx={{
                   height: '34px',
-                  marginTop: { sm: '16px', xs: '0px' },
+                  marginTop: { sm: '12px', xs: '0px' },
                   width: '100px',
                 }}
                 type="number"
@@ -191,7 +191,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
           />
 
           <Typography
-            marginTop={{ sm: '32px', xs: '0px' }}
+            marginTop={{ sm: '28px', xs: '0px' }}
             mt={3}
             textAlign="start"
             variant="body1"

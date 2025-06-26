@@ -1,4 +1,5 @@
 import type {
+  CloudNAT,
   Config,
   Domain,
   DomainRecord,
@@ -115,6 +116,7 @@ export interface MockPresetExtra extends MockPresetBase {
  */
 export type MockPresetCrudGroup = {
   id:
+    | 'CloudNATs'
     | 'Domains'
     | 'Firewalls'
     | 'IP Addresses'
@@ -128,6 +130,7 @@ export type MockPresetCrudGroup = {
     | 'VPCs';
 };
 export type MockPresetCrudId =
+  | 'cloudnats:crud'
   | 'domains:crud'
   | 'firewalls:crud'
   | 'ip-addresses:crud'
@@ -151,6 +154,7 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  * Stateful data shared among mocks.
  */
 export interface MockState {
+  cloudnats: CloudNAT[];
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];

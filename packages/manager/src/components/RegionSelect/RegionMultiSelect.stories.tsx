@@ -9,7 +9,7 @@ import { RegionMultiSelect } from './RegionMultiSelect';
 
 import type { RegionMultiSelectProps } from './RegionSelect.types';
 import type { Region } from '@linode/api-v4';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const sortRegionOptions = (a: Region, b: Region) => {
   return sortByString(a.label, b.label, 'asc');

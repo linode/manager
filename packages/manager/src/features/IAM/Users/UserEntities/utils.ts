@@ -2,7 +2,7 @@ import type { EntitiesRole } from '../../Shared/types';
 import type {
   AccountEntity,
   EntityAccess,
-  EntityAccessRole,
+  EntityRoleType,
   EntityType,
   IamUserRoles,
 } from '@linode/api-v4';
@@ -22,7 +22,7 @@ export const addEntityNamesToRoles = (
       );
 
       if (entity) {
-        return entityRole.roles.map((r: EntityAccessRole) => ({
+        return entityRole.roles.map((r: EntityRoleType) => ({
           access: 'entity_access',
           entity_id: entityRole.id,
           entity_name: entity.label,

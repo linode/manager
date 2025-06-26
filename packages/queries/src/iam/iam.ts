@@ -1,12 +1,12 @@
 import { updateUserRoles } from '@linode/api-v4';
-import { queryPresets } from '@linode/queries';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { iamQueries } from './queries';
+import { queryPresets } from '../base';
+import { iamQueries } from './keys';
 
 import type {
+  AccessType,
   APIError,
-  EntityTypePermissions,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -36,7 +36,7 @@ export const useUserRolesMutation = (username: string) => {
     onSuccess: (role) => {
       queryClient.setQueryData<IamUserRoles>(
         iamQueries.user(username)._ctx.roles.queryKey,
-        role
+        role,
       );
     },
   });
@@ -50,9 +50,9 @@ export const useUserAccountPermissions = (username?: string) => {
 };
 
 export const useUserEntityPermissions = (
-  entityType: EntityTypePermissions,
+  entityType: AccessType,
   entityId: number,
-  username?: string
+  username?: string,
 ) => {
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries
