@@ -13,6 +13,10 @@
 
 - nowrap styles from input ([#12390](https://github.com/linode/manager/pull/12390))
 
+### Tech Stories
+
+- Update to Storybook v9 ([#12416](https://github.com/linode/manager/pull/12416))
+
 ### Upcoming Features:
 
 - Add new maintenance policy icons and update TooltipIcon tokens ([#12398](https://github.com/linode/manager/pull/12398))
