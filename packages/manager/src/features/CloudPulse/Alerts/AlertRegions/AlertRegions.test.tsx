@@ -47,7 +47,7 @@ vi.mock('src/hooks/useFlags', async (importOriginal) => ({
 queryMocks.useRegionsQuery.mockReturnValue({
   data: regions,
   isLoading: false,
-  isErrro: false,
+  isError: false,
 });
 
 queryMocks.useResourcesQuery.mockReturnValue({
