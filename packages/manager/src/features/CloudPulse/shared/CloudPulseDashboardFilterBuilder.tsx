@@ -143,9 +143,15 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
           .replace(/,$/, '')
           .split(',')
           .filter((p) => p !== '');
-        emitFilterChangeByFilterKey(PORT, portList, label, savePref, {
-          [PORT]: port,
-        });
+        emitFilterChangeByFilterKey(
+          PORT,
+          portList,
+          label.filter((l) => l !== ''),
+          savePref,
+          {
+            [PORT]: port,
+          }
+        );
       },
       [emitFilterChangeByFilterKey]
     );
