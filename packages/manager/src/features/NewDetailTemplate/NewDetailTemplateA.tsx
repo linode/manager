@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { useTheme, useMediaQuery } from '@mui/material';
+import { useTheme, useMediaQuery, Grid } from '@mui/material';
 
 const DataItem = ({ label, value, color, backgroundColor }) => (
   <div
@@ -129,7 +129,7 @@ export const NewDetailTemplateA = () => {
     <div
       style={{
         width: '100%',
-        padding: 16,
+        padding: 27,
         margin: '0 auto',
         fontFamily: 'system-ui, -apple-system, sans-serif',
         background: 'white',
@@ -148,46 +148,23 @@ export const NewDetailTemplateA = () => {
       </h2>
 
       {isDesktop ? (
-        <div
-          style={{
-            display: 'flex',
-            gap: 60,
-            flexDirection: 'row',
+        <Grid
+          container
+          id="top-level-container"
+          spacing={7}
+          sx={{
+            margin: 0,
           }}
         >
-          <div
-            style={{
-              // flex: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0,
-              flexGrow: 0,
-              flexShrink: 1,
-              flexBasis: '66%',
-            }}
-          >
+          <Grid item size={{ sm: 12, lg: 8 }} id="red-section">
             <SectionTitle
               title="SUMMARY"
               backgroundColor="#e53e3e"
               color="#ffffff"
             />
-            <div
-              style={{
-                display: 'flex',
-                gap: 60,
-                flexDirection: 'row',
-              }}
-            >
+            <Grid container spacing={7}>
               {distributedReverseGridItems.map((columnItems, colIndex) => (
-                <div
-                  key={colIndex}
-                  style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 0,
-                  }}
-                >
+                <Grid key={colIndex} item size={{ lg: 6 }}>
                   {columnItems.map((item, idx) => (
                     <DataItem
                       key={`reverse-grid-${colIndex}-${idx}`}
@@ -197,22 +174,12 @@ export const NewDetailTemplateA = () => {
                       backgroundColor="#e53e3e"
                     />
                   ))}
-                </div>
+                </Grid>
               ))}
-            </div>
-          </div>
+            </Grid>
+          </Grid>
 
-          <div
-            style={{
-              // flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0,
-              flexGrow: 0,
-              flexShrink: 1,
-              flexBasis: 'calc(33% - 30px)',
-            }}
-          >
+          <Grid item size={{ sm: 12, lg: 4 }} id="blue-section">
             <SectionTitle
               title="VPC"
               backgroundColor="#3182ce"
@@ -227,8 +194,8 @@ export const NewDetailTemplateA = () => {
                 backgroundColor="#3182ce"
               />
             ))}
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       ) : (
         <div>
           <div>
