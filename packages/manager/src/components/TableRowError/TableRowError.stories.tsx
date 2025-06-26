@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 
 import type { TableRowErrorProps } from './TableRowError';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TableRowErrorProps> = {
   render: (args) => {
