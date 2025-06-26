@@ -1,9 +1,9 @@
-import { action } from '@storybook/addon-actions';
 import * as React from 'react';
+import { action } from 'storybook/actions';
 
 import { DebouncedSearchTextField } from './DebouncedSearchTextField';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof DebouncedSearchTextField>;
 

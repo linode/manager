@@ -3,7 +3,7 @@ import React from 'react';
 import { NewFeatureChip } from './NewFeatureChip';
 
 import type { NewFeatureChipProps } from './NewFeatureChip';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<NewFeatureChipProps> = {
   render: (args) => <NewFeatureChip {...args} />,
