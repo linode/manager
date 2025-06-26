@@ -5,7 +5,7 @@ export const COMPLETED_MAINTENANCE_FILTER = Object.freeze({
 });
 
 export const IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
-  status: { '+or': ['in-progress', 'started'] },
+  status: { '+or': ['in_progress', 'started'] },
 });
 
 export const UPCOMING_MAINTENANCE_FILTER = Object.freeze({
@@ -17,7 +17,7 @@ export const PENDING_MAINTENANCE_FILTER = Object.freeze({
 });
 
 export const PENDING_AND_IN_PROGRESS_MAINTENANCE_FILTER = Object.freeze({
-  status: { '+or': ['pending', 'started', 'scheduled', 'in-progress'] },
+  status: { '+or': ['pending', 'started', 'scheduled', 'in_progress'] },
 });
 
 export const PLATFORM_MAINTENANCE_TYPE =
