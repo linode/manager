@@ -2,17 +2,14 @@ import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 
-import type {
-  AccessType,
-  Grants,
-  PermissionType,
-  Profile,
-} from '@linode/api-v4';
+import type { AccessType, Grants, PermissionType } from '@linode/api-v4';
 
 export const toPermissionMap = (
   permissionsToCheck: PermissionType[],
-  usersPermissions: PermissionType[]
+  usersPermissions: PermissionType[],
+  isRestricted?: boolean
 ): Record<PermissionType, boolean> => {
+  const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
   const usersPermissionMap = {} as Record<PermissionType, boolean>;
   usersPermissions?.forEach(
     (permission) => (usersPermissionMap[permission] = true)
@@ -21,7 +18,8 @@ export const toPermissionMap = (
   const permissionMap = {} as Record<PermissionType, boolean>;
   permissionsToCheck?.forEach(
     (permission) =>
-      (permissionMap[permission] = usersPermissionMap[permission] ?? false)
+      (permissionMap[permission] =
+        (unrestricted || usersPermissionMap[permission]) ?? false)
   );
 
   return permissionMap;
@@ -32,7 +30,7 @@ export const fromGrants = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
   grants: Grants,
-  profile?: Profile,
+  isRestricted?: boolean,
   entittyId?: number
 ): Record<PermissionType, boolean> => {
   let usersPermissionsMap = {} as Record<PermissionType, boolean>;
@@ -41,7 +39,7 @@ export const fromGrants = (
     case 'account':
       usersPermissionsMap = accountGrantsToPermissions(
         grants?.global,
-        profile?.restricted
+        isRestricted
       ) as Record<PermissionType, boolean>;
       break;
     case 'firewall':
@@ -49,7 +47,7 @@ export const fromGrants = (
       const firewall = grants?.firewall.find((f) => f.id === entittyId);
       usersPermissionsMap = firewallGrantsToPermissions(
         firewall?.permissions,
-        profile
+        isRestricted
       ) as Record<PermissionType, boolean>;
       break;
     case 'linode':
@@ -57,7 +55,7 @@ export const fromGrants = (
       const linode = grants?.linode.find((f) => f.id === entittyId);
       usersPermissionsMap = linodeGrantsToPermissions(
         linode?.permissions,
-        profile
+        isRestricted
       ) as Record<PermissionType, boolean>;
       break;
     default:

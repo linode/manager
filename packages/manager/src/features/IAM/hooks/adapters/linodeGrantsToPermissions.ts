@@ -1,11 +1,11 @@
-import type { GrantLevel, LinodeAdmin, Profile } from '@linode/api-v4';
+import type { GrantLevel, LinodeAdmin } from '@linode/api-v4';
 
 /** Map the existing Grant model to the new IAM RBAC model. */
 export const linodeGrantsToPermissions = (
   grantLevel?: GrantLevel,
-  profile?: Profile
+  isRestricted?: boolean
 ): Record<LinodeAdmin, boolean> => {
-  const unrestricted = profile?.restricted === false;
+  const unrestricted = isRestricted === false; // explicit === false since the profile can be undefined
   return {
     cancel_linode_backups: unrestricted || grantLevel === 'read_write',
     delete_linode: unrestricted || grantLevel === 'read_write',
