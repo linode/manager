@@ -13,13 +13,17 @@ import { SplashScreen } from 'src/components/SplashScreen';
 import { setupInterceptors } from 'src/request';
 import { storeFactory } from 'src/store';
 
-import { App } from './App';
 import './index.css';
 import { ENABLE_DEV_TOOLS } from './constants';
-import { Logout } from './layouts/Logout';
 import { LinodeThemeWrapper } from './LinodeThemeWrapper';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
+
+const App = React.lazy(() =>
+  import('./App').then((module) => ({
+    default: module.App,
+  }))
+);
 
 const CancelLanding = React.lazy(() =>
   import('src/features/CancelLanding/CancelLanding').then((module) => ({
@@ -27,12 +31,20 @@ const CancelLanding = React.lazy(() =>
   }))
 );
 
+const Logout = React.lazy(() =>
+  import('./OAuth/Logout').then((module) => ({
+    default: module.Logout,
+  }))
+);
+
 const LoginAsCustomerCallback = React.lazy(() =>
-  import('src/layouts/LoginAsCustomerCallback').then((module) => ({
+  import('src/OAuth/LoginAsCustomerCallback').then((module) => ({
     default: module.LoginAsCustomerCallback,
   }))
 );
-const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
+const OAuthCallback = React.lazy(() =>
+  import('src/OAuth/OAuthCallback').then((m) => ({ default: m.OAuthCallback }))
+);
 
 const queryClient = queryClientFactory('longLived');
 const store = storeFactory();
@@ -60,7 +72,7 @@ const Main = () => {
                 <React.Suspense fallback={<SplashScreen />}>
                   <Switch>
                     <Route
-                      component={OAuthCallbackPage}
+                      component={OAuthCallback}
                       exact
                       path="/oauth/callback"
                     />

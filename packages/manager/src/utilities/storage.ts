@@ -225,12 +225,7 @@ export const storage: Storage = {
   },
 };
 
-export const {
-  authentication,
-  stackScriptInProgress,
-  supportTicket,
-  ticketReply,
-} = storage;
+export const { stackScriptInProgress, supportTicket, ticketReply } = storage;
 
 // Only return these if the dev tools are enabled and we're in development mode.
 export const getEnvLocalStorageOverrides = () => {
