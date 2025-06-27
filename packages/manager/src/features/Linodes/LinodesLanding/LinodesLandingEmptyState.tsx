@@ -1,5 +1,5 @@
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
@@ -24,7 +24,7 @@ import {
 const APPS_MORE_LINKS_TEXT = 'See all Marketplace apps';
 
 export const LinodesLandingEmptyState = () => {
-  const { push } = useHistory();
+  const navigate = useNavigate();
 
   const isLinodesGrantReadOnly = useRestrictedGlobalGrantCheck({
     globalGrantType: 'add_linodes',
@@ -39,7 +39,7 @@ export const LinodesLandingEmptyState = () => {
             children: 'Create Linode',
             disabled: isLinodesGrantReadOnly,
             onClick: () => {
-              push('/linodes/create');
+              navigate({ to: '/linodes/create' });
               sendEvent({
                 action: 'Click:button',
                 category: linkAnalyticsEvent.category,

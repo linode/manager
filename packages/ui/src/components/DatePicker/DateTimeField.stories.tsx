@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import { DateTimeField } from './DateTimeField';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DateTimeField> = {
   argTypes: {

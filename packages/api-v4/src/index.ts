@@ -2,6 +2,8 @@ export * from './account';
 
 export * from './betas';
 
+export * from './cloudnat';
+
 export * from './cloudpulse';
 
 export * from './databases';
