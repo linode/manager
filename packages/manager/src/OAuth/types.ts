@@ -3,7 +3,7 @@
  */
 export interface TokenResponse {
   /**
-   * An accces token that you use as the Bearer token when making API requests
+   * An access token that you use as the Bearer token when making API requests
    *
    * @example "59340e48bb1f64970c0e1c15a3833c6adf8cf97f478252eee8764b152704d447"
    */
