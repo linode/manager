@@ -48,14 +48,16 @@ export const fromGrants = (
       // eslint-disable-next-line no-case-declarations
       const firewall = grants?.firewall.find((f) => f.id === entittyId);
       usersPermissionsMap = firewallGrantsToPermissions(
-        firewall?.permissions
+        firewall?.permissions,
+        profile
       ) as Record<PermissionType, boolean>;
       break;
     case 'linode':
       // eslint-disable-next-line no-case-declarations
       const linode = grants?.linode.find((f) => f.id === entittyId);
       usersPermissionsMap = linodeGrantsToPermissions(
-        linode?.permissions
+        linode?.permissions,
+        profile
       ) as Record<PermissionType, boolean>;
       break;
     default:
