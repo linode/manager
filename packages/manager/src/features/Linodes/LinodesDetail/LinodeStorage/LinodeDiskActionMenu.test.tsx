@@ -3,22 +3,12 @@ import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { linodeDiskFactory } from 'src/factories';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { LinodeDiskActionMenu } from './LinodeDiskActionMenu';
-
-const mockHistory = {
-  push: vi.fn(),
-};
-
-// Mock useHistory
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual<any>('react-router-dom');
-  return {
-    ...actual,
-    useHistory: vi.fn(() => mockHistory),
-  };
-});
 
 const defaultProps = {
   disk: linodeDiskFactory.build(),
@@ -29,11 +19,26 @@ const defaultProps = {
   onResize: vi.fn(),
 };
 
+const navigate = vi.fn();
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(() => navigate),
+  useParams: vi.fn(() => ({})),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('LinodeActionMenu', () => {
   beforeEach(() => mockMatchMedia());
 
   it('should contain all basic actions when the Linode is running', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -59,7 +64,7 @@ describe('LinodeActionMenu', () => {
   it('should show inline actions for md screens', async () => {
     mockMatchMedia(false);
 
-    const { getByText } = renderWithTheme(
+    const { getByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -69,7 +74,7 @@ describe('LinodeActionMenu', () => {
   });
 
   it('should hide inline actions for sm screens', async () => {
-    const { queryByText } = renderWithTheme(
+    const { queryByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -79,7 +84,7 @@ describe('LinodeActionMenu', () => {
   });
 
   it('should allow performing actions', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} linodeStatus="offline" />
     );
 
@@ -100,7 +105,11 @@ describe('LinodeActionMenu', () => {
   });
 
   it('Create Disk Image should redirect to image create tab', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    queryMocks.useParams.mockReturnValue({
+      linodeId: defaultProps.linodeId,
+    });
+
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -112,13 +121,21 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(getByText('Create Disk Image'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      `/images/create/disk?selectedLinode=${defaultProps.linodeId}&selectedDisk=${defaultProps.disk.id}`
-    );
+    expect(navigate).toHaveBeenCalledWith({
+      to: '/images/create/disk',
+      search: {
+        selectedLinode: String(defaultProps.linodeId),
+        selectedDisk: String(defaultProps.disk.id),
+      },
+    });
   });
 
   it('Clone should redirect to clone page', async () => {
-    const { getByLabelText, getByText } = renderWithTheme(
+    queryMocks.useParams.mockReturnValue({
+      linodeId: defaultProps.linodeId,
+    });
+
+    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} />
     );
 
@@ -130,15 +147,19 @@ describe('LinodeActionMenu', () => {
 
     await userEvent.click(getByText('Clone'));
 
-    expect(mockHistory.push).toHaveBeenCalledWith(
-      `/linodes/${defaultProps.linodeId}/clone/disks?selectedDisk=${defaultProps.disk.id}`
-    );
+    expect(navigate).toHaveBeenCalledWith({
+      to: `/linodes/${defaultProps.linodeId}/clone/disks`,
+      search: {
+        selectedDisk: String(defaultProps.disk.id),
+      },
+    });
   });
 
   it('should disable Resize and Delete when the Linode is running', async () => {
-    const { getAllByLabelText, getByLabelText } = renderWithTheme(
-      <LinodeDiskActionMenu {...defaultProps} />
-    );
+    const { getAllByLabelText, getByLabelText } =
+      await renderWithThemeAndRouter(
+        <LinodeDiskActionMenu {...defaultProps} />
+      );
 
     const actionMenuButton = getByLabelText(
       `Action menu for Disk ${defaultProps.disk.label}`
@@ -156,7 +177,7 @@ describe('LinodeActionMenu', () => {
   it('should disable Create Disk Image when the disk is a swap image', async () => {
     const disk = linodeDiskFactory.build({ filesystem: 'swap' });
 
-    const { getByLabelText } = renderWithTheme(
+    const { getByLabelText } = await renderWithThemeAndRouter(
       <LinodeDiskActionMenu {...defaultProps} disk={disk} />
     );
 
