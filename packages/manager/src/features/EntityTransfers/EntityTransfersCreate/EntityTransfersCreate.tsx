@@ -1,3 +1,4 @@
+import { entityTransfersQueryKey, useCreateTransfer } from '@linode/queries';
 import Grid from '@mui/material/Grid';
 import { useQueryClient } from '@tanstack/react-query';
 import { createLazyRoute } from '@tanstack/react-router';
@@ -6,7 +7,6 @@ import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { queryKey, useCreateTransfer } from 'src/queries/entityTransfers';
 import { sendEntityTransferCreateEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -68,7 +68,7 @@ export const EntityTransfersCreate = () => {
         sendEntityTransferCreateEvent(entityCount);
 
         queryClient.invalidateQueries({
-          queryKey: [queryKey],
+          queryKey: [entityTransfersQueryKey],
         });
         push({ pathname: '/account/service-transfers', state: { transfer } });
       },
