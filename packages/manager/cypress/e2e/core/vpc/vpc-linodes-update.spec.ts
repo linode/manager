@@ -312,7 +312,7 @@ describe('VPC assign/unassign flows', () => {
           mockLinode.id,
           mockConfig.id,
           mockVPCInterface
-        ).as('createLinodeConfigInterfaces');
+        ).as('appendConfigInterface');
         mockGetVPC(mockVPCAfterLinodeAssignment).as('getVPCLinodeAssignment');
         mockGetSubnets(mockVPC.id, [mockSubnetAfterLinodeAssignment]).as(
           'getSubnetsLinodeAssignment'
@@ -323,7 +323,7 @@ describe('VPC assign/unassign flows', () => {
           .should('be.enabled')
           .click();
         cy.wait([
-          '@createLinodeConfigInterfaces',
+          '@appendConfigInterface',
           '@getVPCLinodeAssignment',
           '@getSubnetsLinodeAssignment',
         ]);
