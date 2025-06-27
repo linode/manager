@@ -81,6 +81,10 @@ function getAppRoot() {
   return import.meta.env.REACT_APP_APP_ROOT;
 }
 
+export function getIsAdminToken(token: string) {
+  return token.toLowerCase().startsWith('admin');
+}
+
 export function getIsLoggedInAsCustomer() {
   const token = storage.authentication.token.get();
 
@@ -88,7 +92,7 @@ export function getIsLoggedInAsCustomer() {
     return false;
   }
 
-  return token.toLowerCase().startsWith('admin');
+  return getIsAdminToken(token);
 }
 
 async function generateCodeVerifierAndChallenge() {

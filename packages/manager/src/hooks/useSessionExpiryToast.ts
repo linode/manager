@@ -2,6 +2,7 @@ import { isNumeric } from '@linode/utilities';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 
+import { getIsAdminToken } from 'src/OAuth/oauth';
 import { storage } from 'src/utilities/storage';
 
 export const useSessionExpiryToast = () => {
@@ -16,9 +17,13 @@ export const useSessionExpiryToast = () => {
       return;
     }
 
-    if (!token.toLowerCase().startsWith('admin')) {
-      // For now, only show this toast when logged in as a customer.
-      // We can consider doing this for all users.
+    /**
+     * Only show the session expiry toast for **admins** that have logged in as a customer.
+     * Do **not** show a session expiry for regular customers.
+     * (We can change this in the future if we want, we just need to run it by product)
+     */
+    if (!getIsAdminToken(token)) {
+      // Early return if we're not logged in as a customer
       return;
     }
 
