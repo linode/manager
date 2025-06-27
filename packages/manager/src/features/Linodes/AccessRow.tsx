@@ -11,15 +11,19 @@ import {
   StyledTableCell,
 } from './LinodeEntityDetail.styles';
 import { StyledTableRow } from './LinodeEntityDetail.styles';
+import { PublicIPAddressesTooltip } from './PublicIPAddressesTooltip';
 
 interface AccessRowProps {
+  hasPublicInterface?: boolean;
   heading?: string;
   isDisabled: boolean;
+  isLinodeInterface?: boolean;
   text: string;
 }
 
 export const AccessRow = (props: AccessRowProps) => {
-  const { heading, text, isDisabled } = props;
+  const { heading, text, isDisabled, hasPublicInterface, isLinodeInterface } =
+    props;
 
   const { data: maskedPreferenceSetting } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
@@ -47,7 +51,14 @@ export const AccessRow = (props: AccessRowProps) => {
           />
         </StyledGradientDiv>
         <Stack alignItems="center" direction="row" spacing={1}>
-          <StyledCopyTooltip disabled={isDisabled} text={text} />
+          {isDisabled ? (
+            <PublicIPAddressesTooltip
+              hasPublicInterface={Boolean(hasPublicInterface)}
+              isLinodeInterface={Boolean(isLinodeInterface)}
+            />
+          ) : (
+            <StyledCopyTooltip text={text} />
+          )}
           {maskedPreferenceSetting && (
             <VisibilityTooltip
               handleClick={() => setIsTextMasked(!isTextMasked)}

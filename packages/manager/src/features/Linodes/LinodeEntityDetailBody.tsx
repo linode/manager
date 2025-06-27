@@ -279,9 +279,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 ) : undefined
               }
               gridSize={{ lg: 5, xs: 12 }}
+              hasPublicInterface={isUnreachablePublicIPv6}
               isLinodeInterface={isLinodeInterface}
-              isUnreachablePublicIPv4={isUnreachablePublicIPv4}
-              isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               rows={[
                 {
                   isMasked: maskSensitiveDataPreference,

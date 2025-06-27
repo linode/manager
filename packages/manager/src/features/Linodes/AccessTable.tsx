@@ -3,7 +3,6 @@ import * as React from 'react';
 import type { JSX } from 'react';
 
 import { TableBody } from 'src/components/TableBody';
-import { PublicIPAddressesTooltip } from 'src/features/Linodes/PublicIPAddressesTooltip';
 
 import { AccessRow } from './AccessRow';
 import {
@@ -29,9 +28,8 @@ interface AccessTableProps {
     lg: number;
     xs: number;
   };
+  hasPublicInterface?: boolean;
   isLinodeInterface?: boolean;
-  isUnreachablePublicIPv4?: boolean;
-  isUnreachablePublicIPv6?: boolean;
   rows: AccessTableRow[];
   sx?: SxProps<Theme>;
   title: string;
@@ -41,16 +39,12 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
   const {
     footer,
     gridSize,
-    isUnreachablePublicIPv6,
-    isUnreachablePublicIPv4,
+    hasPublicInterface,
     isLinodeInterface = false,
     rows,
     sx,
     title,
   } = props;
-
-  const showDisabledPublicIPTooltip =
-    isUnreachablePublicIPv4 || isUnreachablePublicIPv6;
 
   return (
     <Grid
@@ -60,23 +54,17 @@ export const AccessTable = React.memo((props: AccessTableProps) => {
       }}
       sx={sx}
     >
-      <StyledColumnLabelGrid>
-        {title}{' '}
-        {showDisabledPublicIPTooltip && (
-          <PublicIPAddressesTooltip
-            hasPublicInterface={!isUnreachablePublicIPv6}
-            isLinodeInterface={isLinodeInterface}
-          />
-        )}
-      </StyledColumnLabelGrid>
+      <StyledColumnLabelGrid>{title}</StyledColumnLabelGrid>
       <StyledTableGrid>
         <StyledTable>
           <TableBody>
             {rows.map((thisRow) => {
               return thisRow.text ? (
                 <AccessRow
+                  hasPublicInterface={!hasPublicInterface}
                   heading={thisRow.heading}
                   isDisabled={Boolean(thisRow.disabled)}
+                  isLinodeInterface={isLinodeInterface}
                   key={thisRow.text}
                   text={thisRow.text}
                 />
