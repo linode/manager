@@ -285,7 +285,7 @@ export const convertAlertDefinitionValues = (
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
-    scope: 'entity', // Todo: This default value should be removed once the backend supports scope for alerts
+    scope,
     alertId: id,
     channel_ids: alert_channels.map((channel) => channel.id),
     description: description || undefined,
