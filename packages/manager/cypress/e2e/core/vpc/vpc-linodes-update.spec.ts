@@ -12,12 +12,13 @@ import {
   vpcLinodeInterfaceShutDownNotice,
 } from 'support/constants/vpc';
 import {
-  mockCreateLinodeConfigInterfaces,
+  mockAppendConfigInterface,
   mockDeleteLinodeConfigInterface,
+  mockGetLinodeConfig,
   mockGetLinodeConfigs,
 } from 'support/intercepts/configs';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
-import { mockGetLinodes } from 'support/intercepts/linodes';
+import { mockGetLinode, mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockCreateSubnet,
   mockGetSubnet,
@@ -166,9 +167,152 @@ describe('VPC assign/unassign flows', () => {
 
         cy.wait('@getLinodeConfigs');
 
-        mockCreateLinodeConfigInterfaces(mockLinode.id, mockConfig).as(
-          'createLinodeConfigInterfaces'
+        mockAppendConfigInterface(
+          mockLinode.id,
+          mockConfig.id,
+          linodeConfigInterfaceFactoryWithVPC.build()
+        ).as('appendConfigInterface');
+        mockGetVPC(mockVPCAfterLinodeAssignment).as('getVPCLinodeAssignment');
+        mockGetSubnets(mockVPC.id, [mockSubnetAfterLinodeAssignment]).as(
+          'getSubnetsLinodeAssignment'
         );
+        ui.button
+          .findByTitle('Assign Linode')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+        cy.wait([
+          '@appendConfigInterface',
+          '@getVPCLinodeAssignment',
+          '@getSubnetsLinodeAssignment',
+        ]);
+
+        ui.button
+          .findByTitle('Done')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.get('[data-qa-table-row="collapsible-table-headers-row"]')
+      .siblings('tbody')
+      .within(() => {
+        // after assigning Linode(s) to a VPC, VPC page increases number in 'Linodes' column
+        cy.findByText('1').should('be.visible');
+      });
+  });
+
+  it('can assign a Linode without auto-assigning an IPv4 to a VPC', () => {
+    const mockVPCInterface = linodeConfigInterfaceFactoryWithVPC.build({
+      ipv4: {
+        nat_1_1: '172.111.111.111',
+        vpc: '10.0.0.7',
+      },
+      ip_ranges: [],
+    });
+    const mockUpdatedConfig: Config = {
+      ...mockConfig,
+      interfaces: [mockVPCInterface],
+    };
+
+    const mockSubnet = subnetFactory.build({
+      id: randomNumber(2),
+      label: randomLabel(),
+      linodes: [],
+    });
+
+    const mockVPC = vpcFactory.build({
+      id: randomNumber(),
+      label: randomLabel(),
+      subnets: [mockSubnet],
+    });
+
+    const mockSubnetAfterLinodeAssignment = subnetFactory.build({
+      ...mockSubnet,
+      linodes: [
+        {
+          id: mockLinode.id,
+          interfaces: [
+            {
+              config_id: mockConfig.id,
+              active: true,
+              id: mockVPCInterface.id,
+            },
+          ],
+        },
+      ],
+    });
+
+    const mockVPCAfterLinodeAssignment = vpcFactory.build({
+      ...mockVPC,
+      subnets: [mockSubnetAfterLinodeAssignment],
+    });
+
+    mockGetVPC(mockVPC).as('getVPC');
+    mockGetSubnets(mockVPC.id, [mockSubnet]).as('getSubnets');
+    mockGetSubnet(mockVPC.id, mockSubnet.id, mockSubnet);
+    mockGetLinodes([mockLinode]).as('getLinodes');
+
+    cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
+    cy.wait(['@getVPC', '@getSubnets', '@getFeatureFlags']);
+
+    // confirm that vpc and subnet details get displayed
+    cy.findByText(mockVPC.label).should('be.visible');
+    cy.findByText('Subnets (1)');
+    cy.findByText(mockSubnet.label).should('be.visible');
+
+    // assign a linode to the subnet
+    ui.actionMenu
+      .findByTitle(`Action menu for Subnet ${mockSubnet.label}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem
+      .findByTitle('Assign Linodes')
+      .should('be.visible')
+      .click();
+
+    ui.drawer
+      .findByTitle(`Assign Linodes to subnet: ${mockSubnet.label} (0.0.0.0/0)`)
+      .should('be.visible')
+      .within(() => {
+        // confirm that the user is warned that a reboot / shutdown is required
+        cy.findByText(vpcLinodeInterfaceShutDownNotice).should('be.visible');
+        cy.findByText(vpcConfigProfileInterfaceRebootNotice).should(
+          'be.visible'
+        );
+
+        ui.button
+          .findByTitle('Assign Linode')
+          .should('be.visible')
+          .should('be.disabled');
+
+        mockGetLinodeConfigs(mockLinode.id, [mockConfig]).as(
+          'getLinodeConfigs'
+        );
+        cy.findByLabelText('Linode').should('be.visible').click();
+        cy.focused().type(mockLinode.label);
+        cy.focused().should('have.value', mockLinode.label);
+
+        ui.autocompletePopper
+          .findByTitle(mockLinode.label)
+          .should('be.visible')
+          .click();
+
+        // Uncheck auto-assign checkbox and type in VPC IPv4
+        cy.findByLabelText(
+          'Auto-assign a VPC IPv4 address for this Linode'
+        ).click();
+        cy.findByLabelText('VPC IPv4').should('be.visible').click();
+        cy.focused().type(mockVPCInterface.ipv4!.vpc ?? '10.0.0.7');
+
+        cy.wait('@getLinodeConfigs');
+
+        mockAppendConfigInterface(
+          mockLinode.id,
+          mockConfig.id,
+          mockVPCInterface
+        ).as('createLinodeConfigInterfaces');
         mockGetVPC(mockVPCAfterLinodeAssignment).as('getVPCLinodeAssignment');
         mockGetSubnets(mockVPC.id, [mockSubnetAfterLinodeAssignment]).as(
           'getSubnetsLinodeAssignment'
@@ -191,12 +335,22 @@ describe('VPC assign/unassign flows', () => {
           .click();
       });
 
+    mockGetLinode(mockLinode.id, mockLinode).as('getLinodes');
+    mockGetLinodeConfig(mockLinode.id, mockUpdatedConfig).as('getLinodeConfig');
+
     cy.get('[data-qa-table-row="collapsible-table-headers-row"]')
       .siblings('tbody')
       .within(() => {
         // after assigning Linode(s) to a VPC, VPC page increases number in 'Linodes' column
         cy.findByText('1').should('be.visible');
       });
+
+    // confirm VPC IPv4 matches mock
+    cy.findByLabelText(`expand ${mockSubnet.label} row`)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.findByText('10.0.0.7');
   });
 
   /*
