@@ -1,5 +1,5 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
@@ -27,7 +27,6 @@ export const usePagination = (
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const history = useHistory();
-  const location = useLocation();
 
   const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
   const pageSizeKey = queryParamsPrefix
@@ -49,12 +48,12 @@ export const usePagination = (
 
   const setPage = (p: number) => {
     searchParams.set(pageKey, String(p));
-    history.replace(`?${searchParams.toString()}`);
+    history.replace(`${location.pathname}?${searchParams.toString()}`);
   };
 
   const setPageSize = (size: number) => {
     searchParams.set(pageSizeKey, String(size));
-    history.replace(`?${searchParams.toString()}`);
+    history.replace(`${location.pathname}?${searchParams.toString()}`);
   };
 
   const handlePageSizeChange = (newPageSize: number) => {
