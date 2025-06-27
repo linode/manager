@@ -18,10 +18,10 @@ export const METRICS_LEGACY_MODE_BUTTON_TEXT = 'Try the Metrics (Beta)';
 export const METRICS_BETA_MODE_BUTTON_TEXT = 'Switch to legacy Metrics';
 
 export const ALERTS_LEGACY_MODE_BANNER_TEXT =
-  'Try the new Alerts (Beta) for more options, including customizable alerts. You can switch back to the current view at any time.';
+  'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.';
 
 export const ALERTS_BETA_MODE_BANNER_TEXT =
-  'Welcome to Alerts (Beta) with more options and greater flexibility.';
+  'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.';
 
 export const ALERTS_LEGACY_MODE_BUTTON_TEXT = 'Try Alerts (Beta)';
 

@@ -1,6 +1,6 @@
 import { useGrants } from '@linode/queries';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 
@@ -11,7 +11,7 @@ import { LinodeSettingsPasswordPanel } from './LinodeSettingsPasswordPanel';
 import { LinodeWatchdogPanel } from './LinodeWatchdogPanel';
 
 const LinodeSettings = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: grants } = useGrants();

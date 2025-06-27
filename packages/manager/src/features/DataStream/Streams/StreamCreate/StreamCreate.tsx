@@ -6,17 +6,13 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { destinationType } from 'src/features/DataStream/Shared/types';
 
 import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
 import { StreamCreateDataSet } from './StreamCreateDataSet';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import {
-  type CreateStreamForm,
-  destinationType,
-  eventType,
-  streamType,
-} from './types';
+import { type CreateStreamForm, eventType, streamType } from './types';
 
 export const StreamCreate = () => {
   const { classes } = useStyles();
@@ -39,6 +35,7 @@ export const StreamCreate = () => {
       crumbOverrides: [
         {
           label: 'DataStream',
+          linkTo: '/datastream/streams',
           position: 1,
         },
       ],

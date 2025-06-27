@@ -1,15 +1,12 @@
 import {
   createEntityTransfer,
   getEntityTransfer,
-  getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
-import {
-  creationHandlers,
-  listToItemsByID,
-  queryPresets,
-  useProfile,
-} from '@linode/queries';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { creationHandlers, queryPresets } from '../base';
+import { useProfile } from '../profile';
+import { getAllEntityTransfersRequest } from './requests';
 
 import type {
   CreateTransferPayload,
@@ -17,7 +14,7 @@ import type {
 } from '@linode/api-v4/lib/entity-transfers';
 import type { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 
-export const queryKey = 'entity-transfers';
+export const entityTransfersQueryKey = 'entity-transfers';
 
 interface EntityTransfersData {
   entityTransfers: Record<string, EntityTransfer>;
@@ -41,24 +38,15 @@ export const TRANSFER_FILTERS = {
   },
 };
 
-const getAllEntityTransfersRequest = (
-  passedParams: Params = {},
-  passedFilter: Filter = {}
-) =>
-  getEntityTransfers(passedParams, passedFilter).then((data) => ({
-    entityTransfers: listToItemsByID(data.data, 'token'),
-    results: data.results,
-  }));
-
 export const useEntityTransfersQuery = (
   params: Params = {},
-  filter: Filter = {}
+  filter: Filter = {},
 ) => {
   const { data: profile } = useProfile();
 
   return useQuery<EntityTransfersData, APIError[]>({
     queryFn: () => getAllEntityTransfersRequest(params, filter),
-    queryKey: [queryKey, params, filter],
+    queryKey: [entityTransfersQueryKey, params, filter],
     ...queryPresets.longLived,
     enabled: !profile?.restricted,
   });
@@ -67,7 +55,7 @@ export const useEntityTransfersQuery = (
 export const useTransferQuery = (token: string, enabled: boolean = true) => {
   return useQuery<EntityTransfer, APIError[]>({
     queryFn: () => getEntityTransfer(token),
-    queryKey: [queryKey, token],
+    queryKey: [entityTransfersQueryKey, token],
     ...queryPresets.shortLived,
     enabled,
     retry: false,
@@ -80,6 +68,6 @@ export const useCreateTransfer = () => {
     mutationFn: (createData) => {
       return createEntityTransfer(createData);
     },
-    ...creationHandlers([queryKey], 'token', queryClient),
+    ...creationHandlers([entityTransfersQueryKey], 'token', queryClient),
   });
 };
