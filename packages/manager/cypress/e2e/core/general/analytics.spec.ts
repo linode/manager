@@ -9,6 +9,18 @@ const ADOBE_LAUNCH_URLS = [
 describe('Script loading and user interaction test', () => {
   beforeEach(() => {
     cy.visitWithLogin('/');
+    // Allow Adobe analytics scripts to be loaded for this test only.
+    // By default, requests to Adobe Analytics URLs get blocked.
+    // See also `cypress/support/setup/block-analytics.ts`.
+    cy.intercept(
+      {
+        method: '*',
+        url: 'https://*.adobedtm.com/**/*',
+      },
+      (req) => {
+        req.continue();
+      }
+    );
   });
 
   it("checks if each environment's Adobe Launch script is loaded and the page is responsive to user interaction", () => {
