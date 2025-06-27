@@ -14,7 +14,7 @@ export interface CloudPulseModifyAlertResourcesProp {
   /**
    * Name used for the component in the form
    */
-  name: FieldPathByValue<CreateAlertDefinitionForm, string[]>;
+  name: FieldPathByValue<CreateAlertDefinitionForm, string[] | undefined>;
 }
 
 export const CloudPulseModifyAlertResources = React.memo(
@@ -61,7 +61,7 @@ export const CloudPulseModifyAlertResources = React.memo(
               })}
             >
               <AlertResources
-                alertResourceIds={field.value}
+                alertResourceIds={field.value ?? []}
                 alertType="user"
                 errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}
