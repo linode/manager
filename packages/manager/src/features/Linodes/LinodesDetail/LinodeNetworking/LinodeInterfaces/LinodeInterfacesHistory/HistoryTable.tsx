@@ -24,7 +24,7 @@ export const HistoryTable = (props: Props) => {
 
   const pagination = usePaginationV2({
     currentRoute: '/linodes/$linodeId/networking/history',
-    preferenceKey: `${preferenceKey}-order`,
+    preferenceKey: `${preferenceKey}`,
   });
 
   const { handleOrderChange, order, orderBy } = useOrderV2({
@@ -36,6 +36,7 @@ export const HistoryTable = (props: Props) => {
       from: '/linodes/$linodeId/networking/history',
     },
     preferenceKey: `${preferenceKey}-order`,
+    prefix: preferenceKey,
   });
 
   const filter = {

@@ -134,7 +134,9 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
           navigate({
             to: '/linodes/$linodeId/networking',
             params: { linodeId },
-            search: (prev) => prev,
+            search: () => {
+              return {};
+            },
           })
         }
         open={location.pathname.includes('networking/history')}
