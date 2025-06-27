@@ -136,6 +136,25 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
     { label: 'Created', value: '2025-06-20 13:35' },
   ];
 
+  const publicIpItems = [
+    { label: 'Address 1', value: '50.116.6.212' },
+    { label: 'Address 2', value: '2600:3c00::f03c:92ff:fee2:6c40/64' },
+    { label: 'View all IP Addresses', value: '' },
+  ];
+
+  const accessItems = [
+    { label: 'SSH Access', value: 'ssh root@50.116.6.212' },
+    {
+      label: 'LISH Console via SSH',
+      value: 'ssh -t mock-user@lish-us-ord.linode.com linode-detail',
+    },
+  ];
+
+  const firewallItems = [
+    { label: 'Label', value: 'mock-firewall-1' },
+    { label: 'ID', value: '112233' },
+  ];
+
   const reverseGridItems = gridItems.map((item) => ({ ...item }));
   const reverseSidebarItems = sidebarItems.map((item) => ({ ...item }));
 
@@ -241,6 +260,99 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
                 label={item.label}
                 value={item.value}
                 backgroundColor="#d7ecff"
+              />
+            ))}
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        id="bottom-sections-container"
+        columnSpacing={isFullLarge ? 7.5 : 4}
+        sx={{ margin: 0, marginTop: 2 }}
+      >
+        <Grid
+          size={{
+            xs: 12,
+            dl_tabletSmall: 12,
+            dl_tabletLarge: 6,
+            dl_fullSmall: 6,
+            dl_fullLarge: 4,
+          }}
+          sx={{ marginBottom: sectionMarginBottom }}
+        >
+          <SectionTitle title="PUBLIC IP ADDRESSES" />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: 1.75,
+            }}
+          >
+            {publicIpItems.map((item, idx) => (
+              <DataItem
+                key={`public-ip-${idx}`}
+                label={item.label}
+                value={item.value}
+                backgroundColor={debugMode ? '#e2f5e2' : 'white'}
+              />
+            ))}
+          </Box>
+        </Grid>
+
+        <Grid
+          size={{
+            xs: 12,
+            dl_tabletSmall: 12,
+            dl_tabletLarge: 6,
+            dl_fullSmall: 6,
+            dl_fullLarge: 4,
+          }}
+          sx={{ marginBottom: sectionMarginBottom }}
+        >
+          <SectionTitle title="ACCESS" />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: 1.75,
+            }}
+          >
+            {accessItems.map((item, idx) => (
+              <DataItem
+                key={`access-${idx}`}
+                label={item.label}
+                value={item.value}
+                backgroundColor={debugMode ? '#f5f5e2' : 'white'}
+              />
+            ))}
+          </Box>
+        </Grid>
+
+        <Grid
+          size={{
+            xs: 12,
+            dl_tabletSmall: 12,
+            dl_tabletLarge: 12,
+            dl_fullSmall: 12,
+            dl_fullLarge: 4,
+          }}
+          sx={{ marginBottom: sectionMarginBottom }}
+        >
+          <SectionTitle title="FIREWALL" />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              rowGap: 1.75,
+            }}
+          >
+            {firewallItems.map((item, idx) => (
+              <DataItem
+                key={`firewall-${idx}`}
+                label={item.label}
+                value={item.value}
+                backgroundColor={debugMode ? '#f5e2e2' : 'white'}
               />
             ))}
           </Box>
