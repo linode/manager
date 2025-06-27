@@ -1,7 +1,7 @@
 import { useGrants, useLinodeQuery, usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { useFlags } from 'src/hooks/useFlags';
@@ -15,7 +15,7 @@ interface Props {
 
 const LinodeAlerts = (props: Props) => {
   const { isAclpAlertsSupportedRegionLinode } = props;
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { aclpBetaServices } = useFlags();
@@ -42,7 +42,7 @@ const LinodeAlerts = (props: Props) => {
       isAclpAlertsPreferenceBeta ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
-          entityId={linodeId}
+          entityId={linodeId.toString()}
           entityName={linode?.label ?? ''}
           serviceType="linode"
         />
