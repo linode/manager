@@ -9,6 +9,9 @@ const queryMocks = vi.hoisted(() => ({
   useUserAccountPermissions: vi
     .fn()
     .mockReturnValue(['cancel_account', 'create_user']),
+  useProfile: vi
+    .fn()
+    .mockReturnValue({ data: { username: 'mock-user', restricted: true } }),
 }));
 
 vi.mock(import('@linode/queries'), async (importOriginal) => {
@@ -16,6 +19,7 @@ vi.mock(import('@linode/queries'), async (importOriginal) => {
   return {
     ...actual,
     useUserAccountPermissions: queryMocks.useUserAccountPermissions,
+    useProfile: queryMocks.useProfile,
   };
 });
 
