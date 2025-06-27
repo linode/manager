@@ -87,4 +87,15 @@ describe('VPC Landing Table', () => {
       getByText('Create a private and isolated network')
     ).toBeInTheDocument();
   });
+
+  it('should render vpc landing with loading state', async () => {
+    queryMocks.useVPCsQuery.mockReturnValue({
+      isLoading: true,
+    });
+
+    const { findByTestId } = await renderWithThemeAndRouter(<VPCLanding />);
+
+    const loading = await findByTestId('circle-progress');
+    expect(loading).toBeInTheDocument();
+  });
 });
