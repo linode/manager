@@ -1,7 +1,9 @@
 import { linodeFactory } from '@linode/utilities';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
+import { firewallSettingsFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
@@ -12,6 +14,20 @@ import type { Subnet } from '@linode/api-v4';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
+  useAllLinodesQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
+    useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
+  };
+});
+
 const props = {
   isFetching: false,
   onClose: vi.fn(),
@@ -20,6 +36,10 @@ const props = {
     id: 1,
     ipv4: '10.0.0.0/24',
     label: 'subnet-1',
+    linodes: [],
+    nodebalancers: [],
+    created: '',
+    updated: '',
   } as Subnet,
   vpcId: 1,
   vpcRegion: 'us-east',
@@ -71,27 +91,31 @@ describe('Subnet Assign Linodes Drawer', () => {
     );
 
     const selectField = getByLabelText('Linode');
-    fireEvent.change(selectField, { target: { value: 'this-linode' } });
+    await userEvent.selectOptions(selectField, 'this-linode');
 
     const checkbox = await findByText(
       'Auto-assign a VPC IPv4 address for this Linode'
     );
 
     await waitFor(() => expect(checkbox).toBeVisible());
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
 
     const ipv4Textbox = await findByText('VPC IPv4');
     await waitFor(() => expect(ipv4Textbox).toBeVisible());
   });
 
-  it('should close the drawer', () => {
+  it('should close the drawer', async () => {
+    queryMocks.useFirewallSettingsQuery.mockReturnValue({
+      data: firewallSettingsFactory.build(),
+    });
+
     const { getByText } = renderWithTheme(
       <SubnetAssignLinodesDrawer {...props} />
     );
 
     const doneButton = getByText('Done');
     expect(doneButton).toBeVisible();
-    fireEvent.click(doneButton);
+    await userEvent.click(doneButton);
     expect(props.onClose).toHaveBeenCalled();
   });
 });

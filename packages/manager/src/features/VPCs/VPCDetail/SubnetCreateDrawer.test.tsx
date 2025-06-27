@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -39,14 +39,14 @@ describe('Create Subnet Drawer', () => {
     expect(cancelBtn).toBeVisible();
   });
 
-  it('should close the drawer if the close cancel button is clicked', () => {
+  it('should close the drawer if the close cancel button is clicked', async () => {
     const { getByText } = renderWithTheme(<SubnetCreateDrawer {...props} />);
 
     const cancelBtn = getByText(/Cancel/);
     expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
 
-    fireEvent.click(cancelBtn);
+    await userEvent.click(cancelBtn);
     expect(props.onClose).toHaveBeenCalled();
   });
 });
