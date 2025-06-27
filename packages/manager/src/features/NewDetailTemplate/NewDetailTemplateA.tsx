@@ -77,7 +77,7 @@ const distributeItemsSequentially = (items, columns) => {
   return result;
 };
 
-export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
+export const NewDetailTemplateA = () => {
   const theme = useTheme();
   const isDlFullSmall = useMediaQuery(theme.breakpoints.only('dl_fullSmall'));
   const isDlTabletSmall = useMediaQuery(
@@ -90,16 +90,21 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
     isTabletLarge,
     isTablet,
     isDesktop,
-    isCollapsedSmall,
-    isCollapsedLarge,
-    isFullSmall,
-    isFullLarge,
+    isDesktopNavClosedSmall,
+    isDesktopNavClosedLarge,
+    isDesktopNavOpenedSmall,
+    isDesktopNavOpenedLarge,
+    menuIsCollapsed,
     getLayoutState,
-  } = useDetailsLayoutBreakpoints(menuIsCollapsed);
+  } = useDetailsLayoutBreakpoints();
 
   let columns = 1;
   if (isDesktop) columns = 3;
   else if (isTablet) columns = 2;
+
+  const shouldUseLargeSpacing = useMediaQuery(
+    theme.breakpoints.up('dl_desktop1030')
+  );
 
   const shouldUseGap4 = isDlFullSmall || isDlTabletSmall;
   const sectionMarginBottom = isMobile
@@ -178,16 +183,17 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
       <Grid
         container
         id="top-level-container"
-        columnSpacing={shouldUseGap4 ? 4 : 7.5}
+        columnSpacing={shouldUseLargeSpacing ? 7.5 : 4}
         sx={{ margin: 0 }}
       >
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 8,
-            dl_fullSmall: 12,
-            dl_fullLarge: 8,
+            dl_tablet950: 8,
+            sm: 12,
+            md: 12,
+            dl_desktop1030: menuIsCollapsed ? 8 : 12,
+            dl_desktop1214: 8,
           }}
           id="red-section"
           sx={{ marginBottom: sectionMarginBottom }}
@@ -195,7 +201,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           <SectionTitle title="SUMMARY" />
           <Grid
             container
-            columnSpacing={shouldUseGap4 ? 4 : 7.5}
+            columnSpacing={shouldUseLargeSpacing ? 7.5 : 4}
             rowSpacing={isMobile ? 1.75 : 0}
           >
             {distributedReverseGridItems.map((columnItems, colIndex) => (
@@ -203,10 +209,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
                 key={colIndex}
                 size={{
                   xs: 12,
-                  dl_tabletSmall: 6,
-                  dl_tabletLarge: 6,
-                  dl_fullSmall: 6,
-                  dl_fullLarge: 6,
+                  dl_tablet950: 6,
+                  sm: 6,
+                  md: 6,
+                  dl_desktop1030: 6,
+                  dl_desktop1214: 6,
                 }}
               >
                 <Box
@@ -233,10 +240,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 4,
-            dl_fullSmall: 12,
-            dl_fullLarge: 4,
+            dl_tablet950: 4,
+            sm: 12,
+            md: 12,
+            dl_desktop1030: menuIsCollapsed ? 4 : 12,
+            dl_desktop1214: 4,
           }}
           id="blue-section"
           sx={{ marginBottom: sectionMarginBottom }}
@@ -246,14 +254,15 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           <Box
             sx={{
               display: 'grid',
-              columnGap: shouldUseGap4 ? 4 : 7.5,
+              columnGap: shouldUseLargeSpacing ? 7.5 : 4,
               rowGap: 1.75,
               gridTemplateColumns: {
                 xs: '1fr',
-                dl_tabletSmall: '1fr 1fr',
-                dl_tabletLarge: '1fr',
-                dl_fullSmall: '1fr 1fr',
-                dl_fullLarge: '1fr',
+                dl_tablet950: '1fr',
+                sm: '1fr 1fr',
+                md: '1fr 1fr',
+                dl_desktop1030: menuIsCollapsed ? '1fr' : '1fr 1fr',
+                dl_desktop1214: '1fr',
               },
             }}
           >
@@ -268,7 +277,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           </Box>
         </Grid>
       </Grid>
-      <Grid
+      {/* <Grid
         container
         id="bottom-sections-container"
         columnSpacing={shouldUseGap4 ? 4 : 7.5}
@@ -366,7 +375,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
             ))}
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
     </div>
   );
 };

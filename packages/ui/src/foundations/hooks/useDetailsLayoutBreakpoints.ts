@@ -7,14 +7,9 @@ import {
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
-    dl_mobile: true;
-    dl_tabletSmall: true;
-    dl_tabletLarge: true;
-    dl_desktopBase: true;
-    dl_collapsedSmall: true;
-    dl_collapsedLarge: true;
-    dl_fullSmall: true;
-    dl_fullLarge: true;
+    dl_tablet950: true;
+    dl_desktop1030: true;
+    dl_desktop1214: true;
     xs: true;
     sm: true;
     md: true;
@@ -27,10 +22,10 @@ export type LayoutState =
   | 'mobile'
   | 'tabletSmall'
   | 'tabletLarge'
-  | 'collapsedSmall'
-  | 'collapsedLarge'
-  | 'fullSmall'
-  | 'fullLarge';
+  | 'desktopNavClosedSmall'
+  | 'desktopNavClosedLarge'
+  | 'desktopNavOpenedSmall'
+  | 'desktopNavOpenedLarge';
 
 export const useDetailsLayoutBreakpoints = () => {
   const theme = useTheme();
@@ -44,7 +39,7 @@ export const useDetailsLayoutBreakpoints = () => {
     typeof window !== 'undefined' ? window.innerWidth : 0
   );
   const prevStateRef = useRef<LayoutState | null>(null);
-  const prevMenuStateRef = useRef<boolean | null>(null); // ✅ track previous menu state
+  const prevMenuStateRef = useRef<boolean | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -63,29 +58,42 @@ export const useDetailsLayoutBreakpoints = () => {
     };
   }, []);
 
-  const isMobile = useMediaQuery(theme.breakpoints.between('dl_mobile', 'sm')); // 0-599
-  const isTabletSmall = useMediaQuery(theme.breakpoints.between('dl_tabletSmall', 'dl_tabletLarge')); // 600-949
-  const isTabletLarge = useMediaQuery(theme.breakpoints.between('dl_tabletLarge', 'dl_desktopBase')); // 950-959
-  const isTablet = useMediaQuery(theme.breakpoints.between('dl_tabletSmall', 'dl_desktopBase')); // 600-959
+  // Mobile: 0-599px (xs to sm)
+  const isMobile = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  
+  // Tablet Small: 600-949px (sm to dl_tablet950)
+  const isTabletSmall = useMediaQuery(theme.breakpoints.between('sm', 'dl_tablet950'));
+  
+  // Tablet Large: 950-959px (dl_tablet950 to md)
+  const isTabletLarge = useMediaQuery(theme.breakpoints.between('dl_tablet950', 'md'));
+  
+  // Any Tablet: 600-959px (sm to md)
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
-  // Collapsed menu states
-  const isCollapsedSmall = useMediaQuery(
-    theme.breakpoints.between('dl_collapsedSmall', 'dl_collapsedLarge')
-  ); // 960-1029
-  const isCollapsedLarge = useMediaQuery(
-    theme.breakpoints.up('dl_collapsedLarge')
-  ); // 1030+
+  // Desktop (either menu state): 960px+ (md and up)
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
 
-  // Full menu states
-  const isFullSmall = useMediaQuery(
-    theme.breakpoints.between('dl_fullSmall', 'dl_fullLarge')
-  ); // 960-1213
-  const isFullLarge = useMediaQuery(
-    theme.breakpoints.up('dl_fullLarge')
-  ); // 1214+
+  // Desktop with Nav Closed
+  // Small: 960-1029px (md to dl_desktop1030)
+  const isDesktopNavClosedSmall = useMediaQuery(
+    theme.breakpoints.between('md', 'dl_desktop1030')
+  );
+  
+  // Large: 1030px+ (dl_desktop1030 and up)
+  const isDesktopNavClosedLarge = useMediaQuery(
+    theme.breakpoints.up('dl_desktop1030')
+  );
 
-  // Desktop (either menu state)
-  const isDesktop = useMediaQuery(theme.breakpoints.up('dl_desktopBase')); // 960+
+  // Desktop with Nav Opened
+  // Small: 960-1213px (md to dl_desktop1214)
+  const isDesktopNavOpenedSmall = useMediaQuery(
+    theme.breakpoints.between('md', 'dl_desktop1214')
+  );
+  
+  // Large: 1214px+ (dl_desktop1214 and up)
+  const isDesktopNavOpenedLarge = useMediaQuery(
+    theme.breakpoints.up('dl_desktop1214')
+  );
 
   const getLayoutState = (): LayoutState => {
     if (isMobile) return 'mobile';
@@ -93,11 +101,11 @@ export const useDetailsLayoutBreakpoints = () => {
     if (isTabletLarge) return 'tabletLarge';
 
     if (menuIsCollapsed) {
-      if (isCollapsedSmall) return 'collapsedSmall';
-      return 'collapsedLarge';
+      if (isDesktopNavClosedSmall) return 'desktopNavClosedSmall';
+      return 'desktopNavClosedLarge';
     } else {
-      if (isFullSmall) return 'fullSmall';
-      return 'fullLarge';
+      if (isDesktopNavOpenedSmall) return 'desktopNavOpenedSmall';
+      return 'desktopNavOpenedLarge';
     }
   };
 
@@ -118,16 +126,16 @@ export const useDetailsLayoutBreakpoints = () => {
         case 'tabletLarge':
           breakpointRange = '950-959px';
           break;
-        case 'collapsedSmall':
+        case 'desktopNavClosedSmall':
           breakpointRange = '960-1029px (collapsed menu)';
           break;
-        case 'collapsedLarge':
+        case 'desktopNavClosedLarge':
           breakpointRange = '1030px+ (collapsed menu)';
           break;
-        case 'fullSmall':
+        case 'desktopNavOpenedSmall':
           breakpointRange = '960-1213px (full menu)';
           break;
-        case 'fullLarge':
+        case 'desktopNavOpenedLarge':
           breakpointRange = '1214px+ (full menu)';
           break;
       }
@@ -161,13 +169,14 @@ export const useDetailsLayoutBreakpoints = () => {
     isTabletLarge,
     isTablet,
     isDesktop,
-    isCollapsedSmall,
-    isCollapsedLarge,
-    isFullSmall,
-    isFullLarge,
+    isDesktopNavClosedSmall,
+    isDesktopNavClosedLarge,
+    isDesktopNavOpenedSmall,
+    isDesktopNavOpenedLarge,
     getLayoutState,
     currentBreakpoint: currentState,
     windowWidth,
+    menuIsCollapsed, 
   };
 };
 
