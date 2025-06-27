@@ -155,7 +155,7 @@ export const useDetermineUnreachableIPsConfigInterface = (
     configWithVPCInterface?.interfaces.length > 0;
 
   // For legacy config interfaces, if a Linode has no interfaces, the API automatically provides public connectivity.
-  // IPv6 is unreachable if the Linode has interfaces, but none of these interfaces is a public interface
+  // IPv6 is unreachable if the Linode has interfaces and none of these interfaces are a public interface
   const isUnreachablePublicIPv6ConfigInterface = Boolean(
     hasConfigInterfaces &&
       !configWithVPCInterface?.interfaces?.some(
