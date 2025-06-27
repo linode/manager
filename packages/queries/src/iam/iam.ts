@@ -5,8 +5,8 @@ import { queryPresets } from '../base';
 import { iamQueries } from './keys';
 
 import type {
+  AccessType,
   APIError,
-  EntityTypePermissions,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -50,7 +50,7 @@ export const useUserAccountPermissions = (username?: string) => {
 };
 
 export const useUserEntityPermissions = (
-  entityType: EntityTypePermissions,
+  entityType: AccessType,
   entityId: number,
   username?: string,
 ) => {

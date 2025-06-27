@@ -329,7 +329,7 @@ export const lightTheme: ThemeOptions = {
           },
           '&:hover': {
             '& h3': {
-              color: Color.Brand[80],
+              color: Alias.Action.Primary.Default,
             },
           },
           backgroundColor: 'transparent',
@@ -648,6 +648,9 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
           '&:active': {
             color: `${Component.Checkbox.Empty.Active.Border} !important`,
           },
@@ -661,6 +664,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
             color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           // Unchecked & Disabled
           '&.Mui-disabled': {
@@ -677,6 +685,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
@@ -963,6 +976,24 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: 'transparent',
             color: Content.Icon.Primary.Hover,
           },
+          // TooltipIcon Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+              padding: `0 ${Spacing.S6}`,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
+          },
         },
       },
     },
@@ -1017,7 +1048,6 @@ export const lightTheme: ThemeOptions = {
           height: Spacing.S16,
           padding: `${Spacing.S8} 0`, // L & R padding applied to parent due to possible adornments
           textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
         },
         inputMultiline: {
           minHeight: '100px',

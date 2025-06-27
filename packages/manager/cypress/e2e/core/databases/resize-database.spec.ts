@@ -32,8 +32,8 @@ import type { DatabaseClusterConfiguration } from 'support/constants/databases';
  */
 
 const resizeDatabase = (initialLabel: string) => {
-  ui.button
-    .findByTitle('Resize Database Cluster')
+  ui.cdsButton
+    .findButtonByTitle('Resize Database Cluster')
     .should('be.visible')
     .should('be.enabled')
     .click();
@@ -98,8 +98,8 @@ describe('Resizing existing clusters', () => {
           cy.get('[data-reach-tab-list]').within(() => {
             cy.findByText('Resize').should('be.visible').click();
           });
-          ui.button
-            .findByTitle('Resize Database Cluster')
+          ui.cdsButton
+            .findButtonByTitle('Resize Database Cluster')
             .should('be.visible')
             .should('be.disabled');
 
@@ -246,8 +246,9 @@ describe('Resizing existing clusters', () => {
           cy.get('[data-reach-tab-list]').within(() => {
             cy.findByText('Resize').should('be.visible').click();
           });
-          ui.button
-            .findByTitle('Resize Database Cluster')
+
+          ui.cdsButton
+            .findButtonByTitle('Resize Database Cluster')
             .should('be.visible')
             .should('be.disabled');
 

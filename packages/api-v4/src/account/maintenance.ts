@@ -24,8 +24,10 @@ export const getAccountMaintenance = (params?: Params, filter?: Filter) =>
  * Returns a list of maintenance policies that are available for Linodes in this account.
  *
  */
-export const getMaintenancePolicies = () =>
-  Request<MaintenancePolicy[]>(
+export const getMaintenancePolicies = (params?: Params, filter?: Filter) =>
+  Request<ResourcePage<MaintenancePolicy>>(
     setURL(`${BETA_API_ROOT}/maintenance/policies`),
     setMethod('GET'),
+    setParams(params),
+    setXFilter(filter),
   );
