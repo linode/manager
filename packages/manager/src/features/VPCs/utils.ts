@@ -112,24 +112,28 @@ export const getLinodeInterfaceIPv6Ranges = (iface: LinodeInterface) =>
 // TODO: update this when converting to react-hook-form
 // gets the VPC Interface payload depending on whether we want a Linode Interface or Config Interface payload
 export const getVPCInterfacePayload = (inputs: {
-  autoAssignIPv4: boolean;
-  chosenIP: string;
+  autoAssignVPCIPAddresses: boolean;
+  chosenIPv4: string;
   firewallId: null | number;
   ipRanges: ExtendedIP[];
   isLinodeInterface: boolean;
   subnetId: null | number | undefined;
   vpcId: number;
+  vpcIPv6FeatureEnabled?: boolean;
 }): CreateLinodeInterfacePayload | InterfacePayload => {
   const {
     firewallId,
-    chosenIP,
+    chosenIPv4,
     ipRanges,
     subnetId,
     isLinodeInterface,
-    autoAssignIPv4,
+    autoAssignVPCIPAddresses,
     vpcId,
+    // vpcIPv6FeatureEnabled,
   } = inputs;
-  const filteredIPRanges = ipRanges.filter((ipRange) => ipRange.address !== '');
+  const filteredIPv4Ranges = ipRanges.filter(
+    (ipRange) => ipRange.address !== ''
+  );
 
   if (isLinodeInterface) {
     return {
@@ -140,13 +144,22 @@ export const getVPCInterfacePayload = (inputs: {
           addresses: [
             {
               nat_1_1_address: 'auto', // 'auto' in all cases here to match legacy interface behavior - helps the user towards a functional configuration & hides complexity per stakeholder feedback
-              address: !autoAssignIPv4 ? chosenIP : 'auto',
+              address: !autoAssignVPCIPAddresses ? chosenIPv4 : 'auto',
             },
           ],
-          ranges: filteredIPRanges.map((ipRange) => {
+          ranges: filteredIPv4Ranges.map((ipRange) => {
             return { range: ipRange.address };
           }),
         },
+        // ipv6: vpcIPv6FeatureEnabled ? {
+        //   slaac: [
+        //     {
+        //       range: autoAssignVPCIPAddresses ? 'auto' : ,
+        //     }
+        //   ],
+        //   ranges: [],
+        //   is_public: ,
+        // } : undefined,
       },
       public: null,
       vlan: null,
@@ -155,12 +168,21 @@ export const getVPCInterfacePayload = (inputs: {
   }
 
   return {
-    ip_ranges: filteredIPRanges.map((ipRange) => ipRange.address),
+    ip_ranges: filteredIPv4Ranges.map((ipRange) => ipRange.address),
     ipam_address: null,
     ipv4: {
       nat_1_1: 'any', // 'any' in all cases here to help the user towards a functional configuration & hide complexity per stakeholder feedback
-      vpc: !autoAssignIPv4 ? chosenIP : undefined,
+      vpc: !autoAssignVPCIPAddresses ? chosenIPv4 : undefined,
     },
+    // ipv6: vpcIPv6FeatureEnabled ? {
+    //   is_public: ,
+    //   slaac: [
+    //     {
+    //       range: autoAssignVPCIPAddresses ? 'auto' : ,
+    //     }
+    //   ],
+    //   ranges: [],
+    // } : undefined,
     label: null,
     primary: true,
     purpose: 'vpc',

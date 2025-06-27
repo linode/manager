@@ -35,6 +35,7 @@ import {
   VPC_AUTO_ASSIGN_IPV4_TOOLTIP,
   VPC_MULTIPLE_CONFIGURATIONS_LEARN_MORE_LINK,
 } from 'src/features/VPCs/constants';
+import { useFlags } from 'src/hooks/useFlags';
 import { useUnassignLinode } from 'src/hooks/useUnassignLinode';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { SUBNET_LINODE_CSV_HEADERS } from 'src/utilities/subnets';
@@ -104,6 +105,9 @@ export const SubnetAssignLinodesDrawer = (
   const formattedDate = useFormattedDate();
   const theme = useTheme();
 
+  const flags = useFlags();
+  const isVPCIPv6Enabled = !!flags.vpcIpv6;
+
   const { data: firewallSettings } = useFirewallSettingsQuery();
   const defaultFirewall = getDefaultFirewallForInterfacePurpose(
     'vpc',
@@ -120,7 +124,8 @@ export const SubnetAssignLinodesDrawer = (
   const [assignedLinodesAndInterfaceData, setAssignedLinodesAndInterfaceData] =
     React.useState<LinodeAndInterfaceData[]>([]);
   const [linodeConfigs, setLinodeConfigs] = React.useState<Config[]>([]);
-  const [autoAssignIPv4, setAutoAssignIPv4] = React.useState<boolean>(true);
+  const [autoAssignVPCIPAddresses, setAutoAssignVPCIPAddresses] =
+    React.useState<boolean>(true);
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -188,7 +193,7 @@ export const SubnetAssignLinodesDrawer = (
 
   const handleAssignLinode = async () => {
     const {
-      chosenIP,
+      chosenIPv4,
       ipRanges,
       selectedConfig,
       selectedLinode,
@@ -206,12 +211,13 @@ export const SubnetAssignLinodesDrawer = (
 
     const interfacePayload = getVPCInterfacePayload({
       firewallId: selectedFirewall,
-      autoAssignIPv4,
-      chosenIP,
+      autoAssignVPCIPAddresses,
+      chosenIPv4,
       ipRanges,
       subnetId: subnet?.id,
       vpcId,
       isLinodeInterface,
+      vpcIPv6FeatureEnabled: isVPCIPv6Enabled,
     });
 
     try {
@@ -301,7 +307,7 @@ export const SubnetAssignLinodesDrawer = (
   };
 
   const handleAutoAssignIPv4Change = () => {
-    setAutoAssignIPv4(!autoAssignIPv4);
+    setAutoAssignVPCIPAddresses(!autoAssignVPCIPAddresses);
   };
 
   // Helper function to determine the error message based on the configId
@@ -320,7 +326,7 @@ export const SubnetAssignLinodesDrawer = (
     useFormik({
       enableReinitialize: true,
       initialValues: {
-        chosenIP: '',
+        chosenIPv4: '',
         ipRanges: [] as ExtendedIP[],
         selectedConfig: null as Config | null,
         selectedLinode: null as Linode | null,
@@ -391,7 +397,7 @@ export const SubnetAssignLinodesDrawer = (
       resetForm();
       setLinodeConfigs([]);
       setValues({
-        chosenIP: '',
+        chosenIPv4: '',
         ipRanges: [],
         selectedConfig: null,
         selectedLinode: null,
@@ -464,7 +470,7 @@ export const SubnetAssignLinodesDrawer = (
     setLinodeConfigs([]);
     setAssignLinodesErrors({});
     setUnassignLinodesErrors([]);
-    setAutoAssignIPv4(true);
+    setAutoAssignVPCIPAddresses(true);
   };
 
   return (
@@ -505,7 +511,7 @@ export const SubnetAssignLinodesDrawer = (
         />
         {values.selectedLinode?.id && (
           <>
-            {autoAssignIPv4 && assignLinodesErrors['ipv4.vpc'] && (
+            {autoAssignVPCIPAddresses && assignLinodesErrors['ipv4.vpc'] && (
               <Notice spacingBottom={0} spacingTop={16} variant="error">
                 <Typography>{assignLinodesErrors['ipv4.vpc']}</Typography>
               </Notice>
@@ -519,7 +525,7 @@ export const SubnetAssignLinodesDrawer = (
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={autoAssignIPv4}
+                    checked={autoAssignVPCIPAddresses}
                     onChange={handleAutoAssignIPv4Change}
                   />
                 }
@@ -527,24 +533,28 @@ export const SubnetAssignLinodesDrawer = (
                 disabled={userCannotAssignLinodes}
                 label={
                   <Typography>
-                    Auto-assign a VPC IPv4 address for this Linode
+                    Auto-assign{' '}
+                    {isVPCIPv6Enabled
+                      ? 'VPC IP addresses'
+                      : 'a VPC IPv4 address'}{' '}
+                    for this Linode
                   </Typography>
                 }
                 sx={{ marginRight: 0 }}
               />
               <TooltipIcon status="help" text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP} />
             </Box>
-            {!autoAssignIPv4 && (
+            {!autoAssignVPCIPAddresses && (
               <TextField
                 disabled={userCannotAssignLinodes}
                 errorText={assignLinodesErrors['ipv4.vpc']}
                 label="VPC IPv4"
                 onChange={(e) => {
-                  setFieldValue('chosenIP', e.target.value);
+                  setFieldValue('chosenIPv4', e.target.value);
                   setAssignLinodesErrors({});
                 }}
                 sx={(theme) => ({ marginBottom: theme.spacingFunction(8) })}
-                value={values.chosenIP}
+                value={values.chosenIPv4}
               />
             )}
             {linodeConfigs.length > 1 && !isLinodeInterface && (
