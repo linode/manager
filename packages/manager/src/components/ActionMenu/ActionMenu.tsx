@@ -163,7 +163,7 @@ export const ActionMenu = React.memo((props: ActionMenuProps) => {
             {a.tooltip && (
               <TooltipIcon
                 data-qa-tooltip-icon
-                status="help"
+                status="info"
                 sxTooltipIcon={sxTooltipIcon}
                 text={a.tooltip}
                 tooltipPosition="right"
