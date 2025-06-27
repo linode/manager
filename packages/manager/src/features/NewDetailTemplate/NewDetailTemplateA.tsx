@@ -6,12 +6,11 @@ import { useDetailsLayoutBreakpoints } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 
 // Sets colored backgrounds to help visualize the layout
-const debugMode = false;
+const debugMode = true;
 
 const DataItemWrapper = styled('div', { label: 'DataItemWrapper' })(
   ({ theme, backgroundColor }) => ({
     backgroundColor: debugMode ? backgroundColor : 'white',
-    borderRadius: 8,
     minWidth: 120,
     display: 'flex',
     flexDirection: 'column',
@@ -268,14 +267,13 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
       <Grid
         container
         id="bottom-sections-container"
-        columnSpacing={isFullLarge ? 7.5 : 4}
-        sx={{ margin: 0, marginTop: 2 }}
+        columnSpacing={shouldUseGap4 ? 4 : 7.5}
       >
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 6,
+            dl_tabletSmall: 6,
+            dl_tabletLarge: 4,
             dl_fullSmall: 6,
             dl_fullLarge: 4,
           }}
@@ -303,8 +301,8 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 6,
+            dl_tabletSmall: 6,
+            dl_tabletLarge: 4,
             dl_fullSmall: 6,
             dl_fullLarge: 4,
           }}
@@ -333,7 +331,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           size={{
             xs: 12,
             dl_tabletSmall: 12,
-            dl_tabletLarge: 12,
+            dl_tabletLarge: 4,
             dl_fullSmall: 12,
             dl_fullLarge: 4,
           }}
@@ -342,9 +340,16 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           <SectionTitle title="FIREWALL" />
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'grid',
+              columnGap: shouldUseGap4 ? 4 : 7.5,
               rowGap: 1.75,
+              gridTemplateColumns: {
+                xs: '1fr',
+                dl_tabletSmall: '1fr 1fr',
+                dl_tabletLarge: '1fr',
+                dl_fullSmall: '1fr 1fr',
+                dl_fullLarge: '1fr',
+              },
             }}
           >
             {firewallItems.map((item, idx) => (
