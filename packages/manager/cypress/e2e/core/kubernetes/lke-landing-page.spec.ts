@@ -247,6 +247,7 @@ describe('LKE landing page', () => {
 
     const cluster = kubernetesClusterFactory.build({
       k8s_version: oldVersion,
+      tier: 'standard',
     });
 
     const updatedCluster = { ...cluster, k8s_version: newVersion };
@@ -355,17 +356,8 @@ describe('LKE landing page', () => {
 
     cy.wait(['@updateCluster', '@getClusters']);
 
-    ui.dialog.findByTitle('Upgrade complete').should('be.visible');
-
-    ui.button
-      .findByTitle('Recycle All Nodes')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-
-    cy.wait('@recycleAllNodes');
-
-    ui.toast.assertMessage('Recycle started successfully.');
+    // Verify the second step in the banner is not shown for LKE-E.
+    cy.findByText('Upgrade complete').should('not.exist');
 
     cy.findByText(newVersion).should('be.visible');
   });
