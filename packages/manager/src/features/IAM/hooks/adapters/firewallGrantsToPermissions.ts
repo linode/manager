@@ -1,11 +1,11 @@
-import type { FirewallAdmin, GrantLevel, Profile } from '@linode/api-v4';
+import type { FirewallAdmin, GrantLevel } from '@linode/api-v4';
 
 /** Map the existing Grant model to the new IAM RBAC model. */
 export const firewallGrantsToPermissions = (
   grantLevel?: GrantLevel,
-  profile?: Profile
+  isRestricted?: boolean
 ): Record<FirewallAdmin, boolean> => {
-  const unrestricted = profile?.restricted === false;
+  const unrestricted = isRestricted === false; // explicit === false
   return {
     delete_firewall: unrestricted || grantLevel === 'read_write',
     delete_firewall_device: unrestricted || grantLevel === 'read_write',
