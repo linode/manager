@@ -77,6 +77,7 @@ export const createAlertDefinitionSchema = object({
     .min(1, 'At least one notification channel is required.'),
   tags: array().of(string().defined()).optional(),
   entity_ids: array().of(string().defined()).optional(),
+  regions: array().of(string().defined()).optional(),
   scope: string()
     .oneOf(['entity', 'region', 'account'])
     .defined()
@@ -125,4 +126,5 @@ export const editAlertDefinitionSchema = object({
     .oneOf(['enabled', 'disabled', 'in progress', 'failed'])
     .optional(),
   scope: string().oneOf(['entity', 'region', 'account']).required(),
+  regions: array().of(string().defined()).optional(),
 });

@@ -1,12 +1,5 @@
 import { useTypeQuery } from '@linode/queries';
-import {
-  LoadFailureIcon as MaintenanceActiveIcon,
-  CalendarIcon as MaintenancePendingIcon,
-  CalendarScheduledIcon as MaintenanceScheduledIcon,
-  Tooltip,
-  TooltipIcon,
-  Typography,
-} from '@linode/ui';
+import { Tooltip, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
@@ -17,6 +10,7 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { statusTooltipIcons } from 'src/features/Linodes/LinodeEntityDetailHeaderMaintenancePolicy.utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import {
   getProgressOrDefault,
@@ -26,6 +20,7 @@ import {
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useInProgressEvents } from 'src/queries/events/events';
 
+import { LinodeMaintenanceText } from '../../LinodeMaintenanceText';
 import { IPAddress } from '../IPAddress';
 import { RegionIndicator } from '../RegionIndicator';
 import { getLinodeIconStatus, parseMaintenanceStartTime } from '../utils';
@@ -38,30 +33,6 @@ import {
 import type { LinodeHandlers } from '../LinodesLanding';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { LinodeWithMaintenance } from 'src/utilities/linodes';
-
-const statusTooltipIcons = {
-  scheduled: <MaintenanceScheduledIcon />,
-  active: <MaintenanceActiveIcon />,
-  pending: <MaintenancePendingIcon />,
-};
-
-interface MaintenanceTextProps {
-  isOpened?: boolean;
-  maintenanceStartTime: string;
-}
-
-const MaintenanceText = ({
-  isOpened = false,
-  maintenanceStartTime,
-}: MaintenanceTextProps) => {
-  return (
-    <>
-      This Linode&rsquo;s maintenance window {isOpened ? 'opened' : 'opens'} at{' '}
-      {maintenanceStartTime}
-      {!isOpened && <>. For more information, see your open support tickets</>}.
-    </>
-  );
-};
 
 interface Props extends LinodeWithMaintenance {
   handlers: LinodeHandlers;
@@ -153,7 +124,7 @@ export const LinodeRow = (props: Props) => {
             status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
-              <MaintenanceText
+              <LinodeMaintenanceText
                 isOpened
                 maintenanceStartTime={parsedMaintenanceStartTime}
               />
@@ -172,10 +143,10 @@ export const LinodeRow = (props: Props) => {
             status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
-              maintenance.status === 'pending' ? (
+              maintenance?.status === 'pending' ? (
                 "This Linode's maintenance window is pending."
               ) : (
-                <MaintenanceText
+                <LinodeMaintenanceText
                   isOpened={false}
                   maintenanceStartTime={parsedMaintenanceStartTime}
                 />
