@@ -1,6 +1,9 @@
 import { useMediaQuery } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { useEffect, useState, useRef } from 'react';
+import {
+  usePreferences,
+} from '../../../../queries';
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {
@@ -29,36 +32,42 @@ export type LayoutState =
   | 'fullSmall'
   | 'fullLarge';
 
-export const useDetailsLayoutBreakpoints = (menuIsCollapsed: boolean = false) => {
+export const useDetailsLayoutBreakpoints = () => {
   const theme = useTheme();
-  
+
+  const { data: isDesktopSidebarOpenPreference } = usePreferences(
+    (preferences) => preferences?.desktop_sidebar_open
+  );
+  const menuIsCollapsed = isDesktopSidebarOpenPreference ?? false;
+
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : 0
   );
   const prevStateRef = useRef<LayoutState | null>(null);
-  
+  const prevMenuStateRef = useRef<boolean | null>(null); // ✅ track previous menu state
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
+
     if (typeof window !== 'undefined') {
       window.addEventListener('resize', handleResize);
       setWindowWidth(window.innerWidth);
     }
-    
+
     return () => {
       if (typeof window !== 'undefined') {
         window.removeEventListener('resize', handleResize);
       }
     };
   }, []);
-  
+
   const isMobile = useMediaQuery(theme.breakpoints.between('dl_mobile', 'sm')); // 0-599
   const isTabletSmall = useMediaQuery(theme.breakpoints.between('dl_tabletSmall', 'dl_tabletLarge')); // 600-949
   const isTabletLarge = useMediaQuery(theme.breakpoints.between('dl_tabletLarge', 'dl_desktopBase')); // 950-959
   const isTablet = useMediaQuery(theme.breakpoints.between('dl_tabletSmall', 'dl_desktopBase')); // 600-959
-  
+
   // Collapsed menu states
   const isCollapsedSmall = useMediaQuery(
     theme.breakpoints.between('dl_collapsedSmall', 'dl_collapsedLarge')
@@ -66,7 +75,7 @@ export const useDetailsLayoutBreakpoints = (menuIsCollapsed: boolean = false) =>
   const isCollapsedLarge = useMediaQuery(
     theme.breakpoints.up('dl_collapsedLarge')
   ); // 1030+
-  
+
   // Full menu states
   const isFullSmall = useMediaQuery(
     theme.breakpoints.between('dl_fullSmall', 'dl_fullLarge')
@@ -82,7 +91,7 @@ export const useDetailsLayoutBreakpoints = (menuIsCollapsed: boolean = false) =>
     if (isMobile) return 'mobile';
     if (isTabletSmall) return 'tabletSmall';
     if (isTabletLarge) return 'tabletLarge';
-    
+
     if (menuIsCollapsed) {
       if (isCollapsedSmall) return 'collapsedSmall';
       return 'collapsedLarge';
@@ -92,13 +101,11 @@ export const useDetailsLayoutBreakpoints = (menuIsCollapsed: boolean = false) =>
     }
   };
 
-  // Get current layout state
   const currentState = getLayoutState();
-  
-  // Log when state changes
+
   useEffect(() => {
     const prevState = prevStateRef.current;
-    
+
     if (prevState !== currentState) {
       let breakpointRange = '';
       switch (currentState) {
@@ -124,16 +131,29 @@ export const useDetailsLayoutBreakpoints = (menuIsCollapsed: boolean = false) =>
           breakpointRange = '1214px+ (full menu)';
           break;
       }
-      
+
       console.log(
         `%c BreakpointChange: ${prevState || 'initial'} → ${currentState} %c Width: ${windowWidth}px | Range: ${breakpointRange}`,
         'background: #2196F3; color: white; padding: 2px 6px; border-radius: 2px; font-weight: bold;',
         'background: #333; color: white; padding: 2px 6px; border-radius: 2px;'
       );
-      
+
       prevStateRef.current = currentState;
     }
   }, [currentState, windowWidth]);
+
+  useEffect(() => {
+    const prev = prevMenuStateRef.current;
+
+    if (prev !== null && prev !== menuIsCollapsed) {
+      console.log(
+        `%c Menu Toggled: ${prev ? 'Collapsed' : 'Expanded'} → ${menuIsCollapsed ? 'Collapsed' : 'Expanded'}`,
+        'background: #9C27B0; color: white; padding: 2px 6px; border-radius: 2px; font-weight: bold;'
+      );
+    }
+
+    prevMenuStateRef.current = menuIsCollapsed;
+  }, [menuIsCollapsed]);
 
   return {
     isMobile,
