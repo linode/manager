@@ -40,8 +40,15 @@ const destinationsRoute = createRoute({
   import('./dataStreamLazyRoutes').then((m) => m.dataStreamLandingLazyRoute)
 );
 
+const destinationsCreateRoute = createRoute({
+  getParentRoute: () => dataStreamRoute,
+  path: 'destinations/create',
+}).lazy(() =>
+  import('./dataStreamLazyRoutes').then((m) => m.destinationCreateLazyRoute)
+);
+
 export const dataStreamRouteTree = dataStreamRoute.addChildren([
   dataStreamLandingRoute,
   streamsRoute.addChildren([streamsCreateRoute]),
-  destinationsRoute,
+  destinationsRoute.addChildren([destinationsCreateRoute]),
 ]);

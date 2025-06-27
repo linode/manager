@@ -1,23 +1,11 @@
 import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState } from '@linode/ui';
-import { getQueryParamsFromQueryString } from '@linode/utilities';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useLocation, useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-  useParams,
-  useRouteMatch,
-} from 'react-router-dom';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
 
 import { UpgradeInterfacesDialog } from './LinodeConfigs/UpgradeInterfaces/UpgradeInterfacesDialog';
-
-import type { LinodeConfigAndDiskQueryParams } from 'src/features/Linodes/types';
 
 const LinodesDetailHeader = React.lazy(() =>
   import(
@@ -36,28 +24,22 @@ const CloneLanding = React.lazy(() =>
 );
 
 export const LinodeDetail = () => {
-  const { path, url } = useRouteMatch();
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
+  const navigate = useNavigate();
   const location = useLocation();
-  const history = useHistory();
 
-  const queryParams =
-    getQueryParamsFromQueryString<LinodeConfigAndDiskQueryParams>(
-      location.search
-    );
-
-  const pathname = location.pathname;
+  const isCloneRoute = location.pathname.includes('/clone');
 
   const closeUpgradeInterfacesDialog = () => {
-    const newPath = pathname.includes('upgrade-interfaces')
-      ? pathname.split('/').slice(0, -1).join('/')
-      : pathname;
-    history.replace(newPath);
+    const newPath =
+      location.pathname ===
+      `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        ? location.pathname.split('/').slice(0, -1).join('/')
+        : location.pathname;
+    navigate({ to: newPath });
   };
 
-  const id = Number(linodeId);
-
-  const { data: linode, error, isLoading } = useLinodeQuery(id);
+  const { data: linode, error, isLoading } = useLinodeQuery(linodeId);
 
   if (error) {
     return <ErrorState errorText={error?.[0].reason} />;
@@ -69,45 +51,28 @@ export const LinodeDetail = () => {
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <Switch>
-        {/*
+      {/*
           Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
           Or... at least it appears that way to the user. We would like it to live WITHIN
           LinodeDetail, though, because we'd like to use the same context, so we don't
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
-          */}
-        <Route component={CloneLanding} path={`${path}/clone`} />
-        {['resize', 'rescue', 'migrate', 'upgrade', 'rebuild'].map((path) => (
-          <Redirect
-            from={`${url}/${path}`}
-            key={path}
-            to={{
-              pathname: url,
-              search: new URLSearchParams({
-                ...queryParams,
-                [path]: 'true',
-              }).toString(),
-            }}
-          />
-        ))}
-        <Route
-          render={() => (
-            <React.Fragment>
-              <LinodesDetailHeader />
-              <LinodesDetailNavigation />
-              <UpgradeInterfacesDialog
-                linodeId={id}
-                onClose={closeUpgradeInterfacesDialog}
-                open={pathname.includes('upgrade-interfaces')}
-              />
-            </React.Fragment>
-          )}
-        />
-      </Switch>
+      */}
+      {isCloneRoute ? (
+        <CloneLanding />
+      ) : (
+        <>
+          <LinodesDetailHeader />
+          <LinodesDetailNavigation />
+        </>
+      )}
+      <UpgradeInterfacesDialog
+        linodeId={linodeId}
+        onClose={closeUpgradeInterfacesDialog}
+        open={
+          location.pathname ===
+          `/linodes/${linodeId}/configurations/upgrade-interfaces`
+        }
+      />
     </React.Suspense>
   );
 };
-
-export const linodeDetailLazyRoute = createLazyRoute('/linodes/$linodeId')({
-  component: LinodeDetail,
-});
