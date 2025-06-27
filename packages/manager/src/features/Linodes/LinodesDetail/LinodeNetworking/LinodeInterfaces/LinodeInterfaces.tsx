@@ -1,6 +1,6 @@
 import { Box, Button, Drawer, Paper, Stack, Typography } from '@linode/ui';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { AddInterfaceDrawer } from './AddInterfaceDrawer/AddInterfaceDrawer';
 import { DeleteInterfaceDialog } from './DeleteInterfaceDialog';
@@ -16,8 +16,10 @@ interface Props {
 }
 
 export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
-  const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
+  const { interfaceId } = useParams({
+    strict: false,
+  });
 
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -38,7 +40,19 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
 
   const onShowDetails = (interfaceId: number) => {
     setSelectedInterfaceId(interfaceId);
-    history.replace(`${location.pathname}/interfaces/${interfaceId}`);
+    navigate({
+      to: '/linodes/$linodeId/networking/interfaces/$interfaceId',
+      params: { linodeId, interfaceId },
+      search: {
+        delete: undefined,
+        migrate: undefined,
+        rebuild: undefined,
+        rescue: undefined,
+        resize: undefined,
+        selectedImageId: undefined,
+        upgrade: undefined,
+      },
+    });
   };
 
   const onShowHistory = () => {
@@ -92,8 +106,14 @@ export const LinodeInterfaces = ({ linodeId, regionId }: Props) => {
       <InterfaceDetailsDrawer
         interfaceId={selectedInterfaceId}
         linodeId={linodeId}
-        onClose={() => history.replace(`/linodes/${linodeId}/networking`)}
-        open={location.pathname.includes('networking/interfaces')}
+        onClose={() =>
+          navigate({
+            to: '/linodes/$linodeId/networking/interfaces',
+            params: { linodeId },
+            search: (prev) => prev,
+          })
+        }
+        open={Boolean(interfaceId)}
       />
       <HistoryDialog
         linodeId={linodeId}

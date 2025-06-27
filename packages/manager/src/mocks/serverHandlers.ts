@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -2031,7 +2032,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
-      maintenance_policy_id: 1,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2822,6 +2823,8 @@ export const handlers = [
         ? serviceTypesFactory.build({
             label: 'Linodes',
             service_type: 'linode',
+            regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
           })
         : serviceTypesFactory.build({
             label: 'Databases',

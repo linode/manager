@@ -6,7 +6,7 @@ import { Snackbar } from 'src/components/Snackbar/Snackbar';
 import { eventFactory } from 'src/factories';
 import { getEventMessage } from 'src/features/Events/utils';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { VariantType } from 'notistack';
 
 /**
