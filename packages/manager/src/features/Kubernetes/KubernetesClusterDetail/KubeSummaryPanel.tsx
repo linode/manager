@@ -181,7 +181,9 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
                 {isLkeEnterpriseLAFeatureEnabled &&
                 cluster.tier === 'enterprise' ? undefined : (
                   <StyledActionButton
-                    disabled={Boolean(dashboardError) || !dashboard}
+                    disabled={
+                      Boolean(dashboardError) || !dashboard || isClusterReadOnly
+                    }
                     endIcon={<OpenInNewIcon sx={{ height: '14px' }} />}
                     onClick={() => window.open(dashboard?.url, '_blank')}
                   >
