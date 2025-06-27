@@ -10,12 +10,14 @@ import { useFlags } from 'src/hooks/useFlags';
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
   const { data: profile } = useProfile();
-  const { data: permissions } = useUserAccountPermissions(flags.iam?.enabled);
+  const { data: permissions } = useUserAccountPermissions(
+    flags?.iam?.enabled === true
+  );
 
   return {
     isIAMBeta: flags.iam?.beta,
     isIAMEnabled:
-      flags.iam?.enabled &&
+      flags?.iam?.enabled &&
       Boolean(!profile?.restricted || permissions?.length),
   };
 };
