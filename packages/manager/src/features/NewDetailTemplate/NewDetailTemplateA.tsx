@@ -304,9 +304,16 @@ export const NewDetailTemplateA = () => {
           <SectionTitle title="PUBLIC IP ADDRESSES" />
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'grid',
+              columnGap: shouldUseLargeSpacing ? 7.5 : 4,
               rowGap: 1.75,
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: '1fr 1fr',
+                dl_tablet950: '1fr',
+                md: '1fr',
+                dl_desktop1030: '1fr',
+              },
             }}
           >
             {publicIpItems.map((item, idx) => (
@@ -333,9 +340,16 @@ export const NewDetailTemplateA = () => {
           <SectionTitle title="ACCESS" />
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
+              display: 'grid',
+              columnGap: shouldUseLargeSpacing ? 7.5 : 4,
               rowGap: 1.75,
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: '1fr 1fr',
+                dl_tablet950: '1fr',
+                md: '1fr',
+                dl_desktop1030: '1fr',
+              },
             }}
           >
             {accessItems.map((item, idx) => (
