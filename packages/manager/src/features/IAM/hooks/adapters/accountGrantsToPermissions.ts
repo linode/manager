@@ -85,9 +85,9 @@ export const accountGrantsToPermissions = (
     mark_event_seen: true,
     view_event: true,
     // AccountFirewallAdmin
-    create_firewall: globalGrants?.add_firewalls,
+    create_firewall: unrestricted || globalGrants?.add_firewalls,
     // AccountLinodeAdmin
-    create_linode: globalGrants?.add_linodes,
+    create_linode: unrestricted || globalGrants?.add_linodes,
     // AccountMaintenanceViewer
     list_maintenances: true,
     // AccountNotificationViewer
