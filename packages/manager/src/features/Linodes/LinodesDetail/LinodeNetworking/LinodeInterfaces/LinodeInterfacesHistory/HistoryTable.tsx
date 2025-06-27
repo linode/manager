@@ -31,7 +31,7 @@ export const HistoryTable = (props: Props) => {
     initialRoute: {
       defaultOrder: {
         order: 'desc',
-        orderBy: 'label',
+        orderBy: 'interface_id',
       },
       from: '/linodes/$linodeId/networking/history',
     },
