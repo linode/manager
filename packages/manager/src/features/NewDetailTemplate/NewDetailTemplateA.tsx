@@ -3,60 +3,61 @@ import React from 'react';
 
 import { Grid, Box, useMediaQuery } from '@mui/material';
 import { useDetailsLayoutBreakpoints } from '@linode/ui';
-import { useTheme } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
+
+// Sets colored backgrounds to help visualize the layout
+const debugMode = false;
+
+const DataItemWrapper = styled('div', { label: 'DataItemWrapper' })(
+  ({ theme, backgroundColor }) => ({
+    backgroundColor: debugMode ? backgroundColor : 'white',
+    borderRadius: 8,
+    minWidth: 120,
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 14,
+  })
+);
+
+export const DataItemLabel = styled('div', {
+  label: 'DataItemLabel',
+})(({ theme }) => ({
+  fontSize: 14,
+  color: theme.textColors.tableStatic,
+  marginBottom: 4,
+  fontWeight: theme.font.bold,
+}));
+
+const DataItemValue = styled('div', { label: 'DataItemValue' })(
+  ({ theme }) => ({
+    fontSize: 14,
+    fontWeight: 600,
+    color: theme.textColors.headlineStatic,
+  })
+);
+
+export const SectionTitleWrapper = styled('div', { label: 'SectionTitle' })(
+  ({ theme }) => ({
+    backgroundColor: theme.tokens.alias.Interaction.Background.Secondary,
+    color: theme.textColors.headlineStatic,
+    padding: '2px 0',
+    borderRadius: '8px 8px 0 0',
+    fontWeight: 800,
+    fontSize: 12,
+    marginBottom: 10,
+  })
+);
 
 const DataItem = ({ label, value, color, backgroundColor }) => (
-  <div
-    style={{
-      backgroundColor: backgroundColor,
-      borderRadius: 8,
-      padding: 16,
-      minWidth: 120,
-      display: 'flex',
-      flexDirection: 'column',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-      marginBottom: 16,
-    }}
-  >
-    <div
-      style={{
-        fontSize: 12,
-        color: color,
-        marginBottom: 4,
-        fontWeight: 400,
-        opacity: 0.8,
-      }}
-    >
-      {label}
-    </div>
-    <div
-      style={{
-        fontSize: 16,
-        fontWeight: 600,
-        color: color,
-      }}
-    >
-      {value}
-    </div>
-  </div>
+  <DataItemWrapper backgroundColor={backgroundColor}>
+    <DataItemLabel color={color}>{label}</DataItemLabel>
+    <DataItemValue color={color}>{value}</DataItemValue>
+  </DataItemWrapper>
 );
 
-const SectionTitle = ({ title, backgroundColor, color }) => (
-  <div
-    style={{
-      backgroundColor: backgroundColor,
-      color: color,
-      padding: '10px 16px',
-      borderRadius: '8px 8px 0 0',
-      fontWeight: 600,
-      fontSize: 18,
-      marginBottom: 0,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    }}
-  >
-    {title}
-  </div>
-);
+const SectionTitle = ({ title }) => {
+  return <SectionTitleWrapper>{title}</SectionTitleWrapper>;
+};
 
 const distributeItems = (items, columns) => {
   const result = Array.from({ length: columns }, () => []);
@@ -122,14 +123,14 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
 
   const gridItems = [
     { label: 'Status', value: 'Running' },
-    { label: 'Linode ID', value: '78979699' },
     { label: 'CPU Core', value: '1' },
-    { label: 'Plan', value: 'Nanode 1 GB' },
     { label: 'Storage', value: '25 GB' },
-    { label: 'Region', value: 'US, Atlanta, GA' },
     { label: 'RAM', value: '1 GB' },
-    { label: 'Encryption', value: 'Encrypted' },
     { label: 'Volumes', value: '0' },
+    { label: 'Linode ID', value: '78979699' },
+    { label: 'Plan', value: 'Nanode 1 GB' },
+    { label: 'Region', value: 'US, Atlanta, GA' },
+    { label: 'Encryption', value: 'Encrypted' },
     { label: 'Created', value: '2025-06-20 13:35' },
   ];
 
@@ -147,33 +148,20 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
     <div
       style={{
         width: '100%',
-        padding: 27,
+        padding: 25,
         margin: '0 auto',
         fontFamily: 'system-ui, -apple-system, sans-serif',
         background: 'white',
       }}
     >
-      <h2
-        style={{
-          fontSize: 20,
-          fontWeight: 600,
-          marginBottom: 24,
-          marginTop: 40,
-          color: '#2d3748',
-        }}
-      >
-        Reverse Layout (2-col left, single right)
-      </h2>
-
-      {/* {isDesktop ? ( */}
+      <h2>(2-col left, single right)</h2>
       <Grid
         container
         id="top-level-container"
-        spacing={shouldUseGap4 ? 4 : 7}
+        spacing={shouldUseGap4 ? 4 : 7.5}
         sx={{ margin: 0 }}
       >
         <Grid
-          item
           size={{
             xs: 12,
             dl_tabletSmall: 12,
@@ -183,16 +171,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           }}
           id="red-section"
         >
-          <SectionTitle
-            title="SUMMARY"
-            backgroundColor="#e53e3e"
-            color="#ffffff"
-          />
-          <Grid container spacing={shouldUseGap4 ? 4 : 7}>
+          <SectionTitle title="SUMMARY" />
+          <Grid container spacing={shouldUseGap4 ? 4 : 7.5}>
             {distributedReverseGridItems.map((columnItems, colIndex) => (
               <Grid
                 key={colIndex}
-                item
                 size={{
                   xs: 12,
                   dl_tabletSmall: 6,
@@ -206,8 +189,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
                     key={`reverse-grid-${colIndex}-${idx}`}
                     label={item.label}
                     value={item.value}
-                    color="#ffffff"
-                    backgroundColor="#e53e3e"
+                    backgroundColor="#ffd7d7"
                   />
                 ))}
               </Grid>
@@ -216,7 +198,6 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
         </Grid>
 
         <Grid
-          item
           size={{
             xs: 12,
             dl_tabletSmall: 12,
@@ -226,12 +207,12 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           }}
           id="blue-section"
         >
-          <SectionTitle title="VPC" backgroundColor="#3182ce" color="#ffffff" />
+          <SectionTitle title="VPC" />
 
           <Box
             sx={{
               display: 'grid',
-              columnGap: shouldUseGap4 ? 4 : 7,
+              columnGap: shouldUseGap4 ? 4 : 7.5,
               gridTemplateColumns: {
                 xs: '1fr',
                 dl_tabletSmall: '1fr 1fr',
@@ -246,8 +227,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
                 key={`reverse-sidebar-${idx}`}
                 label={item.label}
                 value={item.value}
-                color="#ffffff"
-                backgroundColor="#3182ce"
+                backgroundColor="#d7ecff"
               />
             ))}
           </Box>
