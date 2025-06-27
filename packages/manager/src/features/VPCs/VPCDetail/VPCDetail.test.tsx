@@ -162,7 +162,9 @@ describe('VPC Detail Summary section', () => {
       },
     });
 
-    const { getByTestId, queryByTestId } = await renderWithThemeAndRouter(<VPCDetail />);
+    const { getByTestId, queryByTestId } = await renderWithThemeAndRouter(
+      <VPCDetail />
+    );
 
     await waitForElementToBeRemoved(queryByTestId(loadingTestId));
 

@@ -85,12 +85,12 @@ describe('SubnetLinodeRow', () => {
     });
   });
 
-  it('renders the loading state', () => {
+  it('renders the loading state', async () => {
     queryMocks.useLinodeQuery.mockReturnValue({
       isLoading: true,
     });
 
-    const { getByTestId } = renderWithTheme(
+    const { findByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -105,7 +105,8 @@ describe('SubnetLinodeRow', () => {
     );
 
     // Loading state should render
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    const loading = await findByTestId(loadingTestId);
+    expect(loading).toBeInTheDocument();
   });
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {

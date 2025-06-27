@@ -1,5 +1,4 @@
 import { linodeFactory } from '@linode/utilities';
-import { waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
@@ -16,14 +15,12 @@ beforeAll(() => mockMatchMedia());
 
 const queryMocks = vi.hoisted(() => ({
   useFirewallSettingsQuery: vi.fn().mockReturnValue({}),
-  useAllLinodesQuery: vi.fn().mockReturnValue({}),
 }));
 
 vi.mock('@linode/queries', async () => {
   const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
-    useAllLinodesQuery: queryMocks.useAllLinodesQuery,
     useFirewallSettingsQuery: queryMocks.useFirewallSettingsQuery,
   };
 });
@@ -83,25 +80,6 @@ describe('Subnet Assign Linodes Drawer', () => {
     expect(alreadyAssigned).toBeVisible();
     const doneButton = getByText('Done');
     expect(doneButton).toBeVisible();
-  });
-
-  it.skip('should show the IPv4 textbox when the checkmark is clicked', async () => {
-    const { findByText, getByLabelText } = renderWithTheme(
-      <SubnetAssignLinodesDrawer {...props} />
-    );
-
-    const selectField = getByLabelText('Linode');
-    await userEvent.selectOptions(selectField, 'this-linode');
-
-    const checkbox = await findByText(
-      'Auto-assign a VPC IPv4 address for this Linode'
-    );
-
-    await waitFor(() => expect(checkbox).toBeVisible());
-    await userEvent.click(checkbox);
-
-    const ipv4Textbox = await findByText('VPC IPv4');
-    await waitFor(() => expect(ipv4Textbox).toBeVisible());
   });
 
   it('should close the drawer', async () => {
