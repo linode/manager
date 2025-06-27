@@ -182,7 +182,6 @@ describe('handleOAuthCallback', () => {
         params: 'state=fakenonce&code=gyuwyutfetyfew',
       })
     ).rejects.toThrowError('Request to POST /oauth/token was not ok.');
-
   });
 
   it('should throw if the /oauth/token response is not valid JSON', async () => {

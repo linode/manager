@@ -64,13 +64,13 @@ export interface BodyProps {
   encryptionStatus: EncryptionStatus | undefined;
   gbRAM: number;
   gbStorage: number;
-  hasPublicLinodeInterface: boolean | undefined;
   interfaceGeneration: InterfaceGenerationType | undefined;
   interfaceWithVPC?: Interface | LinodeInterface;
   ipv4: Linode['ipv4'];
   ipv6: Linode['ipv6'];
   isLKELinode: boolean; // indicates whether linode belongs to an LKE cluster
-  isVPCOnlyLinode: boolean;
+  isUnreachablePublicIPv4: boolean;
+  isUnreachablePublicIPv6: boolean;
   linodeCapabilities: LinodeCapabilities[];
   linodeId: number;
   linodeIsInDistributedRegion: boolean;
@@ -88,13 +88,13 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     encryptionStatus,
     gbRAM,
     gbStorage,
-    hasPublicLinodeInterface,
+    isUnreachablePublicIPv4,
     interfaceGeneration,
     interfaceWithVPC,
     ipv4,
     ipv6,
     isLKELinode,
-    isVPCOnlyLinode,
+    isUnreachablePublicIPv6,
     linodeCapabilities,
     linodeId,
     linodeIsInDistributedRegion,
@@ -279,19 +279,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 ) : undefined
               }
               gridSize={{ lg: 5, xs: 12 }}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
+              hasPublicInterface={isUnreachablePublicIPv6}
               isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv4',
                   text: firstAddress,
+                  disabled: isUnreachablePublicIPv4,
                 },
                 {
                   isMasked: maskSensitiveDataPreference,
                   maskedTextLength: 'ipv6',
                   text: secondAddress,
+                  disabled: isUnreachablePublicIPv6,
                 },
               ]}
               sx={{ padding: 0 }}
@@ -299,9 +300,6 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
             />
             <AccessTable
               gridSize={{ lg: 7, xs: 12 }}
-              hasPublicLinodeInterface={hasPublicLinodeInterface}
-              isLinodeInterface={isLinodeInterface}
-              isVPCOnlyLinode={isVPCOnlyLinode}
               rows={[
                 {
                   heading: 'SSH Access',
