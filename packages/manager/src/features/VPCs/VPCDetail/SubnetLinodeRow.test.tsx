@@ -117,7 +117,7 @@ describe('SubnetLinodeRow', () => {
       data: config,
     });
 
-    const { getByRole, getAllByText, findByText } = renderWithTheme(
+    const { getByRole, getByText, findByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -137,7 +137,7 @@ describe('SubnetLinodeRow', () => {
       `/linodes/${linodeFactory1.id}`
     );
 
-    getAllByText('10.0.0.0');
+    expect(getByText('10.0.0.0')).toBeVisible();
 
     const plusChipButton = getByRole('button', { name: '+1' });
     expect(plusChipButton).toHaveTextContent('+1');
@@ -168,7 +168,7 @@ describe('SubnetLinodeRow', () => {
       },
     });
 
-    const { getByRole, getAllByText, findByText } = renderWithTheme(
+    const { getByRole, getByText, findByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -188,8 +188,8 @@ describe('SubnetLinodeRow', () => {
       `/linodes/${linodeFactory1.id}/networking/interfaces/1`
     );
 
-    getAllByText('10.0.0.0');
-    getAllByText('10.0.0.1');
+    expect(getByText('10.0.0.0')).toBeVisible();
+    expect(getByText('10.0.0.1')).toBeVisible();
     const firewall = await findByText(mockFirewall0);
     expect(firewall).toBeVisible();
   });

@@ -47,6 +47,7 @@ describe('VPC Subnets table', () => {
 
   it('should display filter input, subnet label, id, ip range, number of linodes, and action menu', async () => {
     const subnet = subnetFactory.build({
+      id: 27,
       linodes: [
         subnetAssignedLinodeDataFactory.build({ id: 1 }),
         subnetAssignedLinodeDataFactory.build({ id: 2 }),
@@ -59,7 +60,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getAllByText, getByPlaceholderText, getByText } =
+    const { getByLabelText, getByPlaceholderText, getByText } =
       await renderWithThemeAndRouter(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
@@ -68,31 +69,32 @@ describe('VPC Subnets table', () => {
         />
       );
 
-    getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet');
-    getByText(subnet.label);
-    getByText('Subnet ID');
-    getAllByText(subnet.id);
+    expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
+    expect(getByText('Subnet')).toBeVisible();
+    expect(getByText(subnet.label)).toBeVisible();
+    expect(getByText('Subnet ID')).toBeVisible();
+    expect(getByText(subnet.id)).toBeVisible();
 
-    getByText('Subnet IP Range');
-    getByText(subnet.ipv4!);
+    expect(getByText('Subnet IP Range')).toBeVisible();
+    expect(getByText(subnet.ipv4!)).toBeVisible();
 
-    getByText('Linodes');
-    getByText(subnet.linodes.length);
+    expect(getByText('Linodes')).toBeVisible();
+    expect(getByText(subnet.linodes.length)).toBeVisible();
 
     const actionMenuButton = getByLabelText(
       `Action menu for Subnet ${subnet.label}`
     );
     await userEvent.click(actionMenuButton);
 
-    getByText('Assign Linodes');
-    getByText('Unassign Linodes');
-    getByText('Edit');
-    getByText('Delete');
+    expect(getByText('Assign Linodes')).toBeVisible();
+    expect(getByText('Unassign Linodes')).toBeVisible();
+    expect(getByText('Edit')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
   });
 
   it('should display filter input, subnet label, id, ip range, number of resources, and action menu', async () => {
     const subnet = subnetFactory.build({
+      id: 39,
       linodes: [
         subnetAssignedLinodeDataFactory.build({ id: 1 }),
         subnetAssignedLinodeDataFactory.build({ id: 2 }),
@@ -105,7 +107,7 @@ describe('VPC Subnets table', () => {
       },
     });
 
-    const { getByLabelText, getAllByText, getByPlaceholderText, getByText } =
+    const { getByLabelText, getByPlaceholderText, getByText } =
       await renderWithThemeAndRouter(
         <VPCSubnetsTable
           isVPCLKEEnterpriseCluster={false}
@@ -117,27 +119,29 @@ describe('VPC Subnets table', () => {
         }
       );
 
-    getByPlaceholderText('Filter Subnets by label or id');
-    getByText('Subnet');
-    getByText(subnet.label);
-    getByText('Subnet ID');
-    getAllByText(subnet.id);
+    expect(getByPlaceholderText('Filter Subnets by label or id')).toBeVisible();
+    expect(getByText('Subnet')).toBeVisible();
+    expect(getByText(subnet.label)).toBeVisible();
+    expect(getByText('Subnet ID')).toBeVisible();
+    expect(getByText(subnet.id)).toBeVisible();
 
-    getByText('Subnet IP Range');
-    getByText(subnet.ipv4!);
+    expect(getByText('Subnet IP Range')).toBeVisible();
+    expect(getByText(subnet.ipv4!)).toBeVisible();
 
-    getByText('Resources');
-    getByText(subnet.linodes.length + subnet.nodebalancers.length);
+    expect(getByText('Resources')).toBeVisible();
+    expect(
+      getByText(subnet.linodes.length + subnet.nodebalancers.length)
+    ).toBeVisible();
 
     const actionMenuButton = getByLabelText(
       `Action menu for Subnet ${subnet.label}`
     );
     await userEvent.click(actionMenuButton);
 
-    getByText('Assign Linodes');
-    getByText('Unassign Linodes');
-    getByText('Edit');
-    getByText('Delete');
+    expect(getByText('Assign Linodes')).toBeVisible();
+    expect(getByText('Unassign Linodes')).toBeVisible();
+    expect(getByText('Edit')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
   });
 
   it('should display no linodes text if there are no linodes associated with the subnet', async () => {
@@ -158,7 +162,7 @@ describe('VPC Subnets table', () => {
 
     const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
-    getByText('No Linodes');
+    expect(getByText('No Linodes')).toBeVisible();
   });
 
   it('should show linode table head data when table is expanded', async () => {
@@ -183,10 +187,10 @@ describe('VPC Subnets table', () => {
     const expandTableButton = getByLabelText(`expand ${subnet.label} row`);
     await userEvent.click(expandTableButton);
 
-    getByText('Linode');
-    getByText('Status');
-    getByText('VPC IPv4');
-    getByText('Firewalls');
+    expect(getByText('Linode')).toBeVisible();
+    expect(getByText('Status')).toBeVisible();
+    expect(getByText('VPC IPv4')).toBeVisible();
+    expect(getByText('Firewalls')).toBeVisible();
   });
 
   it(
