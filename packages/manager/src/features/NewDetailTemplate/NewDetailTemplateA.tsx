@@ -284,18 +284,20 @@ export const NewDetailTemplateA = () => {
           </Box>
         </Grid>
       </Grid>
-      {/* <Grid
+
+      {/* Bottom section - 3 Col */}
+      <Grid
         container
         id="bottom-sections-container"
-        columnSpacing={shouldUseGap4 ? 4 : 7.5}
+        columnSpacing={shouldUseLargeSpacing ? 7.5 : 4}
       >
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 4,
-            dl_fullSmall: 6,
-            dl_fullLarge: 4,
+            sm: 12,
+            dl_tablet950: 4,
+            md: 6,
+            dl_desktop1030: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -321,10 +323,10 @@ export const NewDetailTemplateA = () => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 4,
-            dl_fullSmall: 6,
-            dl_fullLarge: 4,
+            sm: 12,
+            dl_tablet950: 4,
+            md: 6,
+            dl_desktop1030: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -350,10 +352,10 @@ export const NewDetailTemplateA = () => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 12,
-            dl_tabletLarge: 4,
-            dl_fullSmall: 12,
-            dl_fullLarge: 4,
+            sm: 12,
+            dl_tablet950: 4,
+            md: 12,
+            dl_desktop1030: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -361,14 +363,14 @@ export const NewDetailTemplateA = () => {
           <Box
             sx={{
               display: 'grid',
-              columnGap: shouldUseGap4 ? 4 : 7.5,
+              columnGap: shouldUseLargeSpacing ? 7.5 : 4,
               rowGap: 1.75,
               gridTemplateColumns: {
                 xs: '1fr',
-                dl_tabletSmall: '1fr 1fr',
-                dl_tabletLarge: '1fr',
-                dl_fullSmall: '1fr 1fr',
-                dl_fullLarge: '1fr',
+                sm: '1fr 1fr',
+                dl_tablet950: '1fr',
+                md: '1fr 1fr',
+                dl_desktop1030: '1fr',
               },
             }}
           >
@@ -382,7 +384,7 @@ export const NewDetailTemplateA = () => {
             ))}
           </Box>
         </Grid>
-      </Grid> */}
+      </Grid>
     </div>
   );
 };
