@@ -102,9 +102,16 @@ export const NewDetailTemplateA = () => {
   if (isDesktop) columns = 3;
   else if (isTablet) columns = 2;
 
-  const shouldUseLargeSpacing = useMediaQuery(
-    theme.breakpoints.up('dl_desktop1030')
+  const isDesktop1030Up = useMediaQuery(theme.breakpoints.up('dl_desktop1030'));
+  const isDesktop1214Up = useMediaQuery(theme.breakpoints.up('dl_desktop1214'));
+  const isTablet950ToMd = useMediaQuery(
+    theme.breakpoints.between('dl_tablet950', 'md')
   );
+
+  const cond1 = (isDesktop1030Up && menuIsCollapsed) || isDesktop1214Up;
+  const cond2 = isTablet950ToMd;
+
+  const shouldUseLargeSpacing = cond1 || cond2;
 
   const shouldUseGap4 = isDlFullSmall || isDlTabletSmall;
   const sectionMarginBottom = isMobile
