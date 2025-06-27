@@ -1,4 +1,4 @@
-import { useUserAccountPermissions } from '@linode/queries';
+import { useProfile, useUserAccountPermissions } from '@linode/queries';
 
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -9,10 +9,13 @@ import { useFlags } from 'src/hooks/useFlags';
  */
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
+  const { data: profile } = useProfile();
   const { data: permissions } = useUserAccountPermissions(flags.iam?.enabled);
 
   return {
     isIAMBeta: flags.iam?.beta,
-    isIAMEnabled: Boolean(flags.iam?.enabled && permissions?.length),
+    isIAMEnabled:
+      flags.iam?.enabled &&
+      Boolean(!profile?.restricted || permissions?.length),
   };
 };

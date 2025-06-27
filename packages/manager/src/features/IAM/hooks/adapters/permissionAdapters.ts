@@ -2,7 +2,12 @@ import { accountGrantsToPermissions } from './accountGrantsToPermissions';
 import { firewallGrantsToPermissions } from './firewallGrantsToPermissions';
 import { linodeGrantsToPermissions } from './linodeGrantsToPermissions';
 
-import type { AccessType, Grants, PermissionType } from '@linode/api-v4';
+import type {
+  AccessType,
+  Grants,
+  PermissionType,
+  Profile,
+} from '@linode/api-v4';
 
 export const toPermissionMap = (
   permissionsToCheck: PermissionType[],
@@ -27,6 +32,7 @@ export const fromGrants = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
   grants: Grants,
+  profile?: Profile,
   entittyId?: number
 ): Record<PermissionType, boolean> => {
   let usersPermissionsMap = {} as Record<PermissionType, boolean>;
@@ -34,7 +40,8 @@ export const fromGrants = (
   switch (accessType) {
     case 'account':
       usersPermissionsMap = accountGrantsToPermissions(
-        grants?.global
+        grants?.global,
+        profile?.restricted
       ) as Record<PermissionType, boolean>;
       break;
     case 'firewall':

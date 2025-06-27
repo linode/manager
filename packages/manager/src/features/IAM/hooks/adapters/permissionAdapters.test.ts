@@ -1,6 +1,6 @@
 import { fromGrants, toPermissionMap } from './permissionAdapters';
 
-import type { Grants, PermissionType } from '@linode/api-v4';
+import type { Grants, PermissionType, Profile } from '@linode/api-v4';
 
 describe('toPermissionMap', () => {
   it('should map AccountAdmin permissions correctly', () => {
@@ -127,7 +127,13 @@ describe('fromGrants', () => {
       'update_firewall',
       'update_firewall_rules',
     ];
-    const result = fromGrants('firewall', permissionsToCheck, grants, 126860);
+    const result = fromGrants(
+      'firewall',
+      permissionsToCheck,
+      grants,
+      { restricted: false } as Profile,
+      126860
+    );
     expect(result).toEqual({
       update_firewall: true,
       update_firewall_rules: true,
@@ -141,7 +147,13 @@ describe('fromGrants', () => {
       'update_linode',
       'upgrade_linode',
     ];
-    const result = fromGrants('linode', permissionsToCheck, grants, 99487769);
+    const result = fromGrants(
+      'linode',
+      permissionsToCheck,
+      grants,
+      { restricted: false } as Profile,
+      99487769
+    );
     expect(result).toEqual({
       clone_linode: true,
       reboot_linode: true,
