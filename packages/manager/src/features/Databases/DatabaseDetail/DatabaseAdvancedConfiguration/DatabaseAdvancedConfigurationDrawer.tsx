@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDatabaseEngineConfig, useDatabaseMutation } from '@linode/queries';
 import {
   ActionsPanel,
-  Button,
   CircleProgress,
   Divider,
   Drawer,
@@ -13,6 +12,7 @@ import {
 import { scrollErrorIntoViewV2 } from '@linode/utilities';
 import { createDynamicAdvancedConfigSchema } from '@linode/validation';
 import Grid from '@mui/material/Grid';
+import { Button } from 'akamai-cds-react-components';
 import { enqueueSnackbar } from 'notistack';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
@@ -194,11 +194,12 @@ export const DatabaseAdvancedConfigurationDrawer = (props: Props) => {
           </Grid>
           <Grid size={2}>
             <Button
-              buttonType="primary"
+              data-testid="add-config"
               disabled={!selectedConfig}
               onClick={() => handleAddConfiguration(selectedConfig)}
-              sx={{ minWidth: 'auto', width: '70px' }}
+              style={{ minWidth: 'auto', width: '70px' }}
               title="Add"
+              variant="primary"
             >
               Add
             </Button>

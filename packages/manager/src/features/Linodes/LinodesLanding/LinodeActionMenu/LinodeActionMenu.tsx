@@ -1,8 +1,8 @@
 import { useRegionsQuery } from '@linode/queries';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
@@ -46,7 +46,7 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
   const { inListView, linodeId, linodeRegion, linodeStatus, linodeType } =
     props;
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
   const hasHostMaintenance = linodeStatus === 'stopped';
@@ -127,8 +127,8 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       isReadOnly: isLinodeReadOnly,
       onClick: () => {
         sendLinodeActionMenuItemEvent('Clone');
-        history.push({
-          pathname: '/linodes/create',
+        navigate({
+          to: '/linodes/create',
           search: buildQueryStringForLinodeClone(
             linodeId,
             linodeRegion,
