@@ -15,7 +15,6 @@ const DataItemWrapper = styled('div', { label: 'DataItemWrapper' })(
     minWidth: 120,
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: 14,
   })
 );
 
@@ -86,8 +85,6 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
     theme.breakpoints.only('dl_tabletSmall')
   );
 
-  const shouldUseGap4 = isDlFullSmall || isDlTabletSmall;
-
   const {
     isMobile,
     isTabletSmall,
@@ -104,6 +101,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
   let columns = 1;
   if (isDesktop) columns = 3;
   else if (isTablet) columns = 2;
+
+  const shouldUseGap4 = isDlFullSmall || isDlTabletSmall;
+  const sectionMarginBottom = isMobile
+    ? theme.spacingFunction(24)
+    : theme.spacingFunction(16);
 
   const dataItems = [
     { label: '3 Col Item', value: 'A' },
@@ -158,7 +160,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
       <Grid
         container
         id="top-level-container"
-        spacing={shouldUseGap4 ? 4 : 7.5}
+        columnSpacing={shouldUseGap4 ? 4 : 7.5}
         sx={{ margin: 0 }}
       >
         <Grid
@@ -170,9 +172,10 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
             dl_fullLarge: 8,
           }}
           id="red-section"
+          sx={{ marginBottom: sectionMarginBottom }}
         >
           <SectionTitle title="SUMMARY" />
-          <Grid container spacing={shouldUseGap4 ? 4 : 7.5}>
+          <Grid container columnSpacing={shouldUseGap4 ? 4 : 7.5}>
             {distributedReverseGridItems.map((columnItems, colIndex) => (
               <Grid
                 key={colIndex}
@@ -184,14 +187,22 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
                   dl_fullLarge: 6,
                 }}
               >
-                {columnItems.map((item, idx) => (
-                  <DataItem
-                    key={`reverse-grid-${colIndex}-${idx}`}
-                    label={item.label}
-                    value={item.value}
-                    backgroundColor="#ffd7d7"
-                  />
-                ))}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    rowGap: 1.75,
+                  }}
+                >
+                  {columnItems.map((item, idx) => (
+                    <DataItem
+                      key={`reverse-grid-${colIndex}-${idx}`}
+                      label={item.label}
+                      value={item.value}
+                      backgroundColor="#ffd7d7"
+                    />
+                  ))}
+                </Box>
               </Grid>
             ))}
           </Grid>
@@ -206,6 +217,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
             dl_fullLarge: 4,
           }}
           id="blue-section"
+          sx={{ marginBottom: sectionMarginBottom }}
         >
           <SectionTitle title="VPC" />
 
@@ -213,6 +225,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
             sx={{
               display: 'grid',
               columnGap: shouldUseGap4 ? 4 : 7.5,
+              rowGap: 1.75,
               gridTemplateColumns: {
                 xs: '1fr',
                 dl_tabletSmall: '1fr 1fr',
