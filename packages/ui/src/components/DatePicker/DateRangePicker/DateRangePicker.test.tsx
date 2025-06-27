@@ -73,7 +73,7 @@ describe('DateRangePicker', () => {
 
     renderWithTheme(<DateRangePicker {...defaultProps} />);
     await userEvent.click(screen.getByRole('textbox', { name: 'Start Date' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Last day' }));
+    await userEvent.click(screen.getByRole('button', { name: 'last day' }));
     await userEvent.click(screen.getByRole('button', { name: 'Apply' }));
 
     // Normalize values before assertion (use toISODate() instead of toISO())
@@ -82,7 +82,7 @@ describe('DateRangePicker', () => {
 
     expect(defaultProps.onApply).toHaveBeenCalledWith({
       endDate: expectedEndDate,
-      selectedPreset: 'Last day',
+      selectedPreset: 'last day',
       startDate: expectedStartDate,
     });
 
