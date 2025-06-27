@@ -78,7 +78,7 @@ export const UpgradeDialog = (props: Props) => {
   const [submitting, setSubmitting] = React.useState(false);
 
   // Show the second step of the modal for LKE, but not LKE-E.
-  const shouldShowRecycleNodePoolStep =
+  const shouldShowRecycleNodesStep =
     cluster?.tier === 'standard' && hasUpdatedSuccessfully;
 
   React.useEffect(() => {
@@ -129,7 +129,7 @@ export const UpgradeDialog = (props: Props) => {
       });
   };
 
-  const dialogTitle = shouldShowRecycleNodePoolStep
+  const dialogTitle = shouldShowRecycleNodesStep
     ? 'Upgrade complete'
     : `Upgrade Kubernetes version ${
         nextVersion ? `to ${nextVersion}` : ''
@@ -139,11 +139,11 @@ export const UpgradeDialog = (props: Props) => {
     <ActionsPanel
       primaryButtonProps={{
         'data-testid': 'confirm',
-        label: shouldShowRecycleNodePoolStep
+        label: shouldShowRecycleNodesStep
           ? 'Recycle All Nodes'
           : 'Upgrade Version',
         loading: submitting,
-        onClick: shouldShowRecycleNodePoolStep
+        onClick: shouldShowRecycleNodesStep
           ? onSubmitRecycleDialog
           : onSubmitUpgradeDialog,
       }}
@@ -165,7 +165,7 @@ export const UpgradeDialog = (props: Props) => {
       title={dialogTitle}
     >
       <Typography>
-        {shouldShowRecycleNodePoolStep ? (
+        {shouldShowRecycleNodesStep ? (
           <>
             The cluster’s Kubernetes version has been updated successfully to{' '}
             <strong>{cluster?.k8s_version}</strong>. <br /> <br />
