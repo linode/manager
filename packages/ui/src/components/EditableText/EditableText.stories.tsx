@@ -1,10 +1,10 @@
-import { action } from '@storybook/addon-actions';
-import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
+import { action } from 'storybook/actions';
+import { useArgs } from 'storybook/preview-api';
 
 import { EditableText } from './EditableText';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof EditableText>;
 

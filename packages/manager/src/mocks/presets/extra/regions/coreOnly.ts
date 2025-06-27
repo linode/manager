@@ -7,7 +7,7 @@ import type { MockPresetExtra } from 'src/mocks/types';
 
 const mockCoreOnlyRegions = () => {
   return [
-    http.get('*/v4/regions', ({ request }) => {
+    http.get('*/v4*/regions', ({ request }) => {
       return makePaginatedResponse({
         data: productionRegions,
         request,

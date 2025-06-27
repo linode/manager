@@ -85,7 +85,6 @@ describe('LongviewPlans', () => {
     // calls to `act()`, which can lead to undefined behavior.
     for (let i = 0; i < mockLongviewSubscriptions.length; i += 1) {
       const sub = mockLongviewSubscriptions[i];
-      // eslint-disable-next-line no-await-in-loop
       await testRow(
         sub.id,
         sub.label,

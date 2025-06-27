@@ -7,6 +7,7 @@ import { PLACEMENT_GROUP_LINODES_ERROR_MESSAGE } from '../../constants';
 import { PlacementGroupsLinodes } from './PlacementGroupsLinodes';
 
 const queryMocks = vi.hoisted(() => ({
+  useParams: vi.fn().mockReturnValue({ id: 1 }),
   useSearch: vi.fn().mockReturnValue({ query: undefined }),
 }));
 
@@ -14,6 +15,7 @@ vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
   return {
     ...actual,
+    useParams: queryMocks.useParams,
     useSearch: queryMocks.useSearch,
   };
 });

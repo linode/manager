@@ -1,6 +1,7 @@
 import { useRegionsQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { Link } from 'src/components/Link';
 

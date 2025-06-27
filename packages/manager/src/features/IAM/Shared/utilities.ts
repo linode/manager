@@ -1,6 +1,10 @@
 import { capitalize, capitalizeAllWords } from '@linode/utilities';
 
-import { PAID_ENTITY_TYPES } from './constants';
+import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  LAST_ACCOUNT_ADMIN_ERROR,
+  PAID_ENTITY_TYPES,
+} from './constants';
 
 import type {
   EntitiesOption,
@@ -10,12 +14,13 @@ import type {
   RoleView,
 } from './types';
 import type {
-  AccountAccessRole,
+  AccessType,
   AccountEntity,
+  AccountRoleType,
+  APIError,
   EntityAccess,
-  EntityAccessRole,
+  EntityRoleType,
   EntityType,
-  EntityTypePermissions,
   IamAccess,
   IamAccessType,
   IamAccountRoles,
@@ -55,7 +60,7 @@ export const getFilteredRoles = (options: FilteredRolesOptions) => {
  * @returns true if the given role has the given type
  */
 const getDoesRolesMatchType = (
-  entityType: 'all' | EntityType | EntityTypePermissions,
+  entityType: 'all' | AccessType,
   role: ExtendedRoleView
 ) => {
   if (entityType === 'all') {
@@ -88,19 +93,19 @@ const getDoesRolesMatchQuery = (
 
 export interface RolesType {
   access: IamAccessType;
-  entity_type: EntityTypePermissions;
+  entity_type: AccessType;
   label: string;
   value: string;
 }
 
 export interface ExtendedRole extends Roles {
   access: IamAccessType;
-  entity_type: EntityTypePermissions;
+  entity_type: AccessType;
 }
 
 export interface ExtendedEntityRole extends EntitiesRole {
-  label: EntityAccessRole;
-  value: EntityAccessRole;
+  label: EntityRoleType;
+  value: EntityRoleType;
 }
 
 export const getAllRoles = (permissions: IamAccountRoles): RolesType[] => {
@@ -200,8 +205,8 @@ export const changeUserRole = ({
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.map(
-        (role: AccountAccessRole) =>
-          role === initialRole ? (newRole as AccountAccessRole) : role
+        (role: AccountRoleType) =>
+          role === initialRole ? (newRole as AccountRoleType) : role
       ),
     };
   }
@@ -212,8 +217,8 @@ export const changeUserRole = ({
       entity_access: assignedRoles.entity_access.map(
         (resource: EntityAccess) => ({
           ...resource,
-          roles: resource.roles.map((role: EntityAccessRole) =>
-            role === initialRole ? (newRole as EntityAccessRole) : role
+          roles: resource.roles.map((role: EntityRoleType) =>
+            role === initialRole ? (newRole as EntityRoleType) : role
           ),
         })
       ),
@@ -263,7 +268,7 @@ export const deleteUserRole = ({
     return {
       ...assignedRoles,
       account_access: assignedRoles.account_access.filter(
-        (role: AccountAccessRole) => role !== initialRole
+        (role: AccountRoleType) => role !== initialRole
       ),
     };
   }
@@ -275,7 +280,7 @@ export const deleteUserRole = ({
         .map((resource: EntityAccess) => ({
           ...resource,
           roles: resource.roles.filter(
-            (role: EntityAccessRole) => role !== initialRole
+            (role: EntityRoleType) => role !== initialRole
           ),
         }))
         .filter((resource: EntityAccess) => resource.roles.length > 0),
@@ -309,9 +314,9 @@ export const groupAccountEntitiesByType = (
 export const changeRoleForEntity = (
   entityRoles: EntityAccess[],
   entityId: number,
-  entityType: EntityType | EntityTypePermissions,
-  initialRole: EntityAccessRole,
-  newRole: EntityAccessRole
+  entityType: AccessType,
+  initialRole: EntityRoleType,
+  newRole: EntityRoleType
 ): EntityAccess[] => {
   return [
     ...entityRoles.map((entity) => {
@@ -334,8 +339,8 @@ export const changeRoleForEntity = (
 export const toEntityAccess = (
   entityRoles: EntityAccess[],
   entityIds: number[],
-  roleName: EntityAccessRole,
-  roleType: EntityTypePermissions
+  roleName: EntityRoleType,
+  roleType: AccessType
 ): EntityAccess[] => {
   const selectedIds = new Set(entityIds);
 
@@ -374,15 +379,15 @@ export const toEntityAccess = (
 
 export const deleteUserEntity = (
   entityRoles: EntityAccess[],
-  roleName: EntityAccessRole,
+  roleName: EntityRoleType,
   entityId: number,
-  entityType: EntityType | EntityTypePermissions
+  entityType: AccessType
 ): EntityAccess[] => {
   return entityRoles
     .map((entity) => {
       if (entity.type === entityType && entity.id === entityId) {
         const roles = entity.roles.filter(
-          (role: EntityAccessRole) => role !== roleName
+          (role: EntityRoleType) => role !== roleName
         );
         return {
           ...entity,
@@ -484,11 +489,11 @@ export const mergeAssignedRolesIntoExistingRoles = (
     // Don't push it on if it already exists
     if (
       !selectedPlusExistingRoles.account_access.includes(
-        r.role?.value as AccountAccessRole
+        r.role?.value as AccountRoleType
       )
     ) {
       selectedPlusExistingRoles.account_access.push(
-        r.role?.value as AccountAccessRole
+        r.role?.value as AccountRoleType
       );
     }
   });
@@ -501,17 +506,29 @@ export const mergeAssignedRolesIntoExistingRoles = (
       );
       if (existingEntity) {
         // Don't push it on if it already exists
-        if (!existingEntity.roles.includes(r.role?.value as EntityAccessRole)) {
-          existingEntity.roles.push(r.role?.value as EntityAccessRole);
+        if (!existingEntity.roles.includes(r.role?.value as EntityRoleType)) {
+          existingEntity.roles.push(r.role?.value as EntityRoleType);
         }
       } else {
         selectedPlusExistingRoles.entity_access.push({
           id: e.value,
-          roles: [r.role?.value as EntityAccessRole],
-          type: r.role?.entity_type as EntityTypePermissions,
+          roles: [r.role?.value as EntityRoleType],
+          type: r.role?.entity_type,
         });
       }
     });
   });
   return selectedPlusExistingRoles;
+};
+
+export const getErrorMessage = (error: APIError[] | null) => {
+  const isLastAccountAdmin = error?.some(
+    (err) => err.field === 'Removing last account admin'
+  );
+
+  const errorMessage = isLastAccountAdmin
+    ? LAST_ACCOUNT_ADMIN_ERROR
+    : INTERNAL_ERROR_NO_CHANGES_SAVED;
+
+  return error ? errorMessage : undefined;
 };

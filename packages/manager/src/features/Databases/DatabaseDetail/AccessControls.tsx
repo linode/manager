@@ -1,5 +1,6 @@
 import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';

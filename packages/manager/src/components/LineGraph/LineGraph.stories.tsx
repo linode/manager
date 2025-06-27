@@ -4,7 +4,7 @@ import * as React from 'react';
 import { LineGraph } from 'src/components/LineGraph/LineGraph';
 
 import type { DataSet, LineGraphProps } from './LineGraph';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const data: DataSet['data'] = [
   [1644330600000, 0.45],

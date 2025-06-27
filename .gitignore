@@ -12,6 +12,7 @@ lib
 .vscode
 .idea
 **/*.iml
+*.mdc
 
 # misc
 .DS_Store

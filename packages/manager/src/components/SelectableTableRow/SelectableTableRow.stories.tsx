@@ -7,7 +7,7 @@ import { TableHead } from '../TableHead';
 import { TableRow } from '../TableRow';
 import { SelectableTableRow } from './SelectableTableRow';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof SelectableTableRow>;
 
@@ -27,7 +27,7 @@ const cells = [
 const meta: Meta<typeof SelectableTableRow> = {
   component: SelectableTableRow,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '2em' }}>
         <Story />
       </div>

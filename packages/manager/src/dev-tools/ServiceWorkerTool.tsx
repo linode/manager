@@ -139,7 +139,7 @@ export const ServiceWorkerTool = () => {
       JSON.stringify(currentNotificationsData) !==
       JSON.stringify(customNotificationsData);
 
-    const hasCustomUserAccountPermissionsChanges = 
+    const hasCustomUserAccountPermissionsChanges =
       JSON.stringify(currentUserAccountPermissionsData) !==
       JSON.stringify(customUserAccountPermissionsData);
     const hasCustomUserEntityPermissionsChanges =

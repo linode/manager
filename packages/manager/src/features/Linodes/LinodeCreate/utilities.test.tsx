@@ -54,7 +54,9 @@ describe('getLinodeCreatePayload', () => {
   it('should return a basic payload', () => {
     const values = createLinodeRequestFactory.build() as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values, false)).toEqual(values);
+    expect(
+      getLinodeCreatePayload(values, { isShowingNewNetworkingUI: false })
+    ).toEqual(values);
   });
 
   it('should base64 encode metadata', () => {
@@ -62,7 +64,9 @@ describe('getLinodeCreatePayload', () => {
       metadata: { user_data: userData },
     }) as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values, false)).toEqual({
+    expect(
+      getLinodeCreatePayload(values, { isShowingNewNetworkingUI: false })
+    ).toEqual({
       ...values,
       metadata: { user_data: base64UserData },
     });
@@ -73,7 +77,9 @@ describe('getLinodeCreatePayload', () => {
       placement_group: {},
     }) as LinodeCreateFormValues;
 
-    expect(getLinodeCreatePayload(values, false)).toEqual({
+    expect(
+      getLinodeCreatePayload(values, { isShowingNewNetworkingUI: false })
+    ).toEqual({
       ...values,
       placement_group: undefined,
     });

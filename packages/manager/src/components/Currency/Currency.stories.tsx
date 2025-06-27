@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Currency } from './Currency';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof Currency>;
 

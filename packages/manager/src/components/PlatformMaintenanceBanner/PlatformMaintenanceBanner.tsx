@@ -1,6 +1,5 @@
 import { Notice, Typography } from '@linode/ui';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { usePlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
@@ -13,13 +12,15 @@ import { Link } from '../Link';
  * them separately from the standard MaintenanceBanner.
  */
 
-export const PlatformMaintenanceBanner = () => {
+export const PlatformMaintenanceBanner = ({
+  pathname,
+}: {
+  pathname?: string;
+}) => {
   const { accountHasPlatformMaintenance, linodesWithPlatformMaintenance } =
     usePlatformMaintenance();
 
-  const location = useLocation();
-  const hideAccountMaintenanceLink =
-    location.pathname === '/account/maintenance';
+  const hideAccountMaintenanceLink = pathname === '/account/maintenance';
 
   if (!accountHasPlatformMaintenance) return null;
 
@@ -37,7 +38,7 @@ export const PlatformMaintenanceBanner = () => {
         {!hideAccountMaintenanceLink && (
           <>
             {' '}
-            See which Linodes are scheduled for reboot on the{' '}
+            See which Linodes are <strong>scheduled</strong> for reboot on the{' '}
             <Link to="/account/maintenance">Account Maintenance</Link> page.
           </>
         )}

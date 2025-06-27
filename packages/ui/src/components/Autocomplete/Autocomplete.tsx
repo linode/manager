@@ -1,5 +1,5 @@
 import MuiAutocomplete from '@mui/material/Autocomplete';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import ChevronDownIcon from '../../assets/icons/chevron-down.svg';
 import CloseIcon from '../../assets/icons/close.svg';

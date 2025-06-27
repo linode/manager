@@ -1,12 +1,13 @@
-import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
-import { useRouteMatch } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { NavTabs } from 'src/components/NavTabs/NavTabs';
-
-import type { NavTab } from 'src/components/NavTabs/NavTabs';
+import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
+import { TabPanels } from 'src/components/Tabs/TabPanels';
+import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 const SSHKeys = React.lazy(() =>
   import('./SSHKeys/SSHKeys').then((module) => ({
@@ -46,60 +47,76 @@ const APITokens = React.lazy(() =>
 );
 
 export const Profile = () => {
-  const { url } = useRouteMatch();
-
-  const tabs: NavTab[] = [
+  const { tabs, handleTabChange, tabIndex } = useTabs([
     {
-      component: DisplaySettings,
-      routeName: `${url}/display`,
+      to: `/profile/display`,
       title: 'Display',
     },
     {
-      component: AuthenticationSettings,
-      routeName: `${url}/auth`,
+      to: `/profile/auth`,
       title: 'Login & Authentication',
     },
     {
-      component: SSHKeys,
-      routeName: `${url}/keys`,
+      to: `/profile/keys`,
       title: 'SSH Keys',
     },
     {
-      component: LishSettings,
-      routeName: `${url}/lish`,
+      to: `/profile/lish`,
       title: 'LISH Console Settings',
     },
     {
-      component: APITokens,
-      routeName: `${url}/tokens`,
+      to: `/profile/tokens`,
       title: 'API Tokens',
     },
     {
-      component: OAuthClients,
-      routeName: `${url}/clients`,
+      to: `/profile/clients`,
       title: 'OAuth Apps',
     },
     {
-      component: Referrals,
-      routeName: `${url}/referrals`,
+      to: `/profile/referrals`,
       title: 'Referrals',
     },
     {
-      render: <Settings />,
-      routeName: `${url}/settings`,
+      to: `/profile/settings`,
       title: 'My Settings',
     },
-  ];
+  ]);
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="My Profile" />
       <LandingHeader removeCrumbX={1} title="My Profile" />
-      <NavTabs tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
+        <React.Suspense fallback={<SuspenseLoader />}>
+          <TabPanels>
+            <SafeTabPanel index={0}>
+              <DisplaySettings />
+            </SafeTabPanel>
+            <SafeTabPanel index={1}>
+              <AuthenticationSettings />
+            </SafeTabPanel>
+            <SafeTabPanel index={2}>
+              <SSHKeys />
+            </SafeTabPanel>
+            <SafeTabPanel index={3}>
+              <LishSettings />
+            </SafeTabPanel>
+            <SafeTabPanel index={4}>
+              <APITokens />
+            </SafeTabPanel>
+            <SafeTabPanel index={5}>
+              <OAuthClients />
+            </SafeTabPanel>
+            <SafeTabPanel index={6}>
+              <Referrals />
+            </SafeTabPanel>
+            <SafeTabPanel index={7}>
+              <Settings />
+            </SafeTabPanel>
+          </TabPanels>
+        </React.Suspense>
+      </Tabs>
     </React.Fragment>
   );
 };
-
-export const ProfileLazyRoute = createLazyRoute('/profile')({
-  component: Profile,
-});

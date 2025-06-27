@@ -1,6 +1,7 @@
 import { Dialog, Stack } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import type { APIError } from '@linode/api-v4';
 import type { DialogProps } from '@linode/ui';

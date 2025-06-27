@@ -3,7 +3,7 @@ import React from 'react';
 
 import { FormGroup } from './FormGroup';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof FormGroup> = {
   component: FormGroup,

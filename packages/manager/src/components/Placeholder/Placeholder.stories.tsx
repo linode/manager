@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Placeholder } from './Placeholder';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof Placeholder>;
 

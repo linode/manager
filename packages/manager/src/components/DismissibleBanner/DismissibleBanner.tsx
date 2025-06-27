@@ -1,5 +1,6 @@
 import { CloseIcon, IconButton, Notice, Stack } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { useDismissibleNotifications } from 'src/hooks/useDismissibleNotifications';
 

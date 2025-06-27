@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import type { Notification } from '@linode/api-v4';
 
 export interface NotificationCenterNotificationsItem {

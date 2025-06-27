@@ -69,7 +69,6 @@
     "prepare": "husky"
   },
   "resolutions": {
-    "node-fetch": "^2.6.7",
     "semver": "^7.5.2",
     "yaml": "^2.3.0"
   },

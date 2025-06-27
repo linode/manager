@@ -1,6 +1,6 @@
 import { useProfile } from '@linode/queries';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: profile } = useProfile();
   const profileUsername = profile?.username;
@@ -21,7 +21,10 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const proxyUserActions: Action[] = [
     {
       onClick: () => {
-        history.push(`/iam/users/${username}/roles`);
+        navigate({
+          to: '/iam/users/$username/roles',
+          params: { username },
+        });
       },
       title: 'Manage Access',
     },
@@ -30,19 +33,28 @@ export const UsersActionMenu = ({ isProxyUser, onDelete, username }: Props) => {
   const nonProxyUserActions: Action[] = [
     {
       onClick: () => {
-        history.push(`/iam/users/${username}/details`);
+        navigate({
+          to: '/iam/users/$username/details',
+          params: { username },
+        });
       },
       title: 'View User Details',
     },
     {
       onClick: () => {
-        history.push(`/iam/users/${username}/roles`);
+        navigate({
+          to: '/iam/users/$username/roles',
+          params: { username },
+        });
       },
       title: 'View Assigned Roles',
     },
     {
       onClick: () => {
-        history.push(`/iam/users/${username}/entities`);
+        navigate({
+          to: '/iam/users/$username/entities',
+          params: { username },
+        });
       },
       title: 'View Entity Access',
     },

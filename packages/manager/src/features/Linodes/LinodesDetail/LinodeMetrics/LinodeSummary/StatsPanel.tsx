@@ -1,5 +1,5 @@
 import { CircleProgress, Stack, Typography } from '@linode/ui';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface Props {
   loading: boolean;

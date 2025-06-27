@@ -1,5 +1,6 @@
 import { CircleProgress, ErrorState } from '@linode/ui';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { withRouter } from 'react-router-dom';
 import type { RouteComponentProps } from 'react-router-dom';
 
@@ -85,7 +86,7 @@ type RouteProps = RouteComponentProps<Params>;
 export interface LinodesLandingProps {
   filteredLinodesLoading: boolean;
   handleRegionFilter: (regionFilter: RegionFilter) => void;
-  LandingHeader?: React.ReactElement;
+  LandingHeader?: React.ReactElement<any>;
   linodesData: LinodeWithMaintenance[];
   linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];

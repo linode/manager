@@ -1,3 +1,12 @@
+## [2025-07-01] - v0.5.0
+
+
+### Upcoming Features:
+
+- Add factory methods to create mock VM Host Maintenance Policy data for testing ([#12334](https://github.com/linode/manager/pull/12334))
+- Add `isAclpSupportedRegion` utility and unit tests ([#12375](https://github.com/linode/manager/pull/12375))
+- Add maintenance policy utilities for VM maintenance API ([#12417](https://github.com/linode/manager/pull/12417))
+
 ## [2025-06-17] - v0.4.0
 
 

@@ -3,6 +3,7 @@ import {
   useAccountAgreements,
   useAccountSettings,
   useMutateAccountAgreements,
+  useNetworkTransferPricesQuery,
   useProfile,
   useRegionsQuery,
 } from '@linode/queries';
@@ -13,7 +14,6 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { EUAgreementCheckbox } from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { useNetworkTransferPricesQuery } from 'src/queries/networkTransfer';
 import {
   useCreateBucketMutation,
   useObjectStorageBuckets,

@@ -5,7 +5,7 @@ import { Typography } from '../Typography';
 import { Select } from './Select';
 
 import type { SelectOption, SelectProps } from './Select';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<SelectProps<SelectOption>> = {
   component: Select,

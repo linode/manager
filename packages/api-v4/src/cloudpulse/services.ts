@@ -12,7 +12,7 @@ import type {
   JWEToken,
   JWETokenPayLoad,
   MetricDefinition,
-  ServiceTypes,
+  Service,
   ServiceTypesList,
 } from './types';
 import type { Filter, Params, ResourcePage } from 'src/types';
@@ -51,7 +51,7 @@ export const getCloudPulseServiceTypes = () =>
   );
 
 export const getCloudPulseServiceByServiceType = (serviceType: string) =>
-  Request<ServiceTypes>(
+  Request<Service>(
     setURL(`${API_ROOT}/monitor/services/${encodeURIComponent(serviceType)}`),
     setMethod('GET'),
   );

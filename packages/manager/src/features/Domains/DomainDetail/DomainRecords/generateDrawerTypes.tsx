@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { JSX } from 'react';
 import { Controller } from 'react-hook-form';
 import type { Control } from 'react-hook-form';
 

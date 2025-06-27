@@ -82,7 +82,7 @@ export const CreateMenu = () => {
           description: "Control your Linodes' physical placement",
           display: 'Placement Group',
           hide: !isPlacementGroupsEnabled,
-          href: '/placement-groups/create',
+          href: '/placement-groups?action=create',
         },
         {
           attr: { 'data-qa-one-click-add-new': true },

@@ -1,7 +1,7 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { useTheme } from '@mui/material/styles';
 import { default as _TextField } from '@mui/material/TextField';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { Box } from '../Box';
 import { CircleProgress } from '../CircleProgress';

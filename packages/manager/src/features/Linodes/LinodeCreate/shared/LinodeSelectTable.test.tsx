@@ -57,7 +57,6 @@ describe('Linode Select Table', () => {
     });
 
     for (const linode of linodes) {
-      // eslint-disable-next-line no-await-in-loop
       await findByText(linode.label);
     }
   });

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RemovableSelectionsList } from './RemovableSelectionsList';
 
 import type { RemovableItem } from './RemovableSelectionsList';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof RemovableSelectionsList>;
 

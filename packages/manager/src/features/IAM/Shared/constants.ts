@@ -7,17 +7,20 @@ export const NO_ASSIGNED_ROLES_TEXT = `The user doesn't have any roles assigned 
 
 export const NO_ASSIGNED_ENTITIES_TEXT = `The user doesn't have any entity access roles assigned yet. Once you assign the user a role on specific entities, these entities will show up here.`;
 
-export const INTERNAL_ERROR_UPDATE_PERMISSION = `Internal Error - Issue with updating permissions.`;
+export const INTERNAL_ERROR_NO_CHANGES_SAVED = `Internal Error. No changes were saved.`;
 
-export const NO_CHANGES_SAVED = `No changes were saved.`;
+export const LAST_ACCOUNT_ADMIN_ERROR =
+  'Failed to unassign the role. You need to have at least one user with the account_admin role on your account.';
 
 export const ERROR_STATE_TEXT =
   'An unexpected error occurred. Refresh the page or try again later.';
 
 // Links
-// TODO: update the link when it's ready - UIE-8534
 export const IAM_DOCS_LINK =
-  'https://www.linode.com/docs/platform/identity-access-management/';
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-and-access-cm';
+
+export const ROLES_LEARN_MORE_LINK =
+  'https://techdocs.akamai.com/cloud-computing/docs/identity-access-cm-available-roles';
 
 export const PAID_ENTITY_TYPES = [
   'database',

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { EntityIcon } from 'src/components/EntityIcon/EntityIcon';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { EntityVariants } from 'src/components/EntityIcon/EntityIcon';
 
 const meta: Meta<typeof EntityIcon> = {

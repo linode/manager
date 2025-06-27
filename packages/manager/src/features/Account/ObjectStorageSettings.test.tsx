@@ -84,7 +84,7 @@ describe('ObjectStorageSettings', () => {
     });
 
     server.use(
-      http.get('*/v4/account/settings', () => {
+      http.get('*/v4*/account/settings', () => {
         return HttpResponse.json(
           accountSettingsFactory.build({ object_storage: 'active' })
         );

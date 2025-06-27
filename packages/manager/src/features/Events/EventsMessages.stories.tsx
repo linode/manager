@@ -11,7 +11,7 @@ import { eventMessages } from 'src/features/Events/factory';
 
 import type { EventMessage } from './types';
 import type { Event } from '@linode/api-v4/lib/account';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const event: Event = eventFactory.build({
   action: 'linode_boot',

@@ -27,7 +27,10 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
-import { UPDATE_ALERT_SUCCESS_MESSAGE } from '../constants';
+import {
+  DELETE_ALERT_SUCCESS_MESSAGE,
+  UPDATE_ALERT_SUCCESS_MESSAGE,
+} from '../constants';
 import { AlertsTable } from './AlertsTable';
 import { AlertListingTableLabelMap } from './constants';
 import { GroupedAlertsTable } from './GroupedAlertsTable';
@@ -129,6 +132,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
+        scope: alert.scope,
       })
         .then(() => {
           // Handle success
@@ -164,7 +168,9 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
 
       deleteAlertDefinition(payload)
         .then(() => {
-          enqueueSnackbar('Alert deleted', { variant: 'success' });
+          enqueueSnackbar(DELETE_ALERT_SUCCESS_MESSAGE, {
+            variant: 'success',
+          });
         })
         .catch((deleteError: APIError[]) => {
           const errorResponse = getAPIErrorOrDefault(

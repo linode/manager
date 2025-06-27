@@ -18,7 +18,7 @@ describe('Linode Create UserData', () => {
       http.get('*/v4/images/*', () => {
         return HttpResponse.json(image);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
@@ -42,7 +42,7 @@ describe('Linode Create UserData', () => {
       http.get('*/v4/images/*', () => {
         return HttpResponse.json(image);
       }),
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

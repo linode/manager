@@ -5,7 +5,7 @@ import { Link } from 'src/components/Link';
 
 import { DismissibleBanner } from './DismissibleBanner';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof DismissibleBanner>;
 

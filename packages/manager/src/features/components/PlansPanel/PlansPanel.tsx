@@ -6,6 +6,7 @@ import {
   plansNoticesUtils,
 } from '@linode/utilities';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import {
   getIsDistributedRegion,

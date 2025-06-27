@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Avatar } from 'src/components/Avatar/Avatar';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { AvatarProps } from 'src/components/Avatar/Avatar';
 
 export const Default: StoryObj<AvatarProps> = {

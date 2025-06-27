@@ -23,9 +23,9 @@ describe('TypeToConfirm', () => {
 
     await waitFor(() => {
       expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('checkbox')).toBeChecked();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
     expect(getByText('Type-to-confirm is enabled')).toBeVisible();
   });
 
@@ -40,9 +40,9 @@ describe('TypeToConfirm', () => {
 
     await waitFor(() => {
       expect(getByRole('checkbox')).toBeEnabled();
+      expect(getByRole('checkbox')).toBeChecked();
     });
 
-    expect(getByRole('checkbox')).toBeChecked();
     expect(getByText('Type-to-confirm is enabled')).toBeVisible();
   });
 

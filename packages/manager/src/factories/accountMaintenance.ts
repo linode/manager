@@ -22,7 +22,7 @@ export const accountMaintenanceFactory =
       ])
     ),
     maintenance_policy_set: Factory.each(() =>
-      pickRandom(['migrate', 'power on/off'])
+      pickRandom(['linode/migrate', 'linode/power_off_on'])
     ),
     reason: Factory.each(() =>
       pickRandom([

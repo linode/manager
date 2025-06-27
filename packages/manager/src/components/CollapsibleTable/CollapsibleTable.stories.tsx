@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { CollapsibleTable } from './CollapsibleTable';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof CollapsibleTable> = {
   args: {

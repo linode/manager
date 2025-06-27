@@ -11,6 +11,7 @@ import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { VPCPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/VPCPanel';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/analytics/customEventAnalytics';

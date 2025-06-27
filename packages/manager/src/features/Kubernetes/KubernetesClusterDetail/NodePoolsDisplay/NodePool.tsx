@@ -35,6 +35,7 @@ interface Props {
   handleClickAutoscale: (poolId: number) => void;
   handleClickLabelsAndTaints: (poolId: number) => void;
   handleClickResize: (poolId: number) => void;
+  isLkeClusterRestricted: boolean;
   isOnlyNodePool: boolean;
   nodes: PoolNodeResponse[];
   openDeletePoolDialog: (poolId: number) => void;
@@ -60,6 +61,7 @@ export const NodePool = (props: Props) => {
     handleClickAutoscale,
     handleClickLabelsAndTaints,
     handleClickResize,
+    isLkeClusterRestricted,
     isOnlyNodePool,
     nodes,
     openDeletePoolDialog,
@@ -116,23 +118,27 @@ export const NodePool = (props: Props) => {
               <ActionMenu
                 actionsList={[
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: () => handleClickLabelsAndTaints(poolId),
                     title: 'Labels and Taints',
                   },
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: () => handleClickAutoscale(poolId),
                     title: 'Autoscale Pool',
                   },
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: () => handleClickResize(poolId),
                     title: 'Resize Pool',
                   },
                   {
+                    disabled: isLkeClusterRestricted,
                     onClick: () => openRecycleAllNodesDialog(poolId),
                     title: 'Recycle Pool Nodes',
                   },
                   {
-                    disabled: isOnlyNodePool,
+                    disabled: isLkeClusterRestricted || isOnlyNodePool,
                     onClick: () => openDeletePoolDialog(poolId),
                     title: 'Delete Pool',
                     tooltip: isOnlyNodePool
@@ -155,6 +161,7 @@ export const NodePool = (props: Props) => {
             >
               <StyledActionButton
                 compactY
+                disabled={isLkeClusterRestricted}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClickLabelsAndTaints(poolId);
@@ -164,6 +171,7 @@ export const NodePool = (props: Props) => {
               </StyledActionButton>
               <StyledActionButton
                 compactY
+                disabled={isLkeClusterRestricted}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClickAutoscale(poolId);
@@ -178,6 +186,7 @@ export const NodePool = (props: Props) => {
               )}
               <StyledActionButton
                 compactY
+                disabled={isLkeClusterRestricted}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleClickResize(poolId);
@@ -187,6 +196,7 @@ export const NodePool = (props: Props) => {
               </StyledActionButton>
               <StyledActionButton
                 compactY
+                disabled={isLkeClusterRestricted}
                 onClick={(e) => {
                   e.stopPropagation();
                   openRecycleAllNodesDialog(poolId);
@@ -204,7 +214,7 @@ export const NodePool = (props: Props) => {
                 <div>
                   <StyledActionButton
                     compactY
-                    disabled={isOnlyNodePool}
+                    disabled={isLkeClusterRestricted || isOnlyNodePool}
                     onClick={(e) => {
                       e.stopPropagation();
                       openDeletePoolDialog(poolId);
@@ -227,6 +237,7 @@ export const NodePool = (props: Props) => {
         clusterId={clusterId}
         clusterTier={clusterTier}
         encryptionStatus={encryptionStatus}
+        isLkeClusterRestricted={isLkeClusterRestricted}
         nodes={nodes}
         openRecycleNodeDialog={openRecycleNodeDialog}
         poolId={poolId}

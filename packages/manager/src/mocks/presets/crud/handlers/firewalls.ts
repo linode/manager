@@ -132,6 +132,7 @@ export const createFirewall = (mockState: MockState) => [
             label: `linode-${linodeId}`,
             type: 'linode' as FirewallDeviceEntityType,
             url: `/linodes/${linodeId}`,
+            parent_entity: null,
           };
           firewallEntities.push(entity);
 
@@ -157,6 +158,7 @@ export const createFirewall = (mockState: MockState) => [
             label: `nodebalancer-${nbId}`,
             type: 'nodebalancer' as FirewallDeviceEntityType,
             url: `/nodebalancers/${nbId}`,
+            parent_entity: null,
           };
           firewallEntities.push(entity);
 

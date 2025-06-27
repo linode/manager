@@ -45,7 +45,7 @@ export const SubnetNodeBalancerRow = ({
     data: NodeBalancerConfig[],
     loading: boolean,
     error?: APIError[]
-  ): JSX.Element | string => {
+  ): React.JSX.Element | string => {
     if (loading) {
       return 'Loading...';
     }
@@ -74,7 +74,7 @@ export const SubnetNodeBalancerRow = ({
     data: Firewall[],
     loading: boolean,
     error?: APIError[]
-  ): JSX.Element | string => {
+  ): React.JSX.Element | string => {
     if (loading) {
       return 'Loading...';
     }
@@ -90,7 +90,7 @@ export const SubnetNodeBalancerRow = ({
     return getFirewallLink(data);
   };
 
-  const getFirewallLink = (data: Firewall[]): JSX.Element | string => {
+  const getFirewallLink = (data: Firewall[]): React.JSX.Element | string => {
     const firewall = data[0];
 
     return (

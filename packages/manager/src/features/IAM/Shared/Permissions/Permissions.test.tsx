@@ -11,18 +11,18 @@ import type { PermissionType } from '@linode/api-v4/lib/iam/types';
 const mockPermissions: PermissionType[] = ['cancel_account'];
 
 const mockPermissionsLong: PermissionType[] = [
-  'list_payments',
-  'list_invoices',
+  'list_billing_payments',
+  'list_billing_invoices',
   'list_payment_methods',
-  'view_invoice',
+  'view_billing_invoice',
   'list_invoice_items',
   'view_payment_method',
-  'view_payment',
+  'view_billing_payment',
 ];
 
 const mockPermissionsLongExpand: PermissionType[] = [
   'list_linode_firewalls',
-  'view_linode_networking_info',
+  'list_firewall_devices',
   'view_linode_disk',
   'view_linode_monthly_network_transfer_stats',
   'view_linode_network_transfer',
@@ -33,7 +33,7 @@ const mockPermissionsLongExpand: PermissionType[] = [
   'list_linode_nodebalancers',
   'view_linode_monthly_stats',
   'view_linode_config_profile',
-  'view_linode_ip_address',
+  'list_firewall_rules',
   'view_linode_config_profile_interface',
 ];
 

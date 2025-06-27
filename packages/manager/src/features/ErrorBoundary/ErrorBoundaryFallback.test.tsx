@@ -34,7 +34,7 @@ describe('ErrorBoundaryFallback', () => {
     screen.getByText('Clearing cache and cookies in a browser');
     screen.getByText('Akamai Compute Support');
 
-    expect(consoleSpy).toHaveBeenCalledTimes(3);
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
 
     const refreshButton = screen.getByText('Refresh application');
     const reloadButton = screen.getByText('Reload page');

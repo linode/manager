@@ -2,7 +2,7 @@ import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 
 import type {
-  EntityTypePermissions,
+  AccessType,
   IamAccountRoles,
   IamUserRoles,
   PermissionType,
@@ -84,12 +84,12 @@ export const getUserAccountPermissions = (username: string) =>
  * Returns the current permissions for this User on the entity.
  *
  * @param username { string } the username to look up.
- * @param entityType { EntityTypePermissions } the entityType to look up.
+ * @param entityType { AccessType } the entityType to look up.
  * @param entityId { number } the entityId to look up.
  */
 export const getUserEntityPermissions = (
   username: string,
-  entityType: EntityTypePermissions,
+  entityType: AccessType,
   entityId: number,
 ) =>
   Request<PermissionType[]>(

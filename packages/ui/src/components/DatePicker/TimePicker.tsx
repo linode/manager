@@ -19,7 +19,7 @@ interface TimePickerProps
   > {
   errorText?: string;
   format?: 'HH:mm' | 'hh:mm a'; // 24-hour or 12-hour format
-  inputRef?: React.RefObject<HTMLInputElement>;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
   label: string;
   onChange: (time: DateTime | null) => void;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;

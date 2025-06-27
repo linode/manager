@@ -288,11 +288,9 @@ describe('CloudPulseResourcesSelect component tests', () => {
 
     // Select the first 10 resources
     for (let i = 0; i < 10; i++) {
-      // eslint-disable-next-line no-await-in-loop
       const option = await screen.findByRole('option', {
         name: mockLinodes[i].label,
       });
-      // eslint-disable-next-line no-await-in-loop
       await user.click(option);
     }
 

@@ -1,16 +1,12 @@
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useParams,
-} from 'react-router-dom';
 
 import { LandingHeader } from 'src/components/LandingHeader';
 import { SafeTabPanel } from 'src/components/Tabs/SafeTabPanel';
-import { TabLinkList } from 'src/components/Tabs/TabLinkList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
+import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
+import { useTabs } from 'src/hooks/useTabs';
 
 import { IAM_DOCS_LINK, IAM_LABEL } from '../Shared/constants';
 
@@ -33,38 +29,21 @@ const UserEntities = React.lazy(() =>
 );
 
 export const UserDetailsLanding = () => {
-  const { username } = useParams<{ username: string }>();
-  const location = useLocation();
-  const history = useHistory();
-
-  const tabs = [
+  const { username } = useParams({ from: '/iam/users/$username' });
+  const { tabs, tabIndex, handleTabChange } = useTabs([
     {
-      routeName: `/iam/users/${username}/details`,
+      to: `/iam/users/$username/details`,
       title: 'User Details',
     },
     {
-      routeName: `/iam/users/${username}/roles`,
+      to: `/iam/users/$username/roles`,
       title: 'Assigned Roles',
     },
     {
-      routeName: `/iam/users/${username}/entities`,
+      to: `/iam/users/$username/entities`,
       title: 'Entity Access',
     },
-  ];
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
-  const getDefaultTabIndex = () => {
-    return (
-      tabs.findIndex((tab) =>
-        Boolean(matchPath(tab.routeName, { path: location.pathname }))
-      ) || 0
-    );
-  };
-
-  let idx = 0;
+  ]);
 
   return (
     <>
@@ -86,16 +65,16 @@ export const UserDetailsLanding = () => {
         spacingBottom={4}
         title={username}
       />
-      <Tabs index={getDefaultTabIndex()} onChange={navToURL}>
-        <TabLinkList tabs={tabs} />
+      <Tabs index={tabIndex} onChange={handleTabChange}>
+        <TanStackTabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={idx}>
+          <SafeTabPanel index={0}>
             <UserDetails />
           </SafeTabPanel>
-          <SafeTabPanel index={++idx}>
+          <SafeTabPanel index={1}>
             <UserRoles />
           </SafeTabPanel>
-          <SafeTabPanel index={++idx}>
+          <SafeTabPanel index={2}>
             <UserEntities />
           </SafeTabPanel>
         </TabPanels>

@@ -3,6 +3,7 @@ import { Autocomplete, CloseIcon, CustomPopper } from '@linode/ui';
 import { mapIdsToDevices } from '@linode/utilities';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import type { APIError, NodeBalancer } from '@linode/api-v4';
 import type { SxProps, Theme } from '@mui/material/styles';

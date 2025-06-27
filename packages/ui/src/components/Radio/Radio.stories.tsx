@@ -7,7 +7,7 @@ import { RadioGroup } from '../RadioGroup';
 import { Radio } from './Radio';
 
 import type { RadioProps } from './Radio';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 interface CustomArgs {
   checkedState?: 'checked' | 'unchecked';

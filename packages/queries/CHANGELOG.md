@@ -1,3 +1,16 @@
+## [2025-07-01] - v0.8.0
+
+
+### Added:
+
+- Created `iam/` directory and migrated relevant query keys and hooks ([#12370](https://github.com/linode/manager/pull/12370))
+- Created `networktransfer/` directory and migrated relevant query keys and hooks ([#12381](https://github.com/linode/manager/pull/12381))
+
+### Upcoming Features:
+
+- Add `getAllMaintenancePolicies` query and `useAccountMaintenancePoliciesQuery` hook to fetch and manage VM Host Maintenance Policy data ([#12334](https://github.com/linode/manager/pull/12334))
+- Add CRUD CloudNAT queries ([#12379](https://github.com/linode/manager/pull/12379))
+
 ## [2025-06-17] - v0.7.0
 
 

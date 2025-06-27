@@ -150,7 +150,6 @@ describe('BackupDrawer', () => {
         <BackupDrawer onClose={vi.fn()} open={true} />
       );
       // Confirm that Linodes without backups are listed in table.
-      /* eslint-disable no-await-in-loop */
       for (const mockLinode of mockLinodesWithoutBackups) {
         expect(await findByText(mockLinode.label)).toBeVisible();
       }

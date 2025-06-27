@@ -1,4 +1,4 @@
-import { Divider, Stack, Typography } from '@linode/ui';
+import { Divider, Stack, Typography, useTheme } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 
@@ -19,21 +19,32 @@ export const AppSection = (props: Props) => {
   const { apps, onOpenDetailsDrawer, onSelect, selectedStackscriptId, title } =
     props;
 
+  const theme = useTheme();
+  const isDarkMode = theme.name === 'dark';
+
   return (
     <Stack>
       <Typography variant="h2">{title}</Typography>
       <Divider spacingBottom={16} spacingTop={16} />
       <Grid container spacing={2}>
-        {apps?.map((app) => (
-          <AppSelectionCard
-            checked={app.stackscript.id === selectedStackscriptId}
-            iconUrl={`/assets/${app.details.logo_url}`}
-            key={app.stackscript.id}
-            label={app.stackscript.label}
-            onOpenDetailsDrawer={() => onOpenDetailsDrawer(app.stackscript.id)}
-            onSelect={() => onSelect(app.stackscript)}
-          />
-        ))}
+        {apps?.map((app) => {
+          const iconUrl = isDarkMode
+            ? `/assets/white/${app.details.logo_url}`
+            : `/assets/${app.details.logo_url}`;
+
+          return (
+            <AppSelectionCard
+              checked={app.stackscript.id === selectedStackscriptId}
+              iconUrl={iconUrl}
+              key={app.stackscript.id}
+              label={app.stackscript.label}
+              onOpenDetailsDrawer={() =>
+                onOpenDetailsDrawer(app.stackscript.id)
+              }
+              onSelect={() => onSelect(app.stackscript)}
+            />
+          );
+        })}
       </Grid>
     </Stack>
   );

@@ -1,6 +1,6 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Skeleton } from 'src/components/Skeleton';

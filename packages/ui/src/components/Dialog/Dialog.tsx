@@ -2,6 +2,7 @@ import _Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { omittedProps } from '../../utilities';
 import { getErrorText } from '../../utilities/error';

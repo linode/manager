@@ -44,7 +44,7 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );
@@ -81,7 +81,7 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );
@@ -130,7 +130,7 @@ describe('ManageImageRegionsDrawer', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region1, region2]));
       })
     );

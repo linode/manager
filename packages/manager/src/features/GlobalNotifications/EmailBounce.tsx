@@ -68,9 +68,7 @@ export const EmailBounceNotificationSection = React.memo(() => {
       )}
       {userEmailBounceNotification && profileEmailRef && (
         <EmailBounceNotification
-          changeEmail={() =>
-            history.push('/profile/display', { focusEmail: true })
-          }
+          changeEmail={() => history.push('/profile/display?focusEmail=true')}
           confirmEmail={confirmProfileEmail}
           text={
             <Typography data-testid="user_email_bounce">

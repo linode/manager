@@ -20,6 +20,7 @@ import { API_MAX_PAGE_SIZE, areArraysEqual } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 import { Link } from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';

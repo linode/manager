@@ -1,5 +1,5 @@
 import { useAccount, useProfile } from '@linode/queries';
-import { useMatch, useNavigate } from '@tanstack/react-router';
+import { useLocation, useMatch, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -52,6 +52,7 @@ const MaintenanceLanding = React.lazy(
 
 export const AccountLanding = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const match = useMatch({
     strict: false,
   });
@@ -173,8 +174,8 @@ export const AccountLanding = () => {
 
   return (
     <React.Fragment>
-      <PlatformMaintenanceBanner />
-      <MaintenanceBannerV2 />
+      <PlatformMaintenanceBanner pathname={location.pathname} />
+      <MaintenanceBannerV2 pathname={location.pathname} />
       <DocumentTitleSegment segment="Account Settings" />
       <LandingHeader {...landingHeaderProps} spacingBottom={4} />
 

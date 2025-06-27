@@ -8,7 +8,7 @@ import { Tabs } from 'src/components/Tabs/Tabs';
 import { TabLinkList } from './TabLinkList';
 
 import type { TabsProps } from '@reach/tabs';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const _tabs = [
   {

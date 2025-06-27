@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import * as React from 'react';
 
 import { Table } from 'src/components/Table';
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 import { SortableTableHead } from './SortableTableHead';
 
@@ -34,7 +35,7 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
     toggleLinodeView,
   } = props;
 
-  const { data: isTableStripingEnabled } = usePreferences(
+  const { data: tableStripingPreference } = usePreferences(
     (preferences) => preferences?.isTableStripingEnabled
   );
 
@@ -46,7 +47,10 @@ const TableWrapper = <T,>(props: TableWrapperProps<T>) => {
           colCount={5}
           rowCount={dataLength}
           stickyHeader
-          striped={!linodesAreGrouped && isTableStripingEnabled}
+          striped={
+            !linodesAreGrouped &&
+            getIsTableStripingEnabled(tableStripingPreference)
+          }
           tableClass={linodesAreGrouped ? 'MuiTable-groupByTag' : ''}
           {...tableProps}
         >

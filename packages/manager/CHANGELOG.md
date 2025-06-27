@@ -4,6 +4,68 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2025-07-01] - v1.145.0
+
+
+### Changed:
+
+- Kubernetes cluster details to show restricted access warnings and disabled actions ([#12360](https://github.com/linode/manager/pull/12360))
+- Improve LISH Console Settings page ([#12390](https://github.com/linode/manager/pull/12390))
+- Use white icons for Marketplace dark mode ([#12414](https://github.com/linode/manager/pull/12414))
+
+### Fixed:
+
+- ACLP-Alerting: UI misalignments in Alert Create/Edit form in the Criteria section ([#12402](https://github.com/linode/manager/pull/12402))
+- Incorrect checkbox colors in dark mode causing check icon to appear white instead of black ([#12409](https://github.com/linode/manager/pull/12409))
+- Incorrectly styled Linode Disk row action menu and buttons ([#12413](https://github.com/linode/manager/pull/12413))
+- Incorrectly styled LKE cluster node row action button ([#12413](https://github.com/linode/manager/pull/12413))
+
+### Removed:
+
+- Move IAM queries and dependencies to shared `queries` package ([#12370](https://github.com/linode/manager/pull/12370))
+- Move network transfer queries and dependencies to shared `queries` package ([#12381](https://github.com/linode/manager/pull/12381))
+
+### Tech Stories:
+
+- Reroute Kubernetes ([#12294](https://github.com/linode/manager/pull/12294))
+- Reroute IAM ([#12312](https://github.com/linode/manager/pull/12312))
+- Reroute Profile ([#12338](https://github.com/linode/manager/pull/12338))
+- Disable `no-await-in-loop` ESLint rule ([#12362](https://github.com/linode/manager/pull/12362))
+- Disable `prefer-screen-queries` ESLint rule ([#12362](https://github.com/linode/manager/pull/12362))
+- Update to Storybook v9 ([#12416](https://github.com/linode/manager/pull/12416))
+- TextField and Autocomplete components to wrap startAdornment and endAdornment props using InputAdornment ([#12387](https://github.com/linode/manager/pull/12387))
+
+### Tests:
+
+- Add Cypress tests for Linode details metrics when beta is disabled ([#12337](https://github.com/linode/manager/pull/12337))
+- Fix test flake in `bucket-create-multicluster.spec.ts` ([#12347](https://github.com/linode/manager/pull/12347))
+- Attempt to fix `Select.test.tsx` test flake ([#12362](https://github.com/linode/manager/pull/12362))
+- Account for region availability when selecting regions for tests ([#12378](https://github.com/linode/manager/pull/12378))
+- Disable `nodebalancerVpc` flag in cypress tests ([#12389](https://github.com/linode/manager/pull/12389))
+- Fix Cypress Linode clone test ([#12403](https://github.com/linode/manager/pull/12403))
+- Allow Cypress test resource label prefix to be set via `CY_TEST_RESOURCE_PREFIX` env var ([#12407](https://github.com/linode/manager/pull/12407))
+- Fix flaky test in `VPCSubnetsTable.test.tsx` ([#12425](https://github.com/linode/manager/pull/12425))
+
+### Upcoming Features:
+
+- Assign alert definitions to a Linode during creation ([#12248](https://github.com/linode/manager/pull/12248))
+- Streamline Linode Interface logic for Firewall Landing and Device tables to use new API fields ([#12283](https://github.com/linode/manager/pull/12283))
+- Add VM Host Maintenance Policy selection and display sections to Linode detail view ([#12334](https://github.com/linode/manager/pull/12334))
+- IAM RBAC: Standardize drawer error messages, add an error message for the lasc account admin ([#12371](https://github.com/linode/manager/pull/12371))
+- Update ACLP region support logic for Beta ACLP features based on `/regions` endpoint ([#12375](https://github.com/linode/manager/pull/12375))
+- ACLP - Alerts: enabled and integrated Delete API, added test cases to verify the deletion ([#12376](https://github.com/linode/manager/pull/12376))
+- Add `EntityScopeSelect` component, add `serviceAlertFactory` in services.ts factory file ([#12377](https://github.com/linode/manager/pull/12377))
+- Change `AclpBetaServices` interface in `featureFlags.ts`, add `beta chip` in `metrics & alerts` components based on the `AclpBetaServices` feature flag in cloudpulse ([#12386](https://github.com/linode/manager/pull/12386))
+- Add feature flag support for Cloud NAT ([#12388](https://github.com/linode/manager/pull/12388))
+- Add beta `Alerts Assigned +n` count to Linode Create flow Summary ([#12396](https://github.com/linode/manager/pull/12396))
+- Make copy updates to VM Host Maintenance Banners ([#12397](https://github.com/linode/manager/pull/12397))
+- Add new maintenance policy icons to linode rows ([#12398](https://github.com/linode/manager/pull/12398))
+- IAM RBAC: add the docs links, fix typo and styling issue ([#12410](https://github.com/linode/manager/pull/12410))
+- Add maintenance policy support for VM maintenance API ([#12417](https://github.com/linode/manager/pull/12417))
+- Add VM Host Maintenance support to Linode headers and rows ([#12418](https://github.com/linode/manager/pull/12418))
+- Fix incorrect filter for in-progress maintenance ([#12436](https://github.com/linode/manager/pull/12436))
+- Add CRUD CloudNAT factories and mocks ([#12379](https://github.com/linode/manager/pull/12379))
+
 ## [2025-06-17] - v1.144.0
 
 

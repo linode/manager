@@ -3,7 +3,7 @@ import React from 'react';
 import { CircleProgress } from './CircleProgress';
 
 import type { CircleProgressProps } from './CircleProgress';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<CircleProgressProps> = {
   render: (args) => <CircleProgress {...args} />,
