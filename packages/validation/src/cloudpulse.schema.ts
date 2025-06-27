@@ -78,10 +78,7 @@ export const createAlertDefinitionSchema = object({
   tags: array().of(string().defined()).optional(),
   entity_ids: array().of(string().defined()).optional(),
   regions: array().of(string().defined()).optional(),
-  scope: string()
-    .oneOf(['entity', 'region', 'account', undefined])
-    .nullable()
-    .optional(),
+  scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
 });
 
 export const editAlertDefinitionSchema = object({
@@ -125,9 +122,6 @@ export const editAlertDefinitionSchema = object({
   status: string()
     .oneOf(['enabled', 'disabled', 'in progress', 'failed'])
     .optional(),
-  scope: string()
-    .oneOf(['entity', 'region', 'account', undefined])
-    .nullable()
-    .optional(),
+  scope: string().oneOf(['entity', 'region', 'account']).nullable().optional(),
   regions: array().of(string().defined()).optional(),
 });
