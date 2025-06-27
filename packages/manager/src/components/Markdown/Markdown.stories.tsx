@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Markdown } from './Markdown';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const markdown = `
 # h1 Heading
