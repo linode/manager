@@ -274,7 +274,7 @@ export const DateRangePicker = ({
             <Button buttonType="outlined" onClick={handleClose}>
               Cancel
             </Button>
-            <Button buttonType="primary" onClick={handleApply}>
+            <Button buttonType="primary"  onClick={handleApply}>
               Apply
             </Button>
           </Box>

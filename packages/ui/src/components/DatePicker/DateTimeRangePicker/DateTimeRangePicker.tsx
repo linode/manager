@@ -343,7 +343,11 @@ export const DateTimeRangePicker = ({
             <Button buttonType="outlined" data-qa-buttons onClick={handleClose}>
               Cancel
             </Button>
-            <Button buttonType="primary" data-qa-button onClick={handleApply}>
+            <Button
+              buttonType="primary"
+              data-qa-buttons="apply"
+              onClick={handleApply}
+            >
               Apply
             </Button>
           </Box>
