@@ -551,7 +551,7 @@ export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
  * @param arr2 Array for comparison
  * @returns True if, both the arrays are equal, else false
  */
-const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+export const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
   if (arr1.length !== arr2.length) {
     return false;
   }
