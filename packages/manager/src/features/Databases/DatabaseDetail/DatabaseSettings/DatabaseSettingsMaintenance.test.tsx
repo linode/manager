@@ -41,8 +41,8 @@ const queryMocks = vi.hoisted(() => ({
   }),
 }));
 
-vi.mock('src/queries/databases/databases', async () => {
-  const actual = await vi.importActual('src/queries/databases/databases');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
   return {
     ...actual,
     useDatabaseEnginesQuery: queryMocks.useDatabaseEnginesQuery,

@@ -1,7 +1,7 @@
+import { databaseQueries } from '@linode/queries';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { databaseQueries } from 'src/queries/databases/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseSelectTypes } from '../Utils/models';

@@ -1,3 +1,4 @@
+import { useDatabaseQuery } from '@linode/queries';
 import {
   Autocomplete,
   Box,
@@ -30,7 +31,6 @@ import {
   isTimeOutsideBackup,
   useIsDatabasesEnabled,
 } from 'src/features/Databases/utilities';
-import { useDatabaseQuery } from 'src/queries/databases/databases';
 
 import DatabaseBackupsDialog from './DatabaseBackupsDialog';
 import DatabaseBackupsLegacy from './legacy/DatabaseBackupsLegacy';

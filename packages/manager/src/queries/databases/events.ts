@@ -1,6 +1,6 @@
-import { getEngineFromDatabaseEntityURL } from 'src/utilities/getEventsActionLink';
+import { databaseQueries } from '@linode/queries';
 
-import { databaseQueries } from './databases';
+import { getEngineFromDatabaseEntityURL } from 'src/utilities/getEventsActionLink';
 
 import type { Engine } from '@linode/api-v4';
 import type { EventHandlerData } from '@linode/queries';

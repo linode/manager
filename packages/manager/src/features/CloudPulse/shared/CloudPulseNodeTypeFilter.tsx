@@ -1,7 +1,6 @@
+import { useAllDatabasesQuery } from '@linode/queries';
 import { Autocomplete } from '@linode/ui';
 import * as React from 'react';
-
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 
 import { PRIMARY_NODE } from '../Utils/constants';
 

@@ -1,10 +1,10 @@
+import { useDatabaseMutation } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { enqueueSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Engine, UpdateDatabasePayload } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
