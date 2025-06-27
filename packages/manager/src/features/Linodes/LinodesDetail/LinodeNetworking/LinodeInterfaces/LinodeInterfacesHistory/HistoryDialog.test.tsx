@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { HistoryDialog } from './HistoryDialog';
 
@@ -12,8 +12,10 @@ const props = {
 };
 
 describe('LinodeInterfacesHistoryDialog', () => {
-  it('renders the LinodeInterfaceHistoryDialog', () => {
-    const { getByText } = renderWithTheme(<HistoryDialog {...props} />);
+  it('renders the LinodeInterfaceHistoryDialog', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <HistoryDialog {...props} />
+    );
 
     expect(getByText('Network Interfaces History')).toBeVisible();
     expect(getByText('Created')).toBeVisible();
@@ -26,7 +28,9 @@ describe('LinodeInterfacesHistoryDialog', () => {
   });
 
   it('closes the drawer', async () => {
-    const { getByText } = renderWithTheme(<HistoryDialog {...props} />);
+    const { getByText } = await renderWithThemeAndRouter(
+      <HistoryDialog {...props} />
+    );
 
     const closeButton = getByText('Close');
     await userEvent.click(closeButton);
