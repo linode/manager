@@ -37,14 +37,14 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getAllByText } = await renderWithThemeAndRouter(<VPCLanding />);
+    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />);
 
     // Static text and table column headers
-    getAllByText('Label');
-    getAllByText('Region');
-    getAllByText('VPC ID');
-    getAllByText('Subnets');
-    getAllByText('Linodes');
+    expect(getByText('Label')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('VPC ID')).toBeVisible();
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('Linodes')).toBeVisible();
   });
 
   it('should render vpc landing table with items with nodebalancerVpc flag enabled', async () => {
@@ -59,16 +59,16 @@ describe('VPC Landing Table', () => {
       },
     });
 
-    const { getAllByText } = await renderWithThemeAndRouter(<VPCLanding />, {
+    const { getByText } = await renderWithThemeAndRouter(<VPCLanding />, {
       flags: { nodebalancerVpc: true },
     });
 
     // Static text and table column headers
-    getAllByText('Label');
-    getAllByText('Region');
-    getAllByText('VPC ID');
-    getAllByText('Subnets');
-    getAllByText('Resources');
+    expect(getByText('Label')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('VPC ID')).toBeVisible();
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('Resources')).toBeVisible();
   });
 
   it('should render vpc landing with empty state', async () => {
