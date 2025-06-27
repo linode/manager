@@ -4,11 +4,12 @@ import * as React from 'react';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
+import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { HistoryTableContent } from './HistoryTableContent';
 
@@ -21,15 +22,22 @@ interface Props {
 export const HistoryTable = (props: Props) => {
   const { linodeId } = props;
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    currentRoute: '/linodes/$linodeId/networking/history',
+    preferenceKey: `${preferenceKey}-order`,
+  });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: '/linodes/$linodeId/networking/history',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+  });
+
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
@@ -53,14 +61,7 @@ export const HistoryTable = (props: Props) => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableSortCell
-              active={orderBy === 'created'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label={'created'}
-            >
-              Created
-            </TableSortCell>
+            <TableCell>Created</TableCell>
             <TableSortCell
               active={orderBy === 'interface_id'}
               direction={order}
@@ -77,14 +78,7 @@ export const HistoryTable = (props: Props) => {
             >
               Linode ID
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'event_id'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label={'event_id'}
-            >
-              Event ID
-            </TableSortCell>
+            <TableCell>Event ID</TableCell>
             <TableSortCell
               active={orderBy === 'version'}
               direction={order}
@@ -93,14 +87,7 @@ export const HistoryTable = (props: Props) => {
             >
               Version
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'status'}
-              direction={order}
-              handleClick={handleOrderChange}
-              label={'status'}
-            >
-              Status
-            </TableSortCell>
+            <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
