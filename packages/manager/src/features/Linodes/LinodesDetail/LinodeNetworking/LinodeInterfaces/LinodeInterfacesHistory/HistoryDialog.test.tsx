@@ -1,0 +1,39 @@
+import userEvent from '@testing-library/user-event';
+import * as React from 'react';
+
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+
+import { HistoryDialog } from './HistoryDialog';
+
+const props = {
+  linodeId: 1,
+  onClose: vi.fn(),
+  open: true,
+};
+
+describe('LinodeInterfacesHistoryDialog', () => {
+  it('renders the LinodeInterfaceHistoryDialog', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <HistoryDialog {...props} />
+    );
+
+    expect(getByText('Network Interfaces History')).toBeVisible();
+    expect(getByText('Created')).toBeVisible();
+    expect(getByText('Interface ID')).toBeVisible();
+    expect(getByText('Linode ID')).toBeVisible();
+    expect(getByText('Event ID')).toBeVisible();
+    expect(getByText('Version')).toBeVisible();
+    expect(getByText('Status')).toBeVisible();
+    expect(getByText('Close')).toBeVisible();
+  });
+
+  it('closes the drawer', async () => {
+    const { getByText } = await renderWithThemeAndRouter(
+      <HistoryDialog {...props} />
+    );
+
+    const closeButton = getByText('Close');
+    await userEvent.click(closeButton);
+    expect(props.onClose).toHaveBeenCalled();
+  });
+});
