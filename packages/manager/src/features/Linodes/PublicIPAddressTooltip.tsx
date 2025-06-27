@@ -14,7 +14,7 @@ const sxTooltipIcon = {
   paddingLeft: '4px',
 };
 
-export const PublicIPAddressesTooltip = ({
+export const PublicIPAddressTooltip = ({
   hasPublicInterface,
   isLinodeInterface,
 }: {

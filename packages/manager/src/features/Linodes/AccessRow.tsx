@@ -11,7 +11,7 @@ import {
   StyledTableCell,
 } from './LinodeEntityDetail.styles';
 import { StyledTableRow } from './LinodeEntityDetail.styles';
-import { PublicIPAddressesTooltip } from './PublicIPAddressesTooltip';
+import { PublicIPAddressTooltip } from './PublicIPAddressTooltip';
 
 interface AccessRowProps {
   hasPublicInterface?: boolean;
@@ -52,7 +52,7 @@ export const AccessRow = (props: AccessRowProps) => {
         </StyledGradientDiv>
         <Stack alignItems="center" direction="row" spacing={1}>
           {isDisabled ? (
-            <PublicIPAddressesTooltip
+            <PublicIPAddressTooltip
               hasPublicInterface={Boolean(hasPublicInterface)}
               isLinodeInterface={Boolean(isLinodeInterface)}
             />
