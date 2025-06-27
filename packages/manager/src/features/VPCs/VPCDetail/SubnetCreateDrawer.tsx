@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
+  useAccount,
   useCreateSubnetMutation,
   useGrants,
   useProfile,
@@ -10,13 +11,16 @@ import {
   Drawer,
   FormHelperText,
   Notice,
+  Select,
   Stack,
   TextField,
 } from '@linode/ui';
+import { isFeatureEnabledV2 } from '@linode/utilities';
 import { createSubnetSchemaIPv4 } from '@linode/validation';
 import * as React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
 import {
   calculateAvailableIPv4sRFC1918,
   DEFAULT_SUBNET_IPV4_VALUE,
@@ -35,9 +39,11 @@ interface Props {
 export const SubnetCreateDrawer = (props: Props) => {
   const { onClose, open, vpcId } = props;
 
+  const { data: account } = useAccount();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
   const { data: vpc } = useVPCQuery(vpcId, open);
+  const flags = useFlags();
 
   const userCannotAddSubnet = profile?.restricted && !grants?.global.add_vpcs;
 
@@ -52,6 +58,20 @@ export const SubnetCreateDrawer = (props: Props) => {
     reset: resetRequest,
   } = useCreateSubnetMutation(vpcId);
 
+  const isDualStackEnabled = isFeatureEnabledV2(
+    'VPC Dual Stack',
+    Boolean(flags.vpcIpv6),
+    account?.capabilities ?? []
+  );
+
+  const recommendedIPv6 = isDualStackEnabled
+    ? [
+        {
+          range: '/56',
+        },
+      ]
+    : undefined;
+
   const {
     control,
     formState: { errors, isDirty, isSubmitting },
@@ -64,12 +84,18 @@ export const SubnetCreateDrawer = (props: Props) => {
     resolver: yupResolver(createSubnetSchemaIPv4),
     values: {
       ipv4: recommendedIPv4,
+      ipv6: recommendedIPv6,
       label: '',
     },
   });
 
   const ipv4 = watch('ipv4');
   const numberOfAvailableIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
+
+  const { append, fields, remove } = useFieldArray({
+    control,
+    name: 'ipv6',
+  });
 
   const onCreateSubnet = async (values: CreateSubnetPayload) => {
     try {
@@ -144,6 +170,32 @@ export const SubnetCreateDrawer = (props: Props) => {
                 : 0}
             </FormHelperText>
           )}
+          {isDualStackEnabled && (
+            <Controller
+              control={control}
+              name="ipv6"
+              render={() => {
+                return (
+                  <Select
+                    label="IPv6 CIDR"
+                    onChange={(_, selectedOption) => {
+                      remove(0);
+                      append({
+                        range: selectedOption.value,
+                      });
+                    }}
+                    options={ipv6CIDROptions}
+                    sx={{
+                      width: 140,
+                    }}
+                    value={ipv6CIDROptions.find(
+                      (option) => option.value === fields[0].range
+                    )}
+                  />
+                );
+              }}
+            />
+          )}
         </Stack>
         <ActionsPanel
           primaryButtonProps={{
@@ -159,3 +211,55 @@ export const SubnetCreateDrawer = (props: Props) => {
     </Drawer>
   );
 };
+
+interface Ipv6CIDROption {
+  label: string;
+  value: string;
+}
+
+export const ipv6CIDROptions: Ipv6CIDROption[] = [
+  {
+    label: '/52',
+    value: '/52',
+  },
+  {
+    label: '/53',
+    value: '/53',
+  },
+  {
+    label: '/54',
+    value: '/54',
+  },
+  {
+    label: '/55',
+    value: '/55',
+  },
+  {
+    label: '/56',
+    value: '/56',
+  },
+  {
+    label: '/57',
+    value: '/57',
+  },
+  {
+    label: '/58',
+    value: '/58',
+  },
+  {
+    label: '/59',
+    value: '/59',
+  },
+  {
+    label: '/60',
+    value: '/60',
+  },
+  {
+    label: '/61',
+    value: '/61',
+  },
+  {
+    label: '/62',
+    value: '/62',
+  },
+];
