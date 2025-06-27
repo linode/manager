@@ -208,6 +208,7 @@ const VPCDetail = () => {
               {description}{' '}
               {description.length > 150 && (
                 <StyledLinkButton
+                  data-testid="show-description-button"
                   onClick={() => setShowFullDescription((show) => !show)}
                   sx={{ fontSize: '0.875rem' }}
                 >

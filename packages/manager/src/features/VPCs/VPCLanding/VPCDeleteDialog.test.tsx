@@ -16,24 +16,20 @@ describe('VPC Delete Dialog', () => {
   };
 
   it('renders a VPC delete dialog correctly', async () => {
-    const screen = await renderWithThemeAndRouter(
-      <VPCDeleteDialog {...props} />
-    );
-    const vpcTitle = screen.getByText('Delete VPC vpc-1');
+    const view = await renderWithThemeAndRouter(<VPCDeleteDialog {...props} />);
+    const vpcTitle = view.getByText('Delete VPC vpc-1');
     expect(vpcTitle).toBeVisible();
 
-    const cancelButton = screen.getByText('Cancel');
+    const cancelButton = view.getByText('Cancel');
     expect(cancelButton).toBeVisible();
 
-    const deleteButton = screen.getByText('Delete');
+    const deleteButton = view.getByText('Delete');
     expect(deleteButton).toBeVisible();
   });
 
   it('closes the VPC delete dialog as expected', async () => {
-    const screen = await renderWithThemeAndRouter(
-      <VPCDeleteDialog {...props} />
-    );
-    const cancelButton = screen.getByText('Cancel');
+    const view = await renderWithThemeAndRouter(<VPCDeleteDialog {...props} />);
+    const cancelButton = view.getByText('Cancel');
     expect(cancelButton).toBeVisible();
     await userEvent.click(cancelButton);
     expect(props.onClose).toBeCalled();

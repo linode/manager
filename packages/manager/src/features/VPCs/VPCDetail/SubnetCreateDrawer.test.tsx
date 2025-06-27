@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -13,15 +13,15 @@ const props = {
 
 describe('Create Subnet Drawer', () => {
   it('should render title, label, ipv4 input, ipv4 availability, and action buttons', () => {
-    const { getAllByText, getByTestId, getByText } = renderWithTheme(
+    const { getByRole, getByTestId, getByText } = renderWithTheme(
       <SubnetCreateDrawer {...props} />
     );
 
-    const createSubnetTexts = getAllByText('Create Subnet');
-    expect(createSubnetTexts).toHaveLength(2);
-
-    expect(createSubnetTexts[0]).toBeVisible(); // the Drawer title
-    expect(createSubnetTexts[1]).toBeVisible(); // the button
+    const createHeading = getByRole('heading', { name: 'Create Subnet' });
+    expect(createHeading).toBeVisible();
+    const createButton = getByRole('button', { name: 'Create Subnet' });
+    expect(createButton).toBeVisible();
+    expect(createButton).toBeDisabled();
 
     const label = getByText('Subnet Label');
     expect(label).toBeVisible();
@@ -39,14 +39,14 @@ describe('Create Subnet Drawer', () => {
     expect(cancelBtn).toBeVisible();
   });
 
-  it('should close the drawer if the close cancel button is clicked', () => {
+  it('should close the drawer if the close cancel button is clicked', async () => {
     const { getByText } = renderWithTheme(<SubnetCreateDrawer {...props} />);
 
     const cancelBtn = getByText(/Cancel/);
     expect(cancelBtn).not.toHaveAttribute('aria-disabled', 'true');
     expect(cancelBtn).toBeVisible();
 
-    fireEvent.click(cancelBtn);
+    await userEvent.click(cancelBtn);
     expect(props.onClose).toHaveBeenCalled();
   });
 });

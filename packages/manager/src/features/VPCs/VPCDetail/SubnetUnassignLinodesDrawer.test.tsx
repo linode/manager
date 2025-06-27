@@ -20,16 +20,16 @@ const props = {
 
 describe('Subnet Unassign Linodes Drawer', () => {
   it('should render a subnet Unassign linodes drawer', () => {
-    const screen = renderWithTheme(<SubnetUnassignLinodesDrawer {...props} />);
+    const view = renderWithTheme(<SubnetUnassignLinodesDrawer {...props} />);
 
-    const header = screen.getByText(
+    const header = view.getByText(
       'Unassign Linodes from subnet: subnet-1 (10.0.0.0/24)'
     );
     expect(header).toBeVisible();
-    const notice = screen.getByTestId('subnet-linode-action-notice');
+    const notice = view.getByTestId('subnet-linode-action-notice');
     expect(notice).toBeVisible();
 
-    const linodeSelect = screen.getByText('Linodes');
+    const linodeSelect = view.getByText('Linodes');
     expect(linodeSelect).toBeVisible();
   });
 });
