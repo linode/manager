@@ -193,7 +193,11 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
           sx={{ marginBottom: sectionMarginBottom }}
         >
           <SectionTitle title="SUMMARY" />
-          <Grid container columnSpacing={shouldUseGap4 ? 4 : 7.5}>
+          <Grid
+            container
+            columnSpacing={shouldUseGap4 ? 4 : 7.5}
+            rowSpacing={isMobile ? 1.75 : 0}
+          >
             {distributedReverseGridItems.map((columnItems, colIndex) => (
               <Grid
                 key={colIndex}
@@ -272,7 +276,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 6,
+            dl_tabletSmall: 12,
             dl_tabletLarge: 4,
             dl_fullSmall: 6,
             dl_fullLarge: 4,
@@ -301,7 +305,7 @@ export const NewDetailTemplateA = ({ menuIsCollapsed = false }) => {
         <Grid
           size={{
             xs: 12,
-            dl_tabletSmall: 6,
+            dl_tabletSmall: 12,
             dl_tabletLarge: 4,
             dl_fullSmall: 6,
             dl_fullLarge: 4,
