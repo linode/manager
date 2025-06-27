@@ -6,6 +6,16 @@ import { vi } from 'vitest';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AclpPreferenceToggle } from './AclpPreferenceToggle';
+import {
+  ALERTS_BETA_MODE_BANNER_TEXT,
+  ALERTS_BETA_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+  METRICS_BETA_MODE_BANNER_TEXT,
+  METRICS_BETA_MODE_BUTTON_TEXT,
+  METRICS_LEGACY_MODE_BANNER_TEXT,
+  METRICS_LEGACY_MODE_BUTTON_TEXT,
+} from './constants';
 
 import type { AclpPreferenceToggleType } from './AclpPreferenceToggle';
 
@@ -23,21 +33,17 @@ const expectedAclpPreferences: Record<
 > = {
   metrics: {
     preference: true,
-    legacyModeBannerText:
-      'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current view at any time.',
-    betaModeBannertext:
-      'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.',
-    legacyModeButtonText: 'Try the Metrics (Beta)',
-    betaModeButtonText: 'Switch to legacy Metrics',
+    legacyModeBannerText: METRICS_LEGACY_MODE_BANNER_TEXT,
+    betaModeBannertext: METRICS_BETA_MODE_BANNER_TEXT,
+    legacyModeButtonText: METRICS_LEGACY_MODE_BUTTON_TEXT,
+    betaModeButtonText: METRICS_BETA_MODE_BUTTON_TEXT,
   },
   alerts: {
     preference: true,
-    legacyModeBannerText:
-      'Try the new Alerts (Beta) for more options, including customizable alerts. You can switch back to the current view at any time.',
-    betaModeBannertext:
-      'Welcome to Alerts (Beta) with more options and greater flexibility.',
-    legacyModeButtonText: 'Try Alerts (Beta)',
-    betaModeButtonText: 'Switch to legacy Alerts',
+    legacyModeBannerText: ALERTS_LEGACY_MODE_BANNER_TEXT,
+    betaModeBannertext: ALERTS_BETA_MODE_BANNER_TEXT,
+    legacyModeButtonText: ALERTS_LEGACY_MODE_BUTTON_TEXT,
+    betaModeButtonText: ALERTS_BETA_MODE_BUTTON_TEXT,
   },
 };
 

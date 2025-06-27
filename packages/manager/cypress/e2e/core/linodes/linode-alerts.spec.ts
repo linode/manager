@@ -1,5 +1,4 @@
 // TODO: rename this file after other outstanding PRs merged, to be consistent w/ their naming convention
-// TODO: move strings to constants file
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
@@ -7,6 +6,13 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { randomLabel, randomNumber } from 'support/util/random';
+
+import {
+  ALERTS_BETA_MODE_BANNER_TEXT,
+  ALERTS_BETA_MODE_BUTTON_TEXT,
+  ALERTS_LEGACY_MODE_BANNER_TEXT,
+  ALERTS_LEGACY_MODE_BUTTON_TEXT,
+} from 'src/features/Linodes/constants';
 /*
  * UI of Linode alerts tab based on region enablement of alerts and isAclpAlertsBeta user preference
  */
@@ -55,15 +61,13 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(
-              'Try the new Alerts (Beta) for more options, including customizable alerts. You can switch back to the current view at any time.'
-            );
+            cy.contains(ALERTS_LEGACY_MODE_BANNER_TEXT);
           });
       });
 
     // upgrade from legacy alerts to ACLP alerts
     ui.button
-      .findByTitle('Try Alerts (Beta)')
+      .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
       .should('be.visible')
       .should('be.enabled');
   });
@@ -86,13 +90,11 @@ describe('region enables alerts', function () {
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
-            cy.contains(
-              'Welcome to Alerts (Beta) with more options and greater flexibility.'
-            );
+            cy.contains(ALERTS_BETA_MODE_BANNER_TEXT);
           });
         // possible to downgrade from ACLP alerts to legacy alerts
         ui.button
-          .findByTitle('Switch to legacy Alerts')
+          .findByTitle(ALERTS_BETA_MODE_BUTTON_TEXT)
           .should('be.visible')
           .should('be.enabled');
       });
