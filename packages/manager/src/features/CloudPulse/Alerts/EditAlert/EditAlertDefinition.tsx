@@ -87,7 +87,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       serviceType,
       alertDetails.severity,
       alertId,
-      'entity' // Todo: This default value should be removed once the backend supports scope for alerts
+      alertDetails.scope
     );
     try {
       await editAlert(editPayload);
