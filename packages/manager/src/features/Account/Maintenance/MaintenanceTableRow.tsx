@@ -19,7 +19,7 @@ import { useInProgressEvents } from 'src/queries/events/events';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 
-import { maintenanceDateColumnMap } from './utilities';
+import { getMaintenanceDateField } from './utilities';
 
 import type { MaintenanceTableType } from './MaintenanceTable';
 import type { AccountMaintenance } from '@linode/api-v4/lib/account/types';
@@ -74,7 +74,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const isTruncated = reason !== truncatedReason;
 
-  const dateField = maintenanceDateColumnMap[tableType][0];
+  const dateField = getMaintenanceDateField(tableType);
   const dateValue = props.maintenance[dateField];
 
   return (

@@ -26,8 +26,9 @@ import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
 import {
   COMPLETED_MAINTENANCE_FILTER,
+  getMaintenanceDateField,
+  getMaintenanceDateLabel,
   IN_PROGRESS_MAINTENANCE_FILTER,
-  maintenanceDateColumnMap,
   PENDING_MAINTENANCE_FILTER,
   UPCOMING_MAINTENANCE_FILTER,
 } from './utilities';
@@ -222,13 +223,13 @@ export const MaintenanceTable = ({ type }: Props) => {
                   </Hidden>
                 )}
                 <TableSortCell
-                  active={orderBy === maintenanceDateColumnMap[type][0]}
+                  active={orderBy === getMaintenanceDateField(type)}
                   className={classes.cell}
                   direction={order}
                   handleClick={handleOrderChange}
-                  label={maintenanceDateColumnMap[type][0]}
+                  label={getMaintenanceDateLabel(type)}
                 >
-                  {maintenanceDateColumnMap[type][1]}
+                  {getMaintenanceDateLabel(type)}
                 </TableSortCell>
               </>
             )}
