@@ -74,6 +74,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
   const isTruncated = reason !== truncatedReason;
 
+  const dateField = maintenanceDateColumnMap[tableType][0];
+  const dateValue = props.maintenance[dateField];
+
   return (
     <TableRow key={entity.id}>
       <TableCell style={{ textTransform: 'capitalize' }}>
@@ -117,12 +120,9 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
             </Hidden>
           )}
           <TableCell noWrap>
-            {formatDate(
-              props.maintenance[maintenanceDateColumnMap[tableType][0]],
-              {
-                timezone: profile?.timezone,
-              }
-            )}
+            {dateValue
+              ? formatDate(dateValue, { timezone: profile?.timezone })
+              : '—'}
           </TableCell>
         </>
       )}
