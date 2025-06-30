@@ -52,7 +52,6 @@ export const LinodeFirewallsRow = (props: LinodeFirewallsRowProps) => {
       <TableCell actionCell>
         <LinodeFirewallsActionMenu
           firewallID={firewallID}
-          linodeID={linodeID}
           onUnassign={() => onClickUnassign(firewallDevice, firewall)}
         />
       </TableCell>
