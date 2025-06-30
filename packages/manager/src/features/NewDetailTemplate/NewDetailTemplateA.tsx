@@ -297,7 +297,8 @@ export const NewDetailTemplateA = () => {
             sm: 12,
             dl_tablet950: 4,
             md: 6,
-            dl_desktop1030: 4,
+            dl_desktop1030: menuIsCollapsed ? 4 : 6,
+            dl_desktop1214: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -313,6 +314,7 @@ export const NewDetailTemplateA = () => {
                 dl_tablet950: '1fr',
                 md: '1fr',
                 dl_desktop1030: '1fr',
+                dl_desktop1214: '1fr',
               },
             }}
           >
@@ -333,7 +335,8 @@ export const NewDetailTemplateA = () => {
             sm: 12,
             dl_tablet950: 4,
             md: 6,
-            dl_desktop1030: 4,
+            dl_desktop1030: menuIsCollapsed ? 4 : 6,
+            dl_desktop1214: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -349,6 +352,7 @@ export const NewDetailTemplateA = () => {
                 dl_tablet950: '1fr',
                 md: '1fr',
                 dl_desktop1030: '1fr',
+                dl_desktop1214: '1fr',
               },
             }}
           >
@@ -369,7 +373,8 @@ export const NewDetailTemplateA = () => {
             sm: 12,
             dl_tablet950: 4,
             md: 12,
-            dl_desktop1030: 4,
+            dl_desktop1030: menuIsCollapsed ? 4 : 12,
+            dl_desktop1214: 4,
           }}
           sx={{ marginBottom: sectionMarginBottom }}
         >
@@ -384,7 +389,8 @@ export const NewDetailTemplateA = () => {
                 sm: '1fr 1fr',
                 dl_tablet950: '1fr',
                 md: '1fr 1fr',
-                dl_desktop1030: '1fr',
+                dl_desktop1030: menuIsCollapsed ? '1fr' : '1fr 1fr',
+                dl_desktop1214: '1fr',
               },
             }}
           >
