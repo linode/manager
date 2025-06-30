@@ -234,3 +234,19 @@ export const useIsNodebalancerVPCEnabled = () => {
 
   return { isNodebalancerVPCEnabled: flags.nodebalancerVpc ?? false };
 };
+
+/**
+ * Returns whether or not features related to the NodeBalancer Dual Stack project
+ * should be enabled.
+ *
+ * Currently, this just uses the `nodebalancerIPv6` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsNodebalancerIpv6Enabled = () => {
+  const flags = useFlags();
+
+  // @TODO NB-IPv6: check for customer tag/account capability when it exists
+
+  return { isNodebalancerIpv6Enabled: flags.nodebalancerIpv6 ?? false };
+};
