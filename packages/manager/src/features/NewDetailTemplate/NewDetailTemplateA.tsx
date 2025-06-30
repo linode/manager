@@ -1,8 +1,9 @@
 // @ts-nocheck
 import React from 'react';
 import { useMediaQuery, Box } from '@mui/material';
-import { useDetailsLayoutBreakpoints } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+
+import { useDetailsLayoutBreakpoints } from '@linode/ui';
 
 import {
   summaryData,
@@ -13,10 +14,10 @@ import {
 } from './detailsData';
 
 import { detailActions } from './actionData';
-
 import TwoColumnWithSidebarLayout from './layouts/TwoColumnWithSidebarLayout';
 import ThreeColumnLayout from './layouts/ThreeColumnLayout';
 import MenuActions from './MenuActions';
+import TagsRow from './TagsRow';
 
 export const NewDetailTemplateA = () => {
   const theme = useTheme();
@@ -29,7 +30,6 @@ export const NewDetailTemplateA = () => {
     theme.breakpoints.between('dl_tablet950', 'md')
   );
 
-  // Sets colored backgrounds to help visualize the layout
   const debugMode = true;
 
   const shouldUseLargeSpacing =
@@ -39,6 +39,8 @@ export const NewDetailTemplateA = () => {
     : theme.spacingFunction(16);
 
   const columnConfigs = [publicIpData, accessData, firewallData];
+
+  const [tags, setTags] = React.useState(Array(11).fill('Tag label'));
 
   return (
     <div
@@ -78,6 +80,12 @@ export const NewDetailTemplateA = () => {
         shouldUseLargeSpacing={shouldUseLargeSpacing}
         sectionMarginBottom={sectionMarginBottom}
         debugMode={debugMode}
+      />
+
+      <TagsRow
+        tags={tags}
+        setTags={setTags}
+        sectionMarginBottom={sectionMarginBottom}
       />
     </div>
   );

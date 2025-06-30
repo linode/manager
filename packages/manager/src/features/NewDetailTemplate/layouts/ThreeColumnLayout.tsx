@@ -25,7 +25,6 @@ export const ThreeColumnLayout: React.FC<ThreeColumnLayoutProps> = ({
     safeColumns.push({ title: '', items: [], backgroundColor: 'white' });
   }
 
-  // Define debug colors if debug mode is enabled
   const debugColors = ['#f0f9eb', '#e6f7ff', '#fff1f0'];
 
   return (
