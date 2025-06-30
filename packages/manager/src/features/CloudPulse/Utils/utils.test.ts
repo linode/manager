@@ -54,8 +54,12 @@ describe('arePortsValid', () => {
     expect(result).toBe(PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE);
   });
 
-  it('should return invalid for starting with comma', () => {
+  it('should return invalid for ports starting with comma', () => {
     expect(arePortsValid(',80')).toBe(PORTS_LEADING_COMMA_ERROR_MESSAGE);
+  });
+
+  it('should return invalid for input value other than numbers and commas', () => {
+    expect(arePortsValid('abc')).toBe(PORTS_ERROR_MESSAGE);
   });
 
   it('should return invalid for more than 15 ports', () => {
