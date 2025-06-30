@@ -80,24 +80,8 @@ const SectionTitle = ({ title }: SectionTitleProps) => {
 
 export const NewDetailTemplateA = () => {
   const theme = useTheme();
-  const isDlFullSmall = useMediaQuery(theme.breakpoints.only('dl_fullSmall'));
-  const isDlTabletSmall = useMediaQuery(
-    theme.breakpoints.only('dl_tabletSmall')
-  );
-
-  const {
-    isMobile,
-    isTabletSmall,
-    isTabletLarge,
-    isTablet,
-    isDesktop,
-    isDesktopNavClosedSmall,
-    isDesktopNavClosedLarge,
-    isDesktopNavOpenedSmall,
-    isDesktopNavOpenedLarge,
-    menuIsCollapsed,
-    getLayoutState,
-  } = useDetailsLayoutBreakpoints();
+  const { isMobile, isTablet, isDesktop, menuIsCollapsed } =
+    useDetailsLayoutBreakpoints();
 
   let columns = 1;
   if (isDesktop) columns = 3;
@@ -107,6 +91,10 @@ export const NewDetailTemplateA = () => {
   const isDesktop1214Up = useMediaQuery(theme.breakpoints.up('dl_desktop1214'));
   const isTablet950ToMd = useMediaQuery(
     theme.breakpoints.between('dl_tablet950', 'md')
+  );
+  const isDlFullSmall = useMediaQuery(theme.breakpoints.only('dl_fullSmall'));
+  const isDlTabletSmall = useMediaQuery(
+    theme.breakpoints.only('dl_tabletSmall')
   );
 
   const cond1 = (isDesktop1030Up && menuIsCollapsed) || isDesktop1214Up;
@@ -121,6 +109,7 @@ export const NewDetailTemplateA = () => {
 
   const reverseGridItems = gridItems.map((item) => ({ ...item }));
   const reverseSidebarItems = sidebarItems.map((item) => ({ ...item }));
+
   const distributedReverseGridItems = distributeItemsSequentially(
     reverseGridItems,
     2
