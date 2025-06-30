@@ -3,8 +3,8 @@ import {
   useLinodeQuery,
   useNotificationsQuery,
 } from '@linode/queries';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { LinodeMaintenanceBanner } from 'src/components/MaintenanceBanner/LinodeMaintenanceBanner';
 import { MaintenanceBanner } from 'src/components/MaintenanceBanner/MaintenanceBanner';
@@ -19,7 +19,7 @@ import { MigrationNotification } from './MigrationNotification';
 import type { Notification } from '@linode/api-v4';
 
 const Notifications = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const { data: linode } = useLinodeQuery(Number(linodeId));
 
   const { data: notifications, refetch } = useNotificationsQuery();

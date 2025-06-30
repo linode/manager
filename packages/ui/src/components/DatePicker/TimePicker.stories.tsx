@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 
 import { TimePicker } from './TimePicker';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof TimePicker> = {
   argTypes: {
