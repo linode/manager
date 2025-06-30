@@ -1,20 +1,17 @@
 // @ts-nocheck
 import React from 'react';
 import { Grid, Box } from '@mui/material';
-import { DataItemType } from '../detailsData';
-import { DataItem, SectionTitle } from './commonComponents';
+import { DataItemType, ColumnConfig } from '../detailsData';
+import { DataItem, SectionTitle } from '../commonComponents';
 
 interface TwoColumnWithSidebarLayoutProps {
   isMobile: boolean;
   menuIsCollapsed: boolean;
   shouldUseLargeSpacing: boolean;
   sectionMarginBottom: number | string;
-  mainItems: DataItemType[];
-  sidebarItems: DataItemType[];
-  mainTitle: string;
-  sidebarTitle: string;
-  mainBackgroundColor?: string;
-  sidebarBackgroundColor?: string;
+  mainSection: ColumnConfig;
+  sidebarSection: ColumnConfig;
+  debugMode?: boolean;
 }
 
 export const TwoColumnWithSidebarLayout: React.FC<
@@ -24,13 +21,22 @@ export const TwoColumnWithSidebarLayout: React.FC<
   menuIsCollapsed,
   shouldUseLargeSpacing,
   sectionMarginBottom,
-  mainItems,
-  sidebarItems,
-  mainTitle,
-  sidebarTitle,
-  mainBackgroundColor = '#ffd7d7',
-  sidebarBackgroundColor = '#d7ecff',
+  mainSection,
+  sidebarSection,
+  debugMode = false,
 }) => {
+  const mainItems = mainSection.items;
+  const sidebarItems = sidebarSection.items;
+  const mainTitle = mainSection.title;
+  const sidebarTitle = sidebarSection.title;
+
+  const mainBackgroundColor = debugMode
+    ? '#ffd7d7'
+    : mainSection.backgroundColor || 'white';
+  const sidebarBackgroundColor = debugMode
+    ? '#d7ecff'
+    : sidebarSection.backgroundColor || 'white';
+
   const firstColumnItems = isMobile
     ? mainItems
     : mainItems.filter((_, index) => index % 2 === 0);

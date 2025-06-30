@@ -26,6 +26,9 @@ export const NewDetailTemplateA = () => {
     theme.breakpoints.between('dl_tablet950', 'md')
   );
 
+  // Sets colored backgrounds to help visualize the layout
+  const debugMode = true;
+
   const shouldUseLargeSpacing =
     (isDesktop1030Up && menuIsCollapsed) || isDesktop1214Up || isTablet950ToMd;
   const sectionMarginBottom = isMobile
@@ -53,6 +56,7 @@ export const NewDetailTemplateA = () => {
         sectionMarginBottom={sectionMarginBottom}
         mainSection={summaryData}
         sidebarSection={vpcData}
+        debugMode={debugMode}
       />
 
       <ThreeColumnLayout
@@ -60,6 +64,7 @@ export const NewDetailTemplateA = () => {
         menuIsCollapsed={menuIsCollapsed}
         shouldUseLargeSpacing={shouldUseLargeSpacing}
         sectionMarginBottom={sectionMarginBottom}
+        debugMode={debugMode}
       />
     </div>
   );
