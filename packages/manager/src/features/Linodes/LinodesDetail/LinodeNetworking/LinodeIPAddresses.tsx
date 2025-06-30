@@ -7,10 +7,7 @@ import {
 import {
   useLinodeIPsQuery,
   useLinodeQuery,
-  useProfile,
   useRegionsQuery,
-  useUserAccountPermissions,
-  useUserEntityPermissions,
 } from '@linode/queries';
 import {
   Box,
@@ -32,6 +29,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -73,27 +71,16 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     linode?.region ?? ''
   );
 
-  // const isLinodesGrantReadOnly = useIsResourceRestricted({
-  //   grantLevel: 'read_only',
-  //   grantType: 'linode',
-  //   id: linodeID,
-  // });
-
-  const { data: profile } = useProfile();
-  const { data: userEntityPermissions } = useUserEntityPermissions(
+  const { permissions } = usePermissions('account', [
+    'share_ips',
+    'assign_ips',
+    'update_ip_rdns',
+  ]);
+  const { permissions: entityPermissions } = usePermissions(
     'linode',
+    ['allocate_linode_ip_address'],
     linodeID,
-    profile?.username ?? ''
-  );
-  const { data: accountPermissions } = useUserAccountPermissions(
-    profile?.username ?? ''
-  );
-  // TODO: Switch to using the RBAC hook when it's ready UIE-8946
-  const userCanShareIps = accountPermissions?.includes('share_ips');
-  const userCanTransferIp = accountPermissions?.includes('assign_ips');
-  const userCanUpdateRDNS = accountPermissions?.includes('update_ip_rdns');
-  const userCanAllocateLinodeIp = userEntityPermissions?.includes(
-    'allocate_linode_ip_address'
+    true
   );
 
   const isLinodeInterface = linode?.interface_generation === 'linode';
@@ -203,19 +190,19 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               ...(showAddIPButton
                 ? [
                     {
-                      disabled: !userCanAllocateLinodeIp,
+                      disabled: !entityPermissions.allocate_linode_ip_address,
                       onClick: () => setIsAddDrawerOpen(true),
                       title: 'Add an IP Address',
                     },
                   ]
                 : []),
               {
-                disabled: !userCanTransferIp,
+                disabled: !permissions.assign_ips,
                 onClick: () => setIsTransferDialogOpen(true),
                 title: 'IP Transfer',
               },
               {
-                disabled: !userCanShareIps,
+                disabled: !permissions.share_ips,
                 onClick: () => setIsShareDialogOpen(true),
                 title: 'IP Sharing',
               },
@@ -226,14 +213,14 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
           <Stack direction="row" spacing={1}>
             <Button
               buttonType="secondary"
-              disabled={!userCanTransferIp}
+              disabled={!permissions.assign_ips}
               onClick={() => setIsTransferDialogOpen(true)}
             >
               IP Transfer
             </Button>
             <Button
               buttonType="secondary"
-              disabled={!userCanShareIps}
+              disabled={!permissions.share_ips}
               onClick={() => setIsShareDialogOpen(true)}
             >
               IP Sharing
@@ -241,7 +228,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
             {showAddIPButton && (
               <Button
                 buttonType="primary"
-                disabled={!userCanAllocateLinodeIp}
+                disabled={!entityPermissions.allocate_linode_ip_address}
                 onClick={() => setIsAddDrawerOpen(true)}
               >
                 Add an IP Address
@@ -280,7 +267,7 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
               isUnreachablePublicIPv6={isUnreachablePublicIPv6}
               key={`${ipDisplay.address}-${ipDisplay.type}`}
               linodeId={linodeID}
-              readOnly={!userCanUpdateRDNS}
+              readOnly={!permissions.update_ip_rdns}
             />
           ))}
         </TableBody>
@@ -317,19 +304,19 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         linodeIsInDistributedRegion={linodeIsInDistributedRegion}
         onClose={() => setIsAddDrawerOpen(false)}
         open={isAddDrawerOpen}
-        readOnly={!userCanAllocateLinodeIp}
+        readOnly={!entityPermissions.allocate_linode_ip_address}
       />
       <IPTransfer
         linodeId={linodeID}
         onClose={() => setIsTransferDialogOpen(false)}
         open={isTransferDialogOpen}
-        readOnly={!userCanTransferIp}
+        readOnly={!permissions.assign_ips}
       />
       <IPSharing
         linodeId={linodeID}
         onClose={() => setIsShareDialogOpen(false)}
         open={isShareDialogOpen}
-        readOnly={!userCanShareIps}
+        readOnly={!permissions.share_ips}
       />
       {selectedIP && (
         <DeleteIPDialog

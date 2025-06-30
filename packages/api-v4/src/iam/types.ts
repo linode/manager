@@ -116,6 +116,7 @@ export type AccountAdmin =
   | AccountBillingAdmin
   | AccountEventViewer
   | AccountFirewallAdmin
+  | AccountIPAdmin
   | AccountLinodeAdmin
   | AccountMaintenanceViewer
   | AccountNotificationViewer
@@ -146,6 +147,9 @@ export type AccountEventViewer =
   | 'list_events'
   | 'mark_event_seen'
   | 'view_event';
+
+/** Permissions associated with the "account_ip_admin" role. */
+export type AccountIPAdmin = 'assign_ips' | 'share_ips' | 'update_ip_rdns';
 
 /** Permissions associated with the "account_firewall_admin" role. */
 export type AccountFirewallAdmin = AccountFirewallCreator | FirewallAdmin;
@@ -260,6 +264,7 @@ export type LinodeAdmin =
 
 /** Permissions associated with the "linode_contributor" role. */
 export type LinodeContributor =
+  | 'allocate_linode_ip_address'
   | 'apply_linode_firewalls'
   | 'boot_linode'
   | 'clone_linode'

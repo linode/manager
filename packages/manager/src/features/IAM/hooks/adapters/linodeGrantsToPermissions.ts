@@ -50,5 +50,7 @@ export const linodeGrantsToPermissions = (
     view_linode_monthly_stats: grantLevel !== null,
     view_linode_network_transfer: grantLevel !== null,
     view_linode_stats: grantLevel !== null,
+    allocate_linode_ip_address: grantLevel === 'read_only',
+    update_ip_rdns: grantLevel === 'read_only',
   };
 };

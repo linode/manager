@@ -1,35 +1,30 @@
-import { useProfile, useUserEntityPermissions } from '@linode/queries';
 import * as React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
 import { NO_PERMISSIONS_TOOLTIP_TEXT } from 'src/features/Firewalls/FirewallLanding/constants';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface LinodeFirewallsActionMenuProps {
   firewallID: number;
-  linodeID: number;
   onUnassign: () => void;
 }
 
 export const LinodeFirewallsActionMenu = (
   props: LinodeFirewallsActionMenuProps
 ) => {
-  const { linodeID, onUnassign } = props;
+  const { firewallID, onUnassign } = props;
 
-  const { data: profile } = useProfile();
   // const { data: grants } = useGrants();
-  const { data: userEntityPermissions } = useUserEntityPermissions(
-    'linode',
-    linodeID,
-    profile?.username ?? ''
+  const { permissions } = usePermissions(
+    'firewall',
+    ['delete_firewall_device'],
+    firewallID,
+    true
   );
-  // TODO: Switch to using the RBAC hook when it's ready UIE-8946
-  const userCanModifyFirewall =
-    // checkIfUserCanModifyFirewall(firewallID, profile, grants) ||
-    userEntityPermissions?.includes('delete_firewall_device');
 
-  const disabledProps = !userCanModifyFirewall
+  const disabledProps = !permissions.delete_firewall_device
     ? {
         disabled: true,
         tooltip: NO_PERMISSIONS_TOOLTIP_TEXT,
