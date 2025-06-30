@@ -26,7 +26,7 @@ const linodeConfig = FILTER_CONFIG.get('linode');
 
 const dbaasConfig = FILTER_CONFIG.get('dbaas');
 
-const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancers');
+const nodeBalancerConfig = FILTER_CONFIG.get('nodebalancer');
 
 const dbaasDashboard = dashboardFactory.build({ service_type: 'dbaas' });
 
@@ -428,7 +428,7 @@ it('test getCustomSelectProperties method', () => {
 
 it('test getPortFilterProperties method', () => {
   const portFilterConfig = nodeBalancerConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Port'
+    (filterObj) => filterObj.name === 'Ports'
   );
 
   expect(portFilterConfig).toBeDefined();
@@ -470,6 +470,22 @@ it('test constructAdditionalRequestFilters method', () => {
       'linode'
     )
   );
+
+  expect(result).toBeDefined();
+  expect(result.length).toEqual(0);
+});
+
+it('test constructAdditionalRequestFilters method with empty filter value', () => {
+  const result = constructAdditionalRequestFilters([
+    {
+      filterKey: 'protocol',
+      filterValue: [],
+    },
+    {
+      filterKey: 'port',
+      filterValue: [],
+    },
+  ]);
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);

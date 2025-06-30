@@ -130,7 +130,6 @@ export interface LegendRow {
 export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
   const { updateWidgetPreference: updatePreferences } = useAclpPreference();
   const { data: profile } = useProfile();
-  const timezone = profile?.timezone ?? DateTime.local().zoneName;
 
   const [widget, setWidget] = React.useState<Widgets>({ ...props.widget });
 
@@ -151,6 +150,10 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
     unit,
     widget: widgetProp,
   } = props;
+
+  const timezone =
+    duration.timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
+
   const flags = useFlags();
   const scaledWidgetUnit = React.useRef(generateCurrentUnit(unit));
 
@@ -302,9 +305,20 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              {convertStringToCamelCasesWithSpaces(widget.label)} (
-              {scaledWidgetUnit.current}
-              {unit.endsWith('ps') ? '/s' : ''})
+              <Stack alignItems="center" direction="row">
+                {convertStringToCamelCasesWithSpaces(widget.label)} (
+                {scaledWidgetUnit.current}
+                {unit.endsWith('ps') ? '/s' : ''}){/* TODO: Add tooltip */}
+                {/* <TooltipIcon
+                  status="help"
+                  sxTooltipIcon={{
+                    '& .MuiSvgIcon-root': {
+                      fill: theme.color.headline + '!important',
+                    },
+                  }}
+                  text="Some description"
+                /> */}
+              </Stack>
             </Typography>
             <Stack
               direction={{ sm: 'row' }}

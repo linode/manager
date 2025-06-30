@@ -23,48 +23,65 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
     {
       getRange: () => ({
         endDate: today,
+        startDate: today.minus({ minutes: 30 }),
+      }),
+      label: 'last 30 minutes',
+    },
+    {
+      getRange: () => ({
+        endDate: today,
         startDate: today.minus({ hours: 1 }),
       }),
-      label: 'Last hour',
+      label: 'last hour',
+    },
+    {
+      getRange: () => ({
+        endDate: today,
+        startDate: today.minus({ hours: 12 }),
+      }),
+      label: 'last 12 hours',
     },
     {
       getRange: () => ({
         endDate: today,
         startDate: today.minus({ days: 1 }),
       }),
-      label: 'Last day',
+      label: 'last day',
     },
     {
       getRange: () => ({
         endDate: today,
         startDate: today.minus({ days: 6 }),
       }),
-      label: 'Last 7 days',
+      label: 'last 7 days',
     },
     {
       getRange: () => ({
         endDate: today,
         startDate: today.minus({ days: 30 }),
       }),
-      label: 'Last 30 days',
+      label: 'last 30 days',
     },
     {
       getRange: () => ({
         endDate: today,
-        startDate: today.minus({ days: 60 }),
+        startDate: today.startOf('month'),
       }),
-      label: 'Last 60 days',
+      label: 'this month',
     },
     {
-      getRange: () => ({
-        endDate: today,
-        startDate: today.minus({ days: 90 }),
-      }),
-      label: 'Last 90 days',
+      getRange: () => {
+        const lastMonth = today.minus({ months: 1 });
+        return {
+          startDate: lastMonth.startOf('month'),
+          endDate: lastMonth.endOf('month'),
+        };
+      },
+      label: 'last month',
     },
     {
       getRange: () => ({ endDate: null, startDate: null }),
-      label: 'Reset',
+      label: 'reset',
     },
   ];
 
@@ -92,6 +109,7 @@ export const Presets = ({ onPresetSelect, selectedPreset }: PresetsProps) => {
         const { endDate, startDate } = preset.getRange();
         return (
           <StyledActionButton
+            data-qa-preset={`${preset.label}`}
             key={preset.label}
             onClick={() => {
               onPresetSelect(startDate, endDate, preset.label);
