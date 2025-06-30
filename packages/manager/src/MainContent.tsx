@@ -105,12 +105,6 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
-const LinodesRoutes = React.lazy(() =>
-  import('src/features/Linodes').then((module) => ({
-    default: module.LinodesRoutes,
-  }))
-);
-
 export const MainContent = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
@@ -273,10 +267,6 @@ export const MainContent = () => {
                           <React.Suspense fallback={<SuspenseLoader />}>
                             <ErrorBoundaryFallback>
                               <Switch>
-                                <Route
-                                  component={LinodesRoutes}
-                                  path="/linodes"
-                                />
                                 <Redirect exact from="/" to={defaultRoot} />
                                 {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
                                 <Redirect from="/dashboard" to={defaultRoot} />

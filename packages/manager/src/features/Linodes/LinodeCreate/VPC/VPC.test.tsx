@@ -8,7 +8,29 @@ import { VPC } from './VPC';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('VPC', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('renders a heading', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <VPC />,
@@ -35,7 +57,7 @@ describe('VPC', () => {
     const region = regionFactory.build({ capabilities: [] });
 
     server.use(
-      http.get(`*/v4/regions/${region.id}`, () => {
+      http.get(`*/v4*/regions/${region.id}`, () => {
         return HttpResponse.json(region);
       })
     );

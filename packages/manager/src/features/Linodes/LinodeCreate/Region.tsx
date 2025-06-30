@@ -124,6 +124,14 @@ export const Region = React.memo(() => {
       setValue('metadata.user_data', null);
     }
 
+    if (
+      values.maintenance_policy &&
+      !region.capabilities.includes('Maintenance Policy')
+    ) {
+      // Clear maintenance_policy if the selected region doesn't support it
+      setValue('maintenance_policy', undefined);
+    }
+
     if (values.placement_group?.id) {
       // If a placement group is selected, clear it because they are region specific
       setValue('placement_group.id', 0);

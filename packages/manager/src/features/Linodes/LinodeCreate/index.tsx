@@ -9,12 +9,11 @@ import {
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -23,7 +22,10 @@ import { Tab } from 'src/components/Tabs/Tab';
 import { TabList } from 'src/components/Tabs/TabList';
 import { TabPanels } from 'src/components/Tabs/TabPanels';
 import { Tabs } from 'src/components/Tabs/Tabs';
-import { getRestrictedResourceText } from 'src/features/Account/utils';
+import {
+  getRestrictedResourceText,
+  useVMHostMaintenanceEnabled,
+} from 'src/features/Account/utils';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
@@ -81,27 +83,30 @@ export const LinodeCreate = () => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
   const { data: profile } = useProfile();
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const { data: isAclpAlertsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpAlertsBeta
   );
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
 
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
     context: { isLinodeInterfacesEnabled, profile, secureVMNoticesEnabled },
     defaultValues: () =>
-      defaultValues(params, queryClient, isLinodeInterfacesEnabled),
+      defaultValues(params, queryClient, {
+        isLinodeInterfacesEnabled,
+        isVMHostMaintenanceEnabled,
+      }),
     mode: 'onBlur',
     resolver: getLinodeCreateResolver(params.type, queryClient),
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
-  const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
-
+  const navigate = useNavigate();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
@@ -123,18 +128,17 @@ export const LinodeCreate = () => {
       setParams({ type: newTab });
 
       // Get the default values for the new tab and reset the form
-      defaultValues(
-        { ...params, type: newTab },
-        queryClient,
-        isLinodeInterfacesEnabled
-      ).then(form.reset);
+      defaultValues({ ...params, type: newTab }, queryClient, {
+        isLinodeInterfacesEnabled,
+        isVMHostMaintenanceEnabled,
+      }).then(form.reset);
     }
   };
 
   const onSubmit: SubmitHandler<LinodeCreateFormValues> = async (values) => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
-      isAclpIntegration: flags.aclpBetaServices?.alerts,
+      isAclpIntegration: aclpBetaServices?.linode?.alerts,
       isAclpAlertsPreferenceBeta,
     });
 
@@ -147,7 +151,11 @@ export const LinodeCreate = () => {
             })
           : await createLinode(payload);
 
-      history.push(`/linodes/${linode.id}`);
+      navigate({
+        to: `/linodes/$linodeId`,
+        params: { linodeId: linode.id },
+        search: undefined,
+      });
 
       enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
         variant: 'success',
@@ -289,7 +297,3 @@ export const LinodeCreate = () => {
     </FormProvider>
   );
 };
-
-export const linodeCreateLazyRoute = createLazyRoute('/linodes/create')({
-  component: LinodeCreate,
-});

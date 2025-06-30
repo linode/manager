@@ -203,6 +203,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
+  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
   '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
     {
       background: Table.Row.Background.Hover,
@@ -232,6 +233,20 @@ export const darkTheme: ThemeOptions = {
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '& svg': {
+            fill: Alias.Action.Primary.Default,
+          },
+          '&:hover': {
+            '& h3': {
+              color: Alias.Action.Primary.Default,
+            },
+          },
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
@@ -470,6 +485,28 @@ export const darkTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
+          '&:active': {
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
+          '&:hover': {
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+          },
+          // Checked
+          '&.Mui-checked': {
+            color: Component.Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
+          },
           // Unchecked & Disabled
           '&.Mui-disabled': {
             '& svg': {
@@ -485,6 +522,11 @@ export const darkTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
@@ -652,6 +694,23 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover': {
             color: Content.Icon.Primary.Hover,
+          },
+          // "ui/src/components/TooltipIcon" Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
           },
         },
       },
@@ -1013,6 +1072,7 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
           '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
             {
               backgroundColor: Table.Row.Background.Hover,

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { OSIcon } from './OSIcon';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof OSIcon> = {
   render: (args) => <OSIcon {...args} />,

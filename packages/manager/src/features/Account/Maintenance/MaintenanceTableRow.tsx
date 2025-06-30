@@ -109,7 +109,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
 
       {flags.vmHostMaintenance?.enabled && (
         <>
-          {(tableType === 'scheduled' || tableType === 'completed') && (
+          {(tableType === 'upcoming' || tableType === 'completed') && (
             <Hidden mdDown>
               <TableCell data-testid="relative-date">
                 {parseAPIDate(when).toRelative()}
@@ -146,7 +146,7 @@ export const MaintenanceTableRow = (props: MaintenanceTableRowProps) => {
         <TableCell noWrap>{getFormattedStatus(type)}</TableCell>
       </Hidden>
       {(!flags.vmHostMaintenance?.enabled ||
-        tableType === 'scheduled' ||
+        tableType === 'upcoming' ||
         tableType === 'completed') && (
         <TableCell statusCell>
           <StatusIcon status={statusIconMap[status] ?? 'other'} />
