@@ -7,8 +7,6 @@ declare module '@mui/material/styles' {
     dl_tablet950: true;
     dl_desktop1030: true;
     dl_desktop1214: true;
-    dl_fullSmall: true;
-    dl_tabletSmall: true;
     xs: true;
     sm: true;
     md: true;
