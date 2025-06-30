@@ -1,3 +1,4 @@
+import { CloudPulseSelectTypes } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import { dashboardFactory } from 'src/factories';
@@ -18,7 +19,6 @@ import {
 } from './FilterBuilder';
 import { deepEqual, getFilters } from './FilterBuilder';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseSelectTypes } from './models';
 
 const mockDashboard = dashboardFactory.build();
 

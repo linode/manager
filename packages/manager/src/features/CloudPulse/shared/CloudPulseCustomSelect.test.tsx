@@ -1,13 +1,13 @@
+import { CloudPulseSelectTypes } from '@linode/utilities';
 import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import { databaseQueries } from 'src/queries/databases/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseSelectTypes } from '../Utils/models';
 import { CloudPulseCustomSelect } from './CloudPulseCustomSelect';
 
-import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
+import type { CloudPulseServiceTypeFiltersOptions } from '@linode/utilities';
 
 const mockOptions: CloudPulseServiceTypeFiltersOptions[] = [
   {

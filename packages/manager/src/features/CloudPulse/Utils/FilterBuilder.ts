@@ -1,4 +1,9 @@
 import {
+  CloudPulseAvailableViews,
+  CloudPulseSelectTypes,
+} from '@linode/utilities';
+
+import {
   NODE_TYPE,
   REGION,
   RELATIVE_TIME_DURATION,
@@ -7,7 +12,6 @@ import {
   TAGS,
 } from './constants';
 import { FILTER_CONFIG } from './FilterConfig';
-import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
@@ -23,7 +27,6 @@ import type {
 } from '../shared/CloudPulseTagsFilter';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
-import type { CloudPulseServiceTypeFilters } from './models';
 import type {
   AclpConfig,
   Dashboard,
@@ -32,6 +35,7 @@ import type {
   Filters,
   TimeDuration,
 } from '@linode/api-v4';
+import type { CloudPulseServiceTypeFilters } from '@linode/utilities';
 
 interface CloudPulseFilterProperties {
   config: CloudPulseServiceTypeFilters;

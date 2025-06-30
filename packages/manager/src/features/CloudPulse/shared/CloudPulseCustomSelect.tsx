@@ -9,11 +9,11 @@ import {
 } from './CloudPulseCustomSelectUtils';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
+import type { AclpConfig, FilterValue } from '@linode/api-v4';
 import type {
   CloudPulseServiceTypeFiltersOptions,
   QueryFunctionAndKey,
-} from '../Utils/models';
-import type { AclpConfig, FilterValue } from '@linode/api-v4';
+} from '@linode/utilities';
 
 /**
  * These are the properties requires for CloudPulseCustomSelect Components

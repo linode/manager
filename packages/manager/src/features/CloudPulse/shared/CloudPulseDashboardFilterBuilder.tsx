@@ -1,4 +1,5 @@
 import { Button, ErrorState, Typography } from '@linode/ui';
+import { type CloudPulseServiceTypeFilters } from '@linode/utilities';
 import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
@@ -25,7 +26,6 @@ import {
   getTagsProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
-import { type CloudPulseServiceTypeFilters } from '../Utils/models';
 
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseResources } from './CloudPulseResourcesSelect';

@@ -1,7 +1,11 @@
-import { RESOURCE_ID } from './constants';
-import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
+import {
+  CloudPulseAvailableViews,
+  CloudPulseSelectTypes,
+} from '@linode/utilities';
 
-import type { CloudPulseServiceTypeFilterMap } from './models';
+import { RESOURCE_ID } from './constants';
+
+import type { CloudPulseServiceTypeFilterMap } from '@linode/utilities';
 
 const TIME_DURATION = 'Time Range';
 export const DBAAS_CAPABILITY = 'Managed Databases';

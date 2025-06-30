@@ -34,7 +34,10 @@
     "@linode/api-v4": "workspace:*",
     "luxon": "3.4.4",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "@tanstack/react-query": "5.51.24",
+    "@tanstack/react-query-devtools": "5.51.24",
+    "@tanstack/react-router": "^1.111.11"
   },
   "devDependencies": {
     "@linode/tsconfig": "workspace:*",

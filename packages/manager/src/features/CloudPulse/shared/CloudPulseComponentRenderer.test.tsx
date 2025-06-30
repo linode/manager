@@ -1,3 +1,4 @@
+import { CloudPulseAvailableViews } from '@linode/utilities';
 import { GridLegacy } from '@mui/material';
 import React from 'react';
 
@@ -12,7 +13,6 @@ import {
   getResourcesProperties,
   getTagsProperties,
 } from '../Utils/FilterBuilder';
-import { CloudPulseAvailableViews } from '../Utils/models';
 
 describe('ComponentRenderer component tests', () => {
   it('it should render provided tag filter in props', () => {

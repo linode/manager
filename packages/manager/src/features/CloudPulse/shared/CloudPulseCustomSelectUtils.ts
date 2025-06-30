@@ -1,6 +1,6 @@
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
-import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
 import type { AclpConfig, FilterValue } from '@linode/api-v4';
+import type { CloudPulseServiceTypeFiltersOptions } from '@linode/utilities';
 
 interface CloudPulseCustomSelectProps {
   /**

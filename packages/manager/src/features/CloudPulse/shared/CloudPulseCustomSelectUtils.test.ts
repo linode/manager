@@ -3,7 +3,7 @@ import {
   handleCustomSelectionChange,
 } from './CloudPulseCustomSelectUtils';
 
-import type { CloudPulseServiceTypeFiltersOptions } from '../Utils/models';
+import type { CloudPulseServiceTypeFiltersOptions } from '@linode/utilities';
 
 it('test handleCustomSelectionChange method for single selection', () => {
   const selectedValue: CloudPulseServiceTypeFiltersOptions = {
