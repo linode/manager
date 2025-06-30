@@ -77,8 +77,6 @@ export const CloudPulsePortFilter = React.memo(
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      // Clear the error text when the user blurs the input
-      setErrorText(undefined);
       const validationError = arePortsValid(e.target.value);
       setErrorText(validationError);
       if (validationError === undefined) {
