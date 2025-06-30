@@ -53,12 +53,15 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     ui.regionSelect.find().click();
     ui.regionSelect.find().type(`${disabledRegion.label}{enter}`);
     cy.wait('@getRegionAvailability');
+
     // Alerts section is not visible until enabled region is selected
     cy.get('[data-qa-panel="Alerts"]').should('not.exist');
     ui.regionSelect.find().click();
     ui.regionSelect.find().clear();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+
+    // Alerts section is visible after enabled region is selected
     cy.contains('Additional Options').should('be.visible');
     cy.get('[data-qa-panel="Alerts"]').should('be.visible');
   });
@@ -72,6 +75,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+
+    // legacy alerts are visible
     ui.accordionHeading
       .findByTitle('Alerts')
       .should('be.visible')
@@ -137,6 +142,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+
     // enter plan and password form fields to enable "View Code Snippets" button
     cy.get('[data-qa-tp="Linode Plan"]').scrollIntoView();
     cy.get('[data-qa-tp="Linode Plan"]')
@@ -218,6 +224,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     const enabledRegion = this.mockRegions[0];
     mockGetRegionAvailability(enabledRegion.id, []).as('getRegionAvailability');
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+
+    // alerts panel appears
     cy.wait('@getRegionAvailability');
     cy.get('[data-qa-panel="Alerts"]')
       .should('be.visible')
@@ -239,12 +247,14 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
                 cy.get('td')
                   .eq(0)
                   .within(() => {
+                    // select each alert
                     ui.toggle
                       .find()
                       .should('have.attr', 'data-qa-toggle', 'false')
                       .should('be.visible')
                       .should('be.enabled')
                       .click();
+
                     ui.toggle
                       .find()
                       .should('have.attr', 'data-qa-toggle', 'true');
@@ -304,6 +314,14 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           .click();
       });
     cy.scrollTo('bottom');
+
+    // summary displays number of alerts ("+3")
+    cy.get('[data-qa-linode-create-summary="true"]')
+      .should('be.visible')
+      .within(() => {
+        cy.contains(`+${alertDefinitions.length}`);
+      });
+    // window scrolls to top, RegionSelect displays error msg
     ui.button
       .findByTitle('Create Linode')
       .should('be.visible')
@@ -340,6 +358,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       'getRegionAvailability'
     );
     ui.regionSelect.find().type(`${disabledRegion.label}{enter}`);
+
     cy.wait('@getRegionAvailability');
     // enter plan and password form fields to enable "View Code Snippets" button
     cy.get('[data-qa-tp="Linode Plan"]').scrollIntoView();
@@ -361,16 +380,56 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       const body = intercept.response?.body;
       const alerts = body['alerts'];
       expect(alerts).to.eq(undefined);
-      console.log('createlinode');
-      console.log(JSON.stringify(body));
       const error = body.errors[0];
       expect(error.field).to.eq('region');
       expect(error.reason).to.eq(createLinodeErrorMsg);
     });
-    // Creation fails
     // window scrolls to top, RegionSelect displays error msg
+    // Creation fails but not bc of factors related to this test setup
     cy.get('[data-qa-textfield-error-text="Region"]')
       .should('be.visible')
       .should('have.text', createLinodeErrorMsg);
+  });
+});
+
+describe('aclpBetaServices feature flag disabled', function () {
+  it('Alerts not present when feature flag disabled', function () {
+    const mockEnabledRegion = regionFactory.build({
+      capabilities: ['Linodes'],
+      monitors: {
+        alerts: ['Linodes'],
+      },
+    });
+    const mockRegions = [mockEnabledRegion];
+    cy.wrap(mockRegions).as('mockRegions');
+    mockGetRegions(mockRegions).as('getRegions');
+    mockAppendFeatureFlags({
+      aclpBetaServices: {
+        linode: {
+          alerts: false,
+          metrics: false,
+        },
+      },
+    }).as('getFeatureFlags');
+    mockGetUserPreferences({ isAclpAlertsBeta: true }).as('getUserPreferences');
+    // const createLinodeErrorMsg = 'region is not valid';
+    interceptCreateLinode().as('createLinode');
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getRegions', '@getUserPreferences']);
+    ui.regionSelect.find().click();
+
+    const mockRegionAvailability = [
+      regionAvailabilityFactory.build({
+        available: true,
+        region: mockEnabledRegion.id,
+      }),
+    ];
+    mockGetRegionAvailability(mockEnabledRegion.id, mockRegionAvailability).as(
+      'getRegionAvailability'
+    );
+    ui.regionSelect.find().type(`${mockEnabledRegion.label}{enter}`);
+    cy.wait('@getRegionAvailability');
+
+    cy.get('[data-qa-panel="Alerts"]').should('not.exist');
   });
 });
