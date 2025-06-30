@@ -4,6 +4,7 @@ import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
@@ -19,7 +20,7 @@ describe('isValidPort', () => {
 
   it('should return invalid for ports outside range 1-65535', () => {
     expect(isValidPort('0')).toBe(PORTS_RANGE_ERROR_MESSAGE);
-    expect(isValidPort('01')).toBe(PORTS_RANGE_ERROR_MESSAGE);
+    expect(isValidPort('01')).toBe(PORTS_LEADING_ZERO_ERROR_MESSAGE);
     expect(isValidPort('99999')).toBe(PORTS_RANGE_ERROR_MESSAGE);
   });
 });

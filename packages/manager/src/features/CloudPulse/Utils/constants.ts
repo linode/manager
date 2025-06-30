@@ -43,6 +43,9 @@ export const PORTS_ERROR_MESSAGE =
 export const PORTS_RANGE_ERROR_MESSAGE =
   'Port numbers must be between 1 and 65535.';
 
+export const PORTS_LEADING_ZERO_ERROR_MESSAGE =
+  'Leading zeros are not allowed.';
+
 export const PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
   'Use a single comma to separate port numbers.';
 
