@@ -186,7 +186,7 @@ export const NewDetailTemplateA = () => {
         background: 'white',
       }}
     >
-      <h2>(2-col left, single right)</h2>
+      <h2>ubuntu-us-southeast</h2>
       <Grid
         container
         id="top-level-container"
