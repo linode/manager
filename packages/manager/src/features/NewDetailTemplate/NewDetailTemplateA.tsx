@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from 'react';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, Box } from '@mui/material';
 import { useDetailsLayoutBreakpoints } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 
@@ -12,8 +12,11 @@ import {
   firewallData,
 } from './detailsData';
 
+import { detailActions } from './actionData';
+
 import TwoColumnWithSidebarLayout from './layouts/TwoColumnWithSidebarLayout';
 import ThreeColumnLayout from './layouts/ThreeColumnLayout';
+import MenuActions from './MenuActions';
 
 export const NewDetailTemplateA = () => {
   const theme = useTheme();
@@ -47,7 +50,17 @@ export const NewDetailTemplateA = () => {
         background: 'white',
       }}
     >
-      <h2>ubuntu-us-southeast</h2>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 2,
+        }}
+      >
+        <h2 style={{ margin: 0 }}>ubuntu-us-southeast</h2>
+        <MenuActions actions={detailActions} />
+      </Box>
 
       <TwoColumnWithSidebarLayout
         isMobile={isMobile}
