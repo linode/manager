@@ -3,7 +3,7 @@ import React from 'react';
 import { debounce } from 'throttle-debounce';
 
 import { PORTS_HELPER_TEXT } from '../Utils/constants';
-import { arePortsValid, handleKeyDown, handlePaste } from '../Utils/utils';
+import { arePortsValid } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
@@ -70,6 +70,7 @@ export const CloudPulsePortFilter = React.memo(
 
       // Validate and handle the change
       const validationError = arePortsValid(e.target.value);
+      setErrorText(validationError);
       if (validationError === undefined) {
         debouncedPortChange(e.target.value);
       }
@@ -79,9 +80,8 @@ export const CloudPulsePortFilter = React.memo(
       // Clear the error text when the user blurs the input
       setErrorText(undefined);
       const validationError = arePortsValid(e.target.value);
+      setErrorText(validationError);
       if (validationError === undefined) {
-        // Cancel any pending debouncedPortChange calls
-        debouncedPortChange.cancel();
         handlePortChange(e.target.value, [e.target.value], savePreferences);
       }
     };
@@ -95,9 +95,6 @@ export const CloudPulsePortFilter = React.memo(
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
-        onDrop={(e) => e.preventDefault()}
-        onKeyDown={handleKeyDown(value, setErrorText)}
-        onPaste={handlePaste(value, setErrorText)}
         placeholder={placeholder ?? 'e.g., 80,443,3000'}
         value={value}
       />
