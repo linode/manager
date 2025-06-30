@@ -1,9 +1,19 @@
 // @ts-nocheck
 import React from 'react';
-
 import { Grid, Box, useMediaQuery } from '@mui/material';
 import { useDetailsLayoutBreakpoints } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
+
+import {
+  gridItems,
+  sidebarItems,
+  publicIpItems,
+  accessItems,
+  firewallItems,
+  distributeItems,
+  distributeItemsSequentially,
+  DataItemType,
+} from './detailsData';
 
 // Sets colored backgrounds to help visualize the layout
 const debugMode = true;
@@ -46,35 +56,26 @@ export const SectionTitleWrapper = styled('div', { label: 'SectionTitle' })(
   })
 );
 
-const DataItem = ({ label, value, color, backgroundColor }) => (
+interface DataItemProps {
+  label: string;
+  value: string;
+  color?: string;
+  backgroundColor?: string;
+}
+
+const DataItem = ({ label, value, color, backgroundColor }: DataItemProps) => (
   <DataItemWrapper backgroundColor={backgroundColor}>
     <DataItemLabel color={color}>{label}</DataItemLabel>
     <DataItemValue color={color}>{value}</DataItemValue>
   </DataItemWrapper>
 );
 
-const SectionTitle = ({ title }) => {
+interface SectionTitleProps {
+  title: string;
+}
+
+const SectionTitle = ({ title }: SectionTitleProps) => {
   return <SectionTitleWrapper>{title}</SectionTitleWrapper>;
-};
-
-const distributeItems = (items, columns) => {
-  const result = Array.from({ length: columns }, () => []);
-  items.forEach((item, index) => {
-    result[index % columns].push(item);
-  });
-  return result;
-};
-
-const distributeItemsSequentially = (items, columns) => {
-  const result = Array.from({ length: columns }, () => []);
-  const itemsPerColumn = Math.ceil(items.length / columns);
-
-  items.forEach((item, index) => {
-    const columnIndex = Math.floor(index / itemsPerColumn);
-    result[columnIndex].push(item);
-  });
-
-  return result;
 };
 
 export const NewDetailTemplateA = () => {
@@ -118,59 +119,8 @@ export const NewDetailTemplateA = () => {
     ? theme.spacingFunction(24)
     : theme.spacingFunction(16);
 
-  const dataItems = [
-    { label: '3 Col Item', value: 'A' },
-    { label: '3 Col Item', value: 'B' },
-    { label: '3 Col Item', value: 'C' },
-    { label: '3 Col Item', value: 'D' },
-    { label: '3 Col Item', value: 'E' },
-    { label: '3 Col Item', value: 'F' },
-    { label: '3 Col Item', value: 'G' },
-  ];
-
-  const sidebarItems = [
-    { label: 'Label', value: 'VPC-01-East' },
-    { label: 'Subnets', value: 'se-group' },
-    { label: 'VPC IPv4', value: '10.0.0.0' },
-  ];
-
-  const gridItems = [
-    { label: 'Status', value: 'Running' },
-    { label: 'CPU Core', value: '1' },
-    { label: 'Storage', value: '25 GB' },
-    { label: 'RAM', value: '1 GB' },
-    { label: 'Volumes', value: '0' },
-    { label: 'Linode ID', value: '78979699' },
-    { label: 'Plan', value: 'Nanode 1 GB' },
-    { label: 'Region', value: 'US, Atlanta, GA' },
-    { label: 'Encryption', value: 'Encrypted' },
-    { label: 'Created', value: '2025-06-20 13:35' },
-  ];
-
-  const publicIpItems = [
-    { label: 'Address 1', value: '50.116.6.212' },
-    { label: 'Address 2', value: '2600:3c00::f03c:92ff:fee2:6c40/64' },
-    { label: 'View all IP Addresses', value: '' },
-  ];
-
-  const accessItems = [
-    { label: 'SSH Access', value: 'ssh root@50.116.6.212' },
-    {
-      label: 'LISH Console via SSH',
-      value: 'ssh -t mock-user@lish-us-ord.linode.com linode-detail',
-    },
-  ];
-
-  const firewallItems = [
-    { label: 'Label', value: 'mock-firewall-1' },
-    { label: 'ID', value: '112233' },
-  ];
-
   const reverseGridItems = gridItems.map((item) => ({ ...item }));
   const reverseSidebarItems = sidebarItems.map((item) => ({ ...item }));
-
-  const distributedItems = distributeItems(dataItems, columns);
-  const distributedGridItems = distributeItemsSequentially(gridItems, 2);
   const distributedReverseGridItems = distributeItemsSequentially(
     reverseGridItems,
     2
