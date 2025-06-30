@@ -1,10 +1,11 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-import { vpcsValidateIP } from './vpcs.schema';
+import { determineIPType, vpcsValidateIP } from './vpcs.schema';
 
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 const PRIVATE_IPV4_WARNING = 'Must be a valid private IPv4 address.';
+const IPV4_IPV6_WARNING = 'Must be a valid IPv6 or private IPv4 address';
 
 export const PRIVATE_IPV4_REGEX =
   /^10\.|^172\.1[6-9]\.|^172\.2\d\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
@@ -44,7 +45,39 @@ export const nodeBalancerConfigNodeSchema = object({
   address: string()
     .typeError('IP address is required.')
     .required('IP address is required.')
-    .matches(PRIVATE_IPV4_REGEX, PRIVATE_IPV4_WARNING),
+    .test(
+      'IP validation',
+      'Must be a private IPv4 or a valid IPv6 address',
+      function (value) {
+        const type = determineIPType(value);
+        const isIPv4 = type === 'ipv4';
+        const isIPv6 = type === 'ipv6';
+
+        if (!isIPv4 && !isIPv6) {
+          return this.createError({
+            message: IPV4_IPV6_WARNING,
+          });
+        }
+
+        if (isIPv4) {
+          if (PRIVATE_IPV4_REGEX.test(value)) {
+            return this.createError({
+              message: PRIVATE_IPV4_WARNING,
+            });
+          } else {
+            return true;
+          }
+        }
+
+        if (isIPv6) {
+          return true;
+        }
+
+        return this.createError({
+          message: 'Unexpected error during IP address validation',
+        });
+      },
+    ),
 
   subnet_id: number().when('vpcs', {
     is: (vpcs: (typeof createNodeBalancerVPCsSchema)[]) => vpcs !== undefined,
