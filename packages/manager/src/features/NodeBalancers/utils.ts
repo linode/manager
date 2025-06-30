@@ -65,6 +65,7 @@ export const getNodeForRequest = (
    */
   mode: config.protocol !== 'udp' ? node.mode : undefined,
   port: node.port,
+  subnet_id: node?.subnet_id,
   weight: +node.weight!,
 });
 
@@ -74,12 +75,15 @@ export const formatAddress = (node: NodeBalancerConfigNodeFields) => ({
 });
 
 export const parseAddress = (node: NodeBalancerConfigNode) => {
-  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
+  const match =
+    /^((10.\d{1,3}|192\.168|172\.(1[6-9]|2\d|3[0-1]))\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(
+      node.address
+    );
   if (match) {
     return {
       ...node,
       address: match![1],
-      port: match![2],
+      port: match![4],
     };
   }
   return node;
@@ -229,4 +233,20 @@ export const useIsNodebalancerVPCEnabled = () => {
   // @TODO NB-VPC: check for customer tag/account capability when it exists
 
   return { isNodebalancerVPCEnabled: flags.nodebalancerVpc ?? false };
+};
+
+/**
+ * Returns whether or not features related to the NodeBalancer Dual Stack project
+ * should be enabled.
+ *
+ * Currently, this just uses the `nodebalancerIPv6` feature flag as a source of truth,
+ * but will eventually also look at account capabilities.
+ */
+
+export const useIsNodebalancerIpv6Enabled = () => {
+  const flags = useFlags();
+
+  // @TODO NB-IPv6: check for customer tag/account capability when it exists
+
+  return { isNodebalancerIpv6Enabled: flags.nodebalancerIpv6 ?? false };
 };

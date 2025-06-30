@@ -1,11 +1,13 @@
 import { useUnassignLinodesFromPlacementGroup } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
-import { useParams } from '@tanstack/react-router';
+import { useParams, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
+
+import { PLACEMENT_GROUPS_DETAILS_ROUTE } from './constants';
 
 import type {
   APIError,
@@ -31,8 +33,12 @@ export const PlacementGroupsUnassignModal = (props: Props) => {
   } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { id: placementGroupId, linodeId } = useParams({
-    strict: false,
+  const { id: placementGroupId } = useParams({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
+  });
+
+  const { linodeId } = useSearch({
+    from: PLACEMENT_GROUPS_DETAILS_ROUTE,
   });
 
   const {

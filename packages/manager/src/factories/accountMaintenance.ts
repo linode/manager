@@ -22,7 +22,7 @@ export const accountMaintenanceFactory =
       ])
     ),
     maintenance_policy_set: Factory.each(() =>
-      pickRandom(['migrate', 'power on/off'])
+      pickRandom(['linode/migrate', 'linode/power_off_on'])
     ),
     reason: Factory.each(() =>
       pickRandom([
@@ -38,7 +38,7 @@ export const accountMaintenanceFactory =
       ])
     ),
     description: Factory.each(() =>
-      pickRandom(['Emergency Maintenance', 'Scheduled Maintenance'])
+      pickRandom<AccountMaintenance['description']>(['emergency', 'scheduled'])
     ),
     source: Factory.each(() => pickRandom(['user', 'platform'])),
     status: Factory.each(() => pickRandom(['pending', 'started'])),

@@ -13,6 +13,7 @@ import { dataStreamRouteTree } from './datastream';
 import { domainsRouteTree } from './domains';
 import { eventsRouteTree } from './events';
 import { firewallsRouteTree } from './firewalls';
+import { iamRouteTree } from './IAM';
 import { imagesRouteTree } from './images';
 import { kubernetesRouteTree } from './kubernetes';
 import { linodesRouteTree } from './linodes';
@@ -50,6 +51,7 @@ export const routeTree = rootRoute.addChildren([
   dataStreamRouteTree,
   domainsRouteTree,
   eventsRouteTree,
+  iamRouteTree,
   firewallsRouteTree,
   imagesRouteTree,
   kubernetesRouteTree,
@@ -90,6 +92,7 @@ declare module '@tanstack/react-router' {
  * Eventually we will only use the router exported above.
  */
 export const migrationRouteTree = migrationRootRoute.addChildren([
+  accountRouteTree,
   betaRouteTree,
   cloudPulseAlertsRouteTree,
   cloudPulseMetricsRouteTree,
@@ -98,13 +101,16 @@ export const migrationRouteTree = migrationRootRoute.addChildren([
   dataStreamRouteTree,
   eventsRouteTree,
   firewallsRouteTree,
+  iamRouteTree,
   imagesRouteTree,
   kubernetesRouteTree,
+  linodesRouteTree,
   longviewRouteTree,
   managedRouteTree,
   nodeBalancersRouteTree,
   objectStorageRouteTree,
   placementGroupsRouteTree,
+  profileRouteTree,
   searchRouteTree,
   stackScriptsRouteTree,
   supportRouteTree,

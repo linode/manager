@@ -2,7 +2,7 @@ import React from 'react';
 
 import { CopyableTextField } from './CopyableTextField';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof CopyableTextField> = {
   args: {
@@ -11,7 +11,7 @@ const meta: Meta<typeof CopyableTextField> = {
   },
   component: CopyableTextField,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '1em' }}>
         <Story />
       </div>

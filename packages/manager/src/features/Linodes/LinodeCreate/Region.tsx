@@ -1,4 +1,4 @@
-import { useImageQuery, useRegionsQuery } from '@linode/queries';
+import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { useIsGeckoEnabled } from '@linode/shared';
 import { Box, Notice, Paper, Typography } from '@linode/ui';
 import { getIsLegacyInterfaceArray } from '@linode/utilities';
@@ -14,7 +14,6 @@ import { isDistributedRegionSupported } from 'src/components/RegionSelect/Region
 import { RegionHelperText } from 'src/components/SelectRegionPanel/RegionHelperText';
 import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
-import { useTypeQuery } from 'src/queries/types';
 import {
   sendLinodeCreateFormInputEvent,
   sendLinodeCreateFormStartEvent,
@@ -123,6 +122,14 @@ export const Region = React.memo(() => {
     ) {
       // Clear metadata only if the new region does not support it
       setValue('metadata.user_data', null);
+    }
+
+    if (
+      values.maintenance_policy &&
+      !region.capabilities.includes('Maintenance Policy')
+    ) {
+      // Clear maintenance_policy if the selected region doesn't support it
+      setValue('maintenance_policy', undefined);
     }
 
     if (values.placement_group?.id) {

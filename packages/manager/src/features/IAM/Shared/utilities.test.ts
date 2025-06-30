@@ -2,11 +2,16 @@ import { accountRolesFactory } from 'src/factories/accountRoles';
 import { userRolesFactory } from 'src/factories/userRoles';
 
 import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  LAST_ACCOUNT_ADMIN_ERROR,
+} from './constants';
+import {
   changeRoleForEntity,
   changeUserRole,
   deleteUserEntity,
   deleteUserRole,
   getAllRoles,
+  getErrorMessage,
   getFacadeRoleDescription,
   getFormattedEntityType,
   getRoleByName,
@@ -63,7 +68,7 @@ const accountPermissions = accountRolesFactory.build({
 });
 
 const userPermissions = userRolesFactory.build({
-  account_access: ['account_linode_admin', 'linode_creator'],
+  account_access: ['account_linode_admin', 'account_linode_creator'],
   entity_access: [
     {
       id: 12345678,
@@ -125,7 +130,11 @@ const mockAssignRolesFormValues: AssignNewRoleFormValues = {
 };
 
 const mockMergedRoles = {
-  account_access: ['account_linode_admin', 'linode_creator', 'account_viewer'],
+  account_access: [
+    'account_linode_admin',
+    'account_linode_creator',
+    'account_viewer',
+  ],
   entity_access: [
     {
       id: 12345678,
@@ -199,7 +208,7 @@ describe('getRoleByName', () => {
 describe('changeUserRole', () => {
   it('should return an object of updated users roles with resource access', () => {
     const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 12345678,
@@ -227,7 +236,7 @@ describe('deleteUserRole', () => {
     const initialRole = 'linode_contributor';
 
     const expectedRoles = {
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [],
     };
 
@@ -248,8 +257,8 @@ describe('deleteUserRole', () => {
     const expectedRoles = {
       account_access: [
         'account_linode_admin',
-        'linode_creator',
-        'firewall_creator',
+        'account_linode_creator',
+        'account_firewall_creator',
         'account_admin',
         'account_viewer',
       ],
@@ -280,7 +289,7 @@ describe('deleteUserRole', () => {
     const initialRole = 'account_linode_admin';
 
     const expectedRoles = {
-      account_access: ['linode_creator'],
+      account_access: ['account_linode_creator'],
       entity_access: [
         {
           id: 12345678,
@@ -345,7 +354,7 @@ describe('changeRoleForEntity', () => {
 
   it('should return an object of updated users roles with entity access when changing role from "linode_contributor" to "linode_viewer"', () => {
     const userPermissions = userRolesFactory.build({
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 2,
@@ -389,7 +398,7 @@ describe('changeRoleForEntity', () => {
 
   it('should return an object of updated users roles with entity access', () => {
     const userPermissions = userRolesFactory.build({
-      account_access: ['account_linode_admin', 'linode_creator'],
+      account_access: ['account_linode_admin', 'account_linode_creator'],
       entity_access: [
         {
           id: 2,
@@ -648,17 +657,17 @@ describe('getFacadeRoleDescription', () => {
   it('returns description for account_access with non-paid entity types', () => {
     const role: ExtendedRoleView = {
       access: 'account_access',
-      description: 'stackscript creator',
+      description: 'firewall creator',
       entity_ids: null,
-      entity_type: 'stackscript',
-      id: 'stackscript_creator',
-      name: 'stackscript_creator',
+      entity_type: 'firewall',
+      id: 'account_firewall_creator',
+      name: 'account_firewall_creator',
       permissions: [],
     };
 
     const result = getFacadeRoleDescription(role);
     expect(result).toBe(
-      `This role grants the same access as the legacy "Can add StackScripts to this account" global permissions.`
+      `This role grants the same access as the legacy "Can add Firewalls to this account" global permissions.`
     );
   });
 
@@ -668,8 +677,8 @@ describe('getFacadeRoleDescription', () => {
       description: 'linode creator',
       entity_ids: null,
       entity_type: 'linode',
-      id: 'linode_creator',
-      name: 'linode_creator',
+      id: 'account_linode_creator',
+      name: 'account_linode_creator',
       permissions: [],
     };
 
@@ -798,12 +807,16 @@ describe('mapEntityTypesForSelect', () => {
     const mockRole: RoleView[] = [
       {
         access: 'account_access',
-        description: 'Account volume admin',
+        description: 'Account linode admin',
         entity_ids: [1],
-        entity_type: 'volume',
-        id: 'account_volume_admin',
-        name: 'account_volume_admin',
-        permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+        entity_type: 'linode',
+        id: 'account_linode_admin',
+        name: 'account_linode_admin',
+        permissions: [
+          'apply_linode_firewalls',
+          'delete_linode',
+          'clone_linode',
+        ],
       },
     ];
 
@@ -811,9 +824,43 @@ describe('mapEntityTypesForSelect', () => {
 
     expect(result).toEqual([
       {
-        label: 'Volume Roles',
-        value: 'volume',
+        label: 'Linode Roles',
+        value: 'linode',
       },
     ]);
+  });
+});
+
+describe('getErrorMessage', () => {
+  it('should return LAST_ACCOUNT_ADMIN_ERROR if the error contains "Removing last account admin"', () => {
+    const errors = [
+      {
+        reason: 'Request made to janus is invalid',
+        field: 'Bad janus request',
+      },
+      {
+        reason:
+          'Can not remove account admin access from the last account admin on the account',
+        field: 'Removing last account admin',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(LAST_ACCOUNT_ADMIN_ERROR);
+  });
+
+  it('should return INTERNAL_ERROR_NO_CHANGES_SAVED if the error does not contain "Removing last account admin"', () => {
+    const errors = [
+      {
+        field: 'An unexpected error occurred.',
+        reason: 'An unexpected error occurred.',
+      },
+    ];
+    const result = getErrorMessage(errors);
+    expect(result).toBe(INTERNAL_ERROR_NO_CHANGES_SAVED);
+  });
+
+  it('should return undefined if there are no errors', () => {
+    const result = getErrorMessage(null);
+    expect(result).toBeUndefined();
   });
 });

@@ -6,12 +6,12 @@ import { tooltipValueFormatter } from 'src/components/AreaChart/utils';
 import { AreaChart } from './AreaChart';
 import { customLegendData, timeData } from './utils';
 
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof AreaChart> = {
   component: AreaChart,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ marginTop: '2em' }}>
         <Story />
       </div>

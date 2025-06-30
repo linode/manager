@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -123,10 +124,12 @@ const getRandomWholeNumber = (min: number, max: number) =>
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { trustedDeviceFactory } from 'src/factories/devices';
+import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
-import { MTC } from 'src/features/components/PlansPanel/constants';
+import { MTC_SUPPORTED_REGIONS } from 'src/features/components/PlansPanel/constants';
 
 import type {
   AccountMaintenance,
@@ -458,10 +461,10 @@ const iam = [
     return HttpResponse.json(userRolesFactory.build());
   }),
   http.get('*/iam/users/:username/permissions/:entity_type/:entity_id', () => {
-    return HttpResponse.json(userEntityPermissionsFactory.build());
+    return HttpResponse.json(userEntityPermissionsFactory);
   }),
   http.get('*/v4*/iam/users/:username/permissions/account', () => {
-    return HttpResponse.json(userAccountPermissionsFactory.build());
+    return HttpResponse.json(userAccountPermissionsFactory);
   }),
 ];
 
@@ -579,7 +582,7 @@ export const handlers = [
     );
   }),
   http.get('*/profile/apps', () => {
-    const tokens = appTokenFactory.buildList(5);
+    const tokens = appTokenFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(tokens));
   }),
   http.post('*/profile/phone-number', async () => {
@@ -1478,7 +1481,9 @@ export const handlers = [
     });
   }),
   http.get('*/profile/devices', () => {
-    return HttpResponse.json(makeResourcePage([]));
+    return HttpResponse.json(
+      makeResourcePage(trustedDeviceFactory.buildList(30))
+    );
   }),
   http.put('*/profile/preferences', async ({ request }) => {
     const reqBody = await request.json();
@@ -2027,6 +2032,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2417,20 +2423,19 @@ export const handlers = [
         plan: 'g6-standard-7',
         region: selectedRegion,
       }),
-      // Region-based availability of MTC plans is shown only for customers with MTC customer tag.
-      ...(MTC['availability_regions'].includes(
-        selectedRegion as (typeof MTC)['availability_regions'][number]
-      )
+      // MTC plans are region-specific. The supported regions list below is hardcoded for testing purposes and will expand over time.
+      // The availability of MTC plans is fully handled by this endpoint, which determines the plan's availability status (true/false) for the selected region.
+      ...(MTC_SUPPORTED_REGIONS.includes(selectedRegion)
         ? [
             regionAvailabilityFactory.build({
-              available: true,
+              available: true, // In supported regions, this can be `true` (plan available) or `false` (plan sold-out).
               plan: 'g8-premium-128-ht',
               region: selectedRegion,
             }),
           ]
         : [
             regionAvailabilityFactory.build({
-              available: false,
+              available: false, // In unsupported region, this will always be `false` (Plan not offered/not available).
               plan: 'g8-premium-128-ht',
               region: selectedRegion,
             }),
@@ -2798,7 +2803,6 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
-          regions: 'us-iad,us-east',
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2820,6 +2824,7 @@ export const handlers = [
             label: 'Linodes',
             service_type: 'linode',
             regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
           })
         : serviceTypesFactory.build({
             label: 'Databases',
@@ -3181,4 +3186,9 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...entities,
+  http.get('*/v4beta/maintenance/policies', () => {
+    return HttpResponse.json(
+      makeResourcePage(maintenancePolicyFactory.buildList(2))
+    );
+  }),
 ];

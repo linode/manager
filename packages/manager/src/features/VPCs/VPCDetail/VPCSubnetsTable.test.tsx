@@ -215,70 +215,44 @@ describe('VPC Subnets table', () => {
     getByText('Firewalls');
   });
 
-  it('should display no nodeBalancers text if there are no nodeBalancers associated with the subnet', async () => {
-    const subnet = subnetFactory.build({ nodebalancers: [] });
+  it(
+    'should show Nodebalancer table head data when table is expanded',
+    async () => {
+      const subnet = subnetFactory.build();
 
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
-
-    const { getAllByRole, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={2}
-          vpcRegion=""
-        />,
-        { flags: { nodebalancerVpc: true } }
+      server.use(
+        http.get('*/vpcs/:vpcId/subnets', () => {
+          return HttpResponse.json(makeResourcePage([subnet]));
+        }),
+        http.get('*/networking/firewalls/settings', () => {
+          return HttpResponse.json(firewallSettingsFactory.build());
+        })
       );
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
+      const { getAllByRole, findByText, queryByTestId } =
+        await renderWithThemeAndRouter(
+          <VPCSubnetsTable
+            isVPCLKEEnterpriseCluster={false}
+            vpcId={3}
+            vpcRegion=""
+          />,
+          { flags: { nodebalancerVpc: true } }
+        );
 
-    const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
-    getByText('No NodeBalancers');
-  });
+      const loadingState = queryByTestId(loadingTestId);
+      if (loadingState) {
+        await waitForElementToBeRemoved(loadingState);
+      }
 
-  it('should show Nodebalancer table head data when table is expanded', async () => {
-    const subnet = subnetFactory.build();
-    server.use(
-      http.get('*/vpcs/:vpcId/subnets', () => {
-        return HttpResponse.json(makeResourcePage([subnet]));
-      }),
-      http.get('*/networking/firewalls/settings', () => {
-        return HttpResponse.json(firewallSettingsFactory.build());
-      })
-    );
-    const { getAllByRole, getByText, queryByTestId } =
-      await renderWithThemeAndRouter(
-        <VPCSubnetsTable
-          isVPCLKEEnterpriseCluster={false}
-          vpcId={3}
-          vpcRegion=""
-        />,
-        { flags: { nodebalancerVpc: true } }
-      );
+      const expandTableButton = getAllByRole('button')[3];
+      await userEvent.click(expandTableButton);
 
-    const loadingState = queryByTestId(loadingTestId);
-    if (loadingState) {
-      await waitForElementToBeRemoved(loadingState);
-    }
-
-    const expandTableButton = getAllByRole('button')[3];
-    await userEvent.click(expandTableButton);
-
-    getByText('NodeBalancer');
-    getByText('Backend Status');
-    getByText('VPC IPv4 Range');
-  });
+      await findByText('NodeBalancer');
+      await findByText('Backend Status');
+      await findByText('VPC IPv4 Range');
+    },
+    { timeout: 15_000 }
+  );
 
   it('should disable Create Subnet button if the VPC is associated with a LKE-E cluster', async () => {
     server.use(

@@ -22,7 +22,7 @@ export const TypeToConfirm = () => {
       <FormControlLabel
         control={
           <Toggle
-            checked={typeToConfirmPreference}
+            checked={!!typeToConfirmPreference}
             onChange={(_, checked) =>
               updatePreferences({ type_to_confirm: checked })
             }

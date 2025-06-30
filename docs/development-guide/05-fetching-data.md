@@ -125,7 +125,7 @@ export const useProfile = () =>
 Loading and error states are managed by React Query. The earlier username display example becomes greatly simplified:
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 import { useProfile } from "src/queries/profile";
 
 const UsernameDisplay = () => {
@@ -166,7 +166,7 @@ Before React Query, Redux was used to store API data, loading, and error states.
 ```tsx
 // ---- OLD PATTERN, DON'T USE ---- //
 
-import * as React from "react";
+import * as React from 'react';
 import profileContainer, {
   Props as ProfileProps,
 } from "src/containers/profile.container";

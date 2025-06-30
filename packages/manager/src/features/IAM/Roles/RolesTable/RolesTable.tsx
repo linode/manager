@@ -24,9 +24,12 @@ import {
   getFacadeRoleDescription,
   mapEntityTypesForSelect,
 } from 'src/features/IAM/Shared/utilities';
-import { usePagination } from 'src/hooks/usePagination';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { ROLES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
+import {
+  ROLES_LEARN_MORE_LINK,
+  ROLES_TABLE_PREFERENCE_KEY,
+} from '../../Shared/constants';
 
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
@@ -52,7 +55,11 @@ export const RolesTable = ({ roles = [] }: Props) => {
   const [selectedRows, setSelectedRows] = useState<RoleView[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const pagination = usePagination(1, ROLES_TABLE_PREFERENCE_KEY);
+  const pagination = usePaginationV2({
+    currentRoute: '/iam/roles',
+    initialPage: 1,
+    preferenceKey: ROLES_TABLE_PREFERENCE_KEY,
+  });
 
   // Filtering
   const getFilteredRows = (
@@ -255,10 +262,8 @@ export const RolesTable = ({ roles = [] }: Props) => {
                   selected={selectedRows.includes(roleRow)}
                 >
                   <TableCell
-
                     onClick={(e) => handleExpandToggle(e, roleRow.name)}
                     style={{ minWidth: '26%', wordBreak: 'break-word' }}
-
                   >
                     {roleRow.name}
                   </TableCell>
@@ -269,10 +274,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     {roleRow.permissions.length ? (
                       roleRow.description
                     ) : (
-                      // TODO: update the link for the description when it's ready - UIE-8534
                       <Typography>
                         {getFacadeRoleDescription(roleRow)}{' '}
-                        <Link to="#">Learn more.</Link>
+                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
                       </Typography>
                     )}
                   </TableCell>

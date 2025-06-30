@@ -1,4 +1,9 @@
 import {
+  useAccountRoles,
+  useUserRoles,
+  useUserRolesMutation,
+} from '@linode/queries';
+import {
   ActionsPanel,
   Autocomplete,
   Drawer,
@@ -6,18 +11,17 @@ import {
   Typography,
 } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
 import { Link } from 'src/components/Link';
-import {
-  useAccountRoles,
-  useUserRoles,
-  useUserRolesMutation,
-} from 'src/queries/iam/iam';
 
 import { AssignedPermissionsPanel } from '../../Shared/AssignedPermissionsPanel/AssignedPermissionsPanel';
+import {
+  INTERNAL_ERROR_NO_CHANGES_SAVED,
+  ROLES_LEARN_MORE_LINK,
+} from '../../Shared/constants';
 import {
   changeRoleForEntity,
   getAllRoles,
@@ -41,7 +45,9 @@ export const ChangeRoleForEntityDrawer = ({
   role,
 }: Props) => {
   const theme = useTheme();
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({
+    from: '/iam/users/$username',
+  });
 
   const { data: accountRoles, isLoading: accountPermissionsLoading } =
     useAccountRoles();
@@ -114,7 +120,9 @@ export const ChangeRoleForEntityDrawer = ({
       handleClose();
     } catch (errors) {
       for (const error of errors) {
-        setError(error?.field ?? 'root', { message: error.reason });
+        setError(error?.field ?? 'root', {
+          message: INTERNAL_ERROR_NO_CHANGES_SAVED,
+        });
       }
     }
   };
@@ -124,7 +132,6 @@ export const ChangeRoleForEntityDrawer = ({
     onClose();
   };
 
-  // TODO - add a link 'Learn more" - UIE-8534
   return (
     <Drawer onClose={handleClose} open={open} title="Change Role">
       {errors.root?.message && (
@@ -132,11 +139,14 @@ export const ChangeRoleForEntityDrawer = ({
       )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Typography sx={{ marginBottom: 2.5 }}>
-          Select a role you want the entity to be attached to.
-          <Link to=""> Learn more about roles and permissions.</Link>
+          Select a role you want the entity to be attached to.{' '}
+          <Link to={ROLES_LEARN_MORE_LINK}>
+            Learn more about roles and permissions
+          </Link>
+          .
         </Typography>
 
-        <Typography sx={{ marginBottom: theme.tokens.spacing.S12 }}>
+        <Typography sx={{ marginBottom: theme.tokens.spacing.S8 }}>
           Change the role for <strong>{role?.entity_name}</strong> from{' '}
           <strong>{role?.role_name}</strong> to:
         </Typography>
@@ -152,6 +162,7 @@ export const ChangeRoleForEntityDrawer = ({
               onChange={(_, value) => field.onChange(value)}
               options={allRoles}
               placeholder="Select a Role"
+              sx={{ marginBottom: theme.spacingFunction(16) }}
               textFieldProps={{ hideLabel: true, noMarginTop: true }}
               value={field.value || null}
             />

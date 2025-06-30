@@ -14,7 +14,7 @@ describe('InterfaceGeneration', () => {
     });
 
     server.use(
-      http.get('*/v4/account/settings', () => {
+      http.get('*/v4*/account/settings', () => {
         return HttpResponse.json(accountSettings);
       })
     );
@@ -47,7 +47,7 @@ describe('InterfaceGeneration', () => {
     });
 
     server.use(
-      http.get('*/v4/account/settings', () => {
+      http.get('*/v4*/account/settings', () => {
         return HttpResponse.json(accountSettings);
       })
     );

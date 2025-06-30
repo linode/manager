@@ -1,6 +1,6 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
 import { Button, Typography } from '@linode/ui';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Skeleton } from 'src/components/Skeleton';
@@ -54,14 +54,13 @@ const preferenceConfig: Record<
     getBannerText: (isBeta) =>
       isBeta ? (
         <span>
-          Welcome to <strong>Alerts (Beta)</strong> with more options and
-          greater flexibility.
+          Welcome to <strong>Alerts (Beta)</strong>, designed for flexibility
+          with features like customizable alerts.
         </span>
       ) : (
         <span>
-          Try the new <strong>Alerts (Beta)</strong> for more options, including
-          customizable alerts. You can switch back to the current view at any
-          time.
+          Try the <strong>Alerts (Beta)</strong>, featuring new options like
+          customizable alerts. You can switch back to legacy Alerts at any time.
         </span>
       ),
   },

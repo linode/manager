@@ -1,34 +1,39 @@
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { accountRolesFactory } from 'src/factories/accountRoles';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { useIsIAMEnabled } from './useIsIAMEnabled';
 
 const queryMocks = vi.hoisted(() => ({
-  useAccountRoles: vi.fn().mockReturnValue({ foo: 'bar' }),
+  useUserAccountPermissions: vi
+    .fn()
+    .mockReturnValue(['cancel_account', 'create_user']),
+  useProfile: vi
+    .fn()
+    .mockReturnValue({ data: { username: 'mock-user', restricted: true } }),
 }));
 
-vi.mock(import('src/queries/iam/iam'), async (importOriginal) => {
+vi.mock(import('@linode/queries'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    useAccountRoles: queryMocks.useAccountRoles,
+    useUserAccountPermissions: queryMocks.useUserAccountPermissions,
+    useProfile: queryMocks.useProfile,
   };
 });
 
 describe('useIsIAMEnabled', () => {
   it('should be enabled for a BETA user', async () => {
-    const rolePermissions = accountRolesFactory.build();
+    const accountPermissions = ['cancel_account', 'create_user'];
     server.use(
-      http.get('*/v4beta/iam/role-permissions', () => {
-        return HttpResponse.json(rolePermissions);
+      http.get('*/v4beta/iam/users/mock-user/permissions/account', () => {
+        return HttpResponse.json(accountPermissions);
       })
     );
 
-    queryMocks.useAccountRoles.mockReturnValue({
-      data: rolePermissions,
+    queryMocks.useUserAccountPermissions.mockReturnValue({
+      data: accountPermissions,
     });
 
     const flags = { iam: { beta: true, enabled: true } };
@@ -44,15 +49,15 @@ describe('useIsIAMEnabled', () => {
   });
 
   it('should enabled for a GA user', async () => {
-    const rolePermissions = accountRolesFactory.build();
+    const accountPermissions = ['cancel_account', 'create_user'];
     server.use(
-      http.get('*/v4beta/iam/role-permissions', () => {
-        return HttpResponse.json(rolePermissions);
+      http.get('*/v4beta/iam/users/mock-user/permissions/account', () => {
+        return HttpResponse.json(accountPermissions);
       })
     );
 
-    queryMocks.useAccountRoles.mockReturnValue({
-      data: rolePermissions,
+    queryMocks.useUserAccountPermissions.mockReturnValue({
+      data: accountPermissions,
     });
 
     const flags = { iam: { beta: false, enabled: true } };
@@ -66,20 +71,20 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(true);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
+      expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
     });
   });
 
   it('should be diabled for all users via a feature flag', async () => {
-    const rolePermissions = accountRolesFactory.build();
+    const accountPermissions = ['cancel_account', 'create_user'];
     server.use(
-      http.get('*/v4beta/iam/role-permissions', () => {
-        return HttpResponse.json(rolePermissions);
+      http.get('*/v4beta/iam/users/mock-user/permissions/account', () => {
+        return HttpResponse.json(accountPermissions);
       })
     );
 
-    queryMocks.useAccountRoles.mockReturnValue({
-      data: rolePermissions,
+    queryMocks.useUserAccountPermissions.mockReturnValue({
+      data: accountPermissions,
     });
 
     const flags = { iam: { beta: false, enabled: false } };
@@ -93,18 +98,18 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(false);
+      expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(false);
     });
   });
 
   it('should be diabled for a user via API', async () => {
     server.use(
-      http.get('*/v4beta/iam/role-permissions', () => {
+      http.get('*/v4beta/iam/users/mock-user/permissions/account', () => {
         return HttpResponse.json({}, { status: 403 });
       })
     );
 
-    queryMocks.useAccountRoles.mockReturnValue({
+    queryMocks.useUserAccountPermissions.mockReturnValue({
       data: null,
     });
 
@@ -119,7 +124,7 @@ describe('useIsIAMEnabled', () => {
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
       expect(result.current.isIAMEnabled).toBe(false);
       // eslint-disable-next-line testing-library/no-wait-for-multiple-assertions
-      expect(queryMocks.useAccountRoles).toHaveBeenCalledWith(true);
+      expect(queryMocks.useUserAccountPermissions).toHaveBeenCalledWith(true);
     });
   });
 });

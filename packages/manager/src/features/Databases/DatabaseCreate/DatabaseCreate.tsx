@@ -199,7 +199,7 @@ export const DatabaseCreate = () => {
     },
     validateOnChange: false,
     validationSchema: getDynamicDatabaseSchema(isVPCSelected),
-  });
+  }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
   React.useEffect(() => {
     if (setFieldValue) {
@@ -398,10 +398,11 @@ export const DatabaseCreate = () => {
             provision.
           </StyledTypography>
           <StyledCreateBtn
-            buttonType="primary"
+            data-testid="create-database-cluster"
             disabled={isRestricted}
-            loading={isSubmitting}
+            processing={isSubmitting}
             type="submit"
+            variant="primary"
           >
             Create Database Cluster
           </StyledCreateBtn>

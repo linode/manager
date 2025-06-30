@@ -1,23 +1,31 @@
-export enum StreamType {
-  AuditLogs = 'audit_logs',
-  ErrorLogs = 'error_logs',
-}
+import type { CreateDestinationForm } from 'src/features/DataStream/Shared/types';
 
-export enum StreamStatus {
-  Active = 'active',
-  Inactive = 'inactive',
-}
+export const streamType = {
+  AuditLogs: 'audit_logs',
+  ErrorLogs: 'error_logs',
+} as const;
 
-export enum EventType {
-  Authentication = 'authn',
-  Authorization = 'authz',
-  Configuration = 'configuration',
-}
+export type StreamType = (typeof streamType)[keyof typeof streamType];
 
-export interface CreateStreamForm {
-  [EventType.Authentication]: boolean;
-  [EventType.Authorization]: boolean;
-  [EventType.Configuration]: boolean;
+export const streamStatus = {
+  Active: 'active',
+  Inactive: 'inactive',
+} as const;
+
+export type StreamStatus = (typeof streamStatus)[keyof typeof streamStatus];
+
+export const eventType = {
+  Authentication: 'authn',
+  Authorization: 'authz',
+  Configuration: 'configuration',
+} as const;
+
+export type EventType = (typeof eventType)[keyof typeof eventType];
+
+export interface CreateStreamForm extends CreateDestinationForm {
+  [eventType.Authentication]: boolean;
+  [eventType.Authorization]: boolean;
+  [eventType.Configuration]: boolean;
   destination_id: number;
   label: string;
   status: StreamStatus;

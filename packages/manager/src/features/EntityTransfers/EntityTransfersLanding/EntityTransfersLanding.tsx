@@ -1,13 +1,10 @@
+import { TRANSFER_FILTERS, useEntityTransfersQuery } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { usePagination } from 'src/hooks/usePagination';
-import {
-  TRANSFER_FILTERS,
-  useEntityTransfersQuery,
-} from 'src/queries/entityTransfers';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';
@@ -43,21 +40,24 @@ export const EntityTransfersLanding = () => {
   const receivedTransfersTablePreferenceKey = 'received-transfers-table';
   const sentTransfersTablePreferenceKey = 'sent-transfers-table';
 
-  const paginationPendingTransfers = usePagination(
+  const paginationPendingTransfers = usePaginationV2({
     initialPage,
-    pendingTransfersTablePreferenceKey,
-    pendingTransfersTablePreferenceKey
-  );
-  const paginationReceivedTransfers = usePagination(
+    currentRoute: '/account/service-transfers',
+    preferenceKey: pendingTransfersTablePreferenceKey,
+    queryParamsPrefix: pendingTransfersTablePreferenceKey,
+  });
+  const paginationReceivedTransfers = usePaginationV2({
     initialPage,
-    receivedTransfersTablePreferenceKey,
-    receivedTransfersTablePreferenceKey
-  );
-  const paginationSentTransfers = usePagination(
+    currentRoute: '/account/service-transfers',
+    preferenceKey: receivedTransfersTablePreferenceKey,
+    queryParamsPrefix: receivedTransfersTablePreferenceKey,
+  });
+  const paginationSentTransfers = usePaginationV2({
     initialPage,
-    sentTransfersTablePreferenceKey,
-    sentTransfersTablePreferenceKey
-  );
+    currentRoute: '/account/service-transfers',
+    preferenceKey: sentTransfersTablePreferenceKey,
+    queryParamsPrefix: sentTransfersTablePreferenceKey,
+  });
 
   // Fetch the Pending Transfers
   const {

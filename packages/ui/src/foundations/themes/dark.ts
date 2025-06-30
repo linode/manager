@@ -203,6 +203,7 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
+  // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
   '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
     {
       background: Table.Row.Background.Hover,
@@ -232,6 +233,20 @@ export const darkTheme: ThemeOptions = {
   breakpoints,
   color: customDarkModeOptions.color,
   components: {
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '& svg': {
+            fill: Alias.Action.Primary.Default,
+          },
+          '&:hover': {
+            '& h3': {
+              color: Alias.Action.Primary.Default,
+            },
+          },
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
@@ -258,11 +273,6 @@ export const darkTheme: ThemeOptions = {
           paddingTop: Spacing.S4,
           paddingBottom: Spacing.S4,
           backgroundColor: Component.Dropdown.Background.Default,
-          // Override padding when noOptions is present
-          '&:has(.MuiAutocomplete-noOptions)': {
-            paddingTop: Spacing.S0,
-            paddingBottom: Spacing.S0,
-          },
         },
         listbox: {
           backgroundColor: Select.Default.Background,
@@ -287,12 +297,8 @@ export const darkTheme: ThemeOptions = {
           },
         },
         noOptions: {
-          color: Select.Default.Icon,
-          border: '0px !important',
-          boxShadow: Alias.Elevation.S,
-          height: Spacing.S32,
-          display: 'flex',
-          alignItems: 'center',
+          padding: `${Spacing.S8} ${Spacing.S12} !important`,
+          lineHeight: 1.143,
         },
         option: {
           '&.Mui-focused': {
@@ -309,47 +315,37 @@ export const darkTheme: ThemeOptions = {
             backgroundSize: 'cover',
             boxShadow: 'none',
           },
+          padding: `${Spacing.S6} ${Spacing.S12} !important`,
         },
         popper: {
+          // To remove the double border of listbox and input
           '&.MuiAutocomplete-popper': {
+            '&[data-popper-placement="bottom"], &[data-popper-placement="top"]':
+              {
+                '.MuiAutocomplete-listbox': {
+                  padding: 0,
+                  '& .MuiAutocomplete-groupLabel': {
+                    color: Dropdown.Text.Default,
+                    font: Typography.Heading.Overline,
+                    textTransform: Typography.Heading.OverlineTextCase,
+                  },
+                },
+                '.MuiAutocomplete-option': {
+                  padding: `${Spacing.S6} ${Spacing.S12} !important`,
+                  svg: {
+                    height: Spacing.S16,
+                    width: Spacing.S16,
+                  },
+                },
+              },
             '&[data-popper-placement="bottom"]': {
               '.MuiAutocomplete-listbox': {
                 borderTop: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
             '&[data-popper-placement="top"]': {
               '.MuiAutocomplete-listbox': {
                 borderBottom: 0,
-                padding: 0,
-                '& .MuiAutocomplete-groupLabel': {
-                  fontSize: Font.FontSize.Xxxs,
-                  lineHeight: Font.LineHeight.Xxxs,
-                  fontWeight: Font.FontWeight.Bold,
-                  color: Dropdown.Text.Default,
-                  textTransform: 'uppercase',
-                },
-              },
-              '.MuiAutocomplete-option': {
-                height: Spacing.S32,
-                svg: {
-                  height: Spacing.S20,
-                  width: Spacing.S20,
-                },
               },
             },
           },
@@ -489,6 +485,28 @@ export const darkTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
+          '&:active': {
+            color: `${Component.Checkbox.Empty.Active.Border} !important`,
+          },
+          '&:hover': {
+            color: `${Component.Checkbox.Empty.Hover.Border} !important`,
+          },
+          // Checked
+          '&.Mui-checked': {
+            color: Component.Checkbox.Checked.Default.Background,
+          },
+          // Indeterminate
+          '&.MuiCheckbox-indeterminate': {
+            color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
+          },
           // Unchecked & Disabled
           '&.Mui-disabled': {
             '& svg': {
@@ -504,6 +522,11 @@ export const darkTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
@@ -671,6 +694,23 @@ export const darkTheme: ThemeOptions = {
           },
           '&:hover': {
             color: Content.Icon.Primary.Hover,
+          },
+          // "ui/src/components/TooltipIcon" Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
           },
         },
       },
@@ -884,15 +924,61 @@ export const darkTheme: ThemeOptions = {
     MuiSwitch: {
       styleOverrides: {
         root: {
-          '& .Mui-disabled': {
-            '& + .MuiSwitch-track': {
-              opacity: '.5 !important',
+          width: Spacing.S72,
+          height: Spacing.S48,
+        },
+        switchBase: {
+          padding: Spacing.S16,
+          '&:hover + .MuiSwitch-track': {
+            backgroundColor: Component.Switch.Inactive.Hover.Background,
+          },
+          '&.Mui-checked': {
+            '&:hover, &:focus': {
+              backgroundColor: 'transparent',
             },
-            opacity: 0.5,
+            '&:hover + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Hover.Background,
+            },
+            '.icon': {
+              marginLeft: Spacing.S4,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Default.Background,
+              opacity: 1,
+            },
+            '&.Mui-disabled + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Active.Disabled.Background,
+            },
+          },
+          '&.Mui-disabled': {
+            '& .square': {
+              fill: Component.Switch.Inactive.Disabled.Circle,
+              opacity: 0.5,
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: Component.Switch.Inactive.Disabled.Background,
+              opacity: 1,
+            },
+          },
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent',
+          },
+          '.icon': {
+            borderRadius: '50%',
+            height: Spacing.S20,
+            width: Spacing.S20,
+            top: -2,
+            left: -2,
+            position: 'relative',
+          },
+          '.square': {
+            fill: Component.Switch.Inactive.Default.Circle,
           },
         },
         track: {
-          backgroundColor: Color.Neutrals[80],
+          opacity: 1,
+          borderRadius: Spacing.S12,
+          backgroundColor: Component.Switch.Inactive.Default.Background,
         },
       },
     },
@@ -986,6 +1072,7 @@ export const darkTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
+          // In dark theme, we exclude disabled rows from hover styling to maintain accessibility
           '&.MuiTableRow-hover:not(.disabled-row):hover, &.Mui-selected:not(.disabled-row), &.Mui-selected:not(.disabled-row):hover':
             {
               backgroundColor: Table.Row.Background.Hover,

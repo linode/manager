@@ -5,17 +5,19 @@ import React from 'react';
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { userRolesFactory } from 'src/factories/userRoles';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { AssignedEntitiesTable } from '../../Users/UserEntities/AssignedEntitiesTable';
 
 const queryMocks = vi.hoisted(() => ({
   useAccountEntities: vi.fn().mockReturnValue({}),
+  useParams: vi.fn().mockReturnValue({}),
+  useSearch: vi.fn().mockReturnValue({}),
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useUserRoles: queryMocks.useUserRoles,
@@ -23,10 +25,19 @@ vi.mock('src/queries/iam/iam', async () => {
 });
 
 vi.mock('src/queries/entities/entities', async () => {
-  const actual = await vi.importActual<any>('src/queries/entities/entities');
+  const actual = await vi.importActual('src/queries/entities/entities');
   return {
     ...actual,
     useAccountEntities: queryMocks.useAccountEntities,
+  };
+});
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useParams: queryMocks.useParams,
+    useSearch: queryMocks.useSearch,
   };
 });
 
@@ -39,12 +50,21 @@ const mockEntities = [
 ];
 
 describe('AssignedEntitiesTable', () => {
+  beforeEach(() => {
+    queryMocks.useParams.mockReturnValue({
+      username: 'test_user',
+    });
+    queryMocks.useSearch.mockReturnValue({
+      query: '',
+    });
+  });
+
   it('should display no roles text if there are no roles assigned to user', async () => {
     queryMocks.useUserRoles.mockReturnValue({
       data: {},
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
 
     expect(screen.getByText('No items to display.')).toBeVisible();
   });
@@ -58,13 +78,15 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
 
     expect(screen.getByText('no_devices')).toBeVisible();
     expect(screen.getByText('Firewall')).toBeVisible();
     expect(screen.getByText('firewall_admin')).toBeVisible();
 
-    const actionMenuButton = screen.getAllByLabelText('action menu')[0];
+    const actionMenuButton = screen.getAllByLabelText(
+      'Action menu for entity no_devices'
+    )[0];
     expect(actionMenuButton).toBeVisible();
 
     await userEvent.click(actionMenuButton);
@@ -81,7 +103,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'NonExistentRole');
@@ -100,7 +122,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
 
     const searchInput = screen.getByPlaceholderText('Search');
     await userEvent.type(searchInput, 'no_devices');
@@ -119,7 +141,7 @@ describe('AssignedEntitiesTable', () => {
       data: makeResourcePage(mockEntities),
     });
 
-    renderWithTheme(<AssignedEntitiesTable />);
+    await renderWithThemeAndRouter(<AssignedEntitiesTable />);
 
     const autocomplete = screen.getByPlaceholderText('All Entities');
     await userEvent.type(autocomplete, 'Firewalls');

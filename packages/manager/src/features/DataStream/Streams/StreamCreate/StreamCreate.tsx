@@ -5,22 +5,25 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { destinationType } from 'src/features/DataStream/Shared/types';
 
-import { useStyles } from './StreamCreate.styles';
 import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
 import { StreamCreateDataSet } from './StreamCreateDataSet';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { type CreateStreamForm, EventType, StreamType } from './types';
+import { type CreateStreamForm, eventType, streamType } from './types';
 
 export const StreamCreate = () => {
   const { classes } = useStyles();
   const form = useForm<CreateStreamForm>({
     defaultValues: {
-      type: StreamType.AuditLogs,
-      [EventType.Authorization]: false,
-      [EventType.Authentication]: false,
-      [EventType.Configuration]: false,
+      type: streamType.AuditLogs,
+      [eventType.Authorization]: false,
+      [eventType.Authentication]: false,
+      [eventType.Configuration]: false,
+      destination_type: destinationType.LinodeObjectStorage,
+      region: '',
     },
   });
 
@@ -32,6 +35,7 @@ export const StreamCreate = () => {
       crumbOverrides: [
         {
           label: 'DataStream',
+          linkTo: '/datastream/streams',
           position: 1,
         },
       ],
