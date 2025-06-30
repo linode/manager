@@ -17,6 +17,7 @@ interface SubnetLinodeActionHandlers {
 
 interface Props extends SubnetLinodeActionHandlers {
   isOffline: boolean;
+  isRebootNeeded: boolean;
   isVPCLKEEnterpriseCluster: boolean;
   linode: Linode;
   showPowerButton: boolean;
@@ -29,30 +30,25 @@ export const SubnetLinodeActionMenu = (props: Props) => {
     handleUnassignLinode,
     isVPCLKEEnterpriseCluster,
     isOffline,
+    isRebootNeeded,
     subnet,
     linode,
     showPowerButton,
   } = props;
 
-  const actions: ActionMenuAction[] = [
-    {
+  const actions: ActionMenuAction[] = [];
+  if (isRebootNeeded) {
+    actions.push({
       disabled: isVPCLKEEnterpriseCluster,
       onClick: () => {
         handlePowerActionsLinode(linode, 'Reboot', subnet);
       },
-      title: 'Reboot Linode',
-    },
-    {
-      disabled: isVPCLKEEnterpriseCluster,
-      onClick: () => {
-        handleUnassignLinode(linode, subnet);
-      },
-      title: 'Unassign Linode',
-    },
-  ];
+      title: 'Reboot',
+    });
+  }
 
   if (showPowerButton) {
-    actions.splice(1, 0, {
+    actions.push({
       disabled: isVPCLKEEnterpriseCluster,
       onClick: () => {
         handlePowerActionsLinode(
@@ -64,6 +60,14 @@ export const SubnetLinodeActionMenu = (props: Props) => {
       title: isOffline ? 'Power On' : 'Power Off',
     });
   }
+
+  actions.push({
+    disabled: isVPCLKEEnterpriseCluster,
+    onClick: () => {
+      handleUnassignLinode(linode, subnet);
+    },
+    title: 'Unassign Linode',
+  });
 
   return (
     <ActionMenu

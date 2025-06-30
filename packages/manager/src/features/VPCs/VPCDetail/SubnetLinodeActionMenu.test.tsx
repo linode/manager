@@ -18,6 +18,7 @@ const props = {
   linode: linodeFactory.build({ label: 'linode-1' }),
   subnet: subnetFactory.build({ label: 'subnet-1' }),
   isOffline: false,
+  isRebootNeeded: false,
   showPowerButton: true,
 };
 
@@ -30,21 +31,20 @@ describe('SubnetActionMenu', () => {
       `Action menu for Linodes in Subnet subnet-1`
     );
     await userEvent.click(actionMenu);
-    getByText('Reboot Linode');
     getByText('Power Off');
     getByText('Unassign Linode');
   });
 
   it('should allow the reboot button to be clicked', async () => {
     const { getByLabelText, getByText, queryByLabelText } = renderWithTheme(
-      <SubnetLinodeActionMenu {...props} />
+      <SubnetLinodeActionMenu {...props} isRebootNeeded={true} />
     );
     const actionMenu = getByLabelText(
       `Action menu for Linodes in Subnet subnet-1`
     );
     await userEvent.click(actionMenu);
 
-    const rebootButton = getByText('Reboot Linode');
+    const rebootButton = getByText('Reboot');
     await userEvent.click(rebootButton);
     expect(props.handlePowerActionsLinode).toHaveBeenCalled();
     const tooltipText = queryByLabelText(

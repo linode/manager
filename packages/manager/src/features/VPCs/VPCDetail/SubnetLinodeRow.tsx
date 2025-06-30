@@ -242,6 +242,7 @@ export const SubnetLinodeRow = (props: Props) => {
             handlePowerActionsLinode={handlePowerActionsLinode}
             handleUnassignLinode={handleUnassignLinode}
             isOffline={isOffline}
+            isRebootNeeded={isRebootNeeded}
             isVPCLKEEnterpriseCluster={isVPCLKEEnterpriseCluster}
             linode={linode}
             showPowerButton={showPowerButton}
