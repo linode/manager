@@ -70,12 +70,6 @@ export const KubernetesClusterDetail = () => {
     id: cluster?.id,
   });
 
-  const isClusterReadWrite = useIsResourceRestricted({
-    grantLevel: 'read_write',
-    grantType: 'lkecluster',
-    id: cluster?.id,
-  });
-
   if (error) {
     return (
       <ErrorState
@@ -113,7 +107,7 @@ export const KubernetesClusterDetail = () => {
       <DocumentTitleSegment
         segment={`${cluster?.label} | Kubernetes Cluster`}
       />
-      {isClusterReadWrite && (
+      {!isClusterReadOnly && (
         <UpgradeKubernetesVersionBanner
           clusterID={cluster?.id}
           clusterTier={cluster?.tier ?? 'standard'} // TODO LKE: remove fallback once LKE-E is in GA and tier is required
