@@ -20,18 +20,20 @@ export const MaintenancePolicy = () => {
 
   const flags = useFlags();
 
-  const values: MaintenancePolicyValues = {
-    maintenance_policy: accountSettings?.maintenance_policy ?? 'linode/migrate',
-  };
-
   const {
     control,
     formState: { isDirty, isSubmitting },
     handleSubmit,
     setError,
   } = useForm<MaintenancePolicyValues>({
-    defaultValues: values,
-    values,
+    defaultValues: {
+      maintenance_policy: 'linode/migrate', // Default to 'linode/migrate' if no policies are found
+    },
+    values: accountSettings
+      ? {
+          maintenance_policy: accountSettings.maintenance_policy,
+        }
+      : undefined,
   });
 
   const onSubmit = async (values: MaintenancePolicyValues) => {
