@@ -82,7 +82,6 @@ export const CloudPulsePortFilter = React.memo(
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      setErrorText(undefined);
       const validationError = arePortsValid(e.target.value);
       if (validationError === undefined) {
         // Cancel any pending debouncedPortChange calls
@@ -93,7 +92,6 @@ export const CloudPulsePortFilter = React.memo(
 
     return (
       <TextField
-        onDrop={(e: React.DragEvent<HTMLInputElement>) => {e.preventDefault();}}
         autoComplete="off"
         disabled={disabled}
         errorText={errorText}
