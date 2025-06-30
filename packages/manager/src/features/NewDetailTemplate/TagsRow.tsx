@@ -6,20 +6,13 @@ import { SectionTitle } from './commonComponents';
 
 interface TagsRowProps {
   tags: string[];
-  sectionMarginBottom: string | number;
 }
 
-export const TagsRow: React.FC<TagsRowProps> = ({
-  tags,
-  sectionMarginBottom,
-}) => {
+export const TagsRow: React.FC<TagsRowProps> = ({ tags }) => {
   return (
     <Grid
       size={{
         xs: 12,
-      }}
-      sx={{
-        mb: sectionMarginBottom,
       }}
     >
       <SectionTitle title="TAGS" />

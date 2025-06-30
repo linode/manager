@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { useMediaQuery, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -21,8 +20,7 @@ import TagsRow from './TagsRow';
 
 export const NewDetailTemplateA = () => {
   const theme = useTheme();
-  const { isMobile, isTablet, isDesktop, menuIsCollapsed } =
-    useDetailsLayoutBreakpoints();
+  const { isMobile, menuIsCollapsed } = useDetailsLayoutBreakpoints();
 
   const isDesktop1030Up = useMediaQuery(theme.breakpoints.up('dl_desktop1030'));
   const isDesktop1214Up = useMediaQuery(theme.breakpoints.up('dl_desktop1214'));
@@ -40,7 +38,7 @@ export const NewDetailTemplateA = () => {
 
   const columnConfigs = [publicIpData, accessData, firewallData];
 
-  const [tags, setTags] = React.useState(Array(11).fill('Tag label'));
+  const [tags] = React.useState(Array(11).fill('Tag label'));
 
   return (
     <div
@@ -82,11 +80,7 @@ export const NewDetailTemplateA = () => {
         debugMode={debugMode}
       />
 
-      <TagsRow
-        tags={tags}
-        setTags={setTags}
-        sectionMarginBottom={sectionMarginBottom}
-      />
+      <TagsRow tags={tags} />
     </div>
   );
 };
