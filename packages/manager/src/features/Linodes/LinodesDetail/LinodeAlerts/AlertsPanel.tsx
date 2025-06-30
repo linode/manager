@@ -5,13 +5,12 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-// eslint-disable-next-line no-restricted-imports
-import { Prompt } from 'src/components/Prompt/Prompt';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -248,34 +247,66 @@ export const AlertsPanel = (props: Props) => {
 
   const hasUnsavedChanges = formik.dirty;
 
+  const { proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasUnsavedChanges,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasUnsavedChanges) {
+        return false;
+      }
+
+      // Don't block navigation to the specific route
+      const isNavigatingToAllowedRoute = next.routeId === '/alerts';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
+  });
+
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
+    }
+  }, [status, proceed]);
+
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
+
   return (
     <>
-      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
-        {({ handleCancel, handleConfirm, isModalOpen }) => (
-          <ConfirmationDialog
-            actions={() => (
-              <ActionsPanel
-                primaryButtonProps={{
-                  label: 'Confirm',
-                  onClick: handleConfirm,
-                }}
-                secondaryButtonProps={{
-                  buttonType: 'outlined',
-                  label: 'Cancel',
-                  onClick: handleCancel,
-                }}
-              />
-            )}
-            onClose={handleCancel}
-            open={isModalOpen}
-            title="Unsaved Changes"
-          >
-            <Typography variant="body1">
-              Are you sure you want to leave the page? You have unsaved changes.
-            </Typography>
-          </ConfirmationDialog>
+      <ConfirmationDialog
+        actions={() => (
+          <ActionsPanel
+            primaryButtonProps={{
+              label: 'Confirm',
+              onClick: () => {
+                handleProceedNavigation();
+              },
+            }}
+            secondaryButtonProps={{
+              buttonType: 'outlined',
+              label: 'Cancel',
+              onClick: () => {
+                handleCancelNavigation();
+              },
+            }}
+          />
         )}
-      </Prompt>
+        onClose={() => {
+          handleCancelNavigation();
+        }}
+        open={status === 'blocked'}
+        title="Unsaved Changes"
+      >
+        <Typography variant="body1">
+          Are you sure you want to leave the page? You have unsaved changes.
+        </Typography>
+      </ConfirmationDialog>
 
       <Paper
         sx={(theme) =>
