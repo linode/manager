@@ -200,12 +200,20 @@ export const isValidPort = (port: string): string | undefined => {
  * @description Validates a comma-separated list of ports and sets the error message
  */
 export const arePortsValid = (ports: string): string | undefined => {
+  if (ports === '') {
+    return undefined;
+  }
+
   if (ports.startsWith(',')) {
     return PORTS_LEADING_COMMA_ERROR_MESSAGE;
   }
 
   if (ports.includes(',,')) {
     return PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE;
+  }
+
+  if (!/^[\d,]+$/.test(ports)) {
+    return PORTS_ERROR_MESSAGE;
   }
 
   const portList = ports.split(',');
