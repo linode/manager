@@ -10,6 +10,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+// eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
@@ -290,9 +291,9 @@ export const AlertsPanel = (props: Props) => {
           </Typography>
         )}
         {generalError && <Notice variant="error">{generalError}</Notice>}
-        {alertSections.map((p, idx) => (
+        {alertSections.map((alert, idx) => (
           <React.Fragment key={`alert-${idx}`}>
-            <AlertSection {...p} readOnly={isReadOnly || isCreateFlow} />
+            <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
             {idx !== alertSections.length - 1 ? <Divider /> : null}
           </React.Fragment>
         ))}
