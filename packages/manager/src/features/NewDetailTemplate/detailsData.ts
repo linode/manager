@@ -1,4 +1,3 @@
-
 export interface DataItemType {
     label: string;
     value: string;
@@ -18,9 +17,9 @@ export interface DataItemType {
   ];
   
   export const sidebarItems: DataItemType[] = [
-    { label: 'Label', value: 'VPC-01-East' },
-    { label: 'Subnets', value: 'se-group' },
-    { label: 'VPC IPv4', value: '10.0.0.0' },
+    { label: 'Address 1', value: '50.116.6.212' },
+    { label: 'Address 2', value: '2600:3c00::f03c:92ff:fee2:6c40/64' },
+    { label: 'View all IP Addresses', value: '' },
   ];
   
   export const publicIpItems: DataItemType[] = [
@@ -42,22 +41,3 @@ export interface DataItemType {
     { label: 'ID', value: '112233' },
   ];
   
-  export const distributeItems = (items: DataItemType[], columns: number): DataItemType[][] => {
-    const result = Array.from<unknown, DataItemType[]>({ length: columns }, () => []);
-    items.forEach((item, index) => {
-      result[index % columns].push(item);
-    });
-    return result;
-  };
-  
-  export const distributeItemsSequentially = (items: DataItemType[], columns: number): DataItemType[][] => {
-    const result = Array.from<unknown, DataItemType[]>({ length: columns }, () => []);
-    const itemsPerColumn = Math.ceil(items.length / columns);
-  
-    items.forEach((item, index) => {
-      const columnIndex = Math.floor(index / itemsPerColumn);
-      result[columnIndex].push(item);
-    });
-  
-    return result;
-  };
