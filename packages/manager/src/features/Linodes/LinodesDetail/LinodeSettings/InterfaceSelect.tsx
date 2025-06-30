@@ -76,7 +76,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
     label,
     nattedIPv4Address,
     purpose,
-    // readOnly,
     region,
     regionHasVLANs,
     regionHasVPCs,
@@ -248,7 +247,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
   const jsxSelectVLAN = (
     <Autocomplete
       autoHighlight
-      // disabled={readOnly}
       errorText={errors.labelError}
       filterOptions={filterVLANOptions}
       id={`vlan-label-${slotNumber}`}
@@ -388,9 +386,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
                     )
               }
               placeholder="Select an Interface"
-              // textFieldProps={{
-              //   disabled: readOnly,
-              // }}
               value={purposeOptions.find(
                 (thisOption) => thisOption.value === purpose
               )}
