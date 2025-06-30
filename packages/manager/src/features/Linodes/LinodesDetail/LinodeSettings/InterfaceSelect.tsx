@@ -275,7 +275,6 @@ export const InterfaceSelect = (props: InterfaceSelectProps) => {
 
   const jsxIPAMForVLAN = (
     <TextField
-      // disabled={readOnly}
       errorText={errors.ipamError}
       inputId={`ipam-input-${slotNumber}`}
       label="IPAM Address"
