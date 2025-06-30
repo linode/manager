@@ -24,7 +24,6 @@ describe('InterfaceSelect', () => {
     handleChange: vi.fn(),
     ipamAddress: null,
     label: null,
-    readOnly: false,
     region: 'us-east',
     regionHasVLANs: true,
     slotNumber: 0,
