@@ -23,6 +23,7 @@ import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
 import { generateRandomMetricsData } from 'support/util/cloudpulse';
+import { randomNumber } from 'support/util/random';
 
 import {
   accountFactory,
@@ -237,17 +238,50 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
-  it.only('enter optnal parms', () => {
+  it('should apply optional filters (protocol and port) and verify API request payloads', () => {
+    const randomPort = randomNumber(1, 65535).toString();
+    const expectedProtocol = 'tcp';
+
     ui.button.findByTitle('Filters').should('be.visible').click();
     ui.autocomplete.findByLabel('Protocols').should('be.visible').type('TCP');
 
     ui.autocompletePopper.findByTitle('TCP').should('be.visible').click();
-    
+
     ui.autocomplete.findByLabel('Protocols').click();
 
-    ui.autocomplete.findByLabel('Ports').should('be.visible').type('1,2,3,4,5');
+    cy.findByPlaceholderText('e.g., 80,443,3000')
+      .should('be.visible')
+      .type(randomPort);
 
-    ui.autocomplete.findByLabel('Ports').click();
+    cy.wait([
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+      '@getMetrics',
+    ]);
+
+    cy.get('@getMetrics.all').then((calls) => {
+      const lastFourCalls = (calls as unknown as Interception[]).slice(-4);
+
+      lastFourCalls.forEach((call) => {
+        const filters = call.request.body.filters;
+        // Check protocol filter
+        expect(filters).to.deep.include({
+          dimension_label: 'protocol',
+          operator: 'in',
+          value: expectedProtocol,
+        });
+        expect(filters).to.deep.include({
+          dimension_label: 'port',
+          operator: 'in',
+          value: randomPort,
+        });
+      });
+    });
   });
 
   it('should allow users to select their desired granularity and see the most recent data from the API reflected in the graph', () => {
