@@ -24,8 +24,17 @@ export const linodeConfigInterfaceFactoryWithVPC =
     },
     ipv6: {
       is_public: false,
-      ranges: [],
-      slaac: [],
+      ranges: [
+        {
+          range: '2001:db8::/64',
+        },
+      ],
+      slaac: [
+        {
+          address: '2001:db8::1',
+          range: '2001:db8::/64',
+        },
+      ],
     },
     label: Factory.each((i) => `interface-${i}`),
     purpose: 'vpc',

@@ -13,6 +13,8 @@ import { useIsDiskEncryptionFeatureEnabled } from 'src/components/Encryption/uti
 import { Link } from 'src/components/Link';
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
 import { AccessTable } from 'src/features/Linodes/AccessTable';
+import { ipTableId } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/utils';
+import { useFlags } from 'src/hooks/useFlags';
 import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 
 import { EncryptedStatus } from '../Kubernetes/KubernetesClusterDetail/NodePoolsDisplay/NodeTable';
@@ -32,8 +34,8 @@ import {
 } from './LinodeEntityDetail.styles';
 import { LinodeEntityDetailRowConfigFirewall } from './LinodeEntityDetailRowConfigFirewall';
 import { LinodeEntityDetailRowInterfaceFirewall } from './LinodeEntityDetailRowInterfaceFirewall';
-import { ipTableId } from './LinodesDetail/LinodeNetworking/LinodeIPAddresses';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import { getSubnetsString, getVPCIPv4, getVPCIPv6 } from './utilities';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type {
@@ -43,7 +45,6 @@ import type {
   Linode,
   LinodeCapabilities,
   LinodeInterface,
-  Subnet,
   VPC,
 } from '@linode/api-v4';
 import type { TypographyProps } from '@linode/ui';
@@ -107,6 +108,8 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     vpcLinodeIsAssignedTo,
   } = props;
 
+  const flags = useFlags();
+
   const { data: profile } = useProfile();
 
   const { data: maskSensitiveDataPreference } = usePreferences(
@@ -121,6 +124,7 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
 
   const isLinodeInterface = interfaceGeneration === 'linode';
   const vpcIPv4 = getVPCIPv4(interfaceWithVPC);
+  const vpcIPv6 = getVPCIPv6(interfaceWithVPC);
 
   // @TODO LDE: Remove usages of this variable once LDE is fully rolled out (being used to determine formatting adjustments currently)
   const isDisplayingEncryptedStatus =
@@ -384,6 +388,20 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
                 </StyledIPv4Item>
               </StyledIPv4Box>
             )}
+            {flags.vpcIpv6 &&
+              vpcIPv6 && ( // @TODO VPC IPv6: remove flag check once VPC IPv6 is fully rolled out
+                <StyledIPv4Box>
+                  <StyledIPv4Label data-testid="vpc-ipv6">
+                    VPC IPv6
+                  </StyledIPv4Label>
+                  <StyledIPv4Item component="span" data-testid="vpc-ipv6">
+                    <CopyTooltip copyableText text={vpcIPv6} />
+                    <Box sx={{ ml: 1, position: 'relative', top: 1 }}>
+                      <StyledCopyTooltip text={vpcIPv6} />
+                    </Box>
+                  </StyledIPv4Item>
+                </StyledIPv4Box>
+              )}
           </Grid>
         </Grid>
       )}
@@ -405,28 +423,3 @@ export const LinodeEntityDetailBody = React.memo((props: BodyProps) => {
     </>
   );
 });
-
-export const getSubnetsString = (data: Subnet[]) => {
-  const firstThreeSubnets = data.slice(0, 3);
-  const subnetLabels = firstThreeSubnets.map((subnet) => subnet.label);
-  const firstThreeSubnetsString = subnetLabels.join(', ');
-
-  return data.length > 3
-    ? firstThreeSubnetsString.concat(`, plus ${data.length - 3} more.`)
-    : firstThreeSubnetsString;
-};
-
-export const getVPCIPv4 = (
-  interfaceWithVPC: Interface | LinodeInterface | undefined
-) => {
-  if (interfaceWithVPC) {
-    if ('purpose' in interfaceWithVPC) {
-      return interfaceWithVPC.ipv4?.vpc;
-    }
-    return interfaceWithVPC.vpc?.ipv4?.addresses.find(
-      (address) => address.primary
-    )?.address;
-  }
-
-  return undefined;
-};
