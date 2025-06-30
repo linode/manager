@@ -28,7 +28,7 @@ export const NewDetailTemplateA = () => {
     theme.breakpoints.between('dl_tablet950', 'md')
   );
 
-  const debugMode = true;
+  const debugMode = false;
 
   const shouldUseLargeSpacing =
     (isDesktop1030Up && menuIsCollapsed) || isDesktop1214Up || isTablet950ToMd;
