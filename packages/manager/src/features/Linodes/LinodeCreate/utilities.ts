@@ -167,13 +167,11 @@ export const getLinodeCreatePayload = (
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
-    'maintenance_policy', // Exclude maintenance_policy since it has a different type in formValues (includes null).
+    'maintenance_policy',
   ]);
 
-  // Convert null to undefined for maintenance_policy
-  if (formValues.maintenance_policy === null) {
-    values.maintenance_policy = undefined;
-  } else {
+  // Copy maintenance_policy if it exists (region supports it)
+  if (formValues.maintenance_policy) {
     values.maintenance_policy = formValues.maintenance_policy;
   }
 
@@ -291,13 +289,6 @@ const defaultInterfaces: InterfacePayload[] = [
  * For example, we add `linode` so we can store the currently selected Linode
  * for the Backups and Clone tab.
  *
- * We omit `maintenance_policy` from CreateLinodeRequest because:
- * 1. The API expects it to be either 'linode/migrate', 'linode/power_off_on' or undefined
- * 2. The form needs to handle null (no policy selected) and undefined (omit from API)
- * 3. The actual API payload is handled in getLinodeCreatePayload where we:
- *    - Delete the field if region doesn't support it
- *    - Convert null to undefined if region supports it
- *
  * For any extra values added to the form, we should make sure `getLinodeCreatePayload`
  * removes them from the payload before it is sent to the API.
  */
@@ -331,11 +322,9 @@ export interface LinodeCreateFormValues
    */
   linodeInterfaces: LinodeCreateInterface[];
   /**
-   * Override maintenance_policy to include null for form handling
-   * null = "user explicitly selected 'no policy'"
-   * undefined = "field not set, omit from API"
+   * Maintenance policy for the Linode. Can be undefined if the selected region doesn't support it.
    */
-  maintenance_policy?: MaintenancePolicySlug | null;
+  maintenance_policy?: MaintenancePolicySlug;
 }
 
 export interface LinodeCreateFormContext {
@@ -416,11 +405,8 @@ export const defaultValues = async (
         );
       }
 
-      // If the Maintenance Policy feature is enabled, set the default policy if the user has one set
-      if (
-        flags.isVMHostMaintenanceEnabled &&
-        accountSettings.maintenance_policy
-      ) {
+      // If the Maintenance Policy feature is enabled, use the user's account setting
+      if (flags.isVMHostMaintenanceEnabled) {
         defaultMaintenancePolicy = accountSettings.maintenance_policy;
       }
     } catch (error) {

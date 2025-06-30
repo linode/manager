@@ -69,7 +69,7 @@ export const MaintenancePolicy = () => {
                   ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
                   : undefined,
             }}
-            value={field.value}
+            value={field.value ?? undefined}
           />
         )}
       />
