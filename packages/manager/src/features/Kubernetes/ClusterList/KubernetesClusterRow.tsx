@@ -51,12 +51,6 @@ export const KubernetesClusterRow = (props: Props) => {
     id: cluster.id,
   });
 
-  const isLKEClusterReadWrite = useIsResourceRestricted({
-    grantLevel: 'read_write',
-    grantType: 'lkecluster',
-    id: cluster.id,
-  });
-
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
   const hasUpgrade = nextVersion !== null;
@@ -88,7 +82,7 @@ export const KubernetesClusterRow = (props: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>
           {cluster.k8s_version}
-          {hasUpgrade && isLKEClusterReadWrite && (
+          {hasUpgrade && !isLKEClusterReadOnly && (
             <Chip
               clickable
               label="UPGRADE"
