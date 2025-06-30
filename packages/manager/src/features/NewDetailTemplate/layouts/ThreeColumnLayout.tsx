@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React from 'react';
 import { Grid, Box } from '@mui/material';
-import { DataItemType, ColumnConfig } from '../detailsData';
+import { ColumnConfig } from '../detailsData';
 import { DataItem, SectionTitle } from '../commonComponents';
 
 interface ThreeColumnLayoutProps {

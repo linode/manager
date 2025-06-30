@@ -1,15 +1,19 @@
-// @ts-nocheck
 import React from 'react';
 import { styled } from '@mui/material/styles';
 
-const DataItemWrapper = styled('div', { label: 'DataItemWrapper' })(
-  ({ theme, backgroundColor }) => ({
-    backgroundColor: backgroundColor || 'white',
-    minWidth: 120,
-    display: 'flex',
-    flexDirection: 'column',
-  })
-);
+interface DataItemWrapperProps {
+  backgroundColor?: string;
+}
+
+const DataItemWrapper = styled('div', {
+  label: 'DataItemWrapper',
+  shouldForwardProp: (prop) => prop !== 'backgroundColor',
+})<DataItemWrapperProps>(({ theme, backgroundColor }) => ({
+  backgroundColor: backgroundColor || 'white',
+  minWidth: 120,
+  display: 'flex',
+  flexDirection: 'column',
+}));
 
 export const DataItemLabel = styled('div', { label: 'DataItemLabel' })(
   ({ theme }) => ({
@@ -39,14 +43,27 @@ export const SectionTitleWrapper = styled('div', { label: 'SectionTitle' })(
     marginBottom: 10,
   })
 );
+interface DataItemProps {
+  label: React.ReactNode;
+  value: React.ReactNode;
+  backgroundColor?: string;
+}
 
-export const DataItem = ({ label, value, backgroundColor = 'white' }) => (
+interface SectionTitleProps {
+  title: React.ReactNode;
+}
+
+export const DataItem: React.FC<DataItemProps> = ({
+  label,
+  value,
+  backgroundColor = 'white',
+}) => (
   <DataItemWrapper backgroundColor={backgroundColor}>
     <DataItemLabel>{label}</DataItemLabel>
     <DataItemValue>{value}</DataItemValue>
   </DataItemWrapper>
 );
 
-export const SectionTitle = ({ title }) => (
+export const SectionTitle: React.FC<SectionTitleProps> = ({ title }) => (
   <SectionTitleWrapper>{title}</SectionTitleWrapper>
 );
