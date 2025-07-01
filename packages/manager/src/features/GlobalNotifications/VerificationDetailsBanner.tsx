@@ -41,7 +41,12 @@ export const VerificationDetailsBanner = ({
         <Button
           buttonType="primary"
           data-testid="confirmButton"
-          onClick={() => history.push('/profile/auth', focusOptions)}
+          onClick={() => {
+            const { focusSecurityQuestions, focusTel } = focusOptions;
+            history.push(
+              `/profile/auth?focusSecurityQuestions=${focusSecurityQuestions}&focusTel=${focusTel}`
+            );
+          }}
           sx={{
             width: 250,
           }}

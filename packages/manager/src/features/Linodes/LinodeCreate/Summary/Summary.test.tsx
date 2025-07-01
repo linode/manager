@@ -74,7 +74,7 @@ describe('Linode Create Summary', () => {
     const region = regionFactory.build();
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );
@@ -268,7 +268,7 @@ describe('Linode Create Summary', () => {
     const region = regionFactory.build({ site_type: 'distributed' });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       })
     );

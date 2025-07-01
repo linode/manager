@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 import { Table } from './Table';
 
 import type { TableProps } from './Table';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TableProps> = {
   render: (args) => <Table {...args} />,

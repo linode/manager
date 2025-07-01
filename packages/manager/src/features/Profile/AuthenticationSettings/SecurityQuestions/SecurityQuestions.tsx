@@ -19,7 +19,7 @@ import type { FormikConfig } from 'formik';
 export const SecurityQuestions = ({
   securityQuestionRef,
 }: {
-  securityQuestionRef?: React.RefObject<HTMLInputElement>;
+  securityQuestionRef?: React.RefObject<HTMLInputElement | null>;
 }) => {
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
   const { isPending: isUpdating, mutateAsync: updateSecurityQuestions } =

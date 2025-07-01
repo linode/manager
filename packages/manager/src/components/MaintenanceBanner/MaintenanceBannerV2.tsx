@@ -2,23 +2,19 @@ import { useAllAccountMaintenanceQuery } from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { PENDING_MAINTENANCE_FILTER } from 'src/features/Account/Maintenance/utilities';
 import { isPlatformMaintenance } from 'src/hooks/usePlatformMaintenance';
 
 import { Link } from '../Link';
 
-export const MaintenanceBannerV2 = () => {
+export const MaintenanceBannerV2 = ({ pathname }: { pathname?: string }) => {
   const { data: allMaintenance } = useAllAccountMaintenanceQuery(
     {},
     PENDING_MAINTENANCE_FILTER
   );
 
-  const location = useLocation();
-
-  const hideAccountMaintenanceLink =
-    location.pathname === '/account/maintenance';
+  const hideAccountMaintenanceLink = pathname === '/account/maintenance';
 
   // Filter out platform maintenance, since that is handled separately
   const linodeMaintenance =

@@ -1,6 +1,7 @@
 import { useProfile } from '@linode/queries';
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import React, { useState } from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { useHistory } from 'react-router-dom';
 
 import { PARENT_USER } from 'src/features/Account/constants';

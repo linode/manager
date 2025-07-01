@@ -1,5 +1,5 @@
 import { useAllFirewallsQuery } from '@linode/queries';
-import { Autocomplete } from '@linode/ui';
+import { Autocomplete, InputAdornment } from '@linode/ui';
 import React, { useMemo } from 'react';
 
 import { useDefaultFirewallChipInformation } from 'src/hooks/useDefaultFirewallChipInformation';
@@ -79,10 +79,12 @@ export const FirewallSelect = <DisableClearable extends boolean>(
       textFieldProps={{
         InputProps: {
           endAdornment: isDefault && !hideDefaultChips && (
-            <DefaultFirewallChip
-              defaultNumEntities={defaultNumEntities}
-              tooltipText={tooltipText}
-            />
+            <InputAdornment position="end">
+              <DefaultFirewallChip
+                defaultNumEntities={defaultNumEntities}
+                tooltipText={tooltipText}
+              />
+            </InputAdornment>
           ),
         },
       }}

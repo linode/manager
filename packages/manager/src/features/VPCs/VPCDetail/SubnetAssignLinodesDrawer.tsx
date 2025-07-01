@@ -98,8 +98,8 @@ export const SubnetAssignLinodesDrawer = (
     unassignLinode,
     unassignLinodesErrors,
   } = useUnassignLinode();
-  const csvRef = React.useRef<any>();
-  const newInterface = React.useRef<Interface | LinodeInterface>();
+  const csvRef = React.useRef<any>(undefined);
+  const newInterface = React.useRef<Interface | LinodeInterface>(undefined);
   const removedLinodeId = React.useRef<number>(-1);
   const formattedDate = useFormattedDate();
   const theme = useTheme();

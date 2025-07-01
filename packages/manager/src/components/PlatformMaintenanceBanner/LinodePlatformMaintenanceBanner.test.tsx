@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/prefer-screen-queries */
 import { linodeFactory } from '@linode/utilities';
 import React from 'react';
 
@@ -11,6 +10,7 @@ const queryMocks = vi.hoisted(() => ({
   useNotificationsQuery: vi.fn().mockReturnValue({}),
   useAllAccountMaintenanceQuery: vi.fn().mockReturnValue({}),
   useLinodeQuery: vi.fn().mockReturnValue({}),
+  useLocation: vi.fn(),
 }));
 
 vi.mock('@linode/queries', async () => {
@@ -21,8 +21,17 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual('react-router-dom');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+  };
+});
+
 beforeEach(() => {
   vi.stubEnv('TZ', 'UTC');
+  queryMocks.useLocation.mockReturnValue({ pathname: '/linodes' });
 });
 
 describe('LinodePlatformMaintenanceBanner', () => {
@@ -123,5 +132,87 @@ describe('LinodePlatformMaintenanceBanner', () => {
         el.includes('needs to be rebooted for critical platform maintenance.')
       )
     ).toBeVisible();
+  });
+
+  it('renders linode label as a link when not on linode detail page', () => {
+    const mockPlatformMaintenance = accountMaintenanceFactory.buildList(1, {
+      type: 'reboot',
+      entity: { type: 'linode', id: 123 },
+      reason: 'Your Linode needs a critical security update',
+      when: '2020-01-01T00:00:00',
+      start_time: '2020-01-01T00:00:00',
+    });
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockPlatformMaintenance,
+    });
+
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linodeFactory.build({
+        id: 123,
+        label: 'test-linode',
+      }),
+    });
+
+    queryMocks.useNotificationsQuery.mockReturnValue({
+      data: notificationFactory.buildList(1, {
+        type: 'security_reboot_maintenance_scheduled',
+        label: 'Platform Maintenance Scheduled',
+      }),
+    });
+
+    // Mock location to be on a different page
+    queryMocks.useLocation.mockReturnValue({ pathname: '/linodes' });
+
+    const { getByRole } = renderWithTheme(
+      <LinodePlatformMaintenanceBanner linodeId={123} />
+    );
+
+    const link = getByRole('link', { name: 'test-linode' });
+    expect(link).toBeVisible();
+    expect(link).toHaveAttribute('href', '/linodes/123');
+  });
+
+  it('renders linode label as plain text when on linode detail page', () => {
+    const mockPlatformMaintenance = accountMaintenanceFactory.buildList(1, {
+      type: 'reboot',
+      entity: { type: 'linode', id: 123 },
+      reason: 'Your Linode needs a critical security update',
+      when: '2020-01-01T00:00:00',
+      start_time: '2020-01-01T00:00:00',
+    });
+
+    queryMocks.useAllAccountMaintenanceQuery.mockReturnValue({
+      data: mockPlatformMaintenance,
+    });
+
+    queryMocks.useLinodeQuery.mockReturnValue({
+      data: linodeFactory.build({
+        id: 123,
+        label: 'test-linode',
+      }),
+    });
+
+    queryMocks.useNotificationsQuery.mockReturnValue({
+      data: notificationFactory.buildList(1, {
+        type: 'security_reboot_maintenance_scheduled',
+        label: 'Platform Maintenance Scheduled',
+      }),
+    });
+
+    // Mock location to be on the linode detail page
+    queryMocks.useLocation.mockReturnValue({ pathname: '/linodes/123' });
+
+    const { container, queryByRole } = renderWithTheme(
+      <LinodePlatformMaintenanceBanner linodeId={123} />
+    );
+
+    // Should show the label as plain text within the Typography component
+    expect(container.textContent).toContain('test-linode');
+
+    // Should not have a link
+    expect(
+      queryByRole('link', { name: 'test-linode' })
+    ).not.toBeInTheDocument();
   });
 });

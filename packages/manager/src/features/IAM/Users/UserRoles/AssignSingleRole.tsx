@@ -118,7 +118,11 @@ export const AssignSingleRole = ({
           verticalAlign: 'top',
         }}
       >
-        <Button disabled={roles.length === 1} onClick={() => onRemove(index)}>
+        <Button
+          disabled={roles.length === 1}
+          onClick={() => onRemove(index)}
+          sx={{ paddingRight: 0 }}
+        >
           <DeleteIcon />
         </Button>
       </Box>

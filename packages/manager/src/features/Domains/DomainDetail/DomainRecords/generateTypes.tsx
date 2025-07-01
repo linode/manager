@@ -1,6 +1,6 @@
 import { Button } from '@linode/ui';
 import { truncateEnd } from '@linode/utilities';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 import { DomainRecordActionMenu } from './DomainRecordActionMenu';
 import { getNSRecords, getTimeColumn, typeEq } from './DomainRecordsUtils';

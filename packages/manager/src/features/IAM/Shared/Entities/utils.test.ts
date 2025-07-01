@@ -15,9 +15,7 @@ describe('getCreateLinkForEntityType', () => {
     expect(getCreateLinkForEntityType('placement_group')).toBe(
       '/placement-groups/create'
     );
-    expect(getCreateLinkForEntityType('lkecluster')).toBe(
-      '/kubernetes/clusters'
-    );
+    expect(getCreateLinkForEntityType('lkecluster')).toBe('/kubernetes/create');
   });
 });
 

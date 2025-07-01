@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -123,6 +124,8 @@ const getRandomWholeNumber = (min: number, max: number) =>
 
 import { accountEntityFactory } from 'src/factories/accountEntities';
 import { accountRolesFactory } from 'src/factories/accountRoles';
+import { trustedDeviceFactory } from 'src/factories/devices';
+import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 import { userAccountPermissionsFactory } from 'src/factories/userAccountPermissions';
 import { userEntityPermissionsFactory } from 'src/factories/userEntityPermissions';
 import { userRolesFactory } from 'src/factories/userRoles';
@@ -579,7 +582,7 @@ export const handlers = [
     );
   }),
   http.get('*/profile/apps', () => {
-    const tokens = appTokenFactory.buildList(5);
+    const tokens = appTokenFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(tokens));
   }),
   http.post('*/profile/phone-number', async () => {
@@ -1478,7 +1481,9 @@ export const handlers = [
     });
   }),
   http.get('*/profile/devices', () => {
-    return HttpResponse.json(makeResourcePage([]));
+    return HttpResponse.json(
+      makeResourcePage(trustedDeviceFactory.buildList(30))
+    );
   }),
   http.put('*/profile/preferences', async ({ request }) => {
     const reqBody = await request.json();
@@ -2027,6 +2032,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2797,7 +2803,6 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
-          regions: 'us-iad,us-east',
         }),
         serviceTypesFactory.build({
           label: 'Databases',
@@ -2819,6 +2824,7 @@ export const handlers = [
             label: 'Linodes',
             service_type: 'linode',
             regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
           })
         : serviceTypesFactory.build({
             label: 'Databases',
@@ -3180,4 +3186,9 @@ export const handlers = [
   ...databases,
   ...vpc,
   ...entities,
+  http.get('*/v4beta/maintenance/policies', () => {
+    return HttpResponse.json(
+      makeResourcePage(maintenancePolicyFactory.buildList(2))
+    );
+  }),
 ];

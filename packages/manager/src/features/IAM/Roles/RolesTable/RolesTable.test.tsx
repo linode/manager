@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
 
 import { RolesTable } from './RolesTable';
 
@@ -20,12 +20,12 @@ vi.mock('src/features/IAM/Shared/utilities', async () => {
 const mockRoles: RoleView[] = [
   {
     access: 'account_access',
-    description: 'Account volume admin',
+    description: 'Account linode admin',
     entity_ids: [1],
-    entity_type: 'volume',
-    id: 'account_volume_admin',
-    name: 'account_volume_admin',
-    permissions: ['attach_volume', 'delete_volume', 'clone_volume'],
+    entity_type: 'linode',
+    id: 'account_linode_admin',
+    name: 'account_linode_admin',
+    permissions: ['apply_linode_firewalls', 'delete_linode', 'clone_linode'],
   },
   {
     access: 'entity_access',
@@ -43,8 +43,8 @@ beforeEach(() => {
 });
 
 describe('RolesTable', () => {
-  it('renders no roles when roles array is empty', () => {
-    const { getByText, getByTestId } = renderWithTheme(
+  it('renders no roles when roles array is empty', async () => {
+    const { getByText, getByTestId } = await renderWithThemeAndRouter(
       <RolesTable roles={[]} />
     );
 
@@ -52,18 +52,17 @@ describe('RolesTable', () => {
     expect(getByText('No items to display.')).toBeInTheDocument();
   });
 
-  it('renders roles correctly when roles array is provided', () => {
-    const { getByText, getByTestId, getAllByRole } = renderWithTheme(
-      <RolesTable roles={mockRoles} />
-    );
+  it('renders roles correctly when roles array is provided', async () => {
+    const { getByText, getByTestId, getAllByRole } =
+      await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
 
     expect(getByTestId('roles-table')).toBeInTheDocument();
     expect(getAllByRole('combobox').length).toEqual(1);
-    expect(getByText('Account volume admin')).toBeInTheDocument();
+    expect(getByText('Account linode admin')).toBeInTheDocument();
   });
 
   it('filters roles to warranted results based on search input', async () => {
-    renderWithTheme(<RolesTable roles={mockRoles} />);
+    await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     fireEvent.change(searchInput, { target: { value: 'Account' } });
 
@@ -78,7 +77,7 @@ describe('RolesTable', () => {
   });
 
   it('filters roles to no results based on search input if warranted', async () => {
-    renderWithTheme(<RolesTable roles={mockRoles} />);
+    await renderWithThemeAndRouter(<RolesTable roles={mockRoles} />);
 
     const searchInput: HTMLInputElement = screen.getByPlaceholderText('Search');
     fireEvent.change(searchInput, {

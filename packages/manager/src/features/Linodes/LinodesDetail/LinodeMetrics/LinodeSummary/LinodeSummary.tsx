@@ -229,7 +229,7 @@ const LinodeSummary = (props: Props) => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container data-testid="linode-summary" spacing={2}>
       <Grid size={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Autocomplete
           defaultValue={options[0]}

@@ -35,7 +35,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );
@@ -86,7 +86,7 @@ describe('renders the component with the right data', () => {
     });
 
     server.use(
-      http.get('*/v4/regions', () => {
+      http.get('*/v4*/regions', () => {
         return HttpResponse.json(makeResourcePage([region]));
       }),
       http.get('*/v4/linode/types/:id', () => {
@@ -95,7 +95,7 @@ describe('renders the component with the right data', () => {
       http.get('*/v4/account/transfer', () => {
         return HttpResponse.json(accountTransfer);
       }),
-      http.get('*/v4/linode/instances/:id/transfer', () => {
+      http.get('*/v4*/linode/instances/:id/transfer', () => {
         return HttpResponse.json(linodeTransfer);
       })
     );

@@ -1,12 +1,12 @@
+import { useUserRoles, useUserRolesMutation } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
-import { deleteUserRole } from '../utilities';
+import { deleteUserRole, getErrorMessage } from '../utilities';
 
 import type { ExtendedRoleView } from '../types';
 
@@ -19,7 +19,7 @@ interface Props {
 
 export const UnassignRoleConfirmationDialog = (props: Props) => {
   const { onClose: _onClose, onSuccess, open, role } = props;
-  const { username } = useParams<{ username: string }>();
+  const { username } = useParams({ from: '/iam/users/$username' });
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -74,7 +74,7 @@ export const UnassignRoleConfirmationDialog = (props: Props) => {
           style={{ padding: 0 }}
         />
       }
-      error={error?.[0].reason}
+      error={getErrorMessage(error)}
       onClose={onClose}
       open={open}
       title={`Unassign the ${role?.name} role?`}

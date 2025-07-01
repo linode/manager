@@ -16,6 +16,7 @@ import {
   mockDeleteLinodeConfigInterface,
   mockGetLinodeConfigs,
 } from 'support/intercepts/configs';
+import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodes } from 'support/intercepts/linodes';
 import {
   mockCreateSubnet,
@@ -45,6 +46,13 @@ describe('VPC assign/unassign flows', () => {
     mockConfig = linodeConfigFactory.build({
       id: randomNumber(),
     });
+  });
+
+  beforeEach(() => {
+    // TODO - Remove mock once `nodebalancerVpc` feature flag is removed.
+    mockAppendFeatureFlags({
+      nodebalancerVpc: false,
+    }).as('getFeatureFlags');
   });
 
   /*
@@ -84,7 +92,7 @@ describe('VPC assign/unassign flows', () => {
     mockGetLinodes([mockLinode]).as('getLinodes');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getVPC', '@getSubnets']);
+    cy.wait(['@getVPC', '@getSubnets', '@getFeatureFlags']);
 
     // confirm that vpc and subnet details get displayed
     cy.findByText(mockVPC.label).should('be.visible');
@@ -230,7 +238,7 @@ describe('VPC assign/unassign flows', () => {
     mockGetLinodes([mockLinode, mockSecondLinode]).as('getLinodes');
 
     cy.visitWithLogin(`/vpcs/${mockVPC.id}`);
-    cy.wait(['@getVPC', '@getSubnets', '@getLinodes']);
+    cy.wait(['@getVPC', '@getSubnets', '@getLinodes', '@getFeatureFlags']);
 
     // confirm that subnet should get displayed on VPC's detail page
     cy.findByText(mockVPC.label).should('be.visible');

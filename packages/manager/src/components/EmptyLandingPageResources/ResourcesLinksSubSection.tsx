@@ -1,6 +1,7 @@
 import { Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import type { JSX } from 'react';
 
 interface ResourcesLinksSubSectionProps {
   children?: JSX.Element | JSX.Element[];

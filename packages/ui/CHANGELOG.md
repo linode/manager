@@ -1,3 +1,26 @@
+## [2025-07-01] - v0.15.0
+
+
+### Changed:
+
+- Add `Toggle` design tokens and update styles to match Akamai Design System ([#12303](https://github.com/linode/manager/pull/12303))
+
+### Fixed:
+
+- Use design tokens for accordion headers ([#12334](https://github.com/linode/manager/pull/12334))
+
+### Removed:
+
+- nowrap styles from input ([#12390](https://github.com/linode/manager/pull/12390))
+
+### Tech Stories
+
+- Update to Storybook v9 ([#12416](https://github.com/linode/manager/pull/12416))
+
+### Upcoming Features:
+
+- Add new maintenance policy icons and update TooltipIcon tokens ([#12398](https://github.com/linode/manager/pull/12398))
+
 ## [2025-06-17] - v0.14.0
 
 

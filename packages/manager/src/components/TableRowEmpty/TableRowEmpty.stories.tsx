@@ -8,7 +8,7 @@ import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 
 import type { TableRowEmptyProps } from './TableRowEmpty';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<TableRowEmptyProps> = {
   render: (args) => {

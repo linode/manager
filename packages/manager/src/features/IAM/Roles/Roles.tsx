@@ -1,9 +1,9 @@
+import { useAccountRoles } from '@linode/queries';
 import { CircleProgress, Paper, Typography } from '@linode/ui';
 import React from 'react';
 
 import { RolesTable } from 'src/features/IAM/Roles/RolesTable/RolesTable';
 import { mapAccountPermissionsToRoles } from 'src/features/IAM/Shared/utilities';
-import { useAccountRoles } from 'src/queries/iam/iam';
 
 export const RolesLanding = () => {
   const { data: accountRoles, isLoading } = useAccountRoles();

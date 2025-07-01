@@ -1,4 +1,5 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
+import type { JSX } from 'react';
 
 import type { ManagerPreferences } from '@linode/utilities';
 
