@@ -128,7 +128,7 @@ export const LinodeCreate = () => {
       setParams({ type: newTab });
 
       // Get the default values for the new tab and reset the form
-      defaultValues({ ...params, type: newTab }, queryClient, {
+      defaultValues({ type: newTab }, queryClient, {
         isLinodeInterfacesEnabled,
         isVMHostMaintenanceEnabled,
       }).then(form.reset);
