@@ -100,7 +100,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           .find()
           .should('have.attr', 'data-qa-toggle', 'true')
           .should('be.visible')
-          // TODO: do these need to be enabled in order to be added to POST or snippets modal?
           .should('be.disabled');
         // numeric inputs are disabled
         cy.get('[type="number"]').should('be.visible').should('be.disabled');
