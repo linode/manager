@@ -7,7 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { destinationType } from 'src/features/DataStream/Shared/types';
 
-import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
+import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateDataSet } from './StreamCreateDataSet';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
