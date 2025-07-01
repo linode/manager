@@ -5,7 +5,11 @@ import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/constants';
+import {
+  PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT,
+  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT,
+  PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT,
+} from 'src/features/Linodes/constants';
 
 import type { IPTypes } from './types';
 import type { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
@@ -13,12 +17,12 @@ import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  hasPublicLinodeInterface?: boolean;
+  disabledFromInterfaces: boolean;
+  hasPublicInterface?: boolean;
   ipAddress: IPAddress | IPRange;
   ipType: IPTypes;
   isLinodeInterface: boolean;
   isOnlyPublicIP: boolean;
-  isVPCOnlyLinode: boolean;
   onEdit?: (ip: IPAddress | IPRange) => void;
   onRemove?: (ip: IPAddress | IPRange) => void;
   readOnly: boolean;
@@ -28,12 +32,12 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const {
-    hasPublicLinodeInterface,
+    hasPublicInterface,
     ipAddress,
     ipType,
     isOnlyPublicIP,
     isLinodeInterface,
-    isVPCOnlyLinode,
+    disabledFromInterfaces,
     onEdit,
     onRemove,
     readOnly,
@@ -61,9 +65,10 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     ? 'Linodes must have at least one public IP'
     : undefined;
 
-  const linodeInterfacePublicIPCopy = hasPublicLinodeInterface
-    ? 'This Public IP Address is provisionally reserved but not the default route. To update this, please review your Interface Settings.'
-    : 'This Public IP Address is provisionally reserved but not assigned to a network interface.';
+  const linodeInterfacePublicIPCopy =
+    isLinodeInterface && hasPublicInterface
+      ? PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT
+      : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
 
   const isPublicIPNotAssignedCopy = isLinodeInterface
     ? linodeInterfacePublicIPCopy
@@ -84,7 +89,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
     deletableIPTypes.includes(ipType) &&
     !isLinodeInterface
       ? {
-          disabled: readOnly || isOnlyPublicIP || isVPCOnlyLinode,
+          disabled: readOnly || isOnlyPublicIP || disabledFromInterfaces,
           id: 'delete',
           onClick: () => {
             onRemove(ipAddress);
@@ -92,7 +97,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           title: 'Delete',
           tooltip: readOnly
             ? readOnlyTooltip
-            : isVPCOnlyLinode
+            : disabledFromInterfaces
               ? isPublicIPNotAssignedCopy
               : isOnlyPublicIP
                 ? isOnlyPublicIPTooltip
@@ -101,7 +106,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
       : null,
     onEdit && ipAddress && showEdit
       ? {
-          disabled: readOnly || isVPCOnlyLinode,
+          disabled: readOnly || disabledFromInterfaces,
           id: 'edit-rdns',
           onClick: () => {
             onEdit(ipAddress);
@@ -109,7 +114,7 @@ export const LinodeNetworkingActionMenu = (props: Props) => {
           title: 'Edit RDNS',
           tooltip: readOnly
             ? readOnlyTooltip
-            : isVPCOnlyLinode
+            : disabledFromInterfaces
               ? isPublicIPNotAssignedCopy
               : undefined,
         }
