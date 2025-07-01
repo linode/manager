@@ -125,17 +125,34 @@ export const MaintenanceTable = ({ type }: Props) => {
   );
 
   const renderTableContent = () => {
-    const columnCount = type === 'in progress' ? 5 : 7;
+    const getColumnCount = () => {
+      if (type === 'in progress') {
+        // Entity, Label, Date, Type (hidden smDown), Reason (hidden lgDown)
+        return 5;
+      }
+
+      // For other types: Entity, Label, When (hidden mdDown), Date, Type (hidden smDown), Status, Reason (hidden lgDown)
+      return 7;
+    };
+
+    const columnCount = getColumnCount();
 
     if (isLoading) {
       return (
         <TableRowLoading
           columns={columnCount}
-          responsive={{
-            2: { smDown: true },
-            3: { xsDown: true },
-            5: { mdDown: true },
-          }}
+          responsive={
+            type === 'in progress'
+              ? {
+                  3: { smDown: true }, // Hide Type column on small screens
+                  4: { lgDown: true }, // Hide Reason column on large screens
+                }
+              : {
+                  2: { mdDown: true }, // Hide When column on medium screens
+                  4: { smDown: true }, // Hide Type column on small screens
+                  6: { lgDown: true }, // Hide Reason column on large screens
+                }
+          }
           rows={1}
         />
       );
