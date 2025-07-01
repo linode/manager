@@ -3,7 +3,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { getLoginURL } from 'src/OAuth/oauth';
+import { getLoginURL } from 'src/OAuth/constants';
 
 interface Props {
   username?: string;
