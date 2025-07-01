@@ -371,6 +371,22 @@ describe('Linode Create Summary', () => {
       expect(text).toBeVisible();
     });
 
+    it('should render "Public Internet" if public interface selected', async () => {
+      const { findByText } =
+        renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
+          component: <Summary />,
+          useFormOptions: {
+            defaultValues: {
+              linodeInterfaces: [{ purpose: 'public' }],
+            },
+          },
+          options: { flags: { linodeInterfaces: { enabled: true } } },
+        });
+
+      const text = await findByText('Public Internet');
+      expect(text).toBeVisible();
+    });
+
     it('should render "Firewall Assigned" if a Firewall is selected', async () => {
       const { findByText } =
         renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
