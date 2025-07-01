@@ -5,7 +5,7 @@ export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT =
   'The noted Public IP Addresses are provisionally reserved but not assigned to a network interface.';
 
 export const PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_DEFAULT_ROUTE_TOOLTIP_TEXT =
-  'The noted Public IP Addresses are provisionally reserved but not the default route. To update this, please review your Interface Settings.';
+  'This Public IP Address is provisionally reserved but not the default route. To update this, please review your Interface Settings.';
 
 export const METRICS_LEGACY_MODE_BANNER_TEXT =
   'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current view at any time.';
