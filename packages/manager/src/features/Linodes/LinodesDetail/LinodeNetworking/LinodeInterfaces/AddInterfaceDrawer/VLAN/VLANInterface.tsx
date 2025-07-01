@@ -6,7 +6,11 @@ import { VLANSelect } from 'src/components/VLANSelect';
 
 import type { CreateInterfaceFormValues } from '../utilities';
 
-export const VLANInterface = () => {
+interface Props {
+  regionId: string;
+}
+
+export const VLANInterface = ({ regionId }: Props) => {
   const { control } = useFormContext<CreateInterfaceFormValues>();
 
   return (
@@ -17,6 +21,7 @@ export const VLANInterface = () => {
         render={({ field, fieldState }) => (
           <VLANSelect
             errorText={fieldState.error?.message}
+            filter={{ region: regionId }}
             onChange={field.onChange}
             value={field.value ?? null}
           />
