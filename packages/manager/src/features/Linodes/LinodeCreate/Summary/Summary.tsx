@@ -181,7 +181,9 @@ export const Summary = () => {
       item: {
         title: 'Public Internet',
       },
-      show: linodeInterfaces?.some((i) => i.purpose === 'public'),
+      show:
+        isLinodeInterfacesEnabled &&
+        linodeInterfaces?.some((i) => i.purpose === 'public'),
     },
     {
       item: {
