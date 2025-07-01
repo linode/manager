@@ -156,6 +156,7 @@ export const LinodeSelectTable = (props: Props) => {
         label="Search"
         onSearch={(query) => {
           // If a Linode is selected and the user changes the search query, clear their current selection.
+          // We do this because the new list of Linodes may not include the selected one.
           if (field.value?.id) {
             field.onChange(null);
           }
