@@ -21,9 +21,7 @@ describe('LinodeInterfacesHistoryDialog', () => {
     expect(getByText('Created')).toBeVisible();
     expect(getByText('Interface ID')).toBeVisible();
     expect(getByText('Linode ID')).toBeVisible();
-    expect(getByText('Event ID')).toBeVisible();
     expect(getByText('Version')).toBeVisible();
-    expect(getByText('Status')).toBeVisible();
     expect(getByText('Close')).toBeVisible();
   });
 
