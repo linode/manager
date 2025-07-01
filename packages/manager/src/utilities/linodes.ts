@@ -3,14 +3,27 @@ import { isFeatureEnabledV2 } from '@linode/utilities';
 
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { AccountMaintenance, Linode } from '@linode/api-v4';
+import type {
+  AccountMaintenance,
+  Linode,
+  MaintenancePolicySlug,
+} from '@linode/api-v4';
 
-export interface Maintenance {
+export interface LinodeMaintenance {
+  maintenance_policy_set: MaintenancePolicySlug;
+  start_time: null | string;
+  status?:
+    | 'canceled'
+    | 'completed'
+    | 'in-progress'
+    | 'pending'
+    | 'scheduled'
+    | 'started';
   when: null | string;
 }
 
 export interface LinodeWithMaintenance extends Linode {
-  maintenance?: Maintenance | null;
+  maintenance?: LinodeMaintenance | null;
 }
 
 export const addMaintenanceToLinodes = (
@@ -29,6 +42,9 @@ export const addMaintenanceToLinodes = (
       ? {
           ...thisLinode,
           maintenance: {
+            maintenance_policy_set: foundMaintenance.maintenance_policy_set,
+            start_time: foundMaintenance.start_time,
+            status: foundMaintenance.status,
             when: foundMaintenance.when,
           },
         }

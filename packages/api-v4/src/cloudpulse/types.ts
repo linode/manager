@@ -10,6 +10,7 @@ export type DimensionFilterOperatorType =
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -163,20 +164,21 @@ export interface CloudPulseMetricsList {
   values: [number, string][];
 }
 
-export interface ServiceTypes {
-  alert: {
-    evaluation_periods_seconds: number[];
-    polling_interval_seconds: number[];
-    scope: string[];
-  };
-  is_beta: boolean;
+export interface ServiceAlert {
+  evaluation_periods_seconds: number[];
+  polling_interval_seconds: number[];
+  scope: AlertDefinitionScope[];
+}
+
+export interface Service {
+  alert: ServiceAlert;
   label: string;
   regions: string;
   service_type: string;
 }
 
 export interface ServiceTypesList {
-  data: ServiceTypes[];
+  data: Service[];
 }
 
 export interface CreateAlertDefinitionPayload {
@@ -239,6 +241,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -326,6 +329,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
+  scope: AlertDefinitionScope;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -348,4 +352,24 @@ export interface EntityAlertUpdatePayload {
 export interface DeleteAlertPayload {
   alertId: number;
   serviceType: string;
+}
+
+/**
+ * Represents the payload for CloudPulse alerts, included only when the ACLP beta mode is enabled.
+ *
+ * In Beta mode, the `alerts` object contains enabled system and user alert IDs.
+ * - Legacy mode: `alerts` is not included (read-only mode).
+ * - Beta mode: `alerts` is passed and editable.
+ */
+export interface CloudPulseAlertsPayload {
+  /**
+   * Array of enabled system alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  system: number[];
+  /**
+   * Array of enabled user alert IDs in ACLP (Beta) mode.
+   * Only included in Beta mode.
+   */
+  user: number[];
 }

@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions';
 import React from 'react';
+import { action } from 'storybook/actions';
 
 import { LinodeSelect } from './LinodeSelect';
 
@@ -8,7 +8,7 @@ import type {
   LinodeSingleSelectProps,
 } from './LinodeSelect';
 import type { Linode } from '@linode/api-v4/lib/linodes';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const linodes = [
   { id: 1, label: 'Linode 1' },

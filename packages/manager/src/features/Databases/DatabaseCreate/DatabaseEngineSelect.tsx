@@ -1,4 +1,4 @@
-import { Autocomplete, Box } from '@linode/ui';
+import { Autocomplete, Box, InputAdornment } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import React from 'react';
 
@@ -77,11 +77,11 @@ export const DatabaseEngineSelect = (props: Props) => {
       textFieldProps={{
         InputProps: {
           startAdornment: (
-            <Box
-              sx={{ pr: 1, pt: 0.7, svg: { height: '20px', width: '20px' } }}
-            >
-              {selectedEngine?.flag}
-            </Box>
+            <InputAdornment position="start">
+              <Box sx={{ pt: 0.7, svg: { height: '20px', width: '20px' } }}>
+                {selectedEngine?.flag}
+              </Box>
+            </InputAdornment>
           ),
         },
       }}

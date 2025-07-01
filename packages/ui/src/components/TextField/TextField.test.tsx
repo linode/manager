@@ -65,7 +65,7 @@ describe('TextField', () => {
     const { getByDisplayValue, getByTestId, getByText } = renderWithTheme(
       <TextField
         InputProps={{
-          startAdornment: <InputAdornment position="end">$</InputAdornment>,
+          startAdornment: <InputAdornment position="start">$</InputAdornment>,
         }}
         label={'Money'}
         type={'number'}
@@ -127,6 +127,6 @@ describe('TextField', () => {
     const helperText = getByText('Helper text');
 
     // ':rg:' being the default react generated id
-    expect(helperText.getAttribute('id')).toBe(':rg:-helper-text');
+    expect(helperText.getAttribute('id')).toBe('«rg»-helper-text');
   });
 });
