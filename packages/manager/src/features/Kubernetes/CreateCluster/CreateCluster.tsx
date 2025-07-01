@@ -627,7 +627,6 @@ export const CreateCluster = () => {
                 ? lkeEnterpriseType?.price.monthly
                 : undefined
             }
-            handleConfig={handleOpenNodePoolConfigDrawer}
             hasAgreed={hasAgreed}
             highAvailability={highAvailability}
             highAvailabilityPrice={

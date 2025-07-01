@@ -26,17 +26,11 @@ import { nodeWarning } from '../constants';
 import { StyledBox, StyledHeader } from './KubeCheckoutSummary.styles';
 import { NodePoolSummaryItem } from './NodePoolSummaryItem';
 
-import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type { KubeNodePoolResponse, Region } from '@linode/api-v4';
 
 export interface Props {
   createCluster: () => void;
   enterprisePrice?: number;
-  handleConfig: (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => void;
   hasAgreed: boolean;
   highAvailability?: boolean;
   highAvailabilityPrice: string;
@@ -54,7 +48,6 @@ export const KubeCheckoutBar = (props: Props) => {
     createCluster,
     enterprisePrice,
     hasAgreed,
-    handleConfig,
     highAvailability,
     highAvailabilityPrice,
     pools,
@@ -154,7 +147,6 @@ export const KubeCheckoutBar = (props: Props) => {
         {pools.map((thisPool, idx) => (
           <NodePoolSummaryItem
             clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
-            handleConfig={handleConfig}
             key={idx}
             nodeCount={thisPool.count}
             onRemove={() => removePool(idx)}

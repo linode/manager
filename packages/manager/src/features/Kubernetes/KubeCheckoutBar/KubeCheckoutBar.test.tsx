@@ -14,7 +14,6 @@ import type { Props } from './KubeCheckoutBar';
 const pools = nodePoolFactory.buildList(5, { count: 3, type: 'g6-standard-1' });
 
 const props: Props = {
-  handleConfig: vi.fn(),
   createCluster: vi.fn(),
   hasAgreed: false,
   highAvailability: false,
