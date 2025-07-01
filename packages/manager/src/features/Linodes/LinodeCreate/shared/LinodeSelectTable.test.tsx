@@ -37,13 +37,13 @@ describe('Linode Select Table', () => {
   });
 
   it('should filter out Linodes in distributed regions', () => {
-    const { filter } = getLinodeXFilter(undefined, '');
+    const { filter } = getLinodeXFilter('');
 
     expect(filter).toHaveProperty('site_type', 'core');
   });
 
   it('should search for label, id, ipv4, tags', () => {
-    const { filter } = getLinodeXFilter(undefined, '12345678');
+    const { filter } = getLinodeXFilter('12345678');
 
     expect(filter).toStrictEqual({
       '+or': [
@@ -57,7 +57,7 @@ describe('Linode Select Table', () => {
   });
 
   it('should return an error if the x-filter is invalid', () => {
-    const { filterError } = getLinodeXFilter(undefined, '123 456');
+    const { filterError } = getLinodeXFilter('123 456');
 
     expect(filterError).toHaveProperty(
       'message',
