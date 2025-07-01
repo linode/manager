@@ -13,7 +13,29 @@ import { getLinodeXFilter, LinodeSelectTable } from './LinodeSelectTable';
 
 beforeAll(() => mockMatchMedia());
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('Linode Select Table', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('should filter out Linodes in distributed regions', () => {
     const { filter } = getLinodeXFilter(undefined, '');
 
@@ -57,7 +79,6 @@ describe('Linode Select Table', () => {
     });
 
     for (const linode of linodes) {
-      // eslint-disable-next-line no-await-in-loop
       await findByText(linode.label);
     }
   });

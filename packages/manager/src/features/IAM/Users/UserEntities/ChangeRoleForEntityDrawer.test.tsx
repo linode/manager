@@ -16,8 +16,8 @@ const queryMocks = vi.hoisted(() => ({
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual<any>('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -73,7 +73,7 @@ describe('ChangeRoleForEntityDrawer', () => {
     // Verify title renders
     expect(screen.getByText('Change Role')).toBeVisible();
     expect(
-      screen.getByText('Select a role you want the entity to be attached to.')
+      screen.getByText(/Select a role you want the entity to be attached to/i)
     ).toBeVisible();
   });
 

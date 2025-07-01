@@ -1,37 +1,59 @@
-import { Accordion, BetaChip, Notice } from '@linode/ui';
+import { Accordion, BetaChip } from '@linode/ui';
 import * as React from 'react';
+import { useController, useFormContext } from 'react-hook-form';
 
+import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
 import { LinodeSettingsAlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/LinodeSettingsAlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
-export const Alerts = () => {
-  const flags = useFlags();
+import type { LinodeCreateFormValues } from '../../utilities';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
-  const [isAclpAlertsBetaLocalCreateFlow, setIsAclpBetaLocalCreateFlow] =
-    React.useState<boolean>(false);
+export const Alerts = ({
+  isAclpAlertsBetaLocalCreateFlow,
+  setIsAclpAlertsBetaLocalCreateFlow,
+}: {
+  isAclpAlertsBetaLocalCreateFlow: boolean;
+  setIsAclpAlertsBetaLocalCreateFlow: (value: boolean) => void;
+}) => {
+  const { aclpBetaServices } = useFlags();
+
+  const { control } = useFormContext<LinodeCreateFormValues>();
+  const { field } = useController({
+    control,
+    name: 'alerts',
+    defaultValue: { system: [], user: [] },
+  });
+
+  const handleToggleAlert = (updatedAlerts: CloudPulseAlertsPayload) => {
+    field.onChange(updatedAlerts);
+  };
 
   return (
     <Accordion
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        flags.aclpBetaServices?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
+        aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
           <BetaChip />
         ) : undefined
       }
       subHeading="Receive notifications through system alerts when metric thresholds are exceeded."
       summaryProps={{ sx: { p: 0 } }}
     >
-      {flags.aclpBetaServices?.alerts && (
+      {aclpBetaServices?.linode?.alerts && (
         <AclpPreferenceToggle
           isAclpBetaLocal={isAclpAlertsBetaLocalCreateFlow}
-          setIsAclpBetaLocal={setIsAclpBetaLocalCreateFlow}
+          setIsAclpBetaLocal={setIsAclpAlertsBetaLocalCreateFlow}
           type="alerts"
         />
       )}
-      {flags.aclpBetaServices?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
-        <Notice variant="info">ACLP Alerts coming soon...</Notice>
+      {aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
+        <AlertReusableComponent
+          onToggleAlert={handleToggleAlert}
+          serviceType="linode"
+        />
       ) : (
         <LinodeSettingsAlertsPanel />
       )}

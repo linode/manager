@@ -1,5 +1,6 @@
 import { usePreferences } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { createLazyRoute } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { CloudPulseDashboardWithFilters } from 'src/features/CloudPulse/Dashboard/CloudPulseDashboardWithFilters';
@@ -9,15 +10,15 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import LinodeSummary from './LinodeSummary/LinodeSummary';
 
 interface Props {
-  isAclpSupportedRegionLinode: boolean;
+  isAclpMetricsSupportedRegionLinode: boolean;
   linodeCreated: string;
   linodeId: number;
 }
 
 const LinodeMetrics = (props: Props) => {
-  const { linodeCreated, linodeId, isAclpSupportedRegionLinode } = props;
+  const { linodeCreated, linodeId, isAclpMetricsSupportedRegionLinode } = props;
 
-  const flags = useFlags();
+  const { aclpBetaServices } = useFlags();
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
@@ -25,12 +26,13 @@ const LinodeMetrics = (props: Props) => {
 
   return (
     <Box>
-      {flags.aclpBetaServices?.metrics && isAclpSupportedRegionLinode && (
-        <AclpPreferenceToggle type="metrics" />
-      )}
+      {aclpBetaServices?.linode?.metrics &&
+        isAclpMetricsSupportedRegionLinode && (
+          <AclpPreferenceToggle type="metrics" />
+        )}
 
-      {flags.aclpBetaServices?.metrics &&
-      isAclpSupportedRegionLinode &&
+      {aclpBetaServices?.linode?.metrics &&
+      isAclpMetricsSupportedRegionLinode &&
       isAclpMetricsPreferenceBeta ? (
         // Beta ACLP Metrics View
         <CloudPulseDashboardWithFilters
@@ -46,3 +48,9 @@ const LinodeMetrics = (props: Props) => {
 };
 
 export default LinodeMetrics;
+
+export const linodeMetricsLazyRoute = createLazyRoute(
+  '/linodes/$linodeId/metrics'
+)({
+  component: LinodeMetrics,
+});

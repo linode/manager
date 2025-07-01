@@ -1,5 +1,6 @@
+import { useProfile, useUserAccountPermissions } from '@linode/queries';
+
 import { useFlags } from 'src/hooks/useFlags';
-import { useAccountRoles } from 'src/queries/iam/iam';
 
 /**
  * Hook to determine if the IAM feature is enabled for the current user.
@@ -8,15 +9,15 @@ import { useAccountRoles } from 'src/queries/iam/iam';
  */
 export const useIsIAMEnabled = () => {
   const flags = useFlags();
-  const { data: accountRoles } = useAccountRoles(flags.iam?.enabled);
-
-  const hasAccountAccess = accountRoles?.account_access?.length;
-  const hasEntityAccess = accountRoles?.entity_access?.length;
+  const { data: profile } = useProfile();
+  const { data: permissions } = useUserAccountPermissions(
+    flags?.iam?.enabled === true
+  );
 
   return {
     isIAMBeta: flags.iam?.beta,
-    isIAMEnabled: Boolean(
-      flags.iam?.enabled && (hasAccountAccess || hasEntityAccess)
-    ),
+    isIAMEnabled:
+      flags?.iam?.enabled &&
+      Boolean(!profile?.restricted || permissions?.length),
   };
 };

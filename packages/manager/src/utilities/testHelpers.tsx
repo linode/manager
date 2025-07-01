@@ -300,7 +300,7 @@ export const renderWithTheme = (
  */
 
 export const renderWithThemeAndFormik = <T extends FormikValues>(
-  ui: React.ReactElement,
+  ui: React.ReactElement<any>,
   configObj: FormikConfig<T>
 ) => renderWithTheme(<Formik {...configObj}>{ui}</Formik>);
 
@@ -318,7 +318,7 @@ const FormContextWrapper = <T extends FieldValues>(
 };
 
 interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
-  component: React.ReactElement;
+  component: React.ReactElement<any>;
   options?: Options;
   useFormOptions?: UseFormProps<T>;
 }
@@ -367,4 +367,44 @@ export const assertOrder = (
   expect(Array.from(elements).map((el) => el.textContent)).toMatchObject(
     expectedOrder
   );
+};
+
+/**
+ * Utility function to query an element inside the Shadow DOM of a web component.
+ * Uses MutationObserver to detect changes in the Shadow DOM and resolve the promise
+ * when the desired element is available.
+ * @param host - The web component host element.
+ * @param selector - The CSS selector for the element to query.
+ * @returns A promise that resolves to the queried element inside the Shadow DOM, or null if not found.
+ */
+export const getShadowRootElement = <T extends Element>(
+  host: HTMLElement,
+  selector: string
+): Promise<null | T> => {
+  return new Promise((resolve) => {
+    const shadowRoot = host.shadowRoot;
+
+    if (!shadowRoot) {
+      resolve(null);
+      return;
+    }
+
+    // Check if the element already exists
+    const element = shadowRoot.querySelector<T>(selector);
+    if (element) {
+      resolve(element);
+      return;
+    }
+
+    // Use MutationObserver to detect changes in the Shadow DOM
+    const observer = new MutationObserver(() => {
+      const element = shadowRoot.querySelector<T>(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
+
+    observer.observe(shadowRoot, { childList: true, subtree: true });
+  });
 };

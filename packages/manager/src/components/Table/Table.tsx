@@ -1,6 +1,9 @@
 import { usePreferences } from '@linode/queries';
 import { default as _Table } from '@mui/material/Table';
 import * as React from 'react';
+import { useStyles } from 'tss-react';
+
+import { getIsTableStripingEnabled } from 'src/features/Profile/Settings/TableStriping.utils';
 
 import { StyledTableWrapper } from './Table.styles';
 
@@ -71,6 +74,7 @@ export interface TableProps extends _TableProps {
  * - **Disclaimer:** The UX team is in the process of assessing the usability of all of the above
  */
 export const Table = (props: TableProps) => {
+  const { cx } = useStyles();
   const {
     className,
     colCount,
@@ -84,10 +88,13 @@ export const Table = (props: TableProps) => {
     tableClass = '',
     ...rest
   } = props;
-  const { data: preferences } = usePreferences();
-  const isTableStripingEnabled = Boolean(
-    preferences?.isTableStripingEnabled && striped
+
+  const { data: tableStripingPreference } = usePreferences(
+    (preferences) => preferences?.isTableStripingEnabled
   );
+
+  const isTableStripingEnabled =
+    getIsTableStripingEnabled(tableStripingPreference) && striped;
 
   return (
     <StyledTableWrapper
@@ -98,9 +105,9 @@ export const Table = (props: TableProps) => {
       spacingTop={spacingTop}
     >
       <_Table
-        className={`${tableClass} ${
-          isTableStripingEnabled && !nested ? 'MuiTable-zebra' : ''
-        }`}
+        className={cx(tableClass, {
+          ['MuiTable-zebra']: isTableStripingEnabled && !nested,
+        })}
         {...rest}
         aria-colcount={colCount}
         aria-rowcount={rowCount}

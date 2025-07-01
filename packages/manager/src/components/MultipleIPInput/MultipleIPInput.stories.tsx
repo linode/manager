@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { MultipleIPInput } from './MultipleIPInput';
 
 import type { MultipeIPInputProps } from './MultipleIPInput';
-import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof MultipleIPInput>;
 
@@ -18,7 +18,7 @@ const defaultArgs = {
 const meta: Meta<typeof MultipleIPInput> = {
   component: MultipleIPInput,
   decorators: [
-    (Story: StoryFn) => (
+    (Story) => (
       <div style={{ margin: '2em' }}>
         <Story />
       </div>

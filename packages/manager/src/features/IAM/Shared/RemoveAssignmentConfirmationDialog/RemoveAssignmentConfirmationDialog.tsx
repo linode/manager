@@ -1,10 +1,10 @@
+import { useUserRoles, useUserRolesMutation } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useUserRoles, useUserRolesMutation } from 'src/queries/iam/iam';
 
 import { deleteUserEntity } from '../utilities';
 

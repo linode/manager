@@ -1,4 +1,4 @@
-import { useAccountUser } from '@linode/queries';
+import { useAccountUser, useUserRoles } from '@linode/queries';
 import {
   CircleProgress,
   ErrorState,
@@ -10,7 +10,6 @@ import { useParams } from '@tanstack/react-router';
 import React from 'react';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useUserRoles } from 'src/queries/iam/iam';
 
 import { AssignedRolesTable } from '../../Shared/AssignedRolesTable/AssignedRolesTable';
 import {

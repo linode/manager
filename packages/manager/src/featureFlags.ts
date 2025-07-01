@@ -70,6 +70,11 @@ interface LkeEnterpriseFlag extends BaseFeatureFlag {
   la: boolean;
 }
 
+interface CloudNatFlag extends BetaFeatureFlag {
+  ga: boolean;
+  la: boolean;
+}
+
 export interface CloudPulseResourceTypeMapFlag {
   dimensionKey: string;
   maxResourceSelections?: number;
@@ -99,12 +104,6 @@ interface AclpAlerting {
   recentActivity: boolean;
 }
 
-interface AclpBetaServices {
-  alerts: boolean;
-  dbaas: boolean;
-  metrics: boolean;
-}
-
 interface LimitsEvolution {
   enabled: boolean;
   requestForIncreaseDisabledForAll: boolean;
@@ -126,6 +125,7 @@ export interface Flags {
   aplGeneralAvailability: boolean;
   blockStorageEncryption: boolean;
   cloudManagerDesignUpdatesBanner: DesignUpdatesBannerFlag;
+  cloudNat: CloudNatFlag;
   databaseAdvancedConfig: boolean;
   databaseBeta: boolean;
   databaseResize: boolean;
@@ -147,6 +147,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc2025: boolean;
+  nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
@@ -302,4 +303,11 @@ export interface AclpAlertServiceTypeConfig {
   maxResourceSelectionCount: number;
   serviceType: AlertServiceType;
   // This can be extended to have supportedRegions, supportedFilters and other tags
+}
+
+export interface AclpBetaServices {
+  [serviceType: string]: {
+    alerts: boolean;
+    metrics: boolean;
+  };
 }

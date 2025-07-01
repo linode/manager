@@ -17,8 +17,8 @@ const queryMocks = vi.hoisted(() => ({
   useUserRoles: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('src/queries/iam/iam', async () => {
-  const actual = await vi.importActual('src/queries/iam/iam');
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual<any>('@linode/queries');
   return {
     ...actual,
     useAccountRoles: queryMocks.useAccountRoles,
@@ -103,7 +103,9 @@ describe('ChangeRoleDrawer', () => {
     );
 
     // Check that the correct text is displayed for account_access
-    expect(screen.getByText('Select a role you want to assign.')).toBeVisible();
+    expect(
+      screen.getByText(/Select a role you want to assign./i)
+    ).toBeVisible();
   });
 
   it('renders the correct text for entity_access roles', async () => {
@@ -117,7 +119,11 @@ describe('ChangeRoleDrawer', () => {
 
     // Check that the correct text is displayed for account_access
     expect(
-      screen.getByText('Select a role you want the entities to be attached to.')
+      screen.getByText(
+        /Select a role you want the entities to be attached to./i
+      )
+
+      // screen.getByText('Select a role you want the entities to be attached to.')
     ).toBeVisible();
   });
 

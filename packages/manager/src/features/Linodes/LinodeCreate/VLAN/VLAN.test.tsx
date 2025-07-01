@@ -7,7 +7,29 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { VLAN } from './VLAN';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('VLAN', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('Should render a heading', () => {
     const { getAllByText } = renderWithThemeAndHookFormContext({
       component: <VLAN />,
@@ -36,7 +58,7 @@ describe('VLAN', () => {
     const region = regionFactory.build({ capabilities: ['Vlans'] });
 
     server.use(
-      http.get(`*/v4/regions/${region.id}`, () => {
+      http.get(`*/v4*/regions/${region.id}`, () => {
         return HttpResponse.json(region);
       })
     );

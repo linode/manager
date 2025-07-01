@@ -8,7 +8,7 @@ interface Props {
   index: number;
   isReadOnly: boolean;
   questionResponse?: SecurityQuestion;
-  securityQuestionRef?: React.RefObject<HTMLInputElement>;
+  securityQuestionRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 export const Answer = (props: Props) => {

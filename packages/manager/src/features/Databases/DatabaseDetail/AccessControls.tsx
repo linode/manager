@@ -1,5 +1,7 @@
-import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import * as React from 'react';
+import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
@@ -171,11 +173,11 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
-          buttonType="outlined"
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
+          variant="secondary"
         >
           Manage Access
         </Button>
