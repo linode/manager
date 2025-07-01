@@ -68,6 +68,12 @@ const flags: Partial<Flags> = {
       serviceType: 'dbaas',
       supportedRegionIds: '',
     },
+    {
+      dimensionKey: 'cluster_id',
+      maxResourceSelections: 10,
+      serviceType: 'nodebalancer',
+      supportedRegionIds: 'us-east',
+    },
   ],
 };
 const { dashboardName, id, metrics, region, resource, serviceType } =
