@@ -30,7 +30,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     },
     '#notistack-snackbar > svg': {
       position: 'absolute',
-      left: '-45px',
+      left: '-48px',
     },
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
