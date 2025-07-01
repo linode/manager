@@ -155,7 +155,7 @@ export const Summary = () => {
     },
     {
       item: {
-        title: 'VLAN Attached',
+        title: 'VLAN',
       },
       show: hasVLAN,
     },
@@ -173,9 +173,15 @@ export const Summary = () => {
     },
     {
       item: {
-        title: 'VPC Assigned',
+        title: 'VPC',
       },
       show: hasVPC,
+    },
+    {
+      item: {
+        title: 'Public Internet',
+      },
+      show: linodeInterfaces?.some((i) => i.purpose === 'public'),
     },
     {
       item: {
