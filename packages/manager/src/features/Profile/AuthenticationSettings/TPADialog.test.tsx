@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { getLoginURL } from 'src/OAuth/oauth';
+import { getLoginURL } from 'src/OAuth/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { TPADialog } from './TPADialog';

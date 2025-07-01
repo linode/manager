@@ -4,7 +4,7 @@ import React from 'react';
 
 import { ADOBE_ANALYTICS_URL, PENDO_API_KEY } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getAppRoot } from 'src/OAuth/oauth';
+import { getAppRoot } from 'src/OAuth/constants';
 
 declare global {
   interface Window {

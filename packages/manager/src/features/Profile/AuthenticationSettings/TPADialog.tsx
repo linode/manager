@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 import { useFlags } from 'src/hooks/useFlags';
-import { getLoginURL } from 'src/OAuth/oauth';
+import { getLoginURL } from 'src/OAuth/constants';
 
 import type { TPAProvider } from '@linode/api-v4/lib/profile';
 import type { Provider } from 'src/featureFlags';

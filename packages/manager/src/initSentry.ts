@@ -4,7 +4,7 @@ import { init } from '@sentry/react';
 import { SENTRY_URL } from 'src/constants';
 
 import packageJson from '../package.json';
-import { getAppRoot } from './OAuth/oauth';
+import { getAppRoot } from './OAuth/constants';
 
 import type { APIError } from '@linode/api-v4';
 import type { ErrorEvent as SentryErrorEvent } from '@sentry/react';

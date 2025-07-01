@@ -4,7 +4,6 @@ import * as React from 'react';
 
 import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { getAppRoot } from 'src/OAuth/oauth';
 
 import { getMarketplaceAppLabel } from './utilities';
 
@@ -15,7 +14,7 @@ interface Props {
   checked: boolean;
   /**
    * The path to the app icon
-   * @example "assets/postgresqlmarketplaceocc.svg"
+   * @example "/assets/postgresqlmarketplaceocc.svg"
    */
   iconUrl: string;
   /**
@@ -54,7 +53,7 @@ export const AppSelectionCard = (props: Props) => {
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
-      : () => <img alt={`${label} logo`} src={`${getAppRoot()}${iconUrl}`} />;
+      : () => <img alt={`${label} logo`} src={iconUrl} />;
 
   const renderVariant = () => (
     <IconButton
