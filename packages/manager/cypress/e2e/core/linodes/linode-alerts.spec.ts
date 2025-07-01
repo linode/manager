@@ -41,6 +41,7 @@ describe('region enables alerts', function () {
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
   });
+
   it('isAclpAlertsBeta disabled', function () {
     mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
       'getUserPreferences'
@@ -65,7 +66,7 @@ describe('region enables alerts', function () {
           });
       });
 
-    // upgrade from legacy alerts to ACLP alerts
+    // possible to upgrade from legacy alerts to ACLP alerts
     ui.button
       .findByTitle(ALERTS_LEGACY_MODE_BUTTON_TEXT)
       .should('be.visible')
@@ -111,13 +112,13 @@ describe('region disables alerts. beta alerts not available regardless of user p
         },
       },
     }).as('getFeatureFlags');
+
     const mockDisabledRegion = regionFactory.build({
       capabilities: ['Linodes'],
       monitors: {
         alerts: [],
       },
     });
-
     mockGetRegions([mockDisabledRegion]).as('getRegions');
     const mockLinode = linodeFactory.build({
       id: randomNumber(),
@@ -127,6 +128,7 @@ describe('region disables alerts. beta alerts not available regardless of user p
     mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinode');
     cy.visitWithLogin(`/linodes/${mockLinode.id}/alerts`);
   });
+
   it('isAclpAlertsBeta disabled', () => {
     mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
       'getUserPreferences'
