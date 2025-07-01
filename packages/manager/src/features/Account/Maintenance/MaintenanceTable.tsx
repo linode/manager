@@ -112,7 +112,11 @@ export const MaintenanceTable = ({ type }: Props) => {
     false
   );
 
-  const { data, error, isLoading } = useAccountMaintenanceQuery(
+  const {
+    data,
+    error,
+    isLoading = true,
+  } = useAccountMaintenanceQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
@@ -121,10 +125,12 @@ export const MaintenanceTable = ({ type }: Props) => {
   );
 
   const renderTableContent = () => {
+    const columnCount = type === 'in progress' ? 5 : 7;
+
     if (isLoading) {
       return (
         <TableRowLoading
-          columns={7}
+          columns={columnCount}
           responsive={{
             2: { smDown: true },
             3: { xsDown: true },
@@ -136,11 +142,16 @@ export const MaintenanceTable = ({ type }: Props) => {
     }
 
     if (error) {
-      return <TableRowError colSpan={7} message={error[0].reason} />;
+      return <TableRowError colSpan={columnCount} message={error[0].reason} />;
     }
 
     if (data?.results === 0) {
-      return <TableRowEmpty colSpan={7} message={`No ${type} maintenance.`} />;
+      return (
+        <TableRowEmpty
+          colSpan={columnCount}
+          message={`No ${type} maintenance.`}
+        />
+      );
     }
 
     if (data) {
