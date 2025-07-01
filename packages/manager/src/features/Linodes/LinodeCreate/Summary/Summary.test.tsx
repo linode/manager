@@ -221,7 +221,7 @@ describe('Linode Create Summary', () => {
         },
       });
 
-    expect(getByText('VLAN Attached')).toBeVisible();
+    expect(getByText('VLAN')).toBeVisible();
   });
 
   it('should render "Encrypted" if disk encryption is enabled', async () => {
@@ -292,7 +292,7 @@ describe('Linode Create Summary', () => {
           options: { flags: { linodeInterfaces: { enabled: false } } },
         });
 
-      expect(getByText('VPC Assigned')).toBeVisible();
+      expect(getByText('VPC')).toBeVisible();
     });
 
     it('should render "VLAN Attached" if a VLAN is selected', () => {
@@ -306,7 +306,7 @@ describe('Linode Create Summary', () => {
           options: { flags: { linodeInterfaces: { enabled: false } } },
         });
 
-      expect(getByText('VLAN Attached')).toBeVisible();
+      expect(getByText('VLAN')).toBeVisible();
     });
 
     it('should render "Firewall Assigned" if a Firewall is selected', () => {
@@ -349,7 +349,7 @@ describe('Linode Create Summary', () => {
           options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
-      const text = await findByText('VPC Assigned');
+      const text = await findByText('VPC');
       expect(text).toBeVisible();
     });
 
@@ -367,7 +367,7 @@ describe('Linode Create Summary', () => {
           options: { flags: { linodeInterfaces: { enabled: true } } },
         });
 
-      const text = await findByText('VLAN Attached');
+      const text = await findByText('VLAN');
       expect(text).toBeVisible();
     });
 
