@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
+import { MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
 
@@ -55,11 +56,7 @@ export const MaintenancePolicy = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1} spacing={2}>
           <Typography variant="body1">
-            Select the preferred default host maintenance policy for newly
-            deployed Linodes. During host maintenance events (such as host
-            upgrades), this policy setting determines the type of migration that
-            is performed. This preference can be changed when creating new
-            Linodes or modifying existing Linodes.{' '}
+            {MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION}{' '}
             <Link to="https://techdocs.akamai.com/cloud-computing/docs/host-maintenance-policy">
               Learn more
             </Link>
