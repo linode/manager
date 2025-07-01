@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { APP_ROOT } from 'src/constants';
+import { getAppRoot } from 'src/OAuth/oauth';
 
 import { getMarketplaceAppLabel } from './utilities';
 
@@ -54,7 +54,7 @@ export const AppSelectionCard = (props: Props) => {
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
-      : () => <img alt={`${label} logo`} src={`${APP_ROOT}${iconUrl}`} />;
+      : () => <img alt={`${label} logo`} src={`${getAppRoot()}${iconUrl}`} />;
 
   const renderVariant = () => (
     <IconButton

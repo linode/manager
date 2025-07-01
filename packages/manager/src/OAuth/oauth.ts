@@ -5,6 +5,7 @@ import {
 } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 
+import { DEFAULT_APP_ROOT, DEFAULT_LOGIN_ROOT } from 'src/constants';
 import {
   clearUserInput,
   getEnvLocalStorageOverrides,
@@ -56,11 +57,13 @@ export function clearStorageAndRedirectToLogout() {
   window.location.assign(loginUrl + '/logout');
 }
 
-function getLoginURL() {
+export function getLoginURL() {
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
   return (
-    localStorageOverrides?.loginRoot ?? import.meta.env.REACT_APP_LOGIN_ROOT
+    localStorageOverrides?.loginRoot ??
+    import.meta.env.REACT_APP_LOGIN_ROOT ??
+    DEFAULT_LOGIN_ROOT
   );
 }
 
@@ -77,8 +80,8 @@ function getClientId() {
   return clientId;
 }
 
-function getAppRoot() {
-  return import.meta.env.REACT_APP_APP_ROOT;
+export function getAppRoot() {
+  return import.meta.env.REACT_APP_APP_ROOT ?? DEFAULT_APP_ROOT;
 }
 
 export function getIsAdminToken(token: string) {

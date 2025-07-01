@@ -25,16 +25,17 @@ export const ENABLE_MAINTENANCE_MODE =
  */
 export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
 
-/** required for the app to function */
-export const APP_ROOT =
-  import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
-export const LOGIN_ROOT =
-  import.meta.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
-export const API_ROOT =
-  import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
-export const BETA_API_ROOT = API_ROOT + 'beta';
-/** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
+export const DEFAULT_APP_ROOT = 'http://localhost:3000';
+export const DEFAULT_LOGIN_ROOT = 'https://login.linode.com';
+export const DEFAULT_API_ROOT = 'https://api.linode.com/v4';
+
+/**
+ * `REACT_APP_CLIENT_ID` is required for the app to function
+ *
+ * You can generate a client id by navigating to https://cloud.linode.com/profile/clients
+ */
 export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
+
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
