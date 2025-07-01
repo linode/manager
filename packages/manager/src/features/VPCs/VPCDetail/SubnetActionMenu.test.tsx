@@ -1,4 +1,5 @@
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { PointerEventsCheckLevel } from '@testing-library/user-event';
 import * as React from 'react';
 
 import { subnetFactory } from 'src/factories';
@@ -23,92 +24,96 @@ const props = {
 };
 
 describe('SubnetActionMenu', () => {
-  it('should render the subnet action menu', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
-    screen.getByText('Assign Linodes');
-    screen.getByText('Unassign Linodes');
-    screen.getByText('Edit');
-    screen.getByText('Delete');
+  it('should render the subnet action menu', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
+    view.getByText('Assign Linodes');
+    view.getByText('Unassign Linodes');
+    view.getByText('Edit');
+    view.getByText('Delete');
   });
 
-  it('should not allow the delete button to be clicked', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+  it('should not allow the delete button to be clicked', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const deleteButton = screen.getByText('Delete');
-    fireEvent.click(deleteButton);
+    const deleteButton = view.getByRole('menuitem', { name: 'Delete' });
+    await userEvent.click(deleteButton, {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
     expect(props.handleDelete).not.toHaveBeenCalled();
-    const tooltipText = screen.getByLabelText(
+    const tooltipText = view.getByLabelText(
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).toBeInTheDocument();
   });
 
-  it('should not allow the delete button to be clicked when isNodebalancerVPCEnabled is true', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />, {
+  it('should not allow the delete button to be clicked when isNodebalancerVPCEnabled is true', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />, {
       flags: { nodebalancerVpc: true },
     });
 
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const deleteButton = screen.getByText('Delete');
-    fireEvent.click(deleteButton);
+    const deleteButton = view.getByText('Delete');
+    await userEvent.click(deleteButton, {
+      pointerEventsCheck: PointerEventsCheckLevel.Never,
+    });
     expect(props.handleDelete).not.toHaveBeenCalled();
-    const tooltipText = screen.getByLabelText(
+    const tooltipText = view.getByLabelText(
       'Resources assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).toBeInTheDocument();
   });
 
-  it('should allow the delete button to be clicked', () => {
-    const screen = renderWithTheme(
+  it('should allow the delete button to be clicked', async () => {
+    const view = renderWithTheme(
       <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
     );
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const deleteButton = screen.getByText('Delete');
-    fireEvent.click(deleteButton);
+    const deleteButton = view.getByText('Delete');
+    await userEvent.click(deleteButton);
     expect(props.handleDelete).toHaveBeenCalled();
-    const tooltipText = screen.queryByLabelText(
+    const tooltipText = view.queryByLabelText(
       'Linodes assigned to a subnet must be unassigned before the subnet can be deleted.'
     );
     expect(tooltipText).not.toBeInTheDocument();
   });
 
-  it('should allow the edit button to be clicked', () => {
-    const screen = renderWithTheme(
+  it('should allow the edit button to be clicked', async () => {
+    const view = renderWithTheme(
       <SubnetActionMenu {...props} numLinodes={0} numNodebalancers={0} />
     );
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const editButton = screen.getByText('Edit');
-    fireEvent.click(editButton);
+    const editButton = view.getByText('Edit');
+    await userEvent.click(editButton);
     expect(props.handleEdit).toHaveBeenCalled();
   });
 
-  it('should allow the Assign Linodes button to be clicked', () => {
-    const screen = renderWithTheme(<SubnetActionMenu {...props} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+  it('should allow the Assign Linodes button to be clicked', async () => {
+    const view = renderWithTheme(<SubnetActionMenu {...props} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const assignButton = screen.getByText('Assign Linodes');
-    fireEvent.click(assignButton);
+    const assignButton = view.getByText('Assign Linodes');
+    await userEvent.click(assignButton);
     expect(props.handleAssignLinodes).toHaveBeenCalled();
   });
 
-  it('should disable action buttons if isVPCLKEEnterpriseCluster is true', () => {
+  it('should disable action buttons if isVPCLKEEnterpriseCluster is true', async () => {
     const updatedProps = { ...props, isVPCLKEEnterpriseCluster: true };
-    const screen = renderWithTheme(<SubnetActionMenu {...updatedProps} />);
-    const actionMenu = screen.getByLabelText(`Action menu for Subnet subnet-1`);
-    fireEvent.click(actionMenu);
+    const view = renderWithTheme(<SubnetActionMenu {...updatedProps} />);
+    const actionMenu = view.getByLabelText(`Action menu for Subnet subnet-1`);
+    await userEvent.click(actionMenu);
 
-    const actionButtons = screen.getAllByRole('menuitem');
+    const actionButtons = view.getAllByRole('menuitem');
     actionButtons.forEach((button) =>
       expect(button).toHaveAttribute('aria-disabled', 'true')
     );

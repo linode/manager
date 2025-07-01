@@ -22,8 +22,8 @@ describe('VPC Top Section form content', () => {
       },
     });
 
-    getByText('Region');
-    getByText('VPC Label');
-    getByText('Description');
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('VPC Label')).toBeVisible();
+    expect(getByText('Description')).toBeVisible();
   });
 });
