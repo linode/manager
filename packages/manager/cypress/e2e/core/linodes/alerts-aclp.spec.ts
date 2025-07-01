@@ -88,7 +88,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         .within(() => {
           // TODO move strings to constants
           cy.contains(
-            'Try the new Alerts (Beta) for more options, including customizable alerts. You can switch back to the current view at any time.'
+            'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
           );
         });
     });
@@ -121,7 +121,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           .should('be.visible')
           .within(() => {
             cy.contains(
-              'Welcome to Alerts (Beta) with more options and greater flexibility.'
+              'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.'
             );
           });
         // possible to downgrade from ACLP alerts to legacy alerts
@@ -164,6 +164,9 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .within(() => {
         cy.get('pre code').should('be.visible');
         // 'alert' is not present anywhere in snippet
+        cy.contains('alert').should('not.exist');
+        // cURL tab
+        ui.tabList.findTabByTitle('cURL').should('be.visible').click();
         cy.contains('alert').should('not.exist');
         ui.button
           .findByTitle('Close')
@@ -305,8 +308,27 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       .should('be.visible')
       .within(() => {
         cy.get('pre code').should('be.visible');
-        // 'alert' is not present anywhere in snippet
-        cy.contains('alert').should('not.exist');
+        /** alert in code snippet
+         * "alerts": {
+         *    "system": [
+         *             1,
+         *             2,
+         *      ],
+         *      "user": [
+         *             2
+         *      ]
+         * }
+         */
+        const strAlertSnippet = `alerts '{"system": [${alertDefinitions[0].id},${alertDefinitions[1].id}],"user":[${alertDefinitions[2].id}]}`;
+        cy.contains(strAlertSnippet).should('be.visible');
+        // cURL tab
+        ui.tabList.findTabByTitle('cURL').should('be.visible').click();
+        // hard to consolidate text within multiple spans in <pre><code>
+        cy.get('pre code').within(() => {
+          cy.contains('alerts');
+          cy.contains('system');
+          cy.contains('user');
+        });
         ui.button
           .findByTitle('Close')
           .should('be.visible')
