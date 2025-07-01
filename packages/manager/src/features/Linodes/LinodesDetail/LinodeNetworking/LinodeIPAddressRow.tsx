@@ -29,9 +29,9 @@ export interface IPAddressRowHandlers {
 }
 
 interface LinodeIPAddressRowProps extends IPAddressRowHandlers, IPDisplay {
-  hasPublicLinodeInterface?: boolean;
   isLinodeInterface: boolean;
-  isVPCOnlyLinode: boolean;
+  isUnreachablePublicIPv4?: boolean;
+  isUnreachablePublicIPv6?: boolean;
   linodeId: number;
   readOnly: boolean;
 }
@@ -45,9 +45,9 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     handleOpenEditRDNS,
     handleOpenEditRDNSForRange,
     handleOpenIPV6Details,
-    hasPublicLinodeInterface,
+    isUnreachablePublicIPv6,
     isLinodeInterface,
-    isVPCOnlyLinode,
+    isUnreachablePublicIPv4,
     linodeId,
     openRemoveIPDialog,
     openRemoveIPRangeDialog,
@@ -62,24 +62,29 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
     (preferences) => preferences?.maskSensitiveData
   );
 
+  const disabled = Boolean(
+    (isUnreachablePublicIPv4 && type === 'Public – IPv4') ||
+      (isUnreachablePublicIPv6 && type === 'Public – IPv6 – SLAAC')
+  );
+
   const isOnlyPublicIP =
     ips?.ipv4.public.length === 1 && type === 'Public – IPv4';
 
   return (
     <StyledTableRow
       data-qa-ip={address}
-      disabled={isVPCOnlyLinode}
+      disabled={disabled}
       key={`${address}-${type}`}
     >
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         <CopyTooltip
           copyableText
-          disabled={isVPCOnlyLinode}
+          disabled={disabled}
           masked={Boolean(maskSensitiveDataPreference)}
           maskedTextLength={type.includes('IPv6') ? 'ipv6' : 'ipv4'}
           text={address}
         />
-        {!isVPCOnlyLinode && <StyledCopyToolTip text={address} />}
+        {!disabled && <StyledCopyToolTip text={address} />}
       </TableCell>
       <TableCell data-qa-ip-address sx={{ whiteSpace: 'nowrap' }}>
         {type}
@@ -101,24 +106,24 @@ export const LinodeIPAddressRow = (props: LinodeIPAddressRowProps) => {
       <TableCell actionCell data-qa-action>
         {_ip ? (
           <LinodeNetworkingActionMenu
-            hasPublicLinodeInterface={hasPublicLinodeInterface}
+            disabledFromInterfaces={disabled}
+            hasPublicInterface={!isUnreachablePublicIPv6}
             ipAddress={_ip}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
-            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={handleOpenEditRDNS}
             onRemove={openRemoveIPDialog}
             readOnly={readOnly}
           />
         ) : _range ? (
           <LinodeNetworkingActionMenu
-            hasPublicLinodeInterface={hasPublicLinodeInterface}
+            disabledFromInterfaces={disabled}
+            hasPublicInterface={!isUnreachablePublicIPv6}
             ipAddress={_range}
             ipType={type}
             isLinodeInterface={isLinodeInterface}
             isOnlyPublicIP={isOnlyPublicIP}
-            isVPCOnlyLinode={isVPCOnlyLinode}
             onEdit={() => handleOpenEditRDNSForRange(_range)}
             onRemove={openRemoveIPRangeDialog}
             readOnly={readOnly}
