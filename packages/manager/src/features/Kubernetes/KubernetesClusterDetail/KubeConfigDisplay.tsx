@@ -37,9 +37,9 @@ interface Props {
 const useStyles = makeStyles()((theme: Theme) => ({
   disabled: {
     '& g': {
-      stroke: theme.tokens.color.Neutrals[20],
+      stroke: theme.tokens.alias.Content.Icon.Primary.Disabled,
     },
-    color: theme.tokens.color.Neutrals[20],
+    color: theme.tokens.alias.Content.Text.Primary.Disabled,
     pointer: 'default',
     pointerEvents: 'none',
   },
