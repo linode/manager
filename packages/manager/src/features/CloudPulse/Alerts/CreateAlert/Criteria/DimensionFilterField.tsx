@@ -145,9 +145,8 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     <GridLegacy
       container
       data-testid={`${name}-id`}
-      sx={{
-        gap: 2,
-      }}
+      flexWrap={'wrap'}
+      spacing={2}
     >
       <GridLegacy item md={3} xs={12}>
         <Controller
@@ -214,7 +213,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           )}
         />
       </GridLegacy>
-      <GridLegacy item md={3} xs={12}>
+      <GridLegacy item lg={3} md={12} xs={12}>
         <Box display="flex" gap={2}>
           <Controller
             control={control}
