@@ -1,13 +1,10 @@
+import { TRANSFER_FILTERS, useEntityTransfersQuery } from '@linode/queries';
 import { CircleProgress } from '@linode/ui';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
-import {
-  TRANSFER_FILTERS,
-  useEntityTransfersQuery,
-} from 'src/queries/entityTransfers';
 
 import { TransfersTable } from '../TransfersTable';
 import { CreateTransferSuccessDialog } from './CreateTransferSuccessDialog';

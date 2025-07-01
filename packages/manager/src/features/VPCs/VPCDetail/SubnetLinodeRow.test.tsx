@@ -110,6 +110,8 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should display linode label, reboot status, VPC IPv4 address, associated firewalls, IPv4 chip, and Reboot and Unassign buttons', async () => {
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const config = linodeConfigFactory.build({
       interfaces: [linodeConfigInterfaceFactoryWithVPC.build({ id: 1 })],
     });
@@ -117,19 +119,20 @@ describe('SubnetLinodeRow', () => {
       data: config,
     });
 
-    const { getByRole, getByText, findByText } = renderWithTheme(
-      wrapWithTableBody(
-        <SubnetLinodeRow
-          handlePowerActionsLinode={handlePowerActionsLinode}
-          handleUnassignLinode={handleUnassignLinode}
-          isVPCLKEEnterpriseCluster={false}
-          linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
-          subnetId={1}
-          subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
-        />
-      )
-    );
+    const { getByLabelText, getByRole, getByText, findByText } =
+      renderWithTheme(
+        wrapWithTableBody(
+          <SubnetLinodeRow
+            handlePowerActionsLinode={handlePowerActionsLinode}
+            handleUnassignLinode={handleUnassignLinode}
+            isVPCLKEEnterpriseCluster={false}
+            linodeId={linodeFactory1.id}
+            subnet={subnetFactory1}
+            subnetId={1}
+            subnetInterfaces={[{ active: true, config_id: config.id, id: 1 }]}
+          />
+        )
+      );
 
     const linodeLabelLink = getByRole('link', { name: 'linode-1' });
     expect(linodeLabelLink).toHaveAttribute(
@@ -142,15 +145,16 @@ describe('SubnetLinodeRow', () => {
     const plusChipButton = getByRole('button', { name: '+1' });
     expect(plusChipButton).toHaveTextContent('+1');
 
-    const rebootLinodeButton = getByRole('button', { name: 'Reboot' });
-    expect(rebootLinodeButton).toHaveTextContent('Reboot');
+    const actionMenu = getByLabelText(
+      `Action menu for Linodes in Subnet ${subnetFactory1.label}`
+    );
+    await userEvent.click(actionMenu);
+
+    const rebootLinodeButton = getByText('Reboot');
     await userEvent.click(rebootLinodeButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
 
-    const unassignLinodeButton = getByRole('button', {
-      name: 'Unassign Linode',
-    });
-    expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
+    const unassignLinodeButton = getByText('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
     const firewall = await findByText(mockFirewall0);
@@ -195,6 +199,8 @@ describe('SubnetLinodeRow', () => {
   });
 
   it('should not display reboot linode button if the linode has all active interfaces', async () => {
+    const linodeFactory1 = linodeFactory.build({ id: 1, label: 'linode-1' });
+    const subnetFactory1 = subnetFactory.build({ id: 1, label: 'subnet-1' });
     const vpcInterface = linodeConfigInterfaceFactoryWithVPC.build({
       active: true,
       ip_ranges: [],
@@ -207,14 +213,14 @@ describe('SubnetLinodeRow', () => {
       data: config,
     });
 
-    const { getByRole } = renderWithTheme(
+    const { getByRole, getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
           handleUnassignLinode={handleUnassignLinode}
           isVPCLKEEnterpriseCluster={false}
           linodeId={linodeFactory1.id}
-          subnet={subnetFactory.build()}
+          subnet={subnetFactory1}
           subnetId={0}
           subnetInterfaces={[
             { active: true, config_id: config.id, id: vpcInterface.id },
@@ -229,14 +235,15 @@ describe('SubnetLinodeRow', () => {
       `/linodes/${linodeFactory1.id}`
     );
 
-    const powerOffButton = getByRole('button', { name: 'Power Off' });
-    expect(powerOffButton).toHaveTextContent('Power Off');
+    const actionMenu = getByLabelText(
+      `Action menu for Linodes in Subnet ${subnetFactory1.label}`
+    );
+    await userEvent.click(actionMenu);
+
+    const powerOffButton = getByText('Power Off');
     await userEvent.click(powerOffButton);
     expect(handlePowerActionsLinode).toHaveBeenCalled();
-    const unassignLinodeButton = getByRole('button', {
-      name: 'Unassign Linode',
-    });
-    expect(unassignLinodeButton).toHaveTextContent('Unassign Linode');
+    const unassignLinodeButton = getByText('Unassign Linode');
     await userEvent.click(unassignLinodeButton);
     expect(handleUnassignLinode).toHaveBeenCalled();
   });
@@ -286,12 +293,12 @@ describe('SubnetLinodeRow', () => {
     });
   });
 
-  it('should hide in-line action buttons for LKE-E Linodes', async () => {
+  it('should hide action-menu buttons for LKE-E Linodes', async () => {
     queryMocks.useLinodeConfigQuery.mockReturnValue({
       data: configurationProfile,
     });
 
-    const { queryByRole } = renderWithTheme(
+    const { queryByText } = renderWithTheme(
       wrapWithTableBody(
         <SubnetLinodeRow
           handlePowerActionsLinode={handlePowerActionsLinode}
@@ -305,13 +312,9 @@ describe('SubnetLinodeRow', () => {
       )
     );
 
-    const powerOffButton = queryByRole('button', {
-      name: 'Power Off',
-    });
+    const powerOffButton = queryByText('Power Off');
     expect(powerOffButton).not.toBeInTheDocument();
-    const unassignLinodeButton = queryByRole('button', {
-      name: 'Unassign Linode',
-    });
+    const unassignLinodeButton = queryByText('Unassign Linode');
     expect(unassignLinodeButton).not.toBeInTheDocument();
   });
 

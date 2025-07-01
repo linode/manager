@@ -18,5 +18,3 @@ export interface LinodeConfigAndDiskQueryParams extends BaseQueryParams {
   selectedDisk: string;
   selectedLinode: string;
 }
-
-export type BooleanString = 'false' | 'true';
