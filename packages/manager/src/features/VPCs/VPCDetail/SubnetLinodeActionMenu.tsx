@@ -76,5 +76,3 @@ export const SubnetLinodeActionMenu = (props: Props) => {
     />
   );
 };
-
-export default SubnetLinodeActionMenu;

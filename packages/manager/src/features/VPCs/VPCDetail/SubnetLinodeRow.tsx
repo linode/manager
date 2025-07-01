@@ -24,7 +24,7 @@ import {
   getLinodeInterfaceRanges,
   hasUnrecommendedConfigurationLinodeInterface,
 } from '../utils';
-import SubnetLinodeActionMenu from './SubnetLinodeActionMenu';
+import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 import { StyledWarningIcon } from './SubnetLinodeRow.styles';
 import {
   ConfigInterfaceFirewallCell,

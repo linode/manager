@@ -5,11 +5,7 @@ import * as React from 'react';
 import { subnetFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import SubnetLinodeActionMenu from './SubnetLinodeActionMenu';
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
+import { SubnetLinodeActionMenu } from './SubnetLinodeActionMenu';
 
 const props = {
   handlePowerActionsLinode: vi.fn(),
