@@ -354,12 +354,10 @@ export type LinodeInterfaceStatus = 'active' | 'deleted' | 'inactive';
 
 export interface LinodeInterfaceHistory {
   created: string;
-  event_id: number;
   interface_data: string; // will come in as JSON string object that we'll need to parse
   interface_history_id: number;
   interface_id: number;
   linode_id: number;
-  status: LinodeInterfaceStatus;
   version: number;
 }
 

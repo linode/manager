@@ -79,7 +79,6 @@ export const HistoryTable = (props: Props) => {
             >
               Linode ID
             </TableSortCell>
-            <TableCell>Event ID</TableCell>
             <TableSortCell
               active={orderBy === 'version'}
               direction={order}
@@ -88,7 +87,6 @@ export const HistoryTable = (props: Props) => {
             >
               Version
             </TableSortCell>
-            <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

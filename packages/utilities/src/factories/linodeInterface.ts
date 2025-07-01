@@ -109,11 +109,9 @@ export const linodeInterfaceFactoryPublic =
 export const linodeInterfaceHistoryFactory =
   Factory.Sync.makeFactory<LinodeInterfaceHistory>({
     created: '2025-03-19T03:58:04',
-    event_id: Factory.each((i) => i),
     interface_data: '{ "public": {} }',
     interface_history_id: Factory.each((i) => i),
     interface_id: Factory.each((i) => i),
     linode_id: Factory.each((i) => i),
-    status: 'inactive',
     version: Factory.each((i) => i),
   });

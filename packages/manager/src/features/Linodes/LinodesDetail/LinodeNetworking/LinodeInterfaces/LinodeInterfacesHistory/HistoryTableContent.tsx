@@ -1,4 +1,3 @@
-import { getFormattedStatus } from '@linode/utilities';
 import * as React from 'react';
 
 import { DateTimeDisplay } from 'src/components/DateTimeDisplay';
@@ -45,9 +44,7 @@ export const HistoryTableContent = (props: Props) => {
       </TableCell>
       <TableCell>{history.interface_id}</TableCell>
       <TableCell>{history.linode_id}</TableCell>
-      <TableCell>{history.event_id}</TableCell>
       <TableCell>{history.version}</TableCell>
-      <TableCell>{getFormattedStatus(history.status)}</TableCell>
     </TableRow>
   ));
 };
