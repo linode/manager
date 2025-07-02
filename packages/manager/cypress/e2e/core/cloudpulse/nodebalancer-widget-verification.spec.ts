@@ -244,7 +244,7 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
     // Wait for all metrics query requests to resolve.
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
   });
-  it('should apply optional filter port and verify API request payloads', () => {
+  it('should apply optional filter (port) and verify API request payloads', () => {
     const randomPort = randomNumber(1, 65535).toString();
 
     ui.button.findByTitle('Filters').should('be.visible').click();
