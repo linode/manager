@@ -1,8 +1,7 @@
-// whether or not this is a Vite production build
-// This does not necessarily mean Cloud is running in a production environment.
-
 import { getBooleanEnv } from '@linode/utilities';
 
+// Whether or not this is a Vite production build
+// This does not necessarily mean Cloud is running in a production environment.
 // For example, cloud.dev.linode.com is technically a production build.
 export const isProductionBuild = import.meta.env.PROD;
 
@@ -25,11 +24,6 @@ export const ENABLE_MAINTENANCE_MODE =
  */
 export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
 
-/** required for the app to function */
-export const APP_ROOT =
-  import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
-export const LOGIN_ROOT =
-  import.meta.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
   import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 
@@ -39,11 +33,6 @@ export const API_ROOT =
  */
 export const ENVIRONMENT_NAME =
   import.meta.env.REACT_APP_ENVIRONMENT_NAME ?? 'local';
-
-export const BETA_API_ROOT = API_ROOT + 'beta';
-
-/** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
-export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
