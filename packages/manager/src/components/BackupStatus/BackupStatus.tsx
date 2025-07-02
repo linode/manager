@@ -105,7 +105,7 @@ const BackupStatus = (props: Props) => {
         </Typography>
         <TooltipIcon
           classes={{ tooltip: classes.tooltip }}
-          status="help"
+          status="info"
           sxTooltipIcon={{
             padding: 0,
           }}

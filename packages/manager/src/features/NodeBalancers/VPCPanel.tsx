@@ -194,7 +194,7 @@ export const VPCPanel = (props: Props) => {
                             Auto-assign IPs for this NodeBalancer
                           </Typography>
                           <TooltipIcon
-                            status="help"
+                            status="info"
                             text={
                               <Typography
                                 component={'span'}
