@@ -1,8 +1,10 @@
+import { usePreferences } from '@linode/queries';
 import { Box, Button } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import React, { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useFlags } from 'src/hooks/useFlags';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { sendApiAwarenessClickEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { sendLinodeCreateFormInputEvent } from 'src/utilities/analytics/formEventAnalytics';
@@ -22,6 +24,10 @@ export const Actions = () => {
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
+  const { aclpBetaServices } = useFlags();
+  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpAlertsBeta
+  );
 
   const { formState, getValues, trigger, control } =
     useFormContext<LinodeCreateFormValues>();
@@ -76,6 +82,8 @@ export const Actions = () => {
         onClose={() => setIsAPIAwarenessModalOpen(false)}
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
+          isAclpIntegration: aclpBetaServices?.linode?.alerts,
+          isAclpAlertsPreferenceBeta,
         })}
       />
     </Box>

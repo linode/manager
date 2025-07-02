@@ -90,6 +90,7 @@ export const VPCEditDrawer = (props: Props) => {
           name="label"
           render={({ field, fieldState }) => (
             <TextField
+              data-testid="label"
               disabled={readOnly}
               errorText={fieldState.error?.message}
               label="Label"
@@ -105,6 +106,7 @@ export const VPCEditDrawer = (props: Props) => {
           name="description"
           render={({ field, fieldState }) => (
             <TextField
+              data-testid="description"
               disabled={readOnly}
               errorText={fieldState.error?.message}
               label="Description"

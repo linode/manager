@@ -67,7 +67,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
               </Typography>
             </Box>
             <TooltipIcon
-              status="help"
+              status="info"
               text={
                 <>
                   During a <strong>warm resize</strong>, your Linode will remain
@@ -97,7 +97,7 @@ export const UnifiedMigrationPanel = (props: Props) => {
               value={migrationTypeOptions.cold}
             />
             <TooltipIcon
-              status="help"
+              status="info"
               sxTooltipIcon={{
                 marginLeft: '-15px',
               }}

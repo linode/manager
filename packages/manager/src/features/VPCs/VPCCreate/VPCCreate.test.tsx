@@ -15,17 +15,17 @@ vi.mock('@linode/utilities');
 
 describe('VPC create page', () => {
   it('should render the vpc and subnet sections', () => {
-    const { getAllByText } = renderWithTheme(<VPCCreate />);
+    const { getByText } = renderWithTheme(<VPCCreate />);
 
-    getAllByText('Region');
-    getAllByText('VPC Label');
-    getAllByText('Region');
-    getAllByText('Description');
-    getAllByText('Subnets');
-    getAllByText('Subnet Label');
-    getAllByText('Subnet IP Address Range');
-    getAllByText('Add another Subnet');
-    getAllByText('Create VPC');
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('VPC Label')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Description')).toBeVisible();
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('Subnet Label')).toBeVisible();
+    expect(getByText('Subnet IP Address Range')).toBeVisible();
+    expect(getByText('Add another Subnet')).toBeVisible();
+    expect(getByText('Create VPC')).toBeVisible();
   });
 
   it('should add and delete subnets correctly', async () => {

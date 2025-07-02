@@ -5,12 +5,9 @@ import {
 } from '@linode/utilities';
 import * as Sentry from '@sentry/react';
 
-import {
-  clearUserInput,
-  getEnvLocalStorageOverrides,
-  storage,
-} from 'src/utilities/storage';
+import { clearUserInput, storage } from 'src/utilities/storage';
 
+import { getAppRoot, getClientId, getLoginURL } from './constants';
 import { generateCodeChallenge, generateCodeVerifier } from './pkce';
 import {
   LoginAsCustomerCallbackParamsSchema,
@@ -54,31 +51,6 @@ export function clearStorageAndRedirectToLogout() {
   clearAllAuthDataFromLocalStorage();
   const loginUrl = getLoginURL();
   window.location.assign(loginUrl + '/logout');
-}
-
-function getLoginURL() {
-  const localStorageOverrides = getEnvLocalStorageOverrides();
-
-  return (
-    localStorageOverrides?.loginRoot ?? import.meta.env.REACT_APP_LOGIN_ROOT
-  );
-}
-
-function getClientId() {
-  const localStorageOverrides = getEnvLocalStorageOverrides();
-
-  const clientId =
-    localStorageOverrides?.clientID ?? import.meta.env.REACT_APP_CLIENT_ID;
-
-  if (!clientId) {
-    throw new Error('No CLIENT_ID specified.');
-  }
-
-  return clientId;
-}
-
-function getAppRoot() {
-  return import.meta.env.REACT_APP_APP_ROOT;
 }
 
 export function getIsAdminToken(token: string) {

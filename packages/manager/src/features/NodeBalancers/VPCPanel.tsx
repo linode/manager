@@ -143,9 +143,12 @@ export const VPCPanel = (props: Props) => {
                 placeholder="Subnet"
                 textFieldProps={{
                   helperText: (
-                    <Typography mb={2}>
-                      The VPC subnet for this NodeBalancer.
-                    </Typography>
+                    <Box component="span" mb={2} sx={{ display: 'block' }}>
+                      <Typography component="span" variant="body1">
+                        Select a subnet in which to allocate the VPC CIDR for
+                        the NodeBalancer.
+                      </Typography>
+                    </Box>
                   ),
                   helperTextPosition: 'top',
                 }}
@@ -191,7 +194,7 @@ export const VPCPanel = (props: Props) => {
                             Auto-assign IPs for this NodeBalancer
                           </Typography>
                           <TooltipIcon
-                            status="help"
+                            status="info"
                             text={
                               <Typography
                                 component={'span'}

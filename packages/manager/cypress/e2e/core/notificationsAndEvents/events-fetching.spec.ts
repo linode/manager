@@ -126,7 +126,6 @@ describe('Event fetching and polling', () => {
     // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
     // a `should(() => {})` callback because Cypress commands are disallowed there.
     cy.clock(mockNow.toJSDate()).then((clock) => {
-
       // Confirm that Cloud manager polls the requests endpoint no more than
       // once every 16 seconds.
       mockGetEventsPolling([mockEvent], mockNowTimestamp).as('getEventsPoll');
@@ -196,7 +195,6 @@ describe('Event fetching and polling', () => {
     // We need access to the `clock` object directly since we cannot call `cy.clock()` inside
     // a `should(() => {})` callback because Cypress commands are disallowed there.
     cy.clock(Date.now()).then((clock) => {
-
       // Confirm that Cloud manager polls the requests endpoint no more than once
       // every 2 seconds.
       mockGetEventsPolling(mockEvents, mockNowTimestamp).as('getEventsPoll');

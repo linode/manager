@@ -1,9 +1,9 @@
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import { styled, SvgIcon } from '@mui/material';
 import _Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import type { JSX } from 'react';
 
+import InfoOutline from '../../assets/icons/info-outlined.svg';
 import { omittedProps } from '../../utilities';
 import { Tooltip } from '../Tooltip';
 
@@ -63,7 +63,7 @@ export interface ButtonProps extends _ButtonProps {
 
 const StyledButton = styled(_Button, {
   shouldForwardProp: omittedProps(['compactX', 'compactY', 'buttonType']),
-})<ButtonProps>(({ compactX, compactY }) => ({
+})<ButtonProps>(({ compactX, compactY, theme }) => ({
   ...(compactX && {
     minWidth: 50,
     paddingLeft: 0,
@@ -74,6 +74,9 @@ const StyledButton = styled(_Button, {
     paddingBottom: 0,
     paddingTop: 0,
   }),
+  '&:hover [data-testid="tooltip-info-icon"] *': {
+    color: theme.tokens.alias.Content.Icon.Primary.Hover,
+  },
 }));
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -124,7 +127,18 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         data-testid={rest['data-testid'] || 'button'}
         disableRipple={disabled || rest.disableRipple}
         endIcon={
-          (showTooltip && <HelpOutline sx={sxEndIcon} />) || rest.endIcon
+          (showTooltip && (
+            <SvgIcon
+              component={InfoOutline}
+              data-testid="tooltip-info-icon"
+              sx={{
+                ...sxEndIcon,
+                top: 1,
+                position: 'relative',
+              }}
+            />
+          )) ||
+          rest.endIcon
         }
         onClick={disabled ? (e) => e.preventDefault() : rest.onClick}
         onKeyDown={disabled ? handleDisabledKeyDown : rest.onKeyDown}

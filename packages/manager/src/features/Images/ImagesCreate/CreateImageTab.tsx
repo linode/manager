@@ -304,7 +304,7 @@ export const CreateImageTab = () => {
                       <>
                         This image is cloud-init compatible
                         <TooltipIcon
-                          status="help"
+                          status="info"
                           text={
                             <Typography>
                               Many Linode supported operating systems are

@@ -7,7 +7,7 @@ import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/Contextua
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
-import { LinodeSettingsAlertsPanel } from '../LinodeSettings/LinodeSettingsAlertsPanel';
+import { AlertsPanel } from './AlertsPanel';
 
 interface Props {
   isAclpAlertsSupportedRegionLinode: boolean;
@@ -48,7 +48,7 @@ const LinodeAlerts = (props: Props) => {
         />
       ) : (
         // Legacy Alerts View
-        <LinodeSettingsAlertsPanel isReadOnly={isReadOnly} linodeId={id} />
+        <AlertsPanel isReadOnly={isReadOnly} linodeId={id} />
       )}
     </Box>
   );

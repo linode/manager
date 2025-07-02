@@ -239,7 +239,7 @@ export const filterAlertsByStatusAndType = (
   return (
     alerts?.filter(({ label, status, type }) => {
       return (
-        status === 'enabled' &&
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );

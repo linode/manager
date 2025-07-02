@@ -9,7 +9,6 @@ import { Typography } from '@mui/material';
 import * as React from 'react';
 
 import { Link } from 'src/components/Link';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
@@ -64,8 +63,7 @@ export const SubnetNodeBalancerRow = ({
 
     return (
       <>
-        <StatusIcon aria-label="Nodebalancer status active" status="active" />
-        {up} up, {down} down
+        {up} up - {down} down
       </>
     );
   };
@@ -167,8 +165,8 @@ export const SubnetNodeBalancerRow = ({
 export const SubnetNodebalancerTableRowHead = (
   <TableRow>
     <TableCell sx={{ width: '24%' }}>NodeBalancer</TableCell>
-    <TableCell sx={{ width: '23%' }}>Backend Status</TableCell>
-    <TableCell sx={{ width: '14.25%' }}>VPC IPv4 Range</TableCell>
+    <TableCell sx={{ width: '18%' }}>Backend Status</TableCell>
+    <TableCell sx={{ width: '30%' }}>VPC IPv4 Range</TableCell>
     <TableCell>Firewalls</TableCell>
   </TableRow>
 );

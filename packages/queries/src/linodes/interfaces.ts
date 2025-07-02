@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { firewallQueries } from '../firewalls';
 import { networkingQueries } from '../networking';
+import { vlanQueries } from '../vlans';
 import { vpcQueries } from '../vpcs';
 import { linodeQueries } from './linodes';
 
@@ -136,6 +137,9 @@ export const useCreateLinodeInterfaceMutation = (linodeId: number) => {
             queryKey: firewallQueries.firewall(variables.firewall_id).queryKey,
           });
         }
+
+        // If a VLAN is attached at the time of creation...
+        queryClient.invalidateQueries({ queryKey: vlanQueries._def });
       },
     },
   );

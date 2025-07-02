@@ -1,3 +1,4 @@
+import { capabilityServiceTypeMapping } from '@linode/api-v4';
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,7 +7,6 @@ import * as React from 'react';
 import { dashboardFactory, databaseInstanceFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { DBAAS_CAPABILITY, LINODE_CAPABILITY } from '../Utils/FilterConfig';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
@@ -42,27 +42,27 @@ const flags: Partial<Flags> = {
 
 const allRegions: Region[] = [
   regionFactory.build({
-    capabilities: [LINODE_CAPABILITY],
+    capabilities: [capabilityServiceTypeMapping['linode']],
     id: 'us-lax',
     label: 'US, Los Angeles, CA',
   }),
   regionFactory.build({
-    capabilities: [LINODE_CAPABILITY],
+    capabilities: [capabilityServiceTypeMapping['linode']],
     id: 'us-mia',
     label: 'US, Miami, FL',
   }),
   regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
+    capabilities: [capabilityServiceTypeMapping['dbaas']],
     id: 'us-west',
     label: 'US, Fremont, CA',
   }),
   regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
+    capabilities: [capabilityServiceTypeMapping['dbaas']],
     id: 'us-east',
     label: 'US, Newark, NJ',
   }),
   regionFactory.build({
-    capabilities: [DBAAS_CAPABILITY],
+    capabilities: [capabilityServiceTypeMapping['dbaas']],
     id: 'us-central',
     label: 'US, Dallas, TX',
   }),

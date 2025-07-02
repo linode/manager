@@ -27,20 +27,21 @@ const formOptions = {
 
 describe('VPC Create Drawer', () => {
   it('should render the vpc and subnet sections', () => {
-    const { getAllByText } = renderWithThemeAndHookFormContext({
+    const { getByText, getByRole } = renderWithThemeAndHookFormContext({
       component: <VPCCreateDrawer {...props} />,
       useFormOptions: formOptions,
     });
 
-    getAllByText('VPC Label');
-    getAllByText('Region');
-    getAllByText('Description');
-    getAllByText('Subnets');
-    getAllByText('Subnet Label');
-    getAllByText('Subnet IP Address Range');
-    getAllByText('Add another Subnet');
-    getAllByText('Cancel');
-    getAllByText('Create VPC');
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('VPC Label')).toBeVisible();
+    expect(getByText('Region')).toBeVisible();
+    expect(getByText('Description')).toBeVisible();
+    expect(getByText('Subnets')).toBeVisible();
+    expect(getByText('Subnet Label')).toBeVisible();
+    expect(getByText('Subnet IP Address Range')).toBeVisible();
+    expect(getByText('Add another Subnet')).toBeVisible();
+    expect(getByRole('button', { name: 'Create VPC' })).toBeVisible();
+    expect(getByText('Cancel')).toBeVisible();
   });
 
   it('should not be able to remove the first subnet', () => {

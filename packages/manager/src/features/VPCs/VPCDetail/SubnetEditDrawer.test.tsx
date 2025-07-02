@@ -13,23 +13,21 @@ describe('SubnetEditDrawer', () => {
   };
 
   it('Should render a title, label input, ip address input, and action buttons', () => {
-    const { getAllByTestId, getByTestId, getByText } = renderWithTheme(
+    const { getByTestId, getByRole, getByText } = renderWithTheme(
       <SubnetEditDrawer {...props} />
     );
     const drawerTitle = getByText('Edit Subnet');
     expect(drawerTitle).toBeVisible();
 
-    const inputs = getAllByTestId('textfield-input');
-
     const label = getByText('Label');
-    const labelInput = inputs[0];
+    const labelInput = getByRole('textbox', { name: 'Label' });
     expect(label).toBeVisible();
     expect(labelInput).toBeEnabled();
 
     const ip = getByText('Subnet IP Address Range');
-    const ipInput = inputs[1];
+    const ipInput = getByRole('textbox', { name: 'Subnet IP Address Range' });
     expect(ip).toBeVisible();
-    expect(ipInput).not.toBeEnabled();
+    expect(ipInput).toBeDisabled();
 
     const saveButton = getByTestId('save-button');
     expect(saveButton).toBeVisible();

@@ -149,6 +149,7 @@ describe('LKE cluster updates', () => {
 
       const mockCluster = kubernetesClusterFactory.build({
         k8s_version: oldVersion,
+        tier: 'standard',
       });
 
       const mockClusterUpdated = {
@@ -159,7 +160,8 @@ describe('LKE cluster updates', () => {
       const upgradePrompt = 'A new version of Kubernetes is available (1.26).';
 
       const upgradeNotes = [
-        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
+        'This upgrades the control plane on your cluster',
+        'and ensures that any new worker nodes are created using the newer Kubernetes version.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -289,7 +291,8 @@ describe('LKE cluster updates', () => {
         'A new version of Kubernetes is available (1.31.1+lke2).';
 
       const upgradeNotes = [
-        'This upgrades the control plane on your cluster and ensures that any new worker nodes are created using the newer Kubernetes version.',
+        'This upgrades the control plane on your cluster',
+        'Worker nodes within each node pool can then be upgraded separately.',
         // Confirm that the old version and new version are both shown.
         oldVersion,
         newVersion,
@@ -342,49 +345,15 @@ describe('LKE cluster updates', () => {
       // Wait for API response and assert toast message is shown.
       cy.wait('@updateCluster');
 
-      // Verify the banner goes away because the version update has happened
-      cy.findByText(upgradePrompt).should('not.exist');
-
-      mockRecycleAllNodes(mockCluster.id).as('recycleAllNodes');
-
-      const stepTwoDialogTitle = 'Upgrade complete';
-
-      ui.dialog
-        .findByTitle(stepTwoDialogTitle)
-        .should('be.visible')
-        .within(() => {
-          cy.findByText(
-            'The cluster’s Kubernetes version has been updated successfully',
-            {
-              exact: false,
-            }
-          ).should('be.visible');
-
-          cy.findByText(
-            'To upgrade your existing worker nodes, you can recycle all nodes (which may have a performance impact) or perform other upgrade methods.',
-            { exact: false }
-          ).should('be.visible');
-
-          ui.button
-            .findByTitle('Recycle All Nodes')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
-
-      // Verify clicking the "Recycle All Nodes" makes an API call
-      cy.wait('@recycleAllNodes');
-
-      // Verify the upgrade dialog closed
-      cy.findByText(stepTwoDialogTitle).should('not.exist');
-
       // Verify the banner is still gone after the flow
       cy.findByText(upgradePrompt).should('not.exist');
 
+      // Verify the second step in the banner is not shown for LKE-E.
+      const stepTwoDialogTitle = 'Upgrade complete';
+      cy.findByText(stepTwoDialogTitle).should('not.exist');
+
       // Verify the version is correct after the update
       cy.findByText(`Version ${newVersion}`);
-
-      ui.toast.findByMessage('Recycle started successfully.');
     });
 
     /*
@@ -1051,6 +1020,7 @@ describe('LKE cluster updates', () => {
 
           ui.button
             .findByTitle('Add pool')
+            .scrollIntoView()
             .should('be.visible')
             .should('be.enabled')
             .click();

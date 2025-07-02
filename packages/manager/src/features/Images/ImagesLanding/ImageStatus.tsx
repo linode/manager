@@ -36,7 +36,7 @@ export const ImageStatus = (props: Props) => {
         Upload Failed
         {event.message && (
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={{ ml: 1, p: 0 }}
             text={event.message}
           />
