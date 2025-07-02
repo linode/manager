@@ -64,7 +64,7 @@ export const ApplicationPlatform = (props: APLProps) => {
           {isSectionDisabled && (
             <StyledComingSoonChip
               data-testid="apl-coming-soon-chip"
-              label="Coming Soon"
+              label="coming soon"
             />
           )}
         </Box>
