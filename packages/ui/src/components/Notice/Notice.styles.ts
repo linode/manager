@@ -2,7 +2,7 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
   error: {
-    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
+    border: `1px solid ${theme.tokens.component.NotificationBanner.Error.Border}`,
     background: theme.tokens.component.NotificationBanner.Error.Background,
     '& path': {
       fill: theme.tokens.component.NotificationBanner.Error.StatusIcon,
@@ -18,7 +18,7 @@ export const useStyles = makeStyles()((theme) => ({
     position: 'relative',
   },
   info: {
-    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
+    border: `1px solid ${theme.tokens.component.NotificationBanner.Informative.Border}`,
     background:
       theme.tokens.component.NotificationBanner.Informative.Background,
     '& path': {
@@ -56,14 +56,14 @@ export const useStyles = makeStyles()((theme) => ({
     position: 'relative',
   },
   success: {
-    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
+    border: `1px solid ${theme.tokens.component.NotificationBanner.Success.Border}`,
     background: theme.tokens.component.NotificationBanner.Success.Background,
     '& path': {
       fill: theme.tokens.component.NotificationBanner.Success.StatusIcon,
     },
   },
   warning: {
-    borderLeft: `4px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
+    border: `1px solid ${theme.tokens.component.NotificationBanner.Warning.Border}`,
     background: theme.tokens.component.NotificationBanner.Warning.Background,
     // Only update outer triangle color
     '& .css-1j6o9qe-icon path:first-of-type': {
