@@ -1,4 +1,5 @@
-import { Box } from '@linode/ui';
+import { type Alert, type APIError } from '@linode/api-v4';
+import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Grid, TableBody, TableHead } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import React from 'react';
@@ -12,21 +13,16 @@ import { TableCell } from 'src/components/TableCell';
 import { TableContentWrapper } from 'src/components/TableContentWrapper/TableContentWrapper';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
-import {
-  useAddEntityToAlert,
-  useRemoveEntityFromAlert,
-} from 'src/queries/cloudpulse/alerts';
+import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
+import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
-import type {
-  Alert,
-  APIError,
-  CloudPulseAlertsPayload,
-  EntityAlertUpdatePayload,
-} from '@linode/api-v4';
+import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 export interface AlertInformationActionTableProps {
   /**
@@ -67,6 +63,11 @@ export interface AlertInformationActionTableProps {
    * Column name by which columns will be ordered by default
    */
   orderByColumn: string;
+
+  /**
+   * Service type of the selected entity
+   */
+  serviceType: string;
 }
 
 export interface TableColumnHeader {
@@ -110,112 +111,106 @@ export const AlertInformationActionTable = (
     entityName,
     error,
     orderByColumn,
+    serviceType,
     onToggleAlert,
   } = props;
+
+  const alertsTableRef = React.useRef<HTMLTableElement>(null);
 
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
     : undefined;
   const { enqueueSnackbar } = useSnackbar();
-  const [selectedAlert, setSelectedAlert] = React.useState<Alert>({} as Alert);
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [enabledAlerts, setEnabledAlerts] =
-    React.useState<CloudPulseAlertsPayload>({
-      system: [],
-      user: [],
-    });
 
-  const { mutateAsync: addEntity } = useAddEntityToAlert();
+  const isEditMode = !!entityId;
+  const isCreateMode = !!onToggleAlert;
 
-  const { mutateAsync: removeEntity } = useRemoveEntityFromAlert();
+  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
+    useContextualAlertsState(alerts, entityId);
 
-  const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
-    const { entityId, enabledAlerts, onToggleAlert } = options;
-
-    // Ensure that at least one of entityId or onToggleAlert is provided
-    if (!(entityId || onToggleAlert)) {
-      return null;
-    }
-
-    const isEditMode = !!entityId;
-
-    const handleToggle = isEditMode
-      ? handleToggleEditFlow
-      : handleToggleCreateFlow;
-    const status = isEditMode
-      ? alert.entity_ids.includes(entityId)
-      : enabledAlerts[alert.type].includes(alert.id);
-
-    return { handleToggle, status };
-  };
+  const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
+    serviceType,
+    entityId ?? ''
+  );
 
   const handleCancel = () => {
     setIsDialogOpen(false);
   };
+
   const handleConfirm = React.useCallback(
-    (alert: Alert, currentStatus: boolean) => {
-      if (entityId === undefined) return;
-
-      const payload: EntityAlertUpdatePayload = {
-        alert,
-        entityId,
-      };
-
+    (alertIds: CloudPulseAlertsPayload) => {
       setIsLoading(true);
-      (currentStatus ? removeEntity(payload) : addEntity(payload))
+      updateAlerts({
+        user: alertIds.user,
+        system: alertIds.system,
+      })
         .then(() => {
-          enqueueSnackbar(
-            `The alert settings for ${entityName} saved successfully.`,
-            { variant: 'success' }
-          );
+          enqueueSnackbar('Your settings for alerts have been saved.', {
+            variant: 'success',
+          });
         })
         .catch(() => {
-          enqueueSnackbar(
-            `${currentStatus ? 'Disabling' : 'Enabling'} alert failed.`,
-            {
-              variant: 'error',
-            }
-          );
+          enqueueSnackbar('Alerts changes were not saved, please try again.', {
+            variant: 'error',
+          });
         })
         .finally(() => {
           setIsLoading(false);
           setIsDialogOpen(false);
         });
     },
-    [addEntity, enqueueSnackbar, entityId, entityName, removeEntity]
+    [updateAlerts, enqueueSnackbar]
   );
 
-  const handleToggleEditFlow = (alert: Alert) => {
-    setIsDialogOpen(true);
-    setSelectedAlert(alert);
-  };
+  const handleToggleAlert = React.useCallback(
+    (alert: Alert) => {
+      setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+        const newPayload = {
+          system: [...(prev.system ?? [])],
+          user: [...(prev.user ?? [])],
+        };
 
-  const handleToggleCreateFlow = (alert: Alert) => {
-    if (!onToggleAlert) return;
+        const alertIds = newPayload[alert.type];
+        const isCurrentlyEnabled = alertIds.includes(alert.id);
 
-    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
-      const newPayload = { ...prev };
-      const index = newPayload[alert.type].indexOf(alert.id);
-      // If the alert is already in the payload, remove it, otherwise add it
-      if (index !== -1) {
-        newPayload[alert.type].splice(index, 1);
-      } else {
-        newPayload[alert.type].push(alert.id);
-      }
+        if (isCurrentlyEnabled) {
+          // Remove alert - disable it
+          const index = alertIds.indexOf(alert.id);
+          alertIds.splice(index, 1);
+        } else {
+          // Add alert - enable it
+          alertIds.push(alert.id);
+        }
 
-      onToggleAlert(newPayload);
-      return newPayload;
-    });
-  };
+        // Only call onToggleAlert in create flow
+        if (onToggleAlert) {
+          onToggleAlert(newPayload);
+        }
 
-  const isEnabled = selectedAlert.entity_ids?.includes(entityId ?? '') ?? false;
+        return newPayload;
+      });
+    },
+    [onToggleAlert, setEnabledAlerts]
+  );
+
+  const handleCustomPageChange = React.useCallback(
+    (page: number, handlePageChange: (page: number) => void) => {
+      handlePageChange(page);
+      handlePageChange(page);
+      requestAnimationFrame(() => {
+        scrollToElement(alertsTableRef.current);
+      });
+    },
+    []
+  );
 
   return (
     <>
       <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
+          <Paginate data={orderedData} shouldScroll={false}>
             {({
               count,
               data: paginatedAndOrderedAlerts,
@@ -224,82 +219,131 @@ export const AlertInformationActionTable = (
               page,
               pageSize,
             }) => (
-              <Box>
-                <Grid>
-                  <Table
-                    colCount={columns.length + 1}
-                    data-testid="alert-table"
-                    size="small"
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell actionCell />
-                        {columns.map(({ columnName, label }) => {
+              <>
+                <Box>
+                  <Grid>
+                    <Table
+                      colCount={columns.length + 1}
+                      data-qa="alert-table"
+                      data-testid="alert-table"
+                      ref={alertsTableRef}
+                      size="small"
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell actionCell />
+                          {columns.map(({ columnName, label }) => {
+                            return (
+                              <TableSortCell
+                                active={orderBy === label}
+                                data-qa-header={label}
+                                data-qa-sorting={label}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                key={label}
+                                label={label}
+                                sx={{ position: 'relative' }}
+                              >
+                                {columnName}
+                                {columnName === 'Scope' && (
+                                  <TooltipIcon
+                                    data-qa-tooltip="scope-tooltip"
+                                    status="info"
+                                    sxTooltipIcon={{
+                                      position: 'absolute',
+                                      right: '-30px',
+                                      top: '50%',
+                                      transform: 'translateY(-50%)',
+                                    }}
+                                    text={ALERT_SCOPE_TOOLTIP_CONTEXTUAL}
+                                  />
+                                )}
+                              </TableSortCell>
+                            );
+                          })}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableContentWrapper
+                          error={_error}
+                          length={paginatedAndOrderedAlerts.length}
+                          loading={false}
+                        />
+                        {paginatedAndOrderedAlerts?.map((alert) => {
+                          if (!(isEditMode || isCreateMode)) {
+                            return null;
+                          }
+
+                          // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
+                          if (!isEditMode && alert.scope !== 'entity') {
+                            return null;
+                          }
+
+                          const status = enabledAlerts[alert.type]?.includes(
+                            alert.id
+                          );
+
                           return (
-                            <TableSortCell
-                              active={orderBy === label}
-                              data-qa-header={label}
-                              data-qa-sorting={label}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              key={label}
-                              label={label}
-                            >
-                              {columnName}
-                            </TableSortCell>
+                            <AlertInformationActionRow
+                              alert={alert}
+                              handleToggle={handleToggleAlert}
+                              key={alert.id}
+                              status={status}
+                            />
                           );
                         })}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableContentWrapper
-                        error={_error}
-                        length={paginatedAndOrderedAlerts.length}
-                        loading={false}
-                      />
-                      {paginatedAndOrderedAlerts?.map((alert) => {
-                        const rowProps = getAlertRowProps(alert, {
-                          enabledAlerts,
-                          entityId,
-                          onToggleAlert,
+                      </TableBody>
+                    </Table>
+                  </Grid>
+                  <PaginationFooter
+                    count={count}
+                    eventCategory="Alert Definitions Table"
+                    handlePageChange={(page: number) =>
+                      handleCustomPageChange(page, handlePageChange)
+                    }
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                  />
+                </Box>
+                {isEditMode && (
+                  <Box>
+                    <Button
+                      buttonType="primary"
+                      data-qa-buttons="true"
+                      data-testid="save-alerts"
+                      disabled={!hasUnsavedChanges}
+                      onClick={() => {
+                        window.scrollTo({
+                          behavior: 'instant',
+                          top: 0,
                         });
-
-                        if (!rowProps) return null;
-
-                        return (
-                          <AlertInformationActionRow
-                            alert={alert}
-                            handleToggle={rowProps.handleToggle}
-                            key={alert.id}
-                            status={rowProps.status}
-                          />
-                        );
-                      })}
-                    </TableBody>
-                  </Table>
-                </Grid>
-                <PaginationFooter
-                  count={count}
-                  eventCategory="Alert Definitions Table"
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                />
-              </Box>
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                )}
+              </>
             )}
           </Paginate>
         )}
       </OrderBy>
       <AlertConfirmationDialog
-        alert={selectedAlert}
         handleCancel={handleCancel}
-        handleConfirm={handleConfirm}
-        isEnabled={isEnabled}
+        handleConfirm={() => handleConfirm(enabledAlerts)}
         isLoading={isLoading}
         isOpen={isDialogOpen}
-        message={`Are you sure you want to
-              ${isEnabled ? 'disable' : 'enable'} the alert for ${entityName}?`}
+        message={
+          <>
+            Are you sure you want to save these settings for {entityName}? All
+            legacy alert settings will be disabled and replaced by the new{' '}
+            <b>Alerts(Beta)</b> settings.
+          </>
+        }
+        primaryButtonLabel="Save"
+        title="Save Alerts?"
       />
     </>
   );
