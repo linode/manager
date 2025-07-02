@@ -33,7 +33,7 @@ export const BetaChip = (props: BetaChipProps) => {
   return <StyledBetaChip {...props} data-testid="betaChip" label="beta" />;
 };
 
-const StyledBetaChip = styled(Chip, {
+export const StyledBetaChip = styled(Chip, {
   label: 'StyledBetaChip',
   shouldForwardProp: (prop) => prop !== 'color',
 })<BetaChipProps>(({ theme }) => ({

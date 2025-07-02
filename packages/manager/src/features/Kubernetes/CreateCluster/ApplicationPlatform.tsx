@@ -1,17 +1,20 @@
 import {
   Box,
-  Chip,
   FormControl,
   FormControlLabel,
   NewFeatureChip,
   Radio,
   RadioGroup,
+  styled,
+  StyledBetaChip,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
+
+import type { BetaChipProps } from '@linode/ui';
 
 export interface APLProps {
   isSectionDisabled: boolean;
@@ -55,9 +58,14 @@ export const ApplicationPlatform = (props: APLProps) => {
           <Typography data-testid="apl-label" variant="inherit">
             Akamai App Platform
           </Typography>
-          {!isSectionDisabled && <NewFeatureChip />}
+          {!isSectionDisabled && (
+            <NewFeatureChip data-testid="apl-new-feature-chip" />
+          )}
           {isSectionDisabled && (
-            <Chip color="primary" label="Coming Soon" sx={{ ml: 1 }} />
+            <StyledComingSoonChip
+              data-testid="apl-coming-soon-chip"
+              label="Coming Soon"
+            />
           )}
         </Box>
       </FormLabel>
@@ -77,7 +85,7 @@ export const ApplicationPlatform = (props: APLProps) => {
         <FormControlLabel
           control={
             <Radio
-              checked={selectedValue === 'no'}
+              checked={selectedValue === 'no' || isSectionDisabled}
               data-testid="apl-radio-button-no"
             />
           }
@@ -89,3 +97,11 @@ export const ApplicationPlatform = (props: APLProps) => {
     </FormControl>
   );
 };
+
+const StyledComingSoonChip = styled(StyledBetaChip, {
+  label: 'StyledComingSoonChip',
+  shouldForwardProp: (prop) => prop !== 'color',
+})<BetaChipProps>(({ theme }) => ({
+  background: theme.tokens.color.Brand[80],
+  textTransform: theme.tokens.font.Textcase.Uppercase,
+}));
