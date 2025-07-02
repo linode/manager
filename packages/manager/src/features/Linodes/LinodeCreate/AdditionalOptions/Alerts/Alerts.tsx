@@ -5,7 +5,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
 import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
-import { LinodeSettingsAlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeSettings/LinodeSettingsAlertsPanel';
+import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/AlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../../utilities';
@@ -44,12 +44,14 @@ export const Alerts = () => {
         <AclpPreferenceToggle type="alerts" />
       )}
       {aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
+        // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}
           serviceType="linode"
         />
       ) : (
-        <LinodeSettingsAlertsPanel />
+        // Legacy Alerts View (read-only)
+        <AlertsPanel />
       )}
     </Accordion>
   );
