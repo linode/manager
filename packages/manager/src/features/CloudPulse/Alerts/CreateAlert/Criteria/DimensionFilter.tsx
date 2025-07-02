@@ -42,7 +42,7 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
         <Typography component="span"> (optional)</Typography>
       </Typography>
 
-      <Stack gap={1} mt={0}>
+      <Stack gap={1}>
         {fields?.length > 0 &&
           fields.map((field, index) => (
             <DimensionFilterField
