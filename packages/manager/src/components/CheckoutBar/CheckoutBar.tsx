@@ -28,7 +28,7 @@ export interface CheckoutBarProps {
   /**
    * JSX element for additional content to be rendered within the component.
    */
-  children?: JSX.Element;
+  children?: React.ReactNode;
   /**
    * Boolean to disable the `CheckoutBar` component, making it non-interactive.
    * @default false
