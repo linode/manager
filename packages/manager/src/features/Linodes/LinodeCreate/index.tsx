@@ -123,11 +123,13 @@ export const LinodeCreate = () => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
 
+      const newParams = { type: newTab };
+
       // Update tab "type" query param. (This changes the selected tab)
-      setParams({ type: newTab });
+      setParams(newParams);
 
       // Get the default values for the new tab and reset the form
-      defaultValues({ ...params, type: newTab }, queryClient, {
+      defaultValues(newParams, queryClient, {
         isLinodeInterfacesEnabled,
         isVMHostMaintenanceEnabled,
       }).then(form.reset);
