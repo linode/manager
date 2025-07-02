@@ -165,6 +165,11 @@ describe('VPC assign/unassign flows', () => {
           .should('be.visible')
           .click();
 
+        // Auto-assign IPv4 checkbox checked by default
+        cy.findByLabelText(
+          'Auto-assign a VPC IPv4 address for this Linode'
+        ).should('be.checked');
+
         cy.wait('@getLinodeConfigs');
 
         mockAppendConfigInterface(
