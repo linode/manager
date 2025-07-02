@@ -1,7 +1,10 @@
+import type { AccountCapability } from 'src/account';
+
 export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type AlertServiceType = 'dbaas' | 'linode';
+export type MetricsServiceType = 'dbaas' | 'linode' | 'nodebalancer';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -367,10 +370,18 @@ export interface CloudPulseAlertsPayload {
    * Array of enabled system alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  system: number[];
+  system?: number[];
   /**
    * Array of enabled user alert IDs in ACLP (Beta) mode.
    * Only included in Beta mode.
    */
-  user: number[];
+  user?: number[];
 }
+export const capabilityServiceTypeMapping: Record<
+  MetricsServiceType,
+  AccountCapability
+> = {
+  linode: 'Linodes',
+  dbaas: 'Managed Databases',
+  nodebalancer: 'NodeBalancers',
+};
