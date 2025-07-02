@@ -24,7 +24,33 @@ const props = {
   },
 } as UpgradeInterfacesDialogContentProps<SuccessDialogState>;
 
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn(),
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+    useLocation: queryMocks.useLocation,
+  };
+});
+
 describe('SuccessDialogContent', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({
+      linodeId: props.linodeId,
+    });
+  });
+
   it('can render the success content for a dry run', () => {
     const { getByText } = renderWithTheme(<SuccessDialogContent {...props} />);
 

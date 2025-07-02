@@ -1,8 +1,8 @@
 import { splitAt } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
@@ -25,7 +25,7 @@ interface Props {
 export const LinodeDiskActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const {
     disk,
@@ -62,18 +62,25 @@ export const LinodeDiskActionMenu = (props: Props) => {
     {
       disabled: readOnly || !!swapTooltip,
       onClick: () =>
-        history.push(
-          `/images/create/disk?selectedLinode=${linodeId}&selectedDisk=${disk.id}`
-        ),
+        navigate({
+          to: `/images/create/disk`,
+          search: {
+            selectedLinode: String(linodeId),
+            selectedDisk: String(disk.id),
+          },
+        }),
       title: 'Create Disk Image',
       tooltip: swapTooltip,
     },
     {
       disabled: readOnly,
       onClick: () => {
-        history.push(
-          `/linodes/${linodeId}/clone/disks?selectedDisk=${disk.id}`
-        );
+        navigate({
+          to: `/linodes/${linodeId}/clone/disks`,
+          search: {
+            selectedDisk: String(disk.id),
+          },
+        });
       },
       title: 'Clone',
     },

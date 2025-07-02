@@ -9,6 +9,7 @@ import {
 import { ui } from 'support/ui';
 import { cleanUp } from 'support/util/cleanup';
 import { createTestLinode } from 'support/util/linodes';
+import { randomLabel } from 'support/util/random';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -165,7 +166,7 @@ describe('linode storage tab', () => {
    * - Confirms that Cloud Manager UI automatically updates to reflect deleted disk.
    */
   it('delete disk', () => {
-    const diskName = 'cy-test-disk';
+    const diskName = randomLabel();
     cy.defer(() => createTestLinode({ image: null })).then((linode) => {
       interceptDeleteDisks(linode.id).as('deleteDisk');
       interceptAddDisks(linode.id).as('addDisk');
@@ -202,7 +203,7 @@ describe('linode storage tab', () => {
    * - Confirms that Cloud Manager UI automatically updates to reflect new disk.
    */
   it('add a disk', () => {
-    const diskName = 'cy-test-disk';
+    const diskName = randomLabel();
     cy.defer(() => createTestLinode({ image: null })).then((linode: Linode) => {
       interceptAddDisks(linode.id).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);

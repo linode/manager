@@ -1,5 +1,10 @@
 import { acceptEntityTransfer } from '@linode/api-v4/lib/entity-transfers';
-import { useProfile } from '@linode/queries';
+import {
+  entityTransfersQueryKey,
+  TRANSFER_FILTERS,
+  useProfile,
+  useTransferQuery,
+} from '@linode/queries';
 import { Checkbox, CircleProgress, ErrorState, Notice } from '@linode/ui';
 import { capitalize, pluralize } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,11 +12,6 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import {
-  queryKey,
-  TRANSFER_FILTERS,
-  useTransferQuery,
-} from 'src/queries/entityTransfers';
 import { sendEntityTransferReceiveEvent } from 'src/utilities/analytics/customEventAnalytics';
 import { parseAPIDate } from 'src/utilities/date';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -90,7 +90,7 @@ export const ConfirmTransferDialog = React.memo(
           // Update the received transfer table since we're already on the landing page
           queryClient.invalidateQueries({
             predicate: (query) =>
-              query.queryKey[0] === queryKey &&
+              query.queryKey[0] === entityTransfersQueryKey &&
               query.queryKey[2] === TRANSFER_FILTERS.received,
           });
           onClose();

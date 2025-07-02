@@ -1,4 +1,6 @@
 export { default as AlertIcon } from './alert.svg';
+export { default as CalendarScheduledIcon } from './calendar-schedule.svg';
+export { default as CalendarIcon } from './calendar.svg';
 export { default as CheckIcon } from './check.svg';
 export { default as CheckboxIcon } from './checkbox.svg';
 export { default as CheckboxCheckedIcon } from './checkboxChecked.svg';
@@ -13,6 +15,7 @@ export { default as ErrorIcon } from './error.svg';
 export { default as InfoOutlinedIcon } from './info-outlined.svg';
 export { default as InfoIcon } from './info.svg';
 export { default as LightBulbIcon } from './lightbulb.svg';
+export { default as LoadFailureIcon } from './load-failure.svg';
 export { default as PendingIcon } from './pending.svg';
 export { default as PlusSignIcon } from './plusSign.svg';
 export { default as RadioIcon } from './radio.svg';

@@ -2,10 +2,10 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
+import { destinationType } from 'src/features/DataStream/Shared/types';
 import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StreamCreateDelivery } from './StreamCreateDelivery';
-import { destinationType } from './types';
 
 describe('StreamCreateDelivery', () => {
   it('should render disabled Destination Type input with proper selection', async () => {
@@ -54,6 +54,7 @@ describe('StreamCreateDelivery', () => {
       useFormOptions: {
         defaultValues: {
           destination_label: '',
+          destination_type: destinationType.LinodeObjectStorage,
         },
       },
     });

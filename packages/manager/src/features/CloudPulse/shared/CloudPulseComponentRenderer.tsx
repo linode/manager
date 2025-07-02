@@ -5,6 +5,7 @@ import NullComponent from 'src/components/NullComponent';
 
 import { CloudPulseCustomSelect } from './CloudPulseCustomSelect';
 import { CloudPulseNodeTypeFilter } from './CloudPulseNodeTypeFilter';
+import { CloudPulsePortFilter } from './CloudPulsePortFilter';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
@@ -12,6 +13,7 @@ import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 
 import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from './CloudPulseNodeTypeFilter';
+import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
@@ -22,6 +24,7 @@ export interface CloudPulseComponentRendererProps {
   componentProps:
     | CloudPulseCustomSelectProps
     | CloudPulseNodeTypeFilterProps
+    | CloudPulsePortFilterProps
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTagsSelectProps
@@ -34,6 +37,7 @@ const Components: {
     React.ComponentType<
       | CloudPulseCustomSelectProps
       | CloudPulseNodeTypeFilterProps
+      | CloudPulsePortFilterProps
       | CloudPulseRegionSelectProps
       | CloudPulseResourcesSelectProps
       | CloudPulseTagsSelectProps
@@ -47,6 +51,7 @@ const Components: {
   relative_time_duration: CloudPulseTimeRangeSelect,
   resource_id: CloudPulseResourcesSelect,
   tags: CloudPulseTagsSelect,
+  port: CloudPulsePortFilter,
 };
 
 const buildComponent = (props: CloudPulseComponentRendererProps) => {

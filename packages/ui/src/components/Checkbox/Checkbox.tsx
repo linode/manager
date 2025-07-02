@@ -112,7 +112,7 @@ const StyledCheckbox = styled(_Checkbox, {
     props.readOnly && {
       svg: {
         'g rect:nth-of-type(2)': {
-          fill: theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Icon,
+          fill: `${theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Icon} !important`,
         },
         border: `1px solid ${theme.tokens.component.Checkbox.Indeterminated.ReadOnly.Border}`,
       },

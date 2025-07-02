@@ -3,7 +3,7 @@ import React from 'react';
 import { DateTimeRangePicker } from './DateTimeRangePicker';
 
 import type { DateTimeRangePickerProps } from './DateTimeRangePicker';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof DateTimeRangePicker> = {
   argTypes: {
@@ -34,6 +34,10 @@ const meta: Meta<typeof DateTimeRangePicker> = {
     startDateProps: {
       control: 'object',
       description: 'Props for start date input field.',
+    },
+    timeZoneProps: {
+      control: 'object',
+      description: 'Props for timezone selection.',
     },
   },
   component: DateTimeRangePicker,
@@ -92,7 +96,7 @@ export const Default: Story = {
 export const WithPresets: Story = {
   args: {
     presetsProps: {
-      defaultValue: 'Last 30 days',
+      defaultValue: 'last 30 days',
       enablePresets: true,
     },
   },

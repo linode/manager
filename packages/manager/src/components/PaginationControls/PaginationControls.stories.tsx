@@ -1,9 +1,9 @@
-import { useArgs } from '@storybook/preview-api';
 import * as React from 'react';
+import { useArgs } from 'storybook/preview-api';
 
 import { PaginationControls } from './PaginationControls';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Story = StoryObj<typeof PaginationControls>;
 

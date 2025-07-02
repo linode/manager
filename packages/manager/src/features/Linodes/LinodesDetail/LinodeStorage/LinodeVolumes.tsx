@@ -5,8 +5,8 @@ import {
 } from '@linode/queries';
 import { Box, Button, Paper, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useIsBlockStorageEncryptionFeatureEnabled } from 'src/components/Encryption/utils';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
@@ -29,15 +29,15 @@ import { VolumeDetailsDrawer } from 'src/features/Volumes/Drawers/VolumeDetailsD
 import { LinodeVolumeAddDrawer } from 'src/features/Volumes/Drawers/VolumeDrawer/LinodeVolumeAddDrawer';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useOrder } from 'src/hooks/useOrder';
-import { usePagination } from 'src/hooks/usePagination';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
+import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
 import type { Volume } from '@linode/api-v4';
 
 export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: linode } = useLinodeQuery(id);
@@ -48,20 +48,28 @@ export const LinodeVolumes = () => {
     id,
   });
 
-  const { handleOrderChange, order, orderBy } = useOrder(
-    {
-      order: 'desc',
-      orderBy: 'label',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'label',
+      },
+      from: '/linodes/$linodeId/storage',
     },
-    `${preferenceKey}-order`
-  );
+    preferenceKey: `${preferenceKey}-order`,
+    prefix: preferenceKey,
+  });
 
   const filter = {
     ['+order']: order,
     ['+order_by']: orderBy,
   };
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePaginationV2({
+    currentRoute: '/linodes/$linodeId/storage',
+    initialPage: 1,
+    preferenceKey,
+  });
 
   const regions = useRegionsQuery().data ?? [];
 

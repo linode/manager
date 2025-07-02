@@ -21,20 +21,28 @@ const props = {
 const queryClient = queryClientFactory();
 const queryString = 'menu-item-Managed';
 
+const queryMocks = vi.hoisted(() => ({
+  useIsIAMEnabled: vi.fn(() => ({
+    isIAMBeta: false,
+    isIAMEnabled: false,
+  })),
+  usePreferences: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('src/features/IAM/hooks/useIsIAMEnabled', () => ({
+  useIsIAMEnabled: queryMocks.useIsIAMEnabled,
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    usePreferences: queryMocks.usePreferences,
+  };
+});
+
 describe('PrimaryNav', () => {
   const preference: ManagerPreferences['collapsedSideNavProductFamilies'] = [];
-
-  const queryMocks = vi.hoisted(() => ({
-    usePreferences: vi.fn().mockReturnValue({}),
-  }));
-
-  vi.mock('@linode/queries', async () => {
-    const actual = await vi.importActual('@linode/queries');
-    return {
-      ...actual,
-      usePreferences: queryMocks.usePreferences,
-    };
-  });
 
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(

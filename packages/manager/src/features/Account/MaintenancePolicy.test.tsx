@@ -18,13 +18,19 @@ describe('MaintenancePolicy', () => {
     expect(getByText('Save Maintenance Policy')).toBeVisible();
   });
 
-  it("populates select with the account's default maintenance_policy_id value", async () => {
+  it("populates select with the account's default maintenance_policy value", async () => {
     const policies = [
-      maintenancePolicyFactory.build({ name: 'Power Off / Power On', id: 99 }),
-      maintenancePolicyFactory.build({ name: 'Migrate', id: 100 }),
+      maintenancePolicyFactory.build({
+        label: 'Power Off / Power On',
+        slug: 'linode/power_off_on',
+      }),
+      maintenancePolicyFactory.build({
+        label: 'Migrate',
+        slug: 'linode/migrate',
+      }),
     ];
     const accountSettings = accountSettingsFactory.build({
-      maintenance_policy_id: 99,
+      maintenance_policy: 'linode/power_off_on',
     });
 
     server.use(

@@ -7,7 +7,34 @@ import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { StackScriptSelectionList } from './StackScriptSelectionList';
 
+const queryMocks = vi.hoisted(() => ({
+  useLocation: vi.fn(),
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useLocation: queryMocks.useLocation,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
 describe('StackScriptSelectionList', () => {
+  beforeEach(() => {
+    queryMocks.useLocation.mockReturnValue({
+      pathname: '/linodes/create',
+    });
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('renders StackScripts returned by the API', async () => {
     const stackscripts = stackScriptFactory.buildList(5);
 
@@ -29,6 +56,9 @@ describe('StackScriptSelectionList', () => {
   });
 
   it('renders and selected a StackScript from query params if one is specified', async () => {
+    queryMocks.useSearch.mockReturnValue({
+      stackScriptID: '921609',
+    });
     const stackscript = stackScriptFactory.build();
 
     server.use(

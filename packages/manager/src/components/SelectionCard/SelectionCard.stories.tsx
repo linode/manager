@@ -8,7 +8,7 @@ import * as React from 'react';
 import { SelectionCard } from './SelectionCard';
 
 import type { SelectionCardProps } from './SelectionCard';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const iconOptions = {
   Alarm: () => <Alarm />,
