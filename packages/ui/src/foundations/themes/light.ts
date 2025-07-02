@@ -626,7 +626,7 @@ export const lightTheme: ThemeOptions = {
         root: {
           '&[aria-disabled="true"]': {
             '&[aria-describedby="button-tooltip"] svg': {
-              color: Alias.Content.Icon.Primary.Default,
+              color: Alias.Content.Icon.Secondary.Default,
             },
             '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,

@@ -1,5 +1,4 @@
 import { styled, SvgIcon } from '@mui/material';
-import { useTheme } from '@mui/material';
 import _Button from '@mui/material/Button';
 import * as React from 'react';
 import type { JSX } from 'react';
@@ -99,7 +98,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const showTooltip = alwaysShowTooltip || (disabled && Boolean(tooltipText));
-    const theme = useTheme();
 
     const handleTooltipAnalytics = () => {
       if (tooltipAnalyticsEvent) {
@@ -137,9 +135,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 ...sxEndIcon,
                 top: 1,
                 position: 'relative',
-                '&[data-testid="tooltip-info-icon"] *': {
-                  color: theme.tokens.alias.Content.Icon.Secondary.Default,
-                },
               }}
             />
           )) ||

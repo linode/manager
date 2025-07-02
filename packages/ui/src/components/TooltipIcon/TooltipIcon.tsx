@@ -185,9 +185,6 @@ export const TooltipIcon = (props: TooltipIconProps) => {
         size="large"
         sx={{
           ...sxTooltipIcon,
-          '&:hover *': {
-            color: theme.tokens.alias.Content.Icon.Primary.Hover,
-          },
         }}
       >
         {renderIcon}
