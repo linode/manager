@@ -23,7 +23,6 @@ export const StackScriptSelection = () => {
     updateParams({
       stackScriptID: undefined,
       subtype: tabs[index],
-      type: 'StackScripts',
     });
     // Reset the selected image, the selected StackScript, and the StackScript data when changing tabs.
     reset((prev) => ({
