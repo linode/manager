@@ -10,16 +10,16 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { AlertsPanel } from './AlertsPanel';
 
 interface Props {
-  isAclpAlertsBetaEditFlow: boolean;
+  handleIsAclpAlertsBetaLocal: (isBeta: boolean) => void;
+  isAclpAlertsBetaLocal: boolean;
   isAclpAlertsSupportedRegionLinode: boolean;
-  setIsAclpAlertsBetaEditFlow: (value: boolean) => void;
 }
 
 const LinodeAlerts = (props: Props) => {
   const {
-    isAclpAlertsBetaEditFlow,
+    handleIsAclpAlertsBetaLocal,
+    isAclpAlertsBetaLocal,
     isAclpAlertsSupportedRegionLinode,
-    setIsAclpAlertsBetaEditFlow,
   } = props;
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
@@ -38,15 +38,15 @@ const LinodeAlerts = (props: Props) => {
       {aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode && (
           <AclpPreferenceToggle
-            isAclpBetaLocal={isAclpAlertsBetaEditFlow}
-            setIsAclpBetaLocal={setIsAclpAlertsBetaEditFlow}
+            handleIsAclpAlertsBetaLocal={handleIsAclpAlertsBetaLocal}
+            isAclpAlertsBetaLocal={isAclpAlertsBetaLocal}
             type="alerts"
           />
         )}
 
       {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
-      isAclpAlertsBetaEditFlow ? (
+      isAclpAlertsBetaLocal ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId.toString()}

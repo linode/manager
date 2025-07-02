@@ -72,6 +72,8 @@ const LinodesDetailNavigation = () => {
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
+
+  // Alerts default to the value from a Linode API flag in the Edit flow
   const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
     React.useState<boolean>(linode?.is_alerts_beta ?? false);
 
@@ -198,11 +200,11 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/alerts')}>
                 <LinodeAlerts
-                  isAclpAlertsBetaEditFlow={isAclpAlertsBetaEditFlow}
+                  handleIsAclpAlertsBetaLocal={setIsAclpAlertsBetaEditFlow}
+                  isAclpAlertsBetaLocal={isAclpAlertsBetaEditFlow}
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }
-                  setIsAclpAlertsBetaEditFlow={setIsAclpAlertsBetaEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/settings')}>

@@ -285,15 +285,15 @@ export const LinodeCreate = () => {
             <Networking />
           )}
           <AdditionalOptions
-            isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow}
-            setIsAclpAlertsBetaCreateFlow={setIsAclpAlertsBetaCreateFlow}
+            handleIsAclpAlertsBetaLocal={setIsAclpAlertsBetaCreateFlow}
+            isAclpAlertsBetaLocal={isAclpAlertsBetaCreateFlow}
           />
           <Addons />
           <EUAgreement />
-          <Summary isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow} />
+          <Summary isAclpAlertsBetaLocal={isAclpAlertsBetaCreateFlow} />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow} />
+          <Actions isAclpAlertsBetaLocal={isAclpAlertsBetaCreateFlow} />
         </Stack>
       </form>
     </FormProvider>

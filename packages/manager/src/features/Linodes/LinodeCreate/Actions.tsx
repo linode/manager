@@ -18,11 +18,11 @@ import {
 
 import type { LinodeCreateFormValues } from './utilities';
 
-export const Actions = ({
-  isAclpAlertsBetaCreateFlow,
-}: {
-  isAclpAlertsBetaCreateFlow?: boolean;
-}) => {
+interface ActionProps {
+  isAclpAlertsBetaLocal?: boolean;
+}
+
+export const Actions = ({ isAclpAlertsBetaLocal }: ActionProps) => {
   const { params } = useLinodeCreateQueryParams();
   const [isAPIAwarenessModalOpen, setIsAPIAwarenessModalOpen] = useState(false);
 
@@ -83,7 +83,7 @@ export const Actions = ({
         payLoad={getLinodeCreatePayload(structuredClone(getValues()), {
           isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
           isAclpIntegration: aclpBetaServices?.linode?.alerts,
-          isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
+          isAclpAlertsPreferenceBeta: isAclpAlertsBetaLocal,
         })}
       />
     </Box>
