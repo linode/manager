@@ -1,11 +1,16 @@
 import { Autocomplete, Box, TextField } from '@linode/ui';
 import { capitalize } from '@linode/utilities';
 import { GridLegacy } from '@mui/material';
-import React, { useState } from 'react';
+import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import { handleKeyDown } from 'src/features/CloudPulse/Utils/utils';
+import {
+  PORT_HELPER_TEXT,
+  PORT_PLACEHOLDER_TEXT,
+  PORTS_HELPER_TEXT,
+  PORTS_PLACEHOLDER_TEXT,
+} from 'src/features/CloudPulse/Utils/constants';
 
 import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
@@ -37,17 +42,13 @@ interface DimensionFilterFieldProps {
 export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
   const { dataFieldDisabled, dimensionOptions, name, onFilterDelete } = props;
 
-  const { control, setValue: setFormValue } =
-    useFormContext<CreateAlertDefinitionForm>();
+  const { control, setValue } = useFormContext<CreateAlertDefinitionForm>();
 
   const dataFieldOptions =
     dimensionOptions.map((dimension) => ({
       label: dimension.label,
       value: dimension.dimension_label,
     })) ?? [];
-
-  const [value, setStateValue] = useState<string>('');
-  const [errorText, setErrorText] = useState<string | undefined>(undefined);
 
   const handleDataFieldChange = (
     selected: { label: string; value: string },
@@ -59,13 +60,13 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
       value: null,
     };
     if (operation === 'selectOption') {
-      setFormValue(`${name}.dimension_label`, selected.value, {
+      setValue(`${name}.dimension_label`, selected.value, {
         shouldValidate: true,
       });
-      setFormValue(`${name}.operator`, fieldValue.operator);
-      setFormValue(`${name}.value`, fieldValue.value);
+      setValue(`${name}.operator`, fieldValue.operator);
+      setValue(`${name}.value`, fieldValue.value);
     } else {
-      setFormValue(name, fieldValue);
+      setValue(name, fieldValue);
     }
   };
 
@@ -107,6 +108,19 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
 
   const valuePlaceholder = `${isTextField ? 'Enter' : 'Select'} a Value`;
 
+  const portsPlaceholderText =
+    dimensionFieldWatcher === 'port'
+      ? dimensionOperatorWatcher === 'in'
+        ? PORTS_PLACEHOLDER_TEXT
+        : PORT_PLACEHOLDER_TEXT
+      : valuePlaceholder;
+
+  const portsHelperText =
+    dimensionFieldWatcher === 'port'
+      ? dimensionOperatorWatcher === 'in'
+        ? PORTS_HELPER_TEXT
+        : PORT_HELPER_TEXT
+      : undefined;
   const resolveSelectedValues = (
     options: Item<string, string>[],
     value: null | string,
@@ -199,9 +213,6 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                 field.onChange(
                   operation === 'selectOption' ? newValue.value : null
                 );
-                if (operation === 'selectOption' || operation === 'clear') {
-                  setFormValue(`${name}.value`, null);
-                }
               }}
               options={dimensionOperatorOptions}
               placeholder="Select an Operator"
@@ -225,35 +236,21 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   data-qa-dimension-filter={`${name}-value`}
                   data-testid="value"
                   disabled={!dimensionFieldWatcher}
-                  errorText={errorText ?? fieldState.error?.message}
+                  errorText={fieldState.error?.message}
+                  helperText={!fieldState.error ? portsHelperText : undefined}
                   label="Value"
-                  onBlur={() => {
-                    setErrorText(undefined);
-                    field.onBlur();
-                  }}
-                  onChange={(event) => {
-                    const newValue = event.target.value;
-                    setStateValue(newValue);
-                    field.onChange(newValue);
-                  }}
-                  onDrop={(e) => e.preventDefault()}
-                  onKeyDown={
-                    dimensionFieldWatcher === 'port'
-                      ? handleKeyDown(
-                          value,
-                          setErrorText,
-                          dimensionOperatorWatcher ?? undefined
-                        )
-                      : undefined
-                  }
-                  placeholder={
-                    dimensionOperatorWatcher === 'in'
-                      ? dimensionFieldWatcher === 'port'
-                        ? 'e.g., 80,443,3000'
-                        : 'Enter Value(s) (e.g., abc, xyz)'
-                      : 'Enter a Value'
-                  }
+                  max={65535}
+                  min={1}
+                  onBlur={field.onBlur}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  placeholder={portsPlaceholderText}
                   sx={{ flex: 1, width: '256px' }}
+                  type={
+                    dimensionFieldWatcher === 'port' &&
+                    dimensionOperatorWatcher !== 'in'
+                      ? 'number'
+                      : 'text'
+                  }
                   value={field.value ?? ''}
                 />
               ) : (
