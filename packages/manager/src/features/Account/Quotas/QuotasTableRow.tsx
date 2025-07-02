@@ -92,7 +92,7 @@ export const QuotasTableRow = (props: QuotasTableRowProps) => {
           </Typography>
           <TooltipIcon
             placement="top"
-            status="help"
+            status="info"
             sxTooltipIcon={{
               position: 'relative',
               top: -2,
