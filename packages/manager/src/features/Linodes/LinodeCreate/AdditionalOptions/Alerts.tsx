@@ -7,7 +7,7 @@ import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle'
 import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/AlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { LinodeCreateFormValues } from '../../utilities';
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 interface AlertsProps {
