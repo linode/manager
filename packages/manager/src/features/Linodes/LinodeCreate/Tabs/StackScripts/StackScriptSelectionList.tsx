@@ -180,7 +180,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
               {searchParseError && (
-                <TooltipIcon status="error" text={searchParseError.message} />
+                <TooltipIcon status="warning" text={searchParseError.message} />
               )}
               <IconButton
                 aria-label="Clear"
