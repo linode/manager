@@ -24,7 +24,8 @@ export const ENABLE_MAINTENANCE_MODE =
  */
 export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
 
-export const DEFAULT_API_ROOT = 'https://api.linode.com/v4';
+export const API_ROOT =
+  import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
