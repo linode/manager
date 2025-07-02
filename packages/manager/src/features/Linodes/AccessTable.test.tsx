@@ -23,7 +23,7 @@ describe('AccessTable', () => {
     );
 
     // two tooltip buttons should appear
-    const tooltips = await findAllByTestId('HelpOutlineIcon');
+    const tooltips = await findAllByTestId('tooltip-info-icon');
     expect(tooltips).toHaveLength(2);
 
     await userEvent.click(tooltips[0]);
