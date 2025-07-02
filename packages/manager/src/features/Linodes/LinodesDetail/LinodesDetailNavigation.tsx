@@ -72,7 +72,7 @@ const LinodesDetailNavigation = () => {
   const { data: isAclpMetricsPreferenceBeta } = usePreferences(
     (preferences) => preferences?.isAclpMetricsBeta
   );
-  const [isAclpAlertsBetaLocalEditFlow, setIsAclpAlertsBetaLocalEditFlow] =
+  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
     React.useState<boolean>(linode?.is_alerts_beta ?? false);
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
@@ -113,7 +113,7 @@ const LinodesDetailNavigation = () => {
       chip:
         aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode &&
-        isAclpAlertsBetaLocalEditFlow ? (
+        isAclpAlertsBetaEditFlow ? (
           <BetaChip />
         ) : null,
       to: '/linodes/$linodeId/alerts',
@@ -198,11 +198,11 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/alerts')}>
                 <LinodeAlerts
+                  isAclpAlertsBetaEditFlow={isAclpAlertsBetaEditFlow}
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }
-                  isAclpBetaLocal={isAclpAlertsBetaLocalEditFlow}
-                  setIsAclpBetaLocal={setIsAclpAlertsBetaLocalEditFlow}
+                  setIsAclpAlertsBetaEditFlow={setIsAclpAlertsBetaEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/settings')}>
