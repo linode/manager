@@ -253,16 +253,7 @@ describe('Integration Tests for Nodebalancer Dashboard ', () => {
       .should('be.visible')
       .type(randomPort);
 
-    cy.wait([
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-      '@getMetrics',
-    ]);
+    cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
 
     cy.get('@getMetrics.all').then((calls) => {
       const lastFourCalls = (calls as unknown as Interception[]).slice(-4);
