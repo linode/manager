@@ -1,5 +1,13 @@
 import { useAccountSettings, useMutateAccountSettings } from '@linode/queries';
-import { BetaChip, Box, Button, Paper, Stack, Typography } from '@linode/ui';
+import {
+  BetaChip,
+  Box,
+  Button,
+  NewFeatureChip,
+  Paper,
+  Stack,
+  Typography,
+} from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -51,7 +59,7 @@ export const MaintenancePolicy = () => {
   return (
     <Paper data-testid="host-maintenance-policy">
       <Typography variant="h2">
-        Host Maintenance Policy {flags.vmHostMaintenance?.beta && <BetaChip />}
+        Host Maintenance Policy {getFeatureChip(flags.vmHostMaintenance || {})}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack mt={1} spacing={2}>
@@ -88,4 +96,13 @@ export const MaintenancePolicy = () => {
       </form>
     </Paper>
   );
+};
+
+export const getFeatureChip = (vmHostMaintenance: {
+  beta?: boolean;
+  new?: boolean;
+}) => {
+  if (vmHostMaintenance.beta) return <BetaChip />;
+  if (vmHostMaintenance.new) return <NewFeatureChip />;
+  return null;
 };
