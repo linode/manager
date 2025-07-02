@@ -8,7 +8,7 @@ const DEFAULT_LOGIN_ROOT = 'https://login.linode.com';
  *
  * Specify a `REACT_APP_LOGIN_ROOT` in your environment to set this value.
  *
- * In local dev, a this URL may be pulled from localstorage to allow for environment switching.
+ * In local dev, this URL may be pulled from localstorage to allow for environment switching.
  *
  * @returns The Login server's root URL
  * @default https://login.linode.com
