@@ -1,5 +1,6 @@
 import {
   Box,
+  Chip,
   FormControl,
   FormControlLabel,
   NewFeatureChip,
@@ -13,6 +14,7 @@ import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 
 export interface APLProps {
+  isSectionDisabled: boolean;
   setAPL: (apl: boolean) => void;
   setHighAvailability: (ha: boolean | undefined) => void;
 }
@@ -28,10 +30,10 @@ export const APLCopy = () => (
 );
 
 export const ApplicationPlatform = (props: APLProps) => {
-  const { setAPL, setHighAvailability } = props;
+  const { setAPL, setHighAvailability, isSectionDisabled } = props;
   const [selectedValue, setSelectedValue] = React.useState<
     'no' | 'yes' | undefined
-  >(undefined);
+  >(isSectionDisabled ? 'no' : undefined);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -53,18 +55,33 @@ export const ApplicationPlatform = (props: APLProps) => {
           <Typography data-testid="apl-label" variant="inherit">
             Akamai App Platform
           </Typography>
-          <NewFeatureChip />
+          {!isSectionDisabled && <NewFeatureChip />}
+          {isSectionDisabled && (
+            <Chip color="primary" label="Coming Soon" sx={{ ml: 1 }} />
+          )}
         </Box>
       </FormLabel>
       <APLCopy />
       <RadioGroup onChange={handleChange} value={selectedValue || ''}>
         <FormControlLabel
-          control={<Radio data-testid="apl-radio-button-yes" />}
+          control={
+            <Radio
+              checked={selectedValue === 'yes'}
+              data-testid="apl-radio-button-yes"
+            />
+          }
+          disabled={isSectionDisabled}
           label="Yes, enable Akamai App Platform"
           value="yes"
         />
         <FormControlLabel
-          control={<Radio data-testid="apl-radio-button-no" />}
+          control={
+            <Radio
+              checked={selectedValue === 'no'}
+              data-testid="apl-radio-button-no"
+            />
+          }
+          disabled={isSectionDisabled}
           label="No"
           value="no"
         />
