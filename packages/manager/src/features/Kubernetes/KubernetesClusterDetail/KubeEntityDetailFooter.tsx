@@ -134,6 +134,14 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
               <StyledLinkButton
                 disabled={isClusterReadOnly}
                 onClick={() => setControlPlaneACLDrawerOpen(true)}
+                sx={(theme) => ({
+                  '&:disabled': {
+                    '& g': {
+                      stroke: theme.tokens.alias.Content.Icon.Primary.Disabled,
+                    },
+                    color: theme.tokens.alias.Content.Text.Primary.Disabled,
+                  },
+                })}
               >
                 {buttonCopyACL}
               </StyledLinkButton>

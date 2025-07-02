@@ -1,14 +1,14 @@
+import { capabilityServiceTypeMapping } from '@linode/api-v4';
+
 import { RESOURCE_ID } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
 
 const TIME_DURATION = 'Time Range';
-export const DBAAS_CAPABILITY = 'Managed Databases';
-export const LINODE_CAPABILITY = 'Linodes';
 
 export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
-  capability: LINODE_CAPABILITY,
+  capability: capabilityServiceTypeMapping['linode'],
   filters: [
     {
       configuration: {
@@ -56,7 +56,7 @@ export const LINODE_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
 };
 
 export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
-  capability: DBAAS_CAPABILITY,
+  capability: capabilityServiceTypeMapping['dbaas'],
   filters: [
     {
       configuration: {
@@ -147,9 +147,30 @@ export const DBAAS_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'dbaas',
 };
 
+export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['nodebalancer'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'port',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        name: 'Port',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'e.g., 80,443,3000',
+        priority: 1,
+      },
+      name: 'Port',
+    },
+  ],
+  serviceType: 'nodebalancer',
+};
+
 export const FILTER_CONFIG: Readonly<
   Map<string, CloudPulseServiceTypeFilterMap>
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
   ['linode', LINODE_CONFIG],
+  ['nodebalancer', NODEBALANCER_CONFIG],
 ]);

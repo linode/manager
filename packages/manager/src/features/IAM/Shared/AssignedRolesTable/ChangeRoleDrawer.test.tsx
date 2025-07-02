@@ -119,7 +119,9 @@ describe('ChangeRoleDrawer', () => {
 
     // Check that the correct text is displayed for account_access
     expect(
-        screen.getByText(/Select a role you want the entities to be attached to./i)
+      screen.getByText(
+        /Select a role you want the entities to be attached to./i
+      )
 
       // screen.getByText('Select a role you want the entities to be attached to.')
     ).toBeVisible();

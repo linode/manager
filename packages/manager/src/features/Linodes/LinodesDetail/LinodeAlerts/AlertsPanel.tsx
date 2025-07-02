@@ -5,11 +5,14 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+// eslint-disable-next-line no-restricted-imports
+import { Prompt } from 'src/components/Prompt/Prompt';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -21,15 +24,14 @@ interface Props {
   /**
    * Optional Linode ID.
    * - If provided, the Alerts Panel will be in the edit flow mode.
-   * - If not provided, the Alerts Panel will be in the create flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode (read-only).
    */
   linodeId?: number;
 }
 
-export const LinodeSettingsAlertsPanel = (props: Props) => {
+export const AlertsPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { aclpBetaServices } = useFlags();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -123,11 +125,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'cpu_usage_state',
-      state: formik.values.cpu > 0,
+      state: (formik.values.cpu ?? 0) > 0,
       textInputLabel: 'cpu_usage_threshold',
       textTitle: 'Usage Threshold',
       title: 'CPU Usage',
-      value: formik.values.cpu,
+      value: formik.values.cpu ?? 0,
     },
     {
       copy: 'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
@@ -148,11 +150,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'disk_io_state',
-      state: formik.values.io > 0,
+      state: (formik.values.io ?? 0) > 0,
       textInputLabel: 'disk_io_threshold',
       textTitle: 'I/O Threshold',
       title: 'Disk I/O Rate',
-      value: formik.values.io,
+      value: formik.values.io ?? 0,
     },
     {
       copy: `Average incoming traffic over a 2 hour period exceeding this value triggers this
@@ -177,11 +179,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'incoming_traffic_state',
-      state: formik.values.network_in > 0,
+      state: (formik.values.network_in ?? 0) > 0,
       textInputLabel: 'incoming_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Incoming Traffic',
-      value: formik.values.network_in,
+      value: formik.values.network_in ?? 0,
     },
     {
       copy: `Average outbound traffic over a 2 hour period exceeding this value triggers this
@@ -206,11 +208,11 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'outbound_traffic_state',
-      state: formik.values.network_out > 0,
+      state: (formik.values.network_out ?? 0) > 0,
       textInputLabel: 'outbound_traffic_threshold',
       textTitle: 'Traffic Threshold',
       title: 'Outbound Traffic',
-      value: formik.values.network_out,
+      value: formik.values.network_out ?? 0,
     },
     {
       copy: `Percentage of network transfer quota used being greater than this value will trigger
@@ -235,52 +237,121 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
           !Number.isNaN(e.target.valueAsNumber) ? e.target.valueAsNumber : 0
         ),
       radioInputLabel: 'transfer_quota_state',
-      state: formik.values.transfer_quota > 0,
+      state: (formik.values.transfer_quota ?? 0) > 0,
       textInputLabel: 'transfer_quota_threshold',
       textTitle: 'Quota Threshold',
       title: 'Transfer Quota',
-      value: formik.values.transfer_quota,
+      value: formik.values.transfer_quota ?? 0,
     },
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = aclpBetaServices?.linode?.alerts
-    ? 'Default Alerts'
-    : 'Alerts';
+
+  const hasUnsavedChanges = formik.dirty;
+
+  const { proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasUnsavedChanges,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasUnsavedChanges) {
+        return false;
+      }
+
+      // Don't block navigation to the specific route
+      const isNavigatingToAllowedRoute =
+        next.routeId === '/linodes/$linodeId/alerts';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
+  });
+
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
+    }
+  }, [status, proceed]);
+
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
 
   return (
-    <Paper
-      sx={(theme) =>
-        isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
-      }
-    >
-      {!isCreateFlow && (
-        <Typography
-          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-          variant="h2"
-        >
-          {alertsHeading}
-        </Typography>
-      )}
-      {generalError && <Notice variant="error">{generalError}</Notice>}
-      {alertSections.map((p, idx) => (
-        <React.Fragment key={`alert-${idx}`}>
-          <AlertSection {...p} readOnly={isReadOnly || isCreateFlow} />
-          {idx !== alertSections.length - 1 ? <Divider /> : null}
-        </React.Fragment>
-      ))}
-      {!isCreateFlow && (
-        <StyledActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'alerts-save',
-            disabled: isReadOnly || !formik.dirty,
-            label: 'Save',
-            loading: isPending,
-            onClick: () => formik.handleSubmit(),
-          }}
-        />
-      )}
-    </Paper>
+    <>
+      {/* Use Prompt for now until Link is coupled with Tanstack router */}
+      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
+        {({ handleCancel, handleConfirm, isModalOpen }) => (
+          <ConfirmationDialog
+            actions={() => (
+              <ActionsPanel
+                primaryButtonProps={{
+                  label: 'Confirm',
+                  onClick: () => {
+                    handleProceedNavigation();
+                    handleConfirm();
+                  },
+                }}
+                secondaryButtonProps={{
+                  buttonType: 'outlined',
+                  label: 'Cancel',
+                  onClick: () => {
+                    handleCancelNavigation();
+                    handleCancel();
+                  },
+                }}
+              />
+            )}
+            onClose={() => {
+              handleCancelNavigation();
+              handleCancel();
+            }}
+            open={status === 'blocked' || isModalOpen}
+            title="Unsaved Changes"
+          >
+            <Typography variant="body1">
+              Are you sure you want to leave the page? You have unsaved changes.
+            </Typography>
+          </ConfirmationDialog>
+        )}
+      </Prompt>
+
+      <Paper
+        sx={(theme) =>
+          isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
+        }
+      >
+        {!isCreateFlow && (
+          <Typography
+            sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+            variant="h2"
+          >
+            Alerts
+          </Typography>
+        )}
+        {generalError && <Notice variant="error">{generalError}</Notice>}
+        {alertSections.map((alert, idx) => (
+          <React.Fragment key={`alert-${idx}`}>
+            <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
+            {idx !== alertSections.length - 1 ? <Divider /> : null}
+          </React.Fragment>
+        ))}
+        {!isCreateFlow && (
+          <StyledActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'alerts-save',
+              disabled: isReadOnly || !formik.dirty,
+              label: 'Save',
+              loading: isPending,
+              onClick: () => formik.handleSubmit(),
+            }}
+          />
+        )}
+      </Paper>
+    </>
   );
 };
 
