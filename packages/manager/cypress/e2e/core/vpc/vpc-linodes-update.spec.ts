@@ -300,9 +300,9 @@ describe('VPC assign/unassign flows', () => {
           .click();
 
         // Uncheck auto-assign checkbox and type in VPC IPv4
-        cy.findByLabelText(
-          'Auto-assign a VPC IPv4 address for this Linode'
-        ).click();
+        cy.findByLabelText('Auto-assign a VPC IPv4 address for this Linode')
+          .should('be.checked')
+          .click();
         cy.findByLabelText('VPC IPv4').should('be.visible').click();
         cy.focused().type(mockVPCInterface.ipv4?.vpc ?? '10.0.0.7');
 
