@@ -179,35 +179,6 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
     },
     {
       configuration: {
-        filterKey: 'protocol',
-        filterType: 'string',
-        isFilterable: true,
-        isMetricsFilter: false,
-        isMultiSelect: true,
-        name: 'Protocols',
-        isOptional: true,
-        neededInViews: [
-          CloudPulseAvailableViews.central,
-          CloudPulseAvailableViews.service,
-        ],
-        options: [
-          {
-            id: 'tcp',
-            label: 'TCP',
-          },
-          {
-            id: 'udp',
-            label: 'UDP',
-          },
-        ],
-        placeholder: 'Select Protocols',
-        priority: 3,
-        type: CloudPulseSelectTypes.static,
-      },
-      name: 'Protocols',
-    },
-    {
-      configuration: {
         filterKey: 'port',
         filterType: 'string',
         isFilterable: true,
