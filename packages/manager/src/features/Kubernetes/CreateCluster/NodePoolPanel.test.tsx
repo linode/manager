@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { extendedTypes } from 'src/__data__';
-import { renderWithTheme } from 'src/utilities/testHelpers';
+import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
 
 import { NodePoolPanel } from './NodePoolPanel';
 
@@ -21,7 +21,9 @@ const props: NodePoolPanelProps = {
 
 describe('NodePoolPanel', () => {
   it('should render plan heading', async () => {
-    const { findByText } = renderWithTheme(<NodePoolPanel {...props} />);
+    const { findByText } = renderWithThemeAndHookFormContext({
+      component: <NodePoolPanel {...props} />,
+    });
 
     await findByText('Dedicated CPU');
   });
