@@ -6,6 +6,7 @@ import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
 
+import { alertScopeLabelMap } from '../AlertsListing/constants';
 import { processMetricCriteria } from '../Utils/utils';
 import { MetricThreshold } from './MetricThreshold';
 
@@ -35,13 +36,30 @@ export const AlertInformationActionRow = (
   const { alert, handleToggle, status = false } = props;
   const { id, label, rule_criteria, service_type, type } = alert;
   const metricThreshold = processMetricCriteria(rule_criteria.rules);
+  const isAccountOrRegionLevelAlert =
+    alert.scope === 'region' || alert.scope === 'account';
 
   return (
     <TableRow data-qa-alert-cell={id} data-testid={id} key={`alert-row-${id}`}>
       <TableCell sx={{ width: 0 }}>
         <FormControlLabel
           control={
-            <Toggle checked={status} onChange={() => handleToggle(alert)} />
+            <Toggle
+              checked={status}
+              disabled={isAccountOrRegionLevelAlert}
+              onChange={() => handleToggle(alert)}
+              sx={(theme) => ({
+                '& .Mui-disabled+.MuiSwitch-track': {
+                  backgroundColor: theme.tokens.color.Brand[80] + '!important',
+                  opacity: '0.3 !important',
+                },
+              })}
+              tooltipText={
+                isAccountOrRegionLevelAlert
+                  ? `${alertScopeLabelMap[alert.scope]}-level alerts can't be enabled or disabled for a single entity.`
+                  : undefined
+              }
+            />
           }
           label={''}
         />
@@ -63,6 +81,7 @@ export const AlertInformationActionRow = (
           {capitalize(type)}
         </Typography>
       </TableCell>
+      <TableCell>{alertScopeLabelMap[alert.scope]}</TableCell>
     </TableRow>
   );
 };
