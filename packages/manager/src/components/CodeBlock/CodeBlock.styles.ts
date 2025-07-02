@@ -15,7 +15,6 @@ export const useCodeBlockStyles = makeStyles()((theme) => ({
     right: 0,
     paddingRight: `${theme.spacing(1)}`,
     top: `${theme.spacing(1)}`,
-    backgroundColor: theme.tokens.alias.Background.Neutral,
   },
   lineNumbers: {
     code: {

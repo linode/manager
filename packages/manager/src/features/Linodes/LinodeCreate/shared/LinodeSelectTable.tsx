@@ -70,11 +70,10 @@ export const LinodeSelectTable = (props: Props) => {
 
   const { params } = useLinodeCreateQueryParams();
 
-  const [preselectedLinodeId, setPreselectedLinodeId] = useState(
-    params.linodeID
+  const [query, setQuery] = useState(
+    params.linodeID ? `id = ${params.linodeID}` : ''
   );
 
-  const [query, setQuery] = useState(field.value?.label ?? '');
   const [linodeToPowerOff, setLinodeToPowerOff] = useState<Linode>();
 
   const pagination = usePaginationV2({
@@ -82,6 +81,7 @@ export const LinodeSelectTable = (props: Props) => {
     initialPage: 1,
     preferenceKey: 'linode-clone-select-table',
   });
+
   const { order, orderBy, handleOrderChange } = useOrderV2({
     initialRoute: {
       defaultOrder: {
@@ -93,12 +93,7 @@ export const LinodeSelectTable = (props: Props) => {
     preferenceKey: 'linode-clone-select-table',
   });
 
-  const { filter, filterError } = getLinodeXFilter(
-    preselectedLinodeId ? Number(preselectedLinodeId) : undefined,
-    query,
-    order,
-    orderBy
-  );
+  const { filter, filterError } = getLinodeXFilter(query, order, orderBy);
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -154,14 +149,16 @@ export const LinodeSelectTable = (props: Props) => {
         hideLabel
         isSearching={isFetching}
         label="Search"
-        onSearch={(value) => {
-          if (preselectedLinodeId) {
-            setPreselectedLinodeId(undefined);
+        onSearch={(query) => {
+          // If a Linode is selected and the user changes the search query, clear their current selection.
+          // We do this because the new list of Linodes may not include the selected one.
+          if (field.value?.id) {
+            field.onChange(null);
           }
-          setQuery(value);
+          setQuery(query);
         }}
         placeholder="Search"
-        value={preselectedLinodeId ? (field.value?.label ?? '') : query}
+        value={query}
       />
       <Box>
         {matchesMdUp ? (
@@ -253,7 +250,6 @@ export const LinodeSelectTable = (props: Props) => {
 };
 
 export const getLinodeXFilter = (
-  _preselectedLinodeId: number | undefined,
   query: string,
   order?: Order,
   orderBy?: string
