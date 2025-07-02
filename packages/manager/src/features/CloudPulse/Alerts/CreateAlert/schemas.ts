@@ -19,6 +19,8 @@ import type { AlertDefinitionGroup, AlertDefinitionType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
+const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
+
 // Validation schema for a single input port
 const singlePortSchema = string().test(
   'validate-single-port',
@@ -28,10 +30,9 @@ const singlePortSchema = string().test(
       return this.createError({ message: fieldErrorMessage });
     }
 
-    if (value.includes(',') || value.includes('.') || isNaN(Number(value))) {
-      return this.createError({ message: PORTS_ERROR_MESSAGE });
+    if (!DECIMAL_PORT_REGEX.test(value)) {
+      return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
     }
-
     const num = Number(value);
     if (!Number.isInteger(num) || num < 1 || num > 65535) {
       return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
@@ -50,7 +51,7 @@ const commaSeparatedPortListSchema = string().test(
       return this.createError({ message: fieldErrorMessage });
     }
 
-    if (value.trim().includes(' ')) {
+    if (value.includes(' ')) {
       return this.createError({ message: PORTS_ERROR_MESSAGE });
     }
 
@@ -79,11 +80,12 @@ const commaSeparatedPortListSchema = string().test(
       });
     }
     for (const port of ports) {
-      const num = Number(port);
-      if (isNaN(num)) {
+      const trimmedPort = port.trim();
+      if (!DECIMAL_PORT_REGEX.test(trimmedPort)) {
         return this.createError({ message: PORTS_HELPER_TEXT });
       }
 
+      const num = Number(trimmedPort);
       if (!Number.isInteger(num) || num < 1 || num > 65535) {
         return this.createError({ message: PORTS_RANGE_ERROR_MESSAGE });
       }
