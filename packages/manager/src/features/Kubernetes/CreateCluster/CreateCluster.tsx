@@ -18,8 +18,9 @@ import { createKubeClusterWithRequiredACLSchema } from '@linode/validation';
 import { Divider } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
-import { pick, remove, update } from 'ramda';
+import { pick } from 'ramda';
 import * as React from 'react';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -55,7 +56,6 @@ import { reportAgreementSigningError } from 'src/utilities/reportAgreementSignin
 
 import {
   CLUSTER_VERSIONS_DOCS_LINK,
-  DEFAULT_PLAN_COUNT,
   MAX_NODES_PER_POOL_ENTERPRISE_TIER,
   MAX_NODES_PER_POOL_STANDARD_TIER,
 } from '../constants';
@@ -84,6 +84,10 @@ import type { Region } from '@linode/api-v4/lib/regions';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
+type FormValues = {
+  nodePools: KubeNodePoolResponse[];
+};
+
 export const CreateCluster = () => {
   const flags = useFlags();
   const navigate = useNavigate();
@@ -95,7 +99,6 @@ export const CreateCluster = () => {
   const [selectedRegion, setSelectedRegion] = React.useState<
     Region | undefined
   >();
-  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [version, setVersion] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -125,10 +128,20 @@ export const CreateCluster = () => {
     React.useState(false);
   const [nodePoolConfigDrawerMode, setNodePoolConfigDrawerMode] =
     React.useState<NodePoolConfigDrawerMode>('add');
-  // const [typeCountMap, setTypeCountMap] = React.useState<Map<string, number>>(
-  //   new Map()
-  // );
   const [selectedType, setSelectedType] = React.useState<string>();
+
+  // Use React Hook Form for node pools to make updating pools and their configs easier.
+  // TODO: use RHF for the rest of the form.
+  const { control, watch, ...form } = useForm<FormValues>({
+    defaultValues: {
+      nodePools: [],
+    },
+  });
+  const nodePools = watch('nodePools');
+  const { update } = useFieldArray({
+    control,
+    name: 'nodePools',
+  });
 
   const {
     data: kubernetesHighAvailabilityTypesData,
@@ -162,8 +175,8 @@ export const CreateCluster = () => {
 
     // If a user adds > 100 nodes in the LKE-E flow but then switches to LKE, set the max node count to 100 for correct price display
     if (isLkeEnterpriseLAFeatureEnabled) {
-      setNodePools(
-        nodePools.map((nodePool) => ({
+      nodePools.forEach((nodePool, idx) =>
+        update(idx, {
           ...nodePool,
           count: Math.min(
             nodePool.count,
@@ -171,7 +184,7 @@ export const CreateCluster = () => {
               ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
               : MAX_NODES_PER_POOL_STANDARD_TIER
           ),
-        }))
+        })
       );
     }
   };
@@ -232,12 +245,6 @@ export const CreateCluster = () => {
     setIsNodePoolConfigDrawerOpen(isOpen);
     setSelectedType(planLabel);
   };
-
-  // const updatePlanCount = (planId: string, newCount: number) => {
-  //   setTypeCountMap(new Map(typeCountMap).set(planId, newCount));
-  //   setSelectedType(planId);
-  // };
-  // console.log({typeCountMap}, {nodePools}, {selectedType})
 
   const createCluster = async () => {
     if (ipV4Addr.some((ip) => ip.error) || ipV6Addr.some((ip) => ip.error)) {
@@ -341,22 +348,6 @@ export const CreateCluster = () => {
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
-  const addPool = (pool: KubeNodePoolResponse) => {
-    setNodePools([...nodePools, pool]);
-  };
-
-  const updatePool = (poolIdx: number, updatedPool: KubeNodePoolResponse) => {
-    const updatedPoolWithPrice = {
-      ...updatedPool,
-    };
-    setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
-  };
-
-  const removePool = (poolIdx: number) => {
-    const updatedPools = remove(poolIdx, 1, nodePools);
-    setNodePools(updatedPools);
-  };
-
   const updateLabel = (newLabel: string) => {
     // If the new label is an empty string, use undefined. This allows it to pass Yup validation.
     setLabel(newLabel ? newLabel : undefined);
@@ -400,7 +391,7 @@ export const CreateCluster = () => {
   }
 
   return (
-    <>
+    <FormProvider control={control} watch={watch} {...form}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"
@@ -413,7 +404,7 @@ export const CreateCluster = () => {
             <Notice variant="error">
               <ErrorMessage
                 entity={{ type: 'lkecluster_id' }}
-                formPayloadValues={{ node_pools: nodePools }}
+                formPayloadValues={{ node_pools: form.getValues('nodePools') }}
                 message={generalError}
               />
             </Notice>
@@ -587,12 +578,7 @@ export const CreateCluster = () => {
 
             <Divider sx={{ marginBottom: 4 }} />
             <NodePoolPanel
-              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               apiError={errorMap.node_pools}
-              getTypeCount={
-                (planId) => DEFAULT_PLAN_COUNT
-                // typeCountMap?.get(planId) ?? DEFAULT_PLAN_COUNT
-              }
               hasSelectedRegion={hasSelectedRegion}
               isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
@@ -637,7 +623,6 @@ export const CreateCluster = () => {
             pools={nodePools}
             region={selectedRegion?.id}
             regionsData={regionsData}
-            removePool={removePool}
             submitting={submitting}
             toggleHasAgreed={toggleHasAgreed}
             updateFor={[
@@ -647,28 +632,19 @@ export const CreateCluster = () => {
               nodePools,
               submitting,
               typesData,
-              updatePool,
-              removePool,
               createCluster,
               classes,
             ]}
-            updatePool={updatePool}
           />
         </Grid>
       </Grid>
       <NodePoolConfigDrawer
-        addPool={addPool}
-        getTypeCount={
-          (planId) => DEFAULT_PLAN_COUNT
-          // typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
-        }
         mode={nodePoolConfigDrawerMode}
         onClose={() => setIsNodePoolConfigDrawerOpen(false)}
         open={isNodePoolConfigDrawerOpen}
         planId={selectedType}
         selectedTier={selectedTier}
-        updatePool={updatePool}
       />
-    </>
+    </FormProvider>
   );
 };

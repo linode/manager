@@ -5,6 +5,7 @@ import {
 } from '@linode/queries';
 import { CircleProgress, Divider, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { Link } from 'src/components/Link';
@@ -37,10 +38,8 @@ export interface Props {
   pools: KubeNodePoolResponse[];
   region: string | undefined;
   regionsData: Region[];
-  removePool: (poolIdx: number) => void;
   submitting: boolean;
   toggleHasAgreed: () => void;
-  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
 export const KubeCheckoutBar = (props: Props) => {
@@ -53,11 +52,15 @@ export const KubeCheckoutBar = (props: Props) => {
     pools,
     region,
     regionsData,
-    removePool,
     submitting,
     toggleHasAgreed,
-    updatePool,
   } = props;
+
+  const { control } = useFormContext();
+  const { update, remove } = useFieldArray({
+    control,
+    name: 'nodePools',
+  });
 
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
@@ -149,7 +152,7 @@ export const KubeCheckoutBar = (props: Props) => {
             clusterTier={enterprisePrice ? 'enterprise' : 'standard'}
             key={idx}
             nodeCount={thisPool.count}
-            onRemove={() => removePool(idx)}
+            onRemove={() => remove(idx)}
             poolType={
               types?.find((thisType) => thisType.id === thisPool.type) || null
             }
@@ -164,7 +167,7 @@ export const KubeCheckoutBar = (props: Props) => {
                 : undefined
             }
             updateNodeCount={(updatedCount: number) =>
-              updatePool(idx, { ...thisPool, count: updatedCount })
+              update(idx, { ...thisPool, count: updatedCount })
             }
           />
         ))}

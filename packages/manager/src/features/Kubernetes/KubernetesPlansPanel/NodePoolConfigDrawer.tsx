@@ -1,7 +1,12 @@
 import { useSpecificTypes } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from 'react-hook-form';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
 import { extendType } from 'src/utilities/extendType';
@@ -13,25 +18,17 @@ import {
 } from '../constants';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
-import type {
-  KubeNodePoolResponse,
-  KubernetesTier,
-  NodePoolUpdateStrategy,
-} from '@linode/api-v4';
+import type { KubernetesTier, NodePoolUpdateStrategy } from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 export type NodePoolConfigDrawerMode = 'add' | 'edit';
 
 export interface Props {
-  addPool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
-  getTypeCount: (planId: string) => number;
   mode: NodePoolConfigDrawerMode;
-  // nodePool: KubeNodePoolResponseBeta | undefined;
   onClose: () => void;
   open: boolean;
   planId: string | undefined;
   selectedTier: KubernetesTier;
-  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
 }
 
 interface VersionUpdateFormFields {
@@ -40,21 +37,15 @@ interface VersionUpdateFormFields {
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
-  const {
-    addPool,
-    onClose,
-    open,
-    selectedTier,
-    planId,
-    getTypeCount,
-    mode,
-    // updatePool
-  } = props;
+  const { onClose, open, selectedTier, planId, mode } = props;
+
+  const parentForm = useFormContext();
+  const _nodePools = parentForm.watch('nodePools');
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {
-        nodeCount: planId ? getTypeCount(planId) : DEFAULT_PLAN_COUNT,
+        nodeCount: DEFAULT_PLAN_COUNT,
       },
     });
 
@@ -69,21 +60,24 @@ export const NodePoolConfigDrawer = (props: Props) => {
     if (!planId) {
       return;
     }
-    // If the plan has been added to the cluster, set the existing node count for editing.
-    // setValue('nodeCount', getTypeCount(planId));
+    // TODO: If the plan has been added to the cluster, set the existing node count for editing.
   }, [planId, open]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
       if (isAddMode) {
-        addPool({
-          count: values.nodeCount,
-          // eslint-disable-next-line sonarjs/pseudo-random
-          id: Math.random(),
-          type: planId,
-        });
+        parentForm.setValue('nodePools', [
+          ..._nodePools,
+          {
+            count: values.nodeCount,
+            // eslint-disable-next-line sonarjs/pseudo-random
+            id: Math.random(),
+            type: planId,
+          },
+        ]);
       } else {
-        // updatePool(planId, values.nodeCount)
+        // TODO: We're in edit mode, so find the existing pool in _nodePools based on
+        // selected pool index and set the updated node count/update strategy values.
       }
       handleClose();
     } catch (errResponse) {

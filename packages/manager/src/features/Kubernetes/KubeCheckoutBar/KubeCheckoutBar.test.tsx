@@ -21,10 +21,8 @@ const props: Props = {
   pools,
   region: 'us-east',
   regionsData: regionFactory.buildList(1),
-  removePool: vi.fn(),
   submitting: false,
   toggleHasAgreed: vi.fn(),
-  updatePool: vi.fn(),
 };
 
 const renderComponent = (_props: Props) =>
