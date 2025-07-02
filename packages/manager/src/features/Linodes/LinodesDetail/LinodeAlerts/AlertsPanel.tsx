@@ -5,11 +5,14 @@ import {
 } from '@linode/queries';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
+import { useBlocker } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
-import { useFlags } from 'src/hooks/useFlags';
+import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
+// eslint-disable-next-line no-restricted-imports
+import { Prompt } from 'src/components/Prompt/Prompt';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -21,15 +24,14 @@ interface Props {
   /**
    * Optional Linode ID.
    * - If provided, the Alerts Panel will be in the edit flow mode.
-   * - If not provided, the Alerts Panel will be in the create flow mode.
+   * - If not provided, the Alerts Panel will be in the create flow mode (read-only).
    */
   linodeId?: number;
 }
 
-export const LinodeSettingsAlertsPanel = (props: Props) => {
+export const AlertsPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const { aclpBetaServices } = useFlags();
 
   const { data: linode } = useLinodeQuery(
     linodeId ?? -1,
@@ -244,43 +246,112 @@ export const LinodeSettingsAlertsPanel = (props: Props) => {
   ].filter((thisAlert) => !thisAlert.hidden);
 
   const generalError = hasErrorFor('none');
-  const alertsHeading = aclpBetaServices?.linode?.alerts
-    ? 'Default Alerts'
-    : 'Alerts';
+
+  const hasUnsavedChanges = formik.dirty;
+
+  const { proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasUnsavedChanges,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasUnsavedChanges) {
+        return false;
+      }
+
+      // Don't block navigation to the specific route
+      const isNavigatingToAllowedRoute =
+        next.routeId === '/linodes/$linodeId/alerts';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
+  });
+
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
+    }
+  }, [status, proceed]);
+
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
 
   return (
-    <Paper
-      sx={(theme) =>
-        isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
-      }
-    >
-      {!isCreateFlow && (
-        <Typography
-          sx={(theme) => ({ mb: theme.spacingFunction(12) })}
-          variant="h2"
-        >
-          {alertsHeading}
-        </Typography>
-      )}
-      {generalError && <Notice variant="error">{generalError}</Notice>}
-      {alertSections.map((p, idx) => (
-        <React.Fragment key={`alert-${idx}`}>
-          <AlertSection {...p} readOnly={isReadOnly || isCreateFlow} />
-          {idx !== alertSections.length - 1 ? <Divider /> : null}
-        </React.Fragment>
-      ))}
-      {!isCreateFlow && (
-        <StyledActionsPanel
-          primaryButtonProps={{
-            'data-testid': 'alerts-save',
-            disabled: isReadOnly || !formik.dirty,
-            label: 'Save',
-            loading: isPending,
-            onClick: () => formik.handleSubmit(),
-          }}
-        />
-      )}
-    </Paper>
+    <>
+      {/* Use Prompt for now until Link is coupled with Tanstack router */}
+      <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
+        {({ handleCancel, handleConfirm, isModalOpen }) => (
+          <ConfirmationDialog
+            actions={() => (
+              <ActionsPanel
+                primaryButtonProps={{
+                  label: 'Confirm',
+                  onClick: () => {
+                    handleProceedNavigation();
+                    handleConfirm();
+                  },
+                }}
+                secondaryButtonProps={{
+                  buttonType: 'outlined',
+                  label: 'Cancel',
+                  onClick: () => {
+                    handleCancelNavigation();
+                    handleCancel();
+                  },
+                }}
+              />
+            )}
+            onClose={() => {
+              handleCancelNavigation();
+              handleCancel();
+            }}
+            open={status === 'blocked' || isModalOpen}
+            title="Unsaved Changes"
+          >
+            <Typography variant="body1">
+              Are you sure you want to leave the page? You have unsaved changes.
+            </Typography>
+          </ConfirmationDialog>
+        )}
+      </Prompt>
+
+      <Paper
+        sx={(theme) =>
+          isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
+        }
+      >
+        {!isCreateFlow && (
+          <Typography
+            sx={(theme) => ({ mb: theme.spacingFunction(12) })}
+            variant="h2"
+          >
+            Alerts
+          </Typography>
+        )}
+        {generalError && <Notice variant="error">{generalError}</Notice>}
+        {alertSections.map((alert, idx) => (
+          <React.Fragment key={`alert-${idx}`}>
+            <AlertSection {...alert} readOnly={isReadOnly || isCreateFlow} />
+            {idx !== alertSections.length - 1 ? <Divider /> : null}
+          </React.Fragment>
+        ))}
+        {!isCreateFlow && (
+          <StyledActionsPanel
+            primaryButtonProps={{
+              'data-testid': 'alerts-save',
+              disabled: isReadOnly || !formik.dirty,
+              label: 'Save',
+              loading: isPending,
+              onClick: () => formik.handleSubmit(),
+            }}
+          />
+        )}
+      </Paper>
+    </>
   );
 };
 
