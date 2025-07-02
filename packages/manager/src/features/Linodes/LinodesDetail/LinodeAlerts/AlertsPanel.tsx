@@ -282,6 +282,7 @@ export const AlertsPanel = (props: Props) => {
 
   return (
     <>
+      {/* Use Prompt for now until Link is coupled with Tanstack router */}
       <Prompt confirmWhenLeaving={true} when={hasUnsavedChanges}>
         {({ handleCancel, handleConfirm, isModalOpen }) => (
           <ConfirmationDialog
