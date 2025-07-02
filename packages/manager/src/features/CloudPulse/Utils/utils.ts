@@ -7,6 +7,15 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { compareArrays } from './FilterBuilder';
 
+import {
+  PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  PORTS_ERROR_MESSAGE,
+  PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZERO_ERROR_MESSAGE,
+  PORTS_LIMIT_ERROR_MESSAGE,
+  PORTS_RANGE_ERROR_MESSAGE,
+} from './constants';
+
 import type {
   Alert,
   APIError,
@@ -222,4 +231,67 @@ export const getAllDashboards = (
     error,
     isLoading,
   };
+};
+
+/**
+ * @param port
+ * @returns error message string
+ * @description Validates a single port and returns the error message
+ */
+export const isValidPort = (port: string): string | undefined => {
+  if (port === '') {
+    return undefined;
+  }
+
+  // Check for leading zeros
+  if (port.startsWith('0') && port !== '0') {
+    return PORTS_LEADING_ZERO_ERROR_MESSAGE;
+  }
+
+  const convertedPort = parseInt(port, 10);
+  if (!(1 <= convertedPort && convertedPort <= 65535)) {
+    return PORTS_RANGE_ERROR_MESSAGE;
+  }
+
+  return undefined;
+};
+
+/**
+ * @param ports
+ * @returns error message string
+ * @description Validates a comma-separated list of ports and sets the error message
+ */
+export const arePortsValid = (ports: string): string | undefined => {
+  if (ports === '') {
+    return undefined;
+  }
+
+  if (ports.startsWith(',')) {
+    return PORTS_LEADING_COMMA_ERROR_MESSAGE;
+  }
+
+  if (ports.includes(',,')) {
+    return PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE;
+  }
+
+  if (!/^[\d,]+$/.test(ports)) {
+    return PORTS_ERROR_MESSAGE;
+  }
+
+  const portList = ports.split(',');
+  let portLimitCount = 0;
+
+  for (const port of portList) {
+    const result = isValidPort(port);
+    if (result !== undefined) {
+      return result;
+    }
+    portLimitCount++;
+  }
+
+  if (portLimitCount > 15) {
+    return PORTS_LIMIT_ERROR_MESSAGE;
+  }
+
+  return undefined;
 };

@@ -15,8 +15,8 @@ import {
 } from '@linode/ui';
 import { Box, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
@@ -37,10 +37,10 @@ import { ScheduleSettings } from './ScheduleSettings';
 import type { LinodeBackup, PriceObject } from '@linode/api-v4/lib/linodes';
 
 export const LinodeBackups = () => {
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -75,10 +75,16 @@ export const LinodeBackups = () => {
   );
 
   const handleDeploy = (backup: LinodeBackup) => {
-    history.push(
-      '/linodes/create' +
-        `?type=Backups&backupID=${backup.id}&linodeID=${linode?.id}&typeID=${linode?.type}`
-    );
+    navigate({
+      to: '/linodes/create',
+      search: (prev) => ({
+        ...prev,
+        type: 'Backups',
+        backupID: backup.id.toString(),
+        linodeID: linode?.id,
+        typeID: linode?.type,
+      }),
+    });
   };
 
   const onRestoreBackup = (backup: LinodeBackup) => {

@@ -52,11 +52,6 @@ export const StyledMaintenanceTableCell = styled(TableCell, {
             minWidth: 200,
           },
         },
-        '& button': {
-          color: theme.textColors.linkActiveLight,
-          padding: '0 6px',
-          position: 'relative',
-        },
         [theme.breakpoints.up('md')]: {
           width: '20%',
         },

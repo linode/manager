@@ -16,7 +16,6 @@ import { useMediaQuery, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import OrderBy from 'src/components/OrderBy';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
@@ -24,8 +23,9 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCInterface } from 'src/hooks/useVPCInterface';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { AddIPDrawer } from './AddIPDrawer';
@@ -79,10 +79,11 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const isLinodeInterface = linode?.interface_generation === 'linode';
 
-  const { hasPublicLinodeInterface, isVPCOnlyLinode } = useVPCInterface({
-    isLinodeInterface,
-    linodeId: linodeID,
-  });
+  const { isUnreachablePublicIPv4, isUnreachablePublicIPv6 } =
+    useDetermineUnreachableIPs({
+      isLinodeInterface,
+      linodeId: linodeID,
+    });
 
   const [selectedIP, setSelectedIP] = React.useState<IPAddress>();
   const [selectedRange, setSelectedRange] = React.useState<IPRange>();
@@ -134,6 +135,20 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
     openRemoveIPRangeDialog,
   };
 
+  const ipDisplay = ipResponseToDisplayRows(ips);
+
+  const { sortedData, order, orderBy, handleOrderChange } = useOrderV2({
+    data: ipDisplay,
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'type',
+      },
+      from: '/linodes/$linodeId/networking',
+    },
+    preferenceKey: 'linode-ip-addresses',
+  });
+
   if (isLoading) {
     return <CircleProgress />;
   }
@@ -148,8 +163,6 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
 
   const showAddIPButton =
     !isLinodeInterfacesEnabled || linode?.interface_generation !== 'linode';
-
-  const ipDisplay = ipResponseToDisplayRows(ips);
 
   return (
     <Box>
@@ -219,53 +232,40 @@ export const LinodeIPAddresses = (props: LinodeIPAddressesProps) => {
         )}
       </Paper>
       {/* @todo: It'd be nice if we could always sort by public -> private. */}
-      <OrderBy
-        data={ipDisplay}
-        order="asc"
-        orderBy="type"
-        preferenceKey={'linode-network-ip-table'}
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          return (
-            <Table aria-label="Linode IP Addresses" id={ipTableId}>
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ width: '15%' }}>Address</TableCell>
-                  <TableSortCell
-                    active={orderBy === 'type'}
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    label="type"
-                    sx={{ width: '10%' }}
-                  >
-                    Type
-                  </TableSortCell>
-                  <TableCell sx={{ width: '10%' }}>Default Gateway</TableCell>
-                  <TableCell sx={{ width: '10%' }}>Subnet Mask</TableCell>
-                  <TableCell sx={{ width: '20%' }}>Reverse DNS</TableCell>
-                  <TableCell sx={{ width: '20%' }} />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {orderedData.map((ipDisplay) => (
-                  <LinodeIPAddressRow
-                    {...ipDisplay}
-                    {...handlers}
-                    hasPublicLinodeInterface={hasPublicLinodeInterface}
-                    isLinodeInterface={isLinodeInterface}
-                    isVPCOnlyLinode={
-                      isVPCOnlyLinode && ipDisplay.type === 'Public – IPv4'
-                    }
-                    key={`${ipDisplay.address}-${ipDisplay.type}`}
-                    linodeId={linodeID}
-                    readOnly={isLinodesGrantReadOnly}
-                  />
-                ))}
-              </TableBody>
-            </Table>
-          );
-        }}
-      </OrderBy>
+      <Table aria-label="Linode IP Addresses" id={ipTableId}>
+        <TableHead>
+          <TableRow>
+            <TableCell sx={{ width: '15%' }}>Address</TableCell>
+            <TableSortCell
+              active={orderBy === 'type'}
+              direction={order}
+              handleClick={handleOrderChange}
+              label="type"
+              sx={{ width: '10%' }}
+            >
+              Type
+            </TableSortCell>
+            <TableCell sx={{ width: '10%' }}>Default Gateway</TableCell>
+            <TableCell sx={{ width: '10%' }}>Subnet Mask</TableCell>
+            <TableCell sx={{ width: '20%' }}>Reverse DNS</TableCell>
+            <TableCell sx={{ width: '20%' }} />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(sortedData ?? []).map((ipDisplay) => (
+            <LinodeIPAddressRow
+              {...ipDisplay}
+              {...handlers}
+              isLinodeInterface={isLinodeInterface}
+              isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+              isUnreachablePublicIPv6={isUnreachablePublicIPv6}
+              key={`${ipDisplay.address}-${ipDisplay.type}`}
+              linodeId={linodeID}
+              readOnly={isLinodesGrantReadOnly}
+            />
+          ))}
+        </TableBody>
+      </Table>
       <ViewIPDrawer
         ip={selectedIP}
         onClose={() => setIsIPDrawerOpen(false)}
