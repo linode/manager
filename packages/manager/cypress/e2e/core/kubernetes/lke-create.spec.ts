@@ -462,7 +462,7 @@ describe('LKE Cluster Creation with APL enabled', () => {
     ui.regionSelect.find().click().type(`${clusterRegion.label}{enter}`);
 
     cy.findByTestId('apl-label').should('have.text', 'Akamai App Platform');
-    cy.findByTestId('apl-new-feature-chip')
+    cy.findByTestId('newFeatureChip')
       .should('be.visible')
       .should('have.text', 'new');
     cy.findByTestId('apl-radio-button-yes').should('be.visible').click();
