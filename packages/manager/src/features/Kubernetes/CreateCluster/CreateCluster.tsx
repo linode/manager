@@ -585,43 +585,41 @@ export const CreateCluster = () => {
           data-testid="kube-checkout-bar"
           size={{ lg: 3, md: 12, sm: 12, xs: 12 }}
         >
-          <Paper sx={{ position: 'sticky', top: 0 }}>
-            <KubeCheckoutBar
-              createCluster={createCluster}
-              enterprisePrice={
-                isLkeEnterpriseLAFeatureEnabled &&
-                selectedTier === 'enterprise' &&
-                lkeEnterpriseType?.price.monthly
-                  ? lkeEnterpriseType?.price.monthly
-                  : undefined
-              }
-              hasAgreed={hasAgreed}
-              highAvailability={highAvailability}
-              highAvailabilityPrice={
-                isErrorKubernetesTypes || !highAvailabilityPrice
-                  ? UNKNOWN_PRICE
-                  : highAvailabilityPrice
-              }
-              pools={nodePools}
-              region={selectedRegion?.id}
-              regionsData={regionsData}
-              removePool={removePool}
-              submitting={submitting}
-              toggleHasAgreed={toggleHasAgreed}
-              updateFor={[
-                hasAgreed,
-                highAvailability,
-                selectedRegion?.id,
-                nodePools,
-                submitting,
-                typesData,
-                updatePool,
-                removePool,
-                createCluster,
-              ]}
-              updatePool={updatePool}
-            />
-          </Paper>
+          <KubeCheckoutBar
+            createCluster={createCluster}
+            enterprisePrice={
+              isLkeEnterpriseLAFeatureEnabled &&
+              selectedTier === 'enterprise' &&
+              lkeEnterpriseType?.price.monthly
+                ? lkeEnterpriseType?.price.monthly
+                : undefined
+            }
+            hasAgreed={hasAgreed}
+            highAvailability={highAvailability}
+            highAvailabilityPrice={
+              isErrorKubernetesTypes || !highAvailabilityPrice
+                ? UNKNOWN_PRICE
+                : highAvailabilityPrice
+            }
+            pools={nodePools}
+            region={selectedRegion?.id}
+            regionsData={regionsData}
+            removePool={removePool}
+            submitting={submitting}
+            toggleHasAgreed={toggleHasAgreed}
+            updateFor={[
+              hasAgreed,
+              highAvailability,
+              selectedRegion?.id,
+              nodePools,
+              submitting,
+              typesData,
+              updatePool,
+              removePool,
+              createCluster,
+            ]}
+            updatePool={updatePool}
+          />
         </Grid>
       </Grid>
     </>

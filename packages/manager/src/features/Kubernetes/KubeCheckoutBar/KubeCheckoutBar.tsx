@@ -184,7 +184,7 @@ export const KubeCheckoutBar = (props: Props) => {
               See pricing
             </Link>
             .
-            <Divider spacingTop={16} />
+            <Divider spacingBottom={0} spacingTop={16} />
           </Box>
         )}
       </Stack>
