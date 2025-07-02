@@ -5,8 +5,6 @@ import React from 'react';
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { compareArrays } from './FilterBuilder';
-
 import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
@@ -15,6 +13,7 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
+import { compareArrays } from './FilterBuilder';
 
 import type {
   Alert,
