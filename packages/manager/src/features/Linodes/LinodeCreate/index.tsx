@@ -296,7 +296,9 @@ export const LinodeCreate = () => {
           />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions />
+          <Actions
+            isAclpAlertsBetaLocalCreateFlow={isAclpAlertsBetaLocalCreateFlow}
+          />
         </Stack>
       </form>
     </FormProvider>
