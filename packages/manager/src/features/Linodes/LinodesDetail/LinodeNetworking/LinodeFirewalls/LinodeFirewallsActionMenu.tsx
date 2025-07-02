@@ -16,7 +16,6 @@ export const LinodeFirewallsActionMenu = (
 ) => {
   const { firewallID, onUnassign } = props;
 
-  // const { data: grants } = useGrants();
   const { permissions } = usePermissions(
     'firewall',
     ['delete_firewall_device'],

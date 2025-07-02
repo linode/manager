@@ -1,10 +1,52 @@
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import React from 'react';
+
 import { ipAddressFactory } from 'src/factories/networking';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { createType, ipResponseToDisplayRows } from './LinodeIPAddresses';
+import { LinodeIPAddresses } from './LinodeIPAddresses';
 import { listIPv6InRange } from './LinodeIPAddressRow';
 
 import type { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 
+const loadingTestId = 'circle-progress';
+const navigate = vi.fn();
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+  };
+});
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      assign_ips: false,
+      allocate_linode_ip_address: false,
+    },
+  })),
+  useNavigate: vi.fn(() => navigate),
+  useFlags: vi.fn().mockReturnValue({}),
+  useLinodeQuery: vi.fn().mockReturnValue({}),
+}));
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+vi.mock('src/hooks/useFlags', () => {
+  const actual = vi.importActual('src/hooks/useFlags');
+  return {
+    ...actual,
+    useFlags: queryMocks.useFlags,
+    useLinodeQuery: queryMocks.useLinodeQuery,
+  };
+});
+beforeAll(() => mockMatchMedia());
 describe('listIPv6InRange utility function', () => {
   const ipv4List = ipAddressFactory.buildList(4);
   const ipv6Range = ipAddressFactory.build({
@@ -101,5 +143,55 @@ describe('createType utility function', () => {
 
     expect(createType(ipv6, 'SLAAC')).toBe('Public – IPv6 – SLAAC');
     expect(createType(ipv6, 'Link Local')).toBe('Link Local – IPv6');
+  });
+
+  it('should disable "IP Transfer" button if the user does not have assign_ips permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        ...queryMocks.userPermissions().permissions,
+        assign_ips: false,
+      },
+    });
+
+    const { queryByTestId } = await renderWithThemeAndRouter(
+      <LinodeIPAddresses linodeID={1} />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    const menuButton = screen.getByLabelText(/Linode IP Address Actions/i);
+    await userEvent.click(menuButton);
+
+    const ipTransferBtn = screen.getByTestId('IP Transfer');
+    expect(ipTransferBtn).toBeInTheDocument();
+    expect(ipTransferBtn).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should disable "Add an IP Address" button if the user does not have allocate_linode_ip_address permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        ...queryMocks.userPermissions().permissions,
+        allocate_linode_ip_address: false,
+      },
+    });
+
+    const { queryByTestId } = await renderWithThemeAndRouter(
+      <LinodeIPAddresses linodeID={1} />
+    );
+
+    const loadingState = queryByTestId(loadingTestId);
+    if (loadingState) {
+      await waitForElementToBeRemoved(loadingState);
+    }
+
+    const menuButton = screen.getByLabelText(/Linode IP Address Actions/i);
+    await userEvent.click(menuButton);
+
+    const ipTransferBtn = screen.getByTestId('Add an IP Address');
+    expect(ipTransferBtn).toBeInTheDocument();
+    expect(ipTransferBtn).toHaveAttribute('aria-disabled', 'true');
   });
 });
