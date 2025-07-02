@@ -36,13 +36,13 @@ export const DimensionFilters = (props: DimensionFilterProps) => {
 
   const dimensionFilterWatcher = useWatch({ control, name });
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" gap={1}>
       <Typography variant="h3">
         Dimension Filter
         <Typography component="span"> (optional)</Typography>
       </Typography>
 
-      <Stack gap={1}>
+      <Stack gap={1} mt={0}>
         {fields?.length > 0 &&
           fields.map((field, index) => (
             <DimensionFilterField
