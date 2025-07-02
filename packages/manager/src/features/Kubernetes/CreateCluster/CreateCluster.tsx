@@ -493,6 +493,7 @@ export const CreateCluster = () => {
                 <StyledStackWithTabletBreakpoint>
                   <Stack>
                     <ApplicationPlatform
+                      isSectionDisabled={!isAPLSupported}
                       setAPL={setAplEnabled}
                       setHighAvailability={setHighAvailability}
                     />
