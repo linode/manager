@@ -238,7 +238,6 @@ export const ContactInformation = React.memo((props: Props) => {
                   {taxIdIsVerifyingNotification && (
                     <TooltipIcon
                       icon={<StyledAutorenewIcon />}
-                      status="other"
                       text={taxIdIsVerifyingNotification.label}
                     />
                   )}
