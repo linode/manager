@@ -17,7 +17,10 @@ import { AddFirewallForm } from './AddFirewallForm';
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
 
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
-
+const NO_PERMISSIONS_TOOLTIP_TEXT =
+  "You don't have permissions to add Firewall.";
+const MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT =
+  'Linodes can only have one Firewall assigned.';
 interface LinodeFirewallsProps {
   linodeID: number;
 }
@@ -100,8 +103,8 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
           onClick={() => setIsAddFirewalDrawerOpen(true)}
           tooltipText={
             !permissions.apply_linode_firewalls
-              ? `You don't have permissions to add Firewall.`
-              : 'Linodes can only have one Firewall assigned.'
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT
           }
         >
           Add Firewall
