@@ -73,7 +73,7 @@ export const AddPaymentMethodDrawer = (props: Props) => {
   const renderError = (errorMsg: string) => {
     return (
       <TooltipIcon
-        status="error"
+        status="warning"
         sxTooltipIcon={sxTooltipIcon}
         text={errorMsg}
       />

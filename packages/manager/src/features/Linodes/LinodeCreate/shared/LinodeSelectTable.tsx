@@ -93,12 +93,7 @@ export const LinodeSelectTable = (props: Props) => {
     preferenceKey: 'linode-clone-select-table',
   });
 
-  const { filter, filterError } = getLinodeXFilter(
-    undefined,
-    query,
-    order,
-    orderBy
-  );
+  const { filter, filterError } = getLinodeXFilter(query, order, orderBy);
 
   const { data, error, isFetching, isLoading } = useLinodesQuery(
     {
@@ -255,7 +250,6 @@ export const LinodeSelectTable = (props: Props) => {
 };
 
 export const getLinodeXFilter = (
-  _preselectedLinodeId: number | undefined,
   query: string,
   order?: Order,
   orderBy?: string
