@@ -58,7 +58,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
   }, [serviceMetadata, maxScrapingInterval]);
 
   const getEvaluationPeriodOptions = React.useMemo(() => {
-    const options = serviceMetadata?.evaluation_periods_seconds ?? [];
+    const options = serviceMetadata?.evaluation_period_seconds ?? [];
     return options
       .filter((value) => value >= maxScrapingInterval)
       .map((value) => ({
