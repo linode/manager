@@ -60,7 +60,7 @@ export const ApplicationPlatform = (props: APLProps) => {
       <RadioGroup onChange={handleChange} value={selectedValue || ''}>
         <FormControlLabel
           control={<Radio data-testid="apl-radio-button-yes" />}
-          label="Yes, enable Akamai App Platform."
+          label="Yes, enable Akamai App Platform"
           value="yes"
         />
         <FormControlLabel
