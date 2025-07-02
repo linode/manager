@@ -121,7 +121,6 @@ export const LinodeRow = (props: Props) => {
           <TooltipIcon
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
-            status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
               <LinodeMaintenanceText
@@ -140,7 +139,6 @@ export const LinodeRow = (props: Props) => {
                 ? statusTooltipIcons.pending
                 : statusTooltipIcons.scheduled
             }
-            status="other"
             sx={{ tooltip: { maxWidth: 300 } }}
             text={
               maintenance?.status === 'pending' ? (

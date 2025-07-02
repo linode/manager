@@ -160,7 +160,7 @@ export const DatabaseVPCSelector = (props: DatabaseVPCSelectorProps) => {
           value={selectedVPC ?? null}
         />
         <TooltipIcon
-          status="help"
+          status="info"
           sxTooltipIcon={{
             marginTop: getVPCTooltipIconMargin(),
             padding: '0px 8px',
