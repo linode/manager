@@ -17,9 +17,9 @@ import { getLinodePrice } from './utilities';
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const Summary = ({
-  isAclpAlertsBetaLocalCreateFlow,
+  isAclpAlertsBetaCreateFlow,
 }: {
-  isAclpAlertsBetaLocalCreateFlow?: boolean;
+  isAclpAlertsBetaCreateFlow?: boolean;
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -101,7 +101,7 @@ export const Summary = ({
   const hasBetaAclpAlertsAssigned =
     aclpBetaServices?.linode?.alerts &&
     isAclpAlertsSupportedRegionLinode &&
-    isAclpAlertsBetaLocalCreateFlow;
+    isAclpAlertsBetaCreateFlow;
 
   const totalBetaAclpAlertsAssignedCount =
     (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);

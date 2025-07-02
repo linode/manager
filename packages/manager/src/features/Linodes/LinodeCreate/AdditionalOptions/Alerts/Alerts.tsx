@@ -11,11 +11,11 @@ import type { LinodeCreateFormValues } from '../../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 export const Alerts = ({
-  isAclpAlertsBetaLocalCreateFlow,
-  setIsAclpAlertsBetaLocalCreateFlow,
+  isAclpAlertsBetaCreateFlow,
+  setIsAclpAlertsBetaCreateFlow,
 }: {
-  isAclpAlertsBetaLocalCreateFlow: boolean;
-  setIsAclpAlertsBetaLocalCreateFlow: (value: boolean) => void;
+  isAclpAlertsBetaCreateFlow: boolean;
+  setIsAclpAlertsBetaCreateFlow: (value: boolean) => void;
 }) => {
   const { aclpBetaServices } = useFlags();
 
@@ -35,7 +35,7 @@ export const Alerts = ({
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
+        aclpBetaServices?.linode?.alerts && isAclpAlertsBetaCreateFlow ? (
           <BetaChip />
         ) : undefined
       }
@@ -44,12 +44,12 @@ export const Alerts = ({
     >
       {aclpBetaServices?.linode?.alerts && (
         <AclpPreferenceToggle
-          isAclpBetaLocal={isAclpAlertsBetaLocalCreateFlow}
-          setIsAclpBetaLocal={setIsAclpAlertsBetaLocalCreateFlow}
+          isAclpBetaLocal={isAclpAlertsBetaCreateFlow}
+          setIsAclpBetaLocal={setIsAclpAlertsBetaCreateFlow}
           type="alerts"
         />
       )}
-      {aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocalCreateFlow ? (
+      {aclpBetaServices?.linode?.alerts && isAclpAlertsBetaCreateFlow ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

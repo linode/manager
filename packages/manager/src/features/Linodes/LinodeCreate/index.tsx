@@ -84,10 +84,11 @@ export const LinodeCreate = () => {
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const [isAclpAlertsBetaLocalCreateFlow, setIsAclpAlertsBetaLocalCreateFlow] =
-    React.useState<boolean>(false);
-
   const { aclpBetaServices } = useFlags();
+
+  // Alerts always defaults to 'legacy' mode in the Create Flow
+  const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
+    React.useState<boolean>(false);
 
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -137,7 +138,7 @@ export const LinodeCreate = () => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpBetaServices?.linode?.alerts,
-      isAclpAlertsPreferenceBeta: isAclpAlertsBetaLocalCreateFlow,
+      isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
     });
 
     try {
@@ -284,21 +285,15 @@ export const LinodeCreate = () => {
             <Networking />
           )}
           <AdditionalOptions
-            isAclpAlertsBetaLocalCreateFlow={isAclpAlertsBetaLocalCreateFlow}
-            setIsAclpAlertsBetaLocalCreateFlow={
-              setIsAclpAlertsBetaLocalCreateFlow
-            }
+            isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow}
+            setIsAclpAlertsBetaCreateFlow={setIsAclpAlertsBetaCreateFlow}
           />
           <Addons />
           <EUAgreement />
-          <Summary
-            isAclpAlertsBetaLocalCreateFlow={isAclpAlertsBetaLocalCreateFlow}
-          />
+          <Summary isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow} />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions
-            isAclpAlertsBetaLocalCreateFlow={isAclpAlertsBetaLocalCreateFlow}
-          />
+          <Actions isAclpAlertsBetaCreateFlow={isAclpAlertsBetaCreateFlow} />
         </Stack>
       </form>
     </FormProvider>
