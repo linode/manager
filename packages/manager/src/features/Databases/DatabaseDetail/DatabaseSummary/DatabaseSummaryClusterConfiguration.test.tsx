@@ -23,16 +23,12 @@ const queryMocks = vi.hoisted(() => ({
   useRegionsQuery: vi.fn().mockReturnValue({}),
 }));
 
-vi.mock('@linode/queries', async (importOriginal) => ({
-  ...(await importOriginal()),
-  useRegionsQuery: queryMocks.useRegionsQuery,
-}));
-
 vi.mock(import('@linode/queries'), async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
     useDatabaseTypesQuery: queryMocks.useDatabaseTypesQuery,
+    useRegionsQuery: queryMocks.useRegionsQuery,
   };
 });
 
