@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
 
+import type { TypographyProps } from '@linode/ui';
 import type { SxProps, Theme } from '@mui/material/styles';
 
 export interface DisplayPriceProps {
@@ -26,13 +27,18 @@ export interface DisplayPriceProps {
    * The price to display.
    */
   price: '--.--' | number;
+  /**
+   * Typography variant.
+   * @default h3
+   */
+  variant?: TypographyProps['variant'];
 }
 
 export const displayPrice = (price: number) => `$${price.toFixed(2)}`;
 
 export const DisplayPrice = (props: DisplayPriceProps) => {
   const theme = useTheme<Theme>();
-  const { decimalPlaces, fontSize, interval, price } = props;
+  const { decimalPlaces, fontSize, interval, price, variant = 'h3' } = props;
 
   const sx: SxProps = {
     color: theme.palette.text.primary,
@@ -42,11 +48,11 @@ export const DisplayPrice = (props: DisplayPriceProps) => {
 
   return (
     <>
-      <Typography sx={sx} variant="h3">
+      <Typography sx={sx} variant={variant}>
         <Currency decimalPlaces={decimalPlaces} quantity={price} />
       </Typography>
       {interval && (
-        <Typography sx={sx} variant="h3">
+        <Typography sx={sx} variant={variant}>
           /{interval}
         </Typography>
       )}
