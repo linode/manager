@@ -206,13 +206,14 @@ export const mockCreateLinodeConfigs = (
  *
  * @returns Cypress chainable.
  */
-export const mockCreateLinodeConfigInterfaces = (
+export const mockAppendConfigInterface = (
   linodeId: number,
-  config: Config
+  configId: number,
+  iface: Interface
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    apiMatcher(`linode/instances/${linodeId}/configs/${config.id}/interfaces`),
-    config.interfaces ?? undefined
+    apiMatcher(`linode/instances/${linodeId}/configs/${configId}/interfaces`),
+    iface
   );
 };
