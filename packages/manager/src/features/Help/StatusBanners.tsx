@@ -1,3 +1,4 @@
+import { useIncidentQuery } from '@linode/queries';
 import { Box, Typography } from '@linode/ui';
 import { capitalize, truncateEnd } from '@linode/utilities';
 import { useTheme } from '@mui/material/styles';
@@ -6,10 +7,9 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { useIncidentQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
-import type { IncidentImpact, IncidentStatus } from 'src/queries/statusPage';
+import type { IncidentImpact, IncidentStatus } from '@linode/queries';
 
 export const StatusBanners = () => {
   const { data: incidentsData } = useIncidentQuery();
