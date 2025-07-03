@@ -106,8 +106,13 @@ export const useVMHostMaintenanceEnabled = () => {
 
   const isVMHostMaintenanceEnabled = Boolean(flags.vmHostMaintenance?.enabled);
   const isVMHostMaintenanceInBeta = Boolean(flags.vmHostMaintenance?.beta);
+  const isVMHostMaintenanceNew = Boolean(flags.vmHostMaintenance?.new);
 
-  return { isVMHostMaintenanceEnabled, isVMHostMaintenanceInBeta };
+  return {
+    isVMHostMaintenanceEnabled,
+    isVMHostMaintenanceInBeta,
+    isVMHostMaintenanceNew,
+  };
 };
 
 /**

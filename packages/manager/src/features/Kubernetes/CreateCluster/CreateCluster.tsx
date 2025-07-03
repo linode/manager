@@ -68,7 +68,6 @@ import { ControlPlaneACLPane } from './ControlPlaneACLPane';
 import {
   StyledDocsLinkContainer,
   StyledStackWithTabletBreakpoint,
-  useStyles,
 } from './CreateCluster.styles';
 import { HAControlPlane } from './HAControlPlane';
 import { NodePoolPanel } from './NodePoolPanel';
@@ -95,7 +94,6 @@ export const CreateCluster = () => {
     flags.gecko2?.enabled,
     flags.gecko2?.la
   );
-  const { classes } = useStyles();
   const [selectedRegion, setSelectedRegion] = React.useState<
     Region | undefined
   >();
@@ -398,8 +396,8 @@ export const CreateCluster = () => {
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-lke-linode-kubernetes-engine"
         title="Create Cluster"
       />
-      <Grid className={classes.root} container ref={formContainerRef}>
-        <Grid className={`mlMain py0`}>
+      <Grid container ref={formContainerRef} spacing={2}>
+        <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
           {generalError && (
             <Notice variant="error">
               <ErrorMessage
@@ -426,6 +424,7 @@ export const CreateCluster = () => {
               disabled={isCreateClusterRestricted}
               errorText={errorMap.label}
               label="Cluster Label"
+              noMarginTop
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 updateLabel(e.target.value)
               }
@@ -601,8 +600,8 @@ export const CreateCluster = () => {
           </Paper>
         </Grid>
         <Grid
-          className={`mlSidebar ${classes.sidebar}`}
           data-testid="kube-checkout-bar"
+          size={{ lg: 3, md: 12, sm: 12, xs: 12 }}
         >
           <KubeCheckoutBar
             createCluster={createCluster}
@@ -633,7 +632,6 @@ export const CreateCluster = () => {
               submitting,
               typesData,
               createCluster,
-              classes,
             ]}
           />
         </Grid>
