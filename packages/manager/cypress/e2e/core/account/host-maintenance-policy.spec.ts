@@ -4,6 +4,7 @@
 
 import {
   mockGetAccountSettings,
+  mockGetMaintenance,
   mockUpdateAccountSettings,
   mockUpdateAccountSettingsError,
 } from 'support/intercepts/account';
@@ -12,6 +13,7 @@ import { mockGetMaintenancePolicies } from 'support/intercepts/maintenance';
 import { ui } from 'support/ui';
 
 import { accountSettingsFactory } from 'src/factories';
+import { accountMaintenanceFactory } from 'src/factories/accountMaintenance';
 import { maintenancePolicyFactory } from 'src/factories/maintenancePolicy';
 
 describe('Host Maintenance Policy account settings', () => {
@@ -60,6 +62,48 @@ describe('Host Maintenance Policy account settings', () => {
             );
           });
       });
+    });
+
+    /*
+     * - Confirms that the upcoming maintenance notice appears when there's a scheduled maintenance event
+     *   with a different policy than the currently selected one.
+     */
+    it('shows upcoming maintenance notice when policy differs from scheduled maintenance', () => {
+      // Mock account settings with 'linode/migrate' policy
+      mockGetAccountSettings(
+        accountSettingsFactory.build({
+          maintenance_policy: 'linode/migrate',
+        })
+      );
+
+      // Mock upcoming maintenance with 'linode/power_off_on' policy
+      const upcomingMaintenance = [
+        accountMaintenanceFactory.build({
+          entity: {
+            id: 123,
+            label: 'test-linode',
+            type: 'linode',
+            url: '/v4/linode/instances/123',
+          },
+          maintenance_policy_set: 'linode/power_off_on',
+          status: 'scheduled',
+        }),
+      ];
+      mockGetMaintenance(upcomingMaintenance, []);
+
+      cy.visitWithLogin('/account/settings');
+      cy.findByText('Host Maintenance Policy')
+        .should('be.visible')
+        .closest('[data-qa-paper]')
+        .within(() => {
+          // Verify the notice appears
+          cy.contains(
+            'There are Linodes that have upcoming scheduled maintenance.'
+          ).should('be.visible');
+          cy.contains(
+            'Changes to this policy will not affect this existing planned maintenance event and, instead, will be applied to future maintenance events scheduled after the change is made.'
+          ).should('be.visible');
+        });
     });
 
     /*
