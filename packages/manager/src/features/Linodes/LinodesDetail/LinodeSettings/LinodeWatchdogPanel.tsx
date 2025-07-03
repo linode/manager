@@ -61,6 +61,7 @@ export const LinodeWatchdogPanel = (props: Props) => {
               <Toggle
                 checked={linode?.watchdog_enabled ?? false}
                 data-qa-watchdog-toggle={linode?.watchdog_enabled ?? false}
+                data-testid="watchdog-toggle"
                 onChange={(e, checked) =>
                   updateLinode({ watchdog_enabled: checked })
                 }
