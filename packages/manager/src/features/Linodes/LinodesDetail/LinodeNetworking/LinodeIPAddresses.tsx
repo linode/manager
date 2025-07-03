@@ -365,7 +365,7 @@ export const ipResponseToDisplayRows = (inputs: {
   const vpcIPWithNat = ipv4.vpc.find((ip) => ip.nat_1_1);
   const ipDisplay = [
     ...createPublicIPv4Display({
-      publicIPs: ipv4.public,
+      publicIPv4s: ipv4.public,
       isLinodeInterface,
       interfaceWithVPC,
       vpcIPWithNat,
@@ -428,12 +428,12 @@ type ipKey =
 const createPublicIPv4Display = (inputs: {
   interfaceWithVPC: Interface | LinodeInterface | undefined;
   isLinodeInterface: boolean;
-  publicIPs: IPAddress[];
+  publicIPv4s: IPAddress[];
   vpcIPWithNat: undefined | VPCIP;
 }) => {
-  const { publicIPs, isLinodeInterface, vpcIPWithNat, interfaceWithVPC } =
+  const { publicIPv4s, isLinodeInterface, vpcIPWithNat, interfaceWithVPC } =
     inputs;
-  let ipsToDisplay = [...publicIPs];
+  let ipsToDisplay = [...publicIPv4s];
 
   if (vpcIPWithNat) {
     if (isLinodeInterface) {
