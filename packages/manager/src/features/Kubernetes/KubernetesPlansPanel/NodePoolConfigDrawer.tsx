@@ -1,5 +1,6 @@
 import { useSpecificTypes } from '@linode/queries';
-import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
+import { ActionsPanel, Drawer, Notice } from '@linode/ui';
+import { Box, FormLabel } from '@mui/material';
 import * as React from 'react';
 import {
   Controller,
@@ -33,7 +34,7 @@ export interface Props {
 
 interface VersionUpdateFormFields {
   nodeCount: number;
-  update_strategy: NodePoolUpdateStrategy;
+  updateStrategy: NodePoolUpdateStrategy;
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
@@ -46,6 +47,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
     useForm<VersionUpdateFormFields>({
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
+        updateStrategy: 'on_recycle',
       },
     });
 
@@ -111,32 +113,36 @@ export const NodePoolConfigDrawer = (props: Props) => {
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <Typography
-            sx={(theme: Theme) => ({ marginBottom: theme.spacingFunction(8) })}
+          <FormLabel
+            sx={(theme: Theme) => ({
+              color: theme.tokens.alias.Typography.Label.Bold.S,
+            })}
           >
-            Add Linodes to your cluster:
-          </Typography>
-          <Controller
-            control={control}
-            name="nodeCount"
-            render={({ field }) => (
-              <EnhancedNumberInput
-                inputLabel={`edit-quantity-${planId}`}
-                max={
-                  selectedTier === 'enterprise'
-                    ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                    : MAX_NODES_PER_POOL_STANDARD_TIER
-                }
-                setValue={field.onChange}
-                value={field.value}
-              />
-            )}
-          />
+            Nodes
+          </FormLabel>
+          <Box marginTop={2}>
+            <Controller
+              control={control}
+              name="nodeCount"
+              render={({ field }) => (
+                <EnhancedNumberInput
+                  inputLabel={`edit-quantity-${planId}`}
+                  max={
+                    selectedTier === 'enterprise'
+                      ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                      : MAX_NODES_PER_POOL_STANDARD_TIER
+                  }
+                  setValue={field.onChange}
+                  value={field.value}
+                />
+              )}
+            />
+          </Box>
           {selectedTier === 'enterprise' && <NodePoolConfigOptions />}
           <ActionsPanel
             primaryButtonProps={{
               'data-testid': isAddMode ? 'add' : 'update',
-              label: isAddMode ? 'Add' : 'Update',
+              label: isAddMode ? 'Add Pool' : 'Update Pool',
               type: 'submit',
             }}
             secondaryButtonProps={{
@@ -144,6 +150,9 @@ export const NodePoolConfigDrawer = (props: Props) => {
               label: 'Cancel',
               onClick: handleClose,
             }}
+            sx={(theme: Theme) => ({
+              paddingTop: theme.spacingFunction(32),
+            })}
           />
         </form>
       </FormProvider>

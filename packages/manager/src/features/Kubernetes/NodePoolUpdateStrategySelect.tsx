@@ -15,7 +15,7 @@ export const NodePoolUpdateStrategySelect = (props: Props) => {
   const { onChange, value } = props;
   return (
     <Autocomplete
-      label="Version Update Strategy"
+      label="Node Pool Update Strategy"
       onChange={(e, updateStrategy) => onChange(updateStrategy?.value)}
       options={updateStrategyOptions}
       placeholder="Select an Update Strategy"

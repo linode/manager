@@ -131,7 +131,7 @@ export const CreateCluster = () => {
   const [selectedType, setSelectedType] = React.useState<string>();
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
-  // TODO: use RHF for the rest of the form.
+  // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
   const { control, watch, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],

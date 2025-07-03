@@ -129,9 +129,9 @@ export const KubernetesPlanSelection = (
             onClick={() =>
               onConfigure ? onConfigure('add', true, plan.id) : null
             }
-            sx={{ marginLeft: '10px', minWidth: '85px' }}
+            sx={{ minWidth: '85px' }}
           >
-            Configure
+            Configure Pool
           </Button>
         ) : (
           <>
@@ -219,7 +219,7 @@ export const KubernetesPlanSelection = (
                   }
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
-                  Configure
+                  Configure Pool
                 </Button>
               ) : (
                 <>
