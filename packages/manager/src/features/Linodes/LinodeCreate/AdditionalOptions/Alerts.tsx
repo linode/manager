@@ -1,4 +1,3 @@
-import { usePreferences } from '@linode/queries';
 import { Accordion, BetaChip } from '@linode/ui';
 import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
@@ -8,14 +7,19 @@ import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle'
 import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/AlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { LinodeCreateFormValues } from '../../utilities';
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
-export const Alerts = () => {
+interface AlertsProps {
+  handleIsAclpAlertsBetaLocal: (isBeta: boolean) => void;
+  isAclpAlertsBetaLocal: boolean;
+}
+
+export const Alerts = ({
+  handleIsAclpAlertsBetaLocal,
+  isAclpAlertsBetaLocal,
+}: AlertsProps) => {
   const { aclpBetaServices } = useFlags();
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
   const { control } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController({
@@ -33,7 +37,7 @@ export const Alerts = () => {
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
+        aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocal ? (
           <BetaChip />
         ) : undefined
       }
@@ -41,9 +45,13 @@ export const Alerts = () => {
       summaryProps={{ sx: { p: 0 } }}
     >
       {aclpBetaServices?.linode?.alerts && (
-        <AclpPreferenceToggle type="alerts" />
+        <AclpPreferenceToggle
+          handleIsAclpAlertsBetaLocal={handleIsAclpAlertsBetaLocal}
+          isAclpAlertsBetaLocal={isAclpAlertsBetaLocal}
+          type="alerts"
+        />
       )}
-      {aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
+      {aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocal ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

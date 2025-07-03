@@ -45,10 +45,6 @@ const LinodesDetailNavigation = () => {
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
   const { aclpBetaServices } = useFlags();
-  const { data: aclpPreferences } = usePreferences((preferences) => ({
-    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
-    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
-  }));
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -73,13 +69,20 @@ const LinodesDetailNavigation = () => {
     regions,
     type: 'alerts',
   });
+  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsBeta
+  );
+
+  // Alerts default to the value from a Linode API flag in the Edit flow
+  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
+    React.useState<boolean>(linode?.is_alerts_beta ?? false);
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
       chip:
         aclpBetaServices?.linode?.metrics &&
         isAclpMetricsSupportedRegionLinode &&
-        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
+        isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
       to: '/linodes/$linodeId/metrics',
@@ -112,7 +115,7 @@ const LinodesDetailNavigation = () => {
       chip:
         aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode &&
-        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        isAclpAlertsBetaEditFlow ? (
           <BetaChip />
         ) : null,
       to: '/linodes/$linodeId/alerts',
@@ -197,6 +200,8 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/alerts')}>
                 <LinodeAlerts
+                  handleIsAclpAlertsBetaLocal={setIsAclpAlertsBetaEditFlow}
+                  isAclpAlertsBetaLocal={isAclpAlertsBetaEditFlow}
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }

@@ -1,4 +1,4 @@
-import { useGrants, useLinodeQuery, usePreferences } from '@linode/queries';
+import { useGrants, useLinodeQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -10,20 +10,23 @@ import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 import { AlertsPanel } from './AlertsPanel';
 
 interface Props {
+  handleIsAclpAlertsBetaLocal: (isBeta: boolean) => void;
+  isAclpAlertsBetaLocal: boolean;
   isAclpAlertsSupportedRegionLinode: boolean;
 }
 
 const LinodeAlerts = (props: Props) => {
-  const { isAclpAlertsSupportedRegionLinode } = props;
+  const {
+    handleIsAclpAlertsBetaLocal,
+    isAclpAlertsBetaLocal,
+    isAclpAlertsSupportedRegionLinode,
+  } = props;
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { aclpBetaServices } = useFlags();
   const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
   const isReadOnly =
     grants !== undefined &&
@@ -34,12 +37,16 @@ const LinodeAlerts = (props: Props) => {
     <Box>
       {aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode && (
-          <AclpPreferenceToggle type="alerts" />
+          <AclpPreferenceToggle
+            handleIsAclpAlertsBetaLocal={handleIsAclpAlertsBetaLocal}
+            isAclpAlertsBetaLocal={isAclpAlertsBetaLocal}
+            type="alerts"
+          />
         )}
 
       {aclpBetaServices?.linode?.alerts &&
       isAclpAlertsSupportedRegionLinode &&
-      isAclpAlertsPreferenceBeta ? (
+      isAclpAlertsBetaLocal ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           entityId={linodeId.toString()}
