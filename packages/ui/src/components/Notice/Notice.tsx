@@ -9,7 +9,7 @@ import {
 } from '../../assets/icons';
 import { Box } from '../Box';
 import { Typography } from '../Typography';
-import { useStyles } from './Notice.styles';
+import { StyledIconBox, StyledNoticeBox } from './Notice.styles';
 
 import type { BoxProps } from '../Box';
 import type { TypographyProps } from '../Typography';
@@ -61,6 +61,14 @@ export interface NoticeProps extends BoxProps {
   variant?: NoticeVariant;
 }
 
+const variantMap: Record<NoticeVariant, NoticeVariant> = {
+  error: 'error',
+  info: 'info',
+  success: 'success',
+  tip: 'tip',
+  warning: 'warning',
+} as const;
+
 /**
 ## Usage
 
@@ -94,16 +102,6 @@ export const Notice = (props: NoticeProps) => {
     ...rest
   } = props;
 
-  const { classes, cx } = useStyles();
-
-  const variantMap = {
-    error: variant === 'error',
-    info: variant === 'info',
-    success: variant === 'success',
-    tip: variant === 'tip',
-    warning: variant === 'warning',
-  };
-
   const errorScrollClassName = bypassValidation
     ? ''
     : errorGroup
@@ -120,19 +118,8 @@ export const Notice = (props: NoticeProps) => {
       };
 
   return (
-    <Box
-      className={cx(
-        classes.root,
-        {
-          [classes.error]: variantMap.error,
-          [classes.info]: variantMap.info || variantMap.tip,
-          [classes.success]: variantMap.success,
-          [classes.warning]: variantMap.warning,
-          [errorScrollClassName]: variantMap.error,
-        },
-        'notice',
-        className,
-      )}
+    <StyledNoticeBox
+      className={`notice ${variant === 'error' ? errorScrollClassName : ''} ${className}`}
       data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
       role="alert"
       sx={[
@@ -146,22 +133,23 @@ export const Notice = (props: NoticeProps) => {
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      variant={variantMap[variant ?? 'info']}
       {...dataAttributes}
       {...rest}
     >
-      <Box
+      <StyledIconBox
         sx={(theme) => ({
           display: 'flex',
           alignSelf: forceImportantIconVerticalCenter ? 'center' : 'flex-start',
           marginRight: theme.spacingFunction(8),
         })}
       >
-        {variantMap.error && <ErrorIcon className={classes.icon} />}
-        {variantMap.info && <InfoIcon className={classes.icon} />}
-        {variantMap.success && <CheckIcon className={classes.icon} />}
-        {variantMap.tip && <LightBulbIcon className={classes.icon} />}
-        {variantMap.warning && <WarningIcon className={classes.icon} />}
-      </Box>
+        {variant === 'error' && <ErrorIcon />}
+        {variant === 'info' && <InfoIcon />}
+        {variant === 'success' && <CheckIcon />}
+        {variant === 'tip' && <LightBulbIcon />}
+        {variant === 'warning' && <WarningIcon />}
+      </StyledIconBox>
       <Box sx={{ width: '100%' }}>
         {text || typeof children === 'string' ? (
           <Typography {...typeProps}>{text ?? children}</Typography>
@@ -169,6 +157,6 @@ export const Notice = (props: NoticeProps) => {
           children
         )}
       </Box>
-    </Box>
+    </StyledNoticeBox>
   );
 };
