@@ -92,7 +92,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
       cy.get('[data-testid="notice-info"]')
         .should('be.visible')
         .within(() => {
-          // TODO move strings to constants
           cy.contains(
             'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
           );
@@ -449,7 +448,6 @@ describe('aclpBetaServices feature flag disabled', function () {
       },
     }).as('getFeatureFlags');
     mockGetUserPreferences({ isAclpAlertsBeta: true }).as('getUserPreferences');
-    // const createLinodeErrorMsg = 'region is not valid';
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getUserPreferences']);
