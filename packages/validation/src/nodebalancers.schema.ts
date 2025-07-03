@@ -5,7 +5,6 @@ import { determineIPType, vpcsValidateIP } from './vpcs.schema';
 const PORT_WARNING = 'Port must be between 1 and 65535.';
 const LABEL_WARNING = 'Label must be between 3 and 32 characters.';
 const PRIVATE_IPV4_WARNING = 'Must be a valid private IPv4 address.';
-const IPV4_IPV6_WARNING = 'Must be a valid IPv6 or private IPv4 address';
 
 export const PRIVATE_IPV4_REGEX =
   /^10\.|^172\.1[6-9]\.|^172\.2\d\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
