@@ -267,7 +267,7 @@ describe('Create Alert', () => {
         service_type: serviceType,
         label: serviceType,
         alert: serviceAlertFactory.build({
-          evaluation_periods_seconds: [300],
+          evaluation_period_seconds: [300],
           polling_interval_seconds: [300],
           scope: [value],
         }),

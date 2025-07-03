@@ -17,13 +17,13 @@ import { convertSecondsToOptions } from '../../Utils/utils';
 import type { ServiceAlert } from '@linode/api-v4';
 
 const mockServiceAlertMetadata: ServiceAlert = {
-  evaluation_periods_seconds: [60, 120, 300],
+  evaluation_period_seconds: [60, 120, 300],
   polling_interval_seconds: [30, 60, 180],
   scope: ['region'],
 };
 
 const evaluationPeriodOptions =
-  mockServiceAlertMetadata.evaluation_periods_seconds.map((value) => ({
+  mockServiceAlertMetadata.evaluation_period_seconds.map((value) => ({
     label: convertSecondsToOptions(value),
     value,
   }));

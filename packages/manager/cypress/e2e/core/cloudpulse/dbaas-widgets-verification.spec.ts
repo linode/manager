@@ -204,7 +204,7 @@ const validateWidgetFilters = (widget: Widgets) => {
 };
 
 // It will be fixed
-describe.skip('Integration Tests for DBaaS Dashboard ', () => {
+describe('Integration Tests for DBaaS Dashboard ', () => {
   beforeEach(() => {
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount); // Enables the account to have capability for Akamai Cloud Pulse
@@ -245,14 +245,17 @@ describe.skip('Integration Tests for DBaaS Dashboard ', () => {
       .click();
 
     // Select a time duration from the autocomplete input.
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type(timeDurationToSelect);
+    // Select a time duration from the autocomplete input.
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
 
-    ui.autocompletePopper
-      .findByTitle(timeDurationToSelect)
+    ui.button.findByTitle('last day').click();
+
+    // Click the "Apply" button to confirm the end date and time
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // Select a Database Engine from the autocomplete input.
@@ -500,8 +503,8 @@ describe.skip('Integration Tests for DBaaS Dashboard ', () => {
           );
         }
         expect(metric[0].name).to.equal(metricData.name);
-        expect(timeRange).to.have.property('unit', 'hr');
-        expect(timeRange).to.have.property('value', 24);
+        expect(timeRange).to.have.property('unit', 'days');
+        expect(timeRange).to.have.property('value', 1);
       });
   });
 

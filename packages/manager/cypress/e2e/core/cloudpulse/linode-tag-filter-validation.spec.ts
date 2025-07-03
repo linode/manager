@@ -134,11 +134,25 @@ describe.skip('Integration Tests for Linode Dashboard with Dynamic Mocking', () 
   // Reason : Tag filter is not needed as per template
   it('Select a resource without applying any tags', () => {
     cy.visitWithLogin('metrics');
+
     cy.wait(['@fetchServices', '@fetchDashboard', '@fetchResources']);
     mockGetLinodes([linodes[0]]);
     ui.autocomplete
       .findByLabel('Resources')
       .type(`${linodes[0].label}{enter}`)
+      .click();
+
+    // Select a time duration from the autocomplete input.
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
+
+    ui.button.findByTitle('last day').click();
+
+    // Click the "Apply" button to confirm the end date and time
+    cy.get('[data-qa-buttons="apply"]')
+      .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // Expand the applied filters section
