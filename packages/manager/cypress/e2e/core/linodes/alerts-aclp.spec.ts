@@ -1,4 +1,5 @@
 import { regionAvailabilityFactory, regionFactory } from '@linode/utilities';
+import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
@@ -10,7 +11,7 @@ import {
 import { ui } from 'support/ui';
 import { randomLabel, randomString } from 'support/util/random';
 
-import { alertFactory } from 'src/factories';
+import { accountSettingsFactory, alertFactory } from 'src/factories';
 
 describe('Create flow when beta alerts enabled by region and feature flag', function () {
   beforeEach(() => {
@@ -37,6 +38,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
         },
       },
     }).as('getFeatureFlags');
+    // mock network interface type in case test account has setting that disables <pre><code> snippet
+    const mockInitialAccountSettings = accountSettingsFactory.build({
+      interfaces_for_new_linodes: 'legacy_config_default_but_linode_allowed',
+    });
+    mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
   });
 
   it('Beta alerts become visible after switching to region w/ alerts enabled', function () {
@@ -137,7 +143,12 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     );
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getRegions']);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getSettings',
+      '@getUserPreferences',
+      '@getRegions',
+    ]);
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
@@ -221,7 +232,12 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     );
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getRegions']);
+    cy.wait([
+      '@getFeatureFlags',
+      '@getSettings',
+      '@getUserPreferences',
+      '@getRegions',
+    ]);
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     mockGetRegionAvailability(enabledRegion.id, []).as('getRegionAvailability');
