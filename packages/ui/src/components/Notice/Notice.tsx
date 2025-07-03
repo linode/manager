@@ -32,6 +32,10 @@ export interface NoticeProps extends BoxProps {
    */
   errorGroup?: string;
   /**
+   * If true, the width of the notice will only span the content instead of the container.
+   */
+  fitContentWidth?: boolean;
+  /**
    * If true, the important icon will be vertically centered with the text no matter the height of the text.
    */
   forceImportantIconVerticalCenter?: boolean;
@@ -87,6 +91,7 @@ const variantMap: Record<NoticeVariant, NoticeVariant> = {
 export const Notice = (props: NoticeProps) => {
   const {
     bypassValidation = false,
+    fitContentWidth = false,
     children,
     className,
     dataTestId,
@@ -119,7 +124,7 @@ export const Notice = (props: NoticeProps) => {
 
   return (
     <StyledNoticeBox
-      className={`notice ${variant === 'error' ? errorScrollClassName : ''} ${className}`}
+      className={`notice ${variant === 'error' ? errorScrollClassName : ''} ${className ? className : ''}`}
       data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
       role="alert"
       sx={[
@@ -130,6 +135,7 @@ export const Notice = (props: NoticeProps) => {
               : theme.spacingFunction(16),
           marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
           marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
+          width: fitContentWidth ? 'fit-content' : '100%',
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
