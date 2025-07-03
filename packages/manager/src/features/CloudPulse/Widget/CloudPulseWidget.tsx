@@ -302,20 +302,9 @@ export const CloudPulseWidget = (props: CloudPulseWidgetProperties) => {
             }}
           >
             <Typography flex={{ sm: 2, xs: 0 }} marginLeft={1} variant="h2">
-              <Stack alignItems="center" direction="row">
-                {convertStringToCamelCasesWithSpaces(widget.label)} (
-                {scaledWidgetUnit.current}
-                {unit.endsWith('ps') ? '/s' : ''}){/* TODO: Add tooltip */}
-                {/* <TooltipIcon
-                  status="help"
-                  sxTooltipIcon={{
-                    '& .MuiSvgIcon-root': {
-                      fill: theme.color.headline + '!important',
-                    },
-                  }}
-                  text="Some description"
-                /> */}
-              </Stack>
+              {convertStringToCamelCasesWithSpaces(widget.label)} (
+              {scaledWidgetUnit.current}
+              {unit.endsWith('ps') ? '/s' : ''})
             </Typography>
             <Stack
               direction={{ sm: 'row' }}
