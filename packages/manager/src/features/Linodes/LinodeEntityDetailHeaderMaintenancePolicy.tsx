@@ -67,7 +67,6 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
           <TooltipIcon
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
-            status="other"
             sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
             sxTooltipIcon={{
               '&&.ui-TooltipIcon': {
@@ -93,7 +92,6 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
                 ? statusTooltipIcons.pending
                 : statusTooltipIcons.scheduled
             }
-            status="other"
             sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
             sxTooltipIcon={{
               '&&.ui-TooltipIcon': {

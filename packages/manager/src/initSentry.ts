@@ -1,9 +1,10 @@
 import { deepStringTransform, redactAccessToken } from '@linode/utilities';
 import { init } from '@sentry/react';
 
-import { APP_ROOT, SENTRY_URL } from 'src/constants';
+import { SENTRY_URL } from 'src/constants';
 
 import packageJson from '../package.json';
+import { getAppRoot } from './OAuth/constants';
 
 import type { APIError } from '@linode/api-v4';
 import type { ErrorEvent as SentryErrorEvent } from '@sentry/react';
@@ -218,13 +219,14 @@ const customFingerPrintMap = {
  * so a Sentry issue is identified by the correct environment name.
  */
 const getSentryEnvironment = () => {
-  if (APP_ROOT === 'https://cloud.linode.com') {
+  const appRoot = getAppRoot();
+  if (appRoot === 'https://cloud.linode.com') {
     return 'production';
   }
-  if (APP_ROOT.includes('staging')) {
+  if (appRoot.includes('staging')) {
     return 'staging';
   }
-  if (APP_ROOT.includes('dev')) {
+  if (appRoot.includes('dev')) {
     return 'dev';
   }
   return 'local';

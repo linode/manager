@@ -241,7 +241,7 @@ export const BillingSummary = (props: BillingSummaryProps) => {
             <Box alignItems="center" display="flex">
               <Typography variant="h3">Accrued Charges</Typography>
               <TooltipIcon
-                status="help"
+                status="info"
                 sxTooltipIcon={{ padding: '0 8px' }}
                 text={accruedChargesHelperText}
               />

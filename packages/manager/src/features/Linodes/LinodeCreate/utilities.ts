@@ -68,13 +68,7 @@ export const useLinodeCreateQueryParams = () => {
       to: '/linodes/create',
       search: (prev) => ({
         ...prev,
-        appID: params.appID ?? undefined,
-        backupID: params.backupID ?? undefined,
-        imageID: params.imageID ?? undefined,
-        linodeID: params.linodeID ?? undefined,
-        stackScriptID: params.stackScriptID ?? undefined,
-        subtype: params.subtype ?? undefined,
-        type: params.type ?? undefined,
+        ...params,
       }),
     });
   };
@@ -85,16 +79,7 @@ export const useLinodeCreateQueryParams = () => {
   const setParams = (params: Partial<LinodeCreateSearchParams>) => {
     navigate({
       to: '/linodes/create',
-      search: (prev) => ({
-        ...prev,
-        appID: params.appID ?? undefined,
-        backupID: params.backupID ?? undefined,
-        imageID: params.imageID ?? undefined,
-        linodeID: params.linodeID ?? undefined,
-        stackScriptID: params.stackScriptID ?? undefined,
-        subtype: params.subtype ?? undefined,
-        type: params.type ?? undefined,
-      }),
+      search: params,
     });
   };
 

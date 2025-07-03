@@ -27,7 +27,7 @@ export const PublicIPAddressTooltip = ({
       : PUBLIC_IP_ADDRESSES_LINODE_INTERFACE_NOT_ASSIGNED_TOOLTIP_TEXT;
   return (
     <TooltipIcon
-      status="help"
+      status="info"
       sxTooltipIcon={sxTooltipIcon}
       text={
         isLinodeInterface ? (

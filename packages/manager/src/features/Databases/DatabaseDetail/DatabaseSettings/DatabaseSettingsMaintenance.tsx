@@ -49,7 +49,7 @@ export const DatabaseSettingsMaintenance = (props: Props) => {
         </Button>
         {hasUpdates && (
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={{
               padding: '0px 8px',
             }}
