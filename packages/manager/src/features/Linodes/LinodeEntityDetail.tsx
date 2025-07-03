@@ -169,7 +169,8 @@ export const LinodeEntityDetail = (props: Props) => {
             linodeId={linode.id}
             linodeLabel={linode.label}
             linodeMaintenancePolicySet={
-              linode.maintenance?.maintenance_policy_set
+              linode.maintenance?.maintenance_policy_set ??
+              linode.maintenance_policy // Attempt to use ongoing maintenance policy. Otherwise, fallback to policy set on Linode.
             }
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
