@@ -6,7 +6,12 @@ export const destinationType = {
 export type DestinationType =
   (typeof destinationType)[keyof typeof destinationType];
 
-export const destinationTypeOptions = [
+export interface DestinationTypeOption {
+  label: string;
+  value: string;
+}
+
+export const destinationTypeOptions: DestinationTypeOption[] = [
   {
     value: destinationType.CustomHttps,
     label: 'Custom HTTPS',
