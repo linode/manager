@@ -17,6 +17,7 @@ export * from './profile';
 export * from './quotas';
 export * from './regions';
 export * from './stackscripts';
+export * from './statusPage';
 export * from './support';
 export * from './tags';
 export * from './types';

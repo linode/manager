@@ -1,4 +1,4 @@
-import { LINODE_STATUS_PAGE_URL } from 'src/constants';
+import { LINODE_STATUS_PAGE_URL } from '../../../manager/src/constants';
 
 import type { IncidentResponse, MaintenanceResponse } from './types';
 import type { APIError } from '@linode/api-v4';
@@ -21,7 +21,7 @@ const handleError = (error: APIError, defaultMessage: string) => {
 export const getIncidents = async (): Promise<IncidentResponse> => {
   try {
     const response = await fetch(
-      `${LINODE_STATUS_PAGE_URL}/incidents/unresolved.json`
+      `${LINODE_STATUS_PAGE_URL}/incidents/unresolved.json`,
     );
 
     if (!response.ok) {
@@ -41,7 +41,7 @@ export const getIncidents = async (): Promise<IncidentResponse> => {
 export const getAllMaintenance = async (): Promise<MaintenanceResponse> => {
   try {
     const response = await fetch(
-      `${LINODE_STATUS_PAGE_URL}/scheduled-maintenances.json`
+      `${LINODE_STATUS_PAGE_URL}/scheduled-maintenances.json`,
     );
 
     if (!response.ok) {
@@ -52,7 +52,7 @@ export const getAllMaintenance = async (): Promise<MaintenanceResponse> => {
   } catch (error) {
     return handleError(
       error as APIError,
-      'Error retrieving maintenance events.'
+      'Error retrieving maintenance events.',
     );
   }
 };

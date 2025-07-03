@@ -1,14 +1,13 @@
-import { queryPresets } from '@linode/queries';
+import { queryPresets, useMaintenanceQuery } from '@linode/queries';
 import { Stack, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
-import { useMaintenanceQuery } from 'src/queries/statusPage';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
+import type { Maintenance } from '@linode/queries';
 import type { SuppliedMaintenanceData } from 'src/featureFlags';
-import type { Maintenance } from 'src/queries/statusPage';
 
 interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
