@@ -1234,11 +1234,6 @@ export const lightTheme: ThemeOptions = {
         outlined: {
           border: `1px solid ${Color.Neutrals[30]}`,
         },
-        root: {
-          '& .notice': {
-            width: 'fit-content',
-          },
-        },
         rounded: {
           borderRadius: 0,
         },
