@@ -64,9 +64,8 @@ export const nodeBalancerConfigNodeSchema = object({
             return this.createError({
               message: PRIVATE_IPV4_WARNING,
             });
-          } else {
-            return true;
           }
+          return true;
         }
 
         if (isIPv6) {
