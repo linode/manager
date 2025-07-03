@@ -260,7 +260,7 @@ export const useAllNodeBalancerConfigsQuery = (id: number) =>
 // Please don't use
 export const useAllNodeBalancersQuery = (enabled = true) =>
   useQuery<NodeBalancer[], APIError[]>({
-    ...nodebalancerQueries.nodebalancers._ctx.all,
+    ...nodebalancerQueries.nodebalancers._ctx.all(),
     enabled,
   });
 

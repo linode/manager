@@ -2839,10 +2839,14 @@ export const handlers = [
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
     const serviceType = params.serviceType;
-
+    const serviceTypesMap: Record<string, string> = {
+      linode: 'Linode',
+      dbaas: 'Databases',
+      nodebalancer: 'NodeBalancers',
+    };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
-      label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
+      label: serviceTypesMap[serviceType as string],
       alert:
         serviceType === 'dbaas'
           ? serviceAlertFactory.build({
@@ -2989,11 +2993,6 @@ export const handlers = [
               dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
-            },
-            {
-              dimension_label: 'port',
-              label: ' Port',
-              values: [],
             },
           ],
           label: 'Network Traffic',
