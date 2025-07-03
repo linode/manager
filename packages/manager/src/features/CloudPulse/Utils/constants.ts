@@ -38,7 +38,7 @@ export const PORTS_HELPER_TEXT =
   'Enter one or more port numbers (1-65535) separated by commas.';
 
 export const PORTS_ERROR_MESSAGE =
-  'Enter valid port numbers as integers separated by commas.';
+  'Enter valid port numbers as integers separated by commas without spaces.';
 
 export const PORTS_RANGE_ERROR_MESSAGE =
   'Port numbers must be between 1 and 65535.';
