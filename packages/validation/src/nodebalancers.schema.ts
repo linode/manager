@@ -54,8 +54,9 @@ export const nodeBalancerConfigNodeSchema = object({
         const isIPv6 = type === 'ipv6';
 
         if (!isIPv4 && !isIPv6) {
+          // @TODO- NB Dual Stack Support(IPv6): Edit the error message to cover IPv6 addresses
           return this.createError({
-            message: IPV4_IPV6_WARNING,
+            message: PRIVATE_IPV4_WARNING,
           });
         }
 
