@@ -1,6 +1,7 @@
 import { type AlertSeverityType } from '@linode/api-v4';
 import {
   createAlertDefinitionSchema,
+  dimensionFilters,
   metricCriteria,
   triggerConditionValidation,
 } from '@linode/validation';
@@ -14,6 +15,7 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from '../../Utils/constants';
+import { PORTS_TRAILING_COMMA_ERROR_MESSAGE } from '../constants';
 
 import type { AlertDefinitionGroup, AlertDefinitionType } from '@linode/api-v4';
 
@@ -53,6 +55,10 @@ const commaSeparatedPortListSchema = string().test(
 
     if (value.includes(' ')) {
       return this.createError({ message: PORTS_ERROR_MESSAGE });
+    }
+
+    if (value.trim().endsWith(',')) {
+      return this.createError({ message: PORTS_TRAILING_COMMA_ERROR_MESSAGE });
     }
 
     if (value.trim().startsWith(',')) {
@@ -95,35 +101,37 @@ const commaSeparatedPortListSchema = string().test(
   }
 );
 
-export const dimensionFiltersSchema = object({
-  dimension_label: string()
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  operator: string()
-    .oneOf(['eq', 'neq', 'startswith', 'endswith', 'in'])
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null),
-  value: string()
-    .required(fieldErrorMessage)
-    .nullable()
-    .test('nonNull', fieldErrorMessage, (value) => value !== null)
-    .when(
-      ['dimension_label', 'operator'],
-      ([dimensionLabel, operator], schema) => {
-        if (dimensionLabel === 'port' && operator === 'in') {
-          return commaSeparatedPortListSchema;
-        }
+export const dimensionFiltersSchema = dimensionFilters.concat(
+  object({
+    dimension_label: string()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
+    operator: string()
+      .oneOf(['eq', 'neq', 'startswith', 'endswith', 'in'])
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null),
+    value: string()
+      .required(fieldErrorMessage)
+      .nullable()
+      .test('nonNull', fieldErrorMessage, (value) => value !== null)
+      .when(
+        ['dimension_label', 'operator'],
+        ([dimensionLabel, operator], schema) => {
+          if (dimensionLabel === 'port' && operator === 'in') {
+            return commaSeparatedPortListSchema;
+          }
 
-        if (dimensionLabel === 'port' && operator !== 'in') {
-          return singlePortSchema;
-        }
+          if (dimensionLabel === 'port' && operator !== 'in') {
+            return singlePortSchema;
+          }
 
-        return schema;
-      }
-    ),
-});
+          return schema;
+        }
+      ),
+  })
+);
 
 export const metricCriteriaSchema = metricCriteria.concat(
   object({

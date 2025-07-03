@@ -55,12 +55,3 @@ export const PORTS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
 export const PORTS_LIMIT_ERROR_MESSAGE = 'Enter a maximum of 15 port numbers';
-
-export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
-  'Trailing comma is not allowed.';
-
-export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
-
-export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
-
-export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';

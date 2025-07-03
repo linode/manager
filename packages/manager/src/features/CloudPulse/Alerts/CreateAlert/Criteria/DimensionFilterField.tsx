@@ -5,14 +5,15 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
+import { PORTS_HELPER_TEXT } from 'src/features/CloudPulse/Utils/constants';
+
 import {
+  dimensionOperatorOptions,
   PORT_HELPER_TEXT,
   PORT_PLACEHOLDER_TEXT,
-  PORTS_HELPER_TEXT,
   PORTS_PLACEHOLDER_TEXT,
-} from 'src/features/CloudPulse/Utils/constants';
-
-import { dimensionOperatorOptions, textFieldOperators } from '../../constants';
+  textFieldOperators,
+} from '../../constants';
 import { ClearIconButton } from './ClearIconButton';
 
 import type { Item } from '../../constants';
