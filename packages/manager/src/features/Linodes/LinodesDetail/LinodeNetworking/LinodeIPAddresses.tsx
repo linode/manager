@@ -450,7 +450,8 @@ const createPublicIPv4Display = (inputs: {
         'default_route' in interfaceWithVPC &&
         interfaceWithVPC.default_route.ipv4)
     )
-      // For legacy config profile interfaces, or cases where the vpcInterface is the default IPv4 route, we hide the public IP
+      // For legacy config profile interfaces, or cases where the vpcInterface is the default IPv4 route,
+      // we hide the public IP if there is a VPC IP with 1:1 NAT (implies VPC interface with 1:1 NAT)
       ipsToDisplay.shift();
   }
 
