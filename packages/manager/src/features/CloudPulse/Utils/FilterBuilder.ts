@@ -1,5 +1,6 @@
 import {
   NODE_TYPE,
+  PORT,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -12,6 +13,7 @@ import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
+import type { CloudPulsePortFilterProps } from '../shared/CloudPulsePortFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -297,6 +299,32 @@ export const getTimeDurationProperties = (
 };
 
 /**
+ * This function helps in building the properties needed for port selection component
+ *
+ * @param config - accepts a CloudPulseServiceTypeFilters that has config of port key
+ * @param handlePortChange - the callback when we select new port
+ * @param dashboard - the actual selected dashboard
+ * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences, else no need
+ * @returns CloudPulsePortFilterProps
+ */
+export const getPortProperties = (
+  props: CloudPulseFilterProperties,
+  handlePortChange: (port: string, label: string[], savePref?: boolean) => void
+): CloudPulsePortFilterProps => {
+  const { name: label, placeholder } = props.config.configuration;
+  const { dashboard, isServiceAnalyticsIntegration, preferences } = props;
+
+  return {
+    dashboard,
+    defaultValue: preferences?.[PORT],
+    handlePortChange,
+    label,
+    placeholder,
+    savePreferences: !isServiceAnalyticsIntegration,
+  };
+};
+
+/**
  * This function helps in builder the xFilter needed to passed in a apiV4 call
  *
  * @param config - any cloudpulse service type filter config
@@ -551,7 +579,7 @@ export const deepEqual = <T>(obj1: T, obj2: T): boolean => {
  * @param arr2 Array for comparison
  * @returns True if, both the arrays are equal, else false
  */
-const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
+export const compareArrays = <T>(arr1: T[], arr2: T[]): boolean => {
   if (arr1.length !== arr2.length) {
     return false;
   }
