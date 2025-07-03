@@ -73,6 +73,7 @@ interface AclpFlag {
 interface LkeEnterpriseFlag extends BaseFeatureFlag {
   ga: boolean;
   la: boolean;
+  postLa: boolean;
 }
 
 interface CloudNatFlag extends BetaFeatureFlag {

@@ -16,6 +16,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
+import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
 import type {
   CreateNodePoolData,
   KubernetesTier,
@@ -39,6 +40,11 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
+  onConfigure?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
@@ -61,6 +67,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
+    onConfigure,
     onSelect,
     notice,
     regionsData,
@@ -139,6 +146,7 @@ export const KubernetesPlansPanel = (props: Props) => {
                 getTypeCount={getTypeCount}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
+                onConfigure={onConfigure}
                 onSelect={onSelect}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}

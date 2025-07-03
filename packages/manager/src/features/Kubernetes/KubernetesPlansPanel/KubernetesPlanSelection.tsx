@@ -22,6 +22,9 @@ import {
 import { renderMonthlyPriceToCorrectDecimalPlace } from 'src/utilities/pricing/dynamicPricing';
 import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
+
+import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
 import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
@@ -31,6 +34,11 @@ export interface KubernetesPlanSelectionProps {
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
+  onConfigure?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
   selectedId?: string;
@@ -48,6 +56,7 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
+    onConfigure,
     plan,
     selectedId,
     selectedRegionId,
@@ -74,6 +83,8 @@ export const KubernetesPlanSelection = (
     plan,
     selectedRegionId
   );
+
+  const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
@@ -110,25 +121,43 @@ export const KubernetesPlanSelection = (
   const renderVariant = () => (
     <Grid size={12}>
       <StyledInputOuter>
-        <EnhancedNumberInput
-          disabled={rowIsDisabled}
-          max={
-            selectedTier === 'enterprise'
-              ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-              : MAX_NODES_PER_POOL_STANDARD_TIER
-          }
-          setValue={(newCount: number) => updatePlanCount(plan.id, newCount)}
-          value={count}
-        />
-        {onAdd && (
+        {isLkeEnterprisePostLAFeatureEnabled ? (
           <Button
+            aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
-            disabled={count < 1 || rowIsDisabled}
-            onClick={() => onAdd(plan.id, count)}
-            sx={{ marginLeft: '10px', minWidth: '85px' }}
+            disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+            onClick={() =>
+              onConfigure ? onConfigure('add', true, plan.id) : null
+            }
+            sx={{ minWidth: '85px' }}
           >
-            Add
+            Configure Pool
           </Button>
+        ) : (
+          <>
+            <EnhancedNumberInput
+              disabled={rowIsDisabled}
+              max={
+                selectedTier === 'enterprise'
+                  ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                  : MAX_NODES_PER_POOL_STANDARD_TIER
+              }
+              setValue={(newCount: number) =>
+                updatePlanCount(plan.id, newCount)
+              }
+              value={count}
+            />
+            {onAdd && (
+              <Button
+                buttonType="primary"
+                disabled={count < 1 || rowIsDisabled}
+                onClick={() => onAdd(plan.id, count)}
+                sx={{ marginLeft: '10px', minWidth: '85px' }}
+              >
+                Add
+              </Button>
+            )}
+          </>
         )}
       </StyledInputOuter>
     </Grid>
@@ -178,42 +207,62 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell>
             <StyledInputOuter>
-              <EnhancedNumberInput
-                disabled={
-                  // When on the add pool flow, we only want the current input to be active,
-                  // unless we've just landed on the form, all the inputs are empty,
-                  // or there was a pricing data error.
-                  (!onAdd && Boolean(selectedId) && plan.id !== selectedId) ||
-                  rowIsDisabled ||
-                  typeof price?.hourly !== 'number'
-                }
-                inputLabel={`edit-quantity-${plan.id}`}
-                max={
-                  selectedTier === 'enterprise'
-                    ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
-                    : MAX_NODES_PER_POOL_STANDARD_TIER
-                }
-                setValue={(newCount: number) =>
-                  updatePlanCount(plan.id, newCount)
-                }
-                value={count}
-              />
-              {onAdd && (
+              {isLkeEnterprisePostLAFeatureEnabled ? (
                 <Button
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
                   }
                   buttonType="primary"
-                  disabled={
-                    count < 1 ||
-                    rowIsDisabled ||
-                    typeof price?.hourly !== 'number'
+                  disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
+                  onClick={() =>
+                    onConfigure ? onConfigure('add', true, plan.id) : null
                   }
-                  onClick={() => onAdd(plan.id, count)}
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >
-                  Add
+                  Configure Pool
                 </Button>
+              ) : (
+                <>
+                  <EnhancedNumberInput
+                    disabled={
+                      // When on the add pool flow, we only want the current input to be active,
+                      // unless we've just landed on the form, all the inputs are empty,
+                      // or there was a pricing data error.
+                      (!onAdd &&
+                        Boolean(selectedId) &&
+                        plan.id !== selectedId) ||
+                      rowIsDisabled ||
+                      typeof price?.hourly !== 'number'
+                    }
+                    inputLabel={`edit-quantity-${plan.id}`}
+                    max={
+                      selectedTier === 'enterprise'
+                        ? MAX_NODES_PER_POOL_ENTERPRISE_TIER
+                        : MAX_NODES_PER_POOL_STANDARD_TIER
+                    }
+                    setValue={(newCount: number) =>
+                      updatePlanCount(plan.id, newCount)
+                    }
+                    value={count}
+                  />
+                  {onAdd && (
+                    <Button
+                      aria-label={
+                        rowIsDisabled ? disabledPlanReasonCopy : undefined
+                      }
+                      buttonType="primary"
+                      disabled={
+                        count < 1 ||
+                        rowIsDisabled ||
+                        typeof price?.hourly !== 'number'
+                      }
+                      onClick={() => onAdd(plan.id, count)}
+                      sx={{ marginLeft: '10px', minWidth: '85px' }}
+                    >
+                      Add
+                    </Button>
+                  )}
+                </>
               )}
             </StyledInputOuter>
           </TableCell>
