@@ -64,46 +64,32 @@ export type EntityRoleType =
 
 export type RoleName = AccountRoleType | EntityRoleType;
 
-/** Permissions associated with the "account_admin" role. */
+/**
+ * Permissions associated with the "account_admin" role.
+ * Note: Permissions associated with profile have been excluded as all users have access to their own profile.
+ * This is to align with the permissions API array.
+ */
 export type AccountAdmin =
   | 'accept_service_transfer'
   | 'acknowledge_account_agreement'
-  | 'answer_profile_security_questions'
   | 'cancel_account'
   | 'cancel_service_transfer'
-  | 'create_profile_pat'
-  | 'create_profile_ssh_key'
-  | 'create_profile_tfa_secret'
   | 'create_service_transfer'
   | 'create_user'
-  | 'delete_profile_pat'
-  | 'delete_profile_phone_number'
-  | 'delete_profile_ssh_key'
   | 'delete_user'
-  | 'disable_profile_tfa'
   | 'enable_managed'
-  | 'enable_profile_tfa'
   | 'enroll_beta_program'
   | 'is_account_admin'
   | 'list_account_agreements'
   | 'list_account_logins'
   | 'list_available_services'
   | 'list_default_firewalls'
-  | 'list_enrolled_beta_programs'
   | 'list_service_transfers'
   | 'list_user_grants'
-  | 'revoke_profile_app'
-  | 'revoke_profile_device'
-  | 'send_profile_phone_number_verification_code'
   | 'update_account'
   | 'update_account_settings'
-  | 'update_profile'
-  | 'update_profile_pat'
-  | 'update_profile_ssh_key'
   | 'update_user'
   | 'update_user_grants'
-  | 'update_user_preferences'
-  | 'verify_profile_phone_number'
   | 'view_account'
   | 'view_account_login'
   | 'view_account_settings'
@@ -114,13 +100,8 @@ export type AccountAdmin =
   | 'view_user'
   | 'view_user_preferences'
   | AccountBillingAdmin
-  | AccountEventViewer
   | AccountFirewallAdmin
-  | AccountLinodeAdmin
-  | AccountMaintenanceViewer
-  | AccountNotificationViewer
-  | AccountOauthClientAdmin
-  | AccountProfileViewer;
+  | AccountLinodeAdmin;
 
 /** Permissions associated with the "account_billing_admin" role. */
 export type AccountBillingAdmin =
