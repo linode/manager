@@ -4,6 +4,7 @@ import {
   createNodeBalancerConfig,
   deleteNodeBalancer,
   deleteNodeBalancerConfig,
+  markResourceDeleted,
   updateNodeBalancer,
   updateNodeBalancerConfig,
 } from '@linode/api-v4';
@@ -81,6 +82,8 @@ export const useNodebalancerDeleteMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteNodeBalancer(id),
     onSuccess() {
+      markResourceDeleted('nodebalancers', id);
+
       // Remove NodeBalancer queries for this specific NodeBalancer
       queryClient.removeQueries({
         queryKey: nodebalancerQueries.nodebalancer(id).queryKey,

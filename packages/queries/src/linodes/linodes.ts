@@ -25,6 +25,7 @@ import {
   linodeBoot,
   linodeReboot,
   linodeShutdown,
+  markResourceDeleted,
   rebuildLinode,
   rescueLinode,
   resizeLinode,
@@ -308,6 +309,8 @@ export const useDeleteLinodeMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteLinode(id),
     async onSuccess() {
+      markResourceDeleted('linodes', id);
+
       queryClient.removeQueries(linodeQueries.linode(id));
       queryClient.invalidateQueries(linodeQueries.linodes);
 
