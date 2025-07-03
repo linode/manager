@@ -9,13 +9,15 @@ interface VPCSubnetOption {
 
 interface CloudPulseVPCSubnetProps {
   errorText?: string;
+  label?: string;
   onBlur?: () => void;
   onChange: (value: number[]) => void;
+  placeholder?: string;
   value?: number[];
 }
 
 export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
-  const { errorText, onChange, value, onBlur } = props;
+  const { errorText, onChange, value, onBlur, label, placeholder } = props;
 
   const [selectedValue, setSelectedValue] = React.useState<number[]>(
     value || []
@@ -39,13 +41,17 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
     return options;
   }, [data]);
 
+  const selectedOptions = options.filter(({ id }) =>
+    selectedValue.includes(id)
+  );
+
   return (
     <Autocomplete
       data-testid="vpc-subnet-filter"
       errorText={errorText ?? error?.[0].reason}
       fullWidth
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      label="VPC Subnet"
+      label={label ?? 'VPC Subnet'}
       limitTags={2}
       loading={isLoading}
       multiple
@@ -56,7 +62,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
         onChange?.(newSelectedValue);
       }}
       options={options}
-      placeholder="Select a VPC Subnet"
+      placeholder={placeholder ?? 'Select VPC Subnets'}
       textFieldProps={{
         InputProps: {
           sx: {
@@ -70,7 +76,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
           },
         },
       }}
-      value={options.filter(({ id }) => selectedValue.includes(id))}
+      value={selectedOptions}
     />
   );
 };
