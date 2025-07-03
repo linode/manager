@@ -76,8 +76,8 @@ import { NodePoolPanel } from './NodePoolPanel';
 import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
 import type {
   CreateKubeClusterPayload,
-  CreateNodePoolData,
-  KubeNodePoolResponse,
+  CreateNodePoolDataBeta,
+  KubeNodePoolResponseBeta,
   KubernetesTier,
 } from '@linode/api-v4/lib/kubernetes';
 import type { Region } from '@linode/api-v4/lib/regions';
@@ -85,7 +85,7 @@ import type { APIError } from '@linode/api-v4/lib/types';
 import type { ExtendedIP } from 'src/utilities/ipUtils';
 
 type FormValues = {
-  nodePools: KubeNodePoolResponse[];
+  nodePools: KubeNodePoolResponseBeta[];
 };
 
 export const CreateCluster = () => {
@@ -256,8 +256,8 @@ export const CreateCluster = () => {
     setSubmitting(true);
 
     const node_pools = nodePools.map(
-      pick(['type', 'count'])
-    ) as CreateNodePoolData[];
+      pick(['type', 'count', 'update_strategy'])
+    ) as CreateNodePoolDataBeta[];
 
     const _ipv4 = ipV4Addr
       .map((ip) => {

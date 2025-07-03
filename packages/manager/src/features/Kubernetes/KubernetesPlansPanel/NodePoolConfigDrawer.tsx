@@ -19,7 +19,11 @@ import {
 } from '../constants';
 import { NodePoolConfigOptions } from './NodePoolConfigOptions';
 
-import type { KubernetesTier, NodePoolUpdateStrategy } from '@linode/api-v4';
+import type {
+  CreateNodePoolDataBeta,
+  KubernetesTier,
+  NodePoolUpdateStrategy,
+} from '@linode/api-v4';
 import type { Theme } from '@linode/ui';
 
 export type NodePoolConfigDrawerMode = 'add' | 'edit';
@@ -41,13 +45,14 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const { onClose, open, selectedTier, planId, mode } = props;
 
   const parentForm = useFormContext();
-  const _nodePools = parentForm.watch('nodePools');
+  const _nodePools: CreateNodePoolDataBeta[] = parentForm.watch('nodePools');
 
   const { control, formState, setValue, watch, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
-        updateStrategy: 'on_recycle',
+        updateStrategy:
+          selectedTier === 'enterprise' ? 'on_recycle' : undefined,
       },
     });
 
@@ -75,15 +80,18 @@ export const NodePoolConfigDrawer = (props: Props) => {
             // eslint-disable-next-line sonarjs/pseudo-random
             id: Math.random(),
             type: planId,
+            update_strategy: values.updateStrategy,
           },
         ]);
       } else {
         // TODO: We're in edit mode, so find the existing pool in _nodePools based on
         // selected pool index and set the updated node count/update strategy values.
       }
-      handleClose();
+      onClose();
     } catch (errResponse) {
-      /* TODO */
+      form.setError('root', {
+        message: `${errResponse})}`,
+      });
     }
   };
 
@@ -120,7 +128,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
           >
             Nodes
           </FormLabel>
-          <Box marginTop={2}>
+          <Box marginBottom={4} marginTop={2}>
             <Controller
               control={control}
               name="nodeCount"
