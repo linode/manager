@@ -167,13 +167,7 @@ export const getLinodeCreatePayload = (
     'hasSignedEUAgreement',
     'firewallOverride',
     'linodeInterfaces',
-    'maintenance_policy',
   ]);
-
-  // Copy maintenance_policy if it exists (region supports it)
-  if (formValues.maintenance_policy) {
-    values.maintenance_policy = formValues.maintenance_policy;
-  }
 
   if (!isAclpIntegration || !isAclpAlertsPreferenceBeta) {
     values.alerts = undefined;
