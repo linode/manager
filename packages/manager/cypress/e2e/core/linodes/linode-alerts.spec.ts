@@ -1,4 +1,3 @@
-// TODO: rename this file after other outstanding PRs merged, to be consistent w/ their naming convention
 import { linodeFactory, regionFactory } from '@linode/utilities';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { mockGetLinodeDetails } from 'support/intercepts/linodes';
@@ -58,7 +57,7 @@ describe('region enables alerts', function () {
     cy.get('[data-reach-tab-panels]')
       .should('be.visible')
       .within(() => {
-        cy.contains('Default Alerts').should('be.visible');
+        cy.contains('Alerts').should('be.visible');
         cy.get('[data-testid="notice-info"]')
           .should('be.visible')
           .within(() => {
