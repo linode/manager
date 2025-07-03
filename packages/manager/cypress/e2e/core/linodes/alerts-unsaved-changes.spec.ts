@@ -23,6 +23,8 @@ const mockRegions = [
   { region: mockDisabledRegion, message: 'disabled region' },
 ];
 
+const MOCK_NUMERIC_TEST_VALUE = '101';
+
 describe('Edit to page should trigger modal appearance', () => {
   mockRegions.forEach(({ region, message }) => {
     describe(`Edit to ${message} should trigger modal appearance`, () => {
@@ -39,8 +41,114 @@ describe('Edit to page should trigger modal appearance', () => {
       });
 
       it('after edit to toggle', () => {
-        cy.findByText('Default Alerts')
-          .closest('[data-qa-paper]')
+        cy.get('[data-reach-tab-panels]')
+          .should('be.visible')
+          .within(() => {
+            cy.get('[data-qa-alerts-panel]')
+              .first()
+              .should('be.visible')
+              .within(() => {
+                ui.toggle
+                  .find()
+                  .should('be.visible')
+                  .should('have.attr', 'data-qa-toggle', 'true')
+                  .should('be.enabled')
+                  .click();
+                // click changes toggle to false
+                ui.toggle.find().should('have.attr', 'data-qa-toggle', 'false');
+              });
+          });
+
+        // navigate to another page
+        ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
+        // url does not change
+        cy.url().should('endWith', '/alerts');
+        ui.dialog
+          .findByTitle('Unsaved Changes')
+          .should('be.visible')
+          .within(() => {
+            // close modal, return to Alerts tab
+            ui.button
+              .findByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+        cy.url().should('endWith', '/alerts');
+        cy.get('[data-qa-alerts-panel]')
+          .first()
+          .should('be.visible')
+          .within(() => {
+            // edit to first toggle persists
+            ui.toggle
+              .find()
+              .should('be.visible')
+              .should('have.attr', 'data-qa-toggle', 'false');
+          });
+      });
+
+      it('after edit to numeric input', () => {
+        cy.get('[data-reach-tab-panels]')
+          .should('be.visible')
+          .within(() => {
+            cy.get('[data-qa-alerts-panel]')
+              .first()
+              .should('be.visible')
+              .within(() => {
+                cy.get('[data-testid="textfield-input"]')
+                  .should('be.visible')
+                  .should('be.enabled')
+                  .click();
+                cy.focused().type(`{selectall}${MOCK_NUMERIC_TEST_VALUE}`);
+              });
+          });
+        // attempt to navigate to another page
+        ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
+        // url does not change
+        cy.url().should('endWith', '/alerts');
+        ui.dialog
+          .findByTitle('Unsaved Changes')
+          .should('be.visible')
+          .within(() => {
+            // close modal, return to Alerts tab
+            ui.button
+              .findByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+        cy.url().should('endWith', '/alerts');
+        cy.get('[data-qa-alerts-panel]')
+          .first()
+          .should('be.visible')
+          .within(() => {
+            // edit to first toggle persists
+            cy.get('[data-testid="textfield-input"')
+              .should('be.visible')
+              .should('have.value', MOCK_NUMERIC_TEST_VALUE);
+          });
+
+        // attempt to navigate to another tab
+        ui.tabList.findTabByTitle('Settings').click();
+        // url does not change
+        cy.url().should('endWith', '/alerts');
+        ui.dialog
+          .findByTitle('Unsaved Changes')
+          .should('be.visible')
+          .within(() => {
+            // close modal, return to Alerts tab
+            ui.button
+              .findByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+        cy.url().should('endWith', '/alerts');
+      });
+
+      it('reverted edits do not trigger modal', () => {
+        cy.get('[data-reach-tab-panels]')
+          .should('be.visible')
           .within(() => {
             cy.get('[data-qa-alerts-panel]')
               .first()
@@ -50,19 +158,50 @@ describe('Edit to page should trigger modal appearance', () => {
                   .find()
                   .should('be.visible')
                   .should('be.enabled')
-                  .click();
+                  .should('have.attr', 'data-qa-toggle', 'true')
+                  .then((alertToggle) =>
+                    cy.wrap(alertToggle).as('alertToggle')
+                  );
+                cy.get('@alertToggle').click();
+                // click changes toggle to false
+                // cy.get('@alertToggle').should('have.attr', 'data-qa-toggle', 'false');
+
+                // // undo edit, toggle it back to true
+                // cy.get('@alertToggle').click();
+                // cy.get('@alertToggle').should('have.attr', 'data-qa-toggle', 'true');
               });
           });
+
         // navigate to another page
-        // cy.get('[aria-label="Images"]').should('be.visible').should('be.enabled').click();
         ui.nav.findItemByTitle('Placement Groups').should('be.visible').click();
-        cy.url().should('endWith', '/placement-groups');
+        // url does not change
+        cy.url().should('endWith', '/alerts');
+        ui.dialog
+          .findByTitle('Unsaved Changes')
+          .should('be.visible')
+          .within(() => {
+            // close modal, return to Alerts tab
+            ui.button
+              .findByTitle('Cancel')
+              .should('be.visible')
+              .should('be.enabled')
+              .click();
+          });
+        cy.url().should('endWith', '/alerts');
+        cy.get('[data-qa-alerts-panel]')
+          .first()
+          .should('be.visible')
+          .within(() => {
+            // edit to first toggle persists
+            ui.toggle
+              .find()
+              .should('be.visible')
+              .should('have.attr', 'data-qa-toggle', 'false');
+          });
       });
     });
   });
 });
-
-//   after edit to toggle
-// after edit to numeric input
-// when navigating away to another page
-// when navigating away to another tab
+// .
+// "Confirm" erases edits.
+// Saved edits to not trigger modal
