@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { readableBytes } from '@linode/utilities';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useBlocker, useNavigate, useSearch } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -180,6 +180,37 @@ export const ImageUpload = () => {
 
     navigate({ search: () => ({}), to: nextLocation });
   };
+
+  const { proceed, reset, status } = useBlocker({
+    enableBeforeUnload: hasPendingUpload,
+    shouldBlockFn: ({ next }) => {
+      // Only block if there are unsaved changes
+      if (!hasPendingUpload) {
+        return false;
+      }
+
+      // Don't block navigation to the specific route
+      const isNavigatingToAllowedRoute =
+        next.routeId === '/images/create/upload';
+
+      return !isNavigatingToAllowedRoute;
+    },
+    withResolver: true,
+  });
+
+  // Create a combined handler for proceeding with navigation
+  const handleProceedNavigation = React.useCallback(() => {
+    if (status === 'blocked' && proceed) {
+      proceed();
+    }
+  }, [status, proceed]);
+
+  // Create a combined handler for canceling navigation
+  const handleCancelNavigation = React.useCallback(() => {
+    if (status === 'blocked' && reset) {
+      reset();
+    }
+  }, [status, reset]);
 
   return (
     <FormProvider {...form}>
@@ -401,6 +432,8 @@ export const ImageUpload = () => {
         isOpen={linodeCLIModalOpen}
         onClose={() => setLinodeCLIModalOpen(false)}
       />
+
+      {/* Use Prompt for now until Link is coupled with Tanstack router */}
       <Prompt
         confirmWhenLeaving={true}
         onConfirm={onConfirm}
@@ -413,16 +446,25 @@ export const ImageUpload = () => {
                 <ActionsPanel
                   primaryButtonProps={{
                     label: 'Leave Page',
-                    onClick: handleConfirm,
+                    onClick: () => {
+                      handleProceedNavigation();
+                      handleConfirm();
+                    },
                   }}
                   secondaryButtonProps={{
                     label: 'Cancel',
-                    onClick: handleCancel,
+                    onClick: () => {
+                      handleCancelNavigation();
+                      handleCancel();
+                    },
                   }}
                 />
               }
-              onClose={handleCancel}
-              open={isModalOpen}
+              onClose={() => {
+                handleCancelNavigation();
+                handleCancel();
+              }}
+              open={status === 'blocked' || isModalOpen}
               title="Leave this page?"
             >
               <Typography variant="subtitle1">
