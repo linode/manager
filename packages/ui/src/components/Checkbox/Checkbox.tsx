@@ -77,7 +77,7 @@ export const Checkbox = (props: Props) => {
   return (
     <>
       {CheckboxComponent}
-      {toolTipText ? <TooltipIcon status="help" text={toolTipText} /> : null}
+      {toolTipText ? <TooltipIcon status="info" text={toolTipText} /> : null}
     </>
   );
 };
