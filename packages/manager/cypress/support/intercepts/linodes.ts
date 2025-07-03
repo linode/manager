@@ -103,6 +103,25 @@ export const interceptGetLinode = (
 };
 
 /**
+ * Intercepts GET request to get a Linode and mocks response
+ *
+ * @param linodeId - ID of Linode to fetch.
+ * @param linode - linode to return
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinode = (
+  linodeId: number,
+  linode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}`),
+    makeResponse(linode)
+  );
+};
+
+/**
  * Intercepts GET request to get all Linodes.
  *
  * @returns Cypress chainable.

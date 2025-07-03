@@ -1,11 +1,7 @@
 import { baseRequest } from '@linode/api-v4/lib/request';
 import { AxiosHeaders } from 'axios';
 
-import {
-  ACCESS_TOKEN,
-  DEFAULT_API_ROOT,
-  DEFAULT_ERROR_MESSAGE,
-} from 'src/constants';
+import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
 import { clearAuthDataFromLocalStorage, redirectToLogin } from './OAuth/oauth';
@@ -89,7 +85,7 @@ export const getURL = ({ baseURL, url }: AxiosRequestConfig) => {
 
   const localStorageOverrides = getEnvLocalStorageOverrides();
 
-  const apiRoot = localStorageOverrides?.apiRoot ?? DEFAULT_API_ROOT;
+  const apiRoot = localStorageOverrides?.apiRoot ?? API_ROOT;
 
   // If we have environment overrides in local storage, use those. Otherwise,
   // override the baseURL (from @linode/api-v4) with the one we have defined
