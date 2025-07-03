@@ -336,7 +336,8 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
     );
   }
 
-  const filtersToRender = serviceToFiltersMap[serviceType ?? ''];
+  const filtersToRender =
+    serviceToFiltersMap[serviceType ?? ''] ?? serviceToFiltersMap[''];
   const noticeStyles: React.CSSProperties = {
     alignItems: 'center',
     backgroundColor: theme.tokens.alias.Background.Normal,
