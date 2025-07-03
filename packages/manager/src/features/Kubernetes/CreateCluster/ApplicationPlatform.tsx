@@ -58,12 +58,13 @@ export const ApplicationPlatform = (props: APLProps) => {
           <Typography data-testid="apl-label" variant="inherit">
             Akamai App Platform
           </Typography>
-          {!isSectionDisabled && <NewFeatureChip />}
-          {isSectionDisabled && (
+          {isSectionDisabled ? (
             <StyledComingSoonChip
               data-testid="apl-coming-soon-chip"
               label="coming soon"
             />
+          ) : (
+            <NewFeatureChip />
           )}
         </Box>
       </FormLabel>
