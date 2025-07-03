@@ -26,6 +26,7 @@ describe('LinodeNetworkingActionMenu', () => {
   };
 
   const props = {
+    disabledFromInterfaces: false,
     isOnlyPublicIP: true,
     isVPCOnlyLinode: false,
     onEdit: vi.fn(),

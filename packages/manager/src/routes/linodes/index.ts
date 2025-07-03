@@ -17,11 +17,11 @@ interface LinodeDetailSearchParams {
 }
 
 export interface LinodeCreateSearchParams {
-  appID?: string;
-  backupID?: string;
+  appID?: number;
+  backupID?: number;
   imageID?: string;
   linodeID?: number;
-  stackScriptID?: string;
+  stackScriptID?: number;
   subtype?: StackScriptTabType;
   type?: LinodeCreateType;
 }
