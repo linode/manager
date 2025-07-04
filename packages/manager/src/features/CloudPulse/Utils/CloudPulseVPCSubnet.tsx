@@ -9,41 +9,60 @@ interface VPCSubnetOption {
 
 interface CloudPulseVPCSubnetProps {
   errorText?: string;
+  isMultiple?: boolean;
   label?: string;
   onBlur?: () => void;
-  onChange: (value: number[]) => void;
+  onChange: (value: null | number | number[]) => void;
   placeholder?: string;
-  value?: number[];
+  value?: number | number[];
 }
 
 export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
-  const { errorText, onChange, value, onBlur, label, placeholder } = props;
+  const { errorText, onChange, value, onBlur, label, placeholder, isMultiple } =
+    props;
 
-  const [selectedValue, setSelectedValue] = React.useState<number[]>(
-    value || []
-  );
+  const [selectedValue, setSelectedValue] = React.useState<
+    null | number | number[]
+  >(value ?? null);
   const { data, isLoading, error } = useAllVPCsQuery({ enabled: true });
 
-  const options: VPCSubnetOption[] = React.useMemo(() => {
-    if (!data) return [];
+  const options: Record<number, VPCSubnetOption> = React.useMemo(() => {
+    if (!data) return {};
 
-    const options: VPCSubnetOption[] = [];
+    const options: Record<number, VPCSubnetOption> = [];
 
     for (const { label: vpcLabel, subnets } of data) {
-      options.push(
-        ...subnets.map(({ id: subnetId, label: subnetLabel }) => ({
+      subnets.forEach(({ id: subnetId, label: subnetLabel }) => {
+        options[subnetId] = {
           id: subnetId,
           label: `${vpcLabel}_${subnetLabel}`,
-        }))
-      );
+        };
+      });
     }
 
     return options;
   }, [data]);
+  const isArray = selectedValue && Array.isArray(selectedValue);
+  const getSelectedOptions = (): null | VPCSubnetOption | VPCSubnetOption[] => {
+    if (selectedValue === null) {
+      return isMultiple ? [] : null;
+    }
+    if (isArray) {
+      const selectedOptions = selectedValue
+        .filter((value) => options[value] !== undefined)
+        .map((value) => options[value]);
 
-  const selectedOptions = options.filter(({ id }) =>
-    selectedValue.includes(id)
-  );
+      return isMultiple ? selectedOptions : (selectedOptions[0] ?? null);
+    }
+
+    const selectedOption = options[selectedValue];
+
+    if (isMultiple) {
+      return selectedOption ? [selectedOption] : [];
+    }
+
+    return selectedOption ?? null;
+  };
 
   return (
     <Autocomplete
@@ -54,14 +73,16 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
       label={label ?? 'VPC Subnet'}
       limitTags={2}
       loading={isLoading}
-      multiple
+      multiple={isMultiple}
       onBlur={onBlur}
       onChange={(_, newValue) => {
-        const newSelectedValue = newValue.map(({ id }) => id);
+        const newSelectedValue = Array.isArray(newValue)
+          ? newValue.map(({ id }) => id)
+          : (newValue?.id ?? null);
         setSelectedValue(newSelectedValue);
         onChange?.(newSelectedValue);
       }}
-      options={options}
+      options={Object.values(options)}
       placeholder={placeholder ?? 'Select VPC Subnets'}
       textFieldProps={{
         InputProps: {
@@ -76,7 +97,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
           },
         },
       }}
-      value={selectedOptions}
+      value={getSelectedOptions()}
     />
   );
 };
