@@ -218,3 +218,12 @@ export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
+
+export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
+  'Trailing comma is not allowed.';
+
+export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
+
+export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
+
+export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';
