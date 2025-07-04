@@ -1,17 +1,21 @@
 import {
   Box,
-  Chip,
   FormControl,
   FormControlLabel,
+  NewFeatureChip,
   Radio,
   RadioGroup,
+  styled,
+  StyledBetaChip,
   Typography,
 } from '@linode/ui';
 import * as React from 'react';
 
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
-import { useAPLAvailability } from 'src/features/Kubernetes/kubeUtils';
+
+import type { BetaChipProps } from '@linode/ui';
+
 export interface APLProps {
   isSectionDisabled: boolean;
   setAPL: (apl: boolean) => void;
@@ -29,75 +33,74 @@ export const APLCopy = () => (
 );
 
 export const ApplicationPlatform = (props: APLProps) => {
-  const { isSectionDisabled, setAPL, setHighAvailability } = props;
-  const { isAPLGeneralAvailability } = useAPLAvailability();
-  const [isAPLChecked, setIsAPLChecked] = React.useState<boolean | undefined>(
-    isSectionDisabled ? false : undefined
-  );
-  const [isAPLNotChecked, setIsAPLNotChecked] = React.useState<
-    boolean | undefined
-  >(isSectionDisabled ? true : undefined);
-  const APL_UNSUPPORTED_CHIP_COPY = `${!isAPLGeneralAvailability ? ' - ' : ''}${isSectionDisabled ? 'COMING SOON' : ''}`;
-
-  /**
-   * Reset the radio buttons to the correct default state once the user toggles cluster tiers.
-   */
-  React.useEffect(() => {
-    setIsAPLChecked(isSectionDisabled ? false : undefined);
-    setIsAPLNotChecked(isSectionDisabled ? true : undefined);
-  }, [isSectionDisabled]);
-
-  const CHIP_COPY = `${!isAPLGeneralAvailability ? 'BETA' : ''}${isSectionDisabled ? APL_UNSUPPORTED_CHIP_COPY : ''}`;
+  const { setAPL, setHighAvailability, isSectionDisabled } = props;
+  const [selectedValue, setSelectedValue] = React.useState<
+    'no' | 'yes' | undefined
+  >(isSectionDisabled ? 'no' : undefined);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAPL(e.target.value === 'yes');
-    setHighAvailability(e.target.value === 'yes');
+    const value = e.target.value;
+    if (value === 'yes' || value === 'no') {
+      setSelectedValue(value);
+      setAPL(value === 'yes');
+      setHighAvailability(value === 'yes');
+    }
   };
 
   return (
     <FormControl data-testid="application-platform-form">
       <FormLabel
         sx={(theme) => ({
-          '&&.MuiFormLabel-root.Mui-focused': {
-            color:
-              theme.name === 'dark'
-                ? theme.tokens.color.Neutrals.White
-                : theme.color.black,
-          },
+          color: theme.tokens.alias.Typography.Label.Bold.S,
         })}
       >
         <Box alignItems="center" display="flex" flexDirection="row">
-          <Typography data-testid="apl-label">Akamai App Platform</Typography>
-          {(!isAPLGeneralAvailability || isSectionDisabled) && (
-            <Chip
-              color="primary"
-              data-testid="apl-beta-chip"
-              label={CHIP_COPY}
-              size="small"
-              sx={{ ml: 1 }}
+          <Typography data-testid="apl-label" variant="inherit">
+            Akamai App Platform
+          </Typography>
+          {isSectionDisabled ? (
+            <StyledComingSoonChip
+              data-testid="apl-coming-soon-chip"
+              label="coming soon"
             />
+          ) : (
+            <NewFeatureChip />
           )}
         </Box>
       </FormLabel>
       <APLCopy />
-      <RadioGroup onChange={(e) => handleChange(e)}>
+      <RadioGroup onChange={handleChange} value={selectedValue || ''}>
         <FormControlLabel
-          checked={isAPLChecked}
-          control={<Radio data-testid="apl-radio-button-yes" />}
+          control={
+            <Radio
+              checked={selectedValue === 'yes'}
+              data-testid="apl-radio-button-yes"
+            />
+          }
           disabled={isSectionDisabled}
-          label="Yes, enable Akamai App Platform."
-          name="yes"
+          label="Yes, enable Akamai App Platform"
           value="yes"
         />
         <FormControlLabel
-          checked={isAPLNotChecked}
-          control={<Radio data-testid="apl-radio-button-no" />}
+          control={
+            <Radio
+              checked={selectedValue === 'no' || isSectionDisabled}
+              data-testid="apl-radio-button-no"
+            />
+          }
           disabled={isSectionDisabled}
           label="No"
-          name="no"
           value="no"
         />
       </RadioGroup>
     </FormControl>
   );
 };
+
+const StyledComingSoonChip = styled(StyledBetaChip, {
+  label: 'StyledComingSoonChip',
+  shouldForwardProp: (prop) => prop !== 'color',
+})<BetaChipProps>(({ theme }) => ({
+  background: theme.tokens.color.Brand[80],
+  textTransform: theme.tokens.font.Textcase.Uppercase,
+}));
