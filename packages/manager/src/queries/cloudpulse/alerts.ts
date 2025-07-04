@@ -32,15 +32,12 @@ export const useCreateAlertDefinition = (serviceType: AlertServiceType) => {
   const queryClient = useQueryClient();
   return useMutation<Alert, APIError[], CreateAlertDefinitionPayload>({
     mutationFn: (data) => createAlertDefinition(data, serviceType),
-    onSuccess(newAlert) {
-      queryClient.cancelQueries({
+    onSuccess: async (newAlert) => {
+      await queryClient.cancelQueries({
         queryKey: queryFactory.alerts._ctx.all().queryKey,
       });
 
-      queryClient.setQueryData<Alert[]>(
-        queryFactory.alerts._ctx.all().queryKey,
-        (oldData) => (oldData ? [...oldData, newAlert] : [newAlert])
-      );
+      await queryClient.fetchQuery(queryFactory.alerts._ctx.all());
 
       queryClient.setQueryData(
         queryFactory.alerts._ctx.alertByServiceTypeAndId(
