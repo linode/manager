@@ -8,7 +8,11 @@ import {
   getMetricDefinitionsByServiceType,
   getNodeBalancers,
 } from '@linode/api-v4';
-import { getAllLinodesRequest, volumeQueries } from '@linode/queries';
+import {
+  firewallQueries,
+  getAllLinodesRequest,
+  volumeQueries,
+} from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
 import { databaseQueries } from '../databases/databases';
@@ -110,6 +114,8 @@ export const queryFactory = createQueryKeys(key, {
     switch (resourceType) {
       case 'dbaas':
         return databaseQueries.databases._ctx.all(params, filters);
+      case 'firewall':
+        return firewallQueries.firewalls._ctx.all;
       case 'linode':
         return {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys

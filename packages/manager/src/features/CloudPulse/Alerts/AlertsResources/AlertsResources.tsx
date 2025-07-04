@@ -21,7 +21,11 @@ import {
 } from '../Utils/AlertResourceUtils';
 import { AlertSelectedInfoNotice } from '../Utils/AlertSelectedInfoNotice';
 import { AlertResourcesFilterRenderer } from './AlertsResourcesFilterRenderer';
-import { databaseTypeClassMap, serviceToFiltersMap } from './constants';
+import {
+  databaseTypeClassMap,
+  getSearchPlaceholderText,
+  serviceToFiltersMap,
+} from './constants';
 import { DisplayAlertResources } from './DisplayAlertResources';
 
 import type { SelectDeselectAll } from '../constants';
@@ -380,9 +384,9 @@ export const AlertResources = React.memo((props: AlertResourcesProp) => {
             <DebouncedSearchTextField
               clearable
               hideLabel
-              label="Search for a Region or Entity"
+              label={getSearchPlaceholderText(serviceType)}
               onSearch={handleSearchTextChange}
-              placeholder="Search for a Region or Entity"
+              placeholder={getSearchPlaceholderText(serviceType)}
               sx={{
                 maxHeight: '34px',
               }}
