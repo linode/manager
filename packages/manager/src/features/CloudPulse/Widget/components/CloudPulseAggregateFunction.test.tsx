@@ -41,4 +41,16 @@ describe('Cloud Pulse Aggregate Function', () => {
 
     expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Min');
   });
+
+  it('should disable the dropdown if there is only one option', () => {
+    renderWithTheme(
+      <CloudPulseAggregateFunction
+        {...props}
+        availableAggregateFunctions={['max']}
+      />
+    );
+
+    expect(screen.getByRole('combobox')).toBeDisabled();
+    expect(screen.getByRole('combobox')).toHaveAttribute('value', 'Max');
+  });
 });

@@ -1,5 +1,5 @@
 import { useRegionQuery, useTypeQuery } from '@linode/queries';
-import { Accordion, BetaChip, Notice } from '@linode/ui';
+import { Accordion, Notice } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -12,13 +12,14 @@ import {
   MAINTENANCE_POLICY_TITLE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
-import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
+import { getFeatureChip } from 'src/features/Account/MaintenancePolicy';
+import { useFlags } from 'src/hooks/useFlags';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
 export const MaintenancePolicy = () => {
   const { control } = useFormContext<LinodeCreateFormValues>();
-  const { isVMHostMaintenanceInBeta } = useVMHostMaintenanceEnabled();
+  const flags = useFlags();
 
   const [selectedRegion, selectedType] = useWatch({
     control,
@@ -37,7 +38,7 @@ export const MaintenancePolicy = () => {
     <Accordion
       detailProps={{ sx: { p: 0 } }}
       heading={MAINTENANCE_POLICY_TITLE}
-      headingChip={isVMHostMaintenanceInBeta ? <BetaChip /> : undefined}
+      headingChip={getFeatureChip(flags.vmHostMaintenance || {})}
       subHeading={
         <>
           {MAINTENANCE_POLICY_DESCRIPTION}{' '}
@@ -69,7 +70,7 @@ export const MaintenancePolicy = () => {
                   ? MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT
                   : undefined,
             }}
-            value={field.value}
+            value={field.value ?? undefined}
           />
         )}
       />
