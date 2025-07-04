@@ -178,7 +178,8 @@ export const DisplayAlertResources = React.memo(
 
       return selectionsRemaining < uncheckedCount; // find if there is appropriate space for root checkbox to be enabled
     };
-    const columns = serviceTypeBasedColumns[serviceType ?? ''];
+    const columns =
+      serviceTypeBasedColumns[serviceType ?? ''] ?? serviceTypeBasedColumns[''];
     const colSpanCount = isSelectionsNeeded
       ? columns.length + 1
       : columns.length;
