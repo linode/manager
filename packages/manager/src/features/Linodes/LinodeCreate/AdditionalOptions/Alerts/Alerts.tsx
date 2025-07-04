@@ -35,8 +35,9 @@ export const Alerts = () => {
       exceeded. After you've created your Linode, you can create and manage
       associated alerts on the <strong>centralized Alerts</strong> page.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-email-alerts-for-resource-usage-on-compute-instances">
-        Learn more.
+        Learn more
       </Link>
+      .
     </>
   ) : (
     'Configure the alert notifications to be sent when metric thresholds are exceeded.'
