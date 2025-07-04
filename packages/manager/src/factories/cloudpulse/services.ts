@@ -4,8 +4,8 @@ import { Factory } from '@linode/utilities';
 import type { ServiceAlert } from '@linode/api-v4';
 
 export const serviceAlertFactory = Factory.Sync.makeFactory<ServiceAlert>({
-  polling_interval_seconds: [1, 5, 10, 15],
-  evaluation_periods_seconds: [5, 10, 15, 20],
+  evaluation_period_seconds: [300, 900, 1800, 3600],
+  polling_interval_seconds: [300, 900, 1800, 3600],
   scope: ['entity', 'region', 'account'],
 });
 

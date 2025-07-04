@@ -2809,10 +2809,15 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          alert: {
+            evaluation_period_seconds: [300],
+            polling_interval_seconds: [300],
+          },
         }),
         serviceTypesFactory.build({
           label: 'Nodebalancers',
@@ -2841,6 +2846,10 @@ export const handlers = [
         : serviceTypesFactory.build({
             label: 'Databases',
             service_type: 'dbaas',
+            alert: serviceAlertFactory.build({
+              evaluation_period_seconds: [300],
+              polling_interval_seconds: [300],
+            }),
           });
 
     return HttpResponse.json(response, { status: 200 });

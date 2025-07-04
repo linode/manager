@@ -1,20 +1,19 @@
 import { Autocomplete, Box, TextField, Typography } from '@linode/ui';
 import { GridLegacy } from '@mui/material';
 import * as React from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import type { FieldPathByValue } from 'react-hook-form';
 
-import {
-  evaluationPeriodOptions,
-  pollingIntervalOptions,
-} from '../../constants';
-import { getAlertBoxStyles } from '../../Utils/utils';
+import { convertSecondsToOptions, getAlertBoxStyles } from '../../Utils/utils';
 
 import type { CreateAlertDefinitionForm } from '../types';
 import type {
+  APIError,
   CreateAlertDefinitionPayload,
+  ServiceAlert,
   TriggerCondition,
 } from '@linode/api-v4';
+
 interface TriggerConditionProps {
   /**
    * maximum scraping interval value for a metric to filter the evaluation period and polling interval options
@@ -24,35 +23,56 @@ interface TriggerConditionProps {
    * name used for the component to set in form
    */
   name: FieldPathByValue<CreateAlertDefinitionPayload, TriggerCondition>;
+  /**
+   * Service metadata containing alert configuration options such as evaluation periods and polling intervals.
+   */
+  serviceMetadata: ServiceAlert | undefined;
+  /**
+   * Array of API errors related to service metadata fetching.
+   */
+  serviceMetadataError: APIError[] | null;
+  /**
+   * Boolean value to indicate if service metadata is currently being loaded.
+   */
+  serviceMetadataLoading: boolean;
 }
+
 export const TriggerConditions = (props: TriggerConditionProps) => {
-  const { maxScrapingInterval, name } = props;
+  const {
+    maxScrapingInterval,
+    name,
+    serviceMetadata,
+    serviceMetadataLoading,
+    serviceMetadataError,
+  } = props;
 
   const { control } = useFormContext<CreateAlertDefinitionForm>();
-  const serviceTypeWatcher = useWatch({
-    control,
-    name: 'serviceType',
-  });
-  const getPollingIntervalOptions = () => {
-    const options = serviceTypeWatcher
-      ? pollingIntervalOptions[serviceTypeWatcher]
-      : [];
-    return options.filter((item) => item.value >= maxScrapingInterval);
-  };
+  const getPollingIntervalOptions = React.useMemo(() => {
+    const options = serviceMetadata?.polling_interval_seconds ?? [];
+    return options
+      .filter((value) => value >= maxScrapingInterval)
+      .map((value) => ({
+        value,
+        label: convertSecondsToOptions(value),
+      }));
+  }, [serviceMetadata, maxScrapingInterval]);
 
-  const getEvaluationPeriodOptions = () => {
-    const options = serviceTypeWatcher
-      ? evaluationPeriodOptions[serviceTypeWatcher]
-      : [];
-    return options.filter((item) => item.value >= maxScrapingInterval);
-  };
+  const getEvaluationPeriodOptions = React.useMemo(() => {
+    const options = serviceMetadata?.evaluation_period_seconds ?? [];
+    return options
+      .filter((value) => value >= maxScrapingInterval)
+      .map((value) => ({
+        value,
+        label: convertSecondsToOptions(value),
+      }));
+  }, [serviceMetadata, maxScrapingInterval]);
 
   return (
     <Box
       sx={(theme) => ({
         ...getAlertBoxStyles(theme),
         borderRadius: 1,
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacingFunction(16),
         p: 2,
       })}
     >
@@ -71,9 +91,15 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 data-testid="evaluation-period"
-                disabled={!serviceTypeWatcher}
-                errorText={fieldState.error?.message}
+                disabled={serviceMetadataLoading || !serviceMetadata}
+                errorText={
+                  fieldState.error?.message ??
+                  (serviceMetadataError
+                    ? 'Error in fetching the data'
+                    : undefined)
+                }
                 label="Evaluation Period"
+                loading={serviceMetadataLoading}
                 onBlur={field.onBlur}
                 onChange={(
                   _,
@@ -84,14 +110,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     operation === 'selectOption' ? selected.value : null
                   );
                 }}
-                options={getEvaluationPeriodOptions()}
+                options={getEvaluationPeriodOptions}
                 placeholder="Select an Evaluation Period"
                 textFieldProps={{
                   labelTooltipText:
                     'Defines the timeframe for collecting data in polling intervals to understand the service performance. Choose the data lookback period where the thresholds are applied to gather the information impactful for your business.',
                 }}
                 value={
-                  getEvaluationPeriodOptions().find(
+                  getEvaluationPeriodOptions.find(
                     (option) => option.value === field.value
                   ) ?? null
                 }
@@ -106,9 +132,15 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
             render={({ field, fieldState }) => (
               <Autocomplete
                 data-testid="polling-interval"
-                disabled={!serviceTypeWatcher}
-                errorText={fieldState.error?.message}
+                disabled={serviceMetadataLoading || !serviceMetadata}
+                errorText={
+                  fieldState.error?.message ??
+                  (serviceMetadataError
+                    ? 'Error in fetching the data'
+                    : undefined)
+                }
                 label="Polling Interval"
+                loading={serviceMetadataLoading}
                 onBlur={field.onBlur}
                 onChange={(
                   _,
@@ -119,14 +151,14 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                     operation === 'selectOption' ? newValue.value : null
                   );
                 }}
-                options={getPollingIntervalOptions()}
+                options={getPollingIntervalOptions}
                 placeholder="Select a Polling Interval"
                 textFieldProps={{
                   labelTooltipText:
                     'Choose how often you intend to evaluate the alert condition.',
                 }}
                 value={
-                  getPollingIntervalOptions().find(
+                  getPollingIntervalOptions.find(
                     (option) => option.value === field.value
                   ) ?? null
                 }
@@ -167,7 +199,7 @@ export const TriggerConditions = (props: TriggerConditionProps) => {
                 }}
                 data-qa-trigger-occurrences
                 data-testid="trigger-occurences"
-                disabled={!serviceTypeWatcher}
+                disabled={serviceMetadataLoading || !serviceMetadata}
                 errorText={fieldState.error?.message}
                 label=""
                 max={Number.MAX_SAFE_INTEGER}
