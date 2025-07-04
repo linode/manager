@@ -80,8 +80,10 @@ describe('StreamCreateCheckoutBar', () => {
 
     // change form type value
     await userEvent.click(streamTypesAutocomplete);
-    const errorLogs = await screen.findByText('Error Logs');
-    await userEvent.click(errorLogs);
+    const kubernetesAuditLogs = await screen.findByText(
+      'Kubernetes Audit Logs'
+    );
+    await userEvent.click(kubernetesAuditLogs);
 
     expect(getDeliveryPriceContext()).not.toEqual(initialPrice);
   });
