@@ -21,17 +21,17 @@ vi.mock('@linode/queries', async () => {
 
 const onChange = vi.fn();
 
-const vpcs = vpcFactory.buildList(2, {
+const vpcs = vpcFactory.build({
   subnets: subnetFactory.buildList(2),
 });
 
 describe('CloudPulseVPCSubnet', () => {
-  const component = <CloudPulseVPCSubnet onChange={onChange} />;
+  const component = <CloudPulseVPCSubnet isMultiple onChange={onChange} />;
   beforeEach(() => {
     vi.resetAllMocks();
     queryMock.useAllVpcsQuery.mockReturnValue({
       isLoading: false,
-      data: vpcs,
+      data: [vpcs],
     });
   });
   it('should render vpc subnet filter', () => {
@@ -52,9 +52,9 @@ describe('CloudPulseVPCSubnet', () => {
     const options = screen.getAllByRole('option');
 
     // options[0] is Select All button
-    expect(options).toHaveLength(5);
+    expect(options).toHaveLength(3);
     expect(options[1]).toHaveTextContent(
-      `${vpcs[0].label}_${vpcs[0].subnets[0].label}`
+      `${vpcs.label}_${vpcs.subnets[0].label}`
     );
   });
 
@@ -69,16 +69,14 @@ describe('CloudPulseVPCSubnet', () => {
 
     await userEvent.click(options[1]);
 
-    expect(onChange).toHaveBeenCalledWith([vpcs[0].subnets[0].id]);
+    expect(onChange).toHaveBeenCalledWith([vpcs.subnets[0].id]);
 
     // click select all button
     await userEvent.click(options[0]);
 
     expect(onChange).toHaveBeenCalledWith([
-      vpcs[0].subnets[0].id,
-      vpcs[0].subnets[1].id,
-      vpcs[1].subnets[0].id,
-      vpcs[1].subnets[1].id,
+      vpcs.subnets[0].id,
+      vpcs.subnets[1].id,
     ]);
   });
 });
