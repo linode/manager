@@ -15,18 +15,21 @@ import type {
 
 export const getAllDatabases = (
   passedParams: Params = {},
-  passedFilter: Filter = {}
+  passedFilter: Filter = {},
 ) =>
   getAll<DatabaseInstance>((params, filter) =>
-    getDatabases({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+    getDatabases(
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter },
+    ),
   )().then((data) => data.data);
 
 export const getAllDatabaseEngines = () =>
   getAll<DatabaseEngine>((params) => getDatabaseEngines(params))().then(
-    (data) => data.data
+    (data) => data.data,
   );
 
 export const getAllDatabaseTypes = (passedFilter: Filter = {}) =>
   getAll<DatabaseType>((params, filter) =>
-    getDatabaseTypes(params, { ...filter, ...passedFilter })
+    getDatabaseTypes(params, { ...filter, ...passedFilter }),
   )().then((data) => data.data);

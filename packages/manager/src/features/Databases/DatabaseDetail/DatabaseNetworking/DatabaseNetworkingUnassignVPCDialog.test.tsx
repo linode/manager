@@ -65,6 +65,11 @@ describe('DatabaseNetworkingUnassignVPCDialog Component', () => {
   it(`should navigate to summary after unassigning`, async () => {
     const mockNavigate = vi.fn();
     queryMocks.useNavigate.mockReturnValue(mockNavigate);
+    queryMocks.useDatabaseMutation.mockReturnValue({
+      mutateAsync: vi.fn().mockResolvedValue({}),
+      isLoading: false,
+      reset: vi.fn(),
+    });
     await renderWithThemeAndRouter(
       <DatabaseNetworkingUnassignVPCDialog {...mockProps} />,
       {

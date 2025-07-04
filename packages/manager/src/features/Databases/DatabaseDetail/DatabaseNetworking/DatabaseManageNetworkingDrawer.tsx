@@ -1,11 +1,10 @@
+import { useDatabaseMutation } from '@linode/queries';
 import { Box, Button, Drawer, Notice } from '@linode/ui';
 import { updatePrivateNetworkSchema } from '@linode/validation';
 import { useNavigate } from '@tanstack/react-router';
 import { useFormik } from 'formik';
 import { enqueueSnackbar } from 'notistack';
 import * as React from 'react';
-
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import { DatabaseVPCSelector } from '../../DatabaseCreate/DatabaseVPCSelector';
 

@@ -1,3 +1,4 @@
+import { useDatabaseMutation } from '@linode/queries';
 import { ActionsPanel, Drawer, Notice, Typography } from '@linode/ui';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -15,7 +16,6 @@ import {
 } from 'src/features/Databases/constants';
 import { isDefaultDatabase } from 'src/features/Databases/utilities';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer.utils';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   extendedIPToString,
