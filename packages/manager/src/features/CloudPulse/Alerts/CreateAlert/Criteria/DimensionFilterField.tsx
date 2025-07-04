@@ -92,7 +92,12 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     ? textFieldOperators.includes(dimensionOperatorWatcher)
     : false;
   return (
-    <GridLegacy container data-testid={`${name}-id`} spacing={2}>
+    <GridLegacy
+      container
+      data-testid={`${name}-id`}
+      flexWrap="wrap"
+      spacing={2}
+    >
       <GridLegacy item md={3} xs={12}>
         <Controller
           control={control}
