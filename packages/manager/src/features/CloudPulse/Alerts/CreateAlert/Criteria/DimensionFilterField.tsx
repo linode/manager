@@ -92,13 +92,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
     ? textFieldOperators.includes(dimensionOperatorWatcher)
     : false;
   return (
-    <GridLegacy
-      container
-      data-testid={`${name}-id`}
-      sx={{
-        gap: 2,
-      }}
-    >
+    <GridLegacy container data-testid={`${name}-id`} spacing={2}>
       <GridLegacy item md={3} xs={12}>
         <Controller
           control={control}
@@ -129,7 +123,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           )}
         />
       </GridLegacy>
-      <GridLegacy item md={2} xs={12}>
+      <GridLegacy item lg={2} md={3} xs={12}>
         <Controller
           control={control}
           name={`${name}.operator`}
@@ -161,7 +155,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
           )}
         />
       </GridLegacy>
-      <GridLegacy item md={3} xs={12}>
+      <GridLegacy item lg={3} md={4} xs={12}>
         <Box display="flex" gap={2}>
           <Controller
             control={control}
@@ -177,7 +171,7 @@ export const DimensionFilterField = (props: DimensionFilterFieldProps) => {
                   onBlur={field.onBlur}
                   onChange={(event) => field.onChange(event.target.value)}
                   placeholder={`${isTextField ? 'Enter' : 'Select'} a Value`}
-                  sx={{ flex: 1, width: '256px' }}
+                  sx={{ flex: 1, maxWidth: '256px' }}
                   value={field.value ?? ''}
                 />
               ) : (
