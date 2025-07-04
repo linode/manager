@@ -323,6 +323,16 @@ interface RenderWithThemeAndHookFormOptions<T extends FieldValues> {
   useFormOptions?: UseFormProps<T>;
 }
 
+export const wrapWithFormContext = <T extends FieldValues>(
+  options: RenderWithThemeAndHookFormOptions<T>
+) => {
+  return (
+    <FormContextWrapper {...options.useFormOptions}>
+      {options.component}
+    </FormContextWrapper>
+  );
+};
+
 export const renderWithThemeAndHookFormContext = <T extends FieldValues>(
   options: RenderWithThemeAndHookFormOptions<T>
 ) => {

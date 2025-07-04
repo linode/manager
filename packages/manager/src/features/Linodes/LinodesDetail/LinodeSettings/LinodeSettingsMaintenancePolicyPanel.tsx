@@ -1,12 +1,5 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import {
-  Accordion,
-  BetaChip,
-  Box,
-  Button,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Accordion, Box, Button, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -18,6 +11,7 @@ import {
   MAINTENANCE_POLICY_TITLE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
+import { getFeatureChip } from 'src/features/Account/MaintenancePolicy';
 import { useFlags } from 'src/hooks/useFlags';
 
 import type { AccountSettings } from '@linode/api-v4';
@@ -68,7 +62,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
       heading={
         <>
           {MAINTENANCE_POLICY_TITLE}{' '}
-          {flags.vmHostMaintenance?.beta && <BetaChip />}
+          {getFeatureChip(flags.vmHostMaintenance || {})}
         </>
       }
     >

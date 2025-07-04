@@ -1,5 +1,5 @@
 import { useMutatePreferences, usePreferences } from '@linode/queries';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from '@tanstack/react-router';
 
 import { MIN_PAGE_SIZE } from 'src/components/PaginationFooter/PaginationFooter.constants';
 
@@ -26,35 +26,34 @@ export const usePagination = (
   );
   const { mutateAsync: updatePreferences } = useMutatePreferences();
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
+  const preferedPageSize = preferenceKey
+    ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
+    : MIN_PAGE_SIZE;
   const pageKey = queryParamsPrefix ? `${queryParamsPrefix}-page` : 'page';
   const pageSizeKey = queryParamsPrefix
     ? `${queryParamsPrefix}-pageSize`
     : 'pageSize';
 
-  const searchParams = new URLSearchParams(location.search);
-  const searchParamPage = searchParams.get(pageKey);
-  const searchParamPageSize = searchParams.get(pageSizeKey);
+  const searchParams: { [key: string]: any } = {
+    ...location.search,
+  };
+  const searchParamPage = searchParams[pageKey];
+  const searchParamPageSize = searchParams[pageSizeKey];
 
-  const preferedPageSize = preferenceKey
-    ? (pageSizePreferences?.[preferenceKey] ?? MIN_PAGE_SIZE)
-    : MIN_PAGE_SIZE;
-
-  const page = searchParamPage ? Number(searchParamPage) : initialPage;
-  const pageSize = searchParamPageSize
-    ? Number(searchParamPageSize)
-    : preferedPageSize;
+  const page = searchParamPage ? searchParamPage : initialPage;
+  const pageSize = searchParamPageSize ? searchParamPageSize : preferedPageSize;
 
   const setPage = (p: number) => {
-    searchParams.set(pageKey, String(p));
-    history.replace(`?${searchParams.toString()}`);
+    searchParams[pageKey] = p;
+    navigate({ to: location.pathname, search: searchParams });
   };
 
   const setPageSize = (size: number) => {
-    searchParams.set(pageSizeKey, String(size));
-    history.replace(`?${searchParams.toString()}`);
+    searchParams[pageSizeKey] = size;
+    navigate({ to: location.pathname, search: searchParams });
   };
 
   const handlePageSizeChange = (newPageSize: number) => {

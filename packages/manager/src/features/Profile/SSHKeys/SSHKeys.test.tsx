@@ -4,7 +4,10 @@ import * as React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import {
+  mockMatchMedia,
+  renderWithThemeAndRouter,
+} from 'src/utilities/testHelpers';
 
 import { SSHKeys } from './SSHKeys';
 
@@ -21,7 +24,9 @@ describe('SSHKeys', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<SSHKeys />);
+    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+      <SSHKeys />
+    );
 
     // Check for table headers
     getByText('Label');

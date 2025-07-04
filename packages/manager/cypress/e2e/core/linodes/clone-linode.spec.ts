@@ -251,7 +251,7 @@ describe('clone linode', () => {
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
+      cy.findByText('VLAN').should('be.visible');
     });
 
     ui.button

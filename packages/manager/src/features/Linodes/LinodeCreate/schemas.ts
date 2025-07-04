@@ -27,6 +27,9 @@ export const CreateLinodeSchema: ObjectSchema<LinodeCreateFormValues> =
         type: string().defined().nullable(),
       }).notRequired(),
       linodeInterfaces: array(CreateLinodeInterfaceFormSchema).required(),
+      maintenance_policy: string()
+        .oneOf(['linode/migrate', 'linode/power_off_on'] as const)
+        .optional(),
     })
   );
 

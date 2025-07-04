@@ -584,7 +584,7 @@ const NodeBalancerCreate = () => {
   }
 
   if (nodeBalancerFields.vpcs?.length) {
-    summaryItems.push({ title: 'VPC Assigned' });
+    summaryItems.push({ title: 'VPC' });
   }
 
   if (nodeBalancerFields.firewall_id) {

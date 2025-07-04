@@ -49,7 +49,7 @@ export const Alerts = () => {
       headingChip={
         aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
           <BetaChip />
-        ) : undefined
+        ) : null
       }
       subHeading={subHeading}
       summaryProps={{ sx: { p: 0 } }}
