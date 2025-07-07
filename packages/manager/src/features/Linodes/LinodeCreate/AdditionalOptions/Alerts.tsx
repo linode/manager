@@ -3,9 +3,10 @@ import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
-import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
 import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/AlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
+
+import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
 
 import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
