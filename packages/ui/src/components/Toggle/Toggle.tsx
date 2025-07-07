@@ -79,7 +79,7 @@ export const Toggle = (props: ToggleProps) => {
           ...sx,
         }}
       />
-      {tooltipText && <TooltipIcon status="help" text={tooltipText} />}
+      {tooltipText && <TooltipIcon status="info" text={tooltipText} />}
     </Box>
   );
 };

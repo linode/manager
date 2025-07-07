@@ -164,14 +164,20 @@ export const LinodeEntityDetailHeader = (
       title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
       variant={variant}
     >
-      <Box sx={(theme) => ({ ...sxBoxFlex, gap: theme.spacingFunction(8) })}>
+      <Box
+        sx={(theme) => ({
+          ...sxBoxFlex,
+          gap: theme.spacingFunction(8),
+          flexWrap: 'wrap',
+          padding: `${theme.spacingFunction(6)} 0 ${theme.spacingFunction(6)} ${theme.spacingFunction(16)}`,
+        })}
+      >
         <Stack
           alignItems="center"
           aria-label={`Linode status ${linodeStatus}`}
           data-qa-linode-status
           direction="row"
-          spacing={1.5}
-          sx={{ paddingLeft: 2 }}
+          spacing={1.25}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
           <Typography sx={(theme) => ({ font: theme.font.bold })}>
@@ -180,9 +186,9 @@ export const LinodeEntityDetailHeader = (
         </Stack>
         {isRebootNeeded && (
           <TooltipIcon
-            status="help"
+            status="info"
             sxTooltipIcon={{
-              padding: 0,
+              padding: `0 ${theme.spacingFunction(4)} 0 0`,
             }}
             text={VPC_REBOOT_MESSAGE}
           />

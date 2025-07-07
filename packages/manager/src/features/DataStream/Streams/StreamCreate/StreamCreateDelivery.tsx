@@ -5,7 +5,7 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import {
   destinationType,
@@ -21,7 +21,6 @@ type DestinationName = {
 };
 
 export const StreamCreateDelivery = () => {
-  const { classes } = useStyles();
   const theme = useTheme();
   const { control } = useFormContext<CreateStreamForm>();
 
@@ -64,7 +63,6 @@ export const StreamCreateDelivery = () => {
         name="destination_type"
         render={({ field }) => (
           <Autocomplete
-            className={classes.input}
             disableClearable
             disabled={true}
             label="Destination Type"
@@ -72,9 +70,7 @@ export const StreamCreateDelivery = () => {
               field.onChange(value);
             }}
             options={destinationTypeOptions}
-            value={destinationTypeOptions.find(
-              ({ value }) => value === field.value
-            )}
+            value={getDestinationTypeOption(field.value)}
           />
         )}
         rules={{ required: true }}
@@ -84,7 +80,6 @@ export const StreamCreateDelivery = () => {
         name="destination_label"
         render={({ field }) => (
           <Autocomplete
-            className={classes.input}
             filterOptions={(options, params) => {
               const filtered = destinationNameFilterOptions(options, params);
               const { inputValue } = params;
