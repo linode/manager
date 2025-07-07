@@ -1,7 +1,7 @@
 import { CloseIcon } from '@linode/ui';
 import { styled } from '@mui/material/styles';
-import { action } from '@storybook/addon-actions';
 import React, { useState } from 'react';
+import { action } from 'storybook/actions';
 
 import { IconButton } from '../IconButton';
 import { List } from '../List';
@@ -11,7 +11,7 @@ import { Autocomplete } from './Autocomplete';
 import { SelectedIcon } from './Autocomplete.styles';
 
 import type { EnhancedAutocompleteProps } from './Autocomplete';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const LABEL = 'Select a Linode';
 

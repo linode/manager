@@ -4,7 +4,7 @@ import React from 'react';
 import { TextTooltip } from './TextTooltip';
 
 import type { TextTooltipProps } from './TextTooltip';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /** Default TextTooltip */
 export const Default: StoryObj<TextTooltipProps> = {

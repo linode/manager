@@ -61,6 +61,7 @@ chai.use(function (chai, utils) {
 });
 
 // Test setup.
+import { blockAnalytics } from './setup/block-analytics';
 import { deleteInternalHeader } from './setup/delete-internal-header';
 import { mockFeatureFlagClientstream } from './setup/feature-flag-clientstream';
 import { mockAccountRequest } from './setup/mock-account-request';
@@ -72,3 +73,4 @@ mockAccountRequest();
 mockFeatureFlagRequests();
 mockFeatureFlagClientstream();
 deleteInternalHeader();
+blockAnalytics();

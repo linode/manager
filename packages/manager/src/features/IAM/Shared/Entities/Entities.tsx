@@ -15,18 +15,14 @@ import {
 } from './utils';
 
 import type { DrawerModes, EntitiesOption } from '../types';
-import type {
-  EntityType,
-  EntityTypePermissions,
-  IamAccessType,
-} from '@linode/api-v4/lib/iam/types';
+import type { AccessType, IamAccessType } from '@linode/api-v4/lib/iam/types';
 
 interface Props {
   access: IamAccessType;
   errorText?: string;
   mode?: DrawerModes;
   onChange: (value: EntitiesOption[]) => void;
-  type: EntityType | EntityTypePermissions;
+  type: AccessType;
   value: EntitiesOption[];
 }
 

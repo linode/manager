@@ -132,6 +132,7 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         alertId: alert.id,
         serviceType: alert.service_type,
         status: toggleStatus,
+        scope: alert.scope,
       })
         .then(() => {
           // Handle success
@@ -342,15 +343,15 @@ export const AlertsListTable = React.memo((props: AlertsListTableProps) => {
         }}
       </Paginate>
       <AlertConfirmationDialog
-        alert={selectedAlert}
         handleCancel={handleCancel}
-        handleConfirm={handleConfirm}
-        isEnabled={isEnabled}
+        handleConfirm={() => handleConfirm(selectedAlert, isEnabled)}
         isLoading={isUpdating}
         isOpen={isDialogOpen}
         message={`Are you sure you want to ${
           isEnabled ? 'disable' : 'enable'
         } this alert definition?`}
+        primaryButtonLabel={`${isEnabled ? 'Disable' : 'Enable'}`}
+        title={`${isEnabled ? 'Disable' : 'Enable'} ${selectedAlert.label} Alert?`}
       />
       <TypeToConfirmDialog
         entity={{

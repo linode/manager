@@ -111,7 +111,7 @@ export interface AccountSettings {
   backups_enabled: boolean;
   interfaces_for_new_linodes: LinodeInterfaceAccountSetting;
   longview_subscription: null | string;
-  maintenance_policy_id: number;
+  maintenance_policy: MaintenancePolicySlug;
   managed: boolean;
   network_helper: boolean;
   object_storage: 'active' | 'disabled' | 'suspended';
@@ -506,8 +506,10 @@ export const EventActionKeys = [
 export type EventAction = (typeof EventActionKeys)[number];
 
 export type EventStatus =
+  | 'canceled'
   | 'failed'
   | 'finished'
+  | 'in-progress'
   | 'notification'
   | 'scheduled'
   | 'started';
@@ -516,25 +518,25 @@ export type EventSource = 'platform' | 'user';
 
 export interface Event {
   action: EventAction;
-  complete_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  complete_time?: null | string;
   created: string;
-  description?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  description?: null | string;
   /*
     NOTE: events before the duration key was added will have a duration of 0
   */
   duration: null | number;
   entity: Entity | null;
   id: number;
-  maintenance_policy_set?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  maintenance_policy_set?: MaintenancePolicySlug | null;
   message: null | string;
-  not_before?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  not_before?: null | string;
   percent_complete: null | number;
   rate: null | string;
   read: boolean;
   secondary_entity: Entity | null;
   seen: boolean;
-  source?: EventSource | null; // @TODO VM & Host Maintenance: verify new fields
-  start_time?: null | string; // @TODO VM & Host Maintenance: verify new fields
+  source?: EventSource | null;
+  start_time?: null | string;
   status: EventStatus;
   time_remaining: null | string;
   username: null | string;
@@ -579,7 +581,7 @@ export interface AccountMaintenance {
     type: 'linode' | 'volume';
     url: string;
   };
-  maintenance_policy_set: string;
+  maintenance_policy_set: MaintenancePolicySlug;
   not_before: string;
   reason: string;
   source: 'platform' | 'user';
@@ -591,17 +593,26 @@ export interface AccountMaintenance {
     | 'pending'
     | 'scheduled'
     | 'started';
-  type: 'cold_migration' | 'live_migration' | 'reboot' | 'volume_migration';
+  type:
+    | 'cold_migration'
+    | 'live_migration'
+    | 'migrate'
+    | 'power_off_on'
+    | 'reboot'
+    | 'volume_migration';
   when: string;
 }
 
+// Note: In the future there will be more slugs, ie: 'private/1234'.
+export type MaintenancePolicySlug = 'linode/migrate' | 'linode/power_off_on';
+
 export type MaintenancePolicy = {
   description: string;
-  id: number;
   is_default: boolean;
-  name: string;
+  label: 'Migrate' | 'Power Off / Power On';
   notification_period_sec: number;
-  type: 'migrate' | 'power-off/on';
+  slug: MaintenancePolicySlug;
+  type: 'linode_migrate' | 'linode_power_off_on' | 'migrate' | 'power_off_on'; // Should not be needed for UX. Mainly for FleetOps.
 };
 
 export interface PayPalData {

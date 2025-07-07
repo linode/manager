@@ -2,7 +2,7 @@ import React from 'react';
 
 import { CodeBlock } from './CodeBlock';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const code = `/**
   * Given a user's preference (light | dark | system), get the name of the actual

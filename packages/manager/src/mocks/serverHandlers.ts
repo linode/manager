@@ -98,6 +98,7 @@ import {
   possiblePostgresReplicationTypes,
   postgresConfigResponse,
   promoFactory,
+  serviceAlertFactory,
   serviceTypesFactory,
   stackScriptFactory,
   staticObjects,
@@ -1102,7 +1103,7 @@ export const handlers = [
     return HttpResponse.json(newFirewall);
   }),
   http.get('*/v4/nodebalancers', () => {
-    const nodeBalancers = nodeBalancerFactory.buildList(1);
+    const nodeBalancers = nodeBalancerFactory.buildList(3);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -1471,7 +1472,7 @@ export const handlers = [
     return HttpResponse.json(volume);
   }),
   http.get('*/vlans', () => {
-    const vlans = VLANFactory.buildList(2);
+    const vlans = VLANFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
@@ -2031,7 +2032,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
-      maintenance_policy_id: 1,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2684,9 +2685,15 @@ export const handlers = [
             },
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
           }),
-          ...alertFactory.buildList(5, {
+          ...alertFactory.buildList(6, {
             service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
             type: 'user',
+            scope: 'account',
+          }),
+          ...alertFactory.buildList(6, {
+            service_type: serviceType === 'dbaas' ? 'dbaas' : 'linode',
+            type: 'user',
+            scope: 'region',
           }),
         ],
       });
@@ -2807,6 +2814,12 @@ export const handlers = [
           label: 'Databases',
           service_type: 'dbaas',
         }),
+        serviceTypesFactory.build({
+          label: 'Nodebalancers',
+          service_type: 'nodebalancer',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2822,6 +2835,8 @@ export const handlers = [
         ? serviceTypesFactory.build({
             label: 'Linodes',
             service_type: 'linode',
+            regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
           })
         : serviceTypesFactory.build({
             label: 'Databases',
@@ -2869,6 +2884,16 @@ export const handlers = [
               y_label: 'system_cpu_utilization_ratio',
             }),
           ],
+        })
+      );
+    }
+
+    if (params.serviceType === 'nodebalancer') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 3,
+          label: 'Nodebalancer Dashboard',
+          service_type: 'nodebalancer',
         })
       );
     }
@@ -3008,8 +3033,15 @@ export const handlers = [
       label:
         params.id === '1'
           ? 'DBaaS Service I/O Statistics'
-          : 'Linode Service I/O Statistics',
-      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
+          : params.id === '3'
+            ? 'NodeBalancer Service I/O Statistics'
+            : 'Linode Service I/O Statistics',
+      service_type:
+        params.id === '1'
+          ? 'dbaas'
+          : params.id === '3'
+            ? 'nodebalancer'
+            : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [

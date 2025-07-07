@@ -9,7 +9,7 @@ import { TableRow } from 'src/components/TableRow';
 
 import { TableFooter } from './TableFooter';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Default: StoryObj<typeof TableFooter> = {
   args: {

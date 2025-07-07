@@ -6,6 +6,7 @@ import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
+import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -14,12 +15,18 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEve
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
+import { LinodeEntityDetailHeaderMaintenancePolicy } from './LinodeEntityDetailHeaderMaintenancePolicy';
 import { getLinodeIconStatus } from './LinodesLanding/utils';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Config, LinodeBackups } from '@linode/api-v4';
+import type {
+  Config,
+  LinodeBackups,
+  MaintenancePolicySlug,
+} from '@linode/api-v4';
 import type { Linode, LinodeType } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
+import type { LinodeMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailProps {
   id: number;
@@ -44,8 +51,10 @@ export interface HeaderProps {
   isSummaryView?: boolean;
   linodeId: number;
   linodeLabel: string;
+  linodeMaintenancePolicySet: MaintenancePolicySlug | undefined;
   linodeRegionDisplay: string;
   linodeStatus: Linode['status'];
+  maintenance: LinodeMaintenance | null;
   openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
@@ -71,12 +80,16 @@ export const LinodeEntityDetailHeader = (
     linodeLabel,
     linodeRegionDisplay,
     linodeStatus,
+    linodeMaintenancePolicySet,
+    maintenance,
     openNotificationMenu,
     progress,
     transitionText,
     type,
     variant,
   } = props;
+
+  const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
   const isLinodesGrantReadOnly = useIsResourceRestricted({
     grantLevel: 'read_only',
@@ -151,14 +164,20 @@ export const LinodeEntityDetailHeader = (
       title={<StyledLink to={`linodes/${linodeId}`}>{linodeLabel}</StyledLink>}
       variant={variant}
     >
-      <Box sx={sxBoxFlex}>
+      <Box
+        sx={(theme) => ({
+          ...sxBoxFlex,
+          gap: theme.spacingFunction(8),
+          flexWrap: 'wrap',
+          padding: `${theme.spacingFunction(6)} 0 ${theme.spacingFunction(6)} ${theme.spacingFunction(16)}`,
+        })}
+      >
         <Stack
           alignItems="center"
           aria-label={`Linode status ${linodeStatus}`}
           data-qa-linode-status
           direction="row"
-          spacing={1.5}
-          sx={{ paddingX: 2 }}
+          spacing={1.25}
         >
           <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
           <Typography sx={(theme) => ({ font: theme.font.bold })}>
@@ -167,9 +186,17 @@ export const LinodeEntityDetailHeader = (
         </Stack>
         {isRebootNeeded && (
           <TooltipIcon
-            status="help"
-            sxTooltipIcon={{ padding: 0 }}
+            status="info"
+            sxTooltipIcon={{
+              padding: `0 ${theme.spacingFunction(4)} 0 0`,
+            }}
             text={VPC_REBOOT_MESSAGE}
+          />
+        )}
+        {isVMHostMaintenanceEnabled && (
+          <LinodeEntityDetailHeaderMaintenancePolicy
+            linodeMaintenancePolicySet={linodeMaintenancePolicySet}
+            maintenance={maintenance}
           />
         )}
         {hasSecondaryStatus && (
