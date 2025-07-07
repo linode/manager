@@ -96,8 +96,8 @@ export const CloudPulseTextFilter = React.memo(
       }
     }, [defaultValue, handleTextFilterChange, filterKey, savePreferences]);
 
-    // Only call handlePortChange if the user has stopped typing for 0.5 seconds
-    const debouncedPortChange = React.useMemo(
+    // Only call handleTextFilterChange if the user has stopped typing for 0.5 seconds
+    const debouncedTextFilterChange = React.useMemo(
       () =>
         debounce(500, (value: string) => {
           handleTextFilterChange(value, [value], filterKey, savePreferences);
@@ -112,7 +112,7 @@ export const CloudPulseTextFilter = React.memo(
       const validationError = validate(e.target.value);
       setErrorText(validationError);
       if (validationError === undefined) {
-        debouncedPortChange(e.target.value);
+        debouncedTextFilterChange(e.target.value);
       }
     };
 
