@@ -1,0 +1,47 @@
+import { useLinodeQuery } from '@linode/queries';
+
+type AclpStage = 'beta' | 'ga';
+
+/**
+ * Determines if the linode is considered subscribed to ACLP or legacy alerts.
+ *
+ * ### Cases:
+ * - Legacy alerts = 0, Beta alerts = []
+ *   - Show default Legacy UI (disabled) for Beta
+ *   - Show default Beta UI (disabled) for GA
+ * - Legacy alerts > 0, Beta alerts = []
+ *   - Show default Legacy UI (enabled)
+ * - Legacy alerts = 0, Beta alerts has values (either system, user, or both)
+ *   - Show default Beta UI
+ * - Legacy alerts > 0, Beta alerts has values (either system, user, or both)
+ *   - Show default Beta UI
+ *
+ * @param linodeId - The ID of the Linode
+ * @param stage - The current ACLP stage: 'beta' or 'ga
+ */
+export const useIsLinodeAclpSubscribed = (
+  linodeId: number,
+  stage: AclpStage,
+) => {
+  const { data: linode } = useLinodeQuery(linodeId);
+
+  if (!linode) {
+    return { isLinodeAclpSubscribed: false };
+  }
+
+  const hasLegacyAlerts =
+    (linode.alerts.cpu ?? 0) > 0 ||
+    (linode.alerts.io ?? 0) > 0 ||
+    (linode.alerts.network_in ?? 0) > 0 ||
+    (linode.alerts.network_out ?? 0) > 0 ||
+    (linode.alerts.transfer_quota ?? 0) > 0;
+
+  const hasAclpAlerts =
+    (linode.alerts.system?.length ?? 0) > 0 ||
+    (linode.alerts.user?.length ?? 0) > 0;
+
+  const isLinodeAclpSubscribed =
+    hasAclpAlerts || (!hasAclpAlerts && !hasLegacyAlerts && stage === 'ga');
+
+  return { isLinodeAclpSubscribed };
+};
