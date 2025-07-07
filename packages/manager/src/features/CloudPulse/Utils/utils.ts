@@ -270,7 +270,7 @@ export const areValidInterfaceIds = (
   const interfaceIdList = interfaceIds.split(',');
   const interfaceIdLimitCount = interfaceIdList.length;
 
-  if (interfaceIdLimitCount > 50) {
+  if (interfaceIdLimitCount > 15) {
     return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
   }
 
