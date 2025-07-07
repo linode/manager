@@ -1,3 +1,5 @@
+import type { MaintenancePolicySlug } from '@linode/api-v4';
+
 export const MIGRATE_TOOLTIP_TEXT =
   'Migrates the Linode to a new host while it is still running. During the migration, the instance remains fully operational, though there is a temporary performance impact. For most maintenance events and Linode types, no reboot is required after the migration completes. If a reboot is required, it is automatically performed.';
 
@@ -7,11 +9,19 @@ export const POWER_OFF_TOOLTIP_TEXT =
 export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 
 export const MAINTENANCE_POLICY_DESCRIPTION =
-  'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
+  'Select the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.';
 
-export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<number, string> = {
-  1: 'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
-  2: 'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
+export const MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION =
+  'Select the preferred default host maintenance policy for newly deployed Linodes. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is performed. This preference can be changed when creating new Linodes or modifying existing Linodes.';
+
+export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<
+  MaintenancePolicySlug,
+  string
+> = {
+  'linode/migrate':
+    'Migrates the Linode to a new host while it remains fully operational. Recommended for maximizing availability.',
+  'linode/power_off_on':
+    'Powers off the Linode at the start of the maintenance event and reboots it once the maintenance finishes. Recommended for maximizing performance.',
 };
 
 export const MAINTENANCE_POLICY_LEARN_MORE_URL =

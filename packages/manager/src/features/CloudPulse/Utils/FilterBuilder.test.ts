@@ -437,7 +437,7 @@ it('test getPortFilterProperties method', () => {
     const { handlePortChange, label, savePreferences } = getPortProperties(
       {
         config: portFilterConfig,
-        dashboard: dashboardFactory.build({ service_type: 'nodebalancers' }),
+        dashboard: dashboardFactory.build({ service_type: 'nodebalancer' }),
         isServiceAnalyticsIntegration: false,
       },
       vi.fn()

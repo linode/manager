@@ -5,7 +5,7 @@ import React from 'react';
 import { Notice } from './Notice';
 
 import type { NoticeProps } from './Notice';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 export const Success: StoryObj<NoticeProps> = {
   render: (args) => (

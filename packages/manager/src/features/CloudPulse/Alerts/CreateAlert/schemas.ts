@@ -17,7 +17,7 @@ import {
 } from '../../Utils/constants';
 import { PORTS_TRAILING_COMMA_ERROR_MESSAGE } from '../constants';
 
-import type { AlertDefinitionGroup, AlertDefinitionType } from '@linode/api-v4';
+import type { AlertDefinitionScope, AlertDefinitionType } from '@linode/api-v4';
 
 const fieldErrorMessage = 'This field is required.';
 
@@ -193,7 +193,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
     regions: array().of(string().defined()),
-    scope: mixed<AlertDefinitionGroup>()
+    scope: mixed<AlertDefinitionScope>()
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),

@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Button,
   FormControl,
   FormControlLabel,
   Notice,
@@ -9,6 +8,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -265,7 +265,7 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                 />
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{
                     marginTop: '1.75rem',
                     padding: '0px 8px',
@@ -360,13 +360,13 @@ export const MaintenanceWindow = (props: Props) => {
           </div>
         </div>
         <Button
-          buttonType="primary"
           className={classes.sectionButton}
-          compactX
+          data-testid="save-changes-button"
           disabled={!formTouched || isSubmitting || disabled}
-          loading={isSubmitting}
+          processing={isSubmitting}
           title="Save Changes"
           type="submit"
+          variant="primary"
         >
           Save Changes
         </Button>
