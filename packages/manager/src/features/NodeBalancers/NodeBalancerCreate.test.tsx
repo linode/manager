@@ -27,6 +27,12 @@ vi.mock('src/hooks/useFlags', () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { create_firewall: true },
+  })),
+}));
+
 // Note: see nodeblaancers-create-in-complex-form.spec.ts for an e2e test of this flow
 describe('NodeBalancerCreate', () => {
   queryMocks.useFlags.mockReturnValue({
