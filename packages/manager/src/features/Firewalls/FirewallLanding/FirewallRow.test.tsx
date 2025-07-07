@@ -37,6 +37,12 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { delete_firewall: true, update_firewall: true },
+  })),
+}));
+
 beforeAll(() => mockMatchMedia());
 
 describe('FirewallRow', () => {
