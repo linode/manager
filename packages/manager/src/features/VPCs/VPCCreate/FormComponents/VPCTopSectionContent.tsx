@@ -4,6 +4,7 @@ import {
   Box,
   FormControlLabel,
   Notice,
+  Stack,
   styled,
   TextField,
   TooltipIcon,
@@ -149,7 +150,7 @@ export const VPCTopSectionContent = (props: Props) => {
       />
       {isDualStackEnabled && (
         <Box marginTop={2}>
-          <FormLabel>VPC Stack Type </FormLabel>
+          <FormLabel>Networking IP Stack </FormLabel>
           <RadioGroup sx={{ display: 'block' }}>
             <Grid container spacing={2}>
               <SelectionCard
@@ -165,6 +166,21 @@ export const VPCTopSectionContent = (props: Props) => {
                   remove(0);
                 }}
                 renderIcon={() => <Radio checked={cidrOption === 'ipv4'} />}
+                renderVariant={() => (
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{
+                      padding: '8px',
+                    }}
+                    text={
+                      <Typography>
+                        The VPC uses IPv4 addresses only. The VPC can use the
+                        entire RFC 1918 specified range for subnetting.
+                      </Typography>
+                    }
+                    width={250}
+                  />
+                )}
                 subheadings={[]}
                 sxCardBase={{ gap: 0 }}
                 sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
@@ -195,10 +211,23 @@ export const VPCTopSectionContent = (props: Props) => {
                       padding: '8px',
                     }}
                     text={
-                      <Typography>
-                        /52 is a default that impacts subnetting. If you need a
-                        larger space, open a support ticket.
-                      </Typography>
+                      <Stack spacing={2}>
+                        <Typography>
+                          The VPC supports both IPv4 and IPv6 addresses.
+                        </Typography>
+                        <Typography>
+                          For IPv4, the VPC can use the entire RFC 1918
+                          specified range for subnetting.
+                        </Typography>
+                        <Typography>
+                          For IPv6, the VPC is assigned an IPv6 prefix length of
+                          /52 by default.
+                        </Typography>
+                        <Typography>
+                          To request a larger prefix length, please contact
+                          support.
+                        </Typography>
+                      </Stack>
                     }
                     width={250}
                   />
@@ -211,7 +240,7 @@ export const VPCTopSectionContent = (props: Props) => {
           </RadioGroup>
         </Box>
       )}
-      {cidrOption === 'dualstack' && (
+      {cidrOption === 'dualstack' && isTrustedCustomer && (
         <Controller
           control={control}
           name="ipv6"
@@ -225,11 +254,9 @@ export const VPCTopSectionContent = (props: Props) => {
               }}
               value={fields[0].range}
             >
-              {isTrustedCustomer && (
-                <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
-                  IPv6 CIDR
-                </StyledFormLabel>
-              )}
+              <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
+                VPC IPv6 CIDR
+              </StyledFormLabel>
               {errors.ipv6 && (
                 <Notice
                   sx={{ marginTop: 1 }}
@@ -237,20 +264,10 @@ export const VPCTopSectionContent = (props: Props) => {
                   variant="error"
                 />
               )}
-              {isTrustedCustomer && (
-                <>
-                  <FormControlLabel
-                    control={<Radio />}
-                    label="/52"
-                    value="/52"
-                  />
-                  <FormControlLabel
-                    control={<Radio />}
-                    label="/48"
-                    value="/48"
-                  />
-                </>
-              )}
+              <>
+                <FormControlLabel control={<Radio />} label="/52" value="/52" />
+                <FormControlLabel control={<Radio />} label="/48" value="/48" />
+              </>
             </RadioGroup>
           )}
         />
@@ -262,9 +279,4 @@ export const VPCTopSectionContent = (props: Props) => {
 const StyledFormLabel = styled(FormLabel)(() => ({
   alignItems: 'center',
   display: 'flex',
-}));
-
-const StyledList = styled('ul')(({ theme }) => ({
-  marginTop: 0,
-  paddingLeft: theme.spacingFunction(24),
 }));
