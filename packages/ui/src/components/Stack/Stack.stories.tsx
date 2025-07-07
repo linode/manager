@@ -4,7 +4,7 @@ import { Divider } from '../Divider';
 import { Paper } from '../Paper';
 import { Stack } from './Stack';
 
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const children = [
   <Paper key={0} variant="outlined">

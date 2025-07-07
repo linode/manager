@@ -1472,7 +1472,7 @@ export const handlers = [
     return HttpResponse.json(volume);
   }),
   http.get('*/vlans', () => {
-    const vlans = VLANFactory.buildList(2);
+    const vlans = VLANFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
@@ -2032,7 +2032,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
-      maintenance_policy_id: 1,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2824,6 +2824,12 @@ export const handlers = [
             evaluation_period_seconds: [300],
             polling_interval_seconds: [300],
           },
+        }),
+        serviceTypesFactory.build({
+          label: 'Nodebalancers',
+          service_type: 'nodebalancer',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Nodebalancers',

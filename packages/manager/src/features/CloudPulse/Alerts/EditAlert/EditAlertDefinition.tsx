@@ -100,7 +100,8 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
       values,
       serviceType,
       alertDetails.severity,
-      alertId
+      alertId,
+      alertDetails.scope
     );
     try {
       await editAlert(editPayload);

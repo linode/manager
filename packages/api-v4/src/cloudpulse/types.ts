@@ -15,6 +15,7 @@ export type DimensionFilterOperatorType =
 export type AlertDefinitionType = 'system' | 'user';
 export type AlertDefinitionGroup = 'account' | 'entity' | 'region';
 export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
+export type AlertDefinitionScope = 'account' | 'entity' | 'region';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -391,3 +392,11 @@ export interface CloudPulseAlertsPayload {
    */
   user?: number[];
 }
+export const capabilityServiceTypeMapping: Record<
+  MetricsServiceType,
+  AccountCapability
+> = {
+  linode: 'Linodes',
+  dbaas: 'Managed Databases',
+  nodebalancer: 'NodeBalancers',
+};
