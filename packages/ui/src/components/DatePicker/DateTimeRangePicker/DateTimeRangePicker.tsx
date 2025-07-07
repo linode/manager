@@ -271,6 +271,7 @@ export const DateTimeRangePicker = ({
               <Presets
                 onPresetSelect={handlePresetSelect}
                 selectedPreset={selectedPreset}
+                timeZone={timeZone}
               />
             )}
             <Box>
