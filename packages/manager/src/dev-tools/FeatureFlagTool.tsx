@@ -174,10 +174,10 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
   }: SetNestedValueOptions): NestedObject => {
     const [currentKey, ...restPath] = path;
 
-    // Merge original LD values and stored overrides at the current level
+    // Merge original LD values and existing stored overrides at the current recursion level
     const base = {
-      ...ldFlagsObj, // Keep original LD values
-      ...storedFlagsObj, // Apply any existing stored overrides
+      ...ldFlagsObj, // Keep original LD values at this level
+      ...storedFlagsObj, // Apply any existing stored overrides at this level
     };
 
     // Base case (final key in the path)
@@ -214,7 +214,7 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
       return;
     }
 
-    // If the flag is a nested flag, Recursively update only the specific property that changed,
+    // If the flag is a nested flag, recursively update only the specific property that changed,
     // starting from the parentKey and preserving sibling values at each level
     const [parentKey, ...restPath] = flagParts;
     const updatedNested = setNestedValue({
