@@ -1,3 +1,5 @@
+import { arePortsValid, areValidInterfaceIds } from './utils';
+
 export const DASHBOARD_ID = 'dashboardId';
 
 export const PRIMARY_NODE = 'primary';
@@ -87,4 +89,12 @@ export const HELPER_TEXT: Record<string, string> = {
 export const PLACEHOLDER_TEXT: Record<string, string> = {
   [PORT]: PORTS_PLACEHOLDER_TEXT,
   [INTERFACE_ID]: INTERFACE_IDS_PLACEHOLDER_TEXT,
+};
+
+export const validationFunction: Record<
+  string,
+  (value: string) => string | undefined
+> = {
+  [PORT]: arePortsValid,
+  [INTERFACE_ID]: areValidInterfaceIds,
 };
