@@ -86,7 +86,7 @@ export const LinodeCreate = () => {
 
   const { aclpBetaServices } = useFlags();
 
-  // Alerts always defaults to 'legacy' mode in the Create Flow
+  // In Create flow, alerts always default to 'legacy' mode
   const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
     React.useState<boolean>(false);
 

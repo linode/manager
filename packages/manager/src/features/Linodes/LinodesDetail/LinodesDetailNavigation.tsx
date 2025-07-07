@@ -74,13 +74,13 @@ const LinodesDetailNavigation = () => {
     (preferences) => preferences?.isAclpMetricsBeta
   );
 
-  // Alerts default to the value from a Linode API flag in the Edit flow
+  // In Edit flow, default alert mode is based on Linode's ACLP subscription status
   const { isLinodeAclpSubscribed } = useIsLinodeAclpSubscribed(
     linode?.id,
     'beta'
   );
   const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
-    React.useState<boolean>(isLinodeAclpSubscribed ?? false);
+    React.useState<boolean>(isLinodeAclpSubscribed);
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
