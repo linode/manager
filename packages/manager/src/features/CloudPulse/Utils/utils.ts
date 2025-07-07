@@ -5,10 +5,19 @@ import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
 
 import {
+  INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  INTERFACE_IDS_ERROR_MESSAGE,
+  INTERFACE_IDS_HELPER_TEXT,
+  INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
+  INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
+  INTERFACE_IDS_PLACEHOLDER_TEXT,
+  PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
+  PORTS_HELPER_TEXT,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
+  PORTS_PLACEHOLDER_TEXT,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 
@@ -232,6 +241,76 @@ export const arePortsValid = (ports: string): string | undefined => {
   }
 
   return undefined;
+};
+
+/**
+ * @param interfaceIds
+ * @returns error message string
+ * @description Validates a comma-separated list of interface ids and sets the error message
+ */
+export const areValidInterfaceIds = (
+  interfaceIds: string
+): string | undefined => {
+  if (interfaceIds === '') {
+    return undefined;
+  }
+
+  if (interfaceIds.startsWith(',')) {
+    return INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE;
+  }
+
+  if (interfaceIds.includes(',,')) {
+    return INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE;
+  }
+
+  if (!/^[\d,]+$/.test(interfaceIds)) {
+    return INTERFACE_IDS_ERROR_MESSAGE;
+  }
+
+  const interfaceIdList = interfaceIds.split(',');
+  const interfaceIdLimitCount = interfaceIdList.length;
+
+  if (interfaceIdLimitCount > 50) {
+    return INTERFACE_IDS_LIMIT_ERROR_MESSAGE;
+  }
+
+  return undefined;
+};
+
+/**
+ * @param filterKey
+ * @returns validation function based on the filter key
+ */
+export const getValidationFunction = (filterKey: string) => {
+  if (filterKey === PORT) {
+    return arePortsValid;
+  }
+
+  return areValidInterfaceIds;
+};
+
+/**
+ * @param filterKey
+ * @returns helper text based on the filter key
+ */
+export const getHelperText = (filterKey: string) => {
+  if (filterKey === PORT) {
+    return PORTS_HELPER_TEXT;
+  }
+
+  return INTERFACE_IDS_HELPER_TEXT;
+};
+
+/**
+ * @param filterKey
+ * @returns placeholder text based on the filter key
+ */
+export const getPlaceholderText = (filterKey: string) => {
+  if (filterKey === PORT) {
+    return PORTS_PLACEHOLDER_TEXT;
+  }
+
+  return INTERFACE_IDS_PLACEHOLDER_TEXT;
 };
 
 /**

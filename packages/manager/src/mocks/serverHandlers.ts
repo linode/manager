@@ -2831,6 +2831,13 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+
+        serviceTypesFactory.build({
+          label: 'Firewalls',
+          service_type: 'firewall',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2902,6 +2909,16 @@ export const handlers = [
           id: 3,
           label: 'Nodebalancer Dashboard',
           service_type: 'nodebalancer',
+        })
+      );
+    }
+
+    if (params.serviceType === 'firewall') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 4,
+          label: 'Firewall Dashboard',
+          service_type: 'firewall',
         })
       );
     }
@@ -3054,7 +3071,9 @@ export const handlers = [
           ? 'dbaas'
           : params.id === '3'
             ? 'nodebalancer'
-            : 'linode', // just update the service type and label and use same widget configs
+            : params.id === '4'
+              ? 'firewall'
+              : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [

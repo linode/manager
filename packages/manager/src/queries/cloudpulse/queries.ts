@@ -4,6 +4,7 @@ import {
   getCloudPulseServiceTypes,
   getDashboardById,
   getDashboards,
+  getFirewalls,
   getJWEToken,
   getMetricDefinitionsByServiceType,
   getNodeBalancers,
@@ -110,6 +111,15 @@ export const queryFactory = createQueryKeys(key, {
     switch (resourceType) {
       case 'dbaas':
         return databaseQueries.databases._ctx.all(params, filters);
+      case 'firewall':
+        return {
+          queryFn: async () => {
+            const response = await getFirewalls(params, filters);
+            return response.data;
+          },
+          queryKey: ['firewalls', params, filters],
+        };
+
       case 'linode':
         return {
           queryFn: () => getAllLinodesRequest(params, filters), // since we don't have query factory implementation, in linodes.ts, once it is ready we will reuse that, untill then we will use same query keys
