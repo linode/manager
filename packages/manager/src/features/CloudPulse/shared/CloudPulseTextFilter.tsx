@@ -2,11 +2,8 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import {
-  getHelperText,
-  getPlaceholderText,
-  getValidationFunction,
-} from '../Utils/utils';
+import { HELPER_TEXT, PLACEHOLDER_TEXT } from '../Utils/constants';
+import { getValidationFunction } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
@@ -127,13 +124,13 @@ export const CloudPulseTextFilter = React.memo(
         autoComplete="off"
         disabled={disabled}
         errorText={errorText}
-        helperText={!errorText ? getHelperText(filterKey) : undefined}
+        helperText={!errorText ? HELPER_TEXT[filterKey] : undefined}
         label={label}
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
         optional
-        placeholder={placeholder ?? getPlaceholderText(filterKey)}
+        placeholder={placeholder ?? PLACEHOLDER_TEXT[filterKey]}
         value={value}
       />
     );

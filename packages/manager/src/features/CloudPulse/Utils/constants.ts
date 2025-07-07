@@ -76,3 +76,13 @@ export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
   'Enter a maximum of 15 interface ids';
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 0,1';
+
+export const HELPER_TEXT: Record<string, string> = {
+  [PORT]: PORTS_HELPER_TEXT,
+  [INTERFACE_ID]: INTERFACE_IDS_HELPER_TEXT,
+};
+
+export const PLACEHOLDER_TEXT: Record<string, string> = {
+  [PORT]: PORTS_PLACEHOLDER_TEXT,
+  [INTERFACE_ID]: INTERFACE_IDS_PLACEHOLDER_TEXT,
+};

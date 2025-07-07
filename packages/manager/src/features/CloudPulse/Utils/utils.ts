@@ -7,17 +7,13 @@ import { useFlags } from 'src/hooks/useFlags';
 import {
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
-  INTERFACE_IDS_HELPER_TEXT,
   INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
   INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
-  INTERFACE_IDS_PLACEHOLDER_TEXT,
   PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
-  PORTS_HELPER_TEXT,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
-  PORTS_PLACEHOLDER_TEXT,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
 
@@ -287,30 +283,6 @@ export const getValidationFunction = (filterKey: string) => {
   }
 
   return areValidInterfaceIds;
-};
-
-/**
- * @param filterKey
- * @returns helper text based on the filter key
- */
-export const getHelperText = (filterKey: string) => {
-  if (filterKey === PORT) {
-    return PORTS_HELPER_TEXT;
-  }
-
-  return INTERFACE_IDS_HELPER_TEXT;
-};
-
-/**
- * @param filterKey
- * @returns placeholder text based on the filter key
- */
-export const getPlaceholderText = (filterKey: string) => {
-  if (filterKey === PORT) {
-    return PORTS_PLACEHOLDER_TEXT;
-  }
-
-  return INTERFACE_IDS_PLACEHOLDER_TEXT;
 };
 
 /**
