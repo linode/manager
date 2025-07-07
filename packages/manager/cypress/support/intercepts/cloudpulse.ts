@@ -71,7 +71,7 @@ export const mockGetCloudPulseServices = (
  */
 export const mockGetCloudPulseServiceByServiceType = (
   serviceType: string,
-  service: ServiceType
+  service: Service
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
