@@ -1,5 +1,3 @@
-import { LINODE_STATUS_PAGE_URL } from '../../../manager/src/constants';
-
 import type { IncidentResponse, MaintenanceResponse } from './types';
 import type { APIError } from '@linode/api-v4';
 
@@ -18,10 +16,14 @@ const handleError = (error: APIError, defaultMessage: string) => {
 /**
  * Return a list of incidents with a status of "unresolved."
  */
-export const getIncidents = async (): Promise<IncidentResponse> => {
+export const getIncidents = async (
+  LINODE_STATUS_PAGE_URL?: string,
+): Promise<IncidentResponse> => {
+  const STATUS_PAGE_URL =
+    LINODE_STATUS_PAGE_URL ?? 'https://status.linode.com/api/v2';
   try {
     const response = await fetch(
-      `${LINODE_STATUS_PAGE_URL}/incidents/unresolved.json`,
+      `${STATUS_PAGE_URL}/incidents/unresolved.json`,
     );
 
     if (!response.ok) {
@@ -38,10 +40,15 @@ export const getIncidents = async (): Promise<IncidentResponse> => {
  * There are several endpoints for maintenance events; this method will return
  * a list of the most recent 50 maintenance, inclusive of all statuses.
  */
-export const getAllMaintenance = async (): Promise<MaintenanceResponse> => {
+export const getAllMaintenance = async (
+  LINODE_STATUS_PAGE_URL?: string,
+): Promise<MaintenanceResponse> => {
+  const STATUS_PAGE_URL =
+    LINODE_STATUS_PAGE_URL ?? 'https://status.linode.com/api/v2';
+
   try {
     const response = await fetch(
-      `${LINODE_STATUS_PAGE_URL}/scheduled-maintenances.json`,
+      `${STATUS_PAGE_URL}/scheduled-maintenances.json`,
     );
 
     if (!response.ok) {
