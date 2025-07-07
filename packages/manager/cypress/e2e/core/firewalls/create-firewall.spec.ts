@@ -73,6 +73,7 @@ describe('create firewall', () => {
    * - Confirms that firewall is listed correctly on firewalls landing page.
    * - Confirms that firewall is assigned to the linode.
    */
+  // TODO test fails
   it('creates a firewall assigned to a linode', () => {
     const region = chooseRegion();
 
@@ -123,7 +124,7 @@ describe('create firewall', () => {
       cy.findByText(firewall.label)
         .closest('tr')
         .within(() => {
-          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText(firewall.label).should('be.visible'); // FAILED
           cy.findByText('Enabled').should('be.visible');
           cy.findByText('No rules').should('be.visible');
           cy.findByText(linode.label).should('be.visible');
