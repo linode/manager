@@ -45,7 +45,7 @@ baseRequest.interceptors.request.use((config) => {
 /**
  * After a resource is deleted, the UI may still attempt to fetch it.
  * This interceptor blocks these reqs by checking if the resource has
- * been marked as deleted, preventing unnecessary 404 errors.
+ * been marked as deleted to prevent unnecessary 404 errors.
  */
 baseRequest.interceptors.request.use((config) => {
   const url = config.url || '';
