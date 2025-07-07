@@ -36,7 +36,7 @@ import {
 import type { CreateAlertDefinitionForm as EditAlertDefintionForm } from '../CreateAlert/types';
 import type {
   Alert,
-  AlertDefinitionGroup,
+  AlertDefinitionScope,
   AlertServiceType,
   APIError,
   EditAlertPayloadWithService,
@@ -87,7 +87,7 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
   const scopeWatcher = useWatch<EditAlertDefintionForm>({
     name: 'scope',
     control,
-  }) as AlertDefinitionGroup | null;
+  }) as AlertDefinitionScope | null;
 
   const {
     data: serviceMetadata,

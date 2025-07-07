@@ -95,7 +95,6 @@ export const DateTimeRangePicker = ({
   startDateProps,
   timeZoneProps,
   sx,
-  timeZoneProps,
 }: DateTimeRangePickerProps) => {
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null,

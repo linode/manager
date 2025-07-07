@@ -20,7 +20,6 @@ import type {
   APIError,
   CloudPulseAlertsPayload,
   Dashboard,
-  DimensionFilterOperatorType,
   ResourcePage,
   Service,
   ServiceTypesList,

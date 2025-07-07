@@ -2,7 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
-  AlertDefinitionGroup,
+  AlertDefinitionScope,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -106,13 +106,13 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
-export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
+export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Account', value: 'account' },
   { label: 'Region', value: 'region' },
   { label: 'Entity', value: 'entity' },
 ];
 
-export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
+export const entityGroupMap: Record<AlertDefinitionScope, string> = {
   account: 'Account',
   region: 'Region',
   entity: 'Entity',

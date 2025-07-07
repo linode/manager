@@ -13,9 +13,8 @@ export type DimensionFilterOperatorType =
   | 'neq'
   | 'startswith';
 export type AlertDefinitionType = 'system' | 'user';
-export type AlertDefinitionGroup = 'account' | 'entity' | 'region';
-export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type AlertDefinitionScope = 'account' | 'entity' | 'region';
+export type AlertStatusType = 'disabled' | 'enabled' | 'failed' | 'in progress';
 export type CriteriaConditionType = 'ALL';
 export type MetricUnitType =
   | 'bit_per_second'
@@ -173,7 +172,7 @@ export interface CloudPulseMetricsList {
 export interface ServiceAlert {
   evaluation_period_seconds: number[];
   polling_interval_seconds: number[];
-  scope: AlertDefinitionGroup[];
+  scope: AlertDefinitionScope[];
 }
 
 export interface Service {
@@ -249,7 +248,7 @@ export interface Alert {
   rule_criteria: {
     rules: AlertDefinitionMetricCriteria[];
   };
-  scope: AlertDefinitionGroup;
+  scope: AlertDefinitionScope;
   service_type: AlertServiceType;
   severity: AlertSeverityType;
   status: AlertStatusType;
@@ -338,7 +337,7 @@ export interface EditAlertDefinitionPayload {
   rule_criteria?: {
     rules: MetricCriteria[];
   };
-  scope: AlertDefinitionGroup | null;
+  scope: AlertDefinitionScope | null;
   severity?: AlertSeverityType;
   status?: AlertStatusType;
   tags?: string[];
@@ -392,11 +391,3 @@ export interface CloudPulseAlertsPayload {
    */
   user?: number[];
 }
-export const capabilityServiceTypeMapping: Record<
-  MetricsServiceType,
-  AccountCapability
-> = {
-  linode: 'Linodes',
-  dbaas: 'Managed Databases',
-  nodebalancer: 'NodeBalancers',
-};
