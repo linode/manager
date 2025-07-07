@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
+  INTERFACE_IDS_ERROR_MESSAGE,
+  INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
+  INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
@@ -9,6 +13,7 @@ import {
 } from './constants';
 import {
   arePortsValid,
+  areValidInterfaceIds,
   handleKeyDown,
   handlePaste,
   isValidPort,
@@ -66,6 +71,35 @@ describe('arePortsValid', () => {
     const ports = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
     const result = arePortsValid(ports);
     expect(result).toBe(PORTS_LIMIT_ERROR_MESSAGE);
+  });
+});
+
+describe('areValidInterfaceIds', () => {
+  it('should return valid for valid interface id combinations', () => {
+    expect(areValidInterfaceIds('')).toBe(undefined);
+    expect(areValidInterfaceIds('1')).toBe(undefined);
+    expect(areValidInterfaceIds('1,2,3')).toBe(undefined);
+  });
+
+  it('should return invalid for consecutive commas', () => {
+    const result = areValidInterfaceIds('1,,2');
+    expect(result).toBe(INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE);
+  });
+
+  it('should return invalid for interface ids starting with comma', () => {
+    expect(areValidInterfaceIds(',1')).toBe(
+      INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE
+    );
+  });
+
+  it('should return invalid for input value other than numbers and commas', () => {
+    expect(areValidInterfaceIds('abc')).toBe(INTERFACE_IDS_ERROR_MESSAGE);
+  });
+
+  it('should return invalid for more than 15 interface ids', () => {
+    const interfaceIds = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
+    const result = areValidInterfaceIds(interfaceIds);
+    expect(result).toBe(INTERFACE_IDS_LIMIT_ERROR_MESSAGE);
   });
 });
 
