@@ -155,36 +155,33 @@ describe('delete firewall', () => {
           cy.findByText('DEFAULT').should('be.visible');
 
           ui.actionMenu
-            .findByTitle(
-              `Action menu for Firewall ${mockFirewallNotDefault.label}`
-            )
+            .findByTitle(`Action menu for Firewall ${mockFirewall.label}`)
             .should('be.visible')
             .should('be.enabled')
             .click();
-
-          ui.actionMenuItem
-            .findByTitle('Disable')
-            .should('be.visible')
-            .should('be.disabled')
-            .focus();
-
-          ui.tooltip
-            .findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT)
-            .should('be.visible');
-
-          ui.actionMenuItem
-            .findByTitle('Delete')
-            .should('be.visible')
-            .should('be.disabled')
-            .focus();
-
-          ui.tooltip
-            .findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT)
-            .should('be.visible');
-
-          // Dismiss the tooltip by focusing on another element.
-          cy.findByText(mockFirewall.label).focus();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Disable')
+        .should('be.visible')
+        .should('be.disabled')
+        .focus();
+
+      ui.tooltip.findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT).should('be.visible');
+
+      ui.actionMenuItem
+        .findByTitle('Delete')
+        .should('be.visible')
+        .should('be.disabled')
+        .focus();
+
+      ui.tooltip.findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT).should('be.visible');
+
+      // Dismiss the tooltip by focusing on another element.
+      cy.findByText(mockFirewall.label).focus();
+
+      // Dismiss the action menu by typing the `escape` key.
+      cy.get('body').type('{esc}');
     });
 
     // Confirm that Firewalls that are not designated as default can be disabled
