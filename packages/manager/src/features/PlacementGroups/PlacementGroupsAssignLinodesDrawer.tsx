@@ -179,7 +179,7 @@ export const PlacementGroupsAssignLinodesDrawer = (
             />
             <TooltipIcon
               placement="right"
-              status="help"
+              status="info"
               sxTooltipIcon={{ position: 'relative', top: 4 }}
               text="Only displaying Linodes that aren’t assigned to a Placement Group."
             />

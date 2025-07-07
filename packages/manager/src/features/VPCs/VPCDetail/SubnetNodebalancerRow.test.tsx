@@ -1,13 +1,12 @@
-import { waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { afterAll, afterEach, beforeAll, describe, it } from 'vitest';
+import { beforeAll, describe, it } from 'vitest';
 
 import {
   firewallFactory,
   subnetAssignedNodebalancerDataFactory,
 } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
@@ -18,9 +17,23 @@ import { SubnetNodeBalancerRow } from './SubnetNodebalancerRow';
 
 const LOADING_TEST_ID = 'circle-progress';
 
+const queryMocks = vi.hoisted(() => ({
+  useAllNodeBalancerConfigsQuery: vi.fn().mockReturnValue({}),
+  useNodeBalancerQuery: vi.fn().mockReturnValue({}),
+  useNodeBalancersFirewallsQuery: vi.fn().mockReturnValue({}),
+}));
+
+vi.mock('@linode/queries', async () => {
+  const actual = await vi.importActual('@linode/queries');
+  return {
+    ...actual,
+    useAllNodeBalancerConfigsQuery: queryMocks.useAllNodeBalancerConfigsQuery,
+    useNodeBalancerQuery: queryMocks.useNodeBalancerQuery,
+    useNodeBalancersFirewallsQuery: queryMocks.useNodeBalancersFirewallsQuery,
+  };
+});
+
 beforeAll(() => mockMatchMedia());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 describe('SubnetNodeBalancerRow', () => {
   const nodebalancer = {
@@ -43,6 +56,9 @@ describe('SubnetNodeBalancerRow', () => {
   });
 
   it('renders loading state', async () => {
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      isLoading: true,
+    });
     const { getByTestId } = renderWithTheme(
       wrapWithTableBody(
         <SubnetNodeBalancerRow
@@ -53,21 +69,20 @@ describe('SubnetNodeBalancerRow', () => {
     );
 
     expect(getByTestId(LOADING_TEST_ID)).toBeInTheDocument();
-    await waitForElementToBeRemoved(() => getByTestId(LOADING_TEST_ID));
+    // now that we're mocking the query to return isLoading, the loading state will not be removed
+    // await waitForElementToBeRemoved(() => getByTestId(LOADING_TEST_ID));
   });
 
   it('renders nodebalancer row with data', async () => {
-    server.use(
-      http.get('*/nodebalancers/:id', () => {
-        return HttpResponse.json(nodebalancer);
-      }),
-      http.get('*/nodebalancers/:id/configs', () => {
-        return HttpResponse.json(configs);
-      }),
-      http.get('*/nodebalancers/:id/firewalls', () => {
-        return HttpResponse.json(firewalls);
-      })
-    );
+    queryMocks.useNodeBalancerQuery.mockReturnValue({
+      data: nodebalancer,
+    });
+    queryMocks.useAllNodeBalancerConfigsQuery.mockReturnValue({
+      data: configs,
+    });
+    queryMocks.useNodeBalancersFirewallsQuery.mockReturnValue({
+      data: firewalls,
+    });
 
     const { getByText, getByRole } = renderWithTheme(
       wrapWithTableBody(

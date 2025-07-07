@@ -1,7 +1,7 @@
 import { profileFactory } from '@linode/utilities';
 import { AxiosHeaders } from 'axios';
 
-import { setAuthDataInLocalStorage } from './OAuth/utils';
+import { setAuthDataInLocalStorage } from './OAuth/oauth';
 import { getURL, handleError, injectAkamaiAccountHeader } from './request';
 import { storeFactory } from './store';
 import { storage } from './utilities/storage';
@@ -38,40 +38,7 @@ const error400: AxiosError<LinodeError> = {
   },
 };
 
-const error401: AxiosError<LinodeError> = {
-  ...baseErrorWithJson,
-  response: {
-    ...mockAxiosError.response,
-    status: 401,
-  },
-};
-
 describe('Expiring Tokens', () => {
-  it('should properly expire tokens if given a 401 error', () => {
-    setAuthDataInLocalStorage({
-      expires: 'never',
-      scopes: '*',
-      token: 'helloworld',
-    });
-
-    // Set CLIENT_ID because `handleError` needs it to redirect to Login with the Client ID when a 401 error occours
-    vi.mock('src/constants', async (importOriginal) => ({
-      ...(await importOriginal()),
-      CLIENT_ID: '12345',
-    }));
-
-    const result = handleError(error401, store);
-
-    // the local storage state should nulled out because the error is a 401
-    expect(storage.authentication.token.get()).toBeNull();
-    expect(storage.authentication.expire.get()).toBeNull();
-    expect(storage.authentication.scopes.get()).toBeNull();
-
-    result.catch((e: APIError[]) =>
-      expect(e[0].reason).toMatch(mockAxiosError.response.data.errors[0].reason)
-    );
-  });
-
   it('should just promise reject if a non-401 error', () => {
     setAuthDataInLocalStorage({
       expires: 'never',

@@ -121,12 +121,12 @@ export const updateProfileData = (
   );
 };
 
-export const useGrants = () => {
+export const useGrants = (enabled = true) => {
   const { data: profile } = useProfile();
   return useQuery<Grants, APIError[]>({
     ...profileQueries.grants,
     ...queryPresets.oneTimeFetch,
-    enabled: Boolean(profile?.restricted),
+    enabled: Boolean(profile?.restricted) && enabled,
   });
 };
 

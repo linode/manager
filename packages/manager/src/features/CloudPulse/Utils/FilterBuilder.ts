@@ -507,7 +507,7 @@ export const constructAdditionalRequestFilters = (
   for (const filter of additionalFilters) {
     if (
       filter &&
-      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0)
+      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0) // Check for empty array
     ) {
       // push to the filters
       filters.push({

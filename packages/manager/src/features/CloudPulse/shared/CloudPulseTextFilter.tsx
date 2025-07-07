@@ -89,6 +89,13 @@ export const CloudPulseTextFilter = React.memo(
       }
     }, [defaultValue, handleTextFilterChange, filterKey, savePreferences]);
 
+    // Initialize filterData on mount if there's a default value
+    React.useEffect(() => {
+      if (defaultValue && typeof defaultValue === 'string') {
+        handlePortChange(defaultValue, [defaultValue]);
+      }
+    }, [defaultValue, handlePortChange, savePreferences]);
+
     // Only call handlePortChange if the user has stopped typing for 0.5 seconds
     const debouncedPortChange = React.useMemo(
       () =>

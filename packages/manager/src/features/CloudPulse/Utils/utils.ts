@@ -1,5 +1,6 @@
 import { useAccount } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
+import React from 'react';
 
 import { convertData } from 'src/features/Longview/shared/formatters';
 import { useFlags } from 'src/hooks/useFlags';
@@ -12,14 +13,17 @@ import {
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
+import { compareArrays } from './FilterBuilder';
 
 import type {
+  Alert,
   APIError,
+  CloudPulseAlertsPayload,
   Dashboard,
-  DimensionFilterOperatorType,
   ResourcePage,
   Service,
   ServiceTypesList,
@@ -54,6 +58,63 @@ export const useIsACLPEnabled = (): {
     );
 
   return { isACLPEnabled };
+};
+
+/**
+ * @param alerts List of alerts to be displayed
+ * @param entityId Id of the selected entity
+ * @returns enabledAlerts, setEnabledAlerts, hasUnsavedChanges, initialState
+ */
+export const useContextualAlertsState = (
+  alerts: Alert[],
+  entityId?: string
+) => {
+  const calculateInitialState = React.useCallback(
+    (alerts: Alert[], entityId?: string): CloudPulseAlertsPayload => {
+      const initialStates: CloudPulseAlertsPayload = {
+        system: [],
+        user: [],
+      };
+
+      if (entityId) {
+        alerts.forEach((alert) => {
+          const isAccountOrRegion =
+            alert.scope === 'region' || alert.scope === 'account';
+          const shouldInclude = entityId
+            ? isAccountOrRegion || alert.entity_ids.includes(entityId)
+            : false;
+
+          if (shouldInclude) {
+            initialStates[alert.type]?.push(alert.id);
+          }
+        });
+      }
+      return initialStates;
+    },
+    []
+  );
+
+  const initialState = React.useMemo(
+    () => calculateInitialState(alerts, entityId),
+    [alerts, entityId, calculateInitialState]
+  );
+
+  const [enabledAlerts, setEnabledAlerts] = React.useState(initialState);
+
+  // Check if the enabled alerts have changed from the initial state
+  const hasUnsavedChanges = React.useMemo(() => {
+    return (
+      !compareArrays(enabledAlerts.system ?? [], initialState.system ?? []) ||
+      !compareArrays(enabledAlerts.user ?? [], initialState.user ?? [])
+    );
+  }, [enabledAlerts, initialState]);
+
+  return {
+    enabledAlerts,
+    setEnabledAlerts,
+    hasUnsavedChanges,
+    initialState,
+  };
 };
 
 /**
@@ -186,8 +247,8 @@ export const isValidPort = (port: string): string | undefined => {
   }
 
   // Check for leading zeros
-  if (!port || port.startsWith('0')) {
-    return PORTS_RANGE_ERROR_MESSAGE;
+  if (port.startsWith('0') && port !== '0') {
+    return PORTS_LEADING_ZERO_ERROR_MESSAGE;
   }
 
   const convertedPort = parseInt(port, 10);
@@ -271,97 +332,3 @@ export const areValidInterfaceIds = (
 
   return undefined;
 };
-
-/**
- * @param value
- * @param setErrorText
- * @description Handles the keydown event for the port input
- */
-export const handleKeyDown =
-  (
-    value: string,
-    setErrorText: (error: string | undefined) => void,
-    dimensionOperator: DimensionFilterOperatorType | undefined = undefined
-  ) =>
-  (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const allowedKeys = ['ArrowLeft', 'ArrowRight', 'Tab', 'Control', 'Meta'];
-
-    // Allow copy/paste/select keyboard shortcuts
-    const isCtrlCmd = e.ctrlKey || e.metaKey;
-    const copyPasteKeys = ['a', 'c', 'v', 'x', 'z', 'y'];
-    if (
-      allowedKeys.includes(e.key) ||
-      (isCtrlCmd && copyPasteKeys.includes(e.key.toLowerCase()))
-    ) {
-      setErrorText(undefined);
-      return;
-    }
-
-    const selectionStart = (e.target as HTMLInputElement).selectionStart ?? 0;
-    const selectionEnd = (e.target as HTMLInputElement).selectionEnd ?? 0;
-    let newValue;
-
-    // Calculate new value based on key type
-    if (e.key === 'Backspace' || e.key === 'Delete') {
-      if (selectionStart > 0) {
-        newValue =
-          value.substring(0, selectionStart - 1) +
-          value.substring(selectionStart);
-      } else {
-        return;
-      }
-    } else {
-      if (/^[\d,]$/.test(e.key)) {
-        newValue =
-          value.substring(0, selectionStart) +
-          e.key +
-          value.substring(selectionEnd);
-      } else {
-        e.preventDefault();
-        setErrorText(PORTS_ERROR_MESSAGE);
-        return;
-      }
-    }
-
-    if (dimensionOperator && dimensionOperator !== 'in' && e.key === ',') {
-      e.preventDefault();
-      setErrorText('Commas are not allowed.');
-      return;
-    }
-    // Check if each segment (split by comma) is a valid port
-    const validationError = arePortsValid(newValue);
-    if (validationError !== undefined) {
-      e.preventDefault();
-      setErrorText(validationError);
-      return;
-    }
-
-    setErrorText(validationError);
-  };
-
-/**
- * @param value
- * @param setErrorText
- * @description Handles the paste event for the port input
- */
-export const handlePaste =
-  (value: string, setErrorText: (error: string | undefined) => void) =>
-  (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const pastedData = e.clipboardData.getData('text');
-    if (!/^[\d,]+$/.test(pastedData)) {
-      e.preventDefault();
-      setErrorText(PORTS_ERROR_MESSAGE);
-      return;
-    }
-
-    const newValue = value + pastedData; // Handle cursor position properly
-
-    const validationError = arePortsValid(newValue);
-    if (validationError !== undefined) {
-      e.preventDefault();
-      setErrorText(validationError);
-      return;
-    }
-
-    setErrorText(undefined);
-  };

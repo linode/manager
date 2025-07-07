@@ -26,7 +26,10 @@ import {
 } from 'src/features/IAM/Shared/utilities';
 import { usePaginationV2 } from 'src/hooks/usePaginationV2';
 
-import { ROLES_TABLE_PREFERENCE_KEY } from '../../Shared/constants';
+import {
+  ROLES_LEARN_MORE_LINK,
+  ROLES_TABLE_PREFERENCE_KEY,
+} from '../../Shared/constants';
 
 import type { RoleView } from '../../Shared/types';
 import type { SelectOption } from '@linode/ui';
@@ -271,10 +274,9 @@ export const RolesTable = ({ roles = [] }: Props) => {
                     {roleRow.permissions.length ? (
                       roleRow.description
                     ) : (
-                      // TODO: update the link for the description when it's ready - UIE-8534
                       <Typography>
                         {getFacadeRoleDescription(roleRow)}{' '}
-                        <Link to="#">Learn more.</Link>
+                        <Link to={ROLES_LEARN_MORE_LINK}>Learn more</Link>.
                       </Typography>
                     )}
                   </TableCell>

@@ -17,6 +17,7 @@ import type {
   LinodeInterfaces,
   LinodeIPsResponse,
   LinodeType,
+  Stats,
   UpgradeInterfaceData,
   Volume,
 } from '@linode/api-v4';
@@ -99,6 +100,25 @@ export const interceptGetLinode = (
   linodeId: number
 ): Cypress.Chainable<null> => {
   return cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}`));
+};
+
+/**
+ * Intercepts GET request to get a Linode and mocks response
+ *
+ * @param linodeId - ID of Linode to fetch.
+ * @param linode - linode to return
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinode = (
+  linodeId: number,
+  linode: Linode
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}`),
+    makeResponse(linode)
+  );
 };
 
 /**
@@ -739,5 +759,23 @@ export const mockUpgradeNewLinodeInterfaceError = (
     'POST',
     apiMatcher(`linode/instances/${linodeId}/upgrade-interfaces`),
     makeErrorResponse(errorMessage, statusCode)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve network stats for a linode
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeStats = (
+  linodeId: number,
+  stats: Stats
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher(`linode/instances/${linodeId}/stats`),
+    makeResponse(stats)
   );
 };

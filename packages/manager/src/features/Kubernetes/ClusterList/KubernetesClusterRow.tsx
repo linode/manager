@@ -82,7 +82,7 @@ export const KubernetesClusterRow = (props: Props) => {
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>
           {cluster.k8s_version}
-          {hasUpgrade && (
+          {hasUpgrade && !isLKEClusterReadOnly && (
             <Chip
               clickable
               label="UPGRADE"

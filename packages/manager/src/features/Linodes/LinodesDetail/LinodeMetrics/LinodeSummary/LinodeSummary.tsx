@@ -9,9 +9,9 @@ import { Autocomplete, ErrorState, Paper, Stack, Typography } from '@linode/ui';
 import { formatNumber, formatPercentage, getMetrics } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
+import { useParams } from '@tanstack/react-router';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import PendingIcon from 'src/assets/icons/pending.svg';
 import { AreaChart } from 'src/components/AreaChart/AreaChart';
@@ -38,7 +38,7 @@ interface Props {
 
 const LinodeSummary = (props: Props) => {
   const { linodeCreated } = props;
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
   const theme = useTheme();
 
@@ -229,7 +229,7 @@ const LinodeSummary = (props: Props) => {
   };
 
   return (
-    <Grid container spacing={2}>
+    <Grid container data-testid="linode-summary" spacing={2}>
       <Grid size={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Autocomplete
           defaultValue={options[0]}

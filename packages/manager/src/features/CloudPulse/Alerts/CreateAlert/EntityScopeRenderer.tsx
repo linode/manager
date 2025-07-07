@@ -7,10 +7,10 @@ import { getAlertBoxStyles } from '../Utils/utils';
 import { CloudPulseModifyAlertRegions } from './Regions/CloudPulseModifyAlertRegions';
 import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAlertResources';
 
-import type { AlertDefinitionGroup } from '@linode/api-v4';
+import type { AlertDefinitionScope } from '@linode/api-v4';
 
 export interface EntityScopeRendererProps {
-  scope: AlertDefinitionGroup | null;
+  scope: AlertDefinitionScope | null;
 }
 
 export const EntityScopeRenderer = (props: EntityScopeRendererProps) => {

@@ -78,10 +78,12 @@ export interface DateTimeRangePickerProps {
   /** Any additional styles to apply to the root element */
   sx?: SxProps;
 
+  /** Properties for the time zone selector */
   timeZoneProps?: {
+    /** Default value to be selected */
     defaultValue?: string;
     /** If true, disables the timezone selector */
-    disableTimeZone?: boolean;
+    disabled?: boolean;
   };
 }
 
@@ -114,6 +116,7 @@ export const DateTimeRangePicker = ({
   const [timeZone, setTimeZone] = useState<string>(
     timeZoneProps?.defaultValue ?? 'UTC',
   ); // Default timezone
+
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
   const endDateInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -330,7 +333,7 @@ export const DateTimeRangePicker = ({
                   value={endDate}
                 />
                 <TimeZoneSelect
-                  disabled={timeZoneProps?.disableTimeZone}
+                  disabled={timeZoneProps?.disabled}
                   noMarginTop
                   onChange={handleTimeZoneChange}
                   value={timeZone}
