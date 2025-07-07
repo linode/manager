@@ -2,6 +2,7 @@ export * from './account';
 export * from './base';
 export * from './betas';
 export * from './cloudnats';
+export * from './databases';
 export * from './domains';
 export * from './entitytransfers';
 export * from './eventHandlers';

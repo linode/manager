@@ -1,8 +1,8 @@
+import { useDatabaseCredentialsMutation } from '@linode/queries';
 import { ActionsPanel, Notice, Typography } from '@linode/ui';
 import * as React from 'react';
 
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
-import { useDatabaseCredentialsMutation } from 'src/queries/databases/databases';
 
 import type { Engine } from '@linode/api-v4';
 

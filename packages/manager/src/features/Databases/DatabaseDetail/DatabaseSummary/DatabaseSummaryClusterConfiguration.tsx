@@ -1,4 +1,4 @@
-import { useRegionsQuery } from '@linode/queries';
+import { useDatabaseTypesQuery, useRegionsQuery } from '@linode/queries';
 import { TooltipIcon, Typography } from '@linode/ui';
 import { convertMegabytesTo, formatStorageUnits } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -12,7 +12,6 @@ import {
   StyledValueGrid,
 } from 'src/features/Databases/DatabaseDetail/DatabaseSummary/DatabaseSummaryClusterConfiguration.style';
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import type { Region } from '@linode/api-v4';
