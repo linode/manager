@@ -1,4 +1,5 @@
 import React from 'react';
+import { useStyles } from 'tss-react/mui';
 
 import {
   CheckIcon,
@@ -65,14 +66,6 @@ export interface NoticeProps extends BoxProps {
   variant?: NoticeVariant;
 }
 
-const variantMap: Record<NoticeVariant, NoticeVariant> = {
-  error: 'error',
-  info: 'info',
-  success: 'success',
-  tip: 'tip',
-  warning: 'warning',
-} as const;
-
 /**
 ## Usage
 
@@ -107,24 +100,31 @@ export const Notice = (props: NoticeProps) => {
     ...rest
   } = props;
 
+  const { cx } = useStyles();
+
   const errorScrollClassName = bypassValidation
     ? ''
     : errorGroup
       ? `error-for-scroll-${errorGroup}`
       : `error-for-scroll`;
 
-  const dataAttributes = !variantMap.error
-    ? {
-        'data-qa-notice': true,
-      }
-    : {
-        'data-qa-error': true,
-        'data-qa-notice': true,
-      };
+  const dataAttributes =
+    variant !== 'error'
+      ? {
+          'data-qa-notice': true,
+        }
+      : {
+          'data-qa-error': true,
+          'data-qa-notice': true,
+        };
 
   return (
     <StyledNoticeBox
-      className={`notice ${variant === 'error' ? errorScrollClassName : ''} ${className ? className : ''}`}
+      className={cx(
+        'notice',
+        { [errorScrollClassName]: variant === 'error' },
+        className,
+      )}
       data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
       role="alert"
       sx={[
@@ -139,7 +139,7 @@ export const Notice = (props: NoticeProps) => {
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
-      variant={variantMap[variant ?? 'info']}
+      variant={variant ?? 'info'}
       {...dataAttributes}
       {...rest}
     >

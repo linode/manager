@@ -71,11 +71,7 @@ export const StyledNoticeBox = styled(Box, {
 
 export const StyledIconBox = styled(Box, {
   label: 'StyledIconBox',
-})(({ theme }) => ({
-  '& g': {
-    stroke: theme.tokens.color.Neutrals.White,
-  },
-  color: theme.tokens.color.Neutrals.White,
+})(() => ({
   width: 20,
   height: 20,
   position: 'relative',
