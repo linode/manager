@@ -151,7 +151,7 @@ export const Summary = ({ isAclpAlertsBetaLocal }: SummaryProps) => {
     },
     {
       item: {
-        title: 'VLAN Attached',
+        title: 'VLAN',
       },
       show: hasVLAN,
     },
@@ -169,9 +169,17 @@ export const Summary = ({ isAclpAlertsBetaLocal }: SummaryProps) => {
     },
     {
       item: {
-        title: 'VPC Assigned',
+        title: 'VPC',
       },
       show: hasVPC,
+    },
+    {
+      item: {
+        title: 'Public Internet',
+      },
+      show:
+        isLinodeInterfacesEnabled &&
+        linodeInterfaces?.some((i) => i.purpose === 'public'),
     },
     {
       item: {

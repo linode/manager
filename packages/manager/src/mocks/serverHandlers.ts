@@ -1105,7 +1105,7 @@ export const handlers = [
     return HttpResponse.json(newFirewall);
   }),
   http.get('*/v4/nodebalancers', () => {
-    const nodeBalancers = nodeBalancerFactory.buildList(1);
+    const nodeBalancers = nodeBalancerFactory.buildList(3);
     return HttpResponse.json(makeResourcePage(nodeBalancers));
   }),
   http.get('*/v4/nodebalancers/types', () => {
@@ -2816,6 +2816,12 @@ export const handlers = [
           label: 'Databases',
           service_type: 'dbaas',
         }),
+        serviceTypesFactory.build({
+          label: 'Nodebalancers',
+          service_type: 'nodebalancer',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2880,6 +2886,16 @@ export const handlers = [
               y_label: 'system_cpu_utilization_ratio',
             }),
           ],
+        })
+      );
+    }
+
+    if (params.serviceType === 'nodebalancer') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 3,
+          label: 'Nodebalancer Dashboard',
+          service_type: 'nodebalancer',
         })
       );
     }
@@ -3019,8 +3035,15 @@ export const handlers = [
       label:
         params.id === '1'
           ? 'DBaaS Service I/O Statistics'
-          : 'Linode Service I/O Statistics',
-      service_type: params.id === '1' ? 'dbaas' : 'linode', // just update the service type and label and use same widget configs
+          : params.id === '3'
+            ? 'NodeBalancer Service I/O Statistics'
+            : 'Linode Service I/O Statistics',
+      service_type:
+        params.id === '1'
+          ? 'dbaas'
+          : params.id === '3'
+            ? 'nodebalancer'
+            : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [

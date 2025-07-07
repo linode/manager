@@ -39,7 +39,7 @@ export const Alerts = ({
       headingChip={
         aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocal ? (
           <BetaChip />
-        ) : undefined
+        ) : null
       }
       subHeading="Receive notifications through system alerts when metric thresholds are exceeded."
       summaryProps={{ sx: { p: 0 } }}
