@@ -9,7 +9,6 @@ import {
   INTERFACE_IDS_ERROR_MESSAGE,
   INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
   INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
-  PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
@@ -271,18 +270,6 @@ export const areValidInterfaceIds = (
   }
 
   return undefined;
-};
-
-/**
- * @param filterKey
- * @returns validation function based on the filter key
- */
-export const getValidationFunction = (filterKey: string) => {
-  if (filterKey === PORT) {
-    return arePortsValid;
-  }
-
-  return areValidInterfaceIds;
 };
 
 /**
