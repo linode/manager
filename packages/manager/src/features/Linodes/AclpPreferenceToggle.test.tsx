@@ -21,15 +21,6 @@ const expectedAclpPreferences: Record<
   AclpPreferenceToggleType['type'],
   ExpectedAclpPreferenceItem
 > = {
-  alerts: {
-    preference: true,
-    legacyModeBannerText:
-      'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.',
-    betaModeBannertext:
-      'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.',
-    legacyModeButtonText: 'Try Alerts (Beta)',
-    betaModeButtonText: 'Switch to legacy Alerts',
-  },
   metrics: {
     preference: true,
     legacyModeBannerText:
@@ -38,6 +29,15 @@ const expectedAclpPreferences: Record<
       'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.',
     legacyModeButtonText: 'Try the Metrics (Beta)',
     betaModeButtonText: 'Switch to legacy Metrics',
+  },
+  alerts: {
+    preference: true,
+    legacyModeBannerText:
+      'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.',
+    betaModeBannertext:
+      'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.',
+    legacyModeButtonText: 'Try Alerts (Beta)',
+    betaModeButtonText: 'Switch to legacy Alerts',
   },
 };
 
