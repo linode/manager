@@ -20,10 +20,13 @@ type AclpStage = 'beta' | 'ga';
  * @param stage - The current ACLP stage: 'beta' or 'ga
  */
 export const useIsLinodeAclpSubscribed = (
-  linodeId: number,
+  linodeId: number | undefined,
   stage: AclpStage,
 ) => {
-  const { data: linode } = useLinodeQuery(linodeId);
+  const { data: linode } = useLinodeQuery(
+    linodeId ?? -1,
+    linodeId !== undefined,
+  );
 
   if (!linode) {
     return { isLinodeAclpSubscribed: false };

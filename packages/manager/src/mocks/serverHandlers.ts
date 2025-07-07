@@ -914,14 +914,14 @@ export const handlers = [
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
-          is_alerts_beta: true,
+          alerts: { user: [100, 101], system: [200] },
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
-          is_alerts_beta: false,
+          alerts: { user: [], system: [] },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({

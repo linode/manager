@@ -309,7 +309,6 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   updated: '2020-01-01',
   watchdog_enabled: true,
   has_user_data: false,
-  is_alerts_beta: false,
 });
 
 export const createLinodeRequestFactory =

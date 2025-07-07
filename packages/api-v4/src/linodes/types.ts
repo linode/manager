@@ -42,7 +42,6 @@ export interface Linode {
   interface_generation?: InterfaceGenerationType; // @TODO Linode Interfaces - Remove optionality once fully rolled out
   ipv4: string[];
   ipv6: null | string;
-  is_alerts_beta: boolean;
   label: string;
   lke_cluster_id: null | number;
   maintenance_policy?: MaintenancePolicySlug;

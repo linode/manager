@@ -4,6 +4,7 @@ import {
   useRegionsQuery,
   useTypeQuery,
 } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -74,8 +75,12 @@ const LinodesDetailNavigation = () => {
   );
 
   // Alerts default to the value from a Linode API flag in the Edit flow
+  const { isLinodeAclpSubscribed } = useIsLinodeAclpSubscribed(
+    linode?.id,
+    'beta'
+  );
   const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
-    React.useState<boolean>(linode?.is_alerts_beta ?? false);
+    React.useState<boolean>(isLinodeAclpSubscribed ?? false);
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {

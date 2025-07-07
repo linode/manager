@@ -20,6 +20,16 @@ describe('useIsLinodeAclpSubscribed', () => {
     vi.resetAllMocks();
   });
 
+  it('returns false when linodeId is undefined', () => {
+    queryMocks.useLinodeQuery.mockReturnValue({});
+
+    const { result } = renderHook(() =>
+      useIsLinodeAclpSubscribed(undefined, 'beta'),
+    );
+
+    expect(result.current.isLinodeAclpSubscribed).toBe(false);
+  });
+
   it('returns false when linode data is undefined', () => {
     queryMocks.useLinodeQuery.mockReturnValue({ data: undefined });
 
