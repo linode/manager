@@ -127,6 +127,4 @@ export const editAlertDefinitionSchema = object({
   status: string()
     .oneOf(['enabled', 'disabled', 'in progress', 'failed'])
     .optional(),
-  scope: string().oneOf(['entity', 'region', 'account']).required(),
-  regions: array().of(string().defined()).optional(),
 });
