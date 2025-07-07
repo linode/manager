@@ -2,19 +2,22 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import { PORTS_HELPER_TEXT } from '../Utils/constants';
-import { arePortsValid } from '../Utils/utils';
+import {
+  getHelperText,
+  getPlaceholderText,
+  getValidationFunction,
+} from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
-export interface CloudPulsePortFilterProps {
+export interface CloudPulseTextFilterProps {
   /**
    * The dashboard object
    */
   dashboard: Dashboard;
 
   /**
-   * The last saved value for the port filter from preferences
+   * The last saved value for the text filter from preferences
    */
   defaultValue?: FilterValue;
 
@@ -24,17 +27,27 @@ export interface CloudPulsePortFilterProps {
   disabled?: boolean;
 
   /**
-   * The function to handle the port change
+   * The filter key
    */
-  handlePortChange: (port: string, label: string[], savePref?: boolean) => void;
+  filterKey: string;
 
   /**
-   * The label for the port filter
+   * The function to handle the text filter change
+   */
+  handleTextFilterChange: (
+    port: string,
+    label: string[],
+    filterKey: string,
+    savePref?: boolean
+  ) => void;
+
+  /**
+   * The label for the text filter
    */
   label: string;
 
   /**
-   * The placeholder for the port filter
+   * The placeholder for the text filter
    */
   placeholder?: string;
 
@@ -44,15 +57,16 @@ export interface CloudPulsePortFilterProps {
   savePreferences: boolean;
 }
 
-export const CloudPulsePortFilter = React.memo(
-  (props: CloudPulsePortFilterProps) => {
+export const CloudPulseTextFilter = React.memo(
+  (props: CloudPulseTextFilterProps) => {
     const {
       label,
       placeholder,
-      handlePortChange,
+      handleTextFilterChange,
       savePreferences,
       defaultValue,
       disabled,
+      filterKey,
     } = props;
 
     const [value, setValue] = React.useState<string>(
@@ -61,6 +75,19 @@ export const CloudPulsePortFilter = React.memo(
     const [errorText, setErrorText] = React.useState<string | undefined>(
       undefined
     );
+    const validate = getValidationFunction(filterKey);
+
+    // Initialize filterData on mount if there's a default value
+    React.useEffect(() => {
+      if (defaultValue && typeof defaultValue === 'string') {
+        handleTextFilterChange(
+          defaultValue,
+          [defaultValue],
+          filterKey,
+          savePreferences
+        );
+      }
+    }, [defaultValue, handleTextFilterChange, filterKey, savePreferences]);
 
     // Initialize filterData on mount if there's a default value
     React.useEffect(() => {
@@ -73,16 +100,16 @@ export const CloudPulsePortFilter = React.memo(
     const debouncedPortChange = React.useMemo(
       () =>
         debounce(500, (value: string) => {
-          handlePortChange(value, [value], savePreferences);
+          handleTextFilterChange(value, [value], filterKey, savePreferences);
         }),
-      [handlePortChange, savePreferences]
+      [filterKey, handleTextFilterChange, savePreferences]
     );
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setValue(e.target.value);
 
       // Validate and handle the change
-      const validationError = arePortsValid(e.target.value);
+      const validationError = validate(e.target.value);
       setErrorText(validationError);
       if (validationError === undefined) {
         debouncedPortChange(e.target.value);
@@ -90,10 +117,15 @@ export const CloudPulsePortFilter = React.memo(
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      const validationError = arePortsValid(e.target.value);
+      const validationError = validate(e.target.value);
       setErrorText(validationError);
       if (validationError === undefined) {
-        handlePortChange(e.target.value, [e.target.value], savePreferences);
+        handleTextFilterChange(
+          e.target.value,
+          [e.target.value],
+          filterKey,
+          savePreferences
+        );
       }
     };
 
@@ -102,13 +134,13 @@ export const CloudPulsePortFilter = React.memo(
         autoComplete="off"
         disabled={disabled}
         errorText={errorText}
-        helperText={!errorText ? PORTS_HELPER_TEXT : undefined}
+        helperText={!errorText ? getHelperText(filterKey) : undefined}
         label={label}
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
         optional
-        placeholder={placeholder ?? 'e.g., 80,443,3000'}
+        placeholder={placeholder ?? getPlaceholderText(filterKey)}
         value={value}
       />
     );

@@ -198,10 +198,78 @@ export const NODEBALANCER_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
   serviceType: 'nodebalancer',
 };
 
+export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
+  capability: capabilityServiceTypeMapping['firewall'],
+  filters: [
+    {
+      configuration: {
+        filterKey: 'resource_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: true,
+        isMultiSelect: true,
+        name: 'Firewalls',
+        neededInViews: [CloudPulseAvailableViews.central],
+        placeholder: 'Select Firewalls',
+        priority: 2,
+      },
+      name: 'Firewalls',
+    },
+    {
+      configuration: {
+        filterKey: 'interface_id',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isOptional: true,
+        name: 'Interface IDs',
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        placeholder: 'e.g., 0,1',
+        priority: 4,
+      },
+      name: 'Interface IDs',
+    },
+    {
+      configuration: {
+        filterKey: 'interface_type',
+        filterType: 'string',
+        isFilterable: true,
+        isMetricsFilter: false,
+        isMultiSelect: true,
+        name: 'Interface Type',
+        isOptional: true,
+        neededInViews: [
+          CloudPulseAvailableViews.central,
+          CloudPulseAvailableViews.service,
+        ],
+        options: [
+          {
+            id: 'vpc',
+            label: 'VPC',
+          },
+          {
+            id: 'public',
+            label: 'Public',
+          },
+        ],
+        placeholder: 'Select an Interface Type',
+        priority: 4,
+        type: CloudPulseSelectTypes.static,
+      },
+      name: 'Interface Type',
+    },
+  ],
+  serviceType: 'firewall',
+};
+
 export const FILTER_CONFIG: Readonly<
   Map<string, CloudPulseServiceTypeFilterMap>
 > = new Map([
   ['dbaas', DBAAS_CONFIG],
+  ['firewall', FIREWALL_CONFIG],
   ['linode', LINODE_CONFIG],
   ['nodebalancer', NODEBALANCER_CONFIG],
 ]);

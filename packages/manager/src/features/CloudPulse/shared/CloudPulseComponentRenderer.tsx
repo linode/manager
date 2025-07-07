@@ -5,30 +5,30 @@ import NullComponent from 'src/components/NullComponent';
 
 import { CloudPulseCustomSelect } from './CloudPulseCustomSelect';
 import { CloudPulseNodeTypeFilter } from './CloudPulseNodeTypeFilter';
-import { CloudPulsePortFilter } from './CloudPulsePortFilter';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
 import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
+import { CloudPulseTextFilter } from './CloudPulseTextFilter';
 
 import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from './CloudPulseNodeTypeFilter';
-import type { CloudPulsePortFilterProps } from './CloudPulsePortFilter';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
 import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';
+import type { CloudPulseTextFilterProps } from './CloudPulseTextFilter';
 
 export interface CloudPulseComponentRendererProps {
   componentKey: string;
   componentProps:
     | CloudPulseCustomSelectProps
     | CloudPulseNodeTypeFilterProps
-    | CloudPulsePortFilterProps
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTagsSelectProps
-    | CloudPulseTimeRangeSelectProps;
+    | CloudPulseTimeRangeSelectProps
+    | CloudPulseTextFilterProps;
   key: string;
 }
 
@@ -37,21 +37,22 @@ const Components: {
     React.ComponentType<
       | CloudPulseCustomSelectProps
       | CloudPulseNodeTypeFilterProps
-      | CloudPulsePortFilterProps
       | CloudPulseRegionSelectProps
       | CloudPulseResourcesSelectProps
       | CloudPulseTagsSelectProps
       | CloudPulseTimeRangeSelectProps
+      | CloudPulseTextFilterProps
     >
   >;
 } = {
   customSelect: CloudPulseCustomSelect,
+  interface_id: CloudPulseTextFilter,
   node_type: CloudPulseNodeTypeFilter,
+  port: CloudPulseTextFilter,
   region: CloudPulseRegionSelect,
   relative_time_duration: CloudPulseTimeRangeSelect,
   resource_id: CloudPulseResourcesSelect,
   tags: CloudPulseTagsSelect,
-  port: CloudPulsePortFilter,
 };
 
 const buildComponent = (props: CloudPulseComponentRendererProps) => {
