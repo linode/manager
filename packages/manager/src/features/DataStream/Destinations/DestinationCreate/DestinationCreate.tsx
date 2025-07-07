@@ -5,6 +5,7 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
+import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import {
   destinationType,
@@ -65,9 +66,7 @@ export const DestinationCreate = () => {
                     field.onChange(value);
                   }}
                   options={destinationTypeOptions}
-                  value={destinationTypeOptions.find(
-                    ({ value }) => value === field.value
-                  )}
+                  value={getDestinationTypeOption(field.value)}
                 />
               )}
               rules={{ required: true }}

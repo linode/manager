@@ -1,3 +1,9 @@
+## [2025-07-01] - v0.4.0
+
+### Tech Stories
+
+- Update to Storybook v9 ([#12416](https://github.com/linode/manager/pull/12416))
+
 ## [2025-05-06] - v0.3.0
 
 ### Fixed:

@@ -10,7 +10,11 @@ import React from 'react';
 import { accountFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndHookFormContext } from 'src/utilities/testHelpers';
+import {
+  renderWithThemeAndHookFormContext,
+  renderWithThemeAndRouter,
+  wrapWithFormContext,
+} from 'src/utilities/testHelpers';
 
 import { Security } from './Security';
 
@@ -30,9 +34,10 @@ describe('Security', () => {
   });
 
   it('should render a SSH Keys heading', async () => {
-    const { getAllByText } = renderWithThemeAndHookFormContext({
+    const component = wrapWithFormContext({
       component: <Security />,
     });
+    const { getAllByText } = await renderWithThemeAndRouter(component);
 
     const heading = getAllByText('SSH Keys')[0];
 
@@ -41,9 +46,10 @@ describe('Security', () => {
   });
 
   it('should render an "Add An SSH Key" button', async () => {
-    const { getByText } = renderWithThemeAndHookFormContext({
+    const component = wrapWithFormContext({
       component: <Security />,
     });
+    const { getByText } = await renderWithThemeAndRouter(component);
 
     const addSSHKeyButton = getByText('Add an SSH Key');
 
@@ -118,9 +124,11 @@ describe('Security', () => {
       })
     );
 
-    const { findByText } = renderWithThemeAndHookFormContext({
+    const component = wrapWithFormContext({
       component: <Security />,
-      options: { flags: { linodeDiskEncryption: true } },
+    });
+    const { findByText } = await renderWithThemeAndRouter(component, {
+      flags: { linodeDiskEncryption: true },
     });
 
     const heading = await findByText('Disk Encryption');
@@ -146,12 +154,13 @@ describe('Security', () => {
       })
     );
 
-    const { findByLabelText } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Security />,
-        options: { flags: { linodeDiskEncryption: true } },
-        useFormOptions: { defaultValues: { region: region.id } },
-      });
+    const component = wrapWithFormContext<LinodeCreateFormValues>({
+      component: <Security />,
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+    const { findByLabelText } = await renderWithThemeAndRouter(component, {
+      flags: { linodeDiskEncryption: true },
+    });
 
     await findByLabelText(
       'Disk encryption is not available in the selected region. Select another region to use Disk Encryption.'
@@ -175,12 +184,14 @@ describe('Security', () => {
       })
     );
 
-    const { findByLabelText, getByLabelText } =
-      renderWithThemeAndHookFormContext<LinodeCreateFormValues>({
-        component: <Security />,
-        options: { flags: { linodeDiskEncryption: true } },
-        useFormOptions: { defaultValues: { region: region.id } },
-      });
+    const component = wrapWithFormContext<LinodeCreateFormValues>({
+      component: <Security />,
+      useFormOptions: { defaultValues: { region: region.id } },
+    });
+    const { findByLabelText, getByLabelText } = await renderWithThemeAndRouter(
+      component,
+      { flags: { linodeDiskEncryption: true } }
+    );
 
     await findByLabelText(
       'Distributed Compute Instances are encrypted. This setting can not be changed.'

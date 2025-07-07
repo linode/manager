@@ -366,7 +366,7 @@ it('test getCustomSelectProperties method', () => {
 
 it('test getPortFilterProperties method', () => {
   const portFilterConfig = nodeBalancerConfig?.filters.find(
-    (filterObj) => filterObj.name === 'Port'
+    (filterObj) => filterObj.name === 'Ports'
   );
 
   expect(portFilterConfig).toBeDefined();
@@ -408,6 +408,22 @@ it('test constructAdditionalRequestFilters method', () => {
       'linode'
     )
   );
+
+  expect(result).toBeDefined();
+  expect(result.length).toEqual(0);
+});
+
+it('test constructAdditionalRequestFilters method with empty filter value', () => {
+  const result = constructAdditionalRequestFilters([
+    {
+      filterKey: 'protocol',
+      filterValue: [],
+    },
+    {
+      filterKey: 'port',
+      filterValue: [],
+    },
+  ]);
 
   expect(result).toBeDefined();
   expect(result.length).toEqual(0);
