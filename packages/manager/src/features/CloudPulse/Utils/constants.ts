@@ -71,7 +71,7 @@ export const INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
 export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
-  'Enter a maximum of 50 interface ids';
+  'Enter a maximum of 15 interface ids';
 
 export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 0,1';
 export const NO_REGION_MESSAGE: Record<string, string> = {
