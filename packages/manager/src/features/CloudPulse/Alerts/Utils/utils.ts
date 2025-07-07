@@ -356,7 +356,6 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions: triggerConditions,
     type,
-    scope,
     regions,
   };
 };
