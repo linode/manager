@@ -7,12 +7,13 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
+import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { IncidentImpact, IncidentStatus } from '@linode/queries';
 
 export const StatusBanners = () => {
-  const { data: incidentsData } = useIncidentQuery();
+  const { data: incidentsData } = useIncidentQuery(LINODE_STATUS_PAGE_URL);
   const incidents = incidentsData?.incidents ?? [];
 
   if (incidents.length === 0) {

@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { DismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { Link } from 'src/components/Link';
+import { LINODE_STATUS_PAGE_URL } from 'src/constants';
 import { sanitizeHTML } from 'src/utilities/sanitizeHTML';
 
 import type { Maintenance } from '@linode/queries';
@@ -16,9 +17,12 @@ interface Props {
 export const APIMaintenanceBanner = React.memo((props: Props) => {
   const { suppliedMaintenances } = props;
 
-  const { data: maintenancesData } = useMaintenanceQuery({
-    ...queryPresets.oneTimeFetch,
-  });
+  const { data: maintenancesData } = useMaintenanceQuery(
+    LINODE_STATUS_PAGE_URL,
+    {
+      ...queryPresets.oneTimeFetch,
+    }
+  );
   const maintenances = maintenancesData?.scheduled_maintenances ?? [];
 
   if (
