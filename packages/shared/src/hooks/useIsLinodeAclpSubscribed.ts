@@ -3,7 +3,7 @@ import { useLinodeQuery } from '@linode/queries';
 type AclpStage = 'beta' | 'ga';
 
 /**
- * Determines if the linode is considered subscribed to ACLP or legacy alerts.
+ * Determines if the linode is subscribed to ACLP or legacy alerts.
  *
  * ### Cases:
  * - Legacy alerts = 0, Beta alerts = []
@@ -17,7 +17,7 @@ type AclpStage = 'beta' | 'ga';
  *   - Show default Beta UI
  *
  * @param linodeId - The ID of the Linode
- * @param stage - The current ACLP stage: 'beta' or 'ga
+ * @param stage - The current ACLP stage: 'beta' or 'ga'
  */
 export const useIsLinodeAclpSubscribed = (
   linodeId: number | undefined,
