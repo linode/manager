@@ -103,7 +103,6 @@ describe('delete firewall', () => {
    * - Confirms that Firewalls that are designated as default cannot be deleted or disabled.
    * - Confirms that Firewalls that are not designated as default can be deleted and disabled.
    */
-  // TODO linodeInterfaces is false and never shows the chip
   it('cannot delete default Firewalls', () => {
     const mockFirewallDefaultConfig = firewallFactory.build();
     const mockFirewallDefaultVpc = firewallFactory.build();

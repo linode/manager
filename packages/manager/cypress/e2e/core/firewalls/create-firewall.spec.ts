@@ -73,7 +73,6 @@ describe('create firewall', () => {
    * - Confirms that firewall is listed correctly on firewalls landing page.
    * - Confirms that firewall is assigned to the linode.
    */
-  // TODO test fails
   it('creates a firewall assigned to a linode', () => {
     const region = chooseRegion();
 
