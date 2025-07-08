@@ -15,7 +15,6 @@ import { TimePicker } from '../TimePicker';
 import { TimeZoneSelect } from '../TimeZoneSelect';
 
 import type { SxProps } from '@mui/material/styles';
-
 export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
@@ -271,6 +270,7 @@ export const DateTimeRangePicker = ({
               <Presets
                 onPresetSelect={handlePresetSelect}
                 selectedPreset={selectedPreset}
+                timeZone={timeZone}
               />
             )}
             <Box>
