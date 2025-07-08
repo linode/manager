@@ -5,6 +5,7 @@ on:
         types: [opened]
         branches:
             - aclp_develop
+    workflow_dispatch:
             
 permissions:
     contents: read
