@@ -196,7 +196,6 @@ describe('LinodeConfigDialog', () => {
 
   it('should display the correct network interfaces', async () => {
     const props = {
-      isReadOnly: false,
       linodeId: 0,
       onClose: vi.fn(),
     };
@@ -221,7 +220,6 @@ describe('LinodeConfigDialog', () => {
 
   it('should hide the Network Interfaces section if Linode uses new interfaces', () => {
     const props = {
-      isReadOnly: false,
       linodeId: 1,
       onClose: vi.fn(),
     };
