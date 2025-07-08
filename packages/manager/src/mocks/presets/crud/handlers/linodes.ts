@@ -29,6 +29,7 @@ import type {
   Disk,
   Firewall,
   FirewallDeviceEntityType,
+  Interface,
   InterfaceGenerationType,
   Linode,
   LinodeBackupsResponse,
@@ -400,6 +401,7 @@ export const createLinode = (mockState: MockState) => [
         );
       }
     } else {
+      // TODO UPDATE THIS
       const linodeConfig = configFactory.build({
         created: DateTime.now().toISO(),
       });
@@ -737,6 +739,8 @@ export const shutDownLinode = (mockState: MockState) => [
   ),
 ];
 
+// Linode Interface handlers
+
 export const getLinodeInterfaceFirewalls = (mockState: MockState) => [
   http.get(
     '*/v4*/linode/instances/:id/interfaces/:interfaceId/firewalls',
@@ -1044,6 +1048,72 @@ export const updateLinodeInterfaceSettings = () => [
       });
 
       return makeResponse(updatedSettings);
+    }
+  ),
+];
+
+// Configuration Profile Interface handlers
+
+export const appendConfigInterface = (mockState: MockState) => [
+  http.post(
+    '*/v4*/linode/instances/:id/configs/:configId/interfaces',
+    async ({
+      params,
+      request,
+    }): Promise<StrictResponse<APIErrorResponse | Interface>> => {
+      const linodeId = Number(params.id);
+      const linode = await mswDB.get('linodes', linodeId);
+      const configId = Number(params.configId);
+      const config = await mswDB.get('linodeConfigs', configId);
+
+      if (!linode || !config) {
+        return makeNotFoundResponse();
+      }
+
+      const payload = await request.clone().json();
+      let linodeInterface;
+
+      if (payload.vpc) {
+        linodeInterface = linodeInterfaceFactoryVPC.build({
+          ...payload,
+          created: DateTime.now().toISO(),
+          updated: DateTime.now().toISO(),
+        });
+      } else if (payload.vlan) {
+        linodeInterface = linodeInterfaceFactoryVlan.build({
+          ...payload,
+          created: DateTime.now().toISO(),
+          updated: DateTime.now().toISO(),
+        });
+      } else {
+        linodeInterface = linodeInterfaceFactoryPublic.build({
+          ...payload,
+          created: DateTime.now().toISO(),
+          updated: DateTime.now().toISO(),
+        });
+      }
+
+      await mswDB.add(
+        'linodeInterfaces',
+        [linodeId, linodeInterface],
+        mockState
+      );
+
+      queueEvents({
+        event: {
+          action: 'interface_create',
+          entity: {
+            id: linodeInterface.id,
+            label: linode.label,
+            type: 'linodeInterface',
+            url: `/v4beta/linodes/instances/${linode.id}/interfaces`,
+          },
+        },
+        mockState,
+        sequence: [{ status: 'finished' }],
+      });
+
+      return makeResponse(linodeInterface);
     }
   ),
 ];
