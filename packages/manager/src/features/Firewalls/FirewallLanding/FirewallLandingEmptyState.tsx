@@ -3,7 +3,7 @@ import * as React from 'react';
 import NetworkIcon from 'src/assets/icons/entityIcons/networking.svg';
 import { ResourcesSection } from 'src/components/EmptyLandingPageResources/ResourcesSection';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import {
@@ -20,16 +20,14 @@ interface Props {
 export const FirewallLandingEmptyState = (props: Props) => {
   const { openAddFirewallDrawer } = props;
 
-  const isFirewallsCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_firewalls',
-  });
+  const { permissions } = usePermissions('account', ['create_firewall']);
 
   return (
     <ResourcesSection
       buttonProps={[
         {
           children: 'Create Firewall',
-          disabled: isFirewallsCreationRestricted,
+          disabled: !permissions.create_firewall,
           onClick: () => {
             sendEvent({
               action: 'Click:button',
