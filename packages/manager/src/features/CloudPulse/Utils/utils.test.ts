@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  INTERFACE_ID,
   INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   INTERFACE_IDS_ERROR_MESSAGE,
   INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE,
   INTERFACE_IDS_LIMIT_ERROR_MESSAGE,
+  PORT,
   PORTS_CONSECUTIVE_COMMAS_ERROR_MESSAGE,
   PORTS_ERROR_MESSAGE,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
@@ -12,7 +14,12 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
-import { arePortsValid, areValidInterfaceIds, isValidPort } from './utils';
+import {
+  arePortsValid,
+  areValidInterfaceIds,
+  isValidPort,
+  validationFunction,
+} from './utils';
 
 describe('isValidPort', () => {
   it('should return valid for empty string and valid ports', () => {
@@ -83,5 +90,12 @@ describe('areValidInterfaceIds', () => {
     const interfaceIds = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
     const result = areValidInterfaceIds(interfaceIds);
     expect(result).toBe(INTERFACE_IDS_LIMIT_ERROR_MESSAGE);
+  });
+});
+
+describe('validationFunction', () => {
+  it('should return validation function for given filterKey', () => {
+    expect(validationFunction[PORT]).toBe(arePortsValid);
+    expect(validationFunction[INTERFACE_ID]).toBe(areValidInterfaceIds);
   });
 });

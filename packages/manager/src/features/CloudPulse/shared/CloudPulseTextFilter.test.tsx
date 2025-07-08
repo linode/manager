@@ -2,7 +2,6 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 
-import { dashboardFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
@@ -23,21 +22,21 @@ const filterLabelInterfaceId = 'Interface IDs (optional)';
 const mockHandleTextFilterChange = vi.fn();
 
 const defaultPropsPort: CloudPulseTextFilterProps = {
-  dashboard: dashboardFactory.build(),
   handleTextFilterChange: mockHandleTextFilterChange,
   label: 'Port',
   savePreferences: false,
   filterKey: 'port',
   placeholder: PORTS_PLACEHOLDER_TEXT,
+  optional: true,
 };
 
 const defaultPropsInterfaceId: CloudPulseTextFilterProps = {
-  dashboard: dashboardFactory.build(),
   handleTextFilterChange: mockHandleTextFilterChange,
   label: 'Interface IDs',
   savePreferences: false,
   filterKey: 'interface_id',
   placeholder: INTERFACE_IDS_PLACEHOLDER_TEXT,
+  optional: true,
 };
 
 describe('CloudPulseTextFilter for port', () => {
@@ -91,6 +90,16 @@ describe('CloudPulseTextFilter for port', () => {
     await user.type(input, '8');
     expect(mockHandleTextFilterChange).not.toHaveBeenCalled();
   });
+
+  it('should call handleTextFilterChange when input is blurred', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CloudPulseTextFilter {...defaultPropsPort} />);
+
+    const input = screen.getByLabelText(filterLabelPort);
+    await user.type(input, '8');
+    await user.tab();
+    expect(mockHandleTextFilterChange).toHaveBeenCalled();
+  });
 });
 
 describe('CloudPulseTextFilter for interface_id', () => {
@@ -138,5 +147,15 @@ describe('CloudPulseTextFilter for interface_id', () => {
     const input = screen.getByLabelText(filterLabelInterfaceId);
     await user.type(input, 'a');
     expect(screen.getByText(INTERFACE_IDS_ERROR_MESSAGE)).toBeVisible();
+  });
+
+  it('should call handleTextFilterChange when input is blurred', async () => {
+    const user = userEvent.setup();
+    renderWithTheme(<CloudPulseTextFilter {...defaultPropsInterfaceId} />);
+
+    const input = screen.getByLabelText(filterLabelInterfaceId);
+    await user.type(input, '8');
+    await user.tab();
+    expect(mockHandleTextFilterChange).toHaveBeenCalled();
   });
 });

@@ -5,14 +5,9 @@ import { debounce } from 'throttle-debounce';
 import { HELPER_TEXT, PLACEHOLDER_TEXT } from '../Utils/constants';
 import { validationFunction } from '../Utils/utils';
 
-import type { Dashboard, FilterValue } from '@linode/api-v4';
+import type { FilterValue } from '@linode/api-v4';
 
 export interface CloudPulseTextFilterProps {
-  /**
-   * The dashboard object
-   */
-  dashboard: Dashboard;
-
   /**
    * The last saved value for the text filter from preferences
    */
@@ -44,6 +39,11 @@ export interface CloudPulseTextFilterProps {
   label: string;
 
   /**
+   * The boolean to determine if the filter is optional
+   */
+  optional?: boolean;
+
+  /**
    * The placeholder for the text filter
    */
   placeholder?: string;
@@ -64,10 +64,11 @@ export const CloudPulseTextFilter = React.memo(
       defaultValue,
       disabled,
       filterKey,
+      optional,
     } = props;
 
     const [value, setValue] = React.useState<string>(
-      (defaultValue as string) || ''
+      typeof defaultValue === 'string' ? defaultValue : ''
     );
     const [errorText, setErrorText] = React.useState<string | undefined>(
       undefined
@@ -124,7 +125,7 @@ export const CloudPulseTextFilter = React.memo(
         noMarginTop
         onBlur={handleBlur}
         onChange={handleInputChange}
-        optional
+        optional={optional ?? false}
         placeholder={placeholder ?? PLACEHOLDER_TEXT[filterKey]}
         value={value}
       />
