@@ -1,22 +1,27 @@
-import { usePreferences } from '@linode/queries';
 import { Accordion, BetaChip } from '@linode/ui';
 import * as React from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
-import { AclpPreferenceToggle } from 'src/features/Linodes/AclpPreferenceToggle';
 import { AlertsPanel } from 'src/features/Linodes/LinodesDetail/LinodeAlerts/AlertsPanel';
 import { useFlags } from 'src/hooks/useFlags';
 
-import type { LinodeCreateFormValues } from '../../utilities';
+import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
+
+import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
-export const Alerts = () => {
+interface AlertsProps {
+  isAlertsBetaMode: boolean;
+  onAlertsModeChange: (isBeta: boolean) => void;
+}
+
+export const Alerts = ({
+  onAlertsModeChange,
+  isAlertsBetaMode,
+}: AlertsProps) => {
   const { aclpBetaServices } = useFlags();
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
   const { control } = useFormContext<LinodeCreateFormValues>();
   const { field } = useController({
@@ -29,10 +34,10 @@ export const Alerts = () => {
     field.onChange(updatedAlerts);
   };
 
-  const subHeading = isAclpAlertsPreferenceBeta ? (
+  const subHeading = isAlertsBetaMode ? (
     <>
       Receive notifications through System Alerts when metric thresholds are
-      exceeded. After you've created your Linode, you can create and manage
+      exceeded. After you&apos;ve created your Linode, you can create and manage
       associated alerts on the <strong>centralized Alerts</strong> page.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-email-alerts-for-resource-usage-on-compute-instances">
         Learn more
@@ -48,7 +53,7 @@ export const Alerts = () => {
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
+        aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
           <BetaChip />
         ) : null
       }
@@ -56,9 +61,13 @@ export const Alerts = () => {
       summaryProps={{ sx: { p: 0 } }}
     >
       {aclpBetaServices?.linode?.alerts && (
-        <AclpPreferenceToggle type="alerts" />
+        <AclpPreferenceToggle
+          isAlertsBetaMode={isAlertsBetaMode}
+          onAlertsModeChange={onAlertsModeChange}
+          type="alerts"
+        />
       )}
-      {aclpBetaServices?.linode?.alerts && isAclpAlertsPreferenceBeta ? (
+      {aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

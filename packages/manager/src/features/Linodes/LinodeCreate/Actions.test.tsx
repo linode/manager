@@ -39,7 +39,7 @@ describe('Actions', () => {
     expect(button).toBeEnabled();
   });
 
-  it("should render a ' View Code Snippets' button", () => {
+  it("should render a 'View Code Snippets' button", () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Actions />,
     });

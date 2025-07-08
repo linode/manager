@@ -1,9 +1,4 @@
-import {
-  useImageQuery,
-  usePreferences,
-  useRegionsQuery,
-  useTypeQuery,
-} from '@linode/queries';
+import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { Divider, Paper, Stack, Typography } from '@linode/ui';
 import { formatStorageUnits, isAclpSupportedRegion } from '@linode/utilities';
 import { useTheme } from '@mui/material';
@@ -21,7 +16,11 @@ import { getLinodePrice } from './utilities';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
-export const Summary = () => {
+interface SummaryProps {
+  isAlertsBetaMode?: boolean;
+}
+
+export const Summary = ({ isAlertsBetaMode }: SummaryProps) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -70,9 +69,6 @@ export const Summary = () => {
   const { data: image } = useImageQuery(imageId ?? '', Boolean(imageId));
 
   const { aclpBetaServices } = useFlags();
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
 
   const isAclpAlertsSupportedRegionLinode = isAclpSupportedRegion({
     capability: 'Linodes',
@@ -105,7 +101,7 @@ export const Summary = () => {
   const hasBetaAclpAlertsAssigned =
     aclpBetaServices?.linode?.alerts &&
     isAclpAlertsSupportedRegionLinode &&
-    isAclpAlertsPreferenceBeta;
+    isAlertsBetaMode;
 
   const totalBetaAclpAlertsAssignedCount =
     (alerts?.system?.length ?? 0) + (alerts?.user?.length ?? 0);

@@ -4,6 +4,7 @@ import {
   useRegionsQuery,
   useTypeQuery,
 } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { BetaChip, CircleProgress, ErrorState } from '@linode/ui';
 import { isAclpSupportedRegion } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
@@ -45,10 +46,6 @@ const LinodesDetailNavigation = () => {
   const id = Number(linodeId);
   const { data: linode, error } = useLinodeQuery(id);
   const { aclpBetaServices } = useFlags();
-  const { data: aclpPreferences } = usePreferences((preferences) => ({
-    isAclpMetricsPreferenceBeta: preferences?.isAclpMetricsBeta,
-    isAclpAlertsPreferenceBeta: preferences?.isAclpAlertsBeta,
-  }));
 
   const { data: type } = useTypeQuery(
     linode?.type ?? '',
@@ -73,13 +70,21 @@ const LinodesDetailNavigation = () => {
     regions,
     type: 'alerts',
   });
+  const { data: isAclpMetricsPreferenceBeta } = usePreferences(
+    (preferences) => preferences?.isAclpMetricsBeta
+  );
+
+  // In Edit flow, default alert mode is based on Linode's ACLP subscription status
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
+  const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
+    React.useState<boolean>(isLinodeAclpSubscribed);
 
   const { tabs, handleTabChange, tabIndex, getTabIndex } = useTabs([
     {
       chip:
         aclpBetaServices?.linode?.metrics &&
         isAclpMetricsSupportedRegionLinode &&
-        aclpPreferences?.isAclpMetricsPreferenceBeta ? (
+        isAclpMetricsPreferenceBeta ? (
           <BetaChip />
         ) : null,
       to: '/linodes/$linodeId/metrics',
@@ -112,7 +117,7 @@ const LinodesDetailNavigation = () => {
       chip:
         aclpBetaServices?.linode?.alerts &&
         isAclpAlertsSupportedRegionLinode &&
-        aclpPreferences?.isAclpAlertsPreferenceBeta ? (
+        isAclpAlertsBetaEditFlow ? (
           <BetaChip />
         ) : null,
       to: '/linodes/$linodeId/alerts',
@@ -200,6 +205,8 @@ const LinodesDetailNavigation = () => {
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }
+                  isAlertsBetaMode={isAclpAlertsBetaEditFlow}
+                  onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/settings')}>
