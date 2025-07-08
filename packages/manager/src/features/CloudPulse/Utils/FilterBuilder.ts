@@ -317,7 +317,7 @@ export const getTextFilterProperties = (
     savePref?: boolean
   ) => void
 ): CloudPulseTextFilterProps => {
-  const { name: label, placeholder } = props.config.configuration;
+  const { name: label, placeholder, isOptional } = props.config.configuration;
   const {
     dashboard,
     isServiceAnalyticsIntegration,
@@ -326,7 +326,6 @@ export const getTextFilterProperties = (
   } = props;
 
   return {
-    dashboard,
     disabled: shouldDisableFilterByFilterKey(
       props.config.configuration.filterKey,
       dependentFilters ?? {},
@@ -336,6 +335,7 @@ export const getTextFilterProperties = (
     handleTextFilterChange,
     label,
     placeholder,
+    optional: isOptional,
     savePreferences: !isServiceAnalyticsIntegration,
     filterKey: props.config.configuration.filterKey,
   };
