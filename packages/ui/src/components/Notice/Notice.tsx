@@ -144,11 +144,9 @@ export const Notice = (props: NoticeProps) => {
       {...rest}
     >
       <StyledIconBox
-        sx={(theme) => ({
-          display: 'flex',
+        sx={{
           alignSelf: forceImportantIconVerticalCenter ? 'center' : 'flex-start',
-          marginRight: theme.spacingFunction(8),
-        })}
+        }}
       >
         {variant === 'error' && <ErrorIcon />}
         {variant === 'info' && <InfoIcon />}

@@ -10,6 +10,7 @@ export const StyledNoticeBox = styled(Box, {
   shouldForwardProp: omittedProps(['variant']),
 })<{ variant: NoticeVariant }>(({ theme, variant }) => ({
   display: 'flex',
+  gap: '0.5rem',
   alignItems: 'center',
   '& + .notice': {
     marginTop: `${theme.spacingFunction(16)} !important`,
@@ -72,6 +73,7 @@ export const StyledNoticeBox = styled(Box, {
 export const StyledIconBox = styled(Box, {
   label: 'StyledIconBox',
 })(() => ({
+  display: 'flex',
   width: 20,
   height: 20,
   position: 'relative',
