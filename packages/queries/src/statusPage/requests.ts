@@ -17,10 +17,9 @@ const handleError = (error: APIError, defaultMessage: string) => {
  * Return a list of incidents with a status of "unresolved."
  */
 export const getIncidents = async (
-  LINODE_STATUS_PAGE_URL?: string,
+  statusPageUrl?: string,
 ): Promise<IncidentResponse> => {
-  const STATUS_PAGE_URL =
-    LINODE_STATUS_PAGE_URL ?? 'https://status.linode.com/api/v2';
+  const STATUS_PAGE_URL = statusPageUrl ?? 'https://status.linode.com/api/v2';
   try {
     const response = await fetch(
       `${STATUS_PAGE_URL}/incidents/unresolved.json`,
@@ -41,10 +40,9 @@ export const getIncidents = async (
  * a list of the most recent 50 maintenance, inclusive of all statuses.
  */
 export const getAllMaintenance = async (
-  LINODE_STATUS_PAGE_URL?: string,
+  statusPageUrl?: string,
 ): Promise<MaintenanceResponse> => {
-  const STATUS_PAGE_URL =
-    LINODE_STATUS_PAGE_URL ?? 'https://status.linode.com/api/v2';
+  const STATUS_PAGE_URL = statusPageUrl ?? 'https://status.linode.com/api/v2';
 
   try {
     const response = await fetch(
