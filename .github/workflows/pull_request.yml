@@ -5,7 +5,10 @@ on:
         types: [opened]
         branches:
             - aclp_develop
-
+            
+permissions:
+    contents: read
+    
 
 jobs:
     run-scripts:
