@@ -1,4 +1,3 @@
-import { useProfile } from '@linode/queries';
 import { Popover, useMediaQuery, useTheme } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -96,8 +95,6 @@ export const DateTimeRangePicker = ({
   timeZoneProps,
   sx,
 }: DateTimeRangePickerProps) => {
-  const { data: profile } = useProfile();
-
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null,
   );
@@ -116,7 +113,7 @@ export const DateTimeRangePicker = ({
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
   const [timeZone, setTimeZone] = useState<string>(
-    timeZoneProps?.defaultValue ?? profile?.timezone ?? 'UTC',
+    timeZoneProps?.defaultValue ?? 'UTC',
   ); // Default timezone
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
