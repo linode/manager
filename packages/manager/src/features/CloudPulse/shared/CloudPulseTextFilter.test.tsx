@@ -103,7 +103,9 @@ describe('CloudPulseTextFilter for interface_id', () => {
 
     expect(screen.getByLabelText(filterLabelInterfaceId)).toBeVisible();
     expect(screen.getByText(INTERFACE_IDS_HELPER_TEXT)).toBeVisible();
-    expect(screen.getByPlaceholderText('e.g., 0,1')).toBeVisible();
+    expect(
+      screen.getByPlaceholderText(INTERFACE_IDS_PLACEHOLDER_TEXT)
+    ).toBeVisible();
   });
 
   it('should initialize with default value', () => {
