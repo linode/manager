@@ -61,21 +61,21 @@ export const PORTS_LIMIT_ERROR_MESSAGE = 'Enter a maximum of 15 port numbers';
 export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
 
 export const INTERFACE_IDS_HELPER_TEXT =
-  'Enter one or more interface ids separated by commas.';
+  'Enter one or more interface IDs separated by commas.';
 
 export const INTERFACE_IDS_ERROR_MESSAGE =
-  'Enter valid interface id numbers as integers separated by commas.';
+  'Enter valid interface ID numbers as integers separated by commas.';
 
 export const INTERFACE_IDS_CONSECUTIVE_COMMAS_ERROR_MESSAGE =
-  'Use a single comma to separate interface ids.';
+  'Use a single comma to separate interface IDs.';
 
 export const INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE =
   'First character must be an integer.';
 
 export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
-  'Enter a maximum of 15 interface ids';
+  'Enter a maximum of 15 interface IDs';
 
-export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 0,1';
+export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234, 5678';
 
 export const HELPER_TEXT: Record<string, string> = {
   [PORT]: PORTS_HELPER_TEXT,
