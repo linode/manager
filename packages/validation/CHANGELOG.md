@@ -1,3 +1,16 @@
+## [2025-07-01] - v0.69.0
+
+
+### Added:
+
+- IAM RBAC: email validation ([#12395](https://github.com/linode/manager/pull/12395))
+
+### Upcoming Features:
+
+- Add `scope` in `createAlertDefinitionSchema` and `editAlertDefinitionSchema` ([#12377](https://github.com/linode/manager/pull/12377))
+- Update maintenance policy validation to use string type ([#12417](https://github.com/linode/manager/pull/12417))
+- Add `createCloudNATSchema` and `updateCloudNATSchema`
+
 ## [2025-06-17] - v0.68.0
 
 

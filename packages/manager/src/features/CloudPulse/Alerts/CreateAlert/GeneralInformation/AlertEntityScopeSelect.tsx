@@ -25,7 +25,7 @@ interface AlertEntityScopeSelectProps {
   formMode?: AlertFormMode;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
-    AlertDefinitionScope | null
+    AlertDefinitionScope | null | undefined
   >;
   serviceType: AlertServiceType | null;
 }
@@ -119,7 +119,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
             textFieldProps={{
               labelTooltipText: ALERT_SCOPE_TOOLTIP_TEXT,
             }}
-            value={getSelectedOption(field.value, options)}
+            value={getSelectedOption(field?.value ?? null, options)}
           />
         );
       }}

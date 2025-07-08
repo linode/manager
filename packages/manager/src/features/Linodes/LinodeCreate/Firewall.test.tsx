@@ -26,6 +26,12 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { create_firewall: true },
+  })),
+}));
+
 describe('Linode Create Firewall', () => {
   beforeEach(() => {
     queryMocks.useNavigate.mockReturnValue(vi.fn());
