@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   NewFeatureChip,
+  Notice,
   Paper,
   Stack,
   Typography,
@@ -13,13 +14,15 @@ import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { Link } from 'src/components/Link';
-import { MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION } from 'src/components/MaintenancePolicySelect/constants';
+import {
+  MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION,
+  UPCOMING_MAINTENANCE_NOTICE,
+} from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
 import { useFlags } from 'src/hooks/useFlags';
+import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
-import type { AccountSettings } from '@linode/api-v4';
-
-type MaintenancePolicyValues = Pick<AccountSettings, 'maintenance_policy'>;
+import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
 export const MaintenancePolicy = () => {
   const { enqueueSnackbar } = useSnackbar();
@@ -43,6 +46,12 @@ export const MaintenancePolicy = () => {
           maintenance_policy: accountSettings.maintenance_policy,
         }
       : undefined,
+  });
+
+  const { showUpcomingMaintenanceNotice } = useUpcomingMaintenanceNotice({
+    control,
+    // For account-level settings, we don't have a specific entity ID
+    // The hook will check for any upcoming maintenance events
   });
 
   const onSubmit = async (values: MaintenancePolicyValues) => {
@@ -70,6 +79,12 @@ export const MaintenancePolicy = () => {
             </Link>
             .
           </Typography>
+          {showUpcomingMaintenanceNotice && (
+            <Notice variant="warning">
+              There are Linodes that have upcoming scheduled maintenance.{' '}
+              {UPCOMING_MAINTENANCE_NOTICE}
+            </Notice>
+          )}
           <Controller
             control={control}
             name="maintenance_policy"
