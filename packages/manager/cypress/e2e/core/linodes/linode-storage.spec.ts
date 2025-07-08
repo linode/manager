@@ -40,11 +40,6 @@ const DISK_RESIZE_SIZE_MB = 768;
 const deleteInUseDisk = (diskName: string) => {
   waitForProvision();
 
-  ui.actionMenu
-    .findByTitle(`Action menu for Disk ${diskName}`)
-    .should('be.visible')
-    .click();
-
   ui.actionMenuItem
     .findByTitle('Delete')
     .should('be.visible')
@@ -155,9 +150,9 @@ describe('linode storage tab', () => {
           .findByTitle(`Action menu for Disk ${diskName}`)
           .should('be.visible')
           .click();
-
-        ui.actionMenuItem.findByTitle('Resize').should('be.disabled');
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.disabled');
 
       deleteInUseDisk(diskName);
 
@@ -247,9 +242,9 @@ describe('linode storage tab', () => {
           .findByTitle(`Action menu for Disk ${diskName}`)
           .should('be.visible')
           .click();
-
-        ui.actionMenuItem.findByTitle('Resize').should('be.visible').click();
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.visible').click();
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)
