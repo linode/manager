@@ -349,9 +349,17 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText('Disable').should('be.visible');
-          cy.findByText('Disable').click();
+          ui.actionMenu
+            .findByTitle(`Action menu for Firewall ${firewall.label}`)
+            .should('be.visible')
+            .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Disable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.dialog
         .findByTitle(`Disable Firewall ${firewall.label}?`)
@@ -378,9 +386,17 @@ describe('update firewall', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          cy.findByText('Enable').should('be.visible');
-          cy.findByText('Enable').click();
+          ui.actionMenu
+            .findByTitle(`Action menu for Firewall ${firewall.label}`)
+            .should('be.visible')
+            .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Enable')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.dialog
         .findByTitle(`Enable Firewall ${firewall.label}?`)

@@ -1,15 +1,10 @@
-import { Box } from '@linode/ui';
-import { splitAt } from '@linode/utilities';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Config } from '@linode/api-v4/lib/linodes';
-import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -19,32 +14,40 @@ interface Props {
   onBoot: () => void;
   onDelete: () => void;
   onEdit: () => void;
-  readOnly?: boolean;
 }
 
 export const ConfigActionMenu = (props: Props) => {
-  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
+  const { config, linodeId, onBoot, onDelete, onEdit } = props;
   const navigate = useNavigate();
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const tooltip = readOnly
+  const { permissions } = usePermissions(
+    'linode',
+    [
+      'reboot_linode',
+      'update_linode_config_profile',
+      'clone_linode',
+      'delete_linode_config_profile',
+    ],
+    linodeId
+  );
+
+  const tooltip = !permissions.delete_linode_config_profile
     ? "You don't have permission to perform this action"
     : undefined;
 
   const actions: Action[] = [
     {
-      disabled: readOnly,
+      disabled: !permissions.reboot_linode,
       onClick: onBoot,
       title: 'Boot',
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.update_linode_config_profile,
       onClick: onEdit,
       title: 'Edit',
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.clone_linode,
       onClick: () => {
         navigate({
           to: `/linodes/${linodeId}/clone/configs`,
@@ -57,34 +60,17 @@ export const ConfigActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.delete_linode_config_profile,
       onClick: onDelete,
       title: 'Delete',
       tooltip,
     },
   ];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <Box alignItems="center" display="flex" justifyContent="flex-end">
-      {!matchesSmDown &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              actionText={action.title}
-              disabled={action.disabled}
-              key={action.title}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Linode Config ${props.label}`}
-      />
-    </Box>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Linode Config ${props.label}`}
+    />
   );
 };
