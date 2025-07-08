@@ -48,7 +48,6 @@ export {
   baseRequest,
   convertYupToLinodeErrors,
   isEmpty,
-  markResourceDeleted,
   setToken,
 } from './request';
 

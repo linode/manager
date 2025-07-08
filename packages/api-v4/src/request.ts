@@ -12,18 +12,6 @@ type RequestConfigFn = (config: RequestConfig) => RequestConfig;
 
 type ConfigField = 'data' | 'headers' | 'method' | 'params' | 'url';
 
-const deletedResources = {
-  linodes: new Set<number>(),
-  nodebalancers: new Set<number>(),
-};
-
-export const markResourceDeleted = (
-  type: 'linodes' | 'nodebalancers',
-  id: number,
-) => {
-  deletedResources[type].add(id);
-};
-
 export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4',
 });
@@ -40,27 +28,6 @@ baseRequest.interceptors.request.use((config) => {
   headers.set('User-Agent', 'linodejs');
 
   return { ...config, headers };
-});
-
-/**
- * After a resource is deleted, the UI may still attempt to fetch it.
- * This interceptor blocks these reqs by checking if the resource has
- * been marked as deleted to prevent unnecessary 404 errors.
- */
-baseRequest.interceptors.request.use((config) => {
-  const url = config.url || '';
-
-  const linodeId = Number(url.match(/\/linode\/instances\/(\d+)/)?.[1]);
-  if (linodeId && deletedResources.linodes.has(linodeId)) {
-    return Promise.reject([{ reason: 'Not found' }]);
-  }
-
-  const nodebalancerId = Number(url.match(/\/nodebalancers\/(\d+)/)?.[1]);
-  if (nodebalancerId && deletedResources.nodebalancers.has(nodebalancerId)) {
-    return Promise.reject([{ reason: 'Not found' }]);
-  }
-
-  return config;
 });
 
 /**
