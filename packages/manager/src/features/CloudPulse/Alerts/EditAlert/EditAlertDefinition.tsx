@@ -95,12 +95,6 @@ export const EditAlertDefinition = (props: EditAlertProps) => {
     error: serviceMetadataError,
   } = useCloudPulseServiceByServiceType(serviceType ?? '', !!serviceType);
 
-  const {
-    data: serviceMetadata,
-    isLoading: serviceMetadataLoading,
-    error: serviceMetadataError,
-  } = useCloudPulseServiceByServiceType(serviceType ?? '', !!serviceType);
-
   const onSubmit = handleSubmit(async (values) => {
     const editPayload: EditAlertPayloadWithService = filterEditFormValues(
       values,
