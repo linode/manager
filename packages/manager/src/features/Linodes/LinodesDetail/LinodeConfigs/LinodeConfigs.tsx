@@ -18,6 +18,7 @@ import { TableContentWrapper } from 'src/components/TableContentWrapper/TableCon
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useCanUpgradeInterfaces } from 'src/hooks/useCanUpgradeInterfaces';
 import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendLinodeConfigurationDocsEvent } from 'src/utilities/analytics/customEventAnalytics';
@@ -50,6 +51,12 @@ const LinodeConfigs = () => {
   const { linodeId } = useParams({ from: '/linodes/$linodeId' });
 
   const id = Number(linodeId);
+
+  const { permissions } = usePermissions(
+    'linode',
+    ['create_linode_config_profile'],
+    id
+  );
 
   const { data: linode } = useLinodeQuery(id);
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
@@ -171,7 +178,11 @@ const LinodeConfigs = () => {
               Upgrade Interfaces
             </Button>
           )}
-        <Button buttonType="primary" disabled={isReadOnly} onClick={onCreate}>
+        <Button
+          buttonType="primary"
+          disabled={!permissions.create_linode_config_profile}
+          onClick={onCreate}
+        >
           Add Configuration
         </Button>
       </Box>
@@ -240,7 +251,6 @@ const LinodeConfigs = () => {
                           onBoot={() => onBoot(thisConfig.id)}
                           onDelete={() => onDelete(thisConfig.id)}
                           onEdit={() => onEdit(thisConfig.id)}
-                          readOnly={isReadOnly}
                         />
                       );
                     })}
@@ -261,7 +271,6 @@ const LinodeConfigs = () => {
       </Paginate>
       <LinodeConfigDialog
         config={selectedConfig}
-        isReadOnly={isReadOnly}
         linodeId={id}
         onClose={() => setIsLinodeConfigDialogOpen(false)}
         open={isLinodeConfigDialogOpen}
