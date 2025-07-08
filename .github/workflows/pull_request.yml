@@ -31,7 +31,7 @@ jobs:
             - name: Run Pull Request Notifier
               env:
                 BOT_TOKEN: ${{ secrets }}
-                ROOM_ID: ${{ secrets.ROOM_ID }}
+                ROOM_ID: 'ROOM ID'
                 url: ${{ github.event.pull_request.html_url }}
                 title: ${{ github.event.pull_request.title }}
                 author: ${{ github.event.pull_request.user.login }}
