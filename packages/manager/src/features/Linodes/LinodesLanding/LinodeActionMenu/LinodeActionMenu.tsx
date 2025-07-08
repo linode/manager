@@ -160,7 +160,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
         ? NO_PERMISSION_TOOLTIP_TEXT
         : linodeIsInDistributedRegion
           ? DISTRIBUTED_REGION_TOOLTIP_TEXT
-          : MAINTENANCE_TOOLTIP_TEXT,
+          : hasHostMaintenance
+            ? MAINTENANCE_TOOLTIP_TEXT
+            : undefined,
     },
     {
       condition: !isBareMetalInstance,
@@ -173,7 +175,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
         ? NO_PERMISSION_TOOLTIP_TEXT
         : isMTCLinode
           ? LINODE_MTC_RESIZING_TOOLTIP_TEXT
-          : MAINTENANCE_TOOLTIP_TEXT,
+          : hasHostMaintenance
+            ? MAINTENANCE_TOOLTIP_TEXT
+            : undefined,
     },
     {
       condition: true,
@@ -184,7 +188,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       tooltipAction: 'rebuild',
       tooltipText: !permissions.rebuild_linode
         ? NO_PERMISSION_TOOLTIP_TEXT
-        : MAINTENANCE_TOOLTIP_TEXT,
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,
@@ -195,7 +201,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       tooltipAction: 'rescue',
       tooltipText: !permissions.rescue_linode
         ? NO_PERMISSION_TOOLTIP_TEXT
-        : MAINTENANCE_TOOLTIP_TEXT,
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: !isBareMetalInstance,
@@ -210,7 +218,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       tooltipAction: 'migrate',
       tooltipText: !permissions.migrate_linode
         ? NO_PERMISSION_TOOLTIP_TEXT
-        : MAINTENANCE_TOOLTIP_TEXT,
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,
@@ -224,7 +234,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       tooltipAction: 'delete',
       tooltipText: !permissions.delete_linode
         ? NO_PERMISSION_TOOLTIP_TEXT
-        : MAINTENANCE_TOOLTIP_TEXT,
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
   ];
 
