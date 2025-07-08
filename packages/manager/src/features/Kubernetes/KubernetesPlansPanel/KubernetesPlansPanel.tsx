@@ -32,6 +32,11 @@ interface Props {
   currentPlanHeading?: string;
   error?: string;
   getTypeCount: (planId: string) => number;
+  handleConfigurePool?: (
+    drawerMode: NodePoolConfigDrawerMode,
+    isOpen: boolean,
+    planLabel?: string
+  ) => void;
   hasSelectedRegion: boolean;
   header?: string;
   isAPLEnabled?: boolean;
@@ -40,11 +45,6 @@ interface Props {
   isSubmitting?: boolean;
   notice?: JSX.Element;
   onAdd?: (key: string, value: number) => void;
-  onConfigure?: (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => void;
   onSelect: (key: string) => void;
   regionsData: Region[];
   resetValues: () => void;
@@ -67,7 +67,7 @@ export const KubernetesPlansPanel = (props: Props) => {
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
     onAdd,
-    onConfigure,
+    handleConfigurePool,
     onSelect,
     notice,
     regionsData,
@@ -144,9 +144,9 @@ export const KubernetesPlansPanel = (props: Props) => {
               <KubernetesPlanContainer
                 allDisabledPlans={allDisabledPlans}
                 getTypeCount={getTypeCount}
+                handleConfigurePool={handleConfigurePool}
                 hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
                 onAdd={onAdd}
-                onConfigure={onConfigure}
                 onSelect={onSelect}
                 plans={plansForThisLinodeTypeClass}
                 planType={plan}

@@ -8,7 +8,7 @@ import { NodePoolPanel } from './NodePoolPanel';
 import type { NodePoolPanelProps } from './NodePoolPanel';
 
 const props: NodePoolPanelProps = {
-  onConfigure: vi.fn(),
+  handleConfigurePool: vi.fn(),
   hasSelectedRegion: true,
   isPlanPanelDisabled: () => false,
   isSelectedRegionEligibleForPlan: () => false,

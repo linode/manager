@@ -578,11 +578,11 @@ export const CreateCluster = () => {
             <Divider sx={{ marginBottom: 4 }} />
             <NodePoolPanel
               apiError={errorMap.node_pools}
+              handleConfigurePool={handleOpenNodePoolConfigDrawer}
               hasSelectedRegion={hasSelectedRegion}
               isAPLEnabled={aplEnabled}
               isPlanPanelDisabled={isPlanPanelDisabled}
               isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
-              onConfigure={handleOpenNodePoolConfigDrawer}
               regionsData={regionsData}
               selectedRegionId={selectedRegion?.id}
               selectedTier={selectedTier}

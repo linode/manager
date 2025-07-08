@@ -31,14 +31,14 @@ import type { PlanWithAvailability } from 'src/features/components/PlansPanel/ty
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
-  hasMajorityOfPlansDisabled: boolean;
-  idx: number;
-  onAdd?: (key: string, value: number) => void;
-  onConfigure?: (
+  handleConfigurePool?: (
     drawerMode: NodePoolConfigDrawerMode,
     isOpen: boolean,
     planLabel?: string
   ) => void;
+  hasMajorityOfPlansDisabled: boolean;
+  idx: number;
+  onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plan: PlanWithAvailability;
   selectedId?: string;
@@ -56,7 +56,7 @@ export const KubernetesPlanSelection = (
     idx,
     onAdd,
     onSelect,
-    onConfigure,
+    handleConfigurePool,
     plan,
     selectedId,
     selectedRegionId,
@@ -85,6 +85,8 @@ export const KubernetesPlanSelection = (
   );
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+  const shouldShowConfigurePoolButton =
+    isLkeEnterprisePostLAFeatureEnabled && !onAdd;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,
@@ -121,13 +123,15 @@ export const KubernetesPlanSelection = (
   const renderVariant = () => (
     <Grid size={12}>
       <StyledInputOuter>
-        {isLkeEnterprisePostLAFeatureEnabled ? (
+        {shouldShowConfigurePoolButton ? (
           <Button
             aria-label={rowIsDisabled ? disabledPlanReasonCopy : undefined}
             buttonType="primary"
             disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
             onClick={() =>
-              onConfigure ? onConfigure('add', true, plan.id) : null
+              handleConfigurePool
+                ? handleConfigurePool('add', true, plan.id)
+                : null
             }
             sx={{ minWidth: '85px' }}
           >
@@ -207,7 +211,7 @@ export const KubernetesPlanSelection = (
           </TableCell>
           <TableCell>
             <StyledInputOuter>
-              {isLkeEnterprisePostLAFeatureEnabled ? (
+              {shouldShowConfigurePoolButton ? (
                 <Button
                   aria-label={
                     rowIsDisabled ? disabledPlanReasonCopy : undefined
@@ -215,7 +219,9 @@ export const KubernetesPlanSelection = (
                   buttonType="primary"
                   disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
                   onClick={() =>
-                    onConfigure ? onConfigure('add', true, plan.id) : null
+                    handleConfigurePool
+                      ? handleConfigurePool('add', true, plan.id)
+                      : null
                   }
                   sx={{ marginLeft: '10px', minWidth: '85px' }}
                 >

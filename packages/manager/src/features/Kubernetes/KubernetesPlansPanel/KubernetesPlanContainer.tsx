@@ -20,13 +20,13 @@ import type { PlanWithAvailability } from 'src/features/components/PlansPanel/ty
 export interface KubernetesPlanContainerProps {
   allDisabledPlans: PlanWithAvailability[];
   getTypeCount: (planId: string) => number;
-  hasMajorityOfPlansDisabled: boolean;
-  onAdd?: (key: string, value: number) => void;
-  onConfigure?: (
+  handleConfigurePool?: (
     drawerMode: NodePoolConfigDrawerMode,
     isOpen: boolean,
     planLabel?: string
   ) => void;
+  hasMajorityOfPlansDisabled: boolean;
+  onAdd?: (key: string, value: number) => void;
   onSelect: (key: string) => void;
   plans: PlanWithAvailability[];
   planType?: LinodeTypeClass;
@@ -44,7 +44,7 @@ export const KubernetesPlanContainer = (
     getTypeCount,
     hasMajorityOfPlansDisabled,
     onAdd,
-    onConfigure,
+    handleConfigurePool,
     onSelect,
     planType,
     plans,
@@ -90,11 +90,11 @@ export const KubernetesPlanContainer = (
         return (
           <KubernetesPlanSelection
             getTypeCount={getTypeCount}
+            handleConfigurePool={handleConfigurePool}
             hasMajorityOfPlansDisabled={hasMajorityOfPlansDisabled}
             idx={id}
             key={id}
             onAdd={onAdd}
-            onConfigure={onConfigure}
             onSelect={onSelect}
             plan={plan}
             selectedId={selectedId}
@@ -111,7 +111,7 @@ export const KubernetesPlanContainer = (
       hasMajorityOfPlansDisabled,
       getTypeCount,
       onAdd,
-      onConfigure,
+      handleConfigurePool,
       onSelect,
       plans,
       selectedId,

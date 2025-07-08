@@ -20,15 +20,15 @@ import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface NodePoolPanelProps {
   apiError?: string;
-  hasSelectedRegion: boolean;
-  isAPLEnabled?: boolean;
-  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
-  isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
-  onConfigure: (
+  handleConfigurePool: (
     drawerMode: NodePoolConfigDrawerMode,
     isOpen: boolean,
     planLabel?: string
   ) => void;
+  hasSelectedRegion: boolean;
+  isAPLEnabled?: boolean;
+  isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;
+  isSelectedRegionEligibleForPlan: (planType?: LinodeTypeClass) => boolean;
   regionsData: Region[];
   selectedRegionId: Region['id'] | undefined;
   selectedTier: KubernetesTier;
@@ -62,7 +62,7 @@ const Panel = (props: NodePoolPanelProps) => {
     isAPLEnabled,
     isPlanPanelDisabled,
     isSelectedRegionEligibleForPlan,
-    onConfigure,
+    handleConfigurePool,
     regionsData,
     selectedRegionId,
     selectedTier,
@@ -113,6 +113,7 @@ const Panel = (props: NodePoolPanelProps) => {
           getTypeCount={(planId) =>
             typeCountMap.get(planId) ?? DEFAULT_PLAN_COUNT
           }
+          handleConfigurePool={handleConfigurePool}
           hasSelectedRegion={hasSelectedRegion}
           header="Add Node Pools"
           isAPLEnabled={isAPLEnabled}
@@ -120,7 +121,6 @@ const Panel = (props: NodePoolPanelProps) => {
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
           onAdd={addPool}
-          onConfigure={onConfigure}
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
