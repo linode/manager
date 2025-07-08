@@ -13,13 +13,13 @@ import { MaintenancePolicy } from './MaintenancePolicy';
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
 interface AdditionalOptionProps {
-  handleIsAclpAlertsBetaLocal: (isBeta: boolean) => void;
-  isAclpAlertsBetaLocal: boolean;
+  isAlertsBetaMode: boolean;
+  onAlertsModeChange: (isBeta: boolean) => void;
 }
 
 export const AdditionalOptions = ({
-  handleIsAclpAlertsBetaLocal,
-  isAclpAlertsBetaLocal,
+  onAlertsModeChange,
+  isAlertsBetaMode,
 }: AdditionalOptionProps) => {
   const { aclpBetaServices } = useFlags();
   const { data: regions } = useRegionsQuery();
@@ -56,8 +56,8 @@ export const AdditionalOptions = ({
       <Stack divider={<Divider />}>
         {showAlerts && (
           <Alerts
-            handleIsAclpAlertsBetaLocal={handleIsAclpAlertsBetaLocal}
-            isAclpAlertsBetaLocal={isAclpAlertsBetaLocal}
+            isAlertsBetaMode={isAlertsBetaMode}
+            onAlertsModeChange={onAlertsModeChange}
           />
         )}
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}

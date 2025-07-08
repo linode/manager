@@ -167,11 +167,11 @@ describe('AclpPreferenceToggle', () => {
   /**
    * ACLP Preference Toggle tests for Alerts
    */
-  it('should display the correct legacy mode banner and button text for Alerts when isAclpAlertsBetaLocal is false', () => {
+  it('should display the correct legacy mode banner and button text for Alerts when isAlertsBetaMode is false', () => {
     renderWithTheme(
       <AclpPreferenceToggle
-        handleIsAclpAlertsBetaLocal={vi.fn()}
-        isAclpAlertsBetaLocal={false}
+        isAlertsBetaMode={false}
+        onAlertsModeChange={vi.fn()}
         type="alerts"
       />
     );
@@ -188,11 +188,11 @@ describe('AclpPreferenceToggle', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should display the correct beta mode banner and button text for Alerts when isAclpAlertsBetaLocal is true', () => {
+  it('should display the correct beta mode banner and button text for Alerts when isAlertsBetaMode is true', () => {
     renderWithTheme(
       <AclpPreferenceToggle
-        handleIsAclpAlertsBetaLocal={vi.fn()}
-        isAclpAlertsBetaLocal={true}
+        isAlertsBetaMode={true}
+        onAlertsModeChange={vi.fn()}
         type="alerts"
       />
     );
@@ -209,13 +209,13 @@ describe('AclpPreferenceToggle', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('should call handleIsAclpAlertsBetaLocal with true when switching from legacy to beta mode', async () => {
+  it('should call onAlertsModeChange with true when switching from legacy to beta mode', async () => {
     const mockSetIsAclpBetaLocal = vi.fn();
 
     renderWithTheme(
       <AclpPreferenceToggle
-        handleIsAclpAlertsBetaLocal={mockSetIsAclpBetaLocal}
-        isAclpAlertsBetaLocal={false}
+        isAlertsBetaMode={false}
+        onAlertsModeChange={mockSetIsAclpBetaLocal}
         type="alerts"
       />
     );
@@ -229,13 +229,13 @@ describe('AclpPreferenceToggle', () => {
     expect(mockSetIsAclpBetaLocal).toHaveBeenCalledWith(true);
   });
 
-  it('should call handleIsAclpAlertsBetaLocal with false when switching from beta to legacy mode', async () => {
+  it('should call onAlertsModeChange with false when switching from beta to legacy mode', async () => {
     const mockSetIsAclpBetaLocal = vi.fn();
 
     renderWithTheme(
       <AclpPreferenceToggle
-        handleIsAclpAlertsBetaLocal={mockSetIsAclpBetaLocal}
-        isAclpAlertsBetaLocal={true}
+        isAlertsBetaMode={true}
+        onAlertsModeChange={mockSetIsAclpBetaLocal}
         type="alerts"
       />
     );

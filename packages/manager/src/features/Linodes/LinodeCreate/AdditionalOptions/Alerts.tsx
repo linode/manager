@@ -12,13 +12,13 @@ import type { LinodeCreateFormValues } from '../utilities';
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
 
 interface AlertsProps {
-  handleIsAclpAlertsBetaLocal: (isBeta: boolean) => void;
-  isAclpAlertsBetaLocal: boolean;
+  isAlertsBetaMode: boolean;
+  onAlertsModeChange: (isBeta: boolean) => void;
 }
 
 export const Alerts = ({
-  handleIsAclpAlertsBetaLocal,
-  isAclpAlertsBetaLocal,
+  onAlertsModeChange,
+  isAlertsBetaMode,
 }: AlertsProps) => {
   const { aclpBetaServices } = useFlags();
 
@@ -38,7 +38,7 @@ export const Alerts = ({
       detailProps={{ sx: { p: 0 } }}
       heading="Alerts"
       headingChip={
-        aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocal ? (
+        aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
           <BetaChip />
         ) : null
       }
@@ -47,12 +47,12 @@ export const Alerts = ({
     >
       {aclpBetaServices?.linode?.alerts && (
         <AclpPreferenceToggle
-          handleIsAclpAlertsBetaLocal={handleIsAclpAlertsBetaLocal}
-          isAclpAlertsBetaLocal={isAclpAlertsBetaLocal}
+          isAlertsBetaMode={isAlertsBetaMode}
+          onAlertsModeChange={onAlertsModeChange}
           type="alerts"
         />
       )}
-      {aclpBetaServices?.linode?.alerts && isAclpAlertsBetaLocal ? (
+      {aclpBetaServices?.linode?.alerts && isAlertsBetaMode ? (
         // Beta ACLP Alerts View
         <AlertReusableComponent
           onToggleAlert={handleToggleAlert}

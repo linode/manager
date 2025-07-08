@@ -27,7 +27,7 @@ describe('useIsLinodeAclpSubscribed', () => {
       useIsLinodeAclpSubscribed(undefined, 'beta'),
     );
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(false);
+    expect(result.current).toBe(false);
   });
 
   it('returns false when linode data is undefined', () => {
@@ -35,7 +35,7 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'beta'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(false);
+    expect(result.current).toBe(false);
   });
 
   it('returns true in GA stage when no alerts exist at all', () => {
@@ -55,7 +55,7 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'ga'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(true);
+    expect(result.current).toBe(true);
   });
 
   it('returns false in beta stage when no alerts exist at all', () => {
@@ -75,7 +75,7 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'beta'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(false);
+    expect(result.current).toBe(false);
   });
 
   it('returns false when only legacy alerts exist', () => {
@@ -95,7 +95,7 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'beta'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(false);
+    expect(result.current).toBe(false);
   });
 
   it('returns true when only ACLP alerts exist', () => {
@@ -115,7 +115,7 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'beta'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(true);
+    expect(result.current).toBe(true);
   });
 
   it('returns true when both legacy and ACLP alerts exist', () => {
@@ -135,6 +135,6 @@ describe('useIsLinodeAclpSubscribed', () => {
 
     const { result } = renderHook(() => useIsLinodeAclpSubscribed(123, 'beta'));
 
-    expect(result.current.isLinodeAclpSubscribed).toBe(true);
+    expect(result.current).toBe(true);
   });
 });

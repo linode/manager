@@ -7,13 +7,13 @@ import { Skeleton } from 'src/components/Skeleton';
 
 export interface AclpPreferenceToggleType {
   /**
-   * Handler for alerts toggle. Use only when type is `alerts`
-   */
-  handleIsAclpAlertsBetaLocal?: (isBeta: boolean) => void;
-  /**
    * Alerts toggle state. Use only when type is `alerts`
    */
-  isAclpAlertsBetaLocal?: boolean;
+  isAlertsBetaMode?: boolean;
+  /**
+   * Handler for alerts toggle. Use only when type is `alerts`
+   */
+  onAlertsModeChange?: (isBeta: boolean) => void;
   /**
    * Toggle type: `alerts` or `metrics`
    */
@@ -68,7 +68,7 @@ const preferenceConfig: Record<
 };
 
 export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
-  const { handleIsAclpAlertsBetaLocal, isAclpAlertsBetaLocal, type } = props;
+  const { isAlertsBetaMode, onAlertsModeChange, type } = props;
 
   const config = preferenceConfig[type];
 
@@ -93,10 +93,10 @@ export const AclpPreferenceToggle = (props: AclpPreferenceToggleType) => {
   }
   // -------------------------------------------------------------------
 
-  const isBeta = type === 'alerts' ? isAclpAlertsBetaLocal : isAclpMetricsBeta;
+  const isBeta = type === 'alerts' ? isAlertsBetaMode : isAclpMetricsBeta;
   const handleBetaToggle = () => {
-    if (type === 'alerts' && handleIsAclpAlertsBetaLocal) {
-      handleIsAclpAlertsBetaLocal(!isBeta);
+    if (type === 'alerts' && onAlertsModeChange) {
+      onAlertsModeChange(!isBeta);
     } else {
       updatePreferences({ isAclpMetricsBeta: !isBeta });
     }

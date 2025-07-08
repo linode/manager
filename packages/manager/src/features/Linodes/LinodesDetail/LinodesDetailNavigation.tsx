@@ -75,10 +75,7 @@ const LinodesDetailNavigation = () => {
   );
 
   // In Edit flow, default alert mode is based on Linode's ACLP subscription status
-  const { isLinodeAclpSubscribed } = useIsLinodeAclpSubscribed(
-    linode?.id,
-    'beta'
-  );
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linode?.id, 'beta');
   const [isAclpAlertsBetaEditFlow, setIsAclpAlertsBetaEditFlow] =
     React.useState<boolean>(isLinodeAclpSubscribed);
 
@@ -205,11 +202,11 @@ const LinodesDetailNavigation = () => {
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/alerts')}>
                 <LinodeAlerts
-                  handleIsAclpAlertsBetaLocal={setIsAclpAlertsBetaEditFlow}
-                  isAclpAlertsBetaLocal={isAclpAlertsBetaEditFlow}
                   isAclpAlertsSupportedRegionLinode={
                     isAclpAlertsSupportedRegionLinode
                   }
+                  isAlertsBetaMode={isAclpAlertsBetaEditFlow}
+                  onAlertsModeChange={setIsAclpAlertsBetaEditFlow}
                 />
               </SafeTabPanel>
               <SafeTabPanel index={getTabIndex('/linodes/$linodeId/settings')}>

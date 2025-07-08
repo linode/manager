@@ -18,6 +18,7 @@ type AclpStage = 'beta' | 'ga';
  *
  * @param linodeId - The ID of the Linode
  * @param stage - The current ACLP stage: 'beta' or 'ga'
+ * @returns {boolean} `true` if the Linode is subscribed to ACLP, otherwise `false`
  */
 export const useIsLinodeAclpSubscribed = (
   linodeId: number | undefined,
@@ -29,7 +30,7 @@ export const useIsLinodeAclpSubscribed = (
   );
 
   if (!linode) {
-    return { isLinodeAclpSubscribed: false };
+    return false;
   }
 
   const hasLegacyAlerts =
@@ -43,8 +44,8 @@ export const useIsLinodeAclpSubscribed = (
     (linode.alerts.system?.length ?? 0) > 0 ||
     (linode.alerts.user?.length ?? 0) > 0;
 
-  const isLinodeAclpSubscribed =
-    hasAclpAlerts || (!hasAclpAlerts && !hasLegacyAlerts && stage === 'ga');
-
-  return { isLinodeAclpSubscribed };
+  // Always subscribed if ACLP alerts exist. For GA stage, default to subscribed if no alerts exist.
+  return (
+    hasAclpAlerts || (!hasAclpAlerts && !hasLegacyAlerts && stage === 'ga')
+  );
 };
