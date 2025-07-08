@@ -1,3 +1,23 @@
+## [2025-07-01] - v0.143.0
+
+### Changed:
+
+- Allow `authorized_keys`  to be null in  `Profile` type ([#12390](https://github.com/linode/manager/pull/12390))
+
+### Removed:
+
+- `is_beta` flag from ServiceTypes interface in cloudpulse types ([#12386](https://github.com/linode/manager/pull/12386))
+
+### Upcoming Features:
+
+- Add Beta ACLP alerts property to the `CreateLinodeRequest` type ([#12248](https://github.com/linode/manager/pull/12248))
+- Add `parent_entity` field to `FirewallDeviceEntity` ([#12283](https://github.com/linode/manager/pull/12283))
+- Fix `getMaintenancePolicies` to properly handle pagination params and return all maintenance policies ([#12334](https://github.com/linode/manager/pull/12334))
+- Add `scope` in `Alert` and `EditAlertDefinitionPayload` interfaces, rename `ServiceTypes` interface to `Service`, add `ServiceAlert` interface ([#12377](https://github.com/linode/manager/pull/12377))
+- Add maintenance policy types for VM maintenance API ([#12417](https://github.com/linode/manager/pull/12417))
+- Add `monitors` field to the `Region` type ([#12375](https://github.com/linode/manager/pull/12375))
+- Add CRUD CloudNAT types ([#12379](https://github.com/linode/manager/pull/12379))
+
 ## [2025-06-17] - v0.142.0
 
 
