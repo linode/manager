@@ -1,15 +1,10 @@
-import { splitAt } from '@linode/utilities';
-import { useTheme } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { ActionMenu } from 'src/components/ActionMenu/ActionMenu';
-import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { sendEvent } from 'src/utilities/analytics/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import type { Disk, Linode } from '@linode/api-v4';
-import type { Theme } from '@mui/material/styles';
 import type { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
@@ -23,8 +18,6 @@ interface Props {
 }
 
 export const LinodeDiskActionMenu = (props: Props) => {
-  const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 
   const {
@@ -36,6 +29,17 @@ export const LinodeDiskActionMenu = (props: Props) => {
     onResize,
     readOnly,
   } = props;
+
+  const { permissions } = usePermissions(
+    'linode',
+    [
+      'update_linode_disk',
+      'resize_linode_disk',
+      'delete_linode_disk',
+      'clone_linode',
+    ],
+    linodeId
+  );
 
   const poweredOnTooltip =
     linodeStatus !== 'offline'
@@ -49,12 +53,12 @@ export const LinodeDiskActionMenu = (props: Props) => {
 
   const actions: Action[] = [
     {
-      disabled: readOnly,
+      disabled: !permissions.update_linode_disk,
       onClick: onRename,
       title: 'Rename',
     },
     {
-      disabled: linodeStatus !== 'offline' || readOnly,
+      disabled: !permissions.resize_linode_disk || linodeStatus !== 'offline',
       onClick: onResize,
       title: 'Resize',
       tooltip: poweredOnTooltip,
@@ -73,7 +77,7 @@ export const LinodeDiskActionMenu = (props: Props) => {
       tooltip: swapTooltip,
     },
     {
-      disabled: readOnly,
+      disabled: !permissions.clone_linode,
       onClick: () => {
         navigate({
           to: `/linodes/${linodeId}/clone/disks`,
@@ -85,42 +89,17 @@ export const LinodeDiskActionMenu = (props: Props) => {
       title: 'Clone',
     },
     {
-      disabled: linodeStatus !== 'offline' || readOnly,
+      disabled: !permissions.delete_linode_disk || linodeStatus !== 'offline',
       onClick: onDelete,
       title: 'Delete',
       tooltip: poweredOnTooltip,
     },
   ];
 
-  const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <>
-      {!matchesSmDown &&
-        inlineActions.map((action) => (
-          <InlineMenuAction
-            actionText={action.title}
-            disabled={action.disabled}
-            key={action.title}
-            onClick={action.onClick}
-            tooltip={action.tooltip}
-            tooltipAnalyticsEvent={
-              action.title === 'Resize'
-                ? () =>
-                    sendEvent({
-                      action: `Open:tooltip`,
-                      category: `Disk ${action.title} Flow`,
-                      label: `${action.title} help icon tooltip`,
-                    })
-                : undefined
-            }
-          />
-        ))}
-      <ActionMenu
-        actionsList={menuActions}
-        ariaLabel={`Action menu for Disk ${disk.label}`}
-      />
-    </>
+    <ActionMenu
+      actionsList={actions}
+      ariaLabel={`Action menu for Disk ${disk.label}`}
+    />
   );
 };
