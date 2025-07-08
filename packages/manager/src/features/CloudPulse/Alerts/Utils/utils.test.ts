@@ -8,6 +8,7 @@ import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  convertSecondsToOptions,
   filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -40,6 +41,13 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(65)).toBe('1 minute and 5 seconds');
   expect(convertSecondsToMinutes(1)).toBe('1 second');
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
+});
+
+it('test convertSecondsToOptions method', () => {
+  expect(convertSecondsToOptions(300)).toEqual('5 min');
+  expect(convertSecondsToOptions(60)).toEqual('1 min');
+  expect(convertSecondsToOptions(3600)).toEqual('1 hr');
+  expect(convertSecondsToOptions(900)).toEqual('15 min');
 });
 
 it('test filterAlertsByStatusAndType method', () => {

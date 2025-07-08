@@ -168,7 +168,7 @@ export interface CloudPulseMetricsList {
 }
 
 export interface ServiceAlert {
-  evaluation_periods_seconds: number[];
+  evaluation_period_seconds: number[];
   polling_interval_seconds: number[];
   scope: AlertDefinitionScope[];
 }
