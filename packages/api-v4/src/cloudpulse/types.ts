@@ -4,7 +4,11 @@ export type AlertSeverityType = 0 | 1 | 2 | 3;
 export type MetricAggregationType = 'avg' | 'count' | 'max' | 'min' | 'sum';
 export type MetricOperatorType = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 export type AlertServiceType = 'dbaas' | 'linode';
-export type MetricsServiceType = 'dbaas' | 'linode' | 'nodebalancer';
+export type MetricsServiceType =
+  | 'dbaas'
+  | 'firewall'
+  | 'linode'
+  | 'nodebalancer';
 export type AlertClass = 'dedicated' | 'shared';
 export type DimensionFilterOperatorType =
   | 'endswith'
@@ -370,6 +374,7 @@ export const capabilityServiceTypeMapping: Record<
   linode: 'Linodes',
   dbaas: 'Managed Databases',
   nodebalancer: 'NodeBalancers',
+  firewall: 'Cloud Firewall',
 };
 
 /**
