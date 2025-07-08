@@ -2,11 +2,8 @@ import { TextField } from '@linode/ui';
 import React from 'react';
 import { debounce } from 'throttle-debounce';
 
-import {
-  HELPER_TEXT,
-  PLACEHOLDER_TEXT,
-  validationFunction,
-} from '../Utils/constants';
+import { HELPER_TEXT, PLACEHOLDER_TEXT } from '../Utils/constants';
+import { validationFunction } from '../Utils/utils';
 
 import type { Dashboard, FilterValue } from '@linode/api-v4';
 
@@ -76,18 +73,6 @@ export const CloudPulseTextFilter = React.memo(
       undefined
     );
     const validate = validationFunction[filterKey];
-
-    // Initialize filterData on mount if there's a default value
-    React.useEffect(() => {
-      if (defaultValue && typeof defaultValue === 'string') {
-        handleTextFilterChange(
-          defaultValue,
-          [defaultValue],
-          filterKey,
-          savePreferences
-        );
-      }
-    }, [defaultValue, handleTextFilterChange, filterKey, savePreferences]);
 
     // Initialize filterData on mount if there's a default value
     React.useEffect(() => {

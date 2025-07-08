@@ -1,6 +1,6 @@
 import { capabilityServiceTypeMapping } from '@linode/api-v4';
 
-import { RESOURCE_ID } from './constants';
+import { INTERFACE_IDS_PLACEHOLDER_TEXT, RESOURCE_ID } from './constants';
 import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 
 import type { CloudPulseServiceTypeFilterMap } from './models';
@@ -227,7 +227,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
           CloudPulseAvailableViews.central,
           CloudPulseAvailableViews.service,
         ],
-        placeholder: 'e.g., 0,1',
+        placeholder: INTERFACE_IDS_PLACEHOLDER_TEXT,
         priority: 2,
       },
       name: 'Interface IDs',
