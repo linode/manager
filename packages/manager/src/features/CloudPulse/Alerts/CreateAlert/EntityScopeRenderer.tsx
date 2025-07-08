@@ -10,7 +10,7 @@ import { CloudPulseModifyAlertResources } from './Resources/CloudPulseModifyAler
 import type { AlertDefinitionScope } from '@linode/api-v4';
 
 export interface EntityScopeRendererProps {
-  scope: AlertDefinitionScope | null;
+  scope: AlertDefinitionScope | null | undefined;
 }
 
 export const EntityScopeRenderer = (props: EntityScopeRendererProps) => {
