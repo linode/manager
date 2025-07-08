@@ -80,7 +80,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
           </Typography>
           {showUpcomingMaintenanceNotice && (
             <Notice variant="warning">
-              This Linode has an upcoming scheduled maintenance.{' '}
+              This Linode has upcoming scheduled maintenance.{' '}
               {UPCOMING_MAINTENANCE_NOTICE}
             </Notice>
           )}
