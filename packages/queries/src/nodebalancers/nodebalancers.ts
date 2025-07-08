@@ -81,10 +81,6 @@ export const useNodebalancerDeleteMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteNodeBalancer(id),
     onSuccess() {
-      // Remove NodeBalancer queries for this specific NodeBalancer
-      queryClient.removeQueries({
-        queryKey: nodebalancerQueries.nodebalancer(id).queryKey,
-      });
       // Invalidate paginated stores
       queryClient.invalidateQueries({
         queryKey: nodebalancerQueries.nodebalancers.queryKey,
