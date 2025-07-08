@@ -2,7 +2,7 @@ name: Pull Request Workflow
 
 on:
     workflow_dispatch:
-    pull_request:
+    pull_request_target:
         types: [opened]
         branches:
             - aclp_develop
