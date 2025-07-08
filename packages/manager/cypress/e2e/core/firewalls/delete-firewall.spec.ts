@@ -41,13 +41,18 @@ describe('delete firewall', () => {
         cy.visitWithLogin('/firewalls');
 
         // Confirm that firewall is listed and initiate deletion.
-        cy.findByText(firewall.label)
+        cy.findByText(firewall.label).should('be.visible');
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Firewall ${firewall.label}`)
           .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText('Delete').should('be.visible');
-            cy.findByText('Delete').click();
-          });
+          .should('be.enabled')
+          .click();
+        ui.actionMenuItem
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
 
         // Cancel deletion when prompted to confirm.
         ui.dialog
@@ -62,13 +67,18 @@ describe('delete firewall', () => {
           });
 
         // Confirm that firewall is still listed and initiate deletion again.
-        cy.findByText(firewall.label)
+        cy.findByText(firewall.label).should('be.visible');
+
+        ui.actionMenu
+          .findByTitle(`Action menu for Firewall ${firewall.label}`)
           .should('be.visible')
-          .closest('tr')
-          .within(() => {
-            cy.findByText('Delete').should('be.visible');
-            cy.findByText('Delete').click();
-          });
+          .should('be.enabled')
+          .click();
+        ui.actionMenuItem
+          .findByTitle('Delete')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
 
         // Confirm deletion.
         ui.dialog
@@ -142,29 +152,35 @@ describe('delete firewall', () => {
         .closest('tr')
         .within(() => {
           cy.findByText('DEFAULT').should('be.visible');
-          ui.button
-            .findByTitle('Disable')
+
+          ui.actionMenu
+            .findByTitle(`Action menu for Firewall ${mockFirewall.label}`)
             .should('be.visible')
-            .should('be.disabled')
-            .focus();
-
-          ui.tooltip
-            .findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT)
-            .should('be.visible');
-
-          ui.button
-            .findByTitle('Delete')
-            .should('be.visible')
-            .should('be.disabled')
-            .focus();
-
-          ui.tooltip
-            .findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT)
-            .should('be.visible');
-
-          // Dismiss the tooltip by focusing on another element.
-          cy.findByText(mockFirewall.label).focus();
+            .should('be.enabled')
+            .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Disable')
+        .should('be.visible')
+        .should('be.disabled')
+        .focus();
+
+      ui.tooltip.findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT).should('be.visible');
+
+      ui.actionMenuItem
+        .findByTitle('Delete')
+        .should('be.visible')
+        .should('be.disabled')
+        .focus();
+
+      ui.tooltip.findByText(DEFAULT_FIREWALL_TOOLTIP_TEXT).should('be.visible');
+
+      // Dismiss the tooltip by focusing on another element.
+      cy.findByText(mockFirewall.label).focus();
+
+      // Dismiss the action menu by typing the `escape` key.
+      cy.get('body').type('{esc}');
     });
 
     // Confirm that Firewalls that are not designated as default can be disabled
@@ -174,13 +190,18 @@ describe('delete firewall', () => {
       .closest('tr')
       .within(() => {
         cy.findByText('DEFAULT').should('not.exist');
-
-        ui.button
-          .findByTitle('Disable')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
       });
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Firewall ${mockFirewallNotDefault.label}`)
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    ui.actionMenuItem
+      .findByTitle('Disable')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     ui.dialog
       .findByTitle(`Disable Firewall ${mockFirewallNotDefault.label}?`)
@@ -189,16 +210,18 @@ describe('delete firewall', () => {
         ui.button.findByTitle('Cancel').should('be.visible').click();
       });
 
-    cy.findByText(mockFirewallNotDefault.label)
+    cy.findByText(mockFirewallNotDefault.label).should('be.visible');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Firewall ${mockFirewallNotDefault.label}`)
       .should('be.visible')
-      .closest('tr')
-      .within(() => {
-        ui.button
-          .findByTitle('Delete')
-          .should('be.visible')
-          .should('be.enabled')
-          .click();
-      });
+      .should('be.enabled')
+      .click();
+    ui.actionMenuItem
+      .findByTitle('Delete')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
 
     ui.dialog
       .findByTitle(`Delete Firewall ${mockFirewallNotDefault.label}?`)

@@ -1,4 +1,5 @@
 import {
+  useAllDatabasesQuery,
   useAllDomainsQuery,
   useAllFirewallsQuery,
   useAllLinodesQuery,
@@ -11,7 +12,6 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { useKubernetesBetaEndpoint } from 'src/features/Kubernetes/kubeUtils';
-import { useAllDatabasesQuery } from 'src/queries/databases/databases';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useObjectStorageBuckets } from 'src/queries/object-storage/queries';
 
