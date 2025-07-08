@@ -1,5 +1,5 @@
-import { useAccountUser, useProfile } from '@linode/queries';
-import { CircleProgress, ErrorState } from '@linode/ui';
+import { useAccountUser, useAccountUsers, useProfile } from '@linode/queries';
+import { CircleProgress, ErrorState, NotFound } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocation, useParams } from '@tanstack/react-router';
 import * as React from 'react';
@@ -22,7 +22,18 @@ export const UserDetail = () => {
   const location = useLocation();
 
   const { data: profile } = useProfile();
-  const { data: user, error, isLoading } = useAccountUser(username ?? '');
+  const { data: users, isLoading: isLoadingUsers } = useAccountUsers({});
+
+  const isValidUsername = React.useMemo(() => {
+    if (!users?.data || !username) return false;
+    return users.data.some((user) => user.username === username);
+  }, [users?.data, username]);
+
+  const {
+    data: user,
+    error,
+    isLoading: isLoadingUser,
+  } = useAccountUser(isValidUsername ? (username ?? '') : '');
 
   const queryClient = useQueryClient();
 
@@ -38,15 +49,20 @@ export const UserDetail = () => {
   ]);
 
   const isProxyUser = user?.user_type === 'proxy';
+  const isLoading = isLoadingUsers || isLoadingUser;
 
   if (isLoading) {
     return <CircleProgress />;
   }
 
+  if (users?.data && !isValidUsername) {
+    return <NotFound />;
+  }
+
   if (error) {
     return (
       <React.Fragment>
-        <LandingHeader title={username || ''} />
+        <LandingHeader title="User Details" />
         <ErrorState errorText={error[0].reason} />
       </React.Fragment>
     );
@@ -62,7 +78,7 @@ export const UserDetail = () => {
           pathname: location.pathname,
         }}
         removeCrumbX={4}
-        title={username}
+        title={user?.username || username}
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         {!isProxyUser && <TanStackTabLinkList tabs={tabs} />}
@@ -73,7 +89,7 @@ export const UserDetail = () => {
           <SafeTabPanel index={1}>
             <UserPermissions
               accountUsername={profile?.username}
-              currentUsername={username}
+              currentUsername={user?.username || username}
               queryClient={queryClient}
             />
           </SafeTabPanel>
