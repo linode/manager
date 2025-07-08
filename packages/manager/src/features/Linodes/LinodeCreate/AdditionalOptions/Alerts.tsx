@@ -34,10 +34,10 @@ export const Alerts = ({
     field.onChange(updatedAlerts);
   };
 
-  const subHeading = isAclpAlertsPreferenceBeta ? (
+  const subHeading = isAlertsBetaMode ? (
     <>
       Receive notifications through System Alerts when metric thresholds are
-      exceeded. After you've created your Linode, you can create and manage
+      exceeded. After you&apos;ve created your Linode, you can create and manage
       associated alerts on the <strong>centralized Alerts</strong> page.{' '}
       <Link to="https://techdocs.akamai.com/cloud-computing/docs/configure-email-alerts-for-resource-usage-on-compute-instances">
         Learn more
