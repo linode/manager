@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { Popover, useMediaQuery, useTheme } from '@mui/material';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,7 +16,6 @@ import { TimePicker } from '../TimePicker';
 import { TimeZoneSelect } from '../TimeZoneSelect';
 
 import type { SxProps } from '@mui/material/styles';
-
 export interface DateTimeRangePickerProps {
   /** Properties for the end date field */
   endDateProps?: {
@@ -96,6 +96,8 @@ export const DateTimeRangePicker = ({
   timeZoneProps,
   sx,
 }: DateTimeRangePickerProps) => {
+  const { data: profile } = useProfile();
+
   const [startDate, setStartDate] = useState<DateTime | null>(
     startDateProps?.value ?? null,
   );
@@ -114,7 +116,7 @@ export const DateTimeRangePicker = ({
   const [currentMonth, setCurrentMonth] = useState(DateTime.now());
   const [focusedField, setFocusedField] = useState<'end' | 'start'>('start'); // Tracks focused input field
   const [timeZone, setTimeZone] = useState<string>(
-    timeZoneProps?.defaultValue ?? 'UTC',
+    timeZoneProps?.defaultValue ?? profile?.timezone ?? 'UTC',
   ); // Default timezone
 
   const startDateInputRef = useRef<HTMLInputElement | null>(null);
@@ -153,12 +155,24 @@ export const DateTimeRangePicker = ({
     }
     setTimeZone(newTimeZone);
 
-    setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
-    setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
+    // Only change the timezone keeping the time as selected time
+    if (selectedPreset === 'reset' || selectedPreset === 'last month') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+    } else if (selectedPreset === 'this month') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) => (prev ? prev.setZone(newTimeZone) : null)); // set the end time as per the current time in the selected timezone
+    } else {
+      // Set the start and end date time as per the current time in the selected timezone
+      setStartDate((prev) => (prev ? prev.setZone(newTimeZone) : null));
+      setEndDate((prev) => (prev ? prev.setZone(newTimeZone) : null));
+    }
   };
 
   const validateDates = (

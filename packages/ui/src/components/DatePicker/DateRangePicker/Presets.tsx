@@ -1,3 +1,4 @@
+import { useProfile } from '@linode/queries';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 
@@ -20,58 +21,64 @@ interface PresetsProps {
 export const Presets = ({
   onPresetSelect,
   selectedPreset,
-  timeZone = DateTime.local().zoneName,
+  timeZone,
 }: PresetsProps) => {
   const today = DateTime.now();
+
+  const { data: profile } = useProfile();
+
+  const timeZoneValue =
+    timeZone ?? profile?.timezone ?? DateTime.local().zoneName;
+
   const presets = [
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ minutes: 30 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ minutes: 30 }).setZone(timeZoneValue),
       }),
       label: 'last 30 minutes',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ hours: 1 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ hours: 1 }).setZone(timeZoneValue),
       }),
       label: 'last hour',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ hours: 12 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ hours: 12 }).setZone(timeZoneValue),
       }),
       label: 'last 12 hours',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ days: 1 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ days: 1 }).setZone(timeZoneValue),
       }),
       label: 'last day',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ days: 6 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ days: 6 }).setZone(timeZoneValue),
       }),
       label: 'last 7 days',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
-        startDate: today.minus({ days: 30 }).setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
+        startDate: today.minus({ days: 30 }).setZone(timeZoneValue),
       }),
       label: 'last 30 days',
     },
     {
       getRange: () => ({
-        endDate: today.setZone(timeZone),
+        endDate: today.setZone(timeZoneValue),
         startDate: today
           .startOf('month')
-          .setZone(timeZone, { keepLocalTime: true }),
+          .setZone(timeZoneValue, { keepLocalTime: true }),
       }),
       label: 'this month',
     },
@@ -79,7 +86,7 @@ export const Presets = ({
       getRange: () => {
         const lastMonth = today
           .minus({ months: 1 })
-          .setZone(timeZone, { keepLocalTime: true });
+          .setZone(timeZoneValue, { keepLocalTime: true });
         return {
           startDate: lastMonth.startOf('month'),
           endDate: lastMonth.endOf('month'),
