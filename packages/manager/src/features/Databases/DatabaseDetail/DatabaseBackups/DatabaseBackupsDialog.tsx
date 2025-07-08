@@ -1,10 +1,10 @@
+import { useRestoreFromBackupMutation } from '@linode/queries';
 import { ActionsPanel, Dialog, Notice, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useState } from 'react';
 
-import { useRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { toDatabaseFork, toFormatedDate } from '../../utilities';
