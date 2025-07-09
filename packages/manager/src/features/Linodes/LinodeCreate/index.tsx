@@ -3,7 +3,6 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
   useMutateAccountAgreements,
-  usePreferences,
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
@@ -85,11 +84,11 @@ export const LinodeCreate = () => {
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
-
   const { aclpBetaServices } = useFlags();
+
+  // In Create flow, alerts always default to 'legacy' mode
+  const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
+    React.useState<boolean>(false);
 
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
@@ -141,7 +140,7 @@ export const LinodeCreate = () => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpBetaServices?.linode?.alerts,
-      isAclpAlertsPreferenceBeta,
+      isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
     });
 
     try {
@@ -287,13 +286,16 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
-          <AdditionalOptions />
+          <AdditionalOptions
+            isAlertsBetaMode={isAclpAlertsBetaCreateFlow}
+            onAlertsModeChange={setIsAclpAlertsBetaCreateFlow}
+          />
           <Addons />
           <EUAgreement />
-          <Summary />
+          <Summary isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions />
+          <Actions isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
         </Stack>
       </form>
     </FormProvider>
