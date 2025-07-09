@@ -1,17 +1,14 @@
 import { deepStringTransform, redactAccessToken } from '@linode/utilities';
 import { init } from '@sentry/react';
 
-import { SENTRY_URL } from 'src/constants';
+import { ENVIRONMENT_NAME, SENTRY_URL } from 'src/constants';
 
 import packageJson from '../package.json';
-import { getAppRoot } from './OAuth/constants';
 
 import type { APIError } from '@linode/api-v4';
 import type { ErrorEvent as SentryErrorEvent } from '@sentry/react';
 
 export const initSentry = () => {
-  const environment = getSentryEnvironment();
-
   if (SENTRY_URL) {
     init({
       allowUrls: [
@@ -30,7 +27,7 @@ export const initSentry = () => {
         /^chrome:\/\//i,
       ],
       dsn: SENTRY_URL,
-      environment,
+      environment: ENVIRONMENT_NAME,
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -212,22 +209,4 @@ const customFingerPrintMap = {
   /** group all local storage errors together */
   localstorage: 'Local Storage Error',
   quotaExceeded: 'Local Storage Error',
-};
-
-/**
- * Derives a environment name from the APP_ROOT environment variable
- * so a Sentry issue is identified by the correct environment name.
- */
-const getSentryEnvironment = () => {
-  const appRoot = getAppRoot();
-  if (appRoot === 'https://cloud.linode.com') {
-    return 'production';
-  }
-  if (appRoot.includes('staging')) {
-    return 'staging';
-  }
-  if (appRoot.includes('dev')) {
-    return 'dev';
-  }
-  return 'local';
 };

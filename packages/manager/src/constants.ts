@@ -28,6 +28,13 @@ export const FORCE_SEARCH_TYPE = import.meta.env.REACT_APP_FORCE_SEARCH_TYPE;
 export const API_ROOT =
   import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 
+/**
+ * A display name for the current environment.
+ * This exists so we can dynamically set our Sentry environment.
+ */
+export const ENVIRONMENT_NAME =
+  import.meta.env.REACT_APP_ENVIRONMENT_NAME ?? 'local';
+
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
