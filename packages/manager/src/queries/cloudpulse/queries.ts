@@ -9,8 +9,8 @@ import {
   getNodeBalancers,
 } from '@linode/api-v4';
 import {
-  firewallQueries,
   databaseQueries,
+  firewallQueries,
   getAllLinodesRequest,
   volumeQueries,
 } from '@linode/queries';
