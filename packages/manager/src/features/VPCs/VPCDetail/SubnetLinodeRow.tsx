@@ -1,16 +1,14 @@
 import { useLinodeQuery } from '@linode/queries';
 import { Box, CircleProgress, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
-import { getFormattedStatus } from '@linode/utilities';
 import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import * as React from 'react';
 import type { JSX } from 'react';
 
 import { Link } from 'src/components/Link';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+import { LinodeStatus } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeStatus';
 import { determineNoneSingleOrMultipleWithChip } from 'src/utilities/noneSingleOrMultipleWithChip';
 
 import { useInterfaceDataForLinode } from '../../../hooks/useInterfaceDataForLinode';
@@ -176,7 +174,6 @@ export const SubnetLinodeRow = (props: Props) => {
       linkifiedLinodeLabel
     );
 
-  const iconStatus = getLinodeIconStatus(linode.status);
   const isRunning = linode.status === 'running';
   const isOffline = linode.status === 'stopped' || linode.status === 'offline';
   const isRebootNeeded =
@@ -190,11 +187,8 @@ export const SubnetLinodeRow = (props: Props) => {
         {labelCell}
       </TableCell>
       <TableCell statusCell>
-        <StatusIcon
-          aria-label={`Linode status ${linode?.status ?? iconStatus}`}
-          status={iconStatus}
-        />
-        {isRebootNeeded ? (
+        <LinodeStatus linodeId={linode.id} linodeStatus={linode.status} />
+        {isRebootNeeded && (
           <>
             {'Reboot Needed'}
             <TooltipIcon
@@ -203,8 +197,6 @@ export const SubnetLinodeRow = (props: Props) => {
               text={VPC_REBOOT_MESSAGE}
             />
           </>
-        ) : (
-          getFormattedStatus(linode.status)
         )}
       </TableCell>
       <Hidden smDown>
