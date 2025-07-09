@@ -225,6 +225,12 @@ export const createLinode = (mockState: MockState) => [
             updated: DateTime.now().toISO(),
           });
 
+          const createdVPCInterface = await mswDB.add(
+            'linodeInterfaces',
+            [linode.id, vpcInterface],
+            mockState
+          );
+
           // update VPC/subnet to include this new interface
           const updatedSubnet = {
             ...subnetFromDB[1],
@@ -236,7 +242,8 @@ export const createLinode = (mockState: MockState) => [
                   {
                     active: true,
                     config_id: null,
-                    id: vpcInterface.id,
+                    // ensure interface ID in subnet matches interface ID in DB
+                    id: createdVPCInterface[1].id,
                   },
                 ],
               },
@@ -255,11 +262,6 @@ export const createLinode = (mockState: MockState) => [
             }),
           };
 
-          await mswDB.add(
-            'linodeInterfaces',
-            [linode.id, vpcInterface],
-            mockState
-          );
           await mswDB.update(
             'subnets',
             subnetFromDB[1].id,
