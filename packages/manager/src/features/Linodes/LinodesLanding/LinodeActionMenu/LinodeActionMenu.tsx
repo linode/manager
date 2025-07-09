@@ -113,9 +113,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Reboot',
       tooltipAction: 'reboot',
-      tooltipText: getTooltipText(permissions, 'reboot_linode', {
-        linodeStatus,
-      }),
+      tooltipText: !permissions.reboot_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : !isLinodeRunning
+          ? LINODE_STATUS_NOT_RUNNING_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,
@@ -127,7 +129,9 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Launch LISH Console',
       tooltipAction: 'edit',
-      tooltipText: getTooltipText(permissions, 'generate_linode_lish_token'),
+      tooltipText: !permissions.generate_linode_lish_token
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : undefined,
     },
     {
       condition: !isBareMetalInstance,
@@ -151,10 +155,13 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Clone',
       tooltipAction: 'clone',
-      tooltipText: getTooltipText(permissions, 'clone_linode', {
-        linodeIsInDistributedRegion,
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.clone_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : linodeIsInDistributedRegion
+          ? DISTRIBUTED_REGION_TOOLTIP_TEXT
+          : hasHostMaintenance
+            ? MAINTENANCE_TOOLTIP_TEXT
+            : undefined,
     },
     {
       condition: !isBareMetalInstance,
@@ -163,10 +170,13 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: props.onOpenResizeDialog,
       title: 'Resize',
       tooltipAction: 'resize',
-      tooltipText: getTooltipText(permissions, 'resize_linode', {
-        isMTCLinode,
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.resize_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : isMTCLinode
+          ? LINODE_MTC_RESIZING_TOOLTIP_TEXT
+          : hasHostMaintenance
+            ? MAINTENANCE_TOOLTIP_TEXT
+            : undefined,
     },
     {
       condition: true,
@@ -175,9 +185,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: props.onOpenRebuildDialog,
       title: 'Rebuild',
       tooltipAction: 'rebuild',
-      tooltipText: getTooltipText(permissions, 'rebuild_linode', {
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.rebuild_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,
@@ -186,9 +198,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       onClick: props.onOpenRescueDialog,
       title: 'Rescue',
       tooltipAction: 'rescue',
-      tooltipText: getTooltipText(permissions, 'rescue_linode', {
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.rescue_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: !isBareMetalInstance,
@@ -201,9 +215,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Migrate',
       tooltipAction: 'migrate',
-      tooltipText: getTooltipText(permissions, 'migrate_linode', {
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.migrate_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
     {
       condition: true,
@@ -215,9 +231,11 @@ export const LinodeActionMenu = (props: LinodeActionMenuProps) => {
       },
       title: 'Delete',
       tooltipAction: 'delete',
-      tooltipText: getTooltipText(permissions, 'delete_linode', {
-        hasHostMaintenance,
-      }),
+      tooltipText: !permissions.delete_linode
+        ? NO_PERMISSION_TOOLTIP_TEXT
+        : hasHostMaintenance
+          ? MAINTENANCE_TOOLTIP_TEXT
+          : undefined,
     },
   ];
 
@@ -251,37 +269,3 @@ export const createActionMenuItems = (configs: ActionConfig[]) =>
         tooltip: tooltipText || defaultTooltipText,
       };
     });
-
-function getTooltipText(
-  permissions: Record<string, boolean>,
-  permissionKey: keyof typeof permissions,
-  options: {
-    hasHostMaintenance?: boolean;
-    isMTCLinode?: boolean;
-    linodeIsInDistributedRegion?: boolean;
-    linodeStatus?: string;
-  } = {}
-): string | undefined {
-  const {
-    hasHostMaintenance = false,
-    isMTCLinode = false,
-    linodeIsInDistributedRegion = false,
-    linodeStatus,
-  } = options;
-
-  const hasPermission = permissions[permissionKey];
-
-  if (!hasPermission) return NO_PERMISSION_TOOLTIP_TEXT;
-  if (hasHostMaintenance) return MAINTENANCE_TOOLTIP_TEXT;
-  if (permissionKey === 'resize_linode' && isMTCLinode) {
-    return LINODE_MTC_RESIZING_TOOLTIP_TEXT;
-  }
-  if (permissionKey === 'clone_linode' && linodeIsInDistributedRegion) {
-    return DISTRIBUTED_REGION_TOOLTIP_TEXT;
-  }
-  if (permissionKey === 'reboot_linode' && linodeStatus !== 'running') {
-    return LINODE_STATUS_NOT_RUNNING_TOOLTIP_TEXT;
-  }
-
-  return undefined;
-}
