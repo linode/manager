@@ -1,6 +1,5 @@
 import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
 import { Typography } from '@linode/ui';
-import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
@@ -9,9 +8,6 @@ import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
-import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEventAnalytics';
 
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
@@ -91,19 +87,7 @@ export const LinodeEntityDetailHeader = (
 
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linodeId,
-  });
-
   const isRunning = linodeStatus === 'running';
-  const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
-
-  const handleConsoleButtonClick = (id: number) => {
-    sendLinodeActionMenuItemEvent('Launch Console');
-    lishLaunch(id);
-  };
 
   const isRebootNeeded = React.useMemo(
     () =>
@@ -128,30 +112,6 @@ export const LinodeEntityDetailHeader = (
     // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
-
-  const sxActionItem = {
-    '&:focus': {
-      color: theme.color.white,
-    },
-    '&:hover': {
-      '&[aria-disabled="true"]': {
-        color: theme.color.disabledText,
-      },
-
-      color: theme.color.white,
-    },
-    '&[aria-disabled="true"]': {
-      background: 'transparent',
-      color: theme.color.disabledText,
-    },
-    background: 'transparent',
-    color: theme.textColors.linkActiveLight,
-    font: theme.font.normal,
-    fontSize: '0.875rem',
-    height: theme.spacing(5),
-    minWidth: 'auto',
-    padding: '2px 10px',
-  };
 
   const sxBoxFlex = {
     alignItems: 'center',
@@ -214,36 +174,6 @@ export const LinodeEntityDetailHeader = (
         )}
       </Box>
       <Box sx={sxBoxFlex}>
-        <Hidden mdDown>
-          <Button
-            buttonType="primary"
-            disabled={!(isRunning || isOffline) || isLinodesGrantReadOnly}
-            onClick={() =>
-              handlers.onOpenPowerDialog(isRunning ? 'Power Off' : 'Power On')
-            }
-            sx={sxActionItem}
-          >
-            {isRunning ? 'Power Off' : 'Power On'}
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={isOffline || isLinodesGrantReadOnly}
-            onClick={() => handlers.onOpenPowerDialog('Reboot')}
-            sx={sxActionItem}
-          >
-            Reboot
-          </Button>
-          <Button
-            buttonType="primary"
-            disabled={isLinodesGrantReadOnly}
-            onClick={() => {
-              handleConsoleButtonClick(linodeId);
-            }}
-            sx={sxActionItem}
-          >
-            Launch LISH Console
-          </Button>
-        </Hidden>
         <LinodeActionMenu
           linodeBackups={backups}
           linodeId={linodeId}

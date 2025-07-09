@@ -9,6 +9,15 @@ import {
 
 import { LinodeRow, RenderFlag } from './LinodeRow';
 
+const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {},
+  })),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
 describe('LinodeRow', () => {
   describe('when Linode has mutation', () => {
     it('should render a Flag', async () => {

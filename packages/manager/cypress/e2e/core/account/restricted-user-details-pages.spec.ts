@@ -151,37 +151,30 @@ describe('restricted user details pages', () => {
       `You don't have permissions to edit this Linode. Please contact your ${ADMINISTRATOR} to request the necessary permissions.`
     );
 
-    // Confirm that "Power On" button is disabled
-    ui.button
-      .findByTitle('Power On')
-      .should('be.visible')
-      .should('be.disabled');
-
-    // Confirm that "Reboot" button is disabled
-    ui.button.findByTitle('Reboot').should('be.visible').should('be.disabled');
-
-    // Confirm that "Launch LISH Console" button is disabled
-    ui.button
-      .findByTitle('Launch LISH Console')
-      .should('be.visible')
-      .should('be.disabled');
-
     // Confirm that the buttons in the action menu are disabled
     ui.actionMenu
       .findByTitle(`Action menu for Linode ${mockLinode.label}`)
       .should('be.visible')
       .should('be.enabled')
       .click();
-    ['Clone', 'Resize', 'Rebuild', 'Rescue', 'Migrate', 'Delete'].forEach(
-      (menuItem: string) => {
-        const tooltipMessage = `You don't have permissions to ${menuItem.toLocaleLowerCase()} this Linode.`;
-        ui.actionMenuItem.findByTitle(menuItem).should('be.disabled');
-        ui.button
-          .findByAttribute('aria-label', tooltipMessage)
-          .trigger('mouseover');
-        ui.tooltip.findByText(tooltipMessage);
-      }
-    );
+
+    // Check all action menu items are disabled
+    [
+      'Power On',
+      'Reboot',
+      'Launch LISH Console',
+      'Clone',
+      'Resize',
+      'Rebuild',
+      'Rescue',
+      'Migrate',
+      'Delete',
+    ].forEach((menuItem: string) => {
+      const tooltipMessage = `You do not have permission to perform this action.`;
+      // Find the tooltip icon button and focus it
+      ui.actionMenuItem.findByTitle(menuItem).should('be.disabled').focus();
+      ui.tooltip.findByText(tooltipMessage);
+    });
     cy.reload();
 
     // Confirm that "Add A Tag" button is disabled and
