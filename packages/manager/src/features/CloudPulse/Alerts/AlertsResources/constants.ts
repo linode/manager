@@ -1,6 +1,7 @@
 import { engineTypeMap } from '../constants';
 import { AlertsEngineTypeFilter } from './AlertsEngineTypeFilter';
 import { AlertsRegionFilter } from './AlertsRegionFilter';
+import { AlertsTagFilter } from './AlertsTagsFilter';
 
 import type { AlertInstance } from './DisplayAlertResources';
 import type {
@@ -54,6 +55,23 @@ export const serviceTypeBasedColumns: ServiceColumns<AlertInstance> = {
       sortingKey: 'region',
     },
   ],
+  nodebalancer: [
+    {
+      accessor: ({ label }) => label,
+      label: 'Entity',
+      sortingKey: 'label',
+    },
+    {
+      accessor: ({ region }) => region,
+      label: 'Region',
+      sortingKey: 'region',
+    },
+    {
+      accessor: ({ tags }) => tags?.join(',') ?? '',
+      label: 'Tags',
+      sortingKey: 'tags',
+    },
+  ],
   firewall: [
     {
       accessor: ({ label }) => label,
@@ -73,8 +91,13 @@ export const serviceToFiltersMap: Record<
     { component: AlertsRegionFilter, filterKey: 'region' },
   ],
   linode: [{ component: AlertsRegionFilter, filterKey: 'region' }],
+  nodebalancer: [
+    { component: AlertsRegionFilter, filterKey: 'region' },
+    { component: AlertsTagFilter, filterKey: 'tags' },
+  ],
   firewall: [],
 };
+
 export const applicableAdditionalFilterKeys: AlertAdditionalFilterKey[] = [
   'engineType', // Extendable in future for filter keys like 'tags', 'plan', etc.
   'tags',
