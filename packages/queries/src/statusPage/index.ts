@@ -4,5 +4,7 @@
  * used through this query, all of this is contained within src/queries.
  */
 
+export * from './keys';
+export * from './requests';
 export * from './statusPage';
 export * from './types';
