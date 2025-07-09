@@ -13,8 +13,8 @@ import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
-import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 
+import { usePermissions } from '../IAM/hooks/usePermissions';
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
 import { LinodeEntityDetailHeader } from './LinodeEntityDetailHeader';
@@ -62,12 +62,7 @@ export const LinodeEntityDetail = (props: Props) => {
     linodeId: linode.id,
   });
 
-  const isLinodesGrantReadOnly = useIsResourceRestricted({
-    grantLevel: 'read_only',
-    grantType: 'linode',
-    id: linode.id,
-  });
-
+  const { permissions } = usePermissions('linode', ['update_linode']);
   const imageVendor =
     images?.find((i) => i.id === linode.image)?.vendor ?? null;
 
@@ -94,7 +89,7 @@ export const LinodeEntityDetail = (props: Props) => {
 
   return (
     <>
-      {isLinodesGrantReadOnly && (
+      {!permissions.update_linode && (
         <Notice
           text={getRestrictedResourceText({
             resourceType: 'Linodes',
@@ -129,7 +124,7 @@ export const LinodeEntityDetail = (props: Props) => {
         }
         footer={
           <LinodeEntityDetailFooter
-            isLinodesGrantReadOnly={isLinodesGrantReadOnly}
+            isLinodesGrantReadOnly={!permissions.update_linode}
             linodeCreated={linode.created}
             linodeId={linode.id}
             linodeLabel={linode.label}

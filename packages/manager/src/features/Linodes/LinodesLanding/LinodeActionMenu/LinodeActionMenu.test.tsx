@@ -12,7 +12,6 @@ import { buildQueryStringForLinodeClone } from './LinodeActionMenuUtils';
 import type { LinodeActionMenuProps } from './LinodeActionMenu';
 
 const props: LinodeActionMenuProps = {
-  inListView: true,
   linodeBackups: linodeBackupsFactory.build(),
   linodeId: 1,
   linodeLabel: 'test-linode',
@@ -28,7 +27,24 @@ const props: LinodeActionMenuProps = {
 };
 
 const queryMocks = vi.hoisted(() => ({
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      shutdown_linode: false,
+      reboot_linode: false,
+      clone_linode: false,
+      resize_linode: false,
+      rebuild_linode: false,
+      rescue_linode: false,
+      migrate_linode: false,
+      delete_linode: false,
+      generate_linode_lish_token: false,
+    },
+  })),
   useNavigate: vi.fn(),
+}));
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -86,45 +102,6 @@ describe('LinodeActionMenu', () => {
 
       expect(queryByText('Power On')).toBeVisible();
       expect(queryByText('Power Off')).toBeNull();
-    });
-
-    it('should contain all actions except Power Off, Reboot, and Launch Console when not in table context', async () => {
-      const { getByLabelText, getByText, queryByText } = renderWithTheme(
-        <LinodeActionMenu
-          {...props}
-          inListView={false}
-          linodeStatus="offline"
-        />
-      );
-
-      const actionMenuButton = getByLabelText(
-        `Action menu for Linode ${props.linodeLabel}`
-      );
-
-      await userEvent.click(actionMenuButton);
-
-      const actionsThatShouldBeVisible = [
-        'Clone',
-        'Resize',
-        'Rebuild',
-        'Rescue',
-        'Migrate',
-        'Delete',
-      ];
-
-      for (const action of actionsThatShouldBeVisible) {
-        expect(getByText(action)).toBeVisible();
-      }
-
-      const actionsThatShouldNotBeShown = [
-        'Launch LISH Console',
-        'Power On',
-        'Reboot',
-      ];
-
-      for (const action of actionsThatShouldNotBeShown) {
-        expect(queryByText(action)).toBeNull();
-      }
     });
 
     it('should allow a reboot if the Linode is running', async () => {
@@ -205,5 +182,71 @@ describe('LinodeActionMenu', () => {
     ).not.toMatchObject({
       typeID: 'g6-standard-2',
     });
+  });
+
+  it('should disable Action menu items if the user does not have required permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        shutdown_linode: false,
+        reboot_linode: false,
+        clone_linode: false,
+        resize_linode: false,
+        rebuild_linode: false,
+        rescue_linode: false,
+        migrate_linode: false,
+        delete_linode: false,
+        generate_linode_lish_token: false,
+      },
+    });
+
+    const { getByLabelText, getByText } = renderWithTheme(
+      <LinodeActionMenu {...props} />
+    );
+
+    const actionMenuButton = getByLabelText(
+      `Action menu for Linode ${props.linodeLabel}`
+    );
+
+    await userEvent.click(actionMenuButton);
+
+    const actions = [
+      'Power Off',
+      'Reboot',
+      'Launch LISH Console',
+      'Clone',
+      'Resize',
+      'Rebuild',
+      'Rescue',
+      'Migrate',
+      'Delete',
+    ];
+
+    for (const action of actions) {
+      expect(getByText(action)).toBeVisible();
+      expect(screen.queryByText(action)?.closest('li')).toHaveAttribute(
+        'aria-disabled',
+        'true'
+      );
+    }
+  });
+
+  it('should enable "Reboot" button if the user has reboot_linode permissions', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        ...queryMocks.userPermissions().permissions,
+        reboot_linode: true,
+      },
+    });
+
+    const { getByLabelText, getByTestId } = renderWithTheme(
+      <LinodeActionMenu {...props} />
+    );
+
+    const actionMenuButton = getByLabelText(
+      `Action menu for Linode ${props.linodeLabel}`
+    );
+
+    await userEvent.click(actionMenuButton);
+    expect(getByTestId('Reboot')).not.toHaveAttribute('aria-disabled');
   });
 });

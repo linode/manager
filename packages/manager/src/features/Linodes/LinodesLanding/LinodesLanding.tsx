@@ -91,6 +91,7 @@ export interface LinodesLandingProps {
     orderBy: string;
     sortedData: LinodeWithMaintenance[] | null;
   };
+  permissions: Record<string, boolean>;
   regionFilter: RegionFilter;
   search: SearchParamOptions<AnyRouter, '/linodes', '/linodes'>['search'];
   someLinodesHaveScheduledMaintenance: boolean;
@@ -195,21 +196,16 @@ class ListLinodes extends React.Component<CombinedProps, State> {
   render() {
     const {
       filteredLinodesLoading,
-      grants,
       handleRegionFilter,
       linodesData,
       linodesRequestError,
       linodesRequestLoading,
       navigate,
-      profile,
       regionFilter,
       search,
       totalNumLinodes,
+      permissions,
     } = this.props;
-
-    const isLinodesGrantReadOnly =
-      Boolean(profile.data?.restricted) &&
-      !grants.data?.global?.['add_linodes'];
 
     const view =
       search.view && ['grid', 'list'].includes(search.view)
@@ -368,7 +364,7 @@ class ListLinodes extends React.Component<CombinedProps, State> {
                                 resourceType: 'Linodes',
                               }),
                             }}
-                            disabledCreateButton={isLinodesGrantReadOnly}
+                            disabledCreateButton={!permissions.create_linode}
                             docsLink="https://techdocs.akamai.com/cloud-computing/docs/faqs-for-compute-instances"
                             entity="Linode"
                             onButtonClick={() =>
