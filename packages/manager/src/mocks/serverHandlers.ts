@@ -914,12 +914,14 @@ export const handlers = [
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
+          alerts: { user: [100, 101], system: [200] },
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
+          alerts: { user: [], system: [] },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -2845,20 +2847,28 @@ export const handlers = [
   }),
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    const serviceType = params.serviceType;
+    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
+      return HttpResponse.json({}, { status: 404 });
+    }
 
-    const response = serviceTypesFactory.build({
-      service_type: `${serviceType}`,
-      label: serviceType === 'dbaas' ? 'Databases' : 'Linodes',
-      alert:
-        serviceType === 'dbaas'
-          ? serviceAlertFactory.build({
+    const response =
+      params.serviceType === 'linode'
+        ? serviceTypesFactory.build({
+            label: 'Linodes',
+            service_type: 'linode',
+            regions: 'us-iad,us-east',
+            alert: serviceAlertFactory.build({ scope: ['entity'] }),
+          })
+        : serviceTypesFactory.build({
+            label: 'Databases',
+            service_type: 'dbaas',
+            alert: serviceAlertFactory.build({
               evaluation_period_seconds: [300],
               polling_interval_seconds: [300],
-            })
-          : serviceAlertFactory.build({ scope: ['entity'] }),
-    });
-    return HttpResponse.json(response);
+            }),
+          });
+
+    return HttpResponse.json(response, { status: 200 });
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {

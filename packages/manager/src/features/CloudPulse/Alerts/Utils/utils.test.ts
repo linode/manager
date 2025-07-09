@@ -44,6 +44,13 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
 });
 
+it('test convertSecondsToOptions method', () => {
+  expect(convertSecondsToOptions(300)).toEqual('5 min');
+  expect(convertSecondsToOptions(60)).toEqual('1 min');
+  expect(convertSecondsToOptions(3600)).toEqual('1 hr');
+  expect(convertSecondsToOptions(900)).toEqual('15 min');
+});
+
 it('test filterAlertsByStatusAndType method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'system' });
   expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);

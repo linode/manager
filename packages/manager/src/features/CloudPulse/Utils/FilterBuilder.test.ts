@@ -1,7 +1,7 @@
+import { databaseQueries } from '@linode/queries';
 import { DateTime } from 'luxon';
 
 import { dashboardFactory } from 'src/factories';
-import { databaseQueries } from 'src/queries/databases/databases';
 
 import { RESOURCE_ID, RESOURCES } from './constants';
 import {

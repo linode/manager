@@ -76,7 +76,7 @@ export const filterEditFormValues = (
     severity: formValues.severity ?? severity,
     trigger_conditions: filterTriggerConditionFormValues(triggerConditions),
     type: formValues.type,
-    scope: formValues.scope,
+    scope,
   };
 };
 

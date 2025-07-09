@@ -46,8 +46,8 @@ export const useUserRolesMutation = (username: string) => {
 export const useUserAccountPermissions = (enabled = true) => {
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
-    ...iamQueries.user(profile!.username)._ctx.accountPermissions,
-    enabled,
+    ...iamQueries.user(profile?.username || '')._ctx.accountPermissions,
+    enabled: Boolean(profile?.username) && profile?.restricted && enabled,
   });
 };
 
@@ -59,8 +59,12 @@ export const useUserEntityPermissions = (
   const { data: profile } = useProfile();
   return useQuery<PermissionType[], APIError[]>({
     ...iamQueries
-      .user(profile!.username)
+      .user(profile?.username || '')
       ._ctx.entityPermissions(entityType, entityId),
-    enabled: Boolean(entityType && entityId) && enabled,
+    enabled:
+      Boolean(profile?.username) &&
+      profile?.restricted &&
+      Boolean(entityType && entityId) &&
+      enabled,
   });
 };
