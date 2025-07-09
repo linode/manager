@@ -914,12 +914,14 @@ export const handlers = [
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
+          alerts: { user: [100, 101], system: [200] },
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
+          alerts: { user: [], system: [] },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -963,7 +965,7 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = firewallFactory.buildList(1);
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -1472,7 +1474,7 @@ export const handlers = [
     return HttpResponse.json(volume);
   }),
   http.get('*/vlans', () => {
-    const vlans = VLANFactory.buildList(2);
+    const vlans = VLANFactory.buildList(30);
     return HttpResponse.json(makeResourcePage(vlans));
   }),
   http.get('*/profile/preferences', () => {
@@ -2032,7 +2034,7 @@ export const handlers = [
       backups_enabled: true,
       longview_subscription: 'longview-100',
       managed: true,
-      maintenance_policy_id: 1,
+      maintenance_policy: 'linode/migrate',
       network_helper: true,
       object_storage: 'active',
     });
@@ -2831,6 +2833,13 @@ export const handlers = [
           regions: 'us-iad,us-east',
           alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
+
+        serviceTypesFactory.build({
+          label: 'Firewalls',
+          service_type: 'firewall',
+          regions: 'us-iad,us-east',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
+        }),
       ],
     };
 
@@ -2838,7 +2847,7 @@ export const handlers = [
   }),
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    const serviceType = params.serviceType;
+    const serviceType= params.serviceType as string;
     const serviceTypesMap: Record<string, string> = {
       linode: 'Linode',
       dbaas: 'Databases',
@@ -2846,16 +2855,16 @@ export const handlers = [
     };
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
-      label: serviceTypesMap[serviceType as string],
+      label: serviceTypesMap[serviceType],
       alert:
         serviceType === 'dbaas'
           ? serviceAlertFactory.build({
               evaluation_period_seconds: [300],
               polling_interval_seconds: [300],
-            })
-          : serviceAlertFactory.build({ scope: ['entity'] }),
-    });
-    return HttpResponse.json(response);
+            }),
+          });
+
+    return HttpResponse.json(response, { status: 200 });
   }),
   http.get('*/monitor/services/:serviceType/dashboards', ({ params }) => {
     const response = {
@@ -2906,6 +2915,16 @@ export const handlers = [
           id: 3,
           label: 'Nodebalancer Dashboard',
           service_type: 'nodebalancer',
+        })
+      );
+    }
+
+    if (params.serviceType === 'firewall') {
+      response.data.push(
+        dashboardFactory.build({
+          id: 4,
+          label: 'Firewall Dashboard',
+          service_type: 'firewall',
         })
       );
     }
@@ -3053,7 +3072,9 @@ export const handlers = [
           ? 'dbaas'
           : params.id === '3'
             ? 'nodebalancer'
-            : 'linode', // just update the service type and label and use same widget configs
+            : params.id === '4'
+              ? 'firewall'
+              : 'linode', // just update the service type and label and use same widget configs
       type: 'standard',
       updated: null,
       widgets: [
@@ -3119,6 +3140,7 @@ export const handlers = [
             metric: {
               entity_id: '123',
               metric_name: 'average_cpu_usage',
+              linode_id: '1',
               node_id: 'primary-1',
             },
             values: [

@@ -10,7 +10,35 @@ import { Firewall } from './Firewall';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
+const queryMocks = vi.hoisted(() => ({
+  useNavigate: vi.fn(),
+  useParams: vi.fn(),
+  useSearch: vi.fn(),
+}));
+
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+  return {
+    ...actual,
+    useNavigate: queryMocks.useNavigate,
+    useSearch: queryMocks.useSearch,
+    useParams: queryMocks.useParams,
+  };
+});
+
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { create_firewall: true },
+  })),
+}));
+
 describe('Linode Create Firewall', () => {
+  beforeEach(() => {
+    queryMocks.useNavigate.mockReturnValue(vi.fn());
+    queryMocks.useSearch.mockReturnValue({});
+    queryMocks.useParams.mockReturnValue({});
+  });
+
   it('should render a header', () => {
     const { getByText } = renderWithThemeAndHookFormContext({
       component: <Firewall />,

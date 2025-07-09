@@ -51,6 +51,7 @@
     "test:search": "pnpm run --filter @linode/search test",
     "test:ui": "pnpm run --filter @linode/ui test",
     "test:utilities": "pnpm run --filter @linode/utilities test",
+    "test:shared": "pnpm run --filter @linode/shared test",
     "coverage": "pnpm run --filter linode-manager coverage",
     "coverage:summary": "pnpm run --filter linode-manager coverage:summary",
     "cy:run": "pnpm run --filter linode-manager cy:run",
@@ -69,7 +70,6 @@
     "prepare": "husky"
   },
   "resolutions": {
-    "node-fetch": "^2.6.7",
     "semver": "^7.5.2",
     "yaml": "^2.3.0"
   },

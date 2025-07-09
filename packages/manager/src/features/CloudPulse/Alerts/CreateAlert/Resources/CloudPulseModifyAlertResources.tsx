@@ -61,7 +61,7 @@ export const CloudPulseModifyAlertResources = React.memo(
               })}
             >
               <AlertResources
-                alertResourceIds={field.value}
+                alertResourceIds={field.value ?? []}
                 alertType="user"
                 errorText={fieldState.error?.message}
                 handleResourcesSelection={handleResourcesSelection}

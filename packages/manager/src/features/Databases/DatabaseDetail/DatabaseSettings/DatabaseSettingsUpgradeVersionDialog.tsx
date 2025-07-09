@@ -1,3 +1,4 @@
+import { useDatabaseEnginesQuery, useDatabaseMutation } from '@linode/queries';
 import {
   ActionsPanel,
   Autocomplete,
@@ -14,10 +15,6 @@ import {
   DATABASE_ENGINE_MAP,
   upgradableVersions,
 } from 'src/features/Databases/utilities';
-import {
-  useDatabaseEnginesQuery,
-  useDatabaseMutation,
-} from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import type { Engine } from '@linode/api-v4/lib/databases';

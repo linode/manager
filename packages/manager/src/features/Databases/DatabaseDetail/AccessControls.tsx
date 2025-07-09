@@ -1,4 +1,6 @@
-import { ActionsPanel, Button, Notice, Typography } from '@linode/ui';
+import { useDatabaseMutation } from '@linode/queries';
+import { ActionsPanel, Notice, Typography } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import * as React from 'react';
 import type { JSX } from 'react';
 import { makeStyles } from 'tss-react/mui';
@@ -9,7 +11,6 @@ import { Table } from 'src/components/Table';
 import { TableBody } from 'src/components/TableBody';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import AddAccessControlDrawer from './AddAccessControlDrawer';
 
@@ -172,11 +173,11 @@ export const AccessControls = (props: Props) => {
           <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <Button
-          buttonType="outlined"
           className={classes.addAccessControlBtn}
           data-testid="button-access-control"
           disabled={disabled}
           onClick={() => setAddAccessControlDrawerOpen(true)}
+          variant="secondary"
         >
           Manage Access
         </Button>

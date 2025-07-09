@@ -10,7 +10,7 @@ export const VPCPublicIPLabel = () => {
     <Stack alignItems="center" direction="row">
       <Typography>Assign a public IPv4 address for this Linode</Typography>
       <TooltipIcon
-        status="help"
+        status="info"
         text="Access the internet through the public IPv4 address using static 1:1 NAT."
       />
     </Stack>

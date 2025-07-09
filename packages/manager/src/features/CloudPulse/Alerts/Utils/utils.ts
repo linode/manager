@@ -338,6 +338,7 @@ export const convertAlertDefinitionValues = (
   serviceType: AlertServiceType
 ): EditAlertPayloadWithService => {
   return {
+    scope,
     alertId: id,
     channel_ids: alertChannels.map((channel) => channel.id),
     description: description || undefined,
@@ -355,7 +356,6 @@ export const convertAlertDefinitionValues = (
     tags,
     trigger_conditions: triggerConditions,
     type,
-    scope,
     regions,
   };
 };

@@ -32,7 +32,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -55,7 +55,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -76,7 +76,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={true}
+          isUnreachablePublicIPv4={true}
           linodeId={1}
           readOnly={false}
           {...handlers}
@@ -108,7 +108,7 @@ describe('LinodeIPAddressRow', () => {
       wrapWithTableBody(
         <LinodeIPAddressRow
           isLinodeInterface={false}
-          isVPCOnlyLinode={false}
+          isUnreachablePublicIPv4={false}
           linodeId={1}
           readOnly={false}
           {...handlers}

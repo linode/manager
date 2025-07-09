@@ -41,9 +41,9 @@ describe('Delete Subnet dialog', () => {
 
     const { getByText } = renderWithTheme(<SubnetDeleteDialog {...props} />);
 
-    getByText('Delete Subnet some subnet');
-    getByText('Subnet Label');
-    getByText('Cancel');
-    getByText('Delete');
+    expect(getByText('Delete Subnet some subnet')).toBeVisible();
+    expect(getByText('Subnet Label')).toBeVisible();
+    expect(getByText('Cancel')).toBeVisible();
+    expect(getByText('Delete')).toBeVisible();
   });
 });

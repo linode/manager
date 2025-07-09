@@ -243,10 +243,9 @@ const MuiTableHeadSvgStyles = {
 };
 
 const MuiTableZebraHoverStyles = {
-  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
-    {
-      background: Table.Row.Background.Hover,
-    },
+  '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+    background: Table.Row.Background.Hover,
+  },
 };
 
 const MuiTableZebraStyles = {
@@ -626,6 +625,9 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           '&[aria-disabled="true"]': {
+            '&[aria-describedby="button-tooltip"] svg': {
+              color: Alias.Content.Icon.Secondary.Default,
+            },
             '& .MuiSvgIcon-root': {
               fill: Button.Primary.Disabled.Icon,
             },
@@ -649,6 +651,9 @@ export const lightTheme: ThemeOptions = {
     MuiCheckbox: {
       styleOverrides: {
         root: {
+          '& svg path': {
+            fill: `${Component.Checkbox.Checked.Default.Icon}`,
+          },
           '&:active': {
             color: `${Component.Checkbox.Empty.Active.Border} !important`,
           },
@@ -662,6 +667,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate
           '&.MuiCheckbox-indeterminate': {
             color: Component.Checkbox.Indeterminated.Default.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           // Unchecked & Disabled
           '&.Mui-disabled': {
@@ -678,6 +688,11 @@ export const lightTheme: ThemeOptions = {
           // Indeterminate & Disabled
           '&.MuiCheckbox-indeterminate.Mui-disabled': {
             color: Component.Checkbox.Indeterminated.Disabled.Background,
+            svg: {
+              'g rect:nth-of-type(2)': {
+                fill: Component.Checkbox.Indeterminated.Default.Icon,
+              },
+            },
           },
           color: Component.Checkbox.Empty.Default.Border,
         },
@@ -963,6 +978,24 @@ export const lightTheme: ThemeOptions = {
           '&:hover': {
             backgroundColor: 'transparent',
             color: Content.Icon.Primary.Hover,
+          },
+          // TooltipIcon Overrides
+          '&.ui-TooltipIcon': {
+            '&.ui-TooltipIcon-isActive': {
+              '&.MuiIconButton-root': {
+                color: Component.Button.Danger.Default.Background,
+              },
+              '&.MuiIconButton-root:hover': {
+                color: Component.Button.Danger.Hover.Background,
+              },
+            },
+            '&.MuiIconButton-root': {
+              color: Component.Label.InfoIcon,
+              padding: `0 ${Spacing.S6}`,
+            },
+            '&.MuiIconButton-root:hover': {
+              color: Content.Icon.Primary.Hover,
+            },
           },
         },
       },
@@ -1538,10 +1571,9 @@ export const lightTheme: ThemeOptions = {
             backgroundColor: Table.HeaderNested.Background,
           },
           // The `hover` rule isn't implemented correctly in MUI, so we apply it here.
-          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover':
-            {
-              backgroundColor: Table.Row.Background.Hover,
-            },
+          '&.MuiTableRow-hover:hover, &.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: Table.Row.Background.Hover,
+          },
           '&.MuiTableRow-hover:hover.disabled-row': {
             cursor: 'not-allowed',
             backgroundColor: 'inherit',
