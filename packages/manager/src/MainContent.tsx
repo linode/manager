@@ -105,6 +105,14 @@ const useStyles = makeStyles()((theme: Theme) => ({
   },
 }));
 
+const NewDetailTemplateA = React.lazy(() =>
+  import('src/features/NewDetailTemplate/NewDetailTemplateA').then(
+    (module) => ({
+      default: module.NewDetailTemplateA,
+    })
+  )
+);
+
 export const MainContent = () => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const { classes, cx } = useStyles();
@@ -276,6 +284,10 @@ export const MainContent = () => {
                                  * It is currently set to the migration router in order to incrementally migrate the app to the new routing.
                                  * This is a temporary solution until we are ready to fully migrate to TanStack Router.
                                  */}
+                                <Route
+                                  component={NewDetailTemplateA}
+                                  path="/new-detail-template-a"
+                                />
                                 <Route path="*">
                                   <RouterProvider
                                     context={{ queryClient }}
