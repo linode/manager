@@ -32,3 +32,6 @@ export const MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT =
 
 export const GPU_PLAN_NOTICE =
   'GPU plan does not support live migration and will perform a warm migration and then cold migration as fallbacks.';
+
+export const UPCOMING_MAINTENANCE_NOTICE =
+  'Changes to this policy will not affect this existing planned maintenance event and, instead, will be applied to future maintenance events scheduled after the change is made.';

@@ -75,7 +75,7 @@ Please specify a release date (and environment, if applicable) to guarantee time
 
 ## As an Author, before moving this PR from Draft to Open, I confirmed ✅
 
-- [ ] All unit tests are passing
+- [ ] All tests and CI checks are passing
 - [ ] TypeScript compilation succeeded without errors
 - [ ] Code passes all linting rules
 
