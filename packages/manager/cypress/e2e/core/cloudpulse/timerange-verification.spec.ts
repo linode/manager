@@ -102,7 +102,7 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'GMT',
+  timezone: 'UTC',
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -149,47 +149,29 @@ const getDateRangeInGMT = (
  */
 
 const getThisMonthRange = (): DateTimeWithPreset => {
-  const now = DateTime.now();
+  const nowUtc = DateTime.utc(); // Current time in UTC
 
-  const expectedStartDateISO = now.startOf('month').toISO() ?? '';
-  const expectedEndDateISO = now.toISO() ?? '';
-
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'gmt',
-  });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  const startOfMonthUtc = nowUtc.startOf('month'); // Start of current month in UTC
 
   return {
-    end: formattedEndDate,
-    start: formattedStartDate,
+    start: startOfMonthUtc.toFormat(formatter),
+    end: nowUtc.toFormat(formatter),
   };
 };
-
 const getLastMonthRange = (): DateTimeWithPreset => {
-  const now = DateTime.now();
+  // Get current time in UTC
+  const now = DateTime.utc();
 
-  // Get the last month by subtracting 1 month from the current date
+  // Get last month in UTC
   const lastMonth = now.minus({ months: 1 });
 
-  // Get the start and end of the last month in ISO format
-  const expectedStartDateISO = lastMonth.startOf('month').toISO() ?? '';
-  const expectedEndDateISO = lastMonth.endOf('month').toISO() ?? '';
-
-  // Adjust the start and end dates to GMT
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'gmt',
-  });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-
-  // Format the dates according to the specified format
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  // Get start and end of last month in UTC and format
+  const start = lastMonth.startOf('month').toFormat(formatter);
+  const end = lastMonth.endOf('month').toFormat(formatter);
 
   return {
-    end: formattedEndDate,
-    start: formattedStartDate,
+    start,
+    end,
   };
 };
 
@@ -467,6 +449,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
+
         expect(requestPayload.absolute_time_duration.start).to.equal(start);
         expect(requestPayload.absolute_time_duration.end).to.equal(end);
       });
