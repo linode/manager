@@ -183,6 +183,30 @@ describe('StreamCreateClusters', () => {
     });
   });
 
+  it('should select and deselect all clusters with "Automatically include all..." checkbox', async () => {
+    renderComponentWithoutSelectedClusters();
+    const checkboxes = screen.getAllByRole('checkbox');
+    const [autoIncludeAllCheckbox, headerTableCheckbox] = checkboxes;
+
+    expect(autoIncludeAllCheckbox).not.toBeChecked();
+
+    // Select "Automatically include all..." checkbox
+    await userEvent.click(autoIncludeAllCheckbox);
+    expect(autoIncludeAllCheckbox).toBeChecked();
+    expect(headerTableCheckbox).toBeChecked();
+    expect(checkboxes[2]).toBeDisabled();
+    expect(checkboxes[3]).toBeChecked();
+    expect(checkboxes[4]).toBeChecked();
+
+    // Unselect "Automatically include all..." checkbox
+    await userEvent.click(autoIncludeAllCheckbox);
+    expect(autoIncludeAllCheckbox).not.toBeChecked();
+    expect(headerTableCheckbox).not.toBeChecked();
+    expect(checkboxes[2]).toBeDisabled();
+    expect(checkboxes[3]).not.toBeChecked();
+    expect(checkboxes[4]).not.toBeChecked();
+  });
+
   it('should sort clusters by Cluster Name if clicked', async () => {
     renderComponentWithoutSelectedClusters();
     const sortHeader = screen.getByRole('columnheader', {
@@ -248,5 +272,29 @@ describe('StreamCreateClusters', () => {
       'Enabled',
       'Enabled',
     ]);
+  });
+
+  it('should keep checkboxes selection after sorting', async () => {
+    renderComponentWithoutSelectedClusters();
+    const checkboxes = screen.getAllByRole('checkbox');
+
+    const sortHeader = screen.getByRole('columnheader', {
+      name: 'Log Generation',
+    });
+
+    // Select "prod-cluster-eu" cluster
+    await userEvent.click(checkboxes[4]);
+    expect(checkboxes[2]).not.toBeChecked();
+    expect(checkboxes[3]).not.toBeChecked();
+    expect(checkboxes[4]).toBeChecked();
+
+    // Sort by Log Generation ascending
+    await userEvent.click(sortHeader);
+    const checkboxesAfterSort = screen.getAllByRole('checkbox');
+
+    // After sorting the "prod-cluster-eu" checkbox is first in table
+    expect(checkboxesAfterSort[2]).toBeChecked();
+    expect(checkboxesAfterSort[3]).not.toBeChecked();
+    expect(checkboxesAfterSort[4]).not.toBeChecked();
   });
 });

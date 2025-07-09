@@ -1,5 +1,6 @@
 import { Box, Checkbox, Notice, Paper, Typography } from '@linode/ui';
-import React, { useState } from 'react';
+import { usePrevious } from '@linode/utilities';
+import React, { useEffect, useState } from 'react';
 import type { ControllerRenderProps } from 'react-hook-form';
 import { useWatch } from 'react-hook-form';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -21,7 +22,6 @@ import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCre
 // TODO: remove type after fetching the clusters will be done
 export type Cluster = {
   id: number;
-  isChecked: boolean;
   label: string;
   logGeneration: boolean;
   region: string;
@@ -30,16 +30,37 @@ export type Cluster = {
 type OrderByKeys = 'label' | 'logGeneration' | 'region';
 
 export const StreamCreateClusters = () => {
-  const { control } = useFormContext<CreateStreamForm>();
+  const { control, setValue } = useFormContext<CreateStreamForm>();
 
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<OrderByKeys>('label');
   const [searchText, setSearchText] = useState<string>('');
 
+  const idsWithLogGenerationEnabled = clusters
+    .filter(({ logGeneration }) => logGeneration)
+    .map(({ id }) => id);
+
   const isAutoAddAllClustersEnabled = useWatch({
     control,
     name: 'details.is_auto_add_all_clusters_enabled',
   });
+  const previousIsAutoAddAllClustersEnabled = usePrevious(
+    isAutoAddAllClustersEnabled
+  );
+
+  useEffect(() => {
+    if (isAutoAddAllClustersEnabled !== previousIsAutoAddAllClustersEnabled) {
+      setValue(
+        'details.cluster_ids',
+        isAutoAddAllClustersEnabled ? idsWithLogGenerationEnabled : []
+      );
+    }
+  }, [
+    isAutoAddAllClustersEnabled,
+    idsWithLogGenerationEnabled,
+    previousIsAutoAddAllClustersEnabled,
+    setValue,
+  ]);
 
   const handleOrderChange = (newOrderBy: OrderByKeys) => {
     if (orderBy === newOrderBy) {
@@ -54,14 +75,10 @@ export const StreamCreateClusters = () => {
     field: ControllerRenderProps<CreateStreamForm, 'details.cluster_ids'>
   ) => {
     const selectedIds = field.value || [];
-    const idsWithLogGenerationEnabled = clusters
-      .filter(({ logGeneration }) => logGeneration)
-      .map(({ id }) => id);
 
     const isAllSelected =
       selectedIds.length === idsWithLogGenerationEnabled.length;
-    const isNoneSelected = selectedIds.length === 0;
-    const isIndeterminate = !isAllSelected && !isNoneSelected;
+    const isIndeterminate = selectedIds.length > 0 && !isAllSelected;
 
     const toggleAllClusters = () =>
       field.onChange(isAllSelected ? [] : idsWithLogGenerationEnabled);
