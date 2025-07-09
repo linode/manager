@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link } from 'src/components/Link';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
 import { getDeviceLinkAndLabel } from '../../FirewallLanding/FirewallRow';
@@ -24,12 +25,21 @@ export const FirewallDeviceRow = React.memo((props: FirewallDeviceRowProps) => {
 
   const { entityLabel, entityLink } = getDeviceLinkAndLabel(device.entity);
 
+  const { permissions } = usePermissions(
+    'firewall',
+    ['view_firewall_device'],
+    device.id
+  );
   return (
     <TableRow data-testid={`firewall-device-row-${id}`}>
       <TableCell>
-        <Link tabIndex={0} to={entityLink}>
-          {entityLabel}
-        </Link>
+        {!permissions.view_firewall_device ? (
+          entityLabel
+        ) : (
+          <Link tabIndex={0} to={entityLink}>
+            {entityLabel}
+          </Link>
+        )}
       </TableCell>
       {isLinodeInterfacesEnabled && isLinodeRelatedDevice && (
         <TableCell>

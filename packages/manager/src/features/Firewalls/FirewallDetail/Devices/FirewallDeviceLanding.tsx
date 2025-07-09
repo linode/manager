@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { DebouncedSearchTextField } from 'src/components/DebouncedSearchTextField';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { AddLinodeDrawer } from './AddLinodeDrawer';
 import { AddNodebalancerDrawer } from './AddNodebalancerDrawer';
@@ -27,6 +28,11 @@ export const FirewallDeviceLanding = React.memo(
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
+    const { permissions } = usePermissions(
+      'firewall',
+      ['create_firewall_device', 'delete_firewall_device'],
+      firewallId
+    );
     const helperText =
       'Assign one or more services to this firewall. You can add services later if you want to customize your rules first.';
 
@@ -60,6 +66,10 @@ export const FirewallDeviceLanding = React.memo(
     );
 
     const formattedType = formattedTypes[type];
+    const isCreateDeviceDisabled =
+      type === 'linode' ? !permissions.create_firewall_device : disabled;
+    const isRemoveDeviceDisabled =
+      type === 'linode' ? !permissions.delete_firewall_device : disabled;
 
     // If the user initiates a history -/+ to a /remove route and the device is not found,
     // push navigation to the appropriate /linodes or /nodebalancers route.
@@ -119,7 +129,7 @@ export const FirewallDeviceLanding = React.memo(
               <Button
                 buttonType="primary"
                 data-testid="add-device-button"
-                disabled={disabled}
+                disabled={isCreateDeviceDisabled}
                 onClick={handleOpen}
               >
                 Add {formattedType}s to Firewall
@@ -129,7 +139,7 @@ export const FirewallDeviceLanding = React.memo(
         </Grid>
         <FirewallDeviceTable
           deviceType={type}
-          disabled={disabled}
+          disabled={isRemoveDeviceDisabled}
           firewallId={firewallId}
           handleRemoveDevice={(device) => {
             setDevice(device);
