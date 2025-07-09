@@ -15,6 +15,7 @@ export const LINODE_STATUS_TO_STATUS_ICON_MAP: Record<LinodeStatus, Status> = {
   shutting_down: 'other',
   stopped: 'error',
   resizing: 'other',
+  billing_suspension: 'error',
 };
 
 export const LINODE_EVENT_TO_STATUS_MAP: Partial<
