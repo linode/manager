@@ -1,4 +1,4 @@
-import { Typography } from '@linode/ui';
+import { Placeholder, Typography } from '@linode/ui';
 import * as React from 'react';
 import type { JSX } from 'react';
 
@@ -9,13 +9,14 @@ import { ResourceLinks } from 'src/components/EmptyLandingPageResources/Resource
 import { ResourcesLinksSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSection';
 import { ResourcesLinksSubSection } from 'src/components/EmptyLandingPageResources/ResourcesLinksSubSection';
 import { ResourcesMoreLink } from 'src/components/EmptyLandingPageResources/ResourcesMoreLink';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import {
   getLinkOnClick,
   youtubeChannelLink,
   youtubeMoreLinkLabel,
   youtubeMoreLinkText,
 } from 'src/utilities/emptyStateLandingUtils';
+
+import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
 import type {
   LinkAnalyticsEvent,
@@ -114,6 +115,10 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
   } = props;
   const { description, logo, subtitle, title } = headers;
 
+  const transferDisplayProps = showTransferDisplay
+    ? { showTransferDisplay: true, TransferDisplayComponent: TransferDisplay }
+    : {};
+
   return (
     <Placeholder
       additionalCopy={additionalCopy}
@@ -168,9 +173,9 @@ export const ResourcesSection = (props: ResourcesSectionProps) => {
           </ResourcesLinksSubSection>
         </ResourcesLinksSection>
       }
-      showTransferDisplay={showTransferDisplay}
       subtitle={subtitle}
       title={title}
+      {...transferDisplayProps}
     >
       {logo}
       <Typography variant="subtitle1">{description}</Typography>

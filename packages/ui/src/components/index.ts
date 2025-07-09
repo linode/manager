@@ -36,6 +36,7 @@ export * from './NewFeatureChip';
 export * from './NotFound/NotFound';
 export * from './Notice';
 export * from './Paper';
+export * from './Placeholder';
 export * from './Radio';
 export * from './RadioGroup';
 export * from './Select/Select';
