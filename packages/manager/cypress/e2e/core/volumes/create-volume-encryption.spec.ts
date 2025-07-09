@@ -15,6 +15,7 @@ import { mockGetVolume, mockGetVolumes } from 'support/intercepts/volumes';
 import { ui } from 'support/ui';
 import { randomLabel } from 'support/util/random';
 
+import { checkboxTestId } from 'src/components/Encryption/constants';
 import {
   accountFactory,
   linodeDiskFactory,
@@ -35,14 +36,21 @@ describe('Volume creation with Block Storage Encryption', () => {
       capabilities: ['Linodes', 'Block Storage Encryption'],
     });
 
-    const mockRegion = regionFactory.build({
+    const mockRegionWithBSE = regionFactory.build({
       capabilities: ['Linodes', 'Block Storage Encryption', 'Block Storage'],
+    });
+
+    const mockRegionWithoutBSE = regionFactory.build({
+      country: 'uk',
+      id: 'uk-123',
+      label: 'United Kindom, LD',
+      capabilities: ['Linodes', 'Block Storage'],
     });
 
     const mockLinodeWithoutCapability = linodeFactory.build({
       capabilities: [],
       label: randomLabel(),
-      region: mockRegion.id,
+      region: mockRegionWithBSE.id,
     });
 
     const mockLinodeWithCapability: Linode = {
@@ -53,7 +61,7 @@ describe('Volume creation with Block Storage Encryption', () => {
     const mockVolumeEncrypted = volumeFactory.build({
       encryption: 'enabled',
       label: randomLabel(),
-      region: mockRegion.id,
+      region: mockRegionWithBSE.id,
     });
 
     /*
@@ -74,7 +82,7 @@ describe('Volume creation with Block Storage Encryption', () => {
           blockStorageEncryption: true,
         });
         mockGetAccount(mockAccount);
-        mockGetRegions([mockRegion]);
+        mockGetRegions([mockRegionWithBSE]);
         mockGetLinodes([mockLinodeWithoutCapability]);
         mockGetLinodeDetails(
           mockLinodeWithoutCapability.id,
@@ -95,9 +103,11 @@ describe('Volume creation with Block Storage Encryption', () => {
         cy.visitWithLogin('/volumes/create');
 
         // Select a region, then select a Linode that does not have the BSE capability.
-        ui.autocomplete.findByLabel('Region').type(mockRegion.label);
+        ui.autocomplete.findByLabel('Region').type(mockRegionWithBSE.label);
 
-        ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
+        ui.regionSelect
+          .findItemByRegionId(mockRegionWithBSE.id, [mockRegionWithBSE])
+          .click();
 
         ui.autocomplete
           .findByLabel('Linode')
@@ -217,7 +227,7 @@ describe('Volume creation with Block Storage Encryption', () => {
           blockStorageEncryption: true,
         });
         mockGetAccount(mockAccount);
-        mockGetRegions([mockRegion]);
+        mockGetRegions([mockRegionWithBSE]);
         mockGetLinodes([mockLinodeWithCapability]);
         mockGetLinodeDetails(
           mockLinodeWithCapability.id,
@@ -237,9 +247,11 @@ describe('Volume creation with Block Storage Encryption', () => {
         cy.visitWithLogin('/volumes/create');
 
         // Select a region, then select a Linode that has the BSE capability.
-        ui.autocomplete.findByLabel('Region').type(mockRegion.label);
+        ui.autocomplete.findByLabel('Region').type(mockRegionWithBSE.label);
 
-        ui.regionSelect.findItemByRegionId(mockRegion.id, [mockRegion]).click();
+        ui.regionSelect
+          .findItemByRegionId(mockRegionWithBSE.id, [mockRegionWithBSE])
+          .click();
 
         ui.autocomplete
           .findByLabel('Linode')
@@ -325,6 +337,61 @@ describe('Volume creation with Block Storage Encryption', () => {
             cy.findByText(CLIENT_LIBRARY_UPDATE_COPY).should('not.exist');
             ui.button.findByTitle('Create Volume').should('be.enabled');
           });
+      });
+    });
+
+    /*
+     * Tests that confirm that the Volume encryption toggle is enabled by
+     * default when expected.
+     */
+    describe('Encryption toggle active when expected', () => {
+      beforeEach(() => {
+        mockAppendFeatureFlags({
+          blockStorageEncryption: true,
+        });
+        mockGetAccount(mockAccount);
+        mockGetRegions([mockRegionWithBSE, mockRegionWithoutBSE]);
+        mockGetLinodes([mockLinodeWithoutCapability]);
+        mockGetLinodeDetails(
+          mockLinodeWithoutCapability.id,
+          mockLinodeWithoutCapability
+        );
+        mockGetLinodeVolumes(mockLinodeWithoutCapability.id, []);
+        mockGetLinodeDisks(mockLinodeWithoutCapability.id, [
+          linodeDiskFactory.build(),
+        ]);
+      });
+
+      it('should be active and enabled', () => {
+        mockGetVolumes([]);
+        cy.visitWithLogin('/volumes/create');
+
+        // Select a region, that has the BSE capability.
+        ui.autocomplete.findByLabel('Region').type(mockRegionWithBSE.label);
+
+        ui.regionSelect
+          .findItemByRegionId(mockRegionWithBSE.id, [mockRegionWithBSE])
+          .click();
+
+        cy.findByTestId(checkboxTestId)
+          .should('not.be.disabled')
+          .should('be.checked');
+      });
+
+      it('should be inactive and disabled', () => {
+        mockGetVolumes([]);
+        cy.visitWithLogin('/volumes/create');
+
+        // Select a region, that does not have the BSE capability.
+        ui.autocomplete.findByLabel('Region').type(mockRegionWithoutBSE.label);
+
+        ui.regionSelect
+          .findItemByRegionId(mockRegionWithoutBSE.id, [mockRegionWithoutBSE])
+          .click();
+
+        cy.findByTestId(checkboxTestId)
+          .should('be.disabled')
+          .should('not.be.checked');
       });
     });
   });

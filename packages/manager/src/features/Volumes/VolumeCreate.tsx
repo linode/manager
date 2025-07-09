@@ -520,7 +520,10 @@ export const VolumeCreate = () => {
                       : BLOCK_STORAGE_CHOOSE_REGION_COPY
                   }
                   entityType="Volume"
-                  isEncryptEntityChecked={values.encryption === 'enabled'}
+                  isEncryptEntityChecked={
+                    regionSupportsBlockStorageEncryption &&
+                    values.encryption === 'enabled'
+                  }
                   notices={
                     values.encryption === 'enabled'
                       ? [
@@ -578,7 +581,7 @@ interface FormState {
 
 const initialValues: FormState = {
   config_id: null,
-  encryption: 'disabled',
+  encryption: 'enabled',
   label: '',
   linode_id: null,
   region: '',
