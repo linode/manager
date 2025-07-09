@@ -21,6 +21,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'react-router-dom';
 
+import { Code } from 'src/components/Code/Code';
 import { FormLabel } from 'src/components/FormLabel';
 import { Link } from 'src/components/Link';
 import { RegionSelect } from 'src/components/RegionSelect/RegionSelect';
@@ -217,11 +218,7 @@ export const VPCTopSectionContent = (props: Props) => {
                         </Typography>
                         <Typography>
                           For IPv6, the VPC is assigned an IPv6 prefix length of
-                          /52 by default.
-                        </Typography>
-                        <Typography>
-                          To request a larger prefix length, please contact
-                          support.
+                          <Code>/52</Code> by default.
                         </Typography>
                       </Stack>
                     }
@@ -251,7 +248,7 @@ export const VPCTopSectionContent = (props: Props) => {
               value={fields[0].range}
             >
               <StyledFormLabel sx={{ marginTop: 1, marginBottom: 0 }}>
-                VPC IPv6 CIDR
+                VPC IPv6 Prefix Length
               </StyledFormLabel>
               {errors.ipv6 && (
                 <Notice
