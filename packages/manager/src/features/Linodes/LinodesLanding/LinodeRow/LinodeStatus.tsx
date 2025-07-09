@@ -1,6 +1,5 @@
-import { Stack, Typography } from '@linode/ui';
+import { Stack, Tooltip, Typography } from '@linode/ui';
 import { getFormattedStatus } from '@linode/utilities';
-import { Popover } from '@mui/material';
 import React from 'react';
 
 import { LinearProgress } from 'src/components/LinearProgress';
@@ -37,26 +36,45 @@ export const LinodeStatus = (props: Props) => {
     ? (LINODE_EVENT_TO_STATUS_MAP[event.action] ?? linodeStatus)
     : linodeStatus;
 
-  const [anchorEl, setAnchorEl] = React.useState<HTMLDivElement | null>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
   return (
-    <>
+    <Tooltip
+      slotProps={{
+        tooltip: {
+          sx: { minWidth: 350 }
+        },
+      }}
+      title={
+        event ? (
+          <Stack padding={1} spacing={1}>
+            {getEventMessage(event)}
+            {event.username && (
+              <Typography
+                sx={(theme) => ({ fontSize: theme.tokens.font.FontSize.Xxs })}
+              >
+                Started by {event.username}
+              </Typography>
+            )}
+            {event.time_remaining && (
+              <Typography>
+                {event.time_remaining} remaining{' '}
+                {event.rate && `at ${event.rate}`}
+              </Typography>
+            )}
+            {event.percent_complete !== null && (
+              <LinearProgress
+                value={event.percent_complete}
+                variant="determinate"
+              />
+            )}
+          </Stack>
+        ) : null
+      }
+    >
       <Stack
         alignItems="center"
         direction="row"
-        onClick={handleClick}
         spacing={1}
+        sx={event ? { cursor: 'help' } : {}}
       >
         <StatusIcon status={LINODE_STATUS_TO_STATUS_ICON_MAP[status]} />
         <Typography>{getFormattedStatus(status)}</Typography>
@@ -66,48 +84,6 @@ export const LinodeStatus = (props: Props) => {
           </Typography>
         )}
       </Stack>
-      {event && (
-        <Popover
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'left',
-          }}
-          id={id}
-          onClose={handleClose}
-          open={open}
-          slotProps={{
-            paper: {
-              sx: { p: 2, maxWidth: 400 },
-            },
-          }}
-        >
-          {event && (
-            <Stack spacing={1}>
-              {getEventMessage(event)}
-              {event.username && (
-                <Typography
-                  sx={(theme) => ({ fontSize: theme.tokens.font.FontSize.Xxs })}
-                >
-                  Started by {event.username}
-                </Typography>
-              )}
-              {event.time_remaining && (
-                <Typography>
-                  {event.time_remaining} remaining{' '}
-                  {event.rate && `at ${event.rate}`}
-                </Typography>
-              )}
-              {event.percent_complete !== null && (
-                <LinearProgress
-                  value={event.percent_complete}
-                  variant="determinate"
-                />
-              )}
-            </Stack>
-          )}
-        </Popover>
-      )}
-    </>
+    </Tooltip>
   );
 };
