@@ -2847,26 +2847,20 @@ export const handlers = [
   }),
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    if (params.serviceType !== 'dbaas' && params.serviceType !== 'linode') {
-      return HttpResponse.json({}, { status: 404 });
-    }
-
-    const response =
-      params.serviceType === 'linode'
-        ? serviceTypesFactory.build({
-            label: 'Linodes',
-            service_type: 'linode',
-            regions: 'us-iad,us-east',
-            alert: serviceAlertFactory.build({ scope: ['entity'] }),
-          })
-        : serviceTypesFactory.build({
-            label: 'Databases',
-            service_type: 'dbaas',
-            alert: serviceAlertFactory.build({
-              evaluation_period_seconds: [300],
-              polling_interval_seconds: [300],
-            }),
-          });
+    const serviceType = params.serviceType as string;
+    const serviceTypesMap: Record<string, string> = {
+      linode: 'Linode',
+      dbaas: 'Databases',
+      nodebalancer: 'NodeBalancers',
+    };
+    const response = serviceTypesFactory.build({
+      service_type: `${serviceType}`,
+      label: serviceTypesMap[serviceType],
+      alert: serviceAlertFactory.build({
+        evaluation_period_seconds: [300],
+        polling_interval_seconds: [300],
+      }),
+    });
 
     return HttpResponse.json(response, { status: 200 });
   }),
@@ -3016,11 +3010,6 @@ export const handlers = [
               dimension_label: 'LINODE_ID',
               label: 'Linode ID',
               values: null,
-            },
-            {
-              dimension_label: 'port',
-              label: ' Port',
-              values: [],
             },
           ],
           label: 'Network Traffic',
