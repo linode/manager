@@ -27,7 +27,6 @@ import { ErrorMessage } from 'src/components/ErrorMessage';
 import { Link } from 'src/components/Link';
 import { TypeToConfirm } from 'src/components/TypeToConfirm/TypeToConfirm';
 import { PlansPanel } from 'src/features/components/PlansPanel/PlansPanel';
-import { linodeInTransition } from 'src/features/Linodes/transitions';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useEventsPollingActions } from 'src/queries/events/events';
 import { extendType } from 'src/utilities/extendType';
@@ -333,10 +332,7 @@ export const LinodeResize = (props: Props) => {
               buttonType="primary"
               data-qa-resize
               disabled={
-                !formik.values.type ||
-                linodeInTransition(linode?.status || '') ||
-                tableDisabled ||
-                submitButtonDisabled
+                !formik.values.type || tableDisabled || submitButtonDisabled
               }
               loading={isPending}
               type="submit"

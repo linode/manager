@@ -14,16 +14,10 @@ import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
 import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
 import { LinodeEntityDetailFooter } from './LinodeEntityDetailFooter';
 import { LinodeEntityDetailHeader } from './LinodeEntityDetailHeader';
-import {
-  transitionText as _transitionText,
-  getProgressOrDefault,
-  isEventWithSecondaryLinodeStatus,
-} from './transitions';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type { TypographyProps } from '@linode/ui';
@@ -44,12 +38,6 @@ export const LinodeEntityDetail = (props: Props) => {
   const { handlers, isSummaryView, linode, variant } = props;
 
   const notificationContext = React.useContext(_notificationContext);
-
-  const { data: events } = useInProgressEvents();
-
-  const recentEvent = events?.find(
-    (event) => event.entity?.id === linode.id && event.entity.type === 'linode'
-  );
 
   const { data: images } = useAllImagesQuery({}, {});
 
@@ -101,14 +89,6 @@ export const LinodeEntityDetail = (props: Props) => {
         ?.find((r) => r.id === linode.region)
         ?.capabilities.includes('LA Disk Encryption')) ??
     false;
-
-  let progress;
-  let transitionText;
-
-  if (recentEvent && isEventWithSecondaryLinodeStatus(recentEvent, linode.id)) {
-    progress = getProgressOrDefault(recentEvent);
-    transitionText = _transitionText(linode.status, linode.id, recentEvent);
-  }
 
   const trimmedIPv6 = linode.ipv6?.replace('/128', '') || null;
 
@@ -176,8 +156,6 @@ export const LinodeEntityDetail = (props: Props) => {
             linodeStatus={linode.status}
             maintenance={linode.maintenance ?? null}
             openNotificationMenu={notificationContext.openMenu}
-            progress={progress}
-            transitionText={transitionText}
             type={type ?? null}
             variant={variant}
           />

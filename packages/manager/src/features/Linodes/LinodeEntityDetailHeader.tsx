@@ -1,11 +1,9 @@
-import { Box, Button, Stack, TooltipIcon } from '@linode/ui';
-import { Typography } from '@linode/ui';
+import { Box, Button, TooltipIcon } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
 
 import { EntityHeader } from 'src/components/EntityHeader/EntityHeader';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
 import { LinodeActionMenu } from 'src/features/Linodes/LinodesLanding/LinodeActionMenu/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/Linodes/LinodesLanding/LinodeRow/LinodeRow';
@@ -16,7 +14,7 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/analytics/customEve
 import { VPC_REBOOT_MESSAGE } from '../VPCs/constants';
 import { StyledLink } from './LinodeEntityDetail.styles';
 import { LinodeEntityDetailHeaderMaintenancePolicy } from './LinodeEntityDetailHeaderMaintenancePolicy';
-import { getLinodeIconStatus } from './LinodesLanding/utils';
+import { LinodeStatus } from './LinodesLanding/LinodeRow/LinodeStatus';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
 import type {
@@ -172,18 +170,7 @@ export const LinodeEntityDetailHeader = (
           padding: `${theme.spacingFunction(6)} 0 ${theme.spacingFunction(6)} ${theme.spacingFunction(16)}`,
         })}
       >
-        <Stack
-          alignItems="center"
-          aria-label={`Linode status ${linodeStatus}`}
-          data-qa-linode-status
-          direction="row"
-          spacing={1.25}
-        >
-          <StatusIcon status={getLinodeIconStatus(linodeStatus)} />
-          <Typography sx={(theme) => ({ font: theme.font.bold })}>
-            {formattedStatus}
-          </Typography>
-        </Stack>
+        <LinodeStatus linodeId={linodeId} linodeStatus={linodeStatus} />
         {isRebootNeeded && (
           <TooltipIcon
             status="info"

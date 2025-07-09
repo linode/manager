@@ -173,6 +173,7 @@ export type LinodeStatus =
   | 'provisioning'
   | 'rebooting'
   | 'rebuilding'
+  | 'resizing'
   | 'restoring'
   | 'running'
   | 'shutting_down'

@@ -82,7 +82,6 @@ export interface LinodesLandingProps {
   handleRegionFilter: (regionFilter: RegionFilter) => void;
   LandingHeader?: React.ReactElement<any>;
   linodesData: LinodeWithMaintenance[];
-  linodesInTransition: Set<number>;
   linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   navigate: UseNavigateResult<'/linodes'>;

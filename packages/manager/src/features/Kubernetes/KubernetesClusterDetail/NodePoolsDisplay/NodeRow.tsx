@@ -8,8 +8,6 @@ import { Link } from 'src/components/Link';
 import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { transitionText } from 'src/features/Linodes/transitions';
-import { useInProgressEvents } from 'src/queries/events/events';
 
 import { NodeActionMenu } from './NodeActionMenu';
 
@@ -45,14 +43,8 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
     typeLabel,
   } = props;
 
-  const { data: events } = useInProgressEvents();
   const { data: maskSensitiveDataPreference } = usePreferences(
     (preferences) => preferences?.maskSensitiveData
-  );
-
-  const recentEvent = events?.find(
-    (event) =>
-      event.entity?.id === instanceId && event.entity?.type === 'linode'
   );
 
   const linodeLink = instanceId ? `/linodes/${instanceId}` : undefined;
@@ -70,9 +62,7 @@ export const NodeRow = React.memo((props: NodeRowProps) => {
   const displayLabel = label ?? typeLabel;
 
   const displayStatus =
-    nodeStatus === 'not_ready'
-      ? 'Provisioning'
-      : transitionText(instanceStatus ?? '', instanceId ?? -1, recentEvent);
+    nodeStatus === 'not_ready' ? 'Provisioning' : instanceStatus;
 
   const displayIP = ip ?? '';
 

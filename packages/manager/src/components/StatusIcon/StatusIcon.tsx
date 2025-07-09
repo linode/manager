@@ -48,7 +48,6 @@ const StyledDiv = styled(Box, {
   display: 'inline-block',
   flexShrink: 0,
   height: '16px',
-  marginRight: theme.spacing(),
   position: 'relative',
   transition: theme.transitions.create(['color']),
   width: '16px',
