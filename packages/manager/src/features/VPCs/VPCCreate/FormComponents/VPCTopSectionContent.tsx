@@ -55,8 +55,6 @@ export const VPCTopSectionContent = (props: Props) => {
     location.search
   );
 
-  const [cidrOption, setCIDROption] = React.useState('ipv4');
-
   const {
     control,
     formState: { errors },
@@ -65,6 +63,8 @@ export const VPCTopSectionContent = (props: Props) => {
     control,
     name: 'ipv6',
   });
+
+  const isDualStackSelected = fields.some((f) => f.range);
 
   const { data: account } = useAccount();
   const isDualStackEnabled = isFeatureEnabledV2(
@@ -154,7 +154,7 @@ export const VPCTopSectionContent = (props: Props) => {
           <RadioGroup sx={{ display: 'block' }}>
             <Grid container spacing={2}>
               <SelectionCard
-                checked={cidrOption === 'ipv4'}
+                checked={!isDualStackSelected}
                 gridSize={{
                   md: 3,
                   sm: 12,
@@ -162,10 +162,9 @@ export const VPCTopSectionContent = (props: Props) => {
                 }}
                 heading="IPv4"
                 onClick={() => {
-                  setCIDROption('ipv4');
                   remove(0);
                 }}
-                renderIcon={() => <Radio checked={cidrOption === 'ipv4'} />}
+                renderIcon={() => <Radio checked={!isDualStackSelected} />}
                 renderVariant={() => (
                   <TooltipIcon
                     status="info"
@@ -186,7 +185,7 @@ export const VPCTopSectionContent = (props: Props) => {
                 sxCardBaseIcon={{ svg: { fontSize: '20px' } }}
               />
               <SelectionCard
-                checked={cidrOption === 'dualstack'}
+                checked={isDualStackSelected}
                 gridSize={{
                   md: 3,
                   sm: 12,
@@ -194,16 +193,13 @@ export const VPCTopSectionContent = (props: Props) => {
                 }}
                 heading="IPv4 + IPv6 (Dual Stack)"
                 onClick={() => {
-                  setCIDROption('dualstack');
                   if (fields.length === 0) {
                     append({
                       range: '/52',
                     });
                   }
                 }}
-                renderIcon={() => (
-                  <Radio checked={cidrOption === 'dualstack'} />
-                )}
+                renderIcon={() => <Radio checked={isDualStackSelected} />}
                 renderVariant={() => (
                   <TooltipIcon
                     status="info"
@@ -240,7 +236,7 @@ export const VPCTopSectionContent = (props: Props) => {
           </RadioGroup>
         </Box>
       )}
-      {cidrOption === 'dualstack' && isTrustedCustomer && (
+      {isDualStackSelected && isTrustedCustomer && (
         <Controller
           control={control}
           name="ipv6"
