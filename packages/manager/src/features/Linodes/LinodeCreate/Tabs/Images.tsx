@@ -1,5 +1,5 @@
 import { useAllImagesQuery, useRegionsQuery } from '@linode/queries';
-import { Box, Paper, Stack, Typography } from '@linode/ui';
+import { Box, Paper, Placeholder, Stack, Typography } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
 import React from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
@@ -8,7 +8,6 @@ import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
 import { ImageSelect } from 'src/components/ImageSelect/ImageSelect';
 import { getAPIFilterForImageSelect } from 'src/components/ImageSelect/utilities';
 import { Link } from 'src/components/Link';
-import { Placeholder } from 'src/components/Placeholder/Placeholder';
 import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 
 import { Region } from '../Region';
