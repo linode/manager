@@ -9,9 +9,9 @@ import {
   getMetricDefinitionsByServiceType,
 } from '@linode/api-v4';
 import {
+  databaseQueries,
   getAllLinodesRequest,
   nodebalancerQueries,
-  databaseQueries,
   volumeQueries,
 } from '@linode/queries';
 import { createQueryKeys } from '@lukemorales/query-key-factory';

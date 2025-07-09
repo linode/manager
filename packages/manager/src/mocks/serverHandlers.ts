@@ -2847,7 +2847,7 @@ export const handlers = [
   }),
 
   http.get('*/monitor/services/:serviceType', ({ params }) => {
-    const serviceType= params.serviceType as string;
+    const serviceType = params.serviceType as string;
     const serviceTypesMap: Record<string, string> = {
       linode: 'Linode',
       dbaas: 'Databases',
@@ -2856,13 +2856,11 @@ export const handlers = [
     const response = serviceTypesFactory.build({
       service_type: `${serviceType}`,
       label: serviceTypesMap[serviceType],
-      alert:
-        serviceType === 'dbaas'
-          ? serviceAlertFactory.build({
-              evaluation_period_seconds: [300],
-              polling_interval_seconds: [300],
-            }),
-          });
+      alert: serviceAlertFactory.build({
+        evaluation_period_seconds: [300],
+        polling_interval_seconds: [300],
+      }),
+    });
 
     return HttpResponse.json(response, { status: 200 });
   }),
