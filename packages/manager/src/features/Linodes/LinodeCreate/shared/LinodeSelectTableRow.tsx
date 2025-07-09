@@ -1,13 +1,13 @@
 import { useImageQuery, useRegionsQuery, useTypeQuery } from '@linode/queries';
 import { FormControlLabel, Radio } from '@linode/ui';
-import { formatStorageUnits, getFormattedStatus } from '@linode/utilities';
+import { formatStorageUnits } from '@linode/utilities';
 import React from 'react';
 
 import { InlineMenuAction } from 'src/components/InlineMenuAction/InlineMenuAction';
-import { StatusIcon } from 'src/components/StatusIcon/StatusIcon';
 import { TableCell } from 'src/components/TableCell';
 import { TableRow } from 'src/components/TableRow';
-import { getLinodeIconStatus } from 'src/features/Linodes/LinodesLanding/utils';
+
+import { LinodeStatus } from '../../LinodesLanding/LinodeRow/LinodeStatus';
 
 import type { Linode } from '@linode/api-v4';
 
@@ -43,9 +43,8 @@ export const LinodeSelectTableRow = (props: Props) => {
           sx={{ gap: 2 }}
         />
       </TableCell>
-      <TableCell statusCell>
-        <StatusIcon status={getLinodeIconStatus(linode.status)} />
-        {getFormattedStatus(linode.status)}
+      <TableCell>
+        <LinodeStatus linodeId={linode.id} linodeStatus={linode.status} />
       </TableCell>
       <TableCell>{image?.label ?? linode.image}</TableCell>
       <TableCell>
