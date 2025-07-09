@@ -26,7 +26,7 @@ const vpcs = vpcFactory.build({
 });
 
 describe('CloudPulseVPCSubnet', () => {
-  const component = <CloudPulseVPCSubnet isMultiple onChange={onChange} />;
+  const component = <CloudPulseVPCSubnet multiple onChange={onChange} />;
   beforeEach(() => {
     vi.resetAllMocks();
     queryMock.useAllVpcsQuery.mockReturnValue({

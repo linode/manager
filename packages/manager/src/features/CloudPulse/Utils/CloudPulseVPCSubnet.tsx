@@ -9,8 +9,8 @@ interface VPCSubnetOption {
 
 interface CloudPulseVPCSubnetProps {
   errorText?: string;
-  isMultiple?: boolean;
   label?: string;
+  multiple?: boolean;
   onBlur?: () => void;
   onChange: (value: null | number | number[]) => void;
   placeholder?: string;
@@ -18,7 +18,7 @@ interface CloudPulseVPCSubnetProps {
 }
 
 export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
-  const { errorText, onChange, value, onBlur, label, placeholder, isMultiple } =
+  const { errorText, onChange, value, onBlur, label, placeholder, multiple } =
     props;
 
   const [selectedValue, setSelectedValue] = React.useState<
@@ -45,19 +45,19 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
   const isArray = selectedValue && Array.isArray(selectedValue);
   const getSelectedOptions = (): null | VPCSubnetOption | VPCSubnetOption[] => {
     if (selectedValue === null) {
-      return isMultiple ? [] : null;
+      return multiple ? [] : null;
     }
     if (isArray) {
       const selectedOptions = selectedValue
         .filter((value) => options[value] !== undefined)
         .map((value) => options[value]);
 
-      return isMultiple ? selectedOptions : (selectedOptions[0] ?? null);
+      return multiple ? selectedOptions : (selectedOptions[0] ?? null);
     }
 
     const selectedOption = options[selectedValue];
 
-    if (isMultiple) {
+    if (multiple) {
       return selectedOption ? [selectedOption] : [];
     }
 
@@ -73,7 +73,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
       label={label ?? 'VPC Subnet'}
       limitTags={2}
       loading={isLoading}
-      multiple={isMultiple}
+      multiple={multiple}
       onBlur={onBlur}
       onChange={(_, newValue) => {
         const newSelectedValue = Array.isArray(newValue)
