@@ -3,17 +3,45 @@ import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
 interface VPCSubnetOption {
+  /**
+   * Unique identifier for the subnet.
+   */
   id: number;
+  /**
+   * Display label for the subnet, typically includes VPC name.
+   */
   label: string;
 }
 
 interface CloudPulseVPCSubnetProps {
+  /**
+   * Error text to display when there is an error.
+   */
   errorText?: string;
+  /**
+   * Label for the autocomplete field.
+   */
   label?: string;
+  /**
+   * Whether to allow multiple selections.
+   */
   multiple?: boolean;
+  /**
+   * This function is called when the input field loses focus.
+   */
   onBlur?: () => void;
+  /**
+   * Callback function when the value changes.
+   * @param value - The selected value(s).
+   */
   onChange: (value: null | number | number[]) => void;
+  /**
+   * Placeholder text for the autocomplete field.
+   */
   placeholder?: string;
+  /**
+   * The default selected value for the component.
+   */
   value?: number | number[];
 }
 
@@ -26,6 +54,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
   >(value ?? null);
   const { data, isLoading, error } = useAllVPCsQuery({ enabled: true });
 
+  // Creating a mapping of subnet id to options for constant time access to fetch selected options
   const options: Record<number, VPCSubnetOption> = React.useMemo(() => {
     if (!data) return {};
 
@@ -42,7 +71,9 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
 
     return options;
   }, [data]);
+
   const isArray = selectedValue && Array.isArray(selectedValue);
+
   const getSelectedOptions = (): null | VPCSubnetOption | VPCSubnetOption[] => {
     if (selectedValue === null) {
       return multiple ? [] : null;
