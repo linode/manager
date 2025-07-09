@@ -1,6 +1,6 @@
 import { fromGrants, toPermissionMap } from './permissionAdapters';
 
-import type { Grants, PermissionType, Profile } from '@linode/api-v4';
+import type { Grants, PermissionType } from '@linode/api-v4';
 
 describe('toPermissionMap', () => {
   it('should map AccountAdmin permissions correctly', () => {
@@ -131,7 +131,7 @@ describe('fromGrants', () => {
       'firewall',
       permissionsToCheck,
       grants,
-      { restricted: false } as Profile,
+      false,
       126860
     );
     expect(result).toEqual({
@@ -151,7 +151,7 @@ describe('fromGrants', () => {
       'linode',
       permissionsToCheck,
       grants,
-      { restricted: false } as Profile,
+      false,
       99487769
     );
     expect(result).toEqual({
