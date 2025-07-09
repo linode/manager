@@ -2,7 +2,7 @@ import type { FieldPath } from 'react-hook-form';
 
 import type { CreateAlertDefinitionForm } from './CreateAlert/types';
 import type {
-  AlertDefinitionGroup,
+  AlertDefinitionScope,
   AlertSeverityType,
   AlertStatusType,
   ChannelType,
@@ -106,13 +106,13 @@ export const dimensionOperatorOptions: Item<
   },
 ];
 
-export const entityGroupingOptions: Item<string, AlertDefinitionGroup>[] = [
+export const entityGroupingOptions: Item<string, AlertDefinitionScope>[] = [
   { label: 'Account', value: 'account' },
   { label: 'Region', value: 'region' },
   { label: 'Entity', value: 'entity' },
 ];
 
-export const entityGroupMap: Record<AlertDefinitionGroup, string> = {
+export const entityGroupMap: Record<AlertDefinitionScope, string> = {
   account: 'Account',
   region: 'Region',
   entity: 'Entity',
@@ -218,3 +218,12 @@ export const DELETE_ALERT_SUCCESS_MESSAGE = 'Alert successfully deleted.';
 export type SelectDeselectAll = 'Deselect All' | 'Select All';
 
 export type AlertFormMode = 'create' | 'edit' | 'view';
+
+export const PORTS_TRAILING_COMMA_ERROR_MESSAGE =
+  'Trailing comma is not allowed.';
+
+export const PORT_HELPER_TEXT = 'Enter a port number (1-65535).';
+
+export const PORTS_PLACEHOLDER_TEXT = 'e.g., 80,443,3000';
+
+export const PORT_PLACEHOLDER_TEXT = 'e.g., 80';

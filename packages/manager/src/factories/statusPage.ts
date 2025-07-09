@@ -7,7 +7,7 @@ import type {
   IncidentUpdate,
   Maintenance,
   MaintenanceResponse,
-} from 'src/queries/statusPage';
+} from '@linode/queries';
 
 const DATE = '2021-01-12T00:00:00.394Z';
 

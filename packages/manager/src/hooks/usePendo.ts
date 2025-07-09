@@ -2,8 +2,9 @@ import { useAccount, useProfile } from '@linode/queries';
 import { loadScript } from '@linode/utilities'; // `loadScript` from `useScript` hook
 import React from 'react';
 
-import { ADOBE_ANALYTICS_URL, APP_ROOT, PENDO_API_KEY } from 'src/constants';
+import { ADOBE_ANALYTICS_URL, PENDO_API_KEY } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { getAppRoot } from 'src/OAuth/constants';
 
 declare global {
   interface Window {
@@ -17,9 +18,11 @@ declare global {
  * @returns Unique ID for the environment; else, undefined if missing values.
  */
 const getUniquePendoId = (id: string | undefined) => {
-  const isProdEnv = APP_ROOT === 'https://cloud.linode.com';
+  const appRoot = getAppRoot();
 
-  if (!id || !APP_ROOT) {
+  const isProdEnv = appRoot === 'https://cloud.linode.com';
+
+  if (!id || !appRoot) {
     return;
   }
 

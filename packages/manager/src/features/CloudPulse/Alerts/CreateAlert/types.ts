@@ -1,5 +1,5 @@
 import type {
-  AlertDefinitionGroup,
+  AlertDefinitionScope,
   AlertDefinitionType,
   AlertServiceType,
   AlertSeverityType,
@@ -23,7 +23,7 @@ export interface CreateAlertDefinitionForm
   rule_criteria: {
     rules: MetricCriteriaForm[];
   };
-  scope: AlertDefinitionGroup | null;
+  scope?: AlertDefinitionScope | null;
   serviceType: AlertServiceType | null;
   severity: AlertSeverityType | null;
   trigger_conditions: TriggerConditionForm;

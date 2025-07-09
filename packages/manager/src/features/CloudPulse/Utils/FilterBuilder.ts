@@ -1,6 +1,5 @@
 import {
   NODE_TYPE,
-  PORT,
   REGION,
   RELATIVE_TIME_DURATION,
   RESOURCE_ID,
@@ -13,7 +12,6 @@ import { CloudPulseAvailableViews, CloudPulseSelectTypes } from './models';
 import type { FilterValueType } from '../Dashboard/CloudPulseDashboardLanding';
 import type { CloudPulseCustomSelectProps } from '../shared/CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from '../shared/CloudPulseNodeTypeFilter';
-import type { CloudPulsePortFilterProps } from '../shared/CloudPulsePortFilter';
 import type { CloudPulseRegionSelectProps } from '../shared/CloudPulseRegionSelect';
 import type {
   CloudPulseResources,
@@ -23,6 +21,7 @@ import type {
   CloudPulseTags,
   CloudPulseTagsSelectProps,
 } from '../shared/CloudPulseTagsFilter';
+import type { CloudPulseTextFilterProps } from '../shared/CloudPulseTextFilter';
 import type { CloudPulseTimeRangeSelectProps } from '../shared/CloudPulseTimeRangeSelect';
 import type { CloudPulseMetricsAdditionalFilters } from '../Widget/CloudPulseWidget';
 import type { CloudPulseServiceTypeFilters } from './models';
@@ -301,19 +300,24 @@ export const getTimeDurationProperties = (
 };
 
 /**
- * This function helps in building the properties needed for port selection component
+ * This function helps in building the properties needed for port or interface_id selection component
  *
- * @param config - accepts a CloudPulseServiceTypeFilters that has config of port key
- * @param handlePortChange - the callback when we select new port
+ * @param config - accepts a CloudPulseServiceTypeFilters that has config of port or interface_id key
+ * @param handleTextFilterChange - the callback when we select new value
  * @param dashboard - the actual selected dashboard
  * @param isServiceAnalyticsIntegration - only if this is false, we need to save preferences, else no need
- * @returns CloudPulsePortFilterProps
+ * @returns CloudPulseTextFilterProps
  */
-export const getPortProperties = (
+export const getTextFilterProperties = (
   props: CloudPulseFilterProperties,
-  handlePortChange: (port: string, label: string[], savePref?: boolean) => void
-): CloudPulsePortFilterProps => {
-  const { name: label, placeholder } = props.config.configuration;
+  handleTextFilterChange: (
+    port: string,
+    label: string[],
+    filterKey: string,
+    savePref?: boolean
+  ) => void
+): CloudPulseTextFilterProps => {
+  const { name: label, placeholder, isOptional } = props.config.configuration;
   const {
     dashboard,
     isServiceAnalyticsIntegration,
@@ -322,17 +326,18 @@ export const getPortProperties = (
   } = props;
 
   return {
-    dashboard,
     disabled: shouldDisableFilterByFilterKey(
-      PORT,
+      props.config.configuration.filterKey,
       dependentFilters ?? {},
       dashboard
     ),
-    defaultValue: preferences?.[PORT],
-    handlePortChange,
+    defaultValue: preferences?.[props.config.configuration.filterKey],
+    handleTextFilterChange,
     label,
     placeholder,
+    optional: isOptional,
     savePreferences: !isServiceAnalyticsIntegration,
+    filterKey: props.config.configuration.filterKey,
   };
 };
 
@@ -502,7 +507,7 @@ export const constructAdditionalRequestFilters = (
   for (const filter of additionalFilters) {
     if (
       filter &&
-      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0)
+      (!Array.isArray(filter.filterValue) || filter.filterValue.length > 0) // Check for empty array
     ) {
       // push to the filters
       filters.push({

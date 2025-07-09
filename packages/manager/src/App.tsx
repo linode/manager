@@ -14,15 +14,13 @@ import { useAdobeAnalytics } from './hooks/useAdobeAnalytics';
 import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
+import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
 import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
 // import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
-// Ensure component's display name is 'App'
-export const App = () => <BaseApp />;
-
-const BaseApp = withDocumentTitleProvider(
+export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     const { isLoading } = useInitialRequests();
 
@@ -63,5 +61,6 @@ const GlobalListeners = () => {
   useAdobeAnalytics();
   usePendo();
   useNewRelic();
+  useSessionExpiryToast();
   return null;
 };

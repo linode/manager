@@ -12,8 +12,8 @@ import { EntityDetail } from 'src/components/EntityDetail/EntityDetail';
 import { getIsDistributedRegion } from 'src/components/RegionSelect/RegionSelect.utils';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
 import { notificationCenterContext as _notificationContext } from 'src/features/NotificationCenter/NotificationCenterContext';
+import { useDetermineUnreachableIPs } from 'src/hooks/useDetermineUnreachableIPs';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
-import { useVPCInterface } from 'src/hooks/useVPCInterface';
 import { useInProgressEvents } from 'src/queries/events/events';
 
 import { LinodeEntityDetailBody } from './LinodeEntityDetailBody';
@@ -26,13 +26,13 @@ import {
 } from './transitions';
 
 import type { LinodeHandlers } from './LinodesLanding/LinodesLanding';
-import type { Linode } from '@linode/api-v4/lib/linodes/types';
 import type { TypographyProps } from '@linode/ui';
+import type { LinodeWithMaintenance } from 'src/utilities/linodes';
 
 interface LinodeEntityDetailProps {
   id: number;
   isSummaryView?: boolean;
-  linode: Linode;
+  linode: LinodeWithMaintenance;
   variant?: TypographyProps['variant'];
 }
 
@@ -65,11 +65,11 @@ export const LinodeEntityDetail = (props: Props) => {
 
   const {
     configs,
-    hasPublicLinodeInterface,
+    isUnreachablePublicIPv4,
+    isUnreachablePublicIPv6,
     interfaceWithVPC,
-    isVPCOnlyLinode,
     vpcLinodeIsAssignedTo,
-  } = useVPCInterface({
+  } = useDetermineUnreachableIPs({
     isLinodeInterface,
     linodeId: linode.id,
   });
@@ -128,13 +128,13 @@ export const LinodeEntityDetail = (props: Props) => {
             encryptionStatus={linode.disk_encryption}
             gbRAM={linode.specs.memory / 1024}
             gbStorage={linode.specs.disk / 1024}
-            hasPublicLinodeInterface={hasPublicLinodeInterface}
             interfaceGeneration={linode.interface_generation}
             interfaceWithVPC={interfaceWithVPC}
             ipv4={linode.ipv4}
             ipv6={trimmedIPv6}
             isLKELinode={Boolean(linode.lke_cluster_id)}
-            isVPCOnlyLinode={isVPCOnlyLinode}
+            isUnreachablePublicIPv4={isUnreachablePublicIPv4}
+            isUnreachablePublicIPv6={isUnreachablePublicIPv6}
             linodeCapabilities={linode.capabilities}
             linodeId={linode.id}
             linodeIsInDistributedRegion={linodeIsInDistributedRegion}
@@ -168,8 +168,13 @@ export const LinodeEntityDetail = (props: Props) => {
             isSummaryView={isSummaryView}
             linodeId={linode.id}
             linodeLabel={linode.label}
+            linodeMaintenancePolicySet={
+              linode.maintenance?.maintenance_policy_set ??
+              linode.maintenance_policy // Attempt to use ongoing maintenance policy. Otherwise, fallback to policy set on Linode.
+            }
             linodeRegionDisplay={linodeRegionDisplay}
             linodeStatus={linode.status}
+            maintenance={linode.maintenance ?? null}
             openNotificationMenu={notificationContext.openMenu}
             progress={progress}
             transitionText={transitionText}

@@ -64,7 +64,7 @@ describe('open support tickets', () => {
 
     const image = 'test_screenshot.png';
     const ticketDescription = 'this is a test ticket';
-    const ticketLabel = 'cy-test ticket';
+    const ticketLabel = randomLabel();
     const ticketId = Math.floor(Math.random() * 99999999 + 10000000);
     const ts = new Date();
 
@@ -89,7 +89,7 @@ describe('open support tickets', () => {
         opened: ts.toISOString(),
         opened_by: user,
         status: 'new',
-        summary: 'cy-test ticket',
+        summary: ticketLabel,
         updated: ts.toISOString(),
         updated_by: user,
       });

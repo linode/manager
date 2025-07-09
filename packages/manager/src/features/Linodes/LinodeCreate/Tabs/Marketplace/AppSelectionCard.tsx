@@ -1,10 +1,8 @@
-import { Chip } from '@linode/ui';
+import { Chip, InfoOutlinedIcon, SvgIcon } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import * as React from 'react';
 
-import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
-import { APP_ROOT } from 'src/constants';
 
 import { getMarketplaceAppLabel } from './utilities';
 
@@ -15,7 +13,7 @@ interface Props {
   checked: boolean;
   /**
    * The path to the app icon
-   * @example "assets/postgresqlmarketplaceocc.svg"
+   * @example "/assets/postgresqlmarketplaceocc.svg"
    */
   iconUrl: string;
   /**
@@ -54,7 +52,7 @@ export const AppSelectionCard = (props: Props) => {
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
-      : () => <img alt={`${label} logo`} src={`${APP_ROOT}${iconUrl}`} />;
+      : () => <img alt={`${label} logo`} src={iconUrl} />;
 
   const renderVariant = () => (
     <IconButton
@@ -63,7 +61,11 @@ export const AppSelectionCard = (props: Props) => {
       onClick={handleInfoClick}
       onKeyDown={handleKeyPress}
     >
-      <Info />
+      <SvgIcon
+        component={InfoOutlinedIcon}
+        data-testid="tooltip-info-icon"
+        viewBox="0 0 20 20"
+      />
     </IconButton>
   );
 

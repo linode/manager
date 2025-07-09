@@ -16,9 +16,10 @@ import { TableSortCell } from 'src/components/TableSortCell';
 import { useServiceAlertsMutation } from 'src/queries/cloudpulse/alerts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-import { compareArrays } from '../../Utils/FilterBuilder';
+import { useContextualAlertsState } from '../../Utils/utils';
 import { AlertConfirmationDialog } from '../AlertsLanding/AlertConfirmationDialog';
 import { ALERT_SCOPE_TOOLTIP_CONTEXTUAL } from '../constants';
+import { scrollToElement } from '../Utils/AlertResourceUtils';
 import { AlertInformationActionRow } from './AlertInformationActionRow';
 
 import type { CloudPulseAlertsPayload } from '@linode/api-v4';
@@ -114,88 +115,25 @@ export const AlertInformationActionTable = (
     onToggleAlert,
   } = props;
 
+  const alertsTableRef = React.useRef<HTMLTableElement>(null);
+
   const _error = error
     ? getAPIErrorOrDefault(error, 'Error while fetching the alerts')
     : undefined;
   const { enqueueSnackbar } = useSnackbar();
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [enabledAlerts, setEnabledAlerts] =
-    React.useState<CloudPulseAlertsPayload>({
-      system: [],
-      user: [],
-    });
-
-  const isAccountOrRegionLevelAlert = (alert: Alert) =>
-    alert.scope === 'region' || alert.scope === 'account';
 
   const isEditMode = !!entityId;
+  const isCreateMode = !!onToggleAlert;
 
-  // Store initial alert states for comparison using a ref
-  const initialAlertStatesRef = React.useRef<CloudPulseAlertsPayload>({
-    system: [],
-    user: [],
-  });
-
-  const isAnyAlertStateChanged = React.useMemo(() => {
-    const initial = initialAlertStatesRef.current;
-    const current = enabledAlerts;
-
-    if (!compareArrays(current.system ?? [], initial.system ?? [])) {
-      return true;
-    } else {
-      return !compareArrays(current.user ?? [], initial.user ?? []);
-    }
-  }, [enabledAlerts]);
-
-  // Initialize alert states based on their current status
-  React.useEffect(() => {
-    // Only run this effect for edit flow
-    if (!entityId) {
-      return;
-    }
-
-    const initialStates: CloudPulseAlertsPayload = {
-      system: [],
-      user: [],
-    };
-    alerts.forEach((alert) => {
-      if (isAccountOrRegionLevelAlert(alert)) {
-        initialStates[alert.type]?.push(alert.id);
-      } else {
-        if (alert.entity_ids.includes(entityId)) {
-          initialStates[alert.type]?.push(alert.id);
-        }
-      }
-    });
-    setEnabledAlerts(initialStates);
-    initialAlertStatesRef.current = {
-      system: [...(initialStates.system ?? [])],
-      user: [...(initialStates.user ?? [])],
-    };
-  }, [alerts, entityId]);
+  const { enabledAlerts, setEnabledAlerts, hasUnsavedChanges } =
+    useContextualAlertsState(alerts, entityId);
 
   const { mutateAsync: updateAlerts } = useServiceAlertsMutation(
     serviceType,
     entityId ?? ''
   );
-
-  const getAlertRowProps = (alert: Alert, options: AlertRowPropsOptions) => {
-    const { entityId, enabledAlerts, onToggleAlert } = options;
-
-    // Ensure that at least one of entityId or onToggleAlert is provided
-    if (!(entityId || onToggleAlert)) {
-      return null;
-    }
-
-    const handleToggle = isEditMode
-      ? handleToggleEditFlow
-      : handleToggleCreateFlow;
-
-    const status = enabledAlerts[alert.type]?.includes(alert.id);
-
-    return { handleToggle, status };
-  };
 
   const handleCancel = () => {
     setIsDialogOpen(false);
@@ -226,46 +164,53 @@ export const AlertInformationActionTable = (
     [updateAlerts, enqueueSnackbar]
   );
 
-  const handleToggleEditFlow = (alert: Alert) => {
-    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
-      const newPayload: CloudPulseAlertsPayload = { ...prev };
-      const index = newPayload[alert.type]?.indexOf(alert.id);
+  const handleToggleAlert = React.useCallback(
+    (alert: Alert) => {
+      setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
+        const newPayload = {
+          system: [...(prev.system ?? [])],
+          user: [...(prev.user ?? [])],
+        };
 
-      // If the alert is already in the payload, remove it, otherwise add it
-      if (index !== undefined && index !== -1) {
-        newPayload[alert.type]?.splice(index, 1);
-      } else {
-        newPayload[alert.type]?.push(alert.id);
-      }
+        const alertIds = newPayload[alert.type];
+        const isCurrentlyEnabled = alertIds.includes(alert.id);
 
-      return newPayload;
-    });
-  };
+        if (isCurrentlyEnabled) {
+          // Remove alert - disable it
+          const index = alertIds.indexOf(alert.id);
+          alertIds.splice(index, 1);
+        } else {
+          // Add alert - enable it
+          alertIds.push(alert.id);
+        }
 
-  const handleToggleCreateFlow = (alert: Alert) => {
-    if (!onToggleAlert) return;
+        // Only call onToggleAlert in create flow
+        if (onToggleAlert) {
+          onToggleAlert(newPayload);
+        }
 
-    setEnabledAlerts((prev: CloudPulseAlertsPayload) => {
-      const newPayload: CloudPulseAlertsPayload = { ...prev };
-      const index = newPayload[alert.type]?.indexOf(alert.id);
+        return newPayload;
+      });
+    },
+    [onToggleAlert, setEnabledAlerts]
+  );
 
-      // If the alert is already in the payload, remove it, otherwise add it
-      if (index !== undefined && index !== -1) {
-        newPayload[alert.type]?.splice(index, 1);
-      } else {
-        newPayload[alert.type]?.push(alert.id);
-      }
-
-      onToggleAlert(newPayload);
-      return newPayload;
-    });
-  };
+  const handleCustomPageChange = React.useCallback(
+    (page: number, handlePageChange: (page: number) => void) => {
+      handlePageChange(page);
+      handlePageChange(page);
+      requestAnimationFrame(() => {
+        scrollToElement(alertsTableRef.current);
+      });
+    },
+    []
+  );
 
   return (
     <>
       <OrderBy data={alerts} order="asc" orderBy={orderByColumn}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
+          <Paginate data={orderedData} shouldScroll={false}>
             {({
               count,
               data: paginatedAndOrderedAlerts,
@@ -281,6 +226,7 @@ export const AlertInformationActionTable = (
                       colCount={columns.length + 1}
                       data-qa="alert-table"
                       data-testid="alert-table"
+                      ref={alertsTableRef}
                       size="small"
                     >
                       <TableHead>
@@ -324,25 +270,25 @@ export const AlertInformationActionTable = (
                           loading={false}
                         />
                         {paginatedAndOrderedAlerts?.map((alert) => {
-                          const rowProps = getAlertRowProps(alert, {
-                            enabledAlerts,
-                            entityId,
-                            onToggleAlert,
-                          });
-
-                          if (!rowProps) return null;
+                          if (!(isEditMode || isCreateMode)) {
+                            return null;
+                          }
 
                           // TODO: Remove this once we have a way to toggle ACCOUNT and REGION level alerts
                           if (!isEditMode && alert.scope !== 'entity') {
                             return null;
                           }
 
+                          const status = enabledAlerts[alert.type]?.includes(
+                            alert.id
+                          );
+
                           return (
                             <AlertInformationActionRow
                               alert={alert}
-                              handleToggle={rowProps.handleToggle}
+                              handleToggle={handleToggleAlert}
                               key={alert.id}
-                              status={rowProps.status}
+                              status={status}
                             />
                           );
                         })}
@@ -352,7 +298,9 @@ export const AlertInformationActionTable = (
                   <PaginationFooter
                     count={count}
                     eventCategory="Alert Definitions Table"
-                    handlePageChange={handlePageChange}
+                    handlePageChange={(page: number) =>
+                      handleCustomPageChange(page, handlePageChange)
+                    }
                     handleSizeChange={handlePageSizeChange}
                     page={page}
                     pageSize={pageSize}
@@ -364,7 +312,7 @@ export const AlertInformationActionTable = (
                       buttonType="primary"
                       data-qa-buttons="true"
                       data-testid="save-alerts"
-                      disabled={!isAnyAlertStateChanged}
+                      disabled={!hasUnsavedChanges}
                       onClick={() => {
                         window.scrollTo({
                           behavior: 'instant',
@@ -388,11 +336,11 @@ export const AlertInformationActionTable = (
         isLoading={isLoading}
         isOpen={isDialogOpen}
         message={
-          <span>
+          <>
             Are you sure you want to save these settings for {entityName}? All
             legacy alert settings will be disabled and replaced by the new{' '}
             <b>Alerts(Beta)</b> settings.
-          </span>
+          </>
         }
         primaryButtonLabel="Save"
         title="Save Alerts?"

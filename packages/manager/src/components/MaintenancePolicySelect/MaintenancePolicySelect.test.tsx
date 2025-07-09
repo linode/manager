@@ -12,7 +12,7 @@ import { MaintenancePolicySelect } from './MaintenancePolicySelect';
 describe('MaintenancePolicySelect', () => {
   it('should render a label', () => {
     const { getByLabelText } = renderWithTheme(
-      <MaintenancePolicySelect onChange={vi.fn()} value={1} />
+      <MaintenancePolicySelect onChange={vi.fn()} value={'linode/migrate'} />
     );
 
     expect(getByLabelText('Maintenance Policy')).toBeVisible();
@@ -48,8 +48,8 @@ describe('MaintenancePolicySelect', () => {
 
   it('should show maintenance policy options returned by the API', async () => {
     const policies = [
-      maintenancePolicyFactory.build({ name: 'Power Off / Power On' }),
-      maintenancePolicyFactory.build({ name: 'Migrate' }),
+      maintenancePolicyFactory.build({ label: 'Power Off / Power On' }),
+      maintenancePolicyFactory.build({ label: 'Migrate' }),
     ];
 
     server.use(
@@ -71,8 +71,8 @@ describe('MaintenancePolicySelect', () => {
   it('should call onChange with the policy when one is chosen', async () => {
     const onChange = vi.fn();
     const policies = [
-      maintenancePolicyFactory.build({ name: 'Power Off / Power On' }),
-      maintenancePolicyFactory.build({ name: 'Migrate' }),
+      maintenancePolicyFactory.build({ label: 'Power Off / Power On' }),
+      maintenancePolicyFactory.build({ label: 'Migrate' }),
     ];
 
     server.use(
@@ -93,17 +93,23 @@ describe('MaintenancePolicySelect', () => {
 
     expect(onChange).toHaveBeenCalledWith({
       ...policies[0],
-      label: policies[0].name,
+      label: policies[0].label,
     });
   });
 
   it('should show a default chip for the account default', async () => {
     const policies = [
-      maintenancePolicyFactory.build({ name: 'Power Off / Power On', id: 100 }),
-      maintenancePolicyFactory.build({ name: 'Migrate', id: 101 }),
+      maintenancePolicyFactory.build({
+        label: 'Power Off / Power On',
+        slug: 'linode/power_off_on',
+      }),
+      maintenancePolicyFactory.build({
+        label: 'Migrate',
+        slug: 'linode/migrate',
+      }),
     ];
     const accountSettings = accountSettingsFactory.build({
-      maintenance_policy_id: 101,
+      maintenance_policy: 'linode/migrate',
     });
 
     server.use(

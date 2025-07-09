@@ -110,38 +110,47 @@ describe('AlertDefinition Create', () => {
     },
   });
 
-  it('should render client side validation errors for threshold and trigger occurences text field', async () => {
-    const user = userEvent.setup();
-    const container = await renderWithThemeAndRouter(<CreateAlertDefinition />);
+  it(
+    'should render client side validation errors for threshold and trigger occurences text field',
+    async () => {
+      const user = userEvent.setup();
+      const container = await renderWithThemeAndRouter(
+        <CreateAlertDefinition />
+      );
 
-    const serviceTypeInput = container.getByPlaceholderText('Select a Service');
-    await user.click(serviceTypeInput);
+      const serviceTypeInput =
+        container.getByPlaceholderText('Select a Service');
+      await user.click(serviceTypeInput);
 
-    await user.click(container.getByText('Linode'));
+      await user.click(container.getByText('Linode'));
 
-    const dataFieldContainer = container.getByPlaceholderText(
-      'Select a Data Field'
-    );
+      const dataFieldContainer = container.getByPlaceholderText(
+        'Select a Data Field'
+      );
 
-    await user.click(dataFieldContainer);
-    await user.click(container.getByText('CPU utilization'));
+      await user.click(dataFieldContainer);
+      await user.click(container.getByText('CPU utilization'));
 
-    const submitButton = container.getByText('Submit');
+      const submitButton = container.getByText('Submit');
 
-    await user.click(submitButton);
+      await user.click(submitButton);
 
-    expect(container.getAllByText('Enter a positive value.').length).toBe(2);
+      expect(container.getAllByText('Enter a positive value.').length).toBe(2);
 
-    const thresholdInput = container.getByLabelText('Threshold');
-    const triggerOccurrences = container.getByTestId('trigger-occurences');
-    await user.clear(thresholdInput);
-    await user.clear(within(triggerOccurrences).getByTestId('textfield-input'));
-    await user.click(submitButton!);
+      const thresholdInput = container.getByLabelText('Threshold');
+      const triggerOccurrences = container.getByTestId('trigger-occurences');
+      await user.clear(thresholdInput);
+      await user.clear(
+        within(triggerOccurrences).getByTestId('textfield-input')
+      );
+      await user.click(submitButton!);
 
-    expect(container.getAllByText('The value should be a number.').length).toBe(
-      2
-    );
-  }, {timeout: 10000});
+      expect(
+        container.getAllByText('The value should be a number.').length
+      ).toBe(2);
+    },
+    { timeout: 10000 }
+  );
 
   it('should render the client side validation error messages for the form', async () => {
     const errorMessage = 'This field is required.';

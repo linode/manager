@@ -1,15 +1,15 @@
-import { Button, ErrorState, Typography } from '@linode/ui';
+import { Button, ErrorState, InfoOutlinedIcon, Typography } from '@linode/ui';
 import { GridLegacy, useTheme } from '@mui/material';
 import * as React from 'react';
 
 import KeyboardCaretDownIcon from 'src/assets/icons/caret_down.svg';
 import KeyboardCaretRightIcon from 'src/assets/icons/caret_right.svg';
-import InfoIcon from 'src/assets/icons/info.svg';
 import NullComponent from 'src/components/NullComponent';
 
 import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
+  INTERFACE_ID,
   NODE_TYPE,
   PORT,
   REGION,
@@ -21,10 +21,10 @@ import {
   getCustomSelectProperties,
   getFilters,
   getNodeTypeProperties,
-  getPortProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
+  getTextFilterProperties,
 } from '../Utils/FilterBuilder';
 import { FILTER_CONFIG } from '../Utils/FilterConfig';
 import { type CloudPulseServiceTypeFilters } from '../Utils/models';
@@ -137,19 +137,24 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
       [emitFilterChange, checkAndUpdateDependentFilters]
     );
 
-    const handlePortChange = React.useCallback(
-      (port: string, label: string[], savePref: boolean = false) => {
+    const handleTextFilterChange = React.useCallback(
+      (
+        port: string,
+        label: string[],
+        filterKey: string,
+        savePref: boolean = false
+      ) => {
         const portList = port
           .replace(/,$/, '')
           .split(',')
           .filter((p) => p !== '');
         emitFilterChangeByFilterKey(
-          PORT,
+          filterKey,
           portList,
           label.filter((l) => l !== ''),
           savePref,
           {
-            [PORT]: port,
+            [filterKey]: port,
           }
         );
       },
@@ -298,8 +303,11 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleNodeTypeChange
           );
-        } else if (config.configuration.filterKey === PORT) {
-          return getPortProperties(
+        } else if (
+          config.configuration.filterKey === PORT ||
+          config.configuration.filterKey === INTERFACE_ID
+        ) {
+          return getTextFilterProperties(
             {
               config,
               dashboard,
@@ -309,7 +317,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
                 ? { [RESOURCE_ID]: resource_ids }
                 : dependentFilterReference.current,
             },
-            handlePortChange
+            handleTextFilterChange
           );
         } else {
           return getCustomSelectProperties(
@@ -331,7 +339,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleNodeTypeChange,
         handleTagsChange,
         handleRegionChange,
-        handlePortChange,
+        handleTextFilterChange,
         handleResourceChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,
@@ -351,7 +359,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         // if the filters are not defined , print an error state
         return (
           <ErrorState
-            CustomIcon={InfoIcon}
+            CustomIcon={InfoOutlinedIcon}
             CustomIconStyles={{ height: '40px', width: '40px' }}
             errorText={'Please configure filters to continue'}
           />

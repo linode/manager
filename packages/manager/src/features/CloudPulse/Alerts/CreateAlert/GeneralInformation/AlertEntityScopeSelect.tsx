@@ -15,17 +15,17 @@ import {
 
 import type { AlertFormMode } from '../../constants';
 import type { CreateAlertDefinitionForm } from '../types';
-import type { AlertDefinitionGroup, AlertServiceType } from '@linode/api-v4';
+import type { AlertDefinitionScope, AlertServiceType } from '@linode/api-v4';
 interface ScopeOption {
   disabled: boolean;
   label: string;
-  value: AlertDefinitionGroup;
+  value: AlertDefinitionScope;
 }
 interface AlertEntityScopeSelectProps {
   formMode?: AlertFormMode;
   name: FieldPathByValue<
     CreateAlertDefinitionForm,
-    AlertDefinitionGroup | null
+    AlertDefinitionScope | null | undefined
   >;
   serviceType: AlertServiceType | null;
 }
@@ -119,7 +119,7 @@ export const AlertEntityScopeSelect = (props: AlertEntityScopeSelectProps) => {
             textFieldProps={{
               labelTooltipText: ALERT_SCOPE_TOOLTIP_TEXT,
             }}
-            value={getSelectedOption(field.value, options)}
+            value={getSelectedOption(field?.value ?? null, options)}
           />
         );
       }}
