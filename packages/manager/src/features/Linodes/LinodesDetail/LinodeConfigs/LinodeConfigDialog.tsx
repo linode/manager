@@ -115,7 +115,6 @@ interface EditableFields {
 
 interface Props {
   config: Config | undefined;
-  isReadOnly: boolean;
   linodeId: number;
   onClose: () => void;
   open: boolean;
@@ -253,7 +252,7 @@ const finnixDiskID = 25669;
 
 export const LinodeConfigDialog = (props: Props) => {
   const formContainerRef = React.useRef<HTMLDivElement>(null);
-  const { config, isReadOnly, linodeId, onClose, open } = props;
+  const { config, linodeId, onClose, open } = props;
 
   const { data: linode } = useLinodeQuery(linodeId, open);
 
@@ -755,7 +754,6 @@ export const LinodeConfigDialog = (props: Props) => {
             )}
             <Grid size={12}>
               <TextField
-                disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
                 errorText={formik.errors.label}
                 label="Label"
@@ -766,7 +764,6 @@ export const LinodeConfigDialog = (props: Props) => {
               />
 
               <TextField
-                disabled={isReadOnly}
                 errorGroup="linode-config-dialog"
                 errorText={formik.errors.comments}
                 label="Comments"
@@ -785,7 +782,6 @@ export const LinodeConfigDialog = (props: Props) => {
               <FormControl>
                 <FormLabel
                   aria-describedby={virtModeCaptionId}
-                  disabled={isReadOnly}
                   htmlFor="virt_mode"
                 >
                   VM Mode
@@ -798,13 +794,11 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Paravirtualization"
                     value="paravirt"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Full virtualization"
                     value="fullvirt"
                   />
@@ -826,12 +820,11 @@ export const LinodeConfigDialog = (props: Props) => {
                   errorText={formik.errors.kernel}
                   kernels={kernels}
                   onChange={handleChangeKernel}
-                  readOnly={isReadOnly}
                   selectedKernel={values.kernel}
                 />
               )}
 
-              <FormControl disabled={isReadOnly} fullWidth>
+              <FormControl fullWidth>
                 <FormLabel htmlFor="run_level">Run Level</FormLabel>
                 <StyledRadioGroup
                   aria-label="run_level"
@@ -841,19 +834,16 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Run Default Level"
                     value="default"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Single user mode"
                     value="single"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="init=/bin/bash"
                     value="binbash"
                   />
@@ -872,9 +862,7 @@ export const LinodeConfigDialog = (props: Props) => {
                 memory limit.
               */}
               <FormControl>
-                <FormLabel disabled={isReadOnly} htmlFor="memory_limit">
-                  Memory Limit
-                </FormLabel>
+                <FormLabel htmlFor="memory_limit">Memory Limit</FormLabel>
                 <StyledRadioGroup
                   aria-label="memory_limit"
                   name="setMemoryLimit"
@@ -883,13 +871,11 @@ export const LinodeConfigDialog = (props: Props) => {
                 >
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Do not set any limits on memory usage"
                     value="no_limit"
                   />
                   <FormControlLabel
                     control={<Radio />}
-                    disabled={isReadOnly}
                     label="Limit the amount of RAM this config uses"
                     value="set_limit"
                   />
@@ -898,7 +884,6 @@ export const LinodeConfigDialog = (props: Props) => {
 
               {values.setMemoryLimit === 'set_limit' && (
                 <TextField
-                  disabled={isReadOnly}
                   errorText={formik.errors.memory_limit}
                   helperText={`Max: ${linode?.specs.memory} MB`}
                   label="Memory Limit Allotment (in MB)"
@@ -919,7 +904,6 @@ export const LinodeConfigDialog = (props: Props) => {
               <DeviceSelection
                 counter={deviceCounter}
                 devices={availableDevices}
-                disabled={isReadOnly}
                 errorText={formik.errors.devices as string}
                 getSelected={(slot) =>
                   values.devices?.[slot as keyof DevicesAsStrings] ?? ''
@@ -955,7 +939,7 @@ export const LinodeConfigDialog = (props: Props) => {
               <Button
                 buttonType="secondary"
                 compactX
-                disabled={isReadOnly || deviceCounter >= deviceSlots.length - 1}
+                disabled={deviceCounter >= deviceSlots.length - 1}
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 sx={{
                   marginLeft: `1px`,
@@ -970,7 +954,6 @@ export const LinodeConfigDialog = (props: Props) => {
                   control={
                     <Toggle
                       checked={useCustomRoot}
-                      disabled={isReadOnly}
                       onChange={handleToggleCustomRoot}
                     />
                   }
@@ -981,7 +964,6 @@ export const LinodeConfigDialog = (props: Props) => {
                   <Autocomplete
                     autoHighlight
                     disableClearable
-                    disabled={isReadOnly}
                     errorText={formik.errors.root_device}
                     id="root_device"
                     label="Root Device"
@@ -996,7 +978,6 @@ export const LinodeConfigDialog = (props: Props) => {
                   />
                 ) : (
                   <TextField
-                    disabled={isReadOnly}
                     errorGroup="linode-config-dialog"
                     errorText={formik.errors.root_device}
                     fullWidth
@@ -1056,7 +1037,6 @@ export const LinodeConfigDialog = (props: Props) => {
                       disableClearable={interfacesWithoutPlaceholderInterfaces.some(
                         (i) => i.purpose === 'public' || i.purpose === 'vpc'
                       )}
-                      disabled={isReadOnly}
                       label="Primary Interface (Default Route)"
                       onChange={(_, selected) => {
                         const updatedInterfaces = [
@@ -1162,7 +1142,6 @@ export const LinodeConfigDialog = (props: Props) => {
                             thisInterface.ipv4?.nat_1_1 ?? undefined
                           }
                           purpose={thisInterface.purpose}
-                          readOnly={isReadOnly}
                           region={linode?.region}
                           regionHasVLANs={regionHasVLANS}
                           regionHasVPCs={regionHasVPCs}
@@ -1185,7 +1164,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.distro}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Helps maintain correct inittab/upstart console device"
                       />
@@ -1198,7 +1176,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.updatedb_disabled}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Disables updatedb cron job to avoid disk thrashing"
                       />
@@ -1211,7 +1188,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.modules_dep}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Creates a modules dependency file for the kernel you run"
                       />
@@ -1224,7 +1200,6 @@ export const LinodeConfigDialog = (props: Props) => {
                     control={
                       <Toggle
                         checked={values.helpers.devtmpfs_automount}
-                        disabled={isReadOnly}
                         onChange={formik.handleChange}
                         tooltipText="Controls if pv_ops kernels automount devtmpfs at boot"
                       />
@@ -1238,7 +1213,6 @@ export const LinodeConfigDialog = (props: Props) => {
                       control={
                         <Toggle
                           checked={values.helpers.network}
-                          disabled={isReadOnly}
                           onChange={formik.handleChange}
                           tooltipText={
                             <>
@@ -1263,7 +1237,6 @@ export const LinodeConfigDialog = (props: Props) => {
       </Grid>
       <ActionsPanel
         primaryButtonProps={{
-          disabled: isReadOnly,
           label: config ? 'Save Changes' : 'Add Configuration',
           loading: formik.isSubmitting,
           onClick: formik.submitForm,

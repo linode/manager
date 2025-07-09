@@ -914,12 +914,14 @@ export const handlers = [
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-1',
           region: 'us-iad',
+          alerts: { user: [100, 101], system: [200] },
         }),
         linodeFactory.build({
           id,
           backups: { enabled: false },
           label: 'aclp-supported-region-linode-2',
           region: 'us-east',
+          alerts: { user: [], system: [] },
         }),
       ];
       const linodeNonMTCPlanInMTCSupportedRegionsDetail = linodeFactory.build({
@@ -963,7 +965,7 @@ export const handlers = [
     return HttpResponse.json(response);
   }),
   http.get('*/linode/instances/:id/firewalls', async () => {
-    const firewalls = firewallFactory.buildList(10);
+    const firewalls = firewallFactory.buildList(1);
     firewallFactory.resetSequenceNumber();
     return HttpResponse.json(makeResourcePage(firewalls));
   }),
@@ -2809,10 +2811,15 @@ export const handlers = [
         serviceTypesFactory.build({
           label: 'Linodes',
           service_type: 'linode',
+          alert: serviceAlertFactory.build({ scope: ['entity'] }),
         }),
         serviceTypesFactory.build({
           label: 'Databases',
           service_type: 'dbaas',
+          alert: {
+            evaluation_period_seconds: [300],
+            polling_interval_seconds: [300],
+          },
         }),
         serviceTypesFactory.build({
           label: 'Nodebalancers',
@@ -2841,6 +2848,10 @@ export const handlers = [
         : serviceTypesFactory.build({
             label: 'Databases',
             service_type: 'dbaas',
+            alert: serviceAlertFactory.build({
+              evaluation_period_seconds: [300],
+              polling_interval_seconds: [300],
+            }),
           });
 
     return HttpResponse.json(response, { status: 200 });
