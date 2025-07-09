@@ -104,7 +104,7 @@ export const getRuleString = (count: [number, number]): string => {
 };
 
 export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
-  return [(rules.inbound || []).length, (rules.outbound || []).length];
+  return [(rules?.inbound || []).length, (rules?.outbound || []).length];
 };
 
 interface DeviceLinkInputs {
