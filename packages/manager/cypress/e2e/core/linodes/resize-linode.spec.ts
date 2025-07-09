@@ -223,12 +223,18 @@ describe('resize linode', () => {
         .should('be.visible')
         .closest('tr')
         .within(() => {
-          ui.button
-            .findByTitle('Resize')
+          ui.actionMenu
+            .findByTitle(`Action menu for Disk ${diskName}`)
             .should('be.visible')
             .should('be.enabled')
             .click();
         });
+
+      ui.actionMenuItem
+        .findByTitle('Resize')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)

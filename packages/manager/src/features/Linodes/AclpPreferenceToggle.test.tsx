@@ -57,7 +57,7 @@ vi.mock('@linode/queries', async () => {
 
 describe('AclpPreferenceToggle', () => {
   /**
-   * ACLP Preference Toggle for Metrics
+   * ACLP Preference Toggle tests for Metrics
    */
   it('should display loading state for Metrics preference correctly', () => {
     queryMocks.usePreferences.mockReturnValue({
@@ -165,30 +165,16 @@ describe('AclpPreferenceToggle', () => {
   });
 
   /**
-   * ACLP Preference Toggle for Alerts
+   * ACLP Preference Toggle tests for Alerts
    */
-  it('should display loading state for Alerts preference correctly', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: undefined,
-      isLoading: true,
-    });
-    queryMocks.useMutatePreferences.mockReturnValue({
-      mutateAsync: vi.fn().mockResolvedValue(undefined),
-    });
-
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
-
-    const skeleton = screen.getByTestId('alerts-preference-skeleton');
-    expect(skeleton).toBeInTheDocument();
-  });
-
-  it('should display the correct legacy mode banner and button text for Alerts when isAclpAlertsBeta preference is disabled', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: false,
-      isLoading: false,
-    });
-
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
+  it('should display the correct legacy mode banner and button text for Alerts when isAlertsBetaMode is false', () => {
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAlertsBetaMode={false}
+        onAlertsModeChange={vi.fn()}
+        type="alerts"
+      />
+    );
 
     // Check if the banner content and button text is correct in legacy mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
@@ -196,19 +182,20 @@ describe('AclpPreferenceToggle', () => {
       expectedAclpPreferences.alerts.legacyModeBannerText
     );
 
-    const expectedLegacyModeButtonText = screen.getByText(
+    const button = screen.getByText(
       expectedAclpPreferences.alerts.legacyModeButtonText
     );
-    expect(expectedLegacyModeButtonText).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 
-  it('should display the correct beta mode banner and button text for Alerts when isAclpAlertsBeta preference is enabled', () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: expectedAclpPreferences.alerts.preference,
-      isLoading: false,
-    });
-
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
+  it('should display the correct beta mode banner and button text for Alerts when isAlertsBetaMode is true', () => {
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAlertsBetaMode={true}
+        onAlertsModeChange={vi.fn()}
+        type="alerts"
+      />
+    );
 
     // Check if the banner content and button text is correct in beta mode
     const typography = screen.getByTestId('alerts-preference-banner-text');
@@ -216,25 +203,22 @@ describe('AclpPreferenceToggle', () => {
       expectedAclpPreferences.alerts.betaModeBannertext
     );
 
-    const expectedLegacyModeButtonText = screen.getByText(
+    const button = screen.getByText(
       expectedAclpPreferences.alerts.betaModeButtonText
     );
-    expect(expectedLegacyModeButtonText).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 
-  it('should update ACLP Alerts preference to beta mode when toggling from legacy mode', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: false,
-      isLoading: false,
-    });
-    const mockUpdatePreferences = vi.fn().mockResolvedValue({
-      isAclpMetricsBeta: false,
-    });
-    queryMocks.useMutatePreferences.mockReturnValue({
-      mutateAsync: mockUpdatePreferences,
-    });
+  it('should call onAlertsModeChange with true when switching from legacy to beta mode', async () => {
+    const mockSetIsAclpBetaLocal = vi.fn();
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAlertsBetaMode={false}
+        onAlertsModeChange={mockSetIsAclpBetaLocal}
+        type="alerts"
+      />
+    );
 
     // Click the button to switch from legacy to beta
     const button = screen.getByText(
@@ -242,24 +226,19 @@ describe('AclpPreferenceToggle', () => {
     );
     await userEvent.click(button);
 
-    expect(mockUpdatePreferences).toHaveBeenCalledWith({
-      isAclpAlertsBeta: true,
-    });
+    expect(mockSetIsAclpBetaLocal).toHaveBeenCalledWith(true);
   });
 
-  it('should update ACLP Alerts preference to legacy mode when toggling from beta mode', async () => {
-    queryMocks.usePreferences.mockReturnValue({
-      data: expectedAclpPreferences.alerts.preference,
-      isLoading: false,
-    });
-    const mockUpdatePreferences = vi.fn().mockResolvedValue({
-      isAclpMetricsBeta: true,
-    });
-    queryMocks.useMutatePreferences.mockReturnValue({
-      mutateAsync: mockUpdatePreferences,
-    });
+  it('should call onAlertsModeChange with false when switching from beta to legacy mode', async () => {
+    const mockSetIsAclpBetaLocal = vi.fn();
 
-    renderWithTheme(<AclpPreferenceToggle type="alerts" />);
+    renderWithTheme(
+      <AclpPreferenceToggle
+        isAlertsBetaMode={true}
+        onAlertsModeChange={mockSetIsAclpBetaLocal}
+        type="alerts"
+      />
+    );
 
     // Click the button to switch from beta to legacy
     const button = screen.getByText(
@@ -267,8 +246,6 @@ describe('AclpPreferenceToggle', () => {
     );
     await userEvent.click(button);
 
-    expect(mockUpdatePreferences).toHaveBeenCalledWith({
-      isAclpAlertsBeta: false,
-    });
+    expect(mockSetIsAclpBetaLocal).toHaveBeenCalledWith(false);
   });
 });

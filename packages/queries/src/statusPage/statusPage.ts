@@ -1,35 +1,28 @@
 import { queryPresets } from '@linode/queries';
-import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { useQuery } from '@tanstack/react-query';
 
-import { getAllMaintenance, getIncidents } from './requests';
+import { statusPageQueries } from './keys';
 
 import type { IncidentResponse, MaintenanceResponse } from './types';
 import type { APIError } from '@linode/api-v4/lib/types';
 import type { UseQueryOptions } from '@tanstack/react-query';
 
-export const statusPageQueries = createQueryKeys('statusPage', {
-  incidents: {
-    queryFn: getIncidents,
-    queryKey: null,
-  },
-  maintenance: {
-    queryFn: getAllMaintenance,
-    queryKey: null,
-  },
-});
-
-export const useIncidentQuery = () =>
+export const useIncidentQuery = (
+  statusPageUrl?: string,
+  options?: Partial<UseQueryOptions<IncidentResponse, APIError[]>>,
+) =>
   useQuery<IncidentResponse, APIError[]>({
-    ...statusPageQueries.incidents,
+    ...statusPageQueries.incidents(statusPageUrl),
     ...queryPresets.shortLived,
+    ...(options ?? {}),
   });
 
 export const useMaintenanceQuery = (
-  options?: Partial<UseQueryOptions<MaintenanceResponse, APIError[]>>
+  statusPageUrl?: string,
+  options?: Partial<UseQueryOptions<MaintenanceResponse, APIError[]>>,
 ) =>
   useQuery<MaintenanceResponse, APIError[]>({
-    ...statusPageQueries.maintenance,
+    ...statusPageQueries.maintenance(statusPageUrl),
     ...queryPresets.shortLived,
     ...(options ?? {}),
   });
