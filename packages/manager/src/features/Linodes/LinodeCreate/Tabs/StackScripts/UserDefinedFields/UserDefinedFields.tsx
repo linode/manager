@@ -2,16 +2,17 @@ import { useStackScriptQuery } from '@linode/queries';
 import {
   Box,
   IconButton,
+  InfoOutlinedIcon,
   Notice,
   Paper,
   Stack,
+  SvgIcon,
   Typography,
   useTheme,
 } from '@linode/ui';
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import Info from 'src/assets/icons/info.svg';
 import { ShowMoreExpansion } from 'src/components/ShowMoreExpansion';
 import { oneClickApps } from 'src/features/OneClickApps/oneClickApps';
 
@@ -88,7 +89,11 @@ export const UserDefinedFields = ({ onOpenDetailsDrawer }: Props) => {
               onClick={() => onOpenDetailsDrawer?.(stackscriptId!)}
               size="large"
             >
-              <Info />
+              <SvgIcon
+                component={InfoOutlinedIcon}
+                data-testid="tooltip-info-icon"
+                viewBox="0 0 20 20"
+              />
             </IconButton>
           </Stack>
         ) : (
