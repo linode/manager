@@ -1,7 +1,8 @@
-import { Chip, InfoOutlinedIcon, SvgIcon } from '@linode/ui';
+import { Chip } from '@linode/ui';
 import { IconButton } from '@mui/material';
 import * as React from 'react';
 
+import Info from 'src/assets/icons/info.svg';
 import { SelectionCard } from 'src/components/SelectionCard/SelectionCard';
 
 import { getMarketplaceAppLabel } from './utilities';
@@ -61,11 +62,7 @@ export const AppSelectionCard = (props: Props) => {
       onClick={handleInfoClick}
       onKeyDown={handleKeyPress}
     >
-      <SvgIcon
-        component={InfoOutlinedIcon}
-        data-testid="tooltip-info-icon"
-        viewBox="0 0 20 20"
-      />
+      <Info />
     </IconButton>
   );
 
