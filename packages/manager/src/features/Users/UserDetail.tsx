@@ -46,7 +46,7 @@ export const UserDetail = () => {
   if (error) {
     return (
       <React.Fragment>
-        <LandingHeader title={username || ''} />
+        <LandingHeader title={user?.username || 'User Details'} />
         <ErrorState errorText={error[0].reason} />
       </React.Fragment>
     );
@@ -62,7 +62,7 @@ export const UserDetail = () => {
           pathname: location.pathname,
         }}
         removeCrumbX={4}
-        title={username}
+        title={user?.username}
       />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         {!isProxyUser && <TanStackTabLinkList tabs={tabs} />}
@@ -73,7 +73,7 @@ export const UserDetail = () => {
           <SafeTabPanel index={1}>
             <UserPermissions
               accountUsername={profile?.username}
-              currentUsername={username}
+              currentUsername={user?.username}
               queryClient={queryClient}
             />
           </SafeTabPanel>
