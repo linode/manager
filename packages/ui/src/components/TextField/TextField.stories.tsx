@@ -89,7 +89,32 @@ export const Number: Story = {
   },
 };
 
-export const WithTooltip: Story = {
+export const WithLabelTop: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    labelPosition: 'top',
+  },
+};
+
+export const WithLabelLeft: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    labelPosition: 'left',
+  },
+};
+
+export const WithFieldTooltip: Story = {
+  args: {
+    label: 'Label',
+    tooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+  },
+};
+
+export const WithLabelTooltip: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
@@ -98,33 +123,13 @@ export const WithTooltip: Story = {
   },
 };
 
-export const WithTooltipIconLeft: Story = {
+export const WithLabelTooltipIconLeft: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
     noMarginTop: true,
     placeholder: 'Placeholder',
     labelTooltipIconPosition: 'left',
-  },
-};
-
-export const WithTooltipSmall: Story = {
-  args: {
-    label: 'Label',
-    labelTooltipText: 'Tooltip Text',
-    noMarginTop: true,
-    placeholder: 'Placeholder',
-    labelTooltipIconSize: 'small',
-  },
-};
-
-export const WithTooltipLarge: Story = {
-  args: {
-    label: 'Label',
-    labelTooltipText: 'Tooltip Text',
-    noMarginTop: true,
-    placeholder: 'Placeholder',
-    labelTooltipIconSize: 'large',
   },
 };
 
@@ -136,5 +141,13 @@ export const WithAdornment: Story = {
     label: 'Label with an InputAdornment',
     noMarginTop: true,
     type: 'number',
+  },
+};
+
+export const WithCrossIcon: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    value: 'Input Text',
   },
 };
