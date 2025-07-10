@@ -59,6 +59,14 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   const { data: firewalls } = useAllFirewallsQuery(open);
   const { data: profile } = useProfile();
 
+  // const { data: permissableLinodes } = useQueryWithPermissions(
+  //   useAllLinodesQuery,
+  //   'linode',
+  //   ['apply_linode_firewalls']
+  // );
+
+  // console.log('permissableLinodes', permissableLinodes);
+
   const isRestrictedUser = profile?.restricted;
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
