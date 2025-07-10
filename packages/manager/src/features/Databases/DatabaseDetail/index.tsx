@@ -1,4 +1,9 @@
 import {
+  useDatabaseMutation,
+  useDatabaseQuery,
+  useDatabaseTypesQuery,
+} from '@linode/queries';
+import {
   BetaChip,
   CircleProgress,
   ErrorState,
@@ -21,11 +26,6 @@ import DatabaseLogo from 'src/features/Databases/DatabaseLanding/DatabaseLogo';
 import { useFlags } from 'src/hooks/useFlags';
 import { useIsResourceRestricted } from 'src/hooks/useIsResourceRestricted';
 import { useTabs } from 'src/hooks/useTabs';
-import {
-  useDatabaseMutation,
-  useDatabaseQuery,
-  useDatabaseTypesQuery,
-} from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import { DatabaseAdvancedConfiguration } from './DatabaseAdvancedConfiguration/DatabaseAdvancedConfiguration';

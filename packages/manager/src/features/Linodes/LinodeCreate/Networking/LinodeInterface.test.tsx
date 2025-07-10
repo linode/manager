@@ -10,6 +10,12 @@ import { LinodeInterface } from './LinodeInterface';
 
 import type { LinodeCreateFormValues } from '../utilities';
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { delete_firewall: true, update_firewall: true },
+  })),
+}));
+
 describe('LinodeInterface (Linode Interfaces)', () => {
   it('renders radios for the interface types (Public, VPC, VLAN)', () => {
     const { getByText } = renderWithThemeAndHookFormContext({

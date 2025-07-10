@@ -1,30 +1,32 @@
 import { linodeFactory } from '@linode/utilities';
-import { fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
-import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from 'src/features/Linodes/constants';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { AccessTable } from './AccessTable';
+import { PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT } from './constants';
 
 const linode = linodeFactory.build();
 
 describe('AccessTable', () => {
-  it('should display help icon tooltip if isVPCOnlyLinode is true', async () => {
-    const { findByRole, getAllByRole } = renderWithTheme(
+  it('should display help icon tooltip for each disabled row', async () => {
+    const { findByRole, findAllByTestId } = renderWithTheme(
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
-        isVPCOnlyLinode={true}
-        rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
+        rows={[
+          { text: linode.ipv4[0], disabled: true },
+          { text: linode.ipv4[1], disabled: true },
+        ]}
         title={'Public IP Addresses'}
       />
     );
 
-    const buttons = getAllByRole('button');
-    const helpIconButton = buttons[0];
+    // two tooltip buttons should appear
+    const tooltips = await findAllByTestId('tooltip-info-icon');
+    expect(tooltips).toHaveLength(2);
 
-    fireEvent.mouseEnter(helpIconButton);
-
+    await userEvent.click(tooltips[0]);
     const publicIPAddressesTooltip = await findByRole('tooltip');
     expect(publicIPAddressesTooltip).toContainHTML(
       PUBLIC_IP_ADDRESSES_CONFIG_INTERFACE_TOOLTIP_TEXT
@@ -36,14 +38,12 @@ describe('AccessTable', () => {
       <>
         <AccessTable
           gridSize={{ lg: 6, xs: 12 }}
-          isVPCOnlyLinode={false}
           rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
           title={'Public IP Addresses'}
         />
 
         <AccessTable
           gridSize={{ lg: 6, xs: 12 }}
-          isVPCOnlyLinode={false}
           rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
           title={'Access'}
         />
@@ -57,12 +57,14 @@ describe('AccessTable', () => {
     });
   });
 
-  it('should disable copy buttons for Public IP Addresses if isVPCOnlyLinode is true', () => {
+  it('should disable copy buttons for Public IP Addresses if those rows are disabled', () => {
     const { container } = renderWithTheme(
       <AccessTable
         gridSize={{ lg: 6, xs: 12 }}
-        isVPCOnlyLinode={true}
-        rows={[{ text: linode.ipv4[0] }, { text: linode.ipv4[1] }]}
+        rows={[
+          { text: linode.ipv4[0], disabled: true },
+          { text: linode.ipv4[1], disabled: true },
+        ]}
         title={'Public IP Addresses'}
       />
     );

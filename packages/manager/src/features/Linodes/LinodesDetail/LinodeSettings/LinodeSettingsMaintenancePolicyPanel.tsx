@@ -1,12 +1,5 @@
 import { useLinodeQuery, useLinodeUpdateMutation } from '@linode/queries';
-import {
-  Accordion,
-  BetaChip,
-  Box,
-  Button,
-  Stack,
-  Typography,
-} from '@linode/ui';
+import { Accordion, Box, Button, Notice, Stack, Typography } from '@linode/ui';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -16,18 +9,19 @@ import {
   MAINTENANCE_POLICY_DESCRIPTION,
   MAINTENANCE_POLICY_LEARN_MORE_URL,
   MAINTENANCE_POLICY_TITLE,
+  UPCOMING_MAINTENANCE_NOTICE,
 } from 'src/components/MaintenancePolicySelect/constants';
 import { MaintenancePolicySelect } from 'src/components/MaintenancePolicySelect/MaintenancePolicySelect';
+import { getFeatureChip } from 'src/features/Account/MaintenancePolicy';
 import { useFlags } from 'src/hooks/useFlags';
+import { useUpcomingMaintenanceNotice } from 'src/hooks/useUpcomingMaintenanceNotice';
 
-import type { AccountSettings } from '@linode/api-v4';
+import type { MaintenancePolicyValues } from 'src/hooks/useUpcomingMaintenanceNotice.ts';
 
 interface Props {
   isReadOnly?: boolean;
   linodeId: number;
 }
-
-type MaintenancePolicyValues = Pick<AccountSettings, 'maintenance_policy'>;
 
 export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
   const { isReadOnly, linodeId } = props;
@@ -51,6 +45,12 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
     values,
   });
 
+  const { showUpcomingMaintenanceNotice } = useUpcomingMaintenanceNotice({
+    control,
+    entityId: linodeId,
+    entityType: 'linode',
+  });
+
   const onSubmit = async (values: MaintenancePolicyValues) => {
     try {
       await updateLinode(values);
@@ -68,7 +68,7 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
       heading={
         <>
           {MAINTENANCE_POLICY_TITLE}{' '}
-          {flags.vmHostMaintenance?.beta && <BetaChip />}
+          {getFeatureChip(flags.vmHostMaintenance || {})}
         </>
       }
     >
@@ -78,6 +78,12 @@ export const LinodeSettingsMaintenancePolicyPanel = (props: Props) => {
             {MAINTENANCE_POLICY_DESCRIPTION}{' '}
             <Link to={MAINTENANCE_POLICY_LEARN_MORE_URL}>Learn more</Link>.
           </Typography>
+          {showUpcomingMaintenanceNotice && (
+            <Notice variant="warning">
+              This Linode has upcoming scheduled maintenance.{' '}
+              {UPCOMING_MAINTENANCE_NOTICE}
+            </Notice>
+          )}
           <Controller
             control={control}
             name="maintenance_policy"

@@ -1,4 +1,8 @@
-import { useProfile, useRegionsQuery } from '@linode/queries';
+import {
+  useDatabaseTypesQuery,
+  useProfile,
+  useRegionsQuery,
+} from '@linode/queries';
 import { Chip } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { formatStorageUnits } from '@linode/utilities';
@@ -11,7 +15,6 @@ import { DatabaseStatusDisplay } from 'src/features/Databases/DatabaseDetail/Dat
 import { DatabaseEngineVersion } from 'src/features/Databases/DatabaseEngineVersion';
 import { DatabaseActionMenu } from 'src/features/Databases/DatabaseLanding/DatabaseActionMenu';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 

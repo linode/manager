@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { SuspenseLoader } from 'src/components/SuspenseLoader';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 const PasswordInput = React.lazy(() =>
@@ -20,13 +21,18 @@ const PasswordInput = React.lazy(() =>
 );
 
 interface Props {
-  isReadOnly?: boolean;
   linodeId: number;
 }
 
 export const LinodeSettingsPasswordPanel = (props: Props) => {
-  const { isReadOnly, linodeId } = props;
+  const { linodeId } = props;
   const { data: linode } = useLinodeQuery(linodeId);
+
+  const { permissions } = usePermissions(
+    'linode',
+    ['password_reset_linode', 'reset_linode_disk_root_password'],
+    linodeId
+  );
 
   const {
     data: disks,
@@ -58,6 +64,10 @@ export const LinodeSettingsPasswordPanel = (props: Props) => {
   } = useLinodeDiskChangePasswordMutation(linodeId, selectedDiskId ?? -1);
 
   const isBareMetalInstance = type?.class === 'metal';
+
+  const isReadOnly = isBareMetalInstance
+    ? !permissions.password_reset_linode
+    : !permissions.reset_linode_disk_root_password;
 
   const isLoading = isBareMetalInstance
     ? isLinodePasswordLoading

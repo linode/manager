@@ -10,6 +10,7 @@ lib
 
 # editor configuration
 .vscode
+.cursor
 .idea
 **/*.iml
 *.mdc

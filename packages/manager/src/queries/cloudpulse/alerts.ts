@@ -4,6 +4,7 @@ import {
   deleteAlertDefinition,
   deleteEntityFromAlert,
   editAlertDefinition,
+  updateServiceAlerts,
 } from '@linode/api-v4/lib/cloudpulse';
 import { queryPresets } from '@linode/queries';
 import {
@@ -18,6 +19,7 @@ import { queryFactory } from './queries';
 import type {
   Alert,
   AlertServiceType,
+  CloudPulseAlertsPayload,
   CreateAlertDefinitionPayload,
   DeleteAlertPayload,
   EditAlertPayloadWithService,
@@ -229,6 +231,23 @@ export const useDeleteAlertDefinitionMutation = () => {
           serviceType,
           String(alertId)
         ).queryKey,
+      });
+    },
+  });
+};
+
+export const useServiceAlertsMutation = (
+  serviceType: string,
+  entityId: string
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<{}, APIError[], CloudPulseAlertsPayload>({
+    mutationFn: (payload: CloudPulseAlertsPayload) => {
+      return updateServiceAlerts(serviceType, entityId, payload);
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: queryFactory.resources(serviceType).queryKey,
       });
     },
   });

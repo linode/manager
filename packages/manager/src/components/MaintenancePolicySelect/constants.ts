@@ -9,7 +9,10 @@ export const POWER_OFF_TOOLTIP_TEXT =
 export const MAINTENANCE_POLICY_TITLE = 'Host Maintenance Policy';
 
 export const MAINTENANCE_POLICY_DESCRIPTION =
-  'Select the preferred default host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is used. Learn more.';
+  'Select the preferred host maintenance policy for this Linode. During host maintenance events (such as host upgrades), this policy setting helps determine which maintenance method is performed.';
+
+export const MAINTENANCE_POLICY_ACCOUNT_DESCRIPTION =
+  'Select the preferred default host maintenance policy for newly deployed Linodes. During host maintenance events (such as host upgrades), this policy setting determines the type of migration that is performed. This preference can be changed when creating new Linodes or modifying existing Linodes.';
 
 export const MAINTENANCE_POLICY_OPTION_DESCRIPTIONS: Record<
   MaintenancePolicySlug,
@@ -29,3 +32,6 @@ export const MAINTENANCE_POLICY_NOT_AVAILABLE_IN_REGION_TEXT =
 
 export const GPU_PLAN_NOTICE =
   'GPU plan does not support live migration and will perform a warm migration and then cold migration as fallbacks.';
+
+export const UPCOMING_MAINTENANCE_NOTICE =
+  'Changes to this policy will not affect this existing planned maintenance event and, instead, will be applied to future maintenance events scheduled after the change is made.';

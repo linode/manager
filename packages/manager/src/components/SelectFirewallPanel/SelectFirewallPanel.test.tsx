@@ -13,6 +13,12 @@ beforeAll(() => mockMatchMedia());
 
 const testId = 'select-firewall-panel';
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { delete_firewall: true, update_firewall: true },
+  })),
+}));
+
 describe('SelectFirewallPanel', () => {
   it('should render', async () => {
     const wrapper = renderWithTheme(

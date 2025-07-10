@@ -123,7 +123,7 @@ describe('create firewall', () => {
       cy.findByText(firewall.label)
         .closest('tr')
         .within(() => {
-          cy.findByText(firewall.label).should('be.visible');
+          cy.findByText(firewall.label).should('be.visible'); // FAILED
           cy.findByText('Enabled').should('be.visible');
           cy.findByText('No rules').should('be.visible');
           cy.findByText(linode.label).should('be.visible');

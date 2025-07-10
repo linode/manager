@@ -2,7 +2,6 @@ import { capitalize } from '@linode/utilities';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 
-import { firewalls } from 'src/__data__/firewalls';
 import { accountFactory } from 'src/factories';
 import {
   firewallDeviceFactory,
@@ -37,13 +36,60 @@ vi.mock('@linode/queries', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: vi.fn(() => ({
+    permissions: { delete_firewall: true, update_firewall: true },
+  })),
+}));
+
 beforeAll(() => mockMatchMedia());
 
 describe('FirewallRow', () => {
   describe('Utility functions', () => {
     it('should return correct number of inbound and outbound rules', () => {
-      expect(getCountOfRules(firewalls[0].rules)).toEqual([1, 1]);
-      expect(getCountOfRules(firewalls[1].rules)).toEqual([0, 2]);
+      const firewall1 = firewallFactory.build({
+        rules: {
+          inbound: [
+            {
+              action: 'ACCEPT',
+              ports: '443',
+              protocol: 'ALL',
+            },
+          ],
+          outbound: [
+            {
+              action: 'ACCEPT',
+              addresses: {
+                ipv4: ['12.12.12.12'],
+                ipv6: ['192.168.12.12'],
+              },
+              ports: '22',
+              protocol: 'UDP',
+            },
+          ],
+        },
+      });
+
+      const firewall2 = firewallFactory.build({
+        rules: {
+          inbound: [],
+          outbound: [
+            {
+              action: 'ACCEPT',
+              ports: '443',
+              protocol: 'ALL',
+            },
+            {
+              action: 'ACCEPT',
+              ports: '80',
+              protocol: 'ALL',
+            },
+          ],
+        },
+      });
+
+      expect(getCountOfRules(firewall1.rules)).toEqual([1, 1]);
+      expect(getCountOfRules(firewall2.rules)).toEqual([0, 2]);
     });
 
     it('should return the correct string given an array of numbers', () => {

@@ -60,7 +60,7 @@ export interface AccordionProps extends _AccordionProps {
   /**
    * A chip to render in the heading
    */
-  headingChip?: React.JSX.Element;
+  headingChip?: null | React.JSX.Element;
   /**
    * A number to display in the Accordion's heading
    */

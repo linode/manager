@@ -1,6 +1,6 @@
+import { useDatabaseMutation } from '@linode/queries';
 import {
   Autocomplete,
-  Button,
   FormControl,
   FormControlLabel,
   Notice,
@@ -9,6 +9,7 @@ import {
   TooltipIcon,
   Typography,
 } from '@linode/ui';
+import { Button } from 'akamai-cds-react-components';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -16,7 +17,6 @@ import * as React from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { Link } from 'src/components/Link';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import type { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import type { APIError } from '@linode/api-v4/lib/types';
@@ -265,7 +265,7 @@ export const MaintenanceWindow = (props: Props) => {
                   )}
                 />
                 <TooltipIcon
-                  status="help"
+                  status="info"
                   sxTooltipIcon={{
                     marginTop: '1.75rem',
                     padding: '0px 8px',
@@ -360,13 +360,13 @@ export const MaintenanceWindow = (props: Props) => {
           </div>
         </div>
         <Button
-          buttonType="primary"
           className={classes.sectionButton}
-          compactX
+          data-testid="save-changes-button"
           disabled={!formTouched || isSubmitting || disabled}
-          loading={isSubmitting}
+          processing={isSubmitting}
           title="Save Changes"
           type="submit"
+          variant="primary"
         >
           Save Changes
         </Button>

@@ -1,11 +1,13 @@
-import { useProfile } from '@linode/queries';
+import {
+  useLegacyRestoreFromBackupMutation,
+  useProfile,
+} from '@linode/queries';
 import { Notice, Typography } from '@linode/ui';
 import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
 import { TypeToConfirmDialog } from 'src/components/TypeToConfirmDialog/TypeToConfirmDialog';
-import { useLegacyRestoreFromBackupMutation } from 'src/queries/databases/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 

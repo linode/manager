@@ -50,6 +50,11 @@ interface BaseFeatureFlag {
   enabled: boolean;
 }
 
+interface VMHostMaintenanceFlag extends BaseFeatureFlag {
+  beta: boolean;
+  new: boolean;
+}
+
 interface BetaFeatureFlag extends BaseFeatureFlag {
   beta: boolean;
 }
@@ -147,6 +152,7 @@ export interface Flags {
   marketplaceAppOverrides: MarketplaceAppOverride[];
   metadata: boolean;
   mtc2025: boolean;
+  nodebalancerIpv6: boolean;
   nodebalancerVpc: boolean;
   objectStorageGen2: BaseFeatureFlag;
   objMultiCluster: boolean;
@@ -164,7 +170,7 @@ export interface Flags {
   taxId: BaseFeatureFlag;
   tpaProviders: Provider[];
   udp: boolean;
-  vmHostMaintenance: BetaFeatureFlag;
+  vmHostMaintenance: VMHostMaintenanceFlag;
   vpcIpv6: boolean;
 }
 

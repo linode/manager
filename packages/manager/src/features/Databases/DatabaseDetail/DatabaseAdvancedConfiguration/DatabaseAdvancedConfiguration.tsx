@@ -1,5 +1,6 @@
-import { Box, Button, Paper, Typography } from '@linode/ui';
+import { Box, Paper, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { Button } from 'akamai-cds-react-components';
 import React from 'react';
 
 import { Link } from 'src/components/Link';
@@ -37,10 +38,10 @@ export const DatabaseAdvancedConfiguration = ({ database }: Props) => {
           </Typography>
         </Grid>
         <Button
-          buttonType="outlined"
+          data-testid="configure-database"
           onClick={() => setAdvancedConfigurationDrawerOpen(true)}
-          sx={{ height: 1 }}
           title="Configure"
+          variant="secondary"
         >
           Configure
         </Button>
