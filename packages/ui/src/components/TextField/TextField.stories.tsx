@@ -89,7 +89,16 @@ export const Number: Story = {
   },
 };
 
-export const WithTooltip: Story = {
+export const WithFieldTooltip: Story = {
+  args: {
+    label: 'Label',
+    tooltipText: 'Tooltip Text',
+    noMarginTop: true,
+    placeholder: 'Placeholder',
+  },
+};
+
+export const WithLabelTooltip: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
@@ -98,7 +107,7 @@ export const WithTooltip: Story = {
   },
 };
 
-export const WithTooltipIconLeft: Story = {
+export const WithLabelTooltipIconLeft: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
@@ -108,7 +117,7 @@ export const WithTooltipIconLeft: Story = {
   },
 };
 
-export const WithTooltipSmall: Story = {
+export const WithLabelTooltipSmall: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
@@ -118,7 +127,7 @@ export const WithTooltipSmall: Story = {
   },
 };
 
-export const WithTooltipLarge: Story = {
+export const WithLabelTooltipLarge: Story = {
   args: {
     label: 'Label',
     labelTooltipText: 'Tooltip Text',
@@ -136,5 +145,13 @@ export const WithAdornment: Story = {
     label: 'Label with an InputAdornment',
     noMarginTop: true,
     type: 'number',
+  },
+};
+
+export const WithCrossIcon: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    value: 'Input Text',
   },
 };

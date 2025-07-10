@@ -929,9 +929,6 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&$error': {
-            color: Select.Error.HintText,
-          },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
           maxWidth: 416,
