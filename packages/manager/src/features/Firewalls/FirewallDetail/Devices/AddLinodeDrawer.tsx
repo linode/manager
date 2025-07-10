@@ -23,6 +23,7 @@ import * as React from 'react';
 
 import { Link } from 'src/components/Link';
 import { SupportLink } from 'src/components/SupportLink';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getLinodeInterfaceType } from 'src/features/Linodes/LinodesDetail/LinodeNetworking/LinodeInterfaces/utilities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
@@ -57,6 +58,12 @@ export const AddLinodeDrawer = (props: Props) => {
   const { data, error, isLoading } = useAllFirewallsQuery();
 
   const firewall = data?.find((firewall) => firewall.id === Number(id));
+
+  const { permissions } = usePermissions(
+    'firewall',
+    ['create_firewall_device'],
+    firewall?.id
+  );
 
   const { data: allLinodes } = useAllLinodesQuery({}, {});
 
@@ -371,7 +378,7 @@ export const AddLinodeDrawer = (props: Props) => {
         {isLinodeInterfacesEnabled &&
           selectedLinodesWithMultipleInterfaces.length > 0 && (
             <Typography marginTop={3}>
-              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'} 
+              {`${selectedLinodesWithMultipleInterfaces.length === 1 ? 'This Linode has' : 'The following Linodes have'}
             multiple interfaces that a firewall can be applied to. Select which interface to apply the firewall to.`}
             </Typography>
           )}
@@ -409,7 +416,9 @@ export const AddLinodeDrawer = (props: Props) => {
           })}
         <ActionsPanel
           primaryButtonProps={{
-            disabled: selectedLinodes.length === 0,
+            disabled:
+              selectedLinodes.length === 0 ||
+              !permissions.create_firewall_device,
             label: 'Add',
             loading: addDeviceIsLoading,
             onClick: handleSubmit,
