@@ -81,8 +81,10 @@ export const KubernetesPlanSelection = (
   );
 
   const { isLkeEnterprisePostLAFeatureEnabled } = useIsLkeEnterpriseEnabled();
+
+  // Show the Configure Pool button in the Create flow plans table, but not in the Add Node Pool drawer flow.
   const shouldShowConfigurePoolButton =
-    isLkeEnterprisePostLAFeatureEnabled && !onAdd;
+    isLkeEnterprisePostLAFeatureEnabled && handleConfigurePool;
 
   const disabledPlanReasonCopy = getDisabledPlanReasonCopy({
     planBelongsToDisabledClass,

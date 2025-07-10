@@ -116,7 +116,7 @@ const Panel = (props: NodePoolPanelProps) => {
           isPlanPanelDisabled={isPlanPanelDisabled}
           isSelectedRegionEligibleForPlan={isSelectedRegionEligibleForPlan}
           notice={<PremiumCPUPlanNotice spacingBottom={16} spacingTop={16} />}
-          onAdd={addPool}
+          onAdd={addPool} // Once LKE-E Post-LA work goes to prod, we can remove this prop.
           onSelect={(newType: string) => setSelectedType(newType)}
           regionsData={regionsData}
           resetValues={() => null} // In this flow we don't want to clear things on tab changes
