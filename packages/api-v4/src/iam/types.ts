@@ -273,6 +273,7 @@ export type LinodeContributor =
 
 /** Permissions associated with the "linode_viewer" role. */
 export type LinodeViewer =
+  | 'list_linode_backups'
   | 'list_linode_firewalls'
   | 'list_linode_nodebalancers'
   | 'list_linode_volumes'

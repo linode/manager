@@ -1,8 +1,6 @@
 import {
-  useGrants,
   useLinodeBackupsQuery,
   useLinodeQuery,
-  useProfile,
   useRegionsQuery,
   useTypeQuery,
 } from '@linode/queries';
@@ -25,6 +23,7 @@ import { TableCell } from 'src/components/TableCell';
 import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { getMonthlyBackupsPrice } from 'src/utilities/pricing/backups';
 
 import { BackupsPlaceholder } from './BackupsPlaceholder';
@@ -42,8 +41,18 @@ export const LinodeBackups = () => {
 
   const navigate = useNavigate();
 
-  const { data: profile } = useProfile();
-  const { data: grants } = useGrants();
+  const { permissions } = usePermissions(
+    'linode',
+    [
+      'list_linode_backups',
+      'create_linode_backup_snapshot',
+      'cancel_linode_backups',
+      'enable_linode_backups',
+      'restore_linode_backup',
+    ],
+    linodeId
+  );
+
   const { data: linode } = useLinodeQuery(id);
   const { data: regions } = useRegionsQuery();
   const { data: type } = useTypeQuery(
@@ -55,12 +64,6 @@ export const LinodeBackups = () => {
     error,
     isLoading,
   } = useLinodeBackupsQuery(id, Boolean(linode?.backups.enabled));
-
-  const doesNotHavePermission =
-    Boolean(profile?.restricted) &&
-    grants?.linode.find(
-      (grant) => grant.id === linode?.id && grant.permissions !== 'read_write'
-    ) !== undefined;
 
   const [isRestoreDrawerOpen, setIsRestoreDrawerOpen] = React.useState(false);
 
@@ -102,7 +105,7 @@ export const LinodeBackups = () => {
     return (
       <BackupsPlaceholder
         backupsMonthlyPrice={backupsMonthlyPrice}
-        disabled={doesNotHavePermission}
+        disabled={!permissions.enable_linode_backups}
         linodeId={id}
         linodeIsInDistributedRegion={linodeIsInDistributedRegion}
       />
@@ -141,12 +144,12 @@ export const LinodeBackups = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {hasBackups ? (
+            {hasBackups && permissions.list_linode_backups ? (
               <>
                 {backups?.automatic.map((backup: LinodeBackup, idx: number) => (
                   <BackupTableRow
                     backup={backup}
-                    disabled={doesNotHavePermission}
+                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() => handleDeploy(backup)}
                     handleRestore={() => onRestoreBackup(backup)}
                     key={idx}
@@ -155,7 +158,7 @@ export const LinodeBackups = () => {
                 {Boolean(backups?.snapshot.current) && (
                   <BackupTableRow
                     backup={backups!.snapshot.current!}
-                    disabled={doesNotHavePermission}
+                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.current!)
                     }
@@ -167,7 +170,7 @@ export const LinodeBackups = () => {
                 {Boolean(backups?.snapshot.in_progress) && (
                   <BackupTableRow
                     backup={backups!.snapshot.in_progress!}
-                    disabled={doesNotHavePermission}
+                    disabled={!permissions.restore_linode_backup}
                     handleDeploy={() =>
                       handleDeploy(backups!.snapshot.in_progress!)
                     }
@@ -177,6 +180,11 @@ export const LinodeBackups = () => {
                   />
                 )}
               </>
+            ) : !permissions.list_linode_backups ? (
+              <TableRowEmpty
+                colSpan={7}
+                message="You do not have permission to list backups for this Linode"
+              />
             ) : (
               <TableRowEmpty
                 colSpan={7}
@@ -186,13 +194,19 @@ export const LinodeBackups = () => {
           </TableBody>
         </Table>
       </Paper>
-      <CaptureSnapshot isReadOnly={doesNotHavePermission} linodeId={id} />
-      <ScheduleSettings isReadOnly={doesNotHavePermission} linodeId={id} />
+      <CaptureSnapshot
+        isReadOnly={!permissions.create_linode_backup_snapshot}
+        linodeId={id}
+      />
+      <ScheduleSettings
+        isReadOnly={!permissions.create_linode_backup_snapshot}
+        linodeId={id}
+      />
       <Box>
         <StyledCancelButton
           buttonType="outlined"
           data-qa-cancel
-          disabled={doesNotHavePermission}
+          disabled={!permissions.cancel_linode_backups}
           onClick={() => setIsCancelBackupsDialogOpen(true)}
         >
           Cancel Backups

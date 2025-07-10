@@ -46,6 +46,7 @@ export const linodeGrantsToPermissions = (
     update_linode_disk: unrestricted || grantLevel === 'read_write',
     update_linode_firewalls: unrestricted || grantLevel === 'read_write',
     upgrade_linode: unrestricted || grantLevel === 'read_write',
+    list_linode_backups: unrestricted || grantLevel === 'read_write',
     list_linode_firewalls: unrestricted || grantLevel !== null,
     list_linode_nodebalancers: unrestricted || grantLevel !== null,
     list_linode_volumes: unrestricted || grantLevel !== null,

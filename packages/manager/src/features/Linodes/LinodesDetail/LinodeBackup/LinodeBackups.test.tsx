@@ -10,6 +10,15 @@ import type { LinodeBackupsResponse } from '@linode/api-v4';
 
 const queryMocks = vi.hoisted(() => ({
   useParams: vi.fn(),
+  userPermissions: vi.fn(() => ({
+    permissions: {
+      list_linode_backups: true,
+      create_linode_backup_snapshot: true,
+      cancel_linode_backups: true,
+      enable_linode_backups: true,
+      restore_linode_backup: true,
+    },
+  })),
 }));
 
 vi.mock('@tanstack/react-router', async () => {
@@ -20,6 +29,10 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
+vi.mock('src/features/IAM/hooks/usePermissions', () => ({
+  usePermissions: queryMocks.userPermissions,
+}));
+
 describe('LinodeBackups', () => {
   beforeEach(() => {
     queryMocks.useParams.mockReturnValue({
@@ -27,7 +40,13 @@ describe('LinodeBackups', () => {
     });
   });
 
-  it('renders a list of different types of backups if backups are enabled', async () => {
+  it('renders a list of different types of backups if backups are enabled and the user has permission', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        ...queryMocks.userPermissions().permissions,
+        list_linode_backups: true,
+      },
+    });
     server.use(
       http.get('*/linode/instances/1', () => {
         return HttpResponse.json(
@@ -70,6 +89,47 @@ describe('LinodeBackups', () => {
     // Verify an `current` snapshot renders
     getByText('current-snapshot');
     getByText('Processing');
+  });
+
+  it('renders message if backups are enabled but user does not have permission to see list', async () => {
+    queryMocks.userPermissions.mockReturnValue({
+      permissions: {
+        ...queryMocks.userPermissions().permissions,
+        list_linode_backups: false,
+      },
+    });
+    server.use(
+      http.get('*/linode/instances/1', () => {
+        return HttpResponse.json(
+          linodeFactory.build({ backups: { enabled: true }, id: 1 })
+        );
+      }),
+      http.get('*/linode/instances/1/backups', () => {
+        const response: LinodeBackupsResponse = {
+          automatic: backupFactory.buildList(1, { label: null, type: 'auto' }),
+          snapshot: {
+            current: backupFactory.build({
+              label: 'current-snapshot',
+              status: 'needsPostProcessing',
+              type: 'snapshot',
+            }),
+            in_progress: backupFactory.build({
+              created: '2023-05-03T04:00:05',
+              finished: '2023-05-03T04:02:06',
+              label: 'in-progress-test-backup',
+              type: 'snapshot',
+            }),
+          },
+        };
+        return HttpResponse.json(response);
+      })
+    );
+
+    const { findByText } = await renderWithThemeAndRouter(<LinodeBackups />);
+
+    await findByText(
+      'You do not have permission to list backups for this Linode'
+    );
   });
 
   it('renders BackupsPlaceholder is backups are not enabled on this linode', async () => {
