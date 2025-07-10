@@ -103,6 +103,7 @@ export const DestinationLinodeObjectStorageDetailsForm = () => {
               label="Log Path Prefix"
               onChange={(value) => field.onChange(value)}
               placeholder="Log Path Prefix..."
+              sx={{ width: 416 }}
               value={field.value}
             />
           )}
