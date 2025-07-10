@@ -13,6 +13,13 @@ import {
 } from 'support/util/cloudpulse';
 import { randomLabel, randomNumber } from 'support/util/random';
 
+import {
+  METRICS_BETA_MODE_BANNER_TEXT,
+  METRICS_BETA_MODE_BUTTON_TEXT,
+  METRICS_LEGACY_MODE_BANNER_TEXT,
+  METRICS_LEGACY_MODE_BUTTON_TEXT,
+} from 'src/features/Linodes/constants';
+
 import type { Stats } from '@linode/api-v4';
 
 /**
@@ -87,12 +94,10 @@ describe('ACLP Components UI varies according to ACLP support by region and user
           cy.get('[data-testid="metrics-preference-banner-text"]').should(
             'be.visible'
           );
-          cy.contains(
-            'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.'
-          ).should('be.visible');
+          cy.contains(METRICS_BETA_MODE_BANNER_TEXT).should('be.visible');
 
           ui.button
-            .findByTitle('Switch to legacy Metrics')
+            .findByTitle(METRICS_BETA_MODE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled');
           // UI displays mock error msg
@@ -104,8 +109,6 @@ describe('ACLP Components UI varies according to ACLP support by region and user
 
     // UI displays legacy metrics, can switch to beta view
     it('user preference disables aclp', function () {
-      const msgBeta =
-        'Try the new Metrics (Beta) with more options and greater flexibility for better data analysis. You can switch back to the current view at any time.';
       mockGetUserPreferences({ isAclpMetricsBeta: false }).as(
         'getUserPreferences'
       );
@@ -136,21 +139,19 @@ describe('ACLP Components UI varies according to ACLP support by region and user
           );
           // expect legacy metrics view of LinodeSummary component to be displayed
           cy.get('[data-testid="linode-summary"]').should('be.visible');
-          cy.contains(msgBeta).should('be.visible');
+          cy.contains(METRICS_LEGACY_MODE_BANNER_TEXT).should('be.visible');
           // switch to beta metrics
           ui.button
-            .findByTitle('Try the Metrics (Beta)')
+            .findByTitle(METRICS_LEGACY_MODE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled')
             .click();
           // wait for dashboard query to complete
           cy.wait('@getDashboardError');
-          cy.contains(
-            'Welcome to Metrics (Beta) with more options and greater flexibility for better data analysis.'
-          ).should('be.visible');
-          cy.contains(msgBeta).should('not.exist');
+          cy.contains(METRICS_BETA_MODE_BANNER_TEXT).should('be.visible');
+          cy.contains(METRICS_LEGACY_MODE_BANNER_TEXT).should('not.exist');
           ui.button
-            .findByTitle('Switch to legacy Metrics')
+            .findByTitle(METRICS_BETA_MODE_BUTTON_TEXT)
             .should('be.visible')
             .should('be.enabled');
         });

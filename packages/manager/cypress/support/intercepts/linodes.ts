@@ -779,3 +779,15 @@ export const mockGetLinodeStats = (
     makeResponse(stats)
   );
 };
+
+/**
+ * Intercepts PUT request to edit details of a linode
+ *
+ * @param linodeId - ID of Linode for intercepted request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinode = (linodeId: number): Cypress.Chainable<null> => {
+  console.log('intercepting mockUpdateLinode');
+  return cy.intercept('PUT', apiMatcher(`linode/instances/${linodeId}`));
+};
