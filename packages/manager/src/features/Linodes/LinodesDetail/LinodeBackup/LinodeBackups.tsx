@@ -52,12 +52,6 @@ export const LinodeBackups = () => {
     ],
     linodeId
   );
-  // permissions.list_linode_backups = false;
-  // permissions.view_linode_backup = true;
-  // permissions.create_linode_backup_snapshot = true;
-  // permissions.cancel_linode_backups = true;
-  // permissions.enable_linode_backups = true;
-  // permissions.restore_linode_backup = true;
 
   const { data: linode } = useLinodeQuery(id);
   const { data: regions } = useRegionsQuery();
