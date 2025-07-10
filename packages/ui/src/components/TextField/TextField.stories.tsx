@@ -89,6 +89,22 @@ export const Number: Story = {
   },
 };
 
+export const WithLabelTop: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    labelPosition: 'top',
+  },
+};
+
+export const WithLabelLeft: Story = {
+  args: {
+    label: 'Label',
+    noMarginTop: true,
+    labelPosition: 'left',
+  },
+};
+
 export const WithFieldTooltip: Story = {
   args: {
     label: 'Label',
@@ -114,26 +130,6 @@ export const WithLabelTooltipIconLeft: Story = {
     noMarginTop: true,
     placeholder: 'Placeholder',
     labelTooltipIconPosition: 'left',
-  },
-};
-
-export const WithLabelTooltipSmall: Story = {
-  args: {
-    label: 'Label',
-    labelTooltipText: 'Tooltip Text',
-    noMarginTop: true,
-    placeholder: 'Placeholder',
-    labelTooltipIconSize: 'small',
-  },
-};
-
-export const WithLabelTooltipLarge: Story = {
-  args: {
-    label: 'Label',
-    labelTooltipText: 'Tooltip Text',
-    noMarginTop: true,
-    placeholder: 'Placeholder',
-    labelTooltipIconSize: 'large',
   },
 };
 
