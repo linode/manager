@@ -258,4 +258,30 @@ describe('create NodeBalancer to test the submission of multiple nodes and multi
       cy.get('@qaMustbe').should('be.visible');
     });
   });
+
+  it('renders a port uniqueness error when you try to create a nodebalancer with two TCP configs with the same port', () => {
+    cy.visitWithLogin('/nodebalancers/create');
+
+    cy.get('[id=port-0]').clear();
+    cy.get('[id=port-0]').type('8080');
+
+    cy.get('[id=protocol-0]').click();
+    cy.findByRole('option', { name: 'TCP' }).click();
+
+    cy.findByRole('button', { name: 'Add another Configuration' }).click();
+
+    cy.get('[id=port-1]').clear();
+    cy.get('[id=port-1]').type('8080');
+
+    cy.get('[id=protocol-1]').click();
+    cy.findByRole('option', { name: 'TCP' }).click();
+
+    cy.findByRole('button', { name: 'Create NodeBalancer' })
+      .should('be.enabled')
+      .click();
+
+    cy.findAllByText(
+      'Port must be unique amongst TCP / HTTP / HTTPS configurations.'
+    ).should('have.length', 2);
+  });
 });
