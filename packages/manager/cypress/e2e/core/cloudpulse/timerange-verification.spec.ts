@@ -31,7 +31,6 @@ import {
   databaseFactory,
   widgetFactory,
 } from 'src/factories';
-import { convertToGmt } from 'src/features/CloudPulse/Utils/CloudPulseDateTimePickerUtils';
 import { formatDate } from 'src/utilities/formatDate';
 
 import type { Database, DateTimeWithPreset } from '@linode/api-v4';
@@ -40,16 +39,13 @@ import type { Interception } from 'support/cypress-exports';
 
 const formatter = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-const cleanText = (string: string) =>
-  string.replace(/\u200e|\u2066|\u2067|\u2068|\u2069/g, '');
-
 const timeRanges = [
-  { label: 'Last 30 Minutes', unit: 'min', value: 30 },
-  { label: 'Last 12 Hours', unit: 'hr', value: 12 },
-  { label: 'Last 24 Hours', unit: 'hr', value: 24 },
-  { label: 'Last 30 Days', unit: 'days', value: 30 },
-  { label: 'Last 7 Days', unit: 'days', value: 7 },
-  { label: 'Last 1 Hour', unit: 'hr', value: 1 },
+  { label: 'last 30 minutes', unit: 'min', value: 30 },
+  { label: 'last 12 hours', unit: 'hr', value: 12 },
+  { label: 'last 30 days', unit: 'days', value: 30 },
+  { label: 'last 7 days', unit: 'days', value: 7 },
+  { label: 'last hour', unit: 'hr', value: 1 },
+  { label: 'last day', unit: 'days', value: 1 },
 ];
 
 const mockRegion = regionFactory.build({
@@ -106,7 +102,7 @@ const databaseMock: Database = databaseFactory.build({
   type: engine,
 });
 const mockProfile = profileFactory.build({
-  timezone: 'Etc/GMT',
+  timezone: 'UTC',
 });
 /**
  * Generates a date in Indian Standard Time (IST) based on a specified number of days offset,
@@ -132,9 +128,10 @@ const getDateRangeInGMT = (
 ) => {
   const now = DateTime.now().setZone('GMT'); // Set the timezone to GMT
   const targetDate = isStart
-    ? now.startOf('month').set({ hour, minute })
-    : now.set({ hour, minute });
-  const actualDate = targetDate.toFormat('yyyy-LL-dd HH:mm'); // Format in GMT
+    ? now.startOf('month').set({ hour, minute }).setZone('GMT')
+    : now.set({ hour, minute }).setZone('GMT');
+  const actualDate = targetDate.setZone('GMT').toFormat('yyyy-LL-dd HH:mm');
+
   return {
     actualDate,
     day: targetDate.day,
@@ -152,50 +149,44 @@ const getDateRangeInGMT = (
  */
 
 const getThisMonthRange = (): DateTimeWithPreset => {
-  const now = DateTime.now();
+  const nowUtc = DateTime.utc(); // Current time in UTC
 
-  const expectedStartDateISO = now.startOf('month').toISO() ?? '';
-  const expectedEndDateISO = now.toISO() ?? '';
-
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'gmt',
-  });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  const startOfMonthUtc = nowUtc.startOf('month'); // Start of current month in UTC
 
   return {
-    end: formattedEndDate,
-    start: formattedStartDate,
+    start: startOfMonthUtc.toFormat(formatter),
+    end: nowUtc.toFormat(formatter),
   };
 };
-
 const getLastMonthRange = (): DateTimeWithPreset => {
-  const now = DateTime.now();
+  // Get current time in UTC
+  const now = DateTime.utc();
 
-  // Get the last month by subtracting 1 month from the current date
+  // Get last month in UTC
   const lastMonth = now.minus({ months: 1 });
 
-  // Get the start and end of the last month in ISO format
-  const expectedStartDateISO = lastMonth.startOf('month').toISO() ?? '';
-  const expectedEndDateISO = lastMonth.endOf('month').toISO() ?? '';
-
-  // Adjust the start and end dates to GMT
-  const adjustedStartDate = DateTime.fromISO(expectedStartDateISO, {
-    zone: 'gmt',
-  });
-  const adjustedEndDate = DateTime.fromISO(expectedEndDateISO, { zone: 'gmt' });
-
-  // Format the dates according to the specified format
-  const formattedStartDate = adjustedStartDate.toFormat(formatter);
-  const formattedEndDate = adjustedEndDate.toFormat(formatter);
+  // Get start and end of last month in UTC and format
+  const start = lastMonth.startOf('month').toFormat(formatter);
+  const end = lastMonth.endOf('month').toFormat(formatter);
 
   return {
-    end: formattedEndDate,
-    start: formattedStartDate,
+    start,
+    end,
   };
 };
 
+const convertToGmt = (dateStr: string): string => {
+  return DateTime.fromISO(dateStr.replace(' ', 'T')).toFormat(
+    'yyyy-MM-dd HH:mm'
+  );
+};
+const formatToUtcDateTime = (dateStr: string): string => {
+  return DateTime.fromISO(dateStr)
+    .toUTC() // 🌍 keep it in UTC
+    .toFormat('yyyy-MM-dd HH:mm');
+};
+
+// It is going to be modified
 describe('Integration tests for verifying Cloudpulse custom and preset configurations', () => {
   /*
    * - Mocks user preferences for dashboard details (dashboard, engine, resources, and region).
@@ -263,28 +254,20 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       minute: endMinute,
     } = getDateRangeInGMT(12, 30);
 
-    // Select "Custom" from the "Time Range" dropdown
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .scrollIntoView()
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    cy.get('@startDateInput').clear();
+
+    cy.findAllByText(startDay).first().click();
+    cy.findAllByText(endDay).first().click();
+
+    ui.button
+      .findByAttribute('aria-label^', 'Choose time')
+      .first()
       .should('be.visible')
-      .type('Custom');
+      .as('timePickerButton');
 
-    // Select "Custom" from the autocomplete dropdown
-    ui.autocompletePopper.findByTitle('Custom').should('be.visible').click();
-
-    // Click on "Select Start Date" input field
-    cy.findByPlaceholderText('Select Start Date').should('be.visible').click();
-
-    // Select the start date from the calendar
-    cy.findByRole('gridcell', { name: startDay.toString() })
-      .should('be.visible')
-      .click();
-
-    // Clicks the button closest to the Clock Icon, bypassing any visible state with `force: true`.
-    cy.findByLabelText('Choose time, selected time is', { exact: false })
-      .closest('button')
-      .click();
+    cy.get('@timePickerButton').click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours')
@@ -307,33 +290,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@selectMeridiem').within(() => {
       cy.get(`[aria-label="PM"]`).click();
     });
-
-    // Click the "Apply" button to confirm the start date and time
-    ui.button
-      .findByAttribute('label', 'Apply')
+    cy.get('[aria-label^="Choose time"]')
+      .last()
       .should('be.visible')
-      .should('be.enabled')
-      .click();
+      .as('timePickerButton');
 
-    // Assert that the start date and time is correctly displayed
-    cy.findByPlaceholderText('Select Start Date')
-      .as('selectStartDate')
-      .scrollIntoView({ easing: 'linear' });
-    cy.get('@selectStartDate')
-      .should('be.visible')
-      .should('have.value', `${cleanText(startActualDate)} PM`);
-
-    // Click on "Select End Date" input field
-    cy.findByPlaceholderText('Select End Date').should('be.visible').click();
-
-    // Select the end date from the calendar
-    cy.findByRole('gridcell', { name: endDay.toString() })
-      .should('be.visible')
-      .click();
-
-    cy.findByLabelText('Choose time, selected time is', { exact: false })
-      .closest('button')
-      .click();
+    cy.get('@timePickerButton').click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours').scrollIntoView({
@@ -359,21 +321,24 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@selectMeridiem').within(() => {
       cy.get(`[aria-label="PM"]`).click();
     });
+    cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput');
 
+    cy.get('@timezoneInput').clear();
+    cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
     // Click the "Apply" button to confirm the end date and time
-    ui.button
-      .findByAttribute('label', 'Apply')
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
       .should('be.enabled')
       .click();
 
     // Assert that the end date and time is correctly displayed
-    cy.findByPlaceholderText('Select End Date').scrollIntoView({
-      easing: 'linear',
-    });
-    cy.findByPlaceholderText('Select End Date')
+    cy.get('[aria-labelledby="start-date"]')
       .should('be.visible')
-      .should('have.value', `${cleanText(endActualDate)} PM`);
+      .should('have.value', `${startActualDate} PM`);
+
+    cy.get('[aria-labelledby="end-date"]')
+      .should('be.visible')
+      .should('have.value', `${endActualDate} PM`);
 
     // Select the "Node Type" from the dropdown and submit
     ui.autocomplete
@@ -388,15 +353,16 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
-        expect(requestPayload.absolute_time_duration.start).to.equal(
-          convertToGmt(startActualDate.replace(' ', 'T'))
-        );
-        expect(requestPayload.absolute_time_duration.end).to.equal(
-          convertToGmt(endActualDate.replace(' ', 'T'))
-        );
+        expect(
+          formatToUtcDateTime(requestPayload.absolute_time_duration.start)
+        ).to.equal(convertToGmt(startActualDate));
+        expect(
+          formatToUtcDateTime(requestPayload.absolute_time_duration.end)
+        ).to.equal(convertToGmt(endActualDate));
       });
+
+    cy.get('@startDateInput').click();
     // Click on the "Presets" button
-    ui.buttonGroup.findButtonByTitle('Presets').should('be.visible').click();
 
     // Mock API response for cloud metrics presets
     mockCreateCloudPulseMetrics(serviceType, metricsAPIResponsePayload).as(
@@ -404,21 +370,17 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     );
 
     // Select "Last 30 Days" from the "Time Range" dropdown
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .should('be.visible')
-      .type('Last 30 Days');
+    ui.button.findByTitle('last 30 days').click();
 
-    // Click on the "Last 30 Days" option
-    ui.autocompletePopper
-      .findByTitle('Last 30 Days')
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
+      .should('be.enabled')
       .click();
 
     // Validate API request payload for relative time duration
     cy.get('@getPresets.all')
       .should('have.length', 4)
-      .each((xhr: unknown, index: number) => {
+      .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
 
@@ -435,15 +397,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
   timeRanges.forEach((range) => {
     it(`Select and validate the functionality of the "${range.label}" preset from the "Time Range" dropdown`, () => {
-      ui.autocomplete
-        .findByLabel('Time Range')
-        .scrollIntoView()
+      cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+      cy.get('@startDateInput').click();
+      ui.button.findByTitle(range.label).click();
+      cy.get('[data-qa-buttons="apply"]')
         .should('be.visible')
-        .type(range.label);
-
-      ui.autocompletePopper
-        .findByTitle(range.label)
-        .should('be.visible')
+        .should('be.enabled')
         .click();
 
       ui.autocomplete
@@ -471,17 +430,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "Last Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getLastMonthRange();
 
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .scrollIntoView()
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    ui.button.findByTitle('last month').click();
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
-      .type('Last Month');
-
-    ui.autocompletePopper
-      .findByTitle('Last Month')
-      .should('be.visible')
+      .should('be.enabled')
       .click();
-
     ui.autocomplete
       .findByLabel('Node Type')
       .should('be.visible')
@@ -494,6 +449,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .each((xhr: unknown) => {
         const interception = xhr as Interception;
         const { body: requestPayload } = interception.request;
+
         expect(requestPayload.absolute_time_duration.start).to.equal(start);
         expect(requestPayload.absolute_time_duration.end).to.equal(end);
       });
@@ -502,15 +458,12 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
   it('Select the "This Month" preset from the "Time Range" dropdown and verify its functionality.', () => {
     const { end, start } = getThisMonthRange();
 
-    ui.autocomplete
-      .findByLabel('Time Range')
-      .scrollIntoView()
+    cy.get('[aria-labelledby="start-date"]').as('startDateInput');
+    cy.get('@startDateInput').click();
+    ui.button.findByTitle('this month').click();
+    cy.get('[data-qa-buttons="apply"]')
       .should('be.visible')
-      .type('This Month');
-
-    ui.autocompletePopper
-      .findByTitle('This Month')
-      .should('be.visible')
+      .should('be.enabled')
       .click();
 
     ui.autocomplete
