@@ -426,6 +426,25 @@ export const mockGetSSHKeys = (sshKeys: SSHKey[]): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts GET request to fetch SSH keys and mocks an error response.
+ *
+ * @param errorMessage - Error message to include in mock error response.
+ * @param status - HTTP status for mock error response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSSHKeysError = (
+  errorMessage: string,
+  status: number = 400
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('/profile/sshkeys*'),
+    makeErrorResponse(errorMessage, status)
+  );
+};
+
+/**
  * Intercepts GET request to fetch an SSH key and mocks the response.
  *
  * @param sshKey - SSH key object with which to mock response.

@@ -5,21 +5,15 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
+import { destinationType } from 'src/features/DataStream/Shared/types';
 
-import { StreamCreateCheckoutBar } from './StreamCreateCheckoutBar';
+import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
 import { StreamCreateDataSet } from './StreamCreateDataSet';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import {
-  type CreateStreamForm,
-  destinationType,
-  eventType,
-  streamType,
-} from './types';
+import { type CreateStreamForm, eventType, streamType } from './types';
 
 export const StreamCreate = () => {
-  const { classes } = useStyles();
   const form = useForm<CreateStreamForm>({
     defaultValues: {
       type: streamType.AuditLogs,
@@ -39,6 +33,7 @@ export const StreamCreate = () => {
       crumbOverrides: [
         {
           label: 'DataStream',
+          linkTo: '/datastream/streams',
           position: 1,
         },
       ],
@@ -55,15 +50,15 @@ export const StreamCreate = () => {
       <LandingHeader {...landingHeaderProps} />
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid className={classes.root} container>
-            <Grid className="mlMain">
+          <Grid container spacing={2}>
+            <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
               <Stack spacing={2}>
                 <StreamCreateGeneralInfo />
                 <StreamCreateDataSet />
                 <StreamCreateDelivery />
               </Stack>
             </Grid>
-            <Grid className="mlSidebar">
+            <Grid size={{ lg: 3, md: 12, sm: 12, xs: 12 }}>
               <StreamCreateCheckoutBar />
             </Grid>
           </Grid>

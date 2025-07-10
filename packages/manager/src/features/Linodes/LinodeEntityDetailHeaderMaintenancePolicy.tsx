@@ -1,4 +1,4 @@
-import { Box, Hidden, rotate360, TooltipIcon, Typography } from '@linode/ui';
+import { Box, rotate360, TooltipIcon, Typography } from '@linode/ui';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
@@ -34,25 +34,22 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
     <Box
       sx={(theme) => ({
         borderLeft: `1px solid ${theme.tokens.alias.Border.Normal}`,
-        paddingLeft: theme.spacingFunction(16),
-        marginLeft: theme.spacingFunction(8),
+        paddingLeft: theme.spacingFunction(12),
         display: 'flex',
         alignItems: 'center',
         flexWrap: 'wrap',
         gap: theme.spacingFunction(8),
       })}
     >
-      <Hidden mdDown>
-        <StyledMaintenanceBox>
-          <Typography
-            sx={(theme) => ({
-              font: theme.tokens.alias.Typography.Label.Bold.S,
-            })}
-          >
-            Maintenance Policy:
-          </Typography>
-        </StyledMaintenanceBox>
-      </Hidden>
+      <StyledMaintenanceBox>
+        <Typography
+          sx={(theme) => ({
+            font: theme.tokens.alias.Typography.Label.Bold.S,
+          })}
+        >
+          Maintenance Policy:
+        </Typography>
+      </StyledMaintenanceBox>
       <StyledMaintenanceBox>
         {isInProgress && <StyledAutorenewIcon />}
         <Typography
@@ -70,7 +67,6 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
           <TooltipIcon
             className="ui-TooltipIcon ui-TooltipIcon-isActive"
             icon={statusTooltipIcons.active}
-            status="other"
             sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
             sxTooltipIcon={{
               '&&.ui-TooltipIcon': {
@@ -96,7 +92,6 @@ export const LinodeEntityDetailHeaderMaintenancePolicy = (
                 ? statusTooltipIcons.pending
                 : statusTooltipIcons.scheduled
             }
-            status="other"
             sx={{ tooltip: { maxWidth: 300 }, marginLeft: 0 }}
             sxTooltipIcon={{
               '&&.ui-TooltipIcon': {

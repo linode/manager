@@ -59,7 +59,7 @@ import type { Event, Linode } from '@linode/api-v4';
 const getLinodeCloneUrl = (linode: Linode): string => {
   const regionQuery = `&regionID=${linode.region}`;
   const typeQuery = linode.type ? `&typeID=${linode.type}` : '';
-  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone+Linode${typeQuery}`;
+  return `/linodes/create?linodeID=${linode.id}${regionQuery}&type=Clone%20Linode${typeQuery}`;
 };
 
 authenticate();
@@ -251,7 +251,7 @@ describe('clone linode', () => {
     // Confirm that VLAN attachment is listed in summary, then create Linode.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VLAN Attached').should('be.visible');
+      cy.findByText('VLAN').should('be.visible');
     });
 
     ui.button

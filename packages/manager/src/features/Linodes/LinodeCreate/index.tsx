@@ -3,18 +3,16 @@ import {
   useCloneLinodeMutation,
   useCreateLinodeMutation,
   useMutateAccountAgreements,
-  usePreferences,
   useProfile,
 } from '@linode/queries';
 import { CircleProgress, Notice, Stack } from '@linode/ui';
 import { scrollErrorIntoView } from '@linode/utilities';
 import { useQueryClient } from '@tanstack/react-query';
-import { createLazyRoute } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
@@ -86,14 +84,13 @@ export const LinodeCreate = () => {
   const { isLinodeCloneFirewallEnabled } = useIsLinodeCloneFirewallEnabled();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
 
-  const { data: isAclpAlertsPreferenceBeta } = usePreferences(
-    (preferences) => preferences?.isAclpAlertsBeta
-  );
-
   const { aclpBetaServices } = useFlags();
 
+  // In Create flow, alerts always default to 'legacy' mode
+  const [isAclpAlertsBetaCreateFlow, setIsAclpAlertsBetaCreateFlow] =
+    React.useState<boolean>(false);
+
   const queryClient = useQueryClient();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const form = useForm<LinodeCreateFormValues, LinodeCreateFormContext>({
@@ -108,6 +105,7 @@ export const LinodeCreate = () => {
     shouldFocusError: false, // We handle this ourselves with `scrollErrorIntoView`
   });
 
+  const navigate = useNavigate();
   const { mutateAsync: createLinode } = useCreateLinodeMutation();
   const { mutateAsync: cloneLinode } = useCloneLinodeMutation();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
@@ -125,11 +123,13 @@ export const LinodeCreate = () => {
     if (index !== currentTabIndex) {
       const newTab = tabs[index];
 
+      const newParams = { type: newTab };
+
       // Update tab "type" query param. (This changes the selected tab)
-      setParams({ type: newTab });
+      setParams(newParams);
 
       // Get the default values for the new tab and reset the form
-      defaultValues({ ...params, type: newTab }, queryClient, {
+      defaultValues(newParams, queryClient, {
         isLinodeInterfacesEnabled,
         isVMHostMaintenanceEnabled,
       }).then(form.reset);
@@ -140,7 +140,7 @@ export const LinodeCreate = () => {
     const payload = getLinodeCreatePayload(values, {
       isShowingNewNetworkingUI: isLinodeInterfacesEnabled,
       isAclpIntegration: aclpBetaServices?.linode?.alerts,
-      isAclpAlertsPreferenceBeta,
+      isAclpAlertsPreferenceBeta: isAclpAlertsBetaCreateFlow,
     });
 
     try {
@@ -152,7 +152,11 @@ export const LinodeCreate = () => {
             })
           : await createLinode(payload);
 
-      history.push(`/linodes/${linode.id}`);
+      navigate({
+        to: `/linodes/$linodeId`,
+        params: { linodeId: linode.id },
+        search: undefined,
+      });
 
       enqueueSnackbar(`Your Linode ${linode.label} is being created.`, {
         variant: 'success',
@@ -282,19 +286,18 @@ export const LinodeCreate = () => {
           {isLinodeInterfacesEnabled && params.type !== 'Clone Linode' && (
             <Networking />
           )}
-          <AdditionalOptions />
+          <AdditionalOptions
+            isAlertsBetaMode={isAclpAlertsBetaCreateFlow}
+            onAlertsModeChange={setIsAclpAlertsBetaCreateFlow}
+          />
           <Addons />
           <EUAgreement />
-          <Summary />
+          <Summary isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
           <SMTP />
           {secureVMNoticesEnabled && <FirewallAuthorization />}
-          <Actions />
+          <Actions isAlertsBetaMode={isAclpAlertsBetaCreateFlow} />
         </Stack>
       </form>
     </FormProvider>
   );
 };
-
-export const linodeCreateLazyRoute = createLazyRoute('/linodes/create')({
-  component: LinodeCreate,
-});

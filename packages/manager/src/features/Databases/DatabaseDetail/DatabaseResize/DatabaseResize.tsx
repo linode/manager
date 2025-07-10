@@ -1,3 +1,4 @@
+import { useDatabaseMutation, useDatabaseTypesQuery } from '@linode/queries';
 import {
   Box,
   CircleProgress,
@@ -19,8 +20,6 @@ import { DatabaseSummarySection } from 'src/features/Databases/DatabaseCreate/Da
 import { DatabaseResizeCurrentConfiguration } from 'src/features/Databases/DatabaseDetail/DatabaseResize/DatabaseResizeCurrentConfiguration';
 import { useIsDatabasesEnabled } from 'src/features/Databases/utilities';
 import { typeLabelDetails } from 'src/features/Linodes/presentation';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
-import { useDatabaseMutation } from 'src/queries/databases/databases';
 
 import {
   StyledGrid,
@@ -332,12 +331,13 @@ export const DatabaseResize = ({ database, disabled = false }: Props) => {
       </Paper>
       <StyledGrid>
         <StyledResizeButton
-          buttonType="primary"
+          data-testid="resize-database-button"
           disabled={shouldSubmitBeDisabled || disabled}
           onClick={() => {
             setIsResizeConfirmationDialogOpen(true);
           }}
           type="submit"
+          variant="primary"
         >
           Resize Database Cluster
         </StyledResizeButton>

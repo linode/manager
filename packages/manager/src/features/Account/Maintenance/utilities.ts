@@ -37,3 +37,14 @@ export const maintenanceDateColumnMap: Record<
   upcoming: ['start_time', 'Start Date'],
   pending: ['when', 'Date'],
 };
+
+// Helper functions for better readability
+export const getMaintenanceDateField = (
+  type: MaintenanceTableType
+): 'complete_time' | 'start_time' | 'when' => {
+  return maintenanceDateColumnMap[type][0];
+};
+
+export const getMaintenanceDateLabel = (type: MaintenanceTableType): string => {
+  return maintenanceDateColumnMap[type][1];
+};
