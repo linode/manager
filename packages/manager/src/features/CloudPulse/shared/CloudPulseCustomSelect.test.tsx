@@ -1,7 +1,8 @@
+import { databaseQueries } from '@linode/queries';
 import { fireEvent } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { databaseQueries } from 'src/queries/databases/databases';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { CloudPulseSelectTypes } from '../Utils/models';
@@ -162,5 +163,23 @@ describe('CloudPulseCustomSelect component tests', () => {
     // if we click on clear icon , placeholder should appear
     fireEvent.click(screen.getByTitle('Clear'));
     expect(screen.getByPlaceholderText(testFilter)).toBeDefined();
+  });
+
+  it('should render a component successfully with static props and no default value with isOptional true', () => {
+    renderWithTheme(
+      <CloudPulseCustomSelect
+        filterKey="testfilter"
+        filterType="number"
+        handleSelectionChange={vi.fn()}
+        isOptional={true}
+        label="Test"
+        options={mockOptions}
+        placeholder={'Select a Value'}
+        type={CloudPulseSelectTypes.static}
+      />
+    );
+    expect(screen.queryByPlaceholderText(testFilter)).toBeNull();
+    expect(screen.getByPlaceholderText('Select a Value')).toBeVisible(); // default value should not be visible in case of optional filter
+    expect(screen.getByLabelText('Test (optional)')).toBeVisible();
   });
 });

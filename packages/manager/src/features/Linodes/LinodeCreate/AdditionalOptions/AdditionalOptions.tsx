@@ -5,14 +5,22 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 
 import { useVMHostMaintenanceEnabled } from 'src/features/Account/utils';
-import { MaintenancePolicy } from 'src/features/Linodes/LinodeCreate/AdditionalOptions/MaintenancePolicy';
 import { useFlags } from 'src/hooks/useFlags';
 
-import { Alerts } from './Alerts/Alerts';
+import { Alerts } from './Alerts';
+import { MaintenancePolicy } from './MaintenancePolicy';
 
 import type { CreateLinodeRequest } from '@linode/api-v4';
 
-export const AdditionalOptions = () => {
+interface AdditionalOptionProps {
+  isAlertsBetaMode: boolean;
+  onAlertsModeChange: (isBeta: boolean) => void;
+}
+
+export const AdditionalOptions = ({
+  onAlertsModeChange,
+  isAlertsBetaMode,
+}: AdditionalOptionProps) => {
   const { aclpBetaServices } = useFlags();
   const { data: regions } = useRegionsQuery();
   const { isVMHostMaintenanceEnabled } = useVMHostMaintenanceEnabled();
@@ -46,7 +54,12 @@ export const AdditionalOptions = () => {
         Additional Options
       </Typography>
       <Stack divider={<Divider />}>
-        {showAlerts && <Alerts />}
+        {showAlerts && (
+          <Alerts
+            isAlertsBetaMode={isAlertsBetaMode}
+            onAlertsModeChange={onAlertsModeChange}
+          />
+        )}
         {isVMHostMaintenanceEnabled && <MaintenancePolicy />}
       </Stack>
     </Paper>

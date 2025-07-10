@@ -191,7 +191,6 @@ export const LinodeRow = (props: Props) => {
           linodeStatus={status}
           linodeType={linodeType}
           {...handlers}
-          inListView
         />
       </TableCell>
     </TableRow>
