@@ -20,7 +20,12 @@ import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
 import { pick } from 'ramda';
 import * as React from 'react';
-import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -136,12 +141,12 @@ export const CreateCluster = () => {
 
   // Use React Hook Form for node pools to make updating pools and their configs easier.
   // TODO - Future: use RHF for the rest of the form and replace FormValues with CreateKubeClusterPayload.
-  const { control, watch, ...form } = useForm<FormValues>({
+  const { control, ...form } = useForm<FormValues>({
     defaultValues: {
       nodePools: [],
     },
   });
-  const nodePools = watch('nodePools');
+  const nodePools = useWatch({ control, name: 'nodePools' });
   const { update } = useFieldArray({
     control,
     name: 'nodePools',
@@ -395,7 +400,7 @@ export const CreateCluster = () => {
   }
 
   return (
-    <FormProvider control={control} watch={watch} {...form}>
+    <FormProvider control={control} {...form}>
       <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
       <LandingHeader
         docsLabel="Docs"

@@ -7,6 +7,7 @@ import {
   FormProvider,
   useForm,
   useFormContext,
+  useWatch,
 } from 'react-hook-form';
 
 import { EnhancedNumberInput } from 'src/components/EnhancedNumberInput/EnhancedNumberInput';
@@ -44,15 +45,21 @@ interface VersionUpdateFormFields {
 export const NodePoolConfigDrawer = (props: Props) => {
   const { onClose, open, selectedTier, planId, mode } = props;
 
-  const parentForm = useFormContext();
-  const _nodePools: CreateNodePoolDataBeta[] = parentForm.watch('nodePools');
+  // Use the node pool state from the main create flow from.
+  const { control: parentFormControl, setValue: parentFormSetValue } =
+    useFormContext();
+  const _nodePools: CreateNodePoolDataBeta[] = useWatch({
+    control: parentFormControl,
+    name: 'nodePools',
+  });
 
-  const { control, formState, setValue, watch, ...form } =
+  // Manage node pool options within this drawer form.
+  const { control, formState, setValue, ...form } =
     useForm<VersionUpdateFormFields>({
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
       },
-      shouldUnregister: true, // For conditionally defined fields
+      shouldUnregister: true, // For conditionally defined fields (e.g. updateStrategy)
     });
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
@@ -79,7 +86,7 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
       if (isAddMode) {
-        parentForm.setValue('nodePools', [
+        parentFormSetValue('nodePools', [
           ..._nodePools,
           {
             count: values.nodeCount,
@@ -125,7 +132,6 @@ export const NodePoolConfigDrawer = (props: Props) => {
         control={control}
         formState={formState}
         setValue={setValue}
-        watch={watch}
         {...form}
       >
         <form onSubmit={form.handleSubmit(onSubmit)}>
