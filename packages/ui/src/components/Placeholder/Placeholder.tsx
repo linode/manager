@@ -64,6 +64,21 @@ export interface BasePlaceholderProps {
   title: string;
 }
 
+interface PlaceholderPropsWithoutTransferDisplay extends BasePlaceholderProps {
+  /**
+   * If true, displays transfer display
+   */
+  showTransferDisplay?: boolean;
+  /**
+   * The TransferDisplay component that needs to be passed if you enable showTransferDisplay
+   */
+  TransferDisplayComponent?: React.ComponentType<{ spacingTop?: number }>;
+  /**
+   * The spacingTop value that can be passed to the TransferDisplay component
+   */
+  TransferDisplaySpacingTop?: number;
+}
+
 interface PlaceholderPropsWithTransferDisplay extends BasePlaceholderProps {
   /**
    * If true, displays transfer display
@@ -77,12 +92,6 @@ interface PlaceholderPropsWithTransferDisplay extends BasePlaceholderProps {
    * The spacingTop value that can be passed to the TransferDisplay component
    */
   TransferDisplaySpacingTop?: number;
-}
-
-interface PlaceholderPropsWithoutTransferDisplay extends BasePlaceholderProps {
-  showTransferDisplay?: never;
-  TransferDisplayComponent?: never;
-  TransferDisplaySpacingTop?: never;
 }
 
 export type PlaceholderProps =
@@ -206,7 +215,7 @@ export const Placeholder = (props: PlaceholderProps) => {
           <StyledLinksSection>{linksSection}</StyledLinksSection>
         ) : null}
       </PlaceholderRoot>
-      {showTransferDisplay ? (
+      {showTransferDisplay && TransferDisplayComponent ? (
         <TransferDisplayComponent spacingTop={TransferDisplaySpacingTop} />
       ) : null}
     </>
