@@ -228,6 +228,7 @@ describe('Community Stackscripts integration tests', () => {
             ).should('be.visible');
           });
 
+          // TODO Investigate alternatives to this cy.wait
           // Wait for a bit in case the page is not fully loaded.
           // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(200);
