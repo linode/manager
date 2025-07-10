@@ -86,7 +86,7 @@ export const TopMenu = React.memo((props: TopMenuProps) => {
                 accessibleAriaLabel="Akamai - Dashboard"
                 style={{ lineHeight: 0 }}
                 title="Akamai - Dashboard"
-                to={`/dashboard`}
+                to="/"
               >
                 <StyledAkamaiLogo
                   sx={{
