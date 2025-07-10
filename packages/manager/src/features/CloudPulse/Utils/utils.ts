@@ -1,4 +1,4 @@
-import { useAccount } from '@linode/queries';
+import { useAccount, useRegionsQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import React from 'react';
 
@@ -24,6 +24,7 @@ import { compareArrays } from './FilterBuilder';
 import type {
   Alert,
   APIError,
+  Capabilities,
   CloudPulseAlertsPayload,
   Dashboard,
   ResourcePage,
@@ -36,6 +37,17 @@ import type {
   StatWithDummyPoint,
   WithStartAndEnd,
 } from 'src/features/Longview/request.types';
+
+interface AclpContextualViewProps {
+  regionId: string;
+  serviceType: Capabilities;
+}
+
+interface AclpConextualViewEnabled {
+  isAlertEnabled: boolean;
+  isLoading: boolean;
+  isMetricEnabled: boolean;
+}
 
 /**
  *
@@ -344,4 +356,35 @@ export const validationFunction: Record<
 > = {
   [PORT]: arePortsValid,
   [INTERFACE_ID]: areValidInterfaceIds,
+};
+
+export const useIsAclpConextualViewEnabled = (
+  props: AclpContextualViewProps
+): AclpConextualViewEnabled => {
+  const { regionId, serviceType } = props;
+  const { isLoading, data: regions } = useRegionsQuery();
+
+  if (isLoading) {
+    return {
+      isLoading,
+      isAlertEnabled: false,
+      isMetricEnabled: false,
+    };
+  }
+
+  const region = regions?.find((region) => region.id === regionId);
+
+  if (!region) {
+    return {
+      isLoading,
+      isAlertEnabled: false,
+      isMetricEnabled: false,
+    };
+  }
+
+  return {
+    isLoading,
+    isAlertEnabled: region.monitors?.alerts?.includes(serviceType) ?? false,
+    isMetricEnabled: region.monitors?.metrics?.includes(serviceType) ?? false,
+  };
 };
