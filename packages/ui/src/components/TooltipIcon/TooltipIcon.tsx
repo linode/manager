@@ -136,7 +136,7 @@ export const TooltipIcon = (props: TooltipIconProps) => {
           component={InfoOutlined}
           data-testid="tooltip-info-icon"
           sx={cdsIconProps.rootStyle}
-          viewBox={cdsIconProps.viewBox}
+          viewBox="0 0 24 24"
         />
       );
       break;
