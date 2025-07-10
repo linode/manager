@@ -1,19 +1,18 @@
-import { Button, fadeIn, H1Header, Typography } from '@linode/ui';
 import { styled, useTheme } from '@mui/material/styles';
 import * as React from 'react';
 import type { JSX } from 'react';
 
-import ComputeIcon from 'src/assets/icons/entityIcons/compute.svg';
-
-import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
-
-import type { ButtonProps } from '@linode/ui';
+import { ComputeIcon } from '../../assets';
+import { fadeIn } from '../../foundations';
+import { Button, type ButtonProps } from '../Button';
+import { H1Header } from '../H1Header';
+import { Typography } from '../Typography';
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }
 
-export interface PlaceholderProps {
+export interface BasePlaceholderProps {
   /**
    * Additional copy text to display
    */
@@ -56,10 +55,6 @@ export interface PlaceholderProps {
    */
   renderAsSecondary?: boolean;
   /**
-   * If true, displays transfer display
-   */
-  showTransferDisplay?: boolean;
-  /**
    * Subtitle text to display
    */
   subtitle?: string;
@@ -68,6 +63,40 @@ export interface PlaceholderProps {
    */
   title: string;
 }
+
+interface PlaceholderPropsWithoutTransferDisplay extends BasePlaceholderProps {
+  /**
+   * If true, displays transfer display
+   */
+  showTransferDisplay?: boolean;
+  /**
+   * The TransferDisplay component that needs to be passed if you enable showTransferDisplay
+   */
+  TransferDisplayComponent?: React.ComponentType<{ spacingTop?: number }>;
+  /**
+   * The spacingTop value that can be passed to the TransferDisplay component
+   */
+  TransferDisplaySpacingTop?: number;
+}
+
+interface PlaceholderPropsWithTransferDisplay extends BasePlaceholderProps {
+  /**
+   * If true, displays transfer display
+   */
+  showTransferDisplay: boolean;
+  /**
+   * The TransferDisplay component that needs to be passed if you enable showTransferDisplay
+   */
+  TransferDisplayComponent: React.ComponentType<{ spacingTop?: number }>;
+  /**
+   * The spacingTop value that can be passed to the TransferDisplay component
+   */
+  TransferDisplaySpacingTop?: number;
+}
+
+export type PlaceholderProps =
+  | PlaceholderPropsWithoutTransferDisplay
+  | PlaceholderPropsWithTransferDisplay;
 
 export const Placeholder = (props: PlaceholderProps) => {
   const {
@@ -82,6 +111,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     showTransferDisplay,
     subtitle,
     title,
+    TransferDisplayComponent,
+    TransferDisplaySpacingTop,
   } = props;
 
   const theme = useTheme();
@@ -181,12 +212,12 @@ export const Placeholder = (props: PlaceholderProps) => {
           </StyledCopy>
         ) : null}
         {linksSection !== undefined ? (
-          <StyledLinksSection showTransferDisplay={showTransferDisplay}>
-            {linksSection}
-          </StyledLinksSection>
+          <StyledLinksSection>{linksSection}</StyledLinksSection>
         ) : null}
       </PlaceholderRoot>
-      {showTransferDisplay ? <TransferDisplay spacingTop={0} /> : null}
+      {showTransferDisplay && TransferDisplayComponent ? (
+        <TransferDisplayComponent spacingTop={TransferDisplaySpacingTop} />
+      ) : null}
     </>
   );
 };
@@ -194,7 +225,7 @@ export const Placeholder = (props: PlaceholderProps) => {
 const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
   ({ theme, ...props }) => ({
     gridArea: 'icon',
-    padding: theme.spacing(2),
+    padding: theme.spacingFunction(16),
     ...(props.isEntity && {
       alignItems: 'center',
       backgroundColor: theme.bg.bgPaper,
@@ -203,12 +234,12 @@ const StyledIconWrapper = styled('div')<Pick<PlaceholderProps, 'isEntity'>>(
       display: 'flex',
       justifyContent: 'center',
     }),
-  })
+  }),
 );
 
 const StyledButtonWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: theme.spacing(2),
+  gap: theme.spacingFunction(16),
   gridArea: 'button',
   [theme.breakpoints.down('xs')]: {
     flexDirection: 'column',
@@ -217,7 +248,7 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
 
 const StyledLinksSection = styled('div')<
   Pick<PlaceholderProps, 'showTransferDisplay'>
->(({ theme, ...props }) => ({
+>(({ theme }) => ({
   borderTop: `1px solid ${
     theme.name === 'light'
       ? theme.tokens.color.Neutrals[20]
@@ -226,17 +257,15 @@ const StyledLinksSection = styled('div')<
   gridArea: 'links',
   paddingTop: '38px',
 
-  ...(props.showTransferDisplay && {
-    borderBottom: `1px solid ${
-      theme.name === 'light'
-        ? theme.tokens.color.Neutrals[20]
-        : theme.tokens.color.Neutrals[100]
-    }`,
-    paddingBottom: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      paddingBottom: theme.spacing(4),
-    },
-  }),
+  borderBottom: `1px solid ${
+    theme.name === 'light'
+      ? theme.tokens.color.Neutrals[20]
+      : theme.tokens.color.Neutrals[100]
+  }`,
+  paddingBottom: theme.spacingFunction(16),
+  [theme.breakpoints.up('md')]: {
+    paddingBottom: theme.spacingFunction(32),
+  },
 }));
 
 const StyledCopy = styled('div', {
@@ -301,12 +330,12 @@ const PlaceholderRoot = styled('div')<Partial<PlaceholderProps>>(
     justifyItems: 'center',
 
     padding: props.showTransferDisplay
-      ? `${theme.spacing(4)} 0`
-      : `${theme.spacing(2)} 0`,
+      ? `${theme.spacingFunction(32)} 0`
+      : `${theme.spacingFunction(16)} 0`,
     [theme.breakpoints.up('md')]: {
       padding: props.showTransferDisplay
-        ? `${theme.spacing(8)} 0 ${theme.spacing(4)}`
-        : `${theme.spacing(8)} 0`,
+        ? `${theme.spacingFunction(64)} 0 ${theme.spacingFunction(64)}`
+        : `${theme.spacingFunction(64)} 0`,
     },
-  })
+  }),
 );
