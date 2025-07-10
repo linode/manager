@@ -4,8 +4,8 @@ import {
   usePreferences,
 } from '@linode/queries';
 import { Box } from '@linode/ui';
+import { useLocation } from '@tanstack/react-router';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 
 import Compute from 'src/assets/icons/entityIcons/compute.svg';
 import Database from 'src/assets/icons/entityIcons/database.svg';
@@ -366,7 +366,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
       return filteredLinks.some((link) =>
         linkIsActive(
           link.href,
-          location.search,
+          location.searchStr,
           location.pathname,
           link.activeLinks
         )
@@ -435,7 +435,7 @@ export const PrimaryNav = (props: PrimaryNavProps) => {
             const isActiveLink = Boolean(
               linkIsActive(
                 link.href,
-                location.search,
+                location.searchStr,
                 location.pathname,
                 link.activeLinks
               )

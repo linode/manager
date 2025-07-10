@@ -5,17 +5,15 @@ import {
   flattenChildrenIntoAriaLabel,
   opensInNewTab,
 } from '@linode/utilities'; // `link.ts` utils from @linode/utilities
+import { Link as RouterLink } from '@tanstack/react-router';
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Link as RouterLink } from 'react-router-dom';
-import type { LinkProps as _LinkProps } from 'react-router-dom';
 
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { useStyles } from 'src/components/Link.styles';
 
-import type { LinkProps as TanStackLinkProps } from '@tanstack/react-router';
+import type { LinkComponentProps as TanStackLinkProps } from '@tanstack/react-router';
 
-export interface LinkProps extends Omit<_LinkProps, 'to'> {
+export interface LinkProps extends Omit<TanStackLinkProps, 'to'> {
   /**
    * This property can override the value of the copy passed by default to the aria label from the children.
    * This is useful when the text of the link is unavailable, not descriptive enough, or a single icon is used as the child.
@@ -26,6 +24,10 @@ export interface LinkProps extends Omit<_LinkProps, 'to'> {
    * @default false
    */
   bypassSanitization?: boolean;
+  /**
+   * Override TanStack's children to make link more simple
+   */
+  children: React.ReactNode;
   /**
    * Optional prop to render the link as an external link, which features an external link icon, opens in a new tab<br />
    * and provides by default "noopener noreferrer" attributes to prevent security vulnerabilities.
@@ -153,7 +155,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
           className
         )}
         ref={ref}
-        to={to as string}
+        to={to as TanStackLinkProps['to']}
       />
     );
   }

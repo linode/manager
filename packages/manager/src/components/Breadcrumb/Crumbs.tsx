@@ -1,8 +1,6 @@
 import * as React from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Link } from 'react-router-dom';
-import type { LinkProps } from 'react-router-dom';
 
+import { Link } from '../Link';
 import {
   StyledDiv,
   StyledSlashTypography,
@@ -11,6 +9,7 @@ import {
 import { FinalCrumb } from './FinalCrumb';
 import { FinalCrumbPrefix } from './FinalCrumbPrefix';
 
+import type { LinkProps } from '../Link';
 import type { EditableProps, LabelProps } from './types';
 
 export interface CrumbOverridesProps {

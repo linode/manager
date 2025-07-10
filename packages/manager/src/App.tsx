@@ -1,4 +1,6 @@
 import '@reach/tabs/styles.css';
+import { useQueryClient } from '@tanstack/react-query';
+import { RouterProvider } from '@tanstack/react-router';
 import * as React from 'react';
 
 import {
@@ -15,14 +17,14 @@ import { useInitialRequests } from './hooks/useInitialRequests';
 import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
-import { MainContent } from './MainContent';
 import { useEventsPoller } from './queries/events/events';
-// import { Router } from './Router';
+import { router } from './routes';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     const { isLoading } = useInitialRequests();
+    const queryClient = useQueryClient();
 
     const { areFeatureFlagsLoading } = useSetupFeatureFlags();
 
@@ -49,7 +51,7 @@ export const App = withDocumentTitleProvider(
          * Eventually we will have the <Router /> here in place of <MainContent />
          * <Router />
          */}
-        <MainContent />
+        <RouterProvider context={{ queryClient }} router={router} />
         <GlobalListeners />
       </ErrorBoundaryFallback>
     );

@@ -24,13 +24,12 @@ import thunk from 'redux-thunk';
 
 import { LinodeThemeWrapper } from 'src/LinodeThemeWrapper';
 import { setupInterceptors } from 'src/request';
-import { migrationRouteTree } from 'src/routes';
+import { routeTree } from 'src/routes';
 import { defaultState, storeFactory } from 'src/store';
 
 import { mergeDeepRight } from './mergeDeepRight';
 
 import type { QueryClient } from '@tanstack/react-query';
-// TODO: Tanstack Router - replace AnyRouter once migration is complete.
 import type { AnyRootRoute, AnyRouter } from '@tanstack/react-router';
 import type { MatcherFunction, RenderResult } from '@testing-library/react';
 import type { FormikConfig, FormikValues } from 'formik';
@@ -226,7 +225,7 @@ export const renderWithThemeAndRouter = async (
     history: createMemoryHistory({
       initialEntries: [options.initialRoute || '/'],
     }),
-    routeTree: options.routeTree || migrationRouteTree,
+    routeTree: options.routeTree || routeTree,
   });
 
   const utils: RenderResult = render(
