@@ -41,10 +41,12 @@ export const appendConfigInterface = (mockState: MockState) => [
         ...interfacePayload,
         active: true,
       });
-      const updatedConfig = {
-        ...config[1],
-        interfaces: [...(config[1].interfaces ?? []), configInterface],
-      };
+
+      const newlyAddedConfigInterface = await mswDB.add(
+        'configInterfaces',
+        [linode.id, configInterface],
+        mockState
+      );
 
       // @TODO CONNIE - move to helper function of sorts
       if (interfacePayload.purpose === 'vpc') {
@@ -70,12 +72,7 @@ export const appendConfigInterface = (mockState: MockState) => [
                   {
                     active: true,
                     config_id: configId,
-                    // NOTE: configInterface.id may be duplicated across all subnets, as we are not storing
-                    // a separate configInterface field in our mock DB. This is to reduce complexity (ie needing to fetch/update
-                    // a config and then an interface for our mock operations)
-                    // We currently do not fetch/update individual config interfaces anyway
-                    // See VPC/Subnet delete crud handlers
-                    id: configInterface.id,
+                    id: newlyAddedConfigInterface[1].id,
                   },
                 ],
               },
@@ -104,14 +101,7 @@ export const appendConfigInterface = (mockState: MockState) => [
         }
       }
 
-      await mswDB.update(
-        'linodeConfigs',
-        configId,
-        [linode.id, updatedConfig],
-        mockState
-      );
-
-      return makeResponse(configInterface);
+      return makeResponse(newlyAddedConfigInterface[1]);
     }
   ),
 ];
@@ -123,32 +113,71 @@ export const deleteLinodeConfigInterface = (mockState: MockState) => [
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const linodeId = Number(params.id);
       const configId = Number(params.configId);
+      const interfaceId = Number(params.interfaceId);
       const linode = await mswDB.get('linodes', linodeId);
       const config = await mswDB.get('linodeConfigs', configId);
+      const configInterfaceTuple = await mswDB.get(
+        'configInterfaces',
+        interfaceId
+      );
 
-      if (!linode || !config) {
+      if (!linode || !config || !configInterfaceTuple) {
         return makeNotFoundResponse();
       }
 
-      const updatedConfig = {
-        ...config[1],
-        interfaces: [],
-      };
+      // if the config interface is part of a VPC, we must update the VPC as well
+      const configInterface = configInterfaceTuple[1];
+      if (configInterface.purpose === 'vpc' && configInterface.subnet_id) {
+        const subnetFromDB = await mswDB.get(
+          'subnets',
+          configInterface.subnet_id
+        );
+        const vpc = await mswDB.get(
+          'vpcs',
+          configInterface.vpc_id ?? subnetFromDB?.[0] ?? -1
+        );
 
-      // to "delete" the interface, we will set the config's interfaces to []. While this isn't accurate to the actual API, this reduces complexity on our end
-      // update this may be changed ... i'm thinking some more 
-      await mswDB.update(
-        'linodeConfigs',
-        configId,
-        [linode.id, updatedConfig],
-        mockState
-      );
+        if (subnetFromDB && vpc) {
+          // update VPC/subnet to remove interface
+          const updatedLinodeData = subnetFromDB[1].linodes.map((data) => {
+            return {
+              ...data,
+              interfaces: data.interfaces.filter(
+                (iface) => iface.id !== interfaceId
+              ),
+            };
+          });
+
+          const updatedSubnet = {
+            ...subnetFromDB[1],
+            linodes: updatedLinodeData,
+            updated: DateTime.now().toISO(),
+          };
+
+          const updatedVPC = {
+            ...vpc,
+            subnets: vpc.subnets.map((subnet) => {
+              if (subnet.id === subnetFromDB[1].id) {
+                return updatedSubnet;
+              }
+
+              return subnet;
+            }),
+          };
+
+          await mswDB.update(
+            'subnets',
+            subnetFromDB[1].id,
+            [vpc.id, updatedSubnet],
+            mockState
+          );
+          await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
+        }
+      }
+
+      await mswDB.delete('configInterfaces', interfaceId, mockState);
 
       return makeResponse({});
     }
   ),
 ];
-
-// todo: potentially add back in storing the interfaces separately - need to think about how complicated vpc / subnet deletion can be :sobbing: 
-// OH ANOTHER THOUGHT - what if we always leave configs.interfaces empty, but when we actually return a config, we must also make a request to its interfaces?
-// maybe that makes more sense... (don't need to update the config in tandem -> help out with deleting subnet / vpc)

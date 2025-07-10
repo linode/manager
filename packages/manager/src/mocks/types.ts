@@ -156,6 +156,7 @@ export type MockHandler = (mockState: MockState) => HttpHandler[];
  */
 export interface MockState {
   cloudnats: CloudNAT[];
+  configInterfaces: [number, Interface][]; // number is Config ID
   domainRecords: DomainRecord[];
   domains: Domain[];
   eventQueue: Event[];
