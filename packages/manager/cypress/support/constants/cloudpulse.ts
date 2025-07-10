@@ -7,6 +7,7 @@ export const cloudPulseServiceMap: Record<string, string> = {
   dbaas: 'Databases',
   linode: 'Linode',
   nodebalancer: 'NodeBalancer',
+  firewall: 'netloadbalancers',
 };
 /**
  * Descriptions used in the Create/Edit Alert form to guide users
