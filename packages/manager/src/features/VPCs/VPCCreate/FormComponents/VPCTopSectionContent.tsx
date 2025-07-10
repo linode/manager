@@ -74,7 +74,7 @@ export const VPCTopSectionContent = (props: Props) => {
     account?.capabilities ?? []
   );
 
-  const isTrustedCustomer = isFeatureEnabledV2(
+  const isEnterpriseCustomer = isFeatureEnabledV2(
     'VPC IPv6 Large Prefixes',
     Boolean(flags.vpcIpv6),
     account?.capabilities ?? []
@@ -217,7 +217,7 @@ export const VPCTopSectionContent = (props: Props) => {
                           specified range for subnetting.
                         </Typography>
                         <Typography>
-                          For IPv6, the VPC is assigned an IPv6 prefix length of
+                          For IPv6, the VPC is assigned an IPv6 prefix length of{' '}
                           <Code>/52</Code> by default.
                         </Typography>
                       </Stack>
@@ -233,7 +233,7 @@ export const VPCTopSectionContent = (props: Props) => {
           </RadioGroup>
         </Box>
       )}
-      {isDualStackSelected && isTrustedCustomer && (
+      {isDualStackSelected && isEnterpriseCustomer && (
         <Controller
           control={control}
           name="ipv6"
