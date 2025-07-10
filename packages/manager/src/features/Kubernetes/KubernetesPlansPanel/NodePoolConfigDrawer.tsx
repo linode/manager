@@ -38,7 +38,7 @@ export interface Props {
 
 interface VersionUpdateFormFields {
   nodeCount: number;
-  updateStrategy: NodePoolUpdateStrategy;
+  updateStrategy: NodePoolUpdateStrategy | undefined;
 }
 
 export const NodePoolConfigDrawer = (props: Props) => {
@@ -51,9 +51,8 @@ export const NodePoolConfigDrawer = (props: Props) => {
     useForm<VersionUpdateFormFields>({
       defaultValues: {
         nodeCount: DEFAULT_PLAN_COUNT,
-        updateStrategy:
-          selectedTier === 'enterprise' ? 'on_recycle' : undefined,
       },
+      shouldUnregister: true, // For conditionally defined fields
     });
 
   const typesQuery = useSpecificTypes(planId ? [planId] : []);
@@ -64,11 +63,18 @@ export const NodePoolConfigDrawer = (props: Props) => {
   const isAddMode = mode === 'add';
 
   React.useEffect(() => {
-    if (!planId) {
+    if (!planId || !selectedTier) {
       return;
     }
-    // TODO: If the plan has been added to the cluster, set the existing node count for editing.
-  }, [planId, open]);
+    // Ensure the update strategy resets when the tier is changed.
+    setValue(
+      'updateStrategy',
+      selectedTier === 'enterprise' ? 'on_recycle' : undefined
+    );
+
+    // eslint-disable-next-line sonarjs/todo-tag
+    // TODO - M3-10295: If the plan has been added to the cluster, set the existing node count for editing.
+  }, [planId, open, selectedTier, setValue]);
 
   const onSubmit = async (values: VersionUpdateFormFields) => {
     try {
@@ -84,10 +90,12 @@ export const NodePoolConfigDrawer = (props: Props) => {
           },
         ]);
       } else {
-        // TODO: We're in edit mode, so find the existing pool in _nodePools based on
+        // eslint-disable-next-line sonarjs/todo-tag
+        // TODO - M3-10295: We're in edit mode, so find the existing pool in _nodePools based on
         // selected pool index and set the updated node count/update strategy values.
       }
       onClose();
+      form.reset();
     } catch (errResponse) {
       form.setError('root', {
         message: `${errResponse})}`,
