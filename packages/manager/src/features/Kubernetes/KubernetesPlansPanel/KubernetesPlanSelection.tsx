@@ -24,18 +24,14 @@ import { getLinodeRegionPrice } from 'src/utilities/pricing/linodes';
 
 import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
 
-import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type { KubernetesTier, PriceObject } from '@linode/api-v4';
 import type { Region } from '@linode/api-v4/lib/regions';
 import type { PlanWithAvailability } from 'src/features/components/PlansPanel/types';
 
 export interface KubernetesPlanSelectionProps {
   getTypeCount: (planId: string) => number;
-  handleConfigurePool?: (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => void;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasMajorityOfPlansDisabled: boolean;
   idx: number;
   onAdd?: (key: string, value: number) => void;
@@ -130,7 +126,11 @@ export const KubernetesPlanSelection = (
             disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
             onClick={() =>
               handleConfigurePool
-                ? handleConfigurePool('add', true, plan.id)
+                ? handleConfigurePool({
+                    drawerMode: 'add',
+                    isOpen: true,
+                    planLabel: plan.id,
+                  })
                 : null
             }
             sx={{ minWidth: '85px' }}
@@ -220,7 +220,11 @@ export const KubernetesPlanSelection = (
                   disabled={rowIsDisabled || typeof price?.hourly !== 'number'}
                   onClick={() =>
                     handleConfigurePool
-                      ? handleConfigurePool('add', true, plan.id)
+                      ? handleConfigurePool({
+                          drawerMode: 'add',
+                          isOpen: true,
+                          planLabel: plan.id,
+                        })
                       : null
                   }
                   sx={{ marginLeft: '10px', minWidth: '85px' }}

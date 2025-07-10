@@ -14,17 +14,13 @@ import {
 import { KubernetesPlansPanel } from '../KubernetesPlansPanel/KubernetesPlansPanel';
 import { PremiumCPUPlanNotice } from './PremiumCPUPlanNotice';
 
-import type { NodePoolConfigDrawerMode } from '../KubernetesPlansPanel/NodePoolConfigDrawer';
+import type { NodePoolConfigDrawerHandlerParams } from './CreateCluster';
 import type { KubernetesTier, LinodeTypeClass, Region } from '@linode/api-v4';
 import type { ExtendedType } from 'src/utilities/extendType';
 
 export interface NodePoolPanelProps {
   apiError?: string;
-  handleConfigurePool: (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => void;
+  handleConfigurePool: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
   isAPLEnabled?: boolean;
   isPlanPanelDisabled: (planType?: LinodeTypeClass) => boolean;

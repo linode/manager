@@ -16,7 +16,7 @@ import { useFlags } from 'src/hooks/useFlags';
 
 import { KubernetesPlanContainer } from './KubernetesPlanContainer';
 
-import type { NodePoolConfigDrawerMode } from './NodePoolConfigDrawer';
+import type { NodePoolConfigDrawerHandlerParams } from '../CreateCluster/CreateCluster';
 import type {
   CreateNodePoolData,
   KubernetesTier,
@@ -32,11 +32,7 @@ interface Props {
   currentPlanHeading?: string;
   error?: string;
   getTypeCount: (planId: string) => number;
-  handleConfigurePool?: (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => void;
+  handleConfigurePool?: (params: NodePoolConfigDrawerHandlerParams) => void;
   hasSelectedRegion: boolean;
   header?: string;
   isAPLEnabled?: boolean;

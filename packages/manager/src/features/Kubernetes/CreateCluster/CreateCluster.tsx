@@ -87,6 +87,12 @@ type FormValues = {
   nodePools: KubeNodePoolResponseBeta[];
 };
 
+export interface NodePoolConfigDrawerHandlerParams {
+  drawerMode: NodePoolConfigDrawerMode;
+  isOpen: boolean;
+  planLabel?: string;
+}
+
 export const CreateCluster = () => {
   const flags = useFlags();
   const navigate = useNavigate();
@@ -234,11 +240,11 @@ export const CreateCluster = () => {
     }
   }, [versionData]);
 
-  const handleOpenNodePoolConfigDrawer = (
-    drawerMode: NodePoolConfigDrawerMode,
-    isOpen: boolean,
-    planLabel?: string
-  ) => {
+  const handleOpenNodePoolConfigDrawer = ({
+    drawerMode,
+    isOpen,
+    planLabel,
+  }: NodePoolConfigDrawerHandlerParams) => {
     setNodePoolConfigDrawerMode(drawerMode);
     setIsNodePoolConfigDrawerOpen(isOpen);
     setSelectedType(planLabel);
