@@ -281,6 +281,8 @@ export const deleteLinodeInterface = (mockState: MockState) => [
 
       await mswDB.delete('linodeInterfaces', interfaceId, mockState);
 
+      // todo connie: add vpc stuff... 
+
       queueEvents({
         event: {
           action: 'interface_delete',

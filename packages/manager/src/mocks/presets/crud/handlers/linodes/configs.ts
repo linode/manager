@@ -70,6 +70,11 @@ export const appendConfigInterface = (mockState: MockState) => [
                   {
                     active: true,
                     config_id: configId,
+                    // NOTE: configInterface.id may be duplicated across all subnets, as we are not storing
+                    // a separate configInterface field in our mock DB. This is to reduce complexity (ie needing to fetch/update
+                    // a config and then an interface for our mock operations)
+                    // We currently do not fetch/update individual config interfaces anyway
+                    // See VPC/Subnet delete crud handlers
                     id: configInterface.id,
                   },
                 ],
@@ -110,3 +115,40 @@ export const appendConfigInterface = (mockState: MockState) => [
     }
   ),
 ];
+
+// deleteLinodeConfigInterface
+export const deleteLinodeConfigInterface = (mockState: MockState) => [
+  http.delete(
+    '*/v4*/linodes/instances/:id/configs/:configId/interfaces/:interfaceId',
+    async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
+      const linodeId = Number(params.id);
+      const configId = Number(params.configId);
+      const linode = await mswDB.get('linodes', linodeId);
+      const config = await mswDB.get('linodeConfigs', configId);
+
+      if (!linode || !config) {
+        return makeNotFoundResponse();
+      }
+
+      const updatedConfig = {
+        ...config[1],
+        interfaces: [],
+      };
+
+      // to "delete" the interface, we will set the config's interfaces to []. While this isn't accurate to the actual API, this reduces complexity on our end
+      // update this may be changed ... i'm thinking some more 
+      await mswDB.update(
+        'linodeConfigs',
+        configId,
+        [linode.id, updatedConfig],
+        mockState
+      );
+
+      return makeResponse({});
+    }
+  ),
+];
+
+// todo: potentially add back in storing the interfaces separately - need to think about how complicated vpc / subnet deletion can be :sobbing: 
+// OH ANOTHER THOUGHT - what if we always leave configs.interfaces empty, but when we actually return a config, we must also make a request to its interfaces?
+// maybe that makes more sense... (don't need to update the config in tandem -> help out with deleting subnet / vpc)
