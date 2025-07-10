@@ -1,7 +1,5 @@
 import '@reach/tabs/styles.css';
-import { useQueryClient } from '@tanstack/react-query';
-import { RouterProvider } from '@tanstack/react-router';
-import * as React from 'react';
+import React from 'react';
 
 import {
   DocumentTitleSegment,
@@ -18,13 +16,12 @@ import { useNewRelic } from './hooks/useNewRelic';
 import { usePendo } from './hooks/usePendo';
 import { useSessionExpiryToast } from './hooks/useSessionExpiryToast';
 import { useEventsPoller } from './queries/events/events';
-import { router } from './routes';
+import { Router } from './Router';
 import { useSetupFeatureFlags } from './useSetupFeatureFlags';
 
 export const App = withDocumentTitleProvider(
   withFeatureFlagProvider(() => {
     const { isLoading } = useInitialRequests();
-    const queryClient = useQueryClient();
 
     const { areFeatureFlagsLoading } = useSetupFeatureFlags();
 
@@ -47,11 +44,7 @@ export const App = withDocumentTitleProvider(
         </div>
         <GoTo />
         <DocumentTitleSegment segment="Akamai Cloud Manager" />
-        {/**
-         * Eventually we will have the <Router /> here in place of <MainContent />
-         * <Router />
-         */}
-        <RouterProvider context={{ queryClient }} router={router} />
+        <Router />
         <GlobalListeners />
       </ErrorBoundaryFallback>
     );
