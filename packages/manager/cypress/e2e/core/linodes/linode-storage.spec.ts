@@ -40,11 +40,6 @@ const DISK_RESIZE_SIZE_MB = 768;
 const deleteInUseDisk = (diskName: string) => {
   waitForProvision();
 
-  ui.actionMenu
-    .findByTitle(`Action menu for Disk ${diskName}`)
-    .should('be.visible')
-    .click();
-
   ui.actionMenuItem
     .findByTitle('Delete')
     .should('be.visible')
@@ -151,8 +146,13 @@ describe('linode storage tab', () => {
       ui.button.findByTitle('Add a Disk').should('be.disabled');
 
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-        cy.contains('Resize').should('be.disabled');
+        ui.actionMenu
+          .findByTitle(`Action menu for Disk ${diskName}`)
+          .should('be.visible')
+          .click();
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.disabled');
 
       deleteInUseDisk(diskName);
 
@@ -238,8 +238,13 @@ describe('linode storage tab', () => {
       });
 
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
-        cy.findByText('Resize').should('be.visible').click();
+        ui.actionMenu
+          .findByTitle(`Action menu for Disk ${diskName}`)
+          .should('be.visible')
+          .click();
       });
+
+      ui.actionMenuItem.findByTitle('Resize').should('be.visible').click();
 
       ui.drawer
         .findByTitle(`Resize ${diskName}`)

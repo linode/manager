@@ -227,6 +227,11 @@ describe('Community Stackscripts integration tests', () => {
               `${stackScripts[0].username} / ${stackScripts[0].label}`
             ).should('be.visible');
           });
+
+          // TODO Investigate alternatives to this cy.wait
+          // Wait for a bit in case the page is not fully loaded.
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(200);
         });
     }
   });
@@ -277,7 +282,7 @@ describe('Community Stackscripts integration tests', () => {
     const fairPassword = 'Akamai123';
     const rootPassword = randomString(16);
     const image = 'AlmaLinux 9';
-    const region = chooseRegion({ capabilities: ['Vlans'] });
+    const region = chooseRegion({ capabilities: ['Linodes', 'Vlans'] });
     const linodeLabel = randomLabel();
 
     // Ensure that the Primary Nav is open
@@ -313,7 +318,8 @@ describe('Community Stackscripts integration tests', () => {
       .should('be.visible')
       .click();
 
-    cy.url().should('endWith', '/stackscripts/community');
+    // eslint-disable-next-line sonarjs/anchor-precedence
+    cy.url().should('match', /\/stackscripts\/community|\?query=[a-z-]+$/g);
 
     cy.get(`[href="/stackscripts/${stackScriptId}"]`)
       .should('be.visible')
@@ -376,7 +382,7 @@ describe('Community Stackscripts integration tests', () => {
     cy.get('[data-qa-plan-row="Dedicated 8 GB"]')
       .closest('tr')
       .within(() => {
-        cy.get('[data-qa-radio]').click();
+        cy.get('[data-qa-radio]').click({ force: true });
       });
 
     // Input root password

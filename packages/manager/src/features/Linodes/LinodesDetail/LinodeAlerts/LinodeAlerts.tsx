@@ -1,9 +1,11 @@
-import { useGrants, useLinodeQuery } from '@linode/queries';
+
+import { useLinodeQuery } from '@linode/queries';
 import { Box } from '@linode/ui';
 import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { AlertReusableComponent } from 'src/features/CloudPulse/Alerts/ContextualView/AlertReusableComponent';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 
 import { AclpPreferenceToggle } from '../../AclpPreferenceToggle';
@@ -25,13 +27,9 @@ const LinodeAlerts = (props: Props) => {
   const id = Number(linodeId);
 
   const { aclpBetaServices } = useFlags();
-  const { data: grants } = useGrants();
   const { data: linode } = useLinodeQuery(id);
 
-  const isReadOnly =
-    grants !== undefined &&
-    grants?.linode.find((grant) => grant.id === id)?.permissions ===
-      'read_only';
+  const { permissions } = usePermissions('linode', ['update_linode'], id);
 
   return (
     <Box>
@@ -55,7 +53,7 @@ const LinodeAlerts = (props: Props) => {
         />
       ) : (
         // Legacy Alerts View
-        <AlertsPanel isReadOnly={isReadOnly} linodeId={id} />
+        <AlertsPanel isReadOnly={!permissions.update_linode} linodeId={id} />
       )}
     </Box>
   );
