@@ -98,7 +98,7 @@ export const getInterfaces = () => [
       return makeResponse(linodeSettings);
     }
   ),
-]
+];
 export const getLinodeInterfaceFirewalls = (mockState: MockState) => [
   http.get(
     '*/v4*/linode/instances/:id/interfaces/:interfaceId/firewalls',
@@ -175,7 +175,6 @@ export const createLinodeInterface = (mockState: MockState) => [
         );
 
         if (subnetFromDB && vpc) {
-
           // update VPC/subnet to include this new interface
           const updatedSubnet = {
             ...subnetFromDB[1],
@@ -273,15 +272,66 @@ export const deleteLinodeInterface = (mockState: MockState) => [
       const linodeId = Number(params.id);
       const interfaceId = Number(params.interfaceId);
       const linode = await mswDB.get('linodes', linodeId);
-      const linodeInterface = await mswDB.get('linodeInterfaces', interfaceId);
+      const linodeInterfaceTuple = await mswDB.get(
+        'linodeInterfaces',
+        interfaceId
+      );
 
-      if (!linode || !linodeInterface) {
+      if (!linode || !linodeInterfaceTuple) {
         return makeNotFoundResponse();
       }
 
-      await mswDB.delete('linodeInterfaces', interfaceId, mockState);
+      const linodeInterface = linodeInterfaceTuple[1];
 
-      // todo connie: add vpc stuff... 
+      if (linodeInterface.vpc && linodeInterface.vpc.subnet_id) {
+        const subnetFromDB = await mswDB.get(
+          'subnets',
+          linodeInterface.vpc.subnet_id
+        );
+        const vpc = await mswDB.get(
+          'vpcs',
+          linodeInterface.vpc.vpc_id ?? subnetFromDB?.[0] ?? -1
+        );
+
+        if (subnetFromDB && vpc) {
+          // update VPC/subnet to remove interface
+          const updatedLinodeData = subnetFromDB[1].linodes.map((data) => {
+            return {
+              ...data,
+              interfaces: data.interfaces.filter(
+                (iface) => iface.id !== interfaceId && iface.config_id === null
+              ),
+            };
+          });
+
+          const updatedSubnet = {
+            ...subnetFromDB[1],
+            linodes: updatedLinodeData,
+            updated: DateTime.now().toISO(),
+          };
+
+          const updatedVPC = {
+            ...vpc,
+            subnets: vpc.subnets.map((subnet) => {
+              if (subnet.id === subnetFromDB[1].id) {
+                return updatedSubnet;
+              }
+
+              return subnet;
+            }),
+          };
+
+          await mswDB.update(
+            'subnets',
+            subnetFromDB[1].id,
+            [vpc.id, updatedSubnet],
+            mockState
+          );
+          await mswDB.update('vpcs', vpc.id, updatedVPC, mockState);
+        }
+      }
+
+      await mswDB.delete('linodeInterfaces', interfaceId, mockState);
 
       queueEvents({
         event: {
@@ -339,7 +389,7 @@ export const updateLinodeInterface = (mockState: MockState) => [
           entity: {
             id: interfaceId,
             label: linode.label,
-            type: 'subnets',
+            type: 'linodeInterface',
             url: `/v4beta/linodes/instances/${linode.id}/interfaces`,
           },
         },

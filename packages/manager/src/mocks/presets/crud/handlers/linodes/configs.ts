@@ -2,23 +2,17 @@ import { linodeConfigInterfaceFactory } from '@linode/utilities';
 import { DateTime } from 'luxon';
 import { http } from 'msw';
 
-import { queueEvents } from 'src/mocks/utilities/events';
 import {
   makeNotFoundResponse,
-  makePaginatedResponse,
   makeResponse,
 } from 'src/mocks/utilities/response';
 
 import { mswDB } from '../../../../indexedDB';
-import { addFirewallDevice } from './linodes';
 
-import type { Config, Interface } from '@linode/api-v4';
+import type { Interface } from '@linode/api-v4';
 import type { StrictResponse } from 'msw';
 import type { MockState } from 'src/mocks/types';
-import type {
-  APIErrorResponse,
-  APIPaginatedResponse,
-} from 'src/mocks/utilities/response';
+import type { APIErrorResponse } from 'src/mocks/utilities/response';
 
 export const appendConfigInterface = (mockState: MockState) => [
   http.post(
@@ -48,7 +42,6 @@ export const appendConfigInterface = (mockState: MockState) => [
         mockState
       );
 
-      // @TODO CONNIE - move to helper function of sorts
       if (interfacePayload.purpose === 'vpc') {
         // Update corresponding VPC when creating a VPC interface
         const subnetFromDB = await mswDB.get(
@@ -106,8 +99,7 @@ export const appendConfigInterface = (mockState: MockState) => [
   ),
 ];
 
-// deleteLinodeConfigInterface
-export const deleteLinodeConfigInterface = (mockState: MockState) => [
+export const deleteConfigInterface = (mockState: MockState) => [
   http.delete(
     '*/v4*/linodes/instances/:id/configs/:configId/interfaces/:interfaceId',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
@@ -143,7 +135,8 @@ export const deleteLinodeConfigInterface = (mockState: MockState) => [
             return {
               ...data,
               interfaces: data.interfaces.filter(
-                (iface) => iface.id !== interfaceId
+                (iface) =>
+                  iface.id !== interfaceId && iface.config_id === configId
               ),
             };
           });
