@@ -89,7 +89,7 @@ export const NodeBalancerConfigNode = React.memo(
 
     return (
       <React.Fragment>
-        <Grid data-qa-node size={12} sx={{ padding: 1 }}>
+        <Grid data-qa-node size={12}>
           {idx !== 0 && (
             <Grid size={12}>
               <Divider
@@ -146,7 +146,7 @@ export const NodeBalancerConfigNode = React.memo(
             )}
           </Grid>
         </Grid>
-        <Grid size={12} sx={{ padding: 1 }}>
+        <Grid size={12}>
           <Grid container data-qa-node key={idx} spacing={2}>
             <Grid
               size={{
@@ -230,7 +230,7 @@ export const NodeBalancerConfigNode = React.memo(
               </Grid>
             )}
             {!disallowRemoval && (
-              <Box alignSelf="flex-end" paddingBottom={1}>
+              <Box alignSelf="flex-end">
                 <Button disabled={disabled} onClick={() => removeNode(idx)}>
                   Remove
                 </Button>
