@@ -5,7 +5,7 @@ import { firewallDeviceFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   renderWithTheme,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { FirewallDeviceLanding } from './FirewallDeviceLanding';
@@ -122,7 +122,7 @@ services.forEach((service: FirewallDeviceEntityType) => {
           const mockNavigate = vi.fn();
           queryMocks.useNavigate.mockReturnValue(mockNavigate);
 
-          const { getByTestId } = await renderWithThemeAndRouter(
+          const { getByTestId } = renderWithTheme(
             <FirewallDeviceLanding {...prop} />,
             {
               initialRoute: `/firewalls/1/${service}`,

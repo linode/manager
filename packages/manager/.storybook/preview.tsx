@@ -19,7 +19,7 @@ import {
 } from '@storybook/addon-docs/blocks';
 import {
   wrapWithTheme,
-  wrapWithThemeAndRouter,
+  wrapWithTheme,
 } from '../src/utilities/testHelpers';
 import '../src/index.css';
 import '@reach/tabs/styles.css'; // @todo M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
@@ -64,7 +64,7 @@ const preview: Preview = {
     (Story, context) => {
       const isDark = useDarkMode();
       return context.parameters.tanStackRouter
-        ? wrapWithThemeAndRouter(<Story />, {
+        ? wrapWithTheme(<Story />, {
             theme: isDark ? 'dark' : 'light',
           })
         : wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });

@@ -4,7 +4,7 @@ import React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ImagesLandingEmptyState } from './ImagesLandingEmptyState';
 
@@ -24,7 +24,7 @@ describe('ImagesLandingEmptyState', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ImagesLandingEmptyState />
     );
 

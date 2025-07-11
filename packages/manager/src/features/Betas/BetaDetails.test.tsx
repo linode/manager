@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 
 import { formatDate } from 'src/utilities/formatDate';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import BetaDetails from './BetaDetails';
 
@@ -21,7 +21,7 @@ describe('BetaDetails', () => {
       started: dates.started,
     };
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     getByText(RegExp(beta.label));
@@ -39,7 +39,7 @@ describe('BetaDetails', () => {
       more_info: 'https://linode.com',
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     expect(queryByText(/End Date:/i)).toBeNull();
@@ -52,7 +52,7 @@ describe('BetaDetails', () => {
       label: 'Beta',
       started: DateTime.now().minus({ days: 60 }).toISO(),
     };
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     expect(queryByText(/More Info:/i)).toBeNull();
@@ -75,13 +75,13 @@ describe('BetaDetails', () => {
     };
 
     const { queryByText: queryAccountBetaByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <BetaDetails beta={accountBeta} dataQA="beta-details" />
       );
     const accountBetaSignUpButton = queryAccountBetaByText('Sign Up');
     expect(accountBetaSignUpButton).toBeNull();
 
-    const { queryByText: queryBetaByText } = await renderWithThemeAndRouter(
+    const { queryByText: queryBetaByText } = renderWithTheme(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     const betaSignUpButton = queryBetaByText('Sign Up');
@@ -105,13 +105,13 @@ describe('BetaDetails', () => {
     };
 
     const { queryByText: queryAccountBetaByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <BetaDetails beta={accountBeta} dataQA="beta-details" />
       );
     const accountBetaStartDate = queryAccountBetaByText('Start Date:');
     expect(accountBetaStartDate).toBeNull();
 
-    const { queryByText: queryBetaByText } = await renderWithThemeAndRouter(
+    const { queryByText: queryBetaByText } = renderWithTheme(
       <BetaDetails beta={beta} dataQA="beta-details" />
     );
     const betaStartDate = queryBetaByText('Start Date:');

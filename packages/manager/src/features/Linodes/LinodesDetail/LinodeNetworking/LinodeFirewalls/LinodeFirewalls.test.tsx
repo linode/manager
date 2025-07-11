@@ -11,7 +11,7 @@ import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
   renderWithTheme,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { LinodeFirewalls } from './LinodeFirewalls';
@@ -80,7 +80,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeFirewalls linodeID={1} />
     );
     const addFirewallBtn = getByText('Add Firewall');
@@ -96,7 +96,7 @@ describe('LinodeFirewalls', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeFirewalls linodeID={1} />
     );
     const addFirewallBtn = getByText('Add Firewall');
@@ -118,7 +118,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeFirewalls linodeID={1} />
     );
 
@@ -144,7 +144,7 @@ describe('LinodeFirewalls', () => {
       })
     );
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <LinodeFirewalls linodeID={1} />
     );
 
