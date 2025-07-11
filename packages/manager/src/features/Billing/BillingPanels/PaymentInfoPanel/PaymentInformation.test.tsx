@@ -5,11 +5,7 @@ import * as React from 'react';
 
 import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
-import {
-  renderWithTheme,
-  wrapWithTheme,
-  wrapWithTheme,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import PaymentInformation from './PaymentInformation';
 
@@ -91,11 +87,9 @@ describe('Payment Info Panel', () => {
     expect(getByTestId(ADD_PAYMENT_METHOD_BUTTON_ID)).toBeInTheDocument();
 
     rerender(
-      wrapWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} isAkamaiCustomer={true} />
         </PayPalScriptProvider>
-      )
     );
 
     expect(queryByText('Add Payment Method')).toBeNull();
@@ -118,11 +112,9 @@ describe('Payment Info Panel', () => {
       routeId: '/account/billing/add-payment-method',
     });
     rerender(
-      wrapWithTheme(
         <PayPalScriptProvider options={{ clientId: PAYPAL_CLIENT_ID }}>
           <PaymentInformation {...props} />
         </PayPalScriptProvider>
-      )
     );
     expect(getByTestId('drawer')).toBeVisible();
   });

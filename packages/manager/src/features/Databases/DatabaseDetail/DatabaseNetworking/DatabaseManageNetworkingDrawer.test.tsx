@@ -6,10 +6,7 @@ import { describe, it } from 'vitest';
 
 import { subnetFactory, vpcFactory } from 'src/factories';
 import { databaseFactory } from 'src/factories/databases';
-import {
-  renderWithTheme,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import DatabaseManageNetworkingDrawer from './DatabaseManageNetworkingDrawer';
 

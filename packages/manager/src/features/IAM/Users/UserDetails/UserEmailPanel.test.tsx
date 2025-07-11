@@ -5,10 +5,7 @@ import React from 'react';
 
 import { accountUserFactory } from 'src/factories';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { UserEmailPanel } from './UserEmailPanel';
 

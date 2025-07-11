@@ -4,10 +4,7 @@ import React from 'react';
 import { databaseBackupFactory, databaseFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import {
-  renderWithTheme,
-  renderWithTheme,
-} from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { DatabaseBackups } from './DatabaseBackups';
 
