@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BetaDetailsList } from './BetaDetailsList';
 
@@ -8,7 +8,7 @@ import type { APIError } from '@linode/api-v4';
 
 describe('BetaDetails', () => {
   it('should display the title supplied in the props as an h2 component', async () => {
-    const { queryByRole } = await renderWithThemeAndRouter(
+    const { queryByRole } = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         dataQA="betas"
@@ -21,7 +21,7 @@ describe('BetaDetails', () => {
   });
 
   it('should dispaly the circle progress component if the isLoading prop is set to true', async () => {
-    const { queryByTestId: queryBetasList } = await renderWithThemeAndRouter(
+    const { queryByTestId: queryBetasList } = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         dataQA="betas"
@@ -33,7 +33,7 @@ describe('BetaDetails', () => {
     expect(queryBetasList('circle-progress')).toBeFalsy();
 
     const { queryByTestId: queryLoadingBetasList } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         <BetaDetailsList
           betas={[]}
           dataQA="betas"
@@ -49,7 +49,7 @@ describe('BetaDetails', () => {
     const error: APIError = {
       reason: 'You do not have permissions to access this resource.',
     };
-    const betasList = await renderWithThemeAndRouter(
+    const betasList = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         dataQA="betas"
@@ -61,7 +61,7 @@ describe('BetaDetails', () => {
     expect(betasList.queryByTestId('error-state')).toBeFalsy();
     expect(betasList.queryByText(error.reason)).toBeFalsy();
 
-    const errorBetasList = await renderWithThemeAndRouter(
+    const errorBetasList = renderWithTheme(
       <BetaDetailsList
         betas={[]}
         dataQA="betas"

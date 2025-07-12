@@ -4,7 +4,7 @@ import { databaseFactory } from 'src/factories/databases';
 import {
   getShadowRootElement,
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import * as utils from '../../utilities';
@@ -53,12 +53,12 @@ describe('DatabaseSettings Component', () => {
   const database = databaseFactory.build({ platform: 'rdbms-default' });
   it('Should exist and be renderable', async () => {
     expect(DatabaseSettings).toBeDefined();
-    await renderWithThemeAndRouter(<DatabaseSettings database={database} />);
+    renderWithTheme(<DatabaseSettings database={database} />);
   });
 
   it('should render a Paper component with headers for Manage Access, Resetting the Root password, and Deleting the Cluster', async () => {
     spy.mockReturnValue(v2GA());
-    const { container, getAllByRole } = await renderWithThemeAndRouter(
+    const { container, getAllByRole } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
     const paper = container.querySelector('.MuiPaper-root');
@@ -75,7 +75,7 @@ describe('DatabaseSettings Component', () => {
     const defaultDatabase = databaseFactory.build({
       platform: 'rdbms-default',
     });
-    const { getAllByRole } = await renderWithThemeAndRouter(
+    const { getAllByRole } = renderWithTheme(
       <DatabaseSettings database={defaultDatabase} />,
       { flags: { databaseVpc: true } }
     );
@@ -88,7 +88,7 @@ describe('DatabaseSettings Component', () => {
     const legacyDatabase = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
-    const { getAllByRole } = await renderWithThemeAndRouter(
+    const { getAllByRole } = renderWithTheme(
       <DatabaseSettings database={legacyDatabase} />,
       { flags: { databaseVpc: true } }
     );
@@ -100,7 +100,7 @@ describe('DatabaseSettings Component', () => {
     ['disable', true],
     ['enable', false],
   ])('should %s buttons when disabled is %s', async (_, isDisabled) => {
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettings database={database} disabled={isDisabled} />
     );
 
@@ -136,7 +136,7 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -156,7 +156,7 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -176,7 +176,7 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -196,7 +196,7 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -216,7 +216,7 @@ describe('DatabaseSettings Component', () => {
       version: '14.6',
     });
 
-    const { container } = await renderWithThemeAndRouter(
+    const { container } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -231,7 +231,7 @@ describe('DatabaseSettings Component', () => {
     const database = databaseFactory.build({
       platform: 'rdbms-legacy',
     });
-    const { getByRole, queryByText } = await renderWithThemeAndRouter(
+    const { getByRole, queryByText } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
     const radioInput = getByRole('radiogroup');
@@ -244,7 +244,7 @@ describe('DatabaseSettings Component', () => {
     const database = databaseFactory.build({
       platform: 'rdbms-default',
     });
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <DatabaseSettings database={database} />
     );
 
@@ -274,7 +274,7 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { container, getAllByRole } = await renderWithThemeAndRouter(
+    const { container, getAllByRole } = renderWithTheme(
       <DatabaseSettings database={mockNewDatabase} />,
       { flags }
     );
@@ -310,7 +310,7 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettings database={mockNewDatabase} />,
       { flags }
     );
@@ -348,7 +348,7 @@ describe('DatabaseSettings Component', () => {
       isUserNewBeta: false,
     });
 
-    const { getByTestId } = await renderWithThemeAndRouter(
+    const { getByTestId } = renderWithTheme(
       <DatabaseSettings database={mockNewDatabase} />,
       { flags }
     );

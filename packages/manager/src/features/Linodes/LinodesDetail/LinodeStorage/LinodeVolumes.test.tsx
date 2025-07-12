@@ -4,7 +4,7 @@ import * as React from 'react';
 import { accountFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { LinodeVolumes } from './LinodeVolumes';
 
@@ -47,7 +47,7 @@ describe('LinodeVolumes', async () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<LinodeVolumes />);
+    const { findByText } = renderWithTheme(<LinodeVolumes />);
 
     expect(await findByText('Volumes')).toBeVisible();
   });
@@ -73,7 +73,7 @@ describe('LinodeVolumes', async () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
+    const { findByText } = renderWithTheme(<LinodeVolumes />, {
       flags: { blockStorageEncryption: true },
     });
 
@@ -100,7 +100,7 @@ describe('LinodeVolumes', async () => {
       })
     );
 
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
+    const { queryByText } = renderWithTheme(<LinodeVolumes />, {
       flags: { blockStorageEncryption: false },
     });
 
@@ -127,7 +127,7 @@ describe('LinodeVolumes', async () => {
       })
     );
 
-    const { queryByText } = await renderWithThemeAndRouter(<LinodeVolumes />, {
+    const { queryByText } = renderWithTheme(<LinodeVolumes />, {
       flags: { blockStorageEncryption: true },
     });
 

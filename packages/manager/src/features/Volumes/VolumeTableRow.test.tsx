@@ -6,7 +6,7 @@ import { notificationFactory, volumeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
-  renderWithThemeAndRouter,
+  renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 
@@ -40,7 +40,7 @@ const handlers: ActionHandlers = {
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", async () => {
     const { getByLabelText, getByTestId, getByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         wrapWithTableBody(
           <VolumeTableRow handlers={handlers} volume={attachedVolume} />
         )
@@ -59,7 +59,7 @@ describe('Volume table row', () => {
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow handlers={handlers} volume={unattachedVolume} />
       )
@@ -85,7 +85,7 @@ describe('Volume table row', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -105,7 +105,7 @@ describe('Volume table row', () => {
       })
     );
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -116,7 +116,7 @@ describe('Volume table row', () => {
   it('should render the encryption status if isBlockStorageEncryptionFeatureEnabled is true', async () => {
     const volume = volumeFactory.build();
 
-    const { findByText } = await renderWithThemeAndRouter(
+    const { findByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow
           handlers={handlers}
@@ -132,7 +132,7 @@ describe('Volume table row', () => {
   it('should not render the encryption status if isBlockStorageEncryptionFeatureEnabled is false', async () => {
     const volume = volumeFactory.build();
 
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow handlers={handlers} volume={volume} />)
     );
 
@@ -143,7 +143,7 @@ describe('Volume table row', () => {
 describe('Volume table row - for linodes detail page', () => {
   it("should show the attached Linode's label if present", async () => {
     const { getByLabelText, getByText, queryByTestId, queryByText } =
-      await renderWithThemeAndRouter(
+      renderWithTheme(
         wrapWithTableBody(
           <VolumeTableRow
             handlers={handlers}
@@ -171,7 +171,7 @@ describe('Volume table row - for linodes detail page', () => {
   });
 
   it('should show a high performance icon tooltip if Linode has the capability', async () => {
-    const { getByLabelText, getByText } = await renderWithThemeAndRouter(
+    const { getByLabelText, getByText } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow
           handlers={handlers}

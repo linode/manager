@@ -8,7 +8,7 @@ import React from 'react';
 
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { NodeBalancerConfigurationsWrapper } from './NodeBalancerConfigurationsWrapper';
 
@@ -33,7 +33,7 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } =
-      await renderWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
         initialRoute: '/nodebalancers/$id/configurations',
       });
 
@@ -87,7 +87,7 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByTestId, getByText, queryByLabelText } =
-      await renderWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
         initialRoute: '/nodebalancers/$id/configurations',
       });
 
@@ -112,7 +112,7 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByTestId, getByText, queryByLabelText } =
-      await renderWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
         initialRoute: '/nodebalancers/$id/configurations',
       });
 
@@ -144,7 +144,7 @@ describe('NodeBalancerConfigurations', () => {
     );
 
     const { getByLabelText, getByTestId, getByText } =
-      await renderWithThemeAndRouter(<NodeBalancerConfigurationsWrapper />, {
+      renderWithTheme(<NodeBalancerConfigurationsWrapper />, {
         initialRoute: '/nodebalancers/$id/configurations',
       });
 

@@ -48,7 +48,6 @@ export const mountWithTheme = (
   jsx: React.ReactNode,
   theme: ThemeName = 'light',
   flags: Partial<Flags> = {},
-  useTanstackRouter: boolean = false,
   routeTree?: (parentRoute: AnyRoute) => AnyRoute[]
 ) => {
   const queryClient = queryClientFactory();
@@ -80,13 +79,9 @@ export const mountWithTheme = (
             options={{ bootstrap: flags }}
           >
             <SnackbarProvider>
-              {useTanstackRouter ? (
-                <MemoryRouter>
-                  <RouterProvider router={router} />
-                </MemoryRouter>
-              ) : (
-                <MemoryRouter>{jsx}</MemoryRouter>
-              )}
+              <MemoryRouter>
+                <RouterProvider router={router} />
+              </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>

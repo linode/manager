@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { BillingDetail } from './BillingDetail';
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { findByTestId, findByText } = await renderWithThemeAndRouter(
+    const { findByTestId, findByText } = renderWithTheme(
       <BillingDetail />
     );
     await findByTestId('billing-detail');

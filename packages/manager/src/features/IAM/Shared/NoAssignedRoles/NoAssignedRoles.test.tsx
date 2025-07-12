@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import React from 'react';
 
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import {
   NO_ASSIGNED_ENTITIES_TEXT,
@@ -27,7 +27,7 @@ describe('NoAssignedRoles', () => {
   });
 
   it('renders with correct text for the Assigned Roles tab', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <NoAssignedRoles
         hasAssignNewRoleDrawer={true}
         text={NO_ASSIGNED_ROLES_TEXT}
@@ -41,7 +41,7 @@ describe('NoAssignedRoles', () => {
   });
 
   it('renders with correct text for the Assigned Entities tab', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <NoAssignedRoles
         hasAssignNewRoleDrawer={false}
         text={NO_ASSIGNED_ENTITIES_TEXT}

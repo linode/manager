@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import { accountRolesFactory } from 'src/factories/accountRoles';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { RemoveAssignmentConfirmationDialog } from './RemoveAssignmentConfirmationDialog';
 
@@ -67,7 +67,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('should render', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <RemoveAssignmentConfirmationDialog {...props} />
     );
 
@@ -92,7 +92,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
   });
 
   it('calls onClose when the cancel button is clicked', async () => {
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <RemoveAssignmentConfirmationDialog {...props} />
     );
 
@@ -121,7 +121,7 @@ describe('RemoveAssignmentConfirmationDialog', () => {
       data: accountRolesFactory.build(),
     });
 
-    await renderWithThemeAndRouter(
+    renderWithTheme(
       <RemoveAssignmentConfirmationDialog {...props} />
     );
 

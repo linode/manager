@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { kubernetesClusterFactory } from 'src/factories';
-import { renderWithThemeAndRouter } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import { ClusterChips } from './ClusterChips';
 
@@ -32,7 +32,7 @@ vi.mock('@linode/queries', async () => {
 
 describe('Kubernetes cluster action menu', () => {
   it('renders an HA chip if the cluster is high availability', async () => {
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ClusterChips cluster={mockHACluster} />
     );
 
@@ -40,7 +40,7 @@ describe('Kubernetes cluster action menu', () => {
   });
 
   it('does not render an HA chip if the cluster is not high availability', async () => {
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <ClusterChips cluster={mockCluster} />
     );
 
@@ -54,7 +54,7 @@ describe('Kubernetes cluster action menu', () => {
       },
     });
 
-    const { getByText } = await renderWithThemeAndRouter(
+    const { getByText } = renderWithTheme(
       <ClusterChips cluster={mockEnterpriseCluster} />,
       {
         flags: {
@@ -78,7 +78,7 @@ describe('Kubernetes cluster action menu', () => {
       },
     });
 
-    const { getByText, queryByText } = await renderWithThemeAndRouter(
+    const { getByText, queryByText } = renderWithTheme(
       <ClusterChips cluster={mockEnterpriseCluster} />,
       {
         flags: {
@@ -102,7 +102,7 @@ describe('Kubernetes cluster action menu', () => {
       },
     });
 
-    const { queryByText } = await renderWithThemeAndRouter(
+    const { queryByText } = renderWithTheme(
       <ClusterChips cluster={mockStandardCluster} />,
       {
         flags: {

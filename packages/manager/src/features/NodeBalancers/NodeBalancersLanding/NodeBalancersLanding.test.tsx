@@ -6,7 +6,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
   mockMatchMedia,
-  renderWithThemeAndRouter,
+  renderWithTheme,
 } from 'src/utilities/testHelpers';
 
 import { NodeBalancersLanding } from './NodeBalancersLanding';
@@ -42,7 +42,7 @@ describe('NodeBalancersLanding', () => {
       })
     );
 
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <NodeBalancersLanding />
     );
 
@@ -67,7 +67,7 @@ describe('NodeBalancersLanding', () => {
       })
     );
 
-    const { getByTestId, getByText } = await renderWithThemeAndRouter(
+    const { getByTestId, getByText } = renderWithTheme(
       <NodeBalancersLanding />
     );
 

@@ -136,20 +136,14 @@ componentTests(
         path: '/tab-3',
       }),
     ],
-    useTanstackRouter: true,
   }
 );
 
-visualTests(
-  (mount) => {
-    describe('Accessibility checks', () => {
-      it('passes aXe check when menu is closed without an item selected', () => {
-        mount(<CustomTabs />);
-        checkComponentA11y();
-      });
+visualTests((mount) => {
+  describe('Accessibility checks', () => {
+    it('passes aXe check when menu is closed without an item selected', () => {
+      mount(<CustomTabs />);
+      checkComponentA11y();
     });
-  },
-  {
-    useTanstackRouter: true,
-  }
-);
+  });
+});

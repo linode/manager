@@ -1,6 +1,5 @@
 import { Button } from '@linode/ui';
-import { render, screen, waitFor } from '@testing-library/react';
-import { Formik } from 'formik';
+import { render, screen } from '@testing-library/react';
 import * as React from 'react';
 
 import {
@@ -9,12 +8,9 @@ import {
   getShadowRootElement,
   mockMatchMedia,
   renderWithTheme,
-  renderWithThemeAndFormik,
   renderWithThemeAndHookFormContext,
-  renderWithThemeAndRouter,
   resizeScreenSize,
   withMarkup,
-  wrapWithStore,
   wrapWithTableBody,
 } from './testHelpers';
 
@@ -62,36 +58,6 @@ describe('testHelpers', () => {
     });
   });
 
-  describe('renderWithThemeAndRouter', () => {
-    it('should render the component with theme and router', async () => {
-      const TestComponent = () => <div>Test</div>;
-      const { getByText, router } = await renderWithThemeAndRouter(
-        <TestComponent />
-      );
-
-      expect(router.state.location.pathname).toBe('/');
-
-      await waitFor(() => {
-        router.navigate({
-          params: { betaId: 'beta' },
-          to: '/betas/signup/$betaId',
-        });
-      });
-
-      expect(router.state.location.pathname).toBe('/betas/signup/beta');
-      expect(getByText('Test')).toBeInTheDocument();
-    });
-  });
-
-  describe('wrapWithStore', () => {
-    it('should wrap the component with Redux store', () => {
-      const TestComponent = () => <div>Test</div>;
-      const wrapped = wrapWithStore({ children: <TestComponent /> });
-      render(wrapped);
-      expect(screen.getByText('Test')).toBeInTheDocument();
-    });
-  });
-
   describe('wrapWithTableBody', () => {
     it('should wrap the component with table and tbody', () => {
       const TestComponent = () => (
@@ -103,42 +69,6 @@ describe('testHelpers', () => {
       render(wrapped);
       expect(screen.getByText('Test')).toBeInTheDocument();
       expect(screen.getByText('Test').closest('table')).toBeInTheDocument();
-    });
-  });
-
-  describe('renderWithThemeAndFormik', () => {
-    it('renders the component within Formik context', () => {
-      const TestComponent = () => (
-        <Formik
-          initialValues={{ testInput: 'initial value' }}
-          onSubmit={() => {}}
-        >
-          {({ handleSubmit, values }) => (
-            <form onSubmit={handleSubmit}>
-              <input
-                name="testInput"
-                readOnly
-                type="text"
-                value={values.testInput || ''}
-              />
-              <button type="submit">Submit</button>
-            </form>
-          )}
-        </Formik>
-      );
-
-      const { container } = renderWithThemeAndFormik(<TestComponent />, {
-        initialValues: { testInput: 'initial value' },
-        onSubmit: vi.fn(),
-      });
-
-      expect(container.querySelector('form')).toBeInTheDocument();
-      expect(container.querySelector('input[name="testInput"]')).toHaveValue(
-        'initial value'
-      );
-      expect(
-        container.querySelector('button[type="submit"]')
-      ).toBeInTheDocument();
     });
   });
 

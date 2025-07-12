@@ -50,7 +50,6 @@ export const componentTests = (
   callback: (mountCommand: MountCommand) => void,
   options: {
     routeTree?: (parentRoute: AnyRoute) => AnyRoute[];
-    useTanstackRouter?: boolean;
   } = {}
 ) => {
   const mountCommand = (jsx: React.ReactNode, flags?: Flags) =>
@@ -58,7 +57,6 @@ export const componentTests = (
       jsx,
       defaultTheme,
       flags,
-      options.useTanstackRouter,
       options.routeTree
     );
   describe(`${componentName} component tests`, () => {
@@ -82,7 +80,6 @@ export const visualTests = (
   callback: (mountCommand: MountCommand) => void,
   options: {
     routeTree?: (parentRoute: AnyRoute) => AnyRoute[];
-    useTanstackRouter?: boolean;
   } = {}
 ) => {
   describe('Visual tests', () => {
@@ -92,7 +89,6 @@ export const visualTests = (
           jsx,
           themeName,
           flags,
-          options.useTanstackRouter,
           options.routeTree
         );
       describe(`${capitalize(themeName)} theme`, () => {

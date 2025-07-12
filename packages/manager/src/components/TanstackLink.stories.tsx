@@ -30,9 +30,6 @@ export const AsLink: StoryObj<TanstackLinkComponentProps> = {
 };
 
 const meta: Meta<TanstackLinkComponentProps> = {
-  parameters: {
-    tanStackRouter: true,
-  },
   title: 'Foundations/Link/Tanstack Link',
 };
 export default meta;

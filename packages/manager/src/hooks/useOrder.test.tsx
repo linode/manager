@@ -62,10 +62,9 @@ describe('useOrder hook', () => {
     const { result } = renderHook(() => useOrder(defaultOrder), {
       wrapper: (ui) =>
         wrapWithTheme(ui, {
+          initialRoute: '/account/maintenance',
           MemoryRouter: {
-            initialEntries: [
-              'https://cloud.linode.com/account/maintenance?order=desc&orderBy=when',
-            ],
+            initialEntries: ['/account/maintenance?order=desc&orderBy=when'],
           },
           queryClient,
         }),
