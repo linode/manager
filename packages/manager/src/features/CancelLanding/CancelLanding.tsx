@@ -42,8 +42,6 @@ export const CancelLanding = React.memo(() => {
 
   const surveyLink = location.state?.survey_link;
 
-  console.log("State", location.state)
-
   if (!surveyLink) {
     return <Redirect to="/" />;
   }
