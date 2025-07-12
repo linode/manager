@@ -8,11 +8,7 @@ import {
   Typography,
 } from '@linode/ui';
 import { NotFound } from '@linode/ui';
-import {
-  createLazyRoute,
-  useNavigate,
-  useParams,
-} from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -187,7 +183,3 @@ EAP and the MSA, this EAP shall be deemed controlling only with respect to its e
     </>
   );
 };
-
-export const betaSignupLazyRoute = createLazyRoute('/betas/signup/$betaId')({
-  component: BetaSignup,
-});

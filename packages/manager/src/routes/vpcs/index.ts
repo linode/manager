@@ -40,7 +40,11 @@ const vpcsRoute = createRoute({
 const vpcsLandingRoute = createRoute({
   getParentRoute: () => vpcsRoute,
   path: '/',
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcLandingLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCLanding/VPCLandingLazyRoute').then(
+    (m) => m.vpcLandingLazyRoute
+  )
+);
 
 type VPCActionRouteParams<P = number | string> = {
   action: VPCAction;
@@ -71,12 +75,20 @@ const vpcActionRoute = createRoute({
   },
   getParentRoute: () => vpcsLandingRoute,
   path: '$vpcId/$action',
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcLandingLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCLanding/VPCLandingLazyRoute').then(
+    (m) => m.vpcLandingLazyRoute
+  )
+);
 
 const vpcsCreateRoute = createRoute({
   getParentRoute: () => vpcsRoute,
   path: 'create',
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcCreateLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCCreate/VPCCreateLazyRoute').then(
+    (m) => m.vpcCreateLazyRoute
+  )
+);
 
 const vpcsDetailRoute = createRoute({
   getParentRoute: () => vpcsRoute,
@@ -85,7 +97,11 @@ const vpcsDetailRoute = createRoute({
   }),
   path: '$vpcId',
   validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 /**
  * We must have different routes for the Edit and Delete modals on the VPC Landing page and the VPC Detail page, or we will get
@@ -109,13 +125,21 @@ const vpcDetailActionRoute = createRoute({
   },
   getParentRoute: () => vpcsDetailRoute,
   path: 'detail/$action',
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 const subnetCreateRoute = createRoute({
   getParentRoute: () => vpcsDetailRoute,
   path: 'subnets/create',
   validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 const subnetDetailRoute = createRoute({
   getParentRoute: () => vpcsDetailRoute,
@@ -124,7 +148,11 @@ const subnetDetailRoute = createRoute({
   }),
   path: 'subnets/$subnetId',
   validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 type SubnetActionRouteParams<P = number | string> = {
   subnetAction: SubnetAction;
@@ -154,7 +182,11 @@ const subnetActionRoute = createRoute({
   },
   path: '$subnetAction',
   validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 type SubnetLinodeActionRouteParams<P = number | string> = {
   linodeAction: SubnetLinodeAction;
@@ -192,7 +224,11 @@ const subnetLinodeActionRoute = createRoute({
   },
   path: '/linodes/$linodeId/$linodeAction',
   validateSearch: (search: SubnetSearchParams) => search,
-}).lazy(() => import('./vpcsLazyRoutes').then((m) => m.vpcDetailLazyRoute));
+}).lazy(() =>
+  import('src/features/VPCs/VPCDetail/VPCDetailLazyRoute').then(
+    (m) => m.vpcDetailLazyRoute
+  )
+);
 
 export const vpcsRouteTree = vpcsRoute.addChildren([
   vpcsLandingRoute.addChildren([vpcActionRoute]),

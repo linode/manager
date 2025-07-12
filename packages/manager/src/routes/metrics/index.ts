@@ -13,9 +13,9 @@ const cloudPulseMetricsLandingRoute = createRoute({
   getParentRoute: () => cloudPulseMetricsRoute,
   path: '/',
 }).lazy(() =>
-  import('./cloudPulseMetricsLazyRoutes').then(
-    (m) => m.cloudPulseMetricsLandingLazyRoute
-  )
+  import(
+    'src/features/CloudPulse/Dashboard/cloudPulseMetricsLandingLazyRoute'
+  ).then((m) => m.cloudPulseMetricsLandingLazyRoute)
 );
 
 export const cloudPulseMetricsRouteTree = cloudPulseMetricsRoute.addChildren([

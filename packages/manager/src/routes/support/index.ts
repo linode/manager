@@ -1,7 +1,8 @@
 import { createRoute, redirect } from '@tanstack/react-router';
 
+import { SupportSearchLandingWrapper } from 'src/features/Help/SupportSearchLanding/SupportSearchLandingWrapper';
+
 import { rootRoute } from '../root';
-import { SupportSearchLandingWrapper } from './supportLazyRoutes';
 import { SupportTicketsRoute } from './SupportRoute';
 
 import type { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
@@ -34,7 +35,9 @@ const supportTicketsLandingRoute = createRoute({
   path: 'tickets',
   validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+  import(
+    'src/features/Support/SupportTickets/supportTicketsLandingLazyRoute'
+  ).then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketsNewRoute = createRoute({
@@ -44,7 +47,9 @@ const supportTicketsNewRoute = createRoute({
   getParentRoute: () => supportTicketsLandingRoute,
   path: 'new',
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+  import(
+    'src/features/Support/SupportTickets/supportTicketsLandingLazyRoute'
+  ).then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketsLandingRouteOpen = createRoute({
@@ -52,7 +57,9 @@ const supportTicketsLandingRouteOpen = createRoute({
   path: 'open',
   validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+  import(
+    'src/features/Support/SupportTickets/supportTicketsLandingLazyRoute'
+  ).then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketsLandingRouteClosed = createRoute({
@@ -60,7 +67,9 @@ const supportTicketsLandingRouteClosed = createRoute({
   path: 'closed',
   validateSearch: (search: SupportSearchParams) => search,
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.supportTicketsLandingLazyRoute)
+  import(
+    'src/features/Support/SupportTickets/supportTicketsLandingLazyRoute'
+  ).then((m) => m.supportTicketsLandingLazyRoute)
 );
 
 const supportTicketDetailRoute = createRoute({
@@ -70,7 +79,9 @@ const supportTicketDetailRoute = createRoute({
   }),
   path: 'tickets/$ticketId',
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.supportTicketDetailLazyRoute)
+  import(
+    'src/features/Support/SupportTicketDetail/supportTicketDetailLazyRoute'
+  ).then((m) => m.supportTicketDetailLazyRoute)
 );
 
 const supportSearchLandingRoute = createRoute({
@@ -89,7 +100,9 @@ export const accountActivationLandingRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: 'account-activation',
 }).lazy(() =>
-  import('./supportLazyRoutes').then((m) => m.accountActivationLandingLazyRoute)
+  import(
+    'src/components/AccountActivation/accountActivationLandingLazyRoute'
+  ).then((m) => m.accountActivationLandingLazyRoute)
 );
 
 export const supportRouteTree = supportRoute.addChildren([

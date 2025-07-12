@@ -24,14 +24,18 @@ const stackScriptsLandingRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: '/',
 }).lazy(() =>
-  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+  import(
+    'src/features/StackScripts/StackScriptLanding/stackScriptLandingLazyRoute'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsAccountRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'account',
 }).lazy(() =>
-  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+  import(
+    'src/features/StackScripts/StackScriptLanding/stackScriptLandingLazyRoute'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsAccountMakePublicRoute = createRoute({
@@ -41,7 +45,9 @@ const stackScriptsAccountMakePublicRoute = createRoute({
   }),
   path: 'account/$id/make-public',
 }).lazy(() =>
-  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+  import(
+    'src/features/StackScripts/StackScriptLanding/stackScriptLandingLazyRoute'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsDeleteRoute = createRoute({
@@ -51,14 +57,18 @@ const stackScriptsDeleteRoute = createRoute({
   }),
   path: 'account/$id/delete',
 }).lazy(() =>
-  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+  import(
+    'src/features/StackScripts/StackScriptLanding/stackScriptLandingLazyRoute'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCommunityRoute = createRoute({
   getParentRoute: () => stackScriptsRoute,
   path: 'community',
 }).lazy(() =>
-  import('./stackscriptsLazyRoutes').then((m) => m.stackScriptsLandingLazyRoute)
+  import(
+    'src/features/StackScripts/StackScriptLanding/stackScriptLandingLazyRoute'
+  ).then((m) => m.stackScriptsLandingLazyRoute)
 );
 
 const stackScriptsCreateRoute = createRoute({

@@ -16,21 +16,27 @@ const longviewLandingRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: '/',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewLandingLazyRoute)
+  import('src/features/Longview/LongviewLanding/longviewLandingLazyRoute').then(
+    (m) => m.longviewLandingLazyRoute
+  )
 );
 
 const longviewLandingClientsRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: 'clients',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewLandingLazyRoute)
+  import('src/features/Longview/LongviewLanding/longviewLandingLazyRoute').then(
+    (m) => m.longviewLandingLazyRoute
+  )
 );
 
 const longviewLandingPlanDetailsRoute = createRoute({
   getParentRoute: () => longviewRoute,
   path: 'plan-details',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewLandingLazyRoute)
+  import('src/features/Longview/LongviewLanding/longviewLandingLazyRoute').then(
+    (m) => m.longviewLandingLazyRoute
+  )
 );
 
 const longviewDetailRoute = createRoute({
@@ -40,63 +46,81 @@ const longviewDetailRoute = createRoute({
   }),
   path: 'clients/$id',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailOverviewRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'overview',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailProcessesRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'processes',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailNetworkRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'network',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailDisksRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'disks',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailInstallationRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'installation',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailApacheRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'apache',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailNginxRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'nginx',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 const longviewDetailMySQLRoute = createRoute({
   getParentRoute: () => longviewDetailRoute,
   path: 'mysql',
 }).lazy(() =>
-  import('./longviewLazyRoutes').then((m) => m.longviewDetailLazyRoute)
+  import('src/features/Longview/LongviewDetail/longviewDetailLazyRoute').then(
+    (m) => m.longviewDetailLazyRoute
+  )
 );
 
 export const longviewRouteTree = longviewRoute.addChildren([
