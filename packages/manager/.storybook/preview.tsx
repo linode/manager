@@ -17,10 +17,7 @@ import {
   Controls,
   DocsContainerProps,
 } from '@storybook/addon-docs/blocks';
-import {
-  wrapWithTheme,
-  wrapWithTheme,
-} from '../src/utilities/testHelpers';
+import { wrapWithTheme } from '../src/utilities/testHelpers';
 import '../src/index.css';
 import '@reach/tabs/styles.css'; // @todo M3-6705 Remove this when replacing @reach/tabs with MUI Tabs
 
@@ -61,13 +58,9 @@ export const DocsContainer = ({
 
 const preview: Preview = {
   decorators: [
-    (Story, context) => {
+    (Story) => {
       const isDark = useDarkMode();
-      return context.parameters.tanStackRouter
-        ? wrapWithTheme(<Story />, {
-            theme: isDark ? 'dark' : 'light',
-          })
-        : wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
+      return wrapWithTheme(<Story />, { theme: isDark ? 'dark' : 'light' });
     },
   ],
   parameters: {

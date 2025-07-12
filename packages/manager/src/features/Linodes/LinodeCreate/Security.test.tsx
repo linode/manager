@@ -11,8 +11,8 @@ import { accountFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { http, HttpResponse, server } from 'src/mocks/testServer';
 import {
-  renderWithThemeAndHookFormContext,
   renderWithTheme,
+  renderWithThemeAndHookFormContext,
   wrapWithFormContext,
 } from 'src/utilities/testHelpers';
 
