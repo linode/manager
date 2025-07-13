@@ -51,11 +51,11 @@ export const Profile = () => {
       <LandingHeader removeCrumbX={1} title="My Profile" />
       <Tabs index={tabIndex} onChange={handleTabChange}>
         <TanStackTabLinkList tabs={tabs} />
-        <React.Suspense fallback={<SuspenseLoader />}>
-          <TabPanels>
+        <TabPanels>
+          <React.Suspense fallback={<SuspenseLoader />}>
             <Outlet />
-          </TabPanels>
-        </React.Suspense>
+          </React.Suspense>
+        </TabPanels>
       </Tabs>
     </React.Fragment>
   );

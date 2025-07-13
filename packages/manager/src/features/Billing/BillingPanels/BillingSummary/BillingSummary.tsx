@@ -7,7 +7,7 @@ import {
 import { Box, Button, Divider, TooltipIcon, Typography } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
-import { useMatch, useNavigate, useSearch } from '@tanstack/react-router';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import * as React from 'react';
 
 import { Currency } from 'src/components/Currency';
@@ -54,13 +54,12 @@ export const BillingSummary = (props: BillingSummaryProps) => {
   const { balance, balanceUninvoiced, paymentMethods, promotions } = props;
 
   const navigate = useNavigate();
-  const match = useMatch({ strict: false });
-  const { paymentMethod } = useSearch({
-    strict: false,
+  const search = useSearch({
+    from: '/account/billing',
   });
+  const { paymentMethod } = search;
 
-  const routeForMakePayment = '/account/billing/make-payment';
-  const makePaymentRouteMatch = match?.routeId === routeForMakePayment;
+  const makePaymentRouteMatch = search.action === 'make-payment';
 
   const [paymentDrawerOpen, setPaymentDrawerOpen] =
     React.useState<boolean>(false);
@@ -131,7 +130,15 @@ export const BillingSummary = (props: BillingSummaryProps) => {
     balance > 0 ? (
       <Typography style={{ marginTop: 16 }}>
         <Button
-          onClick={() => navigate({ to: routeForMakePayment })}
+          onClick={() =>
+            navigate({
+              to: '/account/billing',
+              search: (prev) => ({
+                ...prev,
+                action: 'make-payment',
+              }),
+            })
+          }
           sx={{
             ...theme.applyLinkStyles,
             verticalAlign: 'initial',
