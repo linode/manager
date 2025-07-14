@@ -226,12 +226,12 @@ describe('Integration Tests for firewall Dashboard ', () => {
     });
   });
 
-  it('should apply optional filter (InterfaceIds,InterfaceType) and verify API request payloads', () => {
+  it('should apply optional filter (InterfaceIds,InterfaceTypes) and verify API request payloads', () => {
     const randomInterfaceids = `${randomNumber(0, 100)},${randomNumber(101, 200)}`;
 
     ui.button.findByTitle('Filters').should('be.visible').click();
 
-    cy.findByPlaceholderText('e.g., 1234, 5678')
+    cy.findByPlaceholderText('e.g., 1234,5678')
       .should('be.visible')
       .type(randomInterfaceids);
 
@@ -251,11 +251,11 @@ describe('Integration Tests for firewall Dashboard ', () => {
     });
 
     ui.autocomplete
-      .findByLabel('Interface Type')
+      .findByLabel('Interface Types')
       .should('be.visible')
       .type('VPC{enter}');
 
-    ui.autocomplete.findByLabel('Interface Type').click();
+    ui.autocomplete.findByLabel('Interface Types').click();
 
     cy.wait(['@getMetrics', '@getMetrics', '@getMetrics', '@getMetrics']);
 
