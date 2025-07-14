@@ -16,7 +16,10 @@ import {
   TextField,
 } from '@linode/ui';
 import { isFeatureEnabledV2 } from '@linode/utilities';
-import { createSubnetSchemaIPv4 } from '@linode/validation';
+import {
+  createSubnetSchemaIPv4,
+  createSubnetSchemaWithIPv6,
+} from '@linode/validation';
 import * as React from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
@@ -58,19 +61,22 @@ export const SubnetCreateDrawer = (props: Props) => {
     reset: resetRequest,
   } = useCreateSubnetMutation(vpcId);
 
+  const isDualStackVPC = Boolean(vpc?.ipv6);
+
   const isDualStackEnabled = isFeatureEnabledV2(
     'VPC Dual Stack',
     Boolean(flags.vpcIpv6),
     account?.capabilities ?? []
   );
 
-  const recommendedIPv6 = isDualStackEnabled
-    ? [
-        {
-          range: '/56',
-        },
-      ]
-    : undefined;
+  const recommendedIPv6 =
+    isDualStackEnabled && isDualStackVPC
+      ? [
+          {
+            range: '/56',
+          },
+        ]
+      : undefined;
 
   const {
     control,
@@ -81,7 +87,11 @@ export const SubnetCreateDrawer = (props: Props) => {
     watch,
   } = useForm<CreateSubnetPayload>({
     mode: 'onBlur',
-    resolver: yupResolver(createSubnetSchemaIPv4),
+    resolver: yupResolver(
+      isDualStackEnabled && isDualStackVPC
+        ? createSubnetSchemaWithIPv6
+        : createSubnetSchemaIPv4
+    ),
     values: {
       ipv4: recommendedIPv4,
       ipv6: recommendedIPv6,
@@ -170,14 +180,14 @@ export const SubnetCreateDrawer = (props: Props) => {
                 : 0}
             </FormHelperText>
           )}
-          {isDualStackEnabled && (
+          {isDualStackEnabled && isDualStackVPC && (
             <Controller
               control={control}
               name="ipv6"
               render={() => {
                 return (
                   <Select
-                    label="IPv6 CIDR"
+                    label="IPv6 Prefix Length"
                     onChange={(_, selectedOption) => {
                       remove(0);
                       append({
