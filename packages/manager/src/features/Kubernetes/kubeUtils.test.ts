@@ -367,6 +367,7 @@ describe('hooks', () => {
           enabled: true,
           ga: true,
           la: true,
+          phase2Mtc: true,
         },
       });
 
@@ -390,6 +391,7 @@ describe('hooks', () => {
           enabled: true,
           ga: false,
           la: true,
+          phase2Mtc: false,
         },
       });
 
@@ -413,6 +415,7 @@ describe('hooks', () => {
           enabled: true,
           ga: true,
           la: true,
+          phase2Mtc: true,
         },
       });
 
@@ -438,6 +441,7 @@ describe('hooks', () => {
           enabled: true,
           ga: true,
           la: true,
+          phase2Mtc: true,
         },
       });
       queryMocks.useKubernetesTieredVersionsQuery.mockReturnValue({
@@ -478,6 +482,7 @@ describe('hooks', () => {
           enabled: false,
           ga: true,
           la: true,
+          phase2Mtc: true,
         },
       });
 
