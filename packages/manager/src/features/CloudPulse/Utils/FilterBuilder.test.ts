@@ -382,7 +382,7 @@ it('test getTextFilterProperties method for port', () => {
       getTextFilterProperties(
         {
           config: portFilterConfig,
-          dashboard: dashboardFactory.build({ service_type: 'nodebalancers' }),
+          dashboard: dashboardFactory.build({ service_type: 'nodebalancer' }),
           isServiceAnalyticsIntegration: false,
         },
         vi.fn()
