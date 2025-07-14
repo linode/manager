@@ -8,16 +8,16 @@ import { CloudPulseNodeTypeFilter } from './CloudPulseNodeTypeFilter';
 import { CloudPulseRegionSelect } from './CloudPulseRegionSelect';
 import { CloudPulseResourcesSelect } from './CloudPulseResourcesSelect';
 import { CloudPulseTagsSelect } from './CloudPulseTagsFilter';
-import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 import { CloudPulseTextFilter } from './CloudPulseTextFilter';
+import { CloudPulseTimeRangeSelect } from './CloudPulseTimeRangeSelect';
 
 import type { CloudPulseCustomSelectProps } from './CloudPulseCustomSelect';
 import type { CloudPulseNodeTypeFilterProps } from './CloudPulseNodeTypeFilter';
 import type { CloudPulseRegionSelectProps } from './CloudPulseRegionSelect';
 import type { CloudPulseResourcesSelectProps } from './CloudPulseResourcesSelect';
 import type { CloudPulseTagsSelectProps } from './CloudPulseTagsFilter';
-import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';
 import type { CloudPulseTextFilterProps } from './CloudPulseTextFilter';
+import type { CloudPulseTimeRangeSelectProps } from './CloudPulseTimeRangeSelect';
 
 export interface CloudPulseComponentRendererProps {
   componentKey: string;
@@ -27,8 +27,8 @@ export interface CloudPulseComponentRendererProps {
     | CloudPulseRegionSelectProps
     | CloudPulseResourcesSelectProps
     | CloudPulseTagsSelectProps
-    | CloudPulseTimeRangeSelectProps
-    | CloudPulseTextFilterProps;
+    | CloudPulseTextFilterProps
+    | CloudPulseTimeRangeSelectProps;
   key: string;
 }
 
@@ -40,8 +40,8 @@ const Components: {
       | CloudPulseRegionSelectProps
       | CloudPulseResourcesSelectProps
       | CloudPulseTagsSelectProps
-      | CloudPulseTimeRangeSelectProps
       | CloudPulseTextFilterProps
+      | CloudPulseTimeRangeSelectProps
     >
   >;
 } = {
