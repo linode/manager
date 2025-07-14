@@ -23,6 +23,10 @@ interface BaseProps {
    */
   className?: string;
   /**
+   * If true, shows a clear (X) icon when there is a value
+   */
+  clearable?: boolean;
+  /**
    * Props applied to the root element
    */
   containerProps?: BoxProps;
@@ -91,6 +95,10 @@ interface BaseProps {
    */
   noMarginTop?: boolean;
   /**
+   * Clear the input value
+   */
+  onClear?: () => void;
+  /**
    * Adds `(optional)` to the Label
    * @default false
    */
@@ -148,6 +156,7 @@ export const TextField = (props: TextFieldProps) => {
     SelectProps,
     children,
     className,
+    clearable = false,
     containerProps,
     dataAttrs,
     editable,
@@ -172,6 +181,7 @@ export const TextField = (props: TextFieldProps) => {
     noMarginTop,
     onBlur,
     onChange,
+    onClear,
     optional,
     required,
     slotProps,
@@ -418,9 +428,12 @@ export const TextField = (props: TextFieldProps) => {
                       <CircleProgress noPadding size="xs" />
                     </InputAdornment>
                   )}
-                  {_value && !textFieldProps.disabled && (
+                  {clearable && _value && !textFieldProps.disabled && (
                     <InputAdornment
-                      onClick={() => setValue('')}
+                      onClick={() => {
+                        setValue('');
+                        onClear?.();
+                      }}
                       position="end"
                       sx={{ cursor: 'pointer' }}
                     >
