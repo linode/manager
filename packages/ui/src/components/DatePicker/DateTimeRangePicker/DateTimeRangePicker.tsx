@@ -152,12 +152,31 @@ export const DateTimeRangePicker = ({
     }
     setTimeZone(newTimeZone);
 
-    setStartDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
-    setEndDate((prev) =>
-      prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
-    );
+    // keep date time same irrespective of timezone change
+    if (selectedPreset === 'last month' || selectedPreset === 'reset') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      // change only end date based on the timezone
+    } else if (selectedPreset === 'this month') {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: true }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+      // change both the values based on the timezone
+    } else {
+      setStartDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+      setEndDate((prev) =>
+        prev ? prev.setZone(newTimeZone, { keepLocalTime: false }) : null,
+      );
+    }
   };
 
   const validateDates = (
