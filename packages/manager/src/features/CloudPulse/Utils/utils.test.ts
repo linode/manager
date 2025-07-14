@@ -1,3 +1,4 @@
+import { regionFactory } from '@linode/utilities';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -8,7 +9,13 @@ import {
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from './constants';
-import { arePortsValid, isValidPort } from './utils';
+import {
+  arePortsValid,
+  isValidPort,
+  useIsAclpContextualViewEnabled,
+} from './utils';
+
+import type { Capabilities } from '@linode/api-v4';
 
 describe('isValidPort', () => {
   it('should return valid for empty string and valid ports', () => {
@@ -50,5 +57,76 @@ describe('arePortsValid', () => {
     const ports = Array.from({ length: 16 }, (_, i) => i + 1).join(',');
     const result = arePortsValid(ports);
     expect(result).toBe(PORTS_LIMIT_ERROR_MESSAGE);
+  });
+});
+
+describe('validate useIsAclpContextualViewEnabled function', () => {
+  const queryMocks = vitest.hoisted(() => ({
+    useRegionsQuery: vi.fn(),
+  }));
+
+  vi.mock('@linode/queries', async () => {
+    const actual = await vi.importActual('@linode/queries');
+
+    return {
+      ...actual,
+      useRegionsQuery: queryMocks.useRegionsQuery,
+    };
+  });
+  const region = 'us-east';
+
+  const serviceType: Capabilities = 'Linodes';
+
+  it('should return false for alert and true for metrics', () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      isLoading: false,
+      data: [
+        regionFactory.build({
+          id: region,
+          monitors: { alerts: [], metrics: ['Linodes'] },
+        }),
+      ],
+    });
+    const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
+      regionId: region,
+      serviceType,
+    });
+
+    expect(isAlertEnabled).toBe(false);
+    expect(isMetricEnabled).toBe(true);
+  });
+
+  it('should return true for alert and false for metrics', () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      isLoading: false,
+      data: [
+        regionFactory.build({
+          id: region,
+          monitors: { metrics: [], alerts: ['Linodes'] },
+        }),
+      ],
+    });
+    const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
+      regionId: region,
+      serviceType,
+    });
+
+    expect(isMetricEnabled).toBe(false);
+    expect(isAlertEnabled).toBe(true);
+  });
+
+  it('should return true for loading state', () => {
+    queryMocks.useRegionsQuery.mockReturnValue({
+      isLoading: true,
+    });
+    const { isLoading, isAlertEnabled, isMetricEnabled } =
+      useIsAclpContextualViewEnabled({
+        regionId: region,
+        serviceType,
+      });
+
+    expect(isMetricEnabled).toBe(false);
+    expect(isAlertEnabled).toBe(false);
+    expect(isLoading).toBe(true);
   });
 });
