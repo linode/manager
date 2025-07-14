@@ -115,9 +115,7 @@ export const useQueryWithPermissions2 = (
 ) => {
   const { data: profile } = useProfile();
   const { data: allEntities } = query();
-  // const { isIAMEnabled } = useIsIAMEnabled();
-
-  // const { data: grants } = useGrants(!isIAMEnabled);
+  const { isIAMEnabled } = useIsIAMEnabled();
 
   const entityPermissions: any = useQueries({
     queries: (allEntities || []).map((entity: any) => ({
@@ -128,6 +126,7 @@ export const useQueryWithPermissions2 = (
           entityType,
           entity.id
         ),
+      enabled: isIAMEnabled
     })),
   });
 
@@ -138,10 +137,6 @@ export const useQueryWithPermissions2 = (
     }
   );
 
-  // const readOnlyLinodeIds = profile?.restricted
-  //   ? getEntityIdsByPermission(grants, 'linode', 'read_only')
-  //   : [];
-
   const entities = allEntities?.filter((entity: any) => {
     return permissionsToCheck.every((permission) =>
       entityPermissionsMap[entity.id]?.includes(permission)
@@ -150,3 +145,34 @@ export const useQueryWithPermissions2 = (
 
   return { data: entities || [] } as const;
 };
+
+export const useQueryWithPermissions3 = (
+  query: any,
+  entityType: EntityType,
+  permissionsToCheck: PermissionType[]
+) => {
+  const { data: profile } = useProfile();
+  const { data: allEntities } = query();
+  const { data: grants } = useGrants();
+
+  const entities = allEntities?.filter((entity: any) => {
+    const permissionMap = fromGrants(
+      entityType,
+      permissionsToCheck,
+      grants,
+      profile?.restricted,
+      entity.id
+    );
+    return permissionsToCheck.every((permission) => permissionMap[permission]);
+  });
+
+  return { data: entities || [] } as const;
+};
+
+// const linodeOptionsFilter = (linode: Linode) => {
+//   return (
+//     !readOnlyLinodeIds.includes(linode.id) &&
+//     !assignedLinodes?.some((service) => service.id === linode.id) &&
+//     linode.interface_generation !== 'linode'
+//   );
+// };

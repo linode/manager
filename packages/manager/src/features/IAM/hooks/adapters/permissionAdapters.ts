@@ -29,7 +29,7 @@ export const toPermissionMap = (
 export const fromGrants = (
   accessType: AccessType,
   permissionsToCheck: PermissionType[],
-  grants: Grants,
+  grants?: Grants,
   isRestricted?: boolean,
   entittyId?: number
 ): Record<PermissionType, boolean> => {

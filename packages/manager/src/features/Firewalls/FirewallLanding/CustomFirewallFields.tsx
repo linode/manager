@@ -1,4 +1,4 @@
-import { useAllFirewallsQuery, useGrants, useProfile } from '@linode/queries';
+import { useAllFirewallsQuery, useAllLinodesQuery, useGrants, useProfile } from '@linode/queries';
 import { LinodeSelect } from '@linode/shared';
 import {
   Box,
@@ -34,6 +34,7 @@ import type {
   NodeBalancer,
 } from '@linode/api-v4';
 import type { LinodeCreateFormEventOptions } from 'src/utilities/analytics/types';
+import { useQueryWithPermissions2, useQueryWithPermissions3 } from 'src/features/IAM/hooks/usePermissions';
 
 interface CustomFirewallProps {
   createFlow: FirewallDeviceEntityType | undefined;
@@ -66,6 +67,21 @@ export const CustomFirewallFields = (props: CustomFirewallProps) => {
   // );
 
   // console.log('permissableLinodes', permissableLinodes);
+
+  const { data: permissableLinodes2 }  = useQueryWithPermissions2(
+    useAllLinodesQuery,
+    'linode',
+    ['apply_linode_firewalls']
+  );
+
+  const { data: permissableLinodes3 }  = useQueryWithPermissions3(
+    useAllLinodesQuery,
+    'linode',
+    ['apply_linode_firewalls']
+  );
+
+  console.log('permissableLinodes2', permissableLinodes2);
+  console.log('permissableLinodes3', permissableLinodes3);
 
   const isRestrictedUser = profile?.restricted;
 
