@@ -377,6 +377,7 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: false,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2FeatureEnabled: false,
       });
     });
 
@@ -401,6 +402,32 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: false,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2FeatureEnabled: false,
+      });
+    });
+
+    it('returns true for Phase 2/MTC feature enablement if the account has the capability + enabled Phase 2 feature flag values', () => {
+      queryMocks.useAccount.mockReturnValue({
+        data: {
+          capabilities: ['Kubernetes Enterprise'],
+        },
+      });
+      queryMocks.useFlags.mockReturnValue({
+        lkeEnterprise: {
+          enabled: true,
+          ga: false,
+          la: true,
+          phase2Mtc: true,
+        },
+      });
+
+      const { result } = renderHook(() => useIsLkeEnterpriseEnabled());
+      expect(result.current).toStrictEqual({
+        isLkeEnterpriseGAFeatureEnabled: false,
+        isLkeEnterpriseGAFlagEnabled: false,
+        isLkeEnterpriseLAFeatureEnabled: true,
+        isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2FeatureEnabled: true,
       });
     });
 
@@ -425,6 +452,7 @@ describe('hooks', () => {
         isLkeEnterpriseGAFlagEnabled: true,
         isLkeEnterpriseLAFeatureEnabled: true,
         isLkeEnterpriseLAFlagEnabled: true,
+        isLkeEnterprisePhase2FeatureEnabled: true,
       });
     });
   });
