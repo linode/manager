@@ -1,7 +1,11 @@
 /**
  * @fileoverview Cypress test suite for the "Create Alert" functionality.
  */
-import { profileFactory, regionFactory } from '@linode/utilities';
+import {
+  nodeBalancerFactory,
+  profileFactory,
+  regionFactory,
+} from '@linode/utilities';
 import { statusMap } from 'support/constants/alert';
 import { widgetDetails } from 'support/constants/widgets';
 import { mockGetAccount } from 'support/intercepts/account';
@@ -15,6 +19,7 @@ import {
 } from 'support/intercepts/cloudpulse';
 import { mockGetDatabases } from 'support/intercepts/databases';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
+import { mockGetNodeBalancers } from 'support/intercepts/nodebalancers';
 import { mockGetProfile } from 'support/intercepts/profile';
 import { mockGetRegions } from 'support/intercepts/regions';
 import { ui } from 'support/ui';
@@ -51,12 +56,25 @@ export interface MetricDetails {
 
 const flags: Partial<Flags> = {
   aclp: { beta: true, enabled: true },
+  aclpBetaServices: { nodebalancer: { alerts: true, metrics: true } },
   aclpResourceTypeMap: [
     {
       dimensionKey: 'cluster_id',
       maxResourceSelections: 10,
       serviceType: 'nodebalancer',
       supportedRegionIds: 'us-east,us-ord',
+    },
+    {
+      dimensionKey: 'LINODE_ID',
+      maxResourceSelections: 10,
+      serviceType: 'linode',
+      supportedRegionIds: 'us-ord,us-east',
+    },
+    {
+      dimensionKey: 'cluster_id',
+      maxResourceSelections: 10,
+      serviceType: 'dbaas',
+      supportedRegionIds: 'us-ord,us-east',
     },
   ],
 };
@@ -66,12 +84,12 @@ const mockRegions = [
   regionFactory.build({
     id: 'us-ord',
     label: 'Chicago, IL',
-    capabilities: ['Managed Databases'],
+    capabilities: ['NodeBalancers'],
   }),
   regionFactory.build({
     id: 'us-east',
     label: 'New York, NY',
-    capabilities: ['Managed Databases'],
+    capabilities: ['NodeBalancers'],
   }),
 ];
 const { serviceType } = widgetDetails.nodebalancer;
@@ -169,6 +187,13 @@ const mockProfile = profileFactory.build({
 });
 const mockAlerts = alertFactory.build({
   label: 'Alert-1',
+  service_type: 'nodebalancer',
+  entity_ids: ['2'],
+});
+const mockNodeBalancer = nodeBalancerFactory.build({
+  label: 'NodeBalancer-1',
+  id: 2,
+  region: 'us-east',
 });
 const CREATE_ALERT_PAGE_URL = '/alerts/definitions/create';
 /**
@@ -272,6 +297,7 @@ describe('Create Alert', () => {
     mockGetRegions(mockRegions);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions);
     mockGetDatabases(databaseMock);
+    mockGetNodeBalancers([mockNodeBalancer]);
     mockGetAllAlertDefinitions([mockAlerts]).as('getAlertDefinitionsList');
     mockGetAlertChannels([notificationChannels]);
   });
@@ -303,6 +329,7 @@ describe('Create Alert', () => {
         created_by: 'user1',
         description: 'My Custom Description',
         label: 'Alert-1',
+        entity_ids: ['2'],
         rule_criteria: {
           rules: [
             ingressTrafficRateRulesFactory.build(),

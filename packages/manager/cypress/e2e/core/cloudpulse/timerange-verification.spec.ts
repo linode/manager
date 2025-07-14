@@ -258,8 +258,8 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.get('@startDateInput').click();
     cy.get('@startDateInput').clear();
 
-    cy.findAllByText(startDay).first().click();
-    cy.findAllByText(endDay).first().click();
+    cy.findAllByText(startDay).first().click({ force: true });
+    cy.findAllByText(endDay).first().click({ force: true });
 
     ui.button
       .findByAttribute('aria-label^', 'Choose time')
