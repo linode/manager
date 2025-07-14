@@ -31,6 +31,7 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     '#notistack-snackbar > svg': {
       position: 'absolute',
       left: '-48px',
+      top: 6,
       '& path': {
         fill: theme.notificationToast.default.icon,
       },
