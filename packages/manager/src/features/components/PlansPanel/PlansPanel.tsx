@@ -21,7 +21,6 @@ import { PlanInformation } from './PlanInformation';
 import {
   determineInitialPlanCategoryTab,
   extractPlansInformation,
-  getIsLimitedAvailability,
   getPlanSelectionsByPlanType,
   isMTCPlan,
   planTabInfoContent,
@@ -49,7 +48,6 @@ export interface PlansPanelProps {
   isLegacyDatabase?: boolean;
   isResize?: boolean;
   linodeID?: number | undefined;
-  onPlanSelectionInvalidated?: () => void;
   onSelect: (key: string) => void;
   regionsData?: Region[];
   selectedId?: string;
@@ -84,7 +82,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     isLegacyDatabase,
     isResize,
     linodeID,
-    onPlanSelectionInvalidated,
     onSelect,
     regionsData,
     selectedId,
@@ -158,27 +155,6 @@ export const PlansPanel = (props: PlansPanelProps) => {
     regionsData,
     selectedRegionID,
   });
-
-  const selectedPlan = selectedId
-    ? Object.values(plans)
-        .flat()
-        .find((plan) => plan.id === selectedId)
-    : null;
-
-  // Clear the selected plan if that plan would be rendered invalid after a region change
-  React.useEffect(() => {
-    const shouldClearPlanSelection =
-      !!selectedPlan &&
-      (isPlanPanelDisabled(selectedPlan.class) ||
-        getIsLimitedAvailability({
-          plan: selectedPlan,
-          regionAvailabilities,
-          selectedRegionId: selectedRegionID,
-        }));
-    if (shouldClearPlanSelection) {
-      onPlanSelectionInvalidated?.();
-    }
-  }, [isPlanPanelDisabled, regionAvailabilities, selectedRegionID]);
 
   const tabs = Object.keys(plans).map(
     (plan: Exclude<LinodeTypeClass, 'nanode' | 'standard'>) => {
