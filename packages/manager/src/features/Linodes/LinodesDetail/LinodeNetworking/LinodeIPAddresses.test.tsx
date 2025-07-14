@@ -63,12 +63,18 @@ describe('ipResponseToDisplayRows utility function', () => {
   };
 
   it('returns a display row for each IP/range', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows({
+      ipResponse: response,
+      isLinodeInterface: false,
+    });
     expect(result).toHaveLength(7);
   });
 
   it('includes the meta _ip field for IP addresses', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows({
+      ipResponse: response,
+      isLinodeInterface: false,
+    });
     // Check the first six rows (the IPs)
     for (let i = 0; i < 5; i++) {
       expect(result[i]._ip).toBeDefined();
@@ -76,7 +82,10 @@ describe('ipResponseToDisplayRows utility function', () => {
   });
 
   it('includes the meta _range field for IP ranges', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows({
+      ipResponse: response,
+      isLinodeInterface: false,
+    });
     // Check the last row (the IPv6 range)
     expect(result[6]._range).toBeDefined();
   });
