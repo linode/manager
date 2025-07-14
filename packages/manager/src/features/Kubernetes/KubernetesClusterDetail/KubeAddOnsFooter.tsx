@@ -1,9 +1,11 @@
+import { useVPCQuery } from '@linode/queries';
 import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
 import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import React from 'react';
 
+import { Link } from 'src/components/Link';
 import {
   StyledBox,
   StyledLabelBox,
@@ -23,6 +25,7 @@ interface FooterProps {
   isLoadingKubernetesACL: boolean;
   setControlPlaneACLDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   sx?: SxProps;
+  vpcId: number | undefined;
 }
 
 export const KubeAddOnsFooter = (props: FooterProps) => {
@@ -34,6 +37,7 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
     isLoadingKubernetesACL,
     setControlPlaneACLDrawerOpen,
     sx,
+    vpcId,
   } = props;
 
   const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
@@ -46,6 +50,11 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
   const buttonCopyACL = enabledACL
     ? `Enabled (${pluralize('IP Address', 'IP Addresses', totalNumberIPs)})`
     : 'Enable';
+
+  const { data: vpc } = useVPCQuery(
+    vpcId ?? -1,
+    isLkeEnterprisePhase2FeatureEnabled
+  );
 
   return (
     <Grid
@@ -70,7 +79,7 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
       }}
     >
       <StyledBox>
-        {isLkeEnterprisePhase2FeatureEnabled && (
+        {isLkeEnterprisePhase2FeatureEnabled && vpc && (
           <StyledListItem
             sx={{
               alignItems: 'center',
@@ -78,6 +87,14 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
             }}
           >
             <StyledLabelBox component="span">VPC: </StyledLabelBox>{' '}
+            <Link
+              data-testid="assigned-lke-cluster-label"
+              to={`/vpcs/${vpcId}`}
+            >
+              {vpc?.label ?? `${vpcId}`}
+            </Link>
+            &nbsp;
+            {vpcId && vpc?.label ? `(ID: ${vpcId})` : undefined}
           </StyledListItem>
         )}
         <StyledListItem sx={{ ...sxLastListItem }}>

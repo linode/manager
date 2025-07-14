@@ -151,6 +151,7 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
               sx={{
                 paddingTop: 2,
               }}
+              vpcId={cluster.vpc_id}
             />
             <KubeEntityDetailFooter
               areClusterLinodesReadOnly={areClusterLinodesReadOnly}
