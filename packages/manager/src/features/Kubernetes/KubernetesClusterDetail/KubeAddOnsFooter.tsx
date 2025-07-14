@@ -12,6 +12,8 @@ import {
   sxListItemFirstChild,
 } from 'src/features/Linodes/LinodeEntityDetail.styles';
 
+import { useIsLkeEnterpriseEnabled } from '../kubeUtils';
+
 import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
 import type { SxProps } from '@mui/material/styles';
 
@@ -33,6 +35,8 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
     setControlPlaneACLDrawerOpen,
     sx,
   } = props;
+
+  const { isLkeEnterprisePhase2FeatureEnabled } = useIsLkeEnterpriseEnabled();
 
   const enabledACL = aclData?.acl.enabled ?? false;
   const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
@@ -66,14 +70,16 @@ export const KubeAddOnsFooter = (props: FooterProps) => {
       }}
     >
       <StyledBox>
-        <StyledListItem
-          sx={{
-            alignItems: 'center',
-            ...sxListItemFirstChild,
-          }}
-        >
-          <StyledLabelBox component="span">VPC: </StyledLabelBox>{' '}
-        </StyledListItem>
+        {isLkeEnterprisePhase2FeatureEnabled && (
+          <StyledListItem
+            sx={{
+              alignItems: 'center',
+              ...sxListItemFirstChild,
+            }}
+          >
+            <StyledLabelBox component="span">VPC: </StyledLabelBox>{' '}
+          </StyledListItem>
+        )}
         <StyledListItem sx={{ ...sxLastListItem }}>
           <StyledLabelBox component="span">Control Plane ACL: </StyledLabelBox>{' '}
           {isLoadingKubernetesACL ? (
