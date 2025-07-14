@@ -43,7 +43,7 @@ interface AclpContextualViewProps {
   serviceType: Capabilities;
 }
 
-interface AclpConextualViewEnabled {
+interface AclpContextualViewEnabled {
   isAlertEnabled: boolean;
   isLoading: boolean;
   isMetricEnabled: boolean;
@@ -358,9 +358,14 @@ export const validationFunction: Record<
   [INTERFACE_ID]: areValidInterfaceIds,
 };
 
-export const useIsAclpConextualViewEnabled = (
+/**
+ * Checks if the ACLP Contextual View is enabled for the given region and service type.
+ * @param props Contains regionId and serviceType to check against the regions data.
+ * @returns An object indicating whether alerts and metrics are enabled, along with the loading state.
+ */
+export const useIsAclpContextualViewEnabled = (
   props: AclpContextualViewProps
-): AclpConextualViewEnabled => {
+): AclpContextualViewEnabled => {
   const { regionId, serviceType } = props;
   const { isLoading, data: regions } = useRegionsQuery();
 
