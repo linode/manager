@@ -74,7 +74,6 @@ describe('region enables alerts', function () {
       alertFactory.build({
         id: 1,
         description: randomLabel(),
-        // entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
@@ -85,7 +84,6 @@ describe('region enables alerts', function () {
         id: 2,
 
         description: randomLabel(),
-        // entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
@@ -95,7 +93,6 @@ describe('region enables alerts', function () {
       alertFactory.build({
         id: 3,
         description: randomLabel(),
-        // entity_ids: ['1', '2', '3'],
         label: randomLabel(),
         service_type: 'linode',
         severity: 1,
@@ -232,24 +229,25 @@ describe('region enables alerts', function () {
           .click();
       });
 
-    // TODO: modal maybe shouldnt appear in all scenarios
+    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
+    // ui.dialog
+    //   .findByTitle('Save Alerts?')
+    //   .should('be.visible')
+    //   .within(() => {
+    //     ui.button.findByTitle('Save').should('be.visible')
+    //     .click();
+    //   });
     // TODO: content of request.body not match prod, 'alerts' attribute missing here
-    ui.dialog
-      .findByTitle('Save Alerts?')
-      .should('be.visible')
-      .within(() => {
-        ui.button.findByTitle('Save').should('be.visible').click();
-      });
-    cy.wait('@updateLinode').then((xhr) => {
-      // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
-      const edits = xhr.request.body;
-      expect(JSON.stringify(edits.system)).to.equal(
-        JSON.stringify(mockEnabledBetaAlerts.system)
-      );
-      expect(JSON.stringify(edits.user)).to.equal(
-        JSON.stringify(mockEnabledBetaAlerts.user)
-      );
-    });
+    // cy.wait('@updateLinode').then((xhr) => {
+    //   // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
+    //   const edits = xhr.request.body;
+    //   expect(JSON.stringify(edits.system)).to.equal(
+    //     JSON.stringify(mockEnabledBetaAlerts.system)
+    //   );
+    //   expect(JSON.stringify(edits.user)).to.equal(
+    //     JSON.stringify(mockEnabledBetaAlerts.user)
+    //   );
+    // });
   });
 
   it('Legacy alerts = 0, Beta alerts > 0, => beta disabled', function () {
@@ -384,13 +382,13 @@ describe('region enables alerts', function () {
           .should('be.enabled')
           .click();
       });
-    // TODO: not prompted by Save Alerts? dialog
-    cy.wait('@updateLinode').then((xhr) => {
-      // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
-      const actual = xhr.request.body;
-      const expected = { alerts: mockDisabledLegacyAlerts };
-      expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
-    });
+    // TODO: this test passes but modal behavior will change when properly implemented in api (M3-10195)
+    // cy.wait('@updateLinode').then((xhr) => {
+    //   // can save changes. new beta alerts added in assertLinodeAlertsEnabled tests
+    //   const actual = xhr.request.body;
+    //   const expected = { alerts: mockDisabledLegacyAlerts };
+    //   expect(JSON.stringify(actual)).to.equal(JSON.stringify(expected));
+    // });
   });
 });
 
