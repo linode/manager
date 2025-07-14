@@ -3,15 +3,14 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 
 export type PathSampleProps = {
-  className?: string;
   value: string;
 };
 
 export const PathSample = (props: PathSampleProps) => {
-  const { className, value } = props;
+  const { value } = props;
 
   return (
-    <Box className={className} display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column">
       <InputLabel>Destination object name sample</InputLabel>
       <StyledValue>{value}</StyledValue>
     </Box>
@@ -21,5 +20,6 @@ export const PathSample = (props: PathSampleProps) => {
 const StyledValue = styled('span', { label: 'StyledValue' })(({ theme }) => ({
   backgroundColor: theme.tokens.alias.Interaction.Background.Disabled,
   height: 34,
+  width: theme.inputMaxWidth,
   padding: theme.spacingFunction(8),
 }));

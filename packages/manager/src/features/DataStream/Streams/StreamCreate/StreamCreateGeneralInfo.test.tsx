@@ -39,12 +39,14 @@ describe('StreamCreateGeneralInfo', () => {
     // Open the dropdown
     await userEvent.click(streamTypesAutocomplete);
 
-    // Select the "Error Logs" option
-    const errorLogs = await screen.findByText('Error Logs');
-    await userEvent.click(errorLogs);
+    // Select the "Kubernetes Audit Logs" option
+    const kubernetesAuditLogs = await screen.findByText(
+      'Kubernetes Audit Logs'
+    );
+    await userEvent.click(kubernetesAuditLogs);
 
     await waitFor(() => {
-      expect(streamTypesAutocomplete).toHaveValue('Error Logs');
+      expect(streamTypesAutocomplete).toHaveValue('Kubernetes Audit Logs');
     });
   });
 });

@@ -6,7 +6,6 @@ import { CheckoutBar } from 'src/components/CheckoutBar/CheckoutBar';
 import { displayPrice } from 'src/components/DisplayPrice';
 import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { StyledHeader } from 'src/features/DataStream/Streams/StreamCreate/CheckoutBar/StreamCreateCheckoutBar.styles';
-import { eventType } from 'src/features/DataStream/Streams/StreamCreate/types';
 
 import type { CreateStreamForm } from 'src/features/DataStream/Streams/StreamCreate/types';
 
@@ -16,11 +15,10 @@ export const StreamCreateCheckoutBar = () => {
   const formValues = useWatch({
     control,
     name: [
-      eventType.Authentication,
-      eventType.Authorization,
-      eventType.Configuration,
       'status',
       'type',
+      'details.cluster_ids',
+      'details.is_auto_add_all_clusters_enabled',
     ],
   });
   const price = getPrice(formValues);
@@ -32,7 +30,7 @@ export const StreamCreateCheckoutBar = () => {
       disabled={true}
       heading="Stream Summary"
       onDeploy={onDeploy}
-      priceSelectionText="Select Data Set and define a Destination to view pricing and create a stream."
+      priceSelectionText="Select Cluster and define a Destination to view pricing and create a stream."
       submitText="Create Stream"
     >
       <>
