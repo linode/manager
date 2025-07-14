@@ -34,9 +34,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Unsaved changes modal for upload image feature ([#12459](https://github.com/linode/manager/pull/12459))
 - APL header bolding in Create Cluster flow and GA code clean up ([#12461](https://github.com/linode/manager/pull/12461))
 - ACLP-Alerting: added fallback to the AlertsResources and DisplayAlertResources components ([#12467](https://github.com/linode/manager/pull/12467))
+- Volumes upgrade banner alignment ([#12471](https://github.com/linode/manager/pull/12471))
 - ACLP-Alerting: spacing instead of using sx: gap for DimensionFilter, add flexWrap, remove unnecessary Box spacing in Metric ([#12475](https://github.com/linode/manager/pull/12475))
 - Region select missing selected icon ([#12481](https://github.com/linode/manager/pull/12481))
-- Volumes upgrade banner alignment ([#12471](https://github.com/linode/manager/pull/12471))
 
 ### Removed:
 
