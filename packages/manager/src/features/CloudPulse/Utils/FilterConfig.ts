@@ -239,7 +239,7 @@ export const FIREWALL_CONFIG: Readonly<CloudPulseServiceTypeFilterMap> = {
         isFilterable: true,
         isMetricsFilter: false,
         isMultiSelect: true,
-        name: 'Interface Type',
+        name: 'Interface Types',
         isOptional: true,
         neededInViews: [
           CloudPulseAvailableViews.central,
