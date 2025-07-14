@@ -1116,6 +1116,9 @@ export const darkTheme: ThemeOptions = {
             },
           },
         },
+        icon: {
+          margin: 0,
+        },
       },
     },
     MuiTabs: {

@@ -1612,12 +1612,12 @@ export const lightTheme: ThemeOptions = {
           fontSize: Font.FontSize.Xs,
           svg: {
             height: '16px',
-            margin: `0 ${Spacing.S4}`,
             path: {
               fill: Table.HeaderNested.Text,
             },
             width: '16px',
           },
+          gap: spacingFunction(4),
         },
       },
     },

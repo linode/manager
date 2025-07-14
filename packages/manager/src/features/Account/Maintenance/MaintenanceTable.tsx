@@ -2,7 +2,7 @@ import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from '@linode/queries';
-import { Box, Paper, Typography } from '@linode/ui';
+import { Box, Paper, TooltipIcon, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import { useFormattedDate } from '@linode/utilities';
 import * as React from 'react';
@@ -311,6 +311,20 @@ export const MaintenanceTable = ({ type }: Props) => {
                 label="status"
               >
                 Status
+                {type === 'upcoming' && (
+                  <TooltipIcon
+                    status="info"
+                    sxTooltipIcon={{ margin: 0, padding: 0 }}
+                    text={
+                      <>
+                        Scheduled status refers to an event that is planned to
+                        start at a certain time. <br />
+                        <br /> Pending status refers to an event that has yet to
+                        be completed or decided.
+                      </>
+                    }
+                  />
+                )}
               </TableSortCell>
             )}
             <Hidden lgDown>
