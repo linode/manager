@@ -44,7 +44,6 @@ export const LinodeBackups = () => {
   const { permissions } = usePermissions(
     'linode',
     [
-      'list_linode_backups',
       'create_linode_backup_snapshot',
       'cancel_linode_backups',
       'enable_linode_backups',
@@ -144,7 +143,7 @@ export const LinodeBackups = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {hasBackups && permissions.list_linode_backups ? (
+            {hasBackups ? (
               <>
                 {backups?.automatic.map((backup: LinodeBackup, idx: number) => (
                   <BackupTableRow
@@ -180,11 +179,6 @@ export const LinodeBackups = () => {
                   />
                 )}
               </>
-            ) : !permissions.list_linode_backups ? (
-              <TableRowEmpty
-                colSpan={7}
-                message="You do not have permission to list backups for this Linode"
-              />
             ) : (
               <TableRowEmpty
                 colSpan={7}
