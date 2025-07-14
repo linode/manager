@@ -7,6 +7,7 @@ import {
 } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import Grid from '@mui/material/Grid';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 
@@ -26,6 +27,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import { ClusterChips } from '../ClusterList/ClusterChips';
 import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
+import { KubeAddOnsFooter } from './KubeAddOnsFooter';
 import { KubeConfigDisplay } from './KubeConfigDisplay';
 import { KubeConfigDrawer } from './KubeConfigDrawer';
 import { KubeControlPlaneACLDrawer } from './KubeControlPaneACLDrawer';
@@ -132,18 +134,33 @@ export const KubeSummaryPanel = React.memo((props: Props) => {
           </Stack>
         }
         footer={
-          <KubeEntityDetailFooter
-            aclData={aclData}
-            areClusterLinodesReadOnly={areClusterLinodesReadOnly}
-            clusterCreated={cluster.created}
-            clusterId={cluster.id}
-            clusterLabel={cluster.label}
-            clusterTags={cluster.tags}
-            clusterUpdated={cluster.updated}
-            isClusterReadOnly={isClusterReadOnly}
-            isLoadingKubernetesACL={isLoadingKubernetesACL}
-            setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
-          />
+          <Grid
+            container
+            data-qa-kube-entity-footer
+            direction="column"
+            sx={{
+              flex: 1,
+              justifyContent: 'space-between',
+            }}
+          >
+            <KubeAddOnsFooter
+              aclData={aclData}
+              isClusterReadOnly={isClusterReadOnly}
+              isLoadingKubernetesACL={isLoadingKubernetesACL}
+              setControlPlaneACLDrawerOpen={setControlPlaneACLDrawerOpen}
+              sx={{
+                paddingTop: 2,
+              }}
+            />
+            <KubeEntityDetailFooter
+              areClusterLinodesReadOnly={areClusterLinodesReadOnly}
+              clusterCreated={cluster.created}
+              clusterId={cluster.id}
+              clusterLabel={cluster.label}
+              clusterTags={cluster.tags}
+              clusterUpdated={cluster.updated}
+            />
+          </Grid>
         }
         header={
           <EntityHeader>

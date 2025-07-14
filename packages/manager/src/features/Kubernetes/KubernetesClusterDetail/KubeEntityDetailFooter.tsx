@@ -1,6 +1,4 @@
 import { useProfile } from '@linode/queries';
-import { Box, CircleProgress, StyledLinkButton } from '@linode/ui';
-import { pluralize } from '@linode/utilities';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
@@ -17,20 +15,13 @@ import {
 import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
-
-import type { KubernetesControlPlaneACLPayload } from '@linode/api-v4';
-
 interface FooterProps {
-  aclData: KubernetesControlPlaneACLPayload | undefined;
   areClusterLinodesReadOnly: boolean;
   clusterCreated: string;
   clusterId: number;
   clusterLabel: string;
   clusterTags: string[];
   clusterUpdated: string;
-  isClusterReadOnly: boolean;
-  isLoadingKubernetesACL: boolean;
-  setControlPlaneACLDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
@@ -38,26 +29,13 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
   const { data: profile } = useProfile();
   const {
-    aclData,
     areClusterLinodesReadOnly,
     clusterCreated,
     clusterId,
     clusterLabel,
     clusterTags,
     clusterUpdated,
-    isClusterReadOnly,
-    isLoadingKubernetesACL,
-    setControlPlaneACLDrawerOpen,
   } = props;
-
-  const enabledACL = aclData?.acl.enabled ?? false;
-  const totalIPv4 = aclData?.acl.addresses?.ipv4?.length ?? 0;
-  const totalIPv6 = aclData?.acl.addresses?.ipv6?.length ?? 0;
-  const totalNumberIPs = totalIPv4 + totalIPv6;
-
-  const buttonCopyACL = enabledACL
-    ? `Enabled (${pluralize('IP Address', 'IP Addresses', totalNumberIPs)})`
-    : 'Enable';
 
   const { mutateAsync: updateKubernetesCluster } =
     useKubernetesClusterMutation(clusterId);
@@ -105,6 +83,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
 
           [theme.breakpoints.down('lg')]: {
             padding: '8px',
+            paddingTop: 0,
           },
 
           [theme.breakpoints.down('md')]: {
@@ -118,42 +97,7 @@ export const KubeEntityDetailFooter = React.memo((props: FooterProps) => {
             <StyledLabelBox component="span">Cluster ID:</StyledLabelBox>{' '}
             {clusterId}
           </StyledListItem>
-          <StyledListItem
-            sx={{
-              alignItems: 'center',
-            }}
-          >
-            <StyledLabelBox component="span">
-              Control Plane ACL:{' '}
-            </StyledLabelBox>{' '}
-            {isLoadingKubernetesACL ? (
-              <Box component="span" sx={{ paddingLeft: 1 }}>
-                <CircleProgress noPadding size="sm" />
-              </Box>
-            ) : (
-              <StyledLinkButton
-                disabled={isClusterReadOnly}
-                onClick={() => setControlPlaneACLDrawerOpen(true)}
-                sx={(theme) => ({
-                  '&:disabled': {
-                    '& g': {
-                      stroke: theme.tokens.alias.Content.Icon.Primary.Disabled,
-                    },
-                    color: theme.tokens.alias.Content.Text.Primary.Disabled,
-                  },
-                })}
-              >
-                {buttonCopyACL}
-              </StyledLinkButton>
-            )}
-          </StyledListItem>
-        </StyledBox>
-        <StyledBox>
-          <StyledListItem
-            sx={{
-              ...sxListItemFirstChild,
-            }}
-          >
+          <StyledListItem>
             <StyledLabelBox component="span">Created:</StyledLabelBox>{' '}
             {formatDate(clusterCreated, {
               timezone: profile?.timezone,
