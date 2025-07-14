@@ -291,14 +291,6 @@ export const DatabaseCreate = () => {
     }
   };
 
-  const handleClearPlanSelection = () => {
-    if (flags.databasePremium) {
-      handleResetForm({
-        type: undefined,
-      });
-    }
-  };
-
   return (
     <>
       <DocumentTitleSegment segment="Create a Database" />
@@ -352,7 +344,6 @@ export const DatabaseCreate = () => {
               handleTabChange={handleTabChange}
               header="Choose a Plan"
               isCreate
-              onPlanSelectionInvalidated={handleClearPlanSelection}
               onSelect={(selected: string) => {
                 setFieldValue('type', selected);
               }}
