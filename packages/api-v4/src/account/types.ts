@@ -86,6 +86,8 @@ export const accountCapabilities = [
   'Support Ticket Severity',
   'Vlans',
   'VPCs',
+  'VPC Dual Stack',
+  'VPC IPv6 Large Prefixes',
 ] as const;
 
 export type AccountCapability = (typeof accountCapabilities)[number];
