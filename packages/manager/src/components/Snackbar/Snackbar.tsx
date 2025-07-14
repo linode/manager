@@ -30,7 +30,11 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     },
     '#notistack-snackbar > svg': {
       position: 'absolute',
-      left: '-45px',
+      left: '-48px',
+      top: 6,
+      '& path': {
+        fill: theme.notificationToast.default.icon,
+      },
     },
     '&.notistack-MuiContent': {
       color: theme.notificationToast.default.color,
@@ -61,6 +65,9 @@ const StyledMaterialDesignContent = styled(MaterialDesignContent)(
     '&.notistack-MuiContent-warning': {
       backgroundColor: theme.notificationToast.warning.backgroundColor,
       borderLeft: theme.notificationToast.warning.borderLeft,
+      '& #notistack-snackbar svg > path': {
+        fill: theme.notificationToast.warning.icon,
+      },
     },
     '& #notistack-snackbar + div': {
       alignSelf: 'flex-start',
