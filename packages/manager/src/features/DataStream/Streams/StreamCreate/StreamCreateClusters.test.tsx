@@ -31,6 +31,25 @@ const getColumnsValuesFromTable = (column = 1) => {
     });
 };
 
+const getCheckboxByClusterName = (clusterName: string) => {
+  return within(
+    screen.getByLabelText(`Toggle ${clusterName} cluster`)
+  ).getByRole('checkbox');
+};
+
+const expectCheckboxStateToBe = (
+  checkbox: HTMLElement,
+  state: 'checked' | 'indeterminate' | 'unchecked'
+) => {
+  if (state === 'checked') {
+    expect(checkbox).toBeChecked();
+  } else if (state === 'unchecked') {
+    expect(checkbox).not.toBeChecked();
+  } else {
+    expect(checkbox.getAttribute('data-indeterminate')).toEqual('true');
+  }
+};
+
 describe('StreamCreateClusters', () => {
   it('should render all clusters in table', async () => {
     renderComponentWithoutSelectedClusters();
@@ -87,60 +106,55 @@ describe('StreamCreateClusters', () => {
   it('should toggle clusters checkboxes and header checkbox', async () => {
     renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
-    const checkboxes = within(table).getAllByRole('checkbox');
-    const headerCheckbox = checkboxes[0];
-
-    const expectHeaderCheckboxToBe = (
-      state: 'checked' | 'indeterminate' | 'unchecked'
-    ) => {
-      if (state === 'checked') {
-        expect(headerCheckbox).toBeChecked();
-      } else if (state === 'unchecked') {
-        expect(headerCheckbox).not.toBeChecked();
-      } else {
-        expect(headerCheckbox.getAttribute('data-indeterminate')).toEqual(
-          'true'
-        );
-      }
-    };
+    const headerCheckbox = within(table).getAllByRole('checkbox')[0];
+    const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+    const metricsStreamCheckbox = getCheckboxByClusterName(
+      'metrics-stream-cluster'
+    );
+    const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
     // Select and unselect checkboxes
-    expect(checkboxes[1]).toBeDisabled();
-    expect(checkboxes[2]).not.toBeChecked();
-    expectHeaderCheckboxToBe('unchecked');
-    await userEvent.click(checkboxes[2]);
-    expect(checkboxes[2]).toBeChecked();
-    expectHeaderCheckboxToBe('indeterminate');
-    await userEvent.click(checkboxes[2]);
-    expectHeaderCheckboxToBe('unchecked');
-    await userEvent.click(checkboxes[2]);
-    await userEvent.click(checkboxes[3]);
-    expect(checkboxes[2]).toBeChecked();
-    expect(checkboxes[3]).toBeChecked();
-    expectHeaderCheckboxToBe('checked');
+    // console.log(getColumnsValuesFromTable());
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).not.toBeChecked();
+    expectCheckboxStateToBe(headerCheckbox, 'unchecked');
+    await userEvent.click(metricsStreamCheckbox);
+    expect(metricsStreamCheckbox).toBeChecked();
+    expectCheckboxStateToBe(headerCheckbox, 'indeterminate');
+    await userEvent.click(metricsStreamCheckbox);
+    expectCheckboxStateToBe(headerCheckbox, 'unchecked');
+    await userEvent.click(metricsStreamCheckbox);
+    await userEvent.click(prodClusterCheckbox);
+    expect(metricsStreamCheckbox).toBeChecked();
+    expect(prodClusterCheckbox).toBeChecked();
+    expectCheckboxStateToBe(headerCheckbox, 'checked');
   });
 
   it('should select and deselect all clusters with header checkbox', async () => {
     renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
-    const checkboxes = within(table).getAllByRole('checkbox');
-    const headerCheckbox = checkboxes[0];
+    const headerCheckbox = within(table).getAllByRole('checkbox')[0];
+    const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+    const metricsStreamCheckbox = getCheckboxByClusterName(
+      'metrics-stream-cluster'
+    );
+    const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
     expect(headerCheckbox).not.toBeChecked();
 
     // Select header checkbox
     await userEvent.click(headerCheckbox);
     expect(headerCheckbox).toBeChecked();
-    expect(checkboxes[1]).toBeDisabled();
-    expect(checkboxes[2]).toBeChecked();
-    expect(checkboxes[3]).toBeChecked();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).toBeChecked();
+    expect(prodClusterCheckbox).toBeChecked();
 
     // Unselect header checkbox
     await userEvent.click(headerCheckbox);
     expect(headerCheckbox).not.toBeChecked();
-    expect(checkboxes[1]).toBeDisabled();
-    expect(checkboxes[2]).not.toBeChecked();
-    expect(checkboxes[3]).not.toBeChecked();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).not.toBeChecked();
+    expect(prodClusterCheckbox).not.toBeChecked();
   });
 
   describe('when form has already selected clusters', () => {
@@ -156,37 +170,54 @@ describe('StreamCreateClusters', () => {
         },
       });
       const table = screen.getByRole('table');
-      const checkboxes = within(table).getAllByRole('checkbox');
+      const headerCheckbox = within(table).getAllByRole('checkbox')[0];
+      const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+      const metricsStreamCheckbox = getCheckboxByClusterName(
+        'metrics-stream-cluster'
+      );
+      const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
-      expect(checkboxes[0].getAttribute('data-indeterminate')).toEqual('true');
-      expect(checkboxes[1]).not.toBeChecked();
-      expect(checkboxes[3]).not.toBeChecked();
-      expect(checkboxes[2]).toBeChecked();
+      expectCheckboxStateToBe(headerCheckbox, 'indeterminate');
+      expect(gkeProdCheckbox).not.toBeChecked();
+      expect(metricsStreamCheckbox).toBeChecked();
+      expect(prodClusterCheckbox).not.toBeChecked();
     });
   });
 
   it('should disable all table checkboxes if "Automatically include all..." checkbox is selected', async () => {
     renderComponentWithoutSelectedClusters();
     const table = screen.getByRole('table');
-    const tableCheckboxes = within(table).getAllByRole('checkbox');
     const autoIncludeAllCheckbox = screen.getByText(
       'Automatically include all existing and recently configured clusters.'
     );
+    const headerCheckbox = within(table).getAllByRole('checkbox')[0];
+    const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+    const metricsStreamCheckbox = getCheckboxByClusterName(
+      'metrics-stream-cluster'
+    );
+    const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
-    expect(tableCheckboxes[0]).not.toBeDisabled();
-    expect(tableCheckboxes[1]).toBeDisabled();
-    expect(tableCheckboxes[2]).not.toBeDisabled();
+    expect(headerCheckbox).not.toBeDisabled();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).not.toBeDisabled();
+    expect(prodClusterCheckbox).not.toBeDisabled();
 
     await userEvent.click(autoIncludeAllCheckbox);
-    tableCheckboxes.forEach((checkbox) => {
-      expect(checkbox).toBeDisabled();
-    });
+    expect(headerCheckbox).toBeDisabled();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).toBeDisabled();
+    expect(prodClusterCheckbox).toBeDisabled();
   });
 
   it('should select and deselect all clusters with "Automatically include all..." checkbox', async () => {
     renderComponentWithoutSelectedClusters();
     const checkboxes = screen.getAllByRole('checkbox');
     const [autoIncludeAllCheckbox, headerTableCheckbox] = checkboxes;
+    const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+    const metricsStreamCheckbox = getCheckboxByClusterName(
+      'metrics-stream-cluster'
+    );
+    const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
     expect(autoIncludeAllCheckbox).not.toBeChecked();
 
@@ -194,17 +225,17 @@ describe('StreamCreateClusters', () => {
     await userEvent.click(autoIncludeAllCheckbox);
     expect(autoIncludeAllCheckbox).toBeChecked();
     expect(headerTableCheckbox).toBeChecked();
-    expect(checkboxes[2]).toBeDisabled();
-    expect(checkboxes[3]).toBeChecked();
-    expect(checkboxes[4]).toBeChecked();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).toBeChecked();
+    expect(prodClusterCheckbox).toBeChecked();
 
     // Unselect "Automatically include all..." checkbox
     await userEvent.click(autoIncludeAllCheckbox);
     expect(autoIncludeAllCheckbox).not.toBeChecked();
     expect(headerTableCheckbox).not.toBeChecked();
-    expect(checkboxes[2]).toBeDisabled();
-    expect(checkboxes[3]).not.toBeChecked();
-    expect(checkboxes[4]).not.toBeChecked();
+    expect(gkeProdCheckbox).toBeDisabled();
+    expect(metricsStreamCheckbox).not.toBeChecked();
+    expect(prodClusterCheckbox).not.toBeChecked();
   });
 
   it('should sort clusters by Cluster Name if clicked', async () => {
@@ -276,25 +307,26 @@ describe('StreamCreateClusters', () => {
 
   it('should keep checkboxes selection after sorting', async () => {
     renderComponentWithoutSelectedClusters();
-    const checkboxes = screen.getAllByRole('checkbox');
+    const gkeProdCheckbox = getCheckboxByClusterName('gke-prod-europe-west1');
+    const metricsStreamCheckbox = getCheckboxByClusterName(
+      'metrics-stream-cluster'
+    );
+    const prodClusterCheckbox = getCheckboxByClusterName('prod-cluster-eu');
 
     const sortHeader = screen.getByRole('columnheader', {
       name: 'Log Generation',
     });
 
     // Select "prod-cluster-eu" cluster
-    await userEvent.click(checkboxes[4]);
-    expect(checkboxes[2]).not.toBeChecked();
-    expect(checkboxes[3]).not.toBeChecked();
-    expect(checkboxes[4]).toBeChecked();
+    await userEvent.click(prodClusterCheckbox);
+    expect(gkeProdCheckbox).not.toBeChecked();
+    expect(metricsStreamCheckbox).not.toBeChecked();
+    expect(prodClusterCheckbox).toBeChecked();
 
     // Sort by Log Generation ascending
     await userEvent.click(sortHeader);
-    const checkboxesAfterSort = screen.getAllByRole('checkbox');
-
-    // After sorting the "prod-cluster-eu" checkbox is first in table
-    expect(checkboxesAfterSort[2]).toBeChecked();
-    expect(checkboxesAfterSort[3]).not.toBeChecked();
-    expect(checkboxesAfterSort[4]).not.toBeChecked();
+    expect(gkeProdCheckbox).not.toBeChecked();
+    expect(metricsStreamCheckbox).not.toBeChecked();
+    expect(prodClusterCheckbox).toBeChecked();
   });
 });

@@ -130,6 +130,7 @@ export const StreamCreateClusters = () => {
             <TableCell sx={{ width: '5%' }}>
               {!!filteredAndSortedClusters.length && (
                 <Checkbox
+                  aria-label="Toggle all clusters"
                   checked={isAllSelected}
                   disabled={isAutoAddAllClustersEnabled}
                   indeterminate={isIndeterminate}
@@ -174,6 +175,7 @@ export const StreamCreateClusters = () => {
                 <TableRow key={id}>
                   <TableCell>
                     <Checkbox
+                      aria-label={`Toggle ${label} cluster`}
                       checked={selectedIds.includes(id)}
                       disabled={isAutoAddAllClustersEnabled || !logGeneration}
                       onChange={() => toggleCluster(id)}
