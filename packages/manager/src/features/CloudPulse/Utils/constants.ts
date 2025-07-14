@@ -73,7 +73,7 @@ export const INTERFACE_IDS_LEADING_COMMA_ERROR_MESSAGE =
 export const INTERFACE_IDS_LIMIT_ERROR_MESSAGE =
   'Enter a maximum of 15 interface IDs';
 
-export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234, 5678';
+export const INTERFACE_IDS_PLACEHOLDER_TEXT = 'e.g., 1234,5678';
 
 export const HELPER_TEXT: Record<string, string> = {
   [PORT]: PORTS_HELPER_TEXT,

@@ -179,7 +179,7 @@ export const alertDefinitionFormSchema = createAlertDefinitionSchema.concat(
         .min(1, 'At least one metric criteria is required.'),
     }).required(),
     serviceType: string()
-      .oneOf(['linode', 'dbaas', 'nodebalancer'])
+      .oneOf(['linode', 'dbaas', 'firewall', 'nodebalancer'])
       .required(fieldErrorMessage)
       .nullable()
       .test('nonNull', fieldErrorMessage, (value) => value !== null),
