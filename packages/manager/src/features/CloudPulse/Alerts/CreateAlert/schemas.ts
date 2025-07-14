@@ -12,6 +12,7 @@ import {
   PORTS_ERROR_MESSAGE,
   PORTS_HELPER_TEXT,
   PORTS_LEADING_COMMA_ERROR_MESSAGE,
+  PORTS_LEADING_ZERO_ERROR_MESSAGE,
   PORTS_LIMIT_ERROR_MESSAGE,
   PORTS_RANGE_ERROR_MESSAGE,
 } from '../../Utils/constants';
@@ -22,6 +23,7 @@ import type { AlertDefinitionScope, AlertDefinitionType } from '@linode/api-v4';
 const fieldErrorMessage = 'This field is required.';
 
 const DECIMAL_PORT_REGEX = /^[1-9]\d{0,4}$/;
+const LEADING_ZERO_PORT_REGEX = /^0\d+/;
 
 // Validation schema for a single input port
 const singlePortSchema = string().test(
@@ -30,6 +32,12 @@ const singlePortSchema = string().test(
   function (value) {
     if (!value || typeof value !== 'string') {
       return this.createError({ message: fieldErrorMessage });
+    }
+
+    if (LEADING_ZERO_PORT_REGEX.test(value)) {
+      return this.createError({
+        message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
+      });
     }
 
     if (!DECIMAL_PORT_REGEX.test(value)) {
@@ -87,6 +95,12 @@ const commaSeparatedPortListSchema = string().test(
     }
     for (const port of ports) {
       const trimmedPort = port.trim();
+
+      if (LEADING_ZERO_PORT_REGEX.test(trimmedPort)) {
+        return this.createError({
+          message: PORTS_LEADING_ZERO_ERROR_MESSAGE,
+        });
+      }
       if (!DECIMAL_PORT_REGEX.test(trimmedPort)) {
         return this.createError({ message: PORTS_HELPER_TEXT });
       }
@@ -120,11 +134,17 @@ export const dimensionFiltersSchema = dimensionFilters.concat(
         ['dimension_label', 'operator'],
         ([dimensionLabel, operator], schema) => {
           if (dimensionLabel === 'port' && operator === 'in') {
-            return commaSeparatedPortListSchema;
+            return commaSeparatedPortListSchema
+              .required(fieldErrorMessage)
+              .nullable()
+              .test('nonNull', fieldErrorMessage, (value) => value !== null);
           }
 
           if (dimensionLabel === 'port' && operator !== 'in') {
-            return singlePortSchema;
+            return singlePortSchema
+              .required(fieldErrorMessage)
+              .nullable()
+              .test('nonNull', fieldErrorMessage, (value) => value !== null);
           }
 
           return schema;
