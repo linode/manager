@@ -10,6 +10,7 @@
 - TooltipIcon CDS standardization ([#12348](https://github.com/linode/manager/pull/12348))
 - Add `timeZoneProps` to control `timeZone dropdown` in DateTimeRangePicker.tsx ([#12423](https://github.com/linode/manager/pull/12423))
 - Require `selected` prop in `ListItemOptionProps` type ([#12481](https://github.com/linode/manager/pull/12481))
+- Notification banner stroke, width, error icon ([#12471](https://github.com/linode/manager/pull/12471))
 
 ## [2025-07-01] - v0.15.0
 

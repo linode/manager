@@ -36,6 +36,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - ACLP-Alerting: added fallback to the AlertsResources and DisplayAlertResources components ([#12467](https://github.com/linode/manager/pull/12467))
 - ACLP-Alerting: spacing instead of using sx: gap for DimensionFilter, add flexWrap, remove unnecessary Box spacing in Metric ([#12475](https://github.com/linode/manager/pull/12475))
 - Region select missing selected icon ([#12481](https://github.com/linode/manager/pull/12481))
+- Volumes upgrade banner alignment ([#12471](https://github.com/linode/manager/pull/12471))
 
 ### Removed:
 
