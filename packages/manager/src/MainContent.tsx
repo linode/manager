@@ -234,6 +234,7 @@ export const MainContent = () => {
                   <Box
                     component="main"
                     id="main-content"
+                    ref={contentRef}
                     role="main"
                     sx={(theme) => ({
                       flex: 1,
@@ -255,12 +256,7 @@ export const MainContent = () => {
                           }px)`,
                     })}
                   >
-                    <Grid
-                      className={classes.grid}
-                      container
-                      ref={contentRef}
-                      spacing={0}
-                    >
+                    <Grid className={classes.grid} container spacing={0}>
                       <Grid className={cx(classes.switchWrapper, 'p0')}>
                         <div className="content-wrapper">
                           <GlobalNotifications />
