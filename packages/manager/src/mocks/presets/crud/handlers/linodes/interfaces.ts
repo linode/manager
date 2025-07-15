@@ -267,7 +267,7 @@ export const createLinodeInterface = (mockState: MockState) => [
 
 export const deleteLinodeInterface = (mockState: MockState) => [
   http.delete(
-    '*/v4*/linodes/instances/:id/interfaces/:interfaceId',
+    '*/v4*/linode/instances/:id/interfaces/:interfaceId',
     async ({ params }): Promise<StrictResponse<APIErrorResponse | {}>> => {
       const linodeId = Number(params.id);
       const interfaceId = Number(params.interfaceId);
@@ -354,7 +354,7 @@ export const deleteLinodeInterface = (mockState: MockState) => [
 
 export const updateLinodeInterface = (mockState: MockState) => [
   http.put(
-    '*/v4*/linodes/instances/:id/interfaces/:interfaceId',
+    '*/v4*/linode/instances/:id/interfaces/:interfaceId',
     async ({
       params,
       request,
@@ -509,7 +509,7 @@ export const upgradeToLinodeInterfaces = (mockState: MockState) => [
 
 export const updateLinodeInterfaceSettings = () => [
   http.put(
-    '*/v4*/linodes/instances/:id/interfaces/settings',
+    '*/v4*/linode/instances/:id/interfaces/settings',
     async ({
       params,
       request,
