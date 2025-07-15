@@ -261,64 +261,28 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(startDay).first().click({ force: true });
     cy.findAllByText(endDay).first().click({ force: true });
 
-    cy.get('[data-testid="ClockIcon"]')
-      .first() // Pick the first ClockIcon
-      .closest('button') // Get its parent button
-      .as('timePickerButton');
-
-    cy.get('@timePickerButton').invoke('show').click();
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours')
-      .as('selectHours')
-      .scrollIntoView({ easing: 'linear' });
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${startHour} hours"]`).click();
-    });
+    cy.get('#start-time').first().as('selectHours');
 
-    cy.findByLabelText('Select minutes')
-      .as('selectMinutes')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${startMinute} minutes"]`).click();
-    });
+    cy.get('@selectHours').click();
+    cy.get('@selectHours').scrollIntoView({ duration: 500, easing: 'linear' });
 
-    cy.findByLabelText('Select meridiem')
-      .as('selectMeridiem')
-      .scrollIntoView({ duration: 500, easing: 'linear' });
-    cy.get('@selectMeridiem').within(() => {
-      cy.get(`[aria-label="PM"]`).click();
-    });
-    cy.get('[aria-label^="Choose time"]')
-      .last()
-      .should('be.visible')
-      .as('timePickerButton');
+    cy.get('@selectHours').clear();
+    cy.get('@selectHours').type(`${startHour}:${startMinute} PM`);
 
-    cy.get('@timePickerButton').click();
+    cy.get('#end-time').as('selectEndTime');
 
-    // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
-    cy.findByLabelText('Select hours').scrollIntoView({
+    cy.get('@selectEndTime').scrollIntoView({
       duration: 500,
       easing: 'linear',
     });
-    cy.get('@selectHours').within(() => {
-      cy.get(`[aria-label="${endHour} hours"]`).click();
-    });
 
-    cy.findByLabelText('Select minutes').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectMinutes').within(() => {
-      cy.get(`[aria-label="${endMinute} minutes"]`).click();
-    });
+    cy.get('@selectEndTime').should('be.visible');
 
-    cy.findByLabelText('Select meridiem').scrollIntoView({
-      duration: 500,
-      easing: 'linear',
-    });
-    cy.get('@selectMeridiem').within(() => {
-      cy.get(`[aria-label="PM"]`).click();
-    });
+    cy.get('@selectEndTime').clear();
+
+    cy.get('@selectEndTime').type(`${endHour}:${endMinute} PM`);
+
     cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput');
 
     cy.get('@timezoneInput').clear();
