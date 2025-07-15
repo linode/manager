@@ -3,7 +3,6 @@ import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockGetAlertDefinition } from 'support/intercepts/cloudpulse';
 import { mockAppendFeatureFlags } from 'support/intercepts/feature-flags';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
-import { mockGetUserPreferences } from 'support/intercepts/profile';
 import {
   mockGetRegionAvailability,
   mockGetRegions,
@@ -46,15 +45,12 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 
   it('Beta alerts become visible after switching to region w/ alerts enabled', function () {
-    mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
-      'getUserPreferences'
-    );
     const disabledRegion = this.mockRegions[1];
     mockGetRegionAvailability(disabledRegion.id, []).as(
       'getRegionAvailability'
     );
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getRegions']);
+    cy.wait(['@getFeatureFlags', '@getRegions']);
 
     ui.regionSelect.find().click();
     ui.regionSelect.find().type(`${disabledRegion.label}{enter}`);
@@ -73,11 +69,8 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 
   it('can toggle from legacy to beta alerts and back to legacy', function () {
-    mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
-      'getUserPreferences'
-    );
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getUserPreferences', '@getRegions']);
+    cy.wait(['@getFeatureFlags', '@getRegions']);
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
@@ -137,9 +130,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 
   it('legacy create flow', function () {
-    mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
-      'getUserPreferences'
-    );
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
     cy.wait([
@@ -196,7 +186,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 
   it('beta create flow', function () {
-    mockGetUserPreferences({ isAclpAlertsBeta: true }).as('getUserPreferences');
     const alertDefinitions = [
       alertFactory.build({
         description: randomLabel(),
@@ -374,9 +363,6 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
   });
 
   it('Creation fails for region where alerts disabled', function () {
-    mockGetUserPreferences({ isAclpAlertsBeta: false }).as(
-      'getUserPreferences'
-    );
     const createLinodeErrorMsg = 'region is not valid';
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
@@ -447,7 +433,6 @@ describe('aclpBetaServices feature flag disabled', function () {
         },
       },
     }).as('getFeatureFlags');
-    mockGetUserPreferences({ isAclpAlertsBeta: true }).as('getUserPreferences');
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
     cy.wait(['@getRegions', '@getUserPreferences']);
