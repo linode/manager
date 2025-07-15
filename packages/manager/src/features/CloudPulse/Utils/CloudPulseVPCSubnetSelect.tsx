@@ -117,19 +117,6 @@ export const CloudPulseVPCSubnetSelect = (
       }}
       options={Object.values(options)}
       placeholder={placeholder ?? 'Select VPC Subnets'}
-      textFieldProps={{
-        InputProps: {
-          sx: {
-            '::-webkit-scrollbar': {
-              display: 'none',
-            },
-            maxHeight: '55px',
-            msOverflowStyle: 'none',
-            overflow: 'auto',
-            scrollbarWidth: 'none',
-          },
-        },
-      }}
       value={getSelectedOptions()}
     />
   );
