@@ -208,6 +208,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
    */
 
   beforeEach(() => {
+    cy.viewport(1280, 720);
     mockAppendFeatureFlags(flags);
     mockGetAccount(mockAccount);
     mockGetCloudPulseMetricDefinitions(serviceType, metricDefinitions.data);
