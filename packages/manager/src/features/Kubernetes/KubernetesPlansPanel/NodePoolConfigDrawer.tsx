@@ -90,8 +90,6 @@ export const NodePoolConfigDrawer = (props: Props) => {
           ..._nodePools,
           {
             count: values.nodeCount,
-            // eslint-disable-next-line sonarjs/pseudo-random
-            id: Math.random(),
             type: planId,
             update_strategy: values.updateStrategy,
           },
