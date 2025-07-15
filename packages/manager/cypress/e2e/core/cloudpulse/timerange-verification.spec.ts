@@ -264,10 +264,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.get('#start-time').first().as('selectHours');
 
-    cy.get('@selectHours').click();
+    cy.get('@selectHours').click({ force: true });
     cy.get('@selectHours').scrollIntoView({ duration: 500, easing: 'linear' });
 
-    cy.get('@selectHours').clear();
+    cy.get('@selectHours').clear({ force: true });
     cy.get('@selectHours').type(`${startHour}:${startMinute} PM`);
 
     cy.get('#end-time').as('selectEndTime');
@@ -279,7 +279,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     cy.get('@selectEndTime').should('be.visible');
 
-    cy.get('@selectEndTime').clear();
+    cy.get('@selectEndTime').clear({ force: true });
 
     cy.get('@selectEndTime').type(`${endHour}:${endMinute} PM`);
 
