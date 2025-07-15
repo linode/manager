@@ -1,31 +1,35 @@
 import { Stack } from '@linode/ui';
 import Grid from '@mui/material/Grid';
 import * as React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { destinationType } from 'src/features/DataStream/Shared/types';
 
 import { StreamCreateCheckoutBar } from './CheckoutBar/StreamCreateCheckoutBar';
-import { StreamCreateDataSet } from './StreamCreateDataSet';
+import { StreamCreateClusters } from './StreamCreateClusters';
 import { StreamCreateDelivery } from './StreamCreateDelivery';
 import { StreamCreateGeneralInfo } from './StreamCreateGeneralInfo';
-import { type CreateStreamForm, eventType, streamType } from './types';
+import { type CreateStreamForm, streamType } from './types';
 
 export const StreamCreate = () => {
   const form = useForm<CreateStreamForm>({
     defaultValues: {
       type: streamType.AuditLogs,
-      [eventType.Authorization]: false,
-      [eventType.Authentication]: false,
-      [eventType.Configuration]: false,
       destination_type: destinationType.LinodeObjectStorage,
       region: '',
+      details: {
+        is_auto_add_all_clusters_enabled: false,
+      },
     },
   });
 
-  const { handleSubmit } = form;
+  const { control, handleSubmit } = form;
+  const selectedStreamType = useWatch({
+    control,
+    name: 'type',
+  });
 
   const landingHeaderProps = {
     breadcrumbProps: {
@@ -54,7 +58,9 @@ export const StreamCreate = () => {
             <Grid size={{ lg: 9, md: 12, sm: 12, xs: 12 }}>
               <Stack spacing={2}>
                 <StreamCreateGeneralInfo />
-                <StreamCreateDataSet />
+                {selectedStreamType === streamType.LKEAuditLogs && (
+                  <StreamCreateClusters />
+                )}
                 <StreamCreateDelivery />
               </Stack>
             </Grid>

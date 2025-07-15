@@ -2,7 +2,6 @@ import { uploadAttachment } from '@linode/api-v4';
 import { useSupportTicketReplyMutation } from '@linode/queries';
 import { Accordion, Notice } from '@linode/ui';
 import Grid from '@mui/material/Grid';
-import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { debounce } from 'throttle-debounce';
 import { makeStyles } from 'tss-react/mui';
@@ -11,6 +10,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 
 import { AttachFileForm } from '../../AttachFileForm';
+import { updateFileAtIndex } from '../../ticketUtils';
 import { MarkdownReference } from './MarkdownReference';
 import { ReplyActions } from './ReplyActions';
 import { TabbedReply } from './TabbedReply';
@@ -96,20 +96,22 @@ export const ReplyContainer = (props: Props) => {
             return;
           }
 
-          setFiles(set(lensPath([idx, 'uploading']), true));
+          setFiles((prevFiles) =>
+            updateFileAtIndex(prevFiles, idx, { uploading: true })
+          );
 
           const formData = new FormData();
           formData.append('file', file.file ?? '');
 
           uploadAttachment(props.ticketId, formData)
             .then(() => {
-              const nullFileState = {
-                file: null,
-                uploaded: true,
-                uploading: false,
-              };
-
-              setFiles(set(lensPath([idx]), nullFileState));
+              setFiles((prevFiles) =>
+                updateFileAtIndex(prevFiles, idx, {
+                  file: null,
+                  uploaded: true,
+                  uploading: false,
+                })
+              );
               reloadAttachments();
             })
             /*
@@ -117,14 +119,23 @@ export const ReplyContainer = (props: Props) => {
              * fail! Don't try to aggregate errors!
              */
             .catch((fileErrors) => {
-              setFiles(set(lensPath([idx, 'uploading']), false));
+              setFiles((prevFiles) =>
+                prevFiles.map((f, i) =>
+                  i === idx ? { ...f, uploading: false } : f
+                )
+              );
 
               const newErrors = getAPIErrorOrDefault(
                 fileErrors,
                 'There was an error attaching this file. Please try again.'
               );
 
-              setFiles(set(lensPath([idx, 'errors']), newErrors));
+              setFiles((prevFiles) =>
+                updateFileAtIndex(prevFiles, idx, {
+                  uploading: false,
+                  errors: newErrors,
+                })
+              );
             });
         });
       })
