@@ -3,6 +3,7 @@ import {
   useLinodeUpdateMutation,
   useTypeQuery,
 } from '@linode/queries';
+import { useIsLinodeAclpSubscribed } from '@linode/shared';
 import { ActionsPanel, Divider, Notice, Paper, Typography } from '@linode/ui';
 import { styled } from '@mui/material/styles';
 import { useBlocker } from '@tanstack/react-router';
@@ -13,6 +14,7 @@ import * as React from 'react';
 import { ConfirmationDialog } from 'src/components/ConfirmationDialog/ConfirmationDialog';
 // eslint-disable-next-line no-restricted-imports
 import { Prompt } from 'src/components/Prompt/Prompt';
+import { AlertConfirmationDialog } from 'src/features/CloudPulse/Alerts/AlertsLanding/AlertConfirmationDialog';
 import { getAPIErrorFor } from 'src/utilities/getAPIErrorFor';
 
 import { AlertSection } from './AlertSection';
@@ -51,6 +53,9 @@ export const AlertsPanel = (props: Props) => {
 
   const isBareMetalInstance = type?.class === 'metal';
 
+  const isLinodeAclpSubscribed = useIsLinodeAclpSubscribed(linodeId, 'beta');
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+
   const isCreateFlow = !linodeId;
 
   const initialValues = isCreateFlow
@@ -72,6 +77,7 @@ export const AlertsPanel = (props: Props) => {
   const formik = useFormik<Linode['alerts']>({
     enableReinitialize: true,
     initialValues,
+
     async onSubmit({ cpu, io, network_in, network_out, transfer_quota }) {
       await updateLinode({
         alerts: {
@@ -81,12 +87,16 @@ export const AlertsPanel = (props: Props) => {
           network_out,
           transfer_quota,
         },
-      });
-
-      enqueueSnackbar(
-        `Successfully updated alert settings for ${linode?.label}`,
-        { variant: 'success' }
-      );
+      })
+        .then(() => {
+          enqueueSnackbar(
+            `Successfully updated alert settings for ${linode?.label}`,
+            { variant: 'success' }
+          );
+        })
+        .finally(() => {
+          setIsDialogOpen(false);
+        });
     },
   });
 
@@ -280,6 +290,14 @@ export const AlertsPanel = (props: Props) => {
     }
   }, [status, reset]);
 
+  const handleSaveClick = () => {
+    if (!isLinodeAclpSubscribed) {
+      formik.handleSubmit();
+    } else {
+      setIsDialogOpen(true);
+    }
+  };
+
   return (
     <>
       {/* Use Prompt for now until Link is coupled with Tanstack router */}
@@ -319,6 +337,24 @@ export const AlertsPanel = (props: Props) => {
         )}
       </Prompt>
 
+      {/* Save Alerts Confirmation Modal. This Confirmation Modal on "Save" appear
+      only when user already subscribed to Beta/ACLP Mode and making changes in the
+      Legacy mode Interface */}
+      <AlertConfirmationDialog
+        handleCancel={() => setIsDialogOpen(false)}
+        handleConfirm={() => formik.handleSubmit()}
+        isLoading={isPending}
+        isOpen={isDialogOpen && isLinodeAclpSubscribed}
+        message={
+          <>
+            Are you sure you want to save Legacy Alerts? <b>Alerts(Beta)</b>{' '}
+            settings will be disabled and replaced by the original Legacy
+            settings.
+          </>
+        }
+        primaryButtonLabel="Save"
+        title="Are you sure you want to save Legacy Alerts?"
+      />
       <Paper
         sx={(theme) =>
           isCreateFlow ? { p: 0 } : { pb: theme.spacingFunction(16) }
@@ -346,7 +382,7 @@ export const AlertsPanel = (props: Props) => {
               disabled: isReadOnly || !formik.dirty,
               label: 'Save',
               loading: isPending,
-              onClick: () => formik.handleSubmit(),
+              onClick: handleSaveClick,
             }}
           />
         )}
