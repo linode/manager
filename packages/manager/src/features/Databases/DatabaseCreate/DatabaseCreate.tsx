@@ -2,10 +2,15 @@ import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
+  useRegionAvailabilityQuery,
   useRegionsQuery,
 } from '@linode/queries';
 import { CircleProgress, Divider, ErrorState, Notice, Paper } from '@linode/ui';
-import { formatStorageUnits, scrollErrorIntoViewV2 } from '@linode/utilities';
+import {
+  formatStorageUnits,
+  getCapabilityFromPlanType,
+  scrollErrorIntoViewV2,
+} from '@linode/utilities';
 import { getDynamicDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import Grid from '@mui/material/Grid';
 import { useNavigate } from '@tanstack/react-router';
@@ -16,6 +21,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { ErrorMessage } from 'src/components/ErrorMessage';
 import { LandingHeader } from 'src/components/LandingHeader';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { getIsLimitedAvailability } from 'src/features/components/PlansPanel/utils';
 import { DatabaseClusterData } from 'src/features/Databases/DatabaseCreate/DatabaseClusterData';
 import {
   StyledBtnCtn,
@@ -201,6 +207,11 @@ export const DatabaseCreate = () => {
     validationSchema: getDynamicDatabaseSchema(isVPCSelected),
   }); // TODO (UIE-8903): Replace deprecated Formik with React Hook Form
 
+  const { data: regionAvailabilities } = useRegionAvailabilityQuery(
+    values.region || '',
+    Boolean(flags.soldOutChips) && Boolean(values.region)
+  );
+
   React.useEffect(() => {
     if (setFieldValue) {
       setFieldValue(
@@ -244,6 +255,18 @@ export const DatabaseCreate = () => {
     return displayTypes?.find((type) => type.id === values.type);
   }, [displayTypes, values.type]);
 
+  if (flags.databasePremium && selectedPlan) {
+    const isLimitedAvailability = getIsLimitedAvailability({
+      plan: selectedPlan,
+      regionAvailabilities,
+      selectedRegionId: values.region,
+    });
+
+    if (isLimitedAvailability) {
+      setFieldValue('type', '');
+    }
+  }
+
   const accessControlsConfiguration: AccessProps = {
     disabled: isRestricted,
     errors: ipErrorsFromAPI,
@@ -254,6 +277,7 @@ export const DatabaseCreate = () => {
   };
 
   const handleTabChange = (index: number) => {
+    // Return early to preserve current selections when selecting the same tab
     if (selectedTab === index) {
       return;
     }
@@ -288,6 +312,26 @@ export const DatabaseCreate = () => {
       });
     } else {
       resetForm();
+    }
+  };
+
+  // Custom region change handler that validates plan selection
+  const handleRegionChange = (field: string, value: any) => {
+    setFieldValue(field, value);
+
+    // If this is a region change and a plan is selected
+    if (field === 'region' && flags.databasePremium && selectedPlan) {
+      const newRegion = regionsData?.find((region) => region.id === value);
+
+      const isPlanAvailableInRegion = Boolean(
+        newRegion?.capabilities.includes(
+          getCapabilityFromPlanType(selectedPlan.class)
+        )
+      );
+      // Clear the plan selection if plan is not available in the newly selected region
+      if (!isPlanAvailableInRegion) {
+        setFieldValue('type', '');
+      }
     }
   };
 
@@ -329,9 +373,7 @@ export const DatabaseCreate = () => {
           <DatabaseClusterData
             engines={engines}
             errors={errors}
-            onChange={(field: string, value: any) =>
-              setFieldValue(field, value)
-            }
+            onChange={handleRegionChange}
             regionsData={regionsData}
             values={values}
           />
