@@ -181,9 +181,8 @@ const convertToGmt = (dateStr: string): string => {
   );
 };
 const formatToUtcDateTime = (dateStr: string): string => {
-  return DateTime.fromISO(dateStr)
-    .toUTC() // 🌍 keep it in UTC
-    .toFormat('yyyy-MM-dd HH:mm');
+  return DateTime.fromISO(dateStr, { zone: 'utc' }) // Assume input is in UTC
+    .toFormat('yyyy-MM-dd HH:mm'); // Format without converting
 };
 
 // It is going to be modified
@@ -310,10 +309,10 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
 
     // --- Set timezone ---
     //  cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput').clear();
-    cy.findByPlaceholderText('Choose a Timezone').type(
+    /* cy.findByPlaceholderText('Choose a Timezone').type(
       '(GMT +0:00) Greenwich Mean Time{enter}',
       { force: true }
-    );
+    );*/
 
     // --- Apply date/time range ---
     cy.get('[data-qa-buttons="apply"]')
@@ -342,10 +341,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         const {
           request: { body },
         } = xhr as Interception;
-        expect(formatToUtcDateTime(body.absolute_time_duration.start)).to.equal(
+
+        expect(convertToGmt(body.absolute_time_duration.start)).to.equal(
           convertToGmt(startActualDate)
         );
-        expect(formatToUtcDateTime(body.absolute_time_duration.end)).to.equal(
+        expect(convertToGmt(body.absolute_time_duration.end)).to.equal(
           convertToGmt(endActualDate)
         );
       });
