@@ -11,8 +11,8 @@ import { TanStackTabLinkList } from 'src/components/Tabs/TanStackTabLinkList';
 import { useTabs } from 'src/hooks/useTabs';
 
 const Destinations = React.lazy(() =>
-  import('./Destinations/Destinations').then((module) => ({
-    default: module.Destinations,
+  import('./Destinations/DestinationsLanding').then((module) => ({
+    default: module.DestinationsLanding,
   }))
 );
 

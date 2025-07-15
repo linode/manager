@@ -1,6 +1,5 @@
 import { useFirewallsQuery } from '@linode/queries';
-import { Button, CircleProgress, ErrorState } from '@linode/ui';
-import { Hidden } from '@linode/ui';
+import { Button, CircleProgress, ErrorState, Hidden } from '@linode/ui';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import * as React from 'react';
 
@@ -15,10 +14,10 @@ import { TableHead } from 'src/components/TableHead';
 import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell/TableSortCell';
 import { getRestrictedResourceText } from 'src/features/Account/utils';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 import { useFlags } from 'src/hooks/useFlags';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
-import { useRestrictedGlobalGrantCheck } from 'src/hooks/useRestrictedGlobalGrantCheck';
 import { useSecureVMNoticesEnabled } from 'src/hooks/useSecureVMNoticesEnabled';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -73,9 +72,7 @@ const FirewallLanding = () => {
     (firewall) => firewall.id === selectedFirewallId
   );
 
-  const isFirewallsCreationRestricted = useRestrictedGlobalGrantCheck({
-    globalGrantType: 'add_firewalls',
-  });
+  const { permissions } = usePermissions('account', ['create_firewall']);
 
   const openModal = (mode: Mode, id: number) => {
     setSelectedFirewallId(id);
@@ -152,7 +149,7 @@ const FirewallLanding = () => {
             resourceType: 'Firewalls',
           }),
         }}
-        disabledCreateButton={isFirewallsCreationRestricted}
+        disabledCreateButton={!permissions.create_firewall}
         docsLink="https://techdocs.akamai.com/cloud-computing/docs/getting-started-with-cloud-firewalls"
         entity="Firewall"
         extraActions={

@@ -1,3 +1,17 @@
+## [2025-07-15] - v0.16.0
+
+
+### Added:
+
+- Add `null` as type option for `headingChip` ([#12460](https://github.com/linode/manager/pull/12460))
+
+### Changed:
+
+- TooltipIcon CDS standardization ([#12348](https://github.com/linode/manager/pull/12348))
+- Add `timeZoneProps` to control `timeZone dropdown` in DateTimeRangePicker.tsx ([#12423](https://github.com/linode/manager/pull/12423))
+- Notification banner stroke, width, error icon ([#12471](https://github.com/linode/manager/pull/12471))
+- Require `selected` prop in `ListItemOptionProps` type ([#12481](https://github.com/linode/manager/pull/12481))
+
 ## [2025-07-01] - v0.15.0
 
 

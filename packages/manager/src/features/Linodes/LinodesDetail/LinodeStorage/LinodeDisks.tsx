@@ -6,11 +6,10 @@ import {
 import { Box, Button, Paper, Stack, Typography } from '@linode/ui';
 import { Hidden } from '@linode/ui';
 import Grid from '@mui/material/Grid';
+import { useParams } from '@tanstack/react-router';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
-import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import { PaginationFooter } from 'src/components/PaginationFooter/PaginationFooter';
 import { Table } from 'src/components/Table';
@@ -22,6 +21,8 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 import { sendEvent } from 'src/utilities/analytics/utils';
 
 import { addUsedDiskSpace } from '../utilities';
@@ -35,12 +36,14 @@ import type { Disk } from '@linode/api-v4/lib/linodes';
 
 export const LinodeDisks = () => {
   const disksHeaderRef = React.useRef(null);
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: disks, error, isLoading } = useAllLinodeDisksQuery(id);
   const { data: linode } = useLinodeQuery(id);
   const { data: grants } = useGrants();
+
+  const { permissions } = usePermissions('linode', ['create_linode_disk'], id);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
@@ -105,6 +108,19 @@ export const LinodeDisks = () => {
     ));
   };
 
+  const { order, orderBy, handleOrderChange, sortedData } = useOrderV2({
+    data: disks ?? [],
+    initialRoute: {
+      defaultOrder: {
+        order: 'asc',
+        orderBy: 'created',
+      },
+      from: '/linodes/$linodeId/storage',
+    },
+    preferenceKey: 'linode-disks',
+    prefix: 'linode-disks',
+  });
+
   return (
     <Box>
       <Paper
@@ -127,7 +143,7 @@ export const LinodeDisks = () => {
           />
           <Button
             buttonType="primary"
-            disabled={readOnly || !hasFreeDiskSpace}
+            disabled={!permissions.create_linode_disk || !hasFreeDiskSpace}
             onClick={() => setIsCreateDrawerOpen(true)}
             tooltipAnalyticsEvent={() =>
               sendEvent({
@@ -142,82 +158,75 @@ export const LinodeDisks = () => {
           </Button>
         </Stack>
       </Paper>
-      <OrderBy
-        data={disks ?? []}
-        order={'asc'}
-        orderBy={'created'}
-        preferenceKey="linode-disks"
-      >
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData} scrollToRef={disksHeaderRef}>
-            {({
-              count,
-              data: paginatedData,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => {
-              return (
-                <React.Fragment>
-                  <Grid size={12}>
-                    <Table aria-label="List of Disks">
-                      <TableHead>
-                        <TableRow>
-                          <TableSortCell
-                            active={orderBy === 'label'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            label="label"
-                          >
-                            Label
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'filesystem'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            label="filesystem"
-                          >
-                            Type
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'size'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            label="size"
-                          >
-                            Size
-                          </TableSortCell>
-                          <Hidden mdDown>
-                            <TableSortCell
-                              active={orderBy === 'created'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              label="created"
-                            >
-                              Created
-                            </TableSortCell>
-                          </Hidden>
-                          <TableCell />
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>{renderTableContent(paginatedData)}</TableBody>
-                    </Table>
-                  </Grid>
-                  <PaginationFooter
-                    count={count}
-                    eventCategory="linode disks"
-                    handlePageChange={handlePageChange}
-                    handleSizeChange={handlePageSizeChange}
-                    page={page}
-                    pageSize={pageSize}
-                  />
-                </React.Fragment>
-              );
-            }}
-          </Paginate>
-        )}
-      </OrderBy>
+
+      <Paginate data={sortedData ?? []} scrollToRef={disksHeaderRef}>
+        {({
+          count,
+          data: sortedData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+        }) => {
+          return (
+            <React.Fragment>
+              <Grid size={12}>
+                <Table aria-label="List of Disks">
+                  <TableHead>
+                    <TableRow>
+                      <TableSortCell
+                        active={orderBy === 'label'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="label"
+                      >
+                        Label
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'filesystem'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="filesystem"
+                      >
+                        Type
+                      </TableSortCell>
+                      <TableSortCell
+                        active={orderBy === 'size'}
+                        direction={order}
+                        handleClick={handleOrderChange}
+                        label="size"
+                      >
+                        Size
+                      </TableSortCell>
+                      <Hidden mdDown>
+                        <TableSortCell
+                          active={orderBy === 'created'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          label="created"
+                        >
+                          Created
+                        </TableSortCell>
+                      </Hidden>
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{renderTableContent(sortedData)}</TableBody>
+                </Table>
+              </Grid>
+              <PaginationFooter
+                count={count}
+                eventCategory="linode disks"
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+                page={page}
+                pageSize={pageSize}
+              />
+            </React.Fragment>
+          );
+        }}
+      </Paginate>
+
       <DeleteDiskDialog
         disk={selectedDisk}
         linodeId={id}

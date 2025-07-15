@@ -34,6 +34,7 @@ const options: { flag: keyof Flags; label: string }[] = [
   { flag: 'linodeInterfaces', label: 'Linode Interfaces' },
   { flag: 'lkeEnterprise', label: 'LKE-Enterprise' },
   { flag: 'mtc2025', label: 'MTC 2025' },
+  { flag: 'nodebalancerIpv6', label: 'NodeBalancer Dual Stack (IPv6)' },
   { flag: 'nodebalancerVpc', label: 'NodeBalancer-VPC Integration' },
   { flag: 'objMultiCluster', label: 'OBJ Multi-Cluster' },
   { flag: 'objectStorageGen2', label: 'OBJ Gen2' },
@@ -141,6 +142,17 @@ const renderFlagItems = (
   });
 };
 
+interface NestedObject {
+  [key: string]: boolean | NestedObject;
+}
+
+interface SetNestedValueOptions {
+  ldFlagsObj: NestedObject;
+  path: string[];
+  storedFlagsObj: NestedObject;
+  updatedValue: boolean;
+}
+
 export const FeatureFlagTool = withFeatureFlagProvider(() => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
@@ -154,6 +166,39 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     }
   }, [dispatch]);
 
+  const setNestedValue = ({
+    ldFlagsObj,
+    path,
+    storedFlagsObj,
+    updatedValue,
+  }: SetNestedValueOptions): NestedObject => {
+    const [currentKey, ...restPath] = path;
+
+    // Merge original LD values and existing stored overrides at the current recursion level
+    const base = {
+      ...ldFlagsObj, // Keep original LD values at this level
+      ...storedFlagsObj, // Apply any existing stored overrides at this level
+    };
+
+    // Base case (final key in the path)
+    if (restPath.length === 0) {
+      return {
+        ...base,
+        [currentKey]: updatedValue, // Apply the new change
+      };
+    }
+
+    return {
+      ...base,
+      [currentKey]: setNestedValue({
+        ldFlagsObj: (ldFlagsObj?.[currentKey] as NestedObject) ?? {},
+        path: restPath,
+        storedFlagsObj: (storedFlagsObj?.[currentKey] as NestedObject) ?? {},
+        updatedValue,
+      }),
+    };
+  };
+
   const handleCheck = (
     e: React.ChangeEvent<HTMLInputElement>,
     flag: keyof FlagSet
@@ -162,26 +207,24 @@ export const FeatureFlagTool = withFeatureFlagProvider(() => {
     const storedFlags = getStorage(MOCK_FEATURE_FLAGS_STORAGE_KEY) || {};
 
     const flagParts = flag.split('.');
-    const updatedFlags = { ...storedFlags };
 
-    // If the flag is not a nested flag, update it directly
+    // If the flag is not a nested flag, update it directly at the root level
     if (flagParts.length === 1) {
-      updatedFlags[flag] = updatedValue;
-    } else {
-      // If the flag is a nested flag, update the specific property that changed
-      const [parentKey, childKey] = flagParts;
-      const currentParentValue = ldFlags[parentKey];
-      const existingValues = storedFlags[parentKey] || {};
-
-      // Only update the specific property that changed
-      updatedFlags[parentKey] = {
-        ...currentParentValue, // Keep original LD values
-        ...existingValues, // Apply any existing stored overrides
-        [childKey]: updatedValue, // Apply the new change
-      };
+      updateFlagStorage({ ...storedFlags, [flag]: updatedValue });
+      return;
     }
 
-    updateFlagStorage(updatedFlags);
+    // If the flag is a nested flag, recursively update only the specific property that changed,
+    // starting from the parentKey and preserving sibling values at each level
+    const [parentKey, ...restPath] = flagParts;
+    const updatedNested = setNestedValue({
+      ldFlagsObj: ldFlags[parentKey],
+      storedFlagsObj: storedFlags[parentKey],
+      path: restPath,
+      updatedValue,
+    });
+
+    updateFlagStorage({ ...storedFlags, [parentKey]: updatedNested });
   };
 
   const updateFlagStorage = (updatedFlags: object) => {

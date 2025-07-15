@@ -1,4 +1,5 @@
 import React from 'react';
+import { useStyles } from 'tss-react/mui';
 
 import {
   CheckIcon,
@@ -9,7 +10,7 @@ import {
 } from '../../assets/icons';
 import { Box } from '../Box';
 import { Typography } from '../Typography';
-import { useStyles } from './Notice.styles';
+import { StyledIconBox, StyledNoticeBox } from './Notice.styles';
 
 import type { BoxProps } from '../Box';
 import type { TypographyProps } from '../Typography';
@@ -31,6 +32,10 @@ export interface NoticeProps extends BoxProps {
    * The error group this error belongs to. This is used to scroll to the error when the user clicks on the error.
    */
   errorGroup?: string;
+  /**
+   * If true, the width of the notice will only span the content instead of the container.
+   */
+  fitContentWidth?: boolean;
   /**
    * If true, the important icon will be vertically centered with the text no matter the height of the text.
    */
@@ -79,6 +84,7 @@ export interface NoticeProps extends BoxProps {
 export const Notice = (props: NoticeProps) => {
   const {
     bypassValidation = false,
+    fitContentWidth = false,
     children,
     className,
     dataTestId,
@@ -94,15 +100,7 @@ export const Notice = (props: NoticeProps) => {
     ...rest
   } = props;
 
-  const { classes, cx } = useStyles();
-
-  const variantMap = {
-    error: variant === 'error',
-    info: variant === 'info',
-    success: variant === 'success',
-    tip: variant === 'tip',
-    warning: variant === 'warning',
-  };
+  const { cx } = useStyles();
 
   const errorScrollClassName = bypassValidation
     ? ''
@@ -110,27 +108,21 @@ export const Notice = (props: NoticeProps) => {
       ? `error-for-scroll-${errorGroup}`
       : `error-for-scroll`;
 
-  const dataAttributes = !variantMap.error
-    ? {
-        'data-qa-notice': true,
-      }
-    : {
-        'data-qa-error': true,
-        'data-qa-notice': true,
-      };
+  const dataAttributes =
+    variant !== 'error'
+      ? {
+          'data-qa-notice': true,
+        }
+      : {
+          'data-qa-error': true,
+          'data-qa-notice': true,
+        };
 
   return (
-    <Box
+    <StyledNoticeBox
       className={cx(
-        classes.root,
-        {
-          [classes.error]: variantMap.error,
-          [classes.info]: variantMap.info || variantMap.tip,
-          [classes.success]: variantMap.success,
-          [classes.warning]: variantMap.warning,
-          [errorScrollClassName]: variantMap.error,
-        },
         'notice',
+        { [errorScrollClassName]: variant === 'error' },
         className,
       )}
       data-testid={dataTestId ?? `notice${variant ? `-${variant}` : ''}`}
@@ -143,25 +135,25 @@ export const Notice = (props: NoticeProps) => {
               : theme.spacingFunction(16),
           marginLeft: spacingLeft !== undefined ? `${spacingLeft}px` : 0,
           marginTop: spacingTop !== undefined ? `${spacingTop}px` : 0,
+          width: fitContentWidth ? 'fit-content' : '100%',
         }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
+      variant={variant ?? 'info'}
       {...dataAttributes}
       {...rest}
     >
-      <Box
-        sx={(theme) => ({
-          display: 'flex',
+      <StyledIconBox
+        sx={{
           alignSelf: forceImportantIconVerticalCenter ? 'center' : 'flex-start',
-          marginRight: theme.spacingFunction(8),
-        })}
+        }}
       >
-        {variantMap.error && <ErrorIcon className={classes.icon} />}
-        {variantMap.info && <InfoIcon className={classes.icon} />}
-        {variantMap.success && <CheckIcon className={classes.icon} />}
-        {variantMap.tip && <LightBulbIcon className={classes.icon} />}
-        {variantMap.warning && <WarningIcon className={classes.icon} />}
-      </Box>
+        {variant === 'error' && <ErrorIcon />}
+        {variant === 'info' && <InfoIcon />}
+        {variant === 'success' && <CheckIcon />}
+        {variant === 'tip' && <LightBulbIcon />}
+        {variant === 'warning' && <WarningIcon />}
+      </StyledIconBox>
       <Box sx={{ width: '100%' }}>
         {text || typeof children === 'string' ? (
           <Typography {...typeProps}>{text ?? children}</Typography>
@@ -169,6 +161,6 @@ export const Notice = (props: NoticeProps) => {
           children
         )}
       </Box>
-    </Box>
+    </StyledNoticeBox>
   );
 };

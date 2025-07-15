@@ -11,6 +11,7 @@ import RenderComponent from '../shared/CloudPulseComponentRenderer';
 import {
   DASHBOARD_ID,
   NODE_TYPE,
+  PORT,
   REGION,
   RESOURCE_ID,
   RESOURCES,
@@ -20,6 +21,7 @@ import {
   getCustomSelectProperties,
   getFilters,
   getNodeTypeProperties,
+  getPortProperties,
   getRegionProperties,
   getResourcesProperties,
   getTagsProperties,
@@ -133,6 +135,25 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         checkAndUpdateDependentFilters(filterKey, filterValue);
       },
       [emitFilterChange, checkAndUpdateDependentFilters]
+    );
+
+    const handlePortChange = React.useCallback(
+      (port: string, label: string[], savePref: boolean = false) => {
+        const portList = port
+          .replace(/,$/, '')
+          .split(',')
+          .filter((p) => p !== '');
+        emitFilterChangeByFilterKey(
+          PORT,
+          portList,
+          label.filter((l) => l !== ''),
+          savePref,
+          {
+            [PORT]: port,
+          }
+        );
+      },
+      [emitFilterChangeByFilterKey]
     );
 
     const handleNodeTypeChange = React.useCallback(
@@ -277,12 +298,27 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
             },
             handleNodeTypeChange
           );
+        } else if (config.configuration.filterKey === PORT) {
+          return getPortProperties(
+            {
+              config,
+              dashboard,
+              isServiceAnalyticsIntegration,
+              preferences,
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
+                : dependentFilterReference.current,
+            },
+            handlePortChange
+          );
         } else {
           return getCustomSelectProperties(
             {
               config,
               dashboard,
-              dependentFilters: dependentFilterReference.current,
+              dependentFilters: resource_ids?.length
+                ? { [RESOURCE_ID]: resource_ids }
+                : dependentFilterReference.current,
               isServiceAnalyticsIntegration,
               preferences,
             },
@@ -295,6 +331,7 @@ export const CloudPulseDashboardFilterBuilder = React.memo(
         handleNodeTypeChange,
         handleTagsChange,
         handleRegionChange,
+        handlePortChange,
         handleResourceChange,
         handleCustomSelectChange,
         isServiceAnalyticsIntegration,

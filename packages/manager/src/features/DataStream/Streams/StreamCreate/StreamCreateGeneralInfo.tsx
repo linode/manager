@@ -2,13 +2,10 @@ import { Autocomplete, Box, Paper, TextField, Typography } from '@linode/ui';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useStyles } from 'src/features/DataStream/DataStream.styles';
-
 import { type CreateStreamForm, streamType } from './types';
 
 export const StreamCreateGeneralInfo = () => {
   const { control } = useFormContext<CreateStreamForm>();
-  const { classes } = useStyles();
 
   const streamTypeOptions = [
     {
@@ -30,7 +27,6 @@ export const StreamCreateGeneralInfo = () => {
         render={({ field }) => (
           <TextField
             aria-required
-            className={classes.input}
             label="Name"
             onChange={(value) => {
               field.onChange(value);
@@ -47,7 +43,6 @@ export const StreamCreateGeneralInfo = () => {
           name="type"
           render={({ field }) => (
             <Autocomplete
-              className={classes.input}
               disableClearable
               label="Stream Type"
               onChange={(_, { value }) => {

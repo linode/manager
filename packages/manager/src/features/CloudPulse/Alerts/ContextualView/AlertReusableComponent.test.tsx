@@ -8,19 +8,17 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { AlertReusableComponent } from './AlertReusableComponent';
 
 const mockQuery = vi.hoisted(() => ({
-  useAddEntityToAlert: vi.fn(),
   useAlertDefinitionByServiceTypeQuery: vi.fn(),
-  useRemoveEntityFromAlert: vi.fn(),
+  useServiceAlertsMutation: vi.fn(),
 }));
 
 vi.mock('src/queries/cloudpulse/alerts', async () => {
   const actual = vi.importActual('src/queries/cloudpulse/alerts');
   return {
     ...actual,
-    useAddEntityToAlert: mockQuery.useAddEntityToAlert,
     useAlertDefinitionByServiceTypeQuery:
       mockQuery.useAlertDefinitionByServiceTypeQuery,
-    useRemoveEntityFromAlert: mockQuery.useRemoveEntityFromAlert,
+    useServiceAlertsMutation: mockQuery.useServiceAlertsMutation,
   };
 });
 const serviceType = 'linode';
@@ -55,10 +53,7 @@ const component = (
 );
 
 mockQuery.useAlertDefinitionByServiceTypeQuery.mockReturnValue(mockReturnValue);
-mockQuery.useAddEntityToAlert.mockReturnValue({
-  mutateAsync: vi.fn(),
-});
-mockQuery.useRemoveEntityFromAlert.mockReturnValue({
+mockQuery.useServiceAlertsMutation.mockReturnValue({
   mutateAsync: vi.fn(),
 });
 

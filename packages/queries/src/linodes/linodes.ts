@@ -308,7 +308,6 @@ export const useDeleteLinodeMutation = (id: number) => {
   return useMutation<{}, APIError[]>({
     mutationFn: () => deleteLinode(id),
     async onSuccess() {
-      queryClient.removeQueries(linodeQueries.linode(id));
       queryClient.invalidateQueries(linodeQueries.linodes);
 
       // If the linode is assigned to a placement group,
@@ -342,7 +341,7 @@ export const useCreateLinodeMutation = () => {
 
       // If a restricted user creates an entity, we must make sure grants are up to date.
       queryClient.invalidateQueries(profileQueries.grants);
-      // @TODO Linode Interfaces - need to handle case if interface is not legacy
+
       if (getIsLegacyInterfaceArray(variables.interfaces)) {
         if (variables.interfaces?.some((i) => i.purpose === 'vlan')) {
           // If a Linode is created with a VLAN, invalidate vlans because
@@ -365,16 +364,26 @@ export const useCreateLinodeMutation = () => {
           });
         }
       } else {
-        // invalidate firewall queries if a new Linode interface is assigned to a firewall
-        if (variables.interfaces?.some((iface) => iface.firewall_id)) {
+        // Invalidate Firewall "list" queries if any interface has a Firewall
+        if (variables.interfaces?.some((i) => i.firewall_id)) {
           queryClient.invalidateQueries({
             queryKey: firewallQueries.firewalls.queryKey,
           });
         }
-        for (const iface of variables.interfaces ?? []) {
-          if (iface.firewall_id) {
+
+        // Invalidate VLAN queries if the Linode was created with a VLAN
+        if (variables.interfaces?.some((i) => i.vlan?.vlan_label)) {
+          queryClient.invalidateQueries({
+            queryKey: vlanQueries._def,
+          });
+        }
+
+        for (const linodeInterface of variables.interfaces ?? []) {
+          if (linodeInterface.firewall_id) {
+            // If the interface has a Firewall, invalidate that Firewall
             queryClient.invalidateQueries({
-              queryKey: firewallQueries.firewall(iface.firewall_id).queryKey,
+              queryKey: firewallQueries.firewall(linodeInterface.firewall_id)
+                .queryKey,
             });
           }
         }

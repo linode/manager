@@ -98,6 +98,7 @@ export const VPCRow = ({
         {actions.map((action) => (
           <InlineMenuAction
             actionText={action.title}
+            data-testid={action.title}
             disabled={action.disabled}
             key={action.title}
             onClick={action.onClick}

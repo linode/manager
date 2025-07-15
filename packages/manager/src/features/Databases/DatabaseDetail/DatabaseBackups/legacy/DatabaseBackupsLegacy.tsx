@@ -1,3 +1,4 @@
+import { useDatabaseBackupsQuery } from '@linode/queries';
 import { Paper, Typography } from '@linode/ui';
 import * as React from 'react';
 
@@ -9,7 +10,6 @@ import { TableRow } from 'src/components/TableRow';
 import { TableSortCell } from 'src/components/TableSortCell';
 import RestoreLegacyFromBackupDialog from 'src/features/Databases/DatabaseDetail/DatabaseBackups/legacy/RestoreLegacyFromBackupDialog';
 import { useOrder } from 'src/hooks/useOrder';
-import { useDatabaseBackupsQuery } from 'src/queries/databases/databases';
 
 import DatabaseBackupTableBody from './DatabaseBackupTableBody';
 

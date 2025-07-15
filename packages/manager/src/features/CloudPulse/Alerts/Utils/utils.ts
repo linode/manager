@@ -3,6 +3,7 @@ import { array, object, string } from 'yup';
 
 import { aggregationTypeMap, metricOperatorTypeMap } from '../constants';
 
+import type { CloudPulseResources } from '../../shared/CloudPulseResourcesSelect';
 import type { AlertDimensionsProp } from '../AlertsDetail/DisplayAlertDetailChips';
 import type { CreateAlertDefinitionForm } from '../CreateAlert/types';
 import type {
@@ -13,10 +14,14 @@ import type {
   APIError,
   EditAlertPayloadWithService,
   NotificationChannel,
+  Region,
   ServiceTypesList,
 } from '@linode/api-v4';
 import type { Theme } from '@mui/material';
-import type { AclpAlertServiceTypeConfig } from 'src/featureFlags';
+import type {
+  AclpAlertServiceTypeConfig,
+  CloudPulseResourceTypeMapFlag,
+} from 'src/featureFlags';
 import type { ObjectSchema } from 'yup';
 
 interface AlertChipBorderProps {
@@ -101,6 +106,25 @@ interface HandleMultipleErrorProps<T extends FieldValues> {
    * Separator for multiple errors on fields that are rendered by the component. Ex: errorText prop in Autocomplete, TextField component
    */
   singleLineErrorSeparator: string;
+}
+
+interface SupportedRegionsProps {
+  /**
+   * The resource type map flag
+   */
+  aclpResourceTypeMap?: CloudPulseResourceTypeMapFlag[];
+  /**
+   * The list of regions
+   */
+  regions?: Region[];
+  /**
+   * The list of resources
+   */
+  resources?: CloudPulseResources[];
+  /**
+   * The service type for which the regions are being filtered
+   */
+  serviceType: AlertServiceType | null;
 }
 
 /**
@@ -215,7 +239,7 @@ export const filterAlertsByStatusAndType = (
   return (
     alerts?.filter(({ label, status, type }) => {
       return (
-        status === 'enabled' &&
+        (status === 'enabled' || status === 'in progress') &&
         (!selectedType || type === selectedType) &&
         (!searchText || label.toLowerCase().includes(searchText.toLowerCase()))
       );
@@ -412,5 +436,52 @@ export const handleMultipleError = <T extends FieldValues>(
     }
 
     setError(errorFieldToSet, { message: errorMap.get(errorFieldToSet) });
+  }
+};
+
+/**
+ *
+ * @param props The props required to get the supported regions
+ * @returns The filtered regions based on the supported and resources
+ */
+export const getSupportedRegions = (props: SupportedRegionsProps) => {
+  const { aclpResourceTypeMap, serviceType, regions, resources } = props;
+  const resourceTypeFlag = aclpResourceTypeMap?.find(
+    (item: CloudPulseResourceTypeMapFlag) => item.serviceType === serviceType
+  );
+  let supportedRegions = regions;
+  if (
+    resourceTypeFlag?.supportedRegionIds !== null &&
+    resourceTypeFlag?.supportedRegionIds !== undefined
+  ) {
+    const supportedRegionsIdList = resourceTypeFlag.supportedRegionIds
+      .split(',')
+      .map((regionId: string) => regionId.trim());
+
+    supportedRegions =
+      supportedRegions?.filter(({ id }) =>
+        supportedRegionsIdList.includes(id)
+      ) ?? [];
+  }
+
+  return (
+    supportedRegions?.filter(({ id }) =>
+      resources?.some(({ region }) => region === id)
+    ) ?? []
+  );
+};
+
+/*
+ * Converts seconds into a relevant format of minutes or hours to be displayed in the Autocomplete Options.
+ * @param seconds The seconds that need to be converted into minutes or hours.
+ * @returns A string representing the time in minutes or hours.
+ */
+export const convertSecondsToOptions = (seconds: number): string => {
+  const minutes = seconds / 60;
+  if (minutes < 60) {
+    return `${minutes} min`;
+  } else {
+    const hours = minutes / 60;
+    return `${hours} hr`;
   }
 };

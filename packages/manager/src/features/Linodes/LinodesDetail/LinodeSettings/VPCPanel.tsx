@@ -208,7 +208,7 @@ export const VPCPanel = (props: VPCPanelProps) => {
                           VPC
                         </Typography>
                         <TooltipIcon
-                          status="help"
+                          status="info"
                           text={VPC_AUTO_ASSIGN_IPV4_TOOLTIP}
                         />
                       </Box>

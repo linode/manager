@@ -1,9 +1,8 @@
-import { useAccount } from '@linode/queries';
+import { useAccount, useDatabaseTypesQuery } from '@linode/queries';
 import { isFeatureEnabledV2 } from '@linode/utilities';
 import { DateTime } from 'luxon';
 
 import { useFlags } from 'src/hooks/useFlags';
-import { useDatabaseTypesQuery } from 'src/queries/databases/databases';
 
 import type {
   Database,

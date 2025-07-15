@@ -1,10 +1,14 @@
+import { act, renderHook } from '@testing-library/react';
+
 import { alertFactory, serviceTypesFactory } from 'src/factories';
 
+import { useContextualAlertsState } from '../../Utils/utils';
 import { alertDefinitionFormSchema } from '../CreateAlert/schemas';
 import {
   convertAlertDefinitionValues,
   convertAlertsToTypeSet,
   convertSecondsToMinutes,
+  convertSecondsToOptions,
   filterAlertsByStatusAndType,
   getSchemaWithEntityIdValidation,
   getServiceTypeLabel,
@@ -39,6 +43,13 @@ it('test convertSecondsToMinutes method', () => {
   expect(convertSecondsToMinutes(59)).toBe('59 seconds');
 });
 
+it('test convertSecondsToOptions method', () => {
+  expect(convertSecondsToOptions(300)).toEqual('5 min');
+  expect(convertSecondsToOptions(60)).toEqual('1 min');
+  expect(convertSecondsToOptions(3600)).toEqual('1 hr');
+  expect(convertSecondsToOptions(900)).toEqual('15 min');
+});
+
 it('test filterAlertsByStatusAndType method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'system' });
   expect(filterAlertsByStatusAndType(alerts, '', 'system')).toHaveLength(12);
@@ -47,6 +58,7 @@ it('test filterAlertsByStatusAndType method', () => {
     4
   );
 });
+
 it('test convertAlertsToTypeSet method', () => {
   const alerts = alertFactory.buildList(12, { created_by: 'user' });
 
@@ -200,5 +212,75 @@ describe('getSchemaWithEntityIdValidation', () => {
       message:
         'Must be one of avg, sum, min, max, count and no full stop.|Must have at least one rule.|Invalid value.',
     });
+  });
+});
+
+describe('useContextualAlertsState', () => {
+  it('should return empty initial state when no entityId provided', () => {
+    const alerts = alertFactory.buildList(3);
+    const { result } = renderHook(() => useContextualAlertsState(alerts));
+    expect(result.current.initialState).toEqual({ system: [], user: [] });
+  });
+
+  it('should include alerts that match entityId or account/region level alerts in initial states', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({
+        id: 1,
+        label: 'alert1',
+        type: 'system',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+      alertFactory.build({
+        id: 2,
+        label: 'alert2',
+        type: 'user',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+      alertFactory.build({
+        id: 3,
+        label: 'alert3',
+        type: 'system',
+        entity_ids: ['456'],
+        scope: 'region',
+      }),
+    ];
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId)
+    );
+
+    expect(result.current.initialState.system).toContain(1);
+    expect(result.current.initialState.system).toContain(3);
+    expect(result.current.initialState.user).toContain(2);
+  });
+
+  it('should detect unsaved changes when alerts are modified', () => {
+    const entityId = '123';
+    const alerts = [
+      alertFactory.build({
+        label: 'alert1',
+        type: 'system',
+        entity_ids: [entityId],
+        scope: 'entity',
+      }),
+    ];
+
+    const { result } = renderHook(() =>
+      useContextualAlertsState(alerts, entityId)
+    );
+
+    expect(result.current.hasUnsavedChanges).toBe(false);
+
+    act(() => {
+      result.current.setEnabledAlerts((prev) => ({
+        ...prev,
+        system: [...(prev.system ?? []), 999],
+      }));
+    });
+
+    expect(result.current.hasUnsavedChanges).toBe(true);
   });
 });

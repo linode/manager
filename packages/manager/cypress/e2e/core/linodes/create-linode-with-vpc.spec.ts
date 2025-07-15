@@ -140,7 +140,7 @@ describe('Create Linode with VPCs (Legacy)', () => {
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      cy.findByText('VPC Assigned').should('be.visible');
+      cy.findByText('VPC').should('be.visible');
     });
 
     // Create Linode and confirm contents of outgoing API request payload.
@@ -500,8 +500,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      // TODO: M3-9955 Missing info in Summary section
-      // cy.findByText('VPC Assigned').should('be.visible');
+      cy.findByText('VPC').should('be.visible');
     });
 
     // Create Linode and confirm contents of outgoing API request payload.
@@ -640,8 +639,7 @@ describe('Create Linode with VPCs (Linode Interfaces)', () => {
     // Confirm VPC assignment indicator is shown in Linode summary.
     cy.get('[data-qa-linode-create-summary]').scrollIntoView();
     cy.get('[data-qa-linode-create-summary]').within(() => {
-      // TODO: M3-9955 Missing info in Summary section
-      // cy.findByText('VPC Assigned').should('be.visible');
+      cy.findByText('VPC').should('be.visible');
     });
 
     // Create Linode and confirm contents of outgoing API request payload.

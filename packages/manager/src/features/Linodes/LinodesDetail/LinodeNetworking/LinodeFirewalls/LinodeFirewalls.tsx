@@ -11,18 +11,28 @@ import { TableRowEmpty } from 'src/components/TableRowEmpty/TableRowEmpty';
 import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { RemoveDeviceDialog } from 'src/features/Firewalls/FirewallDetail/Devices/RemoveDeviceDialog';
+import { usePermissions } from 'src/features/IAM/hooks/usePermissions';
 
 import { AddFirewallForm } from './AddFirewallForm';
 import { LinodeFirewallsRow } from './LinodeFirewallsRow';
 
 import type { Firewall, FirewallDevice } from '@linode/api-v4';
-
+const NO_PERMISSIONS_TOOLTIP_TEXT =
+  "You don't have permissions to add Firewall.";
+const MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT =
+  'Linodes can only have one Firewall assigned.';
 interface LinodeFirewallsProps {
   linodeID: number;
 }
 
 export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
   const { linodeID } = props;
+  const { permissions } = usePermissions(
+    'linode',
+    ['apply_linode_firewalls'],
+    linodeID,
+    true
+  );
 
   const {
     data: attachedFirewallData,
@@ -86,9 +96,16 @@ export const LinodeFirewalls = (props: LinodeFirewallsProps) => {
         </Typography>
         <Button
           buttonType="primary"
-          disabled={attachedFirewallData && attachedFirewallData.results >= 1}
+          disabled={
+            (attachedFirewallData && attachedFirewallData.results >= 1) ||
+            !permissions.apply_linode_firewalls
+          }
           onClick={() => setIsAddFirewalDrawerOpen(true)}
-          tooltipText="Linodes can only have one Firewall assigned."
+          tooltipText={
+            !permissions.apply_linode_firewalls
+              ? NO_PERMISSIONS_TOOLTIP_TEXT
+              : MORE_THAN_ONE_FIREWALL_TOOLTIP_TEXT
+          }
         >
           Add Firewall
         </Button>

@@ -41,6 +41,11 @@ interface CloudPulseCustomSelectDefaultValueProps
   defaultValue?: FilterValue;
 
   /**
+   * boolean variable to check whether the component is optional or not
+   */
+  isOptional?: boolean;
+
+  /**
    * Last selected values from user preference
    */
   preferences?: AclpConfig;
@@ -129,6 +134,7 @@ export const getInitialDefaultSelections = (
     isMultiSelect,
     options,
     savePreferences,
+    isOptional,
   } = defaultSelectionProps;
 
   if (!options || options.length === 0) {
@@ -136,7 +142,7 @@ export const getInitialDefaultSelections = (
   }
 
   // Handle the case when there is no default value and preferences are not saved
-  if (!defaultValue && !savePreferences) {
+  if (!defaultValue && !savePreferences && !isOptional) {
     const initialSelection = isMultiSelect ? [options[0]] : options[0];
     handleSelectionChange(
       filterKey,

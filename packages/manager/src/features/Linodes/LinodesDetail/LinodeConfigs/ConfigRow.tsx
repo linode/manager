@@ -27,7 +27,6 @@ interface Props {
   onBoot: () => void;
   onDelete: () => void;
   onEdit: () => void;
-  readOnly: boolean;
 }
 
 export const isDiskDevice = (
@@ -43,7 +42,7 @@ const isVolumeDevice = (
 };
 
 export const ConfigRow = React.memo((props: Props) => {
-  const { config, linodeId, onBoot, onDelete, onEdit, readOnly } = props;
+  const { config, linodeId, onBoot, onDelete, onEdit } = props;
 
   const { data: linode } = useLinodeQuery(linodeId);
 
@@ -121,7 +120,7 @@ export const ConfigRow = React.memo((props: Props) => {
           {interfaces.length > 0 ? InterfaceList : defaultInterfaceLabel}
         </TableCell>
       )}
-      <StyledTableCell>
+      <TableCell actionCell>
         <ConfigActionMenu
           config={config}
           label={config.label}
@@ -129,9 +128,8 @@ export const ConfigRow = React.memo((props: Props) => {
           onBoot={onBoot}
           onDelete={onDelete}
           onEdit={onEdit}
-          readOnly={readOnly}
         />
-      </StyledTableCell>
+      </TableCell>
     </TableRow>
   );
 });
@@ -143,10 +141,3 @@ const StyledUl = styled('ul', { label: 'StyledUl' })(({ theme }) => ({
   paddingLeft: 0,
   paddingTop: theme.spacing(),
 }));
-
-const StyledTableCell = styled(TableCell, { label: 'StyledTableCell' })({
-  '&.MuiTableCell-root': {
-    paddingRight: 0,
-  },
-  padding: '0 !important',
-});

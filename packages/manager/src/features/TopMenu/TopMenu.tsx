@@ -7,7 +7,7 @@ import { AppBar } from 'src/components/AppBar';
 import { Link } from 'src/components/Link';
 import { StyledAkamaiLogo } from 'src/components/PrimaryNav/PrimaryNav.styles';
 import { Toolbar } from 'src/components/Toolbar';
-import { getIsLoggedInAsCustomer } from 'src/OAuth/utils';
+import { getIsLoggedInAsCustomer } from 'src/OAuth/oauth';
 
 import { Community } from './Community';
 import { CreateMenu } from './CreateMenu/CreateMenu';

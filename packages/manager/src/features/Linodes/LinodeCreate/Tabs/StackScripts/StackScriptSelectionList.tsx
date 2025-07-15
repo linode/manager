@@ -15,6 +15,7 @@ import {
   TooltipIcon,
 } from '@linode/ui';
 import { useQueryClient } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
 import React, { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { Waypoint } from 'react-waypoint';
@@ -30,7 +31,7 @@ import { TableRowError } from 'src/components/TableRowError/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { TableSortCell } from 'src/components/TableSortCell';
 import { StackScriptSearchHelperText } from 'src/features/StackScripts/Partials/StackScriptSearchHelperText';
-import { useOrder } from 'src/hooks/useOrder';
+import { useOrderV2 } from 'src/hooks/useOrderV2';
 
 import {
   getGeneratedLinodeLabel,
@@ -53,12 +54,21 @@ interface Props {
 
 export const StackScriptSelectionList = ({ type }: Props) => {
   const [query, setQuery] = useState<string>();
+  const location = useLocation();
 
   const queryClient = useQueryClient();
 
-  const { handleOrderChange, order, orderBy } = useOrder({
-    order: 'desc',
-    orderBy: 'deployments_total',
+  const { handleOrderChange, order, orderBy } = useOrderV2({
+    initialRoute: {
+      defaultOrder: {
+        order: 'desc',
+        orderBy: 'deployments_total',
+      },
+      from: location.pathname.includes('/linodes/create')
+        ? '/linodes/create'
+        : '/linodes/$linodeId',
+    },
+    preferenceKey: 'linode-clone-stackscripts',
   });
 
   const {
@@ -82,7 +92,10 @@ export const StackScriptSelectionList = ({ type }: Props) => {
   const hasPreselectedStackScript = Boolean(params.stackScriptID);
 
   const { data: stackscript, isLoading: isSelectedStackScriptLoading } =
-    useStackScriptQuery(params.stackScriptID ?? -1, hasPreselectedStackScript);
+    useStackScriptQuery(
+      params.stackScriptID ? Number(params.stackScriptID) : -1,
+      hasPreselectedStackScript
+    );
 
   const filter =
     type === 'Community'
@@ -167,7 +180,7 @@ export const StackScriptSelectionList = ({ type }: Props) => {
             <InputAdornment position="end">
               {isFetching && <CircleProgress size="sm" />}
               {searchParseError && (
-                <TooltipIcon status="error" text={searchParseError.message} />
+                <TooltipIcon status="warning" text={searchParseError.message} />
               )}
               <IconButton
                 aria-label="Clear"

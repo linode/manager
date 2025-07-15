@@ -1,7 +1,7 @@
 import { useLinodeQuery } from '@linode/queries';
 import { CircleProgress, ErrorState, Stack } from '@linode/ui';
+import { useParams } from '@tanstack/react-router';
 import React from 'react';
-import { useParams } from 'react-router-dom';
 
 import { useIsLinodeInterfacesEnabled } from 'src/utilities/linodes';
 
@@ -12,7 +12,7 @@ import { LinodeNetworkingSummaryPanel } from './NetworkingSummaryPanel/Networkin
 
 export const LinodeNetworking = () => {
   const { isLinodeInterfacesEnabled } = useIsLinodeInterfacesEnabled();
-  const { linodeId } = useParams<{ linodeId: string }>();
+  const { linodeId } = useParams({ from: '/linodes/$linodeId' });
   const id = Number(linodeId);
 
   const { data: linode, error, isPending } = useLinodeQuery(id);
