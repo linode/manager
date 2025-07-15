@@ -1599,6 +1599,7 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         icon: {
           opacity: 1,
+          margin: 0,
         },
         root: {
           '&.Mui-active': {

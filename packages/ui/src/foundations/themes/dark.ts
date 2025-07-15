@@ -111,6 +111,7 @@ export const notificationToast = {
     backgroundColor: NotificationToast.Informative.Background,
     borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
+    icon: NotificationToast.Informative.StatusIcon,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
@@ -127,6 +128,7 @@ export const notificationToast = {
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
     borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
+    icon: NotificationToast.Warning.StatusIcon,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
@@ -1115,9 +1117,6 @@ export const darkTheme: ThemeOptions = {
               fill: Table.HeaderNested.Text,
             },
           },
-        },
-        icon: {
-          margin: 0,
         },
       },
     },
