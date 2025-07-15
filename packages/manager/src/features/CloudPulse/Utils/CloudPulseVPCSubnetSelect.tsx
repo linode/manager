@@ -3,22 +3,52 @@ import { Autocomplete } from '@linode/ui';
 import React from 'react';
 
 interface VPCSubnetOption {
+  /**
+   * Unique identifier for the subnet.
+   */
   id: number;
+  /**
+   * Display label for the subnet, typically includes VPC name.
+   */
   label: string;
 }
 
-interface CloudPulseVPCSubnetProps {
+interface CloudPulseVPCSubnetSelectProps {
+  /**
+   * Error text to display when there is an error.
+   */
   errorText?: string;
-  isMultiple?: boolean;
+  /**
+   * Label for the autocomplete field.
+   */
   label?: string;
+  /**
+   * Whether to allow multiple selections.
+   */
+  multiple?: boolean;
+  /**
+   * This function is called when the input field loses focus.
+   */
   onBlur?: () => void;
+  /**
+   * Callback function when the value changes.
+   * @param value - The selected value(s).
+   */
   onChange: (value: null | number | number[]) => void;
+  /**
+   * Placeholder text for the autocomplete field.
+   */
   placeholder?: string;
+  /**
+   * The default selected value for the component.
+   */
   value?: number | number[];
 }
 
-export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
-  const { errorText, onChange, value, onBlur, label, placeholder, isMultiple } =
+export const CloudPulseVPCSubnetSelect = (
+  props: CloudPulseVPCSubnetSelectProps
+) => {
+  const { errorText, onChange, value, onBlur, label, placeholder, multiple } =
     props;
 
   const [selectedValue, setSelectedValue] = React.useState<
@@ -26,6 +56,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
   >(value ?? null);
   const { data, isLoading, error } = useAllVPCsQuery({ enabled: true });
 
+  // Creating a mapping of subnet id to options for constant time access to fetch selected options
   const options: Record<number, VPCSubnetOption> = React.useMemo(() => {
     if (!data) return {};
 
@@ -42,22 +73,24 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
 
     return options;
   }, [data]);
+
   const isArray = selectedValue && Array.isArray(selectedValue);
+
   const getSelectedOptions = (): null | VPCSubnetOption | VPCSubnetOption[] => {
     if (selectedValue === null) {
-      return isMultiple ? [] : null;
+      return multiple ? [] : null;
     }
     if (isArray) {
       const selectedOptions = selectedValue
         .filter((value) => options[value] !== undefined)
         .map((value) => options[value]);
 
-      return isMultiple ? selectedOptions : (selectedOptions[0] ?? null);
+      return multiple ? selectedOptions : (selectedOptions[0] ?? null);
     }
 
     const selectedOption = options[selectedValue];
 
-    if (isMultiple) {
+    if (multiple) {
       return selectedOption ? [selectedOption] : [];
     }
 
@@ -73,7 +106,7 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
       label={label ?? 'VPC Subnet'}
       limitTags={2}
       loading={isLoading}
-      multiple={isMultiple}
+      multiple={multiple}
       onBlur={onBlur}
       onChange={(_, newValue) => {
         const newSelectedValue = Array.isArray(newValue)
@@ -84,19 +117,6 @@ export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
       }}
       options={Object.values(options)}
       placeholder={placeholder ?? 'Select VPC Subnets'}
-      textFieldProps={{
-        InputProps: {
-          sx: {
-            '::-webkit-scrollbar': {
-              display: 'none',
-            },
-            maxHeight: '55px',
-            msOverflowStyle: 'none',
-            overflow: 'auto',
-            scrollbarWidth: 'none',
-          },
-        },
-      }}
       value={getSelectedOptions()}
     />
   );

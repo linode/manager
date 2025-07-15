@@ -5,7 +5,7 @@ import React from 'react';
 import { subnetFactory, vpcFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import { CloudPulseVPCSubnet } from './CloudPulseVPCSubnet';
+import { CloudPulseVPCSubnetSelect } from './CloudPulseVPCSubnetSelect';
 
 const queryMock = vi.hoisted(() => ({
   useAllVpcsQuery: vi.fn(),
@@ -26,7 +26,7 @@ const vpcs = vpcFactory.build({
 });
 
 describe('CloudPulseVPCSubnet', () => {
-  const component = <CloudPulseVPCSubnet isMultiple onChange={onChange} />;
+  const component = <CloudPulseVPCSubnetSelect multiple onChange={onChange} />;
   beforeEach(() => {
     vi.resetAllMocks();
     queryMock.useAllVpcsQuery.mockReturnValue({
