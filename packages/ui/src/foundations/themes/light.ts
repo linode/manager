@@ -117,6 +117,7 @@ export const notificationToast = {
     backgroundColor: NotificationToast.Informative.Background,
     borderLeft: `48px solid ${NotificationToast.Informative.IconBackground}`,
     color: NotificationToast.Text,
+    icon: NotificationToast.Informative.StatusIcon,
   },
   error: {
     backgroundColor: NotificationToast.Error.Background,
@@ -133,6 +134,7 @@ export const notificationToast = {
   warning: {
     backgroundColor: NotificationToast.Warning.Background,
     borderLeft: `48px solid ${NotificationToast.Warning.IconBackground}`,
+    icon: NotificationToast.Warning.StatusIcon,
   },
   tip: {
     backgroundColor: NotificationToast.Informative.Background,
@@ -929,8 +931,8 @@ export const lightTheme: ThemeOptions = {
     MuiFormHelperText: {
       styleOverrides: {
         root: {
-          '&$error': {
-            color: Select.Error.HintText,
+          '&[class*="error"]': {
+            color: Select.Error.Border,
           },
           fontWeight: Font.FontWeight.Semibold,
           letterSpacing: 'inherit',
@@ -1233,11 +1235,6 @@ export const lightTheme: ThemeOptions = {
       styleOverrides: {
         outlined: {
           border: `1px solid ${Color.Neutrals[30]}`,
-        },
-        root: {
-          '& .notice': {
-            width: 'fit-content',
-          },
         },
         rounded: {
           borderRadius: 0,
