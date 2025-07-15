@@ -33,8 +33,8 @@ import type {
 } from 'src/features/Longview/request.types';
 
 interface AclpContextualViewProps {
+  capability: Capabilities;
   regionId: string;
-  serviceType: Capabilities;
 }
 
 interface AclpContextualViewEnabled {
@@ -315,7 +315,7 @@ export const arePortsValid = (ports: string): string | undefined => {
 export const useIsAclpContextualViewEnabled = (
   props: AclpContextualViewProps
 ): AclpContextualViewEnabled => {
-  const { regionId, serviceType } = props;
+  const { regionId, capability } = props;
   const { isLoading, data: regions } = useRegionsQuery();
 
   if (isLoading) {
@@ -330,7 +330,7 @@ export const useIsAclpContextualViewEnabled = (
 
   return {
     isLoading: false,
-    isAlertEnabled: region?.monitors?.alerts?.includes(serviceType) ?? false,
-    isMetricEnabled: region?.monitors?.metrics?.includes(serviceType) ?? false,
+    isAlertEnabled: region?.monitors?.alerts?.includes(capability) ?? false,
+    isMetricEnabled: region?.monitors?.metrics?.includes(capability) ?? false,
   };
 };

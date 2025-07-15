@@ -75,7 +75,7 @@ describe('validate useIsAclpContextualViewEnabled function', () => {
   });
   const region = 'us-east';
 
-  const serviceType: Capabilities = 'Linodes';
+  const capability: Capabilities = 'Linodes';
 
   it('should return false for alert and true for metrics', () => {
     queryMocks.useRegionsQuery.mockReturnValue({
@@ -89,7 +89,7 @@ describe('validate useIsAclpContextualViewEnabled function', () => {
     });
     const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
       regionId: region,
-      serviceType,
+      capability,
     });
 
     expect(isAlertEnabled).toBe(false);
@@ -108,7 +108,7 @@ describe('validate useIsAclpContextualViewEnabled function', () => {
     });
     const { isAlertEnabled, isMetricEnabled } = useIsAclpContextualViewEnabled({
       regionId: region,
-      serviceType,
+      capability,
     });
 
     expect(isMetricEnabled).toBe(false);
@@ -122,7 +122,7 @@ describe('validate useIsAclpContextualViewEnabled function', () => {
     const { isLoading, isAlertEnabled, isMetricEnabled } =
       useIsAclpContextualViewEnabled({
         regionId: region,
-        serviceType,
+        capability,
       });
 
     expect(isMetricEnabled).toBe(false);
