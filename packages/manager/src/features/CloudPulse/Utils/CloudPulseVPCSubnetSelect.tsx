@@ -13,7 +13,7 @@ interface VPCSubnetOption {
   label: string;
 }
 
-interface CloudPulseVPCSubnetProps {
+interface CloudPulseVPCSubnetSelectProps {
   /**
    * Error text to display when there is an error.
    */
@@ -45,7 +45,9 @@ interface CloudPulseVPCSubnetProps {
   value?: number | number[];
 }
 
-export const CloudPulseVPCSubnet = (props: CloudPulseVPCSubnetProps) => {
+export const CloudPulseVPCSubnetSelect = (
+  props: CloudPulseVPCSubnetSelectProps
+) => {
   const { errorText, onChange, value, onBlur, label, placeholder, multiple } =
     props;
 
