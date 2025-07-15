@@ -44,7 +44,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     mockGetAccountSettings(mockInitialAccountSettings).as('getSettings');
   });
 
-  it('Beta alerts become visible after switching to region w/ alerts enabled', function () {
+  it('Alerts panel becomes visible after switching to region w/ alerts enabled', function () {
     const disabledRegion = this.mockRegions[1];
     mockGetRegionAvailability(disabledRegion.id, []).as(
       'getRegionAvailability'
@@ -68,76 +68,10 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     cy.get('[data-qa-panel="Alerts"]').should('be.visible');
   });
 
-  it('can toggle from legacy to beta alerts and back to legacy', function () {
-    cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getFeatureFlags', '@getRegions']);
-    ui.regionSelect.find().click();
-    const enabledRegion = this.mockRegions[0];
-    ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
-
-    // legacy alerts are visible
-    ui.accordionHeading
-      .findByTitle('Alerts')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-    ui.accordion.findByTitle('Alerts').within(() => {
-      cy.get('[data-testid="notice-info"]')
-        .should('be.visible')
-        .within(() => {
-          cy.contains(
-            'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
-          );
-        });
-    });
-    // legacy alert form
-    // alert items are hardcoded in LinodeSettingsAlertsPanel.tsx
-    cy.get('[data-qa-alerts-panel="true"]').each((panel) => {
-      cy.wrap(panel).within(() => {
-        ui.toggle
-          .find()
-          .should('have.attr', 'data-qa-toggle', 'true')
-          .should('be.visible')
-          .should('be.disabled');
-        // numeric inputs are disabled
-        cy.get('[type="number"]').should('be.visible').should('be.disabled');
-      });
-    });
-
-    // upgrade from legacy alerts to ACLP alerts
-    ui.button
-      .findByTitle('Try Alerts (Beta)')
-      .should('be.visible')
-      .should('be.enabled')
-      .click();
-    cy.get('[data-qa-panel="Alerts"]')
-      .should('be.visible')
-      .within(() => {
-        cy.get('[data-testid="betaChip"]').should('be.visible');
-        cy.get('[data-testid="notice-info"]')
-          .should('be.visible')
-          .within(() => {
-            cy.contains(
-              'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.'
-            );
-          });
-        // possible to downgrade from ACLP alerts to legacy alerts
-        ui.button
-          .findByTitle('Switch to legacy Alerts')
-          .should('be.visible')
-          .should('be.enabled');
-      });
-  });
-
-  it('legacy create flow', function () {
+  it('create flow defaults to legacy alerts', function () {
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getSettings',
-      '@getUserPreferences',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getSettings', '@getRegions']);
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
@@ -185,7 +119,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     });
   });
 
-  it('beta create flow', function () {
+  it('create flow after switching to beta alerts', function () {
     const alertDefinitions = [
       alertFactory.build({
         description: randomLabel(),
@@ -220,12 +154,7 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     );
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait([
-      '@getFeatureFlags',
-      '@getSettings',
-      '@getUserPreferences',
-      '@getRegions',
-    ]);
+    cy.wait(['@getFeatureFlags', '@getSettings', '@getRegions']);
     ui.regionSelect.find().click();
     const enabledRegion = this.mockRegions[0];
     mockGetRegionAvailability(enabledRegion.id, []).as('getRegionAvailability');
@@ -243,6 +172,11 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
           .should('be.enabled')
           .click();
         ui.accordion.findByTitle('Alerts').within(() => {
+          ui.button
+            .findByTitle('Try Alerts (Beta)')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
           cy.get('table[data-testid="alert-table"]')
             .should('be.visible')
             .get('tbody > tr')
@@ -362,11 +296,72 @@ describe('Create flow when beta alerts enabled by region and feature flag', func
     });
   });
 
+  it('can toggle from legacy to beta alerts and back to legacy', function () {
+    cy.visitWithLogin('/linodes/create');
+    cy.wait(['@getFeatureFlags', '@getRegions']);
+    ui.regionSelect.find().click();
+    const enabledRegion = this.mockRegions[0];
+    ui.regionSelect.find().type(`${enabledRegion.label}{enter}`);
+
+    // legacy alerts are visible
+    ui.accordionHeading
+      .findByTitle('Alerts')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    ui.accordion.findByTitle('Alerts').within(() => {
+      cy.get('[data-testid="notice-info"]')
+        .should('be.visible')
+        .within(() => {
+          cy.contains(
+            'Try the Alerts (Beta), featuring new options like customizable alerts. You can switch back to legacy Alerts at any time.'
+          );
+        });
+    });
+    // legacy alert form
+    // alert items are hardcoded in LinodeSettingsAlertsPanel.tsx
+    cy.get('[data-qa-alerts-panel="true"]').each((panel) => {
+      cy.wrap(panel).within(() => {
+        ui.toggle
+          .find()
+          .should('have.attr', 'data-qa-toggle', 'true')
+          .should('be.visible')
+          .should('be.disabled');
+        // numeric inputs are disabled
+        cy.get('[type="number"]').should('be.visible').should('be.disabled');
+      });
+    });
+
+    // upgrade from legacy alerts to ACLP alerts
+    ui.button
+      .findByTitle('Try Alerts (Beta)')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+    cy.get('[data-qa-panel="Alerts"]')
+      .should('be.visible')
+      .within(() => {
+        cy.get('[data-testid="betaChip"]').should('be.visible');
+        cy.get('[data-testid="notice-info"]')
+          .should('be.visible')
+          .within(() => {
+            cy.contains(
+              'Welcome to Alerts (Beta), designed for flexibility with features like customizable alerts.'
+            );
+          });
+        // possible to downgrade from ACLP alerts to legacy alerts
+        ui.button
+          .findByTitle('Switch to legacy Alerts')
+          .should('be.visible')
+          .should('be.enabled');
+      });
+  });
+
   it('Creation fails for region where alerts disabled', function () {
     const createLinodeErrorMsg = 'region is not valid';
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getRegions', '@getUserPreferences']);
+    cy.wait(['@getRegions']);
     ui.regionSelect.find().click();
     const disabledRegion = this.mockRegions[1];
 
@@ -435,7 +430,7 @@ describe('aclpBetaServices feature flag disabled', function () {
     }).as('getFeatureFlags');
     interceptCreateLinode().as('createLinode');
     cy.visitWithLogin('/linodes/create');
-    cy.wait(['@getRegions', '@getUserPreferences']);
+    cy.wait(['@getRegions']);
     ui.regionSelect.find().click();
 
     const mockRegionAvailability = [
