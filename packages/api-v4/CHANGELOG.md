@@ -1,3 +1,21 @@
+## [2025-07-15] - v0.144.0
+
+
+### Changed:
+
+- ACLP:Alerting - fixed the typo from evaluation_periods_seconds to evaluation_period_seconds ([#12466](https://github.com/linode/manager/pull/12466))
+- Use `v4beta` for `/maintenance` endpoint ([#12519](https://github.com/linode/manager/pull/12519))
+
+### Fixed:
+
+- Unnecessary 404 errors when components attempt to fetch deleted resources ([#12474](https://github.com/linode/manager/pull/12474))
+
+### Upcoming Features:
+
+- CloudPulse: Update types in `alerts.ts` and `types.ts`; Linode: Update type in `types.ts` ([#12393](https://github.com/linode/manager/pull/12393))
+- CloudPulse: Update service type in `types.ts` ([#12401](https://github.com/linode/manager/pull/12401))
+- Add `regions` in `Alert` interface in `types.ts` file for cloudpulse ([#12435](https://github.com/linode/manager/pull/12435))
+
 ## [2025-07-01] - v0.143.0
 
 ### Changed:
