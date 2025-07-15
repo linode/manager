@@ -274,7 +274,7 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
         expect(top).to.be.greaterThan(0); // or within viewport bounds
         expect(bottom).to.be.lessThan(Cypress.config('viewportHeight'));
       })
-      .click();
+      .click({ force: true });
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours')
       .as('selectHours')
