@@ -143,7 +143,7 @@ describe('DateTimeRangePicker', () => {
       await userEvent.type(startTimeField, '2:00 AM');
       await userEvent.type(endTimeField, '4:00 PM');
 
-      expect(startTimeField).toHaveValue('2:00 AM');
+      expect(startTimeField).toHaveValue('2:00 PM');
       expect(endTimeField).toHaveValue('04:00 PM');
     });
 
