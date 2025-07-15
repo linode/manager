@@ -261,14 +261,13 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(startDay).first().click({ force: true });
     cy.findAllByText(endDay).first().click({ force: true });
 
-    ui.button
-      .findByAttribute('aria-label^', 'Choose time')
-      .first()
+    cy.get('[data-testid="ClockIcon"]')
+      .first() // Pick the first ClockIcon
+      .closest('button') // Get its parent button
       .as('timePickerButton');
 
-    cy.get('@timePickerButton').scrollIntoView({ easing: 'linear' });
-
-    cy.get('@timePickerButton').click({ force: true });
+    cy.get('@timePickerButton').scrollIntoView();
+    cy.get('@timePickerButton').should('be.visible').click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
     cy.findByLabelText('Select hours')
