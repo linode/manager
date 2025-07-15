@@ -4,7 +4,7 @@
 ### Changed:
 
 - ACLP:Alerting - fixed the typo from evaluation_periods_seconds to evaluation_period_seconds ([#12466](https://github.com/linode/manager/pull/12466))
-- Use `v4beta` for `/maintenance` endpoint
+- Use `v4beta` for `/maintenance` endpoint ([#12519](https://github.com/linode/manager/pull/12519))
 
 ### Fixed:
 
