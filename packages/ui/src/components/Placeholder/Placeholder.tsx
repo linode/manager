@@ -12,7 +12,7 @@ export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
 }
 
-export interface BasePlaceholderProps {
+export interface PlaceholderProps {
   /**
    * Additional copy text to display
    */
@@ -55,6 +55,10 @@ export interface BasePlaceholderProps {
    */
   renderAsSecondary?: boolean;
   /**
+   *If true, switches grid styles for PlaceholderRoot component to accommodate TransferDisplay section
+   */
+  showTransferDisplay?: boolean;
+  /**
    * Subtitle text to display
    */
   subtitle?: string;
@@ -63,40 +67,6 @@ export interface BasePlaceholderProps {
    */
   title: string;
 }
-
-interface PlaceholderPropsWithoutTransferDisplay extends BasePlaceholderProps {
-  /**
-   * If true, displays transfer display
-   */
-  showTransferDisplay?: boolean;
-  /**
-   * The TransferDisplay component that needs to be passed if you enable showTransferDisplay
-   */
-  TransferDisplayComponent?: React.ComponentType<{ spacingTop?: number }>;
-  /**
-   * The spacingTop value that can be passed to the TransferDisplay component
-   */
-  TransferDisplaySpacingTop?: number;
-}
-
-interface PlaceholderPropsWithTransferDisplay extends BasePlaceholderProps {
-  /**
-   * If true, displays transfer display
-   */
-  showTransferDisplay: boolean;
-  /**
-   * The TransferDisplay component that needs to be passed if you enable showTransferDisplay
-   */
-  TransferDisplayComponent: React.ComponentType<{ spacingTop?: number }>;
-  /**
-   * The spacingTop value that can be passed to the TransferDisplay component
-   */
-  TransferDisplaySpacingTop?: number;
-}
-
-export type PlaceholderProps =
-  | PlaceholderPropsWithoutTransferDisplay
-  | PlaceholderPropsWithTransferDisplay;
 
 export const Placeholder = (props: PlaceholderProps) => {
   const {
@@ -108,11 +78,8 @@ export const Placeholder = (props: PlaceholderProps) => {
     isEntity,
     linksSection,
     renderAsSecondary,
-    showTransferDisplay,
     subtitle,
     title,
-    TransferDisplayComponent,
-    TransferDisplaySpacingTop,
   } = props;
 
   const theme = useTheme();
@@ -149,76 +116,71 @@ export const Placeholder = (props: PlaceholderProps) => {
   };
 
   return (
-    <>
-      <PlaceholderRoot
-        className={props.className}
-        data-qa-placeholder-container={dataQAPlaceholder || true}
-      >
-        <StyledIconWrapper isEntity={isEntity}>
-          {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
-        </StyledIconWrapper>
+    <PlaceholderRoot
+      className={props.className}
+      data-qa-placeholder-container={dataQAPlaceholder || true}
+    >
+      <StyledIconWrapper isEntity={isEntity}>
+        {Icon && <Icon data-testid="placeholder-icon" style={IconStyles} />}
+      </StyledIconWrapper>
 
-        <H1Header
-          data-qa-placeholder-title
-          renderAsSecondary={renderAsSecondary}
+      <H1Header
+        data-qa-placeholder-title
+        renderAsSecondary={renderAsSecondary}
+        sx={{
+          gridArea: 'title',
+          textAlign: 'center',
+        }}
+        title={title}
+      />
+      {hasSubtitle ? (
+        <Typography
           sx={{
-            gridArea: 'title',
+            color: theme.palette.text.primary,
+            gridArea: 'subtitle',
             textAlign: 'center',
           }}
-          title={title}
-        />
-        {hasSubtitle ? (
-          <Typography
-            sx={{
-              color: theme.palette.text.primary,
-              gridArea: 'subtitle',
-              textAlign: 'center',
-            }}
-            variant="h2"
-          >
-            {subtitle}
-          </Typography>
-        ) : null}
+          variant="h2"
+        >
+          {subtitle}
+        </Typography>
+      ) : null}
 
-        <StyledCopy descriptionMaxWidth={descriptionMaxWidth}>
-          {typeof props.children === 'string' ? (
-            <Typography variant="subtitle1">{props.children}</Typography>
+      <StyledCopy descriptionMaxWidth={descriptionMaxWidth}>
+        {typeof props.children === 'string' ? (
+          <Typography variant="subtitle1">{props.children}</Typography>
+        ) : (
+          props.children
+        )}
+      </StyledCopy>
+      <StyledButtonWrapper>
+        {buttonProps &&
+          buttonProps.map((thisButton, index) => (
+            <Button
+              buttonType="primary"
+              {...thisButton}
+              data-qa-placeholder-button
+              data-testid="placeholder-button"
+              key={index}
+            />
+          ))}
+      </StyledButtonWrapper>
+      {additionalCopy ? (
+        <StyledCopy
+          descriptionMaxWidth={descriptionMaxWidth}
+          sx={{ gridArea: 'additionalCopy' }}
+        >
+          {typeof additionalCopy === 'string' ? (
+            <Typography variant="subtitle1">{additionalCopy}</Typography>
           ) : (
-            props.children
+            additionalCopy
           )}
         </StyledCopy>
-        <StyledButtonWrapper>
-          {buttonProps &&
-            buttonProps.map((thisButton, index) => (
-              <Button
-                buttonType="primary"
-                {...thisButton}
-                data-qa-placeholder-button
-                data-testid="placeholder-button"
-                key={index}
-              />
-            ))}
-        </StyledButtonWrapper>
-        {additionalCopy ? (
-          <StyledCopy
-            descriptionMaxWidth={descriptionMaxWidth}
-            sx={{ gridArea: 'additionalCopy' }}
-          >
-            {typeof additionalCopy === 'string' ? (
-              <Typography variant="subtitle1">{additionalCopy}</Typography>
-            ) : (
-              additionalCopy
-            )}
-          </StyledCopy>
-        ) : null}
-        {linksSection !== undefined ? (
-          <StyledLinksSection>{linksSection}</StyledLinksSection>
-        ) : null}
-      </PlaceholderRoot>
-      {showTransferDisplay && TransferDisplayComponent ? (
-        <TransferDisplayComponent spacingTop={TransferDisplaySpacingTop} />
       ) : null}
-    </>
+      {linksSection !== undefined ? (
+        <StyledLinksSection>{linksSection}</StyledLinksSection>
+      ) : null}
+    </PlaceholderRoot>
   );
 };
 
@@ -246,9 +208,7 @@ const StyledButtonWrapper = styled('div')(({ theme }) => ({
   },
 }));
 
-const StyledLinksSection = styled('div')<
-  Pick<PlaceholderProps, 'showTransferDisplay'>
->(({ theme }) => ({
+const StyledLinksSection = styled('div')(({ theme }) => ({
   borderTop: `1px solid ${
     theme.name === 'light'
       ? theme.tokens.color.Neutrals[20]
