@@ -15,13 +15,12 @@ export const NodePoolUpdateStrategySelect = (props: Props) => {
   const { onChange, value } = props;
   return (
     <Autocomplete
+      disableClearable
       label="Node Pool Update Strategy"
       onChange={(e, updateStrategy) => onChange(updateStrategy?.value)}
       options={updateStrategyOptions}
       placeholder="Select an Update Strategy"
-      value={
-        updateStrategyOptions.find((option) => option.value === value) ?? null
-      }
+      value={updateStrategyOptions.find((option) => option.value === value)}
     />
   );
 };
