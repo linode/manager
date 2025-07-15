@@ -261,30 +261,83 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
     cy.findAllByText(startDay).first().click({ force: true });
     cy.findAllByText(endDay).first().click({ force: true });
 
-    // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
+    // Clicks the button closest to the Clock Icon, bypassing any visible state with `force: true`.
+    // Get the input and alias it
+
     cy.get('#start-time').first().as('selectHours');
 
+    // Then perform scoped actions using `within`
     cy.get('@selectHours').click({ force: true });
-    cy.get('@selectHours').scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('[data-testid="ClockIcon"]')
+      .first()
+      .should('exist')
+      .closest('button')
+      .should('be.visible')
+      .click({ force: true });
 
-    cy.get('@selectHours').clear({ force: true });
-    cy.get('@selectHours').type(`${startHour}:${startMinute} PM`);
+    cy.findByLabelText('Select hours')
+      .as('selectHours')
+      .scrollIntoView({ easing: 'linear' });
+    cy.get('@selectHours').within(() => {
+      cy.get(`[aria-label="${startHour} hours"]`).click();
+    });
 
-    cy.get('#end-time').as('selectEndTime');
+    cy.findByLabelText('Select minutes')
+      .as('selectMinutes')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('@selectMinutes').within(() => {
+      cy.get(`[aria-label="${startMinute} minutes"]`).click();
+    });
 
-    cy.get('@selectEndTime').scrollIntoView({
+    cy.findByLabelText('Select meridiem')
+      .as('selectMeridiem')
+      .scrollIntoView({ duration: 500, easing: 'linear' });
+    cy.get('@selectMeridiem').within(() => {
+      cy.get(`[aria-label="PM"]`).click();
+    });
+
+    cy.get('[data-testid="ClockIcon"]')
+      .last()
+      .should('exist')
+      .closest('button')
+      .should('be.visible')
+      .click({ force: true });
+
+    // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
+    cy.findByLabelText('Select hours').scrollIntoView({
       duration: 500,
       easing: 'linear',
     });
+    cy.get('@selectHours').within(() => {
+      cy.get(`[aria-label="${endHour} hours"]`).click();
+    });
 
-    cy.get('@selectEndTime').should('be.visible');
+    cy.findByLabelText('Select minutes').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@selectMinutes').within(() => {
+      cy.get(`[aria-label="${endMinute} minutes"]`).click();
+    });
 
-    cy.get('@selectEndTime').clear({ force: true });
+    cy.findByLabelText('Select meridiem').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+    cy.get('@selectMeridiem').within(() => {
+      cy.get(`[aria-label="PM"]`).click();
+    });
 
-    cy.get('@selectEndTime').type(`${endHour}:${endMinute} PM`);
+    // Assert that the end date and time is correctly displayed
+    cy.get('[aria-labelledby="start-date"]')
+      .should('be.visible')
+      .should('have.value', `${startActualDate} PM`);
+
+    cy.get('[aria-labelledby="end-date"]')
+      .should('be.visible')
+      .should('have.value', `${endActualDate} PM`);
 
     cy.findByPlaceholderText('Choose a Timezone').as('timezoneInput');
-
     cy.get('@timezoneInput').clear();
     cy.get('@timezoneInput').type('(GMT +0:00) Greenwich Mean Time{enter}');
     // Click the "Apply" button to confirm the end date and time
