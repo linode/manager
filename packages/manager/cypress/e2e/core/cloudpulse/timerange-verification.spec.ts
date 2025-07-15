@@ -267,6 +267,11 @@ describe('Integration tests for verifying Cloudpulse custom and preset configura
       .should('be.visible')
       .as('timePickerButton');
 
+    cy.get('@timePickerButton').scrollIntoView({
+      duration: 500,
+      easing: 'linear',
+    });
+
     cy.get('@timePickerButton').click();
 
     // Selects the start hour, minute, and meridiem (AM/PM) in the time picker.
