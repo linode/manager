@@ -5,6 +5,7 @@ import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { DocsLink } from 'src/components/DocsLink/DocsLink';
+import { getDestinationTypeOption } from 'src/features/DataStream/dataStreamUtils';
 import { DestinationLinodeObjectStorageDetailsForm } from 'src/features/DataStream/Shared/DestinationLinodeObjectStorageDetailsForm';
 import {
   destinationType,
@@ -69,9 +70,7 @@ export const StreamCreateDelivery = () => {
               field.onChange(value);
             }}
             options={destinationTypeOptions}
-            value={destinationTypeOptions.find(
-              ({ value }) => value === field.value
-            )}
+            value={getDestinationTypeOption(field.value)}
           />
         )}
         rules={{ required: true }}

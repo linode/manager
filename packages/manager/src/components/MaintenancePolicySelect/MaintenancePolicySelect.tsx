@@ -27,7 +27,7 @@ interface Props {
   hideDefaultChip?: boolean;
   onChange: (policy: MaintenancePolicy) => void;
   textFieldProps?: Partial<TextFieldProps>;
-  value?: 'linode/migrate' | 'linode/power_off_on' | null;
+  value?: 'linode/migrate' | 'linode/power_off_on';
 }
 
 export const MaintenancePolicySelect = (props: Props) => {
@@ -49,10 +49,10 @@ export const MaintenancePolicySelect = (props: Props) => {
     accountSettings?.maintenance_policy ??
     policies?.find((p) => p.is_default)?.slug;
 
-  const selectedOption =
-    (value
-      ? options.find((o) => o.slug === value)
-      : options.find((o) => o.is_default)) ?? null;
+  // Return null (controlled) instead of undefined (uncontrolled) to keep Autocomplete controlled
+  const selectedOption = value
+    ? (options.find((o) => o.slug === value) ?? null)
+    : (options.find((o) => o.is_default) ?? null);
 
   return (
     <Autocomplete
