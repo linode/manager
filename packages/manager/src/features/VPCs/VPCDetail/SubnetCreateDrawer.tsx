@@ -26,9 +26,11 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useFlags } from 'src/hooks/useFlags';
 import {
   calculateAvailableIPv4sRFC1918,
+  calculateAvailableIPv6Linodes,
   DEFAULT_SUBNET_IPV4_VALUE,
   getRecommendedSubnetIPv4,
   RESERVED_IP_NUMBER,
+  SUBNET_IPV6_PREFIX_LENGTHS,
 } from 'src/utilities/subnets';
 
 import type { CreateSubnetPayload, Subnet } from '@linode/api-v4';
@@ -69,14 +71,15 @@ export const SubnetCreateDrawer = (props: Props) => {
     account?.capabilities ?? []
   );
 
-  const recommendedIPv6 =
-    isDualStackEnabled && isDualStackVPC
-      ? [
-          {
-            range: '/56',
-          },
-        ]
-      : undefined;
+  const shouldDisplayIPv6 = isDualStackEnabled && isDualStackVPC;
+
+  const recommendedIPv6 = shouldDisplayIPv6
+    ? [
+        {
+          range: '/56',
+        },
+      ]
+    : undefined;
 
   const {
     control,
@@ -100,7 +103,10 @@ export const SubnetCreateDrawer = (props: Props) => {
   });
 
   const ipv4 = watch('ipv4');
-  const numberOfAvailableIPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
+  const numberOfAvailableIPv4IPs = calculateAvailableIPv4sRFC1918(ipv4 ?? '');
+  const numberOfAvailableIPv4Linodes = numberOfAvailableIPv4IPs
+    ? numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
+    : 0;
 
   const { append, fields, remove } = useFieldArray({
     control,
@@ -172,15 +178,17 @@ export const SubnetCreateDrawer = (props: Props) => {
               />
             )}
           />
-          {numberOfAvailableIPs && (
+          {numberOfAvailableIPv4IPs && !shouldDisplayIPv6 && (
             <FormHelperText>
               Number of Available IP Addresses:{' '}
-              {numberOfAvailableIPs > RESERVED_IP_NUMBER
-                ? (numberOfAvailableIPs - RESERVED_IP_NUMBER).toLocaleString()
+              {numberOfAvailableIPv4IPs > RESERVED_IP_NUMBER
+                ? (
+                    numberOfAvailableIPv4IPs - RESERVED_IP_NUMBER
+                  ).toLocaleString()
                 : 0}
             </FormHelperText>
           )}
-          {isDualStackEnabled && isDualStackVPC && (
+          {shouldDisplayIPv6 && (
             <Controller
               control={control}
               name="ipv6"
@@ -194,17 +202,26 @@ export const SubnetCreateDrawer = (props: Props) => {
                         range: selectedOption.value,
                       });
                     }}
-                    options={ipv6CIDROptions}
+                    options={SUBNET_IPV6_PREFIX_LENGTHS}
                     sx={{
                       width: 140,
                     }}
-                    value={ipv6CIDROptions.find(
+                    value={SUBNET_IPV6_PREFIX_LENGTHS.find(
                       (option) => option.value === fields[0].range
                     )}
                   />
                 );
               }}
             />
+          )}
+          {shouldDisplayIPv6 && (
+            <FormHelperText>
+              Number of Linodes:{' '}
+              {Math.min(
+                numberOfAvailableIPv4Linodes,
+                calculateAvailableIPv6Linodes(fields[0].range)
+              )}
+            </FormHelperText>
           )}
         </Stack>
         <ActionsPanel
@@ -221,55 +238,3 @@ export const SubnetCreateDrawer = (props: Props) => {
     </Drawer>
   );
 };
-
-interface Ipv6CIDROption {
-  label: string;
-  value: string;
-}
-
-export const ipv6CIDROptions: Ipv6CIDROption[] = [
-  {
-    label: '/52',
-    value: '/52',
-  },
-  {
-    label: '/53',
-    value: '/53',
-  },
-  {
-    label: '/54',
-    value: '/54',
-  },
-  {
-    label: '/55',
-    value: '/55',
-  },
-  {
-    label: '/56',
-    value: '/56',
-  },
-  {
-    label: '/57',
-    value: '/57',
-  },
-  {
-    label: '/58',
-    value: '/58',
-  },
-  {
-    label: '/59',
-    value: '/59',
-  },
-  {
-    label: '/60',
-    value: '/60',
-  },
-  {
-    label: '/61',
-    value: '/61',
-  },
-  {
-    label: '/62',
-    value: '/62',
-  },
-];

@@ -12,8 +12,61 @@ export const SUBNET_LINODE_CSV_HEADERS = [
   { key: 'vpcRanges', label: 'IPv4 VPC Ranges' },
 ];
 
+interface SubnetIPv4PrefixOption {
+  label: string;
+  value: string;
+}
+
+export const SUBNET_IPV6_PREFIX_LENGTHS: SubnetIPv4PrefixOption[] = [
+  {
+    label: '/52',
+    value: '/52',
+  },
+  {
+    label: '/53',
+    value: '/53',
+  },
+  {
+    label: '/54',
+    value: '/54',
+  },
+  {
+    label: '/55',
+    value: '/55',
+  },
+  {
+    label: '/56',
+    value: '/56',
+  },
+  {
+    label: '/57',
+    value: '/57',
+  },
+  {
+    label: '/58',
+    value: '/58',
+  },
+  {
+    label: '/59',
+    value: '/59',
+  },
+  {
+    label: '/60',
+    value: '/60',
+  },
+  {
+    label: '/61',
+    value: '/61',
+  },
+  {
+    label: '/62',
+    value: '/62',
+  },
+];
+
 /**
  * Maps subnet mask length to number of theoretically available IPs.
+ * - For a /X in IPv4, it is 2^(32-X)
  * - To get usable IPs, subtract 2 from the given number, as the first and last
  * ips are always reserved
  * - To get available IPs for our VPCs, subtract 4 (the number of reserved IPs)
@@ -56,6 +109,26 @@ export const SubnetMaskToAvailIPv4s: Record<number, number> = {
 };
 
 /**
+ * Maps subnet mask length to number of theoretically usable Linodes (not IPs as it would be too large).
+ * - Each Linode will use a minimum one /64 in the subnet
+ * - For a /X in IPv6, to calculate the number of available Linodes, it is 2^(64-X)
+ * - To get usable Linodes, subtract 1 from the given number (one subnet is reserved)
+ */
+export const SubnetMaskToUsableIPv6Linodes: Record<number, number> = {
+  52: 4095,
+  53: 2047,
+  54: 1023,
+  55: 511,
+  56: 255,
+  57: 127,
+  58: 63,
+  59: 31,
+  60: 15,
+  61: 7,
+  62: 3,
+};
+
+/**
  * Determines if the given IPv4 is an RFC1918 IP address.
  */
 const isValidRFC1918IPv4 = (address: string) => {
@@ -94,6 +167,12 @@ export const calculateAvailableIPv4sRFC1918 = (
   return isValidRFC1918IPv4(address)
     ? SubnetMaskToAvailIPv4s[Number(mask)]
     : undefined;
+};
+
+export const calculateAvailableIPv6Linodes = (address: string): number => {
+  const [, mask] = address.split('/');
+
+  return SubnetMaskToUsableIPv6Linodes[Number(mask)];
 };
 
 /**
